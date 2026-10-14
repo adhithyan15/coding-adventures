@@ -2432,6 +2432,13 @@ through S-I3 before two weeks are spent on Windows.
    The working directory is the system directory, which ALL RESTRICTED
    APPLICATION PACKAGES (S-1-15-2-2) may read.
 
+   **LPAC, as the launch check reads it.** `TokenIsLessPrivilegedAppContainer`
+   cannot be queried on windows-2025 (`ERROR_INVALID_PARAMETER`, seen
+   there). What makes a token LPAC is its `WIN://NOALLAPPPKG` security
+   attribute, which access checks consult to leave out ALL APPLICATION
+   PACKAGES, so the check reads `TokenSecurityAttributes` for it when the
+   information class is refused. Any other failure refuses the launch.
+
    **The environment** is the closed set of the macOS applier: only names
    set on the command, each in the grantable set, with plain values. It is
    passed as an explicit Unicode block, never inherited. The applier adds

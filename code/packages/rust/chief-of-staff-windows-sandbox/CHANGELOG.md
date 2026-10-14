@@ -33,6 +33,13 @@
     windows-2025 run). The profile's storage folder (as
     `GetAppContainerFolderPath` reported it) must be gone afterwards. A
     failed removal, or a folder left behind, ends the agent unrun.
+  - `is_less_privileged_app_container(token)`: the launch check's LPAC
+    test, public so the probe reports it from inside the same way. The
+    third windows-2025 run showed `TokenIsLessPrivilegedAppContainer`
+    cannot be queried there (`ERROR_INVALID_PARAMETER`); the token's
+    `WIN://NOALLAPPPKG` security attribute answers instead, read with
+    every pointer bounds- and alignment-checked. Each token query in the
+    launch check now names itself in its error.
   - One instance of an agent at a time: `spawn` refuses an agent whose
     previous `ConfinedChild` is still alive (`Container`), and dropping a
     child ends it and releases the claim once it has exited. Instances

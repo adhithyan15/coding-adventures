@@ -57,7 +57,10 @@ The process is created suspended. Before `ResumeThread`, the applier checks
 from outside that:
 
 - the token is an AppContainer's, LPAC, with this SID, no capabilities and
-  Low integrity;
+  Low integrity. LPAC is read from `TokenIsLessPrivilegedAppContainer`,
+  or, where Windows refuses that query (windows-2025 does), from the
+  token's `WIN://NOALLAPPPKG` security attribute
+  (`is_less_privileged_app_container`);
 - the process is in its job;
 - every mitigation policy asked for is in force;
 - the image is the verified file. `VerifiedExecutable` holds the file open

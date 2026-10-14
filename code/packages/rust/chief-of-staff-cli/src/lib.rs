@@ -1207,7 +1207,36 @@ hardware_key_timeout = 60
             use std::os::unix::fs::PermissionsExt;
             fs::set_permissions(&kek, fs::Permissions::from_mode(0o600)).unwrap();
         }
+        #[cfg(windows)]
+        owner_only(&kek);
         (directory, config)
+    }
+
+    /// The Windows owner-only policy the daemon's KEK read enforces: the
+    /// user owns the file, and a protected DACL holds exactly one ACE, the
+    /// user's. A file created in the temp directory inherits several ACEs
+    /// (and an elevated runner's files are owned by Administrators), so
+    /// both are set with `icacls`, the tool an operator would use.
+    #[cfg(windows)]
+    fn owner_only(path: &Path) {
+        let user = format!(
+            "{}\\{}",
+            env::var("USERDOMAIN").unwrap(),
+            env::var("USERNAME").unwrap()
+        );
+        let grant = format!("{user}:F");
+        for arguments in [
+            vec!["/setowner", user.as_str()],
+            vec!["/inheritance:r", "/grant:r", grant.as_str()],
+        ] {
+            let status = std::process::Command::new("icacls")
+                .arg(path)
+                .args(&arguments)
+                .stdout(std::process::Stdio::null())
+                .status()
+                .unwrap();
+            assert!(status.success(), "icacls {arguments:?}: {status}");
+        }
     }
 
     fn vault_run(

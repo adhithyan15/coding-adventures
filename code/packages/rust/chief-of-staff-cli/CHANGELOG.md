@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- The vault tests give their KEK the Windows owner-only policy (`icacls`:
+  the user as owner, a protected DACL with only the user's ACE). They
+  set it only on Unix, so every vault test failed with
+  `InsecurePermissions` the first time this crate's tests ran on
+  windows-2025.
 - A vault reset is now just wiping the storage directory (VLT01 F12). The
   next `vault put` initializes a new vault, with a new vault id, and resets
   the anchor next to the KEK. A new end-to-end test checks two things: the

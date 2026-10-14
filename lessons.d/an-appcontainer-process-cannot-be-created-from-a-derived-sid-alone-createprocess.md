@@ -32,6 +32,12 @@ and `LOCALAPPDATA` for the same reason. Each Win32 prerequisite surfaced
 only after the previous one was fixed, one ~70-minute CI round each.
 Search for prior art on the exact error before the first run, not after.
 
+**Then the launch check.** With creation working, our own pre-resume
+check failed with `ERROR_INVALID_PARAMETER`: `GetTokenInformation(
+TokenIsLessPrivilegedAppContainer)` is not queryable there. LPAC is read
+from the token's `WIN://NOALLAPPPKG` security attribute instead. The
+error carried no label, which cost a guess; every query now names itself.
+
 **Do differently.** A Win32 design claim ("X is enough") is a hypothesis
 until a native run confirms it. Put a new Windows crate in the
 `build-windows-os-suites` gate in its first push, so the first review

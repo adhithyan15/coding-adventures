@@ -91,7 +91,7 @@ mod windows {
     use windows_sys::Win32::Foundation::{CloseHandle, HANDLE};
     use windows_sys::Win32::Security::{
         GetSidSubAuthority, GetSidSubAuthorityCount, GetTokenInformation, TokenIntegrityLevel,
-        TokenIsAppContainer, TokenIsLessPrivilegedAppContainer, TOKEN_MANDATORY_LABEL,
+        TokenIsAppContainer, TOKEN_MANDATORY_LABEL,
     };
     use windows_sys::Win32::Storage::FileSystem::WriteFile;
     use windows_sys::Win32::System::Memory::{
@@ -251,7 +251,14 @@ mod windows {
             value
         };
         let container = query_u32(TokenIsAppContainer);
-        let lpac = query_u32(TokenIsLessPrivilegedAppContainer);
+        // Through the attribute when the information class cannot be read;
+        // an error prints as 0, which the test refuses.
+        // SAFETY: the pseudo-handle is valid for this process's lifetime.
+        let lpac = chief_of_staff_windows_sandbox::is_less_privileged_app_container(unsafe {
+            std::os::windows::io::BorrowedHandle::borrow_raw(token as RawHandle)
+        })
+        .map(u32::from)
+        .unwrap_or(0);
         let mut buffer = vec![0u64; 16];
         let mut written = 0u32;
         // SAFETY: a 128-byte buffer, ample for a TOKEN_MANDATORY_LABEL and
@@ -274,8 +281,6 @@ mod windows {
                 *GetSidSubAuthority(sid, u32::from(count) - 1)
             }
         };
-        // SAFETY: the token opened above, closed once.
-        unsafe { CloseHandle(token) };
         Ok(format!(
             "appcontainer={container} lpac={lpac} integrity={level:#x}"
         ))

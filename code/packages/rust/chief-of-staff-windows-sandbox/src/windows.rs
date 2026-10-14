@@ -15,13 +15,15 @@ use std::ffi::c_void;
 use std::fs::File;
 use std::io;
 use std::os::windows::ffi::OsStringExt;
-use std::os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle, RawHandle};
+use std::os::windows::io::{
+    AsHandle, AsRawHandle, BorrowedHandle, FromRawHandle, OwnedHandle, RawHandle,
+};
 use std::os::windows::process::ExitStatusExt;
 use std::process::ExitStatus;
 use windows_sys::core::PWSTR;
 use windows_sys::Win32::Foundation::{
-    LocalFree, SetHandleInformation, HANDLE, HANDLE_FLAG_INHERIT, INVALID_HANDLE_VALUE, PSID,
-    WAIT_OBJECT_0, WAIT_TIMEOUT,
+    LocalFree, SetHandleInformation, ERROR_INVALID_PARAMETER, HANDLE, HANDLE_FLAG_INHERIT,
+    INVALID_HANDLE_VALUE, PSID, WAIT_OBJECT_0, WAIT_TIMEOUT,
 };
 use windows_sys::Win32::Security::Authorization::ConvertSidToStringSidW;
 use windows_sys::Win32::Security::Authorization::{
@@ -35,9 +37,9 @@ use windows_sys::Win32::Security::Isolation::{
 use windows_sys::Win32::Security::{
     EqualSid, FreeSid, GetSidSubAuthority, GetSidSubAuthorityCount, GetTokenInformation,
     TokenAppContainerSid, TokenCapabilities, TokenIntegrityLevel, TokenIsAppContainer,
-    TokenIsLessPrivilegedAppContainer, ACL, DACL_SECURITY_INFORMATION, NO_INHERITANCE,
-    SECURITY_CAPABILITIES, TOKEN_APPCONTAINER_INFORMATION, TOKEN_GROUPS, TOKEN_INFORMATION_CLASS,
-    TOKEN_MANDATORY_LABEL, TOKEN_QUERY,
+    TokenIsLessPrivilegedAppContainer, TokenSecurityAttributes, ACL, DACL_SECURITY_INFORMATION,
+    NO_INHERITANCE, SECURITY_CAPABILITIES, TOKEN_APPCONTAINER_INFORMATION, TOKEN_GROUPS,
+    TOKEN_INFORMATION_CLASS, TOKEN_MANDATORY_LABEL, TOKEN_QUERY,
 };
 use windows_sys::Win32::Storage::FileSystem::{
     CreateFileW, GetFinalPathNameByHandleW, ReOpenFile, FILE_GENERIC_EXECUTE, FILE_GENERIC_READ,
@@ -376,19 +378,21 @@ impl WindowsConfinement {
         let refuse = |why: String| ConfinementError::Verification(why);
         let token = process_token(process).map_err(|e| refuse(format!("token: {e}")))?;
 
-        if token_u32(&token, TokenIsAppContainer).map_err(|e| refuse(e.to_string()))? != 1 {
+        if token_u32(&token, TokenIsAppContainer)
+            .map_err(|e| refuse(format!("TokenIsAppContainer: {e}")))?
+            != 1
+        {
             return Err(refuse("the token is not an AppContainer's".into()));
         }
-        if token_u32(&token, TokenIsLessPrivilegedAppContainer)
-            .map_err(|e| refuse(e.to_string()))?
-            != 1
+        if !is_less_privileged_app_container(token.as_handle())
+            .map_err(|e| refuse(format!("less privileged: {e}")))?
         {
             return Err(refuse(
                 "the token is not a less privileged AppContainer's".into(),
             ));
         }
-        let container =
-            token_buffer(&token, TokenAppContainerSid).map_err(|e| refuse(e.to_string()))?;
+        let container = token_buffer(&token, TokenAppContainerSid)
+            .map_err(|e| refuse(format!("TokenAppContainerSid: {e}")))?;
         // SAFETY: the buffer holds a TOKEN_APPCONTAINER_INFORMATION, whose
         // SID pointer points into the same buffer; both SIDs are valid.
         let same = unsafe {
@@ -401,14 +405,16 @@ impl WindowsConfinement {
                 "the token's AppContainer is not this agent's".into(),
             ));
         }
-        let groups = token_buffer(&token, TokenCapabilities).map_err(|e| refuse(e.to_string()))?;
+        let groups = token_buffer(&token, TokenCapabilities)
+            .map_err(|e| refuse(format!("TokenCapabilities: {e}")))?;
         // SAFETY: the buffer holds a TOKEN_GROUPS; GroupCount is its first
         // field.
         let count = unsafe { (*(groups.as_ptr() as *const TOKEN_GROUPS)).GroupCount };
         if count != 0 {
             return Err(refuse(format!("the token has {count} capabilities")));
         }
-        let label = token_buffer(&token, TokenIntegrityLevel).map_err(|e| refuse(e.to_string()))?;
+        let label = token_buffer(&token, TokenIntegrityLevel)
+            .map_err(|e| refuse(format!("TokenIntegrityLevel: {e}")))?;
         // SAFETY: the buffer holds a TOKEN_MANDATORY_LABEL whose SID points
         // into it; GetSidSubAuthorityCount and GetSidSubAuthority read that
         // valid SID, and the index is the last sub-authority.
@@ -1074,6 +1080,103 @@ impl Drop for AttributeList {
     }
 }
 
+/// Whether `token` is a less privileged AppContainer's (LPAC): one whose
+/// access checks do not count ALL APPLICATION PACKAGES.
+///
+/// The information class `TokenIsLessPrivilegedAppContainer` answers this
+/// where Windows lets it be queried. windows-2025 refuses it
+/// (`ERROR_INVALID_PARAMETER`, the error for an information class that
+/// cannot be read). What makes a token LPAC is its `WIN://NOALLAPPPKG`
+/// security attribute, which access checks consult, so that attribute is
+/// the answer then. Any other failure is an error, never a guess.
+pub fn is_less_privileged_app_container(token: BorrowedHandle<'_>) -> io::Result<bool> {
+    match token_u32(&token, TokenIsLessPrivilegedAppContainer) {
+        Ok(value) => Ok(value != 0),
+        Err(error) if error.raw_os_error() == Some(ERROR_INVALID_PARAMETER as i32) => {
+            has_security_attribute(&token, NO_ALL_PACKAGES)
+        }
+        Err(error) => Err(error),
+    }
+}
+
+/// The security attribute an LPAC token carries.
+const NO_ALL_PACKAGES: &str = "WIN://NOALLAPPPKG";
+
+/// `TOKEN_SECURITY_ATTRIBUTES_INFORMATION`, as `NtQueryInformationToken`
+/// (and so `GetTokenInformation`) returns it: names are counted UTF-16
+/// strings, and every pointer points into the same buffer.
+///
+/// ```text
+///   information   version u16 | reserved u16 | count u32 | attributes *
+///   attribute     name { length u16 (bytes) | maximum u16 | buffer * }
+///                 value type u16 | reserved u16 | flags u32 | count u32
+///                 values *
+/// ```
+#[repr(C)]
+struct SecurityAttributes {
+    version: u16,
+    reserved: u16,
+    count: u32,
+    attributes: *const SecurityAttribute,
+}
+
+#[repr(C)]
+struct SecurityAttribute {
+    name_length: u16,
+    name_maximum: u16,
+    name: *const u16,
+    value_type: u16,
+    reserved: u16,
+    flags: u32,
+    value_count: u32,
+    values: *const c_void,
+}
+
+/// Whether `token` carries the security attribute `wanted`. Every pointer
+/// is checked to lie, aligned, inside the returned buffer before it is
+/// read, so a malformed answer is an error rather than a wild read.
+fn has_security_attribute(token: &impl AsRawHandle, wanted: &str) -> io::Result<bool> {
+    let malformed = || io::Error::new(io::ErrorKind::InvalidData, "malformed security attributes");
+    let buffer = token_buffer(token, TokenSecurityAttributes)?;
+    let start = buffer.as_ptr() as usize;
+    let end = start + buffer.len() * std::mem::size_of::<u64>();
+    let inside = |address: usize, length: usize, align: usize| {
+        address.is_multiple_of(align)
+            && address >= start
+            && address.checked_add(length).is_some_and(|last| last <= end)
+    };
+    if !inside(start, std::mem::size_of::<SecurityAttributes>(), 8) {
+        return Err(malformed());
+    }
+    // SAFETY: the buffer holds at least one SecurityAttributes, aligned.
+    let information = unsafe { &*(buffer.as_ptr() as *const SecurityAttributes) };
+    let count = information.count as usize;
+    if count == 0 {
+        return Ok(false);
+    }
+    let array = information.attributes as usize;
+    let size = count
+        .checked_mul(std::mem::size_of::<SecurityAttribute>())
+        .ok_or_else(malformed)?;
+    if !inside(array, size, std::mem::align_of::<SecurityAttribute>()) {
+        return Err(malformed());
+    }
+    for index in 0..count {
+        // SAFETY: the whole array lies, aligned, inside the buffer.
+        let attribute = unsafe { &*information.attributes.add(index) };
+        let length = usize::from(attribute.name_length);
+        if !length.is_multiple_of(2) || !inside(attribute.name as usize, length, 2) {
+            return Err(malformed());
+        }
+        // SAFETY: `length` bytes at `name` lie, aligned, inside the buffer.
+        let name = unsafe { std::slice::from_raw_parts(attribute.name, length / 2) };
+        if String::from_utf16_lossy(name).eq_ignore_ascii_case(wanted) {
+            return Ok(true);
+        }
+    }
+    Ok(false)
+}
+
 fn process_token(process: &OwnedHandle) -> io::Result<OwnedHandle> {
     let mut token: HANDLE = 0;
     // SAFETY: the process handle is open; the token is written to `token`.
@@ -1084,7 +1187,7 @@ fn process_token(process: &OwnedHandle) -> io::Result<OwnedHandle> {
     Ok(unsafe { OwnedHandle::from_raw_handle(token as RawHandle) })
 }
 
-fn token_u32(token: &OwnedHandle, class: TOKEN_INFORMATION_CLASS) -> io::Result<u32> {
+fn token_u32(token: &impl AsRawHandle, class: TOKEN_INFORMATION_CLASS) -> io::Result<u32> {
     let mut value = 0u32;
     let mut written = 0u32;
     // SAFETY: the token is open with TOKEN_QUERY; the value is a u32.
@@ -1104,7 +1207,7 @@ fn token_u32(token: &OwnedHandle, class: TOKEN_INFORMATION_CLASS) -> io::Result<
 }
 
 /// A variable-size token information class, in a `u64`-aligned buffer.
-fn token_buffer(token: &OwnedHandle, class: TOKEN_INFORMATION_CLASS) -> io::Result<Vec<u64>> {
+fn token_buffer(token: &impl AsRawHandle, class: TOKEN_INFORMATION_CLASS) -> io::Result<Vec<u64>> {
     let mut needed = 0u32;
     // SAFETY: the documented size query: a null buffer of length 0.
     unsafe { GetTokenInformation(raw(token), class, std::ptr::null_mut(), 0, &mut needed) };

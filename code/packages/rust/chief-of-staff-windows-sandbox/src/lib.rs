@@ -136,7 +136,9 @@ use std::fmt;
 #[cfg(windows)]
 mod windows;
 #[cfg(windows)]
-pub use windows::{ConfinedChild, SpawnRequest, WindowsConfinement};
+pub use windows::{
+    is_less_privileged_app_container, ConfinedChild, SpawnRequest, WindowsConfinement,
+};
 
 /// The variable that carries the values of the handles passed on to the
 /// agent, in order, comma-separated (P2.8b: a broker's keys).
