@@ -2925,23 +2925,42 @@ mod tests {
     // ---- Errors ----
 
     #[test]
-    fn too_many_args_sysv() {
-        // 7 args > 6 GPR slots → BackendRefused.
-        let params: Vec<_> = (0..7)
+    fn bounded_word_parameters_sysv() {
+        // Seven formals used to exceed the register-only limit. Preserve that
+        // count and the exact eight-word boundary as successful compilation;
+        // simulator controls independently execute the positional values.
+        for count in [7, 8] {
+            let params: Vec<_> = (0..count)
+                .map(|i| (format!("p{i}"), "u64".to_string())).collect();
+            let ctx = fn_ctx("supported", &params, "void");
+            assert!(compile_function(&ctx, &[], X86_64Abi::SysV).is_ok());
+        }
+        let params: Vec<_> = (0..9)
             .map(|i| (format!("p{i}"), "u64".to_string()))
             .collect();
         let ctx = fn_ctx("toomany", &params, "void");
+        assert!(matches!(compile_inner(&ctx, &[], X86_64Abi::SysV, &HashMap::new()),
+            Err(BackendError::TooManyParams { abi: "SysV", got: 9, max: 8 })));
         let result = compile_function(&ctx, &[], X86_64Abi::SysV);
         assert!(result.is_err());
     }
 
     #[test]
-    fn too_many_args_msx64() {
-        // 5 args > 4 GPR slots → BackendRefused on Windows.
-        let params: Vec<_> = (0..5)
+    fn bounded_word_parameters_msx64() {
+        // Five formals now use the first stack word after Windows shadow
+        // space. Eight succeeds too; nine remains an exact, explicit refusal.
+        for count in [5, 8] {
+            let params: Vec<_> = (0..count)
+                .map(|i| (format!("p{i}"), "u64".to_string())).collect();
+            let ctx = fn_ctx("supported", &params, "void");
+            assert!(compile_function(&ctx, &[], X86_64Abi::MsX64).is_ok());
+        }
+        let params: Vec<_> = (0..9)
             .map(|i| (format!("p{i}"), "u64".to_string()))
             .collect();
         let ctx = fn_ctx("toomany", &params, "void");
+        assert!(matches!(compile_inner(&ctx, &[], X86_64Abi::MsX64, &HashMap::new()),
+            Err(BackendError::TooManyParams { abi: "MsX64", got: 9, max: 8 })));
         let result = compile_function(&ctx, &[], X86_64Abi::MsX64);
         assert!(result.is_err());
     }
