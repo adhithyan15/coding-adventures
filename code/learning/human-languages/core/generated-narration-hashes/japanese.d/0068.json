@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 68,
-  "sourceHash": "fnv1a64:7ab5b865e4abc37d",
+  "sourceHash": "fnv1a64:848b0f352d81d812",
   "lessonIds": [
     "JA-C68-oka",
     "JA-C68-tani",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch68.txt",
   "json": "japanese/narration/ch68.json",
-  "textHash": "fnv1a64:928d061994383e1c",
-  "jsonHash": "fnv1a64:af5188048cc2560c",
+  "textHash": "fnv1a64:fa66140fcb3c279b",
+  "jsonHash": "fnv1a64:f32ae57319255a08",
   "findings": []
 }

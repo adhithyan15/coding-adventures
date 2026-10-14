@@ -14,7 +14,8 @@ romanization: "yotei"
 concept_tag: JA-WANT93-YOTEI
 prerequisites: [JA-C93-chuumon, JA-C93-kouho]
 sounds: []
-roots: []
+roots: [middle-chinese-yoh, middle-chinese-dengh]
+etymology_hook: "yotei: Sino-Japanese 予 'beforehand' + 定 'decide', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C93-kouho]
 <!-- hl-knowledge: introduces=[JA-LEX-C93-WANT93-05]; assesses=[] -->
 
 **よてい** — *yotei* — "a plan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**よてい** (*yotei*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *yo*, "beforehand" (Middle Chinese *yoH*) and *tei*, "decide, fix" (*dengH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

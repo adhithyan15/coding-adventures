@@ -11,8 +11,8 @@ gloss: back
 concept_tag: JA-BODY-BACK
 prerequisites: [JA-C12-onaka]
 sounds: [mora]
-roots: []
-etymology_hook: Back differs from belly by its opening sign, keeping the contrast small and readable.
+roots: [japanese-se-back, japanese-naka-middle]
+etymology_hook: "senaka: native compound of se 'back' + naka 'middle' (背中)"
 duration:
   max_seconds: 205
 requires:
@@ -46,6 +46,11 @@ reviews_of: [JA-C12-onaka, JA-W01-ni, JA-C01-koohii, JA-W11-small-tsu]
 > **せなか** — *se-na-ka* — back
 
 Only the opening changes from **おなか**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**せなか** (*senaka*) is a native compound: *se*, "back", and *naka*, "middle", so "the middle of the back" (JMdict writes it with the characters for both, as kun'yomi). It is inherited rather than borrowed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SENAKA] -->

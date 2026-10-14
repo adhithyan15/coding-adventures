@@ -11,8 +11,8 @@ gloss: eight things — and the last of the count that a borrowed number could b
 concept_tag: JA-NATIVE-EIGHT
 prerequisites: [JA-W17-ya, JA-C15-hachi, JA-W10-yu]
 sounds: [mora]
-roots: []
-etymology_hook: Eight is the plain case in both counts: one word each, and nothing shared between them.
+roots: [japanese-ya-eight, japanese-tsu-counter]
+etymology_hook: "yattsu: native ya 'eight' + native counter -tsu"
 duration:
   max_seconds: 180
 requires:
@@ -54,6 +54,11 @@ what the ordinary case looks like once the odd ones have been seen.
 
 Say the run: *hitotsu, futatsu, mittsu, yottsu, itsutsu, muttsu, nanatsu,
 yattsu.* Eight of ten, and two signs left to buy.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**やっつ** (*yattsu*) is native: *ya*, the inherited word for "eight", with the counter *-tsu* (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-YATTSU, JA-LEX-HACHI, JA-LEX-NANATSU] -->

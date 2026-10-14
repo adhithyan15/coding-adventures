@@ -14,7 +14,8 @@ romanization: "yuugata"
 concept_tag: JA-TIME54-YUUGATA
 prerequisites: [JA-C53-samui, JA-C53-asa]
 sounds: []
-roots: []
+roots: [japanese-yuu-evening, japanese-kata-direction]
+etymology_hook: "yūgata: native compound of yū 'evening' + kata 'side, time' (夕方)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C53-asa]
 <!-- hl-knowledge: introduces=[JA-LEX-C54-TIME54-01]; assesses=[] -->
 
 **ゆうがた** — *yuugata* — "evening".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ゆうがた** (*yuugata*) is a native compound, inherited rather than borrowed: *yū*, "evening", and *kata*, "side; time", voiced to *gata*, both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

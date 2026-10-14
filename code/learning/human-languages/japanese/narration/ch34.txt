@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a peach, then the Japanese for a pear.
 You'll want to know: すいか.
 すいか — suika — "a watermelon".
 
+The word, taken apart.
+すいか (suika) is Sino-Japanese, borrowed from Chinese, "western melon": sui, "west", and ka, "melon" (Middle Chinese kwae). Sui is a later Chinese reading of the character for west, not the usual sei (JMdict; Unihan, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a pear, then the Japanese for a waterme
 
 You'll want to know: だいこん.
 だいこん — daikon — "a white radish".
+
+The word, taken apart.
+だいこん (daikon) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dai, "big" (Middle Chinese dajH) and kon, "root" (kon) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a watermelon, then the Japanese for a w
 You'll want to know: にんじん.
 にんじん — ninjin — "a carrot".
 
+The word, taken apart.
+にんじん (ninjin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nin, "person" (Middle Chinese nyin) and jin, "ginseng" (srim) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict lists ginseng as a second sense: the name first belonged to that root and later passed to the carrot.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a white radish, then the Japanese for a
 You'll want to know: とうふ.
 とうふ — toufu — "tofu".
 
+The word, taken apart.
+とうふ (toufu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tō, "bean" (Middle Chinese duwH) and fu, "rot, curdle" (bjuX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a carrot, then the Japanese for tofu.
 
 You'll want to know: しお.
 しお — shio — "salt".
+
+The word, taken apart.
+しお (shio) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

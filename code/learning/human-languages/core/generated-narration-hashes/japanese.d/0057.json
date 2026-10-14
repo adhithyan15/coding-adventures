@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 57,
-  "sourceHash": "fnv1a64:dae741fd7afe84ab",
+  "sourceHash": "fnv1a64:dc76f01ab8d8b691",
   "lessonIds": [
     "JA-C57-chikai",
     "JA-C57-tooi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch57.txt",
   "json": "japanese/narration/ch57.json",
-  "textHash": "fnv1a64:f180d3658c77283c",
-  "jsonHash": "fnv1a64:9b8585713cc4e675",
+  "textHash": "fnv1a64:1ed3147f12d579a0",
+  "jsonHash": "fnv1a64:5e4aca2b381e5374",
   "findings": []
 }

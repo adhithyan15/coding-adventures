@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 45,
-  "sourceHash": "fnv1a64:8d77c63ea337f2a9",
+  "sourceHash": "fnv1a64:72c51eb30ac22ed5",
   "lessonIds": [
     "JA-C45-neko",
     "JA-C45-uma",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch45.txt",
   "json": "japanese/narration/ch45.json",
-  "textHash": "fnv1a64:36aa3eac1a6e465e",
-  "jsonHash": "fnv1a64:265c99a622b65691",
+  "textHash": "fnv1a64:4a73fc3c34d77fa6",
+  "jsonHash": "fnv1a64:d6458f6198c4b781",
   "findings": []
 }

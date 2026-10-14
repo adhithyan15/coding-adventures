@@ -14,7 +14,8 @@ romanization: "ume"
 concept_tag: JA-FOOD36-UME
 prerequisites: [JA-C35-okashi, JA-C36-nori]
 sounds: []
-roots: []
+roots: [middle-chinese-mwoj]
+etymology_hook: "ume: kun'yomi of 梅, usually explained as a very early loan from Chinese (MC mwoj); not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C36-nori]
 <!-- hl-knowledge: introduces=[JA-LEX-C36-FOOD36-02]; assesses=[] -->
 
 **うめ** — *ume* — "a Japanese plum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**うめ** (*ume*) is the kun'yomi of the character for the plum, and is usually explained as a very early loan from Chinese (Middle Chinese *mwoj*), separate from the later on'yomi *bai*. Whether it is a loan or native is not settled (KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

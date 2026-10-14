@@ -14,7 +14,8 @@ romanization: "shikaku"
 concept_tag: JA-CAN96-SHIKAKU
 prerequisites: [JA-C95-mochimono, JA-C95-okanemochi]
 sounds: []
-roots: []
+roots: [middle-chinese-tsij, middle-chinese-kaek]
+etymology_hook: "shikaku: Sino-Japanese 資 'property' + 格 'pattern', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C95-okanemochi]
 <!-- hl-knowledge: introduces=[JA-LEX-C96-CAN96-01]; assesses=[] -->
 
 **しかく** — *shikaku* — "a qualification".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しかく** (*shikaku*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shi*, "property, capital" (Middle Chinese *tsij*) and *kaku*, "pattern, standard" (*kaek*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "raishū"
 concept_tag: JA-FUT141-RAISHUU
 prerequisites: [JA-C140-owarimashita, JA-C140-senshuu, JA-C137-tenpura, JA-C132-soto]
 sounds: []
-roots: []
+roots: [middle-chinese-loj]
+etymology_hook: "raishū: Sino-Japanese 来 'come' + 週 'week', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -54,6 +55,11 @@ what will happen too, and a time word places it:
 
 > **らいしゅう はたらきます。** — *raishū hatarakimasu* — "I will work next
 > week."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**らいしゅう** (*raishū*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rai*, "come, coming" (Middle Chinese *loj*) and *shū*, "week" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C141-RAISHUU] -->

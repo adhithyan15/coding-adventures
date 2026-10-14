@@ -14,7 +14,8 @@ romanization: "hima"
 concept_tag: JA-QUAL120-HIMA
 prerequisites: [JA-C120-katai, JA-C120-tadashii]
 sounds: []
-roots: []
+roots: [japanese-hima]
+etymology_hook: "hima: native Japanese, inherited, not borrowed; kanji 暇 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C120-tadashii]
 <!-- hl-knowledge: introduces=[JA-LEX-C120-QUAL120-03]; assesses=[] -->
 
 **ひま** — *hima* — "free time; not busy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひま** (*hima*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hachimitsu"
 concept_tag: JA-THINGS114-HACHIMITSU
 prerequisites: [JA-C114-ninniku, JA-C114-anko]
 sounds: []
-roots: []
+roots: [japanese-hachi-bee, middle-chinese-mjit]
+etymology_hook: "hachimitsu: native hachi 'bee' + Sino-Japanese mitsu 蜜 'honey'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C114-anko]
 <!-- hl-knowledge: introduces=[JA-LEX-C114-THINGS114-04]; assesses=[] -->
 
 **はちみつ** — *hachimitsu* — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はちみつ** (*hachimitsu*) mixes the two layers: native *hachi*, "bee", read as a kun'yomi, and *mitsu*, "honey", the on'yomi of its second character, borrowed from Chinese (Middle Chinese *mjit*; JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

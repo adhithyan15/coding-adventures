@@ -14,7 +14,8 @@ romanization: "kousaten"
 concept_tag: JA-LOC80-KOUSATEN
 prerequisites: [JA-C79-kaidan, JA-C79-rouka]
 sounds: []
-roots: []
+roots: [middle-chinese-kaew-cross, middle-chinese-tsrhae, middle-chinese-temx]
+etymology_hook: "kousaten: Sino-Japanese 交 'mix' + 差 'differ' + 点 'dot', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C79-rouka]
 <!-- hl-knowledge: introduces=[JA-LEX-C80-LOC80-01]; assesses=[] -->
 
 **こうさてん** — *kousaten* — "a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こうさてん** (*kousaten*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kō*, "mix, cross" (Middle Chinese *kaew*), *sa*, "differ" (*tsrhae*) and *ten*, "dot, point" (*temX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict also gives an older spelling with a character for "fork" in place of the second.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

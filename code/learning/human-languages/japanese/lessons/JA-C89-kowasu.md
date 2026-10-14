@@ -14,7 +14,8 @@ romanization: "kowasu"
 concept_tag: JA-VERB-KOWASU
 prerequisites: [JA-C88-nokosu, JA-C88-taosu]
 sounds: []
-roots: []
+roots: [japanese-kowasu]
+etymology_hook: "kowasu: native Japanese, inherited, not borrowed; kanji 壊す attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C88-taosu]
 <!-- hl-knowledge: introduces=[JA-LEX-C89-ACT89-01]; assesses=[] -->
 
 **こわす** — *kowasu* — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こわす** (*kowasu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

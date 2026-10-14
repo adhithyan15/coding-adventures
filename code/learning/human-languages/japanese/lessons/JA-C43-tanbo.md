@@ -14,7 +14,8 @@ romanization: "tanbo"
 concept_tag: JA-NATURE43-TANBO
 prerequisites: [JA-C42-ishi, JA-C43-suna]
 sounds: []
-roots: []
+roots: [japanese-ta-field]
+etymology_hook: "tanbo: native ta 'rice field' + an ending of unsettled origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C43-suna]
 <!-- hl-knowledge: introduces=[JA-LEX-C43-NATURE43-02]; assesses=[] -->
 
 **たんぼ** — *tanbo* — "a rice field".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たんぼ** (*tanbo*) is native *ta*, "rice field", with an ending whose origin is not settled. JMdict marks the older spelling with "garden" as ateji. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

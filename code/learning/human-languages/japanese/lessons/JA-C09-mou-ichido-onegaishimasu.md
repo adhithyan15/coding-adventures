@@ -11,8 +11,8 @@ gloss: one more time, please
 concept_tag: JA-REPAIR-REPEAT-PLEASE
 prerequisites: [JA-C09-onegaishimasu]
 sounds: [mora, long-o, dakuten]
-roots: []
-etymology_hook: Three independently learned pieces now become one repair turn; the comma marks a small breath, not a new grammatical burden.
+roots: [japanese-mou, middle-chinese-jit, middle-chinese-duh, japanese-negau]
+etymology_hook: "mō (native) + ichido (Sino-Japanese 一度 'one time') + onegai shimasu (native 'I request')"
 duration:
   max_seconds: 205
 requires:
@@ -50,6 +50,11 @@ Nothing new is hidden inside the line. **もう** supplies “again,” **いち
 supplies “one time,” and **おねがいします** makes the request polite. The first
 two words are now readable; the final expression remains supported exposure
 until its own longer script runway is complete.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**もういちど、おねがいします** (*mō ichido, onegai shimasu*) puts three words you own side by side. *Mō*, "more", is native; *ichido*, "one time", is built from two characters borrowed from Chinese, *ichi*, "one", and *do*, "a time"; *onegai shimasu*, "I request it", is native again (JMdict).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU, JA-LEX-SUMIMASEN, JA-LEX-WAKARIMASEN] -->

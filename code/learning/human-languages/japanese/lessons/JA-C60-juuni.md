@@ -14,7 +14,8 @@ romanization: "juuni"
 concept_tag: JA-NUMBERS60-JUUNI
 prerequisites: [JA-C59-sen, JA-C60-man]
 sounds: []
-roots: []
+roots: [middle-chinese-dzyip, middle-chinese-nyijh]
+etymology_hook: "juuni: Sino-Japanese 十 'ten' + 二 'two', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C60-man]
 <!-- hl-knowledge: introduces=[JA-LEX-C60-NUMBERS60-02]; assesses=[] -->
 
 **じゅうに** — *juuni* — "twelve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**じゅうに** (*juuni*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *jū*, "ten" (Middle Chinese *dzyip*) and *ni*, "two" (*nyijH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

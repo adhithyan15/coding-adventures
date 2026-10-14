@@ -14,7 +14,8 @@ romanization: "nouka"
 concept_tag: JA-THINGS112-NOUKA
 prerequisites: [JA-C111-douro, JA-C111-hodou]
 sounds: []
-roots: []
+roots: [middle-chinese-nowng, middle-chinese-kae]
+etymology_hook: "nouka: Sino-Japanese 農 'agriculture' + 家 'house', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C111-hodou]
 <!-- hl-knowledge: introduces=[JA-LEX-C112-THINGS112-01]; assesses=[] -->
 
 **のうか** — *nouka* — "a farmhouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**のうか** (*nouka*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *nō*, "agriculture" (Middle Chinese *nowng*) and *ka*, "house, family" (*kae*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

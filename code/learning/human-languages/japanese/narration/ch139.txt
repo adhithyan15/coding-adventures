@@ -23,6 +23,9 @@ You'll want to know: ですか.
 A verb takes か the same way: ます becomes ますか.
 あした はたらきますか。 — ashita hatarakimasu ka — "Are you working tomorrow?"
 
+The word, taken apart.
+ですか (desu ka) is desu, the polite "is" (JMdict), with ka, the native question particle. Where desu comes from is disputed; it is usually traced to a shortening of de arimasu or de gozarimasu.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: desu ka]
@@ -55,6 +58,9 @@ Four recalls before the new word.
 You'll want to know: ちがいます.
 ちがいます — chigaimasu — "it is different", and so, as an answer, "no, that is not right". It is the polite form of the verb ちがう, chigau, "to differ". When someone asks whether a thing is so and it is not, this is the everyday answer.
 これは おちゃですか。 — kore wa ocha desu ka — "Is this tea?" いいえ、ちがいます。みずです。 — iie, chigaimasu. mizu desu — "No, it isn't. It is water."
+
+The word, taken apart.
+ちがいます (chigaimasu) is native chigau, "to differ", with the polite ending -masu. The verb is inherited rather than borrowed; JMdict lists tagau, "to differ", under the same kanji.
 
 Guided Practice.
 [pause 1 second]
@@ -90,6 +96,9 @@ You'll want to know: じゃない.
 みずじゃない。 — mizu ja nai — "It isn't water."
 Verbs say not with their ending. In the polite form, ます becomes ません, masen:
 はたらきます becomes はたらきません — hatarakimasen — "I don't work" ねます becomes ねません — nemasen — "I don't go to bed".
+
+The word, taken apart.
+じゃない (ja nai) is native: ja, which JMdict explains as coming from de wa, and nai, "not". It is inherited rather than borrowed.
 
 Guided Practice.
 [pause 1 second]
@@ -127,6 +136,9 @@ You'll want to know: なにも.
 なにも のみません。 — nani mo nomimasen — "I don't drink anything."
 のむ, nomu, "to drink", gives のみます nomimasu and then のみません nomimasen. With ます instead of ません the sentence does not work: なにも (nani mo) needs the not.
 
+The word, taken apart.
+なにも (nani mo) is native: nani, "what", with mo, "even, also" (JMdict). It is inherited rather than borrowed.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: nani mo]
@@ -160,6 +172,9 @@ You'll want to know: だれも.
 だれも — dare mo — "nobody", "not anyone". Like なにも (nani mo), it needs a negative verb.
 ここには だれも いません。 — koko ni wa dare mo imasen — "There is nobody here."
 いません, imasen, is the negative of います, imasu, "someone is there", the verb Japanese uses for people and animals.
+
+The word, taken apart.
+だれも (dare mo) is native: dare, "who", with mo, "even, also" (JMdict). It is inherited rather than borrowed.
 
 Guided Practice.
 [pause 1 second]
@@ -197,6 +212,9 @@ You'll want to know: どこにも.
 あしたは どこにも いきません。 — ashita wa doko ni mo ikimasen — "I'm not going anywhere tomorrow."
 Now you can ask and answer:
 あした はたらきますか。 — "Are you working tomorrow?" いいえ、はたらきません。どこにも (doko ni mo) いきません。 — "No, I'm not. I'm not going anywhere."
+
+The word, taken apart.
+どこにも (doko ni mo) is native: doko, "where", the particle ni, "at", and mo, "even, also" (JMdict). It is inherited rather than borrowed.
 
 Guided Practice.
 [pause 1 second]

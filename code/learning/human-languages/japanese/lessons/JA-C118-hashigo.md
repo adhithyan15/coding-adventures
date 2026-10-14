@@ -14,7 +14,8 @@ romanization: "hashigo"
 concept_tag: JA-THINGS118-HASHIGO
 prerequisites: [JA-C117-suitou, JA-C118-nawa]
 sounds: []
-roots: []
+roots: [japanese-hashigo]
+etymology_hook: "hashigo: native; usually hashi 'ladder, bridge' + ko, voiced"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C118-nawa]
 <!-- hl-knowledge: introduces=[JA-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **はしご** — *hashigo* — "a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はしご** (*hashigo*) is a native word, inherited rather than borrowed, usually explained as *hashi*, an old word for a ladder or bridge, with *ko* voiced. JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

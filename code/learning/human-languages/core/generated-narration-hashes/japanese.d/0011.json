@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 11,
-  "sourceHash": "fnv1a64:d4608d50d4a55a74",
+  "sourceHash": "fnv1a64:6a1aba4b190aec8e",
   "lessonIds": [
     "JA-W11-small-tsu",
     "JA-W11-te",
@@ -20,7 +20,7 @@
   "drivablePrefix": 0,
   "text": "japanese/narration/ch11.txt",
   "json": "japanese/narration/ch11.json",
-  "textHash": "fnv1a64:f7d389c16057310b",
-  "jsonHash": "fnv1a64:ae58e6bfdb7c5df1",
+  "textHash": "fnv1a64:1fe623d973becef0",
+  "jsonHash": "fnv1a64:67fe1d7f695724bc",
   "findings": []
 }

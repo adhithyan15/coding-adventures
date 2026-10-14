@@ -4,7 +4,7 @@
   "chapter": 140,
   "title": "Last Week, Last Month, Last Year: the Past",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9e8b499b637adf99",
+  "sourceHash": "fnv1a64:3e7f039f3043d032",
   "lessons": [
     {
       "id": "JA-C140-senshuu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f3b77ca10eae88e",
+      "sourceHash": "fnv1a64:ff6a2385c33871e5",
       "notice": null,
       "blocks": [
         {
@@ -100,6 +100,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せんしゅう (senshū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"before, previous\" (Middle Chinese sen) and shū, \"week\" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -139,7 +150,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -191,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:187a700d34476479",
+      "sourceHash": "fnv1a64:0dc52ac31e8a564b",
       "notice": null,
       "blocks": [
         {
@@ -268,6 +279,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せんげつ (sengetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"before, previous\" (Middle Chinese sen) and getsu, \"moon, month\" (ngjwot) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -307,7 +329,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -357,7 +379,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f731da6ee82a2f0f",
+      "sourceHash": "fnv1a64:3bef0bce0c0ace40",
       "notice": null,
       "blocks": [
         {
@@ -439,6 +461,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きょねん (kyonen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kyo, \"go away, past\" (Middle Chinese khjoH) and nen, \"year\" (nen) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -478,7 +511,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -528,7 +561,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a8870ca669a3270",
+      "sourceHash": "fnv1a64:95eda6ea2b829ddf",
       "notice": null,
       "blocks": [
         {
@@ -601,6 +634,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さっき (sakki) is native, usually explained as saki, \"earlier, ahead\", with the k doubled; JMdict writes both with the same character. It is inherited rather than borrowed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -640,7 +684,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -690,7 +734,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52930dacaa0a3e73",
+      "sourceHash": "fnv1a64:9abc4ba392ab2988",
       "notice": null,
       "blocks": [
         {
@@ -771,6 +815,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おわりました (owarimashita) is native owaru, \"to end\", with -mashita, the past of the polite ending -masu. The verb is inherited rather than borrowed (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -810,7 +865,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 28,
-  "sourceHash": "fnv1a64:5d6e8704f7e76dbc",
+  "sourceHash": "fnv1a64:abb7b12fd1d8d987",
   "lessonIds": [
     "JA-C28-tsukau",
     "JA-C28-utau",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch28.txt",
   "json": "japanese/narration/ch28.json",
-  "textHash": "fnv1a64:d8b0280b63e43957",
-  "jsonHash": "fnv1a64:1e6ae4fc761e0e38",
+  "textHash": "fnv1a64:3b5e61641afcb894",
+  "jsonHash": "fnv1a64:f75e60b1b9735a3e",
   "findings": []
 }

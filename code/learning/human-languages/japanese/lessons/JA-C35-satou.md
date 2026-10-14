@@ -14,7 +14,8 @@ romanization: "satou"
 concept_tag: JA-FOOD35-SATOU
 prerequisites: [JA-C34-toufu, JA-C34-shio]
 sounds: []
-roots: []
+roots: [middle-chinese-srae, middle-chinese-dang]
+etymology_hook: "satou: Sino-Japanese 砂 'sand' + 糖 'sugar', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C34-shio]
 <!-- hl-knowledge: introduces=[JA-LEX-C35-FOOD35-01]; assesses=[] -->
 
 **さとう** — *satou* — "sugar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さとう** (*satou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sa*, "sand" (Middle Chinese *srae*) and *tō*, "sugar" (*dang*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

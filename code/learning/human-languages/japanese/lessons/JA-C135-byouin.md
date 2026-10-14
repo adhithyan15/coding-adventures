@@ -14,8 +14,8 @@ romanization: "byōin"
 concept_tag: JA-ANCHOR-BYOUIN
 prerequisites: [JA-R134-phone-and-train, JA-W131-small-yo, JA-W03-u, JA-W01-i, JA-W01-n, JA-W134-be, JA-W133-ke, JA-C123-kuwashii]
 sounds: [mora]
-roots: []
-etymology_hook: Byōin is the word for a hospital; its first sign is ひ with the voicing mark, a sign the book has not yet written.
+roots: [middle-chinese-bjaengh, middle-chinese-hjwenh]
+etymology_hook: "byōin: Sino-Japanese 病 'illness' + 院 'courtyard', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -55,6 +55,11 @@ sign.
 
 Keep the **ょ** small. With a full-size **よ** the word would be *biyōin*, a
 hair salon.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**びょういん** (*byōin*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *byō*, "illness" (Middle Chinese *bjaengH*) and *in*, "courtyard; institution" (*hjwenH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-BYOUIN, JA-SCRIPT-SMALL-YO-01, JA-SCRIPT-U-01, JA-SCRIPT-I-01, JA-SCRIPT-N-01] -->

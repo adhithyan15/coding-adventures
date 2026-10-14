@@ -14,7 +14,8 @@ romanization: "mainichi"
 concept_tag: JA-TIME54-MAINICHI
 prerequisites: [JA-C54-ashita, JA-C54-ima]
 sounds: []
-roots: []
+roots: [middle-chinese-mwojx, middle-chinese-nyit]
+etymology_hook: "mainichi: Sino-Japanese 毎 'every' + 日 'day', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C54-ima]
 <!-- hl-knowledge: introduces=[JA-LEX-C54-TIME54-04]; assesses=[] -->
 
 **まいにち** — *mainichi* — "every day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まいにち** (*mainichi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *mai*, "every" (Middle Chinese *mwojX*) and *nichi*, "day" (*nyit*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "futon"
 concept_tag: JA-HOME38-FUTON
 prerequisites: [JA-C38-yuka, JA-C38-kagami]
 sounds: []
-roots: []
+roots: [middle-chinese-bu, middle-chinese-dwan]
+etymology_hook: "futon: usually traced to Chinese 蒲團 'rush cushion'; the spelling 布団 is ateji (JMdict)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C38-kagami]
 <!-- hl-knowledge: introduces=[JA-LEX-C38-HOME38-03]; assesses=[] -->
 
 **ふとん** — *futon* — "a futon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふとん** (*futon*) is usually traced to a Chinese word for a round cushion woven of rushes: *fu*, "a kind of rush" (Middle Chinese *bu*), and *ton*, "a round mass" (Middle Chinese *dwan*), *ton* being a later Chinese reading. JMdict marks the common spelling with "cloth" as ateji.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

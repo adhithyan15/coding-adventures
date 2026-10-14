@@ -12,6 +12,9 @@ Before the new one: say the Japanese for clothes, then the Japanese for shoes.
 You'll want to know: ぼうし.
 ぼうし — boushi — "a hat".
 
+The word, taken apart.
+ぼうし (boushi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bō, "hat" (Middle Chinese mawH) and shi, "child; a noun ending" (tsiX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for shoes, then the Japanese for a hat.
 
 You'll want to know: くつした.
 くつした — kutsushita — "socks".
+
+The word, taken apart.
+くつした (kutsushita) is a native compound, inherited rather than borrowed: kutsu, "shoe", and shita, "under", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a hat, then the Japanese for socks.
 You'll want to know: めがね.
 めがね — megane — "glasses".
 
+The word, taken apart.
+めがね (megane) is native, inherited rather than borrowed, usually taken apart as me, "eye", and kane, "metal", voiced to gane. JMdict writes it with characters for "eye" and "mirror", read as a whole, and marks it as usually written in kana.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for socks, then the Japanese for glasses.
 You'll want to know: さんじゅう.
 さんじゅう — sanjuu — "thirty".
 
+The word, taken apart.
+さんじゅう (sanjuu) (sanjū) is Sino-Japanese: san, "three" (Middle Chinese sam), and jū, "ten" (Middle Chinese dzyip), both on'yomi borrowed from Chinese.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for glasses, then the Japanese for thirty.
 
 You'll want to know: せん.
 せん — sen — "a thousand".
+
+The word, taken apart.
+せん (sen) is Sino-Japanese (kango): the on'yomi of a character meaning "thousand", a reading borrowed from Chinese (Middle Chinese tshen; Unihan, KANJIDIC2, Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.

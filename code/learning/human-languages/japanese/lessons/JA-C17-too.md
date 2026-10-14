@@ -11,8 +11,8 @@ gloss: ten things — the one word in the count that drops the counting piece
 concept_tag: JA-NATIVE-TEN
 prerequisites: [JA-C17-kokonotsu, JA-C15-juu, JA-W10-o]
 sounds: [mora]
-roots: []
-etymology_hook: Nine words in this count end in tsu. The tenth does not, and that is where the count stops.
+roots: [japanese-to-ten]
+etymology_hook: "tō: native, the kun'yomi of 十 'ten'; inherited, with no -tsu"
 duration:
   max_seconds: 190
 requires:
@@ -54,6 +54,11 @@ where the native series ends. There is no *eleven things* in it.
 Above ten, Japanese has only the borrowed count and a counter word, which is
 exactly the machinery the next chapter is for. **じゅう** goes on to
 ninety-nine; **とお** goes nowhere.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**とお** (*tō*) is native: the inherited word for "ten", the kun'yomi of the character for ten, with no *-tsu* on the end (KANJIDIC2). Its older origin is not settled.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TOO, JA-LEX-JUU, JA-GRAMMAR-JUU-COMPOUND, JA-LEX-KOKONOTSU] -->

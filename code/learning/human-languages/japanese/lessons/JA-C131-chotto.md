@@ -14,7 +14,8 @@ romanization: "chotto"
 concept_tag: JA-ANCHOR-CHOTTO
 prerequisites: [JA-C131-isha, JA-W11-small-tsu, JA-W03-to, JA-C116-hamachi, JA-C128-kashikoi, JA-C130-aimai]
 sounds: [mora, geminate]
-roots: []
+roots: [japanese-chotto]
+etymology_hook: "chotto: native; usually written in kana; the kanji 一寸 are ateji (JMdict)"
 duration:
   max_seconds: 200
 requires:
@@ -53,6 +54,11 @@ Three beats: *cho*, a held silence, *to*. The silence is the small **っ** you
 already write. The first beat is **ち** with a small sign after it that you do not
 write yet; it joins forward, the way **ゃ** does, and the next lesson
 writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ちょっと** (*chotto*) is a native word, inherited rather than borrowed, usually written in kana; JMdict marks its kanji, "one" and an inch-like measure, as ateji. Its older origin is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-CHOTTO, JA-SCRIPT-SMALL-TSU-01, JA-SCRIPT-CHI-01] -->

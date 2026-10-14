@@ -14,7 +14,8 @@ romanization: "deshō"
 concept_tag: JA-FUT141-DESHOU
 prerequisites: [JA-C141-tsumori, JA-C140-owarimashita, JA-C138-okimasu, JA-C132-kuruma]
 sounds: []
-roots: []
+roots: [japanese-desu]
+etymology_hook: "deshō: desu in its form for what is likely; desu's origin is disputed"
 duration:
   max_seconds: 200
 requires:
@@ -56,6 +57,11 @@ way a weather forecast does.
 Now you can talk about what comes next: what will happen (**ます** with a
 time word), what you mean to do (**つもり**), and what will probably
 happen (**でしょう**).
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**でしょう** (*deshō*) is *desu*, the polite "is", in the form for what is likely (JMdict). Where *desu* comes from is disputed; it is usually traced to a shortening of *de arimasu* or *de gozarimasu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C141-DESHOU, JA-LEX-C141-RAISHUU, JA-LEX-C141-RAIGETSU, JA-LEX-C141-RAINEN, JA-LEX-C141-TSUMORI] -->

@@ -14,7 +14,8 @@ romanization: "sakana"
 concept_tag: JA-FOOD32-SAKANA
 prerequisites: [JA-C31-ugoku, JA-C31-gohan]
 sounds: []
-roots: []
+roots: [japanese-sakana]
+etymology_hook: "sakana: native Japanese, inherited, not borrowed; kanji 魚 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C31-gohan]
 <!-- hl-knowledge: introduces=[JA-LEX-C32-FOOD32-01]; assesses=[] -->
 
 **さかな** — *sakana* — "a fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さかな** (*sakana*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

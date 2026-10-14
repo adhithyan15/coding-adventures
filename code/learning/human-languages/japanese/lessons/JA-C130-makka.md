@@ -14,7 +14,8 @@ romanization: "makka"
 concept_tag: JA-QUAL130-MAKKA
 prerequisites: [JA-C130-masshiro, JA-C130-makkuro]
 sounds: []
-roots: []
+roots: [japanese-ma-true, japanese-akai]
+etymology_hook: "makka: native ma 'true, very' + aka 'red'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C130-makkuro]
 <!-- hl-knowledge: introduces=[JA-LEX-C130-QUAL130-03]; assesses=[] -->
 
 **まっか** — *makka* — "bright red".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まっか** (*makka*) is native: *ma*, "true, very", with *aka*, "red", joined with a held *k* (JMdict, KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Japanese for every day, then the Japanese for a year
 You'll want to know: ふん.
 ふん — fun — "a minute".
 
+The word, taken apart.
+ふん (fun) is Sino-Japanese (kango): the on'yomi of a character meaning "divide; a minute", a reading borrowed from Chinese (Middle Chinese pjun; Unihan, KANJIDIC2, Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a year; age, then the Japanese for a mi
 
 You'll want to know: なつ.
 なつ — natsu — "summer".
+
+The word, taken apart.
+なつ (natsu) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a minute, then the Japanese for summer.
 You'll want to know: ふゆ.
 ふゆ — fuyu — "winter".
 
+The word, taken apart.
+ふゆ (fuyu) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for summer, then the Japanese for winter.
 You'll want to know: いつも.
 いつも — itsumo — "always".
 
+The word, taken apart.
+いつも (itsumo) is native: itsu, "when", with mo, "also, even", so "at any time" (JMdict). It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for winter, then the Japanese for always.
 
 You'll want to know: まだ.
 まだ — mada — "still, not yet".
+
+The word, taken apart.
+まだ (mada) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Pencil and Ticket: Pa, Pi, Pu and Pe",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a9d77bd0ebcff888",
+  "sourceHash": "fnv1a64:0ef57ab78753896d",
   "lessons": [
     {
       "id": "JA-C137-ippai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6000ccf78b1db587",
+      "sourceHash": "fnv1a64:537a86629f35c608",
       "notice": null,
       "blocks": [
         {
@@ -83,6 +83,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いっぱい (ippai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit) and hai, \"cup\" (pwoj) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Ichi and hai join as ippai: one cupful."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,7 +133,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -332,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:521ccde804c35ab5",
+      "sourceHash": "fnv1a64:132b67fa0ea73bd6",
       "notice": null,
       "blocks": [
         {
@@ -405,6 +416,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しんぱい (shinpai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, \"heart, mind\" (Middle Chinese sim) and hai, \"distribute\" (phwojH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -444,7 +466,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -494,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6901e3d120604bf1",
+      "sourceHash": "fnv1a64:c69792615f295715",
       "notice": null,
       "blocks": [
         {
@@ -567,6 +589,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えんぴつ (enpitsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are en, \"lead\" (Middle Chinese ywen) and hitsu, \"writing brush\" (pit) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -606,7 +639,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -807,7 +840,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63585b17e4be6a27",
+      "sourceHash": "fnv1a64:329dc57f74c114d8",
       "notice": null,
       "blocks": [
         {
@@ -880,6 +913,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いっぴき (ippiki) mixes the two layers: ichi, \"one\", borrowed from Chinese (Middle Chinese 'jit), and hiki, a native counter for animals, read as a kun'yomi; they join as ippiki (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -919,7 +963,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -969,7 +1013,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc431331483ee19d",
+      "sourceHash": "fnv1a64:5a6af3c2b6c83c5e",
       "notice": null,
       "blocks": [
         {
@@ -1042,6 +1086,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きっぷ (kippu) mixes the two layers: native kiri, \"cutting\", from kiru, \"to cut\", and fu, \"tally, token\", the on'yomi of its second character, borrowed from Chinese (Middle Chinese bju); they join as kippu (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1081,7 +1136,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1291,7 +1346,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aada9957bed80dc8",
+      "sourceHash": "fnv1a64:2461aaef2055bded",
       "notice": null,
       "blocks": [
         {
@@ -1364,6 +1419,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんぷら (tenpura) is a loanword, usually traced to Portuguese. JMdict names two candidates, tempero, \"seasoning\", and têmporas, the Ember Days of fasting; which one is the source is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1403,7 +1469,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1454,7 +1520,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d08f0a254a58f620",
+      "sourceHash": "fnv1a64:f92b863fee854637",
       "notice": null,
       "blocks": [
         {
@@ -1527,6 +1593,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぺらぺら (perapera) is a native mimetic word, one that pictures a manner in sound; JMdict marks it as mimetic, and it has no kanji. It is inherited, not borrowed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1566,7 +1643,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

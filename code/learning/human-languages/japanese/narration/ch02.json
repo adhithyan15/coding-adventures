@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "A Daytime Greeting, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:67b86b87a54eed0b",
+  "sourceHash": "fnv1a64:012eba1e2e0496a5",
   "lessons": [
     {
       "id": "JA-W01-ko",
@@ -641,7 +641,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:335c19f496d1528f",
+      "sourceHash": "fnv1a64:55dbefa0bf274492",
       "notice": null,
       "blocks": [
         {
@@ -691,6 +691,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わに (wani) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2). In older Japanese the same word also named the shark (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -721,7 +732,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1130,7 +1141,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4d4b57e03d1b2cb4",
+      "sourceHash": "fnv1a64:562799c22483db47",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1207,6 +1218,17 @@
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こんにちは (konnichiwa) is a sentence cut short. Konnichi, \"today, this day\", is Sino-Japanese: kon, \"now\" (Middle Chinese kim), and nichi, \"day\" (Middle Chinese nyit), on'yomi borrowed from Chinese; the native particle wa, \"as for\", stayed on the end (JMdict; Unihan, Baxter–Sagart)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1245,7 +1267,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice — review pulse",
           "segments": [
@@ -1267,7 +1289,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a desk, then the Japanese for a roof.
 You'll want to know: ゆか.
 ゆか — yuka — "the floor".
 
+The word, taken apart.
+ゆか (yuka) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a roof, then the Japanese for the floor
 
 You'll want to know: かがみ.
 かがみ — kagami — "a mirror".
+
+The word, taken apart.
+かがみ (kagami) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for the floor, then the Japanese for a mirr
 You'll want to know: ふとん.
 ふとん — futon — "a futon".
 
+The word, taken apart.
+ふとん (futon) is usually traced to a Chinese word for a round cushion woven of rushes: fu, "a kind of rush" (Middle Chinese bu), and ton, "a round mass" (Middle Chinese dwan), ton being a later Chinese reading. JMdict marks the common spelling with "cloth" as ateji.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a mirror, then the Japanese for a futon
 You'll want to know: はし.
 はし — hashi — "chopsticks".
 
+The word, taken apart.
+はし (hashi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a futon, then the Japanese for chopstic
 
 You'll want to know: だいどころ.
 だいどころ — daidokoro — "a kitchen".
+
+The word, taken apart.
+だいどころ (daidokoro) mixes the two layers: dai, "stand; platform", borrowed from Chinese (Middle Chinese doj), and native tokoro, "place", voiced to dokoro (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

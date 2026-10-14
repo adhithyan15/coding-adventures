@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 100,
-  "sourceHash": "fnv1a64:7119d4e88b16a282",
+  "sourceHash": "fnv1a64:4c8f7caae29c6c06",
   "lessonIds": [
     "JA-C100-gomi",
     "JA-C100-bou",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch100.txt",
   "json": "japanese/narration/ch100.json",
-  "textHash": "fnv1a64:9d4af34351ac87a5",
-  "jsonHash": "fnv1a64:76ef0776a439a34e",
+  "textHash": "fnv1a64:d69c951b515e41bd",
+  "jsonHash": "fnv1a64:bbe7044652fd3fd5",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "kusuri"
 concept_tag: JA-HEALTH23-KUSURI
 prerequisites: [JA-C22-netsu, JA-C22-itai]
 sounds: []
-roots: []
+roots: [japanese-kusuri]
+etymology_hook: "kusuri: native Japanese, inherited, not borrowed; kanji 薬 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C22-itai]
 <!-- hl-knowledge: introduces=[JA-LEX-C23-HEALTH23-01]; assesses=[] -->
 
 **くすり** — *kusuri* — "medicine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**くすり** (*kusuri*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

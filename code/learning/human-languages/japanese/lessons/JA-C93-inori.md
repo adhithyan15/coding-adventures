@@ -14,7 +14,8 @@ romanization: "inori"
 concept_tag: JA-WANT93-INORI
 prerequisites: [JA-C92-yokubou, JA-C93-machidooshii]
 sounds: []
-roots: []
+roots: [japanese-inoru]
+etymology_hook: "inori: native, the noun from inoru 'to pray'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C93-machidooshii]
 <!-- hl-knowledge: introduces=[JA-LEX-C93-WANT93-02]; assesses=[] -->
 
 **いのり** — *inori* — "a prayer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いのり** (*inori*) is native: the noun made from *inoru*, "to pray", by its stem (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

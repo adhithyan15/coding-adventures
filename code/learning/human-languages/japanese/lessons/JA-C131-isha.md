@@ -14,7 +14,8 @@ romanization: "isha"
 concept_tag: JA-THING131-ISHA
 prerequisites: [JA-W131-small-ya, JA-W10-shi, JA-C116-funa, JA-C127-sunao, JA-C130-makka]
 sounds: [mora]
-roots: []
+roots: [middle-chinese-i, middle-chinese-tsyaex]
+etymology_hook: "isha: Sino-Japanese 医 'heal' + 者 'person', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -51,6 +52,11 @@ Then say *ocha*.
 
 The small sign is spent at once. **し** with **ゃ** after it is one beat, *sha*, so
 the word is two beats: *i–sha*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いしゃ** (*isha*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *i*, "heal, medical" (Middle Chinese *'i*) and *sha*, "person, he who" (*tsyaeX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C131-ISHA, JA-SCRIPT-SMALL-YA-01, JA-SCRIPT-SHI-01] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 72,
-  "sourceHash": "fnv1a64:93258cca5fe35e74",
+  "sourceHash": "fnv1a64:3c48da181ee7a3f8",
   "lessonIds": [
     "JA-C72-gogo",
     "JA-C72-yonaka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch72.txt",
   "json": "japanese/narration/ch72.json",
-  "textHash": "fnv1a64:1d1eb08c352b0d16",
-  "jsonHash": "fnv1a64:4d08c669f1fbba09",
+  "textHash": "fnv1a64:ea51a108cd8f510e",
+  "jsonHash": "fnv1a64:dafc13c2c9efa01a",
   "findings": []
 }

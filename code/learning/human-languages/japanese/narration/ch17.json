@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Other Five, and Where the Count Stops",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:884f24ac5a0503ef",
+  "sourceHash": "fnv1a64:70fa78f25629f323",
   "lessons": [
     {
       "id": "JA-W17-mu",
@@ -174,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fb616fb944d068b",
+      "sourceHash": "fnv1a64:9f5648d6698e77b4",
       "notice": null,
       "blocks": [
         {
@@ -242,6 +242,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むっつ (muttsu) is native: mu, the inherited word for \"six\", with the counter -tsu (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -261,7 +272,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -311,7 +322,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70b602edb96e7e36",
+      "sourceHash": "fnv1a64:74bfa1cb105cbe9d",
       "notice": null,
       "blocks": [
         {
@@ -405,6 +416,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ななつ (nanatsu) is native: nana, the inherited word for \"seven\", with the counter -tsu (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -424,7 +446,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -630,7 +652,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4005a0374796b1c5",
+      "sourceHash": "fnv1a64:f9fa686adb204b70",
       "notice": null,
       "blocks": [
         {
@@ -702,6 +724,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やっつ (yattsu) is native: ya, the inherited word for \"eight\", with the counter -tsu (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -721,7 +754,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -925,7 +958,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54a33c5fcdc5b0fb",
+      "sourceHash": "fnv1a64:88dc713c1c3f101a",
       "notice": null,
       "blocks": [
         {
@@ -1010,6 +1043,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ここのつ (kokonotsu) is native: kokono, the inherited word for \"nine\", with the counter -tsu. It is not built from koko, \"here\"; the likeness is chance (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1029,7 +1073,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1079,7 +1123,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:049387b80e695156",
+      "sourceHash": "fnv1a64:608673b29693b164",
       "notice": null,
       "blocks": [
         {
@@ -1151,6 +1195,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とお (tō) is native: the inherited word for \"ten\", the kun'yomi of the character for ten, with no -tsu on the end (KANJIDIC2). Its older origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1170,7 +1225,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

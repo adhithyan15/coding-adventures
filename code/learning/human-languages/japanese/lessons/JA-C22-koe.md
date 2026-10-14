@@ -14,7 +14,8 @@ romanization: "koe"
 concept_tag: JA-BODY22-KOE
 prerequisites: [JA-C22-ase, JA-C22-namida]
 sounds: []
-roots: []
+roots: [japanese-koe]
+etymology_hook: "koe: native Japanese, inherited, not borrowed; kanji 声 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C22-namida]
 <!-- hl-knowledge: introduces=[JA-LEX-C22-BODY22-03]; assesses=[] -->
 
 **こえ** — *koe* — "a voice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こえ** (*koe*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

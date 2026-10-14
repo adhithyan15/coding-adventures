@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a string, then the Japanese for a rope.
 You'll want to know: にもつ.
 にもつ — nimotsu — "luggage".
 
+The word, taken apart.
+にもつ (nimotsu) mixes the two layers: native ni, "a load", read as a kun'yomi, and motsu, "thing", the on'yomi of its second character, borrowed from Chinese (Middle Chinese mjut; JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a rope, then the Japanese for luggage.
 
 You'll want to know: ふね.
 ふね — fune — "a ship".
+
+The word, taken apart.
+ふね (fune) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for luggage, then the Japanese for a ship.
 You'll want to know: おと.
 おと — oto — "a sound".
 
+The word, taken apart.
+おと (oto) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a ship, then the Japanese for a sound.
 You'll want to know: いろ.
 いろ — iro — "a colour".
 
+The word, taken apart.
+いろ (iro) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a sound, then the Japanese for a colour
 
 You'll want to know: かたち.
 かたち — katachi — "a shape".
+
+The word, taken apart.
+かたち (katachi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

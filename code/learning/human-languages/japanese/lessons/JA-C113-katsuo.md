@@ -14,7 +14,8 @@ romanization: "katsuo"
 concept_tag: JA-THINGS113-KATSUO
 prerequisites: [JA-C113-dango, JA-C113-dashi]
 sounds: []
-roots: []
+roots: [japanese-katsuo]
+etymology_hook: "katsuo: native Japanese, inherited, not borrowed; usually kana, kanji 鰹 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C113-dashi]
 <!-- hl-knowledge: introduces=[JA-LEX-C113-THINGS113-04]; assesses=[] -->
 
 **かつお** — *katsuo* — "a bonito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かつお** (*katsuo*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

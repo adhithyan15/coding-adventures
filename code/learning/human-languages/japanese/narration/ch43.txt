@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a forest, then the Japanese for a stone
 You'll want to know: すな.
 すな — suna — "sand".
 
+The word, taken apart.
+すな (suna) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a stone, then the Japanese for sand.
 
 You'll want to know: たんぼ.
 たんぼ — tanbo — "a rice field".
+
+The word, taken apart.
+たんぼ (tanbo) is native ta, "rice field", with an ending whose origin is not settled. JMdict marks the older spelling with "garden" as ateji. It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for sand, then the Japanese for a rice fiel
 You'll want to know: ほし.
 ほし — hoshi — "a star".
 
+The word, taken apart.
+ほし (hoshi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a rice field, then the Japanese for a s
 You'll want to know: くも.
 くも — kumo — "a cloud; a spider".
 
+The word, taken apart.
+くも (kumo) is two native words that sound alike: kumo, "cloud", and kumo, "spider", each with its own kanji (JMdict). Both are inherited rather than borrowed; whether they were ever one word is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a star, then the Japanese for a cloud; 
 
 You'll want to know: たいよう.
 たいよう — taiyou — "the sun".
+
+The word, taken apart.
+たいよう (taiyou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, "big, great" (Middle Chinese thajH) and yō, "sun; the bright principle" (yang) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.

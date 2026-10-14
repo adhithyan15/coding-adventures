@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 49,
-  "sourceHash": "fnv1a64:e1f76f276c14bb0a",
+  "sourceHash": "fnv1a64:29a3c7b00b26832e",
   "lessonIds": [
     "JA-C49-takai",
     "JA-C49-hikui",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch49.txt",
   "json": "japanese/narration/ch49.json",
-  "textHash": "fnv1a64:729558a054c5b735",
-  "jsonHash": "fnv1a64:deff0cb2ae859033",
+  "textHash": "fnv1a64:09f11d5793e9c821",
+  "jsonHash": "fnv1a64:2c45e9a86b26f158",
   "findings": []
 }

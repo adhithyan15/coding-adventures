@@ -14,7 +14,8 @@ romanization: "maishuu"
 concept_tag: JA-TIME74-MAISHUU
 prerequisites: [JA-C73-ototoi, JA-C73-maiasa]
 sounds: []
-roots: []
+roots: [middle-chinese-mwojx]
+etymology_hook: "maishuu: Sino-Japanese 毎 'every' + 週 'week', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C73-maiasa]
 <!-- hl-knowledge: introduces=[JA-LEX-C74-TIME74-01]; assesses=[] -->
 
 **まいしゅう** — *maishuu* — "every week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まいしゅう** (*maishuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *mai*, "every" (Middle Chinese *mwojX*) and *shū*, "week" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

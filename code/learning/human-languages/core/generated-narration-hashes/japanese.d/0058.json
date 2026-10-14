@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 58,
-  "sourceHash": "fnv1a64:27c6f1c8ac2be300",
+  "sourceHash": "fnv1a64:8a7686819a0e8a8a",
   "lessonIds": [
     "JA-C58-chika",
     "JA-C58-kouen",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch58.txt",
   "json": "japanese/narration/ch58.json",
-  "textHash": "fnv1a64:2454c6d60dabef7f",
-  "jsonHash": "fnv1a64:29a0d2939922c4f1",
+  "textHash": "fnv1a64:81e5c20711bb5350",
+  "jsonHash": "fnv1a64:f610ef21ea36adb7",
   "findings": []
 }

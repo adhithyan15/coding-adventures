@@ -12,6 +12,9 @@ Before the new one: say the Japanese for the year before last, then the Japanese
 You'll want to know: まよなか.
 まよなか — mayonaka — "midnight".
 
+The word, taken apart.
+まよなか (mayonaka) is a native compound, inherited rather than borrowed: ma, "true, very", yo, "night", and naka, "middle": the very middle of the night (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for oversleeping, then the Japanese for mid
 
 You'll want to know: いっしゅうかん.
 いっしゅうかん — isshuukan — "a whole week".
+
+The word, taken apart.
+いっしゅうかん (isshuukan) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, "one" (Middle Chinese 'jit), shū, "week" and kan, "interval" (kean) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Ichi loses its last beat before shū.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for midnight, then the Japanese for a whole
 You'll want to know: いちにち.
 いちにち — ichinichi — "one whole day".
 
+The word, taken apart.
+いちにち (ichinichi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, "one" (Middle Chinese 'jit) and nichi, "day" (nyit) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a whole week, then the Japanese for one
 You'll want to know: はんにち.
 はんにち — hannichi — "half a day".
 
+The word, taken apart.
+はんにち (hannichi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are han, "half" (Middle Chinese panH) and nichi, "day" (nyit) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for one whole day, then the Japanese for ha
 
 You'll want to know: ついたち.
 ついたち — tsuitachi — "the first of the month".
+
+The word, taken apart.
+ついたち (tsuitachi) is a native word, inherited rather than borrowed. It is usually explained as tsuki, "moon, month", and tachi, "rising, starting", from tatsu: the month's beginning. JMdict writes it with the characters for "one" and "day", read as a whole.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "hosu"
 concept_tag: JA-VERB-HOSU
 prerequisites: [JA-C87-tanomu, JA-C87-susumu]
 sounds: []
-roots: []
+roots: [japanese-hosu]
+etymology_hook: "hosu: native Japanese, inherited, not borrowed; kanji 干す attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C87-susumu]
 <!-- hl-knowledge: introduces=[JA-LEX-C87-ACT87-04]; assesses=[] -->
 
 **ほす** — *hosu* — "to hang out to dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ほす** (*hosu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

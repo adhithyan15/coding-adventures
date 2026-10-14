@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "A Counter for the Shape of the Thing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:23aba08dbab1d3c6",
+  "sourceHash": "fnv1a64:bc57becd9e0d6ccb",
   "lessons": [
     {
       "id": "JA-C18-tsu-counter",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36662ce9f6a62205",
+      "sourceHash": "fnv1a64:98f90580d6e16fdc",
       "notice": null,
       "blocks": [
         {
@@ -109,7 +109,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Japanese has a great many counters and you will not learn them all here. What you can learn in one sentence is the rule that gets you through:"
+              "text": "Japanese has a great many counters. One rule gets you through:"
             },
             {
               "kind": "speech",
@@ -131,6 +131,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "…つ (-tsu) is a native counter, inherited rather than borrowed; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -141,7 +152,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -191,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a6a0009554f6c91",
+      "sourceHash": "fnv1a64:3f3b28047a283699",
       "notice": null,
       "blocks": [
         {
@@ -306,6 +317,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にん (-nin) is Sino-Japanese: an on'yomi of the character for \"person\", borrowed from Chinese (Middle Chinese nyin); jin is a second on'yomi of the same character (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -325,7 +347,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -375,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bec01b17d65d6edd",
+      "sourceHash": "fnv1a64:8b3e97e860ff4e88",
       "notice": null,
       "blocks": [
         {
@@ -494,6 +516,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひとり ふたり (hitori futari) are native: hito, \"one\", and futa, \"two\", with -ri, an old native counter for people that KANJIDIC2 lists as a reading of the character for \"person\". None of it is borrowed."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -513,7 +546,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -894,7 +927,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95716613a5e08cfd",
+      "sourceHash": "fnv1a64:9146c640cd9bbee4",
       "notice": null,
       "blocks": [
         {
@@ -1004,6 +1037,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほん (-hon) is Sino-Japanese: the on'yomi of 本, a character for \"root, origin\", borrowed from Chinese (Middle Chinese pwonX; Unihan)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1023,7 +1067,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1253,7 +1297,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:33294dd25cd1702b",
+      "sourceHash": "fnv1a64:9f05eca20546882f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1366,6 +1410,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いっぽん (ippon) is Sino-Japanese: ichi, \"one\" (Middle Chinese 'jit), and hon (Middle Chinese pwonX), both borrowed from Chinese; ichi loses its last beat and h becomes p where they meet."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice — read, copy, recall",
           "segments": [
@@ -1376,7 +1431,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

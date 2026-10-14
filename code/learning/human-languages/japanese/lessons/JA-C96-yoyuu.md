@@ -14,7 +14,8 @@ romanization: "yoyuu"
 concept_tag: JA-CAN96-YOYUU
 prerequisites: [JA-C96-sainou, JA-C96-waza]
 sounds: []
-roots: []
+roots: [middle-chinese-yo, middle-chinese-yuh]
+etymology_hook: "yoyuu: Sino-Japanese 余 'surplus' + 裕 'abundant', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C96-waza]
 <!-- hl-knowledge: introduces=[JA-LEX-C96-CAN96-04]; assesses=[] -->
 
 **よゆう** — *yoyuu* — "room to spare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**よゆう** (*yoyuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *yo*, "surplus" (Middle Chinese *yo*) and *yū*, "abundant" (*yuH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

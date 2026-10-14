@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 40,
-  "sourceHash": "fnv1a64:a91bfe512d52006d",
+  "sourceHash": "fnv1a64:c572f7de49f0c496",
   "lessonIds": [
     "JA-C40-kasa",
     "JA-C40-gakkou",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch40.txt",
   "json": "japanese/narration/ch40.json",
-  "textHash": "fnv1a64:da6169925612499c",
-  "jsonHash": "fnv1a64:820d9684071ddc52",
+  "textHash": "fnv1a64:b8b209e8d60fa0ad",
+  "jsonHash": "fnv1a64:efb0f7de42ba9a8e",
   "findings": []
 }

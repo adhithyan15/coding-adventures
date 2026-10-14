@@ -12,6 +12,9 @@ Before the new one: say the Japanese for between, then the Japanese for a region
 You'll want to know: まちかど.
 まちかど — machikado — "a street corner".
 
+The word, taken apart.
+まちかど (machikado) is a native compound, inherited rather than borrowed: machi, "town, street", and kado, "corner", both kun'yomi of its kanji (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a region, then the Japanese for a stree
 
 You'll want to know: しない.
 しない — shinai — "within the city".
+
+The word, taken apart.
+しない (shinai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, "market, city" (Middle Chinese dzyiX) and nai, "inside" (nwojH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a street corner, then the Japanese for 
 You'll want to know: こうがい.
 こうがい — kougai — "the suburbs".
 
+The word, taken apart.
+こうがい (kougai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, "suburbs" (Middle Chinese kaew) and gai, "outside" (ngwajH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for within the city, then the Japanese for 
 You'll want to know: はんたいがわ.
 はんたいがわ — hantaigawa — "the opposite side".
 
+The word, taken apart.
+はんたいがわ (hantaigawa) mixes the two layers: hantai, "opposite", borrowed from Chinese, han, "reverse, opposite" (Middle Chinese pjonX), and tai, "facing" (Middle Chinese twojH), with native kawa, "side", voiced to gawa (JMdict; Unihan, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for the suburbs, then the Japanese for the 
 
 You'll want to know: かわかみ.
 かわかみ — kawakami — "upstream".
+
+The word, taken apart.
+かわかみ (kawakami) is a native compound, inherited rather than borrowed: kawa, "river", and kami, "upper part", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

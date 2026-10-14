@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 48,
-  "sourceHash": "fnv1a64:41bed4329f336ca9",
+  "sourceHash": "fnv1a64:ce3bdb2d6f10c5fa",
   "lessonIds": [
     "JA-C48-niwatori",
     "JA-C48-chiisai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch48.txt",
   "json": "japanese/narration/ch48.json",
-  "textHash": "fnv1a64:8654ef9086eca747",
-  "jsonHash": "fnv1a64:eb3dbf6263ce7984",
+  "textHash": "fnv1a64:9d243abb6bd0767e",
+  "jsonHash": "fnv1a64:aad08001ddd04401",
   "findings": []
 }

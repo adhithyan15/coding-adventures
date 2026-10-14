@@ -14,7 +14,8 @@ romanization: "ninjin"
 concept_tag: JA-FOOD34-NINJIN
 prerequisites: [JA-C34-suika, JA-C34-daikon]
 sounds: []
-roots: []
+roots: [middle-chinese-nyin, middle-chinese-srim]
+etymology_hook: "ninjin: Sino-Japanese 人 'person' + 参 'ginseng', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C34-daikon]
 <!-- hl-knowledge: introduces=[JA-LEX-C34-FOOD34-03]; assesses=[] -->
 
 **にんじん** — *ninjin* — "a carrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**にんじん** (*ninjin*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *nin*, "person" (Middle Chinese *nyin*) and *jin*, "ginseng" (*srim*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict lists ginseng as a second sense: the name first belonged to that root and later passed to the carrot.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

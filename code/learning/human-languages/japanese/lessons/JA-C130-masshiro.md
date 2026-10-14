@@ -14,7 +14,8 @@ romanization: "masshiro"
 concept_tag: JA-QUAL130-MASSHIRO
 prerequisites: [JA-C129-atsukamashii, JA-C129-tanomoshii]
 sounds: []
-roots: []
+roots: [japanese-ma-true, japanese-shiroi]
+etymology_hook: "masshiro: native ma 'true, very' + shiro 'white'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C129-tanomoshii]
 <!-- hl-knowledge: introduces=[JA-LEX-C130-QUAL130-01]; assesses=[] -->
 
 **まっしろ** — *masshiro* — "pure white".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まっしろ** (*masshiro*) is native: *ma*, "true, very", with *shiro*, "white", the consonant doubled where they meet (JMdict, KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

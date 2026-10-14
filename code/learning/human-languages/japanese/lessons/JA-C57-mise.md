@@ -14,7 +14,8 @@ romanization: "mise"
 concept_tag: JA-PLACE57-MISE
 prerequisites: [JA-C57-machi, JA-C57-michi]
 sounds: []
-roots: []
+roots: [japanese-mise]
+etymology_hook: "mise: native Japanese, inherited, not borrowed; kanji 店 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C57-michi]
 <!-- hl-knowledge: introduces=[JA-LEX-C57-PLACE57-05]; assesses=[] -->
 
 **みせ** — *mise* — "a shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**みせ** (*mise*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

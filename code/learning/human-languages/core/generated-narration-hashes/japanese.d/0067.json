@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 67,
-  "sourceHash": "fnv1a64:bf0d570e3237d8b7",
+  "sourceHash": "fnv1a64:2ac19a2148ae8a2f",
   "lessonIds": [
     "JA-C67-uchiwa",
     "JA-C67-sensu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch67.txt",
   "json": "japanese/narration/ch67.json",
-  "textHash": "fnv1a64:d1cd5b9b73d46963",
-  "jsonHash": "fnv1a64:f93c84e5467935c6",
+  "textHash": "fnv1a64:ba5498261b3d6a81",
+  "jsonHash": "fnv1a64:ae49137400bc8de3",
   "findings": []
 }

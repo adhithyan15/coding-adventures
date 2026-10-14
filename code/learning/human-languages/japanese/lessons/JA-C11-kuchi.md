@@ -11,8 +11,8 @@ gloss: mouth
 concept_tag: JA-BODY-MOUTH
 prerequisites: [JA-C11-mimi]
 sounds: [mora]
-roots: []
-etymology_hook: The box written since chapter five is the word itself, and two previously written signs spell its reading.
+roots: [japanese-kuchi]
+etymology_hook: "kuchi: native Japanese, inherited, not borrowed; kanji 口 attached later as kun'yomi"
 duration:
   max_seconds: 150
 requires:
@@ -46,6 +46,11 @@ Retrieve **みみ**.
 The three-stroke box you have written since chapter five is the word: **口**
 is *kuchi*. Its reading joins two earned signs, **く** and **ち**; keep two even
 morae.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**口** (*kuchi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). The kanji **口** you have written is the same character; its borrowed reading, *kō*, comes from Chinese ({MC:口}).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KUCHI, JA-SCRIPT-KU-01, JA-SCRIPT-CHI-01, JA-SCRIPT-KANJI-MOUTH-COMPONENT-01] -->

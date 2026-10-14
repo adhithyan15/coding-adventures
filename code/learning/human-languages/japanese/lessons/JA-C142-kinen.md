@@ -14,7 +14,8 @@ romanization: "kin'en"
 concept_tag: JA-READ142-KINEN
 prerequisites: [JA-C142-chuui, JA-C141-raigetsu, JA-C138-arukimasu]
 sounds: []
-roots: []
+roots: [middle-chinese-kim-forbid, middle-chinese-en]
+etymology_hook: "kin'en: Sino-Japanese 禁 'forbid' + 煙 'smoke', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -58,6 +59,11 @@ not reached yet; the reading is the same.
 **すう**, *suu*, the verb you know for breathing in, also means to smoke.
 Its negative stem **すわ** with **ないで ください** asks you politely not to
 do it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**きんえん** (*kin'en*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kin*, "forbid" (Middle Chinese *kim*) and *en*, "smoke" (*'en*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C142-KINEN, JA-LEX-C142-CHUUI] -->

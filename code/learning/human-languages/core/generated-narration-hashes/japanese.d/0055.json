@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 55,
-  "sourceHash": "fnv1a64:7ad8e80b4296a699",
+  "sourceHash": "fnv1a64:03a83a9f6fa465c0",
   "lessonIds": [
     "JA-C55-fun",
     "JA-C55-natsu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch55.txt",
   "json": "japanese/narration/ch55.json",
-  "textHash": "fnv1a64:a67e95bc21ccd697",
-  "jsonHash": "fnv1a64:f31a77e8075efee6",
+  "textHash": "fnv1a64:9b44d33986ee08fb",
+  "jsonHash": "fnv1a64:b180f2b041306bcb",
   "findings": []
 }

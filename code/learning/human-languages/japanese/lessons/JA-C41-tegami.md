@@ -14,7 +14,8 @@ romanization: "tegami"
 concept_tag: JA-SCHOOL41-TEGAMI
 prerequisites: [JA-C40-mondai, JA-C40-kotae]
 sounds: []
-roots: []
+roots: [japanese-te-hand, japanese-kami-paper]
+etymology_hook: "tegami: native compound of te 'hand' + kami 'paper' (手紙)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C40-kotae]
 <!-- hl-knowledge: introduces=[JA-LEX-C41-SCHOOL41-01]; assesses=[] -->
 
 **てがみ** — *tegami* — "a letter (post)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**てがみ** (*tegami*) is a native compound: *te*, "hand", and *kami*, "paper", voiced to *gami*, both kun'yomi of its kanji (JMdict, KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

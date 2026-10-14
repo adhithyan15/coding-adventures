@@ -11,8 +11,8 @@ gloss: one thing — the first word of the count Japanese kept when it borrowed 
 concept_tag: JA-NATIVE-ONE
 prerequisites: [JA-W16-hi, JA-W03-to, JA-W13-tsu, JA-C14-ichi, JA-C15-roku]
 sounds: [mora]
-roots: []
-etymology_hook: Wiktionary's usage note says hitotsu is what you use when the thing you are counting has no counter of its own.
+roots: [japanese-hito-one, japanese-tsu-counter]
+etymology_hook: "hitotsu: native hito 'one' + native counter -tsu; borrowed from nobody"
 duration:
   max_seconds: 190
 requires:
@@ -60,6 +60,11 @@ interchangeable:
 Wiktionary's usage note for **ひとつ** is one sentence and it is the sentence
 this chapter turns on: it is used *when the items counted have no specific
 counter category*. Hold that. It will be the whole of the next chapter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひとつ** (*hitotsu*) is native: *hito*, the inherited word for "one", with the native counter *-tsu*. *Hito* is the kun'yomi of the character for one; none of the word is borrowed (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HITOTSU, JA-LEX-ICHI, JA-SCRIPT-HI-01] -->

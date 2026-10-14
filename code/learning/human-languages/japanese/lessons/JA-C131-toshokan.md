@@ -14,7 +14,8 @@ romanization: "toshokan"
 concept_tag: JA-THING131-TOSHOKAN
 prerequisites: [JA-W131-small-yo, JA-W03-to, JA-W03-ka, JA-W01-n, JA-C116-asari, JA-C128-isamashii]
 sounds: [mora]
-roots: []
+roots: [middle-chinese-du-chart, middle-chinese-syo, middle-chinese-kwanh-building]
+etymology_hook: "toshokan: Sino-Japanese 図 'chart' + 書 'book' + 館 'public building', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -50,6 +51,11 @@ Then say *tea* — **R2**, five lessons back.
 
 Five signs, four beats: *to–sho–ka–n*. **し** with **ょ** after it is one beat,
 *sho*, and **ん** is a beat on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**としょかん** (*toshokan*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *to*, "chart, map" (Middle Chinese *du*), *sho*, "book" (*syo*) and *kan*, "public building" (*kwanH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C131-TOSHOKAN, JA-SCRIPT-SMALL-YO-01] -->

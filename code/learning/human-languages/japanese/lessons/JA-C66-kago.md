@@ -14,7 +14,8 @@ romanization: "kago"
 concept_tag: JA-THINGS66-KAGO
 prerequisites: [JA-C65-imo, JA-C65-gobou]
 sounds: []
-roots: []
+roots: [japanese-kago]
+etymology_hook: "kago: native Japanese, inherited, not borrowed; usually kana, kanji 籠 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C65-gobou]
 <!-- hl-knowledge: introduces=[JA-LEX-C66-THINGS66-01]; assesses=[] -->
 
 **かご** — *kago* — "a basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かご** (*kago*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

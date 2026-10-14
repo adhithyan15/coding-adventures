@@ -14,7 +14,8 @@ romanization: "kamu"
 concept_tag: JA-VERB-KAMU
 prerequisites: [JA-C86-daku, JA-C86-fumu]
 sounds: []
-roots: []
+roots: [japanese-kamu]
+etymology_hook: "kamu: native Japanese, inherited, not borrowed; kanji 噛む attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C86-fumu]
 <!-- hl-knowledge: introduces=[JA-LEX-C86-ACT86-05]; assesses=[] -->
 
 **かむ** — *kamu* — "to bite, to chew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かむ** (*kamu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

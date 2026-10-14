@@ -12,6 +12,9 @@ Before the new one: say the Japanese for beside, then the Japanese for the very 
 You'll want to know: むこう.
 むこう — mukou — "the other side".
 
+The word, taken apart.
+むこう (mukou) (mukō) is native, from mukau, "to face, to head towards" (JMdict writes both with the same character). It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for the very middle, then the Japanese for 
 
 You'll want to know: てまえ.
 てまえ — temae — "this side of".
+
+The word, taken apart.
+てまえ (temae) is a native compound, inherited rather than borrowed: te, "hand", and mae, "front": what is in front of your hand (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for the other side, then the Japanese for t
 You'll want to know: かど.
 かど — kado — "a corner".
 
+The word, taken apart.
+かど (kado) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for this side of, then the Japanese for a c
 You'll want to know: かいだん.
 かいだん — kaidan — "stairs".
 
+The word, taken apart.
+かいだん (kaidan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kai, "stairs, storey" (Middle Chinese keaj) and dan, "step, section" (dwanH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a corner, then the Japanese for stairs.
 
 You'll want to know: ろうか.
 ろうか — rouka — "a corridor".
+
+The word, taken apart.
+ろうか (rouka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rō, "corridor" (Middle Chinese lang) and ka, "below" (haeX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.

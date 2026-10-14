@@ -14,8 +14,8 @@ romanization: "denwa"
 concept_tag: JA-ANCHOR-DENWA
 prerequisites: [JA-R133-last-four, JA-W01-n, JA-W01-wa, JA-W133-nu, JA-W132-so, JA-C121-haiiro]
 sounds: [mora]
-roots: []
-etymology_hook: Denwa is the everyday word for a telephone; its first sign is て with the two-stroke voicing mark, a sign the book has not yet written.
+roots: [middle-chinese-denh, middle-chinese-hwaejh]
+etymology_hook: "denwa: Sino-Japanese 電 'electricity' + 話 'speech', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -51,6 +51,11 @@ reviews_of: [JA-R133-last-four, JA-W01-n, JA-W01-wa, JA-W133-nu, JA-W132-so, JA-
 Three beats: *de–n–wa*. The last two signs are **ん** and **わ**, which you
 already write. The first one is **て** with the two short strokes of the
 voicing mark at its upper right, so *te* becomes *de*. The next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**でんわ** (*denwa*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *den*, "electricity, lightning" (Middle Chinese *denH*) and *wa*, "speech, talk" (*hwaejH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-DENWA, JA-SCRIPT-N-01, JA-SCRIPT-WA-01] -->

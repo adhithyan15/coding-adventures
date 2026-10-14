@@ -14,7 +14,8 @@ romanization: "ringo"
 concept_tag: JA-FOOD33-RINGO
 prerequisites: [JA-C32-yasai, JA-C32-kudamono]
 sounds: []
-roots: []
+roots: [middle-chinese-lim, middle-chinese-gim]
+etymology_hook: "ringo: Sino-Japanese 林 'forest' + 檎 'a small red apple', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C32-kudamono]
 <!-- hl-knowledge: introduces=[JA-LEX-C33-FOOD33-01]; assesses=[] -->
 
 **りんご** — *ringo* — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**りんご** (*ringo*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *rin*, "forest" (Middle Chinese *lim*) and *go*, "a small red apple" (*gim*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

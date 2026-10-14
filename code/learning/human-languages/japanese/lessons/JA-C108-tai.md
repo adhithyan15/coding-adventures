@@ -14,7 +14,8 @@ romanization: "tai"
 concept_tag: JA-THINGS108-TAI
 prerequisites: [JA-C107-saka, JA-C108-kai]
 sounds: []
-roots: []
+roots: [japanese-tai]
+etymology_hook: "tai: native Japanese, inherited, not borrowed; usually kana, kanji 鯛 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C108-kai]
 <!-- hl-knowledge: introduces=[JA-LEX-C108-THINGS108-02]; assesses=[] -->
 
 **たい** — *tai* — "a sea bream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たい** (*tai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

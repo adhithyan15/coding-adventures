@@ -14,7 +14,8 @@ romanization: "manaita"
 concept_tag: JA-THINGS102-MANAITA
 prerequisites: [JA-C102-yunomi, JA-C102-kama]
 sounds: []
-roots: []
+roots: [japanese-mana, japanese-ita-board]
+etymology_hook: "manaita: native mana (usually 'fish, food') + ita 'board'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C102-kama]
 <!-- hl-knowledge: introduces=[JA-LEX-C102-THINGS102-05]; assesses=[] -->
 
 **まないた** — *manaita* — "a chopping board".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まないた** (*manaita*) is a native compound, inherited rather than borrowed: *ita*, "board", with *mana*, usually explained as an old word for fish or food (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

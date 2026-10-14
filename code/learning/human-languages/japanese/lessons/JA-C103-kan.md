@@ -14,7 +14,8 @@ romanization: "kan"
 concept_tag: JA-THINGS103-KAN
 prerequisites: [JA-C103-yakan, JA-C103-obon]
 sounds: []
-roots: []
+roots: [dutch-kan, english-can]
+etymology_hook: "kan: borrowed from Dutch kan or English can (JMdict); the kanji 缶 is ateji"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C103-obon]
 <!-- hl-knowledge: introduces=[JA-LEX-C103-THINGS103-05]; assesses=[] -->
 
 **かん** — *kan* — "a can, a tin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かん** (*kan*) is a loanword: JMdict gives its source as Dutch *kan*, or English *can*. Its kanji, a character for an earthen jar, is marked as ateji, chosen for its sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

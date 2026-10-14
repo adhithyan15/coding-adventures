@@ -14,7 +14,8 @@ romanization: "nakama"
 concept_tag: JA-FAMILY26-NAKAMA
 prerequisites: [JA-C25-sensei, JA-C26-tonari]
 sounds: []
-roots: []
+roots: [japanese-naka-middle, japanese-ma-space]
+etymology_hook: "nakama: native naka 'relationship, middle' + ma 'space' (仲間)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C26-tonari]
 <!-- hl-knowledge: introduces=[JA-LEX-C26-FAMILY26-02]; assesses=[] -->
 
 **なかま** — *nakama* — "a companion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なかま** (*nakama*) is a native compound, inherited rather than borrowed: *naka*, "relationship; middle", and *ma*, "space, room", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a bonito, then the Japanese for wakame 
 You'll want to know: はくさい.
 はくさい — hakusai — "Chinese cabbage".
 
+The word, taken apart.
+はくさい (hakusai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are haku, "white" (Middle Chinese baek) and sai, "vegetables" (tshojH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for wakame seaweed, then the Japanese for C
 
 You'll want to know: にんにく.
 にんにく — ninniku — "garlic".
+
+The word, taken apart.
+にんにく (ninniku) is written with characters for "big" and "garlic", read as a whole (JMdict). One account derives the word from a Buddhist term for enduring hardship; that is not settled. JMdict marks it as usually written in kana.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for Chinese cabbage, then the Japanese for 
 You'll want to know: あんこ.
 あんこ — anko — "sweet bean paste".
 
+The word, taken apart.
+あんこ (anko) is Sino-Japanese an, "bean filling", borrowed from Chinese in a later reading of its character, with the ending -ko (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for garlic, then the Japanese for sweet bea
 You'll want to know: はちみつ.
 はちみつ — hachimitsu — "honey".
 
+The word, taken apart.
+はちみつ (hachimitsu) mixes the two layers: native hachi, "bee", read as a kun'yomi, and mitsu, "honey", the on'yomi of its second character, borrowed from Chinese (Middle Chinese mjit; JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for sweet bean paste, then the Japanese for
 
 You'll want to know: あみ.
 あみ — ami — "a net".
+
+The word, taken apart.
+あみ (ami) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

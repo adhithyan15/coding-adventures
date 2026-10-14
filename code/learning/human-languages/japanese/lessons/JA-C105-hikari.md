@@ -14,7 +14,8 @@ romanization: "hikari"
 concept_tag: JA-THINGS105-HIKARI
 prerequisites: [JA-C105-honoo, JA-C105-akari]
 sounds: []
-roots: []
+roots: [japanese-hikaru]
+etymology_hook: "hikari: native, the noun from hikaru 'to shine'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C105-akari]
 <!-- hl-knowledge: introduces=[JA-LEX-C105-THINGS105-05]; assesses=[] -->
 
 **ひかり** — *hikari* — "light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひかり** (*hikari*) is native: the noun made from *hikaru*, "to shine", by its stem (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

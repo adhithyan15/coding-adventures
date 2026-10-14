@@ -14,7 +14,8 @@ romanization: "tokai"
 concept_tag: JA-LOC81-TOKAI
 prerequisites: [JA-C81-atari, JA-C81-fumoto]
 sounds: []
-roots: []
+roots: [middle-chinese-tu-capital, middle-chinese-hwajh]
+etymology_hook: "tokai: Sino-Japanese 都 'capital' + 会 'meet', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C81-fumoto]
 <!-- hl-knowledge: introduces=[JA-LEX-C81-LOC81-03]; assesses=[] -->
 
 **とかい** — *tokai* — "the city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**とかい** (*tokai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *to*, "capital" (Middle Chinese *tu*) and *kai*, "meet, gather" (*hwajH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

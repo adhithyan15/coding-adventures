@@ -14,7 +14,8 @@ romanization: "shinpai"
 concept_tag: JA-THING137-SHINPAI
 prerequisites: [JA-W137-pa, JA-W10-shi, JA-W01-n, JA-W01-i, JA-C136-kaze, JA-C135-iriguchi, JA-C128-isamashii]
 sounds: [mora]
-roots: []
+roots: [middle-chinese-sim, middle-chinese-phwojh]
+etymology_hook: "shinpai: Sino-Japanese 心 'heart' + 配 'distribute', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +53,11 @@ someone. It is the word in *Don't worry*.
 The new sign is spent at once. **し** and **ん**, then **ぱ** and **い**: four
 beats, *shi–n–pa–i*. After **ん** the *p* comes out clearly, the lips closed
 first. You write every sign in it now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しんぱい** (*shinpai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shin*, "heart, mind" (Middle Chinese *sim*) and *hai*, "distribute" (*phwojH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C137-SHINPAI, JA-SCRIPT-PA-01, JA-LEX-ANCHOR-IPPAI, JA-SCRIPT-SHI-01, JA-SCRIPT-N-01, JA-SCRIPT-I-01] -->

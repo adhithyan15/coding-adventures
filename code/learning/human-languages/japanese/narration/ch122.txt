@@ -12,6 +12,9 @@ Before the new one: say the Japanese for thin, then the Japanese for shallow.
 You'll want to know: ふかい.
 ふかい — fukai — "deep".
 
+The word, taken apart.
+ふかい (fukai) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for shallow, then the Japanese for deep.
 
 You'll want to know: たいせつ.
 たいせつ — taisetsu — "precious".
+
+The word, taken apart.
+たいせつ (taisetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, "big, great" (Middle Chinese dajH) and setsu, "cut, sharp" (tshet) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for deep, then the Japanese for precious.
 You'll want to know: ひつよう.
 ひつよう — hitsuyou — "necessary".
 
+The word, taken apart.
+ひつよう (hitsuyou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hitsu, "surely, must" (Middle Chinese pjit) and yō, "necessary" ('jiewH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for precious, then the Japanese for necessa
 You'll want to know: かんたん.
 かんたん — kantan — "simple".
 
+The word, taken apart.
+かんたん (kantan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, "simple, terse" (Middle Chinese keanX) and tan, "single" (tan) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for necessary, then the Japanese for simple
 
 You'll want to know: ふくざつ.
 ふくざつ — fukuzatsu — "complicated".
+
+The word, taken apart.
+ふくざつ (fukuzatsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fuku, "double, repeat" (Middle Chinese pjuwk) and zatsu, "mixed" (dzop) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.

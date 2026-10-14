@@ -12,6 +12,9 @@ Before the new one: say the Japanese for stairs, then the Japanese for a corrido
 You'll want to know: こうさてん.
 こうさてん — kousaten — "a crossroads".
 
+The word, taken apart.
+こうさてん (kousaten) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, "mix, cross" (Middle Chinese kaew), sa, "differ" (tsrhae) and ten, "dot, point" (temX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict also gives an older spelling with a character for "fork" in place of the second.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a corridor, then the Japanese for a cro
 
 You'll want to know: しんごう.
 しんごう — shingou — "a traffic light".
+
+The word, taken apart.
+しんごう (shingou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, "trust; message" (Middle Chinese sinH) and gō, "mark, sign" (hawH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a crossroads, then the Japanese for a t
 You'll want to know: ほうがく.
 ほうがく — hougaku — "a direction".
 
+The word, taken apart.
+ほうがく (hougaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hō, "region, direction" (Middle Chinese pjang) and kaku, "horn, angle" (kaewk) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a traffic light, then the Japanese for 
 You'll want to know: ちかみち.
 ちかみち — chikamichi — "a shortcut".
 
+The word, taken apart.
+ちかみち (chikamichi) is a native compound, inherited rather than borrowed: chika, "near", from chikai, and michi, "road", both kun'yomi of its kanji (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a direction, then the Japanese for a sh
 
 You'll want to know: まわり.
 まわり — mawari — "the surroundings".
+
+The word, taken apart.
+まわり (mawari) is native: the noun made from mawaru, "to go round", by its stem (JMdict). It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.

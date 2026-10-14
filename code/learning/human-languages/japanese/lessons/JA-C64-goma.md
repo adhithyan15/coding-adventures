@@ -14,7 +14,8 @@ romanization: "goma"
 concept_tag: JA-WORLD64-GOMA
 prerequisites: [JA-C63-minami, JA-C64-kona]
 sounds: []
-roots: []
+roots: [middle-chinese-hu, middle-chinese-mae]
+etymology_hook: "goma: Sino-Japanese 胡 'foreign' + 麻 'hemp', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C64-kona]
 <!-- hl-knowledge: introduces=[JA-LEX-C64-WORLD64-02]; assesses=[] -->
 
 **ごま** — *goma* — "sesame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ごま** (*goma*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *go*, "foreign" (Middle Chinese *hu*) and *ma*, "hemp" (*mae*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

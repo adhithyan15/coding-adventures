@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 99,
-  "sourceHash": "fnv1a64:874079f36a9391fa",
+  "sourceHash": "fnv1a64:a38818207d5e906f",
   "lessonIds": [
     "JA-C99-saifu",
     "JA-C99-tsue",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch99.txt",
   "json": "japanese/narration/ch99.json",
-  "textHash": "fnv1a64:f58b1737a67e3ef4",
-  "jsonHash": "fnv1a64:d909f40006702f41",
+  "textHash": "fnv1a64:08e24a7b817b0282",
+  "jsonHash": "fnv1a64:a5be87c5b5ebb280",
   "findings": []
 }

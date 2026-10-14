@@ -17,6 +17,9 @@ You'll want to know.
 Five morae, each given room. This polite expression can apologise, attract attention, or soften the request that follows. Here it means: “Excuse me — I need help with what was just said.”
 Its shape is useful, not a literal translation burden. It is related to sumu, “to be settled or finished,” in a polite negative form: the small social debt is not yet settled. Keep the practical job first.
 
+The word, taken apart.
+すみません (sumimasen) is a native verb in its polite negative: sumi, from sumu, "to come to an end, be settled" (JMdict writes it with a character meaning "finish"), with -masen, "does not". It is inherited, not borrowed: "it is not settled", said of a debt of thanks or of trouble.
+
 Guided Practice.
 [your turn — hear: sumimasen becomes choose repair, not farewell]
 [pause 8 seconds for the answer]
@@ -103,6 +106,9 @@ You'll want to know.
 Two morae. Yoku is the adverbial partner of yoi, “good.” In the coming line, it says that understanding did not happen well or fully. It does not itself mean “understand.”
 You already write よ. Treat く (ku) as visible support for now; its own tiny writing lesson follows.
 
+The word, taken apart.
+よく (yoku) is the adverb form of native yoi, "good" (JMdict): the -i of the adjective becomes -ku. It is inherited rather than borrowed, and the older origin of yoi is not settled.
+
 Guided Practice.
 [your turn — hear: yoku becomes choose well/fully]
 [pause 8 seconds for the answer]
@@ -160,6 +166,9 @@ Six morae. The wakari- part carries “understand”; polite -masen makes the pr
 Combine the two known pieces only in sound for now:
 yoku wakarimasen — I do not understand well / fully.
 
+The word, taken apart.
+わかりません (wakarimasen) is native wakaru, "to understand", with the polite negative -masen. JMdict writes wakaru with a character meaning "divide", as if to understand were to sort things apart; the verb is inherited, and its older origin is not settled.
+
 Guided Practice.
 [your turn — hear: wakarimasen becomes choose does not understand]
 [pause 8 seconds for the answer]
@@ -214,6 +223,9 @@ Say sumimasen, yoku wakarimasen.
 You'll want to know.
 もう — mō — again; one more.
 Two morae: mo | o. The macron in mō hides the second beat, but the Japanese spelling shows it with final う. In other settings this adverb can mean “already” or “more.” A request for repetition selects “again.”
+
+The word, taken apart.
+もう (mō) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It has no kanji of its own and is written in kana (JMdict).
 
 Guided Practice.
 [your turn — hear: mō in a repair becomes choose again]
@@ -273,6 +285,9 @@ The word is built transparently: ichi is “one,” and do counts one occurrence
 Now join it to the previous word:
 もういちど — mō ichido — one more time.
 
+The word, taken apart.
+いちど (ichido) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, "one" (Middle Chinese 'jit) and do, "degree, a time" (duH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 Guided Practice.
 Hear i | chi | do without looking.
 [once you have stopped driving — write: いちど (ichido) from the three morae]
@@ -297,6 +312,9 @@ You'll want to know.
 おねがいします (onegai shimasu)。 — o-ne-ga-i shi-ma-su — please; I request it.
 The pieces make the social direction visible: respectful o-, negai “request or wish,” and polite shimasu “do.” Learn the whole as the courteous request ending. Do not translate each piece while speaking.
 The common kanji spelling can wait. This chapter earns the sound and social use first, without switching writing systems mid-ramp.
+
+The word, taken apart.
+おねがいします (onegai shimasu) is built from three native pieces: the polite prefix o-, negai, "a wish, a request", from the verb negau, "to wish", and shimasu, the polite form of suru, "to do". Word for word: "I do the request" (JMdict).
 
 Guided Practice.
 [your turn — hear: onegaishimasu becomes choose a polite request]
@@ -324,6 +342,9 @@ Say sumimasen, yoku wakarimasen. Then retrieve mō, ichido, and onegaishimasu se
 You'll want to know.
 もういちど、おねがいします。 mō ichido, onegai shimasu — one more time, please.
 Nothing new is hidden inside the line. もう (mō) supplies “again,” いちど (ichido) supplies “one time,” and おねがいします (onegai shimasu) makes the request polite. The first two words are now readable; the final expression remains supported exposure until its own longer script runway is complete.
+
+The word, taken apart.
+もういちど、おねがいします (mō ichido, onegai shimasu) puts three words you own side by side. Mō, "more", is native; ichido, "one time", is built from two characters borrowed from Chinese, ichi, "one", and do, "a time"; onegai shimasu, "I request it", is native again (JMdict).
 
 Guided Practice.
 Listen: distinguish sumimasen from mō ichido, onegaishimasu.

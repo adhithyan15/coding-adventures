@@ -14,7 +14,8 @@ romanization: "anshin"
 concept_tag: JA-QUAL126-ANSHIN
 prerequisites: [JA-C126-shiawase, JA-C126-nemutai]
 sounds: []
-roots: []
+roots: [middle-chinese-an, middle-chinese-sim]
+etymology_hook: "anshin: Sino-Japanese 安 'peaceful' + 心 'heart', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C126-nemutai]
 <!-- hl-knowledge: introduces=[JA-LEX-C126-QUAL126-03]; assesses=[] -->
 
 **あんしん** — *anshin* — "relieved".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あんしん** (*anshin*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *an*, "peaceful" (Middle Chinese *'an*) and *shin*, "heart, mind" (*sim*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

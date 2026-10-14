@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 129,
-  "sourceHash": "fnv1a64:866a60f580a3ba4e",
+  "sourceHash": "fnv1a64:f2883c79b93d9870",
   "lessonIds": [
     "JA-C129-kawaii",
     "JA-C129-shitsukoi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch129.txt",
   "json": "japanese/narration/ch129.json",
-  "textHash": "fnv1a64:7031af9b6aa167b3",
-  "jsonHash": "fnv1a64:1798c984595d0909",
+  "textHash": "fnv1a64:3e816a867ee38575",
+  "jsonHash": "fnv1a64:3d7ed50a75b1040a",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "asatte"
 concept_tag: JA-TIME73-ASATTE
 prerequisites: [JA-C73-hinoiri, JA-C73-konya]
 sounds: []
-roots: []
+roots: [japanese-asatte]
+etymology_hook: "asatte: native; written 明後日, read as a whole; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C73-konya]
 <!-- hl-knowledge: introduces=[JA-LEX-C73-TIME73-03]; assesses=[] -->
 
 **あさって** — *asatte* — "the day after tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あさって** (*asatte*) is a native word, inherited rather than borrowed. JMdict writes it with characters for "bright", "after" and "day", read as a whole for their meaning. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

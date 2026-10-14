@@ -12,7 +12,7 @@ concept_tag: JA-WORD-NIHONGO
 prerequisites: [JA-W05-go-kanji]
 sounds: [mora, moraic-n]
 roots: [middle-chinese-nyit, middle-chinese-pwonx, middle-chinese-ngjoX]
-etymology_hook: 日 is nichi, jitsu, hi, bi, or ka — a kanji carries a set of readings, and the word picks one.
+etymology_hook: "nihongo: Sino-Japanese 日 'sun' + 本 'origin' + 語 'language', on'yomi from Middle Chinese nyit, pwonX, ngjoX"
 duration:
   max_seconds: 220
 requires:

@@ -14,7 +14,8 @@ romanization: "ido"
 concept_tag: JA-THINGS67-IDO
 prerequisites: [JA-C67-sensu, JA-C67-sumi]
 sounds: []
-roots: []
+roots: [japanese-i-well, japanese-to-door]
+etymology_hook: "ido: native compound of i 'well' + to 'door, opening' (井戸)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C67-sumi]
 <!-- hl-knowledge: introduces=[JA-LEX-C67-THINGS67-04]; assesses=[] -->
 
 **いど** — *ido* — "a well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いど** (*ido*) is a native compound, inherited rather than borrowed: *i*, "well", and *to*, "door, opening", voiced to *do*, both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

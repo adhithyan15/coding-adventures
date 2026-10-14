@@ -14,7 +14,8 @@ romanization: "chūi"
 concept_tag: JA-READ142-CHUUI
 prerequisites: [JA-C141-deshou, JA-C141-raishuu, JA-C138-hatarakimasu, JA-W132-ru]
 sounds: []
-roots: []
+roots: [middle-chinese-tsyuh, middle-chinese-ih]
+etymology_hook: "chūi: Sino-Japanese 注 'pour' + 意 'thought', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -55,6 +56,11 @@ not reached yet; the reading is the same.
 > **くるまに ちゅうい** — *kuruma ni chūi* — "Watch out for cars."
 
 Read a notice like this and act on it: stop, look, and cross with care.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ちゅうい** (*chūi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *chū*, "pour; direct" (Middle Chinese *tsyuH*) and *i*, "thought, mind" (*'iH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C142-CHUUI] -->

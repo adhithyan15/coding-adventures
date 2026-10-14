@@ -14,7 +14,8 @@ romanization: "daidokoro"
 concept_tag: JA-HOME38-DAIDOKORO
 prerequisites: [JA-C38-futon, JA-C38-hashi]
 sounds: []
-roots: []
+roots: [middle-chinese-doj, japanese-tokoro]
+etymology_hook: "daidokoro: Sino-Japanese dai 台 'stand' + native tokoro 'place' (voiced)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C38-hashi]
 <!-- hl-knowledge: introduces=[JA-LEX-C38-HOME38-05]; assesses=[] -->
 
 **だいどころ** — *daidokoro* — "a kitchen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**だいどころ** (*daidokoro*) mixes the two layers: *dai*, "stand; platform", borrowed from Chinese (Middle Chinese *doj*), and native *tokoro*, "place", voiced to *dokoro* (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

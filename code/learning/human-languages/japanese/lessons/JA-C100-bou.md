@@ -14,7 +14,8 @@ romanization: "bou"
 concept_tag: JA-THINGS100-BOU
 prerequisites: [JA-C99-chiritori, JA-C100-gomi]
 sounds: []
-roots: []
+roots: [middle-chinese-baewngx]
+etymology_hook: "bou: Sino-Japanese, the on'yomi of 棒 'stick', from Middle Chinese baewngX"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C100-gomi]
 <!-- hl-knowledge: introduces=[JA-LEX-C100-THINGS100-02]; assesses=[] -->
 
 **ぼう** — *bou* — "a stick, a pole".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ぼう** (*bou*) is Sino-Japanese (kango): the on'yomi of a character meaning "stick", a reading borrowed from Chinese (Middle Chinese *baewngX*; Unihan, KANJIDIC2, Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

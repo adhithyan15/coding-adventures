@@ -14,7 +14,8 @@ romanization: "asagohan"
 concept_tag: JA-FOOD35-ASAGOHAN
 prerequisites: [JA-C35-udon, JA-C35-sushi]
 sounds: []
-roots: []
+roots: [japanese-asa-morning, middle-chinese-ngjoh, middle-chinese-bjonx]
+etymology_hook: "asagohan: native asa 'morning' + Sino-Japanese gohan 御飯 'rice, meal'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C35-sushi]
 <!-- hl-knowledge: introduces=[JA-LEX-C35-FOOD35-04]; assesses=[] -->
 
 **あさごはん** — *asagohan* — "breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あさごはん** (*asagohan*) mixes the two layers: native *asa*, "morning", read as a kun'yomi, and *gohan*, "rice; a meal", Sino-Japanese *go*, "honourable", and *han*, "cooked rice" (Middle Chinese *bjonX*), borrowed from Chinese (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a request, then the Japanese for a desi
 You'll want to know: まちどおしい.
 まちどおしい — machidooshii — "long-awaited".
 
+The word, taken apart.
+まちどおしい (machidooshii) (machidōshii) is native: machi, from matsu, "to wait", with dōshii, from tōi, "far", voiced: the waiting feels far (JMdict). It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a desire, then the Japanese for long-aw
 
 You'll want to know: いのり.
 いのり — inori — "a prayer".
+
+The word, taken apart.
+いのり (inori) is native: the noun made from inoru, "to pray", by its stem (JMdict). It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for long-awaited, then the Japanese for a p
 You'll want to know: ちゅうもん.
 ちゅうもん — chuumon — "an order".
 
+The word, taken apart.
+ちゅうもん (chuumon) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chū, "pour; note" (Middle Chinese tsyuH) and mon, "writing" (mjun) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a prayer, then the Japanese for an orde
 You'll want to know: こうほ.
 こうほ — kouho — "a candidate, a choice".
 
+The word, taken apart.
+こうほ (kouho) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, "wait" (Middle Chinese huwH) and ho, "mend, fill" (puX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for an order, then the Japanese for a candi
 
 You'll want to know: よてい.
 よてい — yotei — "a plan".
+
+The word, taken apart.
+よてい (yotei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yo, "beforehand" (Middle Chinese yoH) and tei, "decide, fix" (dengH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.

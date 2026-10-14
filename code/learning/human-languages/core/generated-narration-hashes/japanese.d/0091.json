@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 91,
-  "sourceHash": "fnv1a64:3c7afcf7a1c5594e",
+  "sourceHash": "fnv1a64:3bf5ebb728ff4935",
   "lessonIds": [
     "JA-C91-yamu",
     "JA-C91-shimau",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "japanese/narration/ch91.txt",
   "json": "japanese/narration/ch91.json",
-  "textHash": "fnv1a64:8ed5411b72ae1a40",
-  "jsonHash": "fnv1a64:ab15171b0dde68ae",
+  "textHash": "fnv1a64:7a640ef914604f36",
+  "jsonHash": "fnv1a64:bab6866ea0edf504",
   "findings": []
 }

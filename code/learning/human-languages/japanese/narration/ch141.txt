@@ -22,6 +22,9 @@ You'll want to know: らいしゅう.
 Japanese has no separate future tense. The polite present ます says what will happen too, and a time word places it:
 らいしゅう はたらきます。 — raishū hatarakimasu — "I will work next week."
 
+The word, taken apart.
+らいしゅう (raishū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, "come, coming" (Middle Chinese loj) and shū, "week" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: raishū]
@@ -57,6 +60,9 @@ You'll want to know: らいげつ.
 らいげつ — raigetsu — "next month". The らい at its start is the same as in らいしゅう (raishū): "the one coming".
 らいげつ うみに いきます。 — raigetsu umi ni ikimasu — "I will go to the sea next month."
 
+The word, taken apart.
+らいげつ (raigetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, "come, coming" (Middle Chinese loj) and getsu, "moon, month" (ngjwot) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: raigetsu]
@@ -89,6 +95,9 @@ Four recalls before the new word.
 You'll want to know: らいねん.
 らいねん — rainen — "next year": きょねん, ことし, らいねん, last year, this year, next year.
 らいねん ともだちと やまに いきます。 — rainen tomodachi to yama ni ikimasu — "Next year I will go to the mountains with a friend." The particle と means "with".
+
+The word, taken apart.
+らいねん (rainen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rai, "come, coming" (Middle Chinese loj) and nen, "year" (nen) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 Guided Practice.
 [pause 1 second]
@@ -123,6 +132,9 @@ You'll want to know: つもり.
 つもり — tsumori — "an intention", "a plan": what you mean to do. It follows a verb in its dictionary form, and です closes the sentence.
 らいねん うみに いく つもりです。 — rainen umi ni iku tsumori desu — "I plan to go to the sea next year."
 Here the dictionary form matters: iku, not ikimasu, comes before つもり (tsumori). ます goes at the very end of a polite sentence, and です does that job here.
+
+The word, taken apart.
+つもり (tsumori) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2). JMdict writes it with the kanji of tsumoru, "to pile up, to estimate".
 
 Guided Practice.
 [pause 1 second]
@@ -159,6 +171,9 @@ You'll want to know: でしょう.
 でしょう — deshō — "probably", "it will..., I expect". It closes a sentence about something you think will happen but cannot be sure of, the way a weather forecast does.
 あしたは すずしいでしょう。 — ashita wa suzushii deshō — "It will probably be cool tomorrow."
 Now you can talk about what comes next: what will happen (ます with a time word), what you mean to do (つもり (tsumori)), and what will probably happen (でしょう (deshō)).
+
+The word, taken apart.
+でしょう (deshō) is desu, the polite "is", in the form for what is likely (JMdict). Where desu comes from is disputed; it is usually traced to a shortening of de arimasu or de gozarimasu.
 
 Guided Practice.
 [pause 1 second]

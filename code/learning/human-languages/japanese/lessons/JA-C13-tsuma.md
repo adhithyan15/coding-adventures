@@ -11,8 +11,8 @@ gloss: my wife
 concept_tag: JA-FAMILY-WIFE
 prerequisites: [JA-C13-otto]
 sounds: [mora]
-roots: []
-etymology_hook: The new full-size つ reaches its promised word and stays distinct from the small hold in おっと.
+roots: [japanese-tsuma]
+etymology_hook: "tsuma: native Japanese, inherited, not borrowed; kanji 妻 attached later as kun'yomi"
 duration:
   max_seconds: 165
 requires:
@@ -43,6 +43,11 @@ Retrieve **おっと** once and notice the small **っ**.
 
 Hear *tsu-ma* and say two morae, with a full vowel
 after *ts*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つま** (*tsuma*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). JMdict also lists an old use as a term of endearment, "my dear".
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TSUMA, JA-SCRIPT-TSU-01, JA-SCRIPT-MA-01] -->

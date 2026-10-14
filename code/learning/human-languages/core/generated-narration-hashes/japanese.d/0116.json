@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 116,
-  "sourceHash": "fnv1a64:26593337a30485f3",
+  "sourceHash": "fnv1a64:b7482502eaf24b28",
   "lessonIds": [
     "JA-C116-masu",
     "JA-C116-funa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch116.txt",
   "json": "japanese/narration/ch116.json",
-  "textHash": "fnv1a64:df9c5364c9413e9f",
-  "jsonHash": "fnv1a64:6917f9f6fd5b5392",
+  "textHash": "fnv1a64:20c28c467b1cb780",
+  "jsonHash": "fnv1a64:6b915cc710d573d1",
   "findings": []
 }

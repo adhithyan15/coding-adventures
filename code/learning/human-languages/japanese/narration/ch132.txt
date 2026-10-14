@@ -18,6 +18,9 @@ You'll want to know: そこ.
 そこ — soko — "there", the place near the person you are talking to.
 You know ここ, koko, here, the place near you. Change the first sign and the place moves across to the listener: soko, there, by them. The second sign is the こ you already write. The first one is new, and the next lesson writes it.
 
+The word, taken apart.
+そこ (soko) is native: so-, the root that points near the listener, with -ko, "place", as in koko (JMdict). It is inherited rather than borrowed, and is usually written in kana.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: soko]
@@ -91,6 +94,9 @@ You'll want to know: そと.
 そと — soto — "outside".
 The new sign is spent at once. そ with と after it: two beats, so–to, and both signs are ones you write. そこ (soko) is a spot by the listener; そと (soto) is anywhere beyond the walls, out of doors.
 
+The word, taken apart.
+そと (soto) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: soto]
@@ -121,6 +127,9 @@ Say outside — R1, one lesson back.
 You'll want to know: これ.
 これ — kore — "this", a thing near you as you speak.
 ここ is a place near you; これ (kore) is a thing near you, the one in your hand or under your finger. It begins with the same こ. The second sign is one you do not write yet. It turns the pointing word into a thing, and the next lesson writes it.
+
+The word, taken apart.
+これ (kore) is native: ko-, the root that points near the speaker, with -re, the ending of the thing words kore, sore, are (JMdict). It is inherited rather than borrowed.
 
 Guided Practice.
 [pause 1 second]
@@ -201,6 +210,9 @@ You have met both halves. そ (so) points at the listener, as in そこ (soko); 
 near you: ここ, here. near the listener: そこ (soko), there.
 near you: これ (kore), this. near the listener: それ (sore), that.
 
+The word, taken apart.
+それ (sore) is native: so-, the root that points near the listener, with -re, as in kore (JMdict). It is inherited rather than borrowed.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: sore]
@@ -231,6 +243,9 @@ Say that, a thing near the listener — R1, one lesson back.
 You'll want to know: くるま.
 くるま — kuruma — "a car".
 Three beats: ku–ru–ma. The first and last signs are く and ま, and you write both. The middle one is new. It looks like ろ with a small loop tied at the bottom, and the next lesson writes it.
+
+The word, taken apart.
+くるま (kuruma) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). JMdict still lists "wheel" among its senses: the wheel came first, then the cart, then the car.
 
 Guided Practice.
 [pause 1 second]

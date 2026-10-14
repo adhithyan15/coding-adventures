@@ -14,7 +14,8 @@ romanization: "kaiko"
 concept_tag: JA-THINGS109-KAIKO
 prerequisites: [JA-C109-taka, JA-C109-fukurou]
 sounds: []
-roots: []
+roots: [japanese-kaiko]
+etymology_hook: "kaiko: native Japanese, inherited, not borrowed; kanji 蚕 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C109-fukurou]
 <!-- hl-knowledge: introduces=[JA-LEX-C109-THINGS109-05]; assesses=[] -->
 
 **かいこ** — *kaiko* — "a silkworm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かいこ** (*kaiko*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

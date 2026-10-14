@@ -12,6 +12,9 @@ Before the new one: say the Japanese for ice, then the Japanese for the summer h
 You'll want to know: もち.
 もち — mochi — "a rice cake".
 
+The word, taken apart.
+もち (mochi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for the summer holidays, then the Japanese 
 
 You'll want to know: なっとう.
 なっとう — nattou — "natto, fermented soybeans".
+
+The word, taken apart.
+なっとう (nattou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nō, "receive, store" (Middle Chinese nop) and tō, "bean" (duwH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). Nō is shortened to nat before tō.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a rice cake, then the Japanese for natt
 You'll want to know: ちくわ.
 ちくわ — chikuwa — "a fish-paste tube".
 
+The word, taken apart.
+ちくわ (chikuwa) mixes the two layers: chiku, "bamboo", the on'yomi of its first character, borrowed from Chinese (Middle Chinese trjuwk), and native wa, "ring", read as a kun'yomi: a bamboo ring, from its shape (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for natto, then the Japanese for a fish-pas
 You'll want to know: ひよこ.
 ひよこ — hiyoko — "a chick".
 
+The word, taken apart.
+ひよこ (hiyoko) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a fish-paste tube, then the Japanese fo
 
 You'll want to know: はね.
 はね — hane — "a wing; a feather".
+
+The word, taken apart.
+はね (hane) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

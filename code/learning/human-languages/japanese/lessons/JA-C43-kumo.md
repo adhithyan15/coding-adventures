@@ -14,7 +14,8 @@ romanization: "kumo"
 concept_tag: JA-NATURE43-KUMO
 prerequisites: [JA-C43-tanbo, JA-C43-hoshi]
 sounds: []
-roots: []
+roots: [japanese-kumo-cloud, japanese-kumo-spider]
+etymology_hook: "kumo: two native words, 'cloud' (雲) and 'spider' (蜘蛛), with their own kanji"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C43-hoshi]
 <!-- hl-knowledge: introduces=[JA-LEX-C43-NATURE43-04]; assesses=[] -->
 
 **くも** — *kumo* — "a cloud; a spider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**くも** (*kumo*) is two native words that sound alike: *kumo*, "cloud", and *kumo*, "spider", each with its own kanji (JMdict). Both are inherited rather than borrowed; whether they were ever one word is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

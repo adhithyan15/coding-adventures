@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 74,
-  "sourceHash": "fnv1a64:316367ee95a948f1",
+  "sourceHash": "fnv1a64:4d288a458e29b254",
   "lessonIds": [
     "JA-C74-maishuu",
     "JA-C74-shuumatsu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch74.txt",
   "json": "japanese/narration/ch74.json",
-  "textHash": "fnv1a64:954e45c45bec7cbd",
-  "jsonHash": "fnv1a64:89abc9d93dc2f882",
+  "textHash": "fnv1a64:d30f0f4709bc41cd",
+  "jsonHash": "fnv1a64:17a78a516977d9cc",
   "findings": []
 }

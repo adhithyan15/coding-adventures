@@ -14,7 +14,8 @@ romanization: "mondai"
 concept_tag: JA-HOME40-MONDAI
 prerequisites: [JA-C40-gakkou, JA-C40-shukudai]
 sounds: []
-roots: []
+roots: [middle-chinese-mjunh, middle-chinese-dej]
+etymology_hook: "mondai: Sino-Japanese 問 'ask' + 題 'title', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C40-shukudai]
 <!-- hl-knowledge: introduces=[JA-LEX-C40-HOME40-04]; assesses=[] -->
 
 **もんだい** — *mondai* — "a problem, a question".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**もんだい** (*mondai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *mon*, "ask" (Middle Chinese *mjunH*) and *dai*, "title, theme" (*dej*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shudan"
 concept_tag: JA-CAN97-SHUDAN
 prerequisites: [JA-C97-zaisan, JA-C97-tsukaimichi]
 sounds: []
-roots: []
+roots: [middle-chinese-syuwx, middle-chinese-dwanh]
+etymology_hook: "shudan: Sino-Japanese 手 'hand' + 段 'step', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C97-tsukaimichi]
 <!-- hl-knowledge: introduces=[JA-LEX-C97-CAN97-03]; assesses=[] -->
 
 **しゅだん** — *shudan* — "a means".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しゅだん** (*shudan*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shu*, "hand" (Middle Chinese *syuwX*) and *dan*, "step, section" (*dwanH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

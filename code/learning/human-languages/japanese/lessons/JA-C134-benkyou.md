@@ -14,7 +14,8 @@ romanization: "benkyō"
 concept_tag: JA-THING134-BENKYOU
 prerequisites: [JA-W134-be, JA-W01-n, JA-W133-ki, JA-W131-small-yo, JA-W03-u, JA-C134-kaban, JA-C133-eki, JA-C123-otonashii]
 sounds: [mora]
-roots: []
+roots: [middle-chinese-mjenx, middle-chinese-gjang]
+etymology_hook: "benkyō: Sino-Japanese 勉 'endeavor' + 強 'strong', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +53,11 @@ are doing now.
 The new sign is spent at once. **べ** and **ん**, then **き** with a small
 **ょ**, then **う**: four beats, *be–n–kyo–o*. The **う** at the end stretches
 the *o*, as it does in **きのう**. You write every sign in it now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**べんきょう** (*benkyō*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ben*, "endeavor, make effort" (Middle Chinese *mjenX*) and *kyō*, "strong" (*gjang*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C134-BENKYOU, JA-SCRIPT-BE-01, JA-LEX-ANCHOR-TABERU, JA-SCRIPT-N-01, JA-SCRIPT-KI-01, JA-SCRIPT-SMALL-YO-01, JA-SCRIPT-U-01] -->

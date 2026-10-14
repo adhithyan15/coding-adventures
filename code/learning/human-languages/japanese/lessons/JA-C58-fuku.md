@@ -14,7 +14,8 @@ romanization: "fuku"
 concept_tag: JA-PLACE58-FUKU
 prerequisites: [JA-C58-kouen, JA-C58-kuni]
 sounds: []
-roots: []
+roots: [middle-chinese-bjuwk]
+etymology_hook: "fuku: Sino-Japanese, the on'yomi of 服 'clothes', from Middle Chinese bjuwk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C58-kuni]
 <!-- hl-knowledge: introduces=[JA-LEX-C58-PLACE58-04]; assesses=[] -->
 
 **ふく** — *fuku* — "clothes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふく** (*fuku*) is Sino-Japanese (kango): the on'yomi of a character meaning "clothes", a reading borrowed from Chinese (Middle Chinese *bjuwk*; Unihan, KANJIDIC2, Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chika"
 concept_tag: JA-PLACE58-CHIKA
 prerequisites: [JA-C57-michi, JA-C57-mise]
 sounds: []
-roots: []
+roots: [middle-chinese-dijh, middle-chinese-haex]
+etymology_hook: "chika: Sino-Japanese 地 'earth' + 下 'below', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C57-mise]
 <!-- hl-knowledge: introduces=[JA-LEX-C58-PLACE58-01]; assesses=[] -->
 
 **ちか** — *chika* — "underground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ちか** (*chika*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *chi*, "earth, ground" (Middle Chinese *dijH*) and *ka*, "below" (*haeX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

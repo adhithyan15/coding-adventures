@@ -14,7 +14,8 @@ romanization: "taiyou"
 concept_tag: JA-NATURE43-TAIYOU
 prerequisites: [JA-C43-hoshi, JA-C43-kumo]
 sounds: []
-roots: []
+roots: [middle-chinese-thajh, middle-chinese-yang]
+etymology_hook: "taiyou: Sino-Japanese 太 'big' + 陽 'sun', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C43-kumo]
 <!-- hl-knowledge: introduces=[JA-LEX-C43-NATURE43-05]; assesses=[] -->
 
 **たいよう** — *taiyou* — "the sun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たいよう** (*taiyou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tai*, "big, great" (Middle Chinese *thajH*) and *yō*, "sun; the bright principle" (*yang*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

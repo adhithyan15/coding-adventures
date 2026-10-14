@@ -14,7 +14,8 @@ romanization: "ikada"
 concept_tag: JA-THINGS66-IKADA
 prerequisites: [JA-C66-kago, JA-C66-koma]
 sounds: []
-roots: []
+roots: [japanese-ikada]
+etymology_hook: "ikada: native Japanese, inherited, not borrowed; usually kana, kanji 筏 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C66-koma]
 <!-- hl-knowledge: introduces=[JA-LEX-C66-THINGS66-03]; assesses=[] -->
 
 **いかだ** — *ikada* — "a raft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いかだ** (*ikada*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

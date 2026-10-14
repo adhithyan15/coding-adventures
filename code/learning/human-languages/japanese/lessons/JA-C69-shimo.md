@@ -14,7 +14,8 @@ romanization: "shimo"
 concept_tag: JA-THINGS69-SHIMO
 prerequisites: [JA-C69-niji, JA-C69-kaminari]
 sounds: []
-roots: []
+roots: [japanese-shimo]
+etymology_hook: "shimo: native Japanese, inherited, not borrowed; kanji 霜 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C69-kaminari]
 <!-- hl-knowledge: introduces=[JA-LEX-C69-THINGS69-03]; assesses=[] -->
 
 **しも** — *shimo* — "frost".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しも** (*shimo*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

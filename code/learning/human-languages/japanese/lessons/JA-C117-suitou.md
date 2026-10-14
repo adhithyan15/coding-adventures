@@ -14,7 +14,8 @@ romanization: "suitou"
 concept_tag: JA-THINGS117-SUITOU
 prerequisites: [JA-C117-koumori, JA-C117-kamoshika]
 sounds: []
-roots: []
+roots: [middle-chinese-sywijx, middle-chinese-duwng]
+etymology_hook: "suitou: Sino-Japanese 水 'water' + 筒 'tube', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C117-kamoshika]
 <!-- hl-knowledge: introduces=[JA-LEX-C117-THINGS117-05]; assesses=[] -->
 
 **すいとう** — *suitou* — "a water flask".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すいとう** (*suitou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sui*, "water" (Middle Chinese *sywijX*) and *tō*, "tube, pipe" (*duwng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 42,
-  "sourceHash": "fnv1a64:c718b8c6dd6ad78a",
+  "sourceHash": "fnv1a64:cfcb211e4d676ab2",
   "lessonIds": [
     "JA-C42-kawa",
     "JA-C42-umi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch42.txt",
   "json": "japanese/narration/ch42.json",
-  "textHash": "fnv1a64:918e8f1f6e6b57b5",
-  "jsonHash": "fnv1a64:09c19933c2e886e3",
+  "textHash": "fnv1a64:f541eb10f2cec5dc",
+  "jsonHash": "fnv1a64:4452426a53112acf",
   "findings": []
 }

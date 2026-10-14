@@ -12,6 +12,9 @@ Before the new one: say the Japanese for to help, then the Japanese for to get l
 You'll want to know: ほしい.
 ほしい — hoshii — "wanted, wanting to have".
 
+The word, taken apart.
+ほしい (hoshii) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for to get lost, then the Japanese for want
 
 You'll want to know: ねがい.
 ねがい — negai — "a wish, a request".
+
+The word, taken apart.
+ねがい (negai) is native: the noun made from negau, "to wish", by its stem (JMdict). It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for wanted, then the Japanese for a wish.
 You'll want to know: ねがう.
 ねがう — negau — "to wish for".
 
+The word, taken apart.
+ねがう (negau) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a wish, then the Japanese for to wish f
 You'll want to know: たのみ.
 たのみ — tanomi — "a request".
 
+The word, taken apart.
+たのみ (tanomi) is native: the noun made from tanomu, "to ask, to rely on", by its stem (JMdict). It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for to wish for, then the Japanese for a re
 
 You'll want to know: よくぼう.
 よくぼう — yokubou — "a desire".
+
+The word, taken apart.
+よくぼう (yokubou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yoku, "desire" (Middle Chinese yowk) and bō, "hope; gaze" (mjangH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "kona"
 concept_tag: JA-WORLD64-KONA
 prerequisites: [JA-C63-higashi, JA-C63-minami]
 sounds: []
-roots: []
+roots: [japanese-kona]
+etymology_hook: "kona: native Japanese, inherited, not borrowed; kanji 粉 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C63-minami]
 <!-- hl-knowledge: introduces=[JA-LEX-C64-WORLD64-01]; assesses=[] -->
 
 **こな** — *kona* — "powder, flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こな** (*kona*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

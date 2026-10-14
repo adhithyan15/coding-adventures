@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "Afternoon, Middle of the night, Early morning, Evening meal, Morning sun",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:93258cca5fe35e74",
+  "sourceHash": "fnv1a64:3c48da181ee7a3f8",
   "lessons": [
     {
       "id": "JA-C72-gogo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a7f765c413b7e90",
+      "sourceHash": "fnv1a64:7124bbb3bd8f72b3",
       "notice": null,
       "blocks": [
         {
@@ -67,6 +67,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ごご (gogo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are go, \"noon\" (Middle Chinese nguX) and go, \"after\" (huwX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -77,7 +88,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -126,7 +137,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -176,7 +187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:477efce3e415f459",
+      "sourceHash": "fnv1a64:cba604afda5e3355",
       "notice": null,
       "blocks": [
         {
@@ -209,6 +220,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よなか (yonaka) is a native compound, inherited rather than borrowed: yo, \"night\", and naka, \"middle\", both kun'yomi of its kanji (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -219,7 +241,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -318,7 +340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:942897d412285086",
+      "sourceHash": "fnv1a64:d4559333fcdd98be",
       "notice": null,
       "blocks": [
         {
@@ -351,6 +373,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あさがた (asagata) is a native compound, inherited rather than borrowed: asa, \"morning\", and kata, \"side; time\", voiced to gata, both kun'yomi of its kanji (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -361,7 +394,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -410,7 +443,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -460,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a72f5995a713b681",
+      "sourceHash": "fnv1a64:da1cfbe9e096f6f1",
       "notice": null,
       "blocks": [
         {
@@ -493,6 +526,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆうはん (yuuhan) mixes the two layers: native yū, \"evening\", read as a kun'yomi, and han, \"cooked rice; a meal\", the on'yomi of its second character, borrowed from Chinese (Middle Chinese bjonX; JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -503,7 +547,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -552,7 +596,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -602,7 +646,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8acff1fe217422a5",
+      "sourceHash": "fnv1a64:71d1c1ac89443ba3",
       "notice": null,
       "blocks": [
         {
@@ -635,6 +679,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あさひ (asahi) is a native compound, inherited rather than borrowed: asa, \"morning\", and hi, \"sun\", both kun'yomi of its kanji (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -645,7 +700,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -694,7 +749,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

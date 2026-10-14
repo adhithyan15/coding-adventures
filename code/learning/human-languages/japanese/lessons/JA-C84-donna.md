@@ -14,7 +14,8 @@ romanization: "donna"
 concept_tag: JA-DEF84-DONNA
 prerequisites: [JA-C83-konna, JA-C83-anna]
 sounds: []
-roots: []
+roots: [japanese-do-which]
+etymology_hook: "donna: native, on do- 'which'; usually explained as from dono yō na 'of which kind'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C83-anna]
 <!-- hl-knowledge: introduces=[JA-LEX-C84-DEF84-01]; assesses=[] -->
 
 **どんな** — *donna* — "what kind of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**どんな** (*donna*) is native, built on *do-*, the root of "which"; it is usually explained as a shortening of *dono yō na*, "of which kind". It is inherited rather than borrowed and has no kanji (JMdict).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

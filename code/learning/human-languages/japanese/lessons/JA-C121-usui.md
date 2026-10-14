@@ -14,7 +14,8 @@ romanization: "usui"
 concept_tag: JA-QUAL121-USUI
 prerequisites: [JA-C121-momoiro, JA-C121-haiiro]
 sounds: []
-roots: []
+roots: [japanese-usui]
+etymology_hook: "usui: native Japanese, inherited, not borrowed; kanji 薄い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C121-haiiro]
 <!-- hl-knowledge: introduces=[JA-LEX-C121-QUAL121-04]; assesses=[] -->
 
 **うすい** — *usui* — "thin, weak (of taste or colour)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**うすい** (*usui*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "suidou"
 concept_tag: JA-THINGS103-SUIDOU
 prerequisites: [JA-C102-manaita, JA-C103-otama]
 sounds: []
-roots: []
+roots: [middle-chinese-sywijx, middle-chinese-dawx]
+etymology_hook: "suidou: Sino-Japanese 水 'water' + 道 'way', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C103-otama]
 <!-- hl-knowledge: introduces=[JA-LEX-C103-THINGS103-02]; assesses=[] -->
 
 **すいどう** — *suidou* — "the water supply".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すいどう** (*suidou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sui*, "water" (Middle Chinese *sywijX*) and *dō*, "way, path" (*dawX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

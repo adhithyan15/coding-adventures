@@ -12,6 +12,9 @@ Before the new one: say the Japanese for scissors, then the Japanese for a magaz
 You'll want to know: はた.
 はた — hata — "a flag".
 
+The word, taken apart.
+はた (hata) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a magazine, then the Japanese for a fla
 
 You'll want to know: たんす.
 たんす — tansu — "a chest of drawers".
+
+The word, taken apart.
+たんす (tansu) is Sino-Japanese: two characters for a basket or hamper, tan (Middle Chinese tan) and su, borrowed from Chinese; su is a later Chinese reading. JMdict marks it as usually written in kana (Unihan, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a flag, then the Japanese for a chest o
 You'll want to know: ふすま.
 ふすま — fusuma — "a sliding door".
 
+The word, taken apart.
+ふすま (fusuma) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a chest of drawers, then the Japanese f
 You'll want to know: こたつ.
 こたつ — kotatsu — "a heated table".
 
+The word, taken apart.
+こたつ (kotatsu) is written with ko, "torch, fire", a character borrowed from Chinese (Middle Chinese gjoX), and a second character that KANJIDIC2 marks as made in Japan (a kokuji). How the word was formed is not settled; JMdict marks it as usually written in kana.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a sliding door, then the Japanese for a
 
 You'll want to know: だんぼう.
 だんぼう — danbou — "heating".
+
+The word, taken apart.
+だんぼう (danbou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dan, "warm" (Middle Chinese nwanX) and bō, "room, house" (bjang) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.

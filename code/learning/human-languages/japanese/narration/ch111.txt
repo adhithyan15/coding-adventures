@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a heel, then the Japanese for a shin.
 You'll want to know: ひたい.
 ひたい — hitai — "the forehead".
 
+The word, taken apart.
+ひたい (hitai) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a shin, then the Japanese for the foreh
 
 You'll want to know: かんごし.
 かんごし — kangoshi — "a nurse".
+
+The word, taken apart.
+かんごし (kangoshi) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, "look, watch over" (Middle Chinese khan), go, "protect" (huH) and shi, "specialist, teacher" (srij) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for the forehead, then the Japanese for a n
 You'll want to know: しろ.
 しろ — shiro — "a castle; the colour white".
 
+The word, taken apart.
+しろ (shiro) is two native words that sound alike: shiro, "castle", and shiro, "white", each with its own kanji (JMdict). Both are inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a nurse, then the Japanese for a castle
 You'll want to know: どうろ.
 どうろ — douro — "a road, a highway".
 
+The word, taken apart.
+どうろ (douro) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dō, "way, path" (Middle Chinese dawX) and ro, "road" (luH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a castle; the colour white, then the Ja
 
 You'll want to know: ほどう.
 ほどう — hodou — "a pavement".
+
+The word, taken apart.
+ほどう (hodou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ho, "step, walk" (Middle Chinese buH) and dō, "way, path" (dawX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.

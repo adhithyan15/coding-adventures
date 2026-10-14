@@ -14,7 +14,8 @@ romanization: "hannichi"
 concept_tag: JA-TIME76-HANNICHI
 prerequisites: [JA-C76-isshuukan, JA-C76-ichinichi]
 sounds: []
-roots: []
+roots: [middle-chinese-panh, middle-chinese-nyit]
+etymology_hook: "hannichi: Sino-Japanese 半 'half' + 日 'day', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C76-ichinichi]
 <!-- hl-knowledge: introduces=[JA-LEX-C76-TIME76-04]; assesses=[] -->
 
 **はんにち** — *hannichi* — "half a day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はんにち** (*hannichi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *han*, "half" (Middle Chinese *panH*) and *nichi*, "day" (*nyit*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 59,
-  "sourceHash": "fnv1a64:b0a89303a10834b3",
+  "sourceHash": "fnv1a64:4d54e96250ea6b89",
   "lessonIds": [
     "JA-C59-boushi",
     "JA-C59-kutsushita",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch59.txt",
   "json": "japanese/narration/ch59.json",
-  "textHash": "fnv1a64:5ee219b3b066ff11",
-  "jsonHash": "fnv1a64:574dc254bceb718a",
+  "textHash": "fnv1a64:e3b641f4183ab60e",
+  "jsonHash": "fnv1a64:901943dcc329796b",
   "findings": []
 }

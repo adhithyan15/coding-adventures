@@ -11,8 +11,8 @@ gloss: I understand; understood
 concept_tag: JA-REPAIR-UNDERSTOOD
 prerequisites: [JA-C10-mou-sukoshi]
 sounds: [mora, japanese-r]
-roots: []
-etymology_hook: The familiar wakari stem now takes polite past mashita, presenting understanding as achieved after the repair.
+roots: [japanese-wakaru]
+etymology_hook: "wakarimashita: native wakaru 'understand' (kanji 分 'divide') + polite past -mashita"
 duration:
   max_seconds: 170
 requires:
@@ -46,6 +46,11 @@ reviews_of: [JA-C09-wakarimasen, JA-C10-mou-sukoshi, JA-W09-mi, JA-W10-shi]
 The familiar *wakari-* stem returns. Polite *-mashita* presents the change as
 achieved: the explanation landed. The final **た** is supported exposure until
 its own sign lesson.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**わかりました** (*wakarimashita*) is native *wakaru*, "to understand", in its polite past *-mashita*. JMdict writes the verb with a character meaning "divide"; it is inherited, and its older origin is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-WAKARIMASHITA, JA-LEX-WAKARIMASEN] -->

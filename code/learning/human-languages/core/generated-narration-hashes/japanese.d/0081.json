@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 81,
-  "sourceHash": "fnv1a64:8f3713682881b875",
+  "sourceHash": "fnv1a64:eab44eec08e75eeb",
   "lessonIds": [
     "JA-C81-atari",
     "JA-C81-fumoto",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "japanese/narration/ch81.txt",
   "json": "japanese/narration/ch81.json",
-  "textHash": "fnv1a64:893a8895d1d43dc7",
-  "jsonHash": "fnv1a64:fabaa46c7eea2044",
+  "textHash": "fnv1a64:5dc0e113bcd80dee",
+  "jsonHash": "fnv1a64:a029ba9e55b50aeb",
   "findings": []
 }

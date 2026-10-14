@@ -14,7 +14,8 @@ romanization: "yakan"
 concept_tag: JA-THINGS103-YAKAN
 prerequisites: [JA-C103-otama, JA-C103-suidou]
 sounds: []
-roots: []
+roots: [middle-chinese-yak, middle-chinese-kwanh-jar]
+etymology_hook: "yakan: Sino-Japanese 薬 'medicine' + 缶 'jar', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C103-suidou]
 <!-- hl-knowledge: introduces=[JA-LEX-C103-THINGS103-03]; assesses=[] -->
 
 **やかん** — *yakan* — "a kettle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**やかん** (*yakan*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *yaku*, "medicine" (Middle Chinese *yak*) and *kan*, "jar" (*kwanH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). It was a pot for brewing medicine, and *yaku* shortened to *ya*; JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

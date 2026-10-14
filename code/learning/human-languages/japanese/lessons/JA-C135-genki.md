@@ -14,7 +14,8 @@ romanization: "genki"
 concept_tag: JA-THING135-GENKI
 prerequisites: [JA-W135-ge, JA-W01-n, JA-W133-ki, JA-C135-iriguchi, JA-C134-denwa, JA-C125-wakai]
 sounds: [mora]
-roots: []
+roots: [middle-chinese-ngjwon, middle-chinese-khjxjh]
+etymology_hook: "genki: Sino-Japanese 元 'first' + 気 'air', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +53,11 @@ The new sign is spent at once. **げ**, **ん** and **き**: three beats,
 *ge–n–ki*. Asking after someone, you will hear *o-genki desu ka?*, "are you
 well?", and the answer *genki desu*, "I am well". You write every sign in it
 now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**げんき** (*genki*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *gen*, "first, origin" (Middle Chinese *ngjwon*) and *ki*, "air, spirit" (*khj+jH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C135-GENKI, JA-SCRIPT-GE-01, JA-LEX-ANCHOR-GETSUYOUBI, JA-SCRIPT-N-01, JA-SCRIPT-KI-01] -->

@@ -14,7 +14,8 @@ romanization: "senshū"
 concept_tag: JA-PAST140-SENSHUU
 prerequisites: [JA-C139-dokonimo, JA-C139-chigaimasu, JA-C137-enpitsu, JA-C131-ocha-o-kudasai]
 sounds: []
-roots: []
+roots: [middle-chinese-sen]
+etymology_hook: "senshū: Sino-Japanese 先 'before' + 週 'week', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -57,6 +58,11 @@ To say what happened, the polite verb changes **ます** to **ました**,
 
 **はたらきます** → **はたらきました**, **ねます** → **ねました**. Every
 polite verb makes its past this way.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**せんしゅう** (*senshū*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sen*, "before, previous" (Middle Chinese *sen*) and *shū*, "week" (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C140-SENSHUU] -->

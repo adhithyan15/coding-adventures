@@ -14,7 +14,8 @@ romanization: "isshuukan"
 concept_tag: JA-TIME76-ISSHUUKAN
 prerequisites: [JA-C75-asanebou, JA-C76-mayonaka]
 sounds: []
-roots: []
+roots: [middle-chinese-jit, middle-chinese-kean]
+etymology_hook: "isshuukan: Sino-Japanese 一 'one' + 週 'week' + 間 'interval', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C76-mayonaka]
 <!-- hl-knowledge: introduces=[JA-LEX-C76-TIME76-02]; assesses=[] -->
 
 **いっしゅうかん** — *isshuukan* — "a whole week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いっしゅうかん** (*isshuukan*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ichi*, "one" (Middle Chinese *'jit*), *shū*, "week" and *kan*, "interval" (*kean*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart). *Ichi* loses its last beat before *shū*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

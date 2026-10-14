@@ -14,7 +14,8 @@ romanization: "ookami"
 concept_tag: JA-ANIMALS47-OOKAMI
 prerequisites: [JA-C47-ika, JA-C47-kame]
 sounds: []
-roots: []
+roots: [japanese-ookami]
+etymology_hook: "ookami: native Japanese, inherited, not borrowed; kanji 狼 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C47-kame]
 <!-- hl-knowledge: introduces=[JA-LEX-C47-ANIMALS47-05]; assesses=[] -->
 
 **おおかみ** — *ookami* — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おおかみ** (*ookami*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,8 +14,8 @@ romanization: "getsuyōbi"
 concept_tag: JA-ANCHOR-GETSUYOUBI
 prerequisites: [JA-C135-deguchi, JA-W13-tsu, JA-W08-yo, JA-W03-u, JA-W135-bi, JA-W133-he, JA-C125-sugoi]
 sounds: [mora]
-roots: []
-etymology_hook: Getsuyōbi is Monday; its first sign is け with the voicing mark, a sign the book has not yet written.
+roots: [middle-chinese-ngjwot, middle-chinese-yewh, japanese-hi-sun]
+etymology_hook: "getsuyōbi: Sino-Japanese getsu 月 'moon' + yō 曜 'planet' + native hi 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +52,11 @@ reviews_of: [JA-C135-deguchi, JA-W13-tsu, JA-W08-yo, JA-W03-u, JA-W135-bi, JA-W1
 Five beats: *ge–tsu–yo–o–bi*. It ends in *yōbi*, the day of the week, as
 **どようび** does, and you write every sign from **つ** on. The first sign is
 **け** with the voicing mark, so *ke* becomes *ge*. The next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**げつようび** (*getsuyōbi*) mixes the two layers: *getsu*, "moon" (Middle Chinese *ngjwot*), and *yō*, one of the seven "planets" of old astronomy, sun and moon among them, that name the days (Middle Chinese *yewH*), both borrowed from Chinese, with native *hi*, "day", voiced to *bi* (JMdict; Unihan).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-GETSUYOUBI, JA-SCRIPT-TSU-01, JA-SCRIPT-YO-01, JA-SCRIPT-U-01] -->

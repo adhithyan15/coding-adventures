@@ -14,7 +14,8 @@ romanization: "aimai"
 concept_tag: JA-QUAL130-AIMAI
 prerequisites: [JA-C130-makkuro, JA-C130-makka]
 sounds: []
-roots: []
+roots: [middle-chinese-ojh-dim, middle-chinese-mwojh]
+etymology_hook: "aimai: Sino-Japanese 曖 'dim' + 昧 'dark', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C130-makka]
 <!-- hl-knowledge: introduces=[JA-LEX-C130-QUAL130-04]; assesses=[] -->
 
 **あいまい** — *aimai* — "vague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あいまい** (*aimai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ai*, "dim, obscure" (Middle Chinese *'ojH*) and *mai*, "dark, obscure" (*mwojH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

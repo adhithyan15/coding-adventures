@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a road, then the Japanese for a shop.
 You'll want to know: ちか.
 ちか — chika — "underground".
 
+The word, taken apart.
+ちか (chika) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chi, "earth, ground" (Middle Chinese dijH) and ka, "below" (haeX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a shop, then the Japanese for undergrou
 
 You'll want to know: こうえん.
 こうえん — kouen — "a park".
+
+The word, taken apart.
+こうえん (kouen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, "public" (Middle Chinese kuwng) and en, "garden" (hjwon) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for underground, then the Japanese for a pa
 You'll want to know: くに.
 くに — kuni — "a country".
 
+The word, taken apart.
+くに (kuni) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a park, then the Japanese for a country
 You'll want to know: ふく.
 ふく — fuku — "clothes".
 
+The word, taken apart.
+ふく (fuku) is Sino-Japanese (kango): the on'yomi of a character meaning "clothes", a reading borrowed from Chinese (Middle Chinese bjuwk; Unihan, KANJIDIC2, Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a country, then the Japanese for clothe
 
 You'll want to know: くつ.
 くつ — kutsu — "shoes".
+
+The word, taken apart.
+くつ (kutsu) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

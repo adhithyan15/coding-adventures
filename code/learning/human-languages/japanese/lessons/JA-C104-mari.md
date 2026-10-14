@@ -14,7 +14,8 @@ romanization: "mari"
 concept_tag: JA-THINGS104-MARI
 prerequisites: [JA-C104-fuutou, JA-C104-okurimono]
 sounds: []
-roots: []
+roots: [japanese-mari]
+etymology_hook: "mari: native Japanese, inherited, not borrowed; kanji 鞠 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C104-okurimono]
 <!-- hl-knowledge: introduces=[JA-LEX-C104-THINGS104-04]; assesses=[] -->
 
 **まり** — *mari* — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まり** (*mari*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

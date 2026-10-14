@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 122,
-  "sourceHash": "fnv1a64:40baace5d5187668",
+  "sourceHash": "fnv1a64:06e043f5fd586938",
   "lessonIds": [
     "JA-C122-fukai",
     "JA-C122-taisetsu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch122.txt",
   "json": "japanese/narration/ch122.json",
-  "textHash": "fnv1a64:43a649c0335e8061",
-  "jsonHash": "fnv1a64:42bfe9c95cc31567",
+  "textHash": "fnv1a64:f23f5458ac931e90",
+  "jsonHash": "fnv1a64:02a2e3bf5e3baaef",
   "findings": []
 }

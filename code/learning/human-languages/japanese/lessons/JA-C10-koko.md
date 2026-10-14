@@ -11,8 +11,8 @@ gloss: here; this place
 concept_tag: JA-PLACE-KOKO
 prerequisites: [JA-C10-wakarimashita]
 sounds: [mora]
-roots: []
-etymology_hook: The repeated ko belongs to the Japanese ko-so-a-do deictic system; this first member anchors a place near the speaker.
+roots: [japanese-ko-this]
+etymology_hook: "koko: native ko- 'near me' + -ko 'place'; usually written in kana"
 duration:
   max_seconds: 155
 requires:
@@ -46,6 +46,11 @@ Say *wakarimashita*, then retrieve *sumimasen*.
 One owned sign appears twice. The word belongs to a larger pointing family that
 will later contrast near me, near you, and over there. Today, keep only the
 speaker-near place: **here**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ここ** (*koko*) is native: the *ko-* that points near the speaker, as in *kore*, "this", with *-ko*, a place ending that KANJIDIC2 lists among the readings of a character meaning "place". It is inherited rather than borrowed, and is usually written in kana (JMdict).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOKO, JA-SCRIPT-KO-01] -->

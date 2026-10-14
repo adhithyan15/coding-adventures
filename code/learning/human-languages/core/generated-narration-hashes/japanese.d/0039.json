@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 39,
-  "sourceHash": "fnv1a64:9b6871de08bae5f2",
+  "sourceHash": "fnv1a64:b1c1bde018f44efe",
   "lessonIds": [
     "JA-C39-niwa",
     "JA-C39-ofuro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch39.txt",
   "json": "japanese/narration/ch39.json",
-  "textHash": "fnv1a64:b1a249482112fde6",
-  "jsonHash": "fnv1a64:90ba99b42c4836ff",
+  "textHash": "fnv1a64:6f899a61b9fcb63a",
+  "jsonHash": "fnv1a64:04f3a6f5db136680",
   "findings": []
 }

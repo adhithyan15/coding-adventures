@@ -14,7 +14,8 @@ romanization: "shingou"
 concept_tag: JA-LOC80-SHINGOU
 prerequisites: [JA-C79-rouka, JA-C80-kousaten]
 sounds: []
-roots: []
+roots: [middle-chinese-sinh, middle-chinese-hawh]
+etymology_hook: "shingou: Sino-Japanese 信 'trust' + 号 'mark', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C80-kousaten]
 <!-- hl-knowledge: introduces=[JA-LEX-C80-LOC80-02]; assesses=[] -->
 
 **しんごう** — *shingou* — "a traffic light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しんごう** (*shingou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shin*, "trust; message" (Middle Chinese *sinH*) and *gō*, "mark, sign" (*hawH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

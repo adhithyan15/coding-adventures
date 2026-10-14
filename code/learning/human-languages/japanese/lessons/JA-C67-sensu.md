@@ -14,7 +14,8 @@ romanization: "sensu"
 concept_tag: JA-THINGS67-SENSU
 prerequisites: [JA-C66-taiko, JA-C67-uchiwa]
 sounds: []
-roots: []
+roots: [middle-chinese-syenh]
+etymology_hook: "sensu: Sino-Japanese 扇 'fan' + su, a later Chinese reading of the noun ending 子"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C67-uchiwa]
 <!-- hl-knowledge: introduces=[JA-LEX-C67-THINGS67-02]; assesses=[] -->
 
 **せんす** — *sensu* — "a folding fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**せんす** (*sensu*) is Sino-Japanese, borrowed from Chinese: *sen*, "fan" (Middle Chinese *syenH*), and *su*, a noun ending written with the character for "child"; *su* is a later Chinese reading of that character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

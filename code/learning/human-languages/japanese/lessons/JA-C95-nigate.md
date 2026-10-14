@@ -14,7 +14,8 @@ romanization: "nigate"
 concept_tag: JA-CAN95-NIGATE
 prerequisites: [JA-C95-kanou, JA-C95-tokui]
 sounds: []
-roots: []
+roots: [japanese-nigai, japanese-te-hand]
+etymology_hook: "nigate: native niga 'bitter' (nigai) + te 'hand' (苦手)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C95-tokui]
 <!-- hl-knowledge: introduces=[JA-LEX-C95-CAN95-03]; assesses=[] -->
 
 **にがて** — *nigate* — "poor at".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**にがて** (*nigate*) is a native compound, inherited rather than borrowed: *niga*, "bitter", from *nigai*, and *te*, "hand", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

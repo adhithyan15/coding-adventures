@@ -98,6 +98,9 @@ You'll want to know.
 すこし (sukoshi) — su-ko-shi — a little.
 Three morae. This word makes a request smaller and gentler: not a completely different explanation, only a little adjustment. The last sign is exposure for one lesson; its own writing step comes next.
 
+The word, taken apart.
+すこし (sukoshi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 Guided Practice.
 [your turn — hear: sukoshi becomes choose a little]
 [pause 8 seconds for the answer]
@@ -153,6 +156,9 @@ You'll want to know.
 ゆっくり (yukkuri) — yu-k-ku-ri — slowly.
 Do not squeeze the middle. The small っ holds one beat of closure before ku. The spelling is exposure today; this lesson earns the sound and practical job without pretending the two new shapes are already readable.
 
+The word, taken apart.
+ゆっくり (yukkuri) is a native mimetic word, one of the Japanese words that picture a manner or a feeling in sound; JMdict marks it as mimetic, and it has no kanji. It is inherited, not borrowed, and its older origin is not settled.
+
 Guided Practice.
 [your turn — hear: yukkuri becomes choose slowly]
 [pause 8 seconds for the answer]
@@ -207,6 +213,9 @@ You'll want to know.
 いってください。 — itte kudasai — please say it.
 The first part is the request-linking form of iu, “to say.” Kudasai makes the requested action polite. Learn the whole spoken frame now. Its small っ, て, and voiced だ receive separate writing steps later.
 
+The word, taken apart.
+いってください (itte kudasai) is two native verbs, inherited rather than borrowed. Itte is the linking form of iu, "to say". Kudasai is the request form of kudasaru, "to give (to me)", written with a character meaning "down; give", for a favour that comes down to the speaker (JMdict, KANJIDIC2).
+
 Guided Practice.
 [your turn — hear: itte kudasai becomes choose please say it]
 [pause 8 seconds for the answer]
@@ -234,6 +243,9 @@ You'll want to know.
 もうすこし — mō sukoshi — a little more.
 No new grammar is hiding here. もう points beyond the present amount; すこし (sukoshi) keeps the requested change small. Every sign is already earned.
 
+The word, taken apart.
+もうすこし (mō sukoshi) is two native words in a row: mō, "more", and sukoshi, "a little". Both are inherited rather than borrowed (JMdict).
+
 Guided Practice.
 [once you have stopped driving — read: もう | すこし (sukoshi)]
 Say mō sukoshi, keeping the extra beat in もう.
@@ -258,6 +270,9 @@ Say “I do not understand.”
 You'll want to know.
 わかりました。 — wakarimashita — I understand; understood.
 The familiar wakari- stem returns. Polite -mashita presents the change as achieved: the explanation landed. The final た is supported exposure until its own sign lesson.
+
+The word, taken apart.
+わかりました (wakarimashita) is native wakaru, "to understand", in its polite past -mashita. JMdict writes the verb with a character meaning "divide"; it is inherited, and its older origin is not settled.
 
 Guided Practice.
 [your turn — hear: wakarimasen becomes not understood]
@@ -286,6 +301,9 @@ You'll want to know.
 ここ (koko) — ko-ko — here; this place.
 One owned sign appears twice. The word belongs to a larger pointing family that will later contrast near me, near you, and over there. Today, keep only the speaker-near place: here.
 
+The word, taken apart.
+ここ (koko) is native: the ko- that points near the speaker, as in kore, "this", with -ko, a place ending that KANJIDIC2 lists among the readings of a character meaning "place". It is inherited rather than borrowed, and is usually written in kana (JMdict).
+
 Guided Practice.
 Picture the spot beside you and say koko.
 [once you have stopped driving — read: こ | こ]
@@ -309,6 +327,9 @@ Say sumimasen and onegaishimasu. Retrieve the repetition request, then the three
 You'll want to know.
 もうすこし、ゆっくりいってください。 mō sukoshi, yukkuri itte kudasai — please say it a little more slowly.
 No new rule arrives here. The first block is independently readable and writable. The second and third remain sound-first exposure where their small っ, て, and だ have not yet received individual writing lessons.
+
+The word, taken apart.
+もうすこし、ゆっくりいってください (mō sukoshi, yukkuri itte kudasai) is built only from native words you already own: mō, sukoshi, the mimetic yukkuri, itte from iu, "to say", and kudasai from kudasaru, "to give". None of them is borrowed (JMdict).
 
 Guided Practice.
 Listen: choose repetition or slower speech from the request you hear.

@@ -14,7 +14,8 @@ romanization: "ofuro"
 concept_tag: JA-HOME39-OFURO
 prerequisites: [JA-C38-daidokoro, JA-C39-niwa]
 sounds: []
-roots: []
+roots: [japanese-furo]
+etymology_hook: "ofuro: polite o- + furo 'bath', written 風呂; where furo comes from is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C39-niwa]
 <!-- hl-knowledge: introduces=[JA-LEX-C39-HOME39-02]; assesses=[] -->
 
 **おふろ** — *ofuro* — "a bath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おふろ** (*ofuro*) is the polite prefix *o-* with *furo*, "bath". JMdict writes *furo* with a character for "wind" and one used for its sound; where *furo* comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

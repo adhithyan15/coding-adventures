@@ -14,7 +14,8 @@ romanization: "mato"
 concept_tag: JA-THINGS115-MATO
 prerequisites: [JA-C114-ami, JA-C115-futa]
 sounds: []
-roots: []
+roots: [japanese-mato]
+etymology_hook: "mato: native Japanese, inherited, not borrowed; kanji 的 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C115-futa]
 <!-- hl-knowledge: introduces=[JA-LEX-C115-THINGS115-02]; assesses=[] -->
 
 **まと** — *mato* — "a target".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まと** (*mato*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

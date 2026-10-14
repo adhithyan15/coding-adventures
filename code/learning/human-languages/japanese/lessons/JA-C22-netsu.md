@@ -14,7 +14,8 @@ romanization: "netsu"
 concept_tag: JA-BODY22-NETSU
 prerequisites: [JA-C22-namida, JA-C22-koe]
 sounds: []
-roots: []
+roots: [middle-chinese-nyet]
+etymology_hook: "netsu: Sino-Japanese, the on'yomi of 熱 'heat', from Middle Chinese nyet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C22-koe]
 <!-- hl-knowledge: introduces=[JA-LEX-C22-BODY22-04]; assesses=[] -->
 
 **ねつ** — *netsu* — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ねつ** (*netsu*) is Sino-Japanese (kango): the on'yomi of a character meaning "heat", a reading borrowed from Chinese (Middle Chinese *nyet*; Unihan, KANJIDIC2, Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

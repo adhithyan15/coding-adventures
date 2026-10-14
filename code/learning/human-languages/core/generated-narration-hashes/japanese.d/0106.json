@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 106,
-  "sourceHash": "fnv1a64:371d2a2757de45d2",
+  "sourceHash": "fnv1a64:52cdfcc82c04324d",
   "lessonIds": [
     "JA-C106-mon",
     "JA-C106-hayashi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch106.txt",
   "json": "japanese/narration/ch106.json",
-  "textHash": "fnv1a64:96597ae658b7027a",
-  "jsonHash": "fnv1a64:781cae8d6770addb",
+  "textHash": "fnv1a64:d583435e702a0fdf",
+  "jsonHash": "fnv1a64:97957030c5309b37",
   "findings": []
 }

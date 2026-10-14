@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 31,
-  "sourceHash": "fnv1a64:1eb3ae2045186501",
+  "sourceHash": "fnv1a64:c72be795730b6876",
   "lessonIds": [
     "JA-C31-dasu",
     "JA-C31-otosu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch31.txt",
   "json": "japanese/narration/ch31.json",
-  "textHash": "fnv1a64:5684331d08442f96",
-  "jsonHash": "fnv1a64:1ad9ddbde7b9596b",
+  "textHash": "fnv1a64:3d52b2f4c196193e",
+  "jsonHash": "fnv1a64:6ee1e49b92b8e625",
   "findings": []
 }

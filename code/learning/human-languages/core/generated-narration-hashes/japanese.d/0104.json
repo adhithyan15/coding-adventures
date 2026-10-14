@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 104,
-  "sourceHash": "fnv1a64:f458a9b1f0cffc08",
+  "sourceHash": "fnv1a64:2b82198af0eb306d",
   "lessonIds": [
     "JA-C104-tsutsumi",
     "JA-C104-fuutou",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch104.txt",
   "json": "japanese/narration/ch104.json",
-  "textHash": "fnv1a64:47a1f660cecb44e6",
-  "jsonHash": "fnv1a64:a8efb61b4af02c7a",
+  "textHash": "fnv1a64:c8c5b7cd8652211c",
+  "jsonHash": "fnv1a64:974e95daba4a4e5d",
   "findings": []
 }

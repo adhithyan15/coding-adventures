@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 132,
-  "sourceHash": "fnv1a64:8a69dfc551aca497",
+  "sourceHash": "fnv1a64:71e63a191ecb2dca",
   "lessonIds": [
     "JA-C132-soko",
     "JA-W132-so",
@@ -17,7 +17,7 @@
   "drivablePrefix": 1,
   "text": "japanese/narration/ch132.txt",
   "json": "japanese/narration/ch132.json",
-  "textHash": "fnv1a64:a6aaa1ba2afdd822",
-  "jsonHash": "fnv1a64:b953f0a43a428b85",
+  "textHash": "fnv1a64:26b378798820383d",
+  "jsonHash": "fnv1a64:4913d4c4b5e868a4",
   "findings": []
 }

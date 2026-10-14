@@ -14,7 +14,8 @@ romanization: "tsue"
 concept_tag: JA-THINGS99-TSUE
 prerequisites: [JA-C98-yue, JA-C99-saifu]
 sounds: []
-roots: []
+roots: [japanese-tsue]
+etymology_hook: "tsue: native Japanese, inherited, not borrowed; kanji 杖 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C99-saifu]
 <!-- hl-knowledge: introduces=[JA-LEX-C99-THINGS99-02]; assesses=[] -->
 
 **つえ** — *tsue* — "a walking stick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つえ** (*tsue*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

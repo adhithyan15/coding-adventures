@@ -14,7 +14,8 @@ romanization: "teinei"
 concept_tag: JA-QUAL120-TEINEI
 prerequisites: [JA-C120-hima, JA-C120-shinsetsu]
 sounds: []
-roots: []
+roots: [middle-chinese-teng, middle-chinese-neng]
+etymology_hook: "teinei: Sino-Japanese 丁 'robust' + 寧 'repose', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C120-shinsetsu]
 <!-- hl-knowledge: introduces=[JA-LEX-C120-QUAL120-05]; assesses=[] -->
 
 **ていねい** — *teinei* — "polite, careful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ていねい** (*teinei*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *tei*, "robust, vigorous" (Middle Chinese *teng*) and *nei*, "repose, peace" (*neng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "daikon"
 concept_tag: JA-FOOD34-DAIKON
 prerequisites: [JA-C33-nashi, JA-C34-suika]
 sounds: []
-roots: []
+roots: [middle-chinese-dajh, middle-chinese-kon]
+etymology_hook: "daikon: Sino-Japanese 大 'big' + 根 'root', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C34-suika]
 <!-- hl-knowledge: introduces=[JA-LEX-C34-FOOD34-02]; assesses=[] -->
 
 **だいこん** — *daikon* — "a white radish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**だいこん** (*daikon*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *dai*, "big" (Middle Chinese *dajH*) and *kon*, "root" (*kon*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

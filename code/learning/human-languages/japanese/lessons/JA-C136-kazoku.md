@@ -14,8 +14,8 @@ romanization: "kazoku"
 concept_tag: JA-ANCHOR-KAZOKU
 prerequisites: [JA-R135-hospital-and-bank, JA-W03-ka, JA-W09-ku, JA-W135-ge, JA-W134-ba, JA-C126-nemutai]
 sounds: [mora]
-roots: []
-etymology_hook: Kazoku is the everyday word for a family; its middle sign is そ with the voicing mark, a sign the book has not yet written.
+roots: [middle-chinese-kae, middle-chinese-dzuwk]
+etymology_hook: "kazoku: Sino-Japanese 家 'house' + 族 'family clan', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +52,11 @@ with. Said of your own, it means *my family*.
 Three beats: *ka–zo–ku*. **か** and **く** you already write. The middle sign
 is **そ** with the two short strokes of the voicing mark at its upper right,
 so *so* becomes *zo*. The next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かぞく** (*kazoku*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ka*, "house, family" (Middle Chinese *kae*) and *zoku*, "family clan" (*dzuwk*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KAZOKU, JA-SCRIPT-KA-01, JA-SCRIPT-KU-01] -->

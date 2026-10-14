@@ -14,7 +14,8 @@ romanization: "kougai"
 concept_tag: JA-LOC82-KOUGAI
 prerequisites: [JA-C82-machikado, JA-C82-shinai]
 sounds: []
-roots: []
+roots: [middle-chinese-kaew-suburb, middle-chinese-ngwajh]
+etymology_hook: "kougai: Sino-Japanese 郊 'suburbs' + 外 'outside', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C82-shinai]
 <!-- hl-knowledge: introduces=[JA-LEX-C82-LOC82-03]; assesses=[] -->
 
 **こうがい** — *kougai* — "the suburbs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こうがい** (*kougai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kō*, "suburbs" (Middle Chinese *kaew*) and *gai*, "outside" (*ngwajH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

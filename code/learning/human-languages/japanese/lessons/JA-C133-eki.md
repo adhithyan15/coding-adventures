@@ -14,8 +14,8 @@ romanization: "eki"
 concept_tag: JA-ANCHOR-EKI
 prerequisites: [JA-R132-this-and-that, JA-W01-e, JA-W132-re, JA-C119-yaoya]
 sounds: [mora]
-roots: []
-etymology_hook: Eki is the everyday word for a railway station; the sign at its end is one of the last four hiragana the book has not yet written.
+roots: [middle-chinese-yek]
+etymology_hook: "eki: Sino-Japanese, the on'yomi of 駅 'relay station', from Middle Chinese yek"
 duration:
   max_seconds: 200
 requires:
@@ -50,6 +50,11 @@ reviews_of: [JA-R132-this-and-that, JA-W01-e, JA-W132-re, JA-C119-yaoya]
 Two beats: *e–ki*. The first sign is the **え** you already write. The second one
 is new. It is one of only four hiragana signs the book has not yet written, and
 the next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**えき** (*eki*) is Sino-Japanese (kango): the on'yomi of a character meaning "relay station", a reading borrowed from Chinese (Middle Chinese *yek*; Unihan, KANJIDIC2, Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-EKI, JA-SCRIPT-E-01] -->

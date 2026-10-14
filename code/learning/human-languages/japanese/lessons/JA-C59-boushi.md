@@ -14,7 +14,8 @@ romanization: "boushi"
 concept_tag: JA-CLOTHES59-BOUSHI
 prerequisites: [JA-C58-fuku, JA-C58-kutsu]
 sounds: []
-roots: []
+roots: [middle-chinese-mawh, middle-chinese-tsix]
+etymology_hook: "boushi: Sino-Japanese 帽 'hat' + 子 'child', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C58-kutsu]
 <!-- hl-knowledge: introduces=[JA-LEX-C59-CLOTHES59-01]; assesses=[] -->
 
 **ぼうし** — *boushi* — "a hat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ぼうし** (*boushi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *bō*, "hat" (Middle Chinese *mawH*) and *shi*, "child; a noun ending" (*tsiX*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

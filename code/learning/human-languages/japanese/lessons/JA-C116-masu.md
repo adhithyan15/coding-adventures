@@ -14,7 +14,8 @@ romanization: "masu"
 concept_tag: JA-THINGS116-MASU
 prerequisites: [JA-C115-namako, JA-C115-ayu]
 sounds: []
-roots: []
+roots: [japanese-masu-trout]
+etymology_hook: "masu: native Japanese, inherited, not borrowed; usually kana, kanji 鱒 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C115-ayu]
 <!-- hl-knowledge: introduces=[JA-LEX-C116-THINGS116-01]; assesses=[] -->
 
 **ます** — *masu* — "a trout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ます** (*masu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

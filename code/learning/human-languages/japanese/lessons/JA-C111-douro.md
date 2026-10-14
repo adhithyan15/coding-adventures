@@ -14,7 +14,8 @@ romanization: "douro"
 concept_tag: JA-THINGS111-DOURO
 prerequisites: [JA-C111-kangoshi, JA-C111-shiro]
 sounds: []
-roots: []
+roots: [middle-chinese-dawx, middle-chinese-luh]
+etymology_hook: "douro: Sino-Japanese 道 'way' + 路 'road', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C111-shiro]
 <!-- hl-knowledge: introduces=[JA-LEX-C111-THINGS111-04]; assesses=[] -->
 
 **どうろ** — *douro* — "a road, a highway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**どうろ** (*douro*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *dō*, "way, path" (Middle Chinese *dawX*) and *ro*, "road" (*luH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

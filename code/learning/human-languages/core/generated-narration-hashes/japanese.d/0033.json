@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 33,
-  "sourceHash": "fnv1a64:e1b2c4a002399868",
+  "sourceHash": "fnv1a64:7188da631accb87e",
   "lessonIds": [
     "JA-C33-ringo",
     "JA-C33-mikan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch33.txt",
   "json": "japanese/narration/ch33.json",
-  "textHash": "fnv1a64:6d1c9472ab797a3e",
-  "jsonHash": "fnv1a64:259660bcad4127f9",
+  "textHash": "fnv1a64:9ee68bfdad8ac581",
+  "jsonHash": "fnv1a64:ed554bcdf0bd63ec",
   "findings": []
 }

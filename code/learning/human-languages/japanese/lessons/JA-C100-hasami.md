@@ -14,7 +14,8 @@ romanization: "hasami"
 concept_tag: JA-THINGS100-HASAMI
 prerequisites: [JA-C100-bou, JA-C100-ita]
 sounds: []
-roots: []
+roots: [japanese-hasami]
+etymology_hook: "hasami: native Japanese, inherited, not borrowed; usually kana, kanji 鋏 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C100-ita]
 <!-- hl-knowledge: introduces=[JA-LEX-C100-THINGS100-04]; assesses=[] -->
 
 **はさみ** — *hasami* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はさみ** (*hasami*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

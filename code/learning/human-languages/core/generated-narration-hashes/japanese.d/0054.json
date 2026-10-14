@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 54,
-  "sourceHash": "fnv1a64:d234376c085921c0",
+  "sourceHash": "fnv1a64:d401ddbebf835502",
   "lessonIds": [
     "JA-C54-yuugata",
     "JA-C54-ashita",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "japanese/narration/ch54.txt",
   "json": "japanese/narration/ch54.json",
-  "textHash": "fnv1a64:5fc11caf41b31df4",
-  "jsonHash": "fnv1a64:e16f815458607ba2",
+  "textHash": "fnv1a64:7c2cde255b3fdb9c",
+  "jsonHash": "fnv1a64:e5b83a3d3d4d4cde",
   "findings": []
 }

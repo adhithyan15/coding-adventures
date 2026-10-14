@@ -14,7 +14,8 @@ romanization: "wakame"
 concept_tag: JA-THINGS113-WAKAME
 prerequisites: [JA-C113-dashi, JA-C113-katsuo]
 sounds: []
-roots: []
+roots: [japanese-waka, japanese-me-seaweed]
+etymology_hook: "wakame: native waka 'young' + me 'seaweed'; written 若布"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C113-katsuo]
 <!-- hl-knowledge: introduces=[JA-LEX-C113-THINGS113-05]; assesses=[] -->
 
 **わかめ** — *wakame* — "wakame seaweed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**わかめ** (*wakame*) is native: *waka*, "young", and *me*, an old word for edible seaweed. JMdict writes it with characters for "young" and "cloth", read for their meaning. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

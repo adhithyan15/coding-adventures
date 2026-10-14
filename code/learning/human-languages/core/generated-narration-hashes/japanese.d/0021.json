@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 21,
-  "sourceHash": "fnv1a64:28b6dafae59cf0b3",
+  "sourceHash": "fnv1a64:4bc17501ba0551a0",
   "lessonIds": [
     "JA-C21-hone",
     "JA-C21-ago",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch21.txt",
   "json": "japanese/narration/ch21.json",
-  "textHash": "fnv1a64:aedebc3f205fd4dd",
-  "jsonHash": "fnv1a64:0e41532cc4368bfa",
+  "textHash": "fnv1a64:87d87fcf4354fac4",
+  "jsonHash": "fnv1a64:dbba78b2b5a68520",
   "findings": []
 }

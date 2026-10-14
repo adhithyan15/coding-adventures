@@ -14,7 +14,8 @@ romanization: "washi"
 concept_tag: JA-THINGS109-WASHI
 prerequisites: [JA-C108-inoshishi, JA-C109-kamo]
 sounds: []
-roots: []
+roots: [japanese-washi]
+etymology_hook: "washi: native Japanese, inherited, not borrowed; usually kana, kanji 鷲 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C109-kamo]
 <!-- hl-knowledge: introduces=[JA-LEX-C109-THINGS109-02]; assesses=[] -->
 
 **わし** — *washi* — "an eagle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**わし** (*washi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

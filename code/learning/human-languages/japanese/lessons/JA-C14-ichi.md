@@ -11,8 +11,8 @@ gloss: one — the number you have been saying since chapter nine, standing on i
 concept_tag: JA-NUMBER-ONE
 prerequisites: [JA-C13-family-check, JA-C09-ichido, JA-C01-practice]
 sounds: [mora]
-roots: []
-etymology_hook: Chapter nine glossed ichido as one time and said in so many words that ichi is one; this lesson only takes the word apart.
+roots: [middle-chinese-jit]
+etymology_hook: "ichi: Sino-Japanese, the on'yomi of 一 'one', borrowed from Middle Chinese 'jit"
 duration:
   max_seconds: 160
 requires:
@@ -50,6 +50,11 @@ the word changes today. It stops being part of a phrase and starts being a
 number you can use on its own.
 
 Both signs are yours: **い + ち**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いち** (*ichi*) is Sino-Japanese: the on'yomi of the character for "one", a reading borrowed from Chinese (Middle Chinese *'jit*; Unihan, Baxter–Sagart).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ICHI, JA-LEX-ICHIDO, JA-SCRIPT-I-01, JA-SCRIPT-CHI-01] -->

@@ -14,8 +14,8 @@ romanization: "ginkō"
 concept_tag: JA-ANCHOR-GINKOU
 prerequisites: [JA-C135-genki, JA-W01-n, JA-W01-ko, JA-W03-u, JA-W135-gu, JA-W134-de, JA-C125-osanai]
 sounds: [mora]
-roots: []
-etymology_hook: Ginkō is the word for a bank; its first sign is き with the voicing mark, a sign the book has not yet written.
+roots: [middle-chinese-ngin, middle-chinese-hang]
+etymology_hook: "ginkō: Sino-Japanese 銀 'silver' + 行 'go', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +52,11 @@ reviews_of: [JA-C135-genki, JA-W01-n, JA-W01-ko, JA-W03-u, JA-W135-gu, JA-W134-d
 Four beats: *gi–n–ko–o*. **ん**, **こ** and **う** you already write, and the
 **う** stretches the *o*. The first sign is **き** with the voicing mark, so *ki*
 becomes *gi*. The next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ぎんこう** (*ginkō*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *gin*, "silver" (Middle Chinese *ngin*) and *kō*, "go; a row, a line" (*hang*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-GINKOU, JA-SCRIPT-N-01, JA-SCRIPT-KO-01, JA-SCRIPT-U-01] -->

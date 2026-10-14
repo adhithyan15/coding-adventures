@@ -14,6 +14,9 @@ Before the new one: say the Japanese for a nephew, then the Japanese for a niece
 You'll want to know: ごご.
 ごご — gogo — "the afternoon, p.m.".
 
+The word, taken apart.
+ごご (gogo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are go, "noon" (Middle Chinese nguX) and go, "after" (huwX) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -44,6 +47,9 @@ Before the new one: say the Japanese for a niece, then the Japanese for the afte
 
 You'll want to know: よなか.
 よなか — yonaka — "the middle of the night".
+
+The word, taken apart.
+よなか (yonaka) is a native compound, inherited rather than borrowed: yo, "night", and naka, "middle", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -76,6 +82,9 @@ Before the new one: say the Japanese for the afternoon, then the Japanese for th
 You'll want to know: あさがた.
 あさがた — asagata — "early morning".
 
+The word, taken apart.
+あさがた (asagata) is a native compound, inherited rather than borrowed: asa, "morning", and kata, "side; time", voiced to gata, both kun'yomi of its kanji (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -107,6 +116,9 @@ Before the new one: say the Japanese for the middle of the night, then the Japan
 You'll want to know: ゆうはん.
 ゆうはん — yuuhan — "the evening meal".
 
+The word, taken apart.
+ゆうはん (yuuhan) mixes the two layers: native yū, "evening", read as a kun'yomi, and han, "cooked rice; a meal", the on'yomi of its second character, borrowed from Chinese (Middle Chinese bjonX; JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -137,6 +149,9 @@ Before the new one: say the Japanese for early morning, then the Japanese for th
 
 You'll want to know: あさひ.
 あさひ — asahi — "the morning sun".
+
+The word, taken apart.
+あさひ (asahi) is a native compound, inherited rather than borrowed: asa, "morning", and hi, "sun", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

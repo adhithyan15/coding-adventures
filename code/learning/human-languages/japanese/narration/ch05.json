@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Nihongo, Built in Small Blocks",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cdd70426b23f4af1",
+  "sourceHash": "fnv1a64:aa564211848297fc",
   "lessons": [
     {
       "id": "JA-W05-nichi-kanji",
@@ -986,7 +986,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:217e59b91901920a",
+      "sourceHash": "fnv1a64:cc9a085076762de2",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -14,7 +14,8 @@ romanization: "hata"
 concept_tag: JA-THINGS101-HATA
 prerequisites: [JA-C100-hasami, JA-C100-zasshi]
 sounds: []
-roots: []
+roots: [japanese-hata]
+etymology_hook: "hata: native Japanese, inherited, not borrowed; kanji 旗 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C100-zasshi]
 <!-- hl-knowledge: introduces=[JA-LEX-C101-THINGS101-01]; assesses=[] -->
 
 **はた** — *hata* — "a flag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はた** (*hata*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

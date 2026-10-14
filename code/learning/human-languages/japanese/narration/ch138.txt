@@ -18,6 +18,9 @@ You'll want to know: おきます.
 Every verb in this chapter ends in ます, masu. That ending makes the polite present, the form you use with anyone you do not know well. A word list gives the dictionary form instead, here おきる, okiru. To make the polite form of a verb in -iru or -eru like this one, take off the last る and add ます: oki-ru becomes oki-masu.
 まいあさ おきます。 — maiasa okimasu — "I get up every morning."
 
+The word, taken apart.
+おきます (okimasu) is native okiru, "to get up", with the polite ending -masu. The verb is inherited rather than borrowed; -masu is usually traced to an older humble verb, mairasu, "to offer" (JMdict).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: okimasu]
@@ -53,6 +56,9 @@ You'll want to know: はたらきます.
 はたらきます — hatarakimasu — "I work": to do a job, at a desk, in a shop or in a field. The noun for the job itself is しごと, which you already know.
 Its dictionary form is はたらく, hataraku. Verbs that end in -u like this one change that last sound to -i before ます: hatarak-u becomes hatarak-i-masu. So く turns into き.
 ぎんこうで はたらきます。 — ginkō de hatarakimasu — "I work at a bank." The particle で marks the place where something is done.
+
+The word, taken apart.
+はたらきます (hatarakimasu) is native hataraku, "to work", with the polite ending -masu. The verb is inherited rather than borrowed (JMdict); its kanji, "person" beside "move", was made in Japan (KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]
@@ -90,6 +96,9 @@ You'll want to know: あるきます.
 The dictionary form is あるく, aruku, and it works like はたらく: the last く becomes き, and ます follows. aruk-u becomes aruk-i-masu.
 えきまで あるきます。 — eki made arukimasu — "I walk to the station." まで means "as far as".
 
+The word, taken apart.
+あるきます (arukimasu) is native aruku, "to walk", with the polite ending -masu. The verb is inherited rather than borrowed; its kanji is a kun'yomi attached later (JMdict, KANJIDIC2).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: arukimasu]
@@ -121,6 +130,9 @@ You'll want to know: かえります.
 かえります — kaerimasu — "I go home", "I go back", to the place you belong to: your home, your town, your country.
 Its dictionary form is かえる, kaeru. It ends in -eru, but it follows the -u pattern of あるく, not the pattern of おきる: the last る becomes り, and ます follows. So it is kaer-i-masu, never kaemasu. A few common verbs in -eru and -iru work this way, and a word list marks them.
 うちに かえります。 — uchi ni kaerimasu — "I go home." The particle に marks where you are going.
+
+The word, taken apart.
+かえります (kaerimasu) is native kaeru, "to go back", with the polite ending -masu. The verb is inherited rather than borrowed; its kanji is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]
@@ -160,6 +172,9 @@ dictionary form: ねる neru. polite present: ねます nemasu. how: drop -ru.
 dictionary form: はたらく hataraku. polite present: はたらきます hatarakimasu. how: -u becomes -i.
 dictionary form: あるく aruku. polite present: あるきます arukimasu. how: -u becomes -i.
 dictionary form: かえる kaeru. polite present: かえります kaerimasu. how: -u becomes -i.
+
+The word, taken apart.
+ねます (nemasu) is native neru, "to sleep, to lie down", with the polite ending -masu. The verb is inherited rather than borrowed; its kanji is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]

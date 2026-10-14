@@ -14,7 +14,8 @@ romanization: "futsuu"
 concept_tag: JA-QUAL126-FUTSUU
 prerequisites: [JA-C126-nemutai, JA-C126-anshin]
 sounds: []
-roots: []
+roots: [middle-chinese-phux, middle-chinese-thuwng]
+etymology_hook: "futsuu: Sino-Japanese 普 'universal' + 通 'pass through', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C126-anshin]
 <!-- hl-knowledge: introduces=[JA-LEX-C126-QUAL126-04]; assesses=[] -->
 
 **ふつう** — *futsuu* — "ordinary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふつう** (*futsuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *fu*, "universal, general" (Middle Chinese *phuX*) and *tsū*, "pass through; common" (*thuwng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

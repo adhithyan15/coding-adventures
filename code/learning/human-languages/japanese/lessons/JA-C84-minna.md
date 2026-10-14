@@ -14,7 +14,8 @@ romanization: "minna"
 concept_tag: JA-DEF84-MINNA
 prerequisites: [JA-C84-donna, JA-C84-hoka]
 sounds: []
-roots: []
+roots: [japanese-mina]
+etymology_hook: "minna: native, a spoken form of mina 'all', with a nasal beat added"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C84-hoka]
 <!-- hl-knowledge: introduces=[JA-LEX-C84-DEF84-03]; assesses=[] -->
 
 **みんな** — *minna* — "everybody".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**みんな** (*minna*) is native: a spoken form of *mina*, "all", with a nasal beat added; both are written with the same character (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

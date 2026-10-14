@@ -14,7 +14,8 @@ romanization: "senzai"
 concept_tag: JA-THINGS102-SENZAI
 prerequisites: [JA-C101-danbou, JA-C102-sentakumono]
 sounds: []
-roots: []
+roots: [middle-chinese-dzejh]
+etymology_hook: "senzai: Sino-Japanese 洗 'wash' + 剤 'medicinal preparation', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C102-sentakumono]
 <!-- hl-knowledge: introduces=[JA-LEX-C102-THINGS102-02]; assesses=[] -->
 
 **せんざい** — *senzai* — "detergent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**せんざい** (*senzai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *sen*, "wash" and *zai*, "medicinal preparation" (Middle Chinese *dzejH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

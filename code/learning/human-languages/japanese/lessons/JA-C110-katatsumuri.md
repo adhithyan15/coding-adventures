@@ -14,7 +14,8 @@ romanization: "katatsumuri"
 concept_tag: JA-THINGS110-KATATSUMURI
 prerequisites: [JA-C109-kaiko, JA-C110-hae]
 sounds: []
-roots: []
+roots: [japanese-katatsumuri]
+etymology_hook: "katatsumuri: native; written 蝸牛, read as a whole; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C110-hae]
 <!-- hl-knowledge: introduces=[JA-LEX-C110-THINGS110-02]; assesses=[] -->
 
 **かたつむり** — *katatsumuri* — "a snail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かたつむり** (*katatsumuri*) is a native word, inherited rather than borrowed. JMdict writes it with characters for "snail" and "cow", read as a whole, and marks it as usually written in kana. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

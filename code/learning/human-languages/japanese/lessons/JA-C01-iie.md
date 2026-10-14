@@ -12,7 +12,7 @@ concept_tag: RESPONSE-NO
 prerequisites: [JA-C01-hai]
 sounds: [mora, pure-vowels, mora-length]
 roots: []
-etymology_hook: いえ is a house and いいえ is “no” — one extra beat is the whole difference.
+etymology_hook: "iie: native Japanese; JMdict lists it with iya, ie and ina under 否 'no'; how they relate is not settled"
 duration:
   max_seconds: 185
 requires:
@@ -58,6 +58,8 @@ for two beats and the word lands; clip it and you have said "house."
 used to wave away thanks or a compliment. That second use is the common one in
 daily speech, which is worth knowing before you meet it as an answer to
 **thank you** at the end of this chapter.
+
+It is a native Japanese word, inherited rather than borrowed: JMdict lists it in one entry with *iya*, *ie* and *ina*, other ways of saying no, under a kanji meaning "no". How those forms are related is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH, JA-SCRIPT-HIRAGANA-MORA] -->

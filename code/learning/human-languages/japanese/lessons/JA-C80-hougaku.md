@@ -14,7 +14,8 @@ romanization: "hougaku"
 concept_tag: JA-LOC80-HOUGAKU
 prerequisites: [JA-C80-kousaten, JA-C80-shingou]
 sounds: []
-roots: []
+roots: [middle-chinese-pjang, middle-chinese-kaewk]
+etymology_hook: "hougaku: Sino-Japanese 方 'region' + 角 'horn', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C80-shingou]
 <!-- hl-knowledge: introduces=[JA-LEX-C80-LOC80-03]; assesses=[] -->
 
 **ほうがく** — *hougaku* — "a direction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ほうがく** (*hougaku*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *hō*, "region, direction" (Middle Chinese *pjang*) and *kaku*, "horn, angle" (*kaewk*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

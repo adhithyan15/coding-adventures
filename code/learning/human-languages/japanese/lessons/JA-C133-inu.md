@@ -14,8 +14,8 @@ romanization: "inu"
 concept_tag: JA-ANCHOR-INU
 prerequisites: [JA-C133-kesa, JA-W01-i, JA-W09-me, JA-W133-ki, JA-W131-small-yo, JA-C120-shinsetsu]
 sounds: [mora]
-roots: []
-etymology_hook: Inu is the everyday word for a dog, and its second sign is written like め with a small loop added at the end.
+roots: [japanese-inu]
+etymology_hook: "inu: native Japanese, inherited, not borrowed; kanji 犬 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -51,6 +51,11 @@ reviews_of: [JA-C133-kesa, JA-W01-i, JA-W09-me, JA-W133-ki, JA-W131-small-yo, JA
 Two beats: *i–nu*. The first sign is the **い** you already write. The second one
 is new. It looks like **め** with a small loop tied at the end, and the next
 lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いぬ** (*inu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-INU, JA-SCRIPT-I-01, JA-SCRIPT-ME-01] -->

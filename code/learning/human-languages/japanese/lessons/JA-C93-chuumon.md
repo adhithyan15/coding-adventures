@@ -14,7 +14,8 @@ romanization: "chuumon"
 concept_tag: JA-WANT93-CHUUMON
 prerequisites: [JA-C93-machidooshii, JA-C93-inori]
 sounds: []
-roots: []
+roots: [middle-chinese-tsyuh, middle-chinese-mjun-writing]
+etymology_hook: "chuumon: Sino-Japanese 注 'pour' + 文 'writing', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C93-inori]
 <!-- hl-knowledge: introduces=[JA-LEX-C93-WANT93-03]; assesses=[] -->
 
 **ちゅうもん** — *chuumon* — "an order".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ちゅうもん** (*chuumon*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *chū*, "pour; note" (Middle Chinese *tsyuH*) and *mon*, "writing" (*mjun*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

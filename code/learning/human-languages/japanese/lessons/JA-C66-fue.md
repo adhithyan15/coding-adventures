@@ -14,7 +14,8 @@ romanization: "fue"
 concept_tag: JA-THINGS66-FUE
 prerequisites: [JA-C66-koma, JA-C66-ikada]
 sounds: []
-roots: []
+roots: [japanese-fue]
+etymology_hook: "fue: native Japanese, inherited, not borrowed; kanji 笛 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C66-ikada]
 <!-- hl-knowledge: introduces=[JA-LEX-C66-THINGS66-04]; assesses=[] -->
 
 **ふえ** — *fue* — "a flute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふえ** (*fue*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

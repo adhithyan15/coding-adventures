@@ -14,7 +14,8 @@ romanization: "daiku"
 concept_tag: JA-THINGS112-DAIKU
 prerequisites: [JA-C111-hodou, JA-C112-nouka]
 sounds: []
-roots: []
+roots: [middle-chinese-dajh, middle-chinese-kuwng-work]
+etymology_hook: "daiku: Sino-Japanese 大 'big' + 工 'labor', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C112-nouka]
 <!-- hl-knowledge: introduces=[JA-LEX-C112-THINGS112-02]; assesses=[] -->
 
 **だいく** — *daiku* — "a carpenter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**だいく** (*daiku*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *dai*, "big, great" (Middle Chinese *dajH*) and *ku*, "labor, work" (*kuwng*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

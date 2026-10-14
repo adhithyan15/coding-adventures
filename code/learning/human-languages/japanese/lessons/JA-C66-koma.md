@@ -14,7 +14,8 @@ romanization: "koma"
 concept_tag: JA-THINGS66-KOMA
 prerequisites: [JA-C65-gobou, JA-C66-kago]
 sounds: []
-roots: []
+roots: [japanese-koma]
+etymology_hook: "koma: native; written 独楽 'enjoy alone', read as a whole; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C66-kago]
 <!-- hl-knowledge: introduces=[JA-LEX-C66-THINGS66-02]; assesses=[] -->
 
 **こま** — *koma* — "a spinning top".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こま** (*koma*) is a native word, inherited rather than borrowed. JMdict writes it with characters for "alone" and "enjoy", read as a whole, and marks it as usually written in kana. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

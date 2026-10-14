@@ -14,7 +14,8 @@ romanization: "kouiu"
 concept_tag: JA-DEF84-KOUIU
 prerequisites: [JA-C84-hoka, JA-C84-minna]
 sounds: []
-roots: []
+roots: [japanese-ko-this, japanese-iu-say]
+etymology_hook: "kōiu: native kō 'like this' + iu 'to say'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C84-minna]
 <!-- hl-knowledge: introduces=[JA-LEX-C84-DEF84-04]; assesses=[] -->
 
 **こういう** — *kouiu* — "this sort of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こういう** (*kōiu*) is native: *kō*, "like this", built on *ko-*, with *iu*, "to say", so "that one would call like this" (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

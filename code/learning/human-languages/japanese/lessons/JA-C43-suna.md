@@ -14,7 +14,8 @@ romanization: "suna"
 concept_tag: JA-NATURE43-SUNA
 prerequisites: [JA-C42-mori, JA-C42-ishi]
 sounds: []
-roots: []
+roots: [japanese-suna]
+etymology_hook: "suna: native Japanese, inherited, not borrowed; kanji 砂 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C42-ishi]
 <!-- hl-knowledge: introduces=[JA-LEX-C43-NATURE43-01]; assesses=[] -->
 
 **すな** — *suna* — "sand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すな** (*suna*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

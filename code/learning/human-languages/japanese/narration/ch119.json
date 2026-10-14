@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Florist, Fishmonger, Greengrocer, Barber, Butcher",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d485266b646114ca",
+  "sourceHash": "fnv1a64:f2241e30757633a1",
   "lessons": [
     {
       "id": "JA-C119-hanaya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4b9b50300e76a63",
+      "sourceHash": "fnv1a64:1fa9457ad8dbc926",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はなや (hanaya) is a native compound, inherited rather than borrowed: hana, \"flower\", and ya, \"house, shop\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f29271334d0b83d",
+      "sourceHash": "fnv1a64:2a2f7929c82aef4b",
       "notice": null,
       "blocks": [
         {
@@ -209,6 +220,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さかなや (sakanaya) is a native compound, inherited rather than borrowed: sakana, \"fish\", and ya, \"house, shop\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -219,7 +241,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -318,7 +340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b4d24a46d44505e",
+      "sourceHash": "fnv1a64:a7028524744b7617",
       "notice": null,
       "blocks": [
         {
@@ -351,6 +373,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やおや (yaoya) is native ya, \"shop\", after yao, \"eight hundred\", as JMdict writes it; the usual account reads \"eight hundred\" as \"many goods\", but the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -361,7 +394,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -410,7 +443,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -460,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:463a713c1aca1afb",
+      "sourceHash": "fnv1a64:fe085ace49646f79",
       "notice": null,
       "blocks": [
         {
@@ -493,6 +526,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とこや (tokoya) is a native compound, inherited rather than borrowed: toko, \"bed, floor\", and ya, \"house, shop\". Why the barber's shop is named for toko is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -503,7 +547,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -552,7 +596,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -602,7 +646,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf518398931cb44e",
+      "sourceHash": "fnv1a64:64c837baf779066e",
       "notice": null,
       "blocks": [
         {
@@ -635,6 +679,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にくや (nikuya) mixes the two layers: niku, \"meat\", the on'yomi of its first character, borrowed from Chinese (Middle Chinese nyuwk), and native ya, \"house, shop\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -645,7 +700,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -694,7 +749,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

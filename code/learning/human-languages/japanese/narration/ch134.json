@@ -4,7 +4,7 @@
   "chapter": 134,
   "title": "Phone and Train: De, Ba, Be and Bu",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f4a614b1a2d989a5",
+  "sourceHash": "fnv1a64:eb1ca724b9a4721c",
   "lessons": [
     {
       "id": "JA-C134-denwa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b46495ec18f1fccf",
+      "sourceHash": "fnv1a64:424ac5662e468bf3",
       "notice": null,
       "blocks": [
         {
@@ -83,6 +83,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "でんわ (denwa) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are den, \"electricity, lightning\" (Middle Chinese denH) and wa, \"speech, talk\" (hwaejH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,7 +133,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -332,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0dd253cc4dc916c8",
+      "sourceHash": "fnv1a64:4890c5e8bb4e489a",
       "notice": null,
       "blocks": [
         {
@@ -405,6 +416,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "でんしゃ (densha) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are den, \"electricity, lightning\" (Middle Chinese denH) and sha, \"cart, vehicle\" (tsyhae) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -444,7 +466,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -494,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2449b172893b39c5",
+      "sourceHash": "fnv1a64:a4717a5010875e7a",
       "notice": null,
       "blocks": [
         {
@@ -567,6 +589,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かばん (kaban) has an origin that is not settled: it is sometimes said to be a loanword, but no account is proven, and JMdict names no source language. JMdict marks it as usually written in kana."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -606,7 +639,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -807,7 +840,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7ceebfc185c46e2",
+      "sourceHash": "fnv1a64:2fac8f10228df9b7",
       "notice": null,
       "blocks": [
         {
@@ -880,6 +913,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ばしょ (basho) mixes the two layers: native ba, \"place\", read as a kun'yomi, and sho, \"place\", the on'yomi of its second character, borrowed from Chinese (Middle Chinese srjoX; JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -919,7 +963,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -969,7 +1013,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a679efe071f01b8a",
+      "sourceHash": "fnv1a64:9bce274a9dcd4cd2",
       "notice": null,
       "blocks": [
         {
@@ -1042,6 +1086,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たべる (taberu) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1081,7 +1136,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1282,7 +1337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed930e89d047c9e4",
+      "sourceHash": "fnv1a64:562a77c75d06614f",
       "notice": null,
       "blocks": [
         {
@@ -1355,6 +1410,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "べんきょう (benkyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ben, \"endeavor, make effort\" (Middle Chinese mjenX) and kyō, \"strong\" (gjang) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1394,7 +1460,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1445,7 +1511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c4bda1ef203c857",
+      "sourceHash": "fnv1a64:061e8c11b0b53648",
       "notice": null,
       "blocks": [
         {
@@ -1518,6 +1584,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しんぶん (shinbun) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, \"new\" (Middle Chinese sin) and bun, \"hear; news\" (mjun) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1557,7 +1634,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

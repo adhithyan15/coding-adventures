@@ -12,6 +12,9 @@ Before the new one: say the Japanese for shameless, then the Japanese for reliab
 You'll want to know: まっしろ.
 まっしろ — masshiro — "pure white".
 
+The word, taken apart.
+まっしろ (masshiro) is native: ma, "true, very", with shiro, "white", the consonant doubled where they meet (JMdict, KANJIDIC2). It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for reliable, then the Japanese for pure wh
 
 You'll want to know: まっくろ.
 まっくろ — makkuro — "pitch black".
+
+The word, taken apart.
+まっくろ (makkuro) is native: ma, "true, very", with kuro, "black", the consonant doubled where they meet (JMdict, KANJIDIC2). It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for pure white, then the Japanese for pitch
 You'll want to know: まっか.
 まっか — makka — "bright red".
 
+The word, taken apart.
+まっか (makka) is native: ma, "true, very", with aka, "red", joined with a held k (JMdict, KANJIDIC2). It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for pitch black, then the Japanese for brig
 You'll want to know: あいまい.
 あいまい — aimai — "vague".
 
+The word, taken apart.
+あいまい (aimai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ai, "dim, obscure" (Middle Chinese 'ojH) and mai, "dark, obscure" (mwojH) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for bright red, then the Japanese for vague
 
 You'll want to know: たしか.
 たしか — tashika — "certain, sure".
+
+The word, taken apart.
+たしか (tashika) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

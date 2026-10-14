@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 117,
-  "sourceHash": "fnv1a64:e2338296f213b95b",
+  "sourceHash": "fnv1a64:688c55cec34acb12",
   "lessonIds": [
     "JA-C117-hotate",
     "JA-C117-nomi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch117.txt",
   "json": "japanese/narration/ch117.json",
-  "textHash": "fnv1a64:caccc1dc4dc90b17",
-  "jsonHash": "fnv1a64:c8848f307e25684a",
+  "textHash": "fnv1a64:137991bf0ad636a9",
+  "jsonHash": "fnv1a64:d1c68fb137978416",
   "findings": []
 }

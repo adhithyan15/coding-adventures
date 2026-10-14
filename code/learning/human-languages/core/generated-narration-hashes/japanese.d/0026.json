@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 26,
-  "sourceHash": "fnv1a64:b4f504f2ee360d8c",
+  "sourceHash": "fnv1a64:385ee72aff592568",
   "lessonIds": [
     "JA-C26-tonari",
     "JA-C26-nakama",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch26.txt",
   "json": "japanese/narration/ch26.json",
-  "textHash": "fnv1a64:61b9318e1212d359",
-  "jsonHash": "fnv1a64:9811b427f6e66999",
+  "textHash": "fnv1a64:de5bc55e3bed9906",
+  "jsonHash": "fnv1a64:c7290198be78d569",
   "findings": []
 }

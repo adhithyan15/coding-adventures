@@ -14,8 +14,8 @@ romanization: "mizu"
 concept_tag: JA-ANCHOR-MIZU
 prerequisites: [JA-C136-kazoeru, JA-W09-mi, JA-W135-gi, JA-W134-be, JA-C126-umai]
 sounds: [mora]
-roots: []
-etymology_hook: Mizu is the everyday word for water; its second sign is す with the voicing mark, a sign the book has not yet written.
+roots: [japanese-mizu]
+etymology_hook: "mizu: native Japanese, inherited, not borrowed; kanji 水 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +52,11 @@ drink, or ask for in a restaurant. Hot water has a word of its own.
 
 Two beats: *mi–zu*. **み** you already write. The second sign is **す** with
 the voicing mark, so *su* becomes *zu*. The next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**みず** (*mizu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-MIZU, JA-SCRIPT-MI-01] -->

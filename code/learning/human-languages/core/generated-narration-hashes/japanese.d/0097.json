@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 97,
-  "sourceHash": "fnv1a64:79bd34af4e7873cb",
+  "sourceHash": "fnv1a64:5ff96d6c687142b1",
   "lessonIds": [
     "JA-C97-zaisan",
     "JA-C97-tsukaimichi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch97.txt",
   "json": "japanese/narration/ch97.json",
-  "textHash": "fnv1a64:7534c5f5c7319a71",
-  "jsonHash": "fnv1a64:1639c4f01972dfd0",
+  "textHash": "fnv1a64:d95395c8f100b8ab",
+  "jsonHash": "fnv1a64:8486792c6d83926c",
   "findings": []
 }

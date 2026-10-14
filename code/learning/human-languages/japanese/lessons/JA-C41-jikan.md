@@ -14,7 +14,8 @@ romanization: "jikan"
 concept_tag: JA-SCHOOL41-JIKAN
 prerequisites: [JA-C40-kotae, JA-C41-tegami]
 sounds: []
-roots: []
+roots: [middle-chinese-dzyi, middle-chinese-kean]
+etymology_hook: "jikan: Sino-Japanese 時 'time' + 間 'interval', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C41-tegami]
 <!-- hl-knowledge: introduces=[JA-LEX-C41-SCHOOL41-02]; assesses=[] -->
 
 **じかん** — *jikan* — "time; an hour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**じかん** (*jikan*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ji*, "time" (Middle Chinese *dzyi*) and *kan*, "interval" (*kean*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

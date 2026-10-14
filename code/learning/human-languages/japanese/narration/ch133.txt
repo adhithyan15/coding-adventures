@@ -16,6 +16,9 @@ You'll want to know: えき.
 えき — eki — "a station", the place where trains stop.
 Two beats: e–ki. The first sign is the え you already write. The second one is new. It is one of only four hiragana signs the book has not yet written, and the next lesson writes it.
 
+The word, taken apart.
+えき (eki) is Sino-Japanese (kango): the on'yomi of a character meaning "relay station", a reading borrowed from Chinese (Middle Chinese yek; Unihan, KANJIDIC2, Baxter–Sagart).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: eki]
@@ -93,6 +96,9 @@ You'll want to know: きのう.
 きのう — kinō — "yesterday".
 The new sign is spent at once. き, then の and う: three beats, ki–no–o. The う at the end stretches the o, as it does in ありがとう. You write every sign in it now.
 
+The word, taken apart.
+きのう (kinō) is a native word, inherited rather than borrowed. JMdict writes it with characters for "previous" and "day", read as a whole; read sakujitsu, the same characters are Sino-Japanese. Its older origin is not settled.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: kinō]
@@ -122,6 +128,9 @@ Say yesterday — R1, one lesson back.
 You'll want to know: いけ.
 いけ — ike — "a pond".
 Two beats: i–ke. The first sign is the い you already write. The second one is new, and the next lesson writes it.
+
+The word, taken apart.
+いけ (ike) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]
@@ -199,6 +208,9 @@ You'll want to know: けさ.
 けさ — kesa — "this morning".
 The new sign is spent at once. け with さ after it: two beats, ke–sa, and both signs are ones you write. きのう (kinō) was yesterday; けさ (kesa) is earlier today.
 
+The word, taken apart.
+けさ (kesa) is a native word, inherited rather than borrowed, usually explained as ending in a form of asa, "morning". JMdict writes it with "now" and "morning", read as a whole; read konchō, the same characters are Sino-Japanese.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: kesa]
@@ -228,6 +240,9 @@ Say this morning — R1, one lesson back.
 You'll want to know: いぬ.
 いぬ — inu — "a dog".
 Two beats: i–nu. The first sign is the い you already write. The second one is new. It looks like め with a small loop tied at the end, and the next lesson writes it.
+
+The word, taken apart.
+いぬ (inu) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]
@@ -304,6 +319,9 @@ You'll want to know: ぬの.
 ぬの — nuno — "cloth", a piece of woven material.
 The new sign is spent at once. ぬ with の after it: two beats, nu–no, and both signs are ones you write. In いぬ (inu) the new sign comes last; in ぬの (nuno) it comes first.
 
+The word, taken apart.
+ぬの (nuno) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: nuno]
@@ -331,6 +349,9 @@ Say cloth — R1, one lesson back.
 You'll want to know: へや.
 へや — heya — "a room".
 Two beats: he–ya. The second sign is the や you already write. The first one is new: a single low peak, like a roof. When you wrote ほ, the row ha, hi, fu, he, ho had one sign missing. This is it, and the next lesson writes it.
+
+The word, taken apart.
+へや (heya) is a native word, inherited rather than borrowed, ending in ya, "house". JMdict writes it with characters for "section" and "house", read as a whole. Where the first part comes from is not settled.
 
 Guided Practice.
 [pause 1 second]

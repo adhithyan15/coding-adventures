@@ -14,7 +14,8 @@ romanization: "hakusai"
 concept_tag: JA-THINGS114-HAKUSAI
 prerequisites: [JA-C113-katsuo, JA-C113-wakame]
 sounds: []
-roots: []
+roots: [middle-chinese-baek, middle-chinese-tshojh]
+etymology_hook: "hakusai: Sino-Japanese 白 'white' + 菜 'vegetables', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C113-wakame]
 <!-- hl-knowledge: introduces=[JA-LEX-C114-THINGS114-01]; assesses=[] -->
 
 **はくさい** — *hakusai* — "Chinese cabbage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はくさい** (*hakusai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *haku*, "white" (Middle Chinese *baek*) and *sai*, "vegetables" (*tshojH*) (Unihan, KANJIDIC2; Middle Chinese after Baxter–Sagart).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

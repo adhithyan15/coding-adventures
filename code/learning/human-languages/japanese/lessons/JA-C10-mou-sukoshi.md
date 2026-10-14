@@ -11,8 +11,8 @@ gloss: a little more
 concept_tag: JA-QUANTITY-MOU-SUKOSHI
 prerequisites: [JA-C10-itte-kudasai]
 sounds: [mora, long-o]
-roots: []
-etymology_hook: Two familiar words combine without a new rule: mō points beyond the present amount and sukoshi makes the requested increase small.
+roots: [japanese-mou, japanese-sukoshi]
+etymology_hook: "mō sukoshi: two native words, mō 'more' + sukoshi 'a little'; inherited, not borrowed"
 duration:
   max_seconds: 160
 requires:
@@ -44,6 +44,11 @@ reviews_of: [JA-C09-mou, JA-C10-sukoshi, JA-W09-mo, JA-W03-u, JA-W03-su, JA-W01-
 
 No new grammar is hiding here. **もう** points beyond the present amount;
 **すこし** keeps the requested change small. Every sign is already earned.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**もうすこし** (*mō sukoshi*) is two native words in a row: *mō*, "more", and *sukoshi*, "a little". Both are inherited rather than borrowed (JMdict).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU-SUKOSHI] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 51,
-  "sourceHash": "fnv1a64:f4630de47f2b1d79",
+  "sourceHash": "fnv1a64:343142b3651fb749",
   "lessonIds": [
     "JA-C51-tsuyoi",
     "JA-C51-yowai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch51.txt",
   "json": "japanese/narration/ch51.json",
-  "textHash": "fnv1a64:ee78494f58a9ae9f",
-  "jsonHash": "fnv1a64:d6e8787827d65e5a",
+  "textHash": "fnv1a64:7dd01c1ca9f83c8a",
+  "jsonHash": "fnv1a64:e17ad4961fa026ba",
   "findings": []
 }
