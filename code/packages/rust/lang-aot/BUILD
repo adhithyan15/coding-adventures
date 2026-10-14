@@ -72,8 +72,8 @@ cargo test -p lang-aot --test lang_matrix macrooct -- --nocapture
 # anything noticing, which is exactly the failure the test was written to stop.
 cargo test -p lang-aot --test lang_matrix feature_coverage_doc_counts_match_programs_source -- --exact
 #
-# VM-065 AUDIT (2026-09-21): `lang_matrix` is run BY NAME FILTER here, because
-# the unfiltered target is red (above). A filter is not a file: a test living
+# VM-065 AUDIT (2026-09-21): `lang_matrix` used to run BY NAME FILTER because
+# the unfiltered target was red. A filter is not a file: a test living
 # in lang_matrix.rs that matches none of these lines does not run, and nothing
 # reports it -- the same defect as an omitted `--test` target, but harder to
 # see, because the file IS named. Auditing every #[test] in that file against
@@ -88,7 +88,8 @@ cargo test -p lang-aot --test lang_matrix feature_coverage_doc_counts_match_prog
 #       _dynamic_arith_list_ops_and_closures            ← BEAM track tests.
 #   every_backend_name_round_trips_through_the_single_cell_env_var
 #
-# All five green ones are now listed below. The sixth is NOT, deliberately:
+# Focused entries remain below. The formerly red sixth guard now runs in the
+# complete target as well:
 #
 #   proven_columns_do_not_silently_skip now passes in the complete target below;
 #       the old captured-array JVM stack/native-register refusals are repaired.

@@ -14,7 +14,9 @@ fullRAX, stackwords, alignment, shadow overwrite, preserved locals, restoration,
 recursion and nine-arg refusal); backend root1 exactp7 RBP-64 and external actual
 returnPC; real Windows six/eight formal-position checks Exit42; all8 original
 captured/forwarded array rows execute Exit42. Independent scoped exact-source
-security PASS71d retained at5ba, reportSHA a47128791b7d619fff919da48021a3386201c26cc772455ea2ce37ab6964afba. No Linux/macOS hardware
+security PASS712 source/carrier/terminal, reportSHA
+0665444f2dd22d1cae5f36ad7064f860a2bf5f02cc3e2ef48eece561a45c87b1.
+Original71d report preserved. No Linux/macOS hardware
 or forced-GC acceptance inferred from simulator/root metadata.
 
 Actual isolated source316e7878 validation completed: nine affected packages
