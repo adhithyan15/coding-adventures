@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 116,
-  "sourceHash": "fnv1a64:33505203af6d59f3",
+  "sourceHash": "fnv1a64:9bdfbb5912542104",
   "lessonIds": [
     "MW-C116-gun",
     "MW-C116-akal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch116.txt",
   "json": "marwadi/narration/ch116.json",
-  "textHash": "fnv1a64:fbdce4f48484812b",
-  "jsonHash": "fnv1a64:78c830f3e6f65330",
+  "textHash": "fnv1a64:89abac3ae5ce76f7",
+  "jsonHash": "fnv1a64:fe0d6100d98c14cb",
   "findings": []
 }

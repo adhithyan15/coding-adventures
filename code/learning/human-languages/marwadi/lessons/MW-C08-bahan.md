@@ -11,8 +11,8 @@ gloss: sister, written with known signs
 concept_tag: MW-FAMILY-SISTER
 prerequisites: [MW-C08-hear-bahan]
 sounds: [voiced-b, short-a, breathy-h, dental-n]
-roots: []
-etymology_hook: New ब and familiar ह and न make the heard relation visible.
+roots: [sanskrit-bhagini]
+etymology_hook: "bahan ← Sanskrit bhaginī 'sister', a tadbhava (CDIAL 9349, Old Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -47,6 +47,11 @@ Say brother, then give the heard wellbeing answer with *hū̃* and *ṭhīk*.
 > **ब** + **ह** + **न** → **बहन** — *bahan* — sister
 
 All three signs are earned. [YOU READ: the word as two sound groups — *ba-han*]
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बहन** (*bahan*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhaginī*, "sister". CDIAL lists Old Marwari *bahaṇa* under it (CDIAL 9349). CDIAL notes that the move of the breathy *h* from the first sound to the middle of the word is hard to explain.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01, MW-SCRIPT-BAHAN-01] -->

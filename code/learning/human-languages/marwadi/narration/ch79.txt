@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a month, then the Marwadi for a year.
 You'll want to know: घंटो.
 घंटो — ghaṇṭo — "an hour".
 
+The word, taken apart.
+घंटो (ghaṇṭo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghaṇṭā, "bell". CDIAL gives no Marwari form in this entry (CDIAL 4421); the match is through Hindi ghaṇṭā. The bell that struck the hours gave its name to the hour.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a year, then the Marwadi for an hour.
 
 You'll want to know: मिनट.
 मिनट — minaṭ — "a minute".
+
+The word, taken apart.
+मिनट (minaṭ) is a loan from English minute.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for an hour, then the Marwadi for a minute.
 You'll want to know: आज.
 आज — āj — "today".
 
+The word, taken apart.
+आज (āj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from adya, "today". CDIAL lists Old Marwari āji under it (CDIAL 242).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a minute, then the Marwadi for today.
 You'll want to know: काल.
 काल — kāl — "yesterday; tomorrow".
 
+The word, taken apart.
+काल (kāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kālya, "timely; at dawn". CDIAL lists Old Marwari kālī under it (CDIAL 3104). Sanskrit kalya already meant "at dawn, tomorrow"; the Old Marwari row means "tomorrow". It is built on kāla, "time".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for today, then the Marwadi for yesterday; t
 
 You'll want to know: अबार.
 अबार — abār — "now".
+
+The word, taken apart.
+CDIAL has no entry for अबार (abār), so its history is not settled. Its first part looks like Hindi ab, "now", which CDIAL lists under Sanskrit evam eva, "exactly so", crossed with the pronoun stem a- (CDIAL 2528), where Old Marwari has hiva, "now". The rest of अबार (abār) is not explained there.
 
 What you've built.
 One more word for this chapter.

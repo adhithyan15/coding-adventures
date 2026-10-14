@@ -11,8 +11,8 @@ gloss: give — the asking word on the other side of the counter
 concept_tag: MW-VERB-GIVE
 prerequisites: [MW-R24-pay-two]
 sounds: [voiced-d, long-o]
-roots: []
-etymology_hook: One beat, and the exact opposite of the word learned three lessons ago.
+roots: [sanskrit-dadati]
+etymology_hook: "do 'give' ← Sanskrit dadāti 'gives', a tadbhava (CDIAL 6141, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -52,6 +52,11 @@ them to give.
 Say them alternately, four times, picturing the matching hand each time: taking
 for *lo*, giving for *do*. If the picture stops matching the word, slow down
 until it does.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*do* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dadāti*, "gives". CDIAL lists Marwari *deṇo* under it (CDIAL 6141). *do* is the asking form of this verb.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DO-01, MW-LEX-LO-01] -->

@@ -14,7 +14,8 @@ romanization: "rokṇo"
 concept_tag: MW-VERB-ROKNO
 prerequisites: [MW-C56-pakarno, MW-C56-katno]
 sounds: []
-roots: []
+roots: [indo-aryan-rokk]
+etymology_hook: "rokṇo ← *rōkk 'stop', reconstructed; its link with rudh is unclear (CDIAL 10827)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C56-katno]
 <!-- hl-knowledge: introduces=[MW-LEX-C56-VERBS56-04]; assesses=[] -->
 
 **रोकणो** — *rokṇo* — "to stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रोकणो** (*rokṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*rokk*, "stop", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 10827); the match is through Hindi *roknā* and Gujarati *rokvũ*. CDIAL says its link with Sanskrit *rudh*, "obstruct", is not clear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

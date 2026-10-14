@@ -11,8 +11,8 @@ gloss: child, written after cha is isolated
 concept_tag: MW-FAMILY-CHILD-WRITTEN
 prerequisites: [MW-W09-cha]
 sounds: [voiced-b, short-a, geminate-ch, long-aa]
-roots: []
-etymology_hook: New च combines with a known virama and repeats before long aa.
+roots: [persian-bacca]
+etymology_hook: "bachchā: usually traced to Persian bačča 'child'"
 duration:
   max_seconds: 175
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C09-hear-bachcha, MW-W09-cha, MW-W05-virama, MW-C09-patni]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BACHCHA-01, MW-SCRIPT-BACHCHA-01] -->
 
 > **ब** + **च्** + **चा** → **बच्चा** — *bachchā* — child
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बच्चा** (*bachchā*) is a loan, usually traced to Persian *bačča*, "child". CDIAL lists a native cousin under Sanskrit *vatsa*, "calf, child": Hindi *bāchā*, "calf" (CDIAL 11239).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BACHCHA-01] -->

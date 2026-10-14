@@ -14,7 +14,8 @@ romanization: "pakāvṇo"
 concept_tag: MW-VERB-PAKAVNO
 prerequisites: [MW-C102-harek, MW-C103-nhavno]
 sounds: []
-roots: []
+roots: [sanskrit-pakva]
+etymology_hook: "pakāvṇo ← Sanskrit pakva 'cooked, ripe', a tadbhava (CDIAL 7621, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C103-nhavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C103-ACT103-02]; assesses=[] -->
 
 **पकावणो** — *pakāvṇo* — "to cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पकावणो** (*pakāvṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pakva*, "cooked, ripe". CDIAL lists Old Marwari *pākaï* under it (CDIAL 7621). The Old Marwari row means "becomes ripe"; **पकावणो** (*pakāvṇo*) is its causing form, "make cooked". The root is *pac*, "to cook".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

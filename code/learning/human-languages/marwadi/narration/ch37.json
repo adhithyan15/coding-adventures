@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Eleven to Fifteen",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8b6736d440e77def",
+  "sourceHash": "fnv1a64:2c579b1443a071a5",
   "lessons": [
     {
       "id": "MW-W37-i",
@@ -136,7 +136,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:577dc72a3580e898",
+      "sourceHash": "fnv1a64:94f8e0576f2e5220",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +200,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "igyārā is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ekādaśa, \"eleven\". CDIAL gives no Marwari form in this entry (CDIAL 2485); the match is through Hindi igārah and Gujarati agyār. It is eka, \"one\", and daśa, \"ten\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -246,7 +257,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:46a635d95ba1ea3c",
+      "sourceHash": "fnv1a64:03051358d38c7216",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -303,6 +314,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इग्यारा (igyārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ekādaśa, \"eleven\". CDIAL gives no Marwari form in this entry (CDIAL 2485); the match is through Hindi igārah and Gujarati agyār. It is eka, \"one\", and daśa, \"ten\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -313,7 +335,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -358,7 +380,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c8d9a46d52e5973",
+      "sourceHash": "fnv1a64:489bb8d07590fd6a",
       "notice": null,
       "blocks": [
         {
@@ -422,6 +444,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bārā is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dvādaśa, \"twelve\". CDIAL lists Old Marwari bārā under it (CDIAL 6658). It is dva, \"two\", and daśa, \"ten\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -469,7 +502,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:791ab6c7333eec49",
+      "sourceHash": "fnv1a64:fe1219616792f7e7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -536,6 +569,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बारा (bārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dvādaśa, \"twelve\". CDIAL lists Old Marwari bārā under it (CDIAL 6658). It is dva, \"two\", and daśa, \"ten\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -546,7 +590,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -591,7 +635,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3afeb2f957bc9946",
+      "sourceHash": "fnv1a64:0aef6170b0097b92",
       "notice": null,
       "blocks": [
         {
@@ -673,6 +717,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "terā is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit trayodaśa, \"thirteen\": CDIAL lists Marwari terā under a variant it reconstructs, trayēdaśa (CDIAL 6001). It is \"three\" and daśa, \"ten\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -720,7 +775,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:284c21af73f7d78c",
+      "sourceHash": "fnv1a64:b5bd9990b80b276b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -792,6 +847,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तेरा (terā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It goes back to Sanskrit trayodaśa, \"thirteen\": CDIAL lists Marwari terā under a variant it reconstructs, trayēdaśa (CDIAL 6001). It is \"three\" and daśa, \"ten\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -802,7 +868,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -847,7 +913,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff79007d342ae0ef",
+      "sourceHash": "fnv1a64:d6e0c5b16ee6e347",
       "notice": null,
       "blocks": [
         {
@@ -924,6 +990,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "caudā is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caturdaśa, \"fourteen\". CDIAL gives no Marwari form in this entry (CDIAL 4605); the match is through Hindi caudah and Gujarati cauda. It is catur, \"four\", and daśa, \"ten\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -972,7 +1049,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:882aaba1f26dd6f0",
+      "sourceHash": "fnv1a64:03af47bed6ffad26",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1044,6 +1121,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौदा (caudā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caturdaśa, \"fourteen\". CDIAL gives no Marwari form in this entry (CDIAL 4605); the match is through Hindi caudah and Gujarati cauda. It is catur, \"four\", and daśa, \"ten\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1054,7 +1142,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1099,7 +1187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60f43802c1a3124a",
+      "sourceHash": "fnv1a64:289f404d9b95a673",
       "notice": null,
       "blocks": [
         {
@@ -1172,6 +1260,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pandarā is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pañcadaśa, \"fifteen\". CDIAL gives no Marwari form in this entry (CDIAL 7662); the match is through Hindi pandrā. It is pañca, \"five\", and daśa, \"ten\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1219,7 +1318,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b365592e65c29ce1",
+      "sourceHash": "fnv1a64:0e2653d6ac741f62",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1300,6 +1399,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पंदरा (pandarā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pañcadaśa, \"fifteen\". CDIAL gives no Marwari form in this entry (CDIAL 7662); the match is through Hindi pandrā. It is pañca, \"five\", and daśa, \"ten\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1310,7 +1420,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

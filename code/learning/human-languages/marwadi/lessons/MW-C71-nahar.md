@@ -14,7 +14,8 @@ romanization: "nāhar"
 concept_tag: MW-ANIMALS71-NAHAR
 prerequisites: [MW-C71-bher, MW-C71-chiri]
 sounds: []
-roots: []
+roots: [sanskrit-nakha]
+etymology_hook: "nāhar: CDIAL lists Hindi nāhar 'tiger' under *nakhadara and *nakharin, both on nakha 'claw' (CDIAL 6919, 6921)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C71-chiri]
 <!-- hl-knowledge: introduces=[MW-LEX-C71-ANIMALS71-04]; assesses=[] -->
 
 **नाहर** — *nāhar* — "a lion, a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Hindi *nāhar*, "tiger", under two reconstructions, *\*nakhadara*, "tearing with the claws" (CDIAL 6919), and *\*nakharin*, "having claws" (CDIAL 6921). Both are built on Sanskrit *nakha*, "claw"; which one is the source is not settled, and CDIAL gives no Marwari form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

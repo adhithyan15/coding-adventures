@@ -14,7 +14,8 @@ romanization: "sakṇo"
 concept_tag: MW-VERB-SAKNO
 prerequisites: [MW-C113-het, MW-C113-moh]
 sounds: []
-roots: []
+roots: [sanskrit-shaknoti]
+etymology_hook: "sakṇo ← Sanskrit śaknoti 'is able', a tadbhava (CDIAL 12252, Old Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C113-moh]
 <!-- hl-knowledge: introduces=[MW-LEX-C114-CAN114-01]; assesses=[] -->
 
 **सकणो** — *sakṇo* — "to be able to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सकणो** (*sakṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śaknoti*, "is able". CDIAL gives no Marwari form in this entry (CDIAL 12252); the match is through Old Gujarati *sakaï*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

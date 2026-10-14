@@ -11,8 +11,8 @@ gloss: shop
 concept_tag: MW-SHOPPING-SHOP
 prerequisites: [MW-R12-script-close]
 sounds: [voiced-d, short-u, long-aa]
-roots: []
-etymology_hook: A useful market place arrives by ear before its new vowel mark appears.
+roots: [arabic-dukkan]
+etymology_hook: "dukān ← Arabic dukkān 'shop', through Persian (Lane, root d-k-n)"
 duration:
   max_seconds: 145
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C12-weather-six, MW-C10-bajar, MW-C12-mausam, MW-C12-garmi, MW-C
 
 Hear the two beats and say the word once from a shop cue. Keep the sound and
 meaning together; the unfamiliar vowel mark waits for the next lesson.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dukān* is a loan from Arabic *dukkān*, "shop", which reached Marwadi through Persian. Its Arabic root is *d-k-n* (Lane), though Lane notes that some take the Arabic word itself from Persian.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01] -->

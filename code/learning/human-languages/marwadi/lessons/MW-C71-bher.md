@@ -14,7 +14,8 @@ romanization: "bheṛ"
 concept_tag: MW-ANIMALS71-BHER
 prerequisites: [MW-C70-bhais, MW-C71-bakri]
 sounds: []
-roots: []
+roots: [sanskrit-bhedra]
+etymology_hook: "bheṛ ← Sanskrit bheḍra 'ram', itself from Austroasiatic (CDIAL 9606)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C71-bakri]
 <!-- hl-knowledge: introduces=[MW-LEX-C71-ANIMALS71-02]; assesses=[] -->
 
 **भेड़** — *bheṛ* — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भेड़** (*bheṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bheḍra*, "ram". CDIAL gives no Marwari form in this entry (CDIAL 9606); the match is through Hindi *bheṛ*. CDIAL takes the Sanskrit word itself from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

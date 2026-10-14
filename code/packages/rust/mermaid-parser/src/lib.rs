@@ -6593,6 +6593,7 @@ fn parse_swimlane_flowchart_config(source: &str) -> Result<diagram_ir::SwimlaneF
         rank_spacing: parse("rankSpacing")?,
         diagram_padding: parse("diagramPadding")?,
         curve: value("curve").map(|value| parse_swimlane_edge_curve(&value, 1)).transpose()?,
+        wrapping_width: parse("wrappingWidth")?.filter(|value| *value > 0.0),
     })
 }
 

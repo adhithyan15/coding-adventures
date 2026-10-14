@@ -14,7 +14,8 @@ romanization: "dinūgai"
 concept_tag: MW-TIME90-DINUGAI
 prerequisites: [MW-C90-dopar, MW-C90-athan]
 sounds: []
-roots: []
+roots: [sanskrit-dina, indo-aryan-udgati]
+etymology_hook: "dinūgai: seems to be din 'day' + a form of ūgaï 'rises' (CDIAL 6328, 1954); CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C90-athan]
 <!-- hl-knowledge: introduces=[MW-LEX-C90-TIME90-03]; assesses=[] -->
 
 **दिनूगै** — *dinūgai* — "in the early morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL has no entry for **दिनूगै** (*dinūgai*), so its history is not settled. It seems to be *din*, "day" (CDIAL 6328), with a form of the verb CDIAL lists as Old Marwari *ūgaï*, "rises, appears", under *\*udgāti*, "rises" (CDIAL 1954): the time when the day comes up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

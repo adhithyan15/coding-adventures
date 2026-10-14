@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a girl, then the Marwadi for a man.
 You'll want to know: लुगाई.
 लुगाई — lugāī — "a woman".
 
+The word, taken apart.
+The origin of लुगाई (lugāī) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a man, then the Marwadi for a woman.
 
 You'll want to know: पाड़ोसी.
 पाड़ोसी — pāṛosī — "a neighbour".
+
+The word, taken apart.
+पाड़ोसी (pāṛosī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prātiveśya, "neighbouring; neighbour". CDIAL gives no Marwari form in this entry (CDIAL 8936); the match is through Gujarati pāṛośī and Sindhi pāṛosī. It is built on prati, "near", and veśa, "house".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a woman, then the Marwadi for a neighbou
 You'll want to know: पावणो.
 पावणो — pāvṇo — "a guest".
 
+The word, taken apart.
+पावणो (pāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prāhuṇa, "guest". CDIAL lists Marwari pāhuṇo under it (CDIAL 8973). पावणो (pāvṇo) is the same word said with v for h.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a neighbour, then the Marwadi for a gues
 You'll want to know: मास्टर.
 मास्टर — māsṭar — "a teacher".
 
+The word, taken apart.
+मास्टर (māsṭar) is a loan from English master.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a guest, then the Marwadi for a teacher.
 
 You'll want to know: खाणो.
 खाणो — khāṇo — "to eat".
+
+The word, taken apart.
+खाणो (khāṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khādati, "chews, bites; eats". CDIAL lists Marwari khābo under it (CDIAL 3865). khābo is the same verb with another infinitive ending, -bo.
 
 What you've built.
 One more word for this chapter.

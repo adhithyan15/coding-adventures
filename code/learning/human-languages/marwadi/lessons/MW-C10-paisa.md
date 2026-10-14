@@ -11,8 +11,8 @@ gloss: money, written entirely with known signs
 concept_tag: MW-TRAVEL-MONEY-WRITTEN
 prerequisites: [MW-C10-hear-paisa]
 sounds: [unaspirated-p, ai-diphthong, unaspirated-s]
-roots: []
-etymology_hook: Familiar प, ै, स, and ा write the new meaning with no new sign.
+roots: [indo-aryan-padamsha]
+etymology_hook: "paisā ← *padāṃśa 'quarter part', reconstructed (CDIAL 7761, Hindi row)"
 duration:
   max_seconds: 155
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C10-hear-paisa, MW-W05-ai-matra, MW-C10-haath]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PAISA-01, MW-SCRIPT-PAISA-01] -->
 
 > **पै** + **सा** → **पैसा** — *paisā* — money
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पैसा** (*paisā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*padāṃśa*, "quarter part", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 7761); the match is through Hindi *paisā*. CDIAL treats it as a Hindi word that spread to the neighbouring languages; it first named a quarter of an anna.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PAISA-01] -->

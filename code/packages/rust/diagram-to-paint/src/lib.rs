@@ -1687,6 +1687,9 @@ where
     if let Some(curve) = diagram.flowchart_config.curve {
         metadata.insert("swimlane.flowchart.curve".into(), swimlane_curve_name(curve).into());
     }
+    if let Some(width) = diagram.flowchart_config.wrapping_width {
+        metadata.insert("swimlane.flowchart.wrappingWidth".into(), width.to_string());
+    }
     for (index, group) in diagram.groups.iter().enumerate() {
         metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());
         metadata.insert(format!("swimlane.group.{index}.lane"), group.lane_id.clone());

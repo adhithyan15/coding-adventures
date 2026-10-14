@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a son, then the Marwadi for a daughter.
 You'll want to know: काको.
 काको — kāko — "an uncle (father's brother)".
 
+The word, taken apart.
+काको (kāko) is a tadbhava, a word inherited and reshaped by sound change. It comes from kākka, "senior male relative", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 2998); the match is through Hindi kākā and Gujarati kāko. CDIAL takes the word from Dravidian: Kannada kakka, "uncle".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a daughter, then the Marwadi for an uncl
 
 You'll want to know: मामो.
 मामो — māmo — "an uncle (mother's brother)".
+
+The word, taken apart.
+मामो (māmo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from māma, "uncle". CDIAL gives no Marwari form in this entry (CDIAL 10055); the match is through Hindi māmā and Gujarati māmo. CDIAL calls it a nursery word and notes similar words in Dravidian.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for an uncle, then the Marwadi for an uncle.
 You'll want to know: छोरो.
 छोरो — chhoro — "a boy".
 
+The word, taken apart.
+छोरो (chhoro) is a tadbhava, a word inherited and reshaped by sound change. It comes from chokara, "boy", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5070); the match is through Hindi chorā and Gujarati choro. CDIAL compares chōka, "boy".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for an uncle, then the Marwadi for a boy.
 You'll want to know: छोरी.
 छोरी — chhorī — "a girl".
 
+The word, taken apart.
+छोरी (chhorī) is a tadbhava, a word inherited and reshaped by sound change. It comes from chokara, "boy", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5070); the match is through Hindi chorī and Gujarati chorī. It is the feminine of chhoro, "boy".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a boy, then the Marwadi for a girl.
 
 You'll want to know: आदमी.
 आदमी — ādmī — "a man".
+
+The word, taken apart.
+आदमी (ādmī) is a loan from Arabic ādamī, "human, of Adam", which reached Marwadi through Persian. Its Arabic root is ʾ-d-m (Lane). It is the name Ādam with the ending -ī, "belonging to".
 
 What you've built.
 One more word for this chapter.

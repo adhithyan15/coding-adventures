@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for matches, then the Marwadi for wood.
 You'll want to know: कोयलो.
 कोयलो — koylo — "coal".
 
+The word, taken apart.
+कोयलो (koylo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kokila, "lighted coal, charcoal". CDIAL lists Marwari koilo under it (CDIAL 3484). CDIAL takes the Sanskrit word from Middle Indo-Aryan kōila, itself from Proto-Munda.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for wood, then the Marwadi for coal.
 
 You'll want to know: छाणो.
 छाणो — chhāṇo — "a dung cake".
+
+The word, taken apart.
+छाणो (chhāṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from chakana, "dung", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4952); the match is through Gujarati chāṇ. CDIAL sets it beside śakana, "dung".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for coal, then the Marwadi for a dung cake.
 You'll want to know: बोरो.
 बोरो — boro — "a sack".
 
+The word, taken apart.
+बोरो (boro) is a tadbhava, a word inherited and reshaped by sound change. It comes from bora, "sacking, sack", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9320); the match is through Hindi borā. CDIAL thinks it first meant cloth of goat's hair, and asks whether it goes back to Sanskrit bakura, a goatskin bag.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a dung cake, then the Marwadi for a sack
 You'll want to know: रस्सी.
 रस्सी — rassī — "a rope".
 
+The word, taken apart.
+रस्सी (rassī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from raśmi, "rope, bridle, ray of light". CDIAL gives no Marwari form in this entry (CDIAL 10648); the match is through Hindi rassī and Gujarati rasī. CDIAL marks the doubled ss forms as taken from Punjabi.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a sack, then the Marwadi for a rope.
 
 You'll want to know: खूंटी.
 खूंटी — khū̃ṭī — "a peg".
+
+The word, taken apart.
+खूंटी (khū̃ṭī) is a tadbhava, a word inherited and reshaped by sound change. It comes from khuṭṭa, "peg, post", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari khuṭī under it (CDIAL 3893).
 
 What you've built.
 One more word for this chapter.

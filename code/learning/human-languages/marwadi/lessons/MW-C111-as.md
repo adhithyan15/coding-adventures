@@ -14,7 +14,8 @@ romanization: "ās"
 concept_tag: MW-WANT111-AS
 prerequisites: [MW-C111-ichchha, MW-C111-man]
 sounds: []
-roots: []
+roots: [sanskrit-asha]
+etymology_hook: "ās ← Sanskrit āśā 'wish, expectation', a tadbhava (CDIAL 1456, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C111-man]
 <!-- hl-knowledge: introduces=[MW-LEX-C111-WANT111-04]; assesses=[] -->
 
 **आस** — *ās* — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आस** (*ās*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *āśā*, "wish, expectation". CDIAL lists Old Marwari *āsa* under it (CDIAL 1456).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "Me and you as objects",
+  "label": "ch:sa-me-and-you-objects",
+  "canDo": "I can say that someone sees me or one familiar person addressed.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C260-singular-object-practice",
+    "kind": "production",
+    "summary": "Complete chapter 260 by choosing and producing the first- or second-person singular object in a known seeing frame.",
+    "assesses": [
+      "SA-PRON-C260-MAM-01",
+      "SA-PRON-C260-TVAM-02",
+      "SA-GRAMMAR-C260-SINGULAR-OBJECTS-03"
+    ]
+  }
+}

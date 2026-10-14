@@ -14,7 +14,8 @@ romanization: "haḷdī"
 concept_tag: MW-THINGS136-HALDI
 prerequisites: [MW-C136-lasan, MW-C136-adrak]
 sounds: []
-roots: []
+roots: [sanskrit-haridra]
+etymology_hook: "haḷdī ← Sanskrit haridrā 'turmeric', a tadbhava (CDIAL 13992, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C136-adrak]
 <!-- hl-knowledge: introduces=[MW-LEX-C136-THINGS136-04]; assesses=[] -->
 
 **हळदी** — *haḷdī* — "turmeric".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हळदी** (*haḷdī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *haridrā*, "turmeric". CDIAL gives no Marwari form in this entry (CDIAL 13992); the match is through Hindi *haldī*. Marwadi says the *l* curled back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

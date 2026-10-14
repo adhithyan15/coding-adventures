@@ -14,7 +14,8 @@ romanization: "basant"
 concept_tag: MW-TIME95-BASANT
 prerequisites: [MW-C94-siyalo, MW-C94-chaumaso]
 sounds: []
-roots: []
+roots: [sanskrit-vasanta]
+etymology_hook: "basant ← Sanskrit vasanta 'spring season', a semi-tatsama (CDIAL 11439)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C94-chaumaso]
 <!-- hl-knowledge: introduces=[MW-LEX-C95-TIME95-01]; assesses=[] -->
 
 **बसंत** — *basant* — "spring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बसंत** (*basant*) is a semi-tatsama: Sanskrit *vasanta*, "spring season", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 11439). Marwadi says the *v* as *b*; CDIAL lists no Marwari or Hindi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

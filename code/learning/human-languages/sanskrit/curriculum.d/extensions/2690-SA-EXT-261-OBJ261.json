@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-261-OBJ261",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can choose āvām or yuvām when exactly two people are the object.",
+  "prerequisites": [
+    "SA-EXT-260-OBJ260"
+  ]
+}

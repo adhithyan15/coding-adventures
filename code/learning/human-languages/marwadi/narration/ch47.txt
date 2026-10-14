@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for the nose, then the Marwadi for the heart
 You'll want to know: ताव.
 ताव — tāv — "a fever".
 
+The word, taken apart.
+ताव (tāv) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tāpa, "heat, glow; pain". CDIAL lists Old Marwari tāva under it (CDIAL 5767).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for the heart, then the Marwadi for a fever.
 
 You'll want to know: बीमार.
 बीमार — bīmār — "ill, sick".
+
+The word, taken apart.
+बीमार (bīmār) is a loan, usually traced to Persian bīmār, "ill, sick".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a fever, then the Marwadi for ill.
 You'll want to know: दरद.
 दरद — darad — "pain".
 
+The word, taken apart.
+दरद (darad) is a loan, usually traced to Persian dard, "pain". Marwadi puts a vowel between the last two sounds.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for ill, then the Marwadi for pain.
 You'll want to know: दवाई.
 दवाई — davāī — "medicine".
 
+The word, taken apart.
+दवाई (davāī) is a loan from Arabic dawāʾ, "medicine, remedy", which reached Marwadi through Persian. Its Arabic root is d-w-y (Lane). Persian davā took the ending -ī in Marwadi.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for pain, then the Marwadi for medicine.
 
 You'll want to know: भूख.
 भूख — bhūkh — "hunger".
+
+The word, taken apart.
+भूख (bhūkh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bubhukṣā, "desire to eat, hunger". CDIAL lists Old Marwari bhūkha under it (CDIAL 9286).
 
 What you've built.
 One more word for this chapter.

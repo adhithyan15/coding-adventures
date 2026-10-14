@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Bread and Rolls: One New Consonant",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:699c468422e7e55c",
+  "sourceHash": "fnv1a64:65fe8124d17e1738",
   "lessons": [
     {
       "id": "MW-C19-hear-roti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b819235ce15a521",
+      "sourceHash": "fnv1a64:93b68fadfd9ad6e1",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "roṭī is a tadbhava, a word inherited and reshaped by sound change. It comes from roṭṭa, \"bread\", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari roṭī under it (CDIAL 10837)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -208,7 +219,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b71b487e45bd6b70",
+      "sourceHash": "fnv1a64:84064fd5e17ed028",
       "notice": null,
       "blocks": [
         {
@@ -254,6 +265,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रोटी (roṭī) is a tadbhava, a word inherited and reshaped by sound change. It comes from roṭṭa, \"bread\", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari roṭī under it (CDIAL 10837)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -278,7 +300,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -323,7 +345,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:036d6d712f5c13f2",
+      "sourceHash": "fnv1a64:d471cba5636e26db",
       "notice": null,
       "blocks": [
         {
@@ -369,6 +391,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of bāṭī is not settled. CDIAL has no entry for it. The nearest lead is Sanskrit vaṭikā, \"small lump\", whose regular descendants are Hindi baṛā and baṛī, fried cakes (CDIAL 11213); the ṭ of bāṭī does not fit that path."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -413,7 +446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e44ef98ab20f7e3d",
+      "sourceHash": "fnv1a64:4fc996b957762e16",
       "notice": null,
       "blocks": [
         {
@@ -459,6 +492,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of बाटी (bāṭī) is not settled. CDIAL has no entry for it. The nearest lead is Sanskrit vaṭikā, \"small lump\", whose regular descendants are Hindi baṛā and baṛī, fried cakes (CDIAL 11213); the ṭ of बाटी (bāṭī) does not fit that path."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -483,7 +527,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

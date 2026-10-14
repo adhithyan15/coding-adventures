@@ -14,7 +14,8 @@ romanization: "skūl"
 concept_tag: MW-SCHOOL66-SKUL
 prerequisites: [MW-C65-kalam, MW-C66-akhbar]
 sounds: []
-roots: []
+roots: [english-school]
+etymology_hook: "skūl ← English school"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C66-akhbar]
 <!-- hl-knowledge: introduces=[MW-LEX-C66-SCHOOL66-02]; assesses=[] -->
 
 **स्कूल** — *skūl* — "a school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्कूल** (*skūl*) is a loan from English *school*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

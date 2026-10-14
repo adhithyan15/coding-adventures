@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for purple, then the Marwadi for orange.
 You'll want to know: चमकीलो.
 चमकीलो — chamkīlo — "shiny".
 
+The word, taken apart.
+चमकीलो (chamkīlo) is built with -īlo on chamak, "shine". CDIAL lists Hindi camaknā, "to glitter", under camakka, "sudden movement" (CDIAL 4676).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for orange, then the Marwadi for shiny.
 
 You'll want to know: सांत.
 सांत — sānt — "calm".
+
+The word, taken apart.
+सांत (sānt) is a semi-tatsama: Sanskrit śānta, "abated, calm", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 12390). Marwadi says the ś as s.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for shiny, then the Marwadi for calm.
 You'll want to know: हुसियार.
 हुसियार — husiyār — "clever".
 
+The word, taken apart.
+हुसियार (husiyār) is a loan, usually traced to Persian hušyār, "alert, wise". It is built on Persian huš, "the senses".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for calm, then the Marwadi for clever.
 You'll want to know: बावळो.
 बावळो — bāvaḷo — "silly, foolish".
 
+The word, taken apart.
+बावळो (bāvaḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vātula, "affected by wind-disease, crazy". CDIAL gives no Marwari form in this entry (CDIAL 11504); the match is through Hindi bāulā and Gujarati vāulũ. CDIAL thinks the sense "mad" may come from Middle Indo-Aryan vāula, "perplexed", from Sanskrit vyākula.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for clever, then the Marwadi for silly.
 
 You'll want to know: आळसी.
 आळसी — āḷsī — "lazy".
+
+The word, taken apart.
+आळसी (āḷsī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ālasya, "sloth". CDIAL gives no Marwari form in this entry (CDIAL 1371); the match is through Hindi ālsī.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "akhbār"
 concept_tag: MW-SCHOOL66-AKHBAR
 prerequisites: [MW-C65-kitab, MW-C65-kalam]
 sounds: []
-roots: []
+roots: [arabic-akhbar]
+etymology_hook: "akhbār ← Arabic aḫbār 'reports, news', through Persian (Lane, root ḫ-b-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C65-kalam]
 <!-- hl-knowledge: introduces=[MW-LEX-C66-SCHOOL66-01]; assesses=[] -->
 
 **अखबार** — *akhbār* — "a newspaper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अखबार** (*akhbār*) is a loan from Arabic *aḫbār*, "reports, news", which reached Marwadi through Persian. Its Arabic root is *ḫ-b-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bichai"
 concept_tag: MW-LOC97-BICHAI
 prerequisites: [MW-C96-mathai, MW-C97-hethai]
 sounds: []
-roots: []
+roots: [indo-aryan-vicya]
+etymology_hook: "bichai ← *vīcya 'middle', reconstructed (CDIAL 12042, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C97-hethai]
 <!-- hl-knowledge: introduces=[MW-LEX-C97-LOC97-02]; assesses=[] -->
 
 **बिचै** — *bichai* — "in the middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बिचै** (*bichai*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vīcya*, "middle", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *bīca* under it (CDIAL 12042).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nīlo"
 concept_tag: MW-ADJ77-NILO
 prerequisites: [MW-C76-pilo, MW-C77-lal]
 sounds: []
-roots: []
+roots: [sanskrit-nila]
+etymology_hook: "nīlo ← Sanskrit nīla 'dark blue, dark green, black', a tadbhava (CDIAL 7563, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C77-lal]
 <!-- hl-knowledge: introduces=[MW-LEX-C77-ADJ77-02]; assesses=[] -->
 
 **नीलो** — *nīlo* — "blue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नीलो** (*nīlo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nīla*, "dark blue, dark green, black". CDIAL gives no Marwari form in this entry (CDIAL 7563); the match is through Hindi *nīlā* and Gujarati *nīlũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

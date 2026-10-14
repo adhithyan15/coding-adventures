@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for miserly, then the Marwadi for good-natur
 You'll want to know: बुरो.
 बुरो — buro — "wicked, bad".
 
+The word, taken apart.
+बुरो (buro) is a tadbhava, a word inherited and reshaped by sound change. It comes from bura, "defective", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9289); the match is through Hindi burā and Gujarati būrũ. CDIAL sets it in a large group of "defective" words.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for good-natured, then the Marwadi for wicke
 
 You'll want to know: जरूरी.
 जरूरी — jarūrī — "necessary".
+
+The word, taken apart.
+जरूरी (jarūrī) is a loan from Arabic ḍarūrī, "necessary", which reached Marwadi through Persian. Its Arabic root is ḍ-r-r (Lane). Persian says it zarūrī; Marwadi says the z as j.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for wicked, then the Marwadi for necessary.
 You'll want to know: खास.
 खास — khās — "special".
 
+The word, taken apart.
+खास (khās) is a loan from Arabic ḫāṣṣ, "particular, special", which reached Marwadi through Persian. Its Arabic root is ḫ-ṣ-ṣ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for necessary, then the Marwadi for special.
 You'll want to know: सादो.
 सादो — sādo — "plain, simple".
 
+The word, taken apart.
+सादो (sādo) is a loan, usually traced to Persian sāda, "plain, simple".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for special, then the Marwadi for plain.
 
 You'll want to know: अनोखो.
 अनोखो — anokho — "unusual".
+
+The word, taken apart.
+अनोखो (anokho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from anapekṣa, "careless". CDIAL gives no Marwari form in this entry (CDIAL 289); the match is through Hindi anokhā. It is built on an-, "not", and apekṣā, "expectation": "not expected", so "unusual".
 
 What you've built.
 One more word for this chapter.

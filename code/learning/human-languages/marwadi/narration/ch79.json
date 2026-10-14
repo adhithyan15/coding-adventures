@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "Hour, Minute, Today, Yesterday, Now",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:abbbc1747a062359",
+  "sourceHash": "fnv1a64:deb17039f28794c1",
   "lessons": [
     {
       "id": "MW-C79-ghanto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8cf776507391dc5",
+      "sourceHash": "fnv1a64:042da2857c877a33",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घंटो (ghaṇṭo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghaṇṭā, \"bell\". CDIAL gives no Marwari form in this entry (CDIAL 4421); the match is through Hindi ghaṇṭā. The bell that struck the hours gave its name to the hour."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3fbffc6c1be6c9d",
+      "sourceHash": "fnv1a64:9ab46e38cf7d6204",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिनट (minaṭ) is a loan from English minute."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dace9478ce96f80e",
+      "sourceHash": "fnv1a64:603ede37c6606f6d",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आज (āj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from adya, \"today\". CDIAL lists Old Marwari āji under it (CDIAL 242)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e09d2d4c0a61f705",
+      "sourceHash": "fnv1a64:19ef9d959432e91c",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काल (kāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kālya, \"timely; at dawn\". CDIAL lists Old Marwari kālī under it (CDIAL 3104). Sanskrit kalya already meant \"at dawn, tomorrow\"; the Old Marwari row means \"tomorrow\". It is built on kāla, \"time\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2813a20bfa36dd20",
+      "sourceHash": "fnv1a64:3e56e278575fc1b6",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL has no entry for अबार (abār), so its history is not settled. Its first part looks like Hindi ab, \"now\", which CDIAL lists under Sanskrit evam eva, \"exactly so\", crossed with the pronoun stem a- (CDIAL 2528), where Old Marwari has hiva, \"now\". The rest of अबार (abār) is not explained there."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

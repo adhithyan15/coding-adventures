@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to break, then the Marwadi for to join.
 You'll want to know: खरीदणो.
 खरीदणो — kharīdṇo — "to buy".
 
+The word, taken apart.
+खरीदणो (kharīdṇo) is a loan, usually traced to Persian xarīd, "bought; to buy". Persian xarīdan means "to buy"; Marwadi added its own verb ending.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to join, then the Marwadi for to buy.
 
 You'll want to know: उघाड़णो.
 उघाड़णो — ughāṛṇo — "to uncover, to open up".
+
+The word, taken apart.
+उघाड़णो (ughāṛṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from udghāṭayati, "opens". CDIAL gives no Marwari form in this entry (CDIAL 1968); the match is through Hindi ughāṛnā and Gujarati ughāṛvũ. Under the related noun udghāṭa, "act of opening", CDIAL does list Old Marwari ughāṛo, "open" (CDIAL 1972). It is built on ud, "up", and the root ghaṭ.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to buy, then the Marwadi for to uncover.
 You'll want to know: बुलावणो.
 बुलावणो — bulāvṇo — "to call".
 
+The word, taken apart.
+बुलावणो (bulāvṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from boll, "speak", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari bolaï under it (CDIAL 9321). It is the causing form of bolṇo, "to speak": "make speak", so "call".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to uncover, then the Marwadi for to call
 You'll want to know: मांगणो.
 मांगणो — māṅgṇo — "to ask for".
 
+The word, taken apart.
+मांगणो (māṅgṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārgati, "seeks, requests". CDIAL lists Old Marwari māgaï under it (CDIAL 10074).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to call, then the Marwadi for to ask for
 
 You'll want to know: जोवणो.
 जोवणो — jovṇo — "to look, to look for".
+
+The word, taken apart.
+जोवणो (jovṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dyotate, "shines; makes clear". CDIAL lists Old Marwari jovaï under it (CDIAL 6612). The Old Marwari row means "watches"; CDIAL sets the verb beside Sanskrit jyotate, "shines".
 
 What you've built.
 One more word for this chapter.

@@ -11,8 +11,8 @@ gloss: market, written after ja is isolated
 concept_tag: MW-PLACE-MARKET-WRITTEN
 prerequisites: [MW-W10-ja]
 sounds: [voiced-b, long-aa, voiced-j]
-roots: []
-etymology_hook: Familiar ब, ा, and र now frame the newly isolated ज.
+roots: [persian-bazar]
+etymology_hook: "bājār: usually traced to Persian bāzār 'market'"
 duration:
   max_seconds: 160
 requires:
@@ -44,6 +44,11 @@ payoff. [YOU WRITE: **ब**, **ज**, **ा**, and **र**]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01] -->
 
 > **बा** + **जार** → **बाजार** — *bājār* — market
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाजार** (*bājār*) is a loan, usually traced to Persian *bāzār*, "market". Marwadi says the *z* as *j*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BAJAR-01] -->

@@ -14,7 +14,8 @@ romanization: "khel"
 concept_tag: MW-SCHOOL67-KHEL
 prerequisites: [MW-C66-javab, MW-C66-sabad]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khel ← *khēl- 'play', in a reconstructed group (CDIAL 3918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C66-sabad]
 <!-- hl-knowledge: introduces=[MW-LEX-C67-SCHOOL67-01]; assesses=[] -->
 
 **खेल** — *khel* — "a game".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खेल** (*khel*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khel*, "play", or from *\*khell*, forms CDIAL reconstructs from their descendants. CDIAL lists Old Marwari *khelaï* under *\*khel* (CDIAL 3918). It is the noun of the verb *khelṇo*, "to play". CDIAL says that if Sanskrit *krīḍati*, "plays", is of non-Aryan origin, these forms may share its source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

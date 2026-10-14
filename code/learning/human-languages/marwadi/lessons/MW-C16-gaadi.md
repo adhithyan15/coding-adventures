@@ -11,8 +11,8 @@ gloss: vehicle
 concept_tag: MW-TRANSPORT-VEHICLE-WRITTEN
 prerequisites: [MW-C16-hear-gaadi]
 sounds: [voiced-g, retroflex-flap, long-ii]
-roots: []
-etymology_hook: The new word is built entirely from familiar signs, including ड़.
+roots: [indo-aryan-gadda]
+etymology_hook: "gāṛī ← *gāḍḍa 'cart', reconstructed (CDIAL 4116, Hindi row)"
 duration:
   max_seconds: 165
 requires:
@@ -46,6 +46,11 @@ Then recall the three-word shopping payoff.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01] -->
 
 > **गा** + **ड़ी** → **गाड़ी** — *gāṛī* — vehicle
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गाड़ी** (*gāṛī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*gāḍḍa*, "cart", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4116); the match is through Hindi *gāṛī*. CDIAL thinks it may be the same word as one for a seat.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GAADI-01] -->

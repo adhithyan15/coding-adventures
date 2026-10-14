@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Radish, Garlic, Ginger, Turmeric, Cumin",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:03b5c3745dd3db5d",
+  "sourceHash": "fnv1a64:f72b654e9ca73d2e",
   "lessons": [
     {
       "id": "MW-C136-mulo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b6fcc92cccf408e",
+      "sourceHash": "fnv1a64:f70a81db0741c8a3",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मूळो (mūḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mūla, \"root; radish\". CDIAL lists Old Marwari mūlī under it (CDIAL 10250). CDIAL notes a likely non-Aryan origin for the word; Gujarati has mūḷo, \"radish\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7d937e24e310fc3",
+      "sourceHash": "fnv1a64:542773c37156acc1",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लसण (lasaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laśuna, \"garlic\". CDIAL gives no Marwari form in this entry (CDIAL 10990); the match is through Gujarati lasaṇ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e34783053d0896d5",
+      "sourceHash": "fnv1a64:6a33d1ad738c54b4",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अदरक (adrak) goes back to Sanskrit ārdraka, \"fresh ginger\" (CDIAL 1341). CDIAL lists the fully inherited forms as Hindi ādā and Gujarati ādũ; अदरक (adrak) keeps the r and k those forms lost, and CDIAL does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d363cf30e8f61b85",
+      "sourceHash": "fnv1a64:230da1010eec37c1",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हळदी (haḷdī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from haridrā, \"turmeric\". CDIAL gives no Marwari form in this entry (CDIAL 13992); the match is through Hindi haldī. Marwadi says the l curled back."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95b7ff7b325b4eed",
+      "sourceHash": "fnv1a64:c4921d74d58085a0",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जीरो (jīro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jīraka, \"cummin-seed\". CDIAL gives no Marwari form in this entry (CDIAL 5234); the match is through Hindi jīrā and Gujarati jīrũ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

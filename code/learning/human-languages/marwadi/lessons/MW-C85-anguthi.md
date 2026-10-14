@@ -14,7 +14,8 @@ romanization: "aṅgūṭhī"
 concept_tag: MW-CLOTHES85-ANGUTHI
 prerequisites: [MW-C85-mojo, MW-C85-jeb]
 sounds: []
-roots: []
+roots: [sanskrit-angushtha]
+etymology_hook: "aṅgūṭhī ← Sanskrit aṅguṣṭhya 'pertaining to the thumb', a tadbhava (CDIAL 138, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C85-jeb]
 <!-- hl-knowledge: introduces=[MW-LEX-C85-CLOTHES85-03]; assesses=[] -->
 
 **अंगूठी** — *aṅgūṭhī* — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अंगूठी** (*aṅgūṭhī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṅguṣṭhya*, "pertaining to the thumb". CDIAL gives no Marwari form in this entry (CDIAL 138); the match is through Hindi *ãgūṭhī*. It is built on Sanskrit *aṅguṣṭha*, "thumb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

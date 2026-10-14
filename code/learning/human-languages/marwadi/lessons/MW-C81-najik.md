@@ -14,7 +14,8 @@ romanization: "najīk"
 concept_tag: MW-PLACE81-NAJIK
 prerequisites: [MW-C80-paila, MW-C81-dur]
 sounds: []
-roots: []
+roots: [persian-nazdik]
+etymology_hook: "najīk: usually traced to Persian nazdīk 'near'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C81-dur]
 <!-- hl-knowledge: introduces=[MW-LEX-C81-PLACE81-02]; assesses=[] -->
 
 **नजीक** — *najīk* — "near".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नजीक** (*najīk*) is a loan, usually traced to Persian *nazdīk*, "near". Marwadi says the *z* as *j* and drops the *d*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

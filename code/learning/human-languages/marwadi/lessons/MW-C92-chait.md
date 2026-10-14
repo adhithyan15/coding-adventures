@@ -14,7 +14,8 @@ romanization: "chait"
 concept_tag: MW-TIME92-CHAIT
 prerequisites: [MW-C92-sanivar, MW-C92-ravivar]
 sounds: []
-roots: []
+roots: [sanskrit-caitra]
+etymology_hook: "chait ← Sanskrit caitra 'the month of the Citrā full moon', a tadbhava (CDIAL 4915, Punjabi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C92-ravivar]
 <!-- hl-knowledge: introduces=[MW-LEX-C92-TIME92-03]; assesses=[] -->
 
 **चैत** — *chait* — "Chait (the first month, March-April)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चैत** (*chait*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caitra*, "the month of the Citrā full moon". CDIAL gives no Marwari form in this entry (CDIAL 4915); the match is through Punjabi *cetar*. The month is named for the star Citrā.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

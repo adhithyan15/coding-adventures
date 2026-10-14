@@ -14,7 +14,8 @@ romanization: "tāv"
 concept_tag: MW-HEALTH47-TAV
 prerequisites: [MW-C46-nak, MW-C46-dil]
 sounds: []
-roots: []
+roots: [sanskrit-tapa]
+etymology_hook: "tāv ← Sanskrit tāpa 'heat, glow; pain', a tadbhava (CDIAL 5767, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C46-dil]
 <!-- hl-knowledge: introduces=[MW-LEX-C47-HEALTH47-01]; assesses=[] -->
 
 **ताव** — *tāv* — "a fever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ताव** (*tāv*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tāpa*, "heat, glow; pain". CDIAL lists Old Marwari *tāva* under it (CDIAL 5767).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

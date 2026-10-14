@@ -11,8 +11,8 @@ gloss: family
 concept_tag: MW-FAMILY-GROUP
 prerequisites: [MW-C08-dadi]
 sounds: [unaspirated-p, tapped-r, short-i, voiced-v, long-aa]
-roots: []
-etymology_hook: The group word arrives by ear before one new middle consonant.
+roots: [sanskrit-parivara]
+etymology_hook: "parivār ← Sanskrit parivāra 'cover, surroundings; followers', a tatsama (CDIAL 7876)"
 duration:
   max_seconds: 155
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C08-dada, MW-C08-dadi, MW-C08-bahan]
 
 Hear three small groups: *pa-ri-vār*. Say them smoothly once. The word names a
 family group; it does not require every family to have the same members.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*parivār* is Sanskrit *parivāra*, "cover, surroundings; followers", taken over whole as a learned loan, a tatsama (CDIAL 7876). The sense "family" grew from "followers".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PARIVAAR-01, MW-LEX-DADA-01, MW-LEX-DADI-01] -->

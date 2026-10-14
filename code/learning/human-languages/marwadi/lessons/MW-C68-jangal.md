@@ -14,7 +14,8 @@ romanization: "jaṅgaḷ"
 concept_tag: MW-NATURE68-JANGAL
 prerequisites: [MW-C67-patto, MW-C67-dugar]
 sounds: []
-roots: []
+roots: [sanskrit-jangala]
+etymology_hook: "jaṅgaḷ ← Sanskrit jāṅgala 'arid', possibly non-Aryan (CDIAL 5177, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C67-dugar]
 <!-- hl-knowledge: introduces=[MW-LEX-C68-NATURE68-01]; assesses=[] -->
 
 **जंगळ** — *jaṅgaḷ* — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जंगळ** (*jaṅgaḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jāṅgala*, "arid, sparingly grown with trees". CDIAL gives no Marwari form in this entry (CDIAL 5177); the match is through Hindi *jaṅgal*. CDIAL notes evidence for a non-Aryan origin. The sense moved from "dry, open country" to "forest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

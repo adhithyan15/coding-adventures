@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a knife, then the Marwadi for a bottle.
 You'll want to know: किवाड़.
 किवाड़ — kivāṛ — "a door".
 
+The word, taken apart.
+किवाड़ (kivāṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kapāṭa, "leaf of a door". CDIAL lists Old Marwari kibāṛi under it (CDIAL 2963). CDIAL notes a possible Dravidian origin for the Sanskrit word.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a bottle, then the Marwadi for a door.
 
 You'll want to know: रसोई.
 रसोई — rasoī — "a kitchen".
+
+The word, taken apart.
+रसोई (rasoī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rasavatī, "kitchen". CDIAL lists Marwari rasoī under it (CDIAL 10656). It is built on rasa, "juice, flavour".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a door, then the Marwadi for a kitchen.
 You'll want to know: कमरो.
 कमरो — kamro — "a room".
 
+The word, taken apart.
+कमरो (kamro) is a loan from Portuguese câmara, "room, chamber". It goes back to Latin camera, "vaulted room".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a kitchen, then the Marwadi for a room.
 You'll want to know: किताब.
 किताब — kitāb — "a book".
 
+The word, taken apart.
+किताब (kitāb) is a loan from Arabic kitāb, "book", which reached Marwadi through Persian. Its Arabic root is k-t-b (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a room, then the Marwadi for a book.
 
 You'll want to know: कलम.
 कलम — kalam — "a pen".
+
+The word, taken apart.
+कलम (kalam) is a loan from Arabic qalam, "reed pen", which reached Marwadi through Persian. Its Arabic root is q-l-m (Lane). CDIAL marks Hindi kalam, "pen", as a loan (CDIAL 2653).
 
 What you've built.
 One more word for this chapter.

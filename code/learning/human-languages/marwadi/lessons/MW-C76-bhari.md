@@ -14,7 +14,8 @@ romanization: "bhārī"
 concept_tag: MW-ADJ76-BHARI
 prerequisites: [MW-C75-moto, MW-C76-patlo]
 sounds: []
-roots: []
+roots: [sanskrit-bharika]
+etymology_hook: "bhārī ← Sanskrit bhārika 'forming a load, heavy', a tadbhava (CDIAL 9465, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C76-patlo]
 <!-- hl-knowledge: introduces=[MW-LEX-C76-ADJ76-02]; assesses=[] -->
 
 **भारी** — *bhārī* — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भारी** (*bhārī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhārika*, "forming a load, heavy". CDIAL gives no Marwari form in this entry (CDIAL 9465); the match is through Hindi *bhārī* and Gujarati *bhārī*. It is built on *bhāra*, "burden, weight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

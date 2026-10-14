@@ -11,8 +11,8 @@ gloss: heat or hot weather, written after ga is isolated
 concept_tag: MW-WEATHER-HEAT-WRITTEN
 prerequisites: [MW-W12-ga]
 sounds: [voiced-g, trilled-r, long-ii]
-roots: []
-etymology_hook: New ग joins the familiar virama, र, म, and ी.
+roots: [persian-garmi]
+etymology_hook: "garmī: usually traced to Persian garmī 'heat'"
 duration:
   max_seconds: 170
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C12-hear-garmi, MW-W12-ga, MW-C12-mausam, MW-C11-hawa, MW-C06-he
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01] -->
 
 > **गर्** + **मी** → **गर्मी** — *garmī* — heat
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गर्मी** (*garmī*) is a loan, usually traced to Persian *garmī*, "heat". It is built on Persian *garm*, "warm, hot".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GARMI-01] -->

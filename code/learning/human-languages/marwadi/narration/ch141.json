@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "Good, Bad, Narrow, Wide, Deep",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4cc23fb0890ef863",
+  "sourceHash": "fnv1a64:921f02d43dd3ead0",
   "lessons": [
     {
       "id": "MW-C141-chokho",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72a3279a5707eaa8",
+      "sourceHash": "fnv1a64:af26ed146c1a582c",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चोखो (chokho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cokṣa, \"pure, clean\". CDIAL lists Old Marwari cokha under it (CDIAL 4918). The Old Marwari row means \"well\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4581879c3b58e970",
+      "sourceHash": "fnv1a64:b0c7c1b86f16ce37",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खराब (kharāb) is a loan from Arabic ḫarāb, \"ruin, desolation\", which reached Marwadi through Persian. Its Arabic root is ḫ-r-b (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06a6803b99381880",
+      "sourceHash": "fnv1a64:d197d0e045c9fb47",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांकड़ो (sā̃kṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṃkaṭa, \"contracted, narrow\". CDIAL gives no Marwari form in this entry (CDIAL 12817); the match is through Gujarati sā̃kṛũ and Hindi sā̃kar. CDIAL thinks the Sanskrit word probably comes from saṃkṛta, \"contracted\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0351df4228ea67f3",
+      "sourceHash": "fnv1a64:f29e509db397aa90",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौड़ो (chauṛo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ca-uḍa, \"wide, open\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari cauḍaï under it (CDIAL 4534). The Old Marwari row means \"in the open\"; CDIAL thinks the word may be built on caü-, \"four\", from compounds of catur."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e4ef0e124b5c929",
+      "sourceHash": "fnv1a64:36b930f57038a69c",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गैरो (gairo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gabhīra, \"deep\". CDIAL lists Old Marwari gaharau under it (CDIAL 4024). Marwadi has lost the h that the Old Marwari form kept."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

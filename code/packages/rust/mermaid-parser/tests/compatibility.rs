@@ -2630,6 +2630,23 @@ fn swimlane_flowchart_spacing_config_lowers_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_flowchart_wrapping_width_lowers_to_semantic_ir() {
+    let source = "swimlane-beta LR\nsubgraph A\n  first[Review a substantially longer customer request label]\nend";
+    let front_matter = parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    wrappingWidth: 180\n---\n{source}"
+    )).expect("Flowchart wrapping width front matter should parse for Swimlane");
+    let directive = parse_swimlane(&format!(
+        "%%{{init: {{\"flowchart\": {{\"wrappingWidth\": 220}}}}}}%%\n{source}"
+    )).expect("Flowchart wrapping width init directive should parse for Swimlane");
+
+    assert_eq!(front_matter.flowchart_config.wrapping_width, Some(180.0));
+    assert_eq!(directive.flowchart_config.wrapping_width, Some(220.0));
+    assert!(parse_swimlane(&format!(
+        "---\nconfig:\n  flowchart:\n    wrappingWidth: -1\n---\n{source}"
+    )).is_err(), "negative Flowchart wrapping width must be rejected");
+}
+
+#[test]
 fn swimlane_flowchart_curve_config_lowers_to_semantic_ir() {
     use diagram_ir::SwimlaneEdgeCurve;
 

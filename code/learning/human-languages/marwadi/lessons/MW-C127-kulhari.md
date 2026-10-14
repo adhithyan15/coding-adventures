@@ -14,7 +14,8 @@ romanization: "kulhāṛī"
 concept_tag: MW-THINGS127-KULHARI
 prerequisites: [MW-C127-khilo, MW-C127-hathoro]
 sounds: []
-roots: []
+roots: [sanskrit-kuthara]
+etymology_hook: "kulhāṛī ← Sanskrit kuṭhāra 'axe', prob. from Dravidian (CDIAL 3244, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C127-hathoro]
 <!-- hl-knowledge: introduces=[MW-LEX-C127-THINGS127-03]; assesses=[] -->
 
 **कुल्हाड़ी** — *kulhāṛī* — "an axe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुल्हाड़ी** (*kulhāṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kuṭhāra*, "axe". CDIAL gives no Marwari form in this entry (CDIAL 3244); the match is through Hindi *kulhāṛī*. CDIAL thinks the Sanskrit word itself probably came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

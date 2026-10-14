@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 7,
-  "sourceHash": "fnv1a64:65f5bfb40ab7a97f",
+  "sourceHash": "fnv1a64:22bb9f25db12660a",
   "lessonIds": [
     "MW-C06-hear-question",
     "MW-C06-question"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch07.txt",
   "json": "marwadi/narration/ch07.json",
-  "textHash": "fnv1a64:99e09b3d5fec64b9",
-  "jsonHash": "fnv1a64:dbad40e55817193e",
+  "textHash": "fnv1a64:c9c8c7511b44336d",
+  "jsonHash": "fnv1a64:66368349a568a96e",
   "findings": []
 }

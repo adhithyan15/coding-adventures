@@ -14,7 +14,8 @@ romanization: "chaumāso"
 concept_tag: MW-TIME94-CHAUMASO
 prerequisites: [MW-C94-unalo, MW-C94-siyalo]
 sounds: []
-roots: []
+roots: [sanskrit-caturmasa]
+etymology_hook: "chaumāso ← Sanskrit caturmāsa 'period of four months', a tadbhava (CDIAL 4616, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C94-siyalo]
 <!-- hl-knowledge: introduces=[MW-LEX-C94-TIME94-05]; assesses=[] -->
 
 **चौमासो** — *chaumāso* — "the rainy season".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चौमासो** (*chaumāso*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caturmāsa*, "period of four months". CDIAL gives no Marwari form in this entry (CDIAL 4616); the match is through Hindi *caumāsā*. It is built on *catur*, "four", and *māsa*, "month": the four months of rain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

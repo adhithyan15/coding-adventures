@@ -14,7 +14,8 @@ romanization: "ughāṛṇo"
 concept_tag: MW-VERB-UGHARNO
 prerequisites: [MW-C103-jorno, MW-C104-kharidno]
 sounds: []
-roots: []
+roots: [sanskrit-udghatayati]
+etymology_hook: "ughāṛṇo ← Sanskrit udghāṭayati 'opens', a tadbhava (CDIAL 1968, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C104-kharidno]
 <!-- hl-knowledge: introduces=[MW-LEX-C104-ACT104-02]; assesses=[] -->
 
 **उघाड़णो** — *ughāṛṇo* — "to uncover, to open up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उघाड़णो** (*ughāṛṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *udghāṭayati*, "opens". CDIAL gives no Marwari form in this entry (CDIAL 1968); the match is through Hindi *ughāṛnā* and Gujarati *ughāṛvũ*. Under the related noun *udghāṭa*, "act of opening", CDIAL does list Old Marwari *ughāṛo*, "open" (CDIAL 1972). It is built on *ud*, "up", and the root *ghaṭ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

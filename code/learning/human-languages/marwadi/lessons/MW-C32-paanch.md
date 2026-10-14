@@ -11,8 +11,8 @@ gloss: five, on the page — and the count one to five is complete
 concept_tag: NUMBER-ONE-TO-FIVE
 prerequisites: [MW-C32-hear-paanch]
 sounds: [unaspirated-p, nasal-vowel, unaspirated-ch]
-roots: []
-etymology_hook: The nasal dot over paanch is the same dot that stands over haan; one mark, learned once, spent twice.
+roots: [sanskrit-panca]
+etymology_hook: "pāṅch ← Sanskrit pañca 'five', a tadbhava (CDIAL 7655, Marwari row)"
 duration:
   max_seconds: 175
 requires:
@@ -50,6 +50,11 @@ nasal.
 
 That is the whole cost of the first five numbers — one letter, **ए**, and one
 mark the hand had already been making since the third chapter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पांच** (*pāṅch*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañca*, "five". CDIAL lists Marwari *pā̃c* under it (CDIAL 7655). English *five* is the same ancient word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PAANCH-01, MW-SCRIPT-CHAAR-01] -->

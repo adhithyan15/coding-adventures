@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a boat, then the Marwadi for a bicycle.
 You'll want to know: गांव.
 गांव — gā̃v — "a village".
 
+The word, taken apart.
+गांव (gā̃v) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from grāma, "troop, village". CDIAL lists Marwari gā̃v under it (CDIAL 4368).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a bicycle, then the Marwadi for a villag
 
 You'll want to know: सहर.
 सहर — sahar — "a city".
+
+The word, taken apart.
+सहर (sahar) is a loan, usually traced to Persian šahr, "city".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a village, then the Marwadi for a city.
 You'll want to know: कुरतो.
 कुरतो — kurto — "a kurta, a long shirt".
 
+The word, taken apart.
+कुरतो (kurto) is a loan, usually traced to Persian kurta, "a long shirt".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a city, then the Marwadi for a kurta.
 You'll want to know: पजामो.
 पजामो — pajāmo — "pyjama trousers".
 
+The word, taken apart.
+पजामो (pajāmo) is a loan, usually traced to Persian pāy-jāma, "leg garment". It is built on Persian pāy, "leg", and jāma, "garment". English pyjamas is the same word.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a kurta, then the Marwadi for pyjama tro
 
 You'll want to know: जूती.
 जूती — jūtī — "a shoe".
+
+The word, taken apart.
+जूती (jūtī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yukta, "joined, yoked". CDIAL gives no Marwari form in this entry (CDIAL 10479); the match is through Hindi jūtī and Gujarati jūtī. The sense moved from "fastened on" to "shoe".
 
 What you've built.
 One more word for this chapter.

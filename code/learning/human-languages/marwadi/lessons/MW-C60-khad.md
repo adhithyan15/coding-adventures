@@ -14,7 +14,8 @@ romanization: "khā̃ḍ"
 concept_tag: MW-VERBS60-KHAD
 prerequisites: [MW-C59-tamatar, MW-C59-gajar]
 sounds: []
-roots: []
+roots: [sanskrit-khanda-sugar]
+etymology_hook: "khā̃ḍ ← Sanskrit khaṇḍa 'partially dried molasses', a tadbhava (CDIAL 3800, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C59-gajar]
 <!-- hl-knowledge: introduces=[MW-LEX-C60-VERBS60-01]; assesses=[] -->
 
 **खांड** — *khā̃ḍ* — "sugar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खांड** (*khā̃ḍ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khaṇḍa*, "partially dried molasses". CDIAL lists Old Marwari *khāḍa* under it (CDIAL 3800).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

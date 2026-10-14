@@ -14,7 +14,8 @@ romanization: "jāṇo"
 concept_tag: MW-VERB-JANO
 prerequisites: [MW-C50-khano, MW-C51-pino]
 sounds: []
-roots: []
+roots: [sanskrit-yati]
+etymology_hook: "jāṇo ← Sanskrit yāti 'goes, approaches', a tadbhava (CDIAL 10452, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C51-pino]
 <!-- hl-knowledge: introduces=[MW-LEX-C51-VERBS51-02]; assesses=[] -->
 
 **जाणो** — *jāṇo* — "to go".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जाणो** (*jāṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yāti*, "goes, approaches". CDIAL lists Old Marwari *jāvaï* under it (CDIAL 10452).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

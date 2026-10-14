@@ -14,7 +14,8 @@ romanization: "tāḷo"
 concept_tag: MW-THINGS121-TALO
 prerequisites: [MW-C121-katoro, MW-C121-chimto]
 sounds: []
-roots: []
+roots: [sanskrit-tada-latch]
+etymology_hook: "tāḷo ← Sanskrit tāḍa 'latch'; CDIAL compares Dravidian (CDIAL 5749, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C121-chimto]
 <!-- hl-knowledge: introduces=[MW-LEX-C121-THINGS121-05]; assesses=[] -->
 
 **ताळो** — *tāḷo* — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ताळो** (*tāḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tāḍa*, "latch". CDIAL lists Marwari *tāḷo* under it (CDIAL 5749). CDIAL compares Dravidian words for "bar, bolt", such as Tamil ones.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: MW-THINGS122-RAJAI
 prerequisites: [MW-C122-peti, MW-C122-sanduk]
 sounds: []
 roots: []
+etymology_hook: "rajāī 'quilt': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C122-sanduk]
 <!-- hl-knowledge: introduces=[MW-LEX-C122-THINGS122-04]; assesses=[] -->
 
 **रजाई** — *rajāī* — "a quilt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **रजाई** (*rajāī*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

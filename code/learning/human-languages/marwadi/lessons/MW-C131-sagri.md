@@ -14,7 +14,8 @@ romanization: "sā̃grī"
 concept_tag: MW-THINGS131-SAGRI
 prerequisites: [MW-C131-khichro, MW-C131-ker]
 sounds: []
-roots: []
+roots: [sanskrit-sangara]
+etymology_hook: "sā̃grī ← Sanskrit saṅgara 'fruit of Prosopis spicigera', a tadbhava (CDIAL 13083, Gujarati and Hindi rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C131-ker]
 <!-- hl-knowledge: introduces=[MW-LEX-C131-THINGS131-03]; assesses=[] -->
 
 **सांगरी** — *sā̃grī* — "desert beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सांगरी** (*sā̃grī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saṅgara*, "fruit of Prosopis spicigera". CDIAL gives no Marwari form in this entry (CDIAL 13083); the match is through Gujarati *sā̃grī* and Hindi *sā̃gar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

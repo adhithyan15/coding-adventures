@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 10,
-  "sourceHash": "fnv1a64:2f551b5adec17b8b",
+  "sourceHash": "fnv1a64:0e91f1afc679455e",
   "lessonIds": [
     "MW-C08-hear-maa",
     "MW-C08-maa",
@@ -18,7 +18,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch10.txt",
   "json": "marwadi/narration/ch10.json",
-  "textHash": "fnv1a64:47aa05839e25fd16",
-  "jsonHash": "fnv1a64:38587d8b842e35f3",
+  "textHash": "fnv1a64:4c0e0b7ef24ceaa3",
+  "jsonHash": "fnv1a64:38d5e559774789c7",
   "findings": []
 }

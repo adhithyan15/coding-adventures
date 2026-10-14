@@ -11,8 +11,8 @@ gloss: brother
 concept_tag: MW-FAMILY-BROTHER
 prerequisites: [MW-C08-baap]
 sounds: [aspirated-bh, long-aa, long-ii]
-roots: []
-etymology_hook: Brother arrives by ear; every written unit is already familiar.
+roots: [sanskrit-bhratr]
+etymology_hook: "bhāī ← Sanskrit bhrātṛ 'brother', a tadbhava (CDIAL 9661, Marwari row)"
 duration:
   max_seconds: 150
 requires:
@@ -49,6 +49,11 @@ that begins with breathy *bh*.
 
 Hear two long vowel parts: *bhā-ī*. Say them smoothly once. The first consonant
 matches the familiar start of *ābhār*; spelling waits for the next step.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhāī* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhrātṛ*, "brother". CDIAL lists Marwari *bhāī* under it (CDIAL 9661). English *brother* is the same ancient word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BHAI-01, MW-LEX-BAAP-01] -->

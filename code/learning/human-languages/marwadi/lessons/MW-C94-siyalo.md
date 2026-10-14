@@ -14,7 +14,8 @@ romanization: "siyāḷo"
 concept_tag: MW-TIME94-SIYALO
 prerequisites: [MW-C94-magh, MW-C94-unalo]
 sounds: []
-roots: []
+roots: [sanskrit-shitakala]
+etymology_hook: "siyāḷo ← Sanskrit śītakāla 'cold season', a tadbhava (CDIAL 12486, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C94-unalo]
 <!-- hl-knowledge: introduces=[MW-LEX-C94-TIME94-04]; assesses=[] -->
 
 **सियाळो** — *siyāḷo* — "the cold season, winter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सियाळो** (*siyāḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śītakāla*, "cold season". CDIAL gives no Marwari form in this entry (CDIAL 12486); the match is through Hindi *siyālā* and Gujarati *śiyāḷo*. It is built on *śīta*, "cold", and *kāla*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

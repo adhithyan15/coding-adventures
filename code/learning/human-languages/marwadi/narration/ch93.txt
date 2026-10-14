@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for Baisakh, then the Marwadi for Jeth.
 You'll want to know: सावण.
 सावण — sāvaṇ — "Savan (July-August)".
 
+The word, taken apart.
+सावण (sāvaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śrāvaṇa, "the month of the Śravaṇa star". CDIAL gives no Marwari form in this entry (CDIAL 12699); the match is through Hindi sāwan and Gujarati sāvaṇ.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for Jeth, then the Marwadi for Savan.
 
 You'll want to know: भादवो.
 भादवो — bhādvo — "Bhadvo (August-September)".
+
+The word, taken apart.
+भादवो (bhādvo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhādrapada, "the month August-September". CDIAL gives no Marwari form in this entry (CDIAL 9447); the match is through Hindi bhādõ and Gujarati bhādarvo.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for Savan, then the Marwadi for Bhadvo.
 You'll want to know: आसोज.
 आसोज — āsoj — "Asoj (September-October)".
 
+The word, taken apart.
+आसोज (āsoj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aśvayuja, "the month Āśvina, September-October". CDIAL gives no Marwari form in this entry (CDIAL 925); the match is through Hindi asoj. The name is built on aśva, "horse", and yuj, "yoke", a star pair.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for Bhadvo, then the Marwadi for Asoj.
 You'll want to know: काती.
 काती — kātī — "Kati (October-November)".
 
+The word, taken apart.
+काती (kātī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kārttika, "the month October-November". CDIAL gives no Marwari form in this entry (CDIAL 3070); the match is through Sindhi katī. The month is named for the Kṛttikā stars, the Pleiades.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for Asoj, then the Marwadi for Kati.
 
 You'll want to know: मिगसर.
 मिगसर — migsar — "Migsar (November-December)".
+
+The word, taken apart.
+मिगसर (migsar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārgaśiras, "the month November-December". CDIAL gives no Marwari form in this entry (CDIAL 10076); the match is through Hindi mãgsir and Gujarati māgsar.
 
 What you've built.
 One more word for this chapter.

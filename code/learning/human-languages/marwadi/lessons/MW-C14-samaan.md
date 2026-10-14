@@ -11,8 +11,8 @@ gloss: goods or merchandise, written entirely with familiar signs
 concept_tag: MW-SHOPPING-GOODS-WRITTEN
 prerequisites: [MW-C14-hear-samaan]
 sounds: [voiceless-s, long-aa, voiced-m]
-roots: []
-etymology_hook: Repeated familiar ा makes the two long beats visible.
+roots: [persian-saman]
+etymology_hook: "sāmān: usually traced to Persian sāmān 'goods, equipment'"
 duration:
   max_seconds: 160
 requires:
@@ -46,6 +46,11 @@ Retrieve the four-word family payoff. [YOU WRITE: **ा** once]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01] -->
 
 > **सा** + **मान** → **सामान** — *sāmān* — goods
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सामान** (*sāmān*) is a loan, usually traced to Persian *sāmān*, "goods, equipment".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SAMAAN-01] -->

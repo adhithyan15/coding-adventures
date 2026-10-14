@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 110,
-  "sourceHash": "fnv1a64:a6e124136f0ad9ef",
+  "sourceHash": "fnv1a64:c0a89c59d25d0775",
   "lessonIds": [
     "MW-C110-batno",
     "MW-C110-gamavno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch110.txt",
   "json": "marwadi/narration/ch110.json",
-  "textHash": "fnv1a64:6203893a42b55dbb",
-  "jsonHash": "fnv1a64:6f2ceccfb5b6f2d2",
+  "textHash": "fnv1a64:d24cf69ff8d261c8",
+  "jsonHash": "fnv1a64:9ed0e135f57af2e4",
   "findings": []
 }

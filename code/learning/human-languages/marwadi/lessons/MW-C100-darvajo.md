@@ -14,7 +14,8 @@ romanization: "darvājo"
 concept_tag: MW-LOC100-DARVAJO
 prerequisites: [MW-C99-bavri, MW-C99-talav]
 sounds: []
-roots: []
+roots: [persian-darvaza]
+etymology_hook: "darvājo: usually traced to Persian darvāza 'gate, door'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C99-talav]
 <!-- hl-knowledge: introduces=[MW-LEX-C100-LOC100-01]; assesses=[] -->
 
 **दरवाजो** — *darvājo* — "a gate, a doorway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दरवाजो** (*darvājo*) is a loan, usually traced to Persian *darvāza*, "gate, door". Marwadi says the *z* as *j*. The Persian word is a cousin of English *door*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

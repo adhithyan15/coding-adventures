@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 147,
-  "sourceHash": "fnv1a64:2f6709f29620ac4a",
+  "sourceHash": "fnv1a64:d40e5afe3d8d248e",
   "lessonIds": [
     "MW-C147-mehanti",
     "MW-C147-imandar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch147.txt",
   "json": "marwadi/narration/ch147.json",
-  "textHash": "fnv1a64:d4c3d721d9b2fa5c",
-  "jsonHash": "fnv1a64:72762c67f17fac6a",
+  "textHash": "fnv1a64:0794c9b293f5cae6",
+  "jsonHash": "fnv1a64:b6fcb7d3b841cfc7",
   "findings": []
 }

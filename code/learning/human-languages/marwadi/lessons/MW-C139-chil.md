@@ -14,7 +14,8 @@ romanization: "chīl"
 concept_tag: MW-THINGS139-CHIL
 prerequisites: [MW-C139-toto, MW-C139-koyal]
 sounds: []
-roots: []
+roots: [sanskrit-cilli]
+etymology_hook: "chīl ← Sanskrit cilli 'a bird of prey; kite', a tadbhava (CDIAL 4829, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C139-koyal]
 <!-- hl-knowledge: introduces=[MW-LEX-C139-THINGS139-05]; assesses=[] -->
 
 **चील** — *chīl* — "a kite (the bird)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चील** (*chīl*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cilli*, "a bird of prey; kite". CDIAL gives no Marwari form in this entry (CDIAL 4829); the match is through Hindi *cīl* and Gujarati *cīl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

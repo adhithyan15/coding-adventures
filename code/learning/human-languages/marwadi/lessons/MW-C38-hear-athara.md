@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-EIGHTEEN
 prerequisites: [MW-C38-satara]
 sounds: [retroflex-tth, long-aa]
 roots: [sanskrit-ashtadasha]
-etymology_hook: Sanskrit ashtadasha; eight keeps both its consonants and swaps where its length sits.
+etymology_hook: "aṭhārā ← Sanskrit aṣṭādaśa 'eighteen', a tadbhava (CDIAL 946, Hindi row)"
 duration:
   max_seconds: 175
 requires:
@@ -52,6 +52,11 @@ from the front of the word to the middle of it.
 Say them back to back — *āṭh*, *aṭhārā* — and hear the long vowel change places.
 Eighteen is the second of the two teens that begin on a vowel, which is why the
 letter came before it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aṭhārā* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṣṭādaśa*, "eighteen". CDIAL gives no Marwari form in this entry (CDIAL 946); the match is through Hindi *aṭhārah*. It is *aṣṭā*, "eight", and *daśa*, "ten".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-ATHARA-01, MW-LEX-SATARA-01] -->

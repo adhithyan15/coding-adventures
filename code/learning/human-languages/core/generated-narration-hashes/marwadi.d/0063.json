@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 63,
-  "sourceHash": "fnv1a64:a15635e56ac26640",
+  "sourceHash": "fnv1a64:b259c34d1ad32019",
   "lessonIds": [
     "MW-C63-khat",
     "MW-C63-almari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch63.txt",
   "json": "marwadi/narration/ch63.json",
-  "textHash": "fnv1a64:2270b92d78fc4639",
-  "jsonHash": "fnv1a64:7cf35e59e7f39eb0",
+  "textHash": "fnv1a64:0199b986d4236455",
+  "jsonHash": "fnv1a64:c4080024090fc222",
   "findings": []
 }

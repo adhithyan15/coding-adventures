@@ -14,7 +14,8 @@ romanization: "bārai"
 concept_tag: MW-PLACE81-BARAI
 prerequisites: [MW-C81-najik, MW-C81-may]
 sounds: []
-roots: []
+roots: [indo-aryan-bahira]
+etymology_hook: "bārai ← *bāhira 'external', reconstructed (CDIAL 9226, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C81-may]
 <!-- hl-knowledge: introduces=[MW-LEX-C81-PLACE81-04]; assesses=[] -->
 
 **बारै** — *bārai* — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बारै** (*bārai*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bāhira*, "external", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *bāhari* under it (CDIAL 9226). It is built on Sanskrit *bahis*, "outside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

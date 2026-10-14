@@ -15,6 +15,7 @@ concept_tag: MW-LOC96-KATHAI
 prerequisites: [MW-C95-roj, MW-C95-ajkal]
 sounds: []
 roots: []
+etymology_hook: "kaṭhai 'where': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C95-ajkal]
 <!-- hl-knowledge: introduces=[MW-LEX-C96-LOC96-01]; assesses=[] -->
 
 **कठै** — *kaṭhai* — "where".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **कठै** (*kaṭhai*) is not settled. CDIAL, searched by form and by meaning, has no entry for it; its *k-* is the old question stem, as in *kuṇ*, "who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "miṭhāī"
 concept_tag: MW-VERBS61-MITHAI
 prerequisites: [MW-C61-ato, MW-C61-kado]
 sounds: []
-roots: []
+roots: [sanskrit-mishta]
+etymology_hook: "miṭhāī: 'sweet' + -āī, on Sanskrit miṣṭa 'dainty, sweet' (CDIAL 10299)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C61-kado]
 <!-- hl-knowledge: introduces=[MW-LEX-C61-VERBS61-05]; assesses=[] -->
 
 **मिठाई** — *miṭhāī* — "sweets".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मिठाई** (*miṭhāī*) is a noun built with *-āī* on the word for "sweet". CDIAL lists that word, Hindi *miṭh* and Gujarati *mīṭhũ*, "sweet", under Sanskrit *miṣṭa*, "dainty, sweet" (CDIAL 10299), where Old Marwari has *sumīṭha*, "very sweet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

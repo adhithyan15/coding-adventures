@@ -14,7 +14,8 @@ romanization: "bā̃chṇo"
 concept_tag: MW-VERB-BACHNO
 prerequisites: [MW-C104-jovno, MW-C105-raivno]
 sounds: []
-roots: []
+roots: [sanskrit-vacayati]
+etymology_hook: "bā̃chṇo 'to read': usually linked with Sanskrit vācayati 'reads' (CDIAL 11471); its nasal and ch are unexplained"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C105-raivno]
 <!-- hl-knowledge: introduces=[MW-LEX-C105-ACT105-02]; assesses=[] -->
 
 **बांचणो** — *bā̃chṇo* — "to read".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बांचणो** (*bā̃chṇo*) is usually linked with Sanskrit *vācayati*, "causes to say, reads", which CDIAL follows into Prakrit *vāyēi*, "reads" (CDIAL 11471), but not into Marwari or Hindi. That entry does not explain the nasal and the *ch* of **बांचणो** (*bā̃chṇo*), so the link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

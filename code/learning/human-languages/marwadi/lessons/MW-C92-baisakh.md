@@ -14,7 +14,8 @@ romanization: "baisākh"
 concept_tag: MW-TIME92-BAISAKH
 prerequisites: [MW-C92-ravivar, MW-C92-chait]
 sounds: []
-roots: []
+roots: [sanskrit-vaishakha]
+etymology_hook: "baisākh ← Sanskrit vaiśākha 'the month April-May', a tadbhava (CDIAL 12149, Prakrit row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C92-chait]
 <!-- hl-knowledge: introduces=[MW-LEX-C92-TIME92-04]; assesses=[] -->
 
 **बैसाख** — *baisākh* — "Baisakh (April-May)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बैसाख** (*baisākh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vaiśākha*, "the month April-May". CDIAL gives no Marwari form in this entry (CDIAL 12149); the match is through Prakrit *vēsāha*. The month is named for the star pair Viśākhā.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

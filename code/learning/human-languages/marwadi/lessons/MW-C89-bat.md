@@ -14,7 +14,8 @@ romanization: "bāt"
 concept_tag: MW-WORLD89-BAT
 prerequisites: [MW-C89-khabar, MW-C89-des]
 sounds: []
-roots: []
+roots: [sanskrit-varta]
+etymology_hook: "bāt ← Sanskrit vārttā 'livelihood, tidings', a tadbhava (CDIAL 11564, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C89-des]
 <!-- hl-knowledge: introduces=[MW-LEX-C89-WORLD89-04]; assesses=[] -->
 
 **बात** — *bāt* — "a matter; talk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बात** (*bāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vārttā*, "livelihood, tidings". CDIAL lists Old Marwari *bāta* under it (CDIAL 11564).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

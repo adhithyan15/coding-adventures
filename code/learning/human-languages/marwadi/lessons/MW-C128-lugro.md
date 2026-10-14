@@ -14,7 +14,8 @@ romanization: "lūgṛo"
 concept_tag: MW-THINGS128-LUGRO
 prerequisites: [MW-C128-pagri, MW-C128-ghaghro]
 sounds: []
-roots: []
+roots: [indo-aryan-lugga]
+etymology_hook: "lūgṛo: in CDIAL's 'defective' group *lugga-, with Hindi lugṛā 'rag', Gujarati lugṛũ 'clothes' (CDIAL 11072)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C128-ghaghro]
 <!-- hl-knowledge: introduces=[MW-LEX-C128-THINGS128-03]; assesses=[] -->
 
 **लूगड़ो** — *lūgṛo* — "a woman's wrap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लूगड़ो** (*lūgṛo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*lugga*, "defective", a form CDIAL reconstructs from its descendants. In this large group of "defective" words, Hindi *lugṛā* means "rag" and Gujarati *lugṛũ* "clothes", and CDIAL's additions give a Rajasthani *lūgṛī*, "scarf, a woman's coloured wrap" (CDIAL 11072). How the senses connect is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

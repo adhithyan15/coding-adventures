@@ -14,7 +14,8 @@ romanization: "milṇo"
 concept_tag: MW-VERB-MILNO
 prerequisites: [MW-C54-gavno, MW-C54-nachno]
 sounds: []
-roots: []
+roots: [sanskrit-milati]
+etymology_hook: "milṇo ← Sanskrit milati 'meets, encounters', a tadbhava (CDIAL 10133, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C54-nachno]
 <!-- hl-knowledge: introduces=[MW-LEX-C55-VERBS55-01]; assesses=[] -->
 
 **मिलणो** — *milṇo* — "to meet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मिलणो** (*milṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *milati*, "meets, encounters". CDIAL lists Old Marwari *milaï* under it (CDIAL 10133).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

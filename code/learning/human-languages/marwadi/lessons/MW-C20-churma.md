@@ -11,8 +11,8 @@ gloss: sweet crumbled wheat dessert, written entirely with familiar signs
 concept_tag: MW-FOOD-CHURMA-WRITTEN
 prerequisites: [MW-C20-hear-churma]
 sounds: [unaspirated-ch, long-uu, tapped-r, long-aa]
-roots: []
-etymology_hook: Five familiar units spell the longest food word so far without adding a sign.
+roots: [indo-aryan-cura]
+etymology_hook: "chūrmā: on chūr 'crumbled', listed by CDIAL as Hindi cūr under *cūra, from Sanskrit cūrṇa (CDIAL 4888)"
 duration:
   max_seconds: 170
 requires:
@@ -47,6 +47,11 @@ wheat dessert and cloud.
 
 The **ू** under **च** is the long *ū* met in **मिलसू**, and **मा** closes with
 the long **ा** used since the first greeting.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चूरमा** (*chūrmā*) is built on *chūr*, "crumbled". CDIAL lists Hindi *cūr*, "powder", under *\*cūra*, a form drawn from Sanskrit *cūrṇa*, "powdered" (CDIAL 4888). It has no entry for **चूरमा** (*chūrmā*) itself or for its ending.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHURMA-01] -->

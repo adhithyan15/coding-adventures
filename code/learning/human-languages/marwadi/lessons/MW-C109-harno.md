@@ -14,7 +14,8 @@ romanization: "hārṇo"
 concept_tag: MW-VERB-HARNO
 prerequisites: [MW-C109-thakno, MW-C109-jitno]
 sounds: []
-roots: []
+roots: [sanskrit-harayati]
+etymology_hook: "hārṇo ← Sanskrit hārayati 'loses', a tadbhava (CDIAL 14061, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C109-jitno]
 <!-- hl-knowledge: introduces=[MW-LEX-C109-ACT109-04]; assesses=[] -->
 
 **हारणो** — *hārṇo* — "to lose (a game)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हारणो** (*hārṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hārayati*, "loses". CDIAL gives no Marwari form in this entry (CDIAL 14061); the match is through Hindi *hārnā* and Gujarati *hārvũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

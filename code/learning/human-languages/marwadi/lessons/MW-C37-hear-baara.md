@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-TWELVE
 prerequisites: [MW-C37-igyaara]
 sounds: [long-aa]
 roots: [sanskrit-dvadasha]
-etymology_hook: Sanskrit dvadasha, two-and-ten; only the b of two survives in Marwari's twelve.
+etymology_hook: "bārā ← Sanskrit dvādaśa 'twelve', a tadbhava (CDIAL 6658, Old Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -53,6 +53,11 @@ rest does not.
 
 The ending **-ārā** is the one *igyārā* had. From here to nineteen you will hear
 it again and again: the teens are a set that rhymes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bārā* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dvādaśa*, "twelve". CDIAL lists Old Marwari *bārā* under it (CDIAL 6658). It is *dva*, "two", and *daśa*, "ten".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAARA-01, MW-LEX-IGYAARA-01] -->

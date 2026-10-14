@@ -14,7 +14,8 @@ romanization: "buro"
 concept_tag: MW-QUAL148-BURO
 prerequisites: [MW-C147-kanjus, MW-C147-bhalo]
 sounds: []
-roots: []
+roots: [indo-aryan-bura]
+etymology_hook: "buro ← *bura 'defective', reconstructed (CDIAL 9289, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C147-bhalo]
 <!-- hl-knowledge: introduces=[MW-LEX-C148-QUAL148-01]; assesses=[] -->
 
 **बुरो** — *buro* — "wicked, bad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बुरो** (*buro*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bura*, "defective", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9289); the match is through Hindi *burā* and Gujarati *būrũ*. CDIAL sets it in a large group of "defective" words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

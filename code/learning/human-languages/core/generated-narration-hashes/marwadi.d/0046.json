@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 46,
-  "sourceHash": "fnv1a64:24bd9ce50ef425c8",
+  "sourceHash": "fnv1a64:c2ba6ffa62895c25",
   "lessonIds": [
     "MW-C46-pith",
     "MW-C46-jibh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch46.txt",
   "json": "marwadi/narration/ch46.json",
-  "textHash": "fnv1a64:f6702b4eb82b69bb",
-  "jsonHash": "fnv1a64:9cf2655f88942a92",
+  "textHash": "fnv1a64:96b9ed43417a0557",
+  "jsonHash": "fnv1a64:5379f3db6d3dad88",
   "findings": []
 }

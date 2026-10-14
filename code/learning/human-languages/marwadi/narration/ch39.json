@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Saying No",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d43dffdd12d92d68",
+  "sourceHash": "fnv1a64:dce3b3d8bc43764b",
   "lessons": [
     {
       "id": "MW-C39-hear-koni",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e94dd83eee09afc6",
+      "sourceHash": "fnv1a64:db02fcb157395aaa",
       "notice": null,
       "blocks": [
         {
@@ -91,6 +91,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of konī is not settled. CDIAL, searched by form and by meaning, has no entry for it. It lists Marwari na, \"not\", under Sanskrit na (CDIAL 6906), but nothing that explains the ko- of konī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -139,7 +150,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:eb6f01bba9b51d22",
+      "sourceHash": "fnv1a64:89cf7e08cdff0911",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -224,6 +235,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of कोनी (konī) is not settled. CDIAL, searched by form and by meaning, has no entry for it. It lists Marwari na, \"not\", under Sanskrit na (CDIAL 6906), but nothing that explains the ko- of कोनी (konī)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

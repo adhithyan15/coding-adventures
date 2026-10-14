@@ -14,7 +14,8 @@ romanization: "sauk"
 concept_tag: MW-LIKE113-SAUK
 prerequisites: [MW-C113-lagno, MW-C113-pasand]
 sounds: []
-roots: []
+roots: [arabic-shawq]
+etymology_hook: "sauk ← Arabic šawq 'longing, desire', through Persian (Lane, root š-w-q)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C113-pasand]
 <!-- hl-knowledge: introduces=[MW-LEX-C113-LIKE113-03]; assesses=[] -->
 
 **सौक** — *sauk* — "a hobby, a fondness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सौक** (*sauk*) is a loan from Arabic *šawq*, "longing, desire", which reached Marwadi through Persian. Its Arabic root is *š-w-q* (Lane). Marwadi says the *š* as *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

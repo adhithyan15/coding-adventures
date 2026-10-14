@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 14,
-  "sourceHash": "fnv1a64:950bf79516fad99e",
+  "sourceHash": "fnv1a64:690b2b703742323a",
   "lessonIds": [
     "MW-C10-hear-bajar",
     "MW-W10-ja",
@@ -17,7 +17,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch14.txt",
   "json": "marwadi/narration/ch14.json",
-  "textHash": "fnv1a64:5042b7e9f854823a",
-  "jsonHash": "fnv1a64:42352514c2b0a0d8",
+  "textHash": "fnv1a64:5551f1826f72f0e6",
+  "jsonHash": "fnv1a64:6a47b5fbfa1e15b8",
   "findings": []
 }

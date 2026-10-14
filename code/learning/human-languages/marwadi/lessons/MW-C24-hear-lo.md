@@ -11,8 +11,8 @@ gloss: take it — the shortest asking word in the source
 concept_tag: MW-VERB-TAKE
 prerequisites: [MW-R23-script-close]
 sounds: [dental-l, long-o]
-roots: []
-etymology_hook: One beat, one meaning, and the same ending as every other asking word so far.
+roots: [sanskrit-labhate]
+etymology_hook: "lo ← Sanskrit labhate 'takes', a tadbhava (CDIAL 10948, Old Marwari row)"
 duration:
   max_seconds: 160
 requires:
@@ -51,6 +51,11 @@ word is asking somebody to do something.
 
 *lo* is the word that closes a deal rather than opening one. It is what the
 person handing something over says, and what you say when you accept.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lo* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *labhate*, "catches, takes". CDIAL lists Old Marwari *lei* under it (CDIAL 10948). *lo* is the asking form of this verb.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-LO-01] -->

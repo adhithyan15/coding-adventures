@@ -14,7 +14,8 @@ romanization: "māchhlī"
 concept_tag: MW-VERBS58-MACHHLI
 prerequisites: [MW-C58-karno, MW-C58-mas]
 sounds: []
-roots: []
+roots: [sanskrit-matsya]
+etymology_hook: "māchhlī ← Sanskrit matsya 'fish', a tadbhava (CDIAL 9758, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C58-mas]
 <!-- hl-knowledge: introduces=[MW-LEX-C58-VERBS58-04]; assesses=[] -->
 
 **माछली** — *māchhlī* — "a fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माछली** (*māchhlī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *matsya*, "fish". CDIAL lists Old Marwari *māchalī* under it (CDIAL 9758). CDIAL explains the *-l-* as an added suffix.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khī̃chṇo"
 concept_tag: MW-VERB-KHICHNO
 prerequisites: [MW-C105-janno, MW-C105-bharno]
 sounds: []
-roots: []
+roots: [indo-aryan-khinc]
+etymology_hook: "khī̃chṇo ← *khiñc 'to drag, pull', reconstructed (CDIAL 3881, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C105-bharno]
 <!-- hl-knowledge: introduces=[MW-LEX-C105-ACT105-05]; assesses=[] -->
 
 **खींचणो** — *khī̃chṇo* — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खींचणो** (*khī̃chṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khiñc*, "to drag, pull", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *khaĩcaï* under it (CDIAL 3881).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

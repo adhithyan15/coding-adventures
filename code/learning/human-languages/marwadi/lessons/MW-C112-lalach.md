@@ -14,7 +14,8 @@ romanization: "lālach"
 concept_tag: MW-WANT112-LALACH
 prerequisites: [MW-C111-mag, MW-C112-jarurat]
 sounds: []
-roots: []
+roots: [sanskrit-lalitya]
+etymology_hook: "lālach ← Sanskrit lālitya 'amorousness', a tadbhava (CDIAL 11029, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C112-jarurat]
 <!-- hl-knowledge: introduces=[MW-LEX-C112-WANT112-02]; assesses=[] -->
 
 **लालच** — *lālach* — "greed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लालच** (*lālach*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lālitya*, "amorousness". CDIAL gives no Marwari form in this entry (CDIAL 11029); the match is through Hindi *lālac*. It is built on *lalita*, "amorous".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

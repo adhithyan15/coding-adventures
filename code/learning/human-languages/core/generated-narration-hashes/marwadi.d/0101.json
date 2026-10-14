@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 101,
-  "sourceHash": "fnv1a64:c91ae7b4af54536c",
+  "sourceHash": "fnv1a64:b3eccf95603cacac",
   "lessonIds": [
     "MW-C101-yo",
     "MW-C101-iso",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch101.txt",
   "json": "marwadi/narration/ch101.json",
-  "textHash": "fnv1a64:3b38f7856718a194",
-  "jsonHash": "fnv1a64:43c89b604c96b255",
+  "textHash": "fnv1a64:fe14fa5245e4311a",
+  "jsonHash": "fnv1a64:93b97d1f81bee27d",
   "findings": []
 }

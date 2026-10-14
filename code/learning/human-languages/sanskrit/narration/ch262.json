@@ -1,0 +1,559 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 262,
+  "title": "Us and you all as objects",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:be5f1ae77423aab3",
+  "lessons": [
+    {
+      "id": "SA-C262-asman",
+      "sequence": 15570,
+      "title": "अस्मान् (asmān) — us, several people, as the object",
+      "headword": "अस्मान्",
+      "romanization": "asmān",
+      "gloss": "us, several people, as the object",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdf22456a10624ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "“Us two” is आवाम् (āvām). “Our” for several possessors is अस्माकम् (asmākam). Keep the asm- opening and make several people the object."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अस्मान्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अस्मान् (asmān) means “us” when several people including the speaker are the object."
+            },
+            {
+              "kind": "speech",
+              "text": "सः अस्मान् पश्यति। saḥ asmān paśyati. He sees us."
+            },
+            {
+              "kind": "speech",
+              "text": "Whitney §491 lists अस्मान् as the independent accusative plural. Do not confuse it with अस्माकम्, “our / of us”: asmān is a person reached by the action; asmākam answers “whose?”."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "Taken Apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "As a grammatical form, अस्मान् (asmān) comes from the first-person pronoun paradigm; it is not a word from a separate lexical root. Whitney's Sanskrit Grammar §491 records it as the independent accusative plural. This lesson makes no deeper historical derivation claim."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Whitney, Sanskrit Grammar (1889), §491."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“us two” as object — āvām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “us two” as object — *āvām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“us, several people” as object — asmān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “us, several people” as object — *asmān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“he sees us” — saḥ asmān paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “he sees us” — *saḥ asmān paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "object asmān; possessor asmākam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: object *asmān*; possessor *asmākam*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Several people including the speaker are seen. Which object form means “us”? (अस्मान्, asmān.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C262-yusman",
+      "sequence": 15580,
+      "title": "युष्मान् (yuṣmān) — you, several people, as the object",
+      "headword": "युष्मान्",
+      "romanization": "yuṣmān",
+      "gloss": "you, several people, as the object",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5a78fa7c2195ef8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "“Us, several people” is अस्मान् (asmān). “Your” to several people is युष्माकम् (yuṣmākam). Keep the yuṣm- opening and make the several addressees the object."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: युष्मान्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "युष्मान् (yuṣmān) means “you” when several familiar addressees are the object."
+            },
+            {
+              "kind": "speech",
+              "text": "सः युष्मान् पश्यति। saḥ yuṣmān paśyati. He sees you all."
+            },
+            {
+              "kind": "speech",
+              "text": "Whitney §491 lists युष्मान् (yuṣmān) as the independent accusative plural. Keep it apart from युष्माकम्, “your / of you all”: the first is an object and the second is a possessor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "Taken Apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "As a grammatical form, युष्मान् (yuṣmān) comes from the second-person pronoun paradigm; it is not a word from a separate lexical root. Whitney's Sanskrit Grammar §491 records it as the independent accusative plural. This lesson makes no deeper historical derivation claim."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Whitney, Sanskrit Grammar (1889), §491."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“he sees us” — saḥ asmān paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “he sees us” — *saḥ asmān paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“he sees you all” — saḥ yuṣmān paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “he sees you all” — *saḥ yuṣmān paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "several people with the speaker — asmān; several addressees — yuṣmān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: several people with the speaker — *asmān*; several addressees — *yuṣmān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "object yuṣmān; possessor yuṣmākam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: object *yuṣmān*; possessor *yuṣmākam*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Several familiar addressees are seen. Which object form means “you all”? (युष्मान्, yuṣmān.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C262-object-person-number",
+      "sequence": 15590,
+      "title": "Who is seen, and how many?",
+      "headword": "(object person and number)",
+      "romanization": "",
+      "gloss": "choose me, us two, us, you, you two, or you all",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4d136eb51bb358e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the singular pair, then the dual pair, then the several-person pair. (Mām, tvām; āvām, yuvām; asmān, yuṣmān.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: person first, then number",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Choose in two small steps."
+            },
+            {
+              "kind": "speech",
+              "text": "First ask who the object is:"
+            },
+            {
+              "kind": "speech",
+              "text": "first person includes the speaker;"
+            },
+            {
+              "kind": "speech",
+              "text": "second person is the familiar person or people addressed."
+            },
+            {
+              "kind": "speech",
+              "text": "Then count the people:"
+            },
+            {
+              "kind": "speech",
+              "text": "one person: माम् / त्वाम् (mām / tvām);"
+            },
+            {
+              "kind": "speech",
+              "text": "two people: आवाम् / युवाम् (āvām / yuvām);"
+            },
+            {
+              "kind": "speech",
+              "text": "several people: अस्मान् / युष्मान् (asmān / yuṣmān)."
+            },
+            {
+              "kind": "speech",
+              "text": "The six are independent full forms. Choose person, choose number, then place the chosen object before the known verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "first person, one — mām; first person, two — āvām; first person, several — asmān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: first person, one — *mām*; first person, two — *āvām*; first person, several — *asmān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "second person, one — tvām; second person, two — yuvām; second person, several — yuṣmān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: second person, one — *tvām*; second person, two — *yuvām*; second person, several — *yuṣmān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“he sees us two” — saḥ āvām paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “he sees us two” — *saḥ āvām paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“he sees you all” — saḥ yuṣmān paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “he sees you all” — *saḥ yuṣmān paśyati*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the two choices you make before selecting the object form? (Person: speaker included or addressee; then number: one, two, or several.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C262-object-pronoun-retrieval",
+      "sequence": 15600,
+      "title": "One, two, or several — me/us or you",
+      "headword": "(cumulative object-pronoun retrieval)",
+      "romanization": "",
+      "gloss": "retrieve the first- and second-person objects across all three numbers",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:699edf169ef698dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the decision aloud: person first, then number. Do not recite a table; answer each scene separately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — choose before you speak",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the speaker alone is seen — saḥ mām paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the speaker alone is seen — *saḥ mām paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one familiar addressee is seen — saḥ tvām paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one familiar addressee is seen — *saḥ tvām paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the speaker and one companion are seen — saḥ āvām paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the speaker and one companion are seen — *saḥ āvām paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two familiar addressees are seen — saḥ yuvām paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two familiar addressees are seen — *saḥ yuvām paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "several people including the speaker are seen — saḥ asmān paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: several people including the speaker are seen — *saḥ asmān paśyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "several familiar addressees are seen — saḥ yuṣmān paśyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: several familiar addressees are seen — *saḥ yuṣmān paśyati*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the boundary of this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These six are the independent full forms taught here. Classical Sanskrit also has short alternatives in particular positions, and it has third-person and respectful object forms. Those belong to later lessons. This set is not the whole Classical Sanskrit pronoun system; it is the complete first- and second-person full-form choice across one person, two people, and several people."
+            },
+            {
+              "kind": "speech",
+              "text": "Source for the full and short forms: William Dwight Whitney, Sanskrit Grammar (1889), §491."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Without a table, answer six prompts: me, you one, us two, you two, us several, you several. (Mām; tvām; āvām; yuvām; asmān; yuṣmān.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

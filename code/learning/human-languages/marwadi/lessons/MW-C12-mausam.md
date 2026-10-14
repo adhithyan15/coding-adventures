@@ -11,8 +11,8 @@ gloss: weather, written after the au mark is isolated
 concept_tag: MW-WEATHER-GENERAL-WRITTEN
 prerequisites: [MW-W12-au-matra]
 sounds: [au-diphthong, voiced-m, voiceless-s]
-roots: []
-etymology_hook: Familiar म and स now frame the newly isolated au mark.
+roots: [arabic-mawsim-season]
+etymology_hook: "mausam ← Arabic mawsim 'season, festival time', through Persian (Lane, root w-s-m)"
 duration:
   max_seconds: 160
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C12-hear-mausam, MW-W12-au-matra, MW-C11-hawa, MW-C11-baadal, MW
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01] -->
 
 > **मौ** + **सम** → **मौसम** — *mausam* — weather
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मौसम** (*mausam*) is a loan from Arabic *mawsim*, "season, festival time", which reached Marwadi through Persian. Its Arabic root is *w-s-m* (Lane). The sense "weather" grew from "season".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MAUSAM-01] -->

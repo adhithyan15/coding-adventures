@@ -14,7 +14,8 @@ romanization: "jīro"
 concept_tag: MW-THINGS136-JIRO
 prerequisites: [MW-C136-adrak, MW-C136-haldi]
 sounds: []
-roots: []
+roots: [sanskrit-jiraka]
+etymology_hook: "jīro ← Sanskrit jīraka 'cummin-seed', a tadbhava (CDIAL 5234, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C136-haldi]
 <!-- hl-knowledge: introduces=[MW-LEX-C136-THINGS136-05]; assesses=[] -->
 
 **जीरो** — *jīro* — "cumin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जीरो** (*jīro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jīraka*, "cummin-seed". CDIAL gives no Marwari form in this entry (CDIAL 5234); the match is through Hindi *jīrā* and Gujarati *jīrũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

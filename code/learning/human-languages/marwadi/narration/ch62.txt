@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for an onion, then the Marwadi for sweets.
 You'll want to know: खिड़की.
 खिड़की — khiṛkī — "a window".
 
+The word, taken apart.
+खिड़की (khiṛkī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khaṭakkikā, "side door". CDIAL gives no Marwari form in this entry (CDIAL 3770); the match is through Hindi khiṛkī. CDIAL thinks it first meant something made of matting.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for sweets, then the Marwadi for a window.
 
 You'll want to know: कुरसी.
 कुरसी — kursī — "a chair".
+
+The word, taken apart.
+कुरसी (kursī) is a loan from Arabic kursī, "chair, seat", which reached Marwadi through Persian. Its Arabic root is k-r-s (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a window, then the Marwadi for a chair.
 You'll want to know: मेज.
 मेज — mej — "a table".
 
+The word, taken apart.
+मेज (mej) is a loan, usually traced to Persian mēz, "table". Many take the Persian word from Portuguese mesa, "table"; Marwadi says the z as j.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a chair, then the Marwadi for a table.
 You'll want to know: भींत.
 भींत — bhī̃t — "a wall".
 
+The word, taken apart.
+भींत (bhī̃t) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhitti, "mat of split reeds; wall". CDIAL gives no Marwari form in this entry (CDIAL 9494); the match is through Hindi bhī̃t and Gujarati bhī̃t.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a table, then the Marwadi for a wall.
 
 You'll want to know: छात.
 छात — chhāt — "a roof".
+
+The word, taken apart.
+छात (chhāt) is a tadbhava, a word inherited and reshaped by sound change. It comes from chatti, "covering", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4971); the match is through Hindi chāt. It is built on the root chad, "to cover".
 
 What you've built.
 One more word for this chapter.

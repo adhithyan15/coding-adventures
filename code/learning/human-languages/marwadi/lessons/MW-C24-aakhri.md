@@ -11,8 +11,8 @@ gloss: final, written with the standing aa of aabhaar and the kha of this slice
 concept_tag: MW-SHOPPING-FINAL-WRITTEN
 prerequisites: [MW-C24-hear-aakhri]
 sounds: [long-aa, aspirated-kh, tapped-r, long-ii]
-roots: []
-etymology_hook: The chapter's borrowed consonant meets the track's oldest standing vowel in four signs.
+roots: [arabic-akhir]
+etymology_hook: "ākhrī ← Arabic ākhir 'last', through Persian (Lane, root ʾ-ḫ-r)"
 duration:
   max_seconds: 180
 requires:
@@ -48,6 +48,11 @@ Four signs, all secure. The word opens on the standing **आ** of **आभार
 its second sign is the **ख** you traced for **दिखावो**. Write **दिखावो** and
 **आखरी** one under the other and check that the **ख** is drawn the same way in
 both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आखरी** (*ākhrī*) is a loan from Arabic *ākhir*, "last", which reached Marwadi through Persian. Its Arabic root is *ʾ-ḫ-r* (Lane). Persian *āxirī*, "final", added the ending *-ī*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-AAKHRI-01, MW-SCRIPT-KHA-01] -->

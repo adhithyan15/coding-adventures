@@ -4,7 +4,7 @@
   "chapter": 93,
   "title": "Savan, Bhadvo, Asoj, Kati, Migsar",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9d97e22760b0ca23",
+  "sourceHash": "fnv1a64:e7142a2dc0a8e62c",
   "lessons": [
     {
       "id": "MW-C93-savan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6f1864aefa6c811",
+      "sourceHash": "fnv1a64:a89615c7cad06828",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सावण (sāvaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śrāvaṇa, \"the month of the Śravaṇa star\". CDIAL gives no Marwari form in this entry (CDIAL 12699); the match is through Hindi sāwan and Gujarati sāvaṇ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfa8b43dee6ad7de",
+      "sourceHash": "fnv1a64:7322bf47df48834a",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भादवो (bhādvo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhādrapada, \"the month August-September\". CDIAL gives no Marwari form in this entry (CDIAL 9447); the match is through Hindi bhādõ and Gujarati bhādarvo."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e57340955bc49ac9",
+      "sourceHash": "fnv1a64:178cbc2c54481d3d",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसोज (āsoj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aśvayuja, \"the month Āśvina, September-October\". CDIAL gives no Marwari form in this entry (CDIAL 925); the match is through Hindi asoj. The name is built on aśva, \"horse\", and yuj, \"yoke\", a star pair."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f4c764b0f05df88",
+      "sourceHash": "fnv1a64:88875daf12cb013b",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काती (kātī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kārttika, \"the month October-November\". CDIAL gives no Marwari form in this entry (CDIAL 3070); the match is through Sindhi katī. The month is named for the Kṛttikā stars, the Pleiades."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c56d99411ba9abd",
+      "sourceHash": "fnv1a64:7c9e138af5000268",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिगसर (migsar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārgaśiras, \"the month November-December\". CDIAL gives no Marwari form in this entry (CDIAL 10076); the match is through Hindi mãgsir and Gujarati māgsar."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

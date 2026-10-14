@@ -11,8 +11,8 @@ gloss: husband
 concept_tag: MW-FAMILY-HUSBAND
 prerequisites: [MW-C09-nani]
 sounds: [unaspirated-p, dental-t, short-i]
-roots: []
-etymology_hook: The relationship meaning arrives before the one new consonant in its spelling.
+roots: [sanskrit-pati]
+etymology_hook: "pati ← Sanskrit pati 'master, husband', a tatsama (CDIAL 7727)"
 duration:
   max_seconds: 135
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C09-nana, MW-C09-nani]
 
 This is a relationship label, not a required household pattern. Say the two
 short beats. The spelling waits until its new consonant has its own lesson.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pati* is Sanskrit *pati*, "master, husband", taken over whole as a learned loan, a tatsama (CDIAL 7727).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PATI-01] -->

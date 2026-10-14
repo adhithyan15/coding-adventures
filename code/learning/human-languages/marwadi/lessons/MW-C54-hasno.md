@@ -14,7 +14,8 @@ romanization: "hãsṇo"
 concept_tag: MW-VERB-HASNO
 prerequisites: [MW-C53-rakhno, MW-C54-kholno]
 sounds: []
-roots: []
+roots: [sanskrit-hasati]
+etymology_hook: "hãsṇo ← Sanskrit hasati 'laughs', a tadbhava (CDIAL 14021, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C54-kholno]
 <!-- hl-knowledge: introduces=[MW-LEX-C54-VERBS54-02]; assesses=[] -->
 
 **हंसणो** — *hãsṇo* — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हंसणो** (*hãsṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasati*, "laughs". CDIAL lists Marwari *hãsṇo* under it (CDIAL 14021).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

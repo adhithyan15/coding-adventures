@@ -14,7 +14,8 @@ romanization: "sā̃p"
 concept_tag: MW-ANIMALS72-SAP
 prerequisites: [MW-C71-hathi, MW-C72-badro]
 sounds: []
-roots: []
+roots: [sanskrit-sarpa]
+etymology_hook: "sā̃p ← Sanskrit sarpa 'snake', a tadbhava (CDIAL 13271, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C72-badro]
 <!-- hl-knowledge: introduces=[MW-LEX-C72-ANIMALS72-02]; assesses=[] -->
 
 **सांप** — *sā̃p* — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सांप** (*sā̃p*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sarpa*, "snake". CDIAL gives no Marwari form in this entry (CDIAL 13271); the match is through Hindi *sā̃p* and Gujarati *sāp*. It is built on the root *sṛp*, "to creep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

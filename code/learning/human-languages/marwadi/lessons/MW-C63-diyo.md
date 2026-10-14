@@ -14,7 +14,8 @@ romanization: "dīyo"
 concept_tag: MW-HOME63-DIYO
 prerequisites: [MW-C63-khat, MW-C63-almari]
 sounds: []
-roots: []
+roots: [sanskrit-dipa]
+etymology_hook: "dīyo ← Sanskrit dīpa 'lamp', a tadbhava (CDIAL 6348, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C63-almari]
 <!-- hl-knowledge: introduces=[MW-LEX-C63-HOME63-03]; assesses=[] -->
 
 **दीयो** — *dīyo* — "a lamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दीयो** (*dīyo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dīpa*, "lamp". CDIAL lists Old Marwari *diva* under it (CDIAL 6348).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tavo"
 concept_tag: MW-THINGS118-TAVO
 prerequisites: [MW-C117-kyukai, MW-C118-chulho]
 sounds: []
-roots: []
+roots: [indo-aryan-tapaka]
+etymology_hook: "tavo ← *tapaka 'frying pan', reconstructed (CDIAL 5670, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C118-chulho]
 <!-- hl-knowledge: introduces=[MW-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **तवो** — *tavo* — "a griddle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तवो** (*tavo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*tapaka*, "frying pan", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5670); the match is through Hindi *tawā* and Gujarati *tavo*. It is built on the root *tap*, "to heat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

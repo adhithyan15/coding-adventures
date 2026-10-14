@@ -14,7 +14,8 @@ romanization: "naram"
 concept_tag: MW-QUAL142-NARAM
 prerequisites: [MW-C142-halko, MW-C142-karak]
 sounds: []
-roots: []
+roots: [persian-narm]
+etymology_hook: "naram: usually traced to Persian narm 'soft'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C142-karak]
 <!-- hl-knowledge: introduces=[MW-LEX-C142-QUAL142-03]; assesses=[] -->
 
 **नरम** — *naram* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नरम** (*naram*) is a loan, usually traced to Persian *narm*, "soft". Marwadi splits the final consonants with a vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

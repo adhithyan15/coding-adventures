@@ -1,0 +1,11 @@
+{
+  "id": "SA-C261-dual-object-practice",
+  "pathSegment": "SA-PATH-261-OBJ261",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-261-OBJ261",
+      "order": 2
+    }
+  ]
+}

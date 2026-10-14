@@ -11,10 +11,10 @@ gloss: how are you? (polite/formal)
 concept_tag: QUESTION-HOW
 prerequisites: [MW-C05-practice]
 sounds: [long-aa, open-ai, long-o]
-roots: []
-etymology_hook: Learn the social job first; the complete spelling uses only signs your hand already knows.
+roots: [sanskrit-atman, sanskrit-kidrsha, sanskrit-bhavati]
+etymology_hook: "āp ← ātman 'self' (CDIAL 1135); kaiso ← kīdṛśa 'of what kind' (CDIAL 3197); ho ← bhavati (CDIAL 9416)"
 duration:
-  max_seconds: 150
+  max_seconds: 197
 requires:
   knowledge: [MW-DIALOGUE-NAME-EXCHANGE-01]
 introduces:
@@ -52,6 +52,11 @@ The next question has a different social job.
 Hear three groups: *āp | kai-so | ho?* The first addresses the other person
 respectfully; *kaiso* asks how; rising *ho?* keeps the line a question. Listen
 twice, then say the three groups once. Do not spell them yet.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āp kaiso ho* is three inherited words: *āp*, "you", from Sanskrit *ātman*, "self" (CDIAL 1135); *kaiso*, "how", from *kīdṛśa*, "of what kind" (CDIAL 3197); and *ho*, "are", from *bhavati*, "is" (CDIAL 9416).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-AAP-01, MW-LEX-KAISO-01, MW-QUESTION-WELLBEING-HEARD-01] -->

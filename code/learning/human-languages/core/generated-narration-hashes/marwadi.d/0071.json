@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 71,
-  "sourceHash": "fnv1a64:aaa2bb005657caa2",
+  "sourceHash": "fnv1a64:7964e2e7a2af1843",
   "lessonIds": [
     "MW-C71-bakri",
     "MW-C71-bher",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch71.txt",
   "json": "marwadi/narration/ch71.json",
-  "textHash": "fnv1a64:8f7792a14204c9eb",
-  "jsonHash": "fnv1a64:ac787dae1c8415e7",
+  "textHash": "fnv1a64:457deb1c97197db9",
+  "jsonHash": "fnv1a64:81f014a4307b670b",
   "findings": []
 }

@@ -227,8 +227,9 @@ of a power chain whose exponents are finite and static. Up to six supported buil
 functions, including integer-valued `sign`, may wrap that powered exact name
 actual. A user-declared procedure receives no built-in privilege and must
 qualify through the ordinary procedure proof.
-One additional built-in `entier` may directly wrap the exact bounded
-`entier(sign(...))` root; broader runtime `entier` operands remain conservative.
+One additional built-in `entier` may wrap a supported bounded transform rooted
+in `sign(...)`, including the exact `entier(sign(...))` root; broader runtime
+`entier` operands remain conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is

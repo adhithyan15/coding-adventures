@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 98,
-  "sourceHash": "fnv1a64:2e3124fbea3d9dbe",
+  "sourceHash": "fnv1a64:162a99fba9f774fd",
   "lessonIds": [
     "MW-C98-jimano",
     "MW-C98-chauk",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch98.txt",
   "json": "marwadi/narration/ch98.json",
-  "textHash": "fnv1a64:cf639f55eac7ebdc",
-  "jsonHash": "fnv1a64:7993bf3bb2361218",
+  "textHash": "fnv1a64:c0c2e6838b999b14",
+  "jsonHash": "fnv1a64:167d0514680323a0",
   "findings": []
 }

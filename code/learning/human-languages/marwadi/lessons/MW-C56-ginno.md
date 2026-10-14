@@ -14,7 +14,8 @@ romanization: "giṇṇo"
 concept_tag: MW-VERB-GINNO
 prerequisites: [MW-C55-lavno, MW-C55-bhejno]
 sounds: []
-roots: []
+roots: [sanskrit-ganayati]
+etymology_hook: "giṇṇo ← Sanskrit gaṇayati 'counts', a tadbhava (CDIAL 3993, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C55-bhejno]
 <!-- hl-knowledge: introduces=[MW-LEX-C56-VERBS56-01]; assesses=[] -->
 
 **गिणणो** — *giṇṇo* — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गिणणो** (*giṇṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gaṇayati*, "counts". CDIAL lists Old Marwari *giṇaï* under it (CDIAL 3993). CDIAL thinks the Sanskrit verb itself probably goes back to *gṛṇāti*, "addresses, praises".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Thik Hoon: Answer in Two New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8f64fb52b3bb78e1",
+  "sourceHash": "fnv1a64:080c5f7eaec02776",
   "lessons": [
     {
       "id": "MW-C06-hear-answer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5dae683985295f83",
+      "sourceHash": "fnv1a64:6256d11e519b1fdc",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In hū̃ ṭhīk hū̃, the first hū̃, \"I\", is listed by CDIAL as Old Marwari hũ under Sanskrit aham, \"I\" (CDIAL 992). ṭhīk, \"fine, right\", goes back to ṭhīkka, \"firm, right\", which CDIAL says is probably from Sanskrit sthita, \"standing\" (CDIAL 5503). The second hū̃, \"am\", has no Marwari row in CDIAL, so its exact source is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -75,7 +86,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -348,7 +359,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:5a7d488e1bceacb9",
+      "sourceHash": "fnv1a64:d7b669f768e9524c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -383,6 +394,17 @@
         },
         {
           "index": 1,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In हूं ठीक हूं (hū̃ ṭhīk hū̃), the first hū̃, \"I\", is listed by CDIAL as Old Marwari hũ under Sanskrit aham, \"I\" (CDIAL 992). ṭhīk, \"fine, right\", goes back to ṭhīkka, \"firm, right\", which CDIAL says is probably from Sanskrit sthita, \"standing\" (CDIAL 5503). The second hū̃, \"am\", has no Marwari row in CDIAL, so its exact source is not settled."
+            }
+          ]
+        },
+        {
+          "index": 2,
           "type": "script",
           "title": "Script — build three heard groups",
           "segments": [
@@ -397,7 +419,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -416,7 +438,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

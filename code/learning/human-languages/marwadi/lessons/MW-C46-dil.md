@@ -14,7 +14,8 @@ romanization: "dil"
 concept_tag: MW-BODY46-DIL
 prerequisites: [MW-C46-akh, MW-C46-nak]
 sounds: []
-roots: []
+roots: [persian-dil]
+etymology_hook: "dil: usually traced to Persian dil 'heart'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C46-nak]
 <!-- hl-knowledge: introduces=[MW-LEX-C46-BODY46-05]; assesses=[] -->
 
 **दिल** — *dil* — "the heart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दिल** (*dil*) is a loan, usually traced to Persian *dil*, "heart".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

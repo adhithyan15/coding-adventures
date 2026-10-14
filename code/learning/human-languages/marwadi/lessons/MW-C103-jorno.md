@@ -14,7 +14,8 @@ romanization: "joṛṇo"
 concept_tag: MW-VERB-JORNO
 prerequisites: [MW-C103-banavno, MW-C103-torno]
 sounds: []
-roots: []
+roots: [indo-aryan-yotayati]
+etymology_hook: "joṛṇo ← *yoṭayati 'joins', reconstructed (CDIAL 10496, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C103-torno]
 <!-- hl-knowledge: introduces=[MW-LEX-C103-ACT103-05]; assesses=[] -->
 
 **जोड़णो** — *joṛṇo* — "to join".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जोड़णो** (*joṛṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*yoṭayati*, "joins", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *jōḍaï* under it (CDIAL 10496). CDIAL builds it on *\*yuṭati*, "is joined".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

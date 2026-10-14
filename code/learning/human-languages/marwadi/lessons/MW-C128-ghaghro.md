@@ -14,7 +14,8 @@ romanization: "ghāghro"
 concept_tag: MW-THINGS128-GHAGHRO
 prerequisites: [MW-C127-bailgari, MW-C128-pagri]
 sounds: []
-roots: []
+roots: [sanskrit-ghargharika]
+etymology_hook: "ghāghro ← Sanskrit ghargharī 'girdle of small bells', a tadbhava (CDIAL 4444, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C128-pagri]
 <!-- hl-knowledge: introduces=[MW-LEX-C128-THINGS128-02]; assesses=[] -->
 
 **घाघरो** — *ghāghro* — "a long skirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घाघरो** (*ghāghro*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghargharī*, "girdle of small bells". CDIAL gives no Marwari form in this entry (CDIAL 4444); the match is through Hindi *ghāghrā* and Gujarati *ghāghro*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -3641,6 +3641,16 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata|
                     metadata.get("swimlane.flowchart.diagramPadding")), Some(&"32".to_string()));
             }
+            if fixture_name == "flowchart-wrapping-width" {
+                assert_eq!(layout.flowchart_config.wrapping_width, Some(180.0));
+                assert_eq!(layout.nodes[0].width, 180.0,
+                    "wrappingWidth must cap backend-neutral horizontal node width");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.flowchart.wrappingWidth")), Some(&"180".to_string()));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.glyphs.len() > 20
+                )), "wrapped node text must lower to backend-neutral glyph paint");
+            }
             if fixture_name == "flowchart-curve-config" {
                 assert_eq!(layout.flowchart_config.curve,
                     Some(diagram_ir::SwimlaneEdgeCurve::StepAfter));

@@ -14,7 +14,8 @@ romanization: "sagḷā"
 concept_tag: MW-DEF102-SAGLA
 prerequisites: [MW-C101-kiso, MW-C101-kun]
 sounds: []
-roots: []
+roots: [sanskrit-sakala]
+etymology_hook: "sagḷā 'all': usually linked with Sanskrit sakala 'whole' (CDIAL 13066); its g and ḷ are not explained"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C101-kun]
 <!-- hl-knowledge: introduces=[MW-LEX-C102-DEF102-01]; assesses=[] -->
 
 **सगळा** — *sagḷā* — "all, everyone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सगळा** (*sagḷā*) is usually linked with Sanskrit *sakala*, "whole", under which CDIAL lists Old Gujarati *sayala*, "all" (CDIAL 13066). CDIAL gives no Marwari form, and that entry does not explain the *g* and *ḷ* of **सगळा** (*sagḷā*), so the link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

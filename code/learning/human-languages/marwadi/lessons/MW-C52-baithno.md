@@ -14,7 +14,8 @@ romanization: "baiṭhṇo"
 concept_tag: MW-VERB-BAITHNO
 prerequisites: [MW-C51-dekhno, MW-C51-sunno]
 sounds: []
-roots: []
+roots: [sanskrit-upavishati]
+etymology_hook: "baiṭhṇo ← Sanskrit upaviśati 'sits down', a tadbhava (CDIAL 2245, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C51-sunno]
 <!-- hl-knowledge: introduces=[MW-LEX-C52-VERBS52-01]; assesses=[] -->
 
 **बैठणो** — *baiṭhṇo* — "to sit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बैठणो** (*baiṭhṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *upaviśati*, "sits down". CDIAL lists Old Marwari *baiṭhaï* under it (CDIAL 2245). The *ṭh* comes from its past participle, *upaviṣṭa*, "seated".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

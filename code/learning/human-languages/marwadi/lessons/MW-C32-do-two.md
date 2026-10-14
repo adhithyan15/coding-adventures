@@ -11,8 +11,8 @@ gloss: two, on the page — a spelling the hand already owns
 concept_tag: MW-NUMBER-TWO-WRITTEN
 prerequisites: [MW-C32-hear-do-two]
 sounds: [dental-d, long-o]
-roots: []
-etymology_hook: There is no new sign to make here and no old sign to change; only a second meaning to hang on a familiar shape.
+roots: [sanskrit-dvi]
+etymology_hook: "do ← Sanskrit dva 'two', a tadbhava (CDIAL 6648, Marwari row)"
 duration:
   max_seconds: 160
 requires:
@@ -50,6 +50,11 @@ That is worth stating plainly, because it is why a page of Marwari can look as
 though it contains no numbers at all. A reader counting occurrences of **दो**
 across this book finds seventeen of them, and every one is the asking word. The
 number had never been taught.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दो** (*do*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dva*, "two". CDIAL lists Marwari *do* under it (CDIAL 6648). English *two* is the same ancient word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DO-TWO-01, MW-SCRIPT-EK-01] -->

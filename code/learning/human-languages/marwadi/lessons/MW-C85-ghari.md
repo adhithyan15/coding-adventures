@@ -14,7 +14,8 @@ romanization: "ghaṛī"
 concept_tag: MW-CLOTHES85-GHARI
 prerequisites: [MW-C85-jeb, MW-C85-anguthi]
 sounds: []
-roots: []
+roots: [sanskrit-ghati]
+etymology_hook: "ghaṛī ← Sanskrit ghaṭī 'pot, water-clock', a tadbhava (CDIAL 4406, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C85-anguthi]
 <!-- hl-knowledge: introduces=[MW-LEX-C85-CLOTHES85-04]; assesses=[] -->
 
 **घड़ी** — *ghaṛī* — "a watch, a clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घड़ी** (*ghaṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghaṭī*, "pot, water-clock". CDIAL lists Marwari *ghaṛī* under it (CDIAL 4406). The water-clock was a pot that sank in a set time, about twenty-four minutes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

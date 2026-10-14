@@ -14,7 +14,8 @@ romanization: "sūpṛo"
 concept_tag: MW-THINGS120-SUPRO
 prerequisites: [MW-C119-balti, MW-C119-buhari, MW-C40-pehlo-path]
 sounds: []
-roots: []
+roots: [sanskrit-shurpa]
+etymology_hook: "sūpṛo ← Sanskrit śūrpa 'winnowing basket', a tadbhava (CDIAL 12573, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [MW-C119-buhari]
 <!-- hl-knowledge: introduces=[MW-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **सूपड़ो** — *sūpṛo* — "a winnowing basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सूपड़ो** (*sūpṛo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śūrpa*, "winnowing basket". CDIAL gives no Marwari form in this entry (CDIAL 12573); the match is through Gujarati *supṛũ*. The *ṛ* is an added suffix.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

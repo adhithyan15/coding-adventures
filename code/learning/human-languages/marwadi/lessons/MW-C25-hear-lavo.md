@@ -11,8 +11,8 @@ gloss: bring it — the asking word a food counter needs
 concept_tag: MW-VERB-BRING
 prerequisites: [MW-R24-script-close]
 sounds: [dental-l, long-aa, voiced-v, long-o]
-roots: []
-etymology_hook: A shop hands things across; a food stall carries them over, and that takes a different word.
+roots: [sanskrit-labhate]
+etymology_hook: "lāvo 'bring': CDIAL lists Hindi lānā 'to bring' under labhate 'takes', crossed with dadāti (CDIAL 10948)"
 duration:
   max_seconds: 170
 requires:
@@ -51,6 +51,11 @@ met them: *dikhāvo*, *karo*, *lo*, *do*, *lāvo*. Every one ends the same way.
 *lāvo* is the one a food counter needs. You do not ask for tea to be shown to
 you; you ask for it to be brought. The source prints it with a food word, which
 is exactly where the next lesson puts it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL gives no Marwari row for *lāvo*, "bring". It lists Hindi *lānā*, "to bring", under Sanskrit *labhate*, "takes", in forms it explains as crossed with *dadāti*, "gives" (CDIAL 10948). The match is through Hindi.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-LAVO-01, MW-LEX-DIKHAVO-01] -->

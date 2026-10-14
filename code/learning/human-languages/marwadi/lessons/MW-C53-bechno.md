@@ -14,7 +14,8 @@ romanization: "bechṇo"
 concept_tag: MW-VERB-BECHNO
 prerequisites: [MW-C52-daurno, MW-C53-khelno]
 sounds: []
-roots: []
+roots: [indo-aryan-vetyayati]
+etymology_hook: "bechṇo ← *vetyayati 'makes a price', reconstructed (CDIAL 12100, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C53-khelno]
 <!-- hl-knowledge: introduces=[MW-LEX-C53-VERBS53-02]; assesses=[] -->
 
 **बेचणो** — *bechṇo* — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बेचणो** (*bechṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vetyayati*, "makes a price", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 12100); the match is through Hindi *becnā* and Gujarati *vecvũ*. CDIAL builds it on Middle Indo-Aryan *vēcā*, "hire, wages".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

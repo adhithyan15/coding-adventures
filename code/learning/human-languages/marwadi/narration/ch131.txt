@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for millet, then the Marwadi for a millet po
 You'll want to know: खीचड़ो.
 खीचड़ो — khīchṛo — "a millet-and-lentil dish".
 
+The word, taken apart.
+खीचड़ो (khīchṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khiccā, "dish of rice and peas". CDIAL gives no Marwari form in this entry (CDIAL 3880); the match is through Hindi khicṛī and Gujarati khicṛo. The ṛ is an added suffix.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a millet porridge, then the Marwadi for 
 
 You'll want to know: केर.
 केर — ker — "a desert berry".
+
+The word, taken apart.
+केर (ker) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karīra, "the caper bush Capparis aphylla". CDIAL gives no Marwari form in this entry (CDIAL 2805); the match is through Hindi karīr. CDIAL lists Gujarati kerṛo, "its fruit", under the same word.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a millet-and-lentil dish, then the Marwa
 You'll want to know: सांगरी.
 सांगरी — sā̃grī — "desert beans".
 
+The word, taken apart.
+सांगरी (sā̃grī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṅgara, "fruit of Prosopis spicigera". CDIAL gives no Marwari form in this entry (CDIAL 13083); the match is through Gujarati sā̃grī and Hindi sā̃gar.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a desert berry, then the Marwadi for des
 You'll want to know: गट्टा.
 गट्टा — gaṭṭā — "gram-flour dumplings".
 
+The word, taken apart.
+The origin of गट्टा (gaṭṭā) is not settled. CDIAL lists Hindi gaṭṭā, "stopper", under gaṭṭa, "piece" (CDIAL 3965); a link with the dumpling is possible but not shown there.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for desert beans, then the Marwadi for gram-
 
 You'll want to know: पापड़.
 पापड़ — pāpaṛ — "a papad".
+
+The word, taken apart.
+पापड़ (pāpaṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from parpaṭa, "thin cake of rice or pease-meal". CDIAL gives no Marwari form in this entry (CDIAL 7934); the match is through Hindi pāpaṛ and Gujarati pāpaṛ.
 
 What you've built.
 One more word for this chapter.

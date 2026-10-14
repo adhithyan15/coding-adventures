@@ -14,7 +14,8 @@ romanization: "pag"
 concept_tag: MW-BODY44-PAG
 prerequisites: [MW-C38-ughanis, MW-C39-koni]
 sounds: []
-roots: []
+roots: [sanskrit-padga]
+etymology_hook: "pag ← Sanskrit padga 'afoot; footsoldier', a tadbhava (CDIAL 7766, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C39-koni]
 <!-- hl-knowledge: introduces=[MW-LEX-C44-BODY44-01]; assesses=[] -->
 
 **पग** — *pag* — "a foot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पग** (*pag*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *padga*, "afoot; footsoldier". CDIAL lists Old Marwari *paga* under it (CDIAL 7766). It is built on *pad*, "foot", the same ancient word as English *foot*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
