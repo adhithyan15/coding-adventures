@@ -24062,3 +24062,64 @@ fn captured_array_jvm_float_descriptor_runtime_regression() {
     assert!(detail.contains("VerifyError"), "descriptor-only control: {detail}");
     eprintln!("EXECUTED: descriptor-only [F-> [I mutation rejected by real verifier: {detail}");
 }
+
+#[test]
+fn jvm_float_comparison_real_verifier_table() {
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+    use jvm_class_file::{JvmCodeAttribute, JvmConstantPoolEntry as Cp, JvmMethodAttribute, JvmMethodInfo, ACC_PUBLIC, ACC_STATIC};
+    if !java_ok() { eprintln!("UNAVAILABLE: real JVM IEEE float comparison table"); return; }
+    let ops = ["cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge"];
+    let mut functions = Vec::new();
+    for ty in ["f32", "f64"] {
+        for op in ops {
+            functions.push(IIRFunction::new(format!("{ty}_{op}"), vec![("a".into(), ty.into()), ("b".into(), ty.into())], "i32", vec![
+                IIRInstr::new(op, Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("b".into())], ty),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+            ]));
+        }
+    }
+    let module = IIRModule { name: "IEEE".into(), functions, entry_point: Some("f32_cmp_eq".into()), language: "test".into(), exports: vec![], imports: vec![] };
+    let mut class = iir_to_jvm_class_file::lower_iir_to_jvm(&module, &iir_to_jvm_class_file::IIRJvmConfig::new("Main")).unwrap();
+    fn append(cp: &mut Vec<Option<Cp>>, entry: Cp) -> u16 { let index = u16::try_from(cp.len()).unwrap(); cp.push(Some(entry)); index }
+    fn push_number(code: &mut Vec<u8>, double: bool, value: f64) {
+        let zero = if double { 0x0e } else { 0x0b };
+        let one = if double { 0x0f } else { 0x0c };
+        if value.is_nan() { code.extend([zero, zero, if double { 0x6f } else { 0x6e }]); }
+        else if value == 0.0 { code.push(zero); if value.is_sign_negative() { code.push(if double { 0x77 } else { 0x76 }); } }
+        else if value == 1.0 { code.push(one); }
+        else if double { code.extend([one, one, 0x63]); }
+        else { assert_eq!(value, 2.0); code.push(0x0d); }
+    }
+    let cp = &mut class.constant_pool;
+    let cname = append(cp, Cp::Utf8("Main".into()));
+    let owner = append(cp, Cp::Class { name_index: cname });
+    append(cp, Cp::Utf8("main".into())); append(cp, Cp::Utf8("([Ljava/lang/String;)V".into()));
+    let mut code = Vec::new();
+    let cases = [(1.0, 2.0), (2.0, 1.0), (1.0, 1.0), (0.0, -0.0), (-0.0, 0.0), (f64::NAN, 1.0), (1.0, f64::NAN)];
+    let mut checks = 0;
+    for ty in ["f32", "f64"] {
+        for op in ops {
+            let name = append(cp, Cp::Utf8(format!("{ty}_{op}")));
+            let descriptor = append(cp, Cp::Utf8(if ty == "f64" { "(DD)I" } else { "(FF)I" }.into()));
+            let nat = append(cp, Cp::NameAndType { name_index: name, descriptor_index: descriptor });
+            let method = append(cp, Cp::Methodref { class_index: owner, name_and_type_index: nat });
+            for (a, b) in cases {
+                let expected = match op { "cmp_eq" => a == b, "cmp_ne" => a != b, "cmp_lt" => a < b, "cmp_le" => a <= b, "cmp_gt" => a > b, "cmp_ge" => a >= b, _ => unreachable!() };
+                push_number(&mut code, ty == "f64", a); push_number(&mut code, ty == "f64", b);
+                let [hi, lo] = method.to_be_bytes();
+                code.extend([0xb8, hi, lo, if expected { 0x04 } else { 0x03 }, 0x9f, 0, 5, 0x01, 0xbf]);
+                checks += 1;
+            }
+        }
+    }
+    code.push(0xb1);
+    // The largest transient is an existing double argument (2 slots) plus
+    // 0D/0D while constructing the second NaN (4 slots), hence max_stack6.
+    class.methods.push(JvmMethodInfo { access_flags: ACC_PUBLIC | ACC_STATIC, name: "main".into(), descriptor: "([Ljava/lang/String;)V".into(), attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute { name: "Code".into(), max_stack: 6, max_locals: 1, code, nested_attributes: vec![] })] });
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(dir.path().join("Main.class"), iir_to_jvm_class_file::serialize_jvm_class_file(&class)).unwrap();
+    let output = Command::new("java").arg("-Xverify:all").arg("-cp").arg(dir.path()).arg("Main").output().expect("execute real JVM IEEE table");
+    assert!(output.status.success(), "IEEE table: {}", String::from_utf8_lossy(&output.stderr));
+    assert_eq!(checks, 84); assert!(output.stdout.is_empty());
+    eprintln!("EXECUTED: real JVM IEEE table84checks,2widths,6relations,7operand pairs; process0");
+}

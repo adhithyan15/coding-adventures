@@ -5613,6 +5613,36 @@ mod tests {
         assert!(format!("{err:?}").contains("reference descriptor"), "{err:?}");
     }
 
+    #[test]
+    fn float_comparison_typed_loads_and_unordered_branches() {
+        for ty in ["f32", "f64"] {
+            for (op, nan_high, branch) in [("cmp_eq", false, IFNE), ("cmp_ne", false, IFEQ), ("cmp_lt", true, IFGE), ("cmp_le", true, IFGT), ("cmp_gt", false, IFLE), ("cmp_ge", false, IFLT)] {
+                let function = IIRFunction::new("compare", vec![("a".into(), ty.into()), ("b".into(), ty.into())], "i32", vec![
+                    IIRInstr::new(op, Some("result".into()), vec![Operand::Var("a".into()), Operand::Var("b".into())], ty),
+                    IIRInstr::new("ret", None, vec![Operand::Var("result".into())], "i32"),
+                ]);
+                let class = lower_iir_to_jvm(&make_module(function), &make_cfg()).unwrap();
+                let code = &class.methods[0].code_attribute().unwrap().code;
+                let (load, second, cmp, store, reload) = if ty == "f32" {
+                    (0x17, 1, if nan_high { 0x96 } else { 0x95 }, vec![0x3d], vec![0x1c])
+                } else {
+                    (0x18, 2, if nan_high { 0x98 } else { 0x97 }, vec![0x36, 4], vec![0x15, 4])
+                };
+                let mut expected = vec![load, 0, load, second, cmp, branch, 0, 7, 0x04, 0xa7, 0, 4, 0x03];
+                expected.extend(store); expected.extend(reload); expected.push(0xac);
+                assert_eq!(*code, expected, "{ty} {op}");
+            }
+        }
+        for (left, right) in [("f32", "f64"), ("f64", "i32")] {
+            let function = IIRFunction::new("mixed", vec![("a".into(), left.into()), ("b".into(), right.into())], "i32", vec![
+                IIRInstr::new("cmp_eq", Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("b".into())], left),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+            ]);
+            let err = lower_iir_to_jvm(&make_module(function), &make_cfg()).unwrap_err();
+            assert!(format!("{err:?}").contains("mixed floating comparison"), "{err:?}");
+        }
+    }
+
     fn make_cfg() -> IIRJvmConfig {
         IIRJvmConfig::new("TestClass")
     }
