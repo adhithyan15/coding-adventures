@@ -4,7 +4,7 @@
   "chapter": 251,
   "title": "To try, To keep going, To bring to a stop, To move, To heat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8a08e7bce335aa4a",
+  "sourceHash": "fnv1a64:db2fae1d3e478182",
   "lessons": [
     {
       "id": "MR-C251-prayatna-karne",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b59520579e2514cb",
+      "sourceHash": "fnv1a64:66a40eb21e81306d",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "चालू, \"going on\", is built on cālṇẽ, \"to move, walk\", which comes from a reconstructed calyati, \"goes\" (CDIAL 4721). The origin of ठेवणे, \"to keep\", is not settled."
+              "text": "चालू, \"going on\", is built on cālṇẽ, \"to move, walk\", which comes from a reconstructed calyati, \"goes\" (CDIAL 4721). ठेवणे, \"to keep\", CDIAL lists as the \"make\" form of Marathi ṭheṇẽ, \"to stand still\", under Sanskrit sthēya, \"to be stationed\" (CDIAL 13777)."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [MR-C247-siksan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**भावना** (*bhāvanā*) is Sanskrit *bhāvanā*, "imagining, feeling", a tatsama built on *bhū*, "to be". CDIAL has no entry for it.
+**भावना** (*bhāvanā*) is Sanskrit *bhāvanā*, "imagining, feeling", a tatsama built on *bhū*, "to be" (CDIAL 9476).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

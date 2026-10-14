@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "Very, a Little, and Saying It Twice",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:58ea4ea09f4840c1",
+  "sourceHash": "fnv1a64:835b1ba05ce16c38",
   "lessons": [
     {
       "id": "MR-C53-khuup",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a51c04a6074f1e8",
+      "sourceHash": "fnv1a64:eb7b16b08b684582",
       "notice": null,
       "blocks": [
         {
@@ -86,7 +86,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of खूप (khūp) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+              "text": "खूप (khūp) is usually traced to Persian khūb, \"good, fine\"."
             }
           ]
         },
@@ -344,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81b869339224d3a2",
+      "sourceHash": "fnv1a64:9ca0b8848bfe95fc",
       "notice": null,
       "blocks": [
         {
@@ -402,7 +402,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of खूप (khūp) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+              "text": "खूप (khūp) is usually traced to Persian khūb, \"good, fine\"."
             }
           ]
         },

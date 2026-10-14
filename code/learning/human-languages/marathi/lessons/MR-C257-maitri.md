@@ -47,7 +47,7 @@ reviews_of: [MR-C257-cinta]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मैत्री** (*maitrī*) is Sanskrit *maitrī*, "friendship", a tatsama built on *mitra*, "friend". CDIAL has no entry for it.
+**मैत्री** (*maitrī*) is Sanskrit *maitrī*, "friendship", a tatsama built on *mitra*, "friend"; CDIAL lists it beside *maitra*, "friendly" (CDIAL 10340).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

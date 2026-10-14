@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "In, On, Under",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:472b817aeea1b039",
+  "sourceHash": "fnv1a64:c4b77ff6ebad7907",
   "lessons": [
     {
       "id": "MR-C42-madhye",
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c5d6c1b5d4ecf28",
+      "sourceHash": "fnv1a64:10ddcc455d428227",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "खाली (khālī) is inherited. CDIAL lists Marathi khāl, \"below\", under Sanskrit khalla, \"trench, creek\" (CDIAL 3849)."
+              "text": "CDIAL lists Marathi khāl, \"below\", under Sanskrit khalla, \"trench, creek\" (CDIAL 3849)."
             }
           ]
         },

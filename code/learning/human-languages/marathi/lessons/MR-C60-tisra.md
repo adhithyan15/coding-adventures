@@ -14,7 +14,7 @@ sounds: []
 roots: [indo-aryan-trihsara]
 etymology_hook: "tisrā ← *triḥsara 'triple', built on Sanskrit triḥ 'thrice'; a tadbhava (CDIAL 6018)"
 duration:
-  max_seconds: 248
+  max_seconds: 242
 requires:
   knowledge: [MR-GRAMMAR-ORDINAL-SET, MR-LEX-DUSRA, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-AI-MATRA-01, MR-LEX-DAHA, MR-LEX-GHAR]
 introduces:
@@ -64,7 +64,7 @@ The number is still visible in both. **दोन** leaves **दु-**, **ती�
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**तिसरा** (*tisrā*) comes from *\*triḥsara*, "triple", a form CDIAL reconstructs on Sanskrit *triḥ*, "thrice", as **दुसरा** comes from *\*dviḥsara* (CDIAL 6018).
+**तिसरा** comes from *\*triḥsara*, "triple", built on Sanskrit *triḥ*, "thrice" (CDIAL 6018).
 
 ## Grammar Lens: two is not yet a rule
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-TISRA, MR-GRAMMAR-ORDINAL-SET] -->

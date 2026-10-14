@@ -14,7 +14,7 @@ sounds: [unaspirated-p, retroflex-na]
 roots: [punar]
 etymology_hook: "paṇ ← Sanskrit punar 'back, again, however', a tadbhava (CDIAL 8273)"
 duration:
-  max_seconds: 220
+  max_seconds: 210
 requires:
   knowledge: [MR-JOIN-AANI, MR-JOIN-KINVA, MR-LEX-NAHI-01]
 introduces:
@@ -61,7 +61,7 @@ this too: *but* began as *be-utan*, "outside."
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**पण** (*paṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *punar*, "back, again, moreover, however" (CDIAL 8273).
+**पण** (*paṇ*) is inherited from Sanskrit *punar*, "back; however" (CDIAL 8273).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-JOIN-PAN, MR-JOIN-AANI, MR-JOIN-KINVA, MR-LEX-NAHI-01] -->

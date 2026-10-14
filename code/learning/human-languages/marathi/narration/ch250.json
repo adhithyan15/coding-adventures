@@ -4,7 +4,7 @@
   "chapter": 250,
   "title": "History, Geography, Mathematics, Art, Team",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:3592db6c92157260",
+  "sourceHash": "fnv1a64:5de2f427e916f90a",
   "lessons": [
     {
       "id": "MR-C250-itihas",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c466c8c13b12f0d7",
+      "sourceHash": "fnv1a64:fafcc9eefc57958b",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "संघ (saṅgh) is Sanskrit saṅgha, \"multitude, association\", a tatsama: sam, \"together\", and han, \"to strike\". CDIAL has no entry for it."
+              "text": "संघ (saṅgh) is Sanskrit saṅgha, \"multitude, association\", a tatsama: sam, \"together\", and han, \"to strike\" (CDIAL 12854)."
             }
           ]
         },

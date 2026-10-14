@@ -4,7 +4,7 @@
   "chapter": 228,
   "title": "To praise, To go forward, To go back, To defend, To disappear",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:352e883c7c71588d",
+  "sourceHash": "fnv1a64:62c7deba74020bfd",
   "lessons": [
     {
       "id": "MR-C228-kautuk-karne",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11a9ce757e2db3b9",
+      "sourceHash": "fnv1a64:b2730259f33695ee",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बचाव, \"defence\", is built on the verb stem bac-, \"to escape, be saved\", which CDIAL lists under Sanskrit vañcati (CDIAL 11208). करणे comes from Sanskrit karoti, \"does\" (CDIAL 2814)."
+              "text": "बचाव, \"defence\", is built on the verb stem bac-, \"to escape, be saved\", which CDIAL lists under Sanskrit vañcati, marking the b- forms as taken from Hindi (CDIAL 11208). करणे comes from Sanskrit karoti, \"does\" (CDIAL 2814)."
             }
           ]
         },

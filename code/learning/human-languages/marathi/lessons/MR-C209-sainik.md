@@ -47,7 +47,7 @@ reviews_of: [MR-C209-sainya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**सैनिक** (*sainik*) is Sanskrit *sainika*, "belonging to an army, soldier", a tatsama built on *senā*, "army". CDIAL has no entry for it.
+**सैनिक** (*sainik*) is Sanskrit *sainika*, "belonging to an army, soldier", a tatsama built on *senā*, "army". CDIAL notes it, with a "Cf.", beside *sainya*, "army" (CDIAL 13602).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

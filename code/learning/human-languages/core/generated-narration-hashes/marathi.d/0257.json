@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 257,
-  "sourceHash": "fnv1a64:fbf324e1d2bf2577",
+  "sourceHash": "fnv1a64:0946cbc9ab1e5fd7",
   "lessonIds": [
     "MR-C257-visranti",
     "MR-C257-cinta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch257.txt",
   "json": "marathi/narration/ch257.json",
-  "textHash": "fnv1a64:473dd9a2afdb53a8",
-  "jsonHash": "fnv1a64:7efed53287af2aad",
+  "textHash": "fnv1a64:ffcabfad0b42f29e",
+  "jsonHash": "fnv1a64:a1ec411eeb938d14",
   "findings": []
 }

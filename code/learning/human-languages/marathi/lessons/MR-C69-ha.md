@@ -14,7 +14,7 @@ sounds: [matra-aa, matra-ii, matra-e]
 roots: []
 etymology_hook: "hā 'this': origin not settled; CDIAL has no entry for the Marathi word"
 duration:
-  max_seconds: 240
+  max_seconds: 237
 requires:
   knowledge: [MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER, MR-LEX-KHOLI, MR-LEX-GHAR, MR-LEX-MITRA]
 introduces:
@@ -61,7 +61,7 @@ So the first two rows are a habit you already have, pointed at a new word.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **हा** (*hā*) is not settled: CDIAL has no entry for the Marathi word.
+The origin of **हा** is not settled; CDIAL has no entry for it.
 
 ## Grammar Lens: it goes in front, and it never stands alone here
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-DEM-PRENOMINAL]; assesses=[MR-LEX-HA-HI-HE, MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER] -->

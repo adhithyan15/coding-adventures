@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 42,
-  "sourceHash": "fnv1a64:472b817aeea1b039",
+  "sourceHash": "fnv1a64:c4b77ff6ebad7907",
   "lessonIds": [
     "MR-C42-madhye",
     "MR-C42-var",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch42.txt",
   "json": "marathi/narration/ch42.json",
-  "textHash": "fnv1a64:98ffbb65068ab200",
-  "jsonHash": "fnv1a64:b175a5701aa9b3ca",
+  "textHash": "fnv1a64:73448a1e0bf5a261",
+  "jsonHash": "fnv1a64:73ae10a1b0ef3129",
   "findings": []
 }

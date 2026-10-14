@@ -11,7 +11,7 @@ gloss: pleased to meet you (bheṭūn ānand jhālā)
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [MR-C02-tumche-naav-kaay-aahe]
 sounds: [anusvara]
-roots: [ananda, ananda-sanskrit]
+roots: [ananda-sanskrit]
 etymology_hook: "ānand ← Sanskrit ānanda 'happiness', a tatsama (CDIAL 1172); bheṭūn from bheṭṇe 'to meet' (CDIAL 9490)"
 reviews_of: [MR-C02-majhe-naav-aahe]
 duration:

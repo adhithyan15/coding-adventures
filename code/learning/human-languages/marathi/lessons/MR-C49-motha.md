@@ -14,7 +14,7 @@ sounds: [matra-o, retroflex-tha, matra-aa]
 roots: []
 etymology_hook: "moṭhā: origin not settled; CDIAL has a Marathi moṭā 'big, fat' only, with Hindi moṭā (CDIAL 10187)"
 duration:
-  max_seconds: 222
+  max_seconds: 220
 requires:
   knowledge: [MR-GRAMMAR-POSSESSION, MR-POSTP-KADE, MR-GRAMMAR-INDIRECT-OBJECT, MR-LEX-GHAR, MR-LEX-KHOLI, MR-LEX-LAAMB, MR-LEX-JHOPNE, MR-ETYMON-JHOPNE-NOT-SWEP]
 introduces:
@@ -67,7 +67,7 @@ neutral, everyday word; nothing about it is about a body.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **मोठा** (*moṭhā*) is not settled. CDIAL has no entry for it; it lists only a Marathi *moṭā*, "big, fat", beside Hindi *moṭā*, in its "defective" word group *\*muṭṭa* (CDIAL 10187).
+The origin of **मोठा** is not settled. CDIAL lists only a Marathi *moṭā*, "big, fat", in its "defective" word group *\*muṭṭa* (CDIAL 10187).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MOTHA, MR-LEX-GHAR, MR-LEX-KHOLI, MR-LEX-JHOPNE, MR-ETYMON-JHOPNE-NOT-SWEP] -->

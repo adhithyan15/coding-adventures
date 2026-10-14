@@ -14,7 +14,7 @@ sounds: [matra-o]
 roots: [na-pie]
 etymology_hook: "nako: it opens with the old negative na 'not'; CDIAL has no entry for the whole word"
 duration:
-  max_seconds: 245
+  max_seconds: 241
 requires:
   knowledge: [MR-GRAMMAR-NEGATE-NAHI, MR-LEX-CHAHA, MR-LEX-DHANYAVAD-01, MR-SENSE-CHALEL-OKAY]
 introduces:
@@ -62,7 +62,7 @@ declines, and **धन्यवाद** goes on the end of either.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**नको** (*nako*) opens with the old negative *na*, "not". CDIAL has no entry for the whole word, so the history of its second syllable is left open.
+CDIAL has no entry for **नको** as a whole, so the history of its second syllable is left open.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NAKO, MR-SENSE-CHALEL-OKAY, MR-GRAMMAR-NEGATE-NAHI] -->

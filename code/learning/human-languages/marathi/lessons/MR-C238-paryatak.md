@@ -47,7 +47,7 @@ reviews_of: [MR-C238-pardesi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**पर्यटक** (*paryaṭak*) is Sanskrit *paryaṭaka*, "one who wanders about", a tatsama: *pari*, "around", and *aṭ*, "to roam". CDIAL has no entry for it.
+**पर्यटक** (*paryaṭak*) is Sanskrit *paryaṭaka*, "one who wanders about", a tatsama: *pari*, "around", and *aṭ*, "to roam". CDIAL mentions it, as "tramp", under a reconstructed *\*pariyaṭṭa*, "wandering washerman" (CDIAL 7860).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

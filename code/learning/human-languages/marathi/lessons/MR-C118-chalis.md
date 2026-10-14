@@ -47,7 +47,7 @@ reviews_of: [MR-C117-tis]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**चाळीस** (*chāḷīs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catvāriṁśat*, "forty" (CDIAL 4656).
+**चाळीस** (*chāḷīs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catvāriṁśat*, "forty" (CDIAL 4656). CDIAL notes that its *ch-*, where Marathi would say *ts-*, was taken from Hindi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

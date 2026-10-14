@@ -47,7 +47,7 @@ reviews_of: [MR-C78-ughadne]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**शिजवणे** (*shijavṇe*) is the "make" form of Marathi *śijṇẽ*, "to be cooked by boiling". CDIAL lists that verb under Sanskrit *sidhyati*, "succeeds, is well cooked" (CDIAL 13408), and also, as another possibility, under a reconstructed *\*śrīyate*, "is cooked" (CDIAL 12712).
+**शिजवणे** (*shijavṇe*) is the "make" form of Marathi *śijṇẽ*, "to be cooked by boiling". CDIAL lists that verb under Sanskrit *sidhyati*, "succeeds, is well cooked" (CDIAL 13408), and also, as another possibility, under a reconstructed *\*śrīyate*, "is cooked", where it adds "or possibly from *svidyate*" (CDIAL 12712).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

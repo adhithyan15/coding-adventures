@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 127,
-  "sourceHash": "fnv1a64:1d7f0559b4bb71a8",
+  "sourceHash": "fnv1a64:29d7a6b1ce5dc9c3",
   "lessonIds": [
     "MR-C127-hivala",
     "MR-C127-pavsala",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch127.txt",
   "json": "marathi/narration/ch127.json",
-  "textHash": "fnv1a64:baf8f6d1ba2b278d",
-  "jsonHash": "fnv1a64:e5b92eb3fe00ff16",
+  "textHash": "fnv1a64:d04f520088dfa214",
+  "jsonHash": "fnv1a64:664ced833b0b0ddb",
   "findings": []
 }

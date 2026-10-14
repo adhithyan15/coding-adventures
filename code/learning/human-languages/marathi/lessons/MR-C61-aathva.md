@@ -66,7 +66,7 @@ Two words in this set both end in a **-था**/**-वा** you might blur toget
 | | |
 |---|---|
 | **चौथा** (*chauthā*) | fourth — an inherited word, **-था** |
-| **आठवा** (*āṭhvā*) | eighth — a built word, **आठ** + **-वा** |
+| **आठवा** (*āṭhvā*) | eighth — a regular word, **आठ** + **-वा** |
 
 They are not the same ending, and the test is quick: take the ending off and see
 whether a number is left standing. **आठवा** minus **-वा** leaves **आठ**.

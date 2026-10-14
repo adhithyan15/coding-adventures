@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 189,
-  "sourceHash": "fnv1a64:26ae9b94a10a9873",
+  "sourceHash": "fnv1a64:9dd363af6bd14905",
   "lessonIds": [
     "MR-C189-dhoka",
     "MR-C189-upkar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch189.txt",
   "json": "marathi/narration/ch189.json",
-  "textHash": "fnv1a64:b6e7078408d07d9c",
-  "jsonHash": "fnv1a64:36e8004ff7f80b4b",
+  "textHash": "fnv1a64:6d0e061080204a1b",
+  "jsonHash": "fnv1a64:41557a0c10c1d439",
   "findings": []
 }

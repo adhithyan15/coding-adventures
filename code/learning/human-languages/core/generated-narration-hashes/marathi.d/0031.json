@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 31,
-  "sourceHash": "fnv1a64:cc7535adad99e519",
+  "sourceHash": "fnv1a64:534b9246d3b25d07",
   "lessonIds": [
     "MR-C31-naa-naa",
     "MR-C31-naa-tag",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch31.txt",
   "json": "marathi/narration/ch31.json",
-  "textHash": "fnv1a64:b79b86a4e5c92b53",
-  "jsonHash": "fnv1a64:a9ebfcac9654bdf9",
+  "textHash": "fnv1a64:96dda49f55cf43f6",
+  "jsonHash": "fnv1a64:10babd510622a198",
   "findings": []
 }

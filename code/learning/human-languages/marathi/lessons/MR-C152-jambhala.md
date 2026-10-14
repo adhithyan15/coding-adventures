@@ -47,7 +47,7 @@ reviews_of: [MR-C152-khote]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **जांभळा** (*jāmbhaḷā*) is not settled. CDIAL has no entry for it.
+The origin of **जांभळा** (*jāmbhaḷā*) is not settled. CDIAL has no entry for it; it may be named for the dark *jāṁbhūḷ*, "jambolan fruit", which CDIAL lists under Sanskrit *jambula* (CDIAL 5136), but no source here says so.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

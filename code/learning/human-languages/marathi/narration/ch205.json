@@ -4,7 +4,7 @@
   "chapter": 205,
   "title": "Free of charge, Modern, Ancient, Cooked, Ripe",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fd8e9bfdc253e21c",
+  "sourceHash": "fnv1a64:02bb8b5007ec6c3e",
   "lessons": [
     {
       "id": "MR-C205-mophat",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d760a6cadd9255cd",
+      "sourceHash": "fnv1a64:766035f3d03d3493",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "प्राचीन (prācīn) is Sanskrit prācīna, \"turned east; former, old\", a tatsama. CDIAL has no entry for it."
+              "text": "प्राचीन (prācīn) is Sanskrit prācīna, \"turned east; former, old\", a tatsama (CDIAL 8920)."
             }
           ]
         },

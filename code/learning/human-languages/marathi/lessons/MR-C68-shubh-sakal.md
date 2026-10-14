@@ -14,7 +14,7 @@ sounds: [halant-conjunct]
 roots: [sanskrit-shubha]
 etymology_hook: "śubh ← Sanskrit śubha 'bright, auspicious', a tatsama (CDIAL 12532); sakāḷ: origin not settled"
 duration:
-  max_seconds: 263
+  max_seconds: 257
 requires:
   knowledge: [MR-LEX-SAKAL, MR-LEX-NAMASKAR-01]
 introduces:
@@ -59,7 +59,7 @@ because of work you already did.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**शुभ** is Sanskrit *śubha*, "bright, auspicious", a tatsama (CDIAL 12532). The origin of **सकाळ** is not settled: CDIAL has no entry for it.
+**शुभ** is Sanskrit *śubha*, "auspicious" (CDIAL 12532); the origin of **सकाळ** is not settled.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[MR-PHRASE-SHUBH-SAKAL]; assesses=[MR-LEX-NAMASKAR-01] -->

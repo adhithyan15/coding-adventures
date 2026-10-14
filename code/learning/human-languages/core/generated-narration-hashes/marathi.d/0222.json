@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 222,
-  "sourceHash": "fnv1a64:d9d2b70325a3a199",
+  "sourceHash": "fnv1a64:3111548bfeb73156",
   "lessonIds": [
     "MR-C222-karkirda",
     "MR-C222-masik",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch222.txt",
   "json": "marathi/narration/ch222.json",
-  "textHash": "fnv1a64:f75ff0c2b6e9b71b",
-  "jsonHash": "fnv1a64:c8f6c0694608dc96",
+  "textHash": "fnv1a64:4f89cab18d8dce73",
+  "jsonHash": "fnv1a64:abbc380ff297c071",
   "findings": []
 }

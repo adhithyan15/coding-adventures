@@ -47,7 +47,7 @@ reviews_of: [MR-C178-sajja]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**घंटा** (*ghaṇṭā*) is Sanskrit *ghaṇṭā*, "bell", a tatsama; CDIAL lists the inherited Marathi form as *ghāṁṭ*, "bell" (CDIAL 4421). CDIAL thinks the Sanskrit word itself probably renders Prakrit *ghaṁṭiā*.
+**घंटा** (*ghaṇṭā*) is Sanskrit *ghaṇṭā*, "bell", a tatsama; CDIAL lists the inherited Marathi form as *ghāṁṭ*, "bell" (CDIAL 4421). EWA derives it from *granthi*, "bell", but CDIAL takes that *granthi* as probably a Sanskrit rendering of Prakrit *ghaṁṭiā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

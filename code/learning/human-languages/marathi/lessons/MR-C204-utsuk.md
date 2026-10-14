@@ -47,7 +47,7 @@ reviews_of: [MR-C204-bhitra]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**उत्सुक** (*utsuk*) is Sanskrit *utsuka*, "eager, anxious", a tatsama. CDIAL has no entry for it.
+**उत्सुक** (*utsuk*) is Sanskrit *utsuka*, "eager, anxious", a tatsama. CDIAL notes it, with a "Cf.", under a reconstructed *\*utsukya*, "eagerness" (CDIAL 1886).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

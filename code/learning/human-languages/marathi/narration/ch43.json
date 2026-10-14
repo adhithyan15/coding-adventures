@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Near, Opposite, Far",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f7df562be741cb95",
+  "sourceHash": "fnv1a64:45c09577d841eb02",
   "lessons": [
     {
       "id": "MR-C43-javal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ece4e217202ac5e",
+      "sourceHash": "fnv1a64:76dde9d505af74e8",
       "notice": null,
       "blocks": [
         {
@@ -82,7 +82,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of जवळ (javaḷ) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+              "text": "The origin of जवळ (javaḷ) is not settled: neither CDIAL nor DEDR has an entry for it."
             }
           ]
         },

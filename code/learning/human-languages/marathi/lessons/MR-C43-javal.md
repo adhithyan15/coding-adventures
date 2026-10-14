@@ -14,7 +14,7 @@ sounds: [retroflex-la, inherent-a]
 roots: []
 etymology_hook: "javaḷ 'near': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
-  max_seconds: 220
+  max_seconds: 217
 requires:
   knowledge: [MR-POSTP-KHAALI, MR-POSTP-VAR, MR-GRAMMAR-OBLIQUE, MR-LEX-MITRA, MR-A1-FORM-LABEL-SHAHAR, MR-QUESTION-KITI]
 introduces:
@@ -65,7 +65,7 @@ saying somebody HAS something.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **जवळ** (*javaḷ*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+The origin of **जवळ** is not settled: neither CDIAL nor DEDR has an entry for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-POSTP-JAVAL, MR-GRAMMAR-OBLIQUE, MR-LEX-MITRA, MR-A1-FORM-LABEL-SHAHAR, MR-QUESTION-KITI] -->

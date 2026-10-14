@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Rain, Wind, Sky, Dog, Cat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bf018a08cd3357a3",
+  "sourceHash": "fnv1a64:1a2674c4ff7d03b3",
   "lessons": [
     {
       "id": "MR-C99-paus",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12417eca0ae0c5a8",
+      "sourceHash": "fnv1a64:22419983e54a8d60",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कुत्रा (kutrā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kuttira, \"dog\", a form CDIAL reconstructs from its descendants (CDIAL 3277). CDIAL takes the word kutta, \"dog\", behind it as imitative."
+              "text": "कुत्रा (kutrā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kuttira, \"dog\", a form CDIAL reconstructs from its descendants (CDIAL 3277). CDIAL takes the word kutta, \"dog\", behind it as imitative (CDIAL 3275)."
             }
           ]
         },

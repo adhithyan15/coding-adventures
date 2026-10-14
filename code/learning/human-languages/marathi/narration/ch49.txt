@@ -19,7 +19,7 @@ Start with the ending. The headword is मोठा (moṭhā), and the example 
 One warning worth having early. If you know Hindi you will meet मोटा (moṭā) there and reach for it: it means fat, not big, and the two words are a genuine trap between the languages. Marathi's मोठा (moṭhā) is the neutral, everyday word; nothing about it is about a body.
 
 The word, taken apart.
-The origin of मोठा (moṭhā) is not settled. CDIAL has no entry for it; it lists only a Marathi moṭā, "big, fat", beside Hindi moṭā, in its "defective" word group muṭṭa (CDIAL 10187).
+The origin of मोठा (moṭhā) is not settled. CDIAL lists only a Marathi moṭā, "big, fat", in its "defective" word group muṭṭa (CDIAL 10187).
 
 Guided Practice.
 [pause 1 second]
@@ -86,7 +86,7 @@ The second position is different, and you have used it since chapter ten without
 Two positions, two jobs: in front describes a thing you are naming, at the end before आहे makes the description the claim. The ending agrees in both.
 
 The word, taken apart.
-The origin of मोठा (moṭhā) is not settled: CDIAL has no entry for it. आहे CDIAL lists under asti, "is", though Bloch gives it another origin (CDIAL 977).
+The origin of मोठा (moṭhā) is not settled. आहे CDIAL lists under asti, "is", though Bloch disagrees (CDIAL 977).
 
 Guided Practice.
 [pause 1 second]

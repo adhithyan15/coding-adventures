@@ -14,7 +14,7 @@ sounds: [halant-conjunct, matra-e]
 roots: [ma, sanskrit-kati-hip, asti]
 etymology_hook: "mājhyā- ← base ma- (CDIAL 9691); -kaḍe as kaḍ 'side' (CDIAL 2639); āhe listed under asti (CDIAL 977)"
 duration:
-  max_seconds: 235
+  max_seconds: 230
 requires:
   knowledge: [MR-POSTP-KADE, MR-LEX-AAHE-COPULA, MR-GRAMMAR-PRON-OBLIQUE, MR-LEX-PAANI, MR-GRAMMAR-NEGATE-NAHI, MR-POSTP-JAVAL, MR-LEX-BASNE, MR-ETYMON-BASNE-WEYK, MR-LEX-DAAVA, MR-LEX-MITRA]
 introduces:
@@ -67,7 +67,7 @@ has water*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**माझ्या-** goes back to the Sanskrit first-person base *ma-* (CDIAL 9691), and **-कडे** matches Marathi *kaḍ*, "side", which CDIAL lists under *kaṭi*, "hip", as rather from Dravidian (CDIAL 2639). **आहे** CDIAL lists under *asti*, "is", though Bloch gives it another origin (CDIAL 977).
+**माझ्या-** goes back to the first-person base *ma-* (CDIAL 9691); **-कडे** matches *kaḍ*, "side", which CDIAL takes as rather Dravidian (CDIAL 2639). **आहे** CDIAL lists under *asti*, "is", though Bloch disagrees (CDIAL 977).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-POSSESSION, MR-POSTP-KADE, MR-GRAMMAR-NEGATE-NAHI, MR-LEX-PAANI, MR-LEX-MITRA, MR-POSTP-JAVAL, MR-LEX-DAAVA, MR-LEX-BASNE, MR-ETYMON-BASNE-WEYK] -->

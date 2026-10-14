@@ -14,7 +14,7 @@ sounds: [halant-conjunct, matra-aa]
 roots: [ma, persian-barabar]
 etymology_hook: "mājhyā-: oblique of mājhā, from the first-person base ma- (CDIAL 9691); barobar usually traced to Persian"
 duration:
-  max_seconds: 237
+  max_seconds: 234
 requires:
   knowledge: [MR-POSTP-BAROBAR, MR-LEX-MI, MR-LEX-MAJHE, MR-LEX-TU-TUMHI, MR-GRAMMAR-OBLIQUE, MR-LEX-DAAVA]
 introduces:
@@ -65,7 +65,7 @@ that.**
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**माझ्या-** is the oblique of **माझा**, which CDIAL lists under the Sanskrit first-person base *ma-* (CDIAL 9691). **बरोबर** is a loan, usually traced to Persian *barābar*, "equal, level".
+**माझ्या-** is the oblique of **माझा**, on the first-person base *ma-* (CDIAL 9691). **बरोबर** is usually traced to Persian *barābar*, "equal, level".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-PRON-OBLIQUE, MR-POSTP-BAROBAR, MR-LEX-MAJHE, MR-LEX-DAAVA] -->

@@ -4,7 +4,7 @@
   "chapter": 150,
   "title": "Stale, Raw, Calm, Lazy, Hard-working",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e40579579a3d5b31",
+  "sourceHash": "fnv1a64:bf4dd4baf5bfb4f3",
   "lessons": [
     {
       "id": "MR-C150-sila",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dabf7c966c1f7664",
+      "sourceHash": "fnv1a64:e5769afe4fe1aecb",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कच्चा (kaccā) goes back to a reconstructed kacca, \"raw, unripe\" (CDIAL 2613). CDIAL lists the inherited Marathi form as kācā; the shape kaccā matches Punjabi and Hindi."
+              "text": "कच्चा (kaccā) goes back to a reconstructed kacca, \"raw, unripe\" (CDIAL 2613). CDIAL lists the inherited Marathi form as kācā, and marks kaccā as taken from Punjabi."
             }
           ]
         },

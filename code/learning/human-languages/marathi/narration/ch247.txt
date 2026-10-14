@@ -45,7 +45,7 @@ You'll want to know: पदवी.
 पदवी — padvī — "a degree".
 
 The word, taken apart.
-पदवी (padvī) is Sanskrit padavī, "road, path; position", a tatsama built on pada, "step". CDIAL has no entry for it.
+पदवी (padvī) is Sanskrit padavī, "road, path; position", a tatsama built on pada, "step"; CDIAL mentions it under a reconstructed padu, "place" (CDIAL 7764).
 
 What you've built.
 One more word for this chapter.
@@ -109,7 +109,7 @@ You'll want to know: शिक्षण.
 शिक्षण — śikṣaṇ — "education".
 
 The word, taken apart.
-शिक्षण (śikṣaṇ) is Sanskrit śikṣaṇa, "teaching, instruction", a tatsama built on śikṣ, "to learn". CDIAL has no entry for it.
+शिक्षण (śikṣaṇ) is Sanskrit śikṣaṇa, "teaching, instruction", a tatsama built on śikṣ, "to learn" (CDIAL 12429).
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: भावना.
 भावना — bhāvanā — "a feeling".
 
 The word, taken apart.
-भावना (bhāvanā) is Sanskrit bhāvanā, "imagining, feeling", a tatsama built on bhū, "to be". CDIAL has no entry for it.
+भावना (bhāvanā) is Sanskrit bhāvanā, "imagining, feeling", a tatsama built on bhū, "to be" (CDIAL 9476).
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 49,
-  "sourceHash": "fnv1a64:90289270d8e34879",
+  "sourceHash": "fnv1a64:26df20b973eb66ae",
   "lessonIds": [
     "MR-C49-motha",
     "MR-C49-adj-agreement",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch49.txt",
   "json": "marathi/narration/ch49.json",
-  "textHash": "fnv1a64:3606bf5dfeff23be",
-  "jsonHash": "fnv1a64:5072cc5c05de6116",
+  "textHash": "fnv1a64:417f0ef71c5e381e",
+  "jsonHash": "fnv1a64:55c8fde2ee4e6734",
   "findings": []
 }

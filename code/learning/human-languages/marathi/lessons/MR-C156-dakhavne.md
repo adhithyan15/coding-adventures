@@ -15,7 +15,7 @@ concept_tag: MR-VERB-DAKHAVNE
 prerequisites: [MR-C155-rangavne, MR-C155-kadhne]
 sounds: []
 roots: [indo-aryan-drkshati]
-etymology_hook: "dākhavṇe: CDIAL lists it, in its addenda, under *dṛkṣati 'sees' (CDIAL 6507)"
+etymology_hook: "dākhavṇe: CDIAL lists it under *dṛkṣati 'sees' (CDIAL 6507)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MR-C155-kadhne]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**दाखवणे** (*dākhavṇe*) is the "make someone see" form of an old verb for "see": CDIAL lists it, in its addenda, under a reconstructed *\*dṛkṣati*, "sees" (CDIAL 6507).
+**दाखवणे** (*dākhavṇe*) is the "make someone see" form of an old verb for "see": CDIAL lists it under a reconstructed *\*dṛkṣati*, "sees" (CDIAL 6507).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

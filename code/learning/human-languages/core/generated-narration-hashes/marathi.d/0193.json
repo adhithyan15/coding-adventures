@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 193,
-  "sourceHash": "fnv1a64:40f5a40f2d241d95",
+  "sourceHash": "fnv1a64:3bb9b6f56f1debf8",
   "lessonIds": [
     "MR-C193-kharc-karne",
     "MR-C193-bacat-karne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch193.txt",
   "json": "marathi/narration/ch193.json",
-  "textHash": "fnv1a64:5cc9b3b39d61fbd7",
-  "jsonHash": "fnv1a64:fd32898c148844b3",
+  "textHash": "fnv1a64:b7677429e54ed02c",
+  "jsonHash": "fnv1a64:15ea1dbb29061cb3",
   "findings": []
 }

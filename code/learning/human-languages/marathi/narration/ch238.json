@@ -4,7 +4,7 @@
   "chapter": 238,
   "title": "Pilot, Researcher, Foreigner, Tourist, Adult",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8fd31e6f135d33ce",
+  "sourceHash": "fnv1a64:2e60160d219b87a6",
   "lessons": [
     {
       "id": "MR-C238-vaimanik",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da73ded964044106",
+      "sourceHash": "fnv1a64:e4695d1f74c9c1e2",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पर्यटक (paryaṭak) is Sanskrit paryaṭaka, \"one who wanders about\", a tatsama: pari, \"around\", and aṭ, \"to roam\". CDIAL has no entry for it."
+              "text": "पर्यटक (paryaṭak) is Sanskrit paryaṭaka, \"one who wanders about\", a tatsama: pari, \"around\", and aṭ, \"to roam\". CDIAL mentions it, as \"tramp\", under a reconstructed pariyaṭṭa, \"wandering washerman\" (CDIAL 7860)."
             }
           ]
         },

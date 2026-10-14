@@ -47,7 +47,7 @@ reviews_of: [MR-C223-photo-kadhne]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**समजावणे** (*samjāvṇe*) is the "make" form of *samajṇẽ*, "to understand", which comes from Sanskrit *saṁbudhyate*, "wakes up, understands" (CDIAL 12959).
+**समजावणे** (*samjāvṇe*) is the "make" form of *samajṇẽ*, "to understand", which comes from Sanskrit *saṁbudhyate*, "wakes up, understands" (CDIAL 12959). CDIAL calls Bloch's source, *samādhyāyati*, wrong.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

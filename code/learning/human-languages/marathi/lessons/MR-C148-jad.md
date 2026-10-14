@@ -47,7 +47,7 @@ reviews_of: [MR-C147-patal]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**जड** (*jaḍ*) is probably the word CDIAL lists as Marathi *jaḍ*, "cold, stupid", under Sanskrit *jaḍa*, "stupid, dumb; cold", a word it calls certainly of non-Aryan origin (CDIAL 5090). CDIAL does not give the sense "heavy".
+**जड** (*jaḍ*) is probably the word CDIAL lists as Marathi *jaḍ*, "cold, stupid", under Sanskrit *jaḍa*, "stupid, dumb; cold", a word it calls certainly of non-Aryan origin (CDIAL 5090). CDIAL gives the sense "heavy" only for Konkani *jaḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

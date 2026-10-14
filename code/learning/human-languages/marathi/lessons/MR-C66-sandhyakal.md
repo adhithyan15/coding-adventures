@@ -14,7 +14,7 @@ sounds: [anusvara-nasal, retroflex-la]
 roots: [sanskrit-sandhya, sanskrit-kaala-time]
 etymology_hook: "sandhyākāḷ: Sanskrit sandhyā 'twilight' (CDIAL 12918) + kāḷ 'time' ← kāla (CDIAL 3084)"
 duration:
-  max_seconds: 250
+  max_seconds: 244
 requires:
   knowledge: [MR-LEX-DUPAR, MR-LEX-SAKAL, MR-GRAMMAR-TIME-II]
 introduces:
@@ -63,7 +63,7 @@ hard: look for the part of it you have met.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**संध्याकाळ** (*sandhyākāḷ*) joins Sanskrit *sandhyā*, "twilight" (CDIAL 12918), whose inherited Marathi form is *sāṁj*, "evening", to *kāḷ*, "time", from Sanskrit *kāla*, "time" (CDIAL 3084).
+**संध्याकाळ** is Sanskrit *sandhyā*, "twilight" (CDIAL 12918), and *kāḷ*, "time", from *kāla* (CDIAL 3084).
 
 ## Grammar Lens: third time, same ending
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-TIME-II, MR-LEX-SANDHYAKAL] -->

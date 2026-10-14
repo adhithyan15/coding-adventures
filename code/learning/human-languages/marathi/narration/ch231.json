@@ -4,7 +4,7 @@
   "chapter": 231,
   "title": "Together, Perhaps, Besides, Of course, That is to say",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:96f0d235e18e8277",
+  "sourceHash": "fnv1a64:95b4a3155b2f2b5b",
   "lessons": [
     {
       "id": "MR-C231-ekatra",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0f1343ca1a91e1f",
+      "sourceHash": "fnv1a64:3e53593435af0187",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "एकत्र (ekatra) is Sanskrit ekatra, \"in one place\", a tatsama: eka, \"one\", with the place ending -tra. CDIAL has no entry for it."
+              "text": "एकत्र (ekatra) is Sanskrit ekatra, \"in one place\", a tatsama: eka, \"one\", with the place ending -tra (CDIAL 2468)."
             }
           ]
         },

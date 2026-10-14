@@ -14,14 +14,15 @@ That is a question with one answer. This chapter widens the answer.
 
 You'll want to know: सकाळ.
 सकाळ — sakāḷ — morning.
-The last letter is ळ, the retroflex l you first read in काळजी घ्या. Marathi keeps it where standard Hindi does not — so if you come to Marathi from Hindi, this letter is new, and it is worth slowing down on rather than reading as an ordinary ल.
+The last letter is ळ, the retroflex l you first read in काळजी घ्या. Standard Hindi lacks it, so do not read it as an ordinary ल.
+Where सकाळ (sakāḷ) comes from is not settled. CDIAL has Sanskrit sakāla, "early in the morning" (13067), but lists no Marathi form there.
 
 Grammar Lens: the ending that means "at that time".
 सकाळ (sakāḷ) is the morning as a thing. To put an event in it, add -ी:
 [a table of 1 row, read aloud]
 the part of the day: सकाळ sakāḷ. at that time: सकाळी sakāḷī.
 मी सकाळी येतो. — mī sakāḷī yeto. — I come in the morning.
-Notice where सकाळी sits: early, before the verb, in the same slot उद्या and कधी take. A Marathi time word fronts the verb, and this one is no exception.
+Notice where सकाळी sits: early, before the verb, in the same slot उद्या and कधी take. A Marathi time word fronts the verb.
 English needs two words for that slot — in the morning. Marathi needs one letter.
 
 Guided Practice.
@@ -54,7 +55,7 @@ It is the stretch after the morning and before the evening — the middle of the
 मी दुपारी येतो. — mī dupārī yeto. — I come in the afternoon.
 
 The word, taken apart.
-दुपार (dupār) is usually explained as "two watches": du-, "two", and pahār, "a watch of three hours", which CDIAL lists under prahara, "watch". CDIAL asks whether prahara is itself a Sanskritization of Persian pahra, "watch" (CDIAL 8900).
+दुपार (dupār) is usually explained as "two watches", du- and pahār, "a watch of three hours"; CDIAL asks whether Sanskrit prahara renders Persian pahra (CDIAL 8900).
 
 Grammar Lens: the ending holds.
 You were shown -ी on one word. Here it is on a second, doing the same job:
@@ -100,7 +101,7 @@ The morning and the evening end in the same piece — काळ. Once you see th
 That is worth doing to any long word in this language before deciding it is hard: look for the part of it you have met.
 
 The word, taken apart.
-संध्याकाळ (sandhyākāḷ) joins Sanskrit sandhyā, "twilight" (CDIAL 12918), whose inherited Marathi form is sāṁj, "evening", to kāḷ, "time", from Sanskrit kāla, "time" (CDIAL 3084).
+संध्याकाळ (sandhyākāḷ) is Sanskrit sandhyā, "twilight" (CDIAL 12918), and kāḷ, "time", from kāla (CDIAL 3084).
 
 Grammar Lens: third time, same ending.
 मी संध्याकाळी येतो. — mī sandhyākāḷī yeto. — I come in the evening.
@@ -143,7 +144,7 @@ The word ends on त्र, a त and a र written as one joined shape. You hav
 मी रात्री येतो. — mī rātrī yeto. — I come at night.
 
 The word, taken apart.
-रात्र (rātra) is Sanskrit rātri, "night", lightly reshaped. CDIAL lists the inherited Marathi form as rāt, "night" (CDIAL 10702).
+रात्र (rātra) is Sanskrit rātri, "night", lightly reshaped; the inherited form is rāt (CDIAL 10702).
 
 Grammar Lens: four for four, and what English does instead.
 [a table of 4 rows, read aloud]
@@ -186,7 +187,7 @@ You'll want to know: दिवस.
 Not a fifth part. The whole that holds the other four — the morning, the afternoon, the evening and the night are stretches of a दिवस (divas).
 
 The word, taken apart.
-दिवस (divas) is inherited from Sanskrit divasa, which meant "heaven" in the Brahmanas and "day" later; it has come down with almost no change (CDIAL 6333).
+दिवस (divas) is inherited, almost unchanged, from Sanskrit divasa, "heaven", later "day" (CDIAL 6333).
 
 Grammar Lens: the one that will not take -ी.
 Four words took -ी without complaint. This one does not:

@@ -4,7 +4,7 @@
   "chapter": 223,
   "title": "To repair, To take a photo, To explain, To translate, To make a decision",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:600b140992dad38b",
+  "sourceHash": "fnv1a64:fa062efab2370a55",
   "lessons": [
     {
       "id": "MR-C223-durust-karne",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1474659918130e09",
+      "sourceHash": "fnv1a64:acaa9e5dfcf26b0d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "समजावणे (samjāvṇe) is the \"make\" form of samajṇẽ, \"to understand\", which comes from Sanskrit saṁbudhyate, \"wakes up, understands\" (CDIAL 12959)."
+              "text": "समजावणे (samjāvṇe) is the \"make\" form of samajṇẽ, \"to understand\", which comes from Sanskrit saṁbudhyate, \"wakes up, understands\" (CDIAL 12959). CDIAL calls Bloch's source, samādhyāyati, wrong."
             }
           ]
         },

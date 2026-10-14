@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Introducing Yourself",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:3d6893e7fa29bd5b",
+  "sourceHash": "fnv1a64:b9eabe439b891ce4",
   "lessons": [
     {
       "id": "MR-C02-naav",
@@ -659,7 +659,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:91896362a80de90c",
+      "sourceHash": "fnv1a64:913698f0152c3efc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -784,7 +784,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4fad53280175252e",
+      "sourceHash": "fnv1a64:a1cd5d3cfa964a9b",
       "notice": null,
       "blocks": [
         {
@@ -842,7 +842,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Each word is inherited. CDIAL lists तुमचं with तुम्ही under Sanskrit yuṣmad-, \"you\" (plural), whose t- comes from tvam, \"thou\" (CDIAL 10511); नाव (nāv) under nāman, \"name\" (CDIAL 7067); and काय (kāy) under kādṛk, its reshaping of Sanskrit kīdṛk, \"of what sort\" (CDIAL 3196)."
+              "text": "All inherited: तुमचं, like तुम्ही, from Sanskrit yuṣmad-, \"you\" (CDIAL 10511); नाव (nāv) from nāman, \"name\" (CDIAL 7067); काय (kāy) from kādṛk, \"of what sort\" (CDIAL 3196)."
             }
           ]
         },
@@ -920,7 +920,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d414df081ff47e8d",
+      "sourceHash": "fnv1a64:07ec548c5b5b1184",
       "notice": null,
       "blocks": [
         {

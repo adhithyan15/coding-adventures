@@ -55,7 +55,7 @@ Say the middle form of each line aloud. Each one is माझं / तुझं 
 That is the rule worth holding, because it saves you from guessing every time: to put a pronoun in front of a postposition, take its possessive and bend that.
 
 The word, taken apart.
-माझ्या- is the oblique of माझा, which CDIAL lists under the Sanskrit first-person base ma- (CDIAL 9691). बरोबर (barobar) is a loan, usually traced to Persian barābar, "equal, level".
+माझ्या- is the oblique of माझा, on the first-person base ma- (CDIAL 9691). बरोबर (barobar) is usually traced to Persian barābar, "equal, level".
 
 Guided Practice.
 [pause 1 second]
@@ -123,7 +123,7 @@ English overloads one word: with my friend, with my eye. Marathi refuses to. A c
 One thing to file away rather than learn now. This same -ने (-ne) has a second and much larger job in Marathi: it also marks the SUBJECT of a past transitive verb, which is a rule no European language has. That is a later chapter. For now, note only that the ending you have just met is one you will meet again wearing a different hat.
 
 The word, taken apart.
--ने (-ne) is usually traced to the Sanskrit instrumental ending -ena, "by, with", as in hastena, "by hand". CDIAL has no entry for the ending.
+-ने (-ne) is usually traced to the Sanskrit instrumental ending -ena, "by, with"; CDIAL has no entry for it.
 
 Guided Practice.
 [pause 1 second]

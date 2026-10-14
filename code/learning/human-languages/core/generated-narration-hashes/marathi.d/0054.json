@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 54,
-  "sourceHash": "fnv1a64:c69ba0f0eb66d165",
+  "sourceHash": "fnv1a64:e0dbf79a184a8167",
   "lessonIds": [
     "MR-C54-thoda",
     "MR-C54-puresa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch54.txt",
   "json": "marathi/narration/ch54.json",
-  "textHash": "fnv1a64:91b6b8b9a1394da6",
-  "jsonHash": "fnv1a64:7394814913a5a4eb",
+  "textHash": "fnv1a64:2df8eb2d7c6fa09a",
+  "jsonHash": "fnv1a64:88617dd2351fd65b",
   "findings": []
 }

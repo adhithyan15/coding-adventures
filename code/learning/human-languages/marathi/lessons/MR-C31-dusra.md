@@ -14,7 +14,7 @@ sounds: [matra-u, matra-aa]
 roots: [indo-aryan-dvihsara]
 etymology_hook: "dusrā ← *dviḥsara 'twofold', built on Sanskrit dviḥ 'twice' (CDIAL 6676)"
 duration:
-  max_seconds: 228
+  max_seconds: 226
 requires:
   knowledge: [MR-JOIN-AANI, MR-LEX-NUMBERS-ONE-TO-FIVE]
 introduces:
@@ -56,7 +56,7 @@ Like every **-आ** word in this book it agrees: **दुसरा** for a mascu
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**दुसरा** (*dusrā*) comes from *\*dviḥsara*, "twofold", a form CDIAL reconstructs on Sanskrit *dviḥ*, "twice" (CDIAL 6676).
+**दुसरा** comes from *\*dviḥsara*, "twofold", built on Sanskrit *dviḥ*, "twice" (CDIAL 6676).
 
 ## Grammar Lens: एक … दुसरा … — sharing a pair out
 <!-- hl-knowledge: introduces=[MR-JOIN-EK-DUSRA]; assesses=[MR-JOIN-AANI, MR-LEX-DUSRA] -->

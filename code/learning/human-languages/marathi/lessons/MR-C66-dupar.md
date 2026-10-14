@@ -14,7 +14,7 @@ sounds: [matra-u, matra-aa]
 roots: [sanskrit-prahara]
 etymology_hook: "dupār: usually explained as two + pahār 'watch of 3 hours' (CDIAL 8900 prahara)"
 duration:
-  max_seconds: 220
+  max_seconds: 213
 requires:
   knowledge: [MR-LEX-SAKAL, MR-GRAMMAR-TIME-II]
 introduces:
@@ -54,7 +54,7 @@ day, when the sun is highest.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**दुपार** (*dupār*) is usually explained as "two watches": *du-*, "two", and *pahār*, "a watch of three hours", which CDIAL lists under *prahara*, "watch". CDIAL asks whether *prahara* is itself a Sanskritization of Persian *pahra*, "watch" (CDIAL 8900).
+**दुपार** is usually explained as "two watches", *du-* and *pahār*, "a watch of three hours"; CDIAL asks whether Sanskrit *prahara* renders Persian *pahra* (CDIAL 8900).
 
 ## Grammar Lens: the ending holds
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-TIME-II, MR-GRAMMAR-TIME-WORD-FRONTS-THE-VERB] -->

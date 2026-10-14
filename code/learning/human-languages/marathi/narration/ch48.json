@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Toward, and What You Have",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:b34e059864a15de5",
+  "sourceHash": "fnv1a64:e05b0306ce4d1d83",
   "lessons": [
     {
       "id": "MR-C48-kade",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f4b6f156a78e99c",
+      "sourceHash": "fnv1a64:80c0d7842b9845c1",
       "notice": null,
       "blocks": [
         {
@@ -241,7 +241,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "माझ्या- goes back to the Sanskrit first-person base ma- (CDIAL 9691), and -कडे (-kaḍe) matches Marathi kaḍ, \"side\", which CDIAL lists under kaṭi, \"hip\", as rather from Dravidian (CDIAL 2639). आहे CDIAL lists under asti, \"is\", though Bloch gives it another origin (CDIAL 977)."
+              "text": "माझ्या- goes back to the first-person base ma- (CDIAL 9691); -कडे (-kaḍe) matches kaḍ, \"side\", which CDIAL takes as rather Dravidian (CDIAL 2639). आहे CDIAL lists under asti, \"is\", though Bloch disagrees (CDIAL 977)."
             }
           ]
         },

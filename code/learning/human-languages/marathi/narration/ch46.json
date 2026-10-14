@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Where You Came From",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ed104f886f7bcdd2",
+  "sourceHash": "fnv1a64:bd9069fa1370c0d2",
   "lessons": [
     {
       "id": "MR-C46-huun",
@@ -344,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1b0cfee00104d08",
+      "sourceHash": "fnv1a64:b08eeb76fbca7136",
       "notice": null,
       "blocks": [
         {
@@ -406,7 +406,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कुठून (kuṭhūn) is कुठे, usually traced to Sanskrit kutra, \"where\", with the ending -हून (-hūn), \"from\", whose own origin is not settled. CDIAL has no entry for either."
+              "text": "कुठून (kuṭhūn) is कुठे, usually traced to Sanskrit kutra, \"where\", plus -हून (-hūn), \"from\", whose origin is not settled."
             }
           ]
         },

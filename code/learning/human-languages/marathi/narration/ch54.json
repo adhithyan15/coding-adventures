@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "A Little, Enough, Quite a Lot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c69ba0f0eb66d165",
+  "sourceHash": "fnv1a64:e0dbf79a184a8167",
   "lessons": [
     {
       "id": "MR-C54-thoda",
@@ -479,7 +479,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6fd701f3409995e5",
+      "sourceHash": "fnv1a64:cc7da4a69d3e9631",
       "notice": null,
       "blocks": [
         {
@@ -533,7 +533,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "किती goes back to kiyatta, \"how great\", a form CDIAL builds like Sanskrit kiyant, \"how much\" (CDIAL 3167). The origin of मोठा is not settled: CDIAL has no entry for it."
+              "text": "किती goes back to kiyatta, \"how great\" (CDIAL 3167). The origin of मोठा is not settled."
             }
           ]
         },

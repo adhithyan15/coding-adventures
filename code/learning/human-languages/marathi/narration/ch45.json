@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "With Whom, and With What",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a7cc1609d59cf37e",
+  "sourceHash": "fnv1a64:49f87c50828e8e20",
   "lessons": [
     {
       "id": "MR-C45-barobar",
@@ -195,7 +195,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21c1acda34010e27",
+      "sourceHash": "fnv1a64:a23e26f23d756492",
       "notice": null,
       "blocks": [
         {
@@ -245,7 +245,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "माझ्या- is the oblique of माझा, which CDIAL lists under the Sanskrit first-person base ma- (CDIAL 9691). बरोबर (barobar) is a loan, usually traced to Persian barābar, \"equal, level\"."
+              "text": "माझ्या- is the oblique of माझा, on the first-person base ma- (CDIAL 9691). बरोबर (barobar) is usually traced to Persian barābar, \"equal, level\"."
             }
           ]
         },
@@ -499,7 +499,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5144ea191c5bf8f",
+      "sourceHash": "fnv1a64:c12928c95330d68f",
       "notice": null,
       "blocks": [
         {
@@ -553,7 +553,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "-ने (-ne) is usually traced to the Sanskrit instrumental ending -ena, \"by, with\", as in hastena, \"by hand\". CDIAL has no entry for the ending."
+              "text": "-ने (-ne) is usually traced to the Sanskrit instrumental ending -ena, \"by, with\"; CDIAL has no entry for it."
             }
           ]
         },

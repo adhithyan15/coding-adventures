@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "The Parts of the Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c85b9820c7fad582",
+  "sourceHash": "fnv1a64:ccbe68ee276c985b",
   "lessons": [
     {
       "id": "MR-C66-sakal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b129ea009bcc575",
+      "sourceHash": "fnv1a64:3c25a06f38c33bfe",
       "notice": null,
       "blocks": [
         {
@@ -63,7 +63,11 @@
             },
             {
               "kind": "speech",
-              "text": "The last letter is ळ, the retroflex l you first read in काळजी घ्या. Marathi keeps it where standard Hindi does not — so if you come to Marathi from Hindi, this letter is new, and it is worth slowing down on rather than reading as an ordinary ल."
+              "text": "The last letter is ळ, the retroflex l you first read in काळजी घ्या. Standard Hindi lacks it, so do not read it as an ordinary ल."
+            },
+            {
+              "kind": "speech",
+              "text": "Where सकाळ (sakāḷ) comes from is not settled. CDIAL has Sanskrit sakāla, \"early in the morning\" (13067), but lists no Marathi form there."
             }
           ]
         },
@@ -94,7 +98,7 @@
             },
             {
               "kind": "speech",
-              "text": "Notice where सकाळी sits: early, before the verb, in the same slot उद्या and कधी take. A Marathi time word fronts the verb, and this one is no exception."
+              "text": "Notice where सकाळी sits: early, before the verb, in the same slot उद्या and कधी take. A Marathi time word fronts the verb."
             },
             {
               "kind": "speech",
@@ -204,7 +208,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6759ccc723b06040",
+      "sourceHash": "fnv1a64:65040757ba55cc72",
       "notice": null,
       "blocks": [
         {
@@ -250,7 +254,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दुपार (dupār) is usually explained as \"two watches\": du-, \"two\", and pahār, \"a watch of three hours\", which CDIAL lists under prahara, \"watch\". CDIAL asks whether prahara is itself a Sanskritization of Persian pahra, \"watch\" (CDIAL 8900)."
+              "text": "दुपार (dupār) is usually explained as \"two watches\", du- and pahār, \"a watch of three hours\"; CDIAL asks whether Sanskrit prahara renders Persian pahra (CDIAL 8900)."
             }
           ]
         },
@@ -384,7 +388,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8628d0be63ab4374",
+      "sourceHash": "fnv1a64:6fcd671cd5cc5529",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -456,7 +460,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "संध्याकाळ (sandhyākāḷ) joins Sanskrit sandhyā, \"twilight\" (CDIAL 12918), whose inherited Marathi form is sāṁj, \"evening\", to kāḷ, \"time\", from Sanskrit kāla, \"time\" (CDIAL 3084)."
+              "text": "संध्याकाळ (sandhyākāḷ) is Sanskrit sandhyā, \"twilight\" (CDIAL 12918), and kāḷ, \"time\", from kāla (CDIAL 3084)."
             }
           ]
         },
@@ -590,7 +594,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d72cbe5375711fa2",
+      "sourceHash": "fnv1a64:6bba60e622b81e4c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -643,7 +647,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "रात्र (rātra) is Sanskrit rātri, \"night\", lightly reshaped. CDIAL lists the inherited Marathi form as rāt, \"night\" (CDIAL 10702)."
+              "text": "रात्र (rātra) is Sanskrit rātri, \"night\", lightly reshaped; the inherited form is rāt (CDIAL 10702)."
             }
           ]
         },
@@ -788,7 +792,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60761641cd31a68b",
+      "sourceHash": "fnv1a64:ec8fd68bf45f8084",
       "notice": null,
       "blocks": [
         {
@@ -830,7 +834,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दिवस (divas) is inherited from Sanskrit divasa, which meant \"heaven\" in the Brahmanas and \"day\" later; it has come down with almost no change (CDIAL 6333)."
+              "text": "दिवस (divas) is inherited, almost unchanged, from Sanskrit divasa, \"heaven\", later \"day\" (CDIAL 6333)."
             }
           ]
         },

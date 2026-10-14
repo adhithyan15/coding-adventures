@@ -11,10 +11,10 @@ gloss: "sixth — the first ordinal you could have said before you were taught i
 concept_tag: MR-ORDINAL-SIXTH
 prerequisites: [MR-R60-first-to-fifth, MR-C60-pachva, MR-C60-tisra, MR-C57-tera, MR-C42-var]
 sounds: []
-roots: [sanskrit-saptama]
+roots: [sanskrit-shash, sanskrit-saptama]
 etymology_hook: "sahāvā: sahā 'six' + the ordinal -vā, the ending of sātvā ← saptama (CDIAL 13151)"
 duration:
-  max_seconds: 212
+  max_seconds: 210
 requires:
   knowledge: [MR-GRAMMAR-ORDINAL-VA, MR-LEX-PACHVA, MR-LEX-TISRA, MR-LEX-SAHA, MR-LEX-TERA, MR-POSTP-VAR, MR-LEX-GHAR]
 introduces:
@@ -59,7 +59,7 @@ already known. It will happen four more times in this chapter.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**सहावा** (*sahāvā*) is **सहा**, "six", with the ordinal ending **-वा**. CDIAL has no entry for the whole word; the ending is the one that, in **सातवा**, "seventh", continues Sanskrit *saptama* (CDIAL 13151).
+**सहावा** is **सहा**, "six", with **-वा**, the old ending *-ma* of Sanskrit *saptama*, "seventh" (CDIAL 13151). CDIAL has no entry for the whole word.
 
 ## Grammar Lens: what a rule buys
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-SAHAVA, MR-GRAMMAR-ORDINAL-VA, MR-LEX-GHAR] -->
@@ -70,7 +70,7 @@ Chapter sixty cost you four separate words to reach *fourth*. This chapter costs
 you one ending, already paid for, to reach *tenth* — and then *twentieth*, and
 *hundredth*, and every ordinal Marathi will ever need.
 
-That is what the difference between an inherited word and a built one is worth,
+That is what the difference between a memorised word and a rule word is worth,
 and it is why the chapter before this one taught its four the hard way rather
 than pretending they followed a pattern.
 

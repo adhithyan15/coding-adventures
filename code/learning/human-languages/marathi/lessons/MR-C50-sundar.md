@@ -54,8 +54,7 @@ which is the whole return on having a class rather than a list.
 
 The word came into Marathi from Sanskrit **सुन्दर** (*sundara*) unchanged, and
 that is exactly why it does not bend: it arrived already finished. Sanskrit
-built it from **सु-** (*su-*), "good, well" — the same prefix behind
-**सुद्धा** — though CDIAL asks whether **सुन्दर** is itself a Middle Indo-Aryan form of *sūnara*, "excellent" (CDIAL 13474).
+is often said to have built it from **सु-** (*su-*), "good, well", though CDIAL asks whether **सुन्दर** is itself a Middle Indo-Aryan form of *sūnara*, "excellent" (CDIAL 13474).
 
 It is a wide word in use. Marathi says **सुंदर** of a person, a room, a song
 and a day, where English would reach for *beautiful*, *lovely*, *nice* and
@@ -76,6 +75,6 @@ and a day, where English would reach for *beautiful*, *lovely*, *nice* and
 
 [PAUSE 3s] Why does **सुंदर** not agree? (**It does not end in -आ; it arrived
 from Sanskrit already finished**.) What does the **सु-** in it mean?
-(**Good, well** — as in **सुद्धा**.)
+(**Good, well**.)
 
 Sources: [Wiktionary: सुंदर](https://en.wiktionary.org/wiki/%E0%A4%B8%E0%A5%81%E0%A4%82%E0%A4%A6%E0%A4%B0).

@@ -4,7 +4,7 @@
   "chapter": 229,
   "title": "Tablet, Ointment, Bandage, Ambulance, Diet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:00edac6d354aaab8",
+  "sourceHash": "fnv1a64:0856ad93f9c7f767",
   "lessons": [
     {
       "id": "MR-C229-goli",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1df234419a37e86",
+      "sourceHash": "fnv1a64:e9a32c283ddc0330",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "गोळी (goḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gola, \"ball; golikā, little ball\" (CDIAL 4321). CDIAL glosses the Marathi word \"pill\"."
+              "text": "गोळी (goḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from golikā, \"little ball\", built on gola, \"ball\" (CDIAL 4321). CDIAL glosses the Marathi word \"pill\"."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 247,
-  "sourceHash": "fnv1a64:b7d348cf88f8ff90",
+  "sourceHash": "fnv1a64:cbc89b356c2eeb85",
   "lessonIds": [
     "MR-C247-nokri",
     "MR-C247-padvi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch247.txt",
   "json": "marathi/narration/ch247.json",
-  "textHash": "fnv1a64:856231e09ca2d6c6",
-  "jsonHash": "fnv1a64:454cc80f207a036f",
+  "textHash": "fnv1a64:e9d42e9770f86e85",
+  "jsonHash": "fnv1a64:32dae8672f750776",
   "findings": []
 }

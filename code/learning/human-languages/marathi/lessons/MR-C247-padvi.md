@@ -47,7 +47,7 @@ reviews_of: [MR-C247-nokri]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**पदवी** (*padvī*) is Sanskrit *padavī*, "road, path; position", a tatsama built on *pada*, "step". CDIAL has no entry for it.
+**पदवी** (*padvī*) is Sanskrit *padavī*, "road, path; position", a tatsama built on *pada*, "step"; CDIAL mentions it under a reconstructed *\*padu*, "place" (CDIAL 7764).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

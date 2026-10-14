@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Wall, Roof, Bed, Cupboard, Ground",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e8b4aee879317ada",
+  "sourceHash": "fnv1a64:f1c18dc0cf0c294b",
   "lessons": [
     {
       "id": "MR-C90-bhint",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31879ed2a6025ae9",
+      "sourceHash": "fnv1a64:a7c9ecba8c485d13",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of छप्पर (chhappar) is not settled. CDIAL has no entry for it; it may belong with a reconstructed chapp-, \"press, cover, hide\" (CDIAL 4994), but no source says so."
+              "text": "CDIAL has no Marathi form of छप्पर (chhappar), but it lists Hindi and Punjabi chappar, \"thatched roof\", under Sanskrit chattvara, \"house, bower\" (CDIAL 4976)."
             }
           ]
         },

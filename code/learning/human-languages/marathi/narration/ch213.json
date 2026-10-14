@@ -4,7 +4,7 @@
   "chapter": 213,
   "title": "Fountain, Gate, Fence, Cellar, Loft",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:68877d3da318c4fb",
+  "sourceHash": "fnv1a64:4913cbdc2e371533",
   "lessons": [
     {
       "id": "MR-C213-karanje",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:186a30dc32a68be5",
+      "sourceHash": "fnv1a64:de2b6cf8bb0fdc65",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "माळा (māḷā) is a tadbhava, a word inherited and reshaped by sound change. It comes from māḍa, \"upper storey of a house\", a form CDIAL reconstructs from its descendants (CDIAL 9996). CDIAL glosses the Marathi word \"loft, granary\"."
+              "text": "माळा (māḷā) is a tadbhava, a word inherited and reshaped by sound change. It comes from māḍa, \"upper storey of a house\", a form CDIAL reconstructs from its descendants (CDIAL 9996). CDIAL glosses the Marathi word \"loft, granary\", and takes the word from Dravidian, comparing Kannada māḍi, \"upstair house\"."
             }
           ]
         },

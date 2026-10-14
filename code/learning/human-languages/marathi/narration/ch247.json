@@ -4,7 +4,7 @@
   "chapter": 247,
   "title": "Job, Degree, Homework, Education, Feeling",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b7d348cf88f8ff90",
+  "sourceHash": "fnv1a64:cbc89b356c2eeb85",
   "lessons": [
     {
       "id": "MR-C247-nokri",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c42106a58c6dc8f",
+      "sourceHash": "fnv1a64:8de0894144088779",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पदवी (padvī) is Sanskrit padavī, \"road, path; position\", a tatsama built on pada, \"step\". CDIAL has no entry for it."
+              "text": "पदवी (padvī) is Sanskrit padavī, \"road, path; position\", a tatsama built on pada, \"step\"; CDIAL mentions it under a reconstructed padu, \"place\" (CDIAL 7764)."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:daa5d612d15cd9ac",
+      "sourceHash": "fnv1a64:572d8cecce1f94fc",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "शिक्षण (śikṣaṇ) is Sanskrit śikṣaṇa, \"teaching, instruction\", a tatsama built on śikṣ, \"to learn\". CDIAL has no entry for it."
+              "text": "शिक्षण (śikṣaṇ) is Sanskrit śikṣaṇa, \"teaching, instruction\", a tatsama built on śikṣ, \"to learn\" (CDIAL 12429)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c45075fd62dc1f87",
+      "sourceHash": "fnv1a64:be4ef000aef07703",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "भावना (bhāvanā) is Sanskrit bhāvanā, \"imagining, feeling\", a tatsama built on bhū, \"to be\". CDIAL has no entry for it."
+              "text": "भावना (bhāvanā) is Sanskrit bhāvanā, \"imagining, feeling\", a tatsama built on bhū, \"to be\" (CDIAL 9476)."
             }
           ]
         },

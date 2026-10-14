@@ -14,7 +14,7 @@ sounds: [matra-o, matra-ii]
 roots: [indo-aryan-kholla]
 etymology_hook: "khoolī ← *kholla 'hut', a reconstructed form; a tadbhava (CDIAL 3946)"
 duration:
-  max_seconds: 218
+  max_seconds: 207
 requires:
   knowledge: [MR-LEX-GHAR, MR-LEX-JHOPNE]
 introduces:
@@ -65,7 +65,7 @@ lesson is about nothing else.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**खोली** (*khoolī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kholla*, "hut", a form CDIAL reconstructs from its descendants (CDIAL 3946). CDIAL glosses the Marathi word "inner room".
+**खोली** comes from a reconstructed *\*kholla*, "hut"; CDIAL glosses the Marathi word "inner room" (CDIAL 3946).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-KHOLI, MR-LEX-GHAR, MR-JOIN-SAATHI, MR-A1-MESSAGE-LINE-SPEAK] -->

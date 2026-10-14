@@ -15,7 +15,7 @@ concept_tag: MR-HOME93-VAHI
 prerequisites: [MR-C93-svayampakghar, MR-C93-pustak]
 sounds: []
 roots: [sanskrit-vahika]
-etymology_hook: "vahī ← Sanskrit vahikā 'diary, in rājavahikā 'king's diary'', a tadbhava (CDIAL 11460)"
+etymology_hook: "vahī ← Sanskrit vahikā, known only in rājavahikā 'king's diary'; a tadbhava (CDIAL 11460)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MR-C93-pustak]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**वही** (*vahī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vahikā*, "diary, in rājavahikā 'king's diary'" (CDIAL 11460). CDIAL glosses the Marathi word "account-book, ledger".
+**वही** (*vahī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vahikā*, known only in *rājavahikā*, "king's diary" (CDIAL 11460). CDIAL glosses the Marathi word "account-book, ledger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

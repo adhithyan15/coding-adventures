@@ -47,7 +47,7 @@ reviews_of: [MR-C230-kayam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**एकत्र** (*ekatra*) is Sanskrit *ekatra*, "in one place", a tatsama: *eka*, "one", with the place ending *-tra*. CDIAL has no entry for it.
+**एकत्र** (*ekatra*) is Sanskrit *ekatra*, "in one place", a tatsama: *eka*, "one", with the place ending *-tra* (CDIAL 2468).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

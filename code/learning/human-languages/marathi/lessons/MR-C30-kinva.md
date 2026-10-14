@@ -14,7 +14,7 @@ sounds: [matra-i, anusvara, va-wa, matra-aa]
 roots: [sanskrit-kim]
 etymology_hook: "kiṁvā ← Sanskrit kiṁ vā 'or whether': kim 'what' + vā 'or' (CDIAL 3164)"
 duration:
-  max_seconds: 216
+  max_seconds: 212
 requires:
   knowledge: [MR-JOIN-AANI, MR-LEX-CHAHA, MR-LEX-PAANI]
 introduces:
@@ -60,7 +60,7 @@ the **-ve** in *sīve*, "or if." Marathi's word for choosing is, underneath,
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**किंवा** (*kiṁvā*) is Sanskrit *kiṁ vā*, "or whether", kept whole: CDIAL lists that phrase under *kim*, "what", beside Marathi *kĩ*, "or" (CDIAL 3164).
+**किंवा** is Sanskrit *kiṁ vā*, "or whether", kept whole; CDIAL lists it under *kim*, "what" (CDIAL 3164).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-JOIN-KINVA, MR-JOIN-AANI] -->

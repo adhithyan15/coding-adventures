@@ -47,7 +47,7 @@ reviews_of: [MR-C99-akash]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**कुत्रा** (*kutrā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kuttira*, "dog", a form CDIAL reconstructs from its descendants (CDIAL 3277). CDIAL takes the word *\*kutta*, "dog", behind it as imitative.
+**कुत्रा** (*kutrā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kuttira*, "dog", a form CDIAL reconstructs from its descendants (CDIAL 3277). CDIAL takes the word *\*kutta*, "dog", behind it as imitative (CDIAL 3275).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

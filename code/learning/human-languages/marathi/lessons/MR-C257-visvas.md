@@ -47,7 +47,7 @@ reviews_of: [MR-C257-maitri]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**विश्वास** (*viśvās*) is Sanskrit *viśvāsa*, "trust, confidence", a tatsama built on *śvas*, "to breathe". CDIAL has no entry for it.
+**विश्वास** (*viśvās*) is Sanskrit *viśvāsa*, "trust, confidence", a tatsama built on *śvas*, "to breathe" (CDIAL 11966).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

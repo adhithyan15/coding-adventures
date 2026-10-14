@@ -4,7 +4,7 @@
   "chapter": 271,
   "title": "Government office, Bus station, Blanket, Veranda, Broom",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:448a225c8d74823e",
+  "sourceHash": "fnv1a64:d59983cd75b8fa78",
   "lessons": [
     {
       "id": "MR-C271-kaceri",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82934be816e40b70",
+      "sourceHash": "fnv1a64:07b5ad85188032f8",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कचेरी (kacerī) is a loan from Hindustani kacahrī, \"office, court\"."
+              "text": "कचेरी (kacerī) is a loan from Hindustani kacahrī, \"office, court\", which CDIAL traces to a reconstructed kṛtyagharikā, \"court-house\" (CDIAL 3429)."
             }
           ]
         },

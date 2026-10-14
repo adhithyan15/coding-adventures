@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Far, Inside, Outside, Behind, Ahead",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:de9c7ebe8ce42ee4",
+  "sourceHash": "fnv1a64:5f489352fa7f81ad",
   "lessons": [
     {
       "id": "MR-C112-dur",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6859d1369bf8a59f",
+      "sourceHash": "fnv1a64:54ab38669332a921",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of मागे (māge) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+              "text": "The origin of मागे (māge) is not settled. Neither CDIAL nor DEDR has an entry for it. Marathi māg, \"road, track\", which CDIAL lists under Sanskrit mārga, \"track\" (CDIAL 10071), is a possible lead, but no source links the two."
             }
           ]
         },

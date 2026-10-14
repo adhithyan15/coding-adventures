@@ -14,7 +14,7 @@ sounds: [matra-e]
 roots: []
 etymology_hook: "-ne: usually traced to the Sanskrit instrumental ending -ena 'by, with'; CDIAL has no entry for it"
 duration:
-  max_seconds: 228
+  max_seconds: 224
 requires:
   knowledge: [MR-POSTP-SHII, MR-GRAMMAR-PRON-OBLIQUE, MR-LEX-DAAVA, MR-LEX-ITHE, MR-LEX-PAHNE, MR-LEX-DOLA, MR-POSTP-BAROBAR, MR-LEX-GHAR]
 introduces:
@@ -65,7 +65,7 @@ different hat.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**-ने** (*-ne*) is usually traced to the Sanskrit instrumental ending *-ena*, "by, with", as in *hastena*, "by hand". CDIAL has no entry for the ending.
+**-ने** is usually traced to the Sanskrit instrumental ending *-ena*, "by, with"; CDIAL has no entry for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-POSTP-NE-INSTR, MR-POSTP-SHII, MR-POSTP-BAROBAR, MR-LEX-DAAVA, MR-LEX-ITHE] -->

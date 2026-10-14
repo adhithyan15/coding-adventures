@@ -4,7 +4,7 @@
   "chapter": 257,
   "title": "Rest, Anxiety, Friendship, Trust, Courage",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fbf324e1d2bf2577",
+  "sourceHash": "fnv1a64:0946cbc9ab1e5fd7",
   "lessons": [
     {
       "id": "MR-C257-visranti",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77e77503a7e5295f",
+      "sourceHash": "fnv1a64:5e59b33d7ceeaf7d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मैत्री (maitrī) is Sanskrit maitrī, \"friendship\", a tatsama built on mitra, \"friend\". CDIAL has no entry for it."
+              "text": "मैत्री (maitrī) is Sanskrit maitrī, \"friendship\", a tatsama built on mitra, \"friend\"; CDIAL lists it beside maitra, \"friendly\" (CDIAL 10340)."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b64115cfc618f21",
+      "sourceHash": "fnv1a64:be1123c9e3f5a525",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "विश्वास (viśvās) is Sanskrit viśvāsa, \"trust, confidence\", a tatsama built on śvas, \"to breathe\". CDIAL has no entry for it."
+              "text": "विश्वास (viśvās) is Sanskrit viśvāsa, \"trust, confidence\", a tatsama built on śvas, \"to breathe\" (CDIAL 11966)."
             }
           ]
         },

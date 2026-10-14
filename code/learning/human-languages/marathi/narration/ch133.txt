@@ -109,7 +109,7 @@ You'll want to know: टोपली.
 टोपली — ṭoplī — "a basket".
 
 The word, taken apart.
-The origin of टोपली (ṭoplī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+टोपली (ṭoplī) is inherited. CDIAL lists Marathi ṭoplā, "basket", with an added -l-, under a reconstructed ṭōppa, "basket-work", and asks whether that is the same word as the ṭōppa behind टोपी (CDIAL 5482).
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: मेणबत्ती.
 मेणबत्ती — meṇbattī — "a candle".
 
 The word, taken apart.
-मेणबत्ती (meṇbattī) is "wax-lamp": meṇ, "beeswax", from Sanskrit madana, "beeswax" (CDIAL 9778), and battī, "wick, lamp", from Sanskrit varti, "wick" (CDIAL 11359).
+मेणबत्ती (meṇbattī) is "wax-lamp": meṇ, "beeswax", from Sanskrit madana, "beeswax" (CDIAL 9778), and battī, "wick, lamp", the Hindi form of a word CDIAL lists under Sanskrit varti, "wick"; Marathi's own form is vāt (CDIAL 11359).
 
 What you've built.
 One more word for this chapter.

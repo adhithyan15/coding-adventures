@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 11,
-  "sourceHash": "fnv1a64:8d8ad70ed179f1a9",
+  "sourceHash": "fnv1a64:c54a9c9e67f1df9e",
   "lessonIds": [
     "MR-C04-punha",
     "MR-C04-bhetu",
@@ -16,6 +16,6 @@
   "text": "marathi/narration/ch11.txt",
   "json": "marathi/narration/ch11.json",
   "textHash": "fnv1a64:e128326e7d4dde65",
-  "jsonHash": "fnv1a64:674328da91dbf8f2",
+  "jsonHash": "fnv1a64:cb664b110a57e469",
   "findings": []
 }

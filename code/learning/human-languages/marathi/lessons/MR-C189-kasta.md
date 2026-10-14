@@ -47,7 +47,7 @@ reviews_of: [MR-C189-upkar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**कष्ट** (*kaṣṭa*) is Sanskrit *kaṣṭa*, "bad, painful; hardship", a tatsama. CDIAL has no entry for it.
+**कष्ट** (*kaṣṭa*) is Sanskrit *kaṣṭa*, "bad, painful; hardship", a tatsama. CDIAL lists the inherited Marathi form as *kaṭ*, "pain, work" (CDIAL 2978).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

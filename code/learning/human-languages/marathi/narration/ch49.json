@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Big, and How an Adjective Agrees",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:90289270d8e34879",
+  "sourceHash": "fnv1a64:26df20b973eb66ae",
   "lessons": [
     {
       "id": "MR-C49-motha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a140e9ae7742cc5",
+      "sourceHash": "fnv1a64:7ee714a581d8edaf",
       "notice": null,
       "blocks": [
         {
@@ -82,7 +82,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of मोठा (moṭhā) is not settled. CDIAL has no entry for it; it lists only a Marathi moṭā, \"big, fat\", beside Hindi moṭā, in its \"defective\" word group muṭṭa (CDIAL 10187)."
+              "text": "The origin of मोठा (moṭhā) is not settled. CDIAL lists only a Marathi moṭā, \"big, fat\", in its \"defective\" word group muṭṭa (CDIAL 10187)."
             }
           ]
         },
@@ -328,7 +328,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4396f94e5aab12fc",
+      "sourceHash": "fnv1a64:80d2e1a4a6b5c7c4",
       "notice": null,
       "blocks": [
         {
@@ -386,7 +386,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of मोठा (moṭhā) is not settled: CDIAL has no entry for it. आहे CDIAL lists under asti, \"is\", though Bloch gives it another origin (CDIAL 977)."
+              "text": "The origin of मोठा (moṭhā) is not settled. आहे CDIAL lists under asti, \"is\", though Bloch disagrees (CDIAL 977)."
             }
           ]
         },

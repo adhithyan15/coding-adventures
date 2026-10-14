@@ -4,7 +4,7 @@
   "chapter": 182,
   "title": "Discount, Coin, Banknote, Loan, Tax",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6b32c4018f1a02ce",
+  "sourceHash": "fnv1a64:fb3499ca2a3c7c7a",
   "lessons": [
     {
       "id": "MR-C182-savlat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:987bad52f1f11c49",
+      "sourceHash": "fnv1a64:66eccbe7baecc4d6",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सवलत (savlat) is a loan, usually traced through Persian to Arabic suhūla, \"ease, facility\", whose root is s-h-l (Lane)."
+              "text": "सवलत (savlat) is a loan, usually traced through Persian suhūlat to Arabic suhūla, \"ease, facility\", whose root is s-h-l (Lane)."
             }
           ]
         },

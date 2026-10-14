@@ -11,7 +11,7 @@ gloss: (we'll) meet (bheṭū)
 concept_tag: MR-VERB-BHETNE
 prerequisites: [MR-C04-punha, MR-C02-anand]
 sounds: [matra-e, matra-u]
-roots: [bhet-meet, indo-aryan-bhit]
+roots: [indo-aryan-bhit]
 etymology_hook: "bheṭū ← bheṭṇe 'to meet', from a reconstructed *bhēṭ- 'meet, throng' (CDIAL 9490)"
 reviews_of: [MR-C02-anand]
 duration:

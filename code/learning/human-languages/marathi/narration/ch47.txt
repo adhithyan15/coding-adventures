@@ -18,7 +18,7 @@ If you know Spanish this is the personal a under another name, and it behaves th
 The stem is the usual one: मित्र becomes मित्रा-, then -ला. And now the old मला makes sense: it is मी through its oblique, with this same -ला on the end.
 
 The word, taken apart.
-मित्र is Sanskrit mitra, "friend", a tatsama (CDIAL 10124). The history of the ending -ला is not settled: CDIAL has no entry for it.
+मित्र is Sanskrit mitra, "friend" (CDIAL 10124). The ending -ला has no CDIAL entry, and its history is not settled.
 
 Guided Practice.
 [pause 1 second]
@@ -50,7 +50,7 @@ English has two ways to say this — give my friend water, give water to my frie
 आणणे works the same way: मी मित्राला (mitrālā) पाणी आणतो, I bring water to my friend. Any verb of handing over takes this frame, and you already have three of them.
 
 The word, taken apart.
-मित्र is Sanskrit mitra, "friend", a tatsama (CDIAL 10124), and देतो is a form of देणे, "to give", from Sanskrit dadāti, "gives" (CDIAL 6141). The history of the ending -ला is not settled: CDIAL has no entry for it.
+मित्र is Sanskrit mitra, "friend" (CDIAL 10124); देतो comes from Sanskrit dadāti, "gives" (CDIAL 6141). The ending -ला has no CDIAL entry.
 
 Guided Practice.
 [pause 1 second]

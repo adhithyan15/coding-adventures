@@ -4,7 +4,7 @@
   "chapter": 138,
   "title": "Peas, Pomegranate, Watermelon, Coconut, Flour",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:565a658204a0facd",
+  "sourceHash": "fnv1a64:71b41a83c1238804",
   "lessons": [
     {
       "id": "MR-C138-matar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42f5b41bfed1d769",
+      "sourceHash": "fnv1a64:27f7eace1ca3a9f1",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मटार (maṭār) matches Hindi maṭar, \"pea\", which CDIAL traces to a reconstructed maṭṭara, \"pea\". CDIAL lists Marathi's own form as maṭh, \"pea\" (CDIAL 9724)."
+              "text": "मटार (maṭār) matches Hindi maṭar, \"pea\", which CDIAL traces to a reconstructed maṭṭara, \"pea\". CDIAL lists Marathi's own form, maṭh, \"pea\", under its variant maṭṭha (CDIAL 9724)."
             }
           ]
         },

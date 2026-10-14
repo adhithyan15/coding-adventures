@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Small, and the Words That Never Change",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7474efe91ded8789",
+  "sourceHash": "fnv1a64:e73f7a9fdf8b7d39",
   "lessons": [
     {
       "id": "MR-C50-lahaan",
@@ -306,7 +306,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b846bdeecbca1168",
+      "sourceHash": "fnv1a64:847bc8cccc21171a",
       "notice": null,
       "blocks": [
         {
@@ -345,7 +345,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word came into Marathi from Sanskrit सुन्दर (sundara) unchanged, and that is exactly why it does not bend: it arrived already finished. Sanskrit built it from सु- (su-), \"good, well\" — the same prefix behind सुद्धा — though CDIAL asks whether सुन्दर is itself a Middle Indo-Aryan form of sūnara, \"excellent\" (CDIAL 13474)."
+              "text": "The word came into Marathi from Sanskrit सुन्दर (sundara) unchanged, and that is exactly why it does not bend: it arrived already finished. Sanskrit is often said to have built it from सु- (su-), \"good, well\", though CDIAL asks whether सुन्दर is itself a Middle Indo-Aryan form of sūnara, \"excellent\" (CDIAL 13474)."
             },
             {
               "kind": "speech",
@@ -426,7 +426,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why does सुंदर (sundar) not agree? (It does not end in -आ; it arrived from Sanskrit already finished.) What does the सु- in it mean? (Good, well — as in सुद्धा.)"
+              "text": "Why does सुंदर (sundar) not agree? (It does not end in -आ; it arrived from Sanskrit already finished.) What does the सु- in it mean? (Good, well.)"
             },
             {
               "kind": "speech",

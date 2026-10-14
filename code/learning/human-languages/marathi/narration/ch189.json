@@ -4,7 +4,7 @@
   "chapter": 189,
   "title": "Danger, Favour, Hard work, Benefit, Loss",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:26ae9b94a10a9873",
+  "sourceHash": "fnv1a64:9dd363af6bd14905",
   "lessons": [
     {
       "id": "MR-C189-dhoka",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db2337af889ee1f9",
+      "sourceHash": "fnv1a64:d73916e89743388f",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कष्ट (kaṣṭa) is Sanskrit kaṣṭa, \"bad, painful; hardship\", a tatsama. CDIAL has no entry for it."
+              "text": "कष्ट (kaṣṭa) is Sanskrit kaṣṭa, \"bad, painful; hardship\", a tatsama. CDIAL lists the inherited Marathi form as kaṭ, \"pain, work\" (CDIAL 2978)."
             }
           ]
         },

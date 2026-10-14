@@ -4,7 +4,7 @@
   "chapter": 215,
   "title": "Player, Coach, Supporter, Arrival, Departure",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e514dab21c6130d2",
+  "sourceHash": "fnv1a64:e857f53dd08afb1a",
   "lessons": [
     {
       "id": "MR-C215-kheladu",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0957bddb099e2ef5",
+      "sourceHash": "fnv1a64:ae8da7d086acb723",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "आगमन (āgaman) is Sanskrit āgamana, \"coming, arrival\", a tatsama: ā, \"toward\", and gam, \"to go\". CDIAL has no entry for it."
+              "text": "आगमन (āgaman) is Sanskrit āgamana, \"coming, arrival\", a tatsama: ā, \"toward\", and gam, \"to go\" (CDIAL 1046)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68812a73050e83cf",
+      "sourceHash": "fnv1a64:cc7a825caa2367bd",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "प्रस्थान (prasthān) is Sanskrit prasthāna, \"setting out, departure\", a tatsama: pra, \"forth\", and sthā, \"to stand\". CDIAL has no entry for it."
+              "text": "प्रस्थान (prasthān) is Sanskrit prasthāna, \"setting out, departure\", a tatsama: pra, \"forth\", and sthā, \"to stand\" (CDIAL 8872)."
             }
           ]
         },

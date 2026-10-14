@@ -15,7 +15,7 @@ concept_tag: MR-VASTU268-AVJAR
 prerequisites: [MR-C267-cikhal, MR-C267-dhul]
 sounds: []
 roots: [arabic-awzar]
-etymology_hook: "avjār: usually traced, through Persian, to Arabic awzār 'tools'"
+etymology_hook: "avjār: usually traced, through Persian, to Arabic awzār 'burdens; gear of war', plural of wizr"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MR-C267-dhul]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**अवजार** (*avjār*) is a loan, usually traced through Persian to Arabic *awzār*, "tools, implements".
+**अवजार** (*avjār*) is a loan, usually traced through Persian to Arabic *awzār*, the plural of *wizr*, "a burden", which Lane gives also as "weapons, the gear of war" (root *w-z-r*). Persian and Hindustani use it for tools.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

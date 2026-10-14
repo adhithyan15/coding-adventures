@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 270,
-  "sourceHash": "fnv1a64:170be18c02c5949b",
+  "sourceHash": "fnv1a64:8b7b2b58badf772d",
   "lessonIds": [
     "MR-C270-badam",
     "MR-C270-manuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch270.txt",
   "json": "marathi/narration/ch270.json",
-  "textHash": "fnv1a64:97e2f5ecd2700097",
-  "jsonHash": "fnv1a64:6bdded4108791836",
+  "textHash": "fnv1a64:b3a02bdd8d402a7c",
+  "jsonHash": "fnv1a64:22fcdda9f177a451",
   "findings": []
 }

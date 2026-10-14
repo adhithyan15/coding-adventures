@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 213,
-  "sourceHash": "fnv1a64:68877d3da318c4fb",
+  "sourceHash": "fnv1a64:4913cbdc2e371533",
   "lessonIds": [
     "MR-C213-karanje",
     "MR-C213-phatak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch213.txt",
   "json": "marathi/narration/ch213.json",
-  "textHash": "fnv1a64:ef730c5cd109979e",
-  "jsonHash": "fnv1a64:25877d8868998769",
+  "textHash": "fnv1a64:08ad04444926230f",
+  "jsonHash": "fnv1a64:4d0d77dac332aacb",
   "findings": []
 }

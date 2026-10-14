@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 223,
-  "sourceHash": "fnv1a64:600b140992dad38b",
+  "sourceHash": "fnv1a64:fa062efab2370a55",
   "lessonIds": [
     "MR-C223-durust-karne",
     "MR-C223-photo-kadhne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch223.txt",
   "json": "marathi/narration/ch223.json",
-  "textHash": "fnv1a64:403bc6db385b02de",
-  "jsonHash": "fnv1a64:8522e8e9bd9bf026",
+  "textHash": "fnv1a64:f56b12c067782473",
+  "jsonHash": "fnv1a64:5db145c63bf86d32",
   "findings": []
 }

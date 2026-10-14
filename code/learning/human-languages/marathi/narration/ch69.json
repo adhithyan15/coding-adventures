@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "This One and That One",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:0e869245e33e058c",
+  "sourceHash": "fnv1a64:cc9c1a17e94fddc9",
   "lessons": [
     {
       "id": "MR-C69-ha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfeb1adce3b38b22",
+      "sourceHash": "fnv1a64:dd085af40870208a",
       "notice": null,
       "blocks": [
         {
@@ -79,7 +79,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of हा (hā) is not settled: CDIAL has no entry for the Marathi word."
+              "text": "The origin of हा is not settled; CDIAL has no entry for it."
             }
           ]
         },
@@ -192,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb82c7c4ff50663c",
+      "sourceHash": "fnv1a64:6de5e19d4cbeaf0e",
       "notice": null,
       "blocks": [
         {
@@ -252,7 +252,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "तो (to) is usually traced to the old Indo-Aryan pronoun sa, \"he, that\", whose other forms are built on the stem ta-. CDIAL lists Hindi so, \"that\", under it, but no Marathi form (CDIAL 12815)."
+              "text": "तो is usually traced to the old pronoun sa, \"he, that\", whose other forms use the stem ta-; CDIAL lists no Marathi form (CDIAL 12815)."
             }
           ]
         },

@@ -19,7 +19,7 @@ A second kind of number word starts here, so the recalls come first, at the four
 
 You'll want to know: you already own one of these.
 दुसरा — dusrā — the second, the other.
-Chapter thirty-one gave you this word as the partner एक needed: एक चहा आणि दुसरा (dusrā) पाणी. Its gloss said the other, the second, and its etymology said it is दोन wearing an ending: it comes from dviḥsara, "twofold", built from Sanskrit dviḥ, "twice" (CDIAL 6676).
+Chapter thirty-one gave you this word as the partner एक needed: एक चहा आणि दुसरा (dusrā) पाणी. Its gloss said the other, the second, and its etymology said it comes from dviḥsara, "twofold", built on Sanskrit dviḥ, "twice" (CDIAL 6676).
 Nothing about it changes today. What changes is that it stops being one word and becomes a member of a set.
 
 Grammar Lens: two sets of number words, not one.
@@ -69,7 +69,7 @@ how many: तीन (tīn). which one in the line: तिसरा (tisrā).
 The number is still visible in both. दोन leaves दु-, तीन leaves ति-, and the same -सरा sits on the end of each.
 
 The word, taken apart.
-तिसरा (tisrā) comes from triḥsara, "triple", a form CDIAL reconstructs on Sanskrit triḥ, "thrice", as दुसरा (dusrā) comes from dviḥsara (CDIAL 6018).
+तिसरा (tisrā) comes from triḥsara, "triple", built on Sanskrit triḥ, "thrice" (CDIAL 6018).
 
 Grammar Lens: two is not yet a rule.
 It would be pleasant to say -सरा is how Marathi makes ordinals. It is not, and this book will not claim it: -सरा appears on these two words and on no others in the language. What the pair does prove is smaller and true — that the which-one set is related to the how-many set, close enough for the eye to catch it.
@@ -112,7 +112,7 @@ You'll want to know: पहिला.
 पहिली खोली — pahilī khoolī — the first room.
 
 The word, taken apart.
-पहिला (pahilā) comes from prathilla, "first", a form CDIAL reconstructs from Sanskrit prathama, "first" (CDIAL 8652).
+पहिला (pahilā) comes from prathilla, "first", which CDIAL builds on Sanskrit prathama (CDIAL 8652).
 
 Grammar Lens: why first arrives third.
 Go looking for the number inside this one:
@@ -170,7 +170,7 @@ how many: एक. which one in the line: पहिला (pahilā). what happene
 how many: दोन. which one in the line: दुसरा (dusrā). what happened: -सरा.
 how many: तीन. which one in the line: तिसरा (tisrā). what happened: -सरा.
 how many: चार. which one in the line: चौथा (chauthā). what happened: -था.
-Three different shapes across four words. Marathi did not build these; it inherited them, each one worn down separately over centuries — Molesworth records चौथा (chauthā) as coming straight from Sanskrit चतुर्थ.
+Three different shapes across four words. No rule made these; each was inherited and worn down separately over centuries — Molesworth records चौथा (chauthā) as coming straight from Sanskrit चतुर्थ.
 So do not look for a rule here. There is none, and this book will not invent one: these four are four words, and the honest instruction is to learn them as four words. What matters is that the list ENDS. There are exactly four of them, and you now have all four.
 
 Guided Practice.
@@ -186,7 +186,7 @@ Say first, second, third, fourth in Marathi, then say how many different endings
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many of these four can you predict from the number? (None — they are inherited, not built.) How many are there in all? (Four.)
+How many of these four can you predict from the number? (None — each has its own shape.) How many are there in all? (Four.)
 Sources: Molesworth, A Dictionary, Marathi and English, p. 296 (DSAL); Omniglot: Numbers in Marathi.
 
 
@@ -214,7 +214,7 @@ You'll want to know: पाचवा.
 Say पाच and then say पाचवा (pāchvā). The number did not change at all. Nothing was worn down, nothing was replaced: पाच is still sitting there whole, with -वा added behind it.
 
 The word, taken apart.
-CDIAL lists पाचवा (pāchvā) under Sanskrit pañcama, "fifth" (CDIAL 7669). The ending -वा that Marathi now adds to any number is what the old ordinal ending -ma became.
+पाचवा (pāchvā) is inherited too, from Sanskrit pañcama, "fifth" (CDIAL 7669). Its -वा is the old ending -ma; what is new is that Marathi now puts it on any number.
 
 Grammar Lens: -वा, and where the language changes its mind.
 Here is the whole chapter in one column, with the break marked:
@@ -225,7 +225,7 @@ blank. how many: तीन. which one in the line: तिसरा (tisrā).
 blank. how many: चार. which one in the line: चौथा (chauthā).
 — the seam —. how many: blank. which one in the line: blank.
 blank. how many: पाच. which one in the line: पाच + वा.
-Above the line, four words Marathi received from its ancestors, each worn down its own way, none predictable from the number.
+Above the line, four words, each worn down its own way, none predictable from the number.
 Below the line, a rule: take the number and put -वा on it. That is all there is, and it does not stop at five. Six, seven, ten, twenty, a hundred — the next chapter walks the rest of the way, and every one of them is made this way.
 You have therefore learned two different kinds of thing in one chapter. Four words, which had to be memorised. And one ending, which does not.
 
@@ -274,7 +274,7 @@ Say first to fifth, then say which of the five you could have worked out without
 
 What you've built this chapter, in one number.
 Of the five ordinals in this chapter, one was built and four were memorised. That is the worst ratio you will ever see in this set, and it is worth saying out loud, because the next chapter reverses it completely: five more ordinals, and every single one of them built.
-The break sits between चौथा (chauthā) and पाचवा (pāchvā). Everything before it is a word Marathi received. Everything after it is a word Marathi makes.
+The break sits between चौथा (chauthā) and पाचवा (pāchvā). Everything before it has to be memorised. Everything after it follows a rule.
 
 Wrap-up Recall.
 [pause 3 seconds]

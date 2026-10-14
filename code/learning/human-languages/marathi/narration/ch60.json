@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Which One in the Line",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a6d60ac3af7eef6d",
+  "sourceHash": "fnv1a64:06b7fcfab7419b97",
   "lessons": [
     {
       "id": "MR-C60-dusra-ordinal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e520c3caa8a14fdf",
+      "sourceHash": "fnv1a64:224fb0a33f2de06b",
       "notice": null,
       "blocks": [
         {
@@ -86,7 +86,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter thirty-one gave you this word as the partner एक needed: एक चहा आणि दुसरा (dusrā) पाणी. Its gloss said the other, the second, and its etymology said it is दोन wearing an ending: it comes from dviḥsara, \"twofold\", built from Sanskrit dviḥ, \"twice\" (CDIAL 6676)."
+              "text": "Chapter thirty-one gave you this word as the partner एक needed: एक चहा आणि दुसरा (dusrā) पाणी. Its gloss said the other, the second, and its etymology said it comes from dviḥsara, \"twofold\", built on Sanskrit dviḥ, \"twice\" (CDIAL 6676)."
             },
             {
               "kind": "speech",
@@ -215,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95141d82203f5e68",
+      "sourceHash": "fnv1a64:214285ccbbd9461e",
       "notice": null,
       "blocks": [
         {
@@ -314,7 +314,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "तिसरा (tisrā) comes from triḥsara, \"triple\", a form CDIAL reconstructs on Sanskrit triḥ, \"thrice\", as दुसरा (dusrā) comes from dviḥsara (CDIAL 6018)."
+              "text": "तिसरा (tisrā) comes from triḥsara, \"triple\", built on Sanskrit triḥ, \"thrice\" (CDIAL 6018)."
             }
           ]
         },
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c74cf444700091e1",
+      "sourceHash": "fnv1a64:9e043cbb99d76409",
       "notice": null,
       "blocks": [
         {
@@ -509,7 +509,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पहिला (pahilā) comes from prathilla, \"first\", a form CDIAL reconstructs from Sanskrit prathama, \"first\" (CDIAL 8652)."
+              "text": "पहिला (pahilā) comes from prathilla, \"first\", which CDIAL builds on Sanskrit prathama (CDIAL 8652)."
             }
           ]
         },
@@ -659,7 +659,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:caa67e98c32deef1",
+      "sourceHash": "fnv1a64:4f9826db68306857",
       "notice": null,
       "blocks": [
         {
@@ -757,7 +757,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three different shapes across four words. Marathi did not build these; it inherited them, each one worn down separately over centuries — Molesworth records चौथा (chauthā) as coming straight from Sanskrit चतुर्थ."
+              "text": "Three different shapes across four words. No rule made these; each was inherited and worn down separately over centuries — Molesworth records चौथा (chauthā) as coming straight from Sanskrit चतुर्थ."
             },
             {
               "kind": "speech",
@@ -841,7 +841,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many of these four can you predict from the number? (None — they are inherited, not built.) How many are there in all? (Four.)"
+              "text": "How many of these four can you predict from the number? (None — each has its own shape.) How many are there in all? (Four.)"
             },
             {
               "kind": "speech",
@@ -857,7 +857,7 @@
       "title": "पाचवा (pāchvā) — fifth, and the seam",
       "headword": "पाचवा",
       "romanization": "pāchvā",
-      "gloss": "fifth — the seam, where Marathi stops inheriting ordinals and starts building them",
+      "gloss": "fifth — the seam, where Marathi's ordinals start following a rule",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
@@ -865,7 +865,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ed90a0b4104d40fe",
+      "sourceHash": "fnv1a64:72840829e88d1af5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -957,7 +957,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "CDIAL lists पाचवा (pāchvā) under Sanskrit pañcama, \"fifth\" (CDIAL 7669). The ending -वा that Marathi now adds to any number is what the old ordinal ending -ma became."
+              "text": "पाचवा (pāchvā) is inherited too, from Sanskrit pañcama, \"fifth\" (CDIAL 7669). Its -वा is the old ending -ma; what is new is that Marathi now puts it on any number."
             }
           ]
         },
@@ -990,7 +990,7 @@
             },
             {
               "kind": "speech",
-              "text": "Above the line, four words Marathi received from its ancestors, each worn down its own way, none predictable from the number."
+              "text": "Above the line, four words, each worn down its own way, none predictable from the number."
             },
             {
               "kind": "speech",
@@ -1057,7 +1057,7 @@
                 "add -va to the number; none of them"
               ],
               "feedback": {
-                "correct": "The rule starts at five. The four before it are inherited words.",
+                "correct": "The rule starts at five. The four before it are irregular.",
                 "incorrect": "pāch takes -vā. The first four take nothing predictable."
               }
             }
@@ -1099,7 +1099,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5abc3c5264a6d3bd",
+      "sourceHash": "fnv1a64:9ca8e7e2f022fd1d",
       "notice": null,
       "blocks": [
         {
@@ -1231,7 +1231,7 @@
             },
             {
               "kind": "speech",
-              "text": "The break sits between चौथा (chauthā) and पाचवा (pāchvā). Everything before it is a word Marathi received. Everything after it is a word Marathi makes."
+              "text": "The break sits between चौथा (chauthā) and पाचवा (pāchvā). Everything before it has to be memorised. Everything after it follows a rule."
             }
           ]
         },

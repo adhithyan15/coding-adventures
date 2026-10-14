@@ -4,7 +4,7 @@
   "chapter": 169,
   "title": "Health, Brain, Lung, Liver, Kidney",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3290007e2b3f8b89",
+  "sourceHash": "fnv1a64:34e01b3f7e8b3922",
   "lessons": [
     {
       "id": "MR-C169-arogya",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f32f6eb94276d27f",
+      "sourceHash": "fnv1a64:bb4a979e5da4445b",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "फुफ्फुस (phuphphus) is Sanskrit phupphusa, \"lung\", taken over whole, a tatsama. CDIAL has no entry for it."
+              "text": "फुफ्फुस (phuphphus) is Sanskrit phupphusa, \"lung\", taken over whole, a tatsama. CDIAL calls it probably imitative and lists the inherited Marathi form as phopīs (CDIAL 9090)."
             }
           ]
         },

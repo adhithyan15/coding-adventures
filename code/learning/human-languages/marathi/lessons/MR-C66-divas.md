@@ -14,7 +14,7 @@ sounds: [matra-i, inherent-a]
 roots: [sanskrit-divasa]
 etymology_hook: "divas ← Sanskrit divasa 'day', almost unchanged (CDIAL 6333)"
 duration:
-  max_seconds: 220
+  max_seconds: 212
 requires:
   knowledge: [MR-LEX-RATRA, MR-GRAMMAR-TIME-II, MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER]
 introduces:
@@ -51,7 +51,7 @@ afternoon, the evening and the night are stretches of a दिवस.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**दिवस** (*divas*) is inherited from Sanskrit *divasa*, which meant "heaven" in the Brahmanas and "day" later; it has come down with almost no change (CDIAL 6333).
+**दिवस** is inherited, almost unchanged, from Sanskrit *divasa*, "heaven", later "day" (CDIAL 6333).
 
 ## Grammar Lens: the one that will not take -ी
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DIVAS, MR-GRAMMAR-TIME-II, MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER] -->

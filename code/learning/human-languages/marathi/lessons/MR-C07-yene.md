@@ -7,12 +7,12 @@ chapter: 14
 type: word
 headword: येणे
 romanization: yeṇe
-gloss: to come — the same Sanskrit going-root as जाणे, turned around by one small prefix
+gloss: to come — a Sanskrit verb of going, turned around by one small prefix
 concept_tag: VERB-COME
 prerequisites: [MR-C07-jane]
 sounds: [matra-e, retroflex-na]
-roots: [sanskrit-yati-go, sanskrit-a-prefix-toward]
-etymology_hook: "जाणे and येणे are one Sanskrit verb: yā- to travel, plain for going away and prefixed with ā- toward for coming here — Marathi keeps both halves of ayati"
+roots: [sanskrit-aiti, sanskrit-a-prefix-toward]
+etymology_hook: "yeṇe ← Sanskrit aiti 'comes near': ā- 'hither' + eti 'goes'; jāṇe is another verb, yāti (CDIAL 2534)"
 duration:
   max_seconds: 250
 requires:
@@ -58,21 +58,20 @@ come," promising the return rather than announcing the departure.
 have **ये** *ye* — the same stroke you have been putting on **णे** and on the
 last syllable of **आहे**. Two syllables: *ye-ṇe*.
 
-## The word, taken apart — one root, two directions
+## The word, taken apart — one prefix, two directions
 <!-- hl-knowledge: introduces=[MR-ETYMON-AA-YAA-COME]; assesses=[] -->
 
 Sanskrit had a verb of travelling, **yā-**, whose present was **याति** *yāti*
 "goes, travels." Middle Indo-Aryan turned that initial *y-* into a *j-*, giving
 Prakrit *jāi* — and that is Marathi **जाणे**.
 
-Now put a prefix on it. Sanskrit **आ-** *ā-* means "toward, hither," and
-**आयाति** *āyāti* is "travels toward here" — that is, **comes**. Worn down
-through the same centuries, *āyāti* is Marathi **येणे**.
+Sanskrit had a second verb of going, *eti*, on the root *i*. Put a prefix on
+it: **आ-** *ā-* means "toward, hither," and *ā-* with *eti* is *aiti*, "comes
+near" — that is, **comes**. CDIAL lists Marathi **येणे** under *aiti* (CDIAL 2534).
 
-So *going* and *coming* are not two verbs in this family. They are one verb of
-travelling, and the only difference is a prefix meaning "this way." English
-keeps a faint echo of the same trick in *go* against *in-coming*, but it needs
-two separate roots to do what Sanskrit did with one.
+So *coming* is *going* with a prefix meaning "this way." **जाणे** and **येणे**
+grew from two different verbs of going, but **येणे** still carries the prefix
+that turned one direction into the other.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-YENE, MR-ETYMON-AA-YAA-COME] -->
@@ -80,12 +79,12 @@ two separate roots to do what Sanskrit did with one.
 [PAUSE 1s]
 - [YOU SAY: "yeṇe" — to come — then the stem, "ye-"]
 - [YOU SAY: "I come" in your own gender — "mī yeto" or "mī yete"]
-- [YOU SAY: the derivation — "yāti … āyāti … yeṇe"]
+- [YOU SAY: the derivation — "ā- + eti … aiti … yeṇe"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-JANE, MR-LEX-YENE, MR-ETYMON-AA-YAA-COME] -->
 
-[PAUSE 3s] What is the stem of *yeṇe*? (**ये-**, *ye-*.) Which Sanskrit root do
-*jāṇe* and *yeṇe* share? (**yā-**, to travel.) What single piece turns going into
+[PAUSE 3s] What is the stem of *yeṇe*? (**ये-**, *ye-*.) Which Sanskrit verb does CDIAL
+list *yeṇe* under? (*aiti*, "comes near".) What single piece turns going into
 coming? (The prefix **आ-** *ā-*, "toward here.") Next: an infinitive that is also
 a noun, and the gender Hindi does not have.

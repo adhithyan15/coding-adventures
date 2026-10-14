@@ -15,7 +15,7 @@ concept_tag: MR-VACH161-BHADE
 prerequisites: [MR-C161-velapatrak, MR-C161-sucana]
 sounds: []
 roots: [indo-aryan-bharta]
-etymology_hook: "bhāḍe ← MIA bhāṭa 'wages', from *bhārta 'pertaining to servants' (CDIAL 9468)"
+etymology_hook: "bhāḍe ← MIA bhāṭa 'wages', more probably from *bhārta 'pertaining to servants' (CDIAL 9468)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MR-C161-sucana]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**भाडे** (*bhāḍe*) comes, through Middle Indo-Aryan *bhāṭa*, "wages", from a reconstructed *\*bhārta*, "pertaining to servants" (CDIAL 9468).
+**भाडे** (*bhāḍe*) comes through Middle Indo-Aryan *bhāṭa*, "wages", which CDIAL traces, as more probable than a link with *bhṛta*, "hired", to a reconstructed *\*bhārta*, "pertaining to servants" (CDIAL 9468).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

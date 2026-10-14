@@ -47,7 +47,7 @@ reviews_of: [MR-C162-petavne]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**विझवणे** (*vijhavṇe*) comes from a reconstructed *\*vijjhāpayati*, "extinguishes", the "make" form of *\*vijjhāyati*, "is extinguished", under which CDIAL lists Marathi *vijhṇẽ* (CDIAL 11703).
+**विझवणे** (*vijhavṇe*) comes from a reconstructed *\*vijjhāpayati*, "extinguishes", the "make" form of *\*vijjhāyati*, "is extinguished", under which CDIAL lists Marathi *vijhṇẽ* (CDIAL 11703). Bloch derived *vijhṇẽ* from *vi-kṣi* instead.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 67,
-  "sourceHash": "fnv1a64:67731b67d9a13d04",
+  "sourceHash": "fnv1a64:c6127f56c39e7ed1",
   "lessonIds": [
     "MR-C67-vajle",
     "MR-C67-vajta",
@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "marathi/narration/ch67.txt",
   "json": "marathi/narration/ch67.json",
-  "textHash": "fnv1a64:f801a4bbee756ff9",
-  "jsonHash": "fnv1a64:53e2db99dde55445",
+  "textHash": "fnv1a64:004082ee3e9412ad",
+  "jsonHash": "fnv1a64:91b34388b9f679d2",
   "findings": []
 }

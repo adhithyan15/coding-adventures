@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Three Greetings, One Word",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b476efd9528a9bd0",
+  "sourceHash": "fnv1a64:3f5cfdca527d215e",
   "lessons": [
     {
       "id": "MR-C68-shubh-sakal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6af344d0aacd2013",
+      "sourceHash": "fnv1a64:188f7f7712320caa",
       "notice": null,
       "blocks": [
         {
@@ -69,7 +69,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "शुभ is Sanskrit śubha, \"bright, auspicious\", a tatsama (CDIAL 12532). The origin of सकाळ is not settled: CDIAL has no entry for it."
+              "text": "शुभ is Sanskrit śubha, \"auspicious\" (CDIAL 12532); the origin of सकाळ is not settled."
             }
           ]
         },
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:7a37f4ed06ff8e39",
+      "sourceHash": "fnv1a64:1c89de00f6cb2bb8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -260,7 +260,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "शुभ is Sanskrit śubha, \"bright, auspicious\", a tatsama (CDIAL 12532). दुपार is usually explained as \"two watches\", with pahār, \"a watch of three hours\" (CDIAL 8900)."
+              "text": "शुभ is Sanskrit śubha, \"auspicious\" (CDIAL 12532); दुपार is usually explained as \"two watches\" (CDIAL 8900)."
             }
           ]
         },
@@ -375,7 +375,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f427ee6e3f974de",
+      "sourceHash": "fnv1a64:1e49f42f4f899657",
       "notice": null,
       "blocks": [
         {
@@ -431,7 +431,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "शुभ is Sanskrit śubha, \"auspicious\", a tatsama (CDIAL 12532). संध्याकाळ is sandhyā, \"twilight\", and kāḷ, \"time\"."
+              "text": "शुभ is Sanskrit śubha, \"auspicious\" (CDIAL 12532); संध्याकाळ is sandhyā, \"twilight\", and kāḷ, \"time\"."
             }
           ]
         },

@@ -16,7 +16,7 @@ The letters in this word.
 (Skim if you read Devanagari.) ह (ha) + the o-mātrā ो becomes हो (ho).
 
 The word, taken apart.
-हो (ho, "yes") is Marathi's plain affirmative — distinct from Hindi's hāṁ. Its origin is not settled: CDIAL lists a Marathi ho, with no gloss, under Sanskrit ho, a cry of summons or surprise (CDIAL 14172). The polite, fuller "yes" is ho, baraṃ āhe ("yes, it's fine").
+हो (ho, "yes") is Marathi's plain affirmative — distinct from Hindi's hāṁ. Its origin is not settled; CDIAL lists an unglossed Marathi ho under Sanskrit ho, a cry of summons (CDIAL 14172). The polite, fuller "yes" is ho, baraṃ āhe ("yes, it's fine").
 
 Guided Practice.
 [pause 1 second]

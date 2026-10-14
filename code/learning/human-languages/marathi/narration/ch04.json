@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Courtesy, Responses, and Leave-Taking",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:12aef28797bc596e",
+  "sourceHash": "fnv1a64:1320aea3046178e6",
   "lessons": [
     {
       "id": "MR-C01-ho",
@@ -20,7 +20,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ca58435aeb5c5c6e",
+      "sourceHash": "fnv1a64:78033cfdf5bcf529",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -68,7 +68,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "हो (ho, \"yes\") is Marathi's plain affirmative — distinct from Hindi's hāṁ. Its origin is not settled: CDIAL lists a Marathi ho, with no gloss, under Sanskrit ho, a cry of summons or surprise (CDIAL 14172). The polite, fuller \"yes\" is ho, baraṃ āhe (\"yes, it's fine\")."
+              "text": "हो (ho, \"yes\") is Marathi's plain affirmative — distinct from Hindi's hāṁ. Its origin is not settled; CDIAL lists an unglossed Marathi ho under Sanskrit ho, a cry of summons (CDIAL 14172). The polite, fuller \"yes\" is ho, baraṃ āhe (\"yes, it's fine\")."
             }
           ]
         },

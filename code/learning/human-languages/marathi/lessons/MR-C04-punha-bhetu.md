@@ -11,7 +11,7 @@ gloss: see you again (punhā bheṭū)
 concept_tag: FAREWELL-LATER
 prerequisites: [MR-C04-punha, MR-C04-bhetu, MR-C01-yeto]
 sounds: []
-roots: [punar, bhet-meet, indo-aryan-bhit]
+roots: [punar, indo-aryan-bhit]
 etymology_hook: "punhā: usually traced to Sanskrit punar 'again'; bheṭū ← *bhēṭ- 'meet' (CDIAL 9490)"
 reviews_of: [MR-C04-punha, MR-C04-bhetu, MR-C01-yeto]
 duration:

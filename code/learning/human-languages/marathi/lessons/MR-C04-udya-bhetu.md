@@ -11,7 +11,7 @@ gloss: see you tomorrow (udyā bheṭū)
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [MR-C04-punha-bhetu]
 sounds: [halant-conjunct, matra-aa]
-roots: [bhet-meet, indo-aryan-bhit]
+roots: [indo-aryan-bhit]
 etymology_hook: "udyā: origin not settled, no CDIAL entry; bheṭū ← *bhēṭ- 'meet, throng' (CDIAL 9490)"
 reviews_of: [MR-C04-bhetu]
 duration:
@@ -52,8 +52,7 @@ variety: standard
 **उद्या** (*udyā*, "tomorrow") + **भेटू** (*bheṭū*, we'll meet) → **उद्या भेटू** —
 "we'll meet tomorrow."
 
-Unlike
-Hindi's *kal* (which means *both* tomorrow and yesterday), Marathi keeps
+Unlike Hindi's *kal* (which means *both* tomorrow and yesterday), Marathi keeps
 **tomorrow** and **yesterday** as two distinct words — *udyā* (tomorrow) vs.
 **काल** (*kāl*, yesterday). No ambiguity about which way time is pointing.
 

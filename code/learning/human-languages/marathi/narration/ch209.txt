@@ -109,7 +109,7 @@ You'll want to know: सैन्य.
 सैन्य — sainya — "an army".
 
 The word, taken apart.
-सैन्य (sainya) is Sanskrit sainya, "army", a tatsama built on senā, "army". CDIAL has no entry for it.
+सैन्य (sainya) is Sanskrit sainya, "army", a tatsama built on senā, "army" (CDIAL 13602).
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: सैनिक.
 सैनिक — sainik — "a soldier".
 
 The word, taken apart.
-सैनिक (sainik) is Sanskrit sainika, "belonging to an army, soldier", a tatsama built on senā, "army". CDIAL has no entry for it.
+सैनिक (sainik) is Sanskrit sainika, "belonging to an army, soldier", a tatsama built on senā, "army". CDIAL notes it, with a "Cf.", beside sainya, "army" (CDIAL 13602).
 
 What you've built.
 One more word for this chapter.

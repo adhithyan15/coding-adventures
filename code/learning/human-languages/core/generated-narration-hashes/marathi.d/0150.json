@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 150,
-  "sourceHash": "fnv1a64:e40579579a3d5b31",
+  "sourceHash": "fnv1a64:bf4dd4baf5bfb4f3",
   "lessonIds": [
     "MR-C150-sila",
     "MR-C150-kacca",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch150.txt",
   "json": "marathi/narration/ch150.json",
-  "textHash": "fnv1a64:037815b05f82b670",
-  "jsonHash": "fnv1a64:d86d1411a1743344",
+  "textHash": "fnv1a64:aa0baa299ecdd05d",
+  "jsonHash": "fnv1a64:2162a018c562fab8",
   "findings": []
 }

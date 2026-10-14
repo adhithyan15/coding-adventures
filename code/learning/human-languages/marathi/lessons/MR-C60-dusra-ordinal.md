@@ -14,7 +14,7 @@ sounds: []
 roots: [indo-aryan-dvihsara]
 etymology_hook: "dusrā ← *dviḥsara 'twofold', built on Sanskrit dviḥ 'twice' (CDIAL 6676)"
 duration:
-  max_seconds: 295
+  max_seconds: 291
 requires:
   knowledge: [MR-LEX-DUSRA, MR-JOIN-EK-DUSRA, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-RUPAYA, MR-LEX-VIS, MR-LEX-SAHA, MR-QUESTION-KITI]
 introduces:
@@ -51,7 +51,7 @@ at the four growing distances this book measures.
 > **दुसरा** — *dusrā* — **the second, the other**
 
 Chapter thirty-one gave you this word as the partner **एक** needed: **एक चहा
-आणि दुसरा पाणी**. Its gloss said *the other, **the second***, and its etymology said it is **दोन** wearing an ending: it comes from *\*dviḥsara*, "twofold", built from Sanskrit *dviḥ*, "twice" (CDIAL 6676).
+आणि दुसरा पाणी**. Its gloss said *the other, **the second***, and its etymology said it comes from *\*dviḥsara*, "twofold", built on Sanskrit *dviḥ*, "twice" (CDIAL 6676).
 
 Nothing about it changes today. What changes is that it stops being one word and
 becomes a member of a set.

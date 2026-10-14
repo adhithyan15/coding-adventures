@@ -4,7 +4,7 @@
   "chapter": 268,
   "title": "Tool, Tabla, Flute, Sitar, Ball",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1d2365c0162f277c",
+  "sourceHash": "fnv1a64:40320550a9fcd35d",
   "lessons": [
     {
       "id": "MR-C268-avjar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a9dfd8f51a72946",
+      "sourceHash": "fnv1a64:15b1d63f89cab7a4",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "अवजार (avjār) is a loan, usually traced through Persian to Arabic awzār, \"tools, implements\"."
+              "text": "अवजार (avjār) is a loan, usually traced through Persian to Arabic awzār, the plural of wizr, \"a burden\", which Lane gives also as \"weapons, the gear of war\" (root w-z-r). Persian and Hindustani use it for tools."
             }
           ]
         },

@@ -15,7 +15,7 @@ concept_tag: MR-VASTU271-KACERI
 prerequisites: [MR-C270-dhotar, MR-C270-kurta]
 sounds: []
 roots: [hindustani-kacahri]
-etymology_hook: "kacerī ← Hindustani kacahrī 'office, court'"
+etymology_hook: "kacerī ← Hindustani kacahrī 'office, court', which CDIAL traces to *kṛtyagharikā 'court-house' (CDIAL 3429)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MR-C270-kurta]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**कचेरी** (*kacerī*) is a loan from Hindustani *kacahrī*, "office, court".
+**कचेरी** (*kacerī*) is a loan from Hindustani *kacahrī*, "office, court", which CDIAL traces to a reconstructed *\*kṛtyagharikā*, "court-house" (CDIAL 3429).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 222,
   "title": "Career, Magazine, Dictionary, University, Mistake",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:d9d2b70325a3a199",
+  "sourceHash": "fnv1a64:3111548bfeb73156",
   "lessons": [
     {
       "id": "MR-C222-karkirda",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23c62208781a3589",
+      "sourceHash": "fnv1a64:3bf5b2894a83c5ee",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of चूक (cūk) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+              "text": "चूक (cūk) goes with चुकणे, \"to blunder\", which CDIAL lists under a reconstructed cukk-, \"fall short of\", beside Prakrit cukka, \"mistaken\" (CDIAL 4848). CDIAL has no entry for the noun itself."
             }
           ]
         },

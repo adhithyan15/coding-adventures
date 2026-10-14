@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 9,
-  "sourceHash": "fnv1a64:3d6893e7fa29bd5b",
+  "sourceHash": "fnv1a64:b9eabe439b891ce4",
   "lessonIds": [
     "MR-C02-naav",
     "MR-C02-majhe",
@@ -18,7 +18,7 @@
   "drivablePrefix": 9,
   "text": "marathi/narration/ch09.txt",
   "json": "marathi/narration/ch09.json",
-  "textHash": "fnv1a64:c2c9effd81c2e13d",
-  "jsonHash": "fnv1a64:f04233186befb62e",
+  "textHash": "fnv1a64:43fbe4187bee5141",
+  "jsonHash": "fnv1a64:b2d191ee754372b9",
   "findings": []
 }

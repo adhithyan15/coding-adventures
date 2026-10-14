@@ -47,7 +47,7 @@ reviews_of: [MR-C136-svetar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**पोळी** (*poḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pauli*, "a cake of scorched grain and ghee" (CDIAL 8423). CDIAL glosses the Marathi word "wheaten cake", and suggests, with a "perhaps", a link with Prakrit *paülaï*, "cooks".
+**पोळी** (*poḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pauli*, "a cake of scorched grain and ghee" (CDIAL 8423). CDIAL glosses the Marathi word "wheaten cake", and suggests, with a "perhaps", a link with Prakrit *paülaï*, "cooks", or with *pūpalā*, "a cake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

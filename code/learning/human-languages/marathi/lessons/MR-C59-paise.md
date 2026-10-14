@@ -60,7 +60,7 @@ question the speaking paper's transactional part is built on, and you have owned
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**पैसे** (*paise*) is the plural of *paisā*, which CDIAL traces to a reconstructed *\*padāṁśa*, "quarter part", built with *aṁśa*, "part". CDIAL marks the Marathi word as probably taken from Hindi *paisā*, "quarter anna" (CDIAL 7761).
+**पैसे** (*paise*) is the plural of *paisā*, which CDIAL traces to a reconstructed *\*padāṁśa*, "quarter part", built with *aṁśa*, "part". CDIAL marks the Marathi word as taken from Hindi *paisā*, "quarter anna" (CDIAL 7761).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PAISE, MR-SCRIPT-AI-MATRA-01, MR-LEX-ATHRA, MR-LEX-VIS, MR-LEX-SAAT, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-QUESTION-KITI, MR-GRAMMAR-POSSESSION, MR-POSTP-KADE] -->

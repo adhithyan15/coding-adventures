@@ -14,7 +14,7 @@ sounds: []
 roots: [asti]
 etymology_hook: "moṭhaṁ: origin of moṭhā not settled (CDIAL 10187 has moṭā only); āhe listed under asti (CDIAL 977)"
 duration:
-  max_seconds: 221
+  max_seconds: 216
 requires:
   knowledge: [MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-MOTHA, MR-LEX-UJVA, MR-LEX-GHAR, MR-POSTP-KADE, MR-LEX-AAHE-COPULA]
 introduces:
@@ -64,7 +64,7 @@ the end before आहे** makes the description the claim. The ending agrees in
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **मोठा** is not settled: CDIAL has no entry for it. **आहे** CDIAL lists under *asti*, "is", though Bloch gives it another origin (CDIAL 977).
+The origin of **मोठा** is not settled. **आहे** CDIAL lists under *asti*, "is", though Bloch disagrees (CDIAL 977).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-ADJ-PRENOMINAL, MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-MOTHA, MR-LEX-GHAR, MR-POSTP-KADE] -->

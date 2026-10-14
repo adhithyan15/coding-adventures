@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 182,
-  "sourceHash": "fnv1a64:6b32c4018f1a02ce",
+  "sourceHash": "fnv1a64:fb3499ca2a3c7c7a",
   "lessonIds": [
     "MR-C182-savlat",
     "MR-C182-nane",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch182.txt",
   "json": "marathi/narration/ch182.json",
-  "textHash": "fnv1a64:c971b64d998bfa13",
-  "jsonHash": "fnv1a64:c68416814b829597",
+  "textHash": "fnv1a64:d20f6fcff9a5a10a",
+  "jsonHash": "fnv1a64:1ff2b7fa3d3cad4d",
   "findings": []
 }

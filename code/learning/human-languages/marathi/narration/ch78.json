@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "To run, To play, To sell, To open, To cook",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5102c252b3c5bc9c",
+  "sourceHash": "fnv1a64:7dd75e7bb2e6a94f",
   "lessons": [
     {
       "id": "MR-C78-dhavne",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0a74f4b0515cfb7",
+      "sourceHash": "fnv1a64:aea36c7926843d8f",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "शिजवणे (shijavṇe) is the \"make\" form of Marathi śijṇẽ, \"to be cooked by boiling\". CDIAL lists that verb under Sanskrit sidhyati, \"succeeds, is well cooked\" (CDIAL 13408), and also, as another possibility, under a reconstructed śrīyate, \"is cooked\" (CDIAL 12712)."
+              "text": "शिजवणे (shijavṇe) is the \"make\" form of Marathi śijṇẽ, \"to be cooked by boiling\". CDIAL lists that verb under Sanskrit sidhyati, \"succeeds, is well cooked\" (CDIAL 13408), and also, as another possibility, under a reconstructed śrīyate, \"is cooked\", where it adds \"or possibly from svidyate\" (CDIAL 12712)."
             }
           ]
         },

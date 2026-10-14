@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Right and Left",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d192989c569d28ef",
+  "sourceHash": "fnv1a64:840350200f1328db",
   "lessons": [
     {
       "id": "MR-C44-ujva",
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc940fa719766f1f",
+      "sourceHash": "fnv1a64:86b544cbbac7302d",
       "notice": null,
       "blocks": [
         {
@@ -225,7 +225,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "डावा (ḍāvā) goes back to ḍāva-, \"lefthand, crosswise\", a form CDIAL reconstructs and calls non-Aryan, from Dravidian according to A. Master (CDIAL 5539). DEDR compares the Dravidian words for \"left\", such as Kannada eḍa and Telugu ḍā (DEDR 449)."
+              "text": "डावा (ḍāvā) goes back to ḍāva-, \"lefthand\", which CDIAL calls non-Aryan, from Dravidian after A. Master (CDIAL 5539); DEDR compares Kannada eḍa, \"left\" (DEDR 449)."
             }
           ]
         },

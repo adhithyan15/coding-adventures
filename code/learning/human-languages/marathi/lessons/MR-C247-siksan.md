@@ -47,7 +47,7 @@ reviews_of: [MR-C247-grhapath]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**शिक्षण** (*śikṣaṇ*) is Sanskrit *śikṣaṇa*, "teaching, instruction", a tatsama built on *śikṣ*, "to learn". CDIAL has no entry for it.
+**शिक्षण** (*śikṣaṇ*) is Sanskrit *śikṣaṇa*, "teaching, instruction", a tatsama built on *śikṣ*, "to learn" (CDIAL 12429).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

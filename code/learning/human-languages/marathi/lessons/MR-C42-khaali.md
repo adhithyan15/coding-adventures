@@ -14,7 +14,7 @@ sounds: [matra-aa, matra-ii]
 roots: [sanskrit-khalla]
 etymology_hook: "khālī: CDIAL lists Marathi khāl 'below' under Sanskrit khalla 'trench, creek' (CDIAL 3849)"
 duration:
-  max_seconds: 209
+  max_seconds: 206
 requires:
   knowledge: [MR-POSTP-VAR, MR-POSTP-MADHYE, MR-LEX-GHAR, MR-A1-MESSAGE-LINE-SEE-TOMORROW]
 introduces:
@@ -67,7 +67,7 @@ long form, and a job for each.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**खाली** (*khālī*) is inherited. CDIAL lists Marathi *khāl*, "below", under Sanskrit *khalla*, "trench, creek" (CDIAL 3849).
+CDIAL lists Marathi *khāl*, "below", under Sanskrit *khalla*, "trench, creek" (CDIAL 3849).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-POSTP-KHAALI, MR-POSTP-VAR, MR-POSTP-MADHYE, MR-A1-MESSAGE-LINE-SEE-TOMORROW] -->

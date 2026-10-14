@@ -15,7 +15,7 @@ concept_tag: MR-VERB-VACAVNE
 prerequisites: [MR-C158-bhandne, MR-C158-milavne]
 sounds: []
 roots: [sanskrit-vancati]
-etymology_hook: "vācavṇe: probably with Marathi bacāviṇe 'to save', listed under Sanskrit vañcati 'escapes from' (CDIAL 11208)"
+etymology_hook: "vācavṇe: the 'make' form of vācṇe 'to escape, survive', listed under Sanskrit vañcati (CDIAL 11208)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MR-C158-milavne]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**वाचवणे** (*vācavṇe*) probably belongs with Marathi *bacāviṇẽ*, "to save", which CDIAL lists under Sanskrit *vañcati*, a verb whose forms meant "moves, escapes from" (CDIAL 11208). CDIAL does not list the form with *v-*.
+**वाचवणे** (*vācavṇe*) is the "make" form of *vācṇẽ*, "to escape, survive", which CDIAL lists as *vāṁcṇẽ* under Sanskrit *vañcati*, a verb whose forms meant "moves, escapes from" (CDIAL 11208). The *b-* form, *bacāviṇẽ*, "to save", it marks as taken from Hindi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

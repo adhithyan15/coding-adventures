@@ -4,7 +4,7 @@
   "chapter": 127,
   "title": "Winter, Monsoon, Straight, Turn, Corner",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1d7f0559b4bb71a8",
+  "sourceHash": "fnv1a64:29d7a6b1ce5dc9c3",
   "lessons": [
     {
       "id": "MR-C127-hivala",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9555ce755d1a41c5",
+      "sourceHash": "fnv1a64:3f2eb6f7c982b415",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of कोपरा (koprā) is not settled. CDIAL has no entry for it in this sense; it may belong with Marathi kopar, \"elbow\", from Sanskrit kūrpara (CDIAL 3413), but no source says so."
+              "text": "कोपरा (koprā), \"corner\", is inherited. CDIAL lists it beside Marathi kopar, \"elbow\", under Sanskrit kūrpara, \"elbow\" (CDIAL 3413)."
             }
           ]
         },

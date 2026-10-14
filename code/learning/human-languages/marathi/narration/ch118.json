@@ -4,7 +4,7 @@
   "chapter": 118,
   "title": "Forty, Fifty, Sixty, Seventy, Ninety",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:308617108b10b7ef",
+  "sourceHash": "fnv1a64:0ff0ff845e8fefc3",
   "lessons": [
     {
       "id": "MR-C118-chalis",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52ff926ab436601a",
+      "sourceHash": "fnv1a64:29c75332a31f9042",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "चाळीस (chāḷīs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from catvāriṁśat, \"forty\" (CDIAL 4656)."
+              "text": "चाळीस (chāḷīs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from catvāriṁśat, \"forty\" (CDIAL 4656). CDIAL notes that its ch-, where Marathi would say ts-, was taken from Hindi."
             }
           ]
         },

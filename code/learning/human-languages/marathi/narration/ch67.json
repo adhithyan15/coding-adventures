@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "The Clock",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:67731b67d9a13d04",
+  "sourceHash": "fnv1a64:c6127f56c39e7ed1",
   "lessons": [
     {
       "id": "MR-C67-vajle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40d0e65dd81ef2fd",
+      "sourceHash": "fnv1a64:be638d2eff72f1e2",
       "notice": null,
       "blocks": [
         {
@@ -69,7 +69,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "वाजले is a form of वाजणे, \"to sound\", from Sanskrit vādyate, \"is made to sound\" (CDIAL 11513)."
+              "text": "वाजले comes from Sanskrit vādyate, \"is made to sound\" (CDIAL 11513)."
             }
           ]
         },
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df7e4358fa36c9cb",
+      "sourceHash": "fnv1a64:f9f916301b068793",
       "notice": null,
       "blocks": [
         {
@@ -267,7 +267,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "वाजता (vājtā) is a form of वाजणे, \"to sound\", which comes from Sanskrit vādyate, \"is made to sound\", the passive of vādayati, \"makes sound\" (CDIAL 11513)."
+              "text": "वाजता (vājtā) comes from Sanskrit vādyate, \"is made to sound\" (CDIAL 11513)."
             }
           ]
         },

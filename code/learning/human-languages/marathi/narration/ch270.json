@@ -4,7 +4,7 @@
   "chapter": 270,
   "title": "Almonds, Raisins, Jaggery, Dhoti, Kurta",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:170be18c02c5949b",
+  "sourceHash": "fnv1a64:8b7b2b58badf772d",
   "lessons": [
     {
       "id": "MR-C270-badam",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:199af7d7ee5ec199",
+      "sourceHash": "fnv1a64:9dbd875850d96443",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of मनुका (manukā) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+              "text": "The origin of मनुका (manukā) is not settled. Neither CDIAL nor DEDR has an entry for it. It may be the same word as Hindi munakkā, \"large raisin\", from Arabic munaqqā, \"cleaned\", but no source here confirms it."
             }
           ]
         },

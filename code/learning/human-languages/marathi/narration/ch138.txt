@@ -13,7 +13,7 @@ You'll want to know: मटार.
 मटार — maṭār — "peas".
 
 The word, taken apart.
-मटार (maṭār) matches Hindi maṭar, "pea", which CDIAL traces to a reconstructed maṭṭara, "pea". CDIAL lists Marathi's own form as maṭh, "pea" (CDIAL 9724).
+मटार (maṭār) matches Hindi maṭar, "pea", which CDIAL traces to a reconstructed maṭṭara, "pea". CDIAL lists Marathi's own form, maṭh, "pea", under its variant maṭṭha (CDIAL 9724).
 
 What you've built.
 One more word for this chapter.

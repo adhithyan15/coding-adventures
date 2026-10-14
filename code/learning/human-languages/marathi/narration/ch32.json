@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Saying It Is Not So",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:c3407cdcda28d8bf",
+  "sourceHash": "fnv1a64:392cd57cc84ae303",
   "lessons": [
     {
       "id": "MR-C32-nahi-verb",
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78b54ebb0afd258c",
+      "sourceHash": "fnv1a64:e0994250c6be711c",
       "notice": null,
       "blocks": [
         {
@@ -227,7 +227,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नको (nako) opens with the old negative na, \"not\". CDIAL has no entry for the whole word, so the history of its second syllable is left open."
+              "text": "CDIAL has no entry for नको (nako) as a whole, so the history of its second syllable is left open."
             }
           ]
         },

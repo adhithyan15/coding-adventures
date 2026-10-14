@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 45,
-  "sourceHash": "fnv1a64:a7cc1609d59cf37e",
+  "sourceHash": "fnv1a64:49f87c50828e8e20",
   "lessonIds": [
     "MR-C45-barobar",
     "MR-C45-pron-oblique",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch45.txt",
   "json": "marathi/narration/ch45.json",
-  "textHash": "fnv1a64:59880f4700e29f67",
-  "jsonHash": "fnv1a64:2c777e5f4fc95587",
+  "textHash": "fnv1a64:63b0ea392cd58726",
+  "jsonHash": "fnv1a64:5c3fc24c7e73318c",
   "findings": []
 }

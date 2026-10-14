@@ -14,7 +14,7 @@ sounds: []
 roots: [sanskrit-shubha, sanskrit-sandhya]
 etymology_hook: "śubh ← Sanskrit śubha 'auspicious' (CDIAL 12532); sandhyākāḷ: sandhyā 'twilight' + kāḷ 'time'"
 duration:
-  max_seconds: 294
+  max_seconds: 293
 requires:
   knowledge: [MR-PHRASE-SHUBH-DUPAR, MR-LEX-SHUBH, MR-LEX-SANDHYAKAL, MR-LEX-NAMASKAR-01]
 introduces:
@@ -59,7 +59,7 @@ behind, nothing changed in either.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**शुभ** is Sanskrit *śubha*, "auspicious", a tatsama (CDIAL 12532). **संध्याकाळ** is *sandhyā*, "twilight", and *kāḷ*, "time".
+**शुभ** is Sanskrit *śubha*, "auspicious" (CDIAL 12532); **संध्याकाळ** is *sandhyā*, "twilight", and *kāḷ*, "time".
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[MR-PHRASE-SHUBH-SANDHYAKAL, MR-LEX-NAMASKAR-01] -->

@@ -14,7 +14,7 @@ sounds: []
 roots: [sanskrit-shubha, sanskrit-prahara]
 etymology_hook: "śubh ← Sanskrit śubha 'auspicious', a tatsama (CDIAL 12532); dupār: usually 'two watches'"
 duration:
-  max_seconds: 240
+  max_seconds: 234
 requires:
   knowledge: [MR-LEX-SHUBH, MR-PHRASE-SHUBH-SAKAL, MR-LEX-DUPAR]
 introduces:
@@ -58,7 +58,7 @@ you have had since the parts of the day.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**शुभ** is Sanskrit *śubha*, "bright, auspicious", a tatsama (CDIAL 12532). **दुपार** is usually explained as "two watches", with *pahār*, "a watch of three hours" (CDIAL 8900).
+**शुभ** is Sanskrit *śubha*, "auspicious" (CDIAL 12532); **दुपार** is usually explained as "two watches" (CDIAL 8900).
 
 ## Grammar Lens: a pattern you can finish alone
 <!-- hl-knowledge: introduces=[]; assesses=[MR-PHRASE-SHUBH-DUPAR, MR-PHRASE-SHUBH-SAKAL, MR-LEX-SHUBH] -->

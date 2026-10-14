@@ -14,7 +14,7 @@ sounds: []
 roots: [sanskrit-prathama]
 etymology_hook: "pahilā ← *prathilla 'first', a form CDIAL builds on Sanskrit prathama 'first' (CDIAL 8652)"
 duration:
-  max_seconds: 282
+  max_seconds: 280
 requires:
   knowledge: [MR-LEX-TISRA, MR-GRAMMAR-ORDINAL-SET, MR-LEX-DUSRA, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-LEX-PAISE, MR-LEX-AKRA, MR-LEX-KHOLI]
 introduces:
@@ -54,7 +54,7 @@ reviews_of: [MR-C60-tisra, MR-C59-paise, MR-C56-akra, MR-C41-kholi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**पहिला** (*pahilā*) comes from *\*prathilla*, "first", a form CDIAL reconstructs from Sanskrit *prathama*, "first" (CDIAL 8652).
+**पहिला** comes from *\*prathilla*, "first", which CDIAL builds on Sanskrit *prathama* (CDIAL 8652).
 
 ## Grammar Lens: why *first* arrives third
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PAHILA, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-GRAMMAR-ORDINAL-SET] -->

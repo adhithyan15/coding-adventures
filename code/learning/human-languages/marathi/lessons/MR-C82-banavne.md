@@ -47,7 +47,7 @@ reviews_of: [MR-C82-shikavne]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**बनवणे** (*banavṇe*) is the "make" form of Marathi *banṇẽ*, "to suit, be made". CDIAL lists that verb under Sanskrit *vanati*, "desires, makes ready", and marks it as taken from Hindi (CDIAL 11260).
+**बनवणे** (*banavṇe*) is the "make" form of Marathi *banṇẽ*, "to suit, be made". CDIAL lists that verb under Sanskrit *vanati*, "desires, makes ready", and marks it as taken from Hindi; Bloch's source, *varṇayati*, it says does not explain the word's sounds (CDIAL 11260).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

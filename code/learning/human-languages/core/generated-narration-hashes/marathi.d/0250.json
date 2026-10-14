@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 250,
-  "sourceHash": "fnv1a64:3592db6c92157260",
+  "sourceHash": "fnv1a64:5de2f427e916f90a",
   "lessonIds": [
     "MR-C250-itihas",
     "MR-C250-bhugol",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch250.txt",
   "json": "marathi/narration/ch250.json",
-  "textHash": "fnv1a64:47004643c672aed6",
-  "jsonHash": "fnv1a64:34d4dd623b80614b",
+  "textHash": "fnv1a64:c4b443f9fc95b2c4",
+  "jsonHash": "fnv1a64:7462a44021df6847",
   "findings": []
 }

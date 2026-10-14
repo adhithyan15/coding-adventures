@@ -4,7 +4,7 @@
   "chapter": 273,
   "title": "Memory, Temperament, Behaviour, Respect, Pity",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:05f4fc174fa04faf",
+  "sourceHash": "fnv1a64:8e2c9c7348bb819b",
   "lessons": [
     {
       "id": "MR-C273-athvan",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2cbf12dcb5c3877",
+      "sourceHash": "fnv1a64:3676a4d1a573363b",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दया (dayā) is Sanskrit dayā, \"pity, compassion\", taken over whole, a tatsama. CDIAL has no entry for it."
+              "text": "दया (dayā) is Sanskrit dayā, \"pity, compassion\", taken over whole, a tatsama (CDIAL 6185)."
             }
           ]
         },

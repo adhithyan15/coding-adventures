@@ -47,7 +47,7 @@ reviews_of: [MR-C209-santata]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**सैन्य** (*sainya*) is Sanskrit *sainya*, "army", a tatsama built on *senā*, "army". CDIAL has no entry for it.
+**सैन्य** (*sainya*) is Sanskrit *sainya*, "army", a tatsama built on *senā*, "army" (CDIAL 13602).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [MR-C273-adar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**दया** (*dayā*) is Sanskrit *dayā*, "pity, compassion", taken over whole, a tatsama. CDIAL has no entry for it.
+**दया** (*dayā*) is Sanskrit *dayā*, "pity, compassion", taken over whole, a tatsama (CDIAL 6185).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

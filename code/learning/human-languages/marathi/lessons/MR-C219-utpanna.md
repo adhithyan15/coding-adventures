@@ -47,7 +47,7 @@ reviews_of: [MR-C219-dar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**उत्पन्न** (*utpanna*) is Sanskrit *utpanna*, "arisen, produced", a tatsama: *ud*, "up", and *pad*, "to go". CDIAL has no entry for it.
+**उत्पन्न** (*utpanna*) is Sanskrit *utpanna*, "arisen, produced", a tatsama: *ud*, "up", and *pad*, "to go"; CDIAL lists it under *utpadyate*, "arises" (CDIAL 1814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

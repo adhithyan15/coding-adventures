@@ -4,7 +4,7 @@
   "chapter": 162,
   "title": "To light, To put out, To jump, To call over, To thank",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7d01121bb43d8427",
+  "sourceHash": "fnv1a64:184bc106d3e30810",
   "lessons": [
     {
       "id": "MR-C162-petavne",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c53b5a5825b037a5",
+      "sourceHash": "fnv1a64:9359f72342fb8789",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "विझवणे (vijhavṇe) comes from a reconstructed vijjhāpayati, \"extinguishes\", the \"make\" form of vijjhāyati, \"is extinguished\", under which CDIAL lists Marathi vijhṇẽ (CDIAL 11703)."
+              "text": "विझवणे (vijhavṇe) comes from a reconstructed vijjhāpayati, \"extinguishes\", the \"make\" form of vijjhāyati, \"is extinguished\", under which CDIAL lists Marathi vijhṇẽ (CDIAL 11703). Bloch derived vijhṇẽ from vi-kṣi instead."
             }
           ]
         },

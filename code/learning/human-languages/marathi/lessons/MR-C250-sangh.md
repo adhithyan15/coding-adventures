@@ -47,7 +47,7 @@ reviews_of: [MR-C250-kala]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**संघ** (*saṅgh*) is Sanskrit *saṅgha*, "multitude, association", a tatsama: *sam*, "together", and *han*, "to strike". CDIAL has no entry for it.
+**संघ** (*saṅgh*) is Sanskrit *saṅgha*, "multitude, association", a tatsama: *sam*, "together", and *han*, "to strike" (CDIAL 12854).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

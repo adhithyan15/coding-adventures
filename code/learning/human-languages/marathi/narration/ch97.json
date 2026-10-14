@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Lake, Stone, Sand, Field, Star",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6f82f7bd3c0e04d5",
+  "sourceHash": "fnv1a64:f7cf2262378d2133",
   "lessons": [
     {
       "id": "MR-C97-talav",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1ba090986540eb2",
+      "sourceHash": "fnv1a64:259b86fc293f45b5",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "तारा (tārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tārā, \"fixed star\" (CDIAL 5798)."
+              "text": "तारा (tārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it, as a masculine, under tāraka, \"belonging to the stars\", a form beside Sanskrit tārā, \"fixed star\" (CDIAL 5798)."
             }
           ]
         },

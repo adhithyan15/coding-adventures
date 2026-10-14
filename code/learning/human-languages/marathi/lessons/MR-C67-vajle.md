@@ -14,7 +14,7 @@ sounds: [retroflex-la, matra-ii]
 roots: [sanskrit-vadyate]
 etymology_hook: "vājle ← vājṇe 'to sound', from Sanskrit vādyate 'is made to sound' (CDIAL 11513)"
 duration:
-  max_seconds: 290
+  max_seconds: 286
 requires:
   knowledge: [MR-QUESTION-KITI, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-GRAMMAR-TIME-II]
 introduces:
@@ -56,7 +56,7 @@ had bells — *the clock struck three*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**वाजले** is a form of **वाजणे**, "to sound", from Sanskrit *vādyate*, "is made to sound" (CDIAL 11513).
+**वाजले** comes from Sanskrit *vādyate*, "is made to sound" (CDIAL 11513).
 
 ## Grammar Lens: the verb counts with you
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-CLOCK-NUMBER-AGREEMENT]; assesses=[MR-LEX-VAJLE, MR-LEX-NUMBERS-ONE-TO-FIVE] -->

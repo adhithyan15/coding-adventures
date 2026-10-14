@@ -47,7 +47,7 @@ reviews_of: [MR-C144-das]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**कपाळ** (*kapāḷ*) is a tadbhava of Sanskrit *kapāla*, "skull, cranium" (CDIAL 2744). CDIAL thinks the word Indo-European but its later variants at least influenced by Austroasiatic.
+**कपाळ** (*kapāḷ*) is a tadbhava of Sanskrit *kapāla*, "skull, cranium"; CDIAL lists it under the variant *\*kappāla* (CDIAL 2744). CDIAL thinks the word Indo-European but its later variants at least influenced by Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

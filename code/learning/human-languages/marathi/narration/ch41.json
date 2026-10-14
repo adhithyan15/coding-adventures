@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "A House, a Room, and the Stem That Bends",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4a0acaa9ad58b620",
+  "sourceHash": "fnv1a64:1c3393f6168dad8e",
   "lessons": [
     {
       "id": "MR-C41-ghar",
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff1650dcf6c4627e",
+      "sourceHash": "fnv1a64:d632498e6eaa6b5a",
       "notice": null,
       "blocks": [
         {
@@ -225,7 +225,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "खोली (khoolī) is a tadbhava, a word inherited and reshaped by sound change. It comes from kholla, \"hut\", a form CDIAL reconstructs from its descendants (CDIAL 3946). CDIAL glosses the Marathi word \"inner room\"."
+              "text": "खोली (khoolī) comes from a reconstructed kholla, \"hut\"; CDIAL glosses the Marathi word \"inner room\" (CDIAL 3946)."
             }
           ]
         },

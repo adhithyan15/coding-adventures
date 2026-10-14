@@ -4,7 +4,7 @@
   "chapter": 204,
   "title": "Serious, Shy, Valiant, Fearful, Curious",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4ddac5e85757f0b0",
+  "sourceHash": "fnv1a64:3367fb6ee3769279",
   "lessons": [
     {
       "id": "MR-C204-gambhir",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ee1f4f69d20f808",
+      "sourceHash": "fnv1a64:e0416fc2710ed8be",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "उत्सुक (utsuk) is Sanskrit utsuka, \"eager, anxious\", a tatsama. CDIAL has no entry for it."
+              "text": "उत्सुक (utsuk) is Sanskrit utsuka, \"eager, anxious\", a tatsama. CDIAL notes it, with a \"Cf.\", under a reconstructed utsukya, \"eagerness\" (CDIAL 1886)."
             }
           ]
         },

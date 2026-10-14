@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "What It Costs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:822c2a5e71597f29",
+  "sourceHash": "fnv1a64:33bf19cc3387c9bc",
   "lessons": [
     {
       "id": "MR-W59-ai-matra",
@@ -117,7 +117,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d09ae29307573021",
+      "sourceHash": "fnv1a64:a1b86b780441a781",
       "notice": null,
       "blocks": [
         {
@@ -167,7 +167,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पैसे (paise) is the plural of paisā, which CDIAL traces to a reconstructed padāṁśa, \"quarter part\", built with aṁśa, \"part\". CDIAL marks the Marathi word as probably taken from Hindi paisā, \"quarter anna\" (CDIAL 7761)."
+              "text": "पैसे (paise) is the plural of paisā, which CDIAL traces to a reconstructed padāṁśa, \"quarter part\", built with aṁśa, \"part\". CDIAL marks the Marathi word as taken from Hindi paisā, \"quarter anna\" (CDIAL 7761)."
             }
           ]
         },

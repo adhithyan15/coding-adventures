@@ -14,7 +14,7 @@ sounds: [halant-conjunct, matra-aa]
 roots: [sanskrit-ratri]
 etymology_hook: "rātra: Sanskrit rātri 'night'; CDIAL lists the inherited Marathi rāt (CDIAL 10702)"
 duration:
-  max_seconds: 242
+  max_seconds: 240
 requires:
   knowledge: [MR-LEX-SANDHYAKAL, MR-GRAMMAR-TIME-II]
 introduces:
@@ -55,7 +55,7 @@ give it its full value — *rā-tra*, not *rāt*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**रात्र** (*rātra*) is Sanskrit *rātri*, "night", lightly reshaped. CDIAL lists the inherited Marathi form as *rāt*, "night" (CDIAL 10702).
+**रात्र** is Sanskrit *rātri*, "night", lightly reshaped; the inherited form is *rāt* (CDIAL 10702).
 
 ## Grammar Lens: four for four, and what English does instead
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-TIME-II, MR-LEX-RATRA, MR-LEX-SAKAL, MR-LEX-DUPAR, MR-LEX-SANDHYAKAL] -->

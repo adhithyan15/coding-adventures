@@ -15,7 +15,7 @@ concept_tag: MR-AAROGYA169-PHUPHPHUS
 prerequisites: [MR-C169-arogya, MR-C169-mendu]
 sounds: []
 roots: [sanskrit-phupphusa]
-etymology_hook: "phuphphus: Sanskrit phupphusa 'lung', a tatsama"
+etymology_hook: "phuphphus: Sanskrit phupphusa 'lungs', a tatsama; CDIAL calls it probably imitative (CDIAL 9090)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MR-C169-mendu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**फुफ्फुस** (*phuphphus*) is Sanskrit *phupphusa*, "lung", taken over whole, a tatsama. CDIAL has no entry for it.
+**फुफ्फुस** (*phuphphus*) is Sanskrit *phupphusa*, "lung", taken over whole, a tatsama. CDIAL calls it probably imitative and lists the inherited Marathi form as *phopīs* (CDIAL 9090).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

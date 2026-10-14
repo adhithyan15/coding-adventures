@@ -14,7 +14,7 @@ sounds: [retroflex-da, matra-aa]
 roots: [indo-aryan-davva]
 etymology_hook: "ḍāvā ← *ḍāva- 'left hand', which CDIAL calls non-Aryan, from Dravidian after A. Master (CDIAL 5539)"
 duration:
-  max_seconds: 218
+  max_seconds: 210
 requires:
   knowledge: [MR-LEX-UJVA, MR-LEX-LAAMB, MR-POSTP-JAVAL, MR-LEX-KAAN]
 introduces:
@@ -63,7 +63,7 @@ with **समोर** or **जवळ**, and the direction is complete.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**डावा** (*ḍāvā*) goes back to *\*ḍāva-*, "lefthand, crosswise", a form CDIAL reconstructs and calls non-Aryan, from Dravidian according to A. Master (CDIAL 5539). DEDR compares the Dravidian words for "left", such as Kannada *eḍa* and Telugu *ḍā* (DEDR 449).
+**डावा** goes back to *\*ḍāva-*, "lefthand", which CDIAL calls non-Aryan, from Dravidian after A. Master (CDIAL 5539); DEDR compares Kannada *eḍa*, "left" (DEDR 449).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DAAVA, MR-LEX-UJVA, MR-LEX-KAAN, MR-POSTP-JAVAL, MR-LEX-LAAMB] -->

@@ -14,7 +14,7 @@ sounds: [matra-aa]
 roots: [sanskrit-mitra]
 etymology_hook: "mitrālā: mitra is Sanskrit mitra 'friend' (CDIAL 10124); the ending -lā has no CDIAL entry"
 duration:
-  max_seconds: 232
+  max_seconds: 230
 requires:
   knowledge: [MR-QUESTION-KUTHUN, MR-POSTP-PAASUN, MR-POSTP-BAROBAR, MR-LEX-MITRA, MR-GRAMMAR-DATIVE-LIKING, MR-POSTP-MADHYE, MR-LEX-PINE, MR-ETYMON-PINE-SAME-ROOT, MR-POSTP-NE-INSTR, MR-LEX-PAHNE, MR-LEX-PAANI, MR-GRAMMAR-OBLIQUE]
 introduces:
@@ -68,7 +68,7 @@ on the end.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मित्र** is Sanskrit *mitra*, "friend", a tatsama (CDIAL 10124). The history of the ending **-ला** is not settled: CDIAL has no entry for it.
+**मित्र** is Sanskrit *mitra*, "friend" (CDIAL 10124). The ending **-ला** has no CDIAL entry, and its history is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-OBJECT-LAA, MR-LEX-MITRA, MR-LEX-PAANI, MR-POSTP-BAROBAR, MR-POSTP-NE-INSTR, MR-POSTP-MADHYE, MR-LEX-PINE, MR-ETYMON-PINE-SAME-ROOT] -->

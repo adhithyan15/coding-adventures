@@ -47,7 +47,7 @@ reviews_of: [MR-C270-badam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **मनुका** (*manukā*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+The origin of **मनुका** (*manukā*) is not settled. Neither CDIAL nor DEDR has an entry for it. It may be the same word as Hindi *munakkā*, "large raisin", from Arabic *munaqqā*, "cleaned", but no source here confirms it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

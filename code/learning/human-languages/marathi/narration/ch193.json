@@ -4,7 +4,7 @@
   "chapter": 193,
   "title": "To spend, To put money by, To order, To dry, To iron",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:40f5a40f2d241d95",
+  "sourceHash": "fnv1a64:3bb9b6f56f1debf8",
   "lessons": [
     {
       "id": "MR-C193-kharc-karne",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e177134861b3a2e4",
+      "sourceHash": "fnv1a64:3a69a77ab505b13b",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बचत, \"savings\", is built on the verb stem bac-, \"to escape, be saved\", which CDIAL lists under Sanskrit vañcati, a verb whose forms meant \"escapes from\" (CDIAL 11208). करणे is \"to do\"."
+              "text": "बचत, \"savings\", is built on the verb stem bac-, \"to escape, be saved\", which CDIAL lists under Sanskrit vañcati, a verb whose forms meant \"escapes from\", and marks the b- forms as taken from Hindi (CDIAL 11208). करणे is \"to do\"."
             }
           ]
         },

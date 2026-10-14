@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 47,
-  "sourceHash": "fnv1a64:e57befbb297459b9",
+  "sourceHash": "fnv1a64:202958841e66bb47",
   "lessonIds": [
     "MR-C47-laa-object",
     "MR-C47-laa-recipient",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "marathi/narration/ch47.txt",
   "json": "marathi/narration/ch47.json",
-  "textHash": "fnv1a64:bf252ce4c1e9d9c7",
-  "jsonHash": "fnv1a64:e62849b65a9a7802",
+  "textHash": "fnv1a64:02e5e4a3d4cf37ba",
+  "jsonHash": "fnv1a64:7b14401a212fb389",
   "findings": []
 }

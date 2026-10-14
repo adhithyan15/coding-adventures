@@ -4,7 +4,7 @@
   "chapter": 156,
   "title": "To show, To play, To shout, To bite, To swallow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0849b99ff13753e6",
+  "sourceHash": "fnv1a64:b0d8f8d0c2c4d0d3",
   "lessons": [
     {
       "id": "MR-C156-dakhavne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd64f4cdf7cdf044",
+      "sourceHash": "fnv1a64:0e32c1f5c3d88636",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दाखवणे (dākhavṇe) is the \"make someone see\" form of an old verb for \"see\": CDIAL lists it, in its addenda, under a reconstructed dṛkṣati, \"sees\" (CDIAL 6507)."
+              "text": "दाखवणे (dākhavṇe) is the \"make someone see\" form of an old verb for \"see\": CDIAL lists it under a reconstructed dṛkṣati, \"sees\" (CDIAL 6507)."
             }
           ]
         },

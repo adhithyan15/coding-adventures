@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 144,
-  "sourceHash": "fnv1a64:ab636c7a293d0580",
+  "sourceHash": "fnv1a64:617242d6c8d51045",
   "lessonIds": [
     "MR-C144-kolha",
     "MR-C144-gadhav",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch144.txt",
   "json": "marathi/narration/ch144.json",
-  "textHash": "fnv1a64:eda2eb0ceba97610",
-  "jsonHash": "fnv1a64:d677309fd64a2ac4",
+  "textHash": "fnv1a64:2e6d43bf78171d5c",
+  "jsonHash": "fnv1a64:d16ecab3f1333687",
   "findings": []
 }

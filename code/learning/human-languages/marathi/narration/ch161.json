@@ -4,7 +4,7 @@
   "chapter": 161,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:712cfdcdde6e8e4b",
+  "sourceHash": "fnv1a64:071996647a8a8ac6",
   "lessons": [
     {
       "id": "MR-C161-velapatrak",
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4e89396d04f8d01",
+      "sourceHash": "fnv1a64:4dd9de61af5f6aaf",
       "notice": null,
       "blocks": [
         {
@@ -351,7 +351,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "भाडे (bhāḍe) comes, through Middle Indo-Aryan bhāṭa, \"wages\", from a reconstructed bhārta, \"pertaining to servants\" (CDIAL 9468)."
+              "text": "भाडे (bhāḍe) comes through Middle Indo-Aryan bhāṭa, \"wages\", which CDIAL traces, as more probable than a link with bhṛta, \"hired\", to a reconstructed bhārta, \"pertaining to servants\" (CDIAL 9468)."
             }
           ]
         },

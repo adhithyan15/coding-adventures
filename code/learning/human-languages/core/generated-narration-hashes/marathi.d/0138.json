@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 138,
-  "sourceHash": "fnv1a64:565a658204a0facd",
+  "sourceHash": "fnv1a64:71b41a83c1238804",
   "lessonIds": [
     "MR-C138-matar",
     "MR-C138-dalimb",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch138.txt",
   "json": "marathi/narration/ch138.json",
-  "textHash": "fnv1a64:28f5a1fc5e159532",
-  "jsonHash": "fnv1a64:1a18d28145a325ad",
+  "textHash": "fnv1a64:326339763d24980e",
+  "jsonHash": "fnv1a64:a55a9a70fa28ea2b",
   "findings": []
 }

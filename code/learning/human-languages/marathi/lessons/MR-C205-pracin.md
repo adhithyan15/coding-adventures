@@ -47,7 +47,7 @@ reviews_of: [MR-C205-adhunik]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**प्राचीन** (*prācīn*) is Sanskrit *prācīna*, "turned east; former, old", a tatsama. CDIAL has no entry for it.
+**प्राचीन** (*prācīn*) is Sanskrit *prācīna*, "turned east; former, old", a tatsama (CDIAL 8920).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

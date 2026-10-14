@@ -11,10 +11,10 @@ gloss: to go — and the present tense you cannot say without declaring your own
 concept_tag: VERB-GO
 prerequisites: [MR-C07-asne]
 sounds: [matra-aa, retroflex-na]
-roots: [sanskrit-yati-go, sanskrit-yati]
+roots: [sanskrit-yati]
 etymology_hook: "jāṇe ← Sanskrit yāti 'goes', through Prakrit jāi; a tadbhava (CDIAL 10452)"
 duration:
-  max_seconds: 271
+  max_seconds: 263
 requires:
   knowledge: [MR-LEX-ASNE-AAHE, MR-GRAMMAR-AAHE-LAST]
 introduces:
@@ -55,7 +55,7 @@ is decided by something the English sentence never mentions.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**जाणे** (*jāṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yāti*, "goes, approaches" (CDIAL 10452).
+**जाणे** (*jāṇe*) is inherited from Sanskrit *yāti*, "goes" (CDIAL 10452).
 
 ## Sounds you'll need: जा · णे
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

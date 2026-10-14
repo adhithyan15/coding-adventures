@@ -4,7 +4,7 @@
   "chapter": 178,
   "title": "Flat, Dining room, Balcony, Bell, Compartment",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2c7e19d72a53fc35",
+  "sourceHash": "fnv1a64:2e493bdec5a5ce3c",
   "lessons": [
     {
       "id": "MR-C178-sadnika",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ab77f1c9188102c",
+      "sourceHash": "fnv1a64:b062276ccd10f2f6",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "घंटा (ghaṇṭā) is Sanskrit ghaṇṭā, \"bell\", a tatsama; CDIAL lists the inherited Marathi form as ghāṁṭ, \"bell\" (CDIAL 4421). CDIAL thinks the Sanskrit word itself probably renders Prakrit ghaṁṭiā."
+              "text": "घंटा (ghaṇṭā) is Sanskrit ghaṇṭā, \"bell\", a tatsama; CDIAL lists the inherited Marathi form as ghāṁṭ, \"bell\" (CDIAL 4421). EWA derives it from granthi, \"bell\", but CDIAL takes that granthi as probably a Sanskrit rendering of Prakrit ghaṁṭiā."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 234,
   "title": "Important, Entertaining, Filthy, Full, Slow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1dd549dc945cdbda",
+  "sourceHash": "fnv1a64:eceef95cb1aa9017",
   "lessons": [
     {
       "id": "MR-C234-mahattvaca",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe102c35576ac08b",
+      "sourceHash": "fnv1a64:a59ed12ab313f6a8",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मंद (mand) is Sanskrit manda, \"slow, weak, dull\", taken over whole, a tatsama. CDIAL has no entry for it."
+              "text": "मंद (mand) is Sanskrit manda, \"slow, weak, dull\". CDIAL lists Marathi mand, \"slow, stupid\", under it, in its \"defective\" word group matthara (CDIAL 9754)."
             }
           ]
         },

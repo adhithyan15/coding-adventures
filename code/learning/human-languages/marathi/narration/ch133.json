@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "Soap, Box, Bag, Basket, Candle",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fb0c31316b3d2b95",
+  "sourceHash": "fnv1a64:8f72f8bcc1ff5956",
   "lessons": [
     {
       "id": "MR-C133-saban",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e081a577deed4407",
+      "sourceHash": "fnv1a64:4ae93160baa5346d",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of टोपली (ṭoplī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+              "text": "टोपली (ṭoplī) is inherited. CDIAL lists Marathi ṭoplā, \"basket\", with an added -l-, under a reconstructed ṭōppa, \"basket-work\", and asks whether that is the same word as the ṭōppa behind टोपी (CDIAL 5482)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:daeee48bc3d40d18",
+      "sourceHash": "fnv1a64:16e78e5c1fb5f703",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मेणबत्ती (meṇbattī) is \"wax-lamp\": meṇ, \"beeswax\", from Sanskrit madana, \"beeswax\" (CDIAL 9778), and battī, \"wick, lamp\", from Sanskrit varti, \"wick\" (CDIAL 11359)."
+              "text": "मेणबत्ती (meṇbattī) is \"wax-lamp\": meṇ, \"beeswax\", from Sanskrit madana, \"beeswax\" (CDIAL 9778), and battī, \"wick, lamp\", the Hindi form of a word CDIAL lists under Sanskrit varti, \"wick\"; Marathi's own form is vāt (CDIAL 11359)."
             }
           ]
         },

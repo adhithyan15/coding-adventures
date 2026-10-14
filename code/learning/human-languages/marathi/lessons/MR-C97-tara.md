@@ -15,7 +15,7 @@ concept_tag: MR-NATURE97-TARA
 prerequisites: [MR-C97-valu, MR-C97-shet]
 sounds: []
 roots: [sanskrit-tara]
-etymology_hook: "tārā ← Sanskrit tārā 'fixed star', a tadbhava (CDIAL 5798)"
+etymology_hook: "tārā: CDIAL lists it under tāraka 'of the stars', a form beside Sanskrit tārā 'fixed star' (CDIAL 5798)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MR-C97-shet]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**तारा** (*tārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tārā*, "fixed star" (CDIAL 5798).
+**तारा** (*tārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it, as a masculine, under *tāraka*, "belonging to the stars", a form beside Sanskrit *tārā*, "fixed star" (CDIAL 5798).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

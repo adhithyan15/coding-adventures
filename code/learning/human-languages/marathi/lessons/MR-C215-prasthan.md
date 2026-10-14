@@ -47,7 +47,7 @@ reviews_of: [MR-C215-agaman]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**प्रस्थान** (*prasthān*) is Sanskrit *prasthāna*, "setting out, departure", a tatsama: *pra*, "forth", and *sthā*, "to stand". CDIAL has no entry for it.
+**प्रस्थान** (*prasthān*) is Sanskrit *prasthāna*, "setting out, departure", a tatsama: *pra*, "forth", and *sthā*, "to stand" (CDIAL 8872).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

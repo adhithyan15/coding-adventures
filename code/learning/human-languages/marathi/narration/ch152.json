@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "Safe, Dangerous, False, Purple, Orange",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8e3238f4143333c6",
+  "sourceHash": "fnv1a64:227753e112dfeb2f",
   "lessons": [
     {
       "id": "MR-C152-suraksit",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78aadff8d7141a17",
+      "sourceHash": "fnv1a64:4c75a1a6e5f6baad",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of जांभळा (jāmbhaḷā) is not settled. CDIAL has no entry for it."
+              "text": "The origin of जांभळा (jāmbhaḷā) is not settled. CDIAL has no entry for it; it may be named for the dark jāṁbhūḷ, \"jambolan fruit\", which CDIAL lists under Sanskrit jambula (CDIAL 5136), but no source here says so."
             }
           ]
         },

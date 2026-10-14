@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 90,
-  "sourceHash": "fnv1a64:e8b4aee879317ada",
+  "sourceHash": "fnv1a64:f1c18dc0cf0c294b",
   "lessonIds": [
     "MR-C90-bhint",
     "MR-C90-chhappar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch90.txt",
   "json": "marathi/narration/ch90.json",
-  "textHash": "fnv1a64:2188419860be9d61",
-  "jsonHash": "fnv1a64:988fde9bd3a4e567",
+  "textHash": "fnv1a64:0dc52ec0daf6690d",
+  "jsonHash": "fnv1a64:7c9d6eccfedc5220",
   "findings": []
 }

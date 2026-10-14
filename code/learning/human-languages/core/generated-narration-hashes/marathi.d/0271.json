@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 271,
-  "sourceHash": "fnv1a64:448a225c8d74823e",
+  "sourceHash": "fnv1a64:d59983cd75b8fa78",
   "lessonIds": [
     "MR-C271-kaceri",
     "MR-C271-basasthanak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch271.txt",
   "json": "marathi/narration/ch271.json",
-  "textHash": "fnv1a64:ba43b66924c6b64f",
-  "jsonHash": "fnv1a64:2930e9e3c488f1bf",
+  "textHash": "fnv1a64:245433bfe2b4bb61",
+  "jsonHash": "fnv1a64:1eb3541d61d5e590",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 112,
-  "sourceHash": "fnv1a64:de9c7ebe8ce42ee4",
+  "sourceHash": "fnv1a64:5f489352fa7f81ad",
   "lessonIds": [
     "MR-C112-dur",
     "MR-C112-at",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch112.txt",
   "json": "marathi/narration/ch112.json",
-  "textHash": "fnv1a64:c79ced4f0ea34f18",
-  "jsonHash": "fnv1a64:fa14f10292f29acb",
+  "textHash": "fnv1a64:5551eea487fa995c",
+  "jsonHash": "fnv1a64:226d744429149a04",
   "findings": []
 }

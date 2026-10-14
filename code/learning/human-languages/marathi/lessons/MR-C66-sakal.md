@@ -12,9 +12,9 @@ concept_tag: TIME-MORNING
 prerequisites: [MR-C38-kadhi, MR-C04-udya-bhetu]
 sounds: [retroflex-la, matra-ii]
 roots: []
-etymology_hook: "sakāḷ 'morning': origin not settled; neither CDIAL nor DEDR has an entry for it"
+etymology_hook: "sakāḷ 'morning': origin not settled; CDIAL has Sanskrit sakāla 'early in the morning' but no Marathi form"
 duration:
-  max_seconds: 228
+  max_seconds: 226
 requires:
   knowledge: [MR-QUESTION-KADHI, MR-LEX-UDYA, MR-GRAMMAR-TIME-WORD-FRONTS-THE-VERB]
 introduces:
@@ -50,9 +50,10 @@ That is a question with one answer. This chapter widens the answer.
 > **सकाळ** — *sakāḷ* — **morning**
 
 The last letter is **ळ**, the retroflex *l* you first read in **काळजी घ्या**.
-Marathi keeps it where standard Hindi does not — so if you come to Marathi from
-Hindi, this letter is new, and it is worth slowing down on rather than reading
-as an ordinary **ल**.
+Standard Hindi lacks it, so do not read it as an ordinary **ल**.
+
+Where **सकाळ** comes from is not settled. CDIAL has Sanskrit *sakāla*, "early in
+the morning" (13067), but lists no Marathi form there.
 
 ## Grammar Lens: the ending that means "at that time"
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-TIME-II]; assesses=[MR-GRAMMAR-TIME-WORD-FRONTS-THE-VERB] -->
@@ -67,8 +68,7 @@ as an ordinary **ल**.
 > — *mī sakāḷī yeto.* — **I come in the morning.**
 
 Notice where **सकाळी** sits: early, before the verb, in the same slot **उद्या**
-and **कधी** take. **A Marathi time word fronts the verb**, and this one is no
-exception.
+and **कधी** take. **A Marathi time word fronts the verb.**
 
 English needs two words for that slot — *in the morning*. Marathi needs one
 letter.

@@ -15,7 +15,7 @@ concept_tag: MR-THINGS133-MENBATTI
 prerequisites: [MR-C133-pisvi, MR-C133-topli]
 sounds: []
 roots: [sanskrit-madana-wax, sanskrit-varti]
-etymology_hook: "meṇbattī: meṇ 'beeswax' ← madana (CDIAL 9778) + battī ← varti 'wick' (CDIAL 11359)"
+etymology_hook: "meṇbattī: meṇ 'beeswax' ← madana (CDIAL 9778) + battī, Hindi beside Marathi vāt 'wick' ← varti (CDIAL 11359)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MR-C133-topli]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मेणबत्ती** (*meṇbattī*) is "wax-lamp": *meṇ*, "beeswax", from Sanskrit *madana*, "beeswax" (CDIAL 9778), and *battī*, "wick, lamp", from Sanskrit *varti*, "wick" (CDIAL 11359).
+**मेणबत्ती** (*meṇbattī*) is "wax-lamp": *meṇ*, "beeswax", from Sanskrit *madana*, "beeswax" (CDIAL 9778), and *battī*, "wick, lamp", the Hindi form of a word CDIAL lists under Sanskrit *varti*, "wick"; Marathi's own form is *vāt* (CDIAL 11359).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

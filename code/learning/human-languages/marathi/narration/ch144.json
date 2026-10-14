@@ -4,7 +4,7 @@
   "chapter": 144,
   "title": "Fox, Donkey, Ox, Mosquito, Forehead",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ab636c7a293d0580",
+  "sourceHash": "fnv1a64:617242d6c8d51045",
   "lessons": [
     {
       "id": "MR-C144-kolha",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9330bece34ac7f8a",
+      "sourceHash": "fnv1a64:e54406a6d1b9cb7e",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कपाळ (kapāḷ) is a tadbhava of Sanskrit kapāla, \"skull, cranium\" (CDIAL 2744). CDIAL thinks the word Indo-European but its later variants at least influenced by Austroasiatic."
+              "text": "कपाळ (kapāḷ) is a tadbhava of Sanskrit kapāla, \"skull, cranium\"; CDIAL lists it under the variant kappāla (CDIAL 2744). CDIAL thinks the word Indo-European but its later variants at least influenced by Austroasiatic."
             }
           ]
         },

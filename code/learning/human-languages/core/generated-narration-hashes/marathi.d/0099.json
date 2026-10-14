@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 99,
-  "sourceHash": "fnv1a64:bf018a08cd3357a3",
+  "sourceHash": "fnv1a64:1a2674c4ff7d03b3",
   "lessonIds": [
     "MR-C99-paus",
     "MR-C99-vara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch99.txt",
   "json": "marathi/narration/ch99.json",
-  "textHash": "fnv1a64:cc94108ea9e9d8be",
-  "jsonHash": "fnv1a64:63931168e9d85d72",
+  "textHash": "fnv1a64:7d57a4dff6749e27",
+  "jsonHash": "fnv1a64:c2d30fdb7fd412e7",
   "findings": []
 }

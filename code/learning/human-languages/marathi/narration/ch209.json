@@ -4,7 +4,7 @@
   "chapter": 209,
   "title": "Economy, War, Peace, Army, Soldier",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:48b925b40711e954",
+  "sourceHash": "fnv1a64:c95a2fc808707a02",
   "lessons": [
     {
       "id": "MR-C209-arthavyavastha",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d37fd3a56d12be6",
+      "sourceHash": "fnv1a64:583593fd73bbe270",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सैन्य (sainya) is Sanskrit sainya, \"army\", a tatsama built on senā, \"army\". CDIAL has no entry for it."
+              "text": "सैन्य (sainya) is Sanskrit sainya, \"army\", a tatsama built on senā, \"army\" (CDIAL 13602)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d686e5b6f5b7526b",
+      "sourceHash": "fnv1a64:03e8e4fcf8acbdbd",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सैनिक (sainik) is Sanskrit sainika, \"belonging to an army, soldier\", a tatsama built on senā, \"army\". CDIAL has no entry for it."
+              "text": "सैनिक (sainik) is Sanskrit sainika, \"belonging to an army, soldier\", a tatsama built on senā, \"army\". CDIAL notes it, with a \"Cf.\", beside sainya, \"army\" (CDIAL 13602)."
             }
           ]
         },

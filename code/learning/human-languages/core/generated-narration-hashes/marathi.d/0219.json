@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 219,
-  "sourceHash": "fnv1a64:99083ed4f2c2bfb5",
+  "sourceHash": "fnv1a64:9d601c7eff9a5456",
   "lessonIds": [
     "MR-C219-dar",
     "MR-C219-utpanna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch219.txt",
   "json": "marathi/narration/ch219.json",
-  "textHash": "fnv1a64:52c23db7744bec04",
-  "jsonHash": "fnv1a64:70eed4c2c8ea141a",
+  "textHash": "fnv1a64:67aac87de8d9c410",
+  "jsonHash": "fnv1a64:3438725bca8d7ed4",
   "findings": []
 }

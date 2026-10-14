@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 229,
-  "sourceHash": "fnv1a64:00edac6d354aaab8",
+  "sourceHash": "fnv1a64:0856ad93f9c7f767",
   "lessonIds": [
     "MR-C229-goli",
     "MR-C229-malam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch229.txt",
   "json": "marathi/narration/ch229.json",
-  "textHash": "fnv1a64:fb6d3f2fd0924380",
-  "jsonHash": "fnv1a64:ebf5520ce2f724f7",
+  "textHash": "fnv1a64:03325bbc839e3df6",
+  "jsonHash": "fnv1a64:63b6a689be6a4a1d",
   "findings": []
 }

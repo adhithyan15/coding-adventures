@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Words That Need Two Places",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:cc7535adad99e519",
+  "sourceHash": "fnv1a64:534b9246d3b25d07",
   "lessons": [
     {
       "id": "MR-C31-naa-naa",
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e00b9d184d80fd6",
+      "sourceHash": "fnv1a64:457fe70829b3c456",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दुसरा (dusrā) comes from dviḥsara, \"twofold\", a form CDIAL reconstructs on Sanskrit dviḥ, \"twice\" (CDIAL 6676)."
+              "text": "दुसरा (dusrā) comes from dviḥsara, \"twofold\", built on Sanskrit dviḥ, \"twice\" (CDIAL 6676)."
             }
           ]
         },

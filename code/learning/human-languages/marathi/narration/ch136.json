@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Coat, Jumper, Chapati, Vegetable dish, Plain dal",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:159ca50107192585",
+  "sourceHash": "fnv1a64:3b3b666b4b9682cb",
   "lessons": [
     {
       "id": "MR-C136-kot",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b500860a617d0a5",
+      "sourceHash": "fnv1a64:d0e6688e0a385581",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पोळी (poḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pauli, \"a cake of scorched grain and ghee\" (CDIAL 8423). CDIAL glosses the Marathi word \"wheaten cake\", and suggests, with a \"perhaps\", a link with Prakrit paülaï, \"cooks\"."
+              "text": "पोळी (poḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pauli, \"a cake of scorched grain and ghee\" (CDIAL 8423). CDIAL glosses the Marathi word \"wheaten cake\", and suggests, with a \"perhaps\", a link with Prakrit paülaï, \"cooks\", or with pūpalā, \"a cake\"."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:048ff3c46f90ada6",
+      "sourceHash": "fnv1a64:7bcbb93ae17d2d01",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "CDIAL lists Marathi varaṇ, \"tasty dish of pulse\", under a reconstructed aparānna, built from Sanskrit apara, \"other, later\", and anna, \"food\" (CDIAL 442)."
+              "text": "CDIAL lists Marathi varaṇ, \"tasty dish of pulse\", under a reconstructed aparānna, built from Sanskrit apara, \"other, later\", and anna, \"food\" (CDIAL 442). CDIAL calls the link very doubtful: the loss of the first a- and the single -ṇ- are not explained."
             }
           ]
         },

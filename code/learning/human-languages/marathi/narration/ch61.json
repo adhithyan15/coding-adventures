@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "The Rest Are Built",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:9b99284451f7d821",
+  "sourceHash": "fnv1a64:eb4cf2dc1c7a6606",
   "lessons": [
     {
       "id": "MR-C61-sahava",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5f0a51c06c1f2b6",
+      "sourceHash": "fnv1a64:48383069134befd1",
       "notice": null,
       "blocks": [
         {
@@ -105,7 +105,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सहावा (sahāvā) is सहा, \"six\", with the ordinal ending -वा. CDIAL has no entry for the whole word; the ending is the one that, in सातवा (sātvā), \"seventh\", continues Sanskrit saptama (CDIAL 13151)."
+              "text": "सहावा (sahāvā) is सहा, \"six\", with -वा, the old ending -ma of Sanskrit saptama, \"seventh\" (CDIAL 13151). CDIAL has no entry for the whole word."
             }
           ]
         },
@@ -124,7 +124,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is what the difference between an inherited word and a built one is worth, and it is why the chapter before this one taught its four the hard way rather than pretending they followed a pattern."
+              "text": "That is what the difference between a memorised word and a rule word is worth, and it is why the chapter before this one taught its four the hard way rather than pretending they followed a pattern."
             }
           ]
         },
@@ -218,14 +218,14 @@
       "title": "सातवा (sātvā) — seventh",
       "headword": "सातवा",
       "romanization": "sātvā",
-      "gloss": "seventh — and the first sign that the dictionaries never bothered to list these",
+      "gloss": "seventh — and the first sign that Molesworth's dictionary never bothered to list these",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f87d73f5a9a81fbd",
+      "sourceHash": "fnv1a64:ce262c962ba6fe2a",
       "notice": null,
       "blocks": [
         {
@@ -307,14 +307,14 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "CDIAL lists सातवा (sātvā) under Sanskrit saptama, \"seventh\" (CDIAL 13151): the -वा is what the old ordinal ending -ma became."
+              "text": "सातवा (sātvā) is inherited: CDIAL lists it under Sanskrit saptama, \"seventh\", whose -ma became -वा (CDIAL 13151)."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the dictionaries agree with you",
+          "title": "Grammar Lens: Molesworth agrees with you",
           "segments": [
             {
               "kind": "speech",
@@ -385,8 +385,8 @@
                 "sahava satva neither"
               ],
               "feedback": {
-                "correct": "Neither. Only the four inherited ones were printed.",
-                "incorrect": "Both are built from the number, so neither needed an entry."
+                "correct": "Neither. Only the four irregular ones were printed.",
+                "incorrect": "Both follow the rule, so neither needed an entry."
               }
             }
           ]
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b623cb7ab839dbae",
+      "sourceHash": "fnv1a64:b52918fca10cfb76",
       "notice": null,
       "blocks": [
         {
@@ -532,7 +532,7 @@
               "rowCount": 2,
               "utterances": [
                 "चौथा (chauthā), fourth — an inherited word, -था.",
-                "आठवा (āṭhvā), eighth — a built word, आठ + -वा."
+                "आठवा (āṭhvā), eighth — a regular word, आठ + -वा."
               ]
             },
             {
@@ -1047,7 +1047,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f7dc5ba5af70264",
+      "sourceHash": "fnv1a64:076b0b8bf93533db",
       "notice": null,
       "blocks": [
         {
@@ -1162,7 +1162,7 @@
               ],
               "feedback": {
                 "correct": "Ten in a row, and the one adjustment named.",
-                "incorrect": "Run the four inherited ones, then the six built ones, and stop at the one that surprised you."
+                "incorrect": "Run the four irregular ones, then the six regular ones, and stop at the one that surprised you."
               }
             }
           ]
@@ -1208,7 +1208,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four in, the built ones out. A dictionary is a list of what a reader cannot work out for themselves, so the seam this book drew between चौथा and पाचवा was drawn in Marathi lexicography a century and a half before it was drawn here."
+              "text": "Four in, the regular ones out. A dictionary is a list of what a reader cannot work out for themselves, so the seam this book drew between चौथा and पाचवा was drawn in Marathi lexicography a century and a half before it was drawn here."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Two Sentences, One Breath",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2b6af6e8319bf2dd",
+  "sourceHash": "fnv1a64:45bd8d5afe41974f",
   "lessons": [
     {
       "id": "MR-C30-aani",
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9bc65770a60d7b8",
+      "sourceHash": "fnv1a64:8659ed7bf301efbc",
       "notice": null,
       "blocks": [
         {
@@ -212,7 +212,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "किंवा (kiṁvā) is Sanskrit kiṁ vā, \"or whether\", kept whole: CDIAL lists that phrase under kim, \"what\", beside Marathi kĩ, \"or\" (CDIAL 3164)."
+              "text": "किंवा (kiṁvā) is Sanskrit kiṁ vā, \"or whether\", kept whole; CDIAL lists it under kim, \"what\" (CDIAL 3164)."
             }
           ]
         },
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3fa0b5d89749aa2",
+      "sourceHash": "fnv1a64:cc2c4f299a99d4dd",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पण (paṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from punar, \"back, again, moreover, however\" (CDIAL 8273)."
+              "text": "पण (paṇ) is inherited from Sanskrit punar, \"back; however\" (CDIAL 8273)."
             }
           ]
         },
