@@ -31,9 +31,9 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
     "wordLessons": 25682,
-    "wordLessonsWithoutEtymologyHook": 9340,
-    "wordLessonsWithoutVisibleEtymology": 9535,
-    "wordLessonsWithEmptyEtymologyBlock": 435,
+    "wordLessonsWithoutEtymologyHook": 8177,
+    "wordLessonsWithoutVisibleEtymology": 8419,
+    "wordLessonsWithEmptyEtymologyBlock": 430,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -341539,10 +341539,10 @@
       {
         "language": "marathi",
         "wordLessons": 1217,
-        "wordLessonsWithoutEtymologyHook": 1163,
-        "wordLessonsWithoutVisibleEtymology": 1116,
-        "wordLessonsWithoutAnyEtymology": 1105,
-        "wordLessonsWithEmptyEtymologyBlock": 5
+        "wordLessonsWithoutEtymologyHook": 0,
+        "wordLessonsWithoutVisibleEtymology": 0,
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "marwadi",
@@ -341627,12 +341627,12 @@
     ],
     "summary": {
       "wordLessons": 25682,
-      "wordLessonsWithoutEtymologyHook": 9340,
-      "wordLessonsWithoutVisibleEtymology": 9535,
-      "wordLessonsWithoutAnyEtymology": 9087,
-      "wordLessonsWithEmptyEtymologyBlock": 435,
-      "hookPercent": 63,
-      "visiblePercent": 62
+      "wordLessonsWithoutEtymologyHook": 8177,
+      "wordLessonsWithoutVisibleEtymology": 8419,
+      "wordLessonsWithoutAnyEtymology": 7982,
+      "wordLessonsWithEmptyEtymologyBlock": 430,
+      "hookPercent": 68,
+      "visiblePercent": 67
     }
   },
   "writingStages": {
@@ -454093,19 +454093,19 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 13651,
-    "underspent": 12774,
-    "neverSpent": 9756,
+    "roots": 14558,
+    "underspent": 13662,
+    "neverSpent": 10505,
     "payoffDistribution": {
-      "0": 9756,
-      "1": 2126,
-      "2": 892,
-      "3": 430,
-      "4": 212,
-      "5": 101,
-      "6": 44,
-      "7": 31,
-      "8": 10,
+      "0": 10505,
+      "1": 2243,
+      "2": 914,
+      "3": 438,
+      "4": 215,
+      "5": 103,
+      "6": 47,
+      "7": 32,
+      "8": 11,
       "9": 9,
       "10": 8,
       "11": 3,
@@ -454122,6 +454122,7 @@
       "27": 1,
       "28": 1,
       "30": 1,
+      "33": 1,
       "35": 1,
       "43": 1
     },
@@ -454149,30 +454150,30 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 29047,
-    "usesBeforeIntroduction": 51108,
-    "technicalUsesBeforeIntroduction": 8313,
-    "technicalLessons": 5280,
+    "lessonsUsingTerms": 29049,
+    "usesBeforeIntroduction": 51495,
+    "technicalUsesBeforeIntroduction": 8368,
+    "technicalLessons": 5334,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 3045
+        "lessons": 3084
       },
       {
         "term": "noun",
-        "lessons": 1702
+        "lessons": 1709
       },
       {
         "term": "adjective",
-        "lessons": 408
+        "lessons": 409
       },
       {
         "term": "participle",
-        "lessons": 362
+        "lessons": 366
       },
       {
         "term": "case",
-        "lessons": 303
+        "lessons": 304
       },
       {
         "term": "voice",
