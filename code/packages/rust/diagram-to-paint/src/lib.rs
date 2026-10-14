@@ -1047,6 +1047,23 @@ where
             edge.end_marker, &end_previous, &edge.to, stroke, stroke_width,
         ));
         if let Some(label) = &edge.label {
+            let label_x = (edge.from.x + edge.to.x) / 2.0 - 52.0;
+            let label_y = (edge.from.y + edge.to.y) / 2.0 - 25.0;
+            if let Some(background) = &diagram.theme.edge_label_background {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: label_x,
+                    y: label_y,
+                    width: 104.0,
+                    height: 22.0,
+                    fill: Some(background.clone()),
+                    stroke: None,
+                    stroke_width: None,
+                    corner_radius: Some(2.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+            }
             let mut label_font = options.label_font.clone();
             if let Some(size) = diagram.theme.font_size { label_font.size = size; }
             if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
@@ -1064,14 +1081,12 @@ where
             }
             text_children.push(text_node(
                 label,
-                (edge.from.x + edge.to.x) / 2.0 - 52.0,
-                (edge.from.y + edge.to.y) / 2.0 - 25.0,
+                label_x,
+                label_y,
                 104.0,
                 22.0,
                 label_font,
-                edge.style.text_color.as_deref().map(css_to_color).unwrap_or(Color {
-                    r: 55, g: 71, b: 79, a: 255,
-                }),
+                css_to_color(edge.style.text_color.as_deref().unwrap_or(&diagram.theme.text_color)),
             ));
         }
     }
@@ -1602,6 +1617,10 @@ where
     metadata.insert("swimlane.theme.nodeBorder".into(), diagram.theme.node_border.clone());
     metadata.insert("swimlane.theme.lineColor".into(), diagram.theme.line_color.clone());
     metadata.insert("swimlane.theme.primaryTextColor".into(), diagram.theme.primary_text_color.clone());
+    metadata.insert("swimlane.theme.textColor".into(), diagram.theme.text_color.clone());
+    if let Some(background) = &diagram.theme.edge_label_background {
+        metadata.insert("swimlane.theme.edgeLabelBackground".into(), background.clone());
+    }
     if let Some(family) = &diagram.theme.font_family {
         metadata.insert("swimlane.theme.fontFamily".into(), family.clone());
     }

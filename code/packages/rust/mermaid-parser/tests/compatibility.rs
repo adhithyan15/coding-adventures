@@ -2040,6 +2040,17 @@ fn swimlane_theme_typography_reaches_semantic_ir() {
 }
 
 #[test]
+fn swimlane_edge_label_theme_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "%%{init: {\"themeVariables\": {\"textColor\": \"#172554\", \"edgeLabelBackground\": \"#dbeafe\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  request[Request]\n  done[Done]\nend\nrequest -->|themed handoff| done",
+    ).expect("Swimlane edge label theme should parse");
+
+    assert_eq!(diagram.theme.text_color, "#172554");
+    assert_eq!(diagram.theme.edge_label_background.as_deref(), Some("#dbeafe"));
+    assert_eq!(diagram.edges[0].label.as_deref(), Some("themed handoff"));
+}
+
+#[test]
 fn swimlane_inline_node_styles_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nrequest --> done",
