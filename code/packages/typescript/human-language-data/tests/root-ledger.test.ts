@@ -336,6 +336,8 @@ const ETYMOLOGY_GAP_PINS: Readonly<Record<string, { withoutHook: number; without
  * Measured when the pin was added: 475 of 25,682 word lessons, of 4,782
  * whose visible etymology rested on structure alone with no rule-3 origin
  * statement anywhere; the loose signals read 4,307 of those as origins.
+ * Spanish's etymology pass (#17455) landed before this pin and filled 40 of
+ * its 88, so the pins start at 435.
  */
 const EMPTY_ETYMOLOGY_BLOCK_PINS: Readonly<Record<string, number>> = {
   arabic: 19,
@@ -357,7 +359,7 @@ const EMPTY_ETYMOLOGY_BLOCK_PINS: Readonly<Record<string, number>> = {
   punjabi: 31,
   russian: 52,
   sanskrit: 12,
-  spanish: 88,
+  spanish: 48,
   tamil: 12,
   telugu: 8,
   urdu: 1,
