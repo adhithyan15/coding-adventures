@@ -47,7 +47,7 @@ reviews_of: [PA-C81-nivam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ਭਰਿਆ** (*bhariā*) is the past participle of *bharnā*, "to fill", inherited from Sanskrit *bharati*, "bears, brings; fills". CDIAL gives no Punjabi form, but lists the matching Lahnda *bharaṇ*, "to fill" (CDIAL 9397).
+**ਭਰਿਆ** (*bhariā*) is the past participle of *bharnā*, "to fill", inherited from Sanskrit *bharati*, "bears, brings; fills". CDIAL lists *bharnā*, "to bear", from the Punjabi of Ludhiana, and Lahnda *bharaṇ*, "to fill" (CDIAL 9397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

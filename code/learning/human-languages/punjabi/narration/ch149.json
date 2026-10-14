@@ -4,7 +4,7 @@
   "chapter": 149,
   "title": "To swim, To climb, To call, To use, To make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6774b15eb2b34fa4",
+  "sourceHash": "fnv1a64:7080139b25d01f48",
   "lessons": [
     {
       "id": "PA-C149-tarna",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd70aeba80b9dae0",
+      "sourceHash": "fnv1a64:1a7a0778dfef8bfd",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਬਣਾਉਣਾ (baṇāuṇā) is the causing form of baṇnā, \"to be made, to become\". CDIAL lists baṇnā, with Lahnda baṇṇaṇ, \"to become\", under Sanskrit vanati, \"desires, gains, makes ready\" (CDIAL 11260)."
+              "text": "ਬਣਾਉਣਾ (baṇāuṇā) is the causing form of baṇnā, \"to be made, to become\". CDIAL lists baṇnā under Sanskrit vanati, \"desires, gains, makes ready\", and marks it as taken from Lahnda baṇṇaṇ, \"to become\" (CDIAL 11260)."
             }
           ]
         },

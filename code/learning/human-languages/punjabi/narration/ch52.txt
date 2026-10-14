@@ -77,7 +77,7 @@ You'll want to know: ਪਿਆਸ.
 ਪਿਆਸ — piās — "thirst".
 
 The word, taken apart.
-ਪਿਆਸ (piās) is inherited. CDIAL lists no Punjabi form, but gives the matching Hindi piyās under Sanskrit pipāsā, "thirst" (CDIAL 8199).
+ਪਿਆਸ (piās) goes back to Sanskrit pipāsā, "thirst". CDIAL lists no Punjabi form, but gives the matching Hindi piyās under it (CDIAL 8199), and it marks the Punjabi adjective peāsā, "thirsty", as taken from Hindi (CDIAL 8200).
 
 What you've built.
 One more word for this chapter.

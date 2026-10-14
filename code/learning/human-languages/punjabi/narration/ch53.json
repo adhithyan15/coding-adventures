@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "Sad, Father, Mother, Son, Daughter",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:83ad44af2e58fcb8",
+  "sourceHash": "fnv1a64:85052042ef839204",
   "lessons": [
     {
       "id": "PA-C53-udas",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09a4638f08ca64ea",
+      "sourceHash": "fnv1a64:c4dde45e352b091f",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਪਿਤਾ (pitā) is Sanskrit pitā, the nominative of pitṛ, \"father\", taken over whole, a tatsama. The inherited line survives in Punjabi piu, \"mother and father\", which CDIAL lists under pitṛ (CDIAL 8179)."
+              "text": "ਪਿਤਾ (pitā) is Sanskrit pitā, the nominative of pitṛ, \"father\", taken over whole, a tatsama. The inherited line survives in Punjabi piu, \"father\", and mā-pe, \"mother and father\", which CDIAL lists under pitṛ (CDIAL 8179)."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:674d6ca638300058",
+      "sourceHash": "fnv1a64:2185ef9cd70d4230",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਪੁੱਤਰ (puttar) is a semi-tatsama: Sanskrit putra, \"son\", kept with its r. CDIAL lists the inherited Punjabi form as putt, beside Lahnda puttar (CDIAL 8265)."
+              "text": "ਪੁੱਤਰ (puttar) goes back to Sanskrit putra, \"son\". Its doubled tt is an inherited sound change, and it keeps the r, as Lahnda puttar does. CDIAL lists the shorter Punjabi form putt beside Lahnda puttar (CDIAL 8265)."
             }
           ]
         },

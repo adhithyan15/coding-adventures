@@ -15,7 +15,7 @@ concept_tag: PA-TIME100-BARSAT
 prerequisites: [PA-C99-garmi, PA-C99-sardi]
 sounds: []
 roots: [sanskrit-varsharatri]
-etymology_hook: "barsāt: matches Hindi barsāt, listed under varṣārātri 'the rainy season', or a blend with varṣartu (CDIAL 11398)"
+etymology_hook: "barsāt: matches Hindi barsāt, listed under varṣārātri 'the rainy season', or from varṣartu (CDIAL 11398)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [PA-C99-sardi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ਬਰਸਾਤ** (*barsāt*) matches Hindi *barsāt*, which CDIAL lists under Sanskrit *varṣārātri*, "the rainy season", or else as a blend with *varṣartu*, "rainy season" (CDIAL 11398). It gives no Punjabi form.
+**ਬਰਸਾਤ** (*barsāt*) matches Hindi *barsāt*, which CDIAL lists under Sanskrit *varṣārātri*, "the rainy season", or else as coming from, or blended with, *varṣartu*, "rainy season" (CDIAL 11398). It gives no Punjabi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 129,
   "title": "Darkness, Light, Shade, Rainbow, Rabbit",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:24943c550ed480d8",
+  "sourceHash": "fnv1a64:282c835153eb03c4",
   "lessons": [
     {
       "id": "PA-C129-hanera",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51d04a604889a68e",
+      "sourceHash": "fnv1a64:43b1bcc0fb3cf1da",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਸਤਰੰਗੀ ਪੀਂਘ (satrangī pīṅgh) is \"the seven-coloured swing\". Sat, \"seven\", comes from Sanskrit sapta (CDIAL 13139); raṅgī is built on raṅg, \"colour\"; and pīṁgh, \"swing\", comes from Sanskrit preṅkha, \"swing\" (CDIAL 8996)."
+              "text": "ਸਤਰੰਗੀ ਪੀਂਘ (satrangī pīṅgh) is \"the seven-coloured swing\". Sat, \"seven\", comes from Sanskrit sapta (CDIAL 13139); raṅgī is built on raṅg, \"colour\"; and pīṅgh, \"swing\", comes from Sanskrit preṅkha, \"swing\" (CDIAL 8996)."
             }
           ]
         },

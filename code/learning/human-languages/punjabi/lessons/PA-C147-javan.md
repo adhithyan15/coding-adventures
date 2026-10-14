@@ -47,7 +47,7 @@ reviews_of: [PA-C147-garib]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-CDIAL lists Punjabi *javāṇ*, "a youth", under *\*yuvāna*, "young", built on Sanskrit *yuvan* (CDIAL 10510). Hindi *javān* is usually traced instead to Persian *javān*, "young", a cousin of the Sanskrit word, so which one Punjabi has is not settled.
+CDIAL lists Punjabi *javāṇ* and *juāṇ*, "a youth", under *\*yuvāna*, "young", built on Sanskrit *yuvan* (CDIAL 10510), with the *y-* to *j-* change of *jāṇā*. In the same entry it marks Sindhi *juānu*, with a plain *n*, as taken from Persian *javān*, the Sanskrit word's cousin, and Hindi *javān* is usually traced to Persian too. The word taught here also has a plain *n*, so how much Persian shaped it is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

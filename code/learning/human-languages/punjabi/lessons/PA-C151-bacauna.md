@@ -15,7 +15,7 @@ concept_tag: PA-VERB-BACAUNA
 prerequisites: [PA-C151-jiuna, PA-C151-kharcna]
 sounds: []
 roots: [sanskrit-vancati]
-etymology_hook: "bacāuṇā: CDIAL lists Punjabi vacāuṇā under vañcati 'escapes from', and marks the b- form as from Hindi (11208)"
+etymology_hook: "bacāuṇā: CDIAL lists it under vañcati 'escapes from' as taken from Hindi; vacāuṇā under vacyate (11208)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [PA-C151-kharcna]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ਬਚਾਉਣਾ** (*bacāuṇā*) goes back to Sanskrit *vañcati*, "moves; escapes from". CDIAL lists the Punjabi form *vacāuṇā*, "to save", under it, and marks *bacāuṇā*, with *b-*, as taken from Hindi (CDIAL 11208).
+**ਬਚਾਉਣਾ** (*bacāuṇā*) goes back to Sanskrit *vañcati*, "moves; escapes from": CDIAL lists *bacāuṇā* under it and marks the Punjabi word as taken from Hindi. In the same entry it lists the form *vacāuṇā*, "to save", under the second headword, *vacyate*, "flies, is poured forth" (CDIAL 11208).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

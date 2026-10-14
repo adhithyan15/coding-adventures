@@ -4,7 +4,7 @@
   "chapter": 151,
   "title": "To say, To live, To spend, To save, To sow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:566f47bd60c6b5d6",
+  "sourceHash": "fnv1a64:321816c6d2d0c90c",
   "lessons": [
     {
       "id": "PA-C151-kahina",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1706021399824a8",
+      "sourceHash": "fnv1a64:90b437b3c067edc6",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਬਚਾਉਣਾ (bacāuṇā) goes back to Sanskrit vañcati, \"moves; escapes from\". CDIAL lists the Punjabi form vacāuṇā, \"to save\", under it, and marks bacāuṇā, with b-, as taken from Hindi (CDIAL 11208)."
+              "text": "ਬਚਾਉਣਾ (bacāuṇā) goes back to Sanskrit vañcati, \"moves; escapes from\": CDIAL lists bacāuṇā under it and marks the Punjabi word as taken from Hindi. In the same entry it lists the form vacāuṇā, \"to save\", under the second headword, vacyate, \"flies, is poured forth\" (CDIAL 11208)."
             }
           ]
         },

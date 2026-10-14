@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 148,
-  "sourceHash": "fnv1a64:1c6a837d2b53d903",
+  "sourceHash": "fnv1a64:78053d1924411f0a",
   "lessonIds": [
     "PA-C148-lukna",
     "PA-C148-diggna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch148.txt",
   "json": "punjabi/narration/ch148.json",
-  "textHash": "fnv1a64:2b402554fff08603",
-  "jsonHash": "fnv1a64:3b704f479722234c",
+  "textHash": "fnv1a64:8b1dba66e3d0fd2a",
+  "jsonHash": "fnv1a64:214f643b0c55e58b",
   "findings": []
 }

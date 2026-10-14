@@ -4,7 +4,7 @@
   "chapter": 148,
   "title": "To hide, To fall, To teach, To lift, To jump",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1c6a837d2b53d903",
+  "sourceHash": "fnv1a64:78053d1924411f0a",
   "lessons": [
     {
       "id": "PA-C148-lukna",
@@ -444,7 +444,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fe6d9aabfa3d0b4",
+      "sourceHash": "fnv1a64:39f70690cc0fd3bf",
       "notice": null,
       "blocks": [
         {
@@ -482,7 +482,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Where ਚੁੱਕਣਾ (cukkṇā) comes from is not settled. CDIAL does not list it, though it gives the close Punjabi cakkṇā, \"to lift, take up, carry\", in its entry for Sanskrit ucca, \"tall, lofty\" (CDIAL 1634)."
+              "text": "Where ਚੁੱਕਣਾ (cukkṇā), \"to lift\", comes from is not settled. CDIAL lists a Punjabi cukkṇā only in the senses \"to be finished, miss, err; to finish, undertake\", under a reconstructed cukk, \"fall short of, stop\" (CDIAL 4848). It gives the close Punjabi cakkṇā, \"to lift, take up, carry\", in its entry for Sanskrit ucca, \"tall, lofty\" (CDIAL 1634)."
             }
           ]
         },

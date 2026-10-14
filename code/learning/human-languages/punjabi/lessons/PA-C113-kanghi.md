@@ -15,7 +15,7 @@ concept_tag: PA-THINGS113-KANGHI
 prerequisites: [PA-C113-galas, PA-C113-patila]
 sounds: []
 roots: [sanskrit-kankata]
-etymology_hook: "kaṅghī ← *kaṅkaśa, a variant of Sanskrit kaṅkata 'comb', of doubtful IE origin; Hindi took it from Punjabi (CDIAL 2598)"
+etymology_hook: "kanghī ← *kaṅkaśa, a variant of Sanskrit kaṅkata 'comb', of doubtful IE origin; Hindi took it from Punjabi (CDIAL 2598)"
 duration:
   max_seconds: 200
 requires:

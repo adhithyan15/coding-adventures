@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 100,
-  "sourceHash": "fnv1a64:095932c027a61e71",
+  "sourceHash": "fnv1a64:58baaa346e2bbf0e",
   "lessonIds": [
     "PA-C100-barsat",
     "PA-C100-basant",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch100.txt",
   "json": "punjabi/narration/ch100.json",
-  "textHash": "fnv1a64:fd76d22b101ca8c1",
-  "jsonHash": "fnv1a64:e204748c0471a6e7",
+  "textHash": "fnv1a64:975772378deeb2f3",
+  "jsonHash": "fnv1a64:830107de530baecc",
   "findings": []
 }

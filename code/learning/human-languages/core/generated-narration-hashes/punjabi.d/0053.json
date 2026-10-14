@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 53,
-  "sourceHash": "fnv1a64:83ad44af2e58fcb8",
+  "sourceHash": "fnv1a64:85052042ef839204",
   "lessonIds": [
     "PA-C53-udas",
     "PA-C53-pita",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch53.txt",
   "json": "punjabi/narration/ch53.json",
-  "textHash": "fnv1a64:7e293ca9e27c3b4b",
-  "jsonHash": "fnv1a64:7deb29de4a2bc2af",
+  "textHash": "fnv1a64:9c52da525ef96e99",
+  "jsonHash": "fnv1a64:a1bc627ebae78a30",
   "findings": []
 }

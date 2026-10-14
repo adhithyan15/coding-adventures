@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 68,
-  "sourceHash": "fnv1a64:44abe90a9d1746d8",
+  "sourceHash": "fnv1a64:175d7dfdd3efa888",
   "lessonIds": [
     "PA-C68-mez",
     "PA-C68-kandh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch68.txt",
   "json": "punjabi/narration/ch68.json",
-  "textHash": "fnv1a64:baeb77d9a02846cb",
-  "jsonHash": "fnv1a64:18eed9a79de57728",
+  "textHash": "fnv1a64:2acfaa4438e45781",
+  "jsonHash": "fnv1a64:4897e968bfaeaa04",
   "findings": []
 }

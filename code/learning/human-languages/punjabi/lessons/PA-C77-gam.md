@@ -15,7 +15,7 @@ concept_tag: PA-ANIMALS77-GAM
 prerequisites: [PA-C77-kutta, PA-C77-billi]
 sounds: []
 roots: [sanskrit-gavi]
-etymology_hook: "gāṁ: CDIAL lists Punjabi gāṁ under *gāva 'ox', a form of Sanskrit go 'cow, ox' (CDIAL 4147)"
+etymology_hook: "gāṁ: CDIAL lists Punjabi gāṁ under *gāvā 'cow', a form built on Sanskrit go 'cow, ox' (CDIAL 4147)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [PA-C77-billi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ਗਾਂ** (*gāṁ*) is inherited. CDIAL lists it under *\*gāva*, "ox", one of the forms built on Sanskrit *go*, "cow, ox" (CDIAL 4147).
+**ਗਾਂ** (*gāṁ*) is inherited. CDIAL lists it under *\*gāvā*, "cow", the feminine it sets beside *\*gāva*, "ox"; both are built on Sanskrit *go*, "cow, ox" (CDIAL 4147).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

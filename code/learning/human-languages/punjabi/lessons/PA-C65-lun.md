@@ -15,7 +15,7 @@ concept_tag: PA-FOOD65-LUN
 prerequisites: [PA-C65-gajar, PA-C65-khand]
 sounds: []
 roots: [sanskrit-lavana]
-etymology_hook: "lūṇ: inherited; CDIAL lists Lahnda lūṇ 'salt' under Sanskrit lavaṇa 'salt' (CDIAL 10978)"
+etymology_hook: "lūṇ ← Sanskrit lavaṇa 'salt', inherited; CDIAL lists Punjabi lūṇ and nūṇ 'salt' (CDIAL 10978)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [PA-C65-khand]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ਲੂਣ** (*lūṇ*) is inherited. CDIAL lists no Punjabi form, but gives the matching Lahnda *lūṇ*, "salt", under Sanskrit *lavaṇa*, "salt" (CDIAL 10978).
+**ਲੂਣ** (*lūṇ*) is inherited. CDIAL lists Punjabi *lūṇ* and *nūṇ*, "salt", with Lahnda *lūṇ*, under Sanskrit *lavaṇa*, "salt" (CDIAL 10978).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

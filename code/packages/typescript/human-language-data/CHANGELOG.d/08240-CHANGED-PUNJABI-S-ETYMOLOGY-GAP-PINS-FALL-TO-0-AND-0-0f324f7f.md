@@ -13,3 +13,4 @@
 - **Uncertain origins.** 29 say the origin is not settled.
 - **More detail.** The Punjabi track changelog covers the three `max_seconds` raises, all under 300 s.
 - **No code changed.** Only the pins and the owner's rationale moved.
+- **Review.** An independent read of all 576 edited lessons corrected 19. Eleven had a content error, such as a Punjabi form said to be missing from CDIAL, a wrong sub-entry or a wrong gloss. The rest dropped a CDIAL hedge, missed a lead or disagreed with another lesson. CDIAL citations now number 816. The pins and the 29 unsettled origins are unchanged.

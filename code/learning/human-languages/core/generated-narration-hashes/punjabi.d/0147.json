@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 147,
-  "sourceHash": "fnv1a64:dd47dd322fada3ca",
+  "sourceHash": "fnv1a64:c539c78027ad3fc7",
   "lessonIds": [
     "PA-C147-amir",
     "PA-C147-garib",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch147.txt",
   "json": "punjabi/narration/ch147.json",
-  "textHash": "fnv1a64:f05f6c317b19c4b1",
-  "jsonHash": "fnv1a64:00e3723051253ec4",
+  "textHash": "fnv1a64:310e96bbb8bfa659",
+  "jsonHash": "fnv1a64:53250c9c5f535871",
   "findings": []
 }

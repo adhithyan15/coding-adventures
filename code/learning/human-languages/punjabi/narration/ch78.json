@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Bird, Mouse, Lion, Elephant, Monkey",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c9964663631c1db5",
+  "sourceHash": "fnv1a64:bbff82520f0cfe8e",
   "lessons": [
     {
       "id": "PA-C78-panchhi",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c99fe6ac8760ce58",
+      "sourceHash": "fnv1a64:64c28155511309f6",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਬਾਂਦਰ (bāndar) matches Hindi bāṁdar, which CDIAL lists under Sanskrit vānara, \"monkey\", a word it derives from vana, \"forest\" (CDIAL 11515)."
+              "text": "CDIAL lists ਬਾਂਦਰ (bāndar), from the Punjabi of Ludhiana, with Hindi bāṁdar, under Sanskrit vānara, \"monkey\", a word it derives from vana, \"forest\" (CDIAL 11515)."
             }
           ]
         },

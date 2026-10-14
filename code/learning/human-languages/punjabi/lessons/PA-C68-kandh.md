@@ -47,7 +47,7 @@ reviews_of: [PA-C68-mez]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-CDIAL lists **ਕੰਧ** (*kandh*), "wall", under Sanskrit *kanthā*, "wall, town", which it takes from Iranian (CDIAL 2720). It adds that the word coincides with *kaṇṭha*, "throat; border", under which it lists Punjabi *kaṇḍh*, "wall" (CDIAL 2680).
+CDIAL lists **ਕੰਧ** (*kandh*), "wall", under Sanskrit *kanthā*, "wall, town", which it takes from Iranian (CDIAL 2720). It adds that the word coincides with *kaṇṭha*, "throat; border", under which it lists Punjabi *kaṇḍh*, "wall", as perhaps belonging there (CDIAL 2680).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

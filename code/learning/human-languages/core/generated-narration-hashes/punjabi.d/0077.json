@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 77,
-  "sourceHash": "fnv1a64:7efdf76f6be9a1de",
+  "sourceHash": "fnv1a64:67eee510f75a9954",
   "lessonIds": [
     "PA-C77-kutta",
     "PA-C77-billi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch77.txt",
   "json": "punjabi/narration/ch77.json",
-  "textHash": "fnv1a64:7c1d8ebe87e022ef",
-  "jsonHash": "fnv1a64:d9a896313e8f442a",
+  "textHash": "fnv1a64:3fe5141dbd192138",
+  "jsonHash": "fnv1a64:b4bda79d1056ab35",
   "findings": []
 }

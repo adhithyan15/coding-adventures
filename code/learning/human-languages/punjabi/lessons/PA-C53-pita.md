@@ -15,7 +15,7 @@ concept_tag: PA-HEALTH53-PITA
 prerequisites: [PA-C52-khush, PA-C53-udas]
 sounds: []
 roots: [sanskrit-pitr]
-etymology_hook: "pitā: Sanskrit pitā 'father', a tatsama; CDIAL lists inherited Punjabi piu 'mother and father' (CDIAL 8179)"
+etymology_hook: "pitā: Sanskrit pitā 'father', a tatsama; CDIAL lists the inherited Punjabi piu 'father' (CDIAL 8179)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [PA-C53-udas]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ਪਿਤਾ** (*pitā*) is Sanskrit *pitā*, the nominative of *pitṛ*, "father", taken over whole, a tatsama. The inherited line survives in Punjabi *piu*, "mother and father", which CDIAL lists under *pitṛ* (CDIAL 8179).
+**ਪਿਤਾ** (*pitā*) is Sanskrit *pitā*, the nominative of *pitṛ*, "father", taken over whole, a tatsama. The inherited line survives in Punjabi *piu*, "father", and *mā-pe*, "mother and father", which CDIAL lists under *pitṛ* (CDIAL 8179).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

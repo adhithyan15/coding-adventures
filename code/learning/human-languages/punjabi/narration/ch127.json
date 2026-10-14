@@ -4,7 +4,7 @@
   "chapter": 127,
   "title": "Shore, Waterfall, Cave, Valley, Sand hill",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9a1852cf5d126b1c",
+  "sourceHash": "fnv1a64:61e1614d4b028702",
   "lessons": [
     {
       "id": "PA-C127-kinara",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62aa886b282744ab",
+      "sourceHash": "fnv1a64:bc8cf1f4fe92c237",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਝਰਨਾ (jharnā) is inherited. CDIAL lists a Punjabi jharnā, \"grating in a waterway\", under Sanskrit jharaṇa, as in jharaṇodaka, \"water from a cascade\" (CDIAL 5344), on a root jhar, \"flow down\"."
+              "text": "ਝਰਨਾ (jharnā) belongs to the root jhar, \"flow down\", but CDIAL does not list it in the sense \"waterfall\". It gives Hindi jharī, \"waterfall\", under Sanskrit jhara, \"waterfall\" (CDIAL 5343), and a Punjabi jharnā only as \"grating in a waterway\", under jharaṇa, as in jharaṇodaka, \"water from a cascade\" (CDIAL 5344)."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e4de505f13435f7",
+      "sourceHash": "fnv1a64:4df55c09d9b26a35",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਗੁਫ਼ਾ (gufā) matches Lahnda guphā, \"hermit's cave\", which CDIAL lists under a reconstructed gupphā, \"cave\" (CDIAL 4204). CDIAL calls its own further link with Sanskrit guhā, \"cave\", very doubtful."
+              "text": "CDIAL lists ਗੁਫ਼ਾ (gufā), in the spelling guphā, \"cave\", under a reconstructed gupphā, \"cave\" (CDIAL 4204). CDIAL calls its own further link with Sanskrit guhā, \"cave\", very doubtful."
             }
           ]
         },

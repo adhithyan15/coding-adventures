@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 113,
-  "sourceHash": "fnv1a64:adf707611cb78e73",
+  "sourceHash": "fnv1a64:63b0713eac494ed5",
   "lessonIds": [
     "PA-C113-chatri",
     "PA-C113-kauli",
@@ -14,6 +14,6 @@
   "text": "punjabi/narration/ch113.txt",
   "json": "punjabi/narration/ch113.json",
   "textHash": "fnv1a64:f47c9791c7109b3d",
-  "jsonHash": "fnv1a64:16a2d683e10f9f5a",
+  "jsonHash": "fnv1a64:f5c891ae1dfac322",
   "findings": []
 }

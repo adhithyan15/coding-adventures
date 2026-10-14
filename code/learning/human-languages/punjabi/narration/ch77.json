@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "Dog, Cat, Cow, Goat, Sheep",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7efdf76f6be9a1de",
+  "sourceHash": "fnv1a64:67eee510f75a9954",
   "lessons": [
     {
       "id": "PA-C77-kutta",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6634d8689f52b99f",
+      "sourceHash": "fnv1a64:2e29d63236da17e3",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਗਾਂ (gāṁ) is inherited. CDIAL lists it under gāva, \"ox\", one of the forms built on Sanskrit go, \"cow, ox\" (CDIAL 4147)."
+              "text": "ਗਾਂ (gāṁ) is inherited. CDIAL lists it under gāvā, \"cow\", the feminine it sets beside gāva, \"ox\"; both are built on Sanskrit go, \"cow, ox\" (CDIAL 4147)."
             }
           ]
         },

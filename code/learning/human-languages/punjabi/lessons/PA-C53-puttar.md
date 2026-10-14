@@ -15,7 +15,7 @@ concept_tag: PA-HEALTH53-PUTTAR
 prerequisites: [PA-C53-pita, PA-C53-mata]
 sounds: []
 roots: [sanskrit-putra]
-etymology_hook: "puttar: a semi-tatsama of Sanskrit putra 'son'; the inherited Punjabi form is putt (CDIAL 8265)"
+etymology_hook: "puttar ← Sanskrit putra 'son', keeping its r as Lahnda puttar does; CDIAL lists Punjabi putt (8265)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [PA-C53-mata]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ਪੁੱਤਰ** (*puttar*) is a semi-tatsama: Sanskrit *putra*, "son", kept with its *r*. CDIAL lists the inherited Punjabi form as *putt*, beside Lahnda *puttar* (CDIAL 8265).
+**ਪੁੱਤਰ** (*puttar*) goes back to Sanskrit *putra*, "son". Its doubled *tt* is an inherited sound change, and it keeps the *r*, as Lahnda *puttar* does. CDIAL lists the shorter Punjabi form *putt* beside Lahnda *puttar* (CDIAL 8265).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

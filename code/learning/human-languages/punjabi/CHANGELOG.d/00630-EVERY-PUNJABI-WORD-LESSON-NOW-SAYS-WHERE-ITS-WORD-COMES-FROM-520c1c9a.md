@@ -43,3 +43,21 @@ did not state an origin, and 31 had an empty "taken apart" section.
   - `PA-C44-duja`: 230 → 233.
 
   Every other edited lesson still fits its existing limit.
+
+- **Review.** An independent read of all 576 edited lessons against CDIAL
+  and Lane corrected 19 of them. The citations now number 816, to 375
+  entries across 400 lessons; the 29 unsettled origins stay unsettled.
+  - CDIAL does list a Punjabi form for *gufā* (as *guphā*), *lūṇ*,
+    *bāndar* and *bharnā* / *bhariā* (the last two from the Punjabi of
+    Ludhiana), and lists *cukkṇā* in other senses. The blocks had said it
+    did not.
+  - *Gāṁ* is under *\*gāvā* "cow", not *\*gāva* "ox". *Vacāuṇā* is under
+    *vacyate*, the second headword in the *vañcati* entry. Punjabi *piu*
+    means "father".
+  - CDIAL's notes are now kept for *baṇnā* (taken from Lahnda), *kaṇḍh*
+    "wall" (perhaps) and *barsāt* (from, or blended with, *varṣartu*).
+  - *Puttar* is no longer called a semi-tatsama: its *tt* is inherited.
+    *Jharnā* now says CDIAL lacks the sense "waterfall". *Liāuṇā* names
+    Hindi *lānā* as a lead.
+  - *Piās* and *javān* now agree with *piāsā* and with Chapter 7. Two hooks
+    follow their lesson's spelling: *kanghī* and *pīṅgh*.

@@ -45,7 +45,7 @@ You'll want to know: ਪਿਤਾ.
 ਪਿਤਾ — pitā — "a father".
 
 The word, taken apart.
-ਪਿਤਾ (pitā) is Sanskrit pitā, the nominative of pitṛ, "father", taken over whole, a tatsama. The inherited line survives in Punjabi piu, "mother and father", which CDIAL lists under pitṛ (CDIAL 8179).
+ਪਿਤਾ (pitā) is Sanskrit pitā, the nominative of pitṛ, "father", taken over whole, a tatsama. The inherited line survives in Punjabi piu, "father", and mā-pe, "mother and father", which CDIAL lists under pitṛ (CDIAL 8179).
 
 What you've built.
 One more word for this chapter.
@@ -109,7 +109,7 @@ You'll want to know: ਪੁੱਤਰ.
 ਪੁੱਤਰ — puttar — "a son".
 
 The word, taken apart.
-ਪੁੱਤਰ (puttar) is a semi-tatsama: Sanskrit putra, "son", kept with its r. CDIAL lists the inherited Punjabi form as putt, beside Lahnda puttar (CDIAL 8265).
+ਪੁੱਤਰ (puttar) goes back to Sanskrit putra, "son". Its doubled tt is an inherited sound change, and it keeps the r, as Lahnda puttar does. CDIAL lists the shorter Punjabi form putt beside Lahnda puttar (CDIAL 8265).
 
 What you've built.
 One more word for this chapter.

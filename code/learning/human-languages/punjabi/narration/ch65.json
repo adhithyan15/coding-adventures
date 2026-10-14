@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Tomato, Carrot, Sugar, Salt, Butter",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cac1c3db667a5ef8",
+  "sourceHash": "fnv1a64:0ed58cb5847d560a",
   "lessons": [
     {
       "id": "PA-C65-tamatar",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed983aa133779fa5",
+      "sourceHash": "fnv1a64:1989a083e2883956",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਲੂਣ (lūṇ) is inherited. CDIAL lists no Punjabi form, but gives the matching Lahnda lūṇ, \"salt\", under Sanskrit lavaṇa, \"salt\" (CDIAL 10978)."
+              "text": "ਲੂਣ (lūṇ) is inherited. CDIAL lists Punjabi lūṇ and nūṇ, \"salt\", with Lahnda lūṇ, under Sanskrit lavaṇa, \"salt\" (CDIAL 10978)."
             }
           ]
         },

@@ -15,7 +15,7 @@ concept_tag: PA-VERB-CUKKNA
 prerequisites: [PA-C148-diggna, PA-C148-sikhauna]
 sounds: []
 roots: []
-etymology_hook: "cukkṇā 'to lift': CDIAL lists the close Punjabi cakkṇā 'to lift, carry' in its entry for ucca 'tall' (1634), not cukkṇā"
+etymology_hook: "cukkṇā 'to lift': not settled; CDIAL has cukkṇā only as 'finish, err' (4848), and cakkṇā 'to lift' under ucca (1634)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [PA-C148-sikhauna]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Where **ਚੁੱਕਣਾ** (*cukkṇā*) comes from is not settled. CDIAL does not list it, though it gives the close Punjabi *cakkṇā*, "to lift, take up, carry", in its entry for Sanskrit *ucca*, "tall, lofty" (CDIAL 1634).
+Where **ਚੁੱਕਣਾ** (*cukkṇā*), "to lift", comes from is not settled. CDIAL lists a Punjabi *cukkṇā* only in the senses "to be finished, miss, err; to finish, undertake", under a reconstructed *\*cukk*, "fall short of, stop" (CDIAL 4848). It gives the close Punjabi *cakkṇā*, "to lift, take up, carry", in its entry for Sanskrit *ucca*, "tall, lofty" (CDIAL 1634).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

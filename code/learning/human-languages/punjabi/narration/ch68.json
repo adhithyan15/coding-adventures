@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Table, Wall, Roof, Cupboard, Floor",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:44abe90a9d1746d8",
+  "sourceHash": "fnv1a64:175d7dfdd3efa888",
   "lessons": [
     {
       "id": "PA-C68-mez",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3615e1220fe43c67",
+      "sourceHash": "fnv1a64:70b80577e683a4fb",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "CDIAL lists ਕੰਧ (kandh), \"wall\", under Sanskrit kanthā, \"wall, town\", which it takes from Iranian (CDIAL 2720). It adds that the word coincides with kaṇṭha, \"throat; border\", under which it lists Punjabi kaṇḍh, \"wall\" (CDIAL 2680)."
+              "text": "CDIAL lists ਕੰਧ (kandh), \"wall\", under Sanskrit kanthā, \"wall, town\", which it takes from Iranian (CDIAL 2720). It adds that the word coincides with kaṇṭha, \"throat; border\", under which it lists Punjabi kaṇḍh, \"wall\", as perhaps belonging there (CDIAL 2680)."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Pain, Medicine, Thirst, Hunger, Happy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aa692053b00239ed",
+  "sourceHash": "fnv1a64:70d14537ffcc5534",
   "lessons": [
     {
       "id": "PA-C52-darad",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7447f784a5b2b8a",
+      "sourceHash": "fnv1a64:3ea66c8a7d6ba922",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਪਿਆਸ (piās) is inherited. CDIAL lists no Punjabi form, but gives the matching Hindi piyās under Sanskrit pipāsā, \"thirst\" (CDIAL 8199)."
+              "text": "ਪਿਆਸ (piās) goes back to Sanskrit pipāsā, \"thirst\". CDIAL lists no Punjabi form, but gives the matching Hindi piyās under it (CDIAL 8199), and it marks the Punjabi adjective peāsā, \"thirsty\", as taken from Hindi (CDIAL 8200)."
             }
           ]
         },

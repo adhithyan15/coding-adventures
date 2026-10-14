@@ -141,7 +141,7 @@ You'll want to know: ਬਾਂਦਰ.
 ਬਾਂਦਰ — bāndar — "a monkey".
 
 The word, taken apart.
-ਬਾਂਦਰ (bāndar) matches Hindi bāṁdar, which CDIAL lists under Sanskrit vānara, "monkey", a word it derives from vana, "forest" (CDIAL 11515).
+CDIAL lists ਬਾਂਦਰ (bāndar), from the Punjabi of Ludhiana, with Hindi bāṁdar, under Sanskrit vānara, "monkey", a word it derives from vana, "forest" (CDIAL 11515).
 
 What you've built.
 One more word for this chapter.

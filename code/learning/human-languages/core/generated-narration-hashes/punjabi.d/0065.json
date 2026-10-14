@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 65,
-  "sourceHash": "fnv1a64:cac1c3db667a5ef8",
+  "sourceHash": "fnv1a64:0ed58cb5847d560a",
   "lessonIds": [
     "PA-C65-tamatar",
     "PA-C65-gajar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch65.txt",
   "json": "punjabi/narration/ch65.json",
-  "textHash": "fnv1a64:19c5385d9c85dcc4",
-  "jsonHash": "fnv1a64:58edf8d6a95ba130",
+  "textHash": "fnv1a64:1e122762f70da31b",
+  "jsonHash": "fnv1a64:f736a80d5d22bc02",
   "findings": []
 }

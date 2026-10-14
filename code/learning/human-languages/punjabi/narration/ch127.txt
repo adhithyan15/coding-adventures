@@ -45,7 +45,7 @@ You'll want to know: ਝਰਨਾ.
 ਝਰਨਾ — jharnā — "a waterfall".
 
 The word, taken apart.
-ਝਰਨਾ (jharnā) is inherited. CDIAL lists a Punjabi jharnā, "grating in a waterway", under Sanskrit jharaṇa, as in jharaṇodaka, "water from a cascade" (CDIAL 5344), on a root jhar, "flow down".
+ਝਰਨਾ (jharnā) belongs to the root jhar, "flow down", but CDIAL does not list it in the sense "waterfall". It gives Hindi jharī, "waterfall", under Sanskrit jhara, "waterfall" (CDIAL 5343), and a Punjabi jharnā only as "grating in a waterway", under jharaṇa, as in jharaṇodaka, "water from a cascade" (CDIAL 5344).
 
 What you've built.
 One more word for this chapter.
@@ -77,7 +77,7 @@ You'll want to know: ਗੁਫ਼ਾ.
 ਗੁਫ਼ਾ — gufā — "a cave".
 
 The word, taken apart.
-ਗੁਫ਼ਾ (gufā) matches Lahnda guphā, "hermit's cave", which CDIAL lists under a reconstructed gupphā, "cave" (CDIAL 4204). CDIAL calls its own further link with Sanskrit guhā, "cave", very doubtful.
+CDIAL lists ਗੁਫ਼ਾ (gufā), in the spelling guphā, "cave", under a reconstructed gupphā, "cave" (CDIAL 4204). CDIAL calls its own further link with Sanskrit guhā, "cave", very doubtful.
 
 What you've built.
 One more word for this chapter.

@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "Rainy season, Spring, Autumn, Every day, Date",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:095932c027a61e71",
+  "sourceHash": "fnv1a64:58baaa346e2bbf0e",
   "lessons": [
     {
       "id": "PA-C100-barsat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5df962e41b043def",
+      "sourceHash": "fnv1a64:3eafe39f9910ca93",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਬਰਸਾਤ (barsāt) matches Hindi barsāt, which CDIAL lists under Sanskrit varṣārātri, \"the rainy season\", or else as a blend with varṣartu, \"rainy season\" (CDIAL 11398). It gives no Punjabi form."
+              "text": "ਬਰਸਾਤ (barsāt) matches Hindi barsāt, which CDIAL lists under Sanskrit varṣārātri, \"the rainy season\", or else as coming from, or blended with, varṣartu, \"rainy season\" (CDIAL 11398). It gives no Punjabi form."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 82,
-  "sourceHash": "fnv1a64:6d7831e833a61be4",
+  "sourceHash": "fnv1a64:988a9a17551388b9",
   "lessonIds": [
     "PA-C82-bharia",
     "PA-C82-khali",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch82.txt",
   "json": "punjabi/narration/ch82.json",
-  "textHash": "fnv1a64:197d73cb8b6a8ddd",
-  "jsonHash": "fnv1a64:a336d41220a45fe4",
+  "textHash": "fnv1a64:8b9bee7ac05881a3",
+  "jsonHash": "fnv1a64:2096bd01feb1a7e7",
   "findings": []
 }

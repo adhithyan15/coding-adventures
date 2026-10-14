@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "To learn, To forget, To want, To bring, To send",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f588dedf6e568844",
+  "sourceHash": "fnv1a64:ee499cc8383342dc",
   "lessons": [
     {
       "id": "PA-C60-sikkhna",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34de3a56eec384e5",
+      "sourceHash": "fnv1a64:e9003acf20fce38a",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Where ਲਿਆਉਣਾ (liāuṇā) comes from is not settled: CDIAL has no entry for it."
+              "text": "Where ਲਿਆਉਣਾ (liāuṇā) comes from is not settled: CDIAL has no entry for it. It does list Hindi lānā, \"to bring\", in its entry for Sanskrit labhate, \"takes\" (CDIAL 10948), and liāuṇā looks like the Punjabi partner of that word."
             }
           ]
         },

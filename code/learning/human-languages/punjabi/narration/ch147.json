@@ -4,7 +4,7 @@
   "chapter": 147,
   "title": "Rich, Poor, Young, Strong, Weak",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dd47dd322fada3ca",
+  "sourceHash": "fnv1a64:c539c78027ad3fc7",
   "lessons": [
     {
       "id": "PA-C147-amir",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2334fcf9af39fa4b",
+      "sourceHash": "fnv1a64:92e5cc0aa1f40c0b",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "CDIAL lists Punjabi javāṇ, \"a youth\", under yuvāna, \"young\", built on Sanskrit yuvan (CDIAL 10510). Hindi javān is usually traced instead to Persian javān, \"young\", a cousin of the Sanskrit word, so which one Punjabi has is not settled."
+              "text": "CDIAL lists Punjabi javāṇ and juāṇ, \"a youth\", under yuvāna, \"young\", built on Sanskrit yuvan (CDIAL 10510), with the y- to j- change of jāṇā. In the same entry it marks Sindhi juānu, with a plain n, as taken from Persian javān, the Sanskrit word's cousin, and Hindi javān is usually traced to Persian too. The word taught here also has a plain n, so how much Persian shaped it is not settled."
             }
           ]
         },
