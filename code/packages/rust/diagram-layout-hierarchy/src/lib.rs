@@ -380,13 +380,14 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
     let empty_title_reserve = if title_margin > 0.0 {
         title_margin + nested_title_reserve
     } else { 0.0 };
+    let group_boundary_inset = if diagram.groups.is_empty() { 0.0 } else { 6.0 };
     let lane_cross = if horizontal_flow { (node_height + 18.0).max(150.0) + cross_title_reserve } else { (rank_slot_width + 18.0).max(150.0) }
         + 60.0 * max_group_depth as f64;
     let lane_along = if cross_lane_ranks.is_some() && horizontal_flow {
-        let tail = if title_margin > 0.0 { (20.0 + 2.0 * outer_padding).max(40.0) } else { 40.0 };
+        let tail = if title_margin > 0.0 { (20.0 + 2.0 * outer_padding + group_boundary_inset).max(40.0) } else { 40.0 };
         lane_header + rank_count as f64 * rank_slot_width + max_rank as f64 * node_gap + tail
     } else if cross_lane_ranks.is_some() {
-        let tail = if title_margin > 0.0 { (20.0 + outer_padding).max(28.0) } else { 28.0 };
+        let tail = if title_margin > 0.0 { (20.0 + outer_padding + group_boundary_inset).max(28.0) } else { 28.0 };
         lane_header + rank_count as f64 * node_height + max_rank as f64 * node_gap + tail + nested_title_reserve
     } else if horizontal_flow {
         diagram.lanes.iter().map(|lane| {
@@ -400,7 +401,8 @@ fn layout_swimlane_supported(diagram: &SwimlaneDiagram) -> Result<LayoutedSwimla
             let gap_units = lane.node_ids.windows(2).map(|pair|
                 link_gaps.units(&pair[0], &pair[1]) as f64
             ).sum::<f64>();
-            lane_header + widths.iter().sum::<f64>() + node_gap * gap_units + 48.0
+            let tail = if title_margin > 0.0 { (20.0 + 2.0 * outer_padding + group_boundary_inset).max(48.0) } else { 48.0 };
+            lane_header + widths.iter().sum::<f64>() + node_gap * gap_units + tail
         }).fold(0.0, f64::max)
     } else {
         diagram.lanes.iter().map(|lane| {
