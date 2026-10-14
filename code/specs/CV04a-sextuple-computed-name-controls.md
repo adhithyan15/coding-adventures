@@ -66,3 +66,12 @@ code and stdout. Keep every earlier test and shared stdout helper unchanged,
 since some conformance programs intentionally return values. Add adversarial
 matched stdout with nonzero/absent exit to prove the new acceptance check rejects
 the specific loophole; these simulated cases are not native runtime evidence.
+
+
+Actual59062 EXIT0 atd8: four assigned programs×six actual backends=24cells,
+allSome(0) and exact9/1. NativeAot/Llvm/Wasm/Jvm/Vm/Jit accepted for these
+programs; CLR unavailable/unvalidated. Adversarial1PASS and strictLANG/docs0;
+compiler869/5 and AST/source3 retained by whole475-object equality263→d8.
+Independent exactd8 review PASS5cee3d33 closes the scoped status/execution gap;
+original263 finding and semantics amendment remain. This does not accept later
+mainf26 imports, downstream24/whole456/generalgeometry/hosted gates or Miri.

@@ -3,45 +3,49 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a current-main reconciliation -->
-October14: native76/main7b6 actual77435 EXIT0:4936/289,0FAIL/3existing ignores;
-74rows/strict56/docs, unchanged11 production BUILD/48 native roster, isolated
-real WinUI interaction and callback controls pass. Exclude60 repeated focus.
-Failed85/894/d49/ee50 originals retained; acceptance remains source-attributed.
+October14: actual76/main7b6 native77435 EXIT0:4936/289,0FAIL/3existing ignores,
+74rows/strict56/docs and real isolated WinUI/callback controls;60focus excluded.
+Integer9a1 actual5925 EXIT0:619/10/strict3,48 full empty-work scenes through8192,
+six authored scenes and exact predicate/AVL/occurrence controls. General arbitrary-
+support/floating P2 remains WITHHELD. Earlier failed receipts remain immutable.
 
-Integer source9a1 actual5925 EXIT0:619/10/strict3; finaldoc090 complete299/300
-package retention and independent reviews PASS.48 complete scenes through8192
-unique integer segments have one original predicate each;8192 counted286690
-work versus7864320 bound. Six authored scenes, independent AVL leaf inventory
-and exact original-predicate IDs/t/point bits pass. General arbitrary-support/
-floating work P2 remains WITHHELD/OPEN; no global resource acceptance.
+Source4a/main563 actual81156 EXIT0: compiler/IR/paint/hierarchy/parser1501/17,
+0FAIL/0ignore/strict5/docs;5focus excluded. Initial178 import1901paths/1888pure/
+13overlaps/146owned; final4a144/146exact, only documented spec/refusal oracle
+exceptions. Four conflict stages archived;376registry identities unchanged.
+Main25 imported four exact TaskApp docs,224882other objects retained.
 
-Current isolated delivery source `4a4eb9c07ec053cd78a3b504dba3210c1106ac96` integrates main563ea13d.
-Closed1901-path frame:1888 pure exact imports,13 overlaps. Initial178 retains
-146 unchanged owned objects; final4a retains144/146 exact, with only the
-reconciliation spec and strengthened target-refusal oracle intentionally changed.
-Four actual conflict stages archived. No new registry identity:376
-tuples retained after full Windows graph resolution. Actual81156 EXIT0:
-full compiler/IR/paint/hierarchy/parser1501PASS/17targets/0FAIL/0ignore,
-strict5/lessons/whitespace pass;5 repeated focus tests excluded. Six-layer
-admission/seventh AST refusal and direct-source parser135 stay distinct; exact
-theme metadata and full scenes retained. Original178 stale oracles,3b compile
-failure and ebd1500PASS1FAIL unknown-target wording remain failed receipts.
-Only completed generated incremental cache reclaimed; frozen Miri untouched.
+Current tested source `d8dc7306715d9ed3b95dd4a9c3ed6e856448e81d`: sixth computed-name AST alias/value
+matrix covers both roots/outcomes/consumers, exact2relay additions and whole
+original arguments, ordered wrappers/roots/original tree. Alias refusal uses
+the real Type formatter error under unchanged8192 classifier cap; value keeps
+one formatter. Direct sixth source explicitly retains Parse135; cloned positions
+are excluded from source-map/lineage evidence. Full compiler2638 actual54630
+EXIT0:869/5/strict2,3focus repeats excluded; entire475compiler objects retainedd8.
+Initial263 stdout-only native acceptance WITHHELD by independent review; immutable
+finding9555136c and return-semantics amendment61b0f921 retained.
 
-Remaining: sixth computed-name alias/value AST/native matrix, affected24-package
-downstream/SwiftUI/Python/native program validation, complete final-source input
-retention and independent whole review. Five-package acceptance is component
-evidence; whole456/current-main/hosted/required CI/review/conflict gates pending.
-Latest audited main `25d0954d93db6e8c52bace75a71e83d4f7771f3e` adds TaskApp release documentation only
-after563; its documentation import awaits reconciliation, with no new Rust/
-program/script/CI delta. Sole Closure/sharedPR17288 published
-`82209953a0909dfaa66c8065ee6f163d7478c2d1`, conflicting/failed CI, auto-mergeOFF. No push/merge/
-cleanup/CV04b. Base ESTree/own types/no new crates.io decisions retained.
+Repaired d8 actual59062 EXIT0: four assigned source programs × six actual
+NativeAot/Llvm/Wasm/Jvm/Vm/Jit backends =24observed cells, every codeSome(0),
+exact9/1stdout. saved avoids intentional result return; everyprogram requires
+actual execution, availability guard retained. CLR unavailable/unvalidated.
+Adversarial matching stdout with abnormal/missing exit rejected; simulatedcells
+are separate from runtime evidence. StrictLANG/lessons/whitespace0; exact-head
+independent review PASS (5cee3d33), no production or existing-control changes.
 
-Full parity/output byte-source/all transformation lineage/goal OPEN. Final-source
-Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/checkout/target/
-receipts untouched/unpolled. Delivery first, genuine Miri later. Heartbeat ACTIVE.
-External terminal receipts:77435,9a1f4e0f,4a4eb9c0; all own native runs terminal.
+Latest audited main `f26caa738d25f1d30e059b6dfaba07c293181433` now adds sign-wrapped standard name actuals
+and Swimlane edge-label theme. These runtime imports are pending; earlier native
+receipts do not accept them. Next: pin closed sign/theme spec/import, retain all
+ownership/limits/resource controls, add exact paired sign and full theme-scene/
+glyph/rect/metadata controls, recompute affected cone and execute downstream/
+SwiftUI/Python/native11production+48roster validation before final security.
+Whole456/current-main/native/hosted/requiredCI/review/conflict/P2 gates pending.
+Sole Closure/sharedPR17288 published`82209953a0909dfaa66c8065ee6f163d7478c2d1` remains
+conflicted/failedCI, autoOFF. No push/merge/cleanup/CV04b. BaseESTree/own types/
+no newcrates.io retained. Full parity/output byte-source/all lineage/goal OPEN.
+Final-source Miri **DEFERRED/PENDING**, never passed; frozen497inputs/run/source/
+target/receipts untouched/unpolled. Delivery first, genuine Miri later;heartbeat
+ACTIVE. Own validators54630/59062 are actual terminal, not still running.
 <!-- /CV04a current-main reconciliation -->
 
 <!-- CV04a BEAM heap native continuation -->

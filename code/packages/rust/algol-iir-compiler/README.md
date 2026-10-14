@@ -606,5 +606,9 @@ seventh source retain the parser nesting limit135. Paired public AST controls
 verify sixth admission and seventh semantic refusal through both consumers,
 with exact wrapper/root counts and original inputs retained. Cloned positions
 do not establish a new source map. Existing computed-name controls cover both
-roots/outcomes/consumers; the new sixth computed-name AST/native matrix remains
-pending. Value-copy selectors retain snapshots; by-name promotion stays refused.
+roots/outcomes/consumers. Sixth computed-name AST controls retain exactly both
+original arguments inside one extra abs, all wrapper/root order and the original
+parsed tree. Value-copy selectors keep one formatter; by-name promotion is
+refused under the unchanged classifier cap. Direct sixth source retains Parse135;
+four assigned native programs produce9/1 with verified zero exits. Cloned AST
+positions remain excluded from mapping/lineage evidence.

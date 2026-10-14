@@ -1175,3 +1175,13 @@ cannot erase that scalar's provenance; a selector that promotes either root
 still refuses output. Paired direct/assigned name refusal and value controls
 check both actuals and outcomes, with exact -1/1 native stdout. Every earlier
 alias, shared-root, tracked-literal and production-limit control stays required.
+
+
+Sixth computed-name value snapshots have four assigned source controls: both
+mutated formal roots and both outcomes. A saved temporary preserves default
+main exit0, and each program requires actual execution on every available
+standard backend, exact9/1 stdout and successful termination. Actual receipt
+records24 zero-exit cells on NativeAot/LLVM/WASM/JVM/VM/JIT; CLR is unavailable
+and unvalidated. Matched stdout with missing/nonzero exit is rejected by a scoped
+adversarial control, while the existing intentional-return conformance helper
+and all earlier matrices remain unchanged. Miri is DEFERRED/PENDING.
