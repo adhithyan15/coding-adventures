@@ -14,7 +14,8 @@ romanization: "kamī karṇe"
 concept_tag: MR-VERB-KAMI-KARNE
 prerequisites: [MR-C164-olandne, MR-C164-vadhavne]
 sounds: []
-roots: []
+roots: [persian-kam, sanskrit-karoti]
+etymology_hook: "kamī: usually traced to Persian kam 'little, less', + -ī; karṇe ← karoti 'does' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C164-vadhavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C164-ACT164-05]; assesses=[] -->
 
 **कमी करणे** — *kamī karṇe* — "to reduce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कमी** is a loan, usually traced to Persian *kam*, "little, less", with the ending *-ī*. **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

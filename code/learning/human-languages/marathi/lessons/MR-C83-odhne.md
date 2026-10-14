@@ -14,7 +14,8 @@ romanization: "oḍhṇe"
 concept_tag: MR-VERB-ODHNE
 prerequisites: [MR-C82-banavne, MR-C83-uchalne]
 sounds: []
-roots: []
+roots: [indo-aryan-avakaddhati]
+etymology_hook: "oḍhṇe ← *avakaḍḍhati 'pulls away', a reconstructed form; a tadbhava (CDIAL 14245)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C83-uchalne]
 <!-- hl-knowledge: introduces=[MR-LEX-C83-VERBS83-02]; assesses=[] -->
 
 **ओढणे** — *oḍhṇe* — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ओढणे** (*oḍhṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*avakaḍḍhati*, "pulls away", a form CDIAL reconstructs from its descendants (CDIAL 14245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

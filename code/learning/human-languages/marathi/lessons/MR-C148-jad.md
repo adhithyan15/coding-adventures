@@ -14,7 +14,8 @@ romanization: "jaḍ"
 concept_tag: MR-QUAL148-JAD
 prerequisites: [MR-C147-arund, MR-C147-patal]
 sounds: []
-roots: []
+roots: [sanskrit-jada]
+etymology_hook: "jaḍ: probably CDIAL's Marathi jaḍ 'cold, stupid', under Sanskrit jaḍa, called non-Aryan (CDIAL 5090)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C147-patal]
 <!-- hl-knowledge: introduces=[MR-LEX-C148-QUAL148-01]; assesses=[] -->
 
 **जड** — *jaḍ* — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जड** (*jaḍ*) is probably the word CDIAL lists as Marathi *jaḍ*, "cold, stupid", under Sanskrit *jaḍa*, "stupid, dumb; cold", a word it calls certainly of non-Aryan origin (CDIAL 5090). CDIAL gives the sense "heavy" only for Konkani *jaḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

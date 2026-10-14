@@ -14,7 +14,8 @@ romanization: "hasṇe"
 concept_tag: MR-VERB-HASNE
 prerequisites: [MR-C78-shijavne, MR-C79-dhune]
 sounds: []
-roots: []
+roots: [sanskrit-hasati]
+etymology_hook: "hasṇe ← Sanskrit hasati 'laughs', a tadbhava (CDIAL 14021)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C79-dhune]
 <!-- hl-knowledge: introduces=[MR-LEX-C79-VERBS79-02]; assesses=[] -->
 
 **हसणे** — *hasṇe* — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हसणे** (*hasṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasati*, "laughs" (CDIAL 14021).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

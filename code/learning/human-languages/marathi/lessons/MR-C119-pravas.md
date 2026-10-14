@@ -14,7 +14,8 @@ romanization: "pravās"
 concept_tag: MR-NUMBERS119-PRAVAS
 prerequisites: [MR-C119-jag, MR-C119-rang]
 sounds: []
-roots: []
+roots: [sanskrit-pravasa]
+etymology_hook: "pravās ← Sanskrit pravāsa 'dwelling abroad', a tatsama (CDIAL 8802)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C119-rang]
 <!-- hl-knowledge: introduces=[MR-LEX-C119-NUMBERS119-05]; assesses=[] -->
 
 **प्रवास** — *pravās* — "a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रवास** (*pravās*) is Sanskrit *pravāsa*, "dwelling abroad", taken over whole as a learned loan, a tatsama (CDIAL 8802). It is *pra-*, "forth", and *vāsa*, "dwelling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

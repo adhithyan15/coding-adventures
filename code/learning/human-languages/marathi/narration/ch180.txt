@@ -12,6 +12,9 @@ Before the new one: say the Marathi for an election, then the Marathi for politi
 You'll want to know: लेखक / लेखिका.
 लेखक / लेखिका — lekhak / lekhikā — "a writer".
 
+The word, taken apart.
+लेखक (lekhak) is Sanskrit lekhaka, "scribe", taken over whole as a learned loan, a tatsama (CDIAL 11102). It is built on likh, "to write".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for politics, then the Marathi for a writer.
 
 You'll want to know: चित्रकार.
 चित्रकार — citrakār — "a painter".
+
+The word, taken apart.
+चित्रकार (citrakār) is Sanskrit citrakāra, "painter", a tatsama: citra, "picture", and kāra, "maker" (CDIAL 4807). CDIAL lists the inherited Marathi forms as citārī, "painter".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a writer, then the Marathi for a painter
 You'll want to know: छायाचित्रकार.
 छायाचित्रकार — chāyācitrakār — "a photographer".
 
+The word, taken apart.
+छायाचित्रकार (chāyācitrakār) is a modern compound of Sanskrit parts: chāyā, "shadow, image", and citrakāra, "painter" (CDIAL 4807).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a painter, then the Marathi for a photog
 You'll want to know: पत्रकार.
 पत्रकार — patrakār — "a journalist".
 
+The word, taken apart.
+पत्रकार (patrakār) is a modern compound of Sanskrit parts: pattra, "leaf, paper", now "newspaper" (CDIAL 7733), and kāra, "maker".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a photographer, then the Marathi for a j
 
 You'll want to know: वास्तुविशारद.
 वास्तुविशारद — vāstuviśārad — "an architect".
+
+The word, taken apart.
+वास्तुविशारद (vāstuviśārad) is a modern compound built from Sanskrit vāstu, "site of a house, building" (CDIAL 11606), and viśārada, "skilled, expert".
 
 What you've built.
 One more word for this chapter.

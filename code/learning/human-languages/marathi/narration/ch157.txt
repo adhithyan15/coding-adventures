@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to bite, then the Marathi for to swallow
 You'll want to know: चाखणे.
 चाखणे — cākhṇe — "to taste".
 
+The word, taken apart.
+चाखणे (cākhṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from cakṣati, "tastes", a form CDIAL reconstructs from its descendants (CDIAL 4557).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to swallow, then the Marathi for to tast
 
 You'll want to know: पेरणे.
 पेरणे — perṇe — "to sow".
+
+The word, taken apart.
+पेरणे (perṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prakirati, "scatters" (CDIAL 8443). CDIAL glosses the Marathi verb "to scatter, strew, sow", and calls Bloch's source pradara wrong.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to taste, then the Marathi for to sow.
 You'll want to know: वाढणे.
 वाढणे — vāḍhṇe — "to grow".
 
+The word, taken apart.
+वाढणे (vāḍhṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vardhate, "grows, increases" (CDIAL 11376).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to sow, then the Marathi for to grow.
 You'll want to know: थकणे.
 थकणे — thakṇe — "to get tired".
 
+The word, taken apart.
+थकणे (thakṇe) comes from a reconstructed sthakk-, "stop, halt" (CDIAL 13737). CDIAL thinks a link with sthā, "to stand", probable, but not clear.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to grow, then the Marathi for to get tir
 
 You'll want to know: जागणे.
 जागणे — jāgṇe — "to stay awake".
+
+The word, taken apart.
+जागणे (jāgṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāgrati, "are awake" (CDIAL 5175).
 
 What you've built.
 One more word for this chapter.

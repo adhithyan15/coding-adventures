@@ -14,7 +14,8 @@ romanization: "śāntatā"
 concept_tag: MR-VASTU209-SANTATA
 prerequisites: [MR-C209-arthavyavastha, MR-C209-yuddha]
 sounds: []
-roots: []
+roots: [sanskrit-shanta]
+etymology_hook: "śāntatā: Sanskrit śānta 'calm' + -tā '-ness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C209-yuddha]
 <!-- hl-knowledge: introduces=[MR-LEX-C209-VASTU209-03]; assesses=[] -->
 
 **शांतता** — *śāntatā* — "peace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शांतता** (*śāntatā*) is Sanskrit *śānta*, "calm, appeased", with the ending *-tā*, "-ness": "calmness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

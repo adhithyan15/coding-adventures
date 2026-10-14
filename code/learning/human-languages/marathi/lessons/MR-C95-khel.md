@@ -14,7 +14,8 @@ romanization: "kheḷ"
 concept_tag: MR-SCHOOL95-KHEL
 prerequisites: [MR-C94-uttar, MR-C95-shabda]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "kheḷ ← *khēl- 'play', a reconstructed form; CDIAL links it, hesitantly, with Sanskrit krīḍati (CDIAL 3918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C95-shabda]
 <!-- hl-knowledge: introduces=[MR-LEX-C95-SCHOOL95-02]; assesses=[] -->
 
 **खेळ** — *kheḷ* — "a game".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खेळ** (*kheḷ*) is inherited from a reconstructed *\*khēl-*, "play" (CDIAL 3918), the word inside **खेळणे**, "to play". CDIAL links it with Sanskrit *krīḍati*, "plays": if that verb has a non-Aryan source, these forms may share it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

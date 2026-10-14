@@ -14,7 +14,8 @@ romanization: "sāp"
 concept_tag: MR-ANIMALS102-SAP
 prerequisites: [MR-C101-hatti, MR-C101-makad]
 sounds: []
-roots: []
+roots: [sanskrit-sarpa]
+etymology_hook: "sāp ← Sanskrit sarpa 'snake', a tadbhava (CDIAL 13271)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C101-makad]
 <!-- hl-knowledge: introduces=[MR-LEX-C102-ANIMALS102-01]; assesses=[] -->
 
 **साप** — *sāp* — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साप** (*sāp*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sarpa*, "snake" (CDIAL 13271). It is built on *sṛp*, "to creep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

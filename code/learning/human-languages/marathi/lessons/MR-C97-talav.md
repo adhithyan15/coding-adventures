@@ -14,7 +14,8 @@ romanization: "talāv"
 concept_tag: MR-NATURE97-TALAV
 prerequisites: [MR-C96-jangal, MR-C96-nadi]
 sounds: []
-roots: []
+roots: [sanskrit-tadaga]
+etymology_hook: "talāv ← Sanskrit taḍāga 'pool', a tadbhava (CDIAL 5635)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C96-nadi]
 <!-- hl-knowledge: introduces=[MR-LEX-C97-NATURE97-01]; assesses=[] -->
 
 **तलाव** — *talāv* — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तलाव** (*talāv*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *taḍāga*, "pool" (CDIAL 5635).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

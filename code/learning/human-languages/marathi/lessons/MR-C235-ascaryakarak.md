@@ -14,7 +14,8 @@ romanization: "āścaryakārak"
 concept_tag: MR-GUN235-ASCARYAKARAK
 prerequisites: [MR-C235-surekh, MR-C235-bhayankar]
 sounds: []
-roots: []
+roots: [sanskrit-ashcarya]
+etymology_hook: "āścaryakārak: Sanskrit āścarya 'wonder' (CDIAL 1464) + kāraka 'making'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C235-bhayankar]
 <!-- hl-knowledge: introduces=[MR-LEX-C235-GUN235-03]; assesses=[] -->
 
 **आश्चर्यकारक** — *āścaryakārak* — "amazing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आश्चर्यकारक** (*āścaryakārak*) is a compound of Sanskrit parts: *āścarya*, "wonderful" (CDIAL 1464), and *kāraka*, "making".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

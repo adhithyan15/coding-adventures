@@ -14,7 +14,8 @@ romanization: "vādaḷ"
 concept_tag: MR-THINGS141-VADAL
 prerequisites: [MR-C141-bet, MR-C141-vij]
 sounds: []
-roots: []
+roots: [sanskrit-vardala]
+etymology_hook: "vādaḷ ← Sanskrit vārdala 'rainy day, bad weather', a tadbhava (CDIAL 11567)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C141-vij]
 <!-- hl-knowledge: introduces=[MR-LEX-C141-THINGS141-04]; assesses=[] -->
 
 **वादळ** — *vādaḷ* — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वादळ** (*vādaḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vārdala*, "rainy day, bad weather" (CDIAL 11567). CDIAL glosses the Marathi word "cloud, bad weather".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ gloss: twenty — the round number the last four chapters have been climbing tow
 concept_tag: MR-LEX-VIS
 prerequisites: [MR-R57-thirteen-to-sixteen, MR-C58-satra, MR-C58-athra]
 sounds: [matra-ii]
-roots: []
+roots: [sanskrit-vimshati]
+etymology_hook: "vīs ← Sanskrit viṁśati 'twenty', a tadbhava; the same ancient word as Latin viginti (CDIAL 11616)"
 duration:
   max_seconds: 210
 requires:

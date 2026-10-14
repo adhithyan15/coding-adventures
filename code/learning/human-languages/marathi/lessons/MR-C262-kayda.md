@@ -14,7 +14,8 @@ romanization: "kāydā"
 concept_tag: MR-VASTU262-KAYDA
 prerequisites: [MR-C262-samaj, MR-C262-sarkar]
 sounds: []
-roots: []
+roots: [arabic-qaida]
+etymology_hook: "kāydā ← Arabic qāʿida 'base, rule', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C262-sarkar]
 <!-- hl-knowledge: introduces=[MR-LEX-C262-VASTU262-05]; assesses=[] -->
 
 **कायदा** — *kāydā* — "a law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कायदा** (*kāydā*) is a loan from Arabic *qāʿida*, "base, rule", which reached Marathi through Persian. Its Arabic root is *q-ʿ-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

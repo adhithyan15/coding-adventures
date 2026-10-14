@@ -14,7 +14,8 @@ romanization: "garīb"
 concept_tag: MR-ADJ105-GARIB
 prerequisites: [MR-C105-rikama, MR-C105-shrimant]
 sounds: []
-roots: []
+roots: [arabic-gharib]
+etymology_hook: "garīb ← Arabic gharīb 'a stranger', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C105-shrimant]
 <!-- hl-knowledge: introduces=[MR-LEX-C105-ADJ105-04]; assesses=[] -->
 
 **गरीब** — *garīb* — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गरीब** (*garīb*) is a loan from Arabic *gharīb*, "a stranger", which reached Marathi through Persian. Its Arabic root is *gh-r-b* (Lane). Persian and Indian use moved it from "a stranger" to "poor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

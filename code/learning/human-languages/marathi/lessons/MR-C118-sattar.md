@@ -14,7 +14,8 @@ romanization: "sattar"
 concept_tag: MR-NUMBERS118-SATTAR
 prerequisites: [MR-C118-pannas, MR-C118-sath]
 sounds: []
-roots: []
+roots: [sanskrit-saptati]
+etymology_hook: "sattar ← Sanskrit saptati 'seventy', a tadbhava (CDIAL 13143)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C118-sath]
 <!-- hl-knowledge: introduces=[MR-LEX-C118-NUMBERS118-04]; assesses=[] -->
 
 **सत्तर** — *sattar* — "seventy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सत्तर** (*sattar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saptati*, "seventy" (CDIAL 13143).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

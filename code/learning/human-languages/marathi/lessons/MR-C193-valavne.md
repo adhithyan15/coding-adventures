@@ -15,6 +15,7 @@ concept_tag: MR-VERB-VALAVNE
 prerequisites: [MR-C193-bacat-karne, MR-C193-magavne]
 sounds: []
 roots: []
+etymology_hook: "vāḷavṇe 'to dry': origin not settled; CDIAL has a vāḷṇe only as 'to give a twist' (CDIAL 11405)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C193-magavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C193-ACT193-04]; assesses=[] -->
 
 **वाळवणे** — *vāḷavṇe* — "to dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **वाळवणे** (*vāḷavṇe*) is not settled. CDIAL has a Marathi *vāḷṇẽ* only as "to give a twist to" (CDIAL 11405), and no entry for the verb "to dry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

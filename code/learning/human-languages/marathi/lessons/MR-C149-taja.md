@@ -14,7 +14,8 @@ romanization: "tājā"
 concept_tag: MR-QUAL149-TAJA
 prerequisites: [MR-C149-kadu, MR-C149-tikhat]
 sounds: []
-roots: []
+roots: [persian-taza]
+etymology_hook: "tājā: usually traced to Persian tāza 'fresh'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C149-tikhat]
 <!-- hl-knowledge: introduces=[MR-LEX-C149-QUAL149-05]; assesses=[] -->
 
 **ताजा** — *tājā* — "fresh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ताजा** (*tājā*) is a loan, usually traced to Persian *tāza*, "fresh". Marathi writes the *z* as **ज**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "māśī"
 concept_tag: MR-VASTU262-MASI
 prerequisites: [MR-C261-ragit, MR-C262-tapman]
 sounds: []
-roots: []
+roots: [sanskrit-makshika]
+etymology_hook: "māśī ← Sanskrit makṣikā 'fly, bee', a tadbhava (CDIAL 9696)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C262-tapman]
 <!-- hl-knowledge: introduces=[MR-LEX-C262-VASTU262-02]; assesses=[] -->
 
 **माशी** — *māśī* — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माशी** (*māśī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *makṣikā*, "fly, bee" (CDIAL 9696).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pharak"
 concept_tag: MR-VASTU239-PHARAK
 prerequisites: [MR-C238-praudh, MR-C239-nikal]
 sounds: []
-roots: []
+roots: [arabic-farq]
+etymology_hook: "pharak ← Arabic farq 'separation, difference', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C239-nikal]
 <!-- hl-knowledge: introduces=[MR-LEX-C239-VASTU239-02]; assesses=[] -->
 
 **फरक** — *pharak* — "a difference".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फरक** (*pharak*) is a loan from Arabic *farq*, "separation, difference", which reached Marathi through Persian. Its Arabic root is *f-r-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

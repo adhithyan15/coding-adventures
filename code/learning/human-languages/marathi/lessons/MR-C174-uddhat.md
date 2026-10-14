@@ -14,7 +14,8 @@ romanization: "uddhaṭ"
 concept_tag: MR-GUN174-UDDHAT
 prerequisites: [MR-C174-aramdayak, MR-C174-sabhya]
 sounds: []
-roots: []
+roots: [sanskrit-uddhata]
+etymology_hook: "uddhaṭ: usually traced to Sanskrit uddhata 'raised; haughty, excited' (CDIAL 2006)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C174-sabhya]
 <!-- hl-knowledge: introduces=[MR-LEX-C174-GUN174-03]; assesses=[] -->
 
 **उद्धट** — *uddhaṭ* — "rude".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उद्धट** (*uddhaṭ*) is usually traced to Sanskrit *uddhata*, "raised, high; haughty, excited" (CDIAL 2006), with Marathi **ट** for the *t*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

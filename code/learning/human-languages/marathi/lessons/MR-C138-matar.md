@@ -14,7 +14,8 @@ romanization: "maṭār"
 concept_tag: MR-THINGS138-MATAR
 prerequisites: [MR-C137-lasun, MR-C137-ale]
 sounds: []
-roots: []
+roots: [indo-aryan-mattara]
+etymology_hook: "maṭār: as Hindi maṭar 'pea' ← *maṭṭara; CDIAL lists Marathi maṭh 'pea' under the variant *maṭṭha (CDIAL 9724)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C137-ale]
 <!-- hl-knowledge: introduces=[MR-LEX-C138-THINGS138-01]; assesses=[] -->
 
 **मटार** — *maṭār* — "peas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मटार** (*maṭār*) matches Hindi *maṭar*, "pea", which CDIAL traces to a reconstructed *\*maṭṭara*, "pea". CDIAL lists Marathi's own form, *maṭh*, "pea", under its variant *\*maṭṭha* (CDIAL 9724).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

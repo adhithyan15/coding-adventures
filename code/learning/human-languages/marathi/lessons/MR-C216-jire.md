@@ -14,7 +14,8 @@ romanization: "jire"
 concept_tag: MR-VASTU216-JIRE
 prerequisites: [MR-C216-masala, MR-C216-halad]
 sounds: []
-roots: []
+roots: [sanskrit-jiraka]
+etymology_hook: "jire ← Sanskrit jīraka 'cummin-seed', a tadbhava (CDIAL 5234)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C216-halad]
 <!-- hl-knowledge: introduces=[MR-LEX-C216-VASTU216-05]; assesses=[] -->
 
 **जिरे** — *jire* — "cumin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जिरे** (*jire*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jīraka*, "cummin-seed" (CDIAL 5234).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "itaratra"
 concept_tag: MR-JAGA172-ITARATRA
 prerequisites: [MR-C172-bhovti, MR-C172-saglikade]
 sounds: []
-roots: []
+roots: [sanskrit-itaratra]
+etymology_hook: "itaratra: Sanskrit itaratra 'elsewhere', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C172-saglikade]
 <!-- hl-knowledge: introduces=[MR-LEX-C172-JAGA172-03]; assesses=[] -->
 
 **इतरत्र** — *itaratra* — "elsewhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इतरत्र** (*itaratra*) is Sanskrit *itaratra*, "elsewhere", a tatsama: *itara*, "other", with the place ending *-tra*. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

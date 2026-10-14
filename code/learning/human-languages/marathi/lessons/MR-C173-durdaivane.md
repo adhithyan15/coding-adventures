@@ -14,7 +14,8 @@ romanization: "durdaivāne"
 concept_tag: MR-KARAN173-DURDAIVANE
 prerequisites: [MR-C173-jari, MR-C173-asunhi]
 sounds: []
-roots: []
+roots: [sanskrit-durdaiva]
+etymology_hook: "durdaivāne: Sanskrit durdaiva 'ill luck' + the 'by' ending -ne"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C173-asunhi]
 <!-- hl-knowledge: introduces=[MR-LEX-C173-KARAN173-04]; assesses=[] -->
 
 **दुर्दैवाने** — *durdaivāne* — "unfortunately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुर्दैवाने** (*durdaivāne*) is Sanskrit *durdaiva*, "ill luck": *dur-*, "bad", and *daiva*, "fate", with the ending **-ने**, "by".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

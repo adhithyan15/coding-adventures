@@ -14,7 +14,8 @@ romanization: "śanivār"
 concept_tag: MR-TIME125-SANIVAR
 prerequisites: [MR-C125-guruvar, MR-C125-sukravar]
 sounds: []
-roots: []
+roots: [sanskrit-shani, sanskrit-vara-day]
+etymology_hook: "śanivār: Sanskrit śani 'Saturn' + vāra 'day of the week' (CDIAL 11547), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C125-sukravar]
 <!-- hl-knowledge: introduces=[MR-LEX-C125-TIME125-05]; assesses=[] -->
 
 **शनिवार** — *śanivār* — "Saturday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शनिवार** (*śanivār*) is a Sanskrit compound, a tatsama: *śani*, "Saturn", and *vāra*, "day of the week" (CDIAL 11547). Saturday is Saturn's day, as in English.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "aikṇe"
 concept_tag: MR-VERB-AIKNE
 prerequisites: [MR-C77-pahuna, MR-C77-shiksak]
 sounds: []
-roots: []
+roots: [indo-aryan-acikhyati]
+etymology_hook: "aikṇe ← *ācikhyati 'communicates', which CDIAL prefers to *ācakṣati 'looks at' (CDIAL 1074)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C77-shiksak]
 <!-- hl-knowledge: introduces=[MR-LEX-C77-FAMILY77-04]; assesses=[] -->
 
 **ऐकणे** — *aikṇe* — "to hear, to listen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ऐकणे** (*aikṇe*) goes back to *\*ācikhyati*, "communicates", a form CDIAL reconstructs from Sanskrit *ākhyāti*, "tells". CDIAL prefers it to *\*ācakṣati*, "looks at" (CDIAL 1074, 1063).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

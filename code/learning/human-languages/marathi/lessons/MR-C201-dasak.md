@@ -14,7 +14,8 @@ romanization: "daśak"
 concept_tag: MR-VEL201-DASAK
 prerequisites: [MR-C200-citthi, MR-C201-paryant]
 sounds: []
-roots: []
+roots: [sanskrit-dashaka]
+etymology_hook: "daśak ← Sanskrit daśaka 'consisting of ten; a decad', a tatsama (CDIAL 6228)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C201-paryant]
 <!-- hl-knowledge: introduces=[MR-LEX-C201-VEL201-02]; assesses=[] -->
 
 **दशक** — *daśak* — "a decade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दशक** (*daśak*) is Sanskrit *daśaka*, "consisting of ten; a decad", taken over whole as a learned loan, a tatsama (CDIAL 6228). It is built on *daśa*, "ten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

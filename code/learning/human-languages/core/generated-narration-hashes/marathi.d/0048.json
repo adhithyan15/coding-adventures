@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 48,
-  "sourceHash": "fnv1a64:0f28c9ecb07195d3",
+  "sourceHash": "fnv1a64:e05b0306ce4d1d83",
   "lessonIds": [
     "MR-C48-kade",
     "MR-C48-possession",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "marathi/narration/ch48.txt",
   "json": "marathi/narration/ch48.json",
-  "textHash": "fnv1a64:f639287d025883d2",
-  "jsonHash": "fnv1a64:49e8b4acb4c4e8ba",
+  "textHash": "fnv1a64:b9ef2e0b57151c16",
+  "jsonHash": "fnv1a64:285856e77f49dece",
   "findings": []
 }

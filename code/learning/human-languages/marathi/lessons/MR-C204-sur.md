@@ -14,7 +14,8 @@ romanization: "śūr"
 concept_tag: MR-GUN204-SUR
 prerequisites: [MR-C204-gambhir, MR-C204-lajalu]
 sounds: []
-roots: []
+roots: [sanskrit-shura]
+etymology_hook: "śūr: Sanskrit śūra 'strong, valiant; hero', a tatsama (CDIAL 12569)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C204-lajalu]
 <!-- hl-knowledge: introduces=[MR-LEX-C204-GUN204-03]; assesses=[] -->
 
 **शूर** — *śūr* — "valiant, brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शूर** (*śūr*) is Sanskrit *śūra*, "strong, valiant; hero", a tatsama (CDIAL 12569).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

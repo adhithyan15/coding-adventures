@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 153,
-  "sourceHash": "fnv1a64:b275153bc04a1383",
+  "sourceHash": "fnv1a64:455e04857f3e8ba3",
   "lessonIds": [
     "MR-C153-karda",
     "MR-C153-soneri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch153.txt",
   "json": "marathi/narration/ch153.json",
-  "textHash": "fnv1a64:ccd4baad59897896",
-  "jsonHash": "fnv1a64:c51bfd6a9373277a",
+  "textHash": "fnv1a64:316d711ad921f799",
+  "jsonHash": "fnv1a64:dbdfdc3724a3252b",
   "findings": []
 }

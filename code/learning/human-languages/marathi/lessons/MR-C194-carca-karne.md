@@ -14,7 +14,8 @@ romanization: "carcā karṇe"
 concept_tag: MR-VERB-CARCA-KARNE
 prerequisites: [MR-C193-istri-karne, MR-C194-phon-karne]
 sounds: []
-roots: []
+roots: [sanskrit-carca]
+etymology_hook: "carcā: Sanskrit carcā 'repetition', a tatsama (CDIAL 4695); karṇe 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C194-phon-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C194-ACT194-02]; assesses=[] -->
 
 **चर्चा करणे** — *carcā karṇe* — "to discuss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चर्चा** is Sanskrit *carcā*, "repetition, going over", a tatsama (CDIAL 4695). **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

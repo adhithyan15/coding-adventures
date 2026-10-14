@@ -14,7 +14,8 @@ romanization: "pravāsī"
 concept_tag: MR-VASTU190-PRAVASI
 prerequisites: [MR-C190-sejar, MR-C190-vahtuk]
 sounds: []
-roots: []
+roots: [sanskrit-pravasa]
+etymology_hook: "pravāsī: Sanskrit pravāsin 'traveller', from pravāsa 'dwelling abroad' (CDIAL 8802); a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C190-vahtuk]
 <!-- hl-knowledge: introduces=[MR-LEX-C190-VASTU190-03]; assesses=[] -->
 
 **प्रवासी** — *pravāsī* — "a passenger, a traveller".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रवासी** (*pravāsī*) is Sanskrit *pravāsin*, "one away from home, a traveller", a tatsama built on *pravāsa*, "dwelling abroad" (CDIAL 8802).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

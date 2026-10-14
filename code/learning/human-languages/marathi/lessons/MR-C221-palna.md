@@ -15,6 +15,7 @@ concept_tag: MR-VASTU221-PALNA
 prerequisites: [MR-C221-khadu, MR-C221-gun]
 sounds: []
 roots: []
+etymology_hook: "pāḷṇā 'cradle': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C221-gun]
 <!-- hl-knowledge: introduces=[MR-LEX-C221-VASTU221-05]; assesses=[] -->
 
 **पाळणा** — *pāḷṇā* — "a cradle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **पाळणा** (*pāḷṇā*) is not settled. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

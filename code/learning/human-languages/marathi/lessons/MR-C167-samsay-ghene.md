@@ -14,7 +14,8 @@ romanization: "saṁśay gheṇe"
 concept_tag: MR-VERB-SAMSAY-GHENE
 prerequisites: [MR-C167-adlabadal-karne, MR-C167-ghasarne]
 sounds: []
-roots: []
+roots: [sanskrit-samshaya, sanskrit-grbhayati]
+etymology_hook: "saṁśay: Sanskrit saṁśaya 'doubt', a tatsama (CDIAL 13030); gheṇe ← gṛbhāyati 'takes' (CDIAL 4236)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C167-ghasarne]
 <!-- hl-knowledge: introduces=[MR-LEX-C167-ACT167-05]; assesses=[] -->
 
 **संशय घेणे** — *saṁśay gheṇe* — "to suspect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संशय** is Sanskrit *saṁśaya*, "danger, doubt", a tatsama (CDIAL 13030). **घेणे** comes from Sanskrit *gṛbhāyati*, "takes, seizes" (CDIAL 4236).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

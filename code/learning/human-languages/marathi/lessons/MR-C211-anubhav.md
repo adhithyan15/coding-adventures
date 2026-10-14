@@ -14,7 +14,8 @@ romanization: "anubhav"
 concept_tag: MR-VASTU211-ANUBHAV
 prerequisites: [MR-C210-karmacari, MR-C211-apayas]
 sounds: []
-roots: []
+roots: [sanskrit-anubhava]
+etymology_hook: "anubhav: Sanskrit anubhava 'perception, experience', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C211-apayas]
 <!-- hl-knowledge: introduces=[MR-LEX-C211-VASTU211-02]; assesses=[] -->
 
 **अनुभव** — *anubhav* — "experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अनुभव** (*anubhav*) is Sanskrit *anubhava*, "perception, experience", a tatsama: *anu*, "after", and *bhū*, "to be". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

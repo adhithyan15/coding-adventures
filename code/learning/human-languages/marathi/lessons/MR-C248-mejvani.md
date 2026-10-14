@@ -14,7 +14,8 @@ romanization: "mejvānī"
 concept_tag: MR-VASTU248-MEJVANI
 prerequisites: [MR-C248-miravnuk, MR-C248-jatra]
 sounds: []
-roots: []
+roots: [persian-mezbani]
+etymology_hook: "mejvānī: usually traced to Persian mēzbānī 'hospitality', from mēzbān 'host'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C248-jatra]
 <!-- hl-knowledge: introduces=[MR-LEX-C248-VASTU248-04]; assesses=[] -->
 
 **मेजवानी** — *mejvānī* — "a feast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मेजवानी** (*mejvānī*) is a loan, usually traced to Persian *mēzbānī*, "hospitality", built on *mēzbān*, "host".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

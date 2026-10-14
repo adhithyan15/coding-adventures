@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 254,
-  "sourceHash": "fnv1a64:e86ed23d3507e36e",
+  "sourceHash": "fnv1a64:498f2c6cb9c97114",
   "lessonIds": [
     "MR-C254-corne",
     "MR-C254-sodhun-kadhne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch254.txt",
   "json": "marathi/narration/ch254.json",
-  "textHash": "fnv1a64:fc42ff3d19258d9f",
-  "jsonHash": "fnv1a64:96742c221376316e",
+  "textHash": "fnv1a64:f6c817b6e622c7b7",
+  "jsonHash": "fnv1a64:c7f93a1cc45a543b",
   "findings": []
 }

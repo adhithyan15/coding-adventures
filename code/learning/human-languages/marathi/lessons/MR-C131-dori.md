@@ -14,7 +14,8 @@ romanization: "dorī"
 concept_tag: MR-THINGS131-DORI
 prerequisites: [MR-C131-kulup, MR-C131-badli]
 sounds: []
-roots: []
+roots: [sanskrit-davara]
+etymology_hook: "dorī ← Sanskrit davara 'string', a tadbhava (CDIAL 6225)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C131-badli]
 <!-- hl-knowledge: introduces=[MR-LEX-C131-THINGS131-04]; assesses=[] -->
 
 **दोरी** — *dorī* — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दोरी** (*dorī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *davara*, "string" (CDIAL 6225).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

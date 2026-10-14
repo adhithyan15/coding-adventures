@@ -14,7 +14,8 @@ romanization: "kapāṭ"
 concept_tag: MR-HOME90-KAPAT
 prerequisites: [MR-C90-chhappar, MR-C90-palang]
 sounds: []
-roots: []
+roots: [sanskrit-kavata]
+etymology_hook: "kapāṭ: Sanskrit kapāṭa 'leaf of a door', a tatsama; inherited Marathi kavāḍ 'door' (CDIAL 2963)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C90-palang]
 <!-- hl-knowledge: introduces=[MR-LEX-C90-HOME90-04]; assesses=[] -->
 
 **कपाट** — *kapāṭ* — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कपाट** (*kapāṭ*) is Sanskrit *kapāṭa*, "leaf of a door", a tatsama; CDIAL lists it as a variant of *kavāṭa*, whose inherited Marathi form is *kavāḍ*, "door" (CDIAL 2963). CDIAL notes the view that the word is perhaps from Dravidian. In Marathi it names a cupboard.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ gloss: "fun, enjoyment"
 concept_tag: MR-ANCHOR-MAUJ
 prerequisites: [MR-C56-bara]
 sounds: []
-roots: []
+roots: [arabic-mawj]
+etymology_hook: "mauj ← Arabic mawj 'a wave, a surge', through Persian"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard
 
 Say it: *mauj*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ौ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मौज** (*mauj*) is a loan from Arabic *mawj*, "a wave, a surge", which reached Marathi through Persian. Its Arabic root is *m-w-j* (Lane). In Hindustani and Marathi it came to mean a surge of pleasure: fun, enjoyment.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-MAUJ] -->

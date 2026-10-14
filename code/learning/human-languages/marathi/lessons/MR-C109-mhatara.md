@@ -14,7 +14,8 @@ romanization: "mhātārā"
 concept_tag: MR-ADJ109-MHATARA
 prerequisites: [MR-C108-gulabi, MR-C108-tarun]
 sounds: []
-roots: []
+roots: [sanskrit-mahattara]
+etymology_hook: "mhātārā ← Sanskrit mahattara 'greater; village eldest', a tadbhava (CDIAL 9932)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C108-tarun]
 <!-- hl-knowledge: introduces=[MR-LEX-C109-ADJ109-01]; assesses=[] -->
 
 **म्हातारा** — *mhātārā* — "old (people)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**म्हातारा** (*mhātārā*) is a tadbhava of Sanskrit *mahattara*, "greater", which also meant "chief, village eldest" (CDIAL 9932). CDIAL lists Marathi *mahātārā*, "old".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

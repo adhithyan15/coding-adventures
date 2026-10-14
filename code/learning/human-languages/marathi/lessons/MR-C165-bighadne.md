@@ -14,7 +14,8 @@ romanization: "bighaḍṇe"
 concept_tag: MR-VERB-BIGHADNE
 prerequisites: [MR-C165-cukne, MR-C165-sudharne]
 sounds: []
-roots: []
+roots: [sanskrit-vighatate]
+etymology_hook: "bighaḍṇe ← Sanskrit vighaṭate 'flies apart, is marred'; CDIAL marks the Marathi form as from Hindi (CDIAL 11673)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C165-sudharne]
 <!-- hl-knowledge: introduces=[MR-LEX-C165-ACT165-03]; assesses=[] -->
 
 **बिघडणे** — *bighaḍṇe* — "to get worse, to break down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बिघडणे** (*bighaḍṇe*) goes back to Sanskrit *vighaṭate*, "flies apart, is marred, is broken" (CDIAL 11673). CDIAL marks the Marathi form as taken from Hindi *bigaṛnā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

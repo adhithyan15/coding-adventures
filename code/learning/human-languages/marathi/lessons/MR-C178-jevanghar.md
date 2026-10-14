@@ -14,7 +14,8 @@ romanization: "jevaṇghar"
 concept_tag: MR-VASTU178-JEVANGHAR
 prerequisites: [MR-C177-garvistha, MR-C178-sadnika]
 sounds: []
-roots: []
+roots: [sanskrit-jemana, grha-sanskrit]
+etymology_hook: "jevaṇghar: jevaṇ 'meal' ← jemana 'eating' (CDIAL 5268) + ghar 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C178-sadnika]
 <!-- hl-knowledge: introduces=[MR-LEX-C178-VASTU178-02]; assesses=[] -->
 
 **जेवणघर** — *jevaṇghar* — "a dining room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जेवणघर** (*jevaṇghar*) is "meal-house": *jevaṇ*, "a meal", from Sanskrit *jemana*, "eating" (CDIAL 5268), and **घर**, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

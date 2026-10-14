@@ -14,7 +14,8 @@ romanization: "ḍhakalṇe"
 concept_tag: MR-VERB-DHAKALNE
 prerequisites: [MR-C83-uchalne, MR-C83-odhne]
 sounds: []
-roots: []
+roots: [indo-aryan-dhakk]
+etymology_hook: "ḍhakalṇe: with ḍhakā 'push', which CDIAL lists under *dhakk 'push, strike' (CDIAL 6701)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C83-odhne]
 <!-- hl-knowledge: introduces=[MR-LEX-C83-VERBS83-03]; assesses=[] -->
 
 **ढकलणे** — *ḍhakalṇe* — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ढकलणे** (*ḍhakalṇe*) belongs with Marathi *ḍhakā*, "push", which CDIAL lists under a reconstructed *\*dhakk-*, "push, strike" (CDIAL 6701).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

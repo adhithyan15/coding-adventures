@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 84,
-  "sourceHash": "fnv1a64:bd7109667292a3bf",
+  "sourceHash": "fnv1a64:34e8fcf9d2b0f84e",
   "lessonIds": [
     "MR-C84-bharne",
     "MR-C84-badalne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch84.txt",
   "json": "marathi/narration/ch84.json",
-  "textHash": "fnv1a64:35aece1cf6333698",
-  "jsonHash": "fnv1a64:5c8d315aaec16f5c",
+  "textHash": "fnv1a64:336e1dcfda0693c3",
+  "jsonHash": "fnv1a64:ca210d6f3e926f5f",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "bharlelā"
 concept_tag: MR-GUN234-BHARLELA
 prerequisites: [MR-C234-manoranjak, MR-C234-ghanerda]
 sounds: []
-roots: []
+roots: [sanskrit-bharati]
+etymology_hook: "bharlelā: from bharṇe 'to fill' ← bharati 'bears; fills' (CDIAL 9397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C234-ghanerda]
 <!-- hl-knowledge: introduces=[MR-LEX-C234-GUN234-04]; assesses=[] -->
 
 **भरलेला** — *bharlelā* — "full, filled".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भरलेला** (*bharlelā*) is the "-ed" form of *bharṇẽ*, "to carry, fill", which comes from Sanskrit *bharati*, "bears; fills" (CDIAL 9397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

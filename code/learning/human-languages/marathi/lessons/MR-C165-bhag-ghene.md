@@ -14,7 +14,8 @@ romanization: "bhāg gheṇe"
 concept_tag: MR-VERB-BHAG-GHENE
 prerequisites: [MR-C165-bighadne, MR-C165-niriksan-karne]
 sounds: []
-roots: []
+roots: [sanskrit-bhagya, sanskrit-grbhayati]
+etymology_hook: "bhāg 'share' ← bhāgya '*part' (CDIAL 9435); gheṇe ← gṛbhāyati 'takes' (CDIAL 4236)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C165-niriksan-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C165-ACT165-05]; assesses=[] -->
 
 **भाग घेणे** — *bhāg gheṇe* — "to take part".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भाग**, "share, part", CDIAL lists under Sanskrit *bhāgya*, "entitled to a share", which it takes as also meaning "part" (CDIAL 9435). **घेणे** comes from Sanskrit *gṛbhāyati*, "takes, seizes" (CDIAL 4236).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

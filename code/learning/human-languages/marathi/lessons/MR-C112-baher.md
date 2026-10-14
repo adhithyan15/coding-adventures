@@ -14,7 +14,8 @@ romanization: "bāher"
 concept_tag: MR-PLACE112-BAHER
 prerequisites: [MR-C112-dur, MR-C112-at]
 sounds: []
-roots: []
+roots: [indo-aryan-bahira]
+etymology_hook: "bāher ← *bāhira 'external', a reconstructed form; a tadbhava (CDIAL 9226)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C112-at]
 <!-- hl-knowledge: introduces=[MR-LEX-C112-PLACE112-03]; assesses=[] -->
 
 **बाहेर** — *bāher* — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाहेर** (*bāher*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bāhira*, "external", a form CDIAL reconstructs from its descendants (CDIAL 9226). CDIAL builds it on Sanskrit *bahis*, "outside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

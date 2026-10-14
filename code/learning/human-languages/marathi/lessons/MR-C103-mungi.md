@@ -15,6 +15,7 @@ concept_tag: MR-ANIMALS103-MUNGI
 prerequisites: [MR-C102-unt, MR-C102-phulpakhru]
 sounds: []
 roots: []
+etymology_hook: "muṅgī 'ant': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C102-phulpakhru]
 <!-- hl-knowledge: introduces=[MR-LEX-C103-ANIMALS103-01]; assesses=[] -->
 
 **मुंगी** — *muṅgī* — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मुंगी** (*muṅgī*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

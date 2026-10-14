@@ -14,7 +14,8 @@ romanization: "sīmā"
 concept_tag: MR-JAGA202-SIMA
 prerequisites: [MR-C201-suryoday, MR-C201-sevat]
 sounds: []
-roots: []
+roots: [sanskrit-sima]
+etymology_hook: "sīmā ← Sanskrit sīmā 'parting of the hair; boundary', a tatsama (CDIAL 13435)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C201-sevat]
 <!-- hl-knowledge: introduces=[MR-LEX-C202-JAGA202-01]; assesses=[] -->
 
 **सीमा** — *sīmā* — "a border".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सीमा** (*sīmā*) is Sanskrit *sīmā*, "parting of the hair; boundary", taken over whole as a learned loan, a tatsama (CDIAL 13435). CDIAL lists the inherited Marathi form as *śīv*, "boundary of village or field".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

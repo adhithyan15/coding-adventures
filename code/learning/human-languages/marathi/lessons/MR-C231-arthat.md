@@ -14,7 +14,8 @@ romanization: "arthāt"
 concept_tag: MR-KARAN231-ARTHAT
 prerequisites: [MR-C231-kadacit, MR-C231-sivay]
 sounds: []
-roots: []
+roots: [sanskrit-artha]
+etymology_hook: "arthāt: Sanskrit arthāt 'from the meaning', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C231-sivay]
 <!-- hl-knowledge: introduces=[MR-LEX-C231-KARAN231-04]; assesses=[] -->
 
 **अर्थात** — *arthāt* — "of course".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अर्थात** (*arthāt*) is Sanskrit *arthāt*, "from the sense, that is", a form of *artha*, "aim, meaning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sahakārī"
 concept_tag: MR-KAAM192-SAHAKARI
 prerequisites: [MR-C191-mahiti, MR-C192-kampani]
 sounds: []
-roots: []
+roots: [sanskrit-sahakarin]
+etymology_hook: "sahakārī: Sanskrit sahakārin 'working together', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C192-kampani]
 <!-- hl-knowledge: introduces=[MR-LEX-C192-KAAM192-02]; assesses=[] -->
 
 **सहकारी** — *sahakārī* — "a colleague".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सहकारी** (*sahakārī*) is Sanskrit *sahakārin*, "working together", a tatsama: *saha*, "with", and *kāra*, "doing". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

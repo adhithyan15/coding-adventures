@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 243,
-  "sourceHash": "fnv1a64:2aebdb523152f795",
+  "sourceHash": "fnv1a64:81d01e4a2929a329",
   "lessonIds": [
     "MR-C243-thikan",
     "MR-C243-dekhava",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch243.txt",
   "json": "marathi/narration/ch243.json",
-  "textHash": "fnv1a64:37e0956e8f0fbac1",
-  "jsonHash": "fnv1a64:f8d5d3c4112e3d49",
+  "textHash": "fnv1a64:8b265ea0a8e5bbff",
+  "jsonHash": "fnv1a64:fb1a06149fb85f8e",
   "findings": []
 }

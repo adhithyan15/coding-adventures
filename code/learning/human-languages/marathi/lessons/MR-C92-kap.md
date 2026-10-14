@@ -14,7 +14,8 @@ romanization: "kap"
 concept_tag: MR-HOME92-KAP
 prerequisites: [MR-C91-pankha, MR-C91-killi]
 sounds: []
-roots: []
+roots: [english-cup]
+etymology_hook: "kap ← English cup"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C91-killi]
 <!-- hl-knowledge: introduces=[MR-LEX-C92-HOME92-01]; assesses=[] -->
 
 **कप** — *kap* — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कप** (*kap*) is a loan from English *cup*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

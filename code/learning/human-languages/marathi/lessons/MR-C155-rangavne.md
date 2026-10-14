@@ -14,7 +14,8 @@ romanization: "raṅgavṇe"
 concept_tag: MR-VERB-RANGAVNE
 prerequisites: [MR-C155-bandhne, MR-C155-sivne]
 sounds: []
-roots: []
+roots: [sanskrit-ranga, persian-rang]
+etymology_hook: "raṅgavṇe: the 'make' form of raṅg 'colour', from Sanskrit raṅga or Persian rang"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C155-sivne]
 <!-- hl-knowledge: introduces=[MR-LEX-C155-ACT155-04]; assesses=[] -->
 
 **रंगवणे** — *raṅgavṇe* — "to paint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रंगवणे** (*raṅgavṇe*) is the "make" form built on **रंग**, "colour", which may come from Sanskrit *raṅga*, "dye, colour" (CDIAL 10560), or from Persian *rang*, "colour"; the two may have merged.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

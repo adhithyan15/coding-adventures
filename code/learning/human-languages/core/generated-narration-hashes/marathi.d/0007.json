@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 7,
-  "sourceHash": "fnv1a64:1fbadfb0ff8fae9d",
+  "sourceHash": "fnv1a64:1f1e88612e2b7ee6",
   "lessonIds": [
     "MR-C07-taali",
     "MR-C07-thaam",
@@ -17,7 +17,7 @@
   "drivablePrefix": 3,
   "text": "marathi/narration/ch07.txt",
   "json": "marathi/narration/ch07.json",
-  "textHash": "fnv1a64:dd3d99a25457f6a8",
-  "jsonHash": "fnv1a64:4920c2c218831db7",
+  "textHash": "fnv1a64:ca154586b4f3a5e3",
+  "jsonHash": "fnv1a64:8ed4b7f31ecc4bfe",
   "findings": []
 }

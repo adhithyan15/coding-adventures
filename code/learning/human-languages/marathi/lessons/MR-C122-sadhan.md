@@ -14,7 +14,8 @@ romanization: "sādhan"
 concept_tag: MR-CAN122-SADHAN
 prerequisites: [MR-C121-ksamata, MR-C121-adhikar]
 sounds: []
-roots: []
+roots: [sanskrit-sadhana]
+etymology_hook: "sādhan ← Sanskrit sādhana 'furthering; completion', a tatsama (CDIAL 13334)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C121-adhikar]
 <!-- hl-knowledge: introduces=[MR-LEX-C122-CAN122-01]; assesses=[] -->
 
 **साधन** — *sādhan* — "a means, a tool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साधन** (*sādhan*) is Sanskrit *sādhana*, "furthering; completion", taken over whole as a learned loan, a tatsama (CDIAL 13334). It is built on *sādh*, "to accomplish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

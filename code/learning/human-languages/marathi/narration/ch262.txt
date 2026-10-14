@@ -12,6 +12,9 @@ Before the new one: say the Marathi for thirsty, then the Marathi for short-temp
 You'll want to know: तापमान.
 तापमान — tāpmān — "temperature".
 
+The word, taken apart.
+तापमान (tāpmān) is a modern compound of Sanskrit parts: tāpa, "heat, glow" (CDIAL 5767), and māna, "measure".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for short-tempered, then the Marathi for tem
 
 You'll want to know: माशी.
 माशी — māśī — "a fly".
+
+The word, taken apart.
+माशी (māśī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from makṣikā, "fly, bee" (CDIAL 9696).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for temperature, then the Marathi for a fly.
 You'll want to know: समाज.
 समाज — samāj — "society".
 
+The word, taken apart.
+समाज (samāj) is Sanskrit samāja, "festive gathering", taken over whole as a learned loan, a tatsama (CDIAL 13207).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a fly, then the Marathi for society.
 You'll want to know: सरकार.
 सरकार — sarkār — "the government".
 
+The word, taken apart.
+सरकार (sarkār) is a loan, usually traced to Persian sarkār, "government; lordship": sar, "head", and kār, "work".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for society, then the Marathi for the govern
 
 You'll want to know: कायदा.
 कायदा — kāydā — "a law".
+
+The word, taken apart.
+कायदा (kāydā) is a loan from Arabic qāʿida, "base, rule", which reached Marathi through Persian. Its Arabic root is q-ʿ-d (Lane).
 
 What you've built.
 One more word for this chapter.

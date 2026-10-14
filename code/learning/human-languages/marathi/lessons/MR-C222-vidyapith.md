@@ -14,7 +14,8 @@ romanization: "vidyāpīṭh"
 concept_tag: MR-KAAM222-VIDYAPITH
 prerequisites: [MR-C222-masik, MR-C222-sabdakos]
 sounds: []
-roots: []
+roots: [sanskrit-vidya, sanskrit-pitha]
+etymology_hook: "vidyāpīṭh: Sanskrit vidyā 'knowledge' + pīṭha 'seat' (CDIAL 8222); a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C222-sabdakos]
 <!-- hl-knowledge: introduces=[MR-LEX-C222-KAAM222-04]; assesses=[] -->
 
 **विद्यापीठ** — *vidyāpīṭh* — "a university".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विद्यापीठ** (*vidyāpīṭh*) is a modern compound of Sanskrit parts: *vidyā*, "knowledge", and *pīṭha*, "stool, seat" (CDIAL 8222), a word whose many forms suggest to CDIAL a non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

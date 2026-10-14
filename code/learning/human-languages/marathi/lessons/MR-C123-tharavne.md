@@ -14,7 +14,8 @@ romanization: "ṭharavṇe"
 concept_tag: MR-VERB-THARAVNE
 prerequisites: [MR-C123-svapna, MR-C123-magne]
 sounds: []
-roots: []
+roots: [indo-aryan-stabhira]
+etymology_hook: "ṭharavṇe: 'make' form of ṭharṇe 'to be settled', which CDIAL derives from *stabhira 'firm', via Hindi (CDIAL 13680)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C123-magne]
 <!-- hl-knowledge: introduces=[MR-LEX-C123-WANT123-05]; assesses=[] -->
 
 **ठरवणे** — *ṭharavṇe* — "to decide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ठरवणे** (*ṭharavṇe*) is the "make" form of Marathi *ṭharṇẽ*, "to be settled". CDIAL derives that verb from a reconstructed *\*stabhira*, "fixed, firm", rather than *\*stharati*, "is firm", and marks it as taken from Hindi (CDIAL 13680, 13742).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

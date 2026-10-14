@@ -14,7 +14,8 @@ romanization: "kaḍhīpattā"
 concept_tag: MR-VASTU244-KADHIPATTA
 prerequisites: [MR-C244-mohari, MR-C244-kothimbir]
 sounds: []
-roots: []
+roots: [indo-aryan-kvathita, sanskrit-patra]
+etymology_hook: "kaḍhīpattā: kaḍhī ← kvathita 'boiled' (CDIAL 3637) + pattā 'leaf' ← pattra (CDIAL 7733)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C244-kothimbir]
 <!-- hl-knowledge: introduces=[MR-LEX-C244-VASTU244-03]; assesses=[] -->
 
 **कढीपत्ता** — *kaḍhīpattā* — "curry leaves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कढीपत्ता** (*kaḍhīpattā*) is "kaḍhī leaf": *kaḍhī*, a dish of flour boiled in buttermilk, from Sanskrit *kvathita*, "boiled" (CDIAL 3637), and *pattā*, "leaf", from Sanskrit *pattra* (CDIAL 7733).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

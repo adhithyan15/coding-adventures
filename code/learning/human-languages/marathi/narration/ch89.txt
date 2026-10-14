@@ -12,6 +12,9 @@ Before the new one: say the Marathi for an egg, then the Marathi for yoghurt.
 You'll want to know: कांदा.
 कांदा — kāndā — "an onion".
 
+The word, taken apart.
+कांदा (kāndā) is a tadbhava of Sanskrit kanda, "bulbous root" (CDIAL 2723). CDIAL takes the Sanskrit word as probably from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for yoghurt, then the Marathi for an onion.
 
 You'll want to know: आंबा.
 आंबा — āmbā — "a mango".
+
+The word, taken apart.
+आंबा (āmbā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from āmra, "mango tree; its fruit" (CDIAL 1268).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for an onion, then the Marathi for a mango.
 You'll want to know: खिडकी.
 खिडकी — khiḍkī — "a window".
 
+The word, taken apart.
+खिडकी (khiḍkī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khaṭakkikā, "side door" (CDIAL 3770). CDIAL glosses the Marathi word "back door, window", and suggests the word first named something made of matting.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a mango, then the Marathi for a window.
 You'll want to know: खुर्ची.
 खुर्ची — khurchī — "a chair".
 
+The word, taken apart.
+खुर्ची (khurchī) is a loan from Arabic kursī, "chair, throne", which reached Marathi through Persian. Its Arabic root is k-r-s (Lane). Marathi writes it with kh-.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a window, then the Marathi for a chair.
 
 You'll want to know: टेबल.
 टेबल — ṭebal — "a table".
+
+The word, taken apart.
+टेबल (ṭebal) is a loan from English table.
 
 What you've built.
 One more word for this chapter.

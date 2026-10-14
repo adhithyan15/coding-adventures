@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 239,
-  "sourceHash": "fnv1a64:ce5c61a6ab17e53d",
+  "sourceHash": "fnv1a64:c537760c61f49cf2",
   "lessonIds": [
     "MR-C239-nikal",
     "MR-C239-pharak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch239.txt",
   "json": "marathi/narration/ch239.json",
-  "textHash": "fnv1a64:4ae4a35b363671a7",
-  "jsonHash": "fnv1a64:cad699f9619ffff3",
+  "textHash": "fnv1a64:1279a071b791bdd2",
+  "jsonHash": "fnv1a64:8584c3b4e0c1bfe3",
   "findings": []
 }

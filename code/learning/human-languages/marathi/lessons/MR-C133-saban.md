@@ -14,7 +14,8 @@ romanization: "sābaṇ"
 concept_tag: MR-THINGS133-SABAN
 prerequisites: [MR-C132-dora, MR-C132-kangva]
 sounds: []
-roots: []
+roots: [arabic-sabun]
+etymology_hook: "sābaṇ ← Arabic ṣābūn 'soap', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C132-kangva]
 <!-- hl-knowledge: introduces=[MR-LEX-C133-THINGS133-01]; assesses=[] -->
 
 **साबण** — *sābaṇ* — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साबण** (*sābaṇ*) is a loan from Arabic *ṣābūn*, "soap", which reached Marathi through Persian. Its Arabic root is *ṣ-b-n* (Lane). Latin *sāpō* lies further back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

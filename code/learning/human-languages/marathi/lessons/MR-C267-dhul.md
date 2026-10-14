@@ -14,7 +14,8 @@ romanization: "dhūḷ"
 concept_tag: MR-VASTU267-DHUL
 prerequisites: [MR-C267-gota, MR-C267-cikhal]
 sounds: []
-roots: []
+roots: [sanskrit-dhuli]
+etymology_hook: "dhūḷ ← Sanskrit dhūli 'dust, powder', a tadbhava (CDIAL 6835)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C267-cikhal]
 <!-- hl-knowledge: introduces=[MR-LEX-C267-VASTU267-05]; assesses=[] -->
 
 **धूळ** — *dhūḷ* — "dust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धूळ** (*dhūḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dhūli*, "dust, powder" (CDIAL 6835).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

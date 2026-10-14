@@ -15,6 +15,7 @@ concept_tag: MR-VERB-LAPNE
 prerequisites: [MR-C168-lajne, MR-C168-harne]
 sounds: []
 roots: []
+etymology_hook: "lapṇe 'to hide': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C168-harne]
 <!-- hl-knowledge: introduces=[MR-LEX-C168-ACT168-05]; assesses=[] -->
 
 **लपणे** — *lapṇe* — "to take cover, to hide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **लपणे** (*lapṇe*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

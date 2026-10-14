@@ -14,7 +14,8 @@ romanization: "madh"
 concept_tag: MR-FOOD87-MADH
 prerequisites: [MR-C87-mirchi, MR-C87-loni]
 sounds: []
-roots: []
+roots: [sanskrit-madhu]
+etymology_hook: "madh: Sanskrit madhu 'honey, mead', lightly reshaped; CDIAL lists the inherited moh 'honeycomb' (CDIAL 9784)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C87-loni]
 <!-- hl-knowledge: introduces=[MR-LEX-C87-FOOD87-03]; assesses=[] -->
 
 **मध** — *madh* — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मध** (*madh*) is Sanskrit *madhu*, "honey, mead", lightly reshaped. CDIAL lists the inherited Marathi form as *moh*, "honeycomb, hive" (CDIAL 9784).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

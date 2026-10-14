@@ -14,7 +14,8 @@ romanization: "matsarī"
 concept_tag: MR-GUN232-MATSARI
 prerequisites: [MR-C231-arthat, MR-C231-mhanje]
 sounds: []
-roots: []
+roots: [sanskrit-matsara]
+etymology_hook: "matsarī: matsar 'jealousy' ← Sanskrit matsara (CDIAL 9756) + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C231-mhanje]
 <!-- hl-knowledge: introduces=[MR-LEX-C232-GUN232-01]; assesses=[] -->
 
 **मत्सरी** — *matsarī* — "jealous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मत्सरी** (*matsarī*) is **मत्सर**, "jealousy", from Sanskrit *matsara*, "jealous" (CDIAL 9756), with the ending *-ī*, "having".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

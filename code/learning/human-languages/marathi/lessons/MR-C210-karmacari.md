@@ -14,7 +14,8 @@ romanization: "karmacārī"
 concept_tag: MR-VASTU210-KARMACARI
 prerequisites: [MR-C210-karagir, MR-C210-kamgar]
 sounds: []
-roots: []
+roots: [sanskrit-karman, sanskrit-carin]
+etymology_hook: "karmacārī: Sanskrit karman 'work' + cārin 'moving, acting'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C210-kamgar]
 <!-- hl-knowledge: introduces=[MR-LEX-C210-VASTU210-05]; assesses=[] -->
 
 **कर्मचारी** — *karmacārī* — "an employee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कर्मचारी** (*karmacārī*) is a modern compound built from Sanskrit *karman*, "work" (CDIAL 2892), and *cārin*, "moving, acting" (CDIAL 4765).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

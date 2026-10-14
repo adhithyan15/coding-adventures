@@ -14,7 +14,8 @@ romanization: "śirastrāṇ"
 concept_tag: MR-VASTU266-SIRASTRAN
 prerequisites: [MR-C266-dand, MR-C266-parvana]
 sounds: []
-roots: []
+roots: [sanskrit-shiras, sanskrit-trana]
+etymology_hook: "śirastrāṇ: Sanskrit śirastrāṇa 'head-guard', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C266-parvana]
 <!-- hl-knowledge: introduces=[MR-LEX-C266-VASTU266-05]; assesses=[] -->
 
 **शिरस्त्राण** — *śirastrāṇ* — "a helmet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिरस्त्राण** (*śirastrāṇ*) is Sanskrit *śirastrāṇa*, "head-guard, helmet", a tatsama: *śiras*, "head", and *trāṇa*, "protection".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

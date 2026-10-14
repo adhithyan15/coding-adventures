@@ -14,7 +14,8 @@ romanization: "vyavasthāpak"
 concept_tag: MR-VASTU191-VYAVASTHAPAK
 prerequisites: [MR-C190-rang, MR-C190-gardi]
 sounds: []
-roots: []
+roots: [sanskrit-vyavastha]
+etymology_hook: "vyavasthāpak: Sanskrit vyavasthāpaka 'one who arranges', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C190-gardi]
 <!-- hl-knowledge: introduces=[MR-LEX-C191-VASTU191-01]; assesses=[] -->
 
 **व्यवस्थापक** — *vyavasthāpak* — "a manager".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**व्यवस्थापक** (*vyavasthāpak*) is Sanskrit *vyavasthāpaka*, "one who arranges, settles", a tatsama built on *vyavasthā*, "arrangement". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

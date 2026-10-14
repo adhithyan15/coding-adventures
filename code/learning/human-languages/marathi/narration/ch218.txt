@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a harbour, then the Marathi for a well.
 You'll want to know: कोळी.
 कोळी — koḷī — "a spider".
 
+The word, taken apart.
+कोळी (koḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kolika, "weaver" (CDIAL 3535). CDIAL glosses the Marathi word "a caste of watercarriers, a sort of spider". It cites a view linking the Sanskrit word with Tamil kōṭikar, "weaver", and a Munda word for "spider".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a well, then the Marathi for a spider.
 
 You'll want to know: म्हैस.
 म्हैस — mhais — "a buffalo".
+
+The word, taken apart.
+म्हैस (mhais) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mahiṣa, "great, powerful; buffalo" (CDIAL 9964). CDIAL cites H. W. Bailey: the buffalo was "the great one of the beasts".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a spider, then the Marathi for a buffalo
 You'll want to know: बकरी.
 बकरी — bakrī — "a she-goat".
 
+The word, taken apart.
+बकरी (bakrī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from barkara, "kid, lamb; goat" (CDIAL 9153).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a buffalo, then the Marathi for a she-go
 You'll want to know: धुके.
 धुके — dhuke — "fog".
 
+The word, taken apart.
+The origin of धुके (dhuke) is not settled. CDIAL lists a Marathi dhumẽ, "fog", under Sanskrit dhūmra, "smoke-coloured" (CDIAL 6861), but has no entry for धुके.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a she-goat, then the Marathi for fog.
 
 You'll want to know: दव.
 दव — dav — "dew".
+
+The word, taken apart.
+दव (dav) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from drava, "running, flowing; fluidity" (CDIAL 6623). CDIAL glosses the Marathi word "dew, dampness". Bloch derived it instead from udaka, "water".
 
 What you've built.
 One more word for this chapter.

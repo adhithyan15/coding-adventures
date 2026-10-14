@@ -14,7 +14,8 @@ romanization: "śakyatā"
 concept_tag: MR-VASTU211-SAKYATA
 prerequisites: [MR-C211-nivad, MR-C211-nirnay]
 sounds: []
-roots: []
+roots: [sanskrit-shakya]
+etymology_hook: "śakyatā: Sanskrit śakya 'possible' (CDIAL 12253) + -tā '-ness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C211-nirnay]
 <!-- hl-knowledge: introduces=[MR-LEX-C211-VASTU211-05]; assesses=[] -->
 
 **शक्यता** — *śakyatā* — "a possibility".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शक्यता** (*śakyatā*) is Sanskrit *śakya*, "possible" (CDIAL 12253), with the ending *-tā*, "-ness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pustak"
 concept_tag: MR-HOME93-PUSTAK
 prerequisites: [MR-C93-dar, MR-C93-svayampakghar]
 sounds: []
-roots: []
+roots: [sanskrit-pustaka]
+etymology_hook: "pustak: Sanskrit pustaka 'book', which CDIAL traces to Iranian, cf. Persian pōst 'skin' (CDIAL 8413)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C93-svayampakghar]
 <!-- hl-knowledge: introduces=[MR-LEX-C93-HOME93-03]; assesses=[] -->
 
 **पुस्तक** — *pustak* — "a book".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुस्तक** (*pustak*) is Sanskrit *pustaka*, "book", a tatsama. CDIAL traces the Sanskrit word itself to Iranian, comparing Sogdian *pwstk*, "book", and Persian *pōst*, "skin" (CDIAL 8413). The inherited Marathi word is *pothī*, "book".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

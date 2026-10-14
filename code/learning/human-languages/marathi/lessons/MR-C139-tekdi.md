@@ -14,7 +14,8 @@ romanization: "ṭekḍī"
 concept_tag: MR-THINGS139-TEKDI
 prerequisites: [MR-C138-naral, MR-C138-pith]
 sounds: []
-roots: []
+roots: [indo-aryan-tekka]
+etymology_hook: "ṭekḍī ← *ṭēkka, one of the hill words CDIAL groups under *ṭakka 'hill' (CDIAL 5423)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C138-pith]
 <!-- hl-knowledge: introduces=[MR-LEX-C139-THINGS139-01]; assesses=[] -->
 
 **टेकडी** — *ṭekḍī* — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टेकडी** (*ṭekḍī*) goes back to *\*ṭēkka*, "hill", one of a group of forms CDIAL reconstructs under *\*ṭakka*, "hill" (CDIAL 5423). CDIAL says the variety of forms points to a non-Aryan, perhaps Munda, origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

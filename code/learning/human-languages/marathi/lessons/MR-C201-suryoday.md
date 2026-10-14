@@ -14,7 +14,8 @@ romanization: "sūryoday"
 concept_tag: MR-VEL201-SURYODAY
 prerequisites: [MR-C201-dasak, MR-C201-suryasta]
 sounds: []
-roots: []
+roots: [sanskrit-surya, sanskrit-udaya]
+etymology_hook: "sūryoday: Sanskrit sūrya 'sun' (CDIAL 13574) + udaya 'rise' (CDIAL 1931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C201-suryasta]
 <!-- hl-knowledge: introduces=[MR-LEX-C201-VEL201-04]; assesses=[] -->
 
 **सूर्योदय** — *sūryoday* — "sunrise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सूर्योदय** (*sūryoday*) is a compound of Sanskrit parts: *sūrya*, "sun" (CDIAL 13574), and *udaya*, "rise" (CDIAL 1931).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

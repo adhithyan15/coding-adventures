@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a contract, an agreement, then the Marat
 You'll want to know: खर्च करणे.
 खर्च करणे — kharc karṇe — "to spend (money)".
 
+The word, taken apart.
+खर्च is a loan, usually traced to Persian kharj, kharch, "expense", which Persian took from Arabic. करणे is "to do".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for an interview, then the Marathi for to sp
 
 You'll want to know: बचत करणे.
 बचत करणे — bacat karṇe — "to put money by, to save".
+
+The word, taken apart.
+बचत, "savings", is built on the verb stem bac-, "to escape, be saved", which CDIAL lists under Sanskrit vañcati, a verb whose forms meant "escapes from", and marks the b- forms as taken from Hindi (CDIAL 11208). करणे is "to do".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to spend, then the Marathi for to put mo
 You'll want to know: मागवणे.
 मागवणे — māgavṇe — "to order (food, goods)".
 
+The word, taken apart.
+मागवणे (māgavṇe) is the "make" form of मागणे, "to ask for", which comes from Sanskrit mārgati, "seeks, requests" (CDIAL 10074).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to put money by, then the Marathi for to
 You'll want to know: वाळवणे.
 वाळवणे — vāḷavṇe — "to dry".
 
+The word, taken apart.
+The origin of वाळवणे (vāḷavṇe) is not settled. CDIAL has a Marathi vāḷṇẽ only as "to give a twist to" (CDIAL 11405), and no entry for the verb "to dry".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to order, then the Marathi for to dry.
 
 You'll want to know: इस्त्री करणे.
 इस्त्री करणे — istrī karṇe — "to iron".
+
+The word, taken apart.
+इस्त्री, "an iron", is usually traced to Portuguese estirar, "to stretch out". करणे is "to do".
 
 What you've built.
 One more word for this chapter.

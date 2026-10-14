@@ -14,7 +14,8 @@ romanization: "utarṇe"
 concept_tag: MR-VERB-UTARNE
 prerequisites: [MR-C153-soneri, MR-C153-cadhne]
 sounds: []
-roots: []
+roots: [sanskrit-uttarati]
+etymology_hook: "utarṇe ← Sanskrit uttarati 'passes over; alights, descends', a tadbhava (CDIAL 1770)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C153-cadhne]
 <!-- hl-knowledge: introduces=[MR-LEX-C153-QUAL153-04]; assesses=[] -->
 
 **उतरणे** — *utarṇe* — "to get down, to get off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उतरणे** (*utarṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uttarati*, "passes over; alights, descends" (CDIAL 1770). CDIAL traces the sense from "crosses over" to "lands" to "alights" and so "descends".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

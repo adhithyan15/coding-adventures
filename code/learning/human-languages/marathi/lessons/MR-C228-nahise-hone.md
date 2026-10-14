@@ -14,7 +14,8 @@ romanization: "nāhīse hoṇe"
 concept_tag: MR-VERB-NAHISE-HONE
 prerequisites: [MR-C228-mage-jane, MR-C228-bacav-karne]
 sounds: []
-roots: []
+roots: [sanskrit-bhavati]
+etymology_hook: "nāhīse: from nāhī 'not', on the old negative na; hoṇe ← bhavati (CDIAL 9416)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C228-bacav-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C228-ACT228-05]; assesses=[] -->
 
 **नाहीसे होणे** — *nāhīse hoṇe* — "to disappear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाहीसे** is "not-being", built on **नाही**, "not", which rests on the old negative *na*. **होणे** comes from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

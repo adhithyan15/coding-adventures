@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Small, and the Words That Never Change",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b856f98b04778ec2",
+  "sourceHash": "fnv1a64:e73f7a9fdf8b7d39",
   "lessons": [
     {
       "id": "MR-C50-lahaan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ed36d80f9d3a1bb",
+      "sourceHash": "fnv1a64:f13f9a9fa49eb58c",
       "notice": null,
       "blocks": [
         {
@@ -71,7 +71,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its history is a good one. Sanskrit लघु (laghu) meant \"light, slight, small\" — the same ancient word as Latin levis and English light. The Marathi form wore लघु down to लहान (lahān) over two thousand years, and the meaning barely moved."
+              "text": "Its history is a good one. CDIAL traces लहान (lahān) not to लघु (laghu, \"light\") but to Sanskrit ślakṣṇa, \"smooth, soft, tender\", which the old word-lists also gloss \"thin, small\" (CDIAL 12732). Two thousand years wore it down to लहान (lahān)."
             }
           ]
         },
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa505a845ef612f4",
+      "sourceHash": "fnv1a64:3fa0d648ee9989ba",
       "notice": null,
       "blocks": [
         {
@@ -306,7 +306,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6c590fb555ede62",
+      "sourceHash": "fnv1a64:847bc8cccc21171a",
       "notice": null,
       "blocks": [
         {
@@ -345,7 +345,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word came into Marathi from Sanskrit सुन्दर (sundara) unchanged, and that is exactly why it does not bend: it arrived already finished. Sanskrit built it from सु- (su-), \"good, well\" — the same prefix behind सुद्धा — so beautiful is, underneath, well-made."
+              "text": "The word came into Marathi from Sanskrit सुन्दर (sundara) unchanged, and that is exactly why it does not bend: it arrived already finished. Sanskrit is often said to have built it from सु- (su-), \"good, well\", though CDIAL asks whether सुन्दर is itself a Middle Indo-Aryan form of sūnara, \"excellent\" (CDIAL 13474)."
             },
             {
               "kind": "speech",
@@ -426,7 +426,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why does सुंदर (sundar) not agree? (It does not end in -आ; it arrived from Sanskrit already finished.) What does the सु- in it mean? (Good, well — as in सुद्धा.)"
+              "text": "Why does सुंदर (sundar) not agree? (It does not end in -आ; it arrived from Sanskrit already finished.) What does the सु- in it mean? (Good, well.)"
             },
             {
               "kind": "speech",

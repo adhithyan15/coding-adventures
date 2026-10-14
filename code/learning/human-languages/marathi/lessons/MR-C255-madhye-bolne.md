@@ -14,7 +14,8 @@ romanization: "madhye bolṇe"
 concept_tag: MR-VERB-MADHYE-BOLNE
 prerequisites: [MR-C254-svapna-pahne, MR-C255-agrah-karne]
 sounds: []
-roots: []
+roots: [sanskrit-madhya, bol-speak]
+etymology_hook: "madhye: Sanskrit madhye 'in the middle' (CDIAL 9804); bolṇe ← *bōll 'speak' (CDIAL 9321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C255-agrah-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C255-ACT255-02]; assesses=[] -->
 
 **मध्ये बोलणे** — *madhye bolṇe* — "to interrupt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मध्ये** is Sanskrit *madhye*, "in the middle, among" (CDIAL 9804). **बोलणे** comes from a reconstructed *\*bōll-*, "speak" (CDIAL 9321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

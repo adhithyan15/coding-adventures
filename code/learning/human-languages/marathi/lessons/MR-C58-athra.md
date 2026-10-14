@@ -11,7 +11,8 @@ gloss: eighteen — eight-and-ten, and the last of the -रा family
 concept_tag: MR-LEX-ATHRA
 prerequisites: [MR-C57-sola, MR-R57-thirteen-to-sixteen, MR-C58-satra]
 sounds: [standalone-vowel-a, retroflex-tha]
-roots: []
+roots: [sanskrit-ashtadasha]
+etymology_hook: "aṭhrā ← Sanskrit aṣṭādaśa 'eighteen': aṣṭā 'eight' + daśa 'ten'; a tadbhava (CDIAL 946)"
 duration:
   max_seconds: 210
 requires:

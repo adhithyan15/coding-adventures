@@ -14,7 +14,8 @@ romanization: "rugṇālay"
 concept_tag: MR-LOC128-RUGNALAY
 prerequisites: [MR-C128-udyan, MR-C128-vimantal]
 sounds: []
-roots: []
+roots: [sanskrit-rugna, sanskrit-alaya]
+etymology_hook: "rugṇālay: Sanskrit rugṇa 'broken, diseased' (CDIAL 10760) + ālaya 'abode'; a modern tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C128-vimantal]
 <!-- hl-knowledge: introduces=[MR-LEX-C128-LOC128-05]; assesses=[] -->
 
 **रुग्णालय** — *rugṇālay* — "a hospital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रुग्णालय** (*rugṇālay*) is a modern compound of Sanskrit parts, a tatsama: *rugṇa*, "broken, diseased" (CDIAL 10760), and *ālaya*, "abode": a house for the sick.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

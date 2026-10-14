@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 252,
-  "sourceHash": "fnv1a64:6d3f113220a20ccd",
+  "sourceHash": "fnv1a64:b95e87f311a063e2",
   "lessonIds": [
     "MR-C252-maja-karne",
     "MR-C252-ragavne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch252.txt",
   "json": "marathi/narration/ch252.json",
-  "textHash": "fnv1a64:9d7ba26dc6900bda",
-  "jsonHash": "fnv1a64:236e0d839e93766b",
+  "textHash": "fnv1a64:5d6d21fc48fa1767",
+  "jsonHash": "fnv1a64:ea9d78cb0c625c35",
   "findings": []
 }

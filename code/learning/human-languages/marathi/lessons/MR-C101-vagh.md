@@ -14,7 +14,8 @@ romanization: "vāgh"
 concept_tag: MR-ANIMALS101-VAGH
 prerequisites: [MR-C101-undir, MR-C101-simha]
 sounds: []
-roots: []
+roots: [sanskrit-vyaghra]
+etymology_hook: "vāgh ← Sanskrit vyāghra 'tiger', a tadbhava (CDIAL 12193)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C101-simha]
 <!-- hl-knowledge: introduces=[MR-LEX-C101-ANIMALS101-03]; assesses=[] -->
 
 **वाघ** — *vāgh* — "a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वाघ** (*vāgh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vyāghra*, "tiger" (CDIAL 12193).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

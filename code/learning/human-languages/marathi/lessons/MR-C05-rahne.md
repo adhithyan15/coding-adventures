@@ -11,7 +11,8 @@ gloss: to live, to stay (rāhṇe)
 concept_tag: MR-VERB-RAHNE
 prerequisites: [MR-C05-bolne]
 sounds: [matra-aa, retroflex-na]
-roots: [rah-remain]
+roots: [rah-remain, indo-aryan-rahati]
+etymology_hook: "rāhṇe ← *rahati 'remains', a form CDIAL reconstructs beside Sanskrit raha 'secrecy' (CDIAL 10666)"
 reviews_of: [MR-C05-mi-marathi-bolto]
 duration:
   max_seconds: 240
@@ -48,8 +49,7 @@ retroflex) → **राहणे** *rāhṇe*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[MR-LEX-RAHNE]; assesses=[MR-GRAMMAR-PRESENT-GENDERED-ENDING] -->
 
-**राहणे** (*rāhṇe*, "to live, remain, stay") is from Sanskrit **रह्** (*rah-*, "to
-remain") — the same root behind Hindi *rahnā*. Present tense, gendered as always:
+**राहणे** (*rāhṇe*, "to live, remain, stay") goes back to *\*rahati*, "remains", a form CDIAL reconstructs (CDIAL 10666) — the same verb as Hindi *rahnā*. Present tense, gendered as always:
 **मी पुण्यात राहतो** (*mī puṇyāt rāhto*, a man) / **राहते** (*rāhte*, a woman) — "I
 live in Pune."
 

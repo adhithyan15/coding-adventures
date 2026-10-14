@@ -14,7 +14,8 @@ romanization: "nikāl"
 concept_tag: MR-VASTU239-NIKAL
 prerequisites: [MR-C238-paryatak, MR-C238-praudh]
 sounds: []
-roots: []
+roots: [indo-aryan-nishkalati]
+etymology_hook: "nikāl ← *niṣkāla 'exit, expulsion', a reconstructed form; a tadbhava (CDIAL 7483)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C238-praudh]
 <!-- hl-knowledge: introduces=[MR-LEX-C239-VASTU239-01]; assesses=[] -->
 
 **निकाल** — *nikāl* — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निकाल** (*nikāl*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*niṣkāla*, "exit, expulsion", a form CDIAL reconstructs from its descendants (CDIAL 7483). CDIAL glosses the Marathi word "passage", and suggests, with a query, a source form *\*niṣkālya-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

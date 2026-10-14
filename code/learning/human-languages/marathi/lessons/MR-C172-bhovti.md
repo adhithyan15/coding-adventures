@@ -15,6 +15,7 @@ concept_tag: MR-JAGA172-BHOVTI
 prerequisites: [MR-C171-ajun, MR-C171-acanak]
 sounds: []
 roots: []
+etymology_hook: "bhovtī: no entry of its own; CDIAL has bhõvṇe 'to turn' and sabhõvtā 'all around' (CDIAL 9648, 12972)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C171-acanak]
 <!-- hl-knowledge: introduces=[MR-LEX-C172-JAGA172-01]; assesses=[] -->
 
 **भोवती** — *bhovtī* — "around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भोवती** (*bhovtī*) has no entry of its own in CDIAL, but it looks like a form of Marathi *bhõvṇẽ*, "to turn", which CDIAL lists under Sanskrit *bhramati*, "revolves" (CDIAL 9648), beside *sabhõvtā*, "all around", under *saṁbhramati*, "wanders all round" (CDIAL 12972).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

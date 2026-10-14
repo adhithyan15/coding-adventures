@@ -14,7 +14,8 @@ romanization: "ārogya"
 concept_tag: MR-AAROGYA169-AROGYA
 prerequisites: [MR-C168-harne, MR-C168-lapne]
 sounds: []
-roots: []
+roots: [sanskrit-arogya]
+etymology_hook: "ārogya ← Sanskrit ārogya 'health', a tatsama (CDIAL 1330)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C168-lapne]
 <!-- hl-knowledge: introduces=[MR-LEX-C169-AAROGYA169-01]; assesses=[] -->
 
 **आरोग्य** — *ārogya* — "health".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आरोग्य** (*ārogya*) is Sanskrit *ārogya*, "health", taken over whole as a learned loan, a tatsama (CDIAL 1330). It is built on *aroga*, "free from disease".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

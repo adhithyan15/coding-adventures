@@ -14,7 +14,8 @@ romanization: "badām"
 concept_tag: MR-VASTU270-BADAM
 prerequisites: [MR-C269-usal, MR-C269-lonce]
 sounds: []
-roots: []
+roots: [persian-badam]
+etymology_hook: "badām: usually traced to Persian bādām 'almond'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C269-lonce]
 <!-- hl-knowledge: introduces=[MR-LEX-C270-VASTU270-01]; assesses=[] -->
 
 **बदाम** — *badām* — "almonds".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बदाम** (*badām*) is a loan, usually traced to Persian *bādām*, "almond".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

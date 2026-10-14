@@ -14,7 +14,8 @@ romanization: "hoḍī"
 concept_tag: MR-TOWN115-HODI
 prerequisites: [MR-C114-karyalay, MR-C114-polis]
 sounds: []
-roots: []
+roots: [sanskrit-hoda]
+etymology_hook: "hoḍī ← Sanskrit hoḍa 'raft, boat', which CDIAL takes from Dravidian (CDIAL 14174)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C114-polis]
 <!-- hl-knowledge: introduces=[MR-LEX-C115-TOWN115-01]; assesses=[] -->
 
 **होडी** — *hoḍī* — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**होडी** (*hoḍī*) is a tadbhava of Sanskrit *hoḍa*, "raft, boat", a word from the old word-lists (CDIAL 14174). CDIAL takes it from Dravidian, comparing Kannada *ōḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

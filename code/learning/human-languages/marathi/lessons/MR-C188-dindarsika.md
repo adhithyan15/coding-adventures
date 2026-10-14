@@ -14,7 +14,8 @@ romanization: "dindarśikā"
 concept_tag: MR-VASTU188-DINDARSIKA
 prerequisites: [MR-C187-dagina, MR-C187-bangdi]
 sounds: []
-roots: []
+roots: [sanskrit-dina, sanskrit-darshika]
+etymology_hook: "dindarśikā: Sanskrit dina 'day' + darśikā 'one that shows'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C187-bangdi]
 <!-- hl-knowledge: introduces=[MR-LEX-C188-VASTU188-01]; assesses=[] -->
 
 **दिनदर्शिका** — *dindarśikā* — "a calendar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दिनदर्शिका** (*dindarśikā*) is a modern compound of Sanskrit parts: *dina*, "day", and *darśikā*, "one that shows", from *dṛś*, "to see".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,7 +15,7 @@ You'll want to know: कुठे.
 कुठे — kuṭhe — where.
 तुम्ही कुठे राहता? — tumhī kuṭhe rāhtā? — where do you live? मी पुण्यात राहतो. — mī puṇyāt rāhto. — I live in Pune.
 That exchange is the second question of almost every spoken interview, and until this lesson the book could write the answer and not the question. You already had पुण्यात — the city with -ात glued on its tail. What was missing was the word that asks for it.
-कुठे (kuṭhe) is the क- family again, from Sanskrit कुत्र (kutra, "where"). Its answer is a place, the way कोण wants a person and किती wants a number.
+कुठे (kuṭhe) is the क- family again, usually traced to Sanskrit कुत्र (kutra, "where"). Its answer is a place, the way कोण wants a person and किती wants a number.
 When you do not know: माहीत नाही — māhīt nāhī — I don't know. That is a complete and polite answer to कुठे (kuṭhe).
 
 Guided Practice.
@@ -47,7 +47,7 @@ You can already put two events in order with जेव्हा … तेव्
 You'll want to know: कधी.
 कधी — kadhī — when.
 तुम्ही कधी येता? — tumhī kadhī yetā? — when are you coming? उद्या. — udyā. — tomorrow.
-कधी (kadhī) is Sanskrit कदा (kadā, "when"), and it is the fourth क- word in four lessons. The family is now large enough to be a rule rather than a coincidence: काय, कोण, किती, कुठे (kuṭhe), कधी (kadhī).
+कधी (kadhī) is usually traced to Sanskrit कदा (kadā, "when"), and it is the fourth क- word in four lessons. The family is now large enough to be a rule rather than a coincidence: काय, कोण, किती, कुठे (kuṭhe), कधी (kadhī).
 Notice where it sits. A Marathi time word comes early, before the verb — you saw that with उद्या भेटू. कधी (kadhī) takes exactly that slot, because it is standing in for the answer.
 
 Guided Practice.
@@ -80,6 +80,9 @@ Grammar Lens: nothing moves to the front.
 English hauls its asking word to the front of the sentence: your name is Aruṇ becomes what is your name. Marathi does not move anything. The asking word simply stands in the slot where the answer would stand, and the verb stays last.
 तुमचं नाव अरुण आहे. becomes तुमचं नाव काय आहे? तुम्ही पुण्यात राहता. becomes तुम्ही कुठे (kuṭhe) राहता?
 Compare those two pairs. In each, exactly one word changed and nothing else moved. That is the whole rule, and it is worth having as a rule rather than as two memorised phrases: it means every asking word you own works in every sentence you own, without rearrangement.
+
+The word, taken apart.
+कुठे (kuṭhe) is usually traced to Sanskrit kutra, "where", on the same question stem ka- as काय. CDIAL has no entry for it.
 
 Guided Practice.
 [pause 1 second]

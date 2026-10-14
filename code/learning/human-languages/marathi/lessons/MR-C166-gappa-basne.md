@@ -14,7 +14,8 @@ romanization: "gappa basṇe"
 concept_tag: MR-VERB-GAPPA-BASNE
 prerequisites: [MR-C165-bhag-ghene, MR-C166-vaya-ghalavne]
 sounds: []
-roots: []
+roots: [sanskrit-upavishati]
+etymology_hook: "gappa: origin not settled; basṇe ← Sanskrit upaviśati 'sits down' (CDIAL 2245)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C166-vaya-ghalavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C166-ACT166-02]; assesses=[] -->
 
 **गप्प बसणे** — *gappa basṇe* — "to keep quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **गप्प**, "silent", is not settled: CDIAL has no entry for it in this sense. **बसणे** comes from Sanskrit *upaviśati*, "sits down" (CDIAL 2245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

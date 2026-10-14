@@ -12,6 +12,7 @@ concept_tag: MR-LEX-KHARAAB
 prerequisites: [MR-C51-changla, MR-C10-paani, MR-C32-nahi-verb]
 sounds: [matra-aa]
 roots: [arabic-kharab]
+etymology_hook: "kharāb ← Arabic kharāb 'ruin, desolation', root kh-r-b, through Persian"
 duration:
   max_seconds: 210
 requires:

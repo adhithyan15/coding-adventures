@@ -11,7 +11,8 @@ gloss: "tenth — and the ending does not stop here, which is the point of it"
 concept_tag: MR-ORDINAL-TENTH
 prerequisites: [MR-C61-navva, MR-C60-chautha, MR-C56-bara, MR-C43-samor]
 sounds: []
-roots: []
+roots: [sanskrit-dashama]
+etymology_hook: "dahāvā ← Sanskrit daśama 'tenth', a tadbhava (CDIAL 6233)"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,11 @@ reviews_of: [MR-C61-navva, MR-C60-chautha, MR-C56-bara, MR-C43-samor]
 
 **दहा** + **वा**, with the number whole and the ending behind it, exactly as
 sixth, seventh and eighth were.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **दहावा** (*dahāvā*) under Sanskrit *daśama*, "tenth" (CDIAL 6233).
 
 ## Grammar Lens: this is where the set stops, and the ending does not
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DAHAVA, MR-GRAMMAR-ORDINAL-VA, MR-LEX-BARA] -->

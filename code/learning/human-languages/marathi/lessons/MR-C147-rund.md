@@ -14,7 +14,8 @@ romanization: "ruṇd"
 concept_tag: MR-THINGS147-RUND
 prerequisites: [MR-C147-tvaca, MR-C147-had]
 sounds: []
-roots: []
+roots: [sanskrit-rundra]
+etymology_hook: "ruṇd ← Sanskrit rundra 'rich in', a tadbhava (CDIAL 10781)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C147-had]
 <!-- hl-knowledge: introduces=[MR-LEX-C147-THINGS147-03]; assesses=[] -->
 
 **रुंद** — *ruṇd* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रुंद** (*ruṇd*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rundra*, "rich in" (CDIAL 10781). CDIAL glosses the Marathi word "broad, wide".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

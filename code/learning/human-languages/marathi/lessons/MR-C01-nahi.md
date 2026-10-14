@@ -12,6 +12,7 @@ concept_tag: RESPONSE-NO
 prerequisites: [MR-C01-ho]
 sounds: []
 roots: [na-pie]
+etymology_hook: "nāhī: built on the old Indo-Aryan negative na, from PIE *ne, the root of English no and not"
 duration:
   max_seconds: 180
 requires:

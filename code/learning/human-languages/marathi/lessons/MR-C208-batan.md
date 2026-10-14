@@ -14,7 +14,8 @@ romanization: "baṭaṇ"
 concept_tag: MR-VASTU208-BATAN
 prerequisites: [MR-C207-mokla, MR-C208-aramkhurci]
 sounds: []
-roots: []
+roots: [english-button]
+etymology_hook: "baṭaṇ ← English button"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C208-aramkhurci]
 <!-- hl-knowledge: introduces=[MR-LEX-C208-VASTU208-02]; assesses=[] -->
 
 **बटण** — *baṭaṇ* — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बटण** (*baṭaṇ*) is a loan from English *button*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

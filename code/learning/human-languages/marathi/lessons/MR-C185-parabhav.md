@@ -14,7 +14,8 @@ romanization: "parābhav"
 concept_tag: MR-VASTU185-PARABHAV
 prerequisites: [MR-C185-kriket, MR-C185-vijay]
 sounds: []
-roots: []
+roots: [sanskrit-parabhava]
+etymology_hook: "parābhav: Sanskrit parābhava 'defeat, overthrow', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C185-vijay]
 <!-- hl-knowledge: introduces=[MR-LEX-C185-VASTU185-04]; assesses=[] -->
 
 **पराभव** — *parābhav* — "a defeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पराभव** (*parābhav*) is Sanskrit *parābhava*, "defeat, overthrow", a tatsama: *parā*, "away", and *bhū*, "to be". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

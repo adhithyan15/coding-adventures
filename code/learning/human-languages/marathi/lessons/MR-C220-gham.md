@@ -14,7 +14,8 @@ romanization: "ghām"
 concept_tag: MR-VASTU220-GHAM
 prerequisites: [MR-C220-papni, MR-C220-bhuvai]
 sounds: []
-roots: []
+roots: [sanskrit-gharma]
+etymology_hook: "ghām ← Sanskrit gharma 'heat; sweat', a tadbhava (CDIAL 4445)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C220-bhuvai]
 <!-- hl-knowledge: introduces=[MR-LEX-C220-VASTU220-04]; assesses=[] -->
 
 **घाम** — *ghām* — "sweat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घाम** (*ghām*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gharma*, "heat; sweat" (CDIAL 4445). CDIAL glosses the Marathi word "sweat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

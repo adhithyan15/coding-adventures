@@ -14,7 +14,8 @@ romanization: "ārām karṇe"
 concept_tag: MR-VERB-ARAM-KARNE
 prerequisites: [MR-C224-ghatasphot-ghene, MR-C224-ghar-badalne]
 sounds: []
-roots: []
+roots: [persian-aram, sanskrit-karoti]
+etymology_hook: "ārām: usually traced to Persian ārām 'rest, ease'; karṇe ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C224-ghar-badalne]
 <!-- hl-knowledge: introduces=[MR-LEX-C224-ACT224-04]; assesses=[] -->
 
 **आराम करणे** — *ārām karṇe* — "to rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आराम** is usually traced to Persian *ārām*, "rest, ease". **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

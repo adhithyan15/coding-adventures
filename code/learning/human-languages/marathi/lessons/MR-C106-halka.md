@@ -14,7 +14,8 @@ romanization: "halkā"
 concept_tag: MR-ADJ106-HALKA
 prerequisites: [MR-C106-jad, MR-C106-barik]
 sounds: []
-roots: []
+roots: [sanskrit-laghu]
+etymology_hook: "halkā: from Hindi halkā ← Sanskrit laghu 'light'; Marathi's own form is haḷkā (CDIAL 10896)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C106-barik]
 <!-- hl-knowledge: introduces=[MR-LEX-C106-ADJ106-05]; assesses=[] -->
 
 **हलका** — *halkā* — "light (in weight)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हलका** (*halkā*) goes back to Sanskrit *laghu*, "light" (CDIAL 10896). CDIAL lists Marathi's own form as *haḷkā*, and says *halkā* was taken over from Hindi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "karja"
 concept_tag: MR-VASTU182-KARJA
 prerequisites: [MR-C182-nane, MR-C182-not]
 sounds: []
-roots: []
+roots: [arabic-qard]
+etymology_hook: "karja ← Arabic qarḍ 'a loan', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C182-not]
 <!-- hl-knowledge: introduces=[MR-LEX-C182-VASTU182-04]; assesses=[] -->
 
 **कर्ज** — *karja* — "a loan, a debt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कर्ज** (*karja*) is a loan from Arabic *qarḍ*, "a loan", which reached Marathi through Persian. Its Arabic root is *q-r-ḍ* (Lane). Persian and Hindustani say *qarz*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

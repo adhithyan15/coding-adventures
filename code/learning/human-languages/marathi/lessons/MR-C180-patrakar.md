@@ -14,7 +14,8 @@ romanization: "patrakār"
 concept_tag: MR-VASTU180-PATRAKAR
 prerequisites: [MR-C180-citrakar, MR-C180-chayacitrakar]
 sounds: []
-roots: []
+roots: [sanskrit-patra, kara]
+etymology_hook: "patrakār: Sanskrit pattra 'leaf, letter, paper' (CDIAL 7733) + kāra 'maker'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C180-chayacitrakar]
 <!-- hl-knowledge: introduces=[MR-LEX-C180-VASTU180-04]; assesses=[] -->
 
 **पत्रकार** — *patrakār* — "a journalist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पत्रकार** (*patrakār*) is a modern compound of Sanskrit parts: *pattra*, "leaf, paper", now "newspaper" (CDIAL 7733), and *kāra*, "maker".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

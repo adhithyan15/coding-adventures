@@ -14,7 +14,8 @@ romanization: "mārṇe"
 concept_tag: MR-VERB-MARNE
 prerequisites: [MR-C166-ghabarne, MR-C166-vahun-nene]
 sounds: []
-roots: []
+roots: [sanskrit-marayati]
+etymology_hook: "mārṇe ← Sanskrit mārayati 'kills', a tadbhava (CDIAL 10066)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C166-vahun-nene]
 <!-- hl-knowledge: introduces=[MR-LEX-C166-ACT166-05]; assesses=[] -->
 
 **मारणे** — *mārṇe* — "to hit; to kill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मारणे** (*mārṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārayati*, "kills" (CDIAL 10066). It is the "make" form of *mṛ*, "to die": to kill is to make die. CDIAL glosses the Marathi verb "to strike, kill".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

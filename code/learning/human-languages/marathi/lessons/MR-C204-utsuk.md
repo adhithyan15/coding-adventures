@@ -14,7 +14,8 @@ romanization: "utsuk"
 concept_tag: MR-GUN204-UTSUK
 prerequisites: [MR-C204-sur, MR-C204-bhitra]
 sounds: []
-roots: []
+roots: [sanskrit-utsuka]
+etymology_hook: "utsuk: Sanskrit utsuka 'eager, anxious', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C204-bhitra]
 <!-- hl-knowledge: introduces=[MR-LEX-C204-GUN204-05]; assesses=[] -->
 
 **उत्सुक** — *utsuk* — "curious, eager".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उत्सुक** (*utsuk*) is Sanskrit *utsuka*, "eager, anxious", a tatsama. CDIAL notes it, with a "Cf.", under a reconstructed *\*utsukya*, "eagerness" (CDIAL 1886).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

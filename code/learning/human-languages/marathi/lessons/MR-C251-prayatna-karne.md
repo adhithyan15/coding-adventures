@@ -14,7 +14,8 @@ romanization: "prayatna karṇe"
 concept_tag: MR-VERB-PRAYATNA-KARNE
 prerequisites: [MR-C250-kala, MR-C250-sangh]
 sounds: []
-roots: []
+roots: [sanskrit-prayatna, sanskrit-karoti]
+etymology_hook: "prayatna: Sanskrit prayatna 'effort', a tatsama; karṇe ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C250-sangh]
 <!-- hl-knowledge: introduces=[MR-LEX-C251-ACT251-01]; assesses=[] -->
 
 **प्रयत्न करणे** — *prayatna karṇe* — "to try".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रयत्न** is Sanskrit *prayatna*, "effort", a tatsama. **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

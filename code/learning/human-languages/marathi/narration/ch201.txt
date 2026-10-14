@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a head cold, then the Marathi for a note
 You'll want to know: पर्यंत.
 पर्यंत — paryant — "until, up to".
 
+The word, taken apart.
+पर्यंत (paryant) is Sanskrit paryanta, "circuit, limit", a tatsama: pari, "around", and anta, "end" (CDIAL 7936).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a note; a prescription, then the Marathi
 
 You'll want to know: दशक.
 दशक — daśak — "a decade".
+
+The word, taken apart.
+दशक (daśak) is Sanskrit daśaka, "consisting of ten; a decad", taken over whole as a learned loan, a tatsama (CDIAL 6228). It is built on daśa, "ten".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for until, then the Marathi for a decade.
 You'll want to know: सूर्यास्त.
 सूर्यास्त — sūryāsta — "sunset".
 
+The word, taken apart.
+सूर्यास्त (sūryāsta) is a compound of Sanskrit parts: sūrya, "sun" (CDIAL 13574), and asta, "home; setting (of the sun)" (CDIAL 973).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a decade, then the Marathi for sunset.
 You'll want to know: सूर्योदय.
 सूर्योदय — sūryoday — "sunrise".
 
+The word, taken apart.
+सूर्योदय (sūryoday) is a compound of Sanskrit parts: sūrya, "sun" (CDIAL 13574), and udaya, "rise" (CDIAL 1931).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for sunset, then the Marathi for sunrise.
 
 You'll want to know: शेवट.
 शेवट — śevaṭ — "the end".
+
+The word, taken apart.
+The origin of शेवट (śevaṭ) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.

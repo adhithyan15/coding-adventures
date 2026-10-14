@@ -14,7 +14,8 @@ gloss: "a saint"
 concept_tag: MR-ANCHOR-SANT
 prerequisites: [MR-C02-aabhaal]
 sounds: []
-roots: []
+roots: [sanskrit-sant]
+etymology_hook: "sant: usually traced to Sanskrit sant 'being, good', the participle of as 'to be'"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **संत** — *sant* — "a saint".
 
 Say it: *sant*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ं** and **त**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संत** (*sant*) is usually traced to Sanskrit *sant*, "being, good", the present participle of *as*, "to be". CDIAL lists a Marathi *sant* only in the sense "calm", under *śānta* (CDIAL 12390).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-SANT] -->

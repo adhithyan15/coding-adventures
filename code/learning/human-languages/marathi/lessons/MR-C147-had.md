@@ -14,7 +14,8 @@ romanization: "hāḍ"
 concept_tag: MR-THINGS147-HAD
 prerequisites: [MR-C146-chati, MR-C147-tvaca]
 sounds: []
-roots: []
+roots: [sanskrit-hadda]
+etymology_hook: "hāḍ ← Sanskrit haḍḍa 'bone', a tadbhava (CDIAL 13952)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C147-tvaca]
 <!-- hl-knowledge: introduces=[MR-LEX-C147-THINGS147-02]; assesses=[] -->
 
 **हाड** — *hāḍ* — "a bone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हाड** (*hāḍ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *haḍḍa*, "bone" (CDIAL 13952). CDIAL calls a link with Sanskrit *asthi*, "bone", very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

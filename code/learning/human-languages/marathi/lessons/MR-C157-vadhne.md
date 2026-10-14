@@ -14,7 +14,8 @@ romanization: "vāḍhṇe"
 concept_tag: MR-VERB-VADHNE
 prerequisites: [MR-C157-cakhne, MR-C157-perne]
 sounds: []
-roots: []
+roots: [sanskrit-vardhate]
+etymology_hook: "vāḍhṇe ← Sanskrit vardhate 'grows, increases', a tadbhava (CDIAL 11376)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C157-perne]
 <!-- hl-knowledge: introduces=[MR-LEX-C157-ACT157-03]; assesses=[] -->
 
 **वाढणे** — *vāḍhṇe* — "to grow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वाढणे** (*vāḍhṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vardhate*, "grows, increases" (CDIAL 11376).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

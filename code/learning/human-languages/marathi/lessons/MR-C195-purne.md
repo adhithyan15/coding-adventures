@@ -14,7 +14,8 @@ romanization: "purṇe"
 concept_tag: MR-VERB-PURNE
 prerequisites: [MR-C194-marne2, MR-C195-savadh-karne]
 sounds: []
-roots: []
+roots: [sanskrit-purayati]
+etymology_hook: "purṇe ← Sanskrit pūrayati 'fills', a tadbhava (CDIAL 8335)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C195-savadh-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C195-ACT195-02]; assesses=[] -->
 
 **पुरणे** — *purṇe* — "to be enough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुरणे** (*purṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pūrayati*, "fills" (CDIAL 8335). CDIAL glosses the Marathi verb "to satisfy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

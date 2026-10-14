@@ -14,7 +14,8 @@ romanization: "pāvsāḷī"
 concept_tag: MR-GUN176-PAVSALI
 prerequisites: [MR-C175-ayogya, MR-C176-dhagal]
 sounds: []
-roots: []
+roots: [indo-aryan-pravrshakala]
+etymology_hook: "pāvsāḷī ← *prāvṛṣakāla 'the rainy season', a reconstructed form; a tadbhava (CDIAL 8965)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C176-dhagal]
 <!-- hl-knowledge: introduces=[MR-LEX-C176-GUN176-02]; assesses=[] -->
 
 **पावसाळी** — *pāvsāḷī* — "rainy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पावसाळी** (*pāvsāḷī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*prāvṛṣakāla*, "the rainy season", a form CDIAL reconstructs from its descendants (CDIAL 8965). It is *prāvṛṣ*, "the rains", and *kāla*, "time". CDIAL lists Marathi *pāvsāḷī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

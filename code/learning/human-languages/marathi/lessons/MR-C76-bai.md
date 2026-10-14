@@ -15,6 +15,7 @@ concept_tag: MR-FAMILY76-BAI
 prerequisites: [MR-C76-bal, MR-C76-manus]
 sounds: []
 roots: []
+etymology_hook: "bāī 'woman, lady': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C76-manus]
 <!-- hl-knowledge: introduces=[MR-LEX-C76-FAMILY76-05]; assesses=[] -->
 
 **बाई** — *bāī* — "a woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **बाई** (*bāī*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

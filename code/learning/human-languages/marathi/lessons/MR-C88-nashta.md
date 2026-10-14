@@ -14,7 +14,8 @@ romanization: "nāshtā"
 concept_tag: MR-FOOD88-NASHTA
 prerequisites: [MR-C88-santre, MR-C88-limbu]
 sounds: []
-roots: []
+roots: [persian-nashta]
+etymology_hook: "nāshtā: usually traced to Persian nāshtā 'not having eaten'; the meal is named for the fast it ends"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C88-limbu]
 <!-- hl-knowledge: introduces=[MR-LEX-C88-FOOD88-03]; assesses=[] -->
 
 **नाश्ता** — *nāshtā* — "breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाश्ता** (*nāshtā*) is a loan, usually traced to Persian *nāshtā*, "not having eaten". The meal is named for the fast it ends.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "paḍdā"
 concept_tag: MR-THINGS131-PADDA
 prerequisites: [MR-C130-cadar, MR-C130-gadi]
 sounds: []
-roots: []
+roots: [persian-parda]
+etymology_hook: "paḍdā: usually traced to Persian parda 'curtain, veil'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C130-gadi]
 <!-- hl-knowledge: introduces=[MR-LEX-C131-THINGS131-01]; assesses=[] -->
 
 **पडदा** — *paḍdā* — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पडदा** (*paḍdā*) is a loan, usually traced to Persian *parda*, "curtain, veil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

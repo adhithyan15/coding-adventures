@@ -14,7 +14,8 @@ romanization: "naśīb"
 concept_tag: MR-AAROGYA170-NASIB
 prerequisites: [MR-C170-kantala, MR-C170-samyam]
 sounds: []
-roots: []
+roots: [arabic-nasib]
+etymology_hook: "naśīb ← Arabic naṣīb 'share, lot', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C170-samyam]
 <!-- hl-knowledge: introduces=[MR-LEX-C170-AAROGYA170-05]; assesses=[] -->
 
 **नशीब** — *naśīb* — "luck, fate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नशीब** (*naśīb*) is a loan from Arabic *naṣīb*, "share, lot", which reached Marathi through Persian. Its Arabic root is *n-ṣ-b* (Lane). In Persian and Marathi it came to mean fate, the lot one is given.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

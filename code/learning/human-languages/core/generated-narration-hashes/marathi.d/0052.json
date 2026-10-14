@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 52,
-  "sourceHash": "fnv1a64:ad9b34fbe61febdb",
+  "sourceHash": "fnv1a64:22425e4332cb145d",
   "lessonIds": [
     "MR-C52-sopa",
     "MR-C52-kathin",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch52.txt",
   "json": "marathi/narration/ch52.json",
-  "textHash": "fnv1a64:d96251c2daed4b2b",
-  "jsonHash": "fnv1a64:7e157f0b40424613",
+  "textHash": "fnv1a64:8fbe8e7c5d70c617",
+  "jsonHash": "fnv1a64:d9b8b15ebaa63b02",
   "findings": []
 }

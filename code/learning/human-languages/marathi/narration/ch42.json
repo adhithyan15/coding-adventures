@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "In, On, Under",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2cabd3f1860ef7e9",
+  "sourceHash": "fnv1a64:c4b77ff6ebad7907",
   "lessons": [
     {
       "id": "MR-C42-madhye",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18412d3a56dcd729",
+      "sourceHash": "fnv1a64:9eb65c7b70071646",
       "notice": null,
       "blocks": [
         {
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1555cca697ee870",
+      "sourceHash": "fnv1a64:9f0c038132d02ff8",
       "notice": null,
       "blocks": [
         {
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cde8a47564d8d0e4",
+      "sourceHash": "fnv1a64:10ddcc455d428227",
       "notice": null,
       "blocks": [
         {
@@ -380,6 +380,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Marathi khāl, \"below\", under Sanskrit khalla, \"trench, creek\" (CDIAL 3849)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -439,7 +450,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

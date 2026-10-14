@@ -14,7 +14,8 @@ romanization: "kalā"
 concept_tag: MR-KAAM250-KALA
 prerequisites: [MR-C250-bhugol, MR-C250-ganit]
 sounds: []
-roots: []
+roots: [sanskrit-kala-art]
+etymology_hook: "kalā: Sanskrit kalā 'any practical art', which CDIAL takes from Dravidian (CDIAL 2927)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C250-ganit]
 <!-- hl-knowledge: introduces=[MR-LEX-C250-KAAM250-04]; assesses=[] -->
 
 **कला** — *kalā* — "art".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कला** (*kalā*) is Sanskrit *kalā*, "any practical art", a tatsama. CDIAL takes the Sanskrit word from Dravidian (CDIAL 2927).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

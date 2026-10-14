@@ -14,7 +14,8 @@ romanization: "abhyās"
 concept_tag: MR-THINGS135-ABHYAS
 prerequisites: [MR-C135-pariksa, MR-C135-varg]
 sounds: []
-roots: []
+roots: [sanskrit-abhyasa]
+etymology_hook: "abhyās: Sanskrit abhyāsa 'repetition, practice', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C135-varg]
 <!-- hl-knowledge: introduces=[MR-LEX-C135-THINGS135-04]; assesses=[] -->
 
 **अभ्यास** — *abhyās* — "study".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अभ्यास** (*abhyās*) is Sanskrit *abhyāsa*, "repetition, practice", taken over whole, a tatsama. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

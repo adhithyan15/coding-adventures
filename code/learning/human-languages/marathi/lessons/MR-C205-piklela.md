@@ -14,7 +14,8 @@ romanization: "piklelā"
 concept_tag: MR-GUN205-PIKLELA
 prerequisites: [MR-C205-pracin, MR-C205-sijlela]
 sounds: []
-roots: []
+roots: [sanskrit-pakva]
+etymology_hook: "piklelā: from pikṇe 'to ripen' ← *pikva, beside pakva 'ripe' (CDIAL 7621)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C205-sijlela]
 <!-- hl-knowledge: introduces=[MR-LEX-C205-GUN205-05]; assesses=[] -->
 
 **पिकलेला** — *piklelā* — "ripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पिकलेला** (*piklelā*) is the "-ed" form of *pikṇẽ*, "to become ripe", which CDIAL lists under Sanskrit *pakva*, "cooked, ripe", in a reconstructed form *\*pikva-* (CDIAL 7621).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

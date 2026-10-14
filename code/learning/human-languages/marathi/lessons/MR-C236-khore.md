@@ -15,6 +15,7 @@ concept_tag: MR-VASTU236-KHORE
 prerequisites: [MR-C236-jakat, MR-C236-araksan]
 sounds: []
 roots: []
+etymology_hook: "khore 'river valley': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C236-araksan]
 <!-- hl-knowledge: introduces=[MR-LEX-C236-VASTU236-05]; assesses=[] -->
 
 **खोरे** — *khore* — "a river valley, a river basin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **खोरे** (*khore*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

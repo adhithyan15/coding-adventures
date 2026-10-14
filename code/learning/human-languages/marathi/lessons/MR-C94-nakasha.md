@@ -14,7 +14,8 @@ romanization: "nakāshā"
 concept_tag: MR-SCHOOL94-NAKASHA
 prerequisites: [MR-C93-pen, MR-C94-shala]
 sounds: []
-roots: []
+roots: [arabic-naqsh]
+etymology_hook: "nakāshā ← Arabic naqsh 'a painting, an engraving', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C94-shala]
 <!-- hl-knowledge: introduces=[MR-LEX-C94-SCHOOL94-02]; assesses=[] -->
 
 **नकाशा** — *nakāshā* — "a map".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नकाशा** (*nakāshā*) is a loan from Arabic *naqsh*, "a painting, an engraving", which reached Marathi through Persian. Its Arabic root is *n-q-sh* (Lane). Persian *naqsha* came to mean a plan or map.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kānātle"
 concept_tag: MR-VASTU217-KANATLE
 prerequisites: [MR-C216-jire, MR-C217-har]
 sounds: []
-roots: []
+roots: [sanskrit-karna]
+etymology_hook: "kānātle: kān 'ear' ← Sanskrit karṇa (CDIAL 2830) + -āt 'in' + -le 'the ones'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C217-har]
 <!-- hl-knowledge: introduces=[MR-LEX-C217-VASTU217-02]; assesses=[] -->
 
 **कानातले** — *kānātle* — "earrings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कानातले** (*kānātle*) is "the in-ear ones": **कान**, "ear", from Sanskrit *karṇa*, "ear" (CDIAL 2830), with **-त**, "in", and the ending *-le*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

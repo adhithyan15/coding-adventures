@@ -14,7 +14,8 @@ romanization: "navardev"
 concept_tag: MR-VASTU181-NAVARDEV
 prerequisites: [MR-C180-vastuvisarad, MR-C181-sun]
 sounds: []
-roots: []
+roots: [indo-aryan-navavaraka, sanskrit-deva]
+etymology_hook: "navardev: navrā 'bridegroom' ← *navavaraka (CDIAL 7013) + dev 'god' ← deva"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C181-sun]
 <!-- hl-knowledge: introduces=[MR-LEX-C181-VASTU181-02]; assesses=[] -->
 
 **नवरदेव** — *navardev* — "a bridegroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नवरदेव** (*navardev*) is *navrā*, "bridegroom", from a reconstructed *\*navavaraka*, "newly wed" (CDIAL 7013), with *dev*, "god", from Sanskrit *deva*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

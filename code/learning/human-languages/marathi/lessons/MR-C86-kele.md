@@ -14,7 +14,8 @@ romanization: "keḷe"
 concept_tag: MR-FOOD86-KELE
 prerequisites: [MR-C85-phal, MR-C85-safarchand]
 sounds: []
-roots: []
+roots: [sanskrit-kadala]
+etymology_hook: "keḷe ← Sanskrit kadala 'banana plant', itself from Austroasiatic; a tadbhava (CDIAL 2712)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C85-safarchand]
 <!-- hl-knowledge: introduces=[MR-LEX-C86-FOOD86-01]; assesses=[] -->
 
 **केळे** — *keḷe* — "a banana".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**केळे** (*keḷe*) is a tadbhava of Sanskrit *kadala*, "the banana plant; its fruit" (CDIAL 2712). CDIAL notes the view that the Sanskrit word comes from Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 249,
-  "sourceHash": "fnv1a64:f595bf52ec65ed93",
+  "sourceHash": "fnv1a64:19e1a797bdef8adb",
   "lessonIds": [
     "MR-C249-jhopala",
     "MR-C249-khelni",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch249.txt",
   "json": "marathi/narration/ch249.json",
-  "textHash": "fnv1a64:992c7ad098f40322",
-  "jsonHash": "fnv1a64:df8b2adb0afc8f14",
+  "textHash": "fnv1a64:33da0fea30fd3202",
+  "jsonHash": "fnv1a64:ab3ad60108fe6891",
   "findings": []
 }

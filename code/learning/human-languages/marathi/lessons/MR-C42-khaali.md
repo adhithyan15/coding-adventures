@@ -11,9 +11,10 @@ gloss: under, below, down — the exact opposite of वर, and it behaves the s
 concept_tag: MR-POSTP-KHAALI
 prerequisites: [MR-C42-var]
 sounds: [matra-aa, matra-ii]
-roots: []
+roots: [sanskrit-khalla]
+etymology_hook: "khālī: CDIAL lists Marathi khāl 'below' under Sanskrit khalla 'trench, creek' (CDIAL 3849)"
 duration:
-  max_seconds: 200
+  max_seconds: 206
 requires:
   knowledge: [MR-POSTP-VAR, MR-POSTP-MADHYE, MR-LEX-GHAR, MR-A1-MESSAGE-LINE-SEE-TOMORROW]
 introduces:
@@ -62,6 +63,11 @@ built on.
 The word is the **खाल** of *underside* with the same **-ी** you saw on **खोली**.
 Marathi builds a good deal of its everyday vocabulary that way: a short base, a
 long form, and a job for each.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Marathi *khāl*, "below", under Sanskrit *khalla*, "trench, creek" (CDIAL 3849).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-POSTP-KHAALI, MR-POSTP-VAR, MR-POSTP-MADHYE, MR-A1-MESSAGE-LINE-SEE-TOMORROW] -->

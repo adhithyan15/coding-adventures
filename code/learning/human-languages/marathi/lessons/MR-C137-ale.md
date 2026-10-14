@@ -14,7 +14,8 @@ romanization: "āle"
 concept_tag: MR-THINGS137-ALE
 prerequisites: [MR-C137-kakdi, MR-C137-lasun]
 sounds: []
-roots: []
+roots: [indo-aryan-allaka]
+etymology_hook: "āle ← *āllaka 'fresh ginger', a reconstructed form; a tadbhava (CDIAL 1341)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C137-lasun]
 <!-- hl-knowledge: introduces=[MR-LEX-C137-THINGS137-05]; assesses=[] -->
 
 **आले** — *āle* — "ginger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आले** (*āle*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*āllaka*, "fresh ginger", a form CDIAL reconstructs from its descendants (CDIAL 1341). CDIAL builds it from Sanskrit *ārdraka*, "fresh ginger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

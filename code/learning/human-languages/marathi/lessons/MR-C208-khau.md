@@ -14,7 +14,8 @@ romanization: "khāū"
 concept_tag: MR-VASTU208-KHAU
 prerequisites: [MR-C208-aramkhurci, MR-C208-batan]
 sounds: []
-roots: []
+roots: [sanskrit-khaduka]
+etymology_hook: "khāū ← Sanskrit khāduka 'biting', a tadbhava (CDIAL 3871)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C208-batan]
 <!-- hl-knowledge: introduces=[MR-LEX-C208-VASTU208-03]; assesses=[] -->
 
 **खाऊ** — *khāū* — "a snack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खाऊ** (*khāū*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khāduka*, "biting" (CDIAL 3871). It is built on *khād*, "to eat". CDIAL glosses the Marathi word "eating".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

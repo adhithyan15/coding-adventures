@@ -12,6 +12,9 @@ Before the new one: say the Marathi for the liver, then the Marathi for a kidney
 You'll want to know: लाज.
 लाज — lāj — "shame".
 
+The word, taken apart.
+लाज (lāj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lajjā, "shame, modesty" (CDIAL 10910).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a kidney, then the Marathi for shame.
 
 You'll want to know: मत्सर.
 मत्सर — matsar — "jealousy".
+
+The word, taken apart.
+मत्सर (matsar) is Sanskrit matsara, "exhilarating; jealous", taken over whole as a learned loan, a tatsama (CDIAL 9756).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for shame, then the Marathi for jealousy.
 You'll want to know: कंटाळा.
 कंटाळा — kaṇṭāḷā — "boredom".
 
+The word, taken apart.
+The origin of कंटाळा (kaṇṭāḷā) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it in this sense.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for jealousy, then the Marathi for boredom.
 You'll want to know: संयम.
 संयम — saṁyam — "patience, restraint".
 
+The word, taken apart.
+संयम (saṁyam) is Sanskrit saṁyama, "holding together, restraint", a tatsama built on yam, "to hold". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for boredom, then the Marathi for patience.
 
 You'll want to know: नशीब.
 नशीब — naśīb — "luck, fate".
+
+The word, taken apart.
+नशीब (naśīb) is a loan from Arabic naṣīb, "share, lot", which reached Marathi through Persian. Its Arabic root is n-ṣ-b (Lane). In Persian and Marathi it came to mean fate, the lot one is given.
 
 What you've built.
 One more word for this chapter.

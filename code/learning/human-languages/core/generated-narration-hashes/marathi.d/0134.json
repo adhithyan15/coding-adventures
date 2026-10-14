@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 134,
-  "sourceHash": "fnv1a64:23869b699e34ddf5",
+  "sourceHash": "fnv1a64:d24f6018568f1b5f",
   "lessonIds": [
     "MR-C134-vati",
     "MR-C134-patele",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch134.txt",
   "json": "marathi/narration/ch134.json",
-  "textHash": "fnv1a64:740736d12e53ffb3",
-  "jsonHash": "fnv1a64:1c843ad362ae0c3e",
+  "textHash": "fnv1a64:871c031e80c030b5",
+  "jsonHash": "fnv1a64:b497a1c029f9d288",
   "findings": []
 }

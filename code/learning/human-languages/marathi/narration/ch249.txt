@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a feast, then the Marathi for a gift.
 You'll want to know: झोपाळा.
 झोपाळा — jhopāḷā — "a swing".
 
+The word, taken apart.
+The origin of झोपाळा (jhopāḷā) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a gift, then the Marathi for a swing.
 
 You'll want to know: खेळणी.
 खेळणी — kheḷṇī — "toys".
+
+The word, taken apart.
+खेळणी (kheḷṇī) is built on खेळ, "play", which CDIAL lists under a reconstructed khēl-, "play" (CDIAL 3918).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a swing, then the Marathi for toys.
 You'll want to know: बाहुली.
 बाहुली — bāhulī — "a doll".
 
+The word, taken apart.
+The origin of बाहुली (bāhulī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for toys, then the Marathi for a doll.
 You'll want to know: पतंग.
 पतंग — pataṅg — "a kite".
 
+The word, taken apart.
+पतंग (pataṅg) is usually traced to Sanskrit pataṅga, "bird, flying insect" (CDIAL 7721), a word CDIAL thinks was crossed with a non-Aryan one. CDIAL lists no Marathi form.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a doll, then the Marathi for a kite.
 
 You'll want to know: भोवरा.
 भोवरा — bhovrā — "a spinning top".
+
+The word, taken apart.
+भोवरा (bhovrā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhramara, "moving unsteadily, revolving; spinning top" (CDIAL 9650). CDIAL glosses the Marathi word "whorl of hair".
 
 What you've built.
 One more word for this chapter.

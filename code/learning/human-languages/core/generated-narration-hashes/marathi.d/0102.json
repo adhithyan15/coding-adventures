@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 102,
-  "sourceHash": "fnv1a64:601ffb8315641b32",
+  "sourceHash": "fnv1a64:2745f52a67eb1445",
   "lessonIds": [
     "MR-C102-sap",
     "MR-C102-mor",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch102.txt",
   "json": "marathi/narration/ch102.json",
-  "textHash": "fnv1a64:08c05366d4b50546",
-  "jsonHash": "fnv1a64:40809e5545aab1fd",
+  "textHash": "fnv1a64:9196ec0dadf64901",
+  "jsonHash": "fnv1a64:11fb9201d4fe3116",
   "findings": []
 }

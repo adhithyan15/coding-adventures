@@ -11,7 +11,8 @@ gloss: how Marathi says HAVE, given that it has no verb for it — the thing is 
 concept_tag: MR-GRAMMAR-POSSESSION
 prerequisites: [MR-C48-kade, MR-C02-aahe, MR-C32-nahi-verb, MR-C23-basne]
 sounds: [halant-conjunct, matra-e]
-roots: []
+roots: [ma, sanskrit-kati-hip, asti]
+etymology_hook: "mājhyā- ← base ma- (CDIAL 9691); -kaḍe as kaḍ 'side' (CDIAL 2639); āhe listed under asti (CDIAL 977)"
 duration:
   max_seconds: 230
 requires:
@@ -62,6 +63,11 @@ And to deny it you negate that same verb, exactly as chapter thirty-two taught:
 
 Swap the person and nothing else changes: **मित्राकडे पाणी आहे**, *my friend
 has water*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माझ्या-** goes back to the first-person base *ma-* (CDIAL 9691); **-कडे** matches *kaḍ*, "side", which CDIAL takes as rather Dravidian (CDIAL 2639). **आहे** CDIAL lists under *asti*, "is", though Bloch disagrees (CDIAL 977).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-POSSESSION, MR-POSTP-KADE, MR-GRAMMAR-NEGATE-NAHI, MR-LEX-PAANI, MR-LEX-MITRA, MR-POSTP-JAVAL, MR-LEX-DAAVA, MR-LEX-BASNE, MR-ETYMON-BASNE-WEYK] -->

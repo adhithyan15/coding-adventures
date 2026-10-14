@@ -12,8 +12,9 @@ concept_tag: MR-DEM-NEAR
 prerequisites: [MR-R68-greetings-recall, MR-C41-kholi, MR-C11-mitra]
 sounds: [matra-aa, matra-ii, matra-e]
 roots: []
+etymology_hook: "hā 'this': origin not settled; CDIAL has no entry for the Marathi word"
 duration:
-  max_seconds: 210
+  max_seconds: 237
 requires:
   knowledge: [MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER, MR-LEX-KHOLI, MR-LEX-GHAR, MR-LEX-MITRA]
 introduces:
@@ -56,6 +57,11 @@ decided by the noun, not by you**:
 You have made this choice before. **माझा** and **माझी** split the same way, on
 the same two endings — **-आ** for a masculine noun, **-ई** for a feminine one.
 So the first two rows are a habit you already have, pointed at a new word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **हा** is not settled; CDIAL has no entry for it.
 
 ## Grammar Lens: it goes in front, and it never stands alone here
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-DEM-PRENOMINAL]; assesses=[MR-LEX-HA-HI-HE, MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER] -->

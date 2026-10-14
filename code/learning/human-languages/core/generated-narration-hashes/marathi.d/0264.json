@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 264,
-  "sourceHash": "fnv1a64:65d0f7eebb3f84c2",
+  "sourceHash": "fnv1a64:034a404541e73a77",
   "lessonIds": [
     "MR-C264-vrddha",
     "MR-C264-jule",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch264.txt",
   "json": "marathi/narration/ch264.json",
-  "textHash": "fnv1a64:e134b55e35521ee9",
-  "jsonHash": "fnv1a64:a075e54012bf9020",
+  "textHash": "fnv1a64:ba17851935062bab",
+  "jsonHash": "fnv1a64:90cdcfd6f060ea38",
   "findings": []
 }

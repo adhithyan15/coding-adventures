@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to catch, then the Marathi for to cut.
 You'll want to know: थांबणे.
 थांबणे — thāmbṇe — "to stop, to wait".
 
+The word, taken apart.
+थांबणे (thāmbṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from stambhate, "supports, arrests" (CDIAL 13683). CDIAL glosses the Marathi verb "to stop".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to cut, then the Marathi for to stop.
 
 You'll want to know: शोधणे.
 शोधणे — shodhṇe — "to look for".
+
+The word, taken apart.
+शोधणे (shodhṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śoddhum, "to purify" (CDIAL 12626). CDIAL glosses the Marathi verb "to purify, search".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to stop, then the Marathi for to look fo
 You'll want to know: हरवणे.
 हरवणे — haravṇe — "to lose".
 
+The word, taken apart.
+हरवणे (haravṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hārayati, "causes to be taken; loses" (CDIAL 14061). CDIAL lists the Marathi form haraviṇẽ, "to lose, cast away".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to look for, then the Marathi for to los
 You'll want to know: घालणे.
 घालणे — ghālṇe — "to put on (clothes)".
 
+The word, taken apart.
+घालणे (ghālṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from ghalyati, "pours", a form CDIAL reconstructs from its descendants (CDIAL 4457). CDIAL glosses the Marathi verb "to pour".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to lose, then the Marathi for to put on.
 
 You'll want to know: सोडणे.
 सोडणे — soḍṇe — "to leave, to let go".
+
+The word, taken apart.
+सोडणे (soḍṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣoṭayati, "throws" (CDIAL 3747).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "pāvtī"
 concept_tag: MR-VACH161-PAVTI
 prerequisites: [MR-C161-bhade, MR-C161-jahirat]
 sounds: []
-roots: []
+roots: [sanskrit-prapayati]
+etymology_hook: "pāvtī: probably with pāvṇe 'to obtain, reach', which CDIAL lists under Sanskrit prāpayati (CDIAL 8943)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C161-jahirat]
 <!-- hl-knowledge: introduces=[MR-LEX-C161-VACH161-05]; assesses=[] -->
 
 **पावती** — *pāvtī* — "a receipt". Ask for it when you pay: **पावती द्या.** — *pāvtī dyā* — "A receipt, please."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पावती** (*pāvtī*) probably belongs with Marathi *pāvṇẽ*, "to obtain, reach", which CDIAL lists under Sanskrit *prāpayati*, "causes to be obtained" (CDIAL 8943).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

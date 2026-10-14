@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Courtesy, Responses, and Leave-Taking",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:438a319a445acc50",
+  "sourceHash": "fnv1a64:1320aea3046178e6",
   "lessons": [
     {
       "id": "MR-C01-ho",
@@ -20,7 +20,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5586c1e9bb910246",
+      "sourceHash": "fnv1a64:78033cfdf5bcf529",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -68,7 +68,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "हो (ho, \"yes\") is Marathi's plain affirmative — distinct from Hindi's hāṁ. Marathi builds its own everyday words on shared Indo-Aryan roots. The polite, fuller \"yes\" is ho, baraṃ āhe (\"yes, it's fine\")."
+              "text": "हो (ho, \"yes\") is Marathi's plain affirmative — distinct from Hindi's hāṁ. Its origin is not settled; CDIAL lists an unglossed Marathi ho under Sanskrit ho, a cry of summons (CDIAL 14172). The polite, fuller \"yes\" is ho, baraṃ āhe (\"yes, it's fine\")."
             }
           ]
         },
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ef1acb2bf5f2edd3",
+      "sourceHash": "fnv1a64:001f634ab03e350f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -214,7 +214,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बरं (baram) (baraṃ, \"okay, fine, good, all right\") is the oil of everyday Marathi talk — a soft \"sure, fine.\" Its neutral form is bare. A genuinely Marathi word, not a Sanskrit loan — the kind of small, high-frequency word that gives a language its everyday texture."
+              "text": "बरं (baram) (baraṃ, \"okay, fine, good, all right\") is the oil of everyday Marathi talk — a soft \"sure, fine.\" Its neutral form is bare. Its origin is not settled: neither CDIAL nor DEDR has an entry for it."
             }
           ]
         },
@@ -281,7 +281,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b1f02b7c6135d56c",
+      "sourceHash": "fnv1a64:3500d33ca8a7b2d8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0451965cd238809d",
+      "sourceHash": "fnv1a64:adcda254dec6f931",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -443,6 +443,10 @@
             {
               "kind": "speech",
               "text": "Marathi, like the Dravidian languages to its south, will not say a bare \"I'm leaving.\" The everyday goodbye is येतो (yeto) — literally \"I come [again],\" a promise of return, never a final departure. (Fuller: yeto, namaskār.)"
+            },
+            {
+              "kind": "speech",
+              "text": "येतो is a form of yeṇẽ, \"to come\", which CDIAL lists under Sanskrit aiti, \"comes near\" (CDIAL 2534)."
             }
           ]
         },

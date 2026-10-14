@@ -14,7 +14,8 @@ romanization: "bharṇe"
 concept_tag: MR-VERB-BHARNE
 prerequisites: [MR-C83-lapavne, MR-C83-jinkne]
 sounds: []
-roots: []
+roots: [sanskrit-bharati]
+etymology_hook: "bharṇe ← Sanskrit bharati 'bears, brings; fills', a tadbhava (CDIAL 9397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C83-jinkne]
 <!-- hl-knowledge: introduces=[MR-LEX-C84-VERBS84-01]; assesses=[] -->
 
 **भरणे** — *bharṇe* — "to fill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भरणे** (*bharṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bharati*, "bears, brings; fills" (CDIAL 9397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

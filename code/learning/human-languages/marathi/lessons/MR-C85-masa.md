@@ -14,7 +14,8 @@ romanization: "māsā"
 concept_tag: MR-FOOD85-MASA
 prerequisites: [MR-C84-padne, MR-C84-mams]
 sounds: []
-roots: []
+roots: [sanskrit-matsya]
+etymology_hook: "māsā ← Sanskrit matsya 'fish', a tadbhava (CDIAL 9758)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C84-mams]
 <!-- hl-knowledge: introduces=[MR-LEX-C85-FOOD85-01]; assesses=[] -->
 
 **मासा** — *māsā* — "a fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मासा** (*māsā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *matsya*, "fish" (CDIAL 9758).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

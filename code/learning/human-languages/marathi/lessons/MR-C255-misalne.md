@@ -14,7 +14,8 @@ romanization: "misaḷṇe"
 concept_tag: MR-VERB-MISALNE
 prerequisites: [MR-C255-agrah-karne, MR-C255-madhye-bolne]
 sounds: []
-roots: []
+roots: [indo-aryan-mishrala]
+etymology_hook: "misaḷṇe ← *miśrala 'mixed', a reconstructed form; a tadbhava (CDIAL 10138)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C255-madhye-bolne]
 <!-- hl-knowledge: introduces=[MR-LEX-C255-ACT255-03]; assesses=[] -->
 
 **मिसळणे** — *misaḷṇe* — "to mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मिसळणे** (*misaḷṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*miśrala*, "mixed", a form CDIAL reconstructs from its descendants (CDIAL 10138). It is built on Sanskrit *miśra*, "mixed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

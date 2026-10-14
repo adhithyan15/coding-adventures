@@ -12,6 +12,7 @@ concept_tag: MR-POSTP-VAR
 prerequisites: [MR-C42-madhye, MR-C09-avadne, MR-C07-pahne]
 sounds: [inherent-a]
 roots: [sanskrit-upari]
+etymology_hook: "var ← Sanskrit upari 'above', a tadbhava; the same ancient word as English over (CDIAL 2218)"
 duration:
   max_seconds: 230
 requires:

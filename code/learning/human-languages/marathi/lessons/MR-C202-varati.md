@@ -14,7 +14,8 @@ romanization: "varatī"
 concept_tag: MR-JAGA202-VARATI
 prerequisites: [MR-C202-rajdhani, MR-C202-upnagar]
 sounds: []
-roots: []
+roots: [sanskrit-upari]
+etymology_hook: "varatī: built on var 'on, up', which CDIAL lists under upari 'above' (CDIAL 2218)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C202-upnagar]
 <!-- hl-knowledge: introduces=[MR-LEX-C202-JAGA202-05]; assesses=[] -->
 
 **वरती** — *varatī* — "up, upstairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वरती** (*varatī*) is built on Marathi *var*, "on, up to", which CDIAL lists under Sanskrit *upari*, "above" (CDIAL 2218).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

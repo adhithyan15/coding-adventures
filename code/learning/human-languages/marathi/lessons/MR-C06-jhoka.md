@@ -14,7 +14,8 @@ gloss: "a swing"
 concept_tag: MR-ANCHOR-JHOKA
 prerequisites: [MR-C06-jahaj]
 sounds: []
-roots: []
+roots: [indo-aryan-jhukkati]
+etymology_hook: "jhokā: perhaps with jhukṇe 'to stoop', *jhukkati (CDIAL 5399); CDIAL has no entry for jhokā"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **झोका** — *jhokā* — "a swing".
 
 Say it: *jhokā*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **झ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **झोका** (*jhokā*) is not settled. CDIAL has no entry for it; it may belong with Marathi *jhukṇẽ*, "to stoop", from a reconstructed *\*jhukkati*, "stoops" (CDIAL 5399), but no source says so.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-JHOKA] -->

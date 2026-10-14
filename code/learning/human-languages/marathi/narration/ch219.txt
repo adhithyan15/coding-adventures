@@ -12,6 +12,9 @@ Before the new one: say the Marathi for fog, then the Marathi for dew.
 You'll want to know: दर.
 दर — dar — "a rate".
 
+The word, taken apart.
+The origin of दर (dar), "rate", is not settled. CDIAL has no entry for it in this sense.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for dew, then the Marathi for a rate.
 
 You'll want to know: उत्पन्न.
 उत्पन्न — utpanna — "income".
+
+The word, taken apart.
+उत्पन्न (utpanna) is Sanskrit utpanna, "arisen, produced", a tatsama: ud, "up", and pad, "to go"; CDIAL lists it under utpadyate, "arises" (CDIAL 1814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a rate, then the Marathi for income.
 You'll want to know: व्यापार.
 व्यापार — vyāpār — "trade".
 
+The word, taken apart.
+व्यापार (vyāpār) is Sanskrit vyāpāra, "occupation, business", taken over whole as a learned loan, a tatsama (CDIAL 12205). CDIAL lists the inherited Marathi form as vāvar, "business, activity".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for income, then the Marathi for trade.
 You'll want to know: दुकानदार.
 दुकानदार — dukāndār — "a shopkeeper".
 
+The word, taken apart.
+दुकानदार (dukāndār) is dukān, "shop", from Arabic dukkān, "shop", through Persian (Lane, root d-k-n), with Persian -dār, "holder".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for trade, then the Marathi for a shopkeeper
 
 You'll want to know: ग्राहक.
 ग्राहक — grāhak — "a customer".
+
+The word, taken apart.
+ग्राहक (grāhak) is Sanskrit grāhaka, "one who takes, buyer", a tatsama built on grah, "to take". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

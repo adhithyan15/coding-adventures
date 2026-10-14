@@ -12,6 +12,9 @@ Before the new one: say the Marathi for all night, then the Marathi for all day.
 You'll want to know: अनोळखी.
 अनोळखी — anoḷkhī — "unknown, unfamiliar".
 
+The word, taken apart.
+अनोळखी (anoḷkhī) is an-, "not", and ओळख, "acquaintance", which CDIAL lists under Sanskrit upalakṣa, "distinguishing" (CDIAL 2224), with the ending -ī.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for all day, then the Marathi for unknown.
 
 You'll want to know: साधा / साधी.
 साधा / साधी — sādhā / sādhī — "simple, plain".
+
+The word, taken apart.
+साधा (sādhā) is often tied to Sanskrit sādhu, "straight, right", but CDIAL lists no Marathi form under it (CDIAL 13337), and no source here settles it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for unknown, then the Marathi for simple.
 You'll want to know: गुंतागुंतीचा.
 गुंतागुंतीचा — guntāguntīcā — "complicated".
 
+The word, taken apart.
+गुंतागुंतीचा (guntāguntīcā) is built on gũtṇẽ, "to tangle", which CDIAL lists under Sanskrit guphati, "strings together", crossed with another verb (CDIAL 4205).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for simple, then the Marathi for complicated
 You'll want to know: आवश्यक.
 आवश्यक — āvaśyak — "necessary".
 
+The word, taken apart.
+आवश्यक (āvaśyak) is Sanskrit āvaśyaka, "necessary, inevitable", a tatsama built on avaśya, "not to be resisted". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for complicated, then the Marathi for necess
 
 You'll want to know: निरुपयोगी.
 निरुपयोगी — nirupyogī — "useless".
+
+The word, taken apart.
+निरुपयोगी (nirupyogī) is Sanskrit nir-, "without", and upayoga, "use", with the ending -ī: "without use".
 
 What you've built.
 One more word for this chapter.

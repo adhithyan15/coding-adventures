@@ -14,7 +14,8 @@ romanization: "avivāhit"
 concept_tag: MR-GUN260-AVIVAHIT
 prerequisites: [MR-C260-bolka, MR-C260-cintagrasta]
 sounds: []
-roots: []
+roots: [sanskrit-vivaha]
+etymology_hook: "avivāhit: Sanskrit a- 'not' + vivāhita 'married', from vivāha (CDIAL 11920)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C260-cintagrasta]
 <!-- hl-knowledge: introduces=[MR-LEX-C260-GUN260-04]; assesses=[] -->
 
 **अविवाहित** — *avivāhit* — "unmarried".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अविवाहित** (*avivāhit*) is Sanskrit *a-*, "not", and *vivāhita*, "married", built on *vivāha*, "marriage" (CDIAL 11920).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "noṭ"
 concept_tag: MR-VASTU182-NOT
 prerequisites: [MR-C182-savlat, MR-C182-nane]
 sounds: []
-roots: []
+roots: [english-note]
+etymology_hook: "noṭ ← English note"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C182-nane]
 <!-- hl-knowledge: introduces=[MR-LEX-C182-VASTU182-03]; assesses=[] -->
 
 **नोट** — *noṭ* — "a banknote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नोट** (*noṭ*) is a loan from English *note*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

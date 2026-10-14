@@ -14,7 +14,8 @@ romanization: "sainik"
 concept_tag: MR-VASTU209-SAINIK
 prerequisites: [MR-C209-santata, MR-C209-sainya]
 sounds: []
-roots: []
+roots: [sanskrit-sainika]
+etymology_hook: "sainik: Sanskrit sainika 'soldier', from senā 'army', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C209-sainya]
 <!-- hl-knowledge: introduces=[MR-LEX-C209-VASTU209-05]; assesses=[] -->
 
 **सैनिक** — *sainik* — "a soldier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सैनिक** (*sainik*) is Sanskrit *sainika*, "belonging to an army, soldier", a tatsama built on *senā*, "army". CDIAL notes it, with a "Cf.", beside *sainya*, "army" (CDIAL 13602).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

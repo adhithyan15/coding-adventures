@@ -14,7 +14,8 @@ romanization: "nāchṇe"
 concept_tag: MR-VERB-NACHNE
 prerequisites: [MR-C79-radne, MR-C79-gane]
 sounds: []
-roots: []
+roots: [sanskrit-nrtyati]
+etymology_hook: "nāchṇe ← Sanskrit nṛtyati 'dances', a tadbhava (CDIAL 7583)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C79-gane]
 <!-- hl-knowledge: introduces=[MR-LEX-C79-VERBS79-05]; assesses=[] -->
 
 **नाचणे** — *nāchṇe* — "to dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाचणे** (*nāchṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nṛtyati*, "dances" (CDIAL 7583).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

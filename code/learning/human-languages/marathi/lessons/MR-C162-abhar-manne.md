@@ -14,7 +14,8 @@ romanization: "ābhār mānṇe"
 concept_tag: MR-VERB-ABHAR-MANNE
 prerequisites: [MR-C162-udi-marne, MR-C162-bolavne]
 sounds: []
-roots: []
+roots: [sanskrit-abhara, sanskrit-manyate]
+etymology_hook: "ābhār ← Sanskrit ābhāra 'a load, a burden', a tatsama; mānṇe ← manyate 'thinks, honours' (CDIAL 9857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C162-bolavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C162-ACT162-05]; assesses=[] -->
 
 **आभार मानणे** — *ābhār mānṇe* — "to thank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आभार** is Sanskrit *ābhāra*, "a load, a burden", a tatsama. **मानणे** comes from Sanskrit *manyate*, "thinks, honours" (CDIAL 9857).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

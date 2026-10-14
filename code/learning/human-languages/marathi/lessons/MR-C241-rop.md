@@ -14,7 +14,8 @@ romanization: "rop"
 concept_tag: MR-VASTU241-ROP
 prerequisites: [MR-C240-cak, MR-C241-kundi]
 sounds: []
-roots: []
+roots: [sanskrit-ropya]
+etymology_hook: "rop ← Sanskrit ropya 'to be planted', a tadbhava (CDIAL 10849)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C241-kundi]
 <!-- hl-knowledge: introduces=[MR-LEX-C241-VASTU241-02]; assesses=[] -->
 
 **रोप** — *rop* — "a seedling, a young plant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रोप** (*rop*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ropya*, "to be planted" (CDIAL 10849). CDIAL glosses the Marathi word "young plant, sapling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

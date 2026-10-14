@@ -14,7 +14,8 @@ romanization: "loṇī"
 concept_tag: MR-FOOD87-LONI
 prerequisites: [MR-C86-mith, MR-C87-mirchi]
 sounds: []
-roots: []
+roots: [sanskrit-navanita]
+etymology_hook: "loṇī ← Sanskrit navanīta 'fresh butter', a tadbhava (CDIAL 7003)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C87-mirchi]
 <!-- hl-knowledge: introduces=[MR-LEX-C87-FOOD87-02]; assesses=[] -->
 
 **लोणी** — *loṇī* — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लोणी** (*loṇī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *navanīta*, "fresh butter" (CDIAL 7003). It is built on *nava*, "new".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a fruit, then the Marathi for an apple.
 You'll want to know: केळे.
 केळे — keḷe — "a banana".
 
+The word, taken apart.
+केळे (keḷe) is a tadbhava of Sanskrit kadala, "the banana plant; its fruit" (CDIAL 2712). CDIAL notes the view that the Sanskrit word comes from Austroasiatic.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for an apple, then the Marathi for a banana.
 
 You'll want to know: बटाटा.
 बटाटा — baṭāṭā — "a potato".
+
+The word, taken apart.
+बटाटा (baṭāṭā) is a loan from Portuguese batata, "potato".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a banana, then the Marathi for a potato.
 You'll want to know: गाजर.
 गाजर — gājar — "a carrot".
 
+The word, taken apart.
+गाजर (gājar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gārjara, "carrot" (CDIAL 4140).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a potato, then the Marathi for a carrot.
 You'll want to know: साखर.
 साखर — sākhar — "sugar".
 
+The word, taken apart.
+साखर (sākhar) is a tadbhava of Sanskrit śarkarā, "candied sugar" (CDIAL 12338). CDIAL reports Przyluski's view that the "sugar" sense came from a Mon-Khmer word that merged early with śarkarā, "gravel".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a carrot, then the Marathi for sugar.
 
 You'll want to know: मीठ.
 मीठ — mīṭh — "salt".
+
+The word, taken apart.
+मीठ (mīṭh) is inherited. CDIAL lists Marathi mīṭh, "salt", under Sanskrit mṛṣṭa, "prepared, savoury", which also had a form miṣṭa, "dainty, sweet" (CDIAL 10299).
 
 What you've built.
 One more word for this chapter.

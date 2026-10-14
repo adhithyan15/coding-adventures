@@ -14,7 +14,8 @@ romanization: "gambhīr"
 concept_tag: MR-GUN204-GAMBHIR
 prerequisites: [MR-C203-sumare, MR-C203-phakta]
 sounds: []
-roots: []
+roots: [sanskrit-gambhira]
+etymology_hook: "gambhīr ← Sanskrit gambhīra 'deep', a tatsama (CDIAL 4031)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C203-phakta]
 <!-- hl-knowledge: introduces=[MR-LEX-C204-GUN204-01]; assesses=[] -->
 
 **गंभीर** — *gambhīr* — "serious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गंभीर** (*gambhīr*) is Sanskrit *gambhīra*, "deep", taken over whole as a learned loan, a tatsama (CDIAL 4031). CDIAL lists the Marathi word as *gãbhīr*, "deep (of water), serious".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vaktaśīr"
 concept_tag: MR-GUN233-VAKTASIR
 prerequisites: [MR-C233-phikat, MR-C233-durca]
 sounds: []
-roots: []
+roots: [arabic-waqt]
+etymology_hook: "vaktaśīr: built on vakta 'time', usually traced, through Persian, to Arabic waqt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C233-durca]
 <!-- hl-knowledge: introduces=[MR-LEX-C233-GUN233-04]; assesses=[] -->
 
 **वक्तशीर** — *vaktaśīr* — "punctual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वक्तशीर** (*vaktaśīr*) is built on *vakta*, "time", usually traced through Persian to Arabic *waqt*, "time". The source of the ending is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

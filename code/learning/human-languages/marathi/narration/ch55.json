@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "Six, Seven, Eight, Nine",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3f5af0d5855d2e05",
+  "sourceHash": "fnv1a64:805ef0314bc967a2",
   "lessons": [
     {
       "id": "MR-C55-saha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d05375df80f3942",
+      "sourceHash": "fnv1a64:328b0061ac8bcebb",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bcbf9e3a09f911e7",
+      "sourceHash": "fnv1a64:f0cf80d172fa3dce",
       "notice": null,
       "blocks": [
         {
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b416e2f5f806c7a",
+      "sourceHash": "fnv1a64:81902dc27d086931",
       "notice": null,
       "blocks": [
         {
@@ -448,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69a0bd5af06f8fc1",
+      "sourceHash": "fnv1a64:1501b4863870a7b4",
       "notice": null,
       "blocks": [
         {

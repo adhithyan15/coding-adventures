@@ -14,7 +14,8 @@ romanization: "jakham"
 concept_tag: MR-AAROGYA200-JAKHAM
 prerequisites: [MR-C199-kapni-karne, MR-C200-snayu]
 sounds: []
-roots: []
+roots: [persian-zakhm]
+etymology_hook: "jakham: usually traced to Persian zakhm 'wound'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C200-snayu]
 <!-- hl-knowledge: introduces=[MR-LEX-C200-AAROGYA200-02]; assesses=[] -->
 
 **जखम** — *jakham* — "a wound".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जखम** (*jakham*) is a loan, usually traced to Persian *zakhm*, "a wound", with Marathi **ज** for the *z*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

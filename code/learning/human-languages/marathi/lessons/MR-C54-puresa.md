@@ -11,7 +11,8 @@ gloss: enough, sufficient — the answer that ends a transaction, built on a roo
 concept_tag: MR-LEX-PURESA
 prerequisites: [MR-C54-thoda, MR-C49-adj-agreement, MR-C32-nako]
 sounds: [matra-u, matra-e, matra-aa]
-roots: [sanskrit-pur-fill]
+roots: [sanskrit-pur-fill, sanskrit-purayati]
+etymology_hook: "puresā: built on pure 'enough', with purṇe 'to satisfy' ← Sanskrit pūrayati 'fills' (CDIAL 8335)"
 duration:
   max_seconds: 210
 requires:

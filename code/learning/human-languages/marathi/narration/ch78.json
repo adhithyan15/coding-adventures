@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "To run, To play, To sell, To open, To cook",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:992b2fee31e5208d",
+  "sourceHash": "fnv1a64:7dd75e7bb2e6a94f",
   "lessons": [
     {
       "id": "MR-C78-dhavne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:850880c521c3bab3",
+      "sourceHash": "fnv1a64:6e679128d6dfcd94",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धावणे (dhāvṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhāvati, \"runs, flows\" (CDIAL 6802)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69576b0f6146eac1",
+      "sourceHash": "fnv1a64:64083d042d5a102a",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खेळणे (kheḷṇe) is inherited from a reconstructed khēl-, \"play\" (CDIAL 3918). CDIAL links it with Sanskrit krīḍati, \"plays\": if that verb has a non-Aryan source, these forms may share it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d67e5227c179670b",
+      "sourceHash": "fnv1a64:31ac01b710a70920",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विकणे (vikṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vikrīyate, \"is sold\" (CDIAL 11642). CDIAL notes that the Marathi verb moved from \"to be sold\" to \"to sell\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdc4a28ec00a59a3",
+      "sourceHash": "fnv1a64:8c2255e02e55f39d",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उघडणे (ughaḍṇe) is a tadbhava, a word inherited and reshaped by sound change. It comes from udghaṭati, \"is open\", a form CDIAL reconstructs from its descendants (CDIAL 1968)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffcc2989496ee6f9",
+      "sourceHash": "fnv1a64:aea36c7926843d8f",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिजवणे (shijavṇe) is the \"make\" form of Marathi śijṇẽ, \"to be cooked by boiling\". CDIAL lists that verb under Sanskrit sidhyati, \"succeeds, is well cooked\" (CDIAL 13408), and also, as another possibility, under a reconstructed śrīyate, \"is cooked\", where it adds \"or possibly from svidyate\" (CDIAL 12712)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

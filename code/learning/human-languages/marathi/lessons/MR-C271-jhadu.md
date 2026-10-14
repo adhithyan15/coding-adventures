@@ -14,7 +14,8 @@ romanization: "jhāḍū"
 concept_tag: MR-VASTU271-JHADU
 prerequisites: [MR-C271-pangharun, MR-C271-osri]
 sounds: []
-roots: []
+roots: [indo-aryan-jhatati]
+etymology_hook: "jhāḍū: from jhāḍṇe 'to shake, sweep' ← *jhāṭayati 'shakes down' (CDIAL 5328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C271-osri]
 <!-- hl-knowledge: introduces=[MR-LEX-C271-VASTU271-05]; assesses=[] -->
 
 **झाडू** — *jhāḍū* — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**झाडू** (*jhāḍū*) is built on *jhāḍṇẽ*, "to shake, sweep", which comes from a reconstructed *\*jhāṭayati*, "shakes down" (CDIAL 5328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

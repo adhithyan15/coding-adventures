@@ -31,8 +31,8 @@
   `MR-C07-khane` → `MR-C07-pahne` → `MR-C07-mahit-asne`): the track's first
   `SPINE-SAY-WHAT-I-DO` material, and its first chapter above A1. One idea per
   lesson, deliberately: the copula **आहे** and the verb-last rule; the
-  present-tense ending that declares the subject's gender; *jāṇe* and *yeṇe* as
-  one Sanskrit root (*yā-* bare, *ā-yā-* "toward here"); the *-णे* infinitive as
+  present-tense ending that declares the subject's gender; *jāṇe* and *yeṇe* from
+  two Sanskrit verbs of going (*yāti*; *ā-* "toward here" + *eti*); the *-णे* infinitive as
   a **neuter** noun, which is where Marathi's third gender becomes visible;
   *paś-* ← Indo-European *\*spek-* and its English cousin-web; and the dative
   knower, *malā māhīt āhe*, with **माहीत** marked as the Persian/Arabic

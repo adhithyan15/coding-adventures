@@ -14,7 +14,8 @@ romanization: "tārīkh"
 concept_tag: MR-TIME126-TARIKH
 prerequisites: [MR-C125-sanivar, MR-C126-ravivar, MR-C67-vajta]
 sounds: []
-roots: []
+roots: [arabic-tarikh]
+etymology_hook: "tārīkh ← Arabic tārīkh 'a dating, a date', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [MR-C126-ravivar]
 <!-- hl-knowledge: introduces=[MR-LEX-C126-TIME126-02]; assesses=[] -->
 
 **तारीख** — *tārīkh* — "a date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तारीख** (*tārīkh*) is a loan from Arabic *tārīkh*, "a dating, a date", which reached Marathi through Persian. Its Arabic root is *ʾ-r-kh* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

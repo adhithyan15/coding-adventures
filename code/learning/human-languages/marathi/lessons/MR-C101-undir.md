@@ -14,7 +14,8 @@ romanization: "undīr"
 concept_tag: MR-ANIMALS101-UNDIR
 prerequisites: [MR-C100-mendhi, MR-C100-paksi]
 sounds: []
-roots: []
+roots: [sanskrit-undura]
+etymology_hook: "undīr ← Sanskrit undura 'rat, mouse', itself from Austroasiatic; a tadbhava (CDIAL 2095)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C100-paksi]
 <!-- hl-knowledge: introduces=[MR-LEX-C101-ANIMALS101-01]; assesses=[] -->
 
 **उंदीर** — *undīr* — "a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उंदीर** (*undīr*) is a tadbhava of Sanskrit *undura*, "rat, mouse" (CDIAL 2095). CDIAL notes the view that the Sanskrit word comes from Austroasiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

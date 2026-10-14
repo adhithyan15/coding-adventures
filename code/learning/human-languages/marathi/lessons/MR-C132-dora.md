@@ -14,7 +14,8 @@ romanization: "dorā"
 concept_tag: MR-THINGS132-DORA
 prerequisites: [MR-C132-katri, MR-C132-sui]
 sounds: []
-roots: []
+roots: [sanskrit-davara]
+etymology_hook: "dorā ← Sanskrit davara 'string', a tadbhava (CDIAL 6225)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C132-sui]
 <!-- hl-knowledge: introduces=[MR-LEX-C132-THINGS132-04]; assesses=[] -->
 
 **दोरा** — *dorā* — "a thread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दोरा** (*dorā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *davara*, "string" (CDIAL 6225). CDIAL lists Marathi *dor*, "string, rope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

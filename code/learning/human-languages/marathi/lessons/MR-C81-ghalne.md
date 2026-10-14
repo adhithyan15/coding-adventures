@@ -14,7 +14,8 @@ romanization: "ghālṇe"
 concept_tag: MR-VERB-GHALNE
 prerequisites: [MR-C81-shodhne, MR-C81-haravne]
 sounds: []
-roots: []
+roots: [indo-aryan-ghalyati]
+etymology_hook: "ghālṇe ← *ghalyati 'pours', a reconstructed form; a tadbhava (CDIAL 4457)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C81-haravne]
 <!-- hl-knowledge: introduces=[MR-LEX-C81-VERBS81-04]; assesses=[] -->
 
 **घालणे** — *ghālṇe* — "to put on (clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घालणे** (*ghālṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ghalyati*, "pours", a form CDIAL reconstructs from its descendants (CDIAL 4457). CDIAL glosses the Marathi verb "to pour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

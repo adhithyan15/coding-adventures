@@ -15,6 +15,7 @@ concept_tag: MR-VERB-PATAVNE
 prerequisites: [MR-C224-aram-karne, MR-C224-kantalne]
 sounds: []
 roots: []
+etymology_hook: "paṭavṇe 'to convince': origin not settled; CDIAL has no entry for it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C224-kantalne]
 <!-- hl-knowledge: introduces=[MR-LEX-C225-ACT225-01]; assesses=[] -->
 
 **पटवणे** — *paṭavṇe* — "to convince".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **पटवणे** (*paṭavṇe*) is not settled. CDIAL has no entry for it in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

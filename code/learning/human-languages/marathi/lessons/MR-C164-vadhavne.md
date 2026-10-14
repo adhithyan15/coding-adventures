@@ -14,7 +14,8 @@ romanization: "vāḍhavṇe"
 concept_tag: MR-VERB-VADHAVNE
 prerequisites: [MR-C164-talya-vajavne, MR-C164-olandne]
 sounds: []
-roots: []
+roots: [sanskrit-vardhayati]
+etymology_hook: "vāḍhavṇe: the 'make' form of vāḍhṇe 'to grow', from Sanskrit vardhate 'grows' (CDIAL 11376)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C164-olandne]
 <!-- hl-knowledge: introduces=[MR-LEX-C164-ACT164-04]; assesses=[] -->
 
 **वाढवणे** — *vāḍhavṇe* — "to increase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वाढवणे** (*vāḍhavṇe*) is the "make" form of **वाढणे**, "to grow", from Sanskrit *vardhate*, "grows, increases" (CDIAL 11376); Sanskrit had its own "make" form, *vardhayati*, "makes grow" (CDIAL 11382).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

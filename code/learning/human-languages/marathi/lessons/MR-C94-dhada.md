@@ -15,6 +15,7 @@ concept_tag: MR-SCHOOL94-DHADA
 prerequisites: [MR-C94-shala, MR-C94-nakasha]
 sounds: []
 roots: []
+etymology_hook: "dhaḍā 'lesson': origin not settled; neither CDIAL nor DEDR has an entry in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C94-nakasha]
 <!-- hl-knowledge: introduces=[MR-LEX-C94-SCHOOL94-03]; assesses=[] -->
 
 **धडा** — *dhaḍā* — "a lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **धडा** (*dhaḍā*) is not settled. Neither CDIAL nor DEDR has an entry for it in the sense "lesson".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

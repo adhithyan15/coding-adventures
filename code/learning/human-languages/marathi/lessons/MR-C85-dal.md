@@ -14,7 +14,8 @@ romanization: "ḍāḷ"
 concept_tag: MR-FOOD85-DAL
 prerequisites: [MR-C85-masa, MR-C85-bhat]
 sounds: []
-roots: []
+roots: [sanskrit-dala-split]
+etymology_hook: "ḍāḷ ← Sanskrit dāla 'split peas'; CDIAL asks if it is the same as *dāla 'splitting' (CDIAL 6309)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C85-bhat]
 <!-- hl-knowledge: introduces=[MR-LEX-C85-FOOD85-03]; assesses=[] -->
 
 **डाळ** — *ḍāḷ* — "lentils".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डाळ** (*ḍāḷ*) is a tadbhava of Sanskrit *dāla*, "a kind of grain, split peas" (CDIAL 6309). CDIAL asks whether it is the same word as *\*dāla*, "tearing, splitting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

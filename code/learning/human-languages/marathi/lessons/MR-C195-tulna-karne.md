@@ -14,7 +14,8 @@ romanization: "tulnā karṇe"
 concept_tag: MR-VERB-TULNA-KARNE
 prerequisites: [MR-C195-jalne, MR-C195-thothavne]
 sounds: []
-roots: []
+roots: [sanskrit-tulana]
+etymology_hook: "tulnā: Sanskrit tulanā 'weighing, comparing', a tatsama; karṇe 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C195-thothavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C195-ACT195-05]; assesses=[] -->
 
 **तुलना करणे** — *tulnā karṇe* — "to compare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तुलना** is Sanskrit *tulanā*, "weighing, comparing", a tatsama built on *tul*, "to weigh". **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

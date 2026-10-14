@@ -14,7 +14,8 @@ romanization: "pohe"
 concept_tag: MR-THINGS137-POHE
 prerequisites: [MR-C136-bhaji, MR-C136-varan]
 sounds: []
-roots: []
+roots: [sanskrit-prthuka]
+etymology_hook: "pohe ← Sanskrit pṛthuka 'flattened rice or grain', a tadbhava (CDIAL 8359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C136-varan]
 <!-- hl-knowledge: introduces=[MR-LEX-C137-THINGS137-01]; assesses=[] -->
 
 **पोहे** — *pohe* — "flattened rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पोहे** (*pohe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pṛthuka*, "flattened rice or grain" (CDIAL 8359). It is built on *pṛthu*, "broad, flat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

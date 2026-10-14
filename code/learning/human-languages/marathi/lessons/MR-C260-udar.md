@@ -14,7 +14,8 @@ romanization: "udār"
 concept_tag: MR-GUN260-UDAR
 prerequisites: [MR-C259-avasyak, MR-C259-nirupyogi]
 sounds: []
-roots: []
+roots: [sanskrit-udara]
+etymology_hook: "udār ← Sanskrit udāra 'exciting; lofty, noble', a tatsama (CDIAL 1935)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C259-nirupyogi]
 <!-- hl-knowledge: introduces=[MR-LEX-C260-GUN260-01]; assesses=[] -->
 
 **उदार** — *udār* — "generous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उदार** (*udār*) is Sanskrit *udāra*, "exciting; lofty, noble", taken over whole as a learned loan, a tatsama (CDIAL 1935).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

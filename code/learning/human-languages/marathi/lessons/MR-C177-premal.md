@@ -14,7 +14,8 @@ romanization: "premaḷ"
 concept_tag: MR-GUN177-PREMAL
 prerequisites: [MR-C176-asakya, MR-C176-mukhya]
 sounds: []
-roots: []
+roots: [sanskrit-preman]
+etymology_hook: "premaḷ: Sanskrit preman 'love' + the Marathi ending -aḷ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C176-mukhya]
 <!-- hl-knowledge: introduces=[MR-LEX-C177-GUN177-01]; assesses=[] -->
 
 **प्रेमळ** — *premaḷ* — "affectionate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रेमळ** (*premaḷ*) is Sanskrit *preman*, "love", with the Marathi ending *-aḷ*, "full of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

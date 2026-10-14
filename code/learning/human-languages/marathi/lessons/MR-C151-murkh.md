@@ -14,7 +14,8 @@ romanization: "mūrkh"
 concept_tag: MR-QUAL151-MURKH
 prerequisites: [MR-C151-dhadsi, MR-C151-bhitra]
 sounds: []
-roots: []
+roots: [sanskrit-murkha]
+etymology_hook: "mūrkh ← Sanskrit mūrkha 'stupid, foolish', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C151-bhitra]
 <!-- hl-knowledge: introduces=[MR-LEX-C151-QUAL151-04]; assesses=[] -->
 
 **मूर्ख** — *mūrkh* — "foolish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मूर्ख** (*mūrkh*) is Sanskrit *mūrkha*, "stupid, foolish", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

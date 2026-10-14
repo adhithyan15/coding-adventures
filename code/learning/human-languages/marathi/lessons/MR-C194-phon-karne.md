@@ -14,7 +14,8 @@ romanization: "phon karṇe"
 concept_tag: MR-VERB-PHON-KARNE
 prerequisites: [MR-C193-valavne, MR-C193-istri-karne]
 sounds: []
-roots: []
+roots: [english-phone]
+etymology_hook: "phon ← English phone; karṇe 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C193-istri-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C194-ACT194-01]; assesses=[] -->
 
 **फोन करणे** — *phon karṇe* — "to phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फोन** is a loan from English *phone*, short for *telephone*. **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

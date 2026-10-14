@@ -14,7 +14,8 @@ romanization: "dayāḷū"
 concept_tag: MR-GUN177-DAYALU
 prerequisites: [MR-C176-mukhya, MR-C177-premal]
 sounds: []
-roots: []
+roots: [sanskrit-daya]
+etymology_hook: "dayāḷū: Sanskrit dayālu 'compassionate', from dayā 'pity'; with Marathi ḷ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C177-premal]
 <!-- hl-knowledge: introduces=[MR-LEX-C177-GUN177-02]; assesses=[] -->
 
 **दयाळू** — *dayāḷū* — "kind, compassionate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दयाळू** (*dayāḷū*) is Sanskrit *dayālu*, "compassionate", built on *dayā*, "pity", with Marathi **ळ**. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

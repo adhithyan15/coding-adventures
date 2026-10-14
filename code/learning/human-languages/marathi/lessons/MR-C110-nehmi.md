@@ -15,6 +15,7 @@ concept_tag: MR-TIME110-NEHMI
 prerequisites: [MR-C110-aj, MR-C110-ata]
 sounds: []
 roots: []
+etymology_hook: "nehmī 'always': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C110-ata]
 <!-- hl-knowledge: introduces=[MR-LEX-C110-TIME110-04]; assesses=[] -->
 
 **नेहमी** — *nehmī* — "always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **नेहमी** (*nehmī*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

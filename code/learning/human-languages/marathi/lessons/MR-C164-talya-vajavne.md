@@ -14,7 +14,8 @@ romanization: "ṭāḷyā vājavṇe"
 concept_tag: MR-VERB-TALYA-VAJAVNE
 prerequisites: [MR-C163-sahi-karne, MR-C164-jahir-karne]
 sounds: []
-roots: []
+roots: [sanskrit-tada, sanskrit-vadyate]
+etymology_hook: "ṭāḷī 'clapping' ← tāla 'clap', under tāḍa (CDIAL 5748); vājavṇe ← vādyate (CDIAL 11513)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C164-jahir-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C164-ACT164-02]; assesses=[] -->
 
 **टाळ्या वाजवणे** — *ṭāḷyā vājavṇe* — "to clap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टाळ्या** is the plural of **टाळी**, "a clap", which CDIAL lists under Sanskrit *tāḍa*, "blow", whose form *tāla* meant "clap, rhythm" (CDIAL 5748). **वाजवणे** is the "make" form of **वाजणे**, "to sound", from Sanskrit *vādyate*, "is made to sound" (CDIAL 11513).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

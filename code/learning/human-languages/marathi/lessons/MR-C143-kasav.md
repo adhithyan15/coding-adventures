@@ -14,7 +14,8 @@ romanization: "kāsav"
 concept_tag: MR-THINGS143-KASAV
 prerequisites: [MR-C142-ghubad, MR-C142-beduk]
 sounds: []
-roots: []
+roots: [sanskrit-kacchapa]
+etymology_hook: "kāsav ← Sanskrit kacchapa 'turtle, tortoise', a tadbhava (CDIAL 2619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C142-beduk]
 <!-- hl-knowledge: introduces=[MR-LEX-C143-THINGS143-01]; assesses=[] -->
 
 **कासव** — *kāsav* — "a tortoise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कासव** (*kāsav*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kacchapa*, "turtle, tortoise" (CDIAL 2619). CDIAL notes the view that *kacchapa* is a folk reshaping of *kaśyapa*, "tortoise", through *kaccha*, "marsh".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

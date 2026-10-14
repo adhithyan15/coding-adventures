@@ -14,7 +14,8 @@ romanization: "shodhṇe"
 concept_tag: MR-VERB-SHODHNE
 prerequisites: [MR-C80-kapne, MR-C81-thambne]
 sounds: []
-roots: []
+roots: [sanskrit-shoddhum]
+etymology_hook: "shodhṇe ← Sanskrit śoddhum 'to purify', a tadbhava (CDIAL 12626)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C81-thambne]
 <!-- hl-knowledge: introduces=[MR-LEX-C81-VERBS81-02]; assesses=[] -->
 
 **शोधणे** — *shodhṇe* — "to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शोधणे** (*shodhṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śoddhum*, "to purify" (CDIAL 12626). CDIAL glosses the Marathi verb "to purify, search".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

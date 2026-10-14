@@ -11,7 +11,8 @@ gloss: hello / goodbye (namaskār)
 concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [inherent-a, halant-conjunct]
-roots: [namas, kara]
+roots: [namas, kara, sanskrit-namaskara]
+etymology_hook: "namaskār ← Sanskrit namaskāra 'adoration': namas 'a bow' + kāra 'making', a tatsama (CDIAL 6960)"
 duration:
   max_seconds: 240
 requires:

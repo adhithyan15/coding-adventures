@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a salary, then the Marathi for a guide.
 You'll want to know: कारंजे.
 कारंजे — kārañje — "a fountain".
 
+The word, taken apart.
+The origin of कारंजे (kārañje) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a guide, then the Marathi for a fountain
 
 You'll want to know: फाटक.
 फाटक — phāṭak — "a gate".
+
+The word, taken apart.
+फाटक (phāṭak) is a tadbhava, a word inherited and reshaped by sound change. It comes from phāṭṭakka, "gate, door", a form CDIAL reconstructs from its descendants (CDIAL 9069). CDIAL marks its own guess at the reconstruction's source as very doubtful.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a fountain, then the Marathi for a gate.
 You'll want to know: कुंपण.
 कुंपण — kumpaṇ — "a fence".
 
+The word, taken apart.
+The origin of कुंपण (kumpaṇ) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a gate, then the Marathi for a fence.
 You'll want to know: तळघर.
 तळघर — taḷghar — "a cellar".
 
+The word, taken apart.
+तळघर (taḷghar) is "bottom-house": taḷ, "bottom", from Sanskrit tala, "base, bottom" (CDIAL 5731), and घर, "house".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a fence, then the Marathi for a cellar.
 
 You'll want to know: माळा.
 माळा — māḷā — "a loft, an attic".
+
+The word, taken apart.
+माळा (māḷā) is a tadbhava, a word inherited and reshaped by sound change. It comes from māḍa, "upper storey of a house", a form CDIAL reconstructs from its descendants (CDIAL 9996). CDIAL glosses the Marathi word "loft, granary", and takes the word from Dravidian, comparing Kannada māḍi, "upstair house".
 
 What you've built.
 One more word for this chapter.

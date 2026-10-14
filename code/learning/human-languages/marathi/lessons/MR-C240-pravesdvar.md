@@ -14,7 +14,8 @@ romanization: "praveśdvār"
 concept_tag: MR-VASTU240-PRAVESDVAR
 prerequisites: [MR-C239-niyam, MR-C240-praves]
 sounds: []
-roots: []
+roots: [sanskrit-pravesha, sanskrit-dvara]
+etymology_hook: "praveśdvār: Sanskrit praveśa 'entering' + dvāra 'door' (CDIAL 6663)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C240-praves]
 <!-- hl-knowledge: introduces=[MR-LEX-C240-VASTU240-02]; assesses=[] -->
 
 **प्रवेशद्वार** — *praveśdvār* — "an entrance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रवेशद्वार** (*praveśdvār*) is a compound of Sanskrit parts: *praveśa*, "entering", and *dvāra*, "door" (CDIAL 6663).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

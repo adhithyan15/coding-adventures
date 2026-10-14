@@ -14,7 +14,8 @@ romanization: "jag"
 concept_tag: MR-NUMBERS119-JAG
 prerequisites: [MR-C119-shambhar, MR-C119-hajar]
 sounds: []
-roots: []
+roots: [sanskrit-jagat]
+etymology_hook: "jag: Sanskrit jagat 'moving; the world', lightly reshaped (CDIAL 5078)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C119-hajar]
 <!-- hl-knowledge: introduces=[MR-LEX-C119-NUMBERS119-03]; assesses=[] -->
 
 **जग** — *jag* — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जग** (*jag*) is Sanskrit *jagat*, "moving, living", which meant "the world" from the Brahmanas on (CDIAL 5078). Marathi drops the final *-t*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

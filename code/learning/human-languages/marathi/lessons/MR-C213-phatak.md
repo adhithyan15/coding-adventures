@@ -14,7 +14,8 @@ romanization: "phāṭak"
 concept_tag: MR-VASTU213-PHATAK
 prerequisites: [MR-C212-margadarsak, MR-C213-karanje]
 sounds: []
-roots: []
+roots: [indo-aryan-phattakka]
+etymology_hook: "phāṭak ← *phāṭṭakka 'gate, door', a reconstructed form; a tadbhava (CDIAL 9069)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C213-karanje]
 <!-- hl-knowledge: introduces=[MR-LEX-C213-VASTU213-02]; assesses=[] -->
 
 **फाटक** — *phāṭak* — "a gate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फाटक** (*phāṭak*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*phāṭṭakka*, "gate, door", a form CDIAL reconstructs from its descendants (CDIAL 9069). CDIAL marks its own guess at the reconstruction's source as very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

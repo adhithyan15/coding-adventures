@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to float, then the Marathi for to chase.
 You'll want to know: कौतुक करणे.
 कौतुक करणे — kautuk karṇe — "to praise, to admire".
 
+The word, taken apart.
+कौतुक is Sanskrit kautuka, "curiosity, festivity", a tatsama (CDIAL 3562). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to chase, then the Marathi for to praise
 
 You'll want to know: पुढे जाणे.
 पुढे जाणे — puḍhe jāṇe — "to go forward".
+
+The word, taken apart.
+The origin of पुढे, "ahead", is not settled: neither CDIAL nor DEDR has an entry for it. जाणे comes from Sanskrit yāti, "goes" (CDIAL 10452).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to praise, then the Marathi for to go fo
 You'll want to know: मागे जाणे.
 मागे जाणे — māge jāṇe — "to go back".
 
+The word, taken apart.
+The origin of मागे, "behind", is not settled: neither CDIAL nor DEDR has an entry for it. जाणे comes from Sanskrit yāti, "goes" (CDIAL 10452).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to go forward, then the Marathi for to g
 You'll want to know: बचाव करणे.
 बचाव करणे — bacāv karṇe — "to defend".
 
+The word, taken apart.
+बचाव, "defence", is built on the verb stem bac-, "to escape, be saved", which CDIAL lists under Sanskrit vañcati, marking the b- forms as taken from Hindi (CDIAL 11208). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to go back, then the Marathi for to defe
 
 You'll want to know: नाहीसे होणे.
 नाहीसे होणे — nāhīse hoṇe — "to disappear".
+
+The word, taken apart.
+नाहीसे is "not-being", built on नाही, "not", which rests on the old negative na. होणे comes from Sanskrit bhavati, "becomes, is" (CDIAL 9416).
 
 What you've built.
 One more word for this chapter.

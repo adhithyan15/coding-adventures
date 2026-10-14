@@ -14,7 +14,8 @@ romanization: "kāpūs"
 concept_tag: MR-VASTU214-KAPUS
 prerequisites: [MR-C214-urja, MR-C214-plastik]
 sounds: []
-roots: []
+roots: [sanskrit-karpasa]
+etymology_hook: "kāpūs ← Sanskrit karpāsa 'cotton', a tadbhava (CDIAL 2877)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C214-plastik]
 <!-- hl-knowledge: introduces=[MR-LEX-C214-VASTU214-03]; assesses=[] -->
 
 **कापूस** — *kāpūs* — "cotton".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कापूस** (*kāpūs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karpāsa*, "cotton" (CDIAL 2877). CDIAL takes the Sanskrit word from Austro-Asiatic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

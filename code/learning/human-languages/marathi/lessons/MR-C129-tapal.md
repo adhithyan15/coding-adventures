@@ -15,6 +15,7 @@ concept_tag: MR-LOC129-TAPAL
 prerequisites: [MR-C129-granthalay, MR-C129-upahargrh]
 sounds: []
 roots: []
+etymology_hook: "ṭapāl 'post, mail': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C129-upahargrh]
 <!-- hl-knowledge: introduces=[MR-LEX-C129-LOC129-03]; assesses=[] -->
 
 **टपाल** — *ṭapāl* — "the post, mail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **टपाल** (*ṭapāl*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kheḷṇe"
 concept_tag: MR-VERB-KHELNE
 prerequisites: [MR-C77-uthne, MR-C78-dhavne]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "kheḷṇe ← *khēl- 'play', a reconstructed form; CDIAL links it, hesitantly, with Sanskrit krīḍati (CDIAL 3918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C78-dhavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C78-VERBS78-02]; assesses=[] -->
 
 **खेळणे** — *kheḷṇe* — "to play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खेळणे** (*kheḷṇe*) is inherited from a reconstructed *\*khēl-*, "play" (CDIAL 3918). CDIAL links it with Sanskrit *krīḍati*, "plays": if that verb has a non-Aryan source, these forms may share it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

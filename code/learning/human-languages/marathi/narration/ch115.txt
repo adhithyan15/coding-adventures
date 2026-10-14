@@ -12,6 +12,9 @@ Before the new one: say the Marathi for an office, then the Marathi for the poli
 You'll want to know: होडी.
 होडी — hoḍī — "a boat".
 
+The word, taken apart.
+होडी (hoḍī) is a tadbhava of Sanskrit hoḍa, "raft, boat", a word from the old word-lists (CDIAL 14174). CDIAL takes it from Dravidian, comparing Kannada ōḍa.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for the police, then the Marathi for a boat.
 
 You'll want to know: सायकल.
 सायकल — sāykal — "a bicycle".
+
+The word, taken apart.
+सायकल (sāykal) is a loan from English cycle.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a boat, then the Marathi for a bicycle.
 You'll want to know: बाजार.
 बाजार — bājār — "a market".
 
+The word, taken apart.
+बाजार (bājār) is a loan, usually traced to Persian bāzār, "market". Marathi writes the z as ज.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a bicycle, then the Marathi for a market
 You'll want to know: गाव.
 गाव — gāv — "a village".
 
+The word, taken apart.
+गाव (gāv) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from grāma, "troop, village" (CDIAL 4368).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a market, then the Marathi for a village
 
 You'll want to know: कपडे.
 कपडे — kapḍe — "clothes".
+
+The word, taken apart.
+कपडे (kapḍe) is the plural of kapḍā, "cloth", which goes back, like Marathi kāpaḍ, "cloth", to Sanskrit karpaṭa, "patched garment, rag" (CDIAL 2871). CDIAL reports Przyluski's view that the Sanskrit word comes from Austroasiatic.
 
 What you've built.
 One more word for this chapter.

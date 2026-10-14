@@ -14,7 +14,8 @@ gloss: "a water pot"
 concept_tag: MR-ANCHOR-GHAGAR
 prerequisites: [MR-W05-a-independent]
 sounds: []
-roots: []
+roots: [indo-aryan-ghagghara]
+etymology_hook: "ghāgar ← *ghagghara 'waterpot', a reconstructed form; a tadbhava (CDIAL 4403)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **घागर** — *ghāgar* — "a water pot".
 
 Say it: *ghāgar*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **घ** and **ग**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घागर** (*ghāgar*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ghagghara*, "waterpot", a form CDIAL reconstructs from its descendants (CDIAL 4403). CDIAL suggests, with a query, that the word imitates the sound of gurgling, Sanskrit *gharghara*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-GHAGAR] -->

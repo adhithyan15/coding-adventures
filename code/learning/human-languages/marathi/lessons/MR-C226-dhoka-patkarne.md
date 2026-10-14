@@ -14,7 +14,8 @@ romanization: "dhokā patkarṇe"
 concept_tag: MR-VERB-DHOKA-PATKARNE
 prerequisites: [MR-C226-parat-dene, MR-C226-nakarne]
 sounds: []
-roots: []
+roots: [indo-aryan-dhroksha]
+etymology_hook: "dhokā ← *dhrōkṣa 'deceit' (CDIAL 6894); the origin of patkarṇe is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C226-nakarne]
 <!-- hl-knowledge: introduces=[MR-LEX-C226-ACT226-04]; assesses=[] -->
 
 **धोका पत्करणे** — *dhokā patkarṇe* — "to take a risk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धोका** comes from a reconstructed *\*dhrōkṣa*, "deceit" (CDIAL 6894). The origin of **पत्करणे**, "to accept, take on", is not settled; CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "samārambh"
 concept_tag: MR-VASTU274-SAMARAMBH
 prerequisites: [MR-C274-subheccha, MR-C274-amantran]
 sounds: []
-roots: []
+roots: [sanskrit-arambha]
+etymology_hook: "samārambh: Sanskrit samārambha 'undertaking', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C274-amantran]
 <!-- hl-knowledge: introduces=[MR-LEX-C274-VASTU274-03]; assesses=[] -->
 
 **समारंभ** — *samārambh* — "a ceremony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**समारंभ** (*samārambh*) is Sanskrit *samārambha*, "undertaking, beginning", a tatsama: *sam*, "together", and *ārambha*, "beginning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,9 +11,10 @@ gloss: day — the whole that holds the other four, and the one word in the set 
 concept_tag: TIME-DAY
 prerequisites: [MR-C66-ratra]
 sounds: [matra-i, inherent-a]
-roots: []
+roots: [sanskrit-divasa]
+etymology_hook: "divas ← Sanskrit divasa 'day', almost unchanged (CDIAL 6333)"
 duration:
-  max_seconds: 210
+  max_seconds: 212
 requires:
   knowledge: [MR-LEX-RATRA, MR-GRAMMAR-TIME-II, MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER]
 introduces:
@@ -46,6 +47,11 @@ what the four of them together are called.
 
 Not a fifth part. **The whole that holds the other four** — the morning, the
 afternoon, the evening and the night are stretches of a दिवस.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दिवस** is inherited, almost unchanged, from Sanskrit *divasa*, "heaven", later "day" (CDIAL 6333).
 
 ## Grammar Lens: the one that will not take -ी
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DIVAS, MR-GRAMMAR-TIME-II, MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER] -->

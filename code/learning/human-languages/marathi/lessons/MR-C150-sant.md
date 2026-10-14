@@ -14,7 +14,8 @@ romanization: "śānt"
 concept_tag: MR-QUAL150-SANT
 prerequisites: [MR-C150-sila, MR-C150-kacca]
 sounds: []
-roots: []
+roots: [sanskrit-shanta]
+etymology_hook: "śānt: Sanskrit śānta 'calm', a tatsama; CDIAL lists the inherited Marathi sant 'calm' (CDIAL 12390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C150-kacca]
 <!-- hl-knowledge: introduces=[MR-LEX-C150-QUAL150-03]; assesses=[] -->
 
 **शांत** — *śānt* — "calm, quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शांत** (*śānt*) is Sanskrit *śānta*, "abated, calm", taken over whole, a tatsama. CDIAL lists the inherited Marathi form as *sant*, "calm (of flame or temper)" (CDIAL 12390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

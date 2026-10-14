@@ -14,7 +14,8 @@ romanization: "māmā"
 concept_tag: MR-FAMILY75-MAMA
 prerequisites: [MR-C75-kaka, MR-C75-mavshi]
 sounds: []
-roots: []
+roots: [sanskrit-mama]
+etymology_hook: "māmā ← Sanskrit māma 'uncle', a nursery word; similar words in Dravidian (CDIAL 10055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C75-mavshi]
 <!-- hl-knowledge: introduces=[MR-LEX-C75-FAMILY75-05]; assesses=[] -->
 
 **मामा** — *māmā* — "an uncle (mother's brother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मामा** (*māmā*) is a tadbhava of Sanskrit *māma*, "uncle" (CDIAL 10055). CDIAL calls it a nursery word and notes similar words in Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

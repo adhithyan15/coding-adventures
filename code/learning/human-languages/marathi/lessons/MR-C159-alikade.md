@@ -14,7 +14,8 @@ romanization: "alīkaḍe"
 concept_tag: MR-PAS159-ALIKADE
 prerequisites: [MR-C158-milavne, MR-C158-vacavne]
 sounds: []
-roots: []
+roots: [sanskrit-kati-hip]
+etymology_hook: "alīkaḍe: alī- 'this side' + -kaḍe 'side'; the origin of alī- is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C158-vacavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C159-PAS159-01]; assesses=[] -->
 
 **अलीकडे** — *alīkaḍe* — "recently". Marathi's past ends in **-ले**, **-लो** or **-ली**: **अलीकडे मी एक पुस्तक वाचले.** — *alīkaḍe mī ek pustak vācle* — "Recently I read a book."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अलीकडे** (*alīkaḍe*) is *alī-*, "this side", with **-कडे**, "toward". The origin of *alī-* is not settled; CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

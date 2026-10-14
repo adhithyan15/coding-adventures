@@ -14,7 +14,8 @@ romanization: "namra"
 concept_tag: MR-GUN177-NAMRA
 prerequisites: [MR-C177-dayalu, MR-C177-krur]
 sounds: []
-roots: []
+roots: [sanskrit-namra]
+etymology_hook: "namra ← Sanskrit namra 'bent, submissive', a tatsama (CDIAL 6964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C177-krur]
 <!-- hl-knowledge: introduces=[MR-LEX-C177-GUN177-04]; assesses=[] -->
 
 **नम्र** — *namra* — "humble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नम्र** (*namra*) is Sanskrit *namra*, "bent, submissive", taken over whole as a learned loan, a tatsama (CDIAL 6964). It is built on *nam*, "to bow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

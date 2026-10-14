@@ -14,7 +14,8 @@ romanization: "kvacit"
 concept_tag: MR-VEL171-KVACIT
 prerequisites: [MR-C170-samyam, MR-C170-nasib]
 sounds: []
-roots: []
+roots: [sanskrit-kvacit]
+etymology_hook: "kvacit: Sanskrit kvacit 'somewhere, sometimes', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C170-nasib]
 <!-- hl-knowledge: introduces=[MR-LEX-C171-VEL171-01]; assesses=[] -->
 
 **क्वचित** — *kvacit* — "rarely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क्वचित** (*kvacit*) is Sanskrit *kvacit*, "somewhere, at times", a tatsama: *kva*, "where", with *-cit*, "some-". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -7,14 +7,14 @@ chapter: 60
 type: word
 headword: पाचवा
 romanization: pāchvā
-gloss: "fifth — the seam, where Marathi stops inheriting ordinals and starts building them"
+gloss: "fifth — the seam, where Marathi's ordinals start following a rule"
 concept_tag: MR-ORDINAL-FIFTH
 prerequisites: [MR-C60-chautha, MR-C58-ekonis, MR-W56-au-matra, MR-C41-ghar]
 sounds: []
-roots: []
-etymology_hook: "Molesworth has an entry for पाचवा, but it is a different word entirely -- a returning sickness -- because the ordinal fifth was too predictable to need one"
+roots: [sanskrit-pancama]
+etymology_hook: "pāchvā ← Sanskrit pañcama 'fifth', a tadbhava: -ma became -vā (CDIAL 7669)"
 duration:
-  max_seconds: 240
+  max_seconds: 278
 requires:
   knowledge: [MR-LEX-CHAUTHA, MR-LEX-PAHILA, MR-LEX-TISRA, MR-LEX-DUSRA, MR-GRAMMAR-ORDINAL-SET, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-LEX-EKONIS, MR-SCRIPT-AU-MATRA-01, MR-LEX-GHAR]
 introduces:
@@ -55,6 +55,11 @@ Say **पाच** and then say **पाचवा**. The number did not change at
 was worn down, nothing was replaced: **पाच** is still sitting there whole, with
 **-वा** added behind it.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पाचवा** is inherited too, from Sanskrit *pañcama*, "fifth" (CDIAL 7669). Its **-वा** is the old ending *-ma*; what is new is that Marathi now puts it on any number.
+
 ## Grammar Lens: -वा, and where the language changes its mind
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-ORDINAL-VA]; assesses=[MR-LEX-PACHVA, MR-LEX-CHAUTHA, MR-GRAMMAR-ORDINAL-SET] -->
 
@@ -69,7 +74,7 @@ Here is the whole chapter in one column, with the break marked:
 | **— the seam —** | | |
 | | **पाच** | **पाच** + **वा** |
 
-Above the line, four words Marathi received from its ancestors, each worn down
+Above the line, four words, each worn down
 its own way, none predictable from the number.
 
 Below the line, a **rule**: take the number and put **-वा** on it. That is all
@@ -82,7 +87,7 @@ words, which had to be memorised. And one ending, which does not.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PACHVA, MR-GRAMMAR-ORDINAL-VA, MR-LEX-GHAR, MR-LEX-PAHILA, MR-LEX-DUSRA, MR-LEX-TISRA] -->
 
-<!-- hl-activity: {"id":"MR-C60-pachva-r1","kind":"text","assesses":["MR-GRAMMAR-ORDINAL-VA","MR-LEX-PACHVA"],"prompt":"How does Marathi make fifth out of five, and how many of the first four ordinals are made that way?","answer":"paach plus -vaa; none of the first four","accepted":["pāch + vā, none","add -va to the number; none of them"],"feedback":{"correct":"The rule starts at five. The four before it are inherited words.","incorrect":"pāch takes -vā. The first four take nothing predictable."},"response_seconds":25} -->
+<!-- hl-activity: {"id":"MR-C60-pachva-r1","kind":"text","assesses":["MR-GRAMMAR-ORDINAL-VA","MR-LEX-PACHVA"],"prompt":"How does Marathi make fifth out of five, and how many of the first four ordinals are made that way?","answer":"paach plus -vaa; none of the first four","accepted":["pāch + vā, none","add -va to the number; none of them"],"feedback":{"correct":"The rule starts at five. The four before it are irregular.","incorrect":"pāch takes -vā. The first four take nothing predictable."},"response_seconds":25} -->
 
 [PAUSE 1s]
 - [YOU SAY: *pāch*, then *pāchvā*]

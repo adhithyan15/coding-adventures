@@ -12,6 +12,9 @@ Before the new one: say the Marathi for an actress, then the Marathi for a poem.
 You'll want to know: वृद्ध.
 वृद्ध — vṛddha — "an elderly person".
 
+The word, taken apart.
+वृद्ध (vṛddha) is Sanskrit vṛddha, "grown, large; grown-up, old", taken over whole as a learned loan, a tatsama (CDIAL 12073).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a poem, then the Marathi for an elderly 
 
 You'll want to know: जुळे.
 जुळे — juḷe — "twins".
+
+The word, taken apart.
+जुळे (juḷe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yugala, "pair, couple" (CDIAL 10489). It is built on yuga, "yoke". CDIAL glosses the Marathi word "one of twins".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for an elderly person, then the Marathi for 
 You'll want to know: सासू.
 सासू — sāsū — "a mother-in-law".
 
+The word, taken apart.
+सासू (sāsū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śvaśrū, "husband's or wife's mother" (CDIAL 12759).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for twins, then the Marathi for a mother-in-
 You'll want to know: सासरे.
 सासरे — sāsre — "a father-in-law".
 
+The word, taken apart.
+सासरे (sāsre) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śvaśura, "husband's father" (CDIAL 12753). CDIAL adds that the Marathi word may come instead from śvāśura.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a mother-in-law, then the Marathi for a 
 
 You'll want to know: जावई.
 जावई — jāvaī — "a son-in-law".
+
+The word, taken apart.
+जावई (jāvaī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāmātṛ, "daughter's husband" (CDIAL 5198).
 
 What you've built.
 One more word for this chapter.

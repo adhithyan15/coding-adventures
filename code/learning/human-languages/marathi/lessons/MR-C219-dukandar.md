@@ -14,7 +14,8 @@ romanization: "dukāndār"
 concept_tag: MR-VASTU219-DUKANDAR
 prerequisites: [MR-C219-utpanna, MR-C219-vyapar]
 sounds: []
-roots: []
+roots: [arabic-dukkan, persian-dar-holder]
+etymology_hook: "dukāndār: Arabic dukkān 'shop', through Persian, + Persian -dār 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C219-vyapar]
 <!-- hl-knowledge: introduces=[MR-LEX-C219-VASTU219-04]; assesses=[] -->
 
 **दुकानदार** — *dukāndār* — "a shopkeeper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुकानदार** (*dukāndār*) is *dukān*, "shop", from Arabic *dukkān*, "shop", through Persian (Lane, root *d-k-n*), with Persian *-dār*, "holder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

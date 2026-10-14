@@ -14,7 +14,8 @@ romanization: "svachchha"
 concept_tag: MR-ADJ106-SVACHCHHA
 prerequisites: [MR-C105-garib, MR-C105-ghan]
 sounds: []
-roots: []
+roots: [sanskrit-svaccha]
+etymology_hook: "svachchha ← Sanskrit svaccha 'very clear, transparent', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C105-ghan]
 <!-- hl-knowledge: introduces=[MR-LEX-C106-ADJ106-01]; assesses=[] -->
 
 **स्वच्छ** — *svachchha* — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्वच्छ** (*svachchha*) is Sanskrit *svaccha*, "very clear, transparent", taken over whole as a learned loan, a tatsama. It is *su-*, "well", and *accha*, "clear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -18,6 +18,9 @@ English has one word for this. Marathi has three, and which one you use is decid
 हे घर he ghar, this house.
 You have made this choice before. माझा and माझी split the same way, on the same two endings — -आ for a masculine noun, -ई for a feminine one. So the first two rows are a habit you already have, pointed at a new word.
 
+The word, taken apart.
+The origin of हा is not settled; CDIAL has no entry for it.
+
 Grammar Lens: it goes in front, and it never stands alone here.
 हा sits before its noun — hā mitra, never mitra hā. That is the same slot माझा and डावा take, so the front of a Marathi noun is becoming a place you know: the words that describe it queue up there.
 And because the ending is chosen by the noun, the word tells you the gender of anything that follows it. Meet a noun you have never read, with ही in front of it, and you already know one true thing about it.
@@ -53,6 +56,9 @@ near: ही खोली. far: ती खोली.
 near: हे घर. far: ते घर.
 Only the first letter moved. ह- became त-, and the three endings did not budge, because they were never about distance — they were about the noun.
 That is the whole of the second lesson. You learned six words by learning four.
+
+The word, taken apart.
+तो is usually traced to the old pronoun sa, "he, that", whose other forms use the stem ta-; CDIAL lists no Marathi form (CDIAL 12815).
 
 Why it's said this way.
 One warning worth having before you meet ते on a page.

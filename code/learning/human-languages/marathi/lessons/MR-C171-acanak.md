@@ -15,6 +15,7 @@ concept_tag: MR-VEL171-ACANAK
 prerequisites: [MR-C171-sevti, MR-C171-ajun]
 sounds: []
 roots: []
+etymology_hook: "acānak: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C171-ajun]
 <!-- hl-knowledge: introduces=[MR-LEX-C171-VEL171-05]; assesses=[] -->
 
 **अचानक** — *acānak* — "suddenly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **अचानक** (*acānak*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

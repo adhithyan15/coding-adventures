@@ -14,7 +14,8 @@ romanization: "bheṭ deṇe"
 concept_tag: MR-VERB-BHET-DENE
 prerequisites: [MR-C199-cikatavne, MR-C199-gathne]
 sounds: []
-roots: []
+roots: [indo-aryan-bhit, sanskrit-dadati]
+etymology_hook: "bheṭ ← *bhēṭṭ- 'meet', under *bhiṭ (CDIAL 9490); deṇe ← dadāti 'gives' (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C199-gathne]
 <!-- hl-knowledge: introduces=[MR-LEX-C199-ACT199-03]; assesses=[] -->
 
 **भेट देणे** — *bheṭ deṇe* — "to visit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भेट**, "a meeting, a present", CDIAL lists under a reconstructed *\*bhiṭ*, "meet, throng", in the form *\*bhēṭṭ-* (CDIAL 9490). **देणे** comes from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

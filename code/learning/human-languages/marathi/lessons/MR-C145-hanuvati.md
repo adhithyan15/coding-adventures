@@ -14,7 +14,8 @@ romanization: "hanuvaṭī"
 concept_tag: MR-THINGS145-HANUVATI
 prerequisites: [MR-C145-gal, MR-C145-jibh]
 sounds: []
-roots: []
+roots: [sanskrit-hanu]
+etymology_hook: "hanuvaṭī ← Sanskrit hanu 'jaw', a tadbhava (CDIAL 13966)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C145-jibh]
 <!-- hl-knowledge: introduces=[MR-LEX-C145-THINGS145-03]; assesses=[] -->
 
 **हनुवटी** — *hanuvaṭī* — "the chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हनुवटी** (*hanuvaṭī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hanu*, "jaw" (CDIAL 13966). CDIAL lists Marathi *haṇū* and *haṇvaṭī*, "chin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

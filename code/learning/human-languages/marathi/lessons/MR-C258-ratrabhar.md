@@ -14,7 +14,8 @@ romanization: "rātrabhar"
 concept_tag: MR-VEL258-RATRABHAR
 prerequisites: [MR-C258-satak, MR-C258-yug]
 sounds: []
-roots: []
+roots: [sanskrit-ratri, sanskrit-bharati]
+etymology_hook: "rātrabhar: Sanskrit rātra 'night' + bhar 'full', from bharṇe 'to fill' (CDIAL 9397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C258-yug]
 <!-- hl-knowledge: introduces=[MR-LEX-C258-VEL258-04]; assesses=[] -->
 
 **रात्रभर** — *rātrabhar* — "all night".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रात्रभर** (*rātrabhar*) is Sanskrit *rātra*, "night", with *-bhar*, "full", from *bharṇẽ*, "to fill" (CDIAL 9397): "the night full".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

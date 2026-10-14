@@ -14,7 +14,8 @@ romanization: "smārak"
 concept_tag: MR-VASTU183-SMARAK
 prerequisites: [MR-C183-killa, MR-C183-manora]
 sounds: []
-roots: []
+roots: [sanskrit-smaraka]
+etymology_hook: "smārak: Sanskrit smāraka 'reminding', from smṛ 'to remember'; a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C183-manora]
 <!-- hl-knowledge: introduces=[MR-LEX-C183-VASTU183-04]; assesses=[] -->
 
 **स्मारक** — *smārak* — "a monument".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्मारक** (*smārak*) is Sanskrit *smāraka*, "reminding", a tatsama built on *smṛ*, "to remember". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

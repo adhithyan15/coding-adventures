@@ -14,7 +14,8 @@ romanization: "māsik"
 concept_tag: MR-KAAM222-MASIK
 prerequisites: [MR-C221-palna, MR-C222-karkirda]
 sounds: []
-roots: []
+roots: [sanskrit-masika]
+etymology_hook: "māsik ← Sanskrit māsika 'monthly', a tatsama (CDIAL 10109)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C222-karkirda]
 <!-- hl-knowledge: introduces=[MR-LEX-C222-KAAM222-02]; assesses=[] -->
 
 **मासिक** — *māsik* — "a monthly magazine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मासिक** (*māsik*) is Sanskrit *māsika*, "monthly", taken over whole as a learned loan, a tatsama (CDIAL 10109). It is built on *māsa*, "month".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

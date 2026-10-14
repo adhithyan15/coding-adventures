@@ -14,7 +14,8 @@ romanization: "mudat"
 concept_tag: MR-VEL230-MUDAT
 prerequisites: [MR-C229-ahar, MR-C230-suruvat]
 sounds: []
-roots: []
+roots: [arabic-mudda]
+etymology_hook: "mudat ← Arabic mudda 'a space of time', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C230-suruvat]
 <!-- hl-knowledge: introduces=[MR-LEX-C230-VEL230-02]; assesses=[] -->
 
 **मुदत** — *mudat* — "a deadline, a term".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मुदत** (*mudat*) is a loan from Arabic *mudda*, "a space of time", which reached Marathi through Persian. Its Arabic root is *m-d-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

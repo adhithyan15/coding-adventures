@@ -14,7 +14,8 @@ romanization: "atiśayoktī karṇe"
 concept_tag: MR-VERB-ATISAYOKTI-KARNE
 prerequisites: [MR-C226-sodavne, MR-C227-nasta-karne]
 sounds: []
-roots: []
+roots: [sanskrit-atishaya, sanskrit-ukti, sanskrit-karoti]
+etymology_hook: "atiśayoktī: Sanskrit atiśaya 'excess' + ukti 'speech', a tatsama; karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C227-nasta-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C227-ACT227-02]; assesses=[] -->
 
 **अतिशयोक्ती करणे** — *atiśayoktī karṇe* — "to exaggerate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अतिशयोक्ती** is Sanskrit *atiśayokti*, "overstatement", a tatsama: *atiśaya*, "excess", and *ukti*, "speech". **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

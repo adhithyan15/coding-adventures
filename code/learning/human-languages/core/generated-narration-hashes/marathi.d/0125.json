@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 125,
-  "sourceHash": "fnv1a64:4676070614b8b117",
+  "sourceHash": "fnv1a64:5e7bd802714dae8b",
   "lessonIds": [
     "MR-C125-mangalvar",
     "MR-C125-budhvar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch125.txt",
   "json": "marathi/narration/ch125.json",
-  "textHash": "fnv1a64:89faa0a7faf4af8a",
-  "jsonHash": "fnv1a64:f1a4347be8fb7f8e",
+  "textHash": "fnv1a64:c17530ebd5a896bc",
+  "jsonHash": "fnv1a64:f152d59823f89cbe",
   "findings": []
 }

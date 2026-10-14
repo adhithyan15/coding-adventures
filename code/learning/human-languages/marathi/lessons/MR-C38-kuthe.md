@@ -12,8 +12,9 @@ concept_tag: QUESTION-WHERE
 prerequisites: [MR-C05-rahne, MR-A1F01-shahar, MR-A1F01-mitrache-naav, MR-C32-nahi-verb, MR-C36-sudhaa, MR-C37-kon, MR-C37-kiti, MR-R37-who-how-many]
 sounds: [matra-u, retroflex-tha, matra-e]
 roots: [ka-interrogative]
+etymology_hook: "kuṭhe: usually traced to Sanskrit kutra 'where', on the question stem ka-; CDIAL has no entry for it"
 duration:
-  max_seconds: 220
+  max_seconds: 225
 requires:
   knowledge: [MR-QUESTION-KON, MR-QUESTION-KITI, MR-LEX-RAHNE, MR-GRAMMAR-POSTPOSITION-ON-NOUN, MR-A1-FORM-LABEL-SHAHAR]
 introduces:
@@ -57,7 +58,7 @@ this lesson the book could write the answer and not the question. You already ha
 **पुण्यात** — the city with **-ात** glued on its tail. What was missing was the
 word that asks for it.
 
-**कुठे** is the **क-** family again, from Sanskrit **कुत्र** (*kutra*, "where").
+**कुठे** is the **क-** family again, usually traced to Sanskrit **कुत्र** (*kutra*, "where").
 Its answer is a place, the way **कोण** wants a person and **किती** wants a number.
 
 When you do not know: **माहीत नाही** — *māhīt nāhī* — **I don't know**. That is a

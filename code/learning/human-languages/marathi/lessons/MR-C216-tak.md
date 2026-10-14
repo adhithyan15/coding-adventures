@@ -14,7 +14,8 @@ romanization: "tāk"
 concept_tag: MR-VASTU216-TAK
 prerequisites: [MR-C215-prasthan, MR-C216-srikhand]
 sounds: []
-roots: []
+roots: [sanskrit-takra]
+etymology_hook: "tāk ← Sanskrit takra 'buttermilk with a third part of water', a tadbhava (CDIAL 5617)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C216-srikhand]
 <!-- hl-knowledge: introduces=[MR-LEX-C216-VASTU216-02]; assesses=[] -->
 
 **ताक** — *tāk* — "buttermilk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ताक** (*tāk*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *takra*, "buttermilk with a third part of water" (CDIAL 5617). CDIAL glosses the Marathi word "buttermilk, whey".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

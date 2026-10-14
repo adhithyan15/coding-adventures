@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 105,
-  "sourceHash": "fnv1a64:8e20849cfe6033f1",
+  "sourceHash": "fnv1a64:a30d23f705c16b7a",
   "lessonIds": [
     "MR-C105-svasta",
     "MR-C105-rikama",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch105.txt",
   "json": "marathi/narration/ch105.json",
-  "textHash": "fnv1a64:0e3947a743282529",
-  "jsonHash": "fnv1a64:de864dfad4b974ee",
+  "textHash": "fnv1a64:bfb09bbeaea9c7b9",
+  "jsonHash": "fnv1a64:841e0f5ce1c9f9fa",
   "findings": []
 }

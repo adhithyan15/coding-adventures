@@ -14,7 +14,8 @@ romanization: "dayā"
 concept_tag: MR-VASTU273-DAYA
 prerequisites: [MR-C273-vagnuk, MR-C273-adar]
 sounds: []
-roots: []
+roots: [sanskrit-daya]
+etymology_hook: "dayā: Sanskrit dayā 'pity, compassion', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C273-adar]
 <!-- hl-knowledge: introduces=[MR-LEX-C273-VASTU273-05]; assesses=[] -->
 
 **दया** — *dayā* — "pity, compassion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दया** (*dayā*) is Sanskrit *dayā*, "pity, compassion", taken over whole, a tatsama (CDIAL 6185).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

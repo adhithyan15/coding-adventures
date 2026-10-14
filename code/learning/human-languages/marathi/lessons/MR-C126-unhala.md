@@ -14,7 +14,8 @@ romanization: "unhāḷā"
 concept_tag: MR-TIME126-UNHALA
 prerequisites: [MR-C126-sadhya, MR-C126-roj]
 sounds: []
-roots: []
+roots: [sanskrit-ushnakala]
+etymology_hook: "unhāḷā ← Sanskrit uṣṇakāla 'hot season', a tadbhava (CDIAL 2391)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C126-roj]
 <!-- hl-knowledge: introduces=[MR-LEX-C126-TIME126-05]; assesses=[] -->
 
 **उन्हाळा** — *unhāḷā* — "summer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उन्हाळा** (*unhāḷā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uṣṇakāla*, "hot season" (CDIAL 2391). It is *uṣṇa*, "hot", and *kāla*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

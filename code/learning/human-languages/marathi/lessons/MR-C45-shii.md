@@ -11,7 +11,8 @@ gloss: with, to — the bound partner of बरोबर, and the one a verb of 
 concept_tag: MR-POSTP-SHII
 prerequisites: [MR-C45-pron-oblique, MR-C05-bolne, MR-W40-i-independent]
 sounds: [palatal-sha, matra-ii]
-roots: []
+roots: [sanskrit-sama]
+etymology_hook: "-śī: CDIAL lists Marathi śīṁ 'with' under Sanskrit sama 'equal, together with' (CDIAL 13173)"
 duration:
   max_seconds: 210
 requires:
@@ -61,6 +62,11 @@ Keep the pair as a contrast rather than as two words:
 > **मित्राबरोबर** — alongside my friend.
 >
 > **मित्राशी** — engaged with my friend.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**-शी** (*-śī*) is inherited. CDIAL lists it, as Marathi *śīṁ*, "with", under Sanskrit *sama*, "equal, alike", which already meant "together with" in the Brahmanas. CDIAL calls Bloch's derivation from *sahitam* wrong (CDIAL 13173).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-POSTP-SHII, MR-POSTP-BAROBAR, MR-LEX-BOLNE, MR-LEX-UJVA, MR-SCRIPT-I-INDEPENDENT-01] -->

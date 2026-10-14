@@ -14,7 +14,8 @@ romanization: "ghaḍyāḷ"
 concept_tag: MR-CLOTHES117-GHADYAL
 prerequisites: [MR-C116-khisa, MR-C116-angthi]
 sounds: []
-roots: []
+roots: [indo-aryan-ghatitada]
+etymology_hook: "ghaḍyāḷ ← *ghaṭītāḍa 'striking the time', a reconstructed form; a tadbhava (CDIAL 4413)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C116-angthi]
 <!-- hl-knowledge: introduces=[MR-LEX-C117-CLOTHES117-01]; assesses=[] -->
 
 **घड्याळ** — *ghaḍyāḷ* — "a watch, a clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घड्याळ** (*ghaḍyāḷ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ghaṭītāḍa*, "striking the time", a form CDIAL reconstructs from its descendants (CDIAL 4413). It is *ghaṭī*, "water-clock", and *tāḍa*, "blow": the gong struck to mark the hours.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

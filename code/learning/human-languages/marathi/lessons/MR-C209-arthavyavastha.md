@@ -14,7 +14,8 @@ romanization: "arthavyavasthā"
 concept_tag: MR-VASTU209-ARTHAVYAVASTHA
 prerequisites: [MR-C208-baksis, MR-C208-thamba]
 sounds: []
-roots: []
+roots: [sanskrit-artha, sanskrit-vyavastha]
+etymology_hook: "arthavyavasthā: Sanskrit artha 'wealth' + vyavasthā 'arrangement'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C208-thamba]
 <!-- hl-knowledge: introduces=[MR-LEX-C209-VASTU209-01]; assesses=[] -->
 
 **अर्थव्यवस्था** — *arthavyavasthā* — "the economy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अर्थव्यवस्था** (*arthavyavasthā*) is a modern compound built from Sanskrit *artha*, "aim, wealth" (CDIAL 638), and *vyavasthā*, "arrangement".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

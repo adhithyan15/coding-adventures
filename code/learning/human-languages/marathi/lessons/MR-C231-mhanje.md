@@ -14,7 +14,8 @@ romanization: "mhaṇje"
 concept_tag: MR-KARAN231-MHANJE
 prerequisites: [MR-C231-sivay, MR-C231-arthat]
 sounds: []
-roots: []
+roots: [sanskrit-bhanati]
+etymology_hook: "mhaṇje: from mhaṇṇe 'to say' ← bhaṇati 'speaks' (CDIAL 9383)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C231-arthat]
 <!-- hl-knowledge: introduces=[MR-LEX-C231-KARAN231-05]; assesses=[] -->
 
 **म्हणजे** — *mhaṇje* — "that is to say".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**म्हणजे** (*mhaṇje*) is a form of *mhaṇṇẽ*, "to say", which comes from Sanskrit *bhaṇati*, "calls aloud, speaks" (CDIAL 9383). CDIAL calls the *mh-* for *bh-* an abnormal change in a word for "saying".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

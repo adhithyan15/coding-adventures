@@ -14,7 +14,8 @@ romanization: "rāgīṭ"
 concept_tag: MR-GUN261-RAGIT
 prerequisites: [MR-C261-bhukela, MR-C261-tahanlela]
 sounds: []
-roots: []
+roots: [sanskrit-raga]
+etymology_hook: "rāgīṭ: rāg 'anger', from Sanskrit rāga 'passion' (CDIAL 10674), + -īṭ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C261-tahanlela]
 <!-- hl-knowledge: introduces=[MR-LEX-C261-GUN261-05]; assesses=[] -->
 
 **रागीट** — *rāgīṭ* — "short-tempered".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रागीट** (*rāgīṭ*) is *rāg*, "anger", with the ending *-īṭ*, "given to". *Rāg* is Sanskrit *rāga*, "passion" (CDIAL 10674).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -78,7 +78,7 @@ The letters in this word.
 (Skim if you read Devanagari.) आ (ā, the standalone long-ā vowel, used when a word begins with a vowel) + हे (he) becomes आहे āhe.
 
 The word, taken apart.
-आहे (āhe, "is") descends from Sanskrit अस्ति (ásti, "is"), on the root √as ("to be"). That same √as / PIE h₁es- is the ancestor of Latin est, German ist, and English is itself — the deepest, oldest verb in the family, worn down to āhe in Marathi.
+आहे (āhe, "is") is listed by CDIAL under Sanskrit अस्ति (ásti, "is"), on the root √as ("to be"), though Bloch gives it another origin (CDIAL 977). That same √as / PIE h₁es- is the ancestor of Latin est, German ist, and English is itself — the deepest, oldest verb in the family.
 
 Grammar Lens: the verb goes last.
 Marathi is a subject–object–verb language: "my name Mira is." The copula आहे (āhe) sits at the end, where English puts it in the middle. It changes with the subject — you will meet आहेस (āhes, "you are") and आहात (āhāt, "you are," respectful) in the next chapter.
@@ -108,6 +108,9 @@ Notice the shape:
 माझं (mājhaṁ) is neuter, agreeing with the neuter नाव (nāv).
 The verb आहे (āhe) comes last — "my name Mira is."
 A man or a woman says it the same way here; the gender lived in mājhaṁ (matching nāv), which is settled.
+
+The phrase, taken apart.
+Each word is inherited. CDIAL lists माझं (mājhaṁ) under the Sanskrit first-person base ma- (CDIAL 9691) and नाव (nāv) under Sanskrit nāman, "name" (CDIAL 7067). आहे (āhe) it lists under asti, "is", though Bloch gives it another origin (CDIAL 977).
 
 Why it's said this way.
 Marathi drops nothing and reorders everything to English eyes: possessor, thing, value, then is. Learn this frame and you can swap in any name — or, later, any fact about yourself.
@@ -203,6 +206,9 @@ The "your" mirrors the "my" set you learned:
 तुझं (tujhaṁ) — your (familiar, from tū).
 All three are shown here in the neuter, agreeing with the neuter नाव (nāv).
 
+The phrase, taken apart.
+All inherited: तुमचं, like तुम्ही, from Sanskrit yuṣmad-, "you" (CDIAL 10511); नाव (nāv) from nāman, "name" (CDIAL 7067); काय (kāy) from kādṛk, "of what sort" (CDIAL 3196).
+
 Why it's said this way.
 To a friend you would say तुझं नाव काय आहे? (tujhaṁ nāv kāy āhe?), swapping the respectful tumchaṁ for the familiar tujhaṁ — the same tū / tumhī choice of respect, now on the possessive.
 
@@ -229,7 +235,7 @@ You'll want to know — the phrase, assembled.
 भेटून (bheṭūn, "having met") + आनंद (ānand, "joy") + झाला (jhālā, "happened") becomes literally "having met [you], joy happened." Marathi does not say "I am pleased"; it says the joy itself occurred.
 
 The word, taken apart.
-The heart of it is आनंद (ānand, "joy, bliss"), pure Sanskrit: आ- (ā-, "fully") + नन्द (nand, "to rejoice"). It is the ānanda of the scriptural phrase sat-cit-ānanda ("being–consciousness–bliss") — and one of the most common given names across India. So a Marathi speaker meets you and names the feeling joy.
+The heart of it is आनंद (ānand, "joy, bliss"), Sanskrit ānanda, "happiness", a tatsama (CDIAL 1172): आ- (ā-, "fully") + नन्द (nand, "to rejoice"). It is the ānanda of the scriptural phrase sat-cit-ānanda ("being–consciousness–bliss") — and one of the most common given names across India. So a Marathi speaker meets you and names the feeling joy.
 
 Why it's said this way.
 The verb झाला (jhālā, "happened/became") also carries gender — jhālā by default here for the event ānand. And भेटून (bheṭūn) is built on भेटणे (bheṭṇe, "to meet") — a verb you will meet again in Chapter 11's goodbye, punhā bheṭū ("we'll meet again").

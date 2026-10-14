@@ -14,7 +14,8 @@ romanization: "nyāy"
 concept_tag: MR-VASTU272-NYAY
 prerequisites: [MR-C271-osri, MR-C271-jhadu]
 sounds: []
-roots: []
+roots: [sanskrit-nyaya]
+etymology_hook: "nyāy ← Sanskrit nyāya 'rule, manner, method', a tatsama (CDIAL 7614)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C271-jhadu]
 <!-- hl-knowledge: introduces=[MR-LEX-C272-VASTU272-01]; assesses=[] -->
 
 **न्याय** — *nyāy* — "justice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**न्याय** (*nyāy*) is Sanskrit *nyāya*, "rule, manner, method", taken over whole as a learned loan, a tatsama (CDIAL 7614). CDIAL lists the inherited Marathi form as *nyāv*, "justice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

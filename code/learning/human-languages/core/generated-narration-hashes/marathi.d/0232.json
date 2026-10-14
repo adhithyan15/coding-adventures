@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 232,
-  "sourceHash": "fnv1a64:78c7eb90a5eca064",
+  "sourceHash": "fnv1a64:2bb79c627027d087",
   "lessonIds": [
     "MR-C232-matsari",
     "MR-C232-abhimani",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch232.txt",
   "json": "marathi/narration/ch232.json",
-  "textHash": "fnv1a64:6ae4b1700727d968",
-  "jsonHash": "fnv1a64:f8b53e7727cf7298",
+  "textHash": "fnv1a64:1530b5c4b972522a",
+  "jsonHash": "fnv1a64:0bed142f3d270452",
   "findings": []
 }

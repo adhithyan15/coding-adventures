@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a journalist, then the Marathi for an ar
 You'll want to know: सून.
 सून — sūn — "a daughter-in-law".
 
+The word, taken apart.
+सून (sūn) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from snuṣā, "son's wife" (CDIAL 13801). The same ancient word as Latin nurus.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for an architect, then the Marathi for a dau
 
 You'll want to know: नवरदेव.
 नवरदेव — navardev — "a bridegroom".
+
+The word, taken apart.
+नवरदेव (navardev) is navrā, "bridegroom", from a reconstructed navavaraka, "newly wed" (CDIAL 7013), with dev, "god", from Sanskrit deva.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a daughter-in-law, then the Marathi for 
 You'll want to know: नवरी.
 नवरी — navrī — "a bride".
 
+The word, taken apart.
+नवरी (navrī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from navavarikā, "newly wed (woman)" (CDIAL 7013). It is nava, "new", and vara, "bridegroom". CDIAL glosses the Marathi word "bride".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a bridegroom, then the Marathi for a bri
 You'll want to know: विधवा.
 विधवा — vidhvā — "a widow".
 
+The word, taken apart.
+विधवा (vidhvā) is Sanskrit vidhavā, "widow", taken over whole as a learned loan, a tatsama (CDIAL 11752).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a bride, then the Marathi for a widow.
 
 You'll want to know: यश.
 यश — yaś — "success".
+
+The word, taken apart.
+यश (yaś) is Sanskrit yaśas, "splendour, renown", a tatsama. CDIAL lists the inherited Marathi form as jas, "success" (CDIAL 10443).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "adlābadal karṇe"
 concept_tag: MR-VERB-ADLABADAL-KARNE
 prerequisites: [MR-C167-svas-ghene, MR-C167-sodun-dene]
 sounds: []
-roots: []
+roots: [arabic-badal, sanskrit-karoti]
+etymology_hook: "adlābadal: a rhyming pair on badal 'exchange', from Arabic badal through Persian; karṇe ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C167-sodun-dene]
 <!-- hl-knowledge: introduces=[MR-LEX-C167-ACT167-03]; assesses=[] -->
 
 **अदलाबदल करणे** — *adlābadal karṇe* — "to exchange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अदलाबदल** is a rhyming pair built on *badal*, "exchange", a loan from Arabic *badal*, "a substitute", through Persian; its root is *b-d-l* (Lane). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

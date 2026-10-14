@@ -12,6 +12,9 @@ Before the new one: say the Marathi for sweat, then the Marathi for a tear.
 You'll want to know: अहवाल.
 अहवाल — ahvāl — "a report".
 
+The word, taken apart.
+अहवाल (ahvāl) is a loan, usually traced through Persian to Arabic aḥwāl, "states, conditions", the plural of ḥāl, "state"; its root is ḥ-w-l (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a tear, then the Marathi for a report.
 
 You'll want to know: विषय.
 विषय — viṣay — "a subject, a topic".
+
+The word, taken apart.
+विषय (viṣay) is Sanskrit viṣaya, "scope, sphere", taken over whole as a learned loan, a tatsama (CDIAL 11973).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a report, then the Marathi for a subject
 You'll want to know: खडू.
 खडू — khaḍū — "chalk".
 
+The word, taken apart.
+खडू (khaḍū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khaṭikā, "chalk" (CDIAL 3773). CDIAL glosses the Marathi word "a kind of pipeclay".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a subject, then the Marathi for chalk.
 You'll want to know: गुण.
 गुण — guṇ — "marks; a quality".
 
+The word, taken apart.
+गुण (guṇ) is Sanskrit guṇa, "strand of a cord; quality", taken over whole as a learned loan, a tatsama (CDIAL 4190). CDIAL lists the Marathi guṇ with the sense "bowstring".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for chalk, then the Marathi for marks; a qua
 
 You'll want to know: पाळणा.
 पाळणा — pāḷṇā — "a cradle".
+
+The word, taken apart.
+The origin of पाळणा (pāḷṇā) is not settled. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

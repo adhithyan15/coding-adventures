@@ -14,7 +14,8 @@ romanization: "bandar"
 concept_tag: MR-VASTU217-BANDAR
 prerequisites: [MR-C217-kanatle, MR-C217-bajarpeth]
 sounds: []
-roots: []
+roots: [persian-bandar]
+etymology_hook: "bandar 'harbour': usually traced to Persian bandar 'port'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C217-bajarpeth]
 <!-- hl-knowledge: introduces=[MR-LEX-C217-VASTU217-04]; assesses=[] -->
 
 **बंदर** — *bandar* — "a harbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बंदर** (*bandar*), "harbour", is a loan, usually traced to Persian *bandar*, "port".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

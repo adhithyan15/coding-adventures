@@ -12,6 +12,9 @@ Before the new one: say the Marathi for humble, then the Marathi for arrogant.
 You'll want to know: सदनिका.
 सदनिका — sadnikā — "a flat, an apartment".
 
+The word, taken apart.
+सदनिका (sadnikā) is a modern word built on Sanskrit sadana, "seat, dwelling", with the ending -ikā.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for arrogant, then the Marathi for a flat.
 
 You'll want to know: जेवणघर.
 जेवणघर — jevaṇghar — "a dining room".
+
+The word, taken apart.
+जेवणघर (jevaṇghar) is "meal-house": jevaṇ, "a meal", from Sanskrit jemana, "eating" (CDIAL 5268), and घर, "house".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a flat, then the Marathi for a dining ro
 You'll want to know: सज्जा.
 सज्जा — sajjā — "a balcony".
 
+The word, taken apart.
+सज्जा (sajjā) matches Hindi chajjā, "eaves, balcony", which CDIAL lists under Sanskrit chādya, "to be sheltered", as taken from Punjabi (CDIAL 5023).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a dining room, then the Marathi for a ba
 You'll want to know: घंटा.
 घंटा — ghaṇṭā — "a bell".
 
+The word, taken apart.
+घंटा (ghaṇṭā) is Sanskrit ghaṇṭā, "bell", a tatsama; CDIAL lists the inherited Marathi form as ghāṁṭ, "bell" (CDIAL 4421). EWA derives it from granthi, "bell", but CDIAL takes that granthi as probably a Sanskrit rendering of Prakrit ghaṁṭiā.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a balcony, then the Marathi for a bell.
 
 You'll want to know: कप्पा.
 कप्पा — kappā — "a compartment, a shelf".
+
+The word, taken apart.
+The origin of कप्पा (kappā) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.

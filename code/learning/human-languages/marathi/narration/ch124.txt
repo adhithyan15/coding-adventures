@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to ask for, then the Marathi for to deci
 You'll want to know: योजना.
 योजना — yojanā — "a plan".
 
+The word, taken apart.
+योजना (yojanā) is Sanskrit yojanā, "joining, arrangement", a tatsama built on yuj, "to yoke, join". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to decide, then the Marathi for a plan.
 
 You'll want to know: पहाट.
 पहाट — pahāṭ — "dawn".
+
+The word, taken apart.
+पहाट (pahāṭ) is inherited. CDIAL lists Marathi pahāṭ, "period before sunrise, dawn", under Sanskrit prabhā, "light", with a query on how the word was formed (CDIAL 8705).
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Walk through the day before its end: दिवस, then the evening greeting, �
 You'll want to know: मध्यरात्र.
 मध्यरात्र — madhyarātra — "midnight".
 
+The word, taken apart.
+मध्यरात्र (madhyarātra) is a Sanskrit compound, a tatsama: madhya, "middle" (CDIAL 9804), and rātra, "night".
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Marathi for dawn, then the Marathi for midnight.
 You'll want to know: परवा.
 परवा — parvā — "the day after tomorrow".
 
+The word, taken apart.
+परवा (parvā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paraśvas, "the day after tomorrow" (CDIAL 7799j). It is para, "beyond", and śvas, "tomorrow". CDIAL glosses the Marathi word "the day after tomorrow or before yesterday".
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Marathi for midnight, then the Marathi for the day a
 
 You'll want to know: सोमवार.
 सोमवार — somvār — "Monday".
+
+The word, taken apart.
+सोमवार (somvār) is a Sanskrit compound, a tatsama: soma, "the moon", and vāra, "day of the week" (CDIAL 11547). Monday is the moon's day, as in English.
 
 What you've built.
 One more word for this chapter.

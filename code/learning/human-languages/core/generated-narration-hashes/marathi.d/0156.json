@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 156,
-  "sourceHash": "fnv1a64:deaf201e19679227",
+  "sourceHash": "fnv1a64:b0d8f8d0c2c4d0d3",
   "lessonIds": [
     "MR-C156-dakhavne",
     "MR-C156-vajavne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch156.txt",
   "json": "marathi/narration/ch156.json",
-  "textHash": "fnv1a64:c851229181739f45",
-  "jsonHash": "fnv1a64:0c7bb2d93991ee2a",
+  "textHash": "fnv1a64:21f4abf32ee8591b",
+  "jsonHash": "fnv1a64:f6b664e49200ee6f",
   "findings": []
 }

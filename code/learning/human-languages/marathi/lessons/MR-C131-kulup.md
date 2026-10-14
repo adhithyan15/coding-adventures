@@ -14,7 +14,8 @@ romanization: "kulūp"
 concept_tag: MR-THINGS131-KULUP
 prerequisites: [MR-C130-gadi, MR-C131-padda]
 sounds: []
-roots: []
+roots: [arabic-qufl]
+etymology_hook: "kulūp: usually traced, through Persian qulf, to Arabic qufl 'lock'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C131-padda]
 <!-- hl-knowledge: introduces=[MR-LEX-C131-THINGS131-02]; assesses=[] -->
 
 **कुलूप** — *kulūp* — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुलूप** (*kulūp*) is a loan, usually traced through Persian *qulf* to Arabic *qufl*, "lock", whose root is *q-f-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

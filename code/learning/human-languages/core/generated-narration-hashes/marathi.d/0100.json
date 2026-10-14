@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 100,
-  "sourceHash": "fnv1a64:c32f75bb9af4ef3c",
+  "sourceHash": "fnv1a64:7e12a5e98748f579",
   "lessonIds": [
     "MR-C100-ghoda",
     "MR-C100-gay",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch100.txt",
   "json": "marathi/narration/ch100.json",
-  "textHash": "fnv1a64:78475bebcf3fe6a4",
-  "jsonHash": "fnv1a64:3186147127b5c243",
+  "textHash": "fnv1a64:a9ec9c1d3208278f",
+  "jsonHash": "fnv1a64:7699696fe4030bc2",
   "findings": []
 }
