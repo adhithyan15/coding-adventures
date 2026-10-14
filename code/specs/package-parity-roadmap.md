@@ -17464,3 +17464,19 @@ pending adoption owners. Existing package tests or external API witnesses provid
 validation evidence without crediting a committed shared-corpus adopter. PY03's
 future runtime architecture and Python/Ruby gaps remain explicit. Specs precede
 tests, source, documentation, final-head security review and PR publication.
+
+
+STP01 local validation passes 15 neutral tests with 131/131 measured Python
+coverage statements and 68/68 branches, plus 19 CI-registry checks. Go reference
+native tests and the actual BUILD recipe pass at 98.0% statement coverage;
+Rust provider BUILD passes eight tests and its AST downstream passes 96.
+An external Go witness compares all 359 corpus records through public APIs;
+it is validation evidence, not a committed native-adoption reader. All native
+adoption children remain pending. Ruff, formatting, Bandit and Python compile
+checks pass. Actual detector execution validates 5327 discovered package BUILD
+metadata and orphan gates (38 existing exemptions), evaluates 45 Starlark fronts,
+and emits an empty package-diff selection. This does not compile 5327 packages.
+Parity inventory remains collision-free/identical to pinned main; ten reporter
+and 31 lessons tests pass, with 1163 lesson shards and zero problems. Independent
+correctness and CI-scope reviews found no actionable issue. Exact-head security
+review and hosted CI remain gates before publication and auto-merge.

@@ -19852,9 +19852,15 @@
         "post-17379-main5526-owner-delta-audit.md",
         "post-17379-provider-neutral-preparation.md",
         "post-17379-main5526-priority-audit.md",
-        "stp01-spec-review.md"
+        "stp01-spec-review.md",
+        "stp01-correctness-review.md",
+        "stp01-ci-scope-review.md"
       ],
-      "worktree": "C:\\Users\\adhit\\.codex\\worktrees\\parity-starlark-opcode-20261013\\coding-adventures"
+      "worktree": "C:\\Users\\adhit\\.codex\\worktrees\\parity-starlark-opcode-20261013\\coding-adventures",
+      "validation_notes": "Local final-source validation:15 neutral tests;131/131 coverage statements and68/68 branches(100%);19 CI registry tests; Ruff/format/Bandit/Pythoncompile pass. Go1.26.4:6 reference tests,98.0%production statements,vet/build/actual BUILD onWindows pass. Rust1.97:actual provider BUILD8tests andASTdownstream96tests pass; unchangedRustproduction coverage not measured. External actual-Go-API witness compares359rows includingall256decode; it is not a committedcorpusreader/adoption. ActualGo detector validates5327package BUILD/orphan metadata,45Starlarkfronts,38ownedexemptions,zero package-diff seeds; no5327package compilation claimed. Parity10tests/report matchesmain5526;lessons1163shards0problems+31tests. Independent correctness/CIreviews reportnoactionabledefects. Exact-headsecurity andhostedCI remain publication/merge gates.",
+      "validation_receipt": "stp01-local-validation-receipt.json",
+      "security_review": null,
+      "profile_boundary": "Only neutral standalone-provider-v1 foundation. All native adoption/implementation children remain pending; Ruby applicability remains selection-blocked; futurePY03 runtime profile separate."
     },
     {
       "id": "starlark-compiler-csharp-opcode-provider-parity",
