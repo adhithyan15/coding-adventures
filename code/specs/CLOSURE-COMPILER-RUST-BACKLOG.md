@@ -34,8 +34,9 @@ tests reapplied; independent final equality proves no production/control loss.
 The original tested checkout and frozen Miri inputs were unchanged.
 
 Fresh full audit80290 sees main `cbd9a37c8f02d7269c212a944f79588f559b50e2`;
-new quintuple name-actual/edge-label typography, Mosaic and content imports need
-closed reconciliation. Broader453-cone, arbitrary unique-oblique work, whole final
+new edge-label typography, Mosaic and content imports need closed reconciliation.
+The separately owned quintuple PR is still open in that audit; do not treat it
+as a merged main import. Broader453-cone, arbitrary unique-oblique work, whole final
 security and repaired hosted Linux remain PENDING. Sole Closure/sharedPR17288
 stays published at822, DIRTY, terminal Linux/CI-gate failures, auto-mergeOFF.
 Expired build-plan artifact UNAVAILABLE; original preserved hashes historical.

@@ -118,6 +118,7 @@ source-distance tie summation is unchanged. Scoped independent review PASS,
 SHA256 115ae65b65c04398c6b7dfc9bdb64e45c71b32b8114414a8088516b6c063f991; whole-PR acceptance PENDING.
 All original failures, recovery snapshots and prior source frames remain intact.
 Fresh main `cbd9a37c8f02d7269c212a944f79588f559b50e2` still needs bounded closed
-quintuple/edge-label/Mosaic/content reconciliation. Full453-cone, arbitrary unique
+edge-label/Mosaic/content reconciliation; the separately owned quintuple PR
+is still open in that audit. Full453-cone, arbitrary unique
 oblique work, final whole security and hosted gates remain PENDING.
 Full final-source Miri DEFERRED/PENDING; full objective OPEN, heartbeat ACTIVE.
