@@ -9,7 +9,7 @@ spine_node: SPINE-POLITE-REQUEST-REPAIR
 chapter: 271
 type: task
 headword: "कृपया तूष्णीं भव"
-gloss: please be quiet — one sourced familiar-person request
+gloss: please be quiet — a composed request using one sourced command
 romanization: "kṛpayā tūṣṇīṃ bhava"
 concept_tag: SA-REQUEST271-QUIET
 prerequisites: [SA-C271-ask-for-a-person]
@@ -55,7 +55,9 @@ The Board of School Education Haryana copy of the NCERT Class 10
 uses the exact command **तूष्णीं भव**. The grammatical commentary on
 [Pāṇini 3.4.63](https://sanskritdocuments.org/learning_tools/ashtadhyayi/vyakhya/3/3.4.63.htm)
 also explicitly treats **तूष्णीम्** with √भू. The **कृपया** at the front is
-the “please” you already know.
+the “please” you already know. The sources attest the command **तूष्णीं भव**
+and its construction; the full polite request is this course's transparent
+composition of that command with already-owned **कृपया**.
 
 ## Grammar Lens: one complete request
 
@@ -76,4 +78,4 @@ forms from **भव**.
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-PATTERN-C271-REQUEST-QUIET-02] -->
 
-[PAUSE 3s] What is the complete sourced request for “Please be quiet”?
+[PAUSE 3s] What is the complete composed request for “Please be quiet”?

@@ -44,8 +44,9 @@ variety: standard-colloquial
 
 No Sanskrit model is shown before you answer.
 
-Say the Sanskrit for these two turns, in order: “Where is the teacher?” Then:
-“Please be quiet.”
+Say the Sanskrit for these two acts, in order. First ask, “Is the teacher
+here?” and give the positive answer, “Yes, the teacher is here.” Then ask a
+familiar person, “Please be quiet.”
 
 [PAUSE 8s]
 
@@ -53,9 +54,10 @@ Say the Sanskrit for these two turns, in order: “Where is the teacher?” Then
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-PATTERN-C271-ASK-FOR-PERSON-01, SA-PATTERN-C271-REQUEST-QUIET-02] -->
 
-Now check: **अध्यापकः कुत्र अस्ति?** (*adhyāpakaḥ kutra asti?*) asks where the
-teacher is. **कृपया तूष्णीं भव।** (*kṛpayā tūṣṇīṃ bhava.*) asks a familiar
-person, politely, to be quiet.
+Now check: **अध्यापकः अत्र अस्ति? — आम्, अध्यापकः अत्र अस्ति।** (*adhyāpakaḥ
+atra asti? — ām, adhyāpakaḥ atra asti.*) asks whether the teacher is here and
+gives the positive response. **कृपया तूष्णीं भव।** (*kṛpayā tūṣṇīṃ bhava.*)
+asks a familiar person, politely, to be quiet.
 
 ## Wrap-up Recall: boundary
 

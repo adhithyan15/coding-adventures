@@ -14,15 +14,16 @@ person roles including **अध्यापकः** (*adhyāpakaḥ*, “teacher
 `SA-LEX-C83-SCHOOL-03`, and **कृपया** (*kṛpayā*, “please”) as
 `SA-LEX-C29-COURTESY-01`.
 
-The remaining work is small but real: compose those owners into a bounded
-ask-for-a-person turn, teach one sourced request for quiet, and retrieve both
+The remaining work is small but real: compose existing owners into a bounded
+availability exchange for a familiar person, compose one polite request for
+quiet from a sourced command plus already-owned **कृपया**, and retrieve both
 acts without a visible answer model.
 
 ## Source boundary
 
-The quiet request is **कृपया तूष्णीं भव** (*kṛpayā tūṣṇīṃ bhava*, “please be
-quiet”). The new material is limited to the attested command
-**तूष्णीं भव**:
+The quiet request is the composition **कृपया तूष्णीं भव** (*kṛpayā tūṣṇīṃ
+bhava*, “please be quiet”). The new sourced material is limited to the
+attested command **तूष्णीं भव**:
 
 - the Board of School Education Haryana copy of the NCERT Class 10
   *Śemuṣī* Sanskrit reader uses **तूष्णीं भव** as a direct command in the
@@ -38,9 +39,12 @@ general imperative mastery.
 
 Append one Sanskrit-owned chapter after chapter 270 with four lessons:
 
-1. compose **अध्यापकः कुत्र अस्ति?** (“Where is the teacher?”) from existing
-   owners as the bounded ask-for-a-person turn;
-2. teach the sourced request **कृपया तूष्णीं भव** (“Please be quiet”);
+1. compose the doorway/telephone availability exchange **अध्यापकः अत्र
+   अस्ति? — आम्, अध्यापकः अत्र अस्ति।** (“Is the teacher here?” — “Yes, the
+   teacher is here.”) from existing owners as the bounded ask-for-a-person and
+   response turn;
+2. teach the composed request **कृपया तूष्णीं भव** (“Please be quiet”), using
+   the sourced command **तूष्णीं भव** plus already-owned **कृपया**;
 3. retrieve both acts from English cues without a visible Sanskrit model; and
 4. retrieve both acts again in reverse order, again without a visible model.
 
@@ -58,8 +62,10 @@ The chapter owns exactly two new atoms:
 
 The exact `SA-A1-F-22` probe is those two atoms. Existing lessons remain the
 sole owners of the component words. The quiet-request atom owns the complete
-attested command and does not create separate lexical or paradigm ownership
-for **तूष्णीम्** or **भव**.
+composed request. Its sources attest only **तूष्णीं भव** and the **तूष्णीम्**
++ √भू collocation; already-owned **कृपया** supplies the polite softener. The
+atom does not create separate lexical or paradigm ownership for **तूष्णीम्**
+or **भव**.
 
 ## Model-free response boundary
 

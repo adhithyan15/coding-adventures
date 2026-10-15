@@ -44,8 +44,9 @@ variety: standard-colloquial
 
 No Sanskrit model is shown before you answer.
 
-Say the Sanskrit for these two turns in reverse order: “Please be quiet.” Then:
-“Where is the teacher?”
+Say the Sanskrit for these two acts in reverse order. First: “Please be quiet.”
+Then ask, “Is the teacher here?” and give the positive answer, “Yes, the
+teacher is here.”
 
 [PAUSE 8s]
 
@@ -54,7 +55,8 @@ Say the Sanskrit for these two turns in reverse order: “Please be quiet.” Th
 <!-- hl-knowledge: introduces=[]; assesses=[SA-PATTERN-C271-ASK-FOR-PERSON-01, SA-PATTERN-C271-REQUEST-QUIET-02] -->
 
 Now check: **कृपया तूष्णीं भव।** (*kṛpayā tūṣṇīṃ bhava.*) is the quiet request.
-**अध्यापकः कुत्र अस्ति?** (*adhyāpakaḥ kutra asti?*) is the person request.
+**अध्यापकः अत्र अस्ति? — आम्, अध्यापकः अत्र अस्ति।** (*adhyāpakaḥ atra asti?
+— ām, adhyāpakaḥ atra asti.*) is the person request and positive response.
 
 ## Wrap-up Recall: boundary
 

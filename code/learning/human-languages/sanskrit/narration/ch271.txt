@@ -3,27 +3,27 @@ Sanskrit, chapter 271: Two spoken requests, gently joined.
 
 
 Lesson 1 of 4.
-Ask for a familiar person — ask where a familiar person is.
+Ask for a familiar person — ask whether a familiar person is here and answer yes.
 
 Warm-up.
 [pause 2 seconds]
-Recall three known pieces: अध्यापकः, “teacher”; कुत्र, “where?”; and अस्ति, “is.”
+Recall four known pieces: अध्यापकः, “teacher”; अत्र, “here”; अस्ति, “is”; and आम्, “yes.”
 
 Grammar Lens: build the person request.
-Put the familiar person first, then the familiar location question:
-अध्यापकः कुत्र अस्ति? adhyāpakaḥ kutra asti? “Where is the teacher?”
-Nothing in this turn is a new noun or question word. The new skill is the complete turn: asking where a familiar person is so you can speak with them.
+At a doorway or on a call, put the familiar person first and ask whether that person is here. The question mark and rising question voice turn the known statement into a bounded availability question. Then answer by echoing the statement, as chapter 1 taught:
+अध्यापकः अत्र अस्ति? adhyāpakaḥ atra asti? “Is the teacher here?” आम्, अध्यापकः अत्र अस्ति। ām, adhyāpakaḥ atra asti. “Yes, the teacher is here.”
+Nothing in this exchange is a new word. The new skill is the complete doorway/telephone turn: asking whether a familiar person is present and giving the positive response. It does not claim a general polar-question system.
 
 Guided Practice.
 [pause 3 seconds]
-You arrive at school and need the teacher. Ask where the teacher is.
+You call the school and need to speak with the teacher. Ask, “Is the teacher here?” Then give the positive answer, “Yes, the teacher is here.”
 
 What you've built.
-अध्यापकः कुत्र अस्ति? (adhyāpakaḥ kutra asti?) is one bounded way to ask for a familiar person. It does not establish a general service-counter script.
+अध्यापकः अत्र अस्ति? — आम्, अध्यापकः अत्र अस्ति। (adhyāpakaḥ atra asti? — ām, adhyāpakaḥ atra asti.) is one bounded way to ask for a familiar person and respond. It does not establish a general service-counter or telephone script.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask: “Where is the teacher?”
+Ask and answer: “Is the teacher here?” — “Yes, the teacher is here.”
 
 
 Lesson 2 of 4.
@@ -35,7 +35,7 @@ Recall कृपया, “please,” and the complete person request from the p
 
 You'll want to know: कृपया तूष्णीं भव.
 कृपया तूष्णीं भव। kṛpayā tūṣṇīṃ bhava. “Please be quiet.”
-The Board of School Education Haryana copy of the NCERT Class 10 Śemuṣī Sanskrit reader uses the exact command तूष्णीं भव. The grammatical commentary on Pāṇini 3.4.63 also explicitly treats तूष्णीम् with √भू. The कृपया at the front is the “please” you already know.
+The Board of School Education Haryana copy of the NCERT Class 10 Śemuṣī Sanskrit reader uses the exact command तूष्णीं भव. The grammatical commentary on Pāṇini 3.4.63 also explicitly treats तूष्णीम् with √भू. The कृपया at the front is the “please” you already know. The sources attest the command तूष्णीं भव and its construction; the full polite request is this course's transparent composition of that command with already-owned कृपया.
 
 Grammar Lens: one complete request.
 This lesson owns the complete familiar-person request. It does not teach the imperative paradigm, and it does not license you to manufacture other command forms from भव.
@@ -46,7 +46,7 @@ A familiar person is speaking while you need silence. Ask politely: “Please be
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the complete sourced request for “Please be quiet”?
+What is the complete composed request for “Please be quiet”?
 
 
 Lesson 3 of 4.
@@ -58,11 +58,11 @@ Prepare to retrieve two complete spoken turns from meaning.
 
 Guided Practice: independent retrieval.
 No Sanskrit model is shown before you answer.
-Say the Sanskrit for these two turns, in order: “Where is the teacher?” Then: “Please be quiet.”
+Say the Sanskrit for these two acts, in order. First ask, “Is the teacher here?” and give the positive answer, “Yes, the teacher is here.” Then ask a familiar person, “Please be quiet.”
 [pause 8 seconds]
 
 What you've built: check after answering.
-Now check: अध्यापकः कुत्र अस्ति? (adhyāpakaḥ kutra asti?) asks where the teacher is. कृपया तूष्णीं भव। (kṛpayā tūṣṇīṃ bhava.) asks a familiar person, politely, to be quiet.
+Now check: अध्यापकः अत्र अस्ति? — आम्, अध्यापकः अत्र अस्ति। (adhyāpakaḥ atra asti? — ām, adhyāpakaḥ atra asti.) asks whether the teacher is here and gives the positive response. कृपया तूष्णीं भव। (kṛpayā tūṣṇīṃ bhava.) asks a familiar person, politely, to be quiet.
 
 Wrap-up Recall: boundary.
 You have retrieved two bounded turns once without a visible model. That is not a claim of general command formation or conversation-wide ability.
@@ -77,11 +77,11 @@ Prepare to retrieve the same two turns in a fresh order.
 
 Guided Practice: independent retrieval in a fresh order.
 No Sanskrit model is shown before you answer.
-Say the Sanskrit for these two turns in reverse order: “Please be quiet.” Then: “Where is the teacher?”
+Say the Sanskrit for these two acts in reverse order. First: “Please be quiet.” Then ask, “Is the teacher here?” and give the positive answer, “Yes, the teacher is here.”
 [pause 8 seconds]
 
 What you've built: check after answering.
-Now check: कृपया तूष्णीं भव। (kṛpayā tūṣṇīṃ bhava.) is the quiet request. अध्यापकः कुत्र अस्ति? (adhyāpakaḥ kutra asti?) is the person request.
+Now check: कृपया तूष्णीं भव। (kṛpayā tūṣṇīṃ bhava.) is the quiet request. अध्यापकः अत्र अस्ति? — आम्, अध्यापकः अत्र अस्ति। (adhyāpakaḥ atra asti? — ām, adhyāpakaḥ atra asti.) is the person request and positive response.
 
 Wrap-up Recall: boundary.
 You can retrieve these two bounded spoken acts twice without a visible model. This is not evidence of general imperative mastery, conversational competence, human validation, learner attainment, or exam readiness.

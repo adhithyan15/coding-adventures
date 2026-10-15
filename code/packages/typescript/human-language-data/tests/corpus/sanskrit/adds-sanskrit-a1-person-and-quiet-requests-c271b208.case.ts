@@ -33,9 +33,10 @@ it("asks for a person and requests quiet twice in Sanskrit A1", () => {
   const quietAtom = "SA-PATTERN-C271-REQUEST-QUIET-02";
   const pointAtoms = [personAtom, quietAtom];
   const componentAtoms = [
-    "SA-LEX-C14-DEIXIS-06",
+    "SA-LEX-C14-DEIXIS-03",
     "SA-LEX-ASTI",
     "SA-LEX-C83-SCHOOL-03",
+    "SA-LEX-AM-YES",
     "SA-LEX-C29-COURTESY-01",
   ];
 
@@ -60,6 +61,14 @@ it("asks for a person and requests quiet twice in Sanskrit A1", () => {
     ).toHaveLength(1);
   }
 
+  const personLesson = chapterLessons[0];
+  expect(personLesson?.body).toContain("At a doorway or on a call");
+  expect(personLesson?.body).toContain("अध्यापकः अत्र अस्ति?");
+  expect(personLesson?.body).toContain("आम्, अध्यापकः अत्र अस्ति।");
+  expect(personLesson?.body).toContain("Is the teacher here?");
+  expect(personLesson?.body).toContain("Yes, the teacher is here.");
+  expect(personLesson?.body).toMatch(/does not claim a general polar-question system/u);
+
   const quietLesson = chapterLessons[1];
   expect(quietLesson?.body).toContain(
     "https://bseh.org.in/uploads/ebooks/20_Class_10th_Shemushi_Sansktit_120pp.pdf",
@@ -68,6 +77,13 @@ it("asks for a person and requests quiet twice in Sanskrit A1", () => {
     "https://sanskritdocuments.org/learning_tools/ashtadhyayi/vyakhya/3/3.4.63.htm",
   );
   expect(quietLesson?.body).toMatch(/does not teach the\s+imperative paradigm/u);
+  expect(quietLesson?.body).toMatch(
+    /The sources attest the command \*\*तूष्णीं भव\*\*\s+and its construction/u,
+  );
+  expect(quietLesson?.body).toContain(
+    "composition of that command with already-owned **कृपया**",
+  );
+  expect(quietLesson?.body).not.toMatch(/complete sourced request/u);
 
   const retrievalLessons = chapterLessons.slice(2);
   for (const lesson of retrievalLessons) {
@@ -96,11 +112,13 @@ it("asks for a person and requests quiet twice in Sanskrit A1", () => {
       .map((block) => block.markdown)
       .join(" ") ?? "";
     expect(authoredPrefix).not.toMatch(
-      /अध्यापकः कुत्र अस्ति|कृपया तूष्णीं भव|adhyāpakaḥ kutra asti|kṛpayā tūṣṇīṃ bhava/u,
+      /अध्यापकः अत्र अस्ति|आम्, अध्यापकः अत्र अस्ति|कृपया तूष्णीं भव|adhyāpakaḥ atra asti|ām, adhyāpakaḥ atra asti|kṛpayā tūṣṇīṃ bhava/u,
     );
-    expect(checkBlock?.markdown).toContain("अध्यापकः कुत्र अस्ति");
+    expect(checkBlock?.markdown).toContain("अध्यापकः अत्र अस्ति?");
+    expect(checkBlock?.markdown).toContain("आम्, अध्यापकः अत्र अस्ति।");
     expect(checkBlock?.markdown).toContain("कृपया तूष्णीं भव");
-    expect(checkBlock?.markdown).toContain("adhyāpakaḥ kutra asti");
+    expect(checkBlock?.markdown).toMatch(/adhyāpakaḥ\s+atra asti\?/u);
+    expect(checkBlock?.markdown).toMatch(/ām, adhyāpakaḥ\s+atra asti/u);
     expect(checkBlock?.markdown).toContain("kṛpayā tūṣṇīṃ bhava");
   }
 
@@ -140,10 +158,10 @@ it("asks for a person and requests quiet twice in Sanskrit A1", () => {
       .map((segment) => segment.text ?? "")
       .join(" ") ?? "";
     expect(spokenPrefix).not.toMatch(
-      /अध्यापकः कुत्र अस्ति|कृपया तूष्णीं भव|adhyāpakaḥ kutra asti|kṛpayā tūṣṇīṃ bhava/u,
+      /अध्यापकः अत्र अस्ति|आम्, अध्यापकः अत्र अस्ति|कृपया तूष्णीं भव|adhyāpakaḥ atra asti|ām, adhyāpakaḥ atra asti|kṛpayā tūṣṇīṃ bhava/u,
     );
     expect(check?.segments[0]?.text).toMatch(
-      /अध्यापकः कुत्र अस्ति.*कृपया तूष्णीं भव|कृपया तूष्णीं भव.*अध्यापकः कुत्र अस्ति/u,
+      /अध्यापकः अत्र अस्ति.*आम्, अध्यापकः अत्र अस्ति.*कृपया तूष्णीं भव|कृपया तूष्णीं भव.*अध्यापकः अत्र अस्ति.*आम्, अध्यापकः अत्र अस्ति/u,
     );
   }
 
