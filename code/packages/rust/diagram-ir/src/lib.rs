@@ -1912,6 +1912,8 @@ pub struct WardleyLink { pub source: String, pub target: String }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyEvolution { pub component: String, pub target: f64 }
 #[derive(Clone, Debug, PartialEq)]
+pub struct WardleyNote { pub text: String, pub visibility: f64, pub evolution: f64 }
+#[derive(Clone, Debug, PartialEq)]
 pub struct WardleyTheme { pub background_color: String, pub axis_color: String, pub axis_text_color: String,
     pub grid_color: String, pub component_fill: String, pub component_stroke: String,
     pub component_label_color: String, pub link_stroke: String, pub evolution_stroke: String }
@@ -1928,7 +1930,7 @@ impl Default for WardleyConfig { fn default() -> Self { Self { width: 900.0, hei
     show_grid: false, use_max_width: true, theme: WardleyTheme::default() } } }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyDiagram { pub title: Option<String>, pub config: WardleyConfig, pub stages: Vec<String>,
-    pub nodes: Vec<WardleyNode>, pub links: Vec<WardleyLink>, pub evolves: Vec<WardleyEvolution> }
+    pub nodes: Vec<WardleyNode>, pub links: Vec<WardleyLink>, pub evolves: Vec<WardleyEvolution>, pub notes: Vec<WardleyNote> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyNode { pub id: String, pub label: String, pub position: Point, pub anchor: bool }
 #[derive(Clone, Debug, PartialEq)]
@@ -1936,8 +1938,11 @@ pub struct LayoutedWardleyLink { pub from: Point, pub to: Point }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyEvolution { pub from: Point, pub to: Point }
 #[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedWardleyNote { pub text: String, pub position: Point }
+#[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub config: WardleyConfig,
-    pub stages: Vec<String>, pub nodes: Vec<LayoutedWardleyNode>, pub links: Vec<LayoutedWardleyLink>, pub evolves: Vec<LayoutedWardleyEvolution> }
+    pub stages: Vec<String>, pub nodes: Vec<LayoutedWardleyNode>, pub links: Vec<LayoutedWardleyLink>,
+    pub evolves: Vec<LayoutedWardleyEvolution>, pub notes: Vec<LayoutedWardleyNote> }
 
 // SENSE-MAKING FAMILY
 #[derive(Clone, Debug, Eq, PartialEq)]
