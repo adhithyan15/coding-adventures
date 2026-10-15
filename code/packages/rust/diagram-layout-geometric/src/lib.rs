@@ -38,6 +38,11 @@ pub fn try_layout_venn(diagram: &VennDiagram) -> Result<LayoutedVennDiagram, Ven
     if !supported(diagram.config.height, false) { return Err(VennLayoutError::Height); }
     if !supported(diagram.config.padding, true) { return Err(VennLayoutError::Padding); }
     let layout = layout_venn_supported(diagram);
+    validate_venn_geometry(&layout)?;
+    Ok(layout)
+}
+
+fn validate_venn_geometry(layout: &LayoutedVennDiagram) -> Result<(), VennLayoutError> {
     // Caller-owned region sizes can produce NaN radii even after config passes.
     // Keep the original placement arithmetic and refuse any invalid result.
     let non_negative = |v: f64| v.is_finite() && v >= 0.0;
@@ -46,7 +51,7 @@ pub fn try_layout_venn(diagram: &VennDiagram) -> Result<LayoutedVennDiagram, Ven
         || layout.labels.iter().any(|l| !l.x.is_finite() || !l.y.is_finite()) {
         return Err(VennLayoutError::DerivedGeometry);
     }
-    Ok(layout)
+    Ok(())
 }
 
 fn layout_venn_supported(diagram: &VennDiagram) -> LayoutedVennDiagram {
@@ -101,6 +106,11 @@ fn layout_venn_supported(diagram: &VennDiagram) -> LayoutedVennDiagram {
         debug_circles, debug_cells }
 }
 
+#[cfg(test)]
+std::thread_local! { static VENN_DEBUG_VISITS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) }; }
+#[cfg(test)]
+fn observe_venn_debug_work() { VENN_DEBUG_VISITS.with(|v| v.set(v.get() + 1)); }
+
 fn venn_debug_geometry(diagram: &VennDiagram, circles: &[LayoutedVennCircle], centers: &HashMap<&str, (f64, f64)>)
     -> (Vec<LayoutedVennDebugCircle>, Vec<LayoutedVennDebugCell>) {
     let scale = diagram.config.width / 1600.0;
@@ -108,22 +118,23 @@ fn venn_debug_geometry(diagram: &VennDiagram, circles: &[LayoutedVennCircle], ce
     let mut debug_circles = Vec::new();
     let mut debug_cells = Vec::new();
     for text in &diagram.texts {
+        #[cfg(test)] observe_venn_debug_work();
         let key = text.sets.join("\0");
         if !seen.insert(key) { continue; }
         let Some((cx, cy)) = centroid(&text.sets, centers) else { continue; };
-        let area_circles: Vec<_> = text.sets.iter().filter_map(|id| circles.iter().find(|circle| circle.id == *id)).collect();
+        let area_circles: Vec<_> = text.sets.iter().inspect(|_| { #[cfg(test)] observe_venn_debug_work(); }).filter_map(|id| circles.iter().inspect(|_| { #[cfg(test)] observe_venn_debug_work(); }).find(|circle| circle.id == *id)).collect();
         let min_radius = area_circles.iter().map(|circle| circle.radius).fold(f64::INFINITY, f64::min);
         let mut inner_radius = area_circles.iter().map(|circle| {
             circle.radius - (cx - circle.cx).hypot(cy - circle.cy)
         }).fold(f64::INFINITY, f64::min).max(0.0);
         if inner_radius == 0.0 && min_radius.is_finite() { inner_radius = min_radius * 0.6; }
         debug_circles.push(LayoutedVennDebugCircle { cx, cy, radius: inner_radius });
-        let count = diagram.texts.iter().filter(|node| node.sets == text.sets).count();
+        let count = diagram.texts.iter().inspect(|_| { #[cfg(test)] observe_venn_debug_work(); }).filter(|node| node.sets == text.sets).count();
         let cols = (count as f64).sqrt().ceil().max(1.0) as usize;
         let rows = count.div_ceil(cols).max(1);
         let inner_width = (80.0 * scale).max(inner_radius * 1.9);
         let inner_height = (60.0 * scale).max(inner_radius * 1.9);
-        let has_label = diagram.regions.iter().any(|region| region.sets == text.sets
+        let has_label = diagram.regions.iter().inspect(|_| { #[cfg(test)] observe_venn_debug_work(); }).any(|region| region.sets == text.sets
             && region.label.as_ref().is_some_and(|label| !label.is_empty()));
         let label_offset = if has_label { (32.0 * scale).min(inner_radius * 0.25) } else { 0.0 }
             + if count <= 2 { 30.0 * scale } else { 0.0 };
@@ -132,6 +143,7 @@ fn venn_debug_geometry(diagram: &VennDiagram, circles: &[LayoutedVennCircle], ce
         let start_x = cx - inner_width / 2.0;
         let start_y = cy - inner_height / 2.0 + label_offset;
         for index in 0..count {
+            #[cfg(test)] observe_venn_debug_work();
             debug_cells.push(LayoutedVennDebugCell { x: start_x + cell_width * (index % cols) as f64,
                 y: start_y + cell_height * (index / cols) as f64, width: cell_width, height: cell_height });
         }
@@ -601,3 +613,6 @@ mod tests {
 
 #[cfg(test)]
 mod venn_config_contract;
+
+#[cfg(test)]
+mod venn_debug_contract;
