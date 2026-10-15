@@ -1,0 +1,11 @@
+{
+  "id": "SA-C269-six-channel-practice",
+  "pathSegment": "SA-PATH-269-MEDIA269",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-269-MEDIA269",
+      "order": 3
+    }
+  ]
+}

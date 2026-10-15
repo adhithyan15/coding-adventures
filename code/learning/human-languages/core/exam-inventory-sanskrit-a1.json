@@ -3226,7 +3226,14 @@
       "id": "SA-A1-M-06",
       "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
       "label": "media and communication: press, telephone, radio, television, the internet, letters",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C222-THG222-05",
+        "SA-LEX-C104-THINGS104-05",
+        "SA-LEX-C269-MEDIA-01",
+        "SA-LEX-C105-THINGS105-01",
+        "SA-LEX-C269-MEDIA-02",
+        "SA-LEX-C120-THINGS120-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -3241,7 +3248,7 @@
         "A1-NE09-05",
         "A1-NE09-06"
       ],
-      "note": "UNCOVERED, six proxy points. Spoken Sanskrit has coined every one of these — dūravāṇī, saṅgaṇakaḥ, vārtāpatram — and the track teaches none. This is the sharpest illustration of SA-A1-RG-01: a corpus built on the classical register cannot answer a modern-life demand even when the living register can."
+      "note": "COVERED by chapter 269 as one bounded six-word lexical field: four previously owned press, telephone, television, and letter/article atoms join explicitly sourced modern radio and internet atoms, with two model-free retrieval rounds. This does not claim device use, news comprehension, correspondence, broadcasting, internet navigation, digital literacy, human validation, learner attainment, or exam readiness."
     },
     {
       "id": "SA-A1-M-07",

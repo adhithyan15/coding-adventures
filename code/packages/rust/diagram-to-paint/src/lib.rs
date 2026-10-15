@@ -2342,12 +2342,15 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         }));
     }
     let mut text_children = Vec::new();
+    let mut title_font = options.title_font.clone(); title_font.family = diagram.config.font_family.clone();
+    let mut label_font = options.label_font.clone(); label_font.family = diagram.config.font_family.clone();
     if let Some(title) = &diagram.title {
-        text_children.push(text_node(title, 8.0, 5.0, diagram.width - 16.0, 28.0, options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+        text_children.push(text_node(title, 8.0, 5.0, diagram.width - 16.0, 28.0, title_font,
+            css_to_color(&diagram.config.title_text_color)));
     }
     for label in &diagram.labels {
-        text_children.push(text_node(&label.text, label.x - 70.0, label.y - 12.0, 140.0, 26.0, options.label_font.clone(),
-            label.style.text_color.as_deref().map(css_to_color).unwrap_or(Color { r: 15, g: 23, b: 42, a: 255 })));
+        text_children.push(text_node(&label.text, label.x - 70.0, label.y - 12.0, 140.0, 26.0, label_font.clone(),
+            label.style.text_color.as_deref().map(css_to_color).unwrap_or_else(|| css_to_color(&diagram.config.set_text_color))));
     }
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
         id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
@@ -2355,9 +2358,18 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
     });
     instructions.extend(text_scene.instructions);
+    let mut metadata = HashMap::new();
+    metadata.insert("venn.width".into(), diagram.config.width.to_string());
+    metadata.insert("venn.height".into(), diagram.config.height.to_string());
+    metadata.insert("venn.padding".into(), diagram.config.padding.to_string());
+    metadata.insert("venn.useMaxWidth".into(), diagram.config.use_max_width.to_string());
+    metadata.insert("venn.useDebugLayout".into(), diagram.config.use_debug_layout.to_string());
+    metadata.insert("venn.fontFamily".into(), diagram.config.font_family.clone());
+    metadata.insert("venn.titleTextColor".into(), diagram.config.title_text_color.clone());
+    metadata.insert("venn.setTextColor".into(), diagram.config.set_text_color.clone());
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
-        instructions, id: None, metadata: None }
+        instructions, id: None, metadata: Some(metadata) }
 }
 
 /// Lower Ishikawa fishbone geometry into backend-neutral paths, a rect, and glyph runs.
@@ -13040,6 +13052,7 @@ emphasized --> direct
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedVennDiagram {
             width: 400.0, height: 300.0, title: Some("Overlap".into()),
+            config: diagram_ir::VennConfig { width: 400.0, height: 300.0, ..Default::default() },
             circles: vec![diagram_ir::LayoutedVennCircle {
                 id: "A".into(), label: "Alpha".into(), cx: 200.0, cy: 160.0, radius: 90.0,
                 style: diagram_ir::VennStyle { fill: Some("#ff0000".into()), fill_opacity: Some(0.5), ..Default::default() },

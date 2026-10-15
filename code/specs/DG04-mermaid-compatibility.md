@@ -730,8 +730,15 @@ multi-set unions, labels, numeric sizes, attached text nodes, titles, and the
 documented fill, stroke, opacity, and text styling directives into dedicated
 set IR. Deterministic circle geometry lowers through backend-neutral ellipses
 and glyph runs, with native Metal-to-PNG validation. Exact area-proportional
-overlap optimization, theme-exact styling, configuration overrides, and
-interactive behavior remain unsupported at the partial level.
+overlap optimization, theme-exact styling, and interactive behavior remain
+unsupported at the partial level. Positive `width` and `height`, non-negative
+`padding`, `useMaxWidth`, and `useDebugLayout` settings from init directives or
+YAML front matter survive typed semantic IR. Canvas dimensions and padding
+control deterministic circle geometry, while every resolved setting remains
+available as backend-neutral PaintScene metadata.
+Venn-specific title and set text colors plus the global font family now resolve
+from `themeVariables`, survive typed config IR and layout, and drive portable
+title and region glyph runs. Per-region authored text colors retain precedence.
 
 ### Ishikawa Native Slice
 

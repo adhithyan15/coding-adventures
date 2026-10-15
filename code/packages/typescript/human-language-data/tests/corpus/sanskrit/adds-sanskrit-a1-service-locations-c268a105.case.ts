@@ -116,13 +116,13 @@ it("builds one sourced Sanskrit A1 four-service location exchange", () => {
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   expect(coverage).toMatchObject({
     enumerated: 164,
-    covered: 151,
-    unmapped: 13,
+    covered: 152,
+    unmapped: 12,
     partial: 0,
   });
   expect(coverage.byCategory[
     "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]).toEqual({ enumerated: 15, covered: 9 });
+  ]).toEqual({ enumerated: 15, covered: 10 });
   expect(coverage.points.find((point) => point.id === "SA-A1-M-08")).toMatchObject({
     covered: true,
     missingAtoms: [],
