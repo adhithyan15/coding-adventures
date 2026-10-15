@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Colours",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1af1d2f0513205bd",
+  "sourceHash": "fnv1a64:a2dca1e3a3376076",
   "lessons": [
     {
       "id": "SA-C44-white",
@@ -329,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a3d2c217956bf92",
+      "sourceHash": "fnv1a64:39c0b47165598dde",
       "notice": null,
       "blocks": [
         {

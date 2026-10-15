@@ -130,7 +130,7 @@ afterEach(() => {
 });
 
 describe("the narration export's filesystem shell", () => {
-  it("refuses to write through a symlinked hash-owner directory or file", () => {
+  it("refuses to write through a symlinked hash-owner directory", () => {
     const root = fixture();
     const outside = mkdtempSync(
       join(tmpdir(), "human-language-narration-outside-"),
@@ -142,12 +142,19 @@ describe("the narration export's filesystem shell", () => {
     symlinkSync(
       outside,
       join(root, "core", "generated-narration-hashes", "test.d"),
+      process.platform === "win32" ? "junction" : "dir",
     );
     expect(() => runNarrationGeneration(["--write"], root)).toThrow(
       /real directory/,
     );
+  });
 
-    rmSync(join(root, "core", "generated-narration-hashes", "test.d"));
+  it("refuses to write through a symlinked hash-owner file", (ctx) => {
+    const root = fixture();
+    const outside = mkdtempSync(
+      join(tmpdir(), "human-language-narration-outside-"),
+    );
+    roots.push(outside);
     expect(runNarrationGeneration(["--write"], root)).toBe(0);
     const owner = join(
       root,
@@ -159,7 +166,13 @@ describe("the narration export's filesystem shell", () => {
     rmSync(owner);
     const victim = join(outside, "victim.json");
     writeFileSync(victim, "unchanged\n");
-    symlinkSync(victim, owner);
+    try {
+      symlinkSync(victim, owner, "file");
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+      ctx.skip();
+      return;
+    }
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runNarrationGeneration(["--check"], root)).toBe(1);
     expect(() => runNarrationGeneration(["--write"], root)).toThrow(

@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Excuse Me, and Say It Again",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:59a0e6a3fe9da8bb",
+  "sourceHash": "fnv1a64:fef024d14f338887",
   "lessons": [
     {
       "id": "RU-C21-izvinite",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6544e3321b4d3f16",
+      "sourceHash": "fnv1a64:9e558e6ebefff5a2",
       "notice": null,
       "blocks": [
         {
@@ -58,11 +58,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "но, the contradicting but with no secure English cousin",
+              "instruction": "но, the contradicting but, probably kin to English now",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: *но*, the contradicting *but* with no secure English cousin]"
+              "source": "[YOU RECALL: *но*, the contradicting *but*, probably kin to English *now*]"
             },
             {
               "kind": "prompt",

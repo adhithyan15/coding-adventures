@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 95,
-  "sourceHash": "fnv1a64:d5e07753de9772fd",
+  "sourceHash": "fnv1a64:86b49691ae3c4799",
   "lessonIds": [
     "PA-C95-satt",
     "PA-C95-atth",
@@ -14,6 +14,6 @@
   "text": "punjabi/narration/ch95.txt",
   "json": "punjabi/narration/ch95.json",
   "textHash": "fnv1a64:c8c53c9c71ad0d25",
-  "jsonHash": "fnv1a64:21a62e0edac61901",
+  "jsonHash": "fnv1a64:757889433b176477",
   "findings": []
 }

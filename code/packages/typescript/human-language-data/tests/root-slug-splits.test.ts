@@ -283,7 +283,7 @@ describe("the write side", () => {
     expect(runRootSlugSplitsCli(["--write", "--allow-new"], root)).toBe(0);
   });
 
-  it("refuses to write through a SYMLINK, as the read side already refuses to read one", () => {
+  it("refuses to write through a SYMLINK, as the read side already refuses to read one", (ctx) => {
     // `readLedgerFile` refuses a symlinked ledger, so without this the two
     // halves of one CLI disagree about the same path and --write follows a link
     // the checker would have rejected. shard.ts: "a guard living only inside
@@ -292,9 +292,11 @@ describe("the write side", () => {
     const elsewhere = join(root, "elsewhere.json");
     writeFileSync(elsewhere, "{}\n");
     try {
-      symlinkSync(elsewhere, join(root, "core", "root-slug-split-baseline.json"));
-    } catch {
-      return; // A platform without symlink permission proves nothing either way.
+      symlinkSync(elsewhere, join(root, "core", "root-slug-split-baseline.json"), "file");
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+      ctx.skip();
+      return;
     }
     expect(() => runRootSlugSplitsCli(["--write"], root)).toThrow(/must be a real regular file/);
   });

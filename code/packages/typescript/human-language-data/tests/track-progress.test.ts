@@ -26,11 +26,11 @@ import type { BookCorpus, LanguageCurriculum, LanguageRegistry } from "../src/ty
 
 const lesson = (language: string) => ({ language }) as ParsedLesson;
 
-function canCreateSymlinks(): boolean {
+function canCreateDirectoryLinks(): boolean {
   const root = mkdtempSync(join(tmpdir(), "hl-progress-symlink-probe-"));
   try {
     const link = join(root, "link");
-    symlinkSync(join(root, "missing"), link);
+    symlinkSync(join(root, "missing"), link, process.platform === "win32" ? "junction" : "dir");
     return lstatSync(link).isSymbolicLink();
   } catch {
     return false;
@@ -39,7 +39,7 @@ function canCreateSymlinks(): boolean {
   }
 }
 
-const symlinksAvailable = canCreateSymlinks();
+const directoryLinksAvailable = canCreateDirectoryLinks();
 
 // Every progress card for the REAL corpus, rendered once at import. Rendering
 // parses all 23 tracks, and two tests below read the result; building it inside
@@ -129,12 +129,12 @@ describe("track progress", () => {
     }
   });
 
-  it.skipIf(!symlinksAvailable)(
+  it.skipIf(!directoryLinksAvailable)(
     "rejects a resurrected dangling progress symlink",
     () => {
       const root = mkdtempSync(join(tmpdir(), "hl-progress-resurrection-"));
       try {
-        symlinkSync(join(root, "missing"), join(root, TRACK_PROGRESS_DIR));
+        symlinkSync(join(root, "missing"), join(root, TRACK_PROGRESS_DIR), process.platform === "win32" ? "junction" : "dir");
         expect(progressDirectoryIsAbsent(root)).toBe(false);
       } finally {
         rmSync(root, { recursive: true, force: true });

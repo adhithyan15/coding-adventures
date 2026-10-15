@@ -14,7 +14,7 @@ romanization: "kālaḥ"
 concept_tag: SA-TIME152-KALAH
 prerequisites: [SA-C151-matsarah, SA-C151-garvah]
 sounds: []
-roots: [sanskrit-kala-time]
+roots: [sanskrit-kaala-time]
 etymology_hook: "kāla 'time' (AV), from √kal 'calculate' (MW); CDIAL 3084 keeps it apart from kāla 'black'; Hindi kāl"
 duration:
   max_seconds: 200

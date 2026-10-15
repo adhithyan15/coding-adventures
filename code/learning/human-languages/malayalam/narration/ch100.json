@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "What You Wear",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:6d2a6d22c971ac53",
+  "sourceHash": "fnv1a64:4cb816334b3ef42d",
   "lessons": [
     {
       "id": "ML-C100-mundu",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0d09fbf89c30319",
+      "sourceHash": "fnv1a64:c75c1f557f851e61",
       "notice": null,
       "blocks": [
         {

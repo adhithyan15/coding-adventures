@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 73,
-  "sourceHash": "fnv1a64:2188008d73bc47c7",
+  "sourceHash": "fnv1a64:7a02334074132dfe",
   "lessonIds": [
     "MW-C73-nuvo",
     "MW-C73-juno",
@@ -14,6 +14,6 @@
   "text": "marwadi/narration/ch73.txt",
   "json": "marwadi/narration/ch73.json",
   "textHash": "fnv1a64:bf4dceabf8e9ab10",
-  "jsonHash": "fnv1a64:3a3c1c292e1a5342",
+  "jsonHash": "fnv1a64:e490c4f76b5d181c",
   "findings": []
 }

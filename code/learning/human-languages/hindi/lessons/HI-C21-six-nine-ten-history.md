@@ -13,7 +13,7 @@ gloss: six shifts a sibilant, nine dissolves intervocalic v, and ten only drops 
 romanization: "chhah, nau, das"
 prerequisites: [HI-C21-numbers-6-10]
 sounds: [retroflex-sibilant-shift, intervocalic-v-loss, diphthong-au]
-roots: [sanskrit-sas, sanskrit-nava, sanskrit-dasa]
+roots: [sanskrit-sas, sanskrit-nava-nine, sanskrit-dasa]
 etymology_hook: "ṣaṣ → chhah shifts a retroflex sibilant; nava → nau dissolves intervocalic v into a diphthong; daśa → das only drops the final vowel"
 duration:
   max_seconds: 180

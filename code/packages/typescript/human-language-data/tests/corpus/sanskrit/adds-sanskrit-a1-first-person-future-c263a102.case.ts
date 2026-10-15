@@ -121,11 +121,11 @@ it("adds a gentle Sanskrit A1 first-person future ramp", () => {
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   expect(coverage).toMatchObject({
     enumerated: 164,
-    // 146 -> 152 belongs to the later meal-ordering, market, school-plan,
-    // service-location, and media-word tranches; this test still pins the
+    // 146 -> 153 belongs to the later meal-ordering, market, school-plan,
+    // service-location, media-word, and modern-technology tranches; this test still pins the
     // exact first-person-future probe above.
-    covered: 152,
-    unmapped: 12,
+    covered: 153,
+    unmapped: 11,
     partial: 0,
   });
   expect(coverage.byCategory["Likes, wishes and feelings"]).toEqual({

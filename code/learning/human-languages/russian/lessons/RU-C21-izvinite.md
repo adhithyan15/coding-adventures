@@ -42,7 +42,7 @@ verb.
 
 - [YOU RECALL: *понимать*, on a root meaning **to take hold of**]
 - [YOU RECALL: *спасибо*, and *чтобы* with an infinitive after it]
-- [YOU RECALL: *но*, the contradicting *but* with no secure English cousin]
+- [YOU RECALL: *но*, the contradicting *but*, probably kin to English *now*]
 - [YOU RECALL: *надо* with nobody in the sentence, and *хотеть*, which has no
   cousin outside Slavic]
 

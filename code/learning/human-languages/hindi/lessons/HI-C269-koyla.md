@@ -14,7 +14,7 @@ romanization: "koylā"
 concept_tag: HI-THG269-KOYLA
 prerequisites: [HI-C268-ag, HI-C268-rakh]
 sounds: []
-roots: [sanskrit-kokila]
+roots: [sanskrit-kokila-coal]
 etymology_hook: "koylā ← Sanskrit kokila 'lighted coal, charcoal', a tadbhava (CDIAL 3484)"
 duration:
   max_seconds: 200

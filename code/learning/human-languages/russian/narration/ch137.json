@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Recently, for a Long Time, Before, Last, To Happen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:46ebca2a8f794502",
+  "sourceHash": "fnv1a64:b0ed03662d34d8bd",
   "lessons": [
     {
       "id": "RU-C137-nedavno",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b9bb5605dc990dc",
+      "sourceHash": "fnv1a64:9b79b434e17302cd",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "прошлый (próshlyy) is built on прошёл, \"passed\", from пройти, \"to go past\": про-, \"past\", with идти, \"to go\". What is past has gone by."
+              "text": "прошлый (próshlyy) is built on прошёл, \"passed\", the past tense of пройти, \"to go past\". Its -шёл is not from идти, \"to go\": Vasmer puts шёл with ходить, \"to walk\". What is past has gone by."
             }
           ]
         },

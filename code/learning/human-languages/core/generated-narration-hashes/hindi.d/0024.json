@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 24,
-  "sourceHash": "fnv1a64:18a59495148df9c6",
+  "sourceHash": "fnv1a64:651bcb7675d9a109",
   "lessonIds": [
     "HI-C24-hara-pila",
     "HI-C24-pila-history"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch24.txt",
   "json": "hindi/narration/ch24.json",
-  "textHash": "fnv1a64:795e26715318eecb",
-  "jsonHash": "fnv1a64:15e58cba909dde0d",
+  "textHash": "fnv1a64:fa87f307af252d75",
+  "jsonHash": "fnv1a64:eb8d79d15c94c1cb",
   "findings": []
 }

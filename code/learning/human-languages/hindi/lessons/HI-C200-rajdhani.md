@@ -14,7 +14,7 @@ romanization: "rājdhānī"
 concept_tag: HI-THG200-RAJDHANI
 prerequisites: [HI-C200-tvaca, HI-C200-rajya]
 sounds: []
-roots: [sanskrit-rajan, sanskrit-dhana]
+roots: [sanskrit-rajan, sanskrit-dhani]
 etymology_hook: "rājdhānī: Sanskrit rājadhānī 'royal seat', a tatsama"
 duration:
   max_seconds: 200

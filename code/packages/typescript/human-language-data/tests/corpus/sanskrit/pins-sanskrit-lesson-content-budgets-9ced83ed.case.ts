@@ -147,7 +147,8 @@ it("pins Sanskrit lesson-content budgets", () =>
     // exchange twice without a model.
     // 1440 -> 1446: chapter 269 recalls four owned media words, adds two
     // sourced modern meanings, and retrieves the six-word field twice.
-    lessons: 1446,
+    // 1446 -> 1448: chapter 270 retrieves computer and internet twice.
+    lessons: 1448,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

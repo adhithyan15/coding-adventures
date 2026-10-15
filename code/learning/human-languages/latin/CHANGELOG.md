@@ -1,5 +1,9 @@
 # Changelog
 
+## Fixed — the līber "free" family uses one root slug
+
+- **LA-C71-liberi**, **LA-C187-libertas**, **LA-C213-liberalis** and **LA-C220-libertus** move from `liber-latin` to `liber-free-latin`, the slug the French, Italian, Portuguese and Spanish "free" lessons use. `liber-latin` also named *liber* "bark, book", a different word (EtymDB lists Latin *liber* "free" and *liber* "book" as two entries).
+
 ## Fixed — every taken-apart block now says where its word comes from
 
 Thirty-one Latin word lessons had a "taken apart" block that listed English descendants, split a compound into Latin parts, or told the word's later history, and never said where the word itself came from (human-language-data `hasEmptyEtymologyBlock`, HL24 §9.4). Each block now says it. Sources: EtymDB 2.1 (Fourrier & Sagot 2020, CC BY-SA 4.0) and Lewis & Short (Perseus `lexica`, CC BY-SA 4.0), both read locally; every line is our own sentence. Empty etymology blocks 31 → 0.

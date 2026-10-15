@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Husband, Wife, Children",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8be4c7a68b7a5a86",
+  "sourceHash": "fnv1a64:99c2002320ca7cc6",
   "lessons": [
     {
       "id": "LA-C71-maritus",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8608ffaab386fcc",
+      "sourceHash": "fnv1a64:ae80d76840a50767",
       "notice": null,
       "blocks": [
         {

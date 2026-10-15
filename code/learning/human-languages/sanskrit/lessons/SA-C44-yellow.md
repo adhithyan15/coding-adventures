@@ -14,7 +14,7 @@ romanization: "pītaḥ"
 concept_tag: SA-COLOUR-PITA
 prerequisites: [SA-C44-dark, SA-C42-mostly, SA-C43-humility]
 sounds: []
-roots: [sanskrit-pita-drunk]
+roots: [sanskrit-pita-yellow]
 etymology_hook: "pīta 'yellow': MW guesses √pyai 'swell', from butter's colour; not settled; Hindi pīlā (CDIAL 8233)"
 duration:
   max_seconds: 210

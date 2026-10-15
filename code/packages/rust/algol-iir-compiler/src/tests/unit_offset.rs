@@ -103,13 +103,13 @@ fn identity_declaration_guard_checks_exact_tree_signature_and_resolved_identity(
 fn nested_offsets_and_shifted_narrow_range_proofs_have_exact_typed_refusals() {
     let mut failures = Vec::new();
     for (name, expression) in [
-        ("nested-right", "entier((sign(pick()) + 4) + 5)"),
-        ("nested-left", "entier(1 + (8 + sign(pick())))"),
-        ("entier-wrapped", "entier(entier(sign(pick()) + 1) + 8)"),
-        ("abs-wrapped", "entier(abs(sign(pick()) + 2) + 7)"),
+        ("nested-right", "entier((sign(pick()) + 5) + 5)"),
+        ("nested-left", "entier(1 + (9 + sign(pick())))"),
+        ("entier-wrapped", "entier(entier(sign(pick()) + 1) + 9)"),
+        ("abs-wrapped", "entier(abs(sign(pick()) + 2) + 8)"),
         ("shifted-triple-exp", "entier(ln(exp(exp(exp(sign(pick()) + 1)))))"),
-        ("flat-nine", "entier(sign(pick()) + 4 + 5)"),
-        ("non-unit", "entier(sign(pick()) + 9)"),
+        ("flat-ten", "entier(sign(pick()) + 5 + 5)"),
+        ("non-unit", "entier(sign(pick()) + 10)"),
     ] {
         let source = format!("begin real procedure pick; pick := 3.5; real saved; saved := {expression}; output(saved) end");
         match compile_source(&source, "unit_offset_refusal") {
@@ -173,8 +173,8 @@ fn conditional_front_second_and_nonunit_offsets_keep_typed_refusals() {
     for condition in ["true","false"] {
         for expression in [
             "entier((if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1)) + 1)",
-            "entier(if choose() then (entier(sign(left)) + 9) else (entier(sign(right)) + 1))",
-            "entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 9))",
+            "entier(if choose() then (entier(sign(left)) + 10) else (entier(sign(right)) + 1))",
+            "entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 10))",
         ] {
             let source=format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := {expression}; output(saved) end");
             assert!(matches!(compile_source(&source,"conditional_unit_refusal"),Err(CompileError::Type(message)) if message.contains("cannot print a real value")),"condition={condition}: {source}");

@@ -14,7 +14,7 @@ romanization: "pāda"
 concept_tag: KA-THINGS140-PADA
 prerequisites: [KA-C139-mise, KA-C140-gadda]
 sounds: []
-roots: [sanskrit-pada]
+roots: [sanskrit-pada-foot]
 etymology_hook: "pāda ← Sanskrit pāda 'foot', a tatsama (CDIAL 8056)"
 duration:
   max_seconds: 200

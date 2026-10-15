@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Husband, Wife, Baby, Person, Woman",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:810fd1464a42f4f3",
+  "sourceHash": "fnv1a64:40d1499b32f5673c",
   "lessons": [
     {
       "id": "MR-C76-navra",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:237c4922a2f92fdf",
+      "sourceHash": "fnv1a64:52ae8cdbd8c7428c",
       "notice": null,
       "blocks": [
         {

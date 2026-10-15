@@ -14,7 +14,7 @@ romanization: "kāṇḍaṁ"
 concept_tag: TE-VASTUVU272-KANDAM
 prerequisites: [TE-C272-kance, TE-C272-poda]
 sounds: []
-roots: [sanskrit-kanda]
+roots: [sanskrit-kanda-stem]
 etymology_hook: "kāṇḍaṁ ← Sanskrit kāṇḍa 'single joint of a plant; cluster', a tatsama (CDIAL 3023)"
 duration:
   max_seconds: 200

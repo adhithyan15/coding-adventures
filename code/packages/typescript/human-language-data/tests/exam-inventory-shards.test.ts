@@ -150,25 +150,34 @@ describe("exam-inventory direct point owners", () => {
     expect(() => read(repeated.aggregate)).toThrow(/repeats point id/);
   });
 
-  it("rejects nesting, symbolic links, non-regular owners, and aggregate resurrection", () => {
+  it("rejects nesting, non-regular owners, and aggregate resurrection", () => {
     const nested = temporaryRoot();
     writeOwners(nested.directory);
     mkdirSync(join(nested.directory, "nested"));
     expect(() => read(nested.aggregate)).toThrow(/real direct-child regular file/);
 
-    const linked = temporaryRoot();
-    writeOwners(linked.directory);
-    rmSync(join(linked.directory, "0010-TEST-A1-ONE.json"));
-    symlinkSync(
-      join(linked.directory, "0020-TEST-A1-TWO.json"),
-      join(linked.directory, "0010-TEST-A1-ONE.json"),
-    );
-    expect(() => read(linked.aggregate)).toThrow(/real direct-child regular file/);
-
     const resurrected = temporaryRoot();
     writeOwners(resurrected.directory);
     writeFileSync(resurrected.aggregate, `${JSON.stringify(inventory, null, 2)}\n`);
     expect(() => read(resurrected.aggregate)).toThrow(/present beside canonical/);
+  });
+
+  it("rejects a symbolic-link exam owner", (ctx) => {
+    const linked = temporaryRoot();
+    writeOwners(linked.directory);
+    rmSync(join(linked.directory, "0010-TEST-A1-ONE.json"));
+    try {
+      symlinkSync(
+        join(linked.directory, "0020-TEST-A1-TWO.json"),
+        join(linked.directory, "0010-TEST-A1-ONE.json"),
+        "file",
+      );
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+      ctx.skip();
+      return;
+    }
+    expect(() => read(linked.aggregate)).toThrow(/real direct-child regular file/);
   });
 
   it("rejects case-fold-colliding owner names on case-sensitive filesystems", () => {

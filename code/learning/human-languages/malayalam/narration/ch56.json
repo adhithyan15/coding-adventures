@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "Things About the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d4e24933fc43434a",
+  "sourceHash": "fnv1a64:3a861864271e76a1",
   "lessons": [
     {
       "id": "ML-C56-mat",
@@ -457,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e93c4b69537f3448",
+      "sourceHash": "fnv1a64:d759174db63ce251",
       "notice": null,
       "blocks": [
         {

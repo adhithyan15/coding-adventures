@@ -14,7 +14,7 @@ romanization: "navā"
 concept_tag: MR-ANIMALS103-NAVA
 prerequisites: [MR-C103-mungi, MR-C103-badak]
 sounds: []
-roots: [sanskrit-nava]
+roots: [sanskrit-nava-new]
 etymology_hook: "navā ← Sanskrit nava 'new, young', a tadbhava (CDIAL 6983)"
 duration:
   max_seconds: 200

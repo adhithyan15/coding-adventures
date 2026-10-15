@@ -2,12 +2,13 @@
 
 Owned conditional-unit programs require exact stdout and normal exit,
 including markers proving the condition and chosen branch execute once.
-Six locally available backends executed all 76 owned sources (456 cells),
-including ten new seven-unit programs; the previous 66 sources and 396 cells
-remain exact. Ordered branch markers are CL6/CR8; CLR execution is not inferred.
-Complete six-package native/compiler/downstream validation passed 1,799
+Six locally available backends executed all 96 owned sources (576 cells),
+including ten new nine-unit programs; the previous 86 sources and 516 cells
+remain exact. Ordered new branch markers are CL8/CR10; CLR execution is not inferred.
+Complete six-package native/compiler/downstream validation passed 1,809
 tests over 78 targets with one existing ignored test, plus strict lint;
-full unfiltered LANG passed 492. Hosted CI remains a separate gate.
+full unfiltered LANG passed 496. Independent source and terminal reviews passed;
+hosted CI remains a separate gate.
 Final-source Miri remains **DEFERRED/PENDING**, never passed, under the
 user-authorized delivery-first sequencing.
 
@@ -35,8 +36,8 @@ multiplication or division of that additive form by finite static terms. A
 single additional built-in `entier` may wrap a supported bounded transform
 rooted in `sign(...)`, including the exact `entier(sign(...))` root. A real
 name-formal result is also allowed when its actual has the same proof. Up to
-eight exact additive offset units may remain inside that bounded transform,
-either as one exact `8` term or a checked sum of exact `1` through `7` terms,
+nine exact additive offset units may remain inside that bounded transform,
+either as one exact `9` term or a checked sum of exact `1` through `8` terms,
 with the cap tracked through parentheses and supported wrappers and applied per
 conditional path. Unary
 signs, arithmetic composition with finite static operands, and real-valued

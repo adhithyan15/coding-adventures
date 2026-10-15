@@ -378,9 +378,9 @@ describe("independent script owner declarations", () => {
     });
   });
 
-  it.skipIf(process.platform === "win32")(
+  it(
     "rejects a declaration file symlink without opening its target",
-    () => {
+    (ctx) => {
       withFixture((root) => {
         const target = join(root, "outside.json");
         writeJson(target, {
@@ -389,7 +389,13 @@ describe("independent script owner declarations", () => {
           kind: "letter",
           glyph: "𠀀",
         });
-        symlinkSync(target, declaration(root, "letters", "U-20000"));
+        try {
+          symlinkSync(target, declaration(root, "letters", "U-20000"), "file");
+        } catch (error) {
+          if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+          ctx.skip();
+          return;
+        }
         expect(() =>
           readScriptOwnerDeclarations(root, {
             language: "japanese",

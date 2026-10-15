@@ -14,7 +14,7 @@ romanization: "patlā"
 concept_tag: UR-ADJ73-PATLA
 prerequisites: [UR-C72-mitha, UR-C73-mota]
 sounds: []
-roots: [sanskrit-patra]
+roots: [sanskrit-pattrala]
 etymology_hook: "patlā ← Sanskrit pattrala 'leafy', and so 'leaf-like, thin', from pattra 'leaf' (CDIAL 7736)"
 duration:
   max_seconds: 200

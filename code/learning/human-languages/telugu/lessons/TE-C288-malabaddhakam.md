@@ -14,7 +14,7 @@ romanization: "malabaddhakaṁ"
 concept_tag: TE-AROGYAM288-MALABADDHAKAM
 prerequisites: [TE-C288-aparesanu, TE-C288-ajirnam]
 sounds: []
-roots: [sanskrit-mala, sanskrit-baddha]
+roots: [sanskrit-mala-dirt, sanskrit-baddha]
 etymology_hook: "malabaddhakaṁ: Sanskrit mala 'dirt' (CDIAL 9899) + baddha 'bound' (CDIAL 9126)"
 duration:
   max_seconds: 200

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 71,
-  "sourceHash": "fnv1a64:8be4c7a68b7a5a86",
+  "sourceHash": "fnv1a64:99c2002320ca7cc6",
   "lessonIds": [
     "LA-C71-maritus",
     "LA-C71-uxor",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch71.txt",
   "json": "latin/narration/ch71.json",
   "textHash": "fnv1a64:04687dda08f1ad61",
-  "jsonHash": "fnv1a64:94682b491b51b648",
+  "jsonHash": "fnv1a64:4a1d92a999760435",
   "findings": []
 }

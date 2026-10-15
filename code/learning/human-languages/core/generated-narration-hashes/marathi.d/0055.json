@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 55,
-  "sourceHash": "fnv1a64:805ef0314bc967a2",
+  "sourceHash": "fnv1a64:a0ba913197b5ae6b",
   "lessonIds": [
     "MR-C55-saha",
     "MR-C55-saat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch55.txt",
   "json": "marathi/narration/ch55.json",
-  "textHash": "fnv1a64:6eb6a7ce1235d080",
-  "jsonHash": "fnv1a64:04709c1420f73ff3",
+  "textHash": "fnv1a64:9429f49db7ca6b9c",
+  "jsonHash": "fnv1a64:371eb50189457315",
   "findings": []
 }

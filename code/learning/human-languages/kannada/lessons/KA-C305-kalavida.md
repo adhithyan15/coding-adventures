@@ -14,7 +14,7 @@ romanization: "kalāvida"
 concept_tag: KA-KELASA305-KALAVIDA
 prerequisites: [KA-C304-ganita, KA-C305-arcaka]
 sounds: []
-roots: [sanskrit-kala]
+roots: [sanskrit-kala-art]
 etymology_hook: "kalāvida ← Sanskrit kalā 'art' (CDIAL 2927) + -vid 'knowing'"
 duration:
   max_seconds: 200

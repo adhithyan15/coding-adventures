@@ -14,7 +14,7 @@ romanization: "jæmôn"
 concept_tag: BN-KARON218-JMON
 prerequisites: [BN-C217-stediyam, BN-C218-jodio]
 sounds: []
-roots: [sanskrit-ya]
+roots: [sanskrit-ya-relative]
 etymology_hook: "jæmôn: je- 'which' on ya- (CDIAL 10391); the ending -môn is not settled"
 duration:
   max_seconds: 200

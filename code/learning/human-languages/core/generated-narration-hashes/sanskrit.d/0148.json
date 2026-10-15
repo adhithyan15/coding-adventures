@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 148,
-  "sourceHash": "fnv1a64:81e224523edb3658",
+  "sourceHash": "fnv1a64:9e55ce577fae5fdb",
   "lessonIds": [
     "SA-C148-napitah",
     "SA-C148-pacakah",
@@ -14,6 +14,6 @@
   "text": "sanskrit/narration/ch148.txt",
   "json": "sanskrit/narration/ch148.json",
   "textHash": "fnv1a64:4aa60032a9a7d870",
-  "jsonHash": "fnv1a64:d12cae54f6f324ff",
+  "jsonHash": "fnv1a64:6890f8b474cd24e7",
   "findings": []
 }
