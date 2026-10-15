@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 211,
-  "sourceHash": "fnv1a64:66c24796a2d6b909",
+  "sourceHash": "fnv1a64:39423e52acaaf40e",
   "lessonIds": [
     "PT-C211-paciencia",
     "PT-C211-sorte",
@@ -14,6 +14,6 @@
   "text": "portuguese/narration/ch211.txt",
   "json": "portuguese/narration/ch211.json",
   "textHash": "fnv1a64:fb20f3a37281f3ac",
-  "jsonHash": "fnv1a64:9c7af5cfaa676c80",
+  "jsonHash": "fnv1a64:de33f49c8e30e109",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Joining Things Together",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f3d22dfed6dc6d71",
+  "sourceHash": "fnv1a64:91b4d90b1c5533d9",
   "lessons": [
     {
       "id": "ML-C70-um",
@@ -685,9 +685,9 @@
     {
       "id": "ML-R70-script-recall-last-nine",
       "sequence": 2421,
-      "title": "(ഷ ദ സ ഭ ഥ ഗ ോ ം ൃ) (randaam onpath) — the thin nine",
+      "title": "(ഷ ദ സ ഭ ഥ ഗ ോ ം ൃ) (raṇṭāṁ ompatŭ) — the thin nine",
       "headword": "(ഷ ദ സ ഭ ഥ ഗ ോ ം ൃ)",
-      "romanization": "randaam onpath",
+      "romanization": "raṇṭāṁ ompatŭ",
       "gloss": "cold retrieval of the nine pieces that arrived late and thinly, including the two that only ever appear in borrowed words",
       "script": "malayalam",
       "modality": "sight",
@@ -697,7 +697,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:1be7b3abe4bc3474",
+      "sourceHash": "fnv1a64:0a2fc01185b9112c",
       "notice": {
         "modality": "sight",
         "needs": [

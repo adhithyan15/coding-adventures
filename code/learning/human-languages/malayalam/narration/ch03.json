@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:820430dc58f49c1d",
+  "sourceHash": "fnv1a64:706f0bc93f6bc3bd",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -569,7 +569,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c59f88312712345d",
+      "sourceHash": "fnv1a64:1fef41f99f89405f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -629,7 +629,7 @@
             },
             {
               "kind": "speech",
-              "text": "അതെ athe — yes."
+              "text": "അതെ ate — yes."
             },
             {
               "kind": "speech",

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 103,
-  "sourceHash": "fnv1a64:5628d73427260c87",
+  "sourceHash": "fnv1a64:fb99fa34df03f369",
   "lessonIds": [
     "MW-C103-nhavno",
     "MW-C103-pakavno",
@@ -14,6 +14,6 @@
   "text": "marwadi/narration/ch103.txt",
   "json": "marwadi/narration/ch103.json",
   "textHash": "fnv1a64:b9e7867cafac4700",
-  "jsonHash": "fnv1a64:355eddd67025a406",
+  "jsonHash": "fnv1a64:ef5ba9b4c7882e93",
   "findings": []
 }

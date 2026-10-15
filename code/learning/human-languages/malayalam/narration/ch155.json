@@ -4,14 +4,14 @@
   "chapter": 155,
   "title": "Cheek, Chin, Street, Library, Shirt",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:44dc22c2cc34a3fb",
+  "sourceHash": "fnv1a64:58bd98434a508a55",
   "lessons": [
     {
       "id": "ML-C155-kavil",
       "sequence": 6400,
-      "title": "കവിൾ (kavil) — a cheek",
+      "title": "കവിൾ (kaviḷ) — a cheek",
       "headword": "കവിൾ",
-      "romanization": "kavil",
+      "romanization": "kaviḷ",
       "gloss": "a cheek",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffa4dc11d4abca05",
+      "sourceHash": "fnv1a64:e1f9898cd300ef49",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കവിൾ — kavil — \"a cheek\"."
+              "text": "കവിൾ — kaviḷ — \"a cheek\"."
             }
           ]
         },
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കവിൾ (kavil) is native Dravidian, one word with Tamil kavuḷ (DEDR 1337). DEDR 1337 compares Sanskrit kapola, with a query."
+              "text": "കവിൾ (kaviḷ) is native Dravidian, one word with Tamil kavuḷ (DEDR 1337). DEDR 1337 compares Sanskrit kapola, with a query."
             }
           ]
         },
@@ -86,38 +86,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kavil",
+              "instruction": "kaviḷ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kavil*]"
+              "source": "[YOU SAY: *kaviḷ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kavil, once more",
+              "instruction": "kaviḷ, once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kavil*, once more]"
+              "source": "[YOU SAY: *kaviḷ*, once more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "say kavil",
+              "instruction": "say kaviḷ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: say *kavil*]"
+              "source": "[YOU SAY: say *kaviḷ*]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Malayalam for skin, then the Malayalam for a forehead, then say kavil again",
+              "instruction": "say the Malayalam for skin, then the Malayalam for a forehead, then say kaviḷ again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Malayalam for skin, then the Malayalam for a forehead, then say *kavil* again]"
+              "source": "[YOU RECALL: say the Malayalam for skin, then the Malayalam for a forehead, then say *kaviḷ* again]"
             }
           ]
         },
@@ -134,7 +134,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does കവിൾ (kavil) mean? (\"A cheek\".) Say it once more."
+              "text": "What does കവിൾ (kaviḷ) mean? (\"A cheek\".) Say it once more."
             }
           ]
         }

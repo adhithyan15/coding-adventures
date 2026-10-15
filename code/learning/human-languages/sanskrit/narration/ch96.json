@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Main road, Crossroads, Corner, Library, University",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d3fbf7007419c348",
+  "sourceHash": "fnv1a64:8a6a71bfb3982d30",
   "lessons": [
     {
       "id": "SA-C96-rajamargah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e5abff147fdb23b",
+      "sourceHash": "fnv1a64:a131285cbb18377d",
       "notice": null,
       "blocks": [
         {

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 408,
-  "sourceHash": "fnv1a64:21dd78194f192871",
+  "sourceHash": "fnv1a64:c28ad77dc0a59620",
   "lessonIds": [
     "ES-C408-doctor",
     "ES-C408-pastilla",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "spanish/narration/ch408.txt",
   "json": "spanish/narration/ch408.json",
-  "textHash": "fnv1a64:93126d5d0f4f2b4e",
-  "jsonHash": "fnv1a64:d701ef09f96dfe40",
+  "textHash": "fnv1a64:43f034e57555f046",
+  "jsonHash": "fnv1a64:8cce1eeb8337062f",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ec95dbb42b4e6c4d",
+  "sourceHash": "fnv1a64:e18b651c11480bd1",
   "lessons": [
     {
       "id": "ML-C07-numbers-1-5",
@@ -714,7 +714,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02ce920e95737da3",
+      "sourceHash": "fnv1a64:a37c8c6266421ebd",
       "notice": null,
       "blocks": [
         {
@@ -784,7 +784,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Ompathu is usually read as an old word for one plus pattŭ, ten: one short of ten. It is native Dravidian (DEDR 1025), but how it was built is uncertain: DEDR sets it beside both \"one\" and an older word for nine. Before p, the older n becomes m. Say on-pattŭ slowly, then let it settle into ombatŭ."
+              "text": "Ombatŭ is usually read as an old word for one plus pattŭ, ten: one short of ten. It is native Dravidian (DEDR 1025), but how it was built is uncertain: DEDR sets it beside both \"one\" and an older word for nine. Before p, the older n becomes m. Say on-pattŭ slowly, then let it settle into ombatŭ."
             }
           ]
         },
@@ -967,7 +967,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:9f55f7e673ebc8ff",
+      "sourceHash": "fnv1a64:1959bf74aa0c21c3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1056,7 +1056,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which shape means ten? (൰.) Read ൯. (Ompathu.) This lesson added two shapes, not five."
+              "text": "Which shape means ten? (൰.) Read ൯. (Ombatŭ.) This lesson added two shapes, not five."
             }
           ]
         }
