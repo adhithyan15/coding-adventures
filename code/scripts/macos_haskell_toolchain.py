@@ -71,7 +71,7 @@ def unquoted_config_text(line: str) -> str:
 
 
 def overlay_config(source: str, clang: str, ld: str, sdk: str,
-                   *, hsc_wrapper: Path | None = None,
+                   *, ghc: str | None = None, hsc_wrapper: Path | None = None,
                    phase_override: tuple[str, Path] | None = None) -> str:
     """Preserve every unmanaged line; refuse competing active tool overrides.
 
@@ -80,6 +80,8 @@ def overlay_config(source: str, clang: str, ld: str, sdk: str,
     Paths use Cabal's quoted argument tokens, never a shell command string.
     """
     checked_macos_path(ld)
+    if ghc is not None:
+        checked_macos_path(ghc)
     options = phase_options(clang, sdk, ld)
     if phase_override is not None:
         phase, missing = phase_override
@@ -91,6 +93,7 @@ def overlay_config(source: str, clang: str, ld: str, sdk: str,
         raise ValueError("invalid generated hsc2hs wrapper path")
     fields = {
         "program-locations": {"gcc-location": [clang], "ld-location": [ld],
+                              "ghc-location": [] if ghc is None else [ghc],
                               "hsc2hs-location": [] if hsc_wrapper is None else [str(hsc_wrapper)]},
         "program-default-options": {
             "ghc-options": options,
@@ -105,6 +108,8 @@ def overlay_config(source: str, clang: str, ld: str, sdk: str,
     names = re.compile(r"\b(program-locations|program-default-options)\b", re.I)
     for line in lines:
         active = unquoted_config_text(line).strip()
+        if re.search(r"\bwith-compiler\s*:", active, re.I):
+            raise ValueError("existing Cabal compiler selector requires review")
         if names.search(active) and (line[0].isspace() or active.casefold() not in fields):
             raise ValueError("unsupported managed Cabal section syntax")
     for section, managed in fields.items():
@@ -209,7 +214,7 @@ def bootstrap(output: Path, github_env: Path, env: dict[str, str],
         wrapper, forced_hsc = write_hsc_driver(output, hsc2hs, clang, ld, sdk)
         receipt["hsc_wrapper_sha256"] = hashlib.sha256(wrapper.read_bytes()).hexdigest()
         config = output / "cabal.config"
-        config.write_text(overlay_config(original_bytes.decode("utf-8"), clang, ld, sdk, hsc_wrapper=wrapper), encoding="utf-8")
+        config.write_text(overlay_config(original_bytes.decode("utf-8"), clang, ld, sdk, ghc=ghc, hsc_wrapper=wrapper), encoding="utf-8")
         receipt["overlay_config_sha256"] = hashlib.sha256(config.read_bytes()).hexdigest()
         run("clang-version", [clang, "--version"])
         if run("ghc-version", [ghc, "--numeric-version"]).strip() != "9.4.8":
@@ -244,7 +249,7 @@ def bootstrap(output: Path, github_env: Path, env: dict[str, str],
             missing = output / ("missing-" + name)
             refused = output / ("refuse-" + name + ".config")
             refused.write_text(overlay_config(original_bytes.decode("utf-8"), clang, ld, sdk,
-                hsc_wrapper=wrapper, phase_override=(phase, missing)), encoding="utf-8")
+                ghc=ghc, hsc_wrapper=wrapper, phase_override=(phase, missing)), encoding="utf-8")
             run("cabal-refuse-" + name, [cabal, "v2-build", "--offline", "exe:ci-toolchain-probe"],
                 cwd=package, child_env=dict(env, CABAL_CONFIG=str(refused)), expected_refusal=missing)
         cabal_env = dict(env, CABAL_CONFIG=str(config))
