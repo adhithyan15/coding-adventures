@@ -782,8 +782,12 @@ visibility/evolution coordinates, validated dependency links, and evolution
 targets into dedicated strategic-map IR. Deterministic Cartesian mapping
 honors Wardley's `[visibility, evolution]` coordinate order and lowers through
 backend-neutral paths, ellipses, and glyph runs with native Metal-to-PNG
-validation. Pipelines, notes, annotations, accelerators/deaccelerators,
-advanced flow ports, decorators, label offsets, custom stage boundaries, and
+validation. Mermaid's `wardley-beta` width, height, padding, node radius,
+node-label offset, axis and label font sizes, grid visibility, and max-width
+configuration survive grammar parsing through typed semantic and layout IR.
+The grid lowers to dashed backend-neutral paths and renderer configuration is
+preserved in Paint metadata. Pipelines, notes, annotations, accelerators/deaccelerators,
+advanced flow ports, decorators, per-node authored label offsets, custom stage boundaries, and
 theme-exact rendering remain unsupported at the partial level.
 
 ### Cynefin Native Slice
