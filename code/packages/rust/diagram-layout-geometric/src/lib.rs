@@ -48,7 +48,9 @@ fn validate_venn_geometry(layout: &LayoutedVennDiagram) -> Result<(), VennLayout
     let non_negative = |v: f64| v.is_finite() && v >= 0.0;
     if !non_negative(layout.width) || !non_negative(layout.height)
         || layout.circles.iter().any(|c| !c.cx.is_finite() || !c.cy.is_finite() || !non_negative(c.radius))
-        || layout.labels.iter().any(|l| !l.x.is_finite() || !l.y.is_finite()) {
+        || layout.labels.iter().any(|l| !l.x.is_finite() || !l.y.is_finite())
+        || layout.debug_circles.iter().any(|c| !c.cx.is_finite() || !c.cy.is_finite() || !non_negative(c.radius))
+        || layout.debug_cells.iter().any(|c| !c.x.is_finite() || !c.y.is_finite() || !non_negative(c.width) || !non_negative(c.height)) {
         return Err(VennLayoutError::DerivedGeometry);
     }
     Ok(())
@@ -114,28 +116,47 @@ fn observe_venn_debug_work() { VENN_DEBUG_VISITS.with(|v| v.set(v.get() + 1)); }
 fn venn_debug_geometry(diagram: &VennDiagram, circles: &[LayoutedVennCircle], centers: &HashMap<&str, (f64, f64)>)
     -> (Vec<LayoutedVennDebugCircle>, Vec<LayoutedVennDebugCell>) {
     let scale = diagram.config.width / 1600.0;
-    let mut seen = HashSet::new();
-    let mut debug_circles = Vec::new();
-    let mut debug_cells = Vec::new();
+    // Structural slices cannot alias through a delimiter. The vector retains
+    // first authored occurrence; hash tables are lookup-only and never order
+    // output. Counts and labels are collected once rather than rescanned for
+    // each group. Circle radii keep first-ID lookup; centers keep the existing
+    // separately built last-ID lookup, including caller-owned duplicate IDs.
+    let mut first_circles = HashMap::<&str, &LayoutedVennCircle>::new();
+    for circle in circles {
+        #[cfg(test)] observe_venn_debug_work();
+        first_circles.entry(circle.id.as_str()).or_insert(circle);
+    }
+    let mut labeled = HashSet::<&[String]>::new();
+    for region in &diagram.regions {
+        #[cfg(test)] observe_venn_debug_work();
+        if region.label.as_ref().is_some_and(|label| !label.is_empty()) { labeled.insert(region.sets.as_slice()); }
+    }
+    let mut indices = HashMap::<&[String], usize>::new();
+    let mut groups = Vec::<(&[String], usize)>::new();
     for text in &diagram.texts {
         #[cfg(test)] observe_venn_debug_work();
-        let key = text.sets.join("\0");
-        if !seen.insert(key) { continue; }
-        let Some((cx, cy)) = centroid(&text.sets, centers) else { continue; };
-        let area_circles: Vec<_> = text.sets.iter().inspect(|_| { #[cfg(test)] observe_venn_debug_work(); }).filter_map(|id| circles.iter().inspect(|_| { #[cfg(test)] observe_venn_debug_work(); }).find(|circle| circle.id == *id)).collect();
+        let key = text.sets.as_slice();
+        if let Some(index) = indices.get(key).copied() { groups[index].1 += 1; }
+        else { indices.insert(key, groups.len()); groups.push((key, 1)); }
+    }
+    let mut debug_circles = Vec::new();
+    let mut debug_cells = Vec::new();
+    for (sets, count) in groups {
+        #[cfg(test)] observe_venn_debug_work();
+        let Some((cx, cy)) = centroid(sets, centers) else { continue; };
+        let area_circles: Vec<_> = sets.iter().inspect(|_| { #[cfg(test)] observe_venn_debug_work(); })
+            .filter_map(|id| first_circles.get(id.as_str()).copied()).collect();
         let min_radius = area_circles.iter().map(|circle| circle.radius).fold(f64::INFINITY, f64::min);
         let mut inner_radius = area_circles.iter().map(|circle| {
             circle.radius - (cx - circle.cx).hypot(cy - circle.cy)
         }).fold(f64::INFINITY, f64::min).max(0.0);
         if inner_radius == 0.0 && min_radius.is_finite() { inner_radius = min_radius * 0.6; }
         debug_circles.push(LayoutedVennDebugCircle { cx, cy, radius: inner_radius });
-        let count = diagram.texts.iter().inspect(|_| { #[cfg(test)] observe_venn_debug_work(); }).filter(|node| node.sets == text.sets).count();
         let cols = (count as f64).sqrt().ceil().max(1.0) as usize;
         let rows = count.div_ceil(cols).max(1);
         let inner_width = (80.0 * scale).max(inner_radius * 1.9);
         let inner_height = (60.0 * scale).max(inner_radius * 1.9);
-        let has_label = diagram.regions.iter().inspect(|_| { #[cfg(test)] observe_venn_debug_work(); }).any(|region| region.sets == text.sets
-            && region.label.as_ref().is_some_and(|label| !label.is_empty()));
+        let has_label = labeled.contains(sets);
         let label_offset = if has_label { (32.0 * scale).min(inner_radius * 0.25) } else { 0.0 }
             + if count <= 2 { 30.0 * scale } else { 0.0 };
         let cell_width = inner_width / cols as f64;
