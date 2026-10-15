@@ -106,7 +106,7 @@ it("turns owned Sanskrit market words into a gentle A1 price exchange", () => {
   for (const form of [
     "क्रीणाति",
     "क्रीणामि",
-    "मूल्यम्",
+    "मूल्यं",
     "रूप्यकाणि",
     "आपणः",
     "आपणिकः",
