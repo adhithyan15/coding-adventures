@@ -1,7 +1,9 @@
 """Portable controls; mocked tools do not establish macOS link acceptance."""
 from __future__ import annotations
 
+import hashlib
 import json
+import os
 import shlex
 import subprocess
 import sys
@@ -286,9 +288,10 @@ class MacosHaskellToolchainTests(unittest.TestCase):
                 self.assertTrue(encoded.isascii())
                 self.assertFalse(any(ord(c) < 32 for c in encoded))
                 log = root / "output/discover-clang.log"
-                self.assertEqual(payload, log.read_bytes().decode("utf-8").replace("\r\r\n", "\r\n"))
+                self.assertEqual(payload.replace("\n", os.linesep).encode("utf-8"), log.read_bytes())
                 saved = json.loads((root / "output/receipt.json").read_text(encoding="utf-8"))
                 self.assertFalse(saved["success"])
+                self.assertEqual(hashlib.sha256(log.read_bytes()).hexdigest(), saved["commands"][-1]["sha256"])
                 self.assertEqual("EXISTING=retained\n", github_env.read_text(encoding="utf-8"))
         for wrong in [True, "prefix"]:
             with self.subTest(wrong_refusal=wrong):
