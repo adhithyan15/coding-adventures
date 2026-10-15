@@ -34,6 +34,9 @@ scalar fields under root `config` / direct `venn` supply values. Nested maps,
 arrays and unrelated root/section names must not flatten into those fields.
 The shared front-matter reader remains byte-exact for other dialects. This is
 a bounded flat configuration reader, not full YAML scalar/schema support.
+Both target sections must be empty-valued mapping keys. In particular `venn: |`
+or `config: >` block scalars cannot introduce configuration members even when
+their contents resemble mapping lines; preserve executable target-section decoys.
 
 Finite alone is insufficient for this new text-reachable canvas path. The
 incoming width=height=1e308 with four equal sets and a labeled union can overflow
