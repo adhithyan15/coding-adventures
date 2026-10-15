@@ -23,6 +23,12 @@ style object for canvas configuration, or a quoted `venn` value followed by an
 unrelated object. Add exact no-directive/quoted-body/non-init/malformed-init and
 quoted-value controls. Keep all other dialect extractors byte-exact; this bounded
 Venn path is not a general JSON5 parser or a multiline-directive parity claim.
+The selected `venn` key must be a direct member of the init object; numeric and
+boolean fields must be direct members of the selected Venn object. Nested
+objects/arrays and quoted field-name values are decoys, not fallback fields.
+Independent fb7f review found nested member scanning still ambiguous after the
+first repair. Preserve its913-pass full receipt, then add executable nested
+decoy controls before the depth repair and repeat affected acceptance.
 
 Finite alone is insufficient for this new text-reachable canvas path. The
 incoming width=height=1e308 with four equal sets and a labeled union can overflow
