@@ -11,7 +11,7 @@ romanization: "maṇikkūr"
 concept_tag: ML-SPAN-HOUR
 prerequisites: [ML-C139-time, ML-C139-minute]
 sounds: []
-roots: [sanskrit-mani-gem-bell, dravidian-kuru-part]
+roots: [dravidian-mani-bell, dravidian-kuru-part]
 etymology_hook: "maṇikkūr: maṇi 'bell, hour' (DEDR 4672, perhaps Sanskrit maṇi) + native kūr 'part, share' (DEDR 1924)"
 duration:
   max_seconds: 200

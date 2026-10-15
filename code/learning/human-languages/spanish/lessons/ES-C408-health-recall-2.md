@@ -11,7 +11,7 @@ concept_tag: ES-HEALTH-CHAIN-REVIEW-2
 prerequisites: [ES-C408-health-recall-1]
 sounds: []
 roots: []
-etymology_hook: "doctor keeps its teaching history, pastilla its small formed shape, and cansado its passing state"
+etymology_hook: "doctor keeps its teaching history, pastilla its Latin pastillus 'little loaf', and cansado its passing state"
 duration:
   max_seconds: 190
 requires:

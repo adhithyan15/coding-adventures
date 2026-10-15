@@ -4538,7 +4538,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_venn_to_png() {
-        let diagram = parse_venn("---\nthemeVariables:\n  fontFamily: Georgia\n  vennTitleTextColor: '#123456'\n  vennSetTextColor: '#654321'\n  venn1: '#0f766e'\n  venn2: '#f97316'\nconfig:\n  venn:\n    width: 720\n    height: 420\n    padding: 24\n    useMaxWidth: false\n---\nvenn-beta\ntitle Product Skills\nset Design[\"Design\"]:20\n  text research[\"Research\"]\nset Engineering[\"Engineering\"]:18\n  text systems[\"Systems\"]\nunion Design,Engineering[\"Product\"]:6\n  text shared[\"Prototyping\"]").expect("venn parse failed");
+        let diagram = parse_venn("---\nthemeVariables:\n  fontFamily: Georgia\n  vennTitleTextColor: '#123456'\n  vennSetTextColor: '#654321'\n  venn1: '#0f766e'\n  venn2: '#f97316'\nconfig:\n  venn:\n    width: 720\n    height: 420\n    padding: 24\n    useMaxWidth: false\n    useDebugLayout: true\n---\nvenn-beta\ntitle Product Skills\nset Design[\"Design\"]:20\n  text research[\"Research\"]\nset Engineering[\"Engineering\"]:18\n  text systems[\"Systems\"]\nunion Design,Engineering[\"Product\"]:6\n  text shared[\"Prototyping\"]").expect("venn parse failed");
         let layout = layout_venn(&diagram);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_venn(&layout, &DiagramToPaintOptions {
@@ -4549,10 +4549,15 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!((scene.width, scene.height), (720.0, 420.0));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.padding")), Some(&"24".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.useMaxWidth")), Some(&"false".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.useDebugLayout")), Some(&"true".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.fontFamily")), Some(&"Georgia".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.titleTextColor")), Some(&"#123456".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.themeColor1")), Some(&"#0f766e".to_string()));
-        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))).count(), 2);
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))).count(), 5);
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 3);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(ellipse)
+            if ellipse.fill.as_deref() == Some("rgba(15,118,110,0.1)")
+                && ellipse.stroke.as_deref() == Some("#0f766e") && ellipse.stroke_width == Some(2.25))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_venn_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);

@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Cooking, To join, To fill, To burn, Sewing",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4549b7e24d56e075",
+  "sourceHash": "fnv1a64:cfe225f3bbee5eab",
   "lessons": [
     {
       "id": "BN-C101-ranna",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be36d642e7d9597e",
+      "sourceHash": "fnv1a64:a246d078468887ee",
       "notice": null,
       "blocks": [
         {

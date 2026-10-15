@@ -2334,6 +2334,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
 pub fn diagram_to_paint_venn<S, M, R>(diagram: &LayoutedVennDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
     let mut instructions = Vec::new();
+    let scale = diagram.width / 1600.0;
     for (index, circle) in diagram.circles.iter().enumerate() {
         let fill = circle.style.fill.clone().unwrap_or_else(|| {
             diagram.config.theme_colors.get(index % diagram.config.theme_colors.len().max(1))
@@ -2341,10 +2342,21 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         });
         instructions.push(PaintInstruction::Ellipse(PaintEllipse {
             base: PaintBase::default(), cx: circle.cx, cy: circle.cy, rx: circle.radius, ry: circle.radius,
-            fill: Some(with_opacity(&fill, circle.style.fill_opacity.unwrap_or(0.38))),
-            stroke: Some(circle.style.stroke.clone().unwrap_or_else(|| "#334155".into())),
-            stroke_width: Some(circle.style.stroke_width.unwrap_or(2.0)), stroke_dash: None, stroke_dash_offset: None,
+            fill: Some(with_opacity(&fill, circle.style.fill_opacity.unwrap_or(0.1))),
+            stroke: Some(circle.style.stroke.clone().unwrap_or_else(|| fill.clone())),
+            stroke_width: Some(circle.style.stroke_width.unwrap_or(5.0 * scale)), stroke_dash: None, stroke_dash_offset: None,
         }));
+    }
+    for circle in &diagram.debug_circles {
+        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: circle.cx, cy: circle.cy,
+            rx: circle.radius, ry: circle.radius, fill: None, stroke: Some("#800080".into()), stroke_width: Some(1.5 * diagram.width / 1600.0),
+            stroke_dash: Some(vec![6.0 * diagram.width / 1600.0, 4.0 * diagram.width / 1600.0]), stroke_dash_offset: None }));
+    }
+    for cell in &diagram.debug_cells {
+        instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: cell.x, y: cell.y,
+            width: cell.width, height: cell.height, fill: None, stroke: Some("#008080".into()),
+            stroke_width: Some(diagram.width / 1600.0), corner_radius: None,
+            stroke_dash: Some(vec![4.0 * diagram.width / 1600.0, 3.0 * diagram.width / 1600.0]), stroke_dash_offset: None }));
     }
     let mut text_children = Vec::new();
     let mut title_font = options.title_font.clone(); title_font.family = diagram.config.font_family.clone();
@@ -13067,6 +13079,7 @@ emphasized --> direct
                 style: diagram_ir::VennStyle { fill: Some("#ff0000".into()), fill_opacity: Some(0.5), ..Default::default() },
             }],
             labels: vec![diagram_ir::LayoutedVennLabel { text: "Alpha".into(), x: 200.0, y: 160.0, style: Default::default() }],
+            debug_circles: vec![], debug_cells: vec![],
         };
         let scene = diagram_to_paint_venn(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
@@ -13085,15 +13098,39 @@ emphasized --> direct
                     radius: 80.0, style: Default::default() },
                 diagram_ir::LayoutedVennCircle { id: "B".into(), label: "B".into(), cx: 260.0, cy: 150.0,
                     radius: 80.0, style: diagram_ir::VennStyle { fill: Some("#abcdef".into()), ..Default::default() } },
-            ], labels: vec![],
+            ], labels: vec![], debug_circles: vec![], debug_cells: vec![],
         };
         let scene = diagram_to_paint_venn(&layout, &opts);
         let fills: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
             PaintInstruction::Ellipse(ellipse) => ellipse.fill.as_deref(), _ => None,
         }).collect();
-        assert_eq!(fills, ["rgba(17,34,51,0.38)", "rgba(171,205,239,0.38)"]);
+        assert_eq!(fills, ["rgba(17,34,51,0.1)", "rgba(171,205,239,0.1)"]);
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.themeColor1")),
             Some(&"#112233".to_string()));
+        let ellipses: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::Ellipse(ellipse) => Some(ellipse), _ => None,
+        }).collect();
+        assert_eq!(ellipses[0].stroke.as_deref(), Some("#112233"));
+        assert_eq!(ellipses[0].stroke_width, Some(1.25));
+        assert_eq!(ellipses[1].stroke.as_deref(), Some("#abcdef"));
+    }
+
+    #[test]
+    fn venn_lowers_debug_layout_to_dashed_backend_neutral_geometry() {
+        let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedVennDiagram {
+            width: 800.0, height: 450.0, title: None, config: Default::default(), circles: vec![], labels: vec![],
+            debug_circles: vec![diagram_ir::LayoutedVennDebugCircle { cx: 200.0, cy: 180.0, radius: 60.0 }],
+            debug_cells: vec![diagram_ir::LayoutedVennDebugCell { x: 150.0, y: 160.0, width: 100.0, height: 40.0 }],
+        };
+        let scene = diagram_to_paint_venn(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.stroke.as_deref() == Some("#800080")
+                && ellipse.stroke_dash.as_deref() == Some(&[3.0, 2.0]))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.stroke.as_deref() == Some("#008080")
+                && rect.stroke_dash.as_deref() == Some(&[2.0, 1.5]))));
     }
 
     #[test]

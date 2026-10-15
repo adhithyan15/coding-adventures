@@ -6,7 +6,7 @@ sequence: 2871
 chapter: 82
 type: review
 headword: "നന്ദി · ശരി · അതെ · സന്തോഷം"
-romanization: "nandi · śari · athe · santōṣaṁ"
+romanization: "nandi · śari · ate · santōṣaṁ"
 gloss: second pass over the book's first four chapters — thanks, agreement, a name exchange, and the two goodbyes that promise a return
 concept_tag: ML-SECOND-PASS-OPENING
 prerequisites: [ML-C01-nandi, ML-C01-athe, ML-C01-sari, ML-C02-enre-peru-aanu, ML-C02-ninre-peru-entaanu, ML-C02-santosham, ML-W02-santosham-guided-copy, ML-C03-sukhamaano, ML-C04-poyi-varaam, ML-C04-veendum-kaanaam]
@@ -67,7 +67,7 @@ go and come back* — said by the person leaving, about themselves. **വീണ�
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C01-ANSWER-BY-POINTING-01, ML-CONCEPT-C01-ONE-WORD-FOUR-SCRIPTS-01, ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: agree that something is so — *athe* — and say what it literally claims]
+- [YOU SAY: agree that something is so — *ate* — and say what it literally claims]
 - [YOU WRITE: **സന്തോഷം**, from memory, and check the shapes against the page afterwards]
 
 **ശരി** is the one to hold up. It is written four different ways across the

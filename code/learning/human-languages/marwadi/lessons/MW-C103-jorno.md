@@ -14,7 +14,7 @@ romanization: "joṛṇo"
 concept_tag: MW-VERB-JORNO
 prerequisites: [MW-C103-banavno, MW-C103-torno]
 sounds: []
-roots: [indo-aryan-yotayati]
+roots: [indo-aryan-yutati]
 etymology_hook: "joṛṇo ← *yoṭayati 'joins', reconstructed (CDIAL 10496, Old Marwari row)"
 duration:
   max_seconds: 200

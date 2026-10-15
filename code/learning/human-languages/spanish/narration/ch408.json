@@ -4,7 +4,7 @@
   "chapter": 408,
   "title": "Doctor, Pills and Tiredness",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:21dd78194f192871",
+  "sourceHash": "fnv1a64:c28ad77dc0a59620",
   "lessons": [
     {
       "id": "ES-C408-doctor",
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61beb03520e8f931",
+      "sourceHash": "fnv1a64:f5e0a0bfbad50fa8",
       "notice": null,
       "blocks": [
         {
@@ -229,7 +229,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sources: DLE: pastilla; RAE, derivation and composition: pastilla from pasta."
+              "text": "Sources: EtymDB 2.1 (Fourrier & Sagot 2020), pastilla from Latin pastillus; Lewis & Short, pastillus, a diminutive of pānis."
             }
           ]
         }
@@ -340,7 +340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:193783467a3e7680",
+      "sourceHash": "fnv1a64:565e05c7d11b5804",
       "notice": null,
       "blocks": [
         {

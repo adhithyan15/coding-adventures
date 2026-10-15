@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fec8628070f877ba",
+  "sourceHash": "fnv1a64:a7a0225ff9396a9b",
   "lessons": [
     {
       "id": "ML-C01-namaskaram",
@@ -1066,17 +1066,17 @@
     {
       "id": "ML-C01-athe",
       "sequence": 30,
-      "title": "അതെ (athe) — \"yes,\" literally \"that [is so]\"",
+      "title": "അതെ (ate) — \"yes,\" literally \"that [is so]\"",
       "headword": "അതെ",
-      "romanization": "athe",
-      "gloss": "yes (athe — \"that [is so]\")",
+      "romanization": "ate",
+      "gloss": "yes (ate — \"that [is so]\")",
       "script": "malayalam",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:284a4f922922da26",
+      "sourceHash": "fnv1a64:cdd46adc8f728dd0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1121,15 +1121,15 @@
             },
             {
               "kind": "speech",
-              "text": "തെ = \"the\" — ത (tha, a soft th as in this) with the \"e\" vowel sign written in front of the consonant."
+              "text": "തെ = \"te\" — ത (ta, a soft dental t) with the \"e\" vowel sign written in front of the consonant."
             },
             {
               "kind": "speech",
-              "text": "Left to right: അ, തെ = a-the, which gives:"
+              "text": "Left to right: അ, തെ = a-te, which gives:"
             },
             {
               "kind": "speech",
-              "text": "അതെ = athe = \"yes.\""
+              "text": "അതെ = ate = \"yes.\""
             }
           ]
         },
@@ -1140,7 +1140,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "അതെ (athe) is native Malayalam, and it grows from അത് (atŭ), \"that.\" To say \"yes,\" Malayalam essentially says \"that [is so]\" — you affirm by pointing at the truth of what was said. Its natural partner is the negative alla, \"[it is] not that\" — the next lesson."
+              "text": "അതെ (ate) is native Malayalam, and it grows from അത് (atŭ), \"that.\" To say \"yes,\" Malayalam essentially says \"that [is so]\" — you affirm by pointing at the truth of what was said. Its natural partner is the negative alla, \"[it is] not that\" — the next lesson."
             },
             {
               "kind": "speech",
@@ -1155,7 +1155,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Malayalam's yes/no pair are demonstratives in disguise: athe (\"that [is so]\") and alla (\"not that\"). Like its sisters, Malayalam also readily answers by echoing the verb of the question (vannu, \"[I] came,\" for \"did you come?\"). Bank athe as the simple word, but hear the logic underneath — you agree by confirming that is how things are."
+              "text": "Malayalam's yes/no pair are demonstratives in disguise: ate (\"that [is so]\") and alla (\"not that\"). Like its sisters, Malayalam also readily answers by echoing the verb of the question (vannu, \"[I] came,\" for \"did you come?\"). Bank ate as the simple word, but hear the logic underneath — you agree by confirming that is how things are."
             }
           ]
         },
@@ -1173,11 +1173,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "a, the becomes \"athe\"",
+              "instruction": "a, te becomes \"ate\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: a · the → \"athe\"]"
+              "source": "[YOU SAY: a · te → \"ate\"]"
             },
             {
               "kind": "prompt",
@@ -1191,11 +1191,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"athe\" — \"yes, that's so\"",
+              "instruction": "\"ate\" — \"yes, that's so\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"athe\" — \"yes, that's so\"]"
+              "source": "[YOU SAY: \"ate\" — \"yes, that's so\"]"
             },
             {
               "kind": "prompt",
@@ -1222,7 +1222,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "അതെ (athe)",
+              "instruction": "അതെ (ate)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1251,7 +1251,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:16e185e33e030177",
+      "sourceHash": "fnv1a64:7bc9451f52ec5feb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1311,7 +1311,7 @@
             },
             {
               "kind": "speech",
-              "text": "അതെ athe — yes (\"that [is so]\")."
+              "text": "അതെ ate — yes (\"that [is so]\")."
             },
             {
               "kind": "speech",
@@ -1356,7 +1356,7 @@
             },
             {
               "kind": "speech",
-              "text": "അതെ (athe), നന്ദി (nandi), നമസ്കാരം (namaskāraṁ)."
+              "text": "അതെ (ate), നന്ദി (nandi), നമസ്കാരം (namaskāraṁ)."
             },
             {
               "kind": "prompt",
@@ -1410,7 +1410,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3b178f4e7e42946d",
+      "sourceHash": "fnv1a64:c20e7938b15ee979",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1436,7 +1436,7 @@
             },
             {
               "kind": "speech",
-              "text": "The partner of athe, and more family evidence: this Malayalam \"no\" is essentially the same word as Tamil's illai and Kannada's illa — the old Dravidian il- runs right through."
+              "text": "The partner of ate, and more family evidence: this Malayalam \"no\" is essentially the same word as Tamil's illai and Kannada's illa — the old Dravidian il- runs right through."
             }
           ]
         },
@@ -1451,7 +1451,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഇ = \"i\" — an independent vowel (word-initial, so a full letter, like അ in athe)."
+              "text": "ഇ = \"i\" — an independent vowel (word-initial, so a full letter, like അ in ate)."
             },
             {
               "kind": "speech",
@@ -1537,11 +1537,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — athe (\"yes\") / illa (\"no\")",
+              "instruction": "the pair — ate (\"yes\") / illa (\"no\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — *athe* (\"yes\") / *illa* (\"no\")]"
+              "source": "[YOU SAY: the pair — *ate* (\"yes\") / *illa* (\"no\")]"
             },
             {
               "kind": "prompt",
@@ -1595,7 +1595,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1bd36148283d5cdc",
+      "sourceHash": "fnv1a64:7da466e3bf192b68",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1701,11 +1701,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the everyday triple — athe (yes), illa (no), śari (okay)",
+              "instruction": "the everyday triple — ate (yes), illa (no), śari (okay)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the everyday triple — *athe* (yes) · *illa* (no) · *śari* (okay)]"
+              "source": "[YOU SAY: the everyday triple — *ate* (yes) · *illa* (no) · *śari* (okay)]"
             },
             {
               "kind": "prompt",
@@ -1762,7 +1762,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:077868c6be93c666",
+      "sourceHash": "fnv1a64:8c7a73df789fb894",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1815,18 +1815,18 @@
               "utterances": [
                 "Read: നമസ്കാരം namaskāraṁ. Meaning: hello / greetings. Origin: Sanskrit.",
                 "Read: നന്ദി nandi. Meaning: thank you. Origin: native (= Tamil naṉṟi).",
-                "Read: അതെ athe. Meaning: yes. Origin: native (\"that [is so]\").",
+                "Read: അതെ ate. Meaning: yes. Origin: native (\"that [is so]\").",
                 "Read: illa. Meaning: no / there isn't. Origin: native (= Tamil illai).",
                 "Read: śari. Meaning: okay. Origin: native (= sari)."
               ]
             },
             {
               "kind": "speech",
-              "text": "The letters that did it: consonants carry a built-in \"a\"; the chandrakkala strips that vowel so consonants can join into conjuncts (സ്ക, ന്ദ); a vowel sign swaps the vowel (ാ ā, ി i, െ e — the e-sign written before its consonant); the anusvāram (ം) adds a final nasal; and a word-initial vowel gets a full letter (അ in അതെ (athe))."
+              "text": "The letters that did it: consonants carry a built-in \"a\"; the chandrakkala strips that vowel so consonants can join into conjuncts (സ്ക, ന്ദ); a vowel sign swaps the vowel (ാ ā, ി i, െ e — the e-sign written before its consonant); the anusvāram (ം) adds a final nasal; and a word-initial vowel gets a full letter (അ in അതെ (ate))."
             },
             {
               "kind": "speech",
-              "text": "Notice how Tamil-like the native core is: four of the five everyday words (nandi, athe, illa, śari) are shared with Tamil — because Malayalam is Tamil's closest sister — while only the formal greeting reached for Sanskrit."
+              "text": "Notice how Tamil-like the native core is: four of the five everyday words (nandi, ate, illa, śari) are shared with Tamil — because Malayalam is Tamil's closest sister — while only the formal greeting reached for Sanskrit."
             }
           ]
         },
@@ -1855,11 +1855,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all five — namaskāraṁ, nandi, athe, illa, śari",
+              "instruction": "all five — namaskāraṁ, nandi, ate, illa, śari",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all five — namaskāraṁ · nandi · athe · illa · śari]"
+              "source": "[YOU SAY: all five — namaskāraṁ · nandi · ate · illa · śari]"
             },
             {
               "kind": "prompt",
@@ -1900,7 +1900,7 @@
             },
             {
               "kind": "speech",
-              "text": "അതെ (athe) — അ a."
+              "text": "അതെ (ate) — അ a."
             },
             {
               "kind": "prompt",
@@ -1926,7 +1926,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read all five aloud. Which one is Sanskrit, and which four are native Dravidian shared with Tamil? (Sanskrit: namaskāraṁ. Native: nandi, athe, illa, śari.) Which word can mean both \"okay\" and a casual sign-off? (śari.)"
+              "text": "Read all five aloud. Which one is Sanskrit, and which four are native Dravidian shared with Tamil? (Sanskrit: namaskāraṁ. Native: nandi, ate, illa, śari.) Which word can mean both \"okay\" and a casual sign-off? (śari.)"
             },
             {
               "kind": "speech",

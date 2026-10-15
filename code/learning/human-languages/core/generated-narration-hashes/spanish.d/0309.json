@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 309,
-  "sourceHash": "fnv1a64:07ae0c488d0871ae",
+  "sourceHash": "fnv1a64:aecd5f3625c3fa89",
   "lessonIds": [
     "ES-C309-familia",
     "ES-C309-apodo",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch309.txt",
   "json": "spanish/narration/ch309.json",
   "textHash": "fnv1a64:77dbf16f5e4a6743",
-  "jsonHash": "fnv1a64:001853554536187a",
+  "jsonHash": "fnv1a64:3c2cbf165a76afc9",
   "findings": []
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## Fixed — osso uses the Latin os "bone" root slug
+
+- **PT-C211-osso** moves from `ossum-latin` to `os-latin`, the slug LA-C136-os and IT-C151-osso use. *Ossum* is a collateral form of *os, ossis* "bone" (Lewis & Short), one word, so the Portuguese, Italian and Latin bone lessons now join. Text unchanged.
+
 ## Fixed — every taken-apart block now says where its word comes from
 
 Five Portuguese word lessons had a "taken apart" block that split the word into parts and never said where it came from (human-language-data `hasEmptyEtymologyBlock`, HL24 §9.4). Each block now says it, from EtymDB 2.1 (Fourrier & Sagot 2020, CC BY-SA 4.0), read locally; no source text is copied. Empty etymology blocks 5 → 0.

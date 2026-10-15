@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "Opening A Conversation",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:973d1b7f30d4b493",
+  "sourceHash": "fnv1a64:b6052ad77168dff8",
   "lessons": [
     {
       "id": "ML-C82-chettaa",
@@ -655,7 +655,7 @@
       "sequence": 2871,
       "title": "നന്ദി, ശരി, അതെ — the first four chapters, run cold",
       "headword": "നന്ദി · ശരി · അതെ · സന്തോഷം",
-      "romanization": "nandi · śari · athe · santōṣaṁ",
+      "romanization": "nandi · śari · ate · santōṣaṁ",
       "gloss": "second pass over the book's first four chapters — thanks, agreement, a name exchange, and the two goodbyes that promise a return",
       "script": "malayalam",
       "modality": "voice",
@@ -663,7 +663,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4d68d523480fe1a",
+      "sourceHash": "fnv1a64:45607a401ef4aa80",
       "notice": null,
       "blocks": [
         {
@@ -783,11 +783,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "agree that something is so — athe — and say what it literally claims",
+              "instruction": "agree that something is so — ate — and say what it literally claims",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: agree that something is so — *athe* — and say what it literally claims]"
+              "source": "[YOU SAY: agree that something is so — *ate* — and say what it literally claims]"
             },
             {
               "kind": "prompt",

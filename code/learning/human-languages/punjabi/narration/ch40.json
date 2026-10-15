@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "That, and Why",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0d2af20c4c92bae8",
+  "sourceHash": "fnv1a64:96678d258b51f209",
   "lessons": [
     {
       "id": "PA-C40-ki",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:076be84b584914c8",
+      "sourceHash": "fnv1a64:f9762d9da27d1bbc",
       "notice": null,
       "blocks": [
         {

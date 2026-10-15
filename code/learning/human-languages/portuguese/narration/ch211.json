@@ -4,7 +4,7 @@
   "chapter": 211,
   "title": "Patience, Luck, Bone, Allergy, Headache",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:66c24796a2d6b909",
+  "sourceHash": "fnv1a64:39423e52acaaf40e",
   "lessons": [
     {
       "id": "PT-C211-paciencia",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d24717e90c30ca7",
+      "sourceHash": "fnv1a64:60ed30507d4f1aac",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "The Older Generation",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3e7226226ab0a5f6",
+  "sourceHash": "fnv1a64:07c85352c1fd23f5",
   "lessons": [
     {
       "id": "KA-C45-grandfather",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9eab8db62b6026ed",
+      "sourceHash": "fnv1a64:9ce44f831f8dd41d",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "A native Dravidian word of the short, doubled shape that small children's mouths reach for first, and it carries respect well past the family: an unrelated old man can be ajja too. The -a closing it is the masculine ending."
+              "text": "A word of the short, doubled shape that small children's mouths reach for first, and it carries respect well past the family: an unrelated old man can be ajja too. The -a closing it is the masculine ending."
             }
           ]
         },
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41fa8dd8f682e850",
+      "sourceHash": "fnv1a64:263b590b3fd4bb0c",
       "notice": null,
       "blocks": [
         {

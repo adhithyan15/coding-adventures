@@ -55,7 +55,7 @@ something, where the other tens are named from below as so many tens.
 
 | | built from |
 |---|---|
-| **എൺപത്** *eṇpathŭ* 80 | eight **tens** |
+| **എൺപത്** *eṇpatŭ* 80 | eight **tens** |
 | **തൊണ്ണൂറ്** 90 | a **hundred**, reduced |
 | **നൂറ്** 100 | itself |
 

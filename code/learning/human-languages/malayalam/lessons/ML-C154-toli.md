@@ -10,12 +10,12 @@ chapter: 154
 type: word
 headword: "തൊലി"
 gloss: "skin"
-romanization: "tolī"
+romanization: "toli"
 concept_tag: ML-THINGS154-TOLI
 prerequisites: [ML-C154-kalmuttu, ML-C154-navu]
 sounds: []
 roots: [dravidian-tol-skin]
-etymology_hook: "tolī: native Dravidian, one word with Tamil tōl and Kannada tōl(u) (DEDR 3559)"
+etymology_hook: "toli: native Dravidian, one word with Tamil tōl and Kannada tōl(u) (DEDR 3559)"
 duration:
   max_seconds: 200
 requires:
@@ -32,7 +32,7 @@ variety: standard-colloquial
 reviews_of: [ML-C154-navu]
 ---
 
-# തൊലി (tolī) — skin
+# തൊലി (toli) — skin
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C154-THINGS154-02, ML-LEX-C154-THINGS154-03] -->
@@ -42,12 +42,12 @@ reviews_of: [ML-C154-navu]
 ## You'll want to know: തൊലി
 <!-- hl-knowledge: introduces=[ML-LEX-C154-THINGS154-04]; assesses=[] -->
 
-**തൊലി** — *tolī* — "skin".
+**തൊലി** — *toli* — "skin".
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**തൊലി** (*tolī*) is native Dravidian, one word with Tamil *tōl* and Kannada *tōl(u)* (DEDR 3559).
+**തൊലി** (*toli*) is native Dravidian, one word with Tamil *tōl* and Kannada *tōl(u)* (DEDR 3559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -58,10 +58,10 @@ One more word for this chapter.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C154-THINGS154-04, ML-LEX-C154-THINGS154-02, ML-LEX-C154-THINGS154-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: *tolī*]
-- [YOU SAY: *tolī*, once more]
-- [YOU SAY: say *tolī*]
-- [YOU RECALL: say the Malayalam for a knee, then the Malayalam for a tongue, then say *tolī* again]
+- [YOU SAY: *toli*]
+- [YOU SAY: *toli*, once more]
+- [YOU SAY: say *toli*]
+- [YOU RECALL: say the Malayalam for a knee, then the Malayalam for a tongue, then say *toli* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C154-THINGS154-04, ML-LEX-C154-THINGS154-02, ML-LEX-C154-THINGS154-03] -->

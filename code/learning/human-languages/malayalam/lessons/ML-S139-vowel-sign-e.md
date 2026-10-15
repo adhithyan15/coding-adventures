@@ -48,7 +48,7 @@ It is a **vowel sign**. It is not a letter and never stands alone: it attaches t
 You have been reading this one since the first chapter without being told its
 name.
 
-- **അതെ** *athe* — yes
+- **അതെ** *ate* — yes
 - **എന്റെ** *enṟe* — my
 
 It is the short partner of **◌േ**, the long sign in **പേര്**. Both stand

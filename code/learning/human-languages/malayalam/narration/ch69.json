@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8fc526403767ff21",
+  "sourceHash": "fnv1a64:99fdc4d387c92ad6",
   "lessons": [
     {
       "id": "ML-C69-words",
@@ -669,9 +669,9 @@
     {
       "id": "ML-R69-script-recall-first-nine",
       "sequence": 2381,
-      "title": "(ക ര ന മ ത ഴ ് ി ാ) (onnaam onpath) — nine, and three kinds of thing",
+      "title": "(ക ര ന മ ത ഴ ് ി ാ) (onnāṁ ompatŭ) — nine, and three kinds of thing",
       "headword": "(ക ര ന മ ത ഴ ് ി ാ)",
-      "romanization": "onnaam onpath",
+      "romanization": "onnāṁ ompatŭ",
       "gloss": "cold retrieval of the first nine pieces this book taught one per chapter, sorted into letters, a killer, and two hangers",
       "script": "malayalam",
       "modality": "sight",
@@ -681,7 +681,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b572b35d3fb39f70",
+      "sourceHash": "fnv1a64:42cc78fa2c451fd0",
       "notice": {
         "modality": "sight",
         "needs": [

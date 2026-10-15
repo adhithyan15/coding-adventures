@@ -11,7 +11,7 @@ romanization: "muttaśśi"
 concept_tag: ML-NOUN-GRANDMOTHER
 prerequisites: [ML-C45-grandfather]
 sounds: []
-roots: [dravidian-mutu-old, dravidian-accan-father]
+roots: [dravidian-mutu-old, prakrit-ajja]
 etymology_hook: "muttaśśi: native mutt- 'old' (DEDR 4954) + acci 'mother', probably Prakrit ajja (DEDR 50, CDIAL 1347)"
 duration:
   max_seconds: 210

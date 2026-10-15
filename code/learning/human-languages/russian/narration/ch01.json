@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and courtesy",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0a249068986e3173",
+  "sourceHash": "fnv1a64:058b5fcd08a5e035",
   "lessons": [
     {
       "id": "RU-C01-privet",
@@ -565,7 +565,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f836f8a853128c31",
+      "sourceHash": "fnv1a64:81fa3deeac9bfa47",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -644,7 +644,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "нет (nyet) is a compression of a whole clause. It comes from не + (ye)st' — \"not is\", i.e. \"there is not.\""
+              "text": "нет (nyet) is a compression of a whole clause. Vasmer traces it to older ne je tu, \"not is here.\""
             },
             {
               "kind": "speech",
@@ -652,11 +652,15 @@
             },
             {
               "kind": "speech",
-              "text": "yest' — \"is / there is\" (its ancestor is the same verb as English is)."
+              "text": "je — an old \"is\", the verb of English is."
             },
             {
               "kind": "speech",
-              "text": "So Russian's \"no\" is really \"not-is\" — a denial of existence, worn down to a single syllable. (Its longer form nyétu, \"there isn't any,\" still shows the seam.)"
+              "text": "tu — \"here\", as in tut."
+            },
+            {
+              "kind": "speech",
+              "text": "So Russian's \"no\" is \"not-is-here\", worn down to one syllable. (Its longer form nyétu, \"there isn't any,\" still shows the seam.)"
             },
             {
               "kind": "speech",
@@ -745,7 +749,7 @@
             },
             {
               "kind": "speech",
-              "text": "What clause is it worn down from? (не + yest', \"not is.\") What does н sound like — and what does it look like? (Says n, looks like Latin H.) Name two English cousins of не. (no, not, never, none, nay…)"
+              "text": "What clause is it worn down from? (Older ne je tu, \"not is here.\") What does н sound like — and what does it look like? (Says n, looks like Latin H.) Name two English cousins of не. (no, not, never, none, nay…)"
             }
           ]
         }

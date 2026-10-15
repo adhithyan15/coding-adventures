@@ -1878,9 +1878,14 @@ pub struct LayoutedVennCircle {
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedVennLabel { pub text: String, pub x: f64, pub y: f64, pub style: VennStyle }
 #[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedVennDebugCircle { pub cx: f64, pub cy: f64, pub radius: f64 }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedVennDebugCell { pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
+#[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedVennDiagram {
     pub width: f64, pub height: f64, pub title: Option<String>, pub config: VennConfig,
     pub circles: Vec<LayoutedVennCircle>, pub labels: Vec<LayoutedVennLabel>,
+    pub debug_circles: Vec<LayoutedVennDebugCircle>, pub debug_cells: Vec<LayoutedVennDebugCell>,
 }
 
 // CAUSAL FAMILY

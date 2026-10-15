@@ -6,8 +6,8 @@
 //! resolves the canvas size (from an explicit `width`/`height` or from the
 //! bounding box of all elements) and passes elements through unchanged.
 
-use std::collections::HashMap;
-use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
+use std::collections::{HashMap, HashSet};
+use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDebugCell, LayoutedVennDebugCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
 
 pub const VERSION: &str = "0.2.0";
 
@@ -94,7 +94,49 @@ fn layout_venn_supported(diagram: &VennDiagram) -> LayoutedVennDiagram {
             labels.push(LayoutedVennLabel { text: text.label.clone().unwrap_or_else(|| text.id.clone()), x, y: y + 20.0, style: text.style.clone() });
         }
     }
-    LayoutedVennDiagram { width, height, title: diagram.title.clone(), config: diagram.config.clone(), circles, labels }
+    let (debug_circles, debug_cells) = if diagram.config.use_debug_layout {
+        venn_debug_geometry(diagram, &circles, &centers)
+    } else { (Vec::new(), Vec::new()) };
+    LayoutedVennDiagram { width, height, title: diagram.title.clone(), config: diagram.config.clone(), circles, labels,
+        debug_circles, debug_cells }
+}
+
+fn venn_debug_geometry(diagram: &VennDiagram, circles: &[LayoutedVennCircle], centers: &HashMap<&str, (f64, f64)>)
+    -> (Vec<LayoutedVennDebugCircle>, Vec<LayoutedVennDebugCell>) {
+    let scale = diagram.config.width / 1600.0;
+    let mut seen = HashSet::new();
+    let mut debug_circles = Vec::new();
+    let mut debug_cells = Vec::new();
+    for text in &diagram.texts {
+        let key = text.sets.join("\0");
+        if !seen.insert(key) { continue; }
+        let Some((cx, cy)) = centroid(&text.sets, centers) else { continue; };
+        let area_circles: Vec<_> = text.sets.iter().filter_map(|id| circles.iter().find(|circle| circle.id == *id)).collect();
+        let min_radius = area_circles.iter().map(|circle| circle.radius).fold(f64::INFINITY, f64::min);
+        let mut inner_radius = area_circles.iter().map(|circle| {
+            circle.radius - (cx - circle.cx).hypot(cy - circle.cy)
+        }).fold(f64::INFINITY, f64::min).max(0.0);
+        if inner_radius == 0.0 && min_radius.is_finite() { inner_radius = min_radius * 0.6; }
+        debug_circles.push(LayoutedVennDebugCircle { cx, cy, radius: inner_radius });
+        let count = diagram.texts.iter().filter(|node| node.sets == text.sets).count();
+        let cols = (count as f64).sqrt().ceil().max(1.0) as usize;
+        let rows = count.div_ceil(cols).max(1);
+        let inner_width = (80.0 * scale).max(inner_radius * 1.9);
+        let inner_height = (60.0 * scale).max(inner_radius * 1.9);
+        let has_label = diagram.regions.iter().any(|region| region.sets == text.sets
+            && region.label.as_ref().is_some_and(|label| !label.is_empty()));
+        let label_offset = if has_label { (32.0 * scale).min(inner_radius * 0.25) } else { 0.0 }
+            + if count <= 2 { 30.0 * scale } else { 0.0 };
+        let cell_width = inner_width / cols as f64;
+        let cell_height = inner_height / rows as f64;
+        let start_x = cx - inner_width / 2.0;
+        let start_y = cy - inner_height / 2.0 + label_offset;
+        for index in 0..count {
+            debug_cells.push(LayoutedVennDebugCell { x: start_x + cell_width * (index % cols) as f64,
+                y: start_y + cell_height * (index / cols) as f64, width: cell_width, height: cell_height });
+        }
+    }
+    (debug_circles, debug_cells)
 }
 
 fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64, f64)> {
@@ -438,6 +480,26 @@ mod tests {
         assert!(first.circles.iter().all(|circle| circle.cx - circle.radius >= 20.0
             && circle.cx + circle.radius <= 580.0 && circle.cy - circle.radius >= 20.0
             && circle.cy + circle.radius <= 340.0));
+    }
+
+    #[test]
+    fn venn_debug_layout_resolves_text_area_circles_and_grid_cells() {
+        let diagram = VennDiagram { title: None,
+            config: diagram_ir::VennConfig { width: 800.0, height: 450.0, use_debug_layout: true, ..Default::default() },
+            regions: vec![
+                VennRegion { sets: vec!["A".into()], size: 20.0, label: Some("Alpha".into()), style: VennStyle::default() },
+                VennRegion { sets: vec!["B".into()], size: 18.0, label: None, style: VennStyle::default() },
+            ],
+            texts: vec![
+                diagram_ir::VennText { sets: vec!["A".into()], id: "one".into(), label: None, style: Default::default() },
+                diagram_ir::VennText { sets: vec!["A".into()], id: "two".into(), label: None, style: Default::default() },
+            ] };
+        let layout = layout_venn(&diagram);
+        assert_eq!(layout.debug_circles.len(), 1);
+        assert_eq!(layout.debug_cells.len(), 2);
+        assert!(layout.debug_circles[0].radius > 0.0);
+        assert_eq!(layout.debug_cells[0].width, layout.debug_cells[1].width);
+        assert!(layout.debug_cells[0].x < layout.debug_cells[1].x);
     }
 
     #[test]

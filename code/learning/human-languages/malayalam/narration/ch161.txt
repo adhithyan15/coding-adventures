@@ -141,7 +141,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Malayalam for a banana plant, then the Malayalam for jasmine.
 [pause 1 second]
-Maṇi: a bell, or an hour? (Both; Tamil dictionaries treat them as two look-alike words.)
+Maṇi: a bell, or an hour? (Both: the hour is named after the bell that strikes it.)
 
 You'll want to know: താമര.
 താമര — tāmara — "a lotus".

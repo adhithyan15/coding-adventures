@@ -10,7 +10,7 @@ gloss: pill or tablet
 concept_tag: ES-HEALTH-PASTILLA
 prerequisites: [ES-C408-doctor]
 sounds: [stress-penultimate, ll-y]
-roots: [pasta-spanish, diminutive-illa]
+roots: [pastillus-latin]
 etymology_hook: "pastilla ← Latin pastillus 'a little loaf, a lozenge'; it only looks like pasta + -illa"
 duration:
   max_seconds: 220
@@ -60,5 +60,5 @@ pill or tablet, not pasta to eat.
 
 [PAUSE 3s] Pill or tablet? (*La pastilla*.)
 
-Sources: [DLE: pastilla](https://dle.rae.es/pastilla); [RAE, derivation and
-composition: *pastilla* from *pasta*](https://webfrl.rae.es/BRAE_DB_PDF/TOMO_V/XXIII/Alemany_333_349.pdf).
+Sources: EtymDB 2.1 (Fourrier & Sagot 2020), *pastilla* ← Latin *pastillus*;
+Lewis & Short, *pastillus*, a diminutive of *pānis*.

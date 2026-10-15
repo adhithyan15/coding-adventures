@@ -113,11 +113,11 @@ You'll want to know: one word, both jobs.
 perché — why? (asking) and because (answering).
 The same word, spelled the same way, does both:
 — Perché non prendi il caffè? — Why aren't you having the coffee? — Perché non mi piace. — Because I don't like it.
-That exchange is the point of the lesson: question and answer open with the identical word, and an Italian hears no oddity in it. Spanish splits them — ¿por qué? asking, porque answering — and Italian asks you to remember nothing.
+Question and answer open with the identical word, and an Italian hears no oddity in it. Spanish splits them — ¿por qué? asking, porque answering — and Italian asks you to remember nothing.
 This book has spent its whole length explaining why Italian words are shaped as they are, and until this line it had no way to let you say because.
 
 The word, taken apart: for + what.
-Perché is per + ché, both inherited from Latin (EtymDB 2.1). Per, "for, through", is the per of English per cent. Ché is the che of the last chapter, from quid, wearing an accent because it now carries the stress at the end.
+Perché is per + ché, both inherited from Latin (EtymDB 2.1). Per, "for, through", is the per of English per cent. Ché is the che of the last chapter, usually traced to Latin quid, "what".
 So perché is literally "for what" — which is how a question about a reason becomes a statement of one. English does the same with another preposition: what for?
 The accent is acute (é) rather than grave (è), and it is compulsory: the stress falls at the end, per-KEH, and Italian marks a final-stressed vowel in writing, as it does on caffè and lunedì.
 
