@@ -1,17 +1,20 @@
 # algol-iir-compiler
 
-The bounded outer-`entier` proof accepts cumulative offsets of at most ten
-absolute units around one unshadowed direct `sign` call, including supported
-unary `abs`/`entier` wrappers. New offsets use canonical literal values 0..10;
-wrappers never reset the checked budget. The legacy one-unit proof is retained
-at entry. One conditional front checks each branch independently. Exact
-read-once Real name identity lowering and alias/effect invalidation remain;
-the shared `exp`/`ln` classifier stays narrower. General folding, recursive
-conditional and arbitrary-function composition require separate proofs.
+The bounded outer-`entier` proof admits at most eleven cumulative absolute
+canonical literal units around one unshadowed direct `sign` root, bounded within
+[-12,12]. Parentheses/unary/abs/entier never reset the budget; conditional arms
+prove it independently. The legacy entry, shared exp/log/folding, exact read-once,
+pre/post effect/alias and8192 discovery guards remain unchanged. General floating
+folding and arbitrary wrapper composition are outside this dedicated proof.
 
-Source `f9494966` passed 1,814 tests over 78 targets, with 1 unchanged ignore, plus strict all-target lint. Compiler 881 and full unfiltered LANG 498 passed.
-Independent source and terminal reviews passed. Hosted CI remains pending;
-final-source Miri is **DEFERRED/PENDING**, never passed.
+Actual source `f630e6ad` passed 2,765 tests across 120 targets, zero failures,
+one unchanged parent-only archive ignore, and strict all-target Clippy for all
+20 affected packages. Compiler884 and full unfiltered LANG500 passed. Focused
+runtime has 116 sources/696 actual cells on six available backends; all636 old
+tuples and106 old sources stay exact. CLR is unavailable and uncounted.
+Source/native-focused review19fd3975 and style-focused76b54bb9 passed; independent
+full terminal review is pending. Hosted checks and publication remain separate.
+Final-source Miri **DEFERRED/PENDING**, never passed.
 
 Rust frontend for compiling a conservative ALGOL 60 scalar subset into the
 shared LANG VM `interpreter_ir::IIRModule`.

@@ -3,42 +3,50 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a Venn config integration checkpoint -->
-Sole published PR17288 head8d73f88f remains unmerged/autoOFF. Live main0e703237
-adds Venn cascade1014bb86, eleven-unit ALGOL c08387e8 and Sanskrit content;
-PR is CONFLICTING. New incoming changes have not been imported/accepted.
-Actual macOS job116532526128 fails the portable bootstrap fixture's unresolved
-temporary path (/var versus /private/var), before real toolchain probes. Raw
-log SHA2567bf5f038b375d4b4ac0183d55cf0b504b38bb9a8b0c175b0b95d9e236f157f7e.
-All required native/hosted gates remain mandatory; no auto-merge acceptance.
+Local source f630e6ad reconciles0e main through whole225568-entry closed proof:
+49incoming paths,42pure/seven reconstructions, entire owned compiler prefix
+retained except four dedicated canonical11-unit edits after actual tests-first
+reds. Shared folded-f64/exp/log/effect/alias/pre/post/resource guards exact.
 
-Local Venn debug/default source58a7862f has actual full14-package acceptance:
-943 passed/0 failed/0 ignored across41 targets; strict all-target Clippy0.
-Focused parser18/paint9/geometry15 pass.176 complete scene/query cases retain
-104 old oracles through a checked reversible adapter plus56typed/16source.
-Tests-first26506686 reproduced NUL vector collision,188 visits for8groups and
-forged debugNaN admission.74bc2b0d repairs structural ordered grouping/indexes
-and extends only checked debug result fields. Actual work8/32/128 remains
-bounded without new production limits. Raw/schema failures and both adapter
-mistakes have immutable receipts and lessons. Source/terminal review pending;
-no publication or broad visual/parity claim from local tests.
+Actual source `f630e6ad` passed 2,765 tests across 120 targets, zero failures,
+one unchanged parent-only archive ignore, and strict all-target Clippy for all
+20 affected packages. Compiler884 and full unfiltered LANG500 passed. Focused
+runtime has 116 sources/696 actual cells on six available backends; all636 old
+tuples and106 old sources stay exact. CLR is unavailable and uncounted.
+Source/native-focused review19fd3975 and style-focused76b54bb9 passed; independent
+full terminal review is pending. Hosted checks and publication remain separate.
+Final-source Miri **DEFERRED/PENDING**, never passed.
 
-Full receipt CV04a-venn-debug-delivery-58a7862f-validation.json: strict log
-4b4deb1afc35e65a51d579ed5f58c7a572531c8710225c92b667a5a92fe7747c;
-test log2dca629ed457256b80ad70c3ffbc60cc422f168a2b9ebf82da206208bc3ef2db.
-Native166/2841 inputs retain f9494966 attribution except4namedMarkdown paths:
-actual1814/78/1unchangedignore+strict, compiler881, unfilteredLANG498,636
-runtime cells on6backends. Closure36/3705 exact316e7878; no new execution claim.
-Registry376 exact, only3style local version deltas vs published native10lock.
-Current validated source is local; remaining fixture/current-main reconciliation,
-docs, final independent review and fresh unforced plan precede same-PR delivery.
+Venn source58 debug/default repair has actual943/41/strict14 and independent
+review7b0ccafb. Current f630 adds12wholeIR and16wholeScene/query cascade cases,
+retaining176old complete cases:192total. Package inventories native166/2844,
+style50/802; registry376 exact, only three expected local versions changed.
+Current full receipt CV04a-cascade-eleven-delivery-f630e6ad-validation.json:
+strict1b231a1c0585df7b226427d4a26a04b333782023f1f326ff4b832dddaab58e52;
+tests5b5ea0e9731967b41f1bacb10d54e48085642d0599855ddc929b5551eeb52efa.
+Historical Closure36/3705 exact316e is input attribution, not new execution.
+External grammar/corpus attribution requires its own inventory, not package-only
+counts. Source/native-focused19fd3975 and style-focused76b54bb9 pass; terminal
+review pending. Previous failed raw/schema/adapter and numeric-proof runs retained.
 
-Final-source Miri **DEFERRED/PENDING, never passed**; frozen checkout/process/
-inputs/target/receipts untouched and unpolled, no duplicate or termination.
-Deliver implementation first, then genuine final-source Miri. Current exact-head
-conflict-free/review-clean terminal acceptable required CI gates auto-merge;
-actual fetched merge reachability precedes cleanup. Base ESTree canonical
-boundary/owned types/no new crates.io. Full Closure parity/output-byte-source/
-stable identities/pass-sweep/all transformation lineage OPEN; heartbeat ACTIVE.
+Live main6814c2ce adds four Venn style-validation paths, not yet imported.
+Incoming audit4c2351ea requires eager exact parse errors, reversible old12IR
+positive fixture split, all192valid scene/query cases retained, lexical-color
+limitations explicit and external corpus inputs accounted. Spec-first slice next.
+Actual published8d macOS fixture failure /var-/private repaired test-onlyd2:
+12portable tests/pinned Ruff0.15.20 pass, independentba137475; production helper/
+workflow319 exact. PATH Ruff0.16 inherited8diagnostics retainedfailed. Actual
+hosted Python3.10/C/GHC/hsc2hs/Cabal link acceptance still mandatory.
+
+Sole PR17288 remains published8d73f88f, conflicting/unmerged/autoOFF. Local work
+not published. Finish current-main reconciliation/docs/exact reviews/fresh unforced
+plan before same-PR push; require exact-head conflict-free/review-clean terminal
+acceptable required CI before auto-merge. Verify fetched merge reachability before
+cleanup. Miri **DEFERRED/PENDING**, never passed; frozen source/inputs/process/
+target/receipts untouched/unpolled, no duplicate/termination. Delivery first,
+genuine final-source Miri afterward. Full Closure parity/output-byte-source/
+stable IDs/pass-sweep/all transformation lineage OPEN; heartbeat ACTIVE. Base
+ESTree canonical boundary, own types, no new crates.io dependencies retained.
 <!-- /CV04a Venn config integration checkpoint -->
 
 <!-- CV04a pathwise pending checkpoint -->

@@ -18,3 +18,9 @@ Run the complete portable suite and Ruff, verify production helper/workflow
 byte-exact319dc1fe and refresh independent review. Actual hosted macOS Python3.10
 and real C/GHC/hsc2hs/Cabal linking remain required after publication. Local
 mock success is not macOS link acceptance. Miri DEFERRED/PENDING; full goal OPEN.
+
+Actual test-only d2d21e25 repair passed all12 portable tests after an observed
+lexical-parent-path red; exact pinned Python3.13 Ruff0.15.20 passes. Independent
+reviewba137475 confirms production helper/workflow unchanged319. PATH Ruff0.16
+failed8existing diagnostics, reproduced at319 and retained as failed evidence.
+Hosted macOS3.10 and actual linker probes remain pending; no CI waiver.

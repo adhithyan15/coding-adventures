@@ -78,3 +78,25 @@ required checks. Verify actual fetched merge reachability before cleanup.
 Base ESTree canonical serialized boundary, own types and no new crates.io
 dependencies remain owner decisions. Full Closure parity/output-byte-source/
 stable identities/pass-sweep/all transformation lineage OPEN; heartbeat ACTIVE.
+
+## Actual local terminal checkpoint
+
+Actual source `f630e6ad` passed 2,765 tests across 120 targets, zero failures,
+one unchanged parent-only archive ignore, and strict all-target Clippy for all
+20 affected packages. Compiler884 and full unfiltered LANG500 passed. Focused
+runtime has 116 sources/696 actual cells on six available backends; all636 old
+tuples and106 old sources stay exact. CLR is unavailable and uncounted.
+Source/native-focused review19fd3975 and style-focused76b54bb9 passed; independent
+full terminal review is pending. Hosted checks and publication remain separate.
+Final-source Miri **DEFERRED/PENDING**, never passed.
+
+Full receipt CV04a-cascade-eleven-delivery-f630e6ad-validation.json binds strict
+log1b231a1c and test log5b5ea0e9, whole compiler prefix/four dedicated edits,
+native166/2844 and style50/802 package-object inventories. Historical Closure
+36/3705 stays source-attributed316e, not newly executed. These package maps alone
+do not certify external grammar/corpus resources; the next reconciliation must
+explicitly inventory consumed external resources before transferring acceptance.
+
+New main6814c2ce (four paths, parent0e) adds Venn style hardening plus rgba corpus.
+Incoming review4c2351ea permits a bounded narrow parser reconstruction but
+withholds integration acceptance. Current full source excludes that commit.

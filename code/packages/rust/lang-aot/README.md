@@ -1,14 +1,18 @@
 # lang-aot
 
-Owned conditional-unit programs require exact stdout and normal exit,
-including markers proving the condition and chosen branch execute once.
-Six locally available backends executed all 106 owned sources (636 cells),
-including ten new ten-unit programs; the previous 96 sources and 576 cells
-remain exact. New branch markers are CL9/CR11; unavailable CLR is not counted.
-Source `f9494966` passed 1,814 tests over 78 targets, with 1 unchanged ignore, plus strict all-target lint. Compiler 881 and full unfiltered LANG 498 passed.
-Independent source and terminal reviews passed; hosted CI remains a separate gate.
-Final-source Miri remains **DEFERRED/PENDING**, never passed, under the
-user-authorized delivery-first sequencing.
+Owned conditional-unit programs assert exact stdout, normal exit and markers
+proving condition/selected-arm order and single evaluation. The eleven-unit
+group adds ten sources/60 actual cells, retaining all106 old sources/636 tuples.
+Its branch markers are CL10/CR12. Present tools returning no result fail.
+
+Actual source `f630e6ad` passed 2,765 tests across 120 targets, zero failures,
+one unchanged parent-only archive ignore, and strict all-target Clippy for all
+20 affected packages. Compiler884 and full unfiltered LANG500 passed. Focused
+runtime has 116 sources/696 actual cells on six available backends; all636 old
+tuples and106 old sources stay exact. CLR is unavailable and uncounted.
+Source/native-focused review19fd3975 and style-focused76b54bb9 passed; independent
+full terminal review is pending. Hosted checks and publication remain separate.
+Final-source Miri **DEFERRED/PENDING**, never passed.
 
 ALGOL runtime real output now includes values migrated through provenance-tracked
 scalar slots: a real procedure result with zero parameters, value-mode scalar
