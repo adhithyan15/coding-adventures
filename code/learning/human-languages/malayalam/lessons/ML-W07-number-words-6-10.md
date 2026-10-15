@@ -49,7 +49,7 @@ Together with the familiar chandrakkala, they begin and finish **ഏഴ്**, *�
 | **൬** | **ആറ്** | *āṟŭ* |
 | **൭** | **ഏഴ്** | *ēḻŭ* |
 | **൮** | **എട്ട്** | *eṭṭŭ* |
-| **൯** | **ഒമ്പത്** | *ombatŭ* |
+| **൯** | **ഒമ്പത്** | *ompatŭ* |
 | **൰** | **പത്ത്** | *pattŭ* |
 
 ## Writing — observe and trace

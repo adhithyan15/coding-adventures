@@ -6,7 +6,7 @@ sequence: 798
 chapter: 43
 type: grammar
 headword: vivimos
-gloss: "we live" — the first form in which -ir is not the same as -er
+gloss: '"we live" — the first form in which -ir is not the same as -er'
 concept_tag: ES-GRAMMAR-ER-IR-PRESENT-PLURAL
 prerequisites: [ES-C07-comemos]
 sounds: []

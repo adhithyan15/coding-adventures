@@ -6,7 +6,7 @@ sequence: 710
 chapter: 37
 type: word
 headword: dō, dare
-gloss: "I give" — the last of the chapter's eight verbs, and the one that gave English data, date, tradition and dose
+gloss: '"I give" — the last of the chapter''s eight verbs, and the one that gave English data, date, tradition and dose'
 concept_tag: VERB-GIVE
 prerequisites: [LA-C37-scio]
 sounds: [macron-long-vowel, macron-none-short-vowel]

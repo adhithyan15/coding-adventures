@@ -6,7 +6,7 @@ sequence: 470
 chapter: 23
 type: phrase
 headword: nihil est
-gloss: "you're welcome" — another honest gap: Classical Latin has no single fixed reply to thanks, and nihil est ("it's nothing") is a modern conversational-Latin convention built from genuinely real words, not a specific classical citation for this exact job
+gloss: '"you''re welcome" — another honest gap: Classical Latin has no single fixed reply to thanks, and nihil est ("it''s nothing") is a modern conversational-Latin convention built from genuinely real words, not a specific classical citation for this exact job'
 concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [LA-C01-gratias]
 sounds: [h-aspirated, nihil-two-syllables]

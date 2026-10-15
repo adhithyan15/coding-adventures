@@ -65,7 +65,7 @@ being long.
 
 The **ം** that ends വരും is an *m*. When a letter follows it, that *m* is
 written joined to what comes next — **മ്പ**, the same shape you already read in
-**ഒമ്പത്** (*ombatŭ*), "nine".
+**ഒമ്പത്** (*ompatŭ*), "nine".
 
 So the ending is not new material. It is a future form you have had since the
 tense lesson, with the time-piece from the last lesson stuck on the back.

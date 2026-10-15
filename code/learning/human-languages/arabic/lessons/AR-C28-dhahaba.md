@@ -6,7 +6,7 @@ sequence: 720
 chapter: 28
 type: word
 headword: ذهب
-gloss: "he went" — the track's first verb, and the clearest possible view of the root-and-pattern engine, since the same three consonants also give "gold" and "a school of law"
+gloss: '"he went" — the track''s first verb, and the clearest possible view of the root-and-pattern engine, since the same three consonants also give "gold" and "a school of law"'
 concept_tag: VERB-GO
 romanization: dhahaba
 prerequisites: [AR-C27-tusbih-ala-khayr]

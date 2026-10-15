@@ -6,7 +6,7 @@ sequence: 530
 chapter: 29
 type: word
 headword: nox
-gloss: "night" — the word already hiding inside media nox ('midnight'), one of the most rock-solid PIE roots in the whole Indo-European family
+gloss: '"night" — the word already hiding inside media nox (''midnight''), one of the most rock-solid PIE roots in the whole Indo-European family'
 concept_tag: TIME-NIGHT
 prerequisites: [LA-C12-medius-dies-nox, LA-C28-dies]
 sounds: [macron-none-short-vowel, x-ks-sound]

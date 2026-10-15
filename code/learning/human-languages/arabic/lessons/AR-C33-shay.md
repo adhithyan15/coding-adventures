@@ -6,7 +6,7 @@ sequence: 860
 chapter: 33
 type: word
 headword: شاي
-gloss: "tea" — the first noun in this book with no Arabic root at all, and a word that reached Arabic and English from the same Chinese original by two different roads
+gloss: '"tea" — the first noun in this book with no Arabic root at all, and a word that reached Arabic and English from the same Chinese original by two different roads'
 concept_tag: AR-DRINK-TEA
 romanization: shāy
 prerequisites: [AR-C32-ahabba]

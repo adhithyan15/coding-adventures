@@ -6,7 +6,7 @@ sequence: 760
 chapter: 30
 type: word
 headword: عرف
-gloss: "he knew, he recognised" — one of Arabic's two words for knowing, whose root reached Spain and named a palace in Granada
+gloss: '"he knew, he recognised" — one of Arabic''s two words for knowing, whose root reached Spain and named a palace in Granada'
 concept_tag: VERB-KNOW
 romanization: ʿarafa
 prerequisites: [AR-C29-raa]

@@ -6,7 +6,7 @@ sequence: 960
 chapter: 35
 type: word
 headword: صديق
-gloss: "friend" — the chapter's payoff, where a root meaning truth explains the word, the faʿīl pattern turns up for the third time, and every family word you own lines up behind it
+gloss: '"friend" — the chapter''s payoff, where a root meaning truth explains the word, the faʿīl pattern turns up for the third time, and every family word you own lines up behind it'
 concept_tag: AR-PERSON-FRIEND
 romanization: ṣadīq
 prerequisites: [AR-C35-ibn-bint, AR-C04-al-salama]

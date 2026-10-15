@@ -6,7 +6,7 @@ sequence: 1130
 chapter: 37
 type: phrase
 headword: இவர் என் நண்பர்
-gloss: "this is my friend" — three words, no verb, and a choice of ending that says how you regard them
+gloss: '"this is my friend" — three words, no verb, and a choice of ending that says how you regard them'
 romanization: ivar eṉ naṇbar
 concept_tag: TA-INTRODUCE-A-THIRD-PERSON
 prerequisites: [TA-C37-ivar]

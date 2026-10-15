@@ -6,7 +6,7 @@ sequence: 850
 chapter: 41
 type: word
 headword: currō, currere
-gloss: "I run" — the verb inside current, curriculum, courier and corridor, and, by way of a Celtic wagon, inside car
+gloss: '"I run" — the verb inside current, curriculum, courier and corridor, and, by way of a Celtic wagon, inside car'
 concept_tag: VERB-RUN
 prerequisites: [LA-C41-ambulo, LA-C37-venio]
 sounds: [macron-none-short-vowel, c-as-k]

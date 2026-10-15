@@ -6,7 +6,7 @@ sequence: 310
 chapter: 5
 type: phrase
 headword: Parlo italiano
-gloss: "I speak Italian" — your first full sentence (italiano = Italian)
+gloss: '"I speak Italian" — your first full sentence (italiano = Italian)'
 concept_tag: IT-WORD-ITALIANO
 prerequisites: [IT-C05-parlare]
 sounds: [ia-glide, vowel-a-open]

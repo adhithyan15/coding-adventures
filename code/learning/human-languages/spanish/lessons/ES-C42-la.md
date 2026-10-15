@@ -6,7 +6,7 @@ sequence: 1217
 chapter: 84
 type: word
 headword: la
-gloss: "it" for something feminine — the one word in this pair that never had to change
+gloss: '"it" for something feminine — the one word in this pair that never had to change'
 concept_tag: ES-PRONOUN-LA
 prerequisites: [ES-C42-lo, ES-C12-hacer]
 sounds: []

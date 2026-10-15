@@ -6,7 +6,7 @@ sequence: 952
 chapter: 50
 type: grammar
 headword: somos
-gloss: "we are" — from a different Latin verb than soy, and that is why it looks nothing like it
+gloss: '"we are" — from a different Latin verb than soy, and that is why it looks nothing like it'
 concept_tag: ES-GRAMMAR-SER-PRESENT-PLURAL
 prerequisites: [ES-C09-ser, ES-C07-hablamos]
 sounds: []

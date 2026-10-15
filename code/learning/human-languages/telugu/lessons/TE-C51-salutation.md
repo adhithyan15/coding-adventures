@@ -6,7 +6,7 @@ sequence: 1420
 chapter: 51
 type: word
 headword: "దండం"
-gloss: "a salutation, "my respects""
+gloss: 'a salutation, "my respects"'
 romanization: "daṇḍaṁ"
 concept_tag: TE-NOUN-SALUTATION
 prerequisites: [TE-C51-blessing]

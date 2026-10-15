@@ -6,7 +6,7 @@ sequence: 700
 chapter: 37
 type: word
 headword: sciō, scīre
-gloss: "I know" — one of Latin's two verbs for knowing, and the one that gave English science and nice
+gloss: '"I know" — one of Latin''s two verbs for knowing, and the one that gave English science and nice'
 concept_tag: VERB-KNOW
 prerequisites: [LA-C37-video]
 sounds: [macron-long-vowel, c-as-k]

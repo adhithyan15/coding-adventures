@@ -6,7 +6,7 @@ sequence: 570
 chapter: 28
 type: word
 headword: ಅಪರಾಹ್ನ
-gloss: "afternoon" (aparāhna) — a genuine Sanskrit tatsama distinct from ಮಧ್ಯಾಹ್ನ/madhyāhna ("noon"), sharing its "-ahna" ("day") suffix; apara ("latter") vs madhya ("middle"), the same clean structure applied to two different day-parts
+gloss: '"afternoon" (aparāhna) — a genuine Sanskrit tatsama distinct from ಮಧ್ಯಾಹ್ನ/madhyāhna ("noon"), sharing its "-ahna" ("day") suffix; apara ("latter") vs madhya ("middle"), the same clean structure applied to two different day-parts'
 romanization: "aparāhna"
 concept_tag: TIME-AFTERNOON
 prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C21-naayi-bekku]

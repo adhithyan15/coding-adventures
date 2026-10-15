@@ -6,7 +6,7 @@ sequence: 810
 chapter: 45
 type: grammar
 headword: comen · viven
-gloss: "they eat," "they live" — and the families agree again
+gloss: '"they eat," "they live" — and the families agree again'
 concept_tag: ES-GRAMMAR-ER-IR-PRESENT-PLURAL
 prerequisites: [ES-C07-comeis-vivis]
 sounds: []

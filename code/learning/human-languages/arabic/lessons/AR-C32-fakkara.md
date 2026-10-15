@@ -6,7 +6,7 @@ sequence: 830
 chapter: 32
 type: word
 headword: فكّر
-gloss: "he thought" — the first verb that is not a bare root at all, but a root rebuilt by doubling its middle letter, and the mu- doer that comes with the rebuild
+gloss: '"he thought" — the first verb that is not a bare root at all, but a root rebuilt by doubling its middle letter, and the mu- doer that comes with the rebuild'
 concept_tag: VERB-THINK
 romanization: fakkara
 prerequisites: [AR-C32-akhadha]

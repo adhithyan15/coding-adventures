@@ -6,7 +6,7 @@ sequence: 519
 chapter: 17
 type: grammar
 headword: hablas
-gloss: "you speak" — the same verb, aimed at a friend
+gloss: '"you speak" — the same verb, aimed at a friend'
 concept_tag: ES-GRAMMAR-AR-PRESENT
 prerequisites: [ES-C06-pro-drop, ES-C03-tu-usted]
 sounds: []

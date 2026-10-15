@@ -6,7 +6,7 @@ sequence: 970
 chapter: 36
 type: word
 headword: زيت
-gloss: "oil" — one new letter that is only rā wearing a dot, and a second Spanish word carrying Arabic's article welded to its front
+gloss: '"oil" — one new letter that is only rā wearing a dot, and a second Spanish word carrying Arabic''s article welded to its front'
 concept_tag: AR-FOOD-OIL
 romanization: zayt
 prerequisites: [AR-C35-sadiq, AR-W08-kaf-and-ra]

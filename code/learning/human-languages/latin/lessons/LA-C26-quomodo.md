@@ -6,7 +6,7 @@ sequence: 500
 chapter: 26
 type: word
 headword: quōmodo
-gloss: "how, in what way" — the genuine classical word behind Italian come, Spanish cómo, and French comment, which went one step further and double-marked "manner"
+gloss: '"how, in what way" — the genuine classical word behind Italian come, Spanish cómo, and French comment, which went one step further and double-marked "manner"'
 concept_tag: QUESTION-HOW
 prerequisites: [LA-C19-valeo-family]
 sounds: [macron-long-vowel, qu-kw-sound]

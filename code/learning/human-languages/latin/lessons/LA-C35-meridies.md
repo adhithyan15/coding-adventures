@@ -6,7 +6,7 @@ sequence: 600
 chapter: 35
 type: word
 headword: merīdiēs
-gloss: "midday, noon" — the same medius diēs you already know, contracted into one word; Romans split the day around IT (ante/post merīdiem), not into a separate colloquial "afternoon" the way Spanish's tarde or French's après-midi do
+gloss: '"midday, noon" — the same medius diēs you already know, contracted into one word; Romans split the day around IT (ante/post merīdiem), not into a separate colloquial "afternoon" the way Spanish''s tarde or French''s après-midi do'
 concept_tag: TIME-AFTERNOON
 prerequisites: [LA-C12-medius-dies-nox, LA-C13-hora]
 sounds: [macron-long-vowel]

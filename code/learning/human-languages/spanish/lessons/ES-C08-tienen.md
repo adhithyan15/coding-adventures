@@ -6,7 +6,7 @@ sequence: 1048
 chapter: 67
 type: grammar
 headword: tienen
-gloss: "they have" — where the stress returns to the stem, and so does the break
+gloss: '"they have" — where the stress returns to the stem, and so does the break'
 concept_tag: ES-GRAMMAR-TENER-PRESENT-PLURAL
 prerequisites: [ES-C08-tenemos, ES-C07-comen-viven]
 sounds: []

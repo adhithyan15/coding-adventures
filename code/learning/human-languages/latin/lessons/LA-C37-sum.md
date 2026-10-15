@@ -6,7 +6,7 @@ sequence: 640
 chapter: 37
 type: word
 headword: sum, esse
-gloss: "I am" — the verb every sentence leans on, and the one whose forms English still shares outright
+gloss: '"I am" — the verb every sentence leans on, and the one whose forms English still shares outright'
 concept_tag: VERB-BE
 prerequisites: [LA-C19-valeo-family]
 sounds: [macron-long-vowel, macron-none-short-vowel]

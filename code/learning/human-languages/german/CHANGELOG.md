@@ -1,5 +1,9 @@
 # Changelog
 
+## Fixed — two glosses are valid YAML
+
+- GE-C03-es-geht and GE-C06-ein-eine had a `gloss:` that opened with a quoted English word and went on past the closing quote (`gloss: "day" — …`), which a strict YAML parser rejects. Each is now one single-quoted scalar, with an apostrophe written `''`. The wording is unchanged. The repository's reader returns the same text as before.
+
 ## Fixed — every taken-apart block now says where its word comes from
 
 Forty-three German word lessons had a "taken apart" block that set the word beside its English kin, or split a compound, without saying where the word came from in a shape the measure reads (human-language-data `hasEmptyEtymologyBlock`, HL24 §9.4). Source: EtymDB 2.1 (Fourrier & Sagot 2020, CC BY-SA 4.0), read locally; Kluge was not reachable, so a claim EtymDB does not hold is hedged or left as the track already gave it. Every line is our own sentence. Empty etymology blocks 43 → 0.

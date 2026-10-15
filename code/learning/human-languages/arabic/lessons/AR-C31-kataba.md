@@ -6,7 +6,7 @@ sequence: 810
 chapter: 31
 type: word
 headword: كتب
-gloss: "he wrote" — the chapter's payoff, where one root and the patterns you already own hand you a book, a writer, an office and a library with nothing new to memorise
+gloss: '"he wrote" — the chapter''s payoff, where one root and the patterns you already own hand you a book, a writer, an office and a library with nothing new to memorise'
 concept_tag: VERB-WRITE
 romanization: kataba
 prerequisites: [AR-C31-saala]
