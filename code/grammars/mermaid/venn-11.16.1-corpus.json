@@ -12,7 +12,7 @@
     },
     {
       "name": "three-sets-and-styles",
-      "source": "venn-beta\nset A:20\nset B:18\nset C:16\nunion A,B,C[\"All\"]:2\nstyle A fill:#ff6b6b\nstyle A stroke:#991b1b\nstyle A,B color:#333\nstyle A,B fill-opacity:0.25"
+      "source": "venn-beta\nset A:20\nset B:18\nset C:16\nunion A,B,C[\"All\"]:2\nstyle A fill:rgba(255, 107, 107, 0.8)\nstyle A stroke:#991b1b\nstyle A,B color:#333\nstyle A,B fill-opacity:0.25"
     },
     {
       "name": "configured-canvas",
