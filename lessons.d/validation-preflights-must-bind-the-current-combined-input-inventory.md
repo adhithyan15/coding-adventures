@@ -56,3 +56,11 @@ heading's freshly computed digest. The existing reader checks strict basename
 form and heading structure, not that equality. Preserve the failed static audit
 and record both actual fingerprints; inspect the real checker contract before
 inventing a new admission requirement or rewriting pure incoming bytes.
+
+Parallel expected-red panic output can interleave formatted stderr fragments.
+The box-oracle migration preflight found only15 complete event lines although
+the new whole-scene test passed: another test panic split the first event.
+Preserve that actual failed preflight and the original3P/2F red log. Execute
+only the two new passing controls with one test thread to obtain an intact
+16-cell/5-height receipt before oracle migration; do not invent a missing event
+or weaken the exact event inventory. Production and oracle bytes stay fixed.
