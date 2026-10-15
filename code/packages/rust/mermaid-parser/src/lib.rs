@@ -5501,12 +5501,15 @@ fn venn_object_end(source: &str) -> Option<usize> {
     None
 }
 
-// Return the value after an actual quoted member key, skipping entire quoted
-// strings (including escapes) instead of searching inside their contents.
+// Return a direct member's value, skipping quoted strings and nested containers.
+// Both the init object and its selected Venn object use this boundary: a nested
+// lookalike must not supply an absent field or precede an authored direct field.
 fn venn_object_member<'a>(source: &'a str, key: &str) -> Option<&'a str> {
-    let bytes = source.as_bytes(); let mut i = 0;
+    let bytes = source.as_bytes(); let (mut i, mut depth) = (0, 0usize);
     while i < bytes.len() {
         let q = bytes[i];
+        if q == b'{' || q == b'[' { depth += 1; }
+        if q == b'}' || q == b']' { depth = depth.saturating_sub(1); }
         if q != b'\'' && q != b'"' { i += 1; continue; }
         let start = i; i += 1; let content = i;
         while i < bytes.len() && bytes[i] != q {
@@ -5514,7 +5517,7 @@ fn venn_object_member<'a>(source: &'a str, key: &str) -> Option<&'a str> {
             i += 1;
         }
         if i >= bytes.len() { return None; }
-        let is_key = source[content..i] == *key
+        let is_key = depth == 1 && source[content..i] == *key
             && source[..start].trim_end().ends_with(['{', ',']);
         i += 1;
         if is_key {
