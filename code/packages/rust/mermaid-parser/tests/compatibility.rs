@@ -1375,10 +1375,12 @@ fn venn_dispatches_to_dedicated_set_ir_and_validates_unions() {
     let styled = parse_venn("venn-beta\nset A\nstyle A fill:rgba(255, 0, 128, 0.5), stroke-width:3px").unwrap();
     assert_eq!(styled.regions[0].style.fill.as_deref(), Some("rgba(255, 0, 128, 0.5)"));
     assert_eq!(styled.regions[0].style.stroke_width, Some(3.0));
-    let configured = parse_venn("---\nconfig:\n  venn:\n    width: 640\n    height: 360\n    padding: 24\n    useMaxWidth: false\n    useDebugLayout: true\n---\nvenn-beta\nset A").unwrap();
+    let configured = parse_venn("---\nthemeVariables:\n  fontFamily: Georgia\n  vennTitleTextColor: '#123456'\n  vennSetTextColor: '#654321'\nconfig:\n  venn:\n    width: 640\n    height: 360\n    padding: 24\n    useMaxWidth: false\n    useDebugLayout: true\n---\nvenn-beta\nset A").unwrap();
     assert_eq!((configured.config.width, configured.config.height, configured.config.padding), (640.0, 360.0, 24.0));
     assert!(!configured.config.use_max_width);
     assert!(configured.config.use_debug_layout);
+    assert_eq!((&configured.config.font_family, &configured.config.title_text_color, &configured.config.set_text_color),
+        (&"Georgia".to_string(), &"#123456".to_string(), &"#654321".to_string()));
 }
 
 #[test]

@@ -736,6 +736,9 @@ unsupported at the partial level. Positive `width` and `height`, non-negative
 YAML front matter survive typed semantic IR. Canvas dimensions and padding
 control deterministic circle geometry, while every resolved setting remains
 available as backend-neutral PaintScene metadata.
+Venn-specific title and set text colors plus the global font family now resolve
+from `themeVariables`, survive typed config IR and layout, and drive portable
+title and region glyph runs. Per-region authored text colors retain precedence.
 
 ### Ishikawa Native Slice
 
