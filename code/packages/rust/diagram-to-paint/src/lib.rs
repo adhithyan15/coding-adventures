@@ -13212,6 +13212,7 @@ emphasized --> direct
     include!("venn_cascade_paint_contract.rs");
     include!("venn_rgba_paint_contract.rs");
     include!("venn_typography_contract.rs");
+    include!("ishikawa_theme_contract.rs");
 
     #[test]
     fn venn_theme_source_to_complete_scene_and_ordered_font_queries() {
