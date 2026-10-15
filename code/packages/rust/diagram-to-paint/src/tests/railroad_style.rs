@@ -33,6 +33,7 @@ fn railroad_style_retains_ordered_shapes_glyphs_and_complete_metadata() {
         assert_eq!(scene.metadata,Some(HashMap::from([
             ("railroad.padding".into(),padding.to_string()),("railroad.verticalSeparation".into(),"8".into()),
             ("railroad.horizontalSeparation".into(),"10".into()),("railroad.fontSize".into(),font_size.to_string()),
+            ("railroad.arcRadius".into(),"10".into()),
             ("railroad.fontFamily".into(),"Courier New".into()),("railroad.lineColor".into(),"#dc2626".into()),
             ("railroad.strokeWidth".into(),"3".into()),("railroad.markerFill".into(),"#7c2d12".into()),
             ("railroad.showMarkers".into(),markers.to_string()),("railroad.markerRadius".into(),"8".into()),

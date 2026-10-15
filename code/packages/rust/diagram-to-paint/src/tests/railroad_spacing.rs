@@ -63,6 +63,7 @@ fn railroad_source_dialects_keep_complete_ordered_glyphs_and_config_metadata() {
         assert_eq!(scene.metadata,Some(HashMap::from([
             ("railroad.padding".into(),padding.to_string()),("railroad.verticalSeparation".into(),"8".into()),
             ("railroad.horizontalSeparation".into(),"10".into()),
+            ("railroad.arcRadius".into(),"10".into()),
             ("railroad.fontSize".into(),"14".into()),("railroad.fontFamily".into(),"monospace".into()),
             ("railroad.lineColor".into(),"#000000".into()),("railroad.strokeWidth".into(),"2".into()),
             ("railroad.markerFill".into(),"#000000".into()),("railroad.showMarkers".into(),"true".into()),

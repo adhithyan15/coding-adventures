@@ -9459,6 +9459,7 @@ mod tests {
     mod subgraph_margin;
     mod railroad_spacing;
     mod railroad_style;
+    mod railroad_arc;
     use super::*;
     use diagram_ir::{
         DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, LayoutedGraphDiagram,
