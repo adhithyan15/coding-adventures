@@ -7702,10 +7702,44 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
         }
         Ok(parsed)
     };
+    let defaults = RailroadConfig::default();
+    let parse_bool = |name: &str, default: bool| -> Result<bool, ParseError> {
+        let Some(value) = value(name) else { return Ok(default); };
+        match value.to_ascii_lowercase().as_str() {
+            "true" => Ok(true),
+            "false" => Ok(false),
+            _ => Err(ParseError {
+                message: format!("Mermaid Railroad {name} must be true or false"), line: 1, col: 1,
+            }),
+        }
+    };
+    let string = |name: &str, default: &str| value(name).unwrap_or_else(|| default.to_string());
+    let font_size = parse("fontSize", defaults.font_size)?;
+    if font_size <= 0.0 {
+        return Err(ParseError {
+            message: "Mermaid Railroad fontSize must be a positive number".into(), line: 1, col: 1,
+        });
+    }
     Ok(RailroadConfig {
         padding: parse("padding", 10.0)?,
         vertical_separation: parse("verticalSeparation", 8.0)?,
         horizontal_separation: parse("horizontalSeparation", 10.0)?,
+        font_size,
+        font_family: string("fontFamily", &defaults.font_family),
+        terminal_fill: string("terminalFill", &defaults.terminal_fill),
+        terminal_stroke: string("terminalStroke", &defaults.terminal_stroke),
+        terminal_text_color: string("terminalTextColor", &defaults.terminal_text_color),
+        non_terminal_fill: string("nonTerminalFill", &defaults.non_terminal_fill),
+        non_terminal_stroke: string("nonTerminalStroke", &defaults.non_terminal_stroke),
+        non_terminal_text_color: string("nonTerminalTextColor", &defaults.non_terminal_text_color),
+        line_color: string("lineColor", &defaults.line_color),
+        stroke_width: parse("strokeWidth", defaults.stroke_width)?,
+        marker_fill: string("markerFill", &defaults.marker_fill),
+        special_fill: string("specialFill", &defaults.special_fill),
+        special_stroke: string("specialStroke", &defaults.special_stroke),
+        rule_name_color: string("ruleNameColor", &defaults.rule_name_color),
+        show_markers: parse_bool("showMarkers", defaults.show_markers)?,
+        marker_radius: parse("markerRadius", defaults.marker_radius)?,
     })
 }
 

@@ -4380,7 +4380,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_railroad_to_png() {
-        let diagram = parse_railroad("---\nconfig:\n  railroad:\n    padding: 24\n    verticalSeparation: 30\n    horizontalSeparation: 36\n---\nrailroad-beta\ntitle Numeric literal\naccTitle: Numeric grammar\nsign = optional(terminal(\"-\"));\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = sequence(nonterminal(\"sign\"), oneOrMore(nonterminal(\"digit\")), special(\"integer\"));").expect("railroad parse failed");
+        let diagram = parse_railroad("---\nconfig:\n  railroad:\n    padding: 24\n    verticalSeparation: 30\n    horizontalSeparation: 36\n    fontSize: 18\n    fontFamily: Courier New\n    terminalFill: '#dcfce7'\n    terminalStroke: '#166534'\n    terminalTextColor: '#14532d'\n    nonTerminalFill: '#dbeafe'\n    nonTerminalStroke: '#1d4ed8'\n    nonTerminalTextColor: '#172554'\n    lineColor: '#dc2626'\n    strokeWidth: 3\n    markerFill: '#7c2d12'\n    specialFill: '#fef3c7'\n    specialStroke: '#b45309'\n    ruleNameColor: '#581c87'\n    showMarkers: true\n    markerRadius: 8\n---\nrailroad-beta\ntitle Numeric literal\naccTitle: Numeric grammar\nsign = optional(terminal(\"-\"));\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = sequence(nonterminal(\"sign\"), oneOrMore(nonterminal(\"digit\")), special(\"integer\"));").expect("railroad parse failed");
         let layout = layout_railroad(&diagram);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_railroad(&layout, &DiagramToPaintOptions {
@@ -4392,8 +4392,20 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.padding")), Some(&"24".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.verticalSeparation")), Some(&"30".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.horizontalSeparation")), Some(&"36".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.fontFamily")), Some(&"Courier New".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.strokeWidth")), Some(&"3".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.markerRadius")), Some(&"8".to_string()));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#dc2626") && path.stroke_width == Some(3.0))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(marker) if marker.fill.as_deref() == Some("#7c2d12") && marker.rx == 8.0)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dcfce7") && rect.stroke.as_deref() == Some("#166534"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 18.0
+                && run.fill.as_deref() == Some("rgb(20, 83, 45)"))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_railroad_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }

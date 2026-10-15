@@ -864,9 +864,14 @@ from Mermaid init directives or YAML front matter survive typed semantic IR.
 Layout applies them to outer bounds, rule and branch separation, and sequential
 element spacing and content boxes before PaintScene lowering; the resolved values remain
 available as backend-neutral scene metadata.
+Explicit Railroad font family and size; terminal, non-terminal, special,
+connection, marker, and rule-name colors; stroke width; and marker visibility
+and radius follow the same typed semantic and layout path. Font size participates
+in element measurement, while PaintScene emits the resolved portable geometry,
+glyph runs, strokes, fills, and marker ellipses without backend-specific CSS.
 
 This is intentionally partial. Upstream curve geometry, theme/config
-overrides beyond the documented spacing fields, and exact typography remain
+fallbacks, comment styling, compact mode, and exact typography remain
 unsupported rather than being counted as compatible.
 
 ### Info Full Compatibility
