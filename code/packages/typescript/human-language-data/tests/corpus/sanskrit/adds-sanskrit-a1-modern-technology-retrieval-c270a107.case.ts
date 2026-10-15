@@ -48,19 +48,25 @@ it("retrieves the two existing Sanskrit A1 modern-technology nouns twice", () =>
   }
 
   for (const lesson of chapterLessons) {
-    const responseBlock = lesson?.blocks.find((block) =>
+    const responseIndex = lesson?.blocks.findIndex((block) =>
       block.markdown.includes("No Sanskrit model is shown before you answer"),
-    );
-    const checkBlock = lesson?.blocks.find((block) =>
+    ) ?? -1;
+    const checkIndex = lesson?.blocks.findIndex((block) =>
       block.markdown.includes("Now check:"),
-    );
-    expect(responseBlock).toBeDefined();
-    expect(checkBlock).toBeDefined();
+    ) ?? -1;
+    expect(responseIndex).toBeGreaterThanOrEqual(0);
+    expect(checkIndex).toBeGreaterThan(responseIndex);
+    const responseBlock = lesson?.blocks[responseIndex];
+    const checkBlock = lesson?.blocks[checkIndex];
     expect(responseBlock?.markdown).toContain("[PAUSE 8s]");
     expect(responseBlock?.markdown.indexOf("Say the Sanskrit")).toBeLessThan(
       responseBlock?.markdown.indexOf("[PAUSE 8s]") ?? -1,
     );
-    expect(responseBlock?.markdown).not.toMatch(
+    const authoredPrefix = lesson?.blocks
+      .slice(0, checkIndex)
+      .map((block) => block.markdown)
+      .join(" ") ?? "";
+    expect(authoredPrefix).not.toMatch(
       /संगणकम्|अन्तर्जालम्|saṅgaṇakam|antarjālam/u,
     );
     expect(checkBlock?.markdown).toContain("संगणकम्");
@@ -84,8 +90,14 @@ it("retrieves the two existing Sanskrit A1 modern-technology nouns twice", () =>
   };
   for (const id of ids) {
     const spoken = narration.lessons.find((lesson) => lesson.id === id);
-    const guided = spoken?.blocks.find((block) => block.type === "guided-production");
-    const check = spoken?.blocks.find((block) => block.type === "notice");
+    const guidedIndex = spoken?.blocks.findIndex(
+      (block) => block.type === "guided-production",
+    ) ?? -1;
+    const checkIndex = spoken?.blocks.findIndex((block) => block.type === "notice") ?? -1;
+    expect(guidedIndex).toBeGreaterThanOrEqual(0);
+    expect(checkIndex).toBeGreaterThan(guidedIndex);
+    const guided = spoken?.blocks[guidedIndex];
+    const check = spoken?.blocks[checkIndex];
     expect(guided?.segments.map((segment) => segment.kind)).toEqual([
       "speech",
       "speech",
@@ -93,7 +105,12 @@ it("retrieves the two existing Sanskrit A1 modern-technology nouns twice", () =>
     ]);
     expect(guided?.segments[1]?.text).toContain("Say the Sanskrit");
     expect(guided?.segments[2]).toMatchObject({ kind: "pause", seconds: 8 });
-    expect(guided?.segments.map((segment) => segment.text ?? "").join(" ")).not.toMatch(
+    const spokenPrefix = spoken?.blocks
+      .slice(0, checkIndex)
+      .flatMap((block) => block.segments)
+      .map((segment) => segment.text ?? "")
+      .join(" ") ?? "";
+    expect(spokenPrefix).not.toMatch(
       /संगणकम्|अन्तर्जालम्|saṅgaṇakam|antarjālam/u,
     );
     expect(check?.segments[0]?.text).toMatch(/संगणकम्.*अन्तर्जालम्|अन्तर्जालम्.*संगणकम्/u);
