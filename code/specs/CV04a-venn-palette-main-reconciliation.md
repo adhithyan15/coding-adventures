@@ -30,6 +30,10 @@ Do not synthesize eight entries for an explicitly empty typed palette. Typed
 arbitrary palette lengths retain current linear traversal; no invented cap or
 whole-renderer resource/parity claim.
 
+Incoming independent auditcc936d0c accepts no later integration yet. Include
+typed palette lengths0/1/2/8/long, exact8+P metadata, and global circle ordinal
+despite authored fills; authored overrides do not shift later palette indices.
+
 Before any repair, commit executable controls for the complete eight-color cycle
 and wraparound, authored fills, per-index invalid fallback and header/nested/
 quoted decoys, plus typed empty palette. Exercise full source -> typed config ->
