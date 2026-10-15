@@ -103,3 +103,13 @@ fn venn_front_matter_target_sections_must_be_mappings() {
         }
     }
 }
+
+#[test]
+fn venn_front_matter_sequence_items_cannot_promote_descendants() {
+    for front in ["---\nconfig:\n  venn:\n    -\n      width: 640\n---",
+        "---\nconfig:\n  -\n    venn:\n      width: 640\n---",
+        "---\nconfig:\n  venn:\n    other:\n      -\n        width: 640\n    height: 360\n---"] {
+        let expected=if front.contains("height: 360") {VennConfig {height:360.0,..Default::default()}} else {VennConfig::default()};
+        assert_eq!(config(front),expected,"{front}");
+    }
+}
