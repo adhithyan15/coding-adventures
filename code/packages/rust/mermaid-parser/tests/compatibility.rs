@@ -2828,8 +2828,9 @@ fn railroad_dispatches_all_notations_to_recursive_ir() {
 #[test]
 fn railroad_preserves_layout_spacing_config_for_every_notation() {
     let constructor = parse_railroad(
-        "---\nconfig:\n  railroad:\n    padding: 24\n    verticalSeparation: 30\n    horizontalSeparation: 36\n    arcRadius: 18\n---\nrailroad-beta\nvalue = terminal(\"x\");",
+        "---\nconfig:\n  railroad:\n    compactMode: true\n    padding: 24\n    verticalSeparation: 30\n    horizontalSeparation: 36\n    arcRadius: 18\n---\nrailroad-beta\nvalue = terminal(\"x\");",
     ).expect("Railroad front matter config should parse");
+    assert!(constructor.config.compact_mode);
     assert_eq!(constructor.config.padding, 24.0);
     assert_eq!(constructor.config.vertical_separation, 30.0);
     assert_eq!(constructor.config.horizontal_separation, 36.0);
@@ -2843,6 +2844,9 @@ fn railroad_preserves_layout_spacing_config_for_every_notation() {
     assert_eq!(ebnf.config.horizontal_separation, 22.0);
     assert!(parse_railroad(
         "---\nconfig:\n  railroad:\n    horizontalSeparation: -1\n---\nrailroad-beta\nvalue = terminal(\"x\");",
+    ).is_err());
+    assert!(parse_railroad(
+        "---\nconfig:\n  railroad:\n    compactMode: sometimes\n---\nrailroad-beta\nvalue = terminal(\"x\");",
     ).is_err());
 }
 

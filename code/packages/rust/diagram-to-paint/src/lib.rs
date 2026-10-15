@@ -2009,6 +2009,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     instructions.extend(text_scene.instructions); let mut metadata = HashMap::new();
     if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
     if let Some(description) = &diagram.accessibility_description { metadata.insert("accessibility.description".into(), description.clone()); }
+    metadata.insert("railroad.compactMode".into(), diagram.config.compact_mode.to_string());
     metadata.insert("railroad.padding".into(), diagram.config.padding.to_string());
     metadata.insert("railroad.verticalSeparation".into(), diagram.config.vertical_separation.to_string());
     metadata.insert("railroad.horizontalSeparation".into(), diagram.config.horizontal_separation.to_string());
