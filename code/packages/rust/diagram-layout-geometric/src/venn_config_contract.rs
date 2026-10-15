@@ -73,7 +73,8 @@ fn venn_complete_two_set_geometry_and_boolean_transport_are_exact() {
                 LayoutedVennLabel { text: "Alpha".into(), x: 276.25, y: 150.0, style: Default::default() },
                 LayoutedVennLabel { text: "B".into(), x: 123.75, y: 150.0, style: Default::default() },
                 LayoutedVennLabel { text: "AB".into(), x: 200.0, y: 150.0, style: Default::default() },
-                LayoutedVennLabel { text: "Both".into(), x: 200.0, y: 170.0, style: Default::default() }], debug_circles: vec![], debug_cells: vec![] };
+                LayoutedVennLabel { text: "Both".into(), x: 200.0, y: 170.0, style: Default::default() }], debug_circles: if debug {vec![LayoutedVennDebugCircle {cx:200.0,cy:150.0,radius:22.5}]} else {vec![]},
+            debug_cells: if debug {vec![LayoutedVennDebugCell {x:178.625,y:141.75,width:42.75,height:42.75}]} else {vec![]} };
         assert_eq!(try_layout_venn(&d), Ok(expected.clone()));
         assert_eq!(layout_venn(&d), expected);
     }}

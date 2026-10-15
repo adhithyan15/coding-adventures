@@ -45,7 +45,7 @@ fn venn_palette_typed_complete_scenes_empty_short_default_and_long_cycles() {
         let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
         let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,
             label_font:defaults.label_font,title_font:defaults.title_font,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
-        assert_eq!(diagram_to_paint_venn(&layout,&options),expected,"P={} authored={authored} count={count}",palette.len());
+        assert_eq!(restore_reviewed_venn_defaults(diagram_to_paint_venn(&layout,&options),&layout),expected,"P={} authored={authored} count={count}",palette.len());
         assert!(resolver.0.borrow().is_empty(),"complete empty font-query trace");
     }}}
 }

@@ -13179,6 +13179,7 @@ emphasized --> direct
                 for (i,color) in ["#60a5fa","#f59e0b","#34d399","#f472b6","#a78bfa","#22d3ee","#fb7185","#a3e635"].iter().enumerate() {
                     expected.metadata.as_mut().unwrap().insert(format!("venn.themeColor{}",i+1),(*color).into());
                 }
+                let actual=restore_reviewed_venn_defaults(actual,&layout);
                 assert_eq!(actual,expected,"whole scene, every primitive/glyph/style/order/config field");
                 let mut queries=Vec::new();
                 if titled {queries.push(FontQuery::named("sans-serif").with_weight(text_interfaces::FontWeight(700)));}
@@ -13189,6 +13190,7 @@ emphasized --> direct
     }
 
     include!("venn_palette_contract_tests.rs");
+    include!("venn_debug_paint_contract.rs");
 
     #[test]
     fn venn_theme_source_to_complete_scene_and_ordered_font_queries() {
@@ -13250,6 +13252,7 @@ emphasized --> direct
                 for (i,color) in ["#60a5fa","#f59e0b","#34d399","#f472b6","#a78bfa","#22d3ee","#fb7185","#a3e635"].iter().enumerate() {
                     expected.metadata.as_mut().unwrap().insert(format!("venn.themeColor{}",i+1),(*color).into());
                 }
+                let actual=restore_reviewed_venn_defaults(actual,&layout);
                 assert_eq!(actual,expected,"whole scene, every primitive/glyph/style/order/config field");
                 let mut queries=Vec::new();
                 if titled {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(800)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Expanded));}
@@ -13325,6 +13328,7 @@ emphasized --> direct
                 for (i,color) in colors.iter().enumerate() {
                     expected.metadata.as_mut().unwrap().insert(format!("venn.themeColor{}",i+1),color.clone());
                 }
+                let actual=restore_reviewed_venn_defaults(actual,&layout);
                 assert_eq!(actual,expected,"whole source palette scene, including exact metadata/config");
                 let mut queries=Vec::new();
                 if titled {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(800)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Expanded));}
