@@ -5527,7 +5527,7 @@ fn venn_object_member<'a>(source: &'a str, key: &str) -> Option<&'a str> {
     None
 }
 
-fn venn_init_config(source: &str) -> Option<&str> {
+fn venn_init_object<'a>(source: &'a str, key: &str) -> Option<&'a str> {
     // Match the semantic preparation envelope. Init-looking literal content in
     // the leading YAML document is data, even if its line has directive syntax.
     let mut lines = source.lines().peekable();
@@ -5541,7 +5541,7 @@ fn venn_init_config(source: &str) -> Option<&str> {
         let payload = directive.strip_prefix("init")?.trim_start().strip_prefix(':')?.trim();
         let end = venn_object_end(payload)?;
         if !payload[end + 1..].trim().is_empty() { return None; }
-        let value = venn_object_member(payload, "venn")?;
+        let value = venn_object_member(payload, key)?;
         let end = venn_object_end(value)?;
         Some(&value[1..end])
     })
@@ -5550,7 +5550,7 @@ fn venn_init_config(source: &str) -> Option<&str> {
 // Preserve parent indentation for this flat Venn config subset. The older
 // shared helper intentionally remains unchanged for all other dialects; its
 // flattened output cannot distinguish direct fields from nested lookalikes.
-fn venn_front_matter_config(source: &str) -> Option<String> {
+fn venn_front_matter_fields(source: &str, path: &[&str]) -> Option<String> {
     let mut lines = source.lines().skip_while(|line| line.trim().is_empty());
     if lines.next()?.trim() != "---" { return None; }
     let mut parents: Vec<(usize, &str, bool)> = Vec::new();
@@ -5566,8 +5566,9 @@ fn venn_front_matter_config(source: &str) -> Option<String> {
             // its mapping descendants into the surrounding Venn/config scope.
             parents.push((indent, "", false)); continue;
         };
-        if parents.len() == 2 && parents[0].1 == "config" && parents[0].2
-            && parents[1].1 == "venn" && parents[1].2 && !value.trim().is_empty() {
+        if parents.len() == path.len() && parents.iter().zip(path)
+            .all(|((_, name, mapping), expected)| *mapping && name == expected)
+            && !value.trim().is_empty() {
             output.push_str(trimmed); output.push('\n');
         }
         // Keep every parent, including unknown maps, arrays and scalar/block
@@ -5575,6 +5576,42 @@ fn venn_front_matter_config(source: &str) -> Option<String> {
         parents.push((indent, key.trim(), value.trim().is_empty()));
     }
     (!output.is_empty()).then_some(output)
+}
+
+// Keep the established numeric readers' entry points and predicates intact.
+fn venn_init_config(source: &str) -> Option<&str> { venn_init_object(source, "venn") }
+fn venn_front_matter_config(source: &str) -> Option<String> {
+    venn_front_matter_fields(source, &["config", "venn"])
+}
+
+// Decode only the active quote and backslash. A malformed PRESENT value is a
+// sentinel rejected by both existing sanitizers: it cannot reveal a generic
+// fallback or fabricate a valid prefix. Other quote characters are data.
+fn venn_theme_string(value: &str, object_member: bool) -> String {
+    let value = value.trim();
+    let invalid = || "\0".to_string();
+    let Some(quote) = value.chars().next().filter(|c| *c == '\'' || *c == '"') else {
+        return if object_member {
+            value.split([',', '}']).next().unwrap_or("").trim().to_string()
+        } else { value.to_string() };
+    };
+    let mut output = String::new();
+    let mut chars = value[1..].char_indices();
+    while let Some((offset, c)) = chars.next() {
+        if c == quote {
+            let tail = value[offset + 1 + c.len_utf8()..].trim_start();
+            return if tail.is_empty() || (object_member && tail.starts_with([',', '}'])) {
+                output
+            } else { invalid() };
+        }
+        if c == '\\' {
+            match chars.next() {
+                Some((_, escaped)) if escaped == quote || escaped == '\\' => output.push(escaped),
+                _ => return invalid(),
+            }
+        } else { output.push(c); }
+    }
+    invalid()
 }
 
 fn parse_venn_config(source: &str) -> VennConfig {
@@ -5600,12 +5637,19 @@ fn parse_venn_config(source: &str) -> VennConfig {
     let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
         "true" => Some(true), "false" => Some(false), _ => None,
     }).unwrap_or(fallback);
-    let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
-    let theme = mermaid_directive_object(source, "themeVariables").or(theme_front.as_deref()).unwrap_or("");
-    let theme_value = |name: &str| quadrant_directive_value(theme, name).or_else(|| theme.lines().find_map(|line| {
-        let (key, value) = line.trim().split_once(':')?;
-        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
-    }));
+    let theme_front = venn_front_matter_fields(source, &["themeVariables"]);
+    let theme_init = venn_init_object(source, "themeVariables");
+    let theme_object = theme_init.map(|interior| format!("{{{interior}}}"));
+    let theme_value = |name: &str| {
+        if let Some(object) = &theme_object {
+            venn_object_member(object, name).map(|value| venn_theme_string(value, true))
+        } else {
+            theme_front.as_deref().unwrap_or("").lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name).then(|| venn_theme_string(value, false))
+            })
+        }
+    };
     let title_text_color = sanitize_railroad_color(
         theme_value("vennTitleTextColor").or_else(|| theme_value("titleColor")).as_deref(), &defaults.title_text_color);
     let set_text_color = sanitize_railroad_color(
