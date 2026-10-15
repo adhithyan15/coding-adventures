@@ -14,7 +14,8 @@ romanization: "sīmāntaḥ"
 concept_tag: SA-TRV257-SIMANTAH
 prerequisites: [SA-C256-vicarah, SA-C256-matam]
 sounds: []
-roots: []
+roots: [sanskrit-simanta, sanskrit-sima]
+etymology_hook: "sīmānta = sīmā 'boundary' + anta 'end': 'the edge of the boundary' (MW; CDIAL 13437)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C256-matam]
 <!-- hl-knowledge: introduces=[SA-LEX-C257-TRV257-01]; assesses=[] -->
 
 **सीमान्तः** — *sīmāntaḥ* — "a border".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sīmānta* is a compound of *sīmā*, "boundary", and *anta*, "end, edge" (CDIAL 13437): the outer line of a boundary. MW glosses it "a border, boundary", and also the boundary of a village.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:eaa5ab7bd8f4ae7c",
+  "sourceHash": "fnv1a64:508371191288082f",
   "lessons": [
     {
       "id": "SA-C34-arm",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f19859a07d7707ae",
+      "sourceHash": "fnv1a64:b0506da958e359c2",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d15e815c22c99fd0",
+      "sourceHash": "fnv1a64:012758b7c2a1f098",
       "notice": null,
       "blocks": [
         {
@@ -190,11 +190,11 @@
             },
             {
               "kind": "speech",
-              "text": "ग्रीवा (grīvā) is the neck, and its family kept the swallowing that the old root began with."
+              "text": "ग्रीवा (grīvā) is the neck. Russian griva, a mane — the hair along a neck — is its cousin (EtymDB)."
             },
             {
               "kind": "speech",
-              "text": "Latin gula, \"throat\", is a cousin, behind gullet; Russian griva is a mane, the hair along a neck; and Latin vorāre, \"to devour\", belongs to the same wide family, giving devour, voracious and carnivore. Ends in -आ, like तारा and लता."
+              "text": "It is often traced to an old root for swallowing, the root of Latin gula, \"throat\" (behind gullet), and vorāre, \"to devour\" (behind devour, voracious and carnivore), but CDIAL 4387 marks that link as doubtful. Ends in -आ, like तारा and लता."
             }
           ]
         },
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dbcafe0c822f171",
+      "sourceHash": "fnv1a64:f0d31ff7defc32e5",
       "notice": null,
       "blocks": [
         {
@@ -439,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2f1692203f23510",
+      "sourceHash": "fnv1a64:135d9382ee066636",
       "notice": null,
       "blocks": [
         {
@@ -480,6 +480,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Rakta is the past participle of the root √rañj, \"to colour, dye\": first \"dyed\", then \"red\", and so \"blood\" (MW, CDIAL 10539)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -490,7 +501,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -548,7 +559,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -579,7 +590,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8153e4167e8ca940",
+      "sourceHash": "fnv1a64:629242552dd034ba",
       "notice": null,
       "blocks": [
         {
@@ -614,7 +625,7 @@
             },
             {
               "kind": "speech",
-              "text": "English dough is the plain cousin. Latin fingere, \"to shape\", gives figure, fiction and effigy. And an Old Persian relative, a wall of kneaded clay, sits inside paradise: pairi-daēza, a walled garden."
+              "text": "English dough is the plain cousin. Latin fingere, \"to shape\", gives figure, fiction and effigy. And an old Iranian relative, a wall of kneaded clay, sits inside paradise: Avestan pairi-daēza, a walled enclosure."
             }
           ]
         },

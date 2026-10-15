@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Able, and Willing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7cade919f51450c9",
+  "sourceHash": "fnv1a64:96fe082be159def0",
   "lessons": [
     {
       "id": "SA-C57-shaknoti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f4aaa1e3190d188",
+      "sourceHash": "fnv1a64:acf4485fad0fb904",
       "notice": null,
       "blocks": [
         {
@@ -76,6 +76,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Śaknoti is the present of the root √śak, \"to be able\", with the nasal syllable -no- (MW). It lives on as Hindi saknā, \"to be able\" (CDIAL 12252)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -86,7 +97,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -135,7 +146,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -166,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03a5d4a6aee82c5c",
+      "sourceHash": "fnv1a64:6e635efaef3b0d31",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +243,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Icchati is the present of the root √iṣ, \"to seek, wish\" (CDIAL 1556). It is inherited: MW compares Old English āscian, the ancestor of English ask, and Russian iskat', \"to seek\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -242,7 +264,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -282,7 +304,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "ravivāsaraḥ"
 concept_tag: SA-WEEK-SUNDAY
 prerequisites: [SA-C86-friday, SA-C86-saturday]
 sounds: []
-roots: []
+roots: [sanskrit-ravi, sanskrit-vasara]
+etymology_hook: "ravivāsara ← ravi 'the sun' + vāsara 'day' (MW records the compound)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C86-saturday]
 <!-- hl-knowledge: introduces=[SA-LEX-C86-WEEKEND-03]; assesses=[] -->
 
 **रविवासरः** (*ravivāsaraḥ*) — "Sunday", the day of **रविः**, the sun, a word you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Ravivāsara* is built from *ravi*, "the sun", and *vāsara*, "day"; MW records the
+compound as another name for Sunday.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

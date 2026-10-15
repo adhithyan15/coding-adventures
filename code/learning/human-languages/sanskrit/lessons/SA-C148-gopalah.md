@@ -14,7 +14,8 @@ romanization: "gopālaḥ"
 concept_tag: SA-PPL148-GOPALAH
 prerequisites: [SA-C148-malakarah, SA-C148-dhivarah]
 sounds: []
-roots: []
+roots: [sanskrit-gopala, sanskrit-go]
+etymology_hook: "gopāla ← go 'cow' + pāla 'keeper': 'cow-keeper' (CDIAL 4293); MW sets go beside English cow"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C148-dhivarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C148-PPL148-05]; assesses=[] -->
 
 **गोपालः** — *gopālaḥ* — "a cowherd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gopāla* is built from *go* "cow" and *pāla* "guard, keeper" (CDIAL 4293): "the cow-keeper", already in the Vājasaneyi Saṃhitā. MW sets *go* beside Greek *bous*, Latin *bos* and English *cow*: one inherited Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

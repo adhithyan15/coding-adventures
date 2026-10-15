@@ -14,7 +14,8 @@ romanization: "pratīkṣate"
 concept_tag: SA-VERB-PRATIKSATE
 prerequisites: [SA-C233-varsati, SA-C233-rohati]
 sounds: []
-roots: []
+roots: [sanskrit-pratiksha]
+etymology_hook: "pratīkṣate ← prati 'towards' + √īkṣ 'look': 'looks towards', so 'waits for' (MW; CDIAL 8620)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C233-rohati]
 <!-- hl-knowledge: introduces=[SA-LEX-C233-ACT233-03]; assesses=[] -->
 
 **प्रतीक्षते** — *pratīkṣate* — "waits".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pratīkṣate* is built on *prati*, "towards", and the root √īkṣ, "to look" (MW): to wait is to look out for someone. It means "beholds" in the Atharvaveda and "waits for" in the Taittirīya Saṃhitā (CDIAL 8620); Marathi *paikhṇẽ* means "to wait for".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

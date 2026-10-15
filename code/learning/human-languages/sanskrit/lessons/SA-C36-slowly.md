@@ -14,7 +14,8 @@ romanization: "mandam"
 concept_tag: SA-REPLY-MANDA
 prerequisites: [SA-C36-likewise, SA-C34-blood, SA-C35-book]
 sounds: []
-roots: []
+roots: [sanskrit-manda]
+etymology_hook: "mandam, adverb of manda 'slow, dull' (MW); CDIAL 9754 groups it with words for defects; not settled"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,13 @@ reviews_of: [SA-C36-likewise]
 **मन्दम्** asks for less speed. Doubled — *mandam mandam* — it means "slowly now, slowly", which is how it is most often said.
 
 This is the word you want when somebody is talking faster than you can follow, and it goes well with **कृपया**: *kṛpayā mandam*, "slowly, please". Said kindly, it repairs a conversation instead of stopping it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mandam* is the adverb of *manda*, "slow, dull" (MW). CDIAL 9754 groups *manda*
+with other words for slowness and bodily defects, so its deeper origin is not
+settled. It lives on as Hindi *mandā*, "slow, dull".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 116,
   "title": "Crane, Cheek, Chin, Elbow, Wrist",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c66ceaee25206aa2",
+  "sourceHash": "fnv1a64:bf81484418e32cf1",
   "lessons": [
     {
       "id": "SA-C116-sarasah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:936553a28d76ed64",
+      "sourceHash": "fnv1a64:d069cce0aff20d9d",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sārasa is built from saras \"a lake, a pond\" (CDIAL 13359): first \"belonging to a lake\", then the Indian crane (MW). Hindi and Marathi kept it as sāras \"crane\" (CDIAL 13359)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a842f98f8fe67e75",
+      "sourceHash": "fnv1a64:5f9e0b352e431b2f",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kapola \"the cheek\" is probably borrowed from Austroasiatic, or possibly from Dravidian, as CDIAL 2755 reports after EWA; DEDR 1337 sets it, with a query mark, beside a Dravidian word for the cheek. Pali kept it as kapola (CDIAL 2755)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf587cffd0d91928",
+      "sourceHash": "fnv1a64:1890e006541d249d",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cibuka \"the chin\" is taken to be borrowed from Munda (CDIAL 4820, after Kuiper and EWA); the Rigveda already has a form chubuka. Pali kept it as cubuka (CDIAL 4820)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0942728f4985c1c5",
+      "sourceHash": "fnv1a64:da0a73597d3ab18c",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kūrpara \"the elbow\" appears in the medical writer Suśruta, and neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Marathi kopar \"elbow\" (CDIAL 3413)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca6bee93c55e27d5",
+      "sourceHash": "fnv1a64:9e59607b3bb67851",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "maṇibandha is built from maṇi \"jewel, bead\" and bandha \"tying\": the wrist is where jewels are tied on (MW). DEDR 4673 points out that the Dravidian word for the wrist, Kannada maṇikaṭṭu, is built the same way, and takes bandha as a translation of its kaṭṭu \"tie\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

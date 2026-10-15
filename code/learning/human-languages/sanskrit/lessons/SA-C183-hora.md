@@ -14,7 +14,8 @@ romanization: "horā"
 concept_tag: SA-TIME183-HORA
 prerequisites: [SA-C183-yugam, SA-C183-muhurtah]
 sounds: []
-roots: []
+roots: [hora-greek]
+etymology_hook: "horā 'hour' ← borrowed from Greek hōra 'hour, season' with Greek astronomy (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C183-muhurtah]
 <!-- hl-knowledge: introduces=[SA-LEX-C183-TIME183-03]; assesses=[] -->
 
 **होरा** — *horā* — "an hour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*horā* was borrowed from Greek *hōra*, "hour, season" (MW), with the Greek astronomy and astrology that reached India. English *hour* comes from the same Greek word through Latin and French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

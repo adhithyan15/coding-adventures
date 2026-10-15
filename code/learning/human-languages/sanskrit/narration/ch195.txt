@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a discussion group, then the Sanskrit f
 You'll want to know: पत्तनम्.
 पत्तनम् — pattanam — "a port town".
 
+The word, taken apart.
+The origin of pattana is disputed. CDIAL 7705 reports that it is probably borrowed from Dravidian, but notes that its sense "ferry" in several modern languages supports a native partana-, related to Latin portus, "harbour"; the two may have merged. It lives on as Hindi pāṭan, "town".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a fair, then the Sanskrit for a port to
 
 You'll want to know: राजधानी.
 राजधानी — rājadhānī — "a capital".
+
+The word, taken apart.
+rājadhānī is a compound of rāja-, "king", and dhānī, "receptacle, seat", built on the root √dhā, "to put, place" (MW): the place where the king is set. MW lists it as a royal residence, and modern languages use it for a capital city.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a port town, then the Sanskrit for a ca
 You'll want to know: जनपदः.
 जनपदः — janapadaḥ — "a district, a region".
 
+The word, taken apart.
+janapada is a compound of jana, "people", and pada, "footing, place" (MW). In the Śatapatha Brāhmaṇa it means "a people", and in the Mahābhārata "a country" (CDIAL 5101).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a capital, then the Sanskrit for a dist
 You'll want to know: प्रान्तः.
 प्रान्तः — prāntaḥ — "a province, a border".
 
+The word, taken apart.
+prānta is pra with anta, "end, limit" (MW), and so "edge, border" (CDIAL 8940); a province is the land out at the edge. MW compares anta with English end, an inherited Indo-European word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a district, then the Sanskrit for a pro
 
 You'll want to know: सीमा.
 सीमा — sīmā — "a boundary".
+
+The word, taken apart.
+sīmā comes from sīman, which in the Atharvaveda means "the parting of the hair" (CDIAL 13435): a line that divides. Later it means "boundary" (MW). It lives on as Gujarati sīm, "boundary of a village".
 
 What you've built.
 One more word for this chapter.

@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Describing Things",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6e5a08018e201dcc",
+  "sourceHash": "fnv1a64:170a75b4a9a4d83d",
   "lessons": [
     {
       "id": "SA-C15-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:747bf91d46e2317c",
+      "sourceHash": "fnv1a64:f988151ed78d6490",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mahat began as a participle of the root √mah, \"to be great\" (MW). It is inherited: MW sets it beside Greek megas, Latin magnus and English much."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -90,7 +101,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -121,7 +132,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea9a69c817e49546",
+      "sourceHash": "fnv1a64:336f4adb52560b41",
       "notice": null,
       "blocks": [
         {
@@ -166,6 +177,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Alpa is an old word, already in the Atharvaveda (MW), but its origin is not settled: MW gives no root for it. It lives on in a handful of modern words, such as Marathi aprā, \"short\" (CDIAL 722)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -196,7 +218,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -428,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:362f91ce5aa0e4b1",
+      "sourceHash": "fnv1a64:948d52cd6c8c6999",
       "notice": null,
       "blocks": [
         {
@@ -473,6 +495,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uttama is built from ud \"up\" with the superlative ending -tama: \"uppermost\", and so \"best\" (MW, CDIAL 1765)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -503,7 +536,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -534,7 +567,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35f4a019c6fa5738",
+      "sourceHash": "fnv1a64:d4cfa559a00f1449",
       "notice": null,
       "blocks": [
         {
@@ -579,6 +612,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nava is inherited from Proto-Indo-European: MW compares Latin novus and Greek neos, and English new is the same word. It lives on as Hindi nawā and naī (CDIAL 6983)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -609,7 +653,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -821,7 +865,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d42a79777a7931c9",
+      "sourceHash": "fnv1a64:834d0dfa4d88f152",
       "notice": null,
       "blocks": [
         {
@@ -866,6 +910,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Purātana is built from the adverb purā, \"before, of old\", with the suffix -tana that turns a time word into an adjective (MW, CDIAL 8285)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -896,7 +951,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -927,7 +982,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51aebef38d9171d4",
+      "sourceHash": "fnv1a64:80f354bd21887667",
       "notice": null,
       "blocks": [
         {
@@ -977,6 +1032,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mauna is formed from muni, \"sage\": it first named the state of a sage, who often kept a vow of silence (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1007,7 +1073,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

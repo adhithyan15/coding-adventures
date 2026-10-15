@@ -14,7 +14,8 @@ romanization: "keśaḥ"
 concept_tag: SA-BODY-HAIR
 prerequisites: [SA-C25-tooth, SA-C24-lamp]
 sounds: []
-roots: []
+roots: [sanskrit-kesha]
+etymology_hook: "keśa 'hair': the grammarians derive it from √kliś; no secure outside cousin, origin not settled (CDIAL 3471)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,13 @@ reviews_of: [SA-C25-tooth]
 **केशः** is the hair on the head — the hair that grows out of शिरः.
 
 And here the trail stops. No secure cousin has been found for केशः outside India: scholars have proposed several and settled on none. That is worth meeting on purpose, because the last four lessons made travel look easy. Some words have a history we can reconstruct in detail; some have one we cannot reconstruct at all. कर्णः, the ear, was the same case. Masculine **-अः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Keśa* is already in the Atharvaveda. The native grammarians derived it from the
+root √kliś (MW), but no secure cousin outside India is known, so its origin is not
+settled. It lives on as Hindi and Marathi *kes* (CDIAL 3471).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

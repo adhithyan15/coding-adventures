@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 202,
-  "sourceHash": "fnv1a64:490b93995f3e80ca",
+  "sourceHash": "fnv1a64:2d83962f3e7978b4",
   "lessonIds": [
     "SA-C202-pathikah",
     "SA-C202-disa",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch202.txt",
   "json": "sanskrit/narration/ch202.json",
-  "textHash": "fnv1a64:8ebaac6725170a4b",
-  "jsonHash": "fnv1a64:f34103edf58f4a0c",
+  "textHash": "fnv1a64:aa0b09cbc86ee9c6",
+  "jsonHash": "fnv1a64:336ceeb83305eaf9",
   "findings": []
 }

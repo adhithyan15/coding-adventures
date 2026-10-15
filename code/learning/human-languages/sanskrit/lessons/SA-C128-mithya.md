@@ -14,7 +14,8 @@ romanization: "mithyā"
 concept_tag: SA-QUAL128-MITHYA
 prerequisites: [SA-C127-suraksitah, SA-C128-bhayankarah]
 sounds: []
-roots: []
+roots: [sanskrit-mithya]
+etymology_hook: "mithyā 'wrongly, falsely' ← √mith 'alternate, clash' (CDIAL 10130); MW contracts it from mithūyā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C128-bhayankarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C128-QUAL128-02]; assesses=[] -->
 
 **मिथ्या** — *mithyā* — "false".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mithyā* is an old adverb, "invertedly, wrongly", and later "falsely": MW contracts it from *mithūyā*, and CDIAL 10130 sets it under the root √mith "alternate, clash". It lives on as Bengali *michā* "untrue" (CDIAL 10130).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

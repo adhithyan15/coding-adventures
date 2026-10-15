@@ -14,7 +14,8 @@ romanization: "praśnapatram"
 concept_tag: SA-SCH229-PRASNAPATRAM
 prerequisites: [SA-C229-kartavyam, SA-C229-adhikarah]
 sounds: []
-roots: []
+roots: [sanskrit-prashna, sanskrit-patra, prach-ask]
+etymology_hook: "praśnapatra = praśna 'question' (√prach 'ask') + pattra 'leaf, paper'; the compound is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C229-adhikarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C229-SCH229-05]; assesses=[] -->
 
 **प्रश्नपत्रम्** — *praśnapatram* — "a question paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*praśnapatra* is built from *praśna*, "question", from the root √prach, "to ask" (MW), and *patra*, "leaf, sheet of paper". MW does not list the compound, so it is a modern pairing. √prach is the root of *pṛcchati*, "asks", which you have already met.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

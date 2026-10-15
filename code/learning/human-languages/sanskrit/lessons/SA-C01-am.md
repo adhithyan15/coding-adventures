@@ -14,7 +14,8 @@ romanization: "ām"
 concept_tag: RESPONSE-YES
 prerequisites: [SA-C01-svagatam]
 sounds: [independent-vowel, halant]
-roots: []
+roots: [sanskrit-am-yes]
+etymology_hook: "ām, an old particle of assent (MW); it lives on as Hindi and Marathi hāṃ 'yes' (CDIAL 1235)"
 reviews_of: [SA-C01-namaste]
 duration:
   max_seconds: 180
@@ -45,6 +46,14 @@ variety: classical
 
 *ām* — one beat. A long *ā*, then the lips close on *m* with no vowel after it.
 Say it and stop.
+
+## The word, taken apart
+
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Ām* is an old Sanskrit particle of assent (MW). It lives on in the
+daughter languages' everyday "yes", with an *h-* added in front: Hindi
+and Marathi *hāṃ* (CDIAL 1235).
 
 ## Why it's said this way
 

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for loss, then the Sanskrit for trade.
 You'll want to know: क्रीडा.
 क्रीडा — krīḍā — "sport, play".
 
+The word, taken apart.
+krīḍā comes from the root √krīḍ "play, sport, frolic" (MW), already in the Rigveda. krīḍanaka "a toy" comes from the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for trade, then the Sanskrit for sport.
 
 You'll want to know: द्यूतम्.
 द्यूतम् — dyūtam — "gambling, dice".
+
+The word, taken apart.
+dyūta "gambling, play with dice" comes from the root √div "play, gamble" (CDIAL 6608), already in the Atharvaveda. It lives on as Hindi jūā and Bengali juyā "gambling" (CDIAL 6608).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for sport, then the Sanskrit for gambling.
 You'll want to know: उत्सवः.
 उत्सवः — utsavaḥ — "a festival".
 
+The word, taken apart.
+utsava comes from ud-√sū "set going, stir up", the root √sū "impel" with ud "up" (MW; CDIAL 1876): in the Rigveda it means "an enterprise, a beginning", and later "a festival".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for gambling, then the Sanskrit for a festi
 You'll want to know: विवाहः.
 विवाहः — vivāhaḥ — "a wedding".
 
+The word, taken apart.
+vivāha comes from vi-√vah "carry away, lead away", the root √vah "carry" with vi "away" (MW; CDIAL 11920): leading the bride away from her father's house. MW sets √vah beside Latin vehere (English vehicle), and it lives on as Hindi byāh "marriage" (CDIAL 11920).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a festival, then the Sanskrit for a wed
 
 You'll want to know: उपहारः.
 उपहारः — upahāraḥ — "a gift".
+
+The word, taken apart.
+upahāra comes from upa-√hṛ "bring near, offer", the root √hṛ "carry" with upa "near" (MW): "an offering", and so "a gift". It is built like āhāra "food", from the same root.
 
 What you've built.
 One more word for this chapter.

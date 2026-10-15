@@ -14,7 +14,8 @@ romanization: "añjaliḥ"
 concept_tag: SA-WELCOME-ANJALI
 prerequisites: [SA-C30-garland, SA-C28-svasti, SA-C29-fortunate]
 sounds: []
-roots: []
+roots: [sanskrit-anjali]
+etymology_hook: "añjali 'cupped hands' ← the root √añj 'anoint'; MW compares Latin unguō (CDIAL 171)"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,13 @@ reviews_of: [SA-C30-garland]
 
 **अञ्जलिः** is the two hands brought together, palms cupped — the gesture your hands make when you say **नमस्ते**.
 
-The root means "to anoint, to smear", and the cupped hands were first of all a vessel: the shape you make to carry water, or an offering. The gesture of greeting began as the shape of giving something away. So the welcome closes where the book opened, on the first word you learned, with the hands finally named.
+The root means "to anoint, to smear". MW describes the hands as hollowed as if to receive food, and says that raised to the forehead they became a sign of supplication: the gesture of greeting grew out of the shape of asking. So the welcome closes where the book opened, on the first word you learned, with the hands finally named.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Añjali* is built on the root √añj, "to anoint" (MW, CDIAL 171), which MW compares
+with Latin *unguō*, "I anoint", the source of English **ointment**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kumārī"
 concept_tag: SA-PPL236-KUMARI
 prerequisites: [SA-C236-sisuh, SA-C236-kumarah]
 sounds: []
-roots: []
+roots: [sanskrit-kumara]
+etymology_hook: "kumārī 'girl' ← kumāra 'boy' + feminine -ī (MW; CDIAL 3303); Punjabi kãvārī 'virgin'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C236-kumarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C236-PPL236-03]; assesses=[] -->
 
 **कुमारी** — *kumārī* — "a maiden, a girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kumārī* is the feminine of *kumāra*, "boy", made with the ending *-ī* (MW). The Atharvaveda already has it as "young girl" (CDIAL 3303), and Punjabi *kãvārī*, "virgin", comes from it. India's southern tip, Kanyakumari, is named after the maiden goddess.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

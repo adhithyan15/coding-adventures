@@ -14,7 +14,8 @@ romanization: "deyakam"
 concept_tag: SA-READ140-DEYAKAM
 prerequisites: [SA-C140-samayasarani, SA-C140-vijnapanam]
 sounds: []
-roots: []
+roots: [sanskrit-deya]
+etymology_hook: "deyaka ← deya 'to be given, due' (√dā 'give', MW) + -ka; 'a bill' is a modern use"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [SA-C140-vijnapanam]
 
 The bill at the restaurant says **भोजनालयः — देयकम् — शतम्।** A hundred to pay
 before you go.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*deyaka* is built from *deya* "to be given, due", the gerundive of the root √dā "give" (MW), with the suffix *-ka*: "the thing to be paid". Using it for a bill is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

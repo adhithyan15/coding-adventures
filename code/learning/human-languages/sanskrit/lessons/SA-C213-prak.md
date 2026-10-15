@@ -14,7 +14,8 @@ romanization: "prāk"
 concept_tag: SA-TIME213-PRAK
 prerequisites: [SA-C213-sadyah, SA-C213-tatksanam]
 sounds: []
-roots: []
+roots: [sanskrit-pranc]
+etymology_hook: "prāk 'before; eastward' ← prāñc 'facing forward', from pra 'forth' + √añc 'bend' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C213-tatksanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C213-TIME213-03]; assesses=[] -->
 
 **प्राक्** — *prāk* — "formerly, before".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prāk* is a form of *prāñc*, "turned forward, facing", built on *pra*, "forth", and √añc, "to bend, turn" (MW). What lies forward is "before" in time and, facing the sunrise, the east.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

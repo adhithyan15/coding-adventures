@@ -14,7 +14,8 @@ romanization: "viśvavidyālayaḥ"
 concept_tag: SA-LOC96-VISVAVIDYALAYAH
 prerequisites: [SA-C96-konah, SA-C96-pustakalayah]
 sounds: []
-roots: []
+roots: [sanskrit-alaya]
+etymology_hook: "viśvavidyālaya ← viśva 'whole, all' + vidyā 'knowledge' (√vid 'know') + ālaya 'dwelling'; modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C96-pustakalayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C96-LOC96-05]; assesses=[] -->
 
 **विश्वविद्यालयः** — *viśvavidyālayaḥ* — "a university".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*viśvavidyālaya* is a compound of *viśva* "all, whole" and *vidyālaya* "seat of learning" (MW), itself *vidyā* "knowledge" + *ālaya* "dwelling"; using it for a university is modern. *vidyā* comes from the root √vid "know", which MW sets beside Latin *videre* "see" (English *video*) and English *wot* "know".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

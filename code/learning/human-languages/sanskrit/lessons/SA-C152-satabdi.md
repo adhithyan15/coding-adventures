@@ -14,7 +14,8 @@ romanization: "śatābdī"
 concept_tag: SA-TIME152-SATABDI
 prerequisites: [SA-C152-tithih, SA-C152-dinankah]
 sounds: []
-roots: []
+roots: [sanskrit-shata, sanskrit-abda]
+etymology_hook: "śatābdī ← śata 'hundred' (cf. Latin centum, MW) + abda 'year': 'a hundred years'; modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C152-dinankah]
 <!-- hl-knowledge: introduces=[SA-LEX-C152-TIME152-05]; assesses=[] -->
 
 **शताब्दी** — *śatābdī* — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śatābdī* is built from *śata* "hundred" and *abda* "year" (MW): "a period of a hundred years". MW sets *śata* beside Latin *centum* and English *hundred*; using it for a century is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

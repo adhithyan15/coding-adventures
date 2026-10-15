@@ -14,7 +14,8 @@ romanization: "yātrā"
 concept_tag: SA-LEAVE-JOURNEY
 prerequisites: [SA-C28-day-after, SA-C26-king, SA-C27-enough]
 sounds: []
-roots: []
+roots: [sanskrit-yatra]
+etymology_hook: "yātrā 'journey' ← the root √yā 'go, travel' (MW; CDIAL 10456)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,13 @@ reviews_of: [SA-C28-day-after]
 **यात्रा** is a journey — a going, and by long custom a going somewhere holy. Modern Indian languages kept it whole: a *yatra* is a pilgrimage.
 
 It comes from a root *yā*, "to go", which is not the root behind गच्छति. Sanskrit keeps several going-verbs apart, and this one leans toward setting out and travelling rather than the plain act of moving. Feminine, ending in **-आ**, like माता and नारी.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Yātrā* is built on the root √yā, "to go, travel", with the noun suffix *-trā*
+(MW, CDIAL 10456). Punjabi *jātrā*, "pilgrimage", may
+show it worn down, though CDIAL allows that it was borrowed back from Sanskrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

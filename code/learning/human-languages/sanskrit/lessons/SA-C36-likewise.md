@@ -14,7 +14,8 @@ romanization: "tathā"
 concept_tag: SA-REPLY-TATHA
 prerequisites: [SA-C36-all, SA-C34-bone, SA-C35-salt]
 sounds: []
-roots: []
+roots: [sanskrit-tatha]
+etymology_hook: "tathā 'in that way' ← the pointing base ta- + the manner ending -thā, partner of yathā 'as' (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C36-all]
 **कथम्**, which you have had for a long time, asks "how?". **तथा** answers it: "that way".
 
 The *t-* at the front is the one you met on **तत्** and **तत्र**, and it does the same job here — it points back at what has just been said. On its own, as a reply, **तथा** means "just so", and doubled it agrees warmly: *tathā tathā*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Tathā* is built from the pointing base *ta-*, the base of *tat*, with the manner
+ending *-thā*; it is the partner of *yathā*, "as" (MW, CDIAL 5646).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

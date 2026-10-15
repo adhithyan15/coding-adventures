@@ -14,7 +14,8 @@ romanization: "iti"
 concept_tag: SA-JOIN-ITI
 prerequisites: [SA-R53-correlative, SA-C53-yatra-tatra, SA-C08-cintayati]
 sounds: []
-roots: []
+roots: [sanskrit-iti]
+etymology_hook: "iti 'thus' ← the pronoun base i- 'this' (MW; CDIAL 1562)"
 duration:
   max_seconds: 260
 requires:
@@ -67,6 +68,12 @@ sentence with it:
 You have probably met it already without knowing. **इत्यादि** (*ityādi*) — *"and
 so on"* — is **इति** plus **आदि**, "beginning": *thus, and the rest*. And the
 closing line of every chapter of a classical text begins **इति** — *thus ends…*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Iti* is built on the pronoun base *i-*, "this" (MW, CDIAL 1562): "thus, in this
+way", pointing back at the words before it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

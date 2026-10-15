@@ -14,7 +14,8 @@ romanization: "citrapaṭaḥ"
 concept_tag: SA-THG249-CITRAPATAH
 prerequisites: [SA-C249-natakam, SA-C249-kavyam]
 sounds: []
-roots: []
+roots: [sanskrit-pata-cloth, sanskrit-citra]
+etymology_hook: "citrapaṭa = citra 'picture' + paṭa 'cloth': MW 'a painting'; the 'film' sense is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C249-kavyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C249-THG249-04]; assesses=[] -->
 
 **चित्रपटः** — *citrapaṭaḥ* — "a film, a painted cloth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*citrapaṭa* is a compound of *citra*, "picture", and *paṭa*, "woven cloth" (MW): a painting on cloth. CDIAL 7692 thinks *paṭa* is probably borrowed, like *karpāsa*, "cotton". The sense "film" is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

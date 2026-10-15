@@ -14,7 +14,8 @@ romanization: "araṇyam"
 concept_tag: SA-PLANT-FOREST
 prerequisites: [SA-C81-root, SA-C81-garden]
 sounds: []
-roots: []
+roots: [sanskrit-aranya]
+etymology_hook: "araṇya 'distant land, wilderness' ← araṇa 'foreign, distant' (MW); Hindi ran 'forest' (CDIAL 600)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C81-garden]
 <!-- hl-knowledge: introduces=[SA-LEX-C81-PLANTS-05]; assesses=[] -->
 
 **अरण्यम्** (*araṇyam*) — "the wild forest", deeper than a **वनम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Araṇya* is built from *araṇa*, "foreign, distant": in the Rigveda it is a far-off
+land, later the wilderness (MW, CDIAL 600). It lives on as Hindi *ran*, "forest,
+wild land".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

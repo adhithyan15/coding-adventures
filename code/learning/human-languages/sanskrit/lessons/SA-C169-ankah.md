@@ -14,7 +14,8 @@ romanization: "aṅkaḥ"
 concept_tag: SA-SCH169-ANKAH
 prerequisites: [SA-C168-padam, SA-C169-parinamah]
 sounds: []
-roots: []
+roots: [sanskrit-anka]
+etymology_hook: "aṅka 'hook, curve', then 'mark, number' ← √añc 'bend' (CDIAL 100); MW compares Latin uncus 'hook'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C169-parinamah]
 <!-- hl-knowledge: introduces=[SA-LEX-C169-SCH169-02]; assesses=[] -->
 
 **अंकः** — *aṅkaḥ* — "a mark, a number".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aṅka* comes from the root √añc "bend, curve" (CDIAL 100): first "a hook" in the Rigveda, then "a curved line, a mark", and so "a numeral". MW compares Greek *ankōn* "elbow, bend" and Latin *uncus* "hook", and it lives on as Hindi *āṁk* "mark" and Punjabi *aṅg* "figure" (CDIAL 100).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

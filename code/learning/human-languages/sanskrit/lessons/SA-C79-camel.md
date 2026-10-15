@@ -14,7 +14,8 @@ romanization: "uṣṭraḥ"
 concept_tag: SA-ANIMAL-CAMEL
 prerequisites: [SA-C79-elephant, SA-C79-horse]
 sounds: []
-roots: []
+roots: [sanskrit-ushtra]
+etymology_hook: "uṣṭra 'buffalo' in the Rigveda, 'camel' from the epics on; Hindi ūṃṭ (CDIAL 2387)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C79-horse]
 <!-- hl-knowledge: introduces=[SA-LEX-C79-ANIMALS-03]; assesses=[] -->
 
 **उष्ट्रः** (*uṣṭraḥ*) — "a camel", the animal of the desert.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Uṣṭra* meant a buffalo in the Rigveda and a camel only from the epics on (MW,
+CDIAL 2387). It lives on as Hindi *ūṃṭ*, "camel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

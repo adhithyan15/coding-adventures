@@ -14,7 +14,8 @@ romanization: "vistṛtaḥ"
 concept_tag: SA-QUAL126-VISTRTAH
 prerequisites: [SA-C125-suddhah, SA-C125-malinah]
 sounds: []
-roots: []
+roots: [sanskrit-vistrta]
+etymology_hook: "vistṛta ← vi-√stṛ 'spread out', on √stṛ 'strew, spread' (CDIAL 12011): 'spread out, wide' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C125-malinah]
 <!-- hl-knowledge: introduces=[SA-LEX-C126-QUAL126-01]; assesses=[] -->
 
 **विस्तृतः** — *vistṛtaḥ* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vistṛta* is the past participle of *vi-√stṛ* "spread out", the root √stṛ "strew, spread" with *vi-* "apart" (CDIAL 12011): "spread out, wide" (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

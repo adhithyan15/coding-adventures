@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Times of the Day",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e6791963ced47ba2",
+  "sourceHash": "fnv1a64:5e89b70055ae7234",
   "lessons": [
     {
       "id": "SA-C45-morning",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c5da928c38cb572",
+      "sourceHash": "fnv1a64:7e16bbc6119af2fe",
       "notice": null,
       "blocks": [
         {
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4d41e11ddfe4eea",
+      "sourceHash": "fnv1a64:2f0d4486f4504b8a",
       "notice": null,
       "blocks": [
         {
@@ -198,7 +198,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is two pieces joined: madhya, \"middle\", and ahan, a day. Sanskrit keeps more than one word for a day, and this is the other one — दिनम् is the day you count, ahan the day you are standing in. English mid is madhya's own worn-down cousin."
+              "text": "It is two pieces joined: madhya, \"middle\", and ahan, a day. Sanskrit keeps more than one word for a day, and this is the other one, beside दिनम्. English mid is madhya's own worn-down cousin."
             },
             {
               "kind": "speech",
@@ -208,6 +208,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Madhyāhna is a compound of madhya, \"middle\", and ahan, \"day\" (MW, CDIAL 9818). Madhya is inherited: MW compares Latin medius and English mid."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +229,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +287,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +318,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7658ca6f9abdbb0f",
+      "sourceHash": "fnv1a64:73b69fc446b6ac56",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +373,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sāyam is the adverb of sāya, \"close of day\", which MW derives, probably, from the root √so, \"to bring to an end\" (CDIAL 13353)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -372,7 +394,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -430,7 +452,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -461,7 +483,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc2dae594a0515c3",
+      "sourceHash": "fnv1a64:c753bb4faa82d026",
       "notice": null,
       "blocks": [
         {
@@ -605,7 +627,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:711577d678634717",
+      "sourceHash": "fnv1a64:0c00b886cb956cb0",
       "notice": null,
       "blocks": [
         {

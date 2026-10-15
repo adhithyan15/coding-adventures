@@ -14,7 +14,8 @@ romanization: "vijñāpanam"
 concept_tag: SA-READ140-VIJNAPANAM
 prerequisites: [SA-C140-sucana, SA-C140-samayasarani]
 sounds: []
-roots: []
+roots: [sanskrit-vijnapana]
+etymology_hook: "vijñāpana 'making known' ← causative of vi-√jñā 'know, discern' (MW); √jñā is English know's cousin"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [SA-C140-samayasarani]
 
 The advert says **प्रकोष्ठः रिक्तः। मूल्यम् — मासे सहस्रम्।** A room is empty,
 at a thousand a month.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vijñāpana* comes from the causative of *vi-√jñā* "discern, know": "making known, information" (MW). The root √jñā "know" is the cousin of English *know* (EtymDB); using the word for an advertisement is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

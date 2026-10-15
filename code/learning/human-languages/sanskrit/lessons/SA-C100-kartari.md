@@ -14,7 +14,8 @@ romanization: "kartarī"
 concept_tag: SA-THINGS100-KARTARI
 prerequisites: [SA-C100-kilah, SA-C100-mudgarah]
 sounds: []
-roots: []
+roots: [sanskrit-kartari]
+etymology_hook: "kartarī 'scissors' ← √kṛt 'cut' (CDIAL 2858; MW cf. Latin curtus); Hindi katarnī 'scissors'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C100-mudgarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C100-THINGS100-03]; assesses=[] -->
 
 **कर्तरी** — *kartarī* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kartarī* "scissors" comes from the root √kṛt "cut" (CDIAL 2858), which MW compares with Latin *curtus* "cut short", the source of English *curt*. It lives on as Hindi and Punjabi *katarnī* "scissors" (CDIAL 2858).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

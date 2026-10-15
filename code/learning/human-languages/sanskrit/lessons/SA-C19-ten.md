@@ -14,7 +14,8 @@ romanization: "daśa"
 concept_tag: SA-NUM-TEN
 prerequisites: [SA-C19-nine]
 sounds: []
-roots: []
+roots: [sanskrit-dasha]
+etymology_hook: "daśan 'ten' is inherited, the same word as Latin decem and Greek deka; Hindi das (CDIAL 6227)"
 duration:
   max_seconds: 210
 requires:

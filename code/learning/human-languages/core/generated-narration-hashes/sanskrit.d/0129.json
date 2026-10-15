@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 129,
-  "sourceHash": "fnv1a64:3c160e6cb324794e",
+  "sourceHash": "fnv1a64:2a6be924e0b639bd",
   "lessonIds": [
     "SA-C129-sitalah",
     "SA-C129-navinah",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch129.txt",
   "json": "sanskrit/narration/ch129.json",
-  "textHash": "fnv1a64:568c137cb9495f0a",
-  "jsonHash": "fnv1a64:19f2f9e0bf3f8bdf",
+  "textHash": "fnv1a64:4cff5e6d1f180bbd",
+  "jsonHash": "fnv1a64:104f4500b4437d35",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "koṇaḥ"
 concept_tag: SA-LOC96-KONAH
 prerequisites: [SA-C96-rajamargah, SA-C96-catuspathah]
 sounds: []
-roots: []
+roots: [sanskrit-kona]
+etymology_hook: "koṇa 'corner' is often taken to be borrowed from Dravidian (CDIAL 3504; DEDR 2209); Hindi konā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C96-catuspathah]
 <!-- hl-knowledge: introduces=[SA-LEX-C96-LOC96-03]; assesses=[] -->
 
 **कोणः** — *koṇaḥ* — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*koṇa* "corner" is often taken to be borrowed from Dravidian: CDIAL 3504 follows Burrow in deriving it from a Dravidian word, and DEDR 2209 sets it beside a Dravidian family of words for corners. It lives on as Hindi *konā* "corner" (CDIAL 3504).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

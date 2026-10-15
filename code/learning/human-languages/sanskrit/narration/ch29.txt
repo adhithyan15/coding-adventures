@@ -14,6 +14,9 @@ You'll want to know: कृपया.
 कृपया (kṛpayā) is please, and like most polite words in most languages it is not really a word for "please" at all. It is the noun kṛpā, "compassion, kindness", put into the case that means by means of. You are saying by your kindness.
 English does the same thing and hides it just as well: please was once if it please you. Two languages, two buried sentences, one small polite noise.
 
+The word, taken apart.
+Kṛpayā is the instrumental case of kṛpā, "pity, compassion" (MW), a noun MW files under the root √kṛp. Hindi has borrowed the whole word unchanged.
+
 What you've built.
 A polite word with a whole clause folded inside it.
 
@@ -44,7 +47,10 @@ Before the new word: what did kṛpayā literally claim?
 You'll want to know: क्षम्यताम्.
 क्षम्यताम् (kṣamyatām) — "pardon me; let it be forgiven".
 क्षम्यताम् (kṣamyatām) is the apology. It is longer than sorry and it is doing more work: the root means "to be patient, to bear with, to forgive", and the form is a command addressed to nobody in particular. Let it be forgiven.
-Notice that Sanskrit has now given you three of these impersonal commands: अस्तु, "let it be", क्षम्यताम् (kṣamyatām), "let it be forgiven", and स्वस्ति, "may it be well". A polite language often prefers to leave the person out.
+Notice that Sanskrit has now given you two of these impersonal commands, अस्तु, "let it be", and क्षम्यताम् (kṣamyatām), "let it be forgiven", and a wish in the same spirit, स्वस्ति, "may it be well". A polite language often prefers to leave the person out.
+
+The word, taken apart.
+Kṣamyatām is the passive command form of the root √kṣam, "to be patient, bear with, forgive"; MW cites this very form. The noun kṣamā, "patience, forgiveness", is built on the same root (CDIAL 3659).
 
 What you've built.
 An apology that never names who should do the forgiving.
@@ -77,6 +83,9 @@ You'll want to know: प्रणामः.
 प्रणामः (praṇāmaḥ) — "a bow, a respectful salutation".
 प्रणामः (praṇāmaḥ) is a bow — the act, named as a thing. It is pra + nam, "to bend forward".
 And you have met that nam twice already without being told. नमस्ते is namas + te, "a bow to you". नमस्कारः is namas + kāra, "the making of a bow". Now प्रणामः (praṇāmaḥ): the same bending root, a third time, with a prefix. Three of the first words in this book turn out to be one gesture described three ways.
+
+The word, taken apart.
+Praṇāma is built from the prefix pra, "forward", and the root √nam, "to bend, bow" (MW), the root inside namas.
 
 What you've built.
 A root you had used twice, finally named.
@@ -112,6 +121,9 @@ You'll want to know: उपकारः.
 उपकारः (upakāraḥ) is a favour — something done for someone. Take it apart: upa, "near, toward", plus kāra, "a doing", from the root behind करोमि, "I do".
 So a favour is a doing-toward. And you have already seen kāra once, in नमस्कारः, "the making of a bow" — the same piece, in a word you have said since the first chapter. Prefixes and pieces are how Sanskrit builds, and by now you can watch it happen.
 
+The word, taken apart.
+Upakāra is built from the prefix upa, "toward", and kāra, "a doing", from the root √kṛ (MW, CDIAL 2141).
+
 What you've built.
 A second word built from the doing-root you already had.
 
@@ -143,6 +155,9 @@ You'll want to know: धन्यः.
 धन्यः (dhanyaḥ) — "fortunate, blessed".
 धन्यः (dhanyaḥ) means fortunate, blessed, rich in what matters. It is built on dhana, wealth.
 And it closes a circle. The very first thank-you in this book was धन्यवादः — and that word is dhanya + vāda, a saying of "you are fortunate". Sanskrit does not thank you by reporting your gift; it thanks you by calling you lucky. You said the word on the first day and could not see inside it. You can now.
+
+The word, taken apart.
+Dhanya is built from dhana, "prize, wealth": first "bringing wealth, rich", then "fortunate" (MW).
 
 What you've built.
 Five courtesies, and the first word of this book opened up.

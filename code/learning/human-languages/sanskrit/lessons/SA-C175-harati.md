@@ -14,7 +14,8 @@ romanization: "harati"
 concept_tag: SA-VERB-HARATI
 prerequisites: [SA-C174-palayati, SA-C174-pidayati]
 sounds: []
-roots: []
+roots: [sanskrit-harati]
+etymology_hook: "harati ← root √hṛ 'carry, take away' (MW); it lives on as Hindi harnā 'to seize' (CDIAL 13980)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C174-pidayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C175-ACT175-01]; assesses=[] -->
 
 **हरति** — *harati* — "takes away, carries off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*harati* is the present tense of the root √hṛ, which MW glosses "to take, carry, carry off". The verb lives on in Hindi *harnā*, "to take, seize, plunder" (CDIAL 13980).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

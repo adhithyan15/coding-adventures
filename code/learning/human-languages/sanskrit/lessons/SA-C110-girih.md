@@ -14,7 +14,8 @@ romanization: "giriḥ"
 concept_tag: SA-THINGS110-GIRIH
 prerequisites: [SA-C109-nimbukam, SA-C109-apupah]
 sounds: []
-roots: []
+roots: [sanskrit-giri]
+etymology_hook: "giri 'mountain' is inherited from Indo-European (EtymDB); MW compares Avestan gairi; cf. Russian gora"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C109-apupah]
 <!-- hl-knowledge: introduces=[SA-LEX-C110-THINGS110-01]; assesses=[] -->
 
 **गिरिः** — *giriḥ* — "a mountain, a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*giri* "a mountain, a hill" is inherited from Indo-European (EtymDB). MW sets it beside Avestan *gairi* "mountain", and Old Church Slavonic *gora* "mountain", still the Russian word, is a cousin (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

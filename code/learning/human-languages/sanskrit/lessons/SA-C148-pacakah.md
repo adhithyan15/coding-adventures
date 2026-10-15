@@ -14,7 +14,8 @@ romanization: "pācakaḥ"
 concept_tag: SA-PPL148-PACAKAH
 prerequisites: [SA-C147-senapatih, SA-C148-napitah]
 sounds: []
-roots: []
+roots: [sanskrit-pacaka]
+etymology_hook: "pācaka 'cook' ← √pac 'cook' + -aka 'one who' (MW); MW sets √pac beside Latin coquo and Greek pessō"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C148-napitah]
 <!-- hl-knowledge: introduces=[SA-LEX-C148-PPL148-02]; assesses=[] -->
 
 **पाचकः** — *pācakaḥ* — "a cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pācaka* is built from the root √pac "cook, bake" with the agent suffix *-aka* (MW): "one who cooks". MW sets √pac beside Latin *coquo* "I cook", the source of English *cook* and *kitchen*, and Greek *pessō*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

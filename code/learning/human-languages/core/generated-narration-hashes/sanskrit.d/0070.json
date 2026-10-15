@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 70,
-  "sourceHash": "fnv1a64:1814600ed29657c8",
+  "sourceHash": "fnv1a64:5e2cfdbfb72af509",
   "lessonIds": [
     "SA-C70-nail",
     "SA-C70-knee",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch70.txt",
   "json": "sanskrit/narration/ch70.json",
-  "textHash": "fnv1a64:217affc54fc53fa8",
-  "jsonHash": "fnv1a64:502c3ece01f0adbe",
+  "textHash": "fnv1a64:103601fd768ce24d",
+  "jsonHash": "fnv1a64:6d80f624210aad0d",
   "findings": []
 }

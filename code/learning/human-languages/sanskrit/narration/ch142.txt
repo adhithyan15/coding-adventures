@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for touches, then the Sanskrit for leaves.
 You'll want to know: तुष्यति.
 तुष्यति — tuṣyati — "is pleased, is satisfied".
 
+The word, taken apart.
+tuṣyati comes from the root √tuṣ "become calm, be satisfied, be pleased" (CDIAL 5897), inherited from Indo-European (EtymDB). santoṣa "contentment" comes from the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for leaves, then the Sanskrit for is please
 
 You'll want to know: श्राम्यति.
 श्राम्यति — śrāmyati — "gets tired".
+
+The word, taken apart.
+śrāmyati comes from the root √śram "toil, exert oneself, grow tired" (CDIAL 12693), already in the Rigveda. śrama "labour, fatigue" comes from the same root, and so does śramika "a labourer".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for is pleased, then the Sanskrit for gets 
 You'll want to know: रचयति.
 रचयति — racayati — "composes, makes".
 
+The word, taken apart.
+racayati comes from the root √rac "produce, fashion, arrange" (MW), a class-10 root known from the grammarians' Dhātupāṭha. MW gives no outside cousins for it, and racanā "a composition" comes from the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for gets tired, then the Sanskrit for compo
 You'll want to know: दर्शयति.
 दर्शयति — darśayati — "shows".
 
+The word, taken apart.
+darśayati is the causative of the root √dṛś "see": "makes see", so "shows" (CDIAL 6210). MW compares √dṛś with Greek derkomai "look", and darśana "sight" comes from the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for composes, then the Sanskrit for shows.
 
 You'll want to know: पूजयति.
 पूजयति — pūjayati — "worships".
+
+The word, taken apart.
+pūjayati comes from the root √pūj "honour, worship" (MW; CDIAL 8316), and pūjā "worship" is the noun beside it. Its deeper origin is not settled.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "śobhate"
 concept_tag: SA-VERB-SOBHATE
 prerequisites: [SA-C203-yacate, SA-C203-bhasate]
 sounds: []
-roots: []
+roots: [sanskrit-shubh-shine]
+etymology_hook: "śobhate ← root √śubh 'shine, look beautiful' (MW), the root of śubha 'auspicious'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C203-bhasate]
 <!-- hl-knowledge: introduces=[SA-LEX-C203-ACT203-05]; assesses=[] -->
 
 **शोभते** — *śobhate* — "shines, looks fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śobhate* is the present of the root √śubh, "to beautify; to look beautiful, shine" (MW). The adjective *śubha*, "bright, auspicious", comes from the same root, as in Hindi *śubh rātri*, "good night".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

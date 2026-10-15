@@ -14,7 +14,8 @@ romanization: "kāryakramaḥ"
 concept_tag: SA-WRK171-KARYAKRAMAH
 prerequisites: [SA-C171-suvidha, SA-C171-vyavastha]
 sounds: []
-roots: []
+roots: [sanskrit-karya, sanskrit-krama]
+etymology_hook: "kāryakrama ← kārya 'work to be done' + krama 'step, order' (√kram 'stride'); a modern pairing"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C171-vyavastha]
 <!-- hl-knowledge: introduces=[SA-LEX-C171-WRK171-04]; assesses=[] -->
 
 **कार्यक्रमः** — *kāryakramaḥ* — "a programme, an event".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kāryakrama* is built from *kārya* "work to be done", from √kṛ "do", and *krama* "a step, an order", from √kram "stride" (MW): "the order of things to be done". The pairing for a programme or event is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

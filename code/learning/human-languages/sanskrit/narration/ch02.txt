@@ -3,23 +3,23 @@ Sanskrit, chapter 2: Introducing Yourself.
 
 
 Lesson 1 of 14.
-नाम (nāma) — "name," the source of a word half the world shares.
+नाम (nāma) — "name," a word half the world shares.
 
 Warm-up.
 [pause 2 seconds]
-The first word of the introduction — and, since this is Sanskrit, the source of the word half the world uses.
+The first word of the introduction — and an old cousin of the word half the world uses.
 
 Sounds you'll need.
 nā, ma. A long first beat and a short second — the two vowels English keeps apart in father and sofa.
 
 The word, taken apart.
-nāma ("name," neuter) is from the stem nāman, from Proto-Indo-European h₃nomn-. This is not a borrowing from anywhere — it is the ancestor: the same root surfaces as English name, Latin nōmen ( becomes noun, nominate), Greek onoma, and, worn down, as Hindi nām, Bengali nām, Punjabi nāṁ. When you say Sanskrit nāma, you are standing near the headwaters of a word that flowed to both Europe and modern India.
+nāma ("name," neuter) is from the stem nāman, from Proto-Indo-European h₃nomn-. This is not a borrowing from anywhere — it is inherited: the same root surfaces as English name, Latin nōmen ( becomes noun, nominate), Greek onoma, and, worn down, as Hindi nām, Bengali nām, Punjabi nāṁ. Sanskrit nāma is the ancestor of the Indian forms and a cousin of the European ones: one root that flowed to both Europe and modern India.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: "nāma"]
 [pause 8 seconds for the answer]
-[your turn — say: its children, west and east — English name, Latin nōmen; Hindi nām]
+[your turn — say: its cousins west and its children east — English name, Latin nōmen; Hindi nām]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -28,17 +28,17 @@ What PIE root is nāma from, and name two of its descendants. (h₃nomn-; any tw
 
 
 Lesson 2 of 14.
-मम (mama) — "my," the ancestor of me and my.
+मम (mama) — "my," a cousin of me and my.
 
 Warm-up.
 [pause 2 seconds]
-The word that makes the name yours — and it is, quite literally, the grandparent of English my.
+The word that makes the name yours — and it shares its root with English my.
 
 Sounds you'll need.
 ma, ma. Two identical short beats, evenly stressed.
 
 The word, taken apart.
-mama ("my, of me") is the genitive of aham ("I"), on the first-person root ma-, from Proto-Indo-European me-. This is the source of the whole first-person family: English me, my, mine, Latin meus, Greek emou, and Hindi merā. Sanskrit mama and English my are not merely similar — they are the same ancient word, one still in its old form, the other worn smooth by five thousand years.
+mama ("my, of me") is the genitive of aham ("I"), on the first-person root ma-, from Proto-Indo-European me-. The same PIE stem runs through the whole first-person family: English me, my, mine, Latin meus, Greek emou, and Hindi merā. Sanskrit mama and English my are not merely similar — they are built on the same ancient stem, one kept close to its old form, the other worn smooth by five thousand years.
 
 Guided Practice.
 [pause 1 second]
@@ -91,28 +91,28 @@ Which character is this — ◌ः? What does it add to the end of a syllable? (
 
 
 Lesson 4 of 14.
-अस्ति (asti) — "is," the ancestor of is and est.
+अस्ति (asti) — "is," a cousin of is and est.
 
 Warm-up.
 [pause 2 seconds]
-The little verb "is" — and here you meet it in the form that fathered half the "to be" words on earth.
+The little verb "is" — and here you meet it in a form whose root is shared by half the "to be" words on earth.
 
 Sounds you'll need.
 as, ti. The s closes the first beat; ti follows cleanly after it.
 
 The word, taken apart.
-asti ("is") is the third-person singular of the root as- ("to be"), from Proto-Indo-European h₁es-. It is the source of the family's copula: English is, German ist, Latin est, Greek esti, and Hindi hai ( from asti directly). Unlike its Dravidian neighbours — Tamil and Bengali drop "is" in the present — Sanskrit keeps an explicit copula, and it is the very word Europe kept too.
+asti ("is") is the third-person singular of the root as- ("to be"), from Proto-Indo-European h₁es-. The same root gives the family's copula elsewhere: English is, German ist, Latin est, Greek esti. Hindi hai is often linked to asti, but CDIAL puts Old Hindi āhaï "is" under a different verb, ākṣeti "dwells" (CDIAL 1031). Unlike Tamil and Bengali, which drop "is" in the present, Sanskrit keeps an explicit copula, built on the very root Europe kept too.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: "asti"]
 [pause 8 seconds for the answer]
-[your turn — say: the family — asti / English is / Latin est / Greek esti / Hindi hai]
+[your turn — say: the family — asti / English is / Latin est / Greek esti]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What root is asti from, and its cousins across the family? (As- / PIE h₁es-; English is, Latin est, Hindi hai.)
+What root is asti from, and its cousins across the family? (As- / PIE h₁es-; English is, Latin est.)
 
 
 Lesson 5 of 14.
@@ -199,7 +199,7 @@ Sounds you'll need.
 bha, vān. The bh is one sound — a b released with breath behind it. The second beat carries a long ā and closes on n.
 
 The word, taken apart.
-Bhavān ("you," respectful) is not really a second-person word at all: it is a third-person honorific — "your honour," from bhavat ("being, gracious one") — and so it takes a third-person verb (bhavān asti, "your honour is"). For a first meeting, use bhavān.
+Bhavān ("you," respectful) is not really a second-person word at all: it is a third-person honorific — "your honour," from bhavat ("being, present," of the root √bhū "be") — and so it takes a third-person verb (bhavān asti, "your honour is"). For a first meeting, use bhavān.
 
 Grammar Lens: politeness by grammatical person.
 Where Hindi and Punjabi make respect plural (āp … haiṁ), Sanskrit makes it third-person: to be polite you address someone as though speaking about them — "is your honour well?" rather than "are you well?" Different trick, same courtesy.
@@ -223,7 +223,7 @@ Lesson 8 of 14.
 
 Warm-up.
 [pause 2 seconds]
-The other "you" — the one you use with friends, and the ancestor of English thou.
+The other "you" — the one you use with friends, and a cousin of English thou.
 
 Sounds you'll need.
 tvam — one beat. The tv- is a single push, t and v said together, and then the lips close on m.
@@ -250,13 +250,13 @@ Lesson 9 of 14.
 
 Warm-up.
 [pause 2 seconds]
-The question-word — and the fountainhead of a whole family of "wh-" words, east and west.
+The question-word — and a cousin of a whole family of "wh-" words in the west.
 
 Sounds you'll need.
 kim — one short beat, closing on m with no vowel after it.
 
 The word, taken apart.
-kim ("what") is from the interrogative stem ka-, from Proto-Indo-European kʷo- — the ancestor of the whole question-family: English what, who, which, Latin quis / quid, Greek tis, and Hindi kyā / kaun. Sanskrit's own questions all grow from this ka-: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). It is the single seed from which both Europe's qu-/wh- words and India's k- words grew.
+kim ("what") is from the interrogative stem ka-, from Proto-Indo-European kʷo- — the ancestor of the whole question-family: English what, who, which, Latin quis / quid, Greek tis, and Hindi kyā / kaun. Sanskrit's own questions all grow from this ka-: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). Its PIE ancestor is the single seed from which both Europe's qu-/wh- words and India's k- words grew.
 
 Guided Practice.
 [pause 1 second]
@@ -264,7 +264,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the ka- family — kim, kaḥ, kadā, kutra, katham]
 [pause 8 seconds for the answer]
-[your turn — say: its western children (English what, Latin quis)]
+[your turn — say: its western cousins (English what, Latin quis)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -326,6 +326,7 @@ Turn the introduction around — ask, instead of tell.
 
 The phrase, taken apart.
 tava ("your," the genitive of tvam) + nāma (name) + kim (what) becomes "your name what?" Here Sanskrit often drops the asti: tava nāma kim? stands complete, the question-word alone doing the work.
+Tava comes from the same inherited second-person stem as tvam, the stem behind Latin tū and English thou; kim is built on the old question stem ka- (MW).
 
 Grammar Lens: the respectful version.
 Tava ("your") is the familiar form, matching tvam. To a respected stranger, use the honorific: bhavataḥ nāma kim? (bhavataḥ, "of your honour"). Note mama / tava / bhavataḥ — "my / your / your-honour's" — all built the same way, as genitives.
@@ -356,6 +357,7 @@ Sounds you'll need.
 
 The word, taken apart.
 To say "pleased to meet you," Sanskrit can say bhavantaṁ dṛṣṭvā ānandaḥ — "seeing you, [there is] joy." The key word ānandaḥ ("joy, bliss, delight") is from ā- ("fully") + the root nand ("to rejoice"). It is one of Sanskrit's most beloved words — the ānanda of sat-cit-ānanda ("being-consciousness-bliss"), and the name Ānanda, the Buddha's devoted disciple. So a simple greeting reaches for the word Indian thought uses for the deepest happiness.
+The noun is built on the root √nand "to rejoice" with the prefix ā-, and it is already in the Rigveda (MW, CDIAL 1172).
 
 Guided Practice.
 [pause 1 second]
@@ -464,13 +466,13 @@ Script — the chapter's four shapes.
 
 What you've built: every atom is a source.
 [pause 2 seconds]
-Every word in that exchange is an ancestor, not a borrowing:
-nāma becomes English name, Latin nōmen.
-mama becomes English my, me.
-asti becomes English is, Latin est, Hindi hai.
-kim becomes English what, Latin quid.
+Every word in that exchange is inherited, not borrowed, and each is a cousin of words you know:
+nāma: English name, Latin nōmen.
+mama: English my, me.
+asti: English is, Latin est.
+kim: English what, Latin quid.
 And Sanskrit keeps the copula that its Dravidian neighbours drop. Next chapter: bhavān katham asti? — "how are you?"
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give your name in Sanskrit, ask for someone else's, and name two English words this chapter's vocabulary is the ancestor of. (Mama nāma … asti; tava nāma kim?; any two of name, my, is, what.)
+Give your name in Sanskrit, ask for someone else's, and name two English cousins of this chapter's vocabulary. (Mama nāma … asti; tava nāma kim?; any two of name, my, is, what.)

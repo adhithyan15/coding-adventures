@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 151,
-  "sourceHash": "fnv1a64:235a04babd1c8743",
+  "sourceHash": "fnv1a64:eac25cc180a02c78",
   "lessonIds": [
     "SA-C151-utsahah",
     "SA-C151-dhairyam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch151.txt",
   "json": "sanskrit/narration/ch151.json",
-  "textHash": "fnv1a64:d4d5b3cc58341ae9",
-  "jsonHash": "fnv1a64:4539b2ed316e441f",
+  "textHash": "fnv1a64:35c23c50413ae9c9",
+  "jsonHash": "fnv1a64:014aef8e01b20fc7",
   "findings": []
 }

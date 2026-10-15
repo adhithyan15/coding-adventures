@@ -14,7 +14,8 @@ romanization: "namratā"
 concept_tag: SA-COURTESY-NAMRATA
 prerequisites: [SA-C43-conduct, SA-C41-boat, SA-C42-mostly]
 sounds: []
-roots: []
+roots: [sanskrit-namra, sanskrit-nam-bend]
+etymology_hook: "namratā 'humility' ← namra 'bowing' + -tā '-ness', from the root √nam 'bend, bow' (MW; CDIAL 6964)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C43-conduct]
 It stands on *nam*, "to bow", which is the *nam* that opens नमस्ते on your first page and sits inside प्रणामः. Those two are single acts; **नम्रता** is the same bow turned into a settled habit.
 
 Hindi *namratā* is the word people still use of someone who carries success lightly.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Namratā* is built from *namra*, "bowing, bent", and the abstract ending *-tā*;
+*namra* itself is built on the root √nam, "to bend, bow" (MW, CDIAL 6964).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

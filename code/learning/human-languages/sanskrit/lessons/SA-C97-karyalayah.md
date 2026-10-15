@@ -14,7 +14,8 @@ romanization: "kāryālayaḥ"
 concept_tag: SA-LOC97-KARYALAYAH
 prerequisites: [SA-C96-pustakalayah, SA-C96-visvavidyalayah]
 sounds: []
-roots: []
+roots: [sanskrit-karya, sanskrit-alaya]
+etymology_hook: "kāryālaya ← kārya 'work to be done' (√kṛ 'do') + ālaya 'dwelling'; the pairing for an office is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C96-visvavidyalayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C97-LOC97-01]; assesses=[] -->
 
 **कार्यालयः** — *kāryālayaḥ* — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kāryālaya* is built from *kārya* "work, business to be done", formed from the root √kṛ "do" (MW), and *ālaya* "dwelling, house". The pairing for an office is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

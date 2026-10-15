@@ -14,7 +14,8 @@ romanization: "vāyuḥ"
 concept_tag: SA-SKY-VAYU
 prerequisites: [SA-C31-star, SA-C29-favour, SA-C30-garland]
 sounds: []
-roots: []
+roots: [sanskrit-vayu]
+etymology_hook: "vāyu 'wind' ← the root √vā 'blow'; MW compares Latin ventus and English wind (CDIAL 11544)"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,7 @@ reviews_of: [SA-C31-star]
 
 **वायुः** is the wind, and also the air it is made of. Its root means "to blow", so the word says what the thing does.
 
-English *wind* is the same word worn down, and so are German *Wind*, Gothic *winds* and Latin *ventus*, which gives *vent* and *ventilate*. Ends in *-uḥ*, the ending you had on **गुरुः**.
+English *wind* grows from the same root, and so do German *Wind*, Gothic *winds* and Latin *ventus*, which gives *vent* and *ventilate*. Ends in *-uḥ*, the ending you had on **गुरुः**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

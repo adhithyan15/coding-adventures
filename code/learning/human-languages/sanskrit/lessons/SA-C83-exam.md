@@ -14,7 +14,8 @@ romanization: "parīkṣā"
 concept_tag: SA-SCHOOL-EXAM
 prerequisites: [SA-C83-teacher, SA-C83-lesson]
 sounds: []
-roots: []
+roots: [sanskrit-pariksha]
+etymology_hook: "parīkṣā 'examination, test' ← pari 'around' + the root √īkṣ 'look' (MW; CDIAL 7904)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C83-lesson]
 <!-- hl-knowledge: introduces=[SA-LEX-C83-SCHOOL-05]; assesses=[] -->
 
 **परीक्षा** (*parīkṣā*) — "an exam", "a test": looking all around a thing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Parīkṣā* is built from *pari*, "around", and the root √īkṣ, "to look": to examine
+is to look all around a thing (MW, CDIAL 7904).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

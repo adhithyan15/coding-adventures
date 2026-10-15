@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a farmer, then the Sanskrit for a merch
 You'll want to know: सप्ताहः.
 सप्ताहः (saptāhaḥ) — "a week": सप्त, "seven", with अह, "day".
 
+The word, taken apart.
+Saptāha is built from sapta, "seven", and aha, "day" (MW, CDIAL 13161). In the Brāhmaṇas it names a seven-day rite; the plain sense "week" is later.
+
 What you've built.
 Seven plus day.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a merchant, then the Sanskrit for a wee
 
 You'll want to know: सोमवासरः.
 सोमवासरः (somavāsaraḥ) — "Monday": सोम, "the moon", with वासरः, "day".
+
+The word, taken apart.
+Somavāsara is built from soma, the pressed drink and the moon, and vāsara, "day", a word MW derives from the root √vas, "to shine". MW records the compound as "Monday".
 
 What you've built.
 The moon's day.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a week, then the Sanskrit for Monday.
 You'll want to know: मंगलवासरः.
 मंगलवासरः (maṅgalavāsaraḥ) — "Tuesday", the day of मंगल, Mars.
 
+The word, taken apart.
+Maṅgalavāsara is built from maṅgala, "welfare, auspiciousness", the name given to the planet Mars, and vāsara, "day" (MW).
+
 What you've built.
 Mars's day.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for Monday, then the Sanskrit for Tuesday.
 You'll want to know: बुधवासरः.
 बुधवासरः (budhavāsaraḥ) — "Wednesday", the day of बुध, Mercury.
 
+The word, taken apart.
+Budhavāsara is built from budha, "awake, wise", from the root √budh, "to wake", the name given to Mercury, and vāsara, "day" (MW). MW records the day as budhavāra, with vāra, "turn", in place of vāsara.
+
 What you've built.
 Mercury's day.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for Tuesday, then the Sanskrit for Wednesda
 
 You'll want to know: गुरुवासरः.
 गुरुवासरः (guruvāsaraḥ) — "Thursday", the day of Jupiter, called गुरुः, "the teacher" — a word you know.
+
+The word, taken apart.
+Guruvāsara is built from guru, "heavy, the teacher", the name given to Jupiter, and vāsara, "day" (MW). MW records the day as guruvāra, with vāra, "turn", in place of vāsara.
 
 What you've built.
 The teacher's day.

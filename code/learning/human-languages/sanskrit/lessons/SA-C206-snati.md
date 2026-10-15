@@ -14,7 +14,8 @@ romanization: "snāti"
 concept_tag: SA-VERB-SNATI
 prerequisites: [SA-C205-vikasati, SA-C206-majjati]
 sounds: []
-roots: []
+roots: [sanskrit-snati]
+etymology_hook: "snāti ← root √snā 'bathe'; MW compares Latin nāre 'to swim'; Hindi nahānā (CDIAL 13786)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C206-majjati]
 <!-- hl-knowledge: introduces=[SA-LEX-C206-ACT206-02]; assesses=[] -->
 
 **स्नाति** — *snāti* — "bathes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*snāti* is the present of the root √snā, "to bathe" (MW). The root is inherited from Indo-European: MW compares Latin *nāre*, "to swim". It lives on as Hindi *nahānā*, "to bathe" (CDIAL 13786).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

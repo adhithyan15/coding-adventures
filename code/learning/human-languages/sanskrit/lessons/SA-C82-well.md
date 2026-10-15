@@ -14,7 +14,8 @@ romanization: "kūpaḥ"
 concept_tag: SA-WATER-WELL
 prerequisites: [SA-C81-forest, SA-C82-lake]
 sounds: []
-roots: []
+roots: [sanskrit-kupa]
+etymology_hook: "kūpa 'hollow, pit, well' is Rigvedic; MW guesses ku + ap 'water'; Hindi kūā (CDIAL 3400)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C82-lake]
 <!-- hl-knowledge: introduces=[SA-LEX-C82-WATER-02]; assesses=[] -->
 
 **कूपः** (*kūpaḥ*) — "a well", water from under the ground.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kūpa* first meant a hole or hollow, in the Rigveda, and then a well (CDIAL 3400).
+MW tentatively splits it into *ku* + *ap*, "water", but that is a guess. It lives
+on as Hindi *kūā*, "well".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

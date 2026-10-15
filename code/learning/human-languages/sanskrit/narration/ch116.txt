@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a butterfly, then the Sanskrit for a ro
 You'll want to know: सारसः.
 सारसः — sārasaḥ — "a crane".
 
+The word, taken apart.
+sārasa is built from saras "a lake, a pond" (CDIAL 13359): first "belonging to a lake", then the Indian crane (MW). Hindi and Marathi kept it as sāras "crane" (CDIAL 13359).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a rooster, then the Sanskrit for a cran
 
 You'll want to know: कपोलः.
 कपोलः — kapolaḥ — "a cheek".
+
+The word, taken apart.
+kapola "the cheek" is probably borrowed from Austroasiatic, or possibly from Dravidian, as CDIAL 2755 reports after EWA; DEDR 1337 sets it, with a query mark, beside a Dravidian word for the cheek. Pali kept it as kapola (CDIAL 2755).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a crane, then the Sanskrit for a cheek.
 You'll want to know: चिबुकम्.
 चिबुकम् — cibukam — "the chin".
 
+The word, taken apart.
+cibuka "the chin" is taken to be borrowed from Munda (CDIAL 4820, after Kuiper and EWA); the Rigveda already has a form chubuka. Pali kept it as cubuka (CDIAL 4820).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a cheek, then the Sanskrit for the chin
 You'll want to know: कूर्परः.
 कूर्परः — kūrparaḥ — "an elbow".
 
+The word, taken apart.
+kūrpara "the elbow" appears in the medical writer Suśruta, and neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Marathi kopar "elbow" (CDIAL 3413).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for the chin, then the Sanskrit for an elbo
 
 You'll want to know: मणिबन्धः.
 मणिबन्धः — maṇibandhaḥ — "a wrist".
+
+The word, taken apart.
+maṇibandha is built from maṇi "jewel, bead" and bandha "tying": the wrist is where jewels are tied on (MW). DEDR 4673 points out that the Dravidian word for the wrist, Kannada maṇikaṭṭu, is built the same way, and takes bandha as a translation of its kaṭṭu "tie".
 
 What you've built.
 One more word for this chapter.

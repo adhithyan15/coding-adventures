@@ -14,7 +14,8 @@ romanization: "āsvādayati"
 concept_tag: SA-VERB-ASVADAYATI
 prerequisites: [SA-C207-divyati, SA-C207-pravahati]
 sounds: []
-roots: []
+roots: [sanskrit-asvada]
+etymology_hook: "āsvādayati ← ā- + causative of √svad 'taste sweet' (MW); its adjective svādu is kin to English sweet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C207-pravahati]
 <!-- hl-knowledge: introduces=[SA-LEX-C207-ACT207-03]; assesses=[] -->
 
 **आस्वादयति** — *āsvādayati* — "tastes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āsvādayati* is built on *ā-* and the causative of the root √svad, "to taste well, be sweet" (MW). MW derives the root, probably, from *su* "well" and √ad "eat", and compares its adjective *svādu*, "sweet", with Latin *suāvis* and English *sweet*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

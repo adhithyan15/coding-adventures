@@ -14,7 +14,8 @@ romanization: "kiyat"
 concept_tag: SA-WHY185-KIYAT
 prerequisites: [SA-C184-uccaih, SA-C184-nicaih]
 sounds: []
-roots: []
+roots: [ka-interrogative]
+etymology_hook: "kiyat 'how much' ← the interrogative stem ki- (MW), the stem of Latin quis 'who', inherited from Indo-European"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C184-nicaih]
 <!-- hl-knowledge: introduces=[SA-LEX-C185-WHY185-01]; assesses=[] -->
 
 **कियत्** — *kiyat* — "how much?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kiyat* is built on *ki-*, the stem that asks a question (MW), the way *iyat* means "so much". That interrogative stem is inherited from Indo-European, and Latin *quis*, "who", is usually traced to the same source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

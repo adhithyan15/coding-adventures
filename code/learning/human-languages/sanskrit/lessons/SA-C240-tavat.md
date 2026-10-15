@@ -14,7 +14,8 @@ romanization: "tāvat"
 concept_tag: SA-TIME240-TAVAT
 prerequisites: [SA-C239-daya, SA-C239-karuna]
 sounds: []
-roots: []
+roots: [sanskrit-tavat]
+etymology_hook: "tāvat 'so long, so much' ← the pronoun stem ta- 'that'; MW compares Latin tantus (CDIAL 5804)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C239-karuna]
 <!-- hl-knowledge: introduces=[SA-LEX-C240-TIME240-01]; assesses=[] -->
 
 **तावत्** — *tāvat* — "so long, meanwhile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tāvat* is built on the pronoun stem *ta-*, "that" (MW): "so much, so long", the partner of *yāvat*, "as long as", which you have already met. It is a Rigvedic word (CDIAL 5804), and MW compares Latin *tantus*, "so great".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

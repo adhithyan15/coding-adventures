@@ -15,6 +15,9 @@ Before the new word:
 You'll want to know: ज्वरः.
 ज्वरः (jvaraḥ) — "a fever". मम ज्वरः अस्ति (mama jvaraḥ asti) — "I have a fever", literally "of me a fever is", with मम and अस्ति, which you know.
 
+The word, taken apart.
+Jvara is built on the root √jvar, "to be feverish", which MW sets beside √jval, "to burn, blaze" (CDIAL 5303). It lives on as Hindi and Bengali jar, "fever".
+
 What you've built.
 An illness, said with of-me and is.
 
@@ -45,6 +48,9 @@ Before the new one: say the Sanskrit for first, then the Sanskrit for a fever.
 
 You'll want to know: कासः.
 कासः (kāsaḥ) — "a cough". मम कासः अस्ति — "I have a cough".
+
+The word, taken apart.
+Kāsa is built on the root √kās, "to cough", and the noun is already in the Atharvaveda (MW, CDIAL 3138). It lives on as Hindi khāṃsī, "cough".
 
 What you've built.
 The same frame, a new illness.
@@ -77,6 +83,9 @@ Before the new one: say the Sanskrit for a fever, then the Sanskrit for a cough.
 You'll want to know: पीडा.
 पीडा (pīḍā) — "pain". शिरः + पीडा: शिरःपीडा, "a headache".
 
+The word, taken apart.
+Pīḍā is built on the root √pīḍ, "to press, squeeze" (MW), so pain is named as pressure. It lives on as Hindi pīṛ, "pain" (CDIAL 8227).
+
 What you've built.
 Pain, and where it is.
 
@@ -106,6 +115,9 @@ Before the new one: say the Sanskrit for a cough, then the Sanskrit for pain.
 You'll want to know: रोगः.
 रोगः (rogaḥ) — "an illness", the general word under ज्वरः (jvaraḥ) and कासः (kāsaḥ).
 
+The word, taken apart.
+Roga is built on the root √ruj, "to break"; MW glosses it "breaking up of strength" (CDIAL 10829). It is already in the Atharvaveda.
+
 What you've built.
 The word over all the others.
 
@@ -134,6 +146,9 @@ Before the new one: say the Sanskrit for pain, then the Sanskrit for an illness.
 
 You'll want to know: आरोग्यम्.
 आरोग्यम् (ārogyam) — "health": आ-, then रोग, "illness", with -य after it — the state of the body once the illness is gone.
+
+The word, taken apart.
+Ārogya is built from a-roga, "free from disease": a- "not" with roga "disease", made into an abstract noun (MW, CDIAL 1330).
 
 What you've built.
 What you wish someone who is ill.

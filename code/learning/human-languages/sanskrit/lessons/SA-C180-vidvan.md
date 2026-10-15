@@ -14,7 +14,8 @@ romanization: "vidvān"
 concept_tag: SA-PPL180-VIDVAN
 prerequisites: [SA-C180-yacakah, SA-C180-panditah]
 sounds: []
-roots: []
+roots: [sanskrit-vidvas]
+etymology_hook: "vidvān ← vidvas 'one who knows', the perfect participle of √vid 'know' (MW); √vid is Latin vidēre's kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C180-panditah]
 <!-- hl-knowledge: introduces=[SA-LEX-C180-PPL180-05]; assesses=[] -->
 
 **विद्वान्** — *vidvān* — "a learned person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vidvān* is the nominative of *vidvas*, "one who knows", the old perfect participle of the root √vid, "to know" (MW). The root is inherited from Indo-European; MW compares Latin *vidēre*, "to see".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "icchati"
 concept_tag: VERB-WANT
 prerequisites: [SA-C57-shaknoti, SA-C08-pathati]
 sounds: []
-roots: []
+roots: [sanskrit-icchati]
+etymology_hook: "icchati 'wishes' ← the root √iṣ 'seek, wish'; MW compares Old English āscian, the source of ask (CDIAL 1556)"
 duration:
   max_seconds: 260
 requires:
@@ -66,6 +67,13 @@ two things to plug into it.
 
 The root is **इष्**, "to seek" — and the noun it makes is one you may have met
 in English writing about India: **इच्छा** (*icchā*), "wish, desire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Icchati* is the present of the root √iṣ, "to seek, wish" (CDIAL 1556). It is
+inherited: MW compares Old English *āscian*, the ancestor of English **ask**, and
+Russian *iskat'*, "to seek".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

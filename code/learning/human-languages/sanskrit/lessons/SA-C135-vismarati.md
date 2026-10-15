@@ -14,7 +14,8 @@ romanization: "vismarati"
 concept_tag: SA-VERB-VISMARATI
 prerequisites: [SA-C135-siksate, SA-C135-pathayati]
 sounds: []
-roots: []
+roots: [sanskrit-vismarati]
+etymology_hook: "vismarati ← vi 'away' + √smṛ 'remember' (CDIAL 12021); MW compares Latin memor; Hindi bisarnā 'forget'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C135-pathayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C135-ACT135-03]; assesses=[] -->
 
 **विस्मरति** — *vismarati* — "forgets".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vismarati* comes from *vi* "away, apart" and the root √smṛ "remember" (CDIAL 12021): "remembers away", forgets. MW compares √smṛ with Latin *memor* "mindful", the source of English *memory*; it lives on as Hindi *bisarnā* "to forget" (CDIAL 12021).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

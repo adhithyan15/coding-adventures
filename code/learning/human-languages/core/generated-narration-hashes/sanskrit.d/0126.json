@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 126,
-  "sourceHash": "fnv1a64:86d17e1e078021e7",
+  "sourceHash": "fnv1a64:6c14fe3f49e87efd",
   "lessonIds": [
     "SA-C126-vistrtah",
     "SA-C126-sankirnah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch126.txt",
   "json": "sanskrit/narration/ch126.json",
-  "textHash": "fnv1a64:b2913fd72c3853fe",
-  "jsonHash": "fnv1a64:25be9f95232e08cb",
+  "textHash": "fnv1a64:f2ce3c442fac6b4c",
+  "jsonHash": "fnv1a64:e69ffc9d270e374b",
   "findings": []
 }

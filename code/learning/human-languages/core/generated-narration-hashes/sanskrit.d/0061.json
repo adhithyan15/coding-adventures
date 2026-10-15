@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 61,
-  "sourceHash": "fnv1a64:43040dbf6086e550",
+  "sourceHash": "fnv1a64:cd004d8f14ab1d51",
   "lessonIds": [
     "SA-C61-rtu",
     "SA-S225-letter-vocalic-r"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "sanskrit/narration/ch61.txt",
   "json": "sanskrit/narration/ch61.json",
-  "textHash": "fnv1a64:9cd0c147475b524e",
-  "jsonHash": "fnv1a64:80635754321cb5b3",
+  "textHash": "fnv1a64:3afeaa254bfbca08",
+  "jsonHash": "fnv1a64:cd4dab7115bd2890",
   "findings": []
 }

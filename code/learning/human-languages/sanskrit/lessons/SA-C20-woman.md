@@ -14,7 +14,8 @@ romanization: "nārī"
 concept_tag: SA-NOUN-WOMAN
 prerequisites: [SA-C20-man, SA-C18-why, SA-C19-seven]
 sounds: []
-roots: []
+roots: [sanskrit-nara]
+etymology_hook: "nārī 'woman' ← nṛ/nara 'man' with the feminine -ī (MW); it lives on as Hindi nār (CDIAL 7078)"
 duration:
   max_seconds: 210
 requires:
@@ -51,6 +52,13 @@ So the map has grown again: *-am* neuter, *-aḥ* masculine, *-iḥ* a third fam
 and now *-ī* feminine. Four endings, four families. You are not being asked to
 produce them — only to hear them, because everything Sanskrit does with a noun
 starts here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Nārī* is built from the stem of *nara*, "man", with the feminine ending *-ī*
+(MW). It is already in the Rigveda and lives on as Hindi *nār*, "woman" (CDIAL
+7078).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

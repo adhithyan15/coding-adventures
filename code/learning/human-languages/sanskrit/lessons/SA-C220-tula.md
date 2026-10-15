@@ -14,7 +14,8 @@ romanization: "tulā"
 concept_tag: SA-THG220-TULA
 prerequisites: [SA-C219-sevaphalam, SA-C219-cipitakah]
 sounds: []
-roots: []
+roots: [sanskrit-tula]
+etymology_hook: "tulā 'balance' ← root √tul 'lift, weigh'; MW compares Latin tulī 'I carried' (CDIAL 5886)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C219-cipitakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C220-THG220-01]; assesses=[] -->
 
 **तुला** — *tulā* — "a balance, scales".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tulā* is built on the root √tul, "to lift up, weigh" (MW): a balance lifts things to weigh them (CDIAL 5886). MW compares the root with Latin *tulī*, "I carried", an inherited Indo-European root. It is also the sign Libra, the Scales.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

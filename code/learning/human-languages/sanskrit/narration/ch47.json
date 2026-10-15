@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Parts of a House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1283c0f368591da3",
+  "sourceHash": "fnv1a64:7c48e403bd2d4df8",
   "lessons": [
     {
       "id": "SA-C47-wall",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30428180ce627de6",
+      "sourceHash": "fnv1a64:2e33655ae219e155",
       "notice": null,
       "blocks": [
         {
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efa29a6f205b84b3",
+      "sourceHash": "fnv1a64:a0324a03bd690fcd",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +208,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vātāyana is a compound of vāta, \"wind\", built on the root √vā \"to blow\", and ayana, \"a going, a passage\"; MW glosses it \"wind-passage\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +229,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +287,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +318,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2081eb2e6973842",
+      "sourceHash": "fnv1a64:b836d6e74d380e8b",
       "notice": null,
       "blocks": [
         {
@@ -342,7 +353,7 @@
             },
             {
               "kind": "speech",
-              "text": "The usual way of taking it apart reads it as \"the means of going up\" — a small joining word in front, and behind it the sense of rising. The word carries its purpose on its face, the way वातायनम् (vātāyanam) does."
+              "text": "One way of taking it apart reads it as \"the approach\" — a small joining word in front, and behind it a word for coming near. If that is right, the word carries its purpose on its face, the way वातायनम् (vātāyanam) does."
             },
             {
               "kind": "speech",
@@ -352,6 +363,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW suggests sopāna may be contracted from sa + upāyana, \"approach\", and CDIAL 13606 repeats this with a question mark, so it is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +384,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +442,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +473,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d36e971bb3b6c16c",
+      "sourceHash": "fnv1a64:297c18a6cbdfe1ca",
       "notice": null,
       "blocks": [
         {
@@ -490,12 +512,23 @@
             },
             {
               "kind": "speech",
-              "text": "English staff and stamp sit near it, and the picture under all three is one thing: something planted hard and standing. Ends in -अः."
+              "text": "English stamp and stump sit near it (MW), and the picture under all three is one thing: something planted hard and standing. Ends in -अः."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stambha is built on the root √stambh, \"to prop, make firm\" (MW, CDIAL 13682). It lives on as Punjabi thambh, \"pillar\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +539,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +597,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +628,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab793ff554e122c8",
+      "sourceHash": "fnv1a64:3f5cfe8de1356b35",
       "notice": null,
       "blocks": [
         {

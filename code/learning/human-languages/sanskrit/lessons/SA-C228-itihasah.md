@@ -14,7 +14,8 @@ romanization: "itihāsaḥ"
 concept_tag: SA-SCH228-ITIHASAH
 prerequisites: [SA-C227-cancuh, SA-C227-grdhrah]
 sounds: []
-roots: []
+roots: [sanskrit-itihasa]
+etymology_hook: "itihāsa = iti ha āsa 'so indeed it was' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C227-grdhrah]
 <!-- hl-knowledge: introduces=[SA-LEX-C228-SCH228-01]; assesses=[] -->
 
 **इतिहासः** — *itihāsaḥ* — "history".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*itihāsa* is built from a phrase frozen into a word: *iti*, "thus", *ha*, "indeed", and *āsa*, "it was" (MW). History is "so indeed it was", the telling of past events.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

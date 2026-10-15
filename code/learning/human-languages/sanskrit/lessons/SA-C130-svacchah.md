@@ -14,7 +14,8 @@ romanization: "svacchaḥ"
 concept_tag: SA-QUAL130-SVACCHAH
 prerequisites: [SA-C130-sabalah, SA-C130-durbalah]
 sounds: []
-roots: []
+roots: [sanskrit-svaccha]
+etymology_hook: "svaccha ← su 'very, well' + accha 'clear, transparent': 'very clear, crystalline' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C130-durbalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C130-QUAL130-05]; assesses=[] -->
 
 **स्वच्छः** — *svacchaḥ* — "clear, clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*svaccha* is built from *su* "very, well" and *accha* "clear, transparent" (MW): "very clear, crystalline", and so "clean".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

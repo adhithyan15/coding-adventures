@@ -14,7 +14,8 @@ romanization: "pravahati"
 concept_tag: SA-VERB-PRAVAHATI
 prerequisites: [SA-C206-unmilayati, SA-C207-divyati]
 sounds: []
-roots: []
+roots: [sanskrit-pravahati, sanskrit-vahati]
+etymology_hook: "pravahati ← pra 'forth' + √vah 'carry': 'carries forward', so 'flows' (MW; CDIAL 8792)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C207-divyati]
 <!-- hl-knowledge: introduces=[SA-LEX-C207-ACT207-02]; assesses=[] -->
 
 **प्रवहति** — *pravahati* — "flows".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pravahati* is built on *pra*, "forth", and the root √vah, "to carry" (MW), the root of *vahati*, "carries", which you have already met. CDIAL 8792 lists it, and Marathi *pohṇẽ*, "to swim, float", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -48,6 +48,9 @@ You'll want to know: वातायनम्.
 It is vāta, wind, joined to ayana, a going: a window is the wind's way in. You already say वायुः for wind, and vāta is its near relative from the same root, "to blow".
 Set it against भित्तिः (bhittiḥ) and the pair makes sense of a room: the wall shuts, the window opens. Neuter, ending in -अम्.
 
+The word, taken apart.
+Vātāyana is a compound of vāta, "wind", built on the root √vā "to blow", and ayana, "a going, a passage"; MW glosses it "wind-passage".
+
 What you've built.
 The opening in the wall, named for what comes through it.
 
@@ -78,8 +81,11 @@ Before the new word: what did vātāyanam mean?
 You'll want to know: सोपानम्.
 सोपानम् (sopānam) — "a stair".
 सोपानम् (sopānam) is a stair, a flight of steps.
-The usual way of taking it apart reads it as "the means of going up" — a small joining word in front, and behind it the sense of rising. The word carries its purpose on its face, the way वातायनम् (vātāyanam) does.
+One way of taking it apart reads it as "the approach" — a small joining word in front, and behind it a word for coming near. If that is right, the word carries its purpose on its face, the way वातायनम् (vātāyanam) does.
 It stayed home and stayed itself: Hindi and Marathi both keep sopān for a stair. Neuter, ending in -अम्.
+
+The word, taken apart.
+MW suggests sopāna may be contracted from sa + upāyana, "approach", and CDIAL 13606 repeats this with a question mark, so it is not settled.
 
 What you've built.
 The way up, added to the wall and the window.
@@ -112,7 +118,10 @@ You'll want to know: स्तम्भः.
 स्तम्भः (stambhaḥ) — "a pillar".
 स्तम्भः (stambhaḥ) is a pillar, a post: the upright that carries a roof.
 It rests on stambh, "to prop, to make firm". Where भित्तिः (bhittiḥ) splits a space, स्तम्भः (stambhaḥ) holds one open — a wall you can walk past.
-English staff and stamp sit near it, and the picture under all three is one thing: something planted hard and standing. Ends in -अः.
+English stamp and stump sit near it (MW), and the picture under all three is one thing: something planted hard and standing. Ends in -अः.
+
+The word, taken apart.
+Stambha is built on the root √stambh, "to prop, make firm" (MW, CDIAL 13682). It lives on as Punjabi thambh, "pillar".
 
 What you've built.
 What holds the roof up, beside what closes the room in.

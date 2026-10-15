@@ -14,7 +14,8 @@ romanization: "sapta"
 concept_tag: SA-NUM-SEVEN
 prerequisites: [SA-C19-six]
 sounds: []
-roots: []
+roots: [sanskrit-sapta]
+etymology_hook: "saptan 'seven' is inherited: MW compares Latin septem and Greek hepta; Hindi sāt (CDIAL 13139)"
 duration:
   max_seconds: 210
 requires:

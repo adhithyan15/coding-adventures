@@ -14,7 +14,8 @@ gloss: "silence"
 concept_tag: SA-ANCHOR-MAUNA
 prerequisites: [SA-S121-letter-u]
 sounds: []
-roots: []
+roots: [sanskrit-mauna]
+etymology_hook: "mauna 'silence' ← muni 'sage': first the state of a muni, who kept a vow of silence (MW)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,12 @@ variety: standard-colloquial
 
 Say it: *mauna*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ौ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mauna* is formed from *muni*, "sage": it first named the state of a sage,
+who often kept a vow of silence (MW).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-ANCHOR-MAUNA] -->

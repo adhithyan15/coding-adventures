@@ -14,7 +14,8 @@ romanization: "vidyālayaḥ"
 concept_tag: SA-SCHOOL-SCHOOL
 prerequisites: [SA-C82-island, SA-C82-shore]
 sounds: []
-roots: []
+roots: [sanskrit-vidya, sanskrit-alaya]
+etymology_hook: "vidyālaya ← vidyā 'knowledge' (√vid 'know') + ālaya 'dwelling'; MW records 'school' from a late dictionary"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,13 @@ reviews_of: [SA-C82-shore]
 
 **विद्यालयः** (*vidyālayaḥ*) — "a school": **विद्या**, "knowledge", with **आलयः**,
 "home". A school is a home of knowledge.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vidyālaya* is built from *vidyā*, "knowledge", from the root √vid, and *ālaya*,
+"a dwelling". MW records it as "seat of learning, a school" only from a
+nineteenth-century dictionary, so the everyday school sense is recent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 19,
-  "sourceHash": "fnv1a64:731aa0613ab2d8b2",
+  "sourceHash": "fnv1a64:27534a265ecb05af",
   "lessonIds": [
     "SA-C19-six",
     "SA-C19-seven",
@@ -15,6 +15,6 @@
   "text": "sanskrit/narration/ch19.txt",
   "json": "sanskrit/narration/ch19.json",
   "textHash": "fnv1a64:8457fd2da94ba53c",
-  "jsonHash": "fnv1a64:b6009bdece4444f8",
+  "jsonHash": "fnv1a64:c6b9a7d3c17cb036",
   "findings": []
 }

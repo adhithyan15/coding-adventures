@@ -14,7 +14,8 @@ romanization: "bālikā"
 concept_tag: SA-PEOPLE-GIRL
 prerequisites: [SA-C87-hundred, SA-C87-thousand]
 sounds: []
-roots: []
+roots: [sanskrit-bala-child]
+etymology_hook: "bālikā 'girl' ← bāla 'young, a child' + the feminine ending -ikā; bāla's origin is not settled (CDIAL 9216)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C87-thousand]
 <!-- hl-knowledge: introduces=[SA-LEX-C88-PEOPLE-01]; assesses=[] -->
 
 **बालिका** (*bālikā*) — "a girl". **बालः** is "a boy"; **-इका** makes the girl.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Bālikā* is built from *bāla*, "young, a child", with the feminine ending *-ikā*;
+the origin of *bāla* itself is not settled (CDIAL 9216).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

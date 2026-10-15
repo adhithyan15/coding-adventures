@@ -14,7 +14,8 @@ romanization: "pacati"
 concept_tag: SA-VERB-COOK
 prerequisites: [SA-C71-standsup, SA-C71-falls]
 sounds: []
-roots: []
+roots: [sanskrit-pacati]
+etymology_hook: "pacati 'cooks' ← the root √pac 'cook'; MW compares Greek pessō and Latin coquō (CDIAL 7650)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C71-falls]
 <!-- hl-knowledge: introduces=[SA-LEX-C72-HOUSEWORK-01]; assesses=[] -->
 
 **पचति** (*pacati*) — "(he, she) cooks". **माता ओदनं पचति** — "mother cooks rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Pacati* is the present of the root √pac, "to cook, bake" (CDIAL 7650). It is
+inherited: MW compares Greek *pessō* and Latin *coquō*, "I cook", the source of
+English **cook**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

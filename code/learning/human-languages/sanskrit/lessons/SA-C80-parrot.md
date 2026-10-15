@@ -14,7 +14,8 @@ romanization: "śukaḥ"
 concept_tag: SA-ANIMAL-PARROT
 prerequisites: [SA-C79-cat, SA-C80-crow]
 sounds: []
-roots: []
+roots: [sanskrit-shuka]
+etymology_hook: "śuka 'parrot', probably 'the bright one' from the root √śuc 'shine' (MW); Hindi suwā (CDIAL 12503)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C80-crow]
 <!-- hl-knowledge: introduces=[SA-LEX-C80-BIRDS-02]; assesses=[] -->
 
 **शुकः** (*śukaḥ*) — "a parrot", the **हरितः** bird that repeats words.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW takes *śuka* as probably "the bright one", from the root √śuc, "to shine",
+after the parrot's green. It is Rigvedic, and lives on as Hindi *suwā*, "parrot"
+(CDIAL 12503).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

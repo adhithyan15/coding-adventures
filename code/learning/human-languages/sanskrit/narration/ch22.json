@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Verbs of Mind and Motion",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ead6a5f62d1f144f",
+  "sourceHash": "fnv1a64:9baf42e9b4165644",
   "lessons": [
     {
       "id": "SA-C22-hear",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03e72be70de6f362",
+      "sourceHash": "fnv1a64:68f8a552866cd8f1",
       "notice": null,
       "blocks": [
         {
@@ -156,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:743ac2676165f86a",
+      "sourceHash": "fnv1a64:3884ecf7caaa0395",
       "notice": null,
       "blocks": [
         {
@@ -193,6 +193,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nayati is the present of the root √nī, \"to lead\", already in the Rigveda (MW). It lives on as Bengali neoyā, \"to take\" (CDIAL 6966)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -203,7 +214,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -252,7 +263,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -283,7 +294,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1bbcb3caa35c97dc",
+      "sourceHash": "fnv1a64:75fc550dae95601d",
       "notice": null,
       "blocks": [
         {
@@ -330,6 +341,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Krīḍati is the present of the root √krīḍ, \"to play\"; the Rigveda has it as krīḷati (MW, CDIAL 3592). The noun krīḍā is built from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -340,7 +362,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -389,7 +411,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -420,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41eb4436cac7384f",
+      "sourceHash": "fnv1a64:ab160d6295c00edf",
       "notice": null,
       "blocks": [
         {
@@ -451,12 +473,23 @@
             },
             {
               "kind": "speech",
-              "text": "From √दह् (dah), and its distant English cousin is day — by way of a Germanic word for the burning warmth of the sky, not the daylight itself."
+              "text": "From √दह् (dah), and its distant English cousin may be day — by way of a Germanic word for the burning warmth of the sky, not the daylight itself."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Dahati is the present of the root √dah, \"to burn\". It is inherited: MW compares Lithuanian degu, \"I am hot\", and Gothic dags, \"day\". It lives on as Hindi dahnā, \"to burn\" (CDIAL 6245)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -467,7 +500,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -516,7 +549,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

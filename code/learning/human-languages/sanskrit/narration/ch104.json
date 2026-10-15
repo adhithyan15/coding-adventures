@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "Sari, Shoe, Turban, Shirt, Telephone",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c26665c241e55798",
+  "sourceHash": "fnv1a64:771020faadf0025e",
   "lessons": [
     {
       "id": "SA-C104-satika",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16933c5fe051a4be",
+      "sourceHash": "fnv1a64:a41dac82c59fdb9e",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "śāṭikā is śāṭī \"a strip of cloth, a garment\" (MW) with the suffix -kā; MW takes śāṭa from a root √śaṭ with a query, so the deeper source is uncertain. śāṭī wore down into Hindi sāṛī (CDIAL 12381), the source of English sari (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6463c26253b34454",
+      "sourceHash": "fnv1a64:da126ff92563665b",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pādatrāṇa is built from pāda \"foot\" and trāṇa \"protection\" (MW): \"foot-guard\". The pair is old, already in Suśruta (CDIAL 8060), and pāda is the inherited word for \"foot\" that MW sets beside Latin pes and English foot."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78e46bcc042f3967",
+      "sourceHash": "fnv1a64:25199861290751a7",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "uṣṇīṣa \"anything wound round the head, a turban\" is old, already in the Atharvaveda. The grammarians quoted by MW read it as uṣṇa \"heat\" and īṣ \"ward off\", \"what keeps off the heat\", but that is a learned guess, and its origin is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d261b5fbd9b263a4",
+      "sourceHash": "fnv1a64:cb982a2c5632d1ad",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kañcuka \"a close-fitting jacket, a bodice; a snake's slough\" is possibly borrowed from Munda: CDIAL 2626 gives that view after Kuiper and EWA, while MW suggests a root √kañc with a query. The origin is uncertain; Pali kept it as kañcuka (CDIAL 2626)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fd5ed93ad11fbbc",
+      "sourceHash": "fnv1a64:c3ca23d1b775d1f5",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dūrabhāṣa is built from dūra \"far\" and bhāṣa \"speech\", from the root √bhāṣ \"speak\" (MW): \"far-speech\". It is a modern coinage, made the way English telephone was made from Greek tele \"far\" + phōnē \"voice\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

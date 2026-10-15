@@ -14,7 +14,8 @@ romanization: "khalu"
 concept_tag: SA-WHY214-KHALU
 prerequisites: [SA-C213-yavat, SA-C214-eva]
 sounds: []
-roots: []
+roots: [sanskrit-khalu]
+etymology_hook: "khalu 'indeed', a Rigvedic particle (CDIAL 3846); MW gives no derivation, so its origin is unknown"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C214-eva]
 <!-- hl-knowledge: introduces=[SA-LEX-C214-WHY214-02]; assesses=[] -->
 
 **खलु** — *khalu* — "indeed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khalu* is a particle of assurance, already in the Rigveda (CDIAL 3846). MW gives no derivation for it, so its origin is unknown. Pali has it as *khalu* and *kho*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

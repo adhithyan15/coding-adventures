@@ -14,7 +14,8 @@ romanization: "uttama"
 concept_tag: SA-ADJ-GOOD
 prerequisites: [SA-C15-small]
 sounds: []
-roots: []
+roots: [sanskrit-uttama]
+etymology_hook: "uttama 'highest, best' ← ud 'up' + the superlative suffix -tama: 'uppermost' (MW; CDIAL 1765)"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,12 @@ You met **अल्प** *alpa* a moment ago. Put them side by side and nothing 
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Uttama* is built from *ud* "up" with the superlative ending *-tama*:
+"uppermost", and so "best" (MW, CDIAL 1765).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-03] -->

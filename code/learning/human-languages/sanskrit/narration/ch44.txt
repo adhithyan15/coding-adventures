@@ -15,6 +15,9 @@ You'll want to know: श्वेतः.
 English white is the same word by the Germanic road, and Russian svet, "light", is another of its brothers — brightness and whiteness were one idea for a long time.
 हिमम् is श्वेतम्, and so is दधि.
 
+The word, taken apart.
+Śveta is built on the root √śvit, "to be bright, white" (MW, CDIAL 12774). It is inherited: MW compares Gothic hweits, the cousin of English white.
+
 What you've built.
 White, and the brightness that comes with it.
 
@@ -48,6 +51,9 @@ You'll want to know: श्यामः.
 It is the darkness of a thundercloud rather than of soot, which is why the god whose name means "the dark one" is also called Śyām with affection.
 No European cousin has been agreed. The word stayed home, and Śyām and Śyāmā are ordinary names in India today.
 
+The word, taken apart.
+Śyāma is already in the Atharvaveda. MW reports a traditional link with the root √śyai, and CDIAL 12664 compares śyāva, "dark brown", but its source is not settled.
+
 What you've built.
 Dark, with a rain cloud in it rather than ash.
 
@@ -78,11 +84,14 @@ Before the new word: what did śyāmaḥ mean?
 You'll want to know: पीतः.
 पीतः (pītaḥ) — "yellow".
 पीतः (pītaḥ) is yellow — turmeric, ripe grain, a marigold, the silk a bridegroom wears.
-Its older force is "made yellow", so a पीतम् वस्त्रम् is a cloth that has been dyed rather than one that grew that colour.
+Its shape looks like a past participle, but which verb it would belong to is not settled. A पीतम् वस्त्रम् is a yellow cloth.
 Hindi pīlā is the same word with an ending on it, and it is the yellow of every wall and every taxi.
 
+The word, taken apart.
+MW suggests that pīta "yellow" may come from the root √pyai, "to swell, be fat", after the colour of butter and oil; that derivation is not settled, and CDIAL 8230 sends the reader to pitta, "bile", instead. Hindi pīlā comes from its longer form pītala (CDIAL 8233).
+
 What you've built.
-Yellow, understood as a thing that was dyed.
+Yellow, and a word whose history is still open.
 
 Guided Practice.
 [pause 1 second]
@@ -113,6 +122,9 @@ You'll want to know: हरितः.
 हरितः (haritaḥ) is green — and before it settled it covered yellow-green and gold as well.
 English yellow and gold are its cousins, from ǵhel-, a root that runs across the whole band from green to yellow. One family, one word, two colours pulled apart by different daughters.
 तृणम् is हरितम्, and so is a young पत्रम् on a तरुः.
+
+The word, taken apart.
+Harita is built on hari, "yellowish, tawny" (MW). It is inherited: MW compares Latin helvus, "honey-yellow", and English yellow. It lives on as Hindi harā, "green" (CDIAL 13985).
 
 What you've built.
 Green, from a root that could not decide between green and gold.

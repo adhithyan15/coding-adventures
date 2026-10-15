@@ -14,7 +14,8 @@ romanization: "varāhaḥ"
 concept_tag: SA-THINGS113-VARAHAH
 prerequisites: [SA-C113-sasakah, SA-C113-gardabhah]
 sounds: []
-roots: []
+roots: [sanskrit-varaha]
+etymology_hook: "varāha 'boar' is inherited from Indo-Iranian (EtymDB), cousin of Persian gorāz; MW calls it doubtful"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C113-gardabhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C113-THINGS113-03]; assesses=[] -->
 
 **वराहः** — *varāhaḥ* — "a boar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW calls the derivation of *varāha* "a boar" doubtful, but EtymDB traces it to an Indo-Iranian word for the boar, inherited also by Avestan *varāza* and Persian *gorāz* "boar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

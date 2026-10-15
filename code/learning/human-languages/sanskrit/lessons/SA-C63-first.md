@@ -14,7 +14,8 @@ romanization: "prathamaḥ"
 concept_tag: SA-ORDINAL-FIRST
 prerequisites: [SA-C63-second, SA-C62-fifth, SA-C58-mahyam, SA-C44-dark, SA-C06-numbers-1-5]
 sounds: []
-roots: []
+roots: [sanskrit-prathama]
+etymology_hook: "prathama 'first' ← pra-tama, the superlative of pra 'forward': 'foremost' (MW; CDIAL 8648)"
 duration:
   max_seconds: 230
 requires:
@@ -65,6 +66,9 @@ So **प्रथमः** is not *one-th*. It is **foremost** — the most forwa
 English did the identical thing on its own road. *First* is the superlative of *fore*: *fore*, *former*, *first*. Two languages, no contact, the same idea: the word for *first* is not counted to, it is a claim about being ahead.
 
 That is why this chapter saved it for last. Every other ordinal in these two chapters answered the question *what happens to the number?* This one answers a different question, and it could only be heard as different once the other nine had answered the first one.
+
+MW gives the same account, *pra-tama*, the superlative of *pra* (CDIAL 8648), and
+CDIAL notes that many modern languages replaced the word with newer forms.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C63-ORDINAL-07] -->

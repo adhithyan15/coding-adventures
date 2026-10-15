@@ -14,7 +14,8 @@ romanization: "kaṇṭhaḥ"
 concept_tag: SA-BODY-THROAT
 prerequisites: [SA-C68-joy, SA-C69-eye]
 sounds: []
-roots: []
+roots: [sanskrit-kantha-throat]
+etymology_hook: "kaṇṭha 'throat, neck': the grammarians derive it from √kaṇ 'sound' (MW); origin not settled (CDIAL 2680)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C69-eye]
 <!-- hl-knowledge: introduces=[SA-LEX-C69-BODY-02]; assesses=[] -->
 
 **कण्ठः** (*kaṇṭhaḥ*) — "the throat". With a **कासः**, it is the **कण्ठः** that hurts.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kaṇṭha* is already in the Śatapatha Brāhmaṇa. The native grammarians derive it
+from a root √kaṇ, "to sound" (MW), but its origin is not settled (CDIAL 2680).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

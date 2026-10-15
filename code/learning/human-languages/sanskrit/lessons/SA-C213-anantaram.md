@@ -14,7 +14,8 @@ romanization: "anantaram"
 concept_tag: SA-TIME213-ANANTARAM
 prerequisites: [SA-C213-tatksanam, SA-C213-prak]
 sounds: []
-roots: []
+roots: [sanskrit-anantara]
+etymology_hook: "anantaram = an- 'not' + antara 'interval': 'with no interval', so 'immediately after' (CDIAL 287)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C213-prak]
 <!-- hl-knowledge: introduces=[SA-LEX-C213-TIME213-04]; assesses=[] -->
 
 **अनन्तरम्** — *anantaram* — "afterwards, next".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*anantaram* is built on *an-*, "not", and *antara*, "interval" (MW): "with no interval", and so "immediately after" (CDIAL 287). CDIAL lists Marathi *nãtar*, "afterwards", under it, asking whether Marathi took it from Sanskrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

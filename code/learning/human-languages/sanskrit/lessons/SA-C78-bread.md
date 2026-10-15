@@ -14,7 +14,8 @@ romanization: "roṭikā"
 concept_tag: SA-FOOD-BREAD
 prerequisites: [SA-C78-banana, SA-C78-oil]
 sounds: []
-roots: []
+roots: [sanskrit-rotika]
+etymology_hook: "roṭikā 'bread' is a late word (MW); its origin is unclear; Hindi roṭī shares it (CDIAL 10837)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C78-oil]
 <!-- hl-knowledge: introduces=[SA-LEX-C78-FOOD-04]; assesses=[] -->
 
 **रोटिका** (*roṭikā*) — "flatbread", eaten with **शाकम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Roṭikā* is a late word, recorded in a medical text (MW). CDIAL 10837 sets it
+beside an unattested *\*roṭṭa*, "bread", the source of Hindi *roṭī*; where that
+word came from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

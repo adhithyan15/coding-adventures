@@ -14,7 +14,8 @@ romanization: "vinayaḥ"
 concept_tag: SA-COURTESY-VINAYA
 prerequisites: [SA-C43-hospitality, SA-C41-pot, SA-C42-suddenly]
 sounds: []
-roots: []
+roots: [sanskrit-vinaya, sanskrit-nayati]
+etymology_hook: "vinaya 'leading away; good breeding' ← vi 'away' + the root √nī 'lead' (MW; CDIAL 11767)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C43-hospitality]
 Its pieces are *vi-*, "away, apart", and the leading doing-word नयति: to have **विनयः** is to have been led away from what was rough in you. Training and good manners are one word here, because the second is thought to come out of the first.
 
 The Buddhist books of monastic training carry this word as their name.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vinaya* is built from the prefix *vi*, "away, apart", and the root √nī, "to
+lead": first "leading away", then "training, good breeding" (MW, CDIAL 11767).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

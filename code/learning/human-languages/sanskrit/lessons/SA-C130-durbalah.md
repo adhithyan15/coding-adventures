@@ -14,7 +14,8 @@ romanization: "durbalaḥ"
 concept_tag: SA-QUAL130-DURBALAH
 prerequisites: [SA-C130-alasah, SA-C130-sabalah]
 sounds: []
-roots: []
+roots: [sanskrit-durbala]
+etymology_hook: "durbala ← dus- 'bad, ill' + bala 'strength' (CDIAL 6438); Hindi dublā 'thin, weak'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C130-sabalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C130-QUAL130-04]; assesses=[] -->
 
 **दुर्बलः** — *durbalaḥ* — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*durbala* is built from *dus-* "bad, ill" and *bala* "strength" (CDIAL 6438): "of little strength". It lives on as Hindi *dublā* "thin, weak" (CDIAL 6438).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

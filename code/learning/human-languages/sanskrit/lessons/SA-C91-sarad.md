@@ -14,7 +14,8 @@ romanization: "śarad"
 concept_tag: SA-TIME91-SARAD
 prerequisites: [SA-C91-hemantah, SA-C91-sisirah]
 sounds: []
-roots: []
+roots: [sanskrit-sharad]
+etymology_hook: "śarad 'autumn', probably 'the time of ripening', from √śrā or √śṝ (MW; CDIAL 12329)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C91-sisirah]
 <!-- hl-knowledge: introduces=[SA-LEX-C91-TIME91-05]; assesses=[] -->
 
 **शरद्** — *śarad* — "autumn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW explains *śarad* as probably "the time of ripening", from the root √śrā or √śṝ;
+it is already in the Rigveda (CDIAL 12329).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

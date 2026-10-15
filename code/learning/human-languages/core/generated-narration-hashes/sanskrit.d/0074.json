@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 74,
-  "sourceHash": "fnv1a64:c6d9892adaef6b07",
+  "sourceHash": "fnv1a64:63710c80f6d98eeb",
   "lessonIds": [
     "SA-C74-buys",
     "SA-C74-money",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch74.txt",
   "json": "sanskrit/narration/ch74.json",
-  "textHash": "fnv1a64:757f15ed7ddfa576",
-  "jsonHash": "fnv1a64:356bf64c7a048cf2",
+  "textHash": "fnv1a64:796326a8c79d0e13",
+  "jsonHash": "fnv1a64:01928ab81d53b7b6",
   "findings": []
 }

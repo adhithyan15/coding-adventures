@@ -232,20 +232,26 @@ pub fn try_layout_railroad(diagram: &RailroadDiagram) -> Result<LayoutedRailroad
 fn layout_railroad_supported(diagram: &RailroadDiagram) -> LayoutedRailroadDiagram {
     let padding = diagram.config.padding;
     let title_height = if diagram.title.is_some() { 36.0 + padding } else { 8.0 + padding };
-    let expression_x = padding + 130.0;
-    let marker_x = padding + 100.0;
     let mut rules = Vec::new(); let mut y = title_height; let mut width: f64 = 400.0 + padding * 2.0;
     for rule in &diagram.rules {
         let mut elements = Vec::new(); let mut paths = Vec::new();
         let content_y = y + padding + 8.0;
+        let rule_label = format!("{} =", rule.name);
+        let rule_label_width = rule_label.chars().count() as f64 * diagram.config.font_size * 0.61;
+        let name_width = rule_label_width + 20.0;
+        let start_marker_x = padding + name_width;
+        let expression_x = start_marker_x + 20.0;
         let (expr_width, expr_height) = layout_railroad_expression(
             &rule.definition, expression_x, content_y, &diagram.config, &mut elements, &mut paths,
         );
         let center = content_y + expr_height / 2.0;
-        paths.push(LayoutedRailroadPath { points: vec![Point { x: marker_x + 6.0, y: center }, Point { x: expression_x, y: center }], loopback: false });
-        paths.push(LayoutedRailroadPath { points: vec![Point { x: expression_x + expr_width, y: center }, Point { x: expression_x + expr_width + 24.0, y: center }], loopback: false });
-        let height = expr_height + padding * 2.0 + 24.0; width = width.max(expr_width + 168.0 + padding * 2.0);
-        rules.push(LayoutedRailroadRule { name: rule.name.clone(), y, height, elements, paths });
+        let start_marker = Point { x: start_marker_x, y: center };
+        let end_marker = Point { x: expression_x + expr_width + 10.0, y: center };
+        paths.push(LayoutedRailroadPath { points: vec![Point { x: start_marker.x + diagram.config.marker_radius, y: center }, Point { x: expression_x, y: center }], loopback: false });
+        paths.push(LayoutedRailroadPath { points: vec![Point { x: expression_x + expr_width, y: center }, Point { x: end_marker.x - diagram.config.marker_radius, y: center }], loopback: false });
+        let height = expr_height + padding * 2.0 + 24.0;
+        width = width.max(end_marker.x + diagram.config.marker_radius + padding);
+        rules.push(LayoutedRailroadRule { name: rule.name.clone(), y, height, start_marker, end_marker, elements, paths });
         y += height + diagram.config.vertical_separation;
     }
     LayoutedRailroadDiagram { width, height: y + padding, title: diagram.title.clone(),
@@ -260,10 +266,11 @@ fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
         RailroadExpression::Terminal(label) | RailroadExpression::NonTerminal(label) | RailroadExpression::Special(label) => {
             let kind = match expr { RailroadExpression::Terminal(_) => RailroadElementKind::Terminal,
                 RailroadExpression::NonTerminal(_) => RailroadElementKind::NonTerminal, _ => RailroadElementKind::Special };
-            let text_width = label.chars().count() as f64 * config.font_size * 0.61;
+            let display_label = if kind == RailroadElementKind::Special { format!("? {label} ?") } else { label.clone() };
+            let text_width = display_label.chars().count() as f64 * config.font_size * 0.61;
             let width = text_width.clamp(config.font_size * 3.15, config.font_size * 13.72) + config.padding * 2.0;
             let height = config.font_size * 1.15 + config.padding * 2.0;
-            elements.push(LayoutedRailroadElement { kind, label: label.clone(), x, y, width, height }); (width, height)
+            elements.push(LayoutedRailroadElement { kind, label: display_label, x, y, width, height }); (width, height)
         }
         RailroadExpression::Sequence(items) => {
             let sizes: Vec<_> = items.iter().map(|item| measure_railroad_expression(item, config)).collect();
@@ -349,7 +356,8 @@ fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
 fn measure_railroad_expression(expr: &RailroadExpression, config: &diagram_ir::RailroadConfig) -> (f64, f64) {
     match expr {
         RailroadExpression::Terminal(label) | RailroadExpression::NonTerminal(label) | RailroadExpression::Special(label) => {
-            let text_width = label.chars().count() as f64 * config.font_size * 0.61;
+            let display_length = label.chars().count() + if matches!(expr, RailroadExpression::Special(_)) { 4 } else { 0 };
+            let text_width = display_length as f64 * config.font_size * 0.61;
             (text_width.clamp(config.font_size * 3.15, config.font_size * 13.72) + config.padding * 2.0,
                 config.font_size * 1.15 + config.padding * 2.0)
         }
@@ -2203,6 +2211,30 @@ mod tests {
     }
 
     #[test]
+    fn railroad_layout_uses_upstream_rule_and_special_display_labels() {
+        use diagram_ir::{RailroadDiagram, RailroadExpression, RailroadRule};
+        let diagram = RailroadDiagram {
+            title: None, accessibility_title: None, accessibility_description: None,
+            config: Default::default(),
+            rules: vec![
+                RailroadRule { name: "x".into(), definition: RailroadExpression::Special("integer".into()) },
+                RailroadRule { name: "long-rule-name".into(), definition: RailroadExpression::Terminal("value".into()) },
+            ],
+        };
+
+        let layout = layout_railroad(&diagram);
+        assert_eq!(layout.rules[0].elements[0].label, "? integer ?");
+        assert!(layout.rules[1].start_marker.x > layout.rules[0].start_marker.x);
+        for rule in &layout.rules {
+            assert_eq!(rule.start_marker.y, rule.end_marker.y);
+            assert_eq!(rule.paths[rule.paths.len() - 2].points[0].x,
+                rule.start_marker.x + layout.config.marker_radius);
+            assert_eq!(rule.paths[rule.paths.len() - 1].points[1].x,
+                rule.end_marker.x - layout.config.marker_radius);
+        }
+    }
+
+    #[test]
     fn railroad_layout_sizes_nested_repetition_without_clipping() {
         use diagram_ir::{RailroadDiagram, RailroadExpression, RailroadRule};
         let diagram = RailroadDiagram {
@@ -2268,7 +2300,8 @@ mod tests {
         });
         let tight = layout_with_radius(4.0);
         let wide = layout_with_radius(24.0);
-        assert!(wide.width > tight.width);
+        assert!(wide.rules[0].end_marker.x > tight.rules[0].end_marker.x);
+        assert!(wide.width >= wide.rules[0].end_marker.x + wide.config.marker_radius + wide.config.padding);
         assert!(wide.rules[0].height > tight.rules[0].height);
         assert_ne!(wide.rules[0].paths, tight.rules[0].paths);
         for layout in [&tight, &wide] {

@@ -14,7 +14,8 @@ romanization: "kuṭīram"
 concept_tag: SA-THG250-KUTIRAM
 prerequisites: [SA-C250-durgam, SA-C250-prasadah]
 sounds: []
-roots: []
+roots: [sanskrit-kuti]
+etymology_hook: "kuṭīra ← kuṭī 'hut', which Mayrhofer takes from Dravidian (CDIAL 3232); Marathi kuḍī 'hut'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C250-prasadah]
 <!-- hl-knowledge: introduces=[SA-LEX-C250-THG250-03]; assesses=[] -->
 
 **कुटीरम्** — *kuṭīram* — "a hut, a cottage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuṭīra* is built on *kuṭī*, "hut, cottage" (MW). CDIAL 3232 reports Mayrhofer's view that the word was borrowed from Dravidian. Marathi *kuḍī*, "hut", comes from *kuṭī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

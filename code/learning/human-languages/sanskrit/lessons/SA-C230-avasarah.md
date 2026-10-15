@@ -14,7 +14,8 @@ romanization: "avasaraḥ"
 concept_tag: SA-WRK230-AVASARAH
 prerequisites: [SA-C230-viphalata, SA-C230-prayatnah]
 sounds: []
-roots: []
+roots: [sanskrit-avasara]
+etymology_hook: "avasara ← ava 'down' + √sṛ 'run, flow': first 'descent of rain', then 'occasion' (MW; CDIAL 858)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C230-prayatnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C230-WRK230-04]; assesses=[] -->
 
 **अवसरः** — *avasaraḥ* — "an opportunity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*avasara* is built on *ava*, "down", and the root √sṛ, "to run, flow" (MW). MW's first sense is "descent of water, rain", and then "occasion, favourable moment" (CDIAL 858). Hindi *osrā*, "turn, season", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

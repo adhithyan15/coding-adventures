@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 254,
-  "sourceHash": "fnv1a64:d4a412abc7b686a8",
+  "sourceHash": "fnv1a64:5b592cadb63a38c5",
   "lessonIds": [
     "SA-C254-cakravakah",
     "SA-C254-syenah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch254.txt",
   "json": "sanskrit/narration/ch254.json",
-  "textHash": "fnv1a64:c2076b82a192c0ae",
-  "jsonHash": "fnv1a64:86db56a047be1b10",
+  "textHash": "fnv1a64:66bbc5cbd072f56f",
+  "jsonHash": "fnv1a64:b109b36d352b1ab5",
   "findings": []
 }

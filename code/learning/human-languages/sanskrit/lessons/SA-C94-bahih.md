@@ -14,7 +14,8 @@ romanization: "bahiḥ"
 concept_tag: SA-LOC94-BAHIH
 prerequisites: [SA-C93-daksinah, SA-C93-antah]
 sounds: []
-roots: []
+roots: [sanskrit-bahis]
+etymology_hook: "bahiḥ = bahis 'out, outside' (MW); its origin is not settled; Pali bahi (CDIAL 9186)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C93-antah]
 <!-- hl-knowledge: introduces=[SA-LEX-C94-LOC94-01]; assesses=[] -->
 
 **बहिः** — *bahiḥ* — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bahiḥ* is *bahis* "out, outside", with the final *s* said as *ḥ* at the end of a phrase (MW). MW gives no source for it, and its origin is not settled. Pali and Prakrit kept it as *bahi* (CDIAL 9186).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

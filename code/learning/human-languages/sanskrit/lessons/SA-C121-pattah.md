@@ -14,7 +14,8 @@ romanization: "paṭṭaḥ"
 concept_tag: SA-THINGS121-PATTAH
 prerequisites: [SA-C121-vadyam, SA-C121-vina]
 sounds: []
-roots: []
+roots: [sanskrit-patta]
+etymology_hook: "paṭṭa 'cloth, silk, strip' is probably from a non-Aryan source (CDIAL 7700); Hindi paṭṭī 'strip of cloth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C121-vina]
 <!-- hl-knowledge: introduces=[SA-LEX-C121-THINGS121-03]; assesses=[] -->
 
 **पट्टः** — *paṭṭaḥ* — "a cloth, a strip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paṭṭa* "cloth, woven silk, a strip or bandage" is probably from a non-Aryan source, says CDIAL 7700, which rejects a link with *pattra* "leaf". It lives on as Hindi *paṭṭī* "strip of cloth" (CDIAL 7700).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mūlam"
 concept_tag: SA-PLANT-ROOT
 prerequisites: [SA-C81-tree, SA-C81-seed]
 sounds: []
-roots: []
+roots: [sanskrit-mula]
+etymology_hook: "mūla 'root': MW reads 'firmly fixed'; CDIAL 10250 thinks it perhaps Dravidian; Hindi mūlī 'radish'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C81-seed]
 <!-- hl-knowledge: introduces=[SA-LEX-C81-PLANTS-03]; assesses=[] -->
 
 **मूलम्** (*mūlam*) — "a root", and also "the origin" of anything.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW explains *mūla* as probably "firmly fixed", but CDIAL 10250 thinks its sound
+variation points to a non-Aryan, perhaps Dravidian, origin, so the question is not
+settled. Hindi *mūlī*, "radish", the root vegetable, comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,6 +14,9 @@ You'll want to know: शान्तिः.
 शान्तिः (śāntiḥ) is peace of a particular kind: not the absence of war so much as the settling of something that had been disturbed. It comes from śam, "to grow calm, to come to rest".
 A great many Sanskrit texts close on it, said three times over, once for each of the troubles a person can meet. You already have स्वस्ति for a wish of wellbeing; शान्तिः (śāntiḥ) is the quieter one, and the one you would say last.
 
+The word, taken apart.
+Śānti is built on the root √śam, "to grow calm, come to rest", with the noun suffix -ti (MW, CDIAL 12391).
+
 What you've built.
 A word for peace, and the way Sanskrit texts stop.
 
@@ -46,6 +49,9 @@ You'll want to know: सादरम्.
 सादरम् (sādaram) is sa-, "with", joined to ādara, "regard, esteem" — so, "with regard".
 It goes at the front of a request, where English would put its politeness at the end of a letter. Set beside कृपया it makes a request about as courteous as Sanskrit gets: sādaram kṛpayā.
 
+The word, taken apart.
+Sādaram is built from sa-, "with", and ādara, "regard, respect", a noun MW derives from ā and the root √dṛ.
+
 What you've built.
 A politeness that goes at the front rather than the end.
 
@@ -76,7 +82,10 @@ Before the new word: what did sādaram mean?
 You'll want to know: प्रसन्नः.
 प्रसन्नः (prasannaḥ) — "pleased, gracious, clear".
 प्रसन्नः (prasannaḥ) describes a face that has cleared. The one word covers still water, a settled mind and a kindly host, because it is pra-, "forth", with sad, "to settle": what was cloudy has dropped its silt.
-To say that a guest left you प्रसन्नः (prasannaḥ) is to say they left you at ease. The offering handed back from a temple, prasāda, is this same word — grace, given a physical form.
+To say that a guest left you प्रसन्नः (prasannaḥ) is to say they left you at ease. The offering handed back from a temple, prasāda, comes from the same root — grace, given a physical form.
+
+The word, taken apart.
+Prasanna is the past participle of pra + the root √sad, "to sit, settle" (MW, CDIAL 8823). That root is inherited: MW compares Latin sedēre and English sit.
 
 What you've built.
 A word for water, a mind and a host, all at once.
@@ -110,6 +119,9 @@ You'll want to know: अभिनन्दनम्.
 अभिनन्दनम् (abhinandanam) is what you offer when something has gone well for somebody else. It is abhi, "towards", with nand, "to rejoice" — gladness turned towards another person rather than kept.
 That nand is the piece inside आनन्दः, the joy you met near the beginning of this book. The two words are the same delight, one held and one given away. Neuter -अम्.
 
+The word, taken apart.
+Abhinandana is built from the prefix abhi, "toward", and the root √nand, "to rejoice" (MW), the root of ānanda.
+
 What you've built.
 Joy from the beginning of this book, turned outwards towards somebody else.
 
@@ -141,6 +153,9 @@ You'll want to know: आशीर्वादः.
 आशीर्वादः (āśīrvādaḥ) — "a blessing".
 आशीर्वादः (āśīrvādaḥ) is a blessing spoken aloud: āśis, "a wish, a prayer", joined to vāda, "a speaking".
 That second piece is the one inside धन्यवादः, the thanks you learned on your very first page — thanks is a speaking too. An elder gives आशीर्वादः (āśīrvādaḥ); you answer with धन्यवादः; and the two are built the same way, out of a wish and a word for saying it.
+
+The word, taken apart.
+Āśīrvāda is built from āśis, "a wish, prayer", and vāda, "a speaking", from the root √vad (MW).
 
 What you've built.
 Five courtesies, and the piece shared by a blessing and a thanks.

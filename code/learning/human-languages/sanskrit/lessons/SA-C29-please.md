@@ -14,7 +14,8 @@ romanization: "kṛpayā"
 concept_tag: SA-COURTESY-PLEASE
 prerequisites: [SA-C28-svasti, SA-C27-so-be-it, SA-C28-now]
 sounds: []
-roots: []
+roots: [krpa-sanskrit]
+etymology_hook: "kṛpayā 'please' ← kṛpā 'pity, compassion' in the instrumental: 'by your kindness' (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C28-svasti]
 **कृपया** is *please*, and like most polite words in most languages it is not really a word for "please" at all. It is the noun *kṛpā*, "compassion, kindness", put into the case that means *by means of*. You are saying **by your kindness**.
 
 English does the same thing and hides it just as well: *please* was once *if it please you*. Two languages, two buried sentences, one small polite noise.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kṛpayā* is the instrumental case of *kṛpā*, "pity, compassion" (MW), a noun MW
+files under the root √kṛp. Hindi has borrowed the whole word unchanged.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

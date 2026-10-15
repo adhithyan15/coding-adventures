@@ -14,7 +14,8 @@ romanization: "padārthaḥ"
 concept_tag: SA-THG193-PADARTHAH
 prerequisites: [SA-C193-vikrayah, SA-C193-vastu]
 sounds: []
-roots: []
+roots: [sanskrit-pada, sanskrit-artha]
+etymology_hook: "padārtha = pada 'word' + artha 'meaning': 'the meaning of a word', then 'a thing' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C193-vastu]
 <!-- hl-knowledge: introduces=[SA-LEX-C193-THG193-04]; assesses=[] -->
 
 **पदार्थः** — *padārthaḥ* — "an item, a thing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*padārtha* is built from *pada*, "word", and *artha*, "meaning" (MW). It first meant "the meaning of a word", then the thing the word stands for, and so "an item, a thing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

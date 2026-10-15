@@ -14,7 +14,8 @@ romanization: "śokaḥ"
 concept_tag: SA-WEL182-SOKAH
 prerequisites: [SA-C181-svasthyam, SA-C182-vismayah]
 sounds: []
-roots: []
+roots: [sanskrit-shoka, sanskrit-shuc]
+etymology_hook: "śoka ← root √śuc 'burn, glow': first 'heat', then 'grief' (MW; CDIAL 12619)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C182-vismayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C182-WEL182-02]; assesses=[] -->
 
 **शोकः** — *śokaḥ* — "grief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śoka* is built on the root √śuc, "to burn, glow" (MW). In the Rigveda it means "heat" as well as "pain", and later "grief" (CDIAL 12619): sorrow as something that burns.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

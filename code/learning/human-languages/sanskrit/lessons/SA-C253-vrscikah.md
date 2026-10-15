@@ -14,7 +14,8 @@ romanization: "vṛścikaḥ"
 concept_tag: SA-THG253-VRSCIKAH
 prerequisites: [SA-C253-kitah, SA-C253-luta]
 sounds: []
-roots: []
+roots: [sanskrit-vrshcika]
+etymology_hook: "vṛścika 'scorpion', probably from √vraśc 'tear, cut' (CDIAL 12081); Hindi bīchā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C253-luta]
 <!-- hl-knowledge: introduces=[SA-LEX-C253-THG253-03]; assesses=[] -->
 
 **वृश्चिकः** — *vṛścikaḥ* — "a scorpion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vṛścika* is a Rigvedic word for the scorpion (CDIAL 12081), probably built on the root √vraśc, "to cut, tear", though CDIAL marks that with a question mark. It is also the sign Scorpio, and Hindi *bīchā* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

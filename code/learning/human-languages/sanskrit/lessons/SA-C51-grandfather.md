@@ -14,7 +14,8 @@ romanization: "pitāmahaḥ"
 concept_tag: SA-KIN-PITAMAHA
 prerequisites: [SA-C51-wife, SA-C49-only, SA-C50-voice]
 sounds: []
-roots: []
+roots: [sanskrit-pitr, sanskrit-maha]
+etymology_hook: "pitāmaha 'paternal grandfather' ← pitā 'father' + maha 'great' (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C51-wife]
 Both halves are already yours. पिता is the father, and महत् is big; the ending shifts a little in the joining, but the sense does not. A grandfather is the great father.
 
 Sanskrit keeps the two sides of a family apart, so this word does not stretch to the mother's side. Ends in **-अः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Pitāmaha* is built from *pitā*, "father", and *maha*, "great", a Vedic adjective
+beside *mahat* (MW): the great father. It is already in the Atharvaveda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

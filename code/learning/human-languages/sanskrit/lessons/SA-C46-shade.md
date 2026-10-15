@@ -14,7 +14,8 @@ romanization: "chāyā"
 concept_tag: SA-LIGHT-CHAYA
 prerequisites: [SA-C46-light, SA-C44-green, SA-C45-month]
 sounds: []
-roots: []
+roots: [sanskrit-chaya]
+etymology_hook: "chāyā 'shade, shadow' is inherited: EtymDB links it to Greek skia 'shadow' and Persian sāya (CDIAL 5027)"
 duration:
   max_seconds: 210
 requires:
@@ -46,7 +47,7 @@ reviews_of: [SA-C46-light]
 
 You have छत्रम् for the parasol. **छाया** is what the parasol makes: the cool patch, not the object holding it up. One is the tool and the other is the result, and now you can name both.
 
-Greek *skiā*, "shadow", is the same word, and English *shine* is usually put in the family too — brightness and the dark it casts named from one root. Feminine, ending in **-आ**.
+Greek *skiā*, "shadow", is the same word, and so is Persian *sāya*. Feminine, ending in **-आ**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

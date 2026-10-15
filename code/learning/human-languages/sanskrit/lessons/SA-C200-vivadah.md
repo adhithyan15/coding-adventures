@@ -14,7 +14,8 @@ romanization: "vivādaḥ"
 concept_tag: SA-SCH200-VIVADAH
 prerequisites: [SA-C200-bhasanam, SA-C200-carca]
 sounds: []
-roots: []
+roots: [sanskrit-vivada, vad-speak]
+etymology_hook: "vivāda ← vi- 'apart' + √vad 'speak': speaking against each other, a dispute (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C200-carca]
 <!-- hl-knowledge: introduces=[SA-LEX-C200-SCH200-05]; assesses=[] -->
 
 **विवादः** — *vivādaḥ* — "a dispute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vivāda* is built on *vi-*, "apart", and the root √vad, "to speak" (MW), which you met early on in *vadāmi*, "I speak". People who speak apart from each other are disputing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

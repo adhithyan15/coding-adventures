@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for speaks, then the Sanskrit for shines.
 You'll want to know: सूचयति.
 सूचयति — sūcayati — "points out, informs".
 
+The word, taken apart.
+sūcayati is, MW says, a verb made from sūca and sūci, "needle, pointer": a needle is a pointer. Its noun sūcanā, "information", went into Hindi as sūcnā.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for shines, then the Sanskrit for points ou
 
 You'll want to know: खनति.
 खनति — khanati — "digs".
+
+The word, taken apart.
+khanati is the present of the root √khan, "to dig, dig up" (MW), a Rigvedic verb. It lives on as Hindi khannā, "to dig, scrape", and Gujarati khaṇvũ, "to dig" (CDIAL 3811).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for points out, then the Sanskrit for digs.
 You'll want to know: वपति.
 वपति — vapati — "sows".
 
+The word, taken apart.
+vapati is the present of the root √vap, "to strew, scatter seed, sow" (MW); MW has a separate √vap, "to shear". CDIAL 11282 lists Hindi bonā, "to sow", under it, marking it as taken from Gujarati.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for digs, then the Sanskrit for sows.
 You'll want to know: जीवति.
 जीवति — jīvati — "is alive, lives".
 
+The word, taken apart.
+jīvati is the present of the root √jīv, "to live" (MW). The root is inherited from Indo-European: MW compares Latin vīvō, "I live". It lives on as Hindi jīnā, "to live" (CDIAL 5241).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for sows, then the Sanskrit for is alive.
 
 You'll want to know: तपति.
 तपति — tapati — "heats, is hot".
+
+The word, taken apart.
+tapati is the present of the root √tap, "to give out heat, be hot" (MW; CDIAL 5671). MW compares Latin tepēre, "to be warm", the source of English tepid. The noun tapas, "heat", also means austerity.
 
 What you've built.
 One more word for this chapter.

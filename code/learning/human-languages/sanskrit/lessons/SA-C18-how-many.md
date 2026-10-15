@@ -14,7 +14,8 @@ romanization: "kati"
 concept_tag: SA-Q-HOW-MANY
 prerequisites: [SA-C18-why]
 sounds: []
-roots: []
+roots: [ka-interrogative]
+etymology_hook: "kati 'how many' ← the question stem ka-; MW compares Latin quot; Hindi kai (CDIAL 2694)"
 duration:
   max_seconds: 210
 requires:

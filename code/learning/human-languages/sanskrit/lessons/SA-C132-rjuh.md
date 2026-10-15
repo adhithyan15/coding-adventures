@@ -14,7 +14,8 @@ romanization: "ṛjuḥ"
 concept_tag: SA-QUAL132-RJUH
 prerequisites: [SA-C132-krsah, SA-C132-vakrah]
 sounds: []
-roots: []
+roots: [sanskrit-rju]
+etymology_hook: "ṛju 'straight, honest' is inherited from Indo-European, cousin of Latin rēctus and English right (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C132-vakrah]
 <!-- hl-knowledge: introduces=[SA-LEX-C132-QUAL132-03]; assesses=[] -->
 
 **ऋजुः** — *ṛjuḥ* — "straight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ṛju* "straight, upright, honest" is old, in the Rigveda, and is inherited from Indo-European: Latin *rēctus* and English *right* are its cousins (EtymDB). Marathi kept it as *ujū* "straight, honest" (CDIAL 2448).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "raviḥ"
 concept_tag: SA-LIGHT-RAVI
 prerequisites: [SA-C45-year, SA-C44-white, SA-C45-morning]
 sounds: []
-roots: []
+roots: [sanskrit-ravi]
+etymology_hook: "ravi 'sun': the grammarians derive it from √ru (MW); EtymDB compares an Armenian sun-word; not settled"
 duration:
   max_seconds: 210
 requires:
@@ -46,7 +47,14 @@ reviews_of: [SA-C45-year]
 
 You have आकाशः for the open sky and चन्द्रः for the moon. **रविः** is the third thing overhead, and the one the other two are measured against.
 
-Sanskrit keeps several sun-words and this one has no agreed cousin outside India, so its history stops at the border. Its life since then has not: Hindi still calls Sunday *ravivār*, so the word gets said once a week by people who have never studied it.
+Sanskrit keeps several sun-words, and this one has only one proposed cousin outside India, an Armenian word for the sun, so its history beyond the border is thin. Its life since then has not: Hindi still calls Sunday *ravivār*, so the word gets said once a week by people who have never studied it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Ravi* is a classical word for the sun (CDIAL 10646). The native grammarians
+derive it from the root √ru, "to roar" (MW). EtymDB compares an Armenian word
+for the sun, but its origin is not settled. It survives in *ravivāra*, "Sunday".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gāyati"
 concept_tag: SA-VERB-SING
 prerequisites: [SA-C72-brings, SA-C72-gives]
 sounds: []
-roots: []
+roots: [sanskrit-gayati]
+etymology_hook: "gāyati 'sings' ← the root √gai 'sing' (MW); Hindi gānā is listed with it (CDIAL 4135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C72-gives]
 <!-- hl-knowledge: introduces=[SA-LEX-C73-VOICE-01]; assesses=[] -->
 
 **गायति** (*gāyati*) — "(he, she) sings". What is sung is a **गीतम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Gāyati* is the present of the root √gai, "to sing" (MW). CDIAL 4135 lists Hindi
+*gānā*, "to sing", with it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

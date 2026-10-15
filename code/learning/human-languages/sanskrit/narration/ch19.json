@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Counting On --- Six to Ten, and What They Prove",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:731aa0613ab2d8b2",
+  "sourceHash": "fnv1a64:27534a265ecb05af",
   "lessons": [
     {
       "id": "SA-C19-six",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0d9b1da7d78b679",
+      "sourceHash": "fnv1a64:2ecea7599b1e5820",
       "notice": null,
       "blocks": [
         {
@@ -151,7 +151,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a6a77ac75c4b4da",
+      "sourceHash": "fnv1a64:4a15c5004ea7c687",
       "notice": null,
       "blocks": [
         {
@@ -273,7 +273,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f20bbacc158a079",
+      "sourceHash": "fnv1a64:88e694a4cebf366e",
       "notice": null,
       "blocks": [
         {
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa7aab7df2211af7",
+      "sourceHash": "fnv1a64:d4bd386d4c31e61b",
       "notice": null,
       "blocks": [
         {
@@ -521,7 +521,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82713d2b3e2cc568",
+      "sourceHash": "fnv1a64:363d59a6337d3154",
       "notice": null,
       "blocks": [
         {

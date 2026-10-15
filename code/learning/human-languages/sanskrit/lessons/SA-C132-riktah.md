@@ -14,7 +14,8 @@ romanization: "riktaḥ"
 concept_tag: SA-QUAL132-RIKTAH
 prerequisites: [SA-C132-rjuh, SA-C132-purnah]
 sounds: []
-roots: []
+roots: [sanskrit-rikta]
+etymology_hook: "rikta 'emptied' ← √ric 'leave, empty' (CDIAL 10729); inherited, kin to Latin linquere (EtymDB); Hindi rītā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C132-purnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C132-QUAL132-05]; assesses=[] -->
 
 **रिक्तः** — *riktaḥ* — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rikta* is the past participle of the root √ric "leave, empty" (CDIAL 10729): "left, emptied". The root is inherited from Indo-European, kin to Latin *linquere* "leave" (EtymDB), and *rikta* lives on as Hindi *rītā* "empty" (CDIAL 10729).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

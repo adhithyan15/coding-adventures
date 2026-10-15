@@ -14,7 +14,8 @@ romanization: "talam"
 concept_tag: SA-DWELL-TALA
 prerequisites: [SA-C47-pillar, SA-C45-year, SA-C46-heat]
 sounds: []
-roots: []
+roots: [sanskrit-tala]
+etymology_hook: "tala 'surface, base, sole', which MW derives from √stṛ 'spread'; Hindi talā (CDIAL 5731)"
 duration:
   max_seconds: 210
 requires:

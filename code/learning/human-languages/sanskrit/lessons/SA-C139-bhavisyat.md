@@ -14,7 +14,8 @@ romanization: "bhaviṣyat"
 concept_tag: SA-FUT139-BHAVISYAT
 prerequisites: [SA-C138-bhramati, SA-C138-vardhate]
 sounds: []
-roots: []
+roots: [sanskrit-bhavishyat, sanskrit-bhavati]
+etymology_hook: "bhaviṣyat 'about to be', the future participle of √bhū 'be, become' (MW), cousin of English be"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C138-vardhate]
 <!-- hl-knowledge: introduces=[SA-LEX-C139-FUT139-01]; assesses=[] -->
 
 **भविष्यत्** — *bhaviṣyat* — "the future". Sanskrit puts the future inside the verb, with **-ष्य-** before the ending: **पठति** — "reads" — becomes **पठिष्यति** — "will read".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhaviṣyat* is the future participle of the root √bhū "be, become": "about to be", and as a noun "the future" (MW). MW sets √bhū beside Latin *fuit* "was" and English *be*: an inherited Indo-European root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

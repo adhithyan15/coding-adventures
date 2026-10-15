@@ -14,7 +14,8 @@ romanization: "na cintā"
 concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [SA-C01-na, SA-C01-dhanyavada]
 sounds: [inherent-a, nt-conjunct]
-roots: [na-negative, cint-think]
+roots: [na-negative, cint-think, sanskrit-cinta]
+etymology_hook: "na 'not', inherited (MW); cintā 'anxious thought' ← the root √cint 'think' (MW; CDIAL 4816)"
 reviews_of: [SA-C01-na]
 duration:
   max_seconds: 210

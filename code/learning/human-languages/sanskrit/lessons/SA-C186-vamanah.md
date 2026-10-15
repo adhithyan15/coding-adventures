@@ -14,7 +14,8 @@ romanization: "vāmanaḥ"
 concept_tag: SA-QUAL186-VAMANAH
 prerequisites: [SA-C185-avasyam, SA-C186-komalah]
 sounds: []
-roots: []
+roots: [sanskrit-vamana-dwarf]
+etymology_hook: "vāmana 'dwarfish', 'of doubtful derivation' (MW); Hindi baunā 'dwarf' (CDIAL 11538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C186-komalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C186-QUAL186-02]; assesses=[] -->
 
 **वामनः** — *vāmanaḥ* — "dwarfish, short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vāmana* is of uncertain origin: MW calls it "of doubtful derivation". It is the name of Viṣṇu's dwarf form, and it lives on as Hindi *baunā*, "dwarf" (CDIAL 11538).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

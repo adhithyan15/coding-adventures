@@ -14,7 +14,8 @@ romanization: "raśmiḥ"
 concept_tag: SA-LIGHT-RASHMI
 prerequisites: [SA-C46-sun, SA-C44-dark, SA-C45-noon]
 sounds: []
-roots: []
+roots: [sanskrit-rashmi]
+etymology_hook: "raśmi 'rope, rein', then 'ray of light' (MW); Punjabi rassī 'rope', borrowed into Hindi (CDIAL 10648)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C46-sun]
 The same word means a rein or a cord held in the hand, and the two senses share one picture — something long and thin, stretched from a holder to the thing it holds. A ray reaches out of the sun the way a rein reaches out of a fist.
 
 That doubling is worth noticing, because it shows how Sanskrit builds: not two words for two things, but one shape lent to both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Raśmi* first meant a rope or a rein, already in the Rigveda, and then a ray of
+light (MW, CDIAL 10648). It lives on as Punjabi *rassī*, "rope", which Hindi
+borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

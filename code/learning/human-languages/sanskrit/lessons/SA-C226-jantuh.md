@@ -14,7 +14,8 @@ romanization: "jantuḥ"
 concept_tag: SA-THG226-JANTUH
 prerequisites: [SA-C226-dhumaketuh, SA-C226-pasuh]
 sounds: []
-roots: []
+roots: [sanskrit-jantu]
+etymology_hook: "jantu 'offspring, creature' ← root √jan 'be born'; MW compares Latin gignere (CDIAL 5110)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C226-pasuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C226-THG226-04]; assesses=[] -->
 
 **जन्तुः** — *jantuḥ* — "a creature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jantu* is built on the root √jan, "to be born, beget" (MW): first "offspring", then any creature (CDIAL 5110). MW compares √jan with Latin *gignere*, "to beget", and Greek *gignomai*, "I become".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

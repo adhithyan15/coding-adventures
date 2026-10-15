@@ -14,7 +14,8 @@ romanization: "putraḥ"
 concept_tag: SA-PEOPLE-SON
 prerequisites: [SA-C88-youngman, SA-C88-friend]
 sounds: []
-roots: []
+roots: [sanskrit-putra]
+etymology_hook: "putra 'son': etymology doubtful (MW); MW compares Avestan puthra; it lives on as Hindi pūt (CDIAL 8265)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,14 @@ reviews_of: [SA-C88-friend]
 <!-- hl-knowledge: introduces=[SA-LEX-C88-PEOPLE-04]; assesses=[] -->
 
 **पुत्रः** (*putraḥ*) — "a son", the everyday word beside **सूनुः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW calls the etymology of *putra* doubtful: perhaps the root √puṣ, "to nourish";
+the old story of *put* + *tra*, "saving from the hell Put", is a traditional
+reading. MW compares Avestan *puthra*, so the word is shared with Iranian. It
+lives on as Hindi *pūt* (CDIAL 8265).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

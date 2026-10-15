@@ -14,7 +14,8 @@ romanization: "chadiḥ"
 concept_tag: SA-HOME-ROOF
 prerequisites: [SA-C77-kitchen, SA-C77-bathroom]
 sounds: []
-roots: []
+roots: [sanskrit-chadis]
+etymology_hook: "chadis 'roof' ← the root √chad 'cover' (MW), the root of chattra 'parasol'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C77-bathroom]
 <!-- hl-knowledge: introduces=[SA-LEX-C77-HOME-04]; assesses=[] -->
 
 **छदिः** (*chadiḥ*) — "the roof", over every **प्रकोष्ठः** of the house.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Chadiḥ* is built on the root √chad, "to cover" (MW): the roof is the covering, as
+the *chattra* is.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

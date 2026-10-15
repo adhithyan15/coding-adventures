@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for for a long time, then the Sanskrit for 
 You'll want to know: दूरतः.
 दूरतः — dūrataḥ — "from afar".
 
+The word, taken apart.
+dūrataḥ is dūra, "far", with the ending -tas, "from" (MW). MW thinks dūra probably comes from the root √du, and it lives on as Hindi dūr (CDIAL 6495).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for after a long time, then the Sanskrit fo
 
 You'll want to know: निकटे.
 निकटे — nikaṭe — "close by, near".
+
+The word, taken apart.
+nikaṭe is the locative of nikaṭa, "nearness" (MW). Its origin is disputed: CDIAL 7136 thinks a Munda source unlikely and derives it from nikṛta-, "put at". Hindi keeps it as neṛe, "near".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for from afar, then the Sanskrit for close 
 You'll want to know: अन्तरा.
 अन्तरा — antarā — "between".
 
+The word, taken apart.
+antarā is an adverb formed from antara, "interior, near" (CDIAL 362), which comes from antar, "within". MW compares antar with Latin inter, "between", an inherited Indo-European word.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for close by, then the Sanskrit for between
 You'll want to know: उच्चैः.
 उच्चैः — uccaiḥ — "loudly, high".
 
+The word, taken apart.
+uccaiḥ is an old case form of ucca, "high", used as an adverb (MW), and the Rigveda already has it (CDIAL 1634). Ucca lives on as Punjabi uccā, "high", and as the Hindi word for high. MW says it is said to come from ud "up" and √añc "bend".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for between, then the Sanskrit for loudly.
 
 You'll want to know: नीचैः.
 नीचैः — nīcaiḥ — "softly, low".
+
+The word, taken apart.
+nīcaiḥ is an old case form of nīca, "low", which MW takes apart as ni "down" and √añc "bend". It is the mirror image of uccaiḥ, and nīca lives on as Hindi nīcā (CDIAL 7540).
 
 What you've built.
 One more word for this chapter.

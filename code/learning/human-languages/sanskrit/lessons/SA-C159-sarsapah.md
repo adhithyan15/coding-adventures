@@ -14,7 +14,8 @@ romanization: "sarṣapaḥ"
 concept_tag: SA-THG159-SARSAPAH
 prerequisites: [SA-C158-kapatam, SA-C159-jirakam]
 sounds: []
-roots: []
+roots: [sanskrit-sarshapa]
+etymology_hook: "sarṣapa 'mustard seed' (Brāhmaṇas); origin uncertain; DEDR 921 notes a possible Dravidian link"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C159-jirakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C159-THG159-02]; assesses=[] -->
 
 **सर्षपः** — *sarṣapaḥ* — "mustard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sarṣapa* "mustard, mustard seed" goes back to the Ṣaḍviṃśa Brāhmaṇa (CDIAL 13281). Its origin is uncertain: DEDR 921, citing Burrow and Mayrhofer, discusses a possible link with Dravidian words for mustard.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

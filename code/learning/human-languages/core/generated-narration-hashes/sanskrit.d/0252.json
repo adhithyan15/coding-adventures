@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 252,
-  "sourceHash": "fnv1a64:ea053d4d2dd76727",
+  "sourceHash": "fnv1a64:dee3129ce27d15aa",
   "lessonIds": [
     "SA-C252-valli",
     "SA-C252-kantakah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch252.txt",
   "json": "sanskrit/narration/ch252.json",
-  "textHash": "fnv1a64:2c5f768b42d30401",
-  "jsonHash": "fnv1a64:81f9aba762d1abdd",
+  "textHash": "fnv1a64:9bb3a49280ee0049",
+  "jsonHash": "fnv1a64:7df2ed22287056a0",
   "findings": []
 }

@@ -15,6 +15,7 @@ concept_tag: PRONOUN-I
 prerequisites: [SA-C02-mama]
 sounds: [inherent-a, halant]
 roots: [aham-first-person]
+etymology_hook: "aham 'I' is inherited: MW compares Greek egō and Gothic ik, a cousin of English I"
 reviews_of: [SA-C02-mama]
 duration:
   max_seconds: 210
@@ -31,13 +32,13 @@ register: neutral
 variety: classical
 ---
 
-# अहम् (aham) — "I," the ancestor of *ego* and *I*
+# अहम् (aham) — "I," a cousin of *ego* and *I*
 
 ## Warm-up
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-MAMA] -->
 
-[PAUSE 2s] To answer "how are you?" you first need "I" — and it is the grandparent
+[PAUSE 2s] To answer "how are you?" you first need "I" — and it is a cousin
 of both English *I* and the word *ego*.
 
 ## Sounds you'll need

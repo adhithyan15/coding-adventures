@@ -14,7 +14,8 @@ romanization: "śṛṅgam"
 concept_tag: SA-THG227-SRNGAM
 prerequisites: [SA-C227-paksah, SA-C227-pucchah]
 sounds: []
-roots: []
+roots: [sanskrit-shrnga]
+etymology_hook: "śṛṅga 'horn', perhaps related to śiras 'head'; MW compares Latin cornū and English horn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C227-pucchah]
 <!-- hl-knowledge: introduces=[SA-LEX-C227-THG227-03]; assesses=[] -->
 
 **शृंगम्** — *śṛṅgam* — "a horn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śṛṅga* is the horn of an animal, and also a mountain peak (MW). MW suggests it may be connected with *śiras*, "head", and compares Latin *cornū* and English *horn*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

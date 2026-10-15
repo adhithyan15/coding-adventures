@@ -14,7 +14,8 @@ romanization: "pariṇāmaḥ"
 concept_tag: SA-SCH169-PARINAMAH
 prerequisites: [SA-C168-varnah, SA-C168-padam]
 sounds: []
-roots: []
+roots: [sanskrit-parinama, sanskrit-nam-bend]
+etymology_hook: "pariṇāma ← pari-√nam 'bend round, change' (MW): 'change, ripening', so 'result'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C168-padam]
 <!-- hl-knowledge: introduces=[SA-LEX-C169-SCH169-01]; assesses=[] -->
 
 **परिणामः** — *pariṇāmaḥ* — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pariṇāma* comes from *pari-√nam* "bend round, change, ripen", the root √nam "bend" with *pari* "around" (MW): "change, transformation, ripening", and so "the outcome, the result". It is the root √nam of *namaste*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

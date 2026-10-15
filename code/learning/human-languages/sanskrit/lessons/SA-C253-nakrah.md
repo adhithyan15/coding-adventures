@@ -14,7 +14,8 @@ romanization: "nakraḥ"
 concept_tag: SA-THG253-NAKRAH
 prerequisites: [SA-C253-vrscikah, SA-C253-godha]
 sounds: []
-roots: []
+roots: [sanskrit-nakra-crocodile]
+etymology_hook: "nakra 'crocodile'; MW reports an analysis na + kra; origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C253-godha]
 <!-- hl-knowledge: introduces=[SA-LEX-C253-THG253-05]; assesses=[] -->
 
 **नक्रः** — *nakraḥ* — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nakra* is a crocodile or alligator, and also the sign Scorpio (MW). MW reports a grammarians' analysis into *na* and *kra*, but gives no sure derivation, so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

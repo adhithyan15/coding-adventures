@@ -15,6 +15,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [inherent-a, halant-conjunct]
 roots: [namas, te]
+etymology_hook: "namaste ← namas 'a bow' (root √nam 'bend') + te 'to you', the pronoun English keeps as thee (MW)"
 reviews_of: []
 duration:
   max_seconds: 210

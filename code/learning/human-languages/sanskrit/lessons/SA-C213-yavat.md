@@ -14,7 +14,8 @@ romanization: "yāvat"
 concept_tag: SA-TIME213-YAVAT
 prerequisites: [SA-C213-prak, SA-C213-anantaram]
 sounds: []
-roots: []
+roots: [sanskrit-yavat]
+etymology_hook: "yāvat 'as long as', from the relative stem ya-, paired with tāvat 'so long' (MW; CDIAL 10474)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C213-anantaram]
 <!-- hl-knowledge: introduces=[SA-LEX-C213-TIME213-05]; assesses=[] -->
 
 **यावत्** — *yāvat* — "as long as, until".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yāvat* is built on the relative stem *ya-*, "which" (MW), and MW pairs it with its correlative *tāvat*, "so long". It is a Rigvedic word for "as long as, until" (CDIAL 10474).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

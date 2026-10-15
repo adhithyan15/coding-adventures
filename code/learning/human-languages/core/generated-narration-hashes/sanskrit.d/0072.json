@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 72,
-  "sourceHash": "fnv1a64:e317501cd9921444",
+  "sourceHash": "fnv1a64:ec66fcc5588f1f65",
   "lessonIds": [
     "SA-C72-cooks",
     "SA-C72-sleeps",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch72.txt",
   "json": "sanskrit/narration/ch72.json",
-  "textHash": "fnv1a64:6b05ab69ae89335e",
-  "jsonHash": "fnv1a64:6757ee60100be47f",
+  "textHash": "fnv1a64:84592394f853b082",
+  "jsonHash": "fnv1a64:7793817e0a5642e1",
   "findings": []
 }

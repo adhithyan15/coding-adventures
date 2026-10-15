@@ -14,7 +14,8 @@ romanization: "kapāṭam"
 concept_tag: SA-THG158-KAPATAM
 prerequisites: [SA-C158-pattika, SA-C158-dipika]
 sounds: []
-roots: []
+roots: [sanskrit-kapata]
+etymology_hook: "kapāṭa 'door panel' is perhaps borrowed from Dravidian (CDIAL 2963, after EWA); Marathi kavāḍ 'door'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C158-dipika]
 <!-- hl-knowledge: introduces=[SA-LEX-C158-THG158-05]; assesses=[] -->
 
 **कपाटम्** — *kapāṭam* — "a door panel, a shutter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kapāṭa*, also *kavāṭa*, "the leaf or panel of a door" is perhaps borrowed from Dravidian, as CDIAL 2963 reports after EWA. It lives on as Marathi *kavāḍ* "door" and Punjabi *kavāṛ* (CDIAL 2963).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

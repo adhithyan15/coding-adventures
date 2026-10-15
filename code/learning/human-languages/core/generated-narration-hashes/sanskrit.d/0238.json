@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 238,
-  "sourceHash": "fnv1a64:ed3309e98dcd9d71",
+  "sourceHash": "fnv1a64:fe4d69d85d667ffd",
   "lessonIds": [
     "SA-C238-paricarika",
     "SA-C238-abhiyanta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch238.txt",
   "json": "sanskrit/narration/ch238.json",
-  "textHash": "fnv1a64:beffd1087fdd8f9e",
-  "jsonHash": "fnv1a64:fe1b112077084d4f",
+  "textHash": "fnv1a64:e8e2663d128f5110",
+  "jsonHash": "fnv1a64:a2ba0a513ad162e6",
   "findings": []
 }

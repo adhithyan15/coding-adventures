@@ -14,7 +14,8 @@ romanization: "yadi"
 concept_tag: SA-WHY154-YADI
 prerequisites: [SA-C153-paritah, SA-C153-samantatah]
 sounds: []
-roots: []
+roots: [sanskrit-yadi]
+etymology_hook: "yadi 'if' is built on the relative stem ya- 'which' (CDIAL 10410; MW); Punjabi je 'if'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C153-samantatah]
 <!-- hl-knowledge: introduces=[SA-LEX-C154-WHY154-01]; assesses=[] -->
 
 **यदि** — *yadi* — "if".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yadi* "if" is built on the relative stem *ya-* "which" (CDIAL 10410), already in the Rigveda (MW). MW compares the relative *ya-* with Greek *hos* "who". It lives on as Punjabi *je* and Marathi *jai* "if" (CDIAL 10410).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

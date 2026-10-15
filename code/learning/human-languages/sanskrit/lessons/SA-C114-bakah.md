@@ -14,7 +14,8 @@ romanization: "bakaḥ"
 concept_tag: SA-THINGS114-BAKAH
 prerequisites: [SA-C114-kapotah, SA-C114-ulukah]
 sounds: []
-roots: []
+roots: [sanskrit-baka]
+etymology_hook: "baka 'heron, crane' is probably imitative in origin (CDIAL 9115); Hindi bagulā 'crane'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C114-ulukah]
 <!-- hl-knowledge: introduces=[SA-LEX-C114-THINGS114-04]; assesses=[] -->
 
 **बकः** — *bakaḥ* — "a heron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*baka* "a heron, a crane" is probably imitative in origin, as CDIAL 9115 explains after EWA, which is why its *k* survives into the modern forms. It lives on as Hindi *bagulā* and Bengali *bak* (CDIAL 9115).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

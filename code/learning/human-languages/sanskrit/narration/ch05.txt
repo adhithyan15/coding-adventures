@@ -14,6 +14,7 @@ va, dā, mi. The long ā in the middle beat is the ending doing its work — sho
 
 The word, taken apart.
 vadāmi ("I speak") is from the root vad ("to speak, to say") — the very root of vāda ("a saying") inside Chapter 1's dhanyavādaḥ ("thank you"). The present tense is stem + person- ending: vad-ā-mi, where -mi means "I" — the same -mi you can see in asmi ("I am").
+The verb is built on √vad, which MW compares with Lithuanian vadinti, "to call".
 
 Grammar Lens: singular, DUAL, and plural.
 Here is Sanskrit's showpiece. Where English (and Hindi) count in two — singular and plural — Sanskrit counts in three, with a special dual for exactly two:
@@ -95,7 +96,7 @@ Sounds you'll need.
 a, haṁ, saṁs, kṛ, taṁ, va, dā, mi. The ṁ is a hum through the nose that colours the vowel before it rather than a full m; ṛ is a short vowel made with the tongue curled, near the ri of rich.
 
 The sentence, taken apart.
-ahaṁ saṁskṛtaṁ vadāmi = aham ("I") + saṁskṛtam (the object) + vadāmi ("speak") — "I Sanskrit speak," the verb last (as in every daughter language). The name saṁskṛta means "put together, refined, perfected" — from sam- ("together," cousin of English same, Greek syn-) + kṛta ("made, done," from the root kṛ you met in namaskāra). So "Sanskrit" literally means "the perfected [language]," named in contrast to prākṛta ("natural, raw" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend).
+ahaṁ saṁskṛtaṁ vadāmi = aham ("I") + saṁskṛtam (the object) + vadāmi ("speak") — "I Sanskrit speak," the verb last (as in every daughter language). The name saṁskṛta means "put together, refined, perfected" — from sam- ("together," cousin of English same) + kṛta ("made, done," from the root kṛ you met in namaskāra). So "Sanskrit" literally means "the perfected [language]," named in contrast to prākṛta ("natural, raw" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend).
 
 Grammar Lens: sandhi joins the words.
 Say it aloud and aham + saṁskṛtam runs together as ahaṁ saṁskṛtam — the m softening to the anusvāra before the next consonant. That is sandhi, the sound-joining you met in Chapter 1's svāgatam; it is why Sanskrit flows.
@@ -127,10 +128,10 @@ Sounds you'll need.
 va, sā, mi. One consonant apart from vadāmi, and the same long ā carrying the ending.
 
 The word, taken apart.
-vasāmi ("I dwell, I live") is from the root vas ("to dwell, to stay, to abide"), from Proto-Indo-European wes- ("to dwell, to be") — the ancestor of English was and were (the past of "to be" began as "to dwell/remain"). So Sanskrit's "I dwell" and English's "was" are, at the root, one word. From vas come vāsa ("a dwelling"), nivāsa ("a residence"), and names like Vārāṇasī. "I live in the city" is ahaṁ nagare vasāmi.
+vasāmi ("I dwell, I live") is from the root vas ("to dwell, to stay, to abide"), from Proto-Indo-European wes- ("to dwell, to be") — the ancestor of English was and were (the past of "to be" began as "to dwell/remain"). So Sanskrit's "I dwell" and English's "was" are, at the root, one word. From vas come vāsa ("a dwelling") and nivāsa ("a residence"). "I live in the city" is ahaṁ nagare vasāmi.
 
 Grammar Lens: "in" is a case-ending.
-nagare ("in the city") = nagara ("city") in the locative case (-e, "in / at"). Sanskrit has no separate word for "in" — it is folded into the noun's ending, the ancestor of the postpositions Hindi and Bengali use. This is your second case, after Chapter 4's dative.
+nagare ("in the city") = nagara ("city") in the locative case (-e, "in / at"). Sanskrit has no separate word for "in" — it is folded into the noun's ending, where Hindi puts a separate word after the noun (meṃ, "in"). This is your second case, after Chapter 4's dative.
 
 Guided Practice.
 [pause 1 second]

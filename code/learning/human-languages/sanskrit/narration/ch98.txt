@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a reason, then the Sanskrit for because
 You'll want to know: अतः.
 अतः — ataḥ — "therefore".
 
+The word, taken apart.
+ataḥ is built from the pronoun base a- "this" and the ending -tas "from": "from this", hence "therefore" (MW). It is the same -tas that you met in yataḥ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for because, then the Sanskrit for therefor
 
 You'll want to know: तस्मात्.
 तस्मात् — tasmāt — "so, from that".
+
+The word, taken apart.
+tasmāt is the ablative, "from that", of the pronoun tad "that" (MW), so "on that account, therefore". The pronoun is inherited from PIE tód (EtymDB), the same word as English that.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for therefore, then the Sanskrit for so.
 You'll want to know: हेतुः.
 हेतुः — hetuḥ — "a cause".
 
+The word, taken apart.
+hetu comes from the root √hi "urge on, set in motion" (CDIAL 14160): MW's first gloss is "impulse", the push that makes a thing happen, and from that "motive, cause, reason". Pali kept it unchanged as hetu (CDIAL 14160).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for so, then the Sanskrit for a cause.
 You'll want to know: तदर्थम्.
 तदर्थम् — tadartham — "for that reason".
 
+The word, taken apart.
+tadartham is a compound of tad "that" and artha "aim, purpose, sake", used in the accusative as an adverb: "for that end, on that account" (MW). The pronoun tad is inherited from PIE tód (EtymDB), the same word as English that.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a cause, then the Sanskrit for for that
 
 You'll want to know: यस्मात्.
 यस्मात् — yasmāt — "because".
+
+The word, taken apart.
+yasmāt is the ablative, "from which", of the relative pronoun ya- "which" (MW), so "for which reason, because". It answers tasmāt "therefore", and MW compares the relative ya- with Greek hos "who".
 
 What you've built.
 One more word for this chapter.

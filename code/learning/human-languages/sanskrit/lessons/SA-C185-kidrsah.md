@@ -14,7 +14,8 @@ romanization: "kīdṛśaḥ"
 concept_tag: SA-WHY185-KIDRSAH
 prerequisites: [SA-C184-nicaih, SA-C185-kiyat]
 sounds: []
-roots: []
+roots: [sanskrit-kidrsha, ka-interrogative]
+etymology_hook: "kīdṛśa = kī- 'what' + dṛś 'look': 'of what appearance'; Hindi kaisā (CDIAL 3197)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C185-kiyat]
 <!-- hl-knowledge: introduces=[SA-LEX-C185-WHY185-02]; assesses=[] -->
 
 **कीदृशः** — *kīdṛśaḥ* — "of what kind?".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kīdṛśa* is built on the question stem *kī-* and *-dṛśa*, "looking like", from the root √dṛś, "to see" (MW): "of what appearance". It lives on as Hindi *kaisā*, with *ka-* in place of *kī-*, and Gujarati *śũ*, "what" (CDIAL 3197).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

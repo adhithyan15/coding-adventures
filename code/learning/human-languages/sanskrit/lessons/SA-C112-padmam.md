@@ -14,7 +14,8 @@ romanization: "padmam"
 concept_tag: SA-THINGS112-PADMAM
 prerequisites: [SA-C111-parnam, SA-C111-kusumam]
 sounds: []
-roots: []
+roots: [sanskrit-padma]
+etymology_hook: "padma 'lotus'; MW links it to pad with a query, so its origin is uncertain; Kashmiri pam-pōś (CDIAL 7769)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C111-kusumam]
 <!-- hl-knowledge: introduces=[SA-LEX-C112-THINGS112-01]; assesses=[] -->
 
 **पद्मम्** — *padmam* — "a lotus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW links *padma* "a lotus" to *pad* with a query mark, so its origin is uncertain. It lives on in Kashmiri *pam-pōś* "lotus" (CDIAL 7769).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

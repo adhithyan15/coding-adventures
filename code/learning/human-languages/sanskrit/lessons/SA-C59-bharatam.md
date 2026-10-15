@@ -14,7 +14,8 @@ romanization: "Bhāratam"
 concept_tag: SA-LEX-BHARATAM-INDIA
 prerequisites: [SA-C59-desha, SA-C02-asti]
 sounds: []
-roots: []
+roots: [sanskrit-bharata]
+etymology_hook: "bhārata 'belonging to Bharata' ← Bharata, an epic people and king, with a lengthened first vowel (MW)"
 duration:
   max_seconds: 250
 requires:

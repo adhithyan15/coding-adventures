@@ -14,7 +14,8 @@ romanization: "krīḍāṅgaṇam"
 concept_tag: SA-THG164-KRIDANGANAM
 prerequisites: [SA-C164-vatika, SA-C164-upavanam]
 sounds: []
-roots: []
+roots: [sanskrit-krida, sanskrit-angana]
+etymology_hook: "krīḍāṅgaṇa ← krīḍā 'play' + aṅgaṇa 'yard, court': 'play-yard'; a modern pairing for a playground"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C164-upavanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C164-THG164-04]; assesses=[] -->
 
 **क्रीडांगणम्** — *krīḍāṅgaṇam* — "a playground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*krīḍāṅgaṇa* is built from *krīḍā* "play, sport" and *aṅgaṇa* "a yard, a court" (CDIAL 118): "the play-yard". MW does not list the pair, so it is a modern coinage.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

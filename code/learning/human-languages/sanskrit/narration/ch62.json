@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "The Ending That Counts",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ec3b8e9eea209e58",
+  "sourceHash": "fnv1a64:06e76b3e7225432b",
   "lessons": [
     {
       "id": "SA-C62-fifth",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08569eefbf9fdcae",
+      "sourceHash": "fnv1a64:04948ebde17dc4c9",
       "notice": null,
       "blocks": [
         {
@@ -114,6 +114,10 @@
             {
               "kind": "speech",
               "text": "This lesson does not begin at first. It begins at fifth because -म is the ending that WORKS, and a rule has to be visible before anything can be seen departing from it. The words for first, second and third all depart from it, and they wait."
+            },
+            {
+              "kind": "speech",
+              "text": "Pañca itself is inherited: MW compares Latin quīnque and English five, and the ordinal is as old as the Atharvaveda (CDIAL 7669)."
             }
           ]
         },
@@ -204,7 +208,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a412904f37faabf1",
+      "sourceHash": "fnv1a64:848f7984583aa6e9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -392,7 +396,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2abb1fdc510ab29b",
+      "sourceHash": "fnv1a64:7b681035b43ae1e2",
       "notice": null,
       "blocks": [
         {
@@ -479,6 +483,10 @@
             {
               "kind": "speech",
               "text": "That is worth noticing for a reason beyond the word: it tells you that the -म ending is not merely common in Sanskrit but PRODUCTIVE — the ending a speaker reaches for by default, rather than one of several stored shapes. You will meet the one number in this range where that is not true, and it will stand out."
+            },
+            {
+              "kind": "speech",
+              "text": "Aṣṭa is an inherited numeral: MW compares Latin octō and English eight, and the ordinal is already in the Rigveda (CDIAL 937)."
             }
           ]
         },
@@ -569,7 +577,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a2228018c1ba485",
+      "sourceHash": "fnv1a64:e7798e8bb6807177",
       "notice": null,
       "blocks": [
         {
@@ -755,7 +763,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:5ddb1f1399aaef8c",
+      "sourceHash": "fnv1a64:795da643d02fafd1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -872,6 +880,10 @@
             {
               "kind": "speech",
               "text": "That was on purpose, and it is not because sixth is rare. षट् is the one number between five and ten whose ordinal does NOT take -म, and the next chapter opens on it — because a hole is only interesting once the thing around it is solid."
+            },
+            {
+              "kind": "speech",
+              "text": "MW compares daśama directly with Latin decimus: the two ordinals are inherited cousins, ending and all (CDIAL 6233)."
             }
           ]
         },

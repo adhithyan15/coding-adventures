@@ -14,7 +14,8 @@ romanization: "sīmā"
 concept_tag: SA-THG195-SIMA
 prerequisites: [SA-C195-janapadah, SA-C195-prantah]
 sounds: []
-roots: []
+roots: [sanskrit-sima]
+etymology_hook: "sīmā 'boundary', first 'the parting of the hair' (MW; CDIAL 13435); Gujarati sīm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C195-prantah]
 <!-- hl-knowledge: introduces=[SA-LEX-C195-THG195-05]; assesses=[] -->
 
 **सीमा** — *sīmā* — "a boundary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sīmā* comes from *sīman*, which in the Atharvaveda means "the parting of the hair" (CDIAL 13435): a line that divides. Later it means "boundary" (MW). It lives on as Gujarati *sīm*, "boundary of a village".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

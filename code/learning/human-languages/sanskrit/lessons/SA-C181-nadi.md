@@ -14,7 +14,8 @@ romanization: "nāḍī"
 concept_tag: SA-WEL181-NADI
 prerequisites: [SA-C181-pratisyayah, SA-C181-svasah]
 sounds: []
-roots: []
+roots: [sanskrit-nadi-tube]
+etymology_hook: "nāḍī 'tube, vein', later 'pulse' ← naḍa 'reed' (CDIAL 7047); a different word from nadī 'river'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C181-svasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C181-WEL181-04]; assesses=[] -->
 
 **नाडी** — *nāḍī* — "the pulse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nāḍī* first meant a tubular stalk, then any tube or vessel of the body, and MW also gives "the pulse". CDIAL 7047 derives it from *naḍa*, "reed". It is a different word from *nadī*, "river".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kiñcit"
 concept_tag: SA-REPLY-KINCIT
 prerequisites: [SA-C42-mostly, SA-C40-vegetable, SA-C41-mirror]
 sounds: []
-roots: []
+roots: [sanskrit-kimcid, ka-interrogative]
+etymology_hook: "kiñcit 'something, a little' ← kim 'what' + the indefinite particle cit; Hindi kuch (CDIAL 3144)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C42-mostly]
 It is किम्, the *what* you have been asking with since your first questions, wearing the same little *cit* that softened **कदाचित्**. *What* gone vague is *something* — and *something* said of a quantity is *a little*.
 
 अल्पम् describes a small thing; **किञ्चित्** measures a small amount of it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kiñcit* is built from *kim*, "what", and the particle *cit* (CDIAL 3144). It
+lives on as Hindi *kuch*, "some, something".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

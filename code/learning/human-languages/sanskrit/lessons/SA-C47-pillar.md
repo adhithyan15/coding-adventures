@@ -14,7 +14,8 @@ romanization: "stambhaḥ"
 concept_tag: SA-DWELL-STAMBHA
 prerequisites: [SA-C47-stair, SA-C45-month, SA-C46-shade]
 sounds: []
-roots: []
+roots: [sanskrit-stambha]
+etymology_hook: "stambha 'pillar, post' ← the root √stambh 'prop, make firm' (MW); Punjabi thambh (CDIAL 13682)"
 duration:
   max_seconds: 210
 requires:
@@ -46,7 +47,13 @@ reviews_of: [SA-C47-stair]
 
 It rests on *stambh*, "to prop, to make firm". Where भित्तिः splits a space, **स्तम्भः** holds one open — a wall you can walk past.
 
-English *staff* and *stamp* sit near it, and the picture under all three is one thing: something planted hard and standing. Ends in **-अः**.
+English *stamp* and *stump* sit near it (MW), and the picture under all three is one thing: something planted hard and standing. Ends in **-अः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Stambha* is built on the root √stambh, "to prop, make firm" (MW, CDIAL 13682). It
+lives on as Punjabi *thambh*, "pillar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

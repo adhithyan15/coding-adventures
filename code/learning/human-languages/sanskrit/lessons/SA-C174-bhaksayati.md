@@ -14,7 +14,8 @@ romanization: "bhakṣayati"
 concept_tag: SA-VERB-BHAKSAYATI
 prerequisites: [SA-C173-ramate, SA-C174-corayati]
 sounds: []
-roots: []
+roots: [sanskrit-bhakshayati]
+etymology_hook: "bhakṣayati 'eats, devours', probably a by-form of √bhaj 'share' (MW; CDIAL 9342); Punjabi bhakkhṇā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C174-corayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C174-ACT174-02]; assesses=[] -->
 
 **भक्षयति** — *bhakṣayati* — "eats up, devours".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhakṣayati* comes from the root √bhakṣ "eat, devour" (CDIAL 9342), which MW thinks probably a secondary form of √bhaj "share, partake". It lives on as Punjabi *bhakkhṇā* "to devour" (CDIAL 9342).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

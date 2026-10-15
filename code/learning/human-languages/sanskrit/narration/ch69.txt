@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for shyness, then the Sanskrit for joy.
 You'll want to know: नेत्रम्.
 नेत्रम् (netram) — "an eye", the word of poems, beside the everyday अक्षि.
 
+The word, taken apart.
+Netra is traditionally read as "the guide", from the root √nī, "to lead" (MW), but CDIAL 7587 reports that this link has been doubted, so its origin is not settled.
+
 What you've built.
 A second word for the eye.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for joy, then the Sanskrit for an eye.
 
 You'll want to know: कण्ठः.
 कण्ठः (kaṇṭhaḥ) — "the throat". With a कासः, it is the कण्ठः that hurts.
+
+The word, taken apart.
+Kaṇṭha is already in the Śatapatha Brāhmaṇa. The native grammarians derive it from a root √kaṇ, "to sound" (MW), but its origin is not settled (CDIAL 2680).
 
 What you've built.
 Where the voice comes from.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for an eye, then the Sanskrit for the throa
 You'll want to know: उदरम्.
 उदरम् (udaram) — "the belly", where क्षुधा is felt.
 
+The word, taken apart.
+Udara is a Rigvedic word for the belly (CDIAL 1932). MW records two guesses, the roots √dṝ, "to burst", and √ṛ, "to go", so its origin is not settled.
+
 What you've built.
 Where hunger lives.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for the throat, then the Sanskrit for the b
 You'll want to know: ललाटम्.
 ललाटम् (lalāṭam) — "the forehead", above the अक्षि.
 
+The word, taken apart.
+Lalāṭa is the later form of Vedic rarāṭa (MW, CDIAL 10970). Its own origin is not settled, though CDIAL takes the side form niṭāla as borrowed from Dravidian. It lives on as Hindi lilāṛ, "forehead".
+
 What you've built.
 The top of the face.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for the belly, then the Sanskrit for the fo
 
 You'll want to know: जिह्वा.
 जिह्वा (jihvā) — "the tongue", inside the मुखम्.
+
+The word, taken apart.
+Jihvā is inherited: MW compares Latin lingua and Gothic tuggō, the cousin of English tongue. It lives on as Hindi jībh (CDIAL 5228).
 
 What you've built.
 What tastes and speaks.

@@ -14,7 +14,8 @@ romanization: "jambūphalam"
 concept_tag: SA-THG190-JAMBUPHALAM
 prerequisites: [SA-C190-kharjuram, SA-C190-amalakam]
 sounds: []
-roots: []
+roots: [sanskrit-jambu, sanskrit-phala]
+etymology_hook: "jambūphala = jambū 'rose-apple tree' + phala 'fruit'; jambū lives on as Hindi jām (CDIAL 5131)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C190-amalakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C190-THG190-05]; assesses=[] -->
 
 **जम्बूफलम्** — *jambūphalam* — "a rose apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jambūphala* is a compound of *jambū*, "the rose-apple tree" (MW), and *phala*, "fruit": the tree's fruit. *Jambū* lives on as Hindi *jām* (CDIAL 5131).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

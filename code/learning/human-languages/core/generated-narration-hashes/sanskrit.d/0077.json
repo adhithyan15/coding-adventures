@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 77,
-  "sourceHash": "fnv1a64:23f7e70d05c77bd8",
+  "sourceHash": "fnv1a64:118107986850b439",
   "lessonIds": [
     "SA-C77-room",
     "SA-C77-kitchen",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch77.txt",
   "json": "sanskrit/narration/ch77.json",
-  "textHash": "fnv1a64:161f35534f6163e2",
-  "jsonHash": "fnv1a64:360215f30af352d6",
+  "textHash": "fnv1a64:7aae34a452f63475",
+  "jsonHash": "fnv1a64:a0967dc3b1446d6d",
   "findings": []
 }

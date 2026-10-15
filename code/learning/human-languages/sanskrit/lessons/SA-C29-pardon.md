@@ -14,7 +14,8 @@ romanization: "kṣamyatām"
 concept_tag: SA-COURTESY-PARDON
 prerequisites: [SA-C29-please, SA-C27-well-done, SA-C28-day-after]
 sounds: []
-roots: []
+roots: [kshama-sanskrit]
+etymology_hook: "kṣamyatām 'let it be forgiven' ← the root √kṣam 'be patient, forgive', in its passive command form (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,14 @@ reviews_of: [SA-C29-please]
 
 **क्षम्यताम्** is the apology. It is longer than *sorry* and it is doing more work: the root means "to be patient, to bear with, to forgive", and the form is a command addressed to nobody in particular. *Let it be forgiven.*
 
-Notice that Sanskrit has now given you three of these impersonal commands: अस्तु, "let it be", क्षम्यताम्, "let it be forgiven", and स्वस्ति, "may it be well". A polite language often prefers to leave the person out.
+Notice that Sanskrit has now given you two of these impersonal commands, अस्तु, "let it be", and क्षम्यताम्, "let it be forgiven", and a wish in the same spirit, स्वस्ति, "may it be well". A polite language often prefers to leave the person out.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kṣamyatām* is the passive command form of the root √kṣam, "to be patient, bear
+with, forgive"; MW cites this very form. The noun *kṣamā*, "patience,
+forgiveness", is built on the same root (CDIAL 3659).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 118,
   "title": "Ankle, Finger, Room, Chair, Board",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e39ab2d9887e2537",
+  "sourceHash": "fnv1a64:ec9c2a1d20a264b9",
   "lessons": [
     {
       "id": "SA-C118-gulphah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:586b503a13e92f83",
+      "sourceHash": "fnv1a64:2dc95db62cd3c6b9",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gulpha \"the ankle\", also kulpha in the Rigveda, is perhaps borrowed from Dravidian: CDIAL 4216, after Burrow, takes the wavering k- and g- as a sign of that and compares a Dravidian word for \"hoof\". It lives on as Marathi gophā \"ankle\" (CDIAL 4216)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:570a725bef646e9c",
+      "sourceHash": "fnv1a64:ac2757ffa4295ca8",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aṅguli \"a finger, a toe\" is built on the base aṅgu-, the same base as aṅguṣṭha \"thumb\" (CDIAL 135, 137). It lives on as Hindi uṅglī \"finger\" (CDIAL 135)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cf66bf7ddd2c513",
+      "sourceHash": "fnv1a64:35c48e99a8d88ab6",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kakṣa first meant \"a hiding place\" and \"the armpit\", which MW calls the most concealed part of the body; its feminine kakṣā also names a walled enclosure or a private room. MW compares Latin coxa \"hip\", and EtymDB counts it as inherited from Indo-European."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b66abaa3a4f1a1c3",
+      "sourceHash": "fnv1a64:dbbe97d9bd30d8f9",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "āsandī \"a chair, a stool\" is old, in the Atharvaveda, and comes from ā \"on\" + the root √sad \"sit\" (CDIAL 1485). MW sets √sad beside Latin sedere and English sit: an inherited Indo-European root."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:419445afcd05d7fa",
+      "sourceHash": "fnv1a64:845fb618db22638d",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "phalaka \"a board, a plank, a bench\" is found from the Brāhmaṇas on (MW). CDIAL 9053 refers it to the root √phal \"burst, split\", the root MW files it under, and MW compares √phal with English split. Nepali kept it as phalek \"board, plank\" (CDIAL 9053)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

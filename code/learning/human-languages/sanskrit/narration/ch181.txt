@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a scholar, then the Sanskrit for a lear
 You'll want to know: दन्तपीडा.
 दन्तपीडा — dantapīḍā — "a toothache".
 
+The word, taken apart.
+dantapīḍā is a compound of danta, "tooth", and pīḍā, "pain", built on the root √pīḍ, "to press, squeeze" (MW). Danta is the source of the Hindi word for tooth (CDIAL 6152), and pīḍā lives on as Hindi pīṛ, "pain" (CDIAL 8227).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a learned person, then the Sanskrit for
 
 You'll want to know: प्रतिश्यायः.
 प्रतिश्यायः — pratiśyāyaḥ — "a head cold".
+
+The word, taken apart.
+pratiśyāya is built on prati- and the root √śyai, "to congeal, freeze" (MW). MW glosses it, and its twin pratiśyā, as "a cold, catarrh".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a toothache, then the Sanskrit for a he
 You'll want to know: श्वासः.
 श्वासः — śvāsaḥ — "breath".
 
+The word, taken apart.
+śvāsa is built on the root √śvas, "to breathe, hiss, pant" (MW), the root inside viśvasiti, "trusts". It lives on as Hindi sās, "breath" (CDIAL 12769).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a head cold, then the Sanskrit for brea
 You'll want to know: नाडी.
 नाडी — nāḍī — "the pulse".
 
+The word, taken apart.
+nāḍī first meant a tubular stalk, then any tube or vessel of the body, and MW also gives "the pulse". CDIAL 7047 derives it from naḍa, "reed". It is a different word from nadī, "river".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for breath, then the Sanskrit for the pulse
 
 You'll want to know: स्वास्थ्यम्.
 स्वास्थ्यम् — svāsthyam — "fitness, health".
+
+The word, taken apart.
+svāsthya comes from svastha, "well, healthy", a compound of sva "self" and stha "standing" (MW): to be healthy is to be in your own natural state. The -ya ending turns the adjective into the noun "health".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "paṭuḥ"
 concept_tag: SA-QUAL187-PATUH
 prerequisites: [SA-C187-krpanah, SA-C187-satyavadi]
 sounds: []
-roots: []
+roots: [sanskrit-patu]
+etymology_hook: "paṭu 'sharp, skilful' is of uncertain origin; MW suggests √paṭ with a question mark"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C187-satyavadi]
 <!-- hl-knowledge: introduces=[SA-LEX-C187-QUAL187-05]; assesses=[] -->
 
 **पटुः** — *paṭuḥ* — "adept, skilful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paṭu* first meant "sharp, pungent, keen", then "clever, skilful" (MW). Its origin is uncertain: MW suggests the root √paṭ, with a question mark.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

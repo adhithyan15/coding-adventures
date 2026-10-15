@@ -14,7 +14,8 @@ romanization: "daridraḥ"
 concept_tag: SA-QUAL127-DARIDRAH
 prerequisites: [SA-C126-ardrah, SA-C126-suskah]
 sounds: []
-roots: []
+roots: [sanskrit-daridra]
+etymology_hook: "daridra 'roving', then 'poor, needy' ← the intensive of √drā 'run' (MW; CDIAL 6195)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C126-suskah]
 <!-- hl-knowledge: introduces=[SA-LEX-C127-QUAL127-01]; assesses=[] -->
 
 **दरिद्रः** — *daridraḥ* — "poor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*daridra* comes from the intensive of the root √drā "run" (MW; CDIAL 6195): in the Vedas it means "roving, strolling", and later "poor, needy". Punjabi kept it as *dariddar* "poverty" (CDIAL 6195).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

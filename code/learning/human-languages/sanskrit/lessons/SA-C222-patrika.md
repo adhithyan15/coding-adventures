@@ -14,7 +14,8 @@ romanization: "patrikā"
 concept_tag: SA-THG222-PATRIKA
 prerequisites: [SA-C222-panyam, SA-C222-apanikah]
 sounds: []
-roots: []
+roots: [sanskrit-patrika, sanskrit-patra]
+etymology_hook: "patrikā ← pattra 'wing, leaf, page' + -ikā (MW; CDIAL 7733); the 'newspaper' sense is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C222-apanikah]
 <!-- hl-knowledge: introduces=[SA-LEX-C222-THG222-05]; assesses=[] -->
 
 **पत्रिका** — *patrikā* — "a newspaper, a magazine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*patrikā* is *pattra*, "wing-feather, leaf, leaf of a book" (CDIAL 7733), with the suffix *-ikā*: a little leaf, a letter or document (MW). Its use for a newspaper or magazine is modern. *Pattra* lives on as Hindi *pattā*, "leaf".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

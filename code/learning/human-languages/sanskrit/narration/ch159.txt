@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a small lamp, then the Sanskrit for a d
 You'll want to know: जीरकम्.
 जीरकम् — jīrakam — "cumin".
 
+The word, taken apart.
+jīraka "cumin seed" is a word of the medical writer Suśruta, and neither MW nor CDIAL 5234 gives a derivation, so its origin is uncertain. It lives on as Hindi and Bengali jīrā and Gujarati jīrũ "cumin" (CDIAL 5234).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a door panel, a shutter, then the Sansk
 
 You'll want to know: सर्षपः.
 सर्षपः — sarṣapaḥ — "mustard".
+
+The word, taken apart.
+sarṣapa "mustard, mustard seed" goes back to the Ṣaḍviṃśa Brāhmaṇa (CDIAL 13281). Its origin is uncertain: DEDR 921, citing Burrow and Mayrhofer, discusses a possible link with Dravidian words for mustard.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for cumin, then the Sanskrit for mustard.
 You'll want to know: हिंगु.
 हिंगु — hiṅgu — "asafoetida".
 
+The word, taken apart.
+hiṅgu "asafoetida" appears from the Mahābhārata on. EtymDB lists it as borrowed from Iranian, but neither MW nor CDIAL 14079 gives a derivation, so its origin is not settled. It lives on as Punjabi hiṅg and Hindi hīṅg (CDIAL 14079).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for mustard, then the Sanskrit for asafoeti
 You'll want to know: तिलः.
 तिलः — tilaḥ — "sesame".
 
+The word, taken apart.
+tila "sesame" is old, in the Atharvaveda, and is probably borrowed from Munda: CDIAL 5827 follows Kuiper and thinks a Dravidian source less likely. It lives on as Hindi and Punjabi til (CDIAL 5827).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for asafoetida, then the Sanskrit for sesam
 
 You'll want to know: चणकः.
 चणकः — caṇakaḥ — "a chickpea".
+
+The word, taken apart.
+caṇaka is caṇa "the chickpea" with the suffix -ka (CDIAL 4579). Neither MW nor CDIAL gives a derivation for caṇa, so its origin is uncertain. It lives on as Hindi and Punjabi canā, caṇā (CDIAL 4579).
 
 What you've built.
 One more word for this chapter.

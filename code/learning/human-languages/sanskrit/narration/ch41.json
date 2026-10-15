@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Things People Make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e4e3950e6467bb22",
+  "sourceHash": "fnv1a64:539e3b299267f03e",
   "lessons": [
     {
       "id": "SA-C41-wheel",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9fc48f478eb2299",
+      "sourceHash": "fnv1a64:c9bef232e02f7cd6",
       "notice": null,
       "blocks": [
         {
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75106fd28f0d58ec",
+      "sourceHash": "fnv1a64:893bad389601eb52",
       "notice": null,
       "blocks": [
         {
@@ -202,7 +202,7 @@
             },
             {
               "kind": "speech",
-              "text": "Greek kalux, a husk or a cup, has been offered as a cousin, and Latin calix, which English keeps in chalice, names the same swelling shape."
+              "text": "Greek kalux, a husk or a cup, has been offered as a cousin (MW), though the link is not settled, and Latin calix, which English keeps in chalice, names the same swelling shape."
             }
           ]
         },
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f45eca78399c48c",
+      "sourceHash": "fnv1a64:8682f616710397dc",
       "notice": null,
       "blocks": [
         {
@@ -451,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1297887cdbd82d4",
+      "sourceHash": "fnv1a64:6c717df7e44a3b9e",
       "notice": null,
       "blocks": [
         {
@@ -486,7 +486,7 @@
             },
             {
               "kind": "speech",
-              "text": "It stands on dṛp, \"to be proud\", so the object is named for what people do in front of it rather than for what it is made of. That is a small joke three thousand years old."
+              "text": "It stands on dṛp, \"to be proud\", so the object is named for what people do in front of it rather than for what it is made of. That is a small joke, and an old one."
             },
             {
               "kind": "speech",
@@ -496,6 +496,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW explains darpaṇa as \"causing vanity\", built on darpa, \"pride\", from the root √dṛp; CDIAL 6201 marks the root with a question mark."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +517,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +575,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +606,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3b78b57cbdd451f",
+      "sourceHash": "fnv1a64:bf338f11946340fa",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +651,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chattra is built on the root √chad, \"to cover\" (MW, CDIAL 4972). It lives on as Hindi chātā, \"umbrella\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +672,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +730,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

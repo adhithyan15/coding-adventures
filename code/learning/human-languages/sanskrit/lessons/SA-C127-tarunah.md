@@ -14,7 +14,8 @@ romanization: "taruṇaḥ"
 concept_tag: SA-QUAL127-TARUNAH
 prerequisites: [SA-C127-daridrah, SA-C127-dhanikah]
 sounds: []
-roots: []
+roots: [sanskrit-taruna]
+etymology_hook: "taruṇa 'young, tender' is inherited from Indo-European, cousin of Greek terēn 'tender' (EtymDB); Hindi tarun"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C127-dhanikah]
 <!-- hl-knowledge: introduces=[SA-LEX-C127-QUAL127-03]; assesses=[] -->
 
 **तरुणः** — *taruṇaḥ* — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*taruṇa* "young, tender" is old, in the Rigveda, and is inherited from Indo-European: Greek *terēn* "tender" is a cousin (EtymDB). It lives on as Hindi *tarun* "a youth" (CDIAL 5712).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

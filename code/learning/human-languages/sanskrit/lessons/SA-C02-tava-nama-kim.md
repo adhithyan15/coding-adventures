@@ -14,7 +14,8 @@ romanization: "tava nāma kim?"
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [SA-C02-tvam, SA-C02-kim, SA-C02-nama]
 sounds: []
-roots: []
+roots: [tvam-second-person, naaman-sanskrit, ka-interrogative]
+etymology_hook: "tava 'your' ← the stem of tvam 'you'; kim 'what' ← the question stem ka- (MW)"
 reviews_of: [SA-C02-kim, SA-C02-tvam]
 duration:
   max_seconds: 210
@@ -46,6 +47,10 @@ variety: classical
 *tava* ("your," the genitive of *tvam*) + *nāma* (name) + *kim* (what)
 → "**your name what?**" Here Sanskrit often *drops* the *asti*: *tava nāma kim?*
 stands complete, the question-word alone doing the work.
+
+*Tava* comes from the same inherited second-person stem as *tvam*, the
+stem behind Latin *tū* and English *thou*; *kim* is built on the old
+question stem *ka-* (MW).
 
 ## Grammar Lens: the respectful version
 

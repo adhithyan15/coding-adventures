@@ -14,7 +14,8 @@ romanization: "mātulānī"
 concept_tag: SA-PPL178-MATULANI
 prerequisites: [SA-C177-visvasiti, SA-C177-lajjate]
 sounds: []
-roots: []
+roots: [sanskrit-matulani]
+etymology_hook: "mātulānī ← mātula 'mother's brother' + feminine -ānī; mātula is built on mātṛ 'mother' (MW; CDIAL 10012)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C177-lajjate]
 <!-- hl-knowledge: introduces=[SA-LEX-C178-PPL178-01]; assesses=[] -->
 
 **मातुलानी** — *mātulānī* — "a mother's brother's wife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mātulānī* is the feminine of *mātula*, "mother's brother", which MW files under *mātṛ*, "mother". The ending *-ānī* makes "the uncle's wife" (CDIAL 10012), and Marathi keeps it as *māvḷaṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

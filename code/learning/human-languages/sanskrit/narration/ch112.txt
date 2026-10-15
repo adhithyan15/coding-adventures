@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a leaf, then the Sanskrit for a flower.
 You'll want to know: पद्मम्.
 पद्मम् — padmam — "a lotus".
 
+The word, taken apart.
+MW links padma "a lotus" to pad with a query mark, so its origin is uncertain. It lives on in Kashmiri pam-pōś "lotus" (CDIAL 7769).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a flower, then the Sanskrit for a lotus
 
 You'll want to know: नक्षत्रम्.
 नक्षत्रम् — nakṣatram — "a star".
+
+The word, taken apart.
+nakṣatra "a star", and later a lunar mansion, is old, in the Rigveda; MW thinks it probably comes from the root √nakṣ "approach, reach". It lives on as Hindi nakhat "star, constellation" (CDIAL 6913).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a lotus, then the Sanskrit for a star.
 You'll want to know: सूर्यः.
 सूर्यः — sūryaḥ — "the sun".
 
+The word, taken apart.
+sūrya "the sun" is inherited from Indo-European (EtymDB): MW sets its base svar "sun, light" beside Latin sol and Greek hēlios, the source of English solar and helium. Hindi sūraj "sun" comes from it (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a star, then the Sanskrit for the sun.
 You'll want to know: भल्लूकः.
 भल्लूकः — bhallūkaḥ — "a bear".
 
+The word, taken apart.
+bhallūka "a bear" has a disputed origin: CDIAL 9415 reports EWA's view that it may be Indo-European with an expressive -ll-, and Przyluski's that it is Austroasiatic. It lives on as Hindi bhālū "bear" (CDIAL 9415).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for the sun, then the Sanskrit for a bear.
 
 You'll want to know: शृगालः.
 शृगालः — śṛgālaḥ — "a jackal".
+
+The word, taken apart.
+MW calls śṛgāla "a jackal" (also written sṛgāla) of doubtful derivation, so its origin is uncertain; it is old, in the Śatapatha Brāhmaṇa. It lives on as Hindi siyār and Bengali siyāl "jackal" (CDIAL 12578).
 
 What you've built.
 One more word for this chapter.

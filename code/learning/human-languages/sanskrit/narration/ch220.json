@@ -4,7 +4,7 @@
   "chapter": 220,
   "title": "Balance, Measuring rod, Stick, Staff, Archer's bow",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a63d09fec1f010a4",
+  "sourceHash": "fnv1a64:4fc9b9494b07ef17",
   "lessons": [
     {
       "id": "SA-C220-tula",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f9e498be647db59",
+      "sourceHash": "fnv1a64:3def162b4ea8fc4c",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tulā is built on the root √tul, \"to lift up, weigh\" (MW): a balance lifts things to weigh them (CDIAL 5886). MW compares the root with Latin tulī, \"I carried\", an inherited Indo-European root. It is also the sign Libra, the Scales."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7ac98b3d812d8b8",
+      "sourceHash": "fnv1a64:e5b07213e8615132",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mānadaṇḍa is a compound of māna, \"measure, standard\" (CDIAL 10041), built on the root √mā, \"to measure\", and daṇḍa, \"stick, rod\". MW does not list the compound, so the pairing for a measuring rod is modern; mānadaṇḍa also means \"standard\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20d9394ea0a13ccc",
+      "sourceHash": "fnv1a64:134728f5be8aa40a",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "daṇḍa is a Rigvedic word for \"stick, club\" (CDIAL 6128). MW relates it to Greek dendron, \"tree\", and to Sanskrit dāru, \"wood\", but CDIAL thinks it probably non-Aryan and finds no support for the Greek comparison, so the origin is not settled. It later also meant \"punishment\", the stick that rules."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42b6a66875609cd7",
+      "sourceHash": "fnv1a64:5f801151181a7ff0",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yaṣṭi means \"any support, a staff, pole\" (MW), and MW derives it, probably, from √yam, \"to hold, support\". It is in the Śatapatha Brāhmaṇa, and Hindi jāṭh, \"post, beam in a sugar mill\", comes from it (CDIAL 10444)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7cfae19acaa0a52",
+      "sourceHash": "fnv1a64:e028db5dfe66a293",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dhanuḥ is the nominative of dhanus, \"bow\", already in the Rigveda (CDIAL 6726). MW gives no derivation, so its origin is uncertain. It is the second half of indradhanus, \"rainbow\", which you have already met."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

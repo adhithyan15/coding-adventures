@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 108,
-  "sourceHash": "fnv1a64:8e8d97d8ebd83594",
+  "sourceHash": "fnv1a64:bcf6c2e9e2c24cbb",
   "lessonIds": [
     "SA-C108-palanduh",
     "SA-C108-alukam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch108.txt",
   "json": "sanskrit/narration/ch108.json",
-  "textHash": "fnv1a64:217e920f47abcfe9",
-  "jsonHash": "fnv1a64:3c9bc335586cda78",
+  "textHash": "fnv1a64:13242f97d4399e3e",
+  "jsonHash": "fnv1a64:a639686a947ef631",
   "findings": []
 }

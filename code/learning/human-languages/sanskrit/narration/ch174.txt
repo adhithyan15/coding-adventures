@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for serves, then the Sanskrit for enjoys.
 You'll want to know: चोरयति.
 चोरयति — corayati — "steals".
 
+The word, taken apart.
+corayati "steals" is built on cora "a thief" (CDIAL 4933), with the verb-making ending -aya-. It lives on as Hindi cornā "to steal" (CDIAL 4933), and cora as Hindi cor "thief" (CDIAL 4931).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for enjoys, then the Sanskrit for steals.
 
 You'll want to know: भक्षयति.
 भक्षयति — bhakṣayati — "eats up, devours".
+
+The word, taken apart.
+bhakṣayati comes from the root √bhakṣ "eat, devour" (CDIAL 9342), which MW thinks probably a secondary form of √bhaj "share, partake". It lives on as Punjabi bhakkhṇā "to devour" (CDIAL 9342).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for steals, then the Sanskrit for eats up.
 You'll want to know: ताडयति.
 ताडयति — tāḍayati — "strikes, beats".
 
+The word, taken apart.
+tāḍayati comes from the root √taḍ "beat, strike" (CDIAL 5752), found from the Nirukta on. It lives on as Punjabi tāṛnā "to slap" and Bengali tāṛāna "to drive away" (CDIAL 5752).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for eats up, then the Sanskrit for strikes.
 You'll want to know: पालयति.
 पालयति — pālayati — "keeps, protects".
 
+The word, taken apart.
+pālayati "guards, protects, keeps" is, according to CDIAL 8129 after EWA, an l-form of pārayati "brings across", which people later linked with √pā "protect". It lives on as Hindi pālnā "to rear, to keep" (CDIAL 8129).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for strikes, then the Sanskrit for keeps.
 
 You'll want to know: पीडयति.
 पीडयति — pīḍayati — "hurts, troubles".
+
+The word, taken apart.
+pīḍayati first meant "presses, squeezes", and then "hurts, troubles" (CDIAL 8226). It is inherited from Indo-European, cousin of Greek piezō "press" (EtymDB), and MW explains it as pi-√sad "sit upon"; pīḍā "pain" is its noun.
 
 What you've built.
 One more word for this chapter.

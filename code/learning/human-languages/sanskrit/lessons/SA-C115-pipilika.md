@@ -14,7 +14,8 @@ romanization: "pipīlikā"
 concept_tag: SA-THINGS115-PIPILIKA
 prerequisites: [SA-C115-maksika, SA-C115-masakah]
 sounds: []
-roots: []
+roots: [sanskrit-pipila]
+etymology_hook: "pipīlikā 'ant' (AV) ← pipīla 'ant'; CDIAL 8201 calls it of unknown non-Aryan origin; Hindi pipṛī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C115-masakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C115-THINGS115-03]; assesses=[] -->
 
 **पिपीलिका** — *pipīlikā* — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pipīlikā* "the small red ant" is old, in the Atharvaveda, and is built on *pipīla* "ant". CDIAL 8201, after EWA, takes the word to be of unknown non-Aryan origin. It lives on as Hindi *pipṛī* "small red ant" (CDIAL 8201).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

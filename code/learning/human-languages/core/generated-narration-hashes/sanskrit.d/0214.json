@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 214,
-  "sourceHash": "fnv1a64:d47a335f71ad559e",
+  "sourceHash": "fnv1a64:cddd54a98a86e400",
   "lessonIds": [
     "SA-C214-eva",
     "SA-C214-khalu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch214.txt",
   "json": "sanskrit/narration/ch214.json",
-  "textHash": "fnv1a64:089b8f3e92e479b1",
-  "jsonHash": "fnv1a64:55ee0e011fadccf8",
+  "textHash": "fnv1a64:a571f8f2e5d535e1",
+  "jsonHash": "fnv1a64:903f46673a8254ff",
   "findings": []
 }

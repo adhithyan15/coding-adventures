@@ -14,7 +14,8 @@ romanization: "gacchāmi"
 concept_tag: FAREWELL
 prerequisites: [SA-C03-aham]
 sounds: [cch-conjunct, long-aa]
-roots: [gam-go]
+roots: [gam-go, gam-come]
+etymology_hook: "gacchāmi ← the root √gam 'go', inherited: MW compares English come and Latin venio"
 reviews_of: []
 duration:
   max_seconds: 210
@@ -38,7 +39,7 @@ variety: classical
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-AHAM] -->
 
 [PAUSE 2s] Sanskrit has no casual "bye." Like its daughters, it takes leave by
-saying "I go" — and the verb is a cousin of English *come* and *go*.
+saying "I go" — and the verb is a cousin of English *come*.
 
 ## Sounds you'll need
 

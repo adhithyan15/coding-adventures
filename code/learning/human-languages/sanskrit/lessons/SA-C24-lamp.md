@@ -14,7 +14,8 @@ romanization: "dīpaḥ"
 concept_tag: SA-NOUN-LAMP
 prerequisites: [SA-C24-cloth]
 sounds: []
-roots: []
+roots: [sanskrit-dipa]
+etymology_hook: "dīpa 'lamp' ← the root √dīp 'blaze, shine' (MW); it lives on as Hindi diyā (CDIAL 6348)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C24-cloth]
 **दीपः** is a lamp — the small clay one with oil and a wick. Its root means "to blaze", so the word names the burning rather than the vessel.
 
 Put दीप together with a word meaning "a row" and you get *dīpāvalī*, "a row of lamps" — the festival English writes as Diwali. Masculine **-अः**, like ओदनः.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Dīpa* is built on the root √dīp, "to blaze, shine" (MW). It lives on as Hindi
+*diyā*, the small clay lamp of Diwali (CDIAL 6348).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

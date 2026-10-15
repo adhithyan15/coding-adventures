@@ -14,7 +14,8 @@ romanization: "vahati"
 concept_tag: SA-VERB-VAHATI
 prerequisites: [SA-C175-harati, SA-C175-bharati]
 sounds: []
-roots: []
+roots: [sanskrit-vahati]
+etymology_hook: "vahati ← root √vah 'carry, convey', inherited: MW compares Latin vehere; Hindi bahnā 'to flow' (CDIAL 11453)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C175-bharati]
 <!-- hl-knowledge: introduces=[SA-LEX-C175-ACT175-03]; assesses=[] -->
 
 **वहति** — *vahati* — "carries, flows".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vahati* is the present of the root √vah, "to carry, convey", which also says what a river does with what it carries. The root is inherited from Indo-European: MW compares Latin *vehere*, the source of English *vehicle*. It lives on as Hindi *bahnā*, "to flow" (CDIAL 11453).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

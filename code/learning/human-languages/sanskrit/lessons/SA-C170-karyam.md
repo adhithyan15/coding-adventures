@@ -14,7 +14,8 @@ romanization: "kāryam"
 concept_tag: SA-WRK170-KARYAM
 prerequisites: [SA-C169-sabdakosah, SA-C169-lekhanam]
 sounds: []
-roots: []
+roots: [sanskrit-karya]
+etymology_hook: "kārya 'to be done', then 'work, a task' ← √kṛ 'do' (CDIAL 3078); Hindi kāj 'work'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C169-lekhanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C170-WRK170-01]; assesses=[] -->
 
 **कार्यम्** — *kāryam* — "work, a task".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kārya* is the gerundive of the root √kṛ "do, make" (CDIAL 3078): "to be done", and so "a task, work, business" (MW). It lives on as Hindi and Bengali *kāj* "work" (CDIAL 3078).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 149,
-  "sourceHash": "fnv1a64:262c2f58dafd1682",
+  "sourceHash": "fnv1a64:e9b4c2490d843f27",
   "lessonIds": [
     "SA-C149-karmakarah",
     "SA-C149-sramikah",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch149.txt",
   "json": "sanskrit/narration/ch149.json",
-  "textHash": "fnv1a64:85a2e6328d1898f2",
-  "jsonHash": "fnv1a64:9bc44846032acd09",
+  "textHash": "fnv1a64:0e7c68e51576f294",
+  "jsonHash": "fnv1a64:41138e5845aebbd7",
   "findings": []
 }

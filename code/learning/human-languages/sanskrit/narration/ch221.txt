@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a staff, then the Sanskrit for an arche
 You'll want to know: कार्पासः.
 कार्पासः — kārpāsaḥ — "cotton".
 
+The word, taken apart.
+kārpāsa is the adjective of karpāsa, "the cotton plant", used for cotton itself (MW). CDIAL 2877 takes karpāsa from Austroasiatic, and MW compares Greek karpasos and Latin carbasus, "fine flax". Punjabi kapāh, "cotton", comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for an archer's bow, then the Sanskrit for 
 
 You'll want to know: कौशेयम्.
 कौशेयम् — kauśeyam — "silk".
+
+The word, taken apart.
+kauśeya is an adjective from kośa, "case, sheath", here the silkworm's cocoon (MW): "silken", and so silk cloth. Kośa itself is a Rigvedic word for "bucket, case" (CDIAL 3539).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for cotton, then the Sanskrit for silk.
 You'll want to know: चर्म.
 चर्म — carma — "leather, hide".
 
+The word, taken apart.
+carma is the nominative of carman, "hide, skin", a Rigvedic word (CDIAL 4701). MW compares Latin corium, "hide, leather", so it is an inherited Indo-European word. It lives on as Hindi cām, "hide, leather".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for silk, then the Sanskrit for leather.
 You'll want to know: ग्रन्थिः.
 ग्रन्थिः — granthiḥ — "a knot".
 
+The word, taken apart.
+granthi is built on the root √granth, "to fasten, tie, string together" (MW): a knot. It is a Rigvedic word (CDIAL 4354). The same root gives grantha, "a book", words strung together.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for leather, then the Sanskrit for a knot.
 
 You'll want to know: पीठिका.
 पीठिका — pīṭhikā — "a small stool".
+
+The word, taken apart.
+pīṭhikā is pīṭha, "stool, seat", with the diminutive -ikā. MW suggests pīṭha may be worn down from pi-sad, "to sit upon", while CDIAL 8222 says its many forms suggest a non-Aryan origin; the question is not settled. It lives on as Hindi pīṛhā, "stool".
 
 What you've built.
 One more word for this chapter.

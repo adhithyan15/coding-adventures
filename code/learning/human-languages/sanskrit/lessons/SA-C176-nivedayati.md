@@ -14,7 +14,8 @@ romanization: "nivedayati"
 concept_tag: SA-VERB-NIVEDAYATI
 prerequisites: [SA-C175-yatate, SA-C176-parivartayati]
 sounds: []
-roots: []
+roots: [sanskrit-nivedayati]
+etymology_hook: "nivedayati ← ni- + causative of √vid 'know': 'makes known' (MW); √vid is Latin vidēre's cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C176-parivartayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C176-ACT176-02]; assesses=[] -->
 
 **निवेदयति** — *nivedayati* — "reports, submits".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nivedayati* is the causative of *ni-* with the root √vid, "to know" (MW): it means "makes known", and so "reports, presents". The root is inherited from Indo-European; MW compares Latin *vidēre*, "to see".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

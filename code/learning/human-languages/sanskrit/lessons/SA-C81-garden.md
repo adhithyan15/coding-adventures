@@ -14,7 +14,8 @@ romanization: "udyānam"
 concept_tag: SA-PLANT-GARDEN
 prerequisites: [SA-C81-seed, SA-C81-root]
 sounds: []
-roots: []
+roots: [sanskrit-udyana]
+etymology_hook: "udyāna 'going out; park, garden' ← ud 'out' + the root √yā 'go' (MW; CDIAL 2052)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C81-root]
 <!-- hl-knowledge: introduces=[SA-LEX-C81-PLANTS-04]; assesses=[] -->
 
 **उद्यानम्** (*udyānam*) — "a garden", full of **पुष्पम्** and **लता**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Udyāna* is built from *ud*, "out", and the root √yā, "to go": first "going out",
+then the park one walks out to (MW, CDIAL 2052).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

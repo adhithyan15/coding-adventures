@@ -14,7 +14,8 @@ romanization: "spṛśati"
 concept_tag: SA-VERB-SPRSATI
 prerequisites: [SA-C141-vasati, SA-C141-carati]
 sounds: []
-roots: []
+roots: [sanskrit-sprshati]
+etymology_hook: "spṛśati 'touches' ← √spṛś 'touch, stroke' (MW; CDIAL 13815), already in the Rigveda"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C141-carati]
 <!-- hl-knowledge: introduces=[SA-LEX-C141-ACT141-04]; assesses=[] -->
 
 **स्पृशति** — *spṛśati* — "touches".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*spṛśati* comes from the root √spṛś "touch, stroke" (CDIAL 13815), already in the Rigveda. *sparśa* "touch", the word for the stop consonants in Sanskrit grammar, comes from the same root (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

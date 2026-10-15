@@ -14,7 +14,8 @@ romanization: "bhinatti"
 concept_tag: SA-VERB-BHINATTI
 prerequisites: [SA-C133-kurdati, SA-C134-chinatti]
 sounds: []
-roots: []
+roots: [sanskrit-bhinatti]
+etymology_hook: "bhinatti ← √bhid 'split, break', class-7 infix -na-; inherited, cf. Latin findo, English bite (MW; EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C134-chinatti]
 <!-- hl-knowledge: introduces=[SA-LEX-C134-ACT134-02]; assesses=[] -->
 
 **भिनत्ति** — *bhinatti* — "breaks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhinatti* comes from the root √bhid "split, break", with the class-7 infix *-na-* (MW). The root is inherited from Indo-European (EtymDB): MW sets it beside Latin *findo* "split" and English *bite*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

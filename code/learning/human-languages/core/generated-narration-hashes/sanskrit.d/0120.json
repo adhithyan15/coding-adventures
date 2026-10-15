@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 120,
-  "sourceHash": "fnv1a64:6b19f0d00d3c20e6",
+  "sourceHash": "fnv1a64:a5dc40faba786df0",
   "lessonIds": [
     "SA-C120-mudra",
     "SA-C120-patralayah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch120.txt",
   "json": "sanskrit/narration/ch120.json",
-  "textHash": "fnv1a64:007720624a632457",
-  "jsonHash": "fnv1a64:0217b33c65ef54f3",
+  "textHash": "fnv1a64:da261c9ac4566cb8",
+  "jsonHash": "fnv1a64:7235c2291bb24c06",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "chāgaḥ"
 concept_tag: SA-BEAST-CHAGA
 prerequisites: [SA-C48-wolf, SA-C46-light, SA-C47-stair]
 sounds: []
-roots: []
+roots: [sanskrit-chaga]
+etymology_hook: "chāga 'he-goat' is Rigvedic; MW's Greek comparison is tentative, so its origin is not settled (CDIAL 4963)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C48-wolf]
 Like सिंहः and unlike वृकः, it has no agreed cousin outside India: the goat words of Europe and this one do not line up. Two animals out of the same field, and only one of them carried its name across the family.
 
 That is worth holding on to, because it is what makes वृकः remarkable rather than ordinary. Ends in **-अः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Chāga* is already in the Rigveda. MW tentatively compares a Greek verb for
+limping, but no cousin is agreed, so its origin is not settled. The related
+*chagala*, "goat", has many modern descendants (CDIAL 4963).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

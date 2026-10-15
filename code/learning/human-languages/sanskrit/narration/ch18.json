@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Asking --- Every Question Begins with K",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:94663e180261c622",
+  "sourceHash": "fnv1a64:5ee52b75fc85f4f0",
   "lessons": [
     {
       "id": "SA-C18-when",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c5031dc040a857c",
+      "sourceHash": "fnv1a64:68a046c39741c946",
       "notice": null,
       "blocks": [
         {
@@ -74,6 +74,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kadā is built on the question stem ka- (MW). It is inherited: MW compares Avestan kadha, Latin quandō and Lithuanian kada, all \"when\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -84,7 +95,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +135,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -155,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf5ac11592e2101e",
+      "sourceHash": "fnv1a64:a60bf934f5a896d3",
       "notice": null,
       "blocks": [
         {
@@ -194,7 +205,7 @@
             },
             {
               "kind": "speech",
-              "text": "— literally \"for what purpose?\" Sanskrit does not have a single opaque word for why; it asks what the aim was, and lets the shape of the question show."
+              "text": "— literally \"for what purpose?\" A bare kim can also ask why; this fuller word asks what the aim was, and lets the shape of the question show."
             },
             {
               "kind": "speech",
@@ -204,6 +215,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kimartham is a compound of kim \"what\" and artha \"aim, purpose\", already in the Śatapatha Brāhmaṇa (MW, CDIAL 3165)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -214,7 +236,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -254,7 +276,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -285,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c839b9f7a5d767f0",
+      "sourceHash": "fnv1a64:a5eb52b5db184149",
       "notice": null,
       "blocks": [
         {
@@ -407,7 +429,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d1b9ac583e84e2e",
+      "sourceHash": "fnv1a64:7e7583ec420ef9fe",
       "notice": null,
       "blocks": [
         {
@@ -462,6 +484,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kutaḥ is built from the question base ku- with the ending -tas, \"from\" (MW, CDIAL 3271)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -472,7 +505,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -512,7 +545,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

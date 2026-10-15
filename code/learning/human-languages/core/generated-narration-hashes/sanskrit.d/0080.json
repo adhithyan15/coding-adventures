@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 80,
-  "sourceHash": "fnv1a64:e44939bfa4672b39",
+  "sourceHash": "fnv1a64:6c9f61ac49468e30",
   "lessonIds": [
     "SA-C80-crow",
     "SA-C80-parrot",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch80.txt",
   "json": "sanskrit/narration/ch80.json",
-  "textHash": "fnv1a64:850d9766ddc30dad",
-  "jsonHash": "fnv1a64:77276b871b0cfca9",
+  "textHash": "fnv1a64:31e6a543625fde0c",
+  "jsonHash": "fnv1a64:e87910080084a2fc",
   "findings": []
 }

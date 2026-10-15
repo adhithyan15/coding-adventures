@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 246,
-  "sourceHash": "fnv1a64:d50c873fb51c89ec",
+  "sourceHash": "fnv1a64:1eb55e09ab4a3465",
   "lessonIds": [
     "SA-C246-lajah",
     "SA-C246-dhanyam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch246.txt",
   "json": "sanskrit/narration/ch246.json",
-  "textHash": "fnv1a64:ca4643a8e2e910d4",
-  "jsonHash": "fnv1a64:ac10d839d3ca85e3",
+  "textHash": "fnv1a64:1ac1a9f10826a4ec",
+  "jsonHash": "fnv1a64:708a0c82741c9cf7",
   "findings": []
 }

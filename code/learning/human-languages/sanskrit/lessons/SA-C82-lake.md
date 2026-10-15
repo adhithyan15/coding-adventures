@@ -14,7 +14,8 @@ romanization: "saraḥ"
 concept_tag: SA-WATER-LAKE
 prerequisites: [SA-C81-garden, SA-C81-forest]
 sounds: []
-roots: []
+roots: [sanskrit-saras]
+etymology_hook: "saras 'lake, pool', 'anything flowing', from the root √sṛ 'flow, run' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C81-forest]
 <!-- hl-knowledge: introduces=[SA-LEX-C82-WATER-01]; assesses=[] -->
 
 **सरः** (*saraḥ*) — "a lake", still **जलम्** where the lotus grows.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Saras* is built on the root √sṛ, "to flow, run": MW glosses it "anything
+flowing", and so a lake or a pool. It is already in the Rigveda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

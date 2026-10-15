@@ -14,7 +14,8 @@ romanization: "svapnaḥ"
 concept_tag: SA-WEL212-SVAPNAH
 prerequisites: [SA-C212-manah, SA-C212-atma]
 sounds: []
-roots: []
+roots: [sanskrit-svapna]
+etymology_hook: "svapna 'sleep, dream' ← root √svap 'sleep'; MW compares Latin somnus and Greek hypnos (CDIAL 13904)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C212-atma]
 <!-- hl-knowledge: introduces=[SA-LEX-C212-WEL212-04]; assesses=[] -->
 
 **स्वप्नः** — *svapnaḥ* — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*svapna* is built on the root √svap, "to sleep" (MW): first "sleep", then "dream" (CDIAL 13904). The root is inherited from Indo-European: MW compares Latin *somnus*, "sleep", and Greek *hypnos*. Hindi *sapnā*, "dream", goes back to it, though CDIAL 13904 does not list the Hindi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "matsaraḥ"
 concept_tag: SA-WEL151-MATSARAH
 prerequisites: [SA-C151-dhairyam, SA-C151-alasyam]
 sounds: []
-roots: []
+roots: [sanskrit-matsara]
+etymology_hook: "matsara 'exhilarating', later 'jealous' ← √mad 'be drunk, exult' (CDIAL 9756; MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C151-alasyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C151-WEL151-04]; assesses=[] -->
 
 **मत्सरः** — *matsaraḥ* — "jealousy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*matsara* probably comes from the root √mad "be drunk, exult" (MW; CDIAL 9756): in the Rigveda it means "exhilarating", and later "envious, jealous". A second *matsara*, "mosquito", gave Hindi *macchar*; CDIAL 9757 thinks it possibly the same word, named for its hum.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

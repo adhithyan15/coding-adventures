@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 109,
-  "sourceHash": "fnv1a64:eff7510b963c8472",
+  "sourceHash": "fnv1a64:b50f78135d69a77c",
   "lessonIds": [
     "SA-C109-dadimam",
     "SA-C109-draksa",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch109.txt",
   "json": "sanskrit/narration/ch109.json",
-  "textHash": "fnv1a64:83d0ed39a20a3c24",
-  "jsonHash": "fnv1a64:e64c7aa37198bb09",
+  "textHash": "fnv1a64:43868db3d5b25764",
+  "jsonHash": "fnv1a64:781e53f51adf8498",
   "findings": []
 }

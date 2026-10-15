@@ -14,7 +14,8 @@ romanization: "muñcati"
 concept_tag: SA-VERB-MUNCATI
 prerequisites: [SA-C172-paryatakah, SA-C173-ksipati]
 sounds: []
-roots: []
+roots: [sanskrit-muncati]
+etymology_hook: "muñcati ← √muc 'release, let go' with a nasal infix (CDIAL 10182); mokṣa 'release' is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C173-ksipati]
 <!-- hl-knowledge: introduces=[SA-LEX-C173-ACT173-02]; assesses=[] -->
 
 **मुञ्चति** — *muñcati* — "lets go, releases".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*muñcati* comes from the root √muc "release, let go, free" (CDIAL 10182), with a nasal *ñ* added in the present, inherited from Indo-European (EtymDB). *mokṣa* "release, liberation" comes from the same root (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

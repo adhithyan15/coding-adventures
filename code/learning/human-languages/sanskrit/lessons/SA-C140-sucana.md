@@ -14,7 +14,8 @@ romanization: "sūcanā"
 concept_tag: SA-READ140-SUCANA
 prerequisites: [SA-C139-bhavisyati, SA-C139-gamisyati]
 sounds: []
-roots: []
+roots: [sanskrit-sucana]
+etymology_hook: "sūcanā 'pointing out, indication' ← √sūc 'indicate' (MW), itself from sūci 'needle, point'"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [SA-C139-gamisyati]
 
 The notice on the shop door says **अद्य विश्रामः।** — "today, rest". The shop is
 closed today, so come back **श्वः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sūcanā* comes from the verb √sūc "point out, indicate" (MW), which MW takes as formed from *sūci* "needle, point": to notify is to point something out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

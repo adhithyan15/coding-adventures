@@ -14,7 +14,8 @@ romanization: "anyatra"
 concept_tag: SA-LOC95-ANYATRA
 prerequisites: [SA-C95-parsve, SA-C95-sarvatra]
 sounds: []
-roots: []
+roots: [sanskrit-anya]
+etymology_hook: "anyatra ← anya 'other' + -tra 'in, at'; MW compares Latin alius, Greek allos; Hindi anat (CDIAL 401)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C95-sarvatra]
 <!-- hl-knowledge: introduces=[SA-LEX-C95-LOC95-04]; assesses=[] -->
 
 **अन्यत्र** — *anyatra* — "elsewhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*anyatra* is built from *anya* "other" and the place ending *-tra* "in, at" (MW). MW sets *anya* beside Latin *alius* (English *alias*) and Greek *allos*, so it is inherited from Indo-European. It lives on as Hindi *anat* "elsewhere" (CDIAL 401).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

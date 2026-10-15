@@ -14,7 +14,8 @@ romanization: "kaḥ"
 concept_tag: SA-DEIXIS-WHO
 prerequisites: [SA-C14-there]
 sounds: []
-roots: []
+roots: [ka-interrogative]
+etymology_hook: "kaḥ 'who' ← the question stem ka-, inherited: the stem of Latin quis and English who (CDIAL 2574)"
 duration:
   max_seconds: 210
 requires:

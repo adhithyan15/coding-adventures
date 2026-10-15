@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for an amla, gooseberry, then the Sanskrit 
 You'll want to know: शरावः.
 शरावः — śarāvaḥ — "an earthen dish".
 
+The word, taken apart.
+śarāva is a shallow dish or platter of earthenware, and also its flat lid (MW). Neither MW nor CDIAL 12334 gives a derivation, so its origin is uncertain. It lives on as Hindi sarā, "earthen cover".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a rose apple, then the Sanskrit for an 
 
 You'll want to know: कुम्भः.
 कुम्भः — kumbhaḥ — "a pitcher".
+
+The word, taken apart.
+kumbha is a Rigvedic word for a water jar (CDIAL 3308). MW compares Greek kymbē, "cup", and CDIAL compares Avestan xumba-, "pot", so it is an old word shared with Iranian. Kumbha is also the sign Aquarius, the water-carrier.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for an earthen dish, then the Sanskrit for 
 You'll want to know: उलूखलम्.
 उलूखलम् — ulūkhalam — "a mortar".
 
+The word, taken apart.
+ulūkhala is a wooden mortar, already in the Rigveda. CDIAL 2360 takes it as borrowed from Dravidian, following Mayrhofer, and notes it shares the ending -ala with musala, "pestle". Punjabi ukkhal, "small wooden mortar", comes from a variant of it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a pitcher, then the Sanskrit for a mort
 You'll want to know: मुसलम्.
 मुसलम् — musalam — "a pestle".
 
+The word, taken apart.
+musala is probably not an Indo-Aryan word: CDIAL 10223 says its sounds point to a non-Aryan origin, with Bloch suggesting Dravidian. It lives on as Hindi mūsal, "small pestle".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a mortar, then the Sanskrit for a pestl
 
 You'll want to know: चालनी.
 चालनी — cālanī — "a sieve".
+
+The word, taken apart.
+cālanī is built on the root √cal, "to move, shake" (MW): a sieve is what you shake to sift. CDIAL 4771 lists it, and it lives on as Hindi cālnī, "sieve".
 
 What you've built.
 One more word for this chapter.

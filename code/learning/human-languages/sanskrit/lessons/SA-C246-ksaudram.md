@@ -14,7 +14,8 @@ romanization: "kṣaudram"
 concept_tag: SA-THG246-KSAUDRAM
 prerequisites: [SA-C246-dhanyam, SA-C246-saktuh]
 sounds: []
-roots: []
+roots: [sanskrit-kshaudra]
+etymology_hook: "kṣaudra 'honey' ← kṣudrā 'a small bee', from kṣudra 'tiny' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C246-saktuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C246-THG246-04]; assesses=[] -->
 
 **क्षौद्रम्** — *kṣaudram* — "wild honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kṣaudra* is built on *kṣudrā*, "a kind of bee", from *kṣudra*, "tiny" (MW): the honey of small wild bees. MW glosses *kṣaudra* "honey, a species of honey".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

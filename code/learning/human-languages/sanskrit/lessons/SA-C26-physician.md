@@ -14,7 +14,8 @@ romanization: "vaidyaḥ"
 concept_tag: SA-PERSON-PHYSICIAN
 prerequisites: [SA-C26-guest, SA-C24-lamp, SA-C25-hair]
 sounds: []
-roots: []
+roots: [sanskrit-vaidya]
+etymology_hook: "vaidya ← vidyā 'knowledge' (MW), from the root √vid 'know', cousin of Latin vidēre and English wit"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,7 @@ reviews_of: [SA-C26-guest]
 
 **वैद्यः** is a physician — literally *one who has the knowledge*, built on *vidyā*, knowledge, from a root *vid*, "to know".
 
-That root is one of the great travellers: Latin *vidēre*, "to see" — *video*, *evident*; Greek *idea*; English *wit*, *wise*, *wisdom*. And Sanskrit already gave you a second knowing-verb, जानाति, from a different root altogether. Sanskrit keeps two ways of knowing apart, and वैद्यः belongs to the one that also means seeing — the doctor as the one who has looked.
+That root is one of the great travellers: Latin *vidēre*, "to see" — *video*, *evident*; Greek *idea*; English *wit*, *wise*, *wisdom*. And Sanskrit already gave you a second knowing-verb, जानाति, from a different root altogether. Sanskrit keeps two ways of knowing apart, and वैद्यः belongs to the one whose cousins elsewhere mean seeing — the doctor as the one who has looked.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

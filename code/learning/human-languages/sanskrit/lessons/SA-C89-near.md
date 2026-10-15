@@ -14,7 +14,8 @@ romanization: "samīpam"
 concept_tag: SA-DESCRIBE-NEAR
 prerequisites: [SA-C89-beautiful, SA-C89-far]
 sounds: []
-roots: []
+roots: [sanskrit-samipa]
+etymology_hook: "samīpa 'near', probably sam + ap 'water', formed like dvīpa 'island' (MW; CDIAL 13226)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C89-far]
 <!-- hl-knowledge: introduces=[SA-LEX-C89-DESCRIBE-03]; assesses=[] -->
 
 **समीपम्** (*samīpam*) — "near", the opposite of **दूरम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW takes *samīpa* as probably *sam* + *ap*, "water", formed like *dvīpa*,
+"island", and CDIAL 13226 agrees that its *-īpa* was taken from such words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

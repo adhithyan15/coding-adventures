@@ -14,7 +14,8 @@ romanization: "yācate"
 concept_tag: SA-VERB-YACATE
 prerequisites: [SA-C203-modate, SA-C203-vandate]
 sounds: []
-roots: []
+roots: [sanskrit-yacate]
+etymology_hook: "yācate ← root √yāc 'ask, beg' (MW), a Rigvedic verb (CDIAL 10447)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C203-vandate]
 <!-- hl-knowledge: introduces=[SA-LEX-C203-ACT203-03]; assesses=[] -->
 
 **याचते** — *yācate* — "begs, asks for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yācate* is the middle present of the root √yāc, "to ask, beg" (MW): the middle voice means asking for yourself. It is already in the Rigveda (CDIAL 10447), and *yācaka*, "beggar", is built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

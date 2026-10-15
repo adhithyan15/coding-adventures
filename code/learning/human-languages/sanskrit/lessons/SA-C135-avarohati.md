@@ -14,7 +14,8 @@ romanization: "avarohati"
 concept_tag: SA-VERB-AVAROHATI
 prerequisites: [SA-C135-vismarati, SA-C135-arohati]
 sounds: []
-roots: []
+roots: [sanskrit-avarohati]
+etymology_hook: "avarohati ← ava 'down' + √ruh 'climb': 'climbs down, descends' (MW; CDIAL 817); Pali orohati"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C135-arohati]
 <!-- hl-knowledge: introduces=[SA-LEX-C135-ACT135-05]; assesses=[] -->
 
 **अवरोहति** — *avarohati* — "climbs down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*avarohati* comes from *ava* "down" and the root √ruh "climb, rise" (MW; CDIAL 817): "climbs down, descends", the mirror of *ārohati*. Pali wore it down to *orohati* "descends" (CDIAL 817).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

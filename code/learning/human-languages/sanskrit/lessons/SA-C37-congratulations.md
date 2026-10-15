@@ -14,7 +14,8 @@ romanization: "abhinandanam"
 concept_tag: SA-COURTESY-ABHINANDANA
 prerequisites: [SA-C37-gracious, SA-C35-book, SA-C36-slowly]
 sounds: []
-roots: []
+roots: [sanskrit-abhinandana]
+etymology_hook: "abhinandana 'delighting, praise' ← abhi 'toward' + the root √nand 'rejoice' (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C37-gracious]
 **अभिनन्दनम्** is what you offer when something has gone well for somebody else. It is *abhi*, "towards", with *nand*, "to rejoice" — gladness turned towards another person rather than kept.
 
 That *nand* is the piece inside **आनन्दः**, the joy you met near the beginning of this book. The two words are the same delight, one held and one given away. Neuter **-अम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Abhinandana* is built from the prefix *abhi*, "toward", and the root √nand, "to
+rejoice" (MW), the root of *ānanda*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

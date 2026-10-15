@@ -4,7 +4,7 @@
   "chapter": 223,
   "title": "Traveller, Guide, Holy ford, Hermitage, Monastery",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:075d6157cdbf58d8",
+  "sourceHash": "fnv1a64:ba6002475087221d",
   "lessons": [
     {
       "id": "SA-C223-yatrikah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b429d0cca4b47e50",
+      "sourceHash": "fnv1a64:06eaadee5c5d06ce",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yātrika is built on yātrā, \"journey, procession\", from the root √yā, \"to go\" (MW), with the suffix -ika: one on a journey (CDIAL 10457). Yātrā lives on as Sindhi jāṭra, \"body of pilgrims\" (CDIAL 10456)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe01d0653a1d4066",
+      "sourceHash": "fnv1a64:ef3ba25df9fe5fbc",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mārgadarśaka is MW's \"way-shower\": mārga, \"road\", with darśaka, \"one who shows\", from the root √dṛś, \"to see\". Mārga first meant the track of a wild animal, from mṛga, \"deer\" (CDIAL 10071)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ccb6fad06fdc330",
+      "sourceHash": "fnv1a64:03deae802305727b",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tīrtha is built on the root √tṝ, \"to cross over\" (MW): a ford is where you cross a river (CDIAL 5846). Holy bathing places on rivers became places of pilgrimage. √tṝ is also the root of vitarati, \"hands out\", which you have already met."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d04a84e2709f2d4a",
+      "sourceHash": "fnv1a64:c6544ad580a22269",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "āśrama is built on ā- and the root √śram, \"to toil, exert oneself\" (MW), the root of śrama, \"toil\": a hermitage is a place of religious exertion. It also names the four stages of a life."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d13fe2ae678aee1",
+      "sourceHash": "fnv1a64:4ac9de0890efbd32",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "maṭha first meant a hut, the cell of an ascetic or a student (MW), and later a monastery. Its origin is uncertain: CDIAL 9727 sends the reader to maṇḍapa, a word it suspects is non-Aryan. It lives on as Hindi maṛhī, \"hut\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

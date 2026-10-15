@@ -83,12 +83,13 @@ you already have.
 
 <!-- hl-knowledge: introduces=[SA-HISTORY-CH2-SOURCE-WORDS]; assesses=[] -->
 
-[PAUSE 2s] Every word in that exchange is an *ancestor*, not a borrowing:
+[PAUSE 2s] Every word in that exchange is inherited, not borrowed, and each is a *cousin* of
+words you know:
 
-- *nāma* → English **name**, Latin *nōmen*
-- *mama* → English **my**, **me**
-- *asti* → English **is**, Latin *est*, Hindi *hai*
-- *kim* → English **what**, Latin *quid*
+- *nāma*: English **name**, Latin *nōmen*
+- *mama*: English **my**, **me**
+- *asti*: English **is**, Latin *est*
+- *kim*: English **what**, Latin *quid*
 
 And Sanskrit keeps the copula that its Dravidian neighbours drop. Next chapter:
 *bhavān katham asti?* — "how are you?"
@@ -98,5 +99,5 @@ And Sanskrit keeps the copula that its Dravidian neighbours drop. Next chapter:
 <!-- hl-knowledge: introduces=[]; assesses=[SA-HISTORY-CH2-SOURCE-WORDS, SA-PATTERN-WHATS-YOUR-NAME] -->
 
 [PAUSE 3s] Give your name in Sanskrit, ask for someone else's, and name two
-English words this chapter's vocabulary is the ancestor of. (*Mama nāma … asti;
+English cousins of this chapter's vocabulary. (*Mama nāma … asti;
 tava nāma kim?*; any two of **name**, **my**, **is**, **what**.)

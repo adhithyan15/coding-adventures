@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a tortoise, then the Sanskrit for a fro
 You'll want to know: वृक्षः.
 वृक्षः (vṛkṣaḥ) — "a tree", the everyday word beside तरुः.
 
+The word, taken apart.
+Vṛkṣa is already in the Rigveda (CDIAL 12067). MW offers three guesses, a root √bṛh "to grow", another √bṛh "to root up", or √vraśc "to fell", so its origin is not settled.
+
 What you've built.
 A second word for tree.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a frog, then the Sanskrit for a tree.
 
 You'll want to know: बीजम्.
 बीजम् (bījam) — "a seed", the start of every वृक्षः (vṛkṣaḥ).
+
+The word, taken apart.
+Bīja is already in the Rigveda, and MW calls it "of doubtful origin". It lives on as Gujarati bī, "seed" (CDIAL 9250).
 
 What you've built.
 Where a tree begins.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a tree, then the Sanskrit for a seed.
 You'll want to know: मूलम्.
 मूलम् (mūlam) — "a root", and also "the origin" of anything.
 
+The word, taken apart.
+MW explains mūla as probably "firmly fixed", but CDIAL 10250 thinks its sound variation points to a non-Aryan, perhaps Dravidian, origin, so the question is not settled. Hindi mūlī, "radish", the root vegetable, comes from it.
+
 What you've built.
 What holds the tree down.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a seed, then the Sanskrit for a root.
 You'll want to know: उद्यानम्.
 उद्यानम् (udyānam) — "a garden", full of पुष्पम् and लता.
 
+The word, taken apart.
+Udyāna is built from ud, "out", and the root √yā, "to go": first "going out", then the park one walks out to (MW, CDIAL 2052).
+
 What you've built.
 The planted place.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a root, then the Sanskrit for a garden.
 
 You'll want to know: अरण्यम्.
 अरण्यम् (araṇyam) — "the wild forest", deeper than a वनम्.
+
+The word, taken apart.
+Araṇya is built from araṇa, "foreign, distant": in the Rigveda it is a far-off land, later the wilderness (MW, CDIAL 600). It lives on as Hindi ran, "forest, wild land".
 
 What you've built.
 The unplanted place.

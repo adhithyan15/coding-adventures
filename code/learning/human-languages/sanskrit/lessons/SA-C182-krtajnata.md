@@ -14,7 +14,8 @@ romanization: "kṛtajñatā"
 concept_tag: SA-WEL182-KRTAJNATA
 prerequisites: [SA-C182-sokah, SA-C182-santosah]
 sounds: []
-roots: []
+roots: [sanskrit-krtajna, kr-do]
+etymology_hook: "kṛtajñatā = kṛta 'what was done' (√kṛ) + jña 'knowing' + -tā '-ness' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C182-santosah]
 <!-- hl-knowledge: introduces=[SA-LEX-C182-WEL182-04]; assesses=[] -->
 
 **कृतज्ञता** — *kṛtajñatā* — "gratitude".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kṛtajñatā* is built from *kṛta*, "what was done", from the root √kṛ "to do", and *jña*, "knowing", with *-tā*, "-ness" (MW). Gratitude is knowing what was done for you.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

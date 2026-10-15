@@ -14,7 +14,8 @@ romanization: "śukravāsaraḥ"
 concept_tag: SA-WEEK-FRIDAY
 prerequisites: [SA-C85-wednesday, SA-C85-thursday]
 sounds: []
-roots: []
+roots: [sanskrit-shukra, sanskrit-vasara]
+etymology_hook: "śukravāsara ← śukra 'bright' (from √śuc 'shine'), the name of Venus + vāsara 'day' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C85-thursday]
 <!-- hl-knowledge: introduces=[SA-LEX-C86-WEEKEND-01]; assesses=[] -->
 
 **शुक्रवासरः** (*śukravāsaraḥ*) — "Friday", the day of **शुक्र**, Venus.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śukravāsara* is built from *śukra*, "bright", from the root √śuc, "to shine", the
+name given to Venus, and *vāsara*, "day"; MW records the compound from
+inscriptions.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

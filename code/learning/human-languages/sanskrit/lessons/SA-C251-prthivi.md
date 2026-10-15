@@ -14,7 +14,8 @@ romanization: "pṛthivī"
 concept_tag: SA-THG251-PRTHIVI
 prerequisites: [SA-C250-bhavanam, SA-C250-avasah]
 sounds: []
-roots: []
+roots: [sanskrit-prthivi]
+etymology_hook: "pṛthivī 'the broad one', feminine of pṛthu 'broad'; MW compares Greek platys 'broad'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C250-avasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C251-THG251-01]; assesses=[] -->
 
 **पृथिवी** — *pṛthivī* — "the earth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pṛthivī* is the feminine of *pṛthu*, "broad, wide" (MW): the earth is "the broad, extended one". MW compares *pṛthu* with Greek *platys*, "broad", and English *plate*, so the word is inherited from Indo-European.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

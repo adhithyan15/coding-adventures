@@ -14,7 +14,8 @@ romanization: "jyotiḥ"
 concept_tag: SA-THG224-JYOTIH
 prerequisites: [SA-C224-attalika, SA-C224-andhakarah]
 sounds: []
-roots: []
+roots: [sanskrit-jyotis]
+etymology_hook: "jyotis 'light' ← root √jyut 'shine', a form of √dyut (MW; CDIAL 5300)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C224-andhakarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C224-THG224-04]; assesses=[] -->
 
 **ज्योतिः** — *jyotiḥ* — "radiance, a flame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jyotiḥ* is the nominative of *jyotis*, "light", built on the root √jyut, "to shine", which MW calls a form of √dyut. It is a Rigvedic word (CDIAL 5300), and *jyotsnā*, "moonlight", comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

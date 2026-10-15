@@ -14,7 +14,8 @@ romanization: "evam"
 concept_tag: SA-REPLY-THUS
 prerequisites: [SA-C27-true, SA-C25-hair, SA-C26-physician]
 sounds: []
-roots: []
+roots: [sanskrit-evam]
+etymology_hook: "evam 'thus' ← the pronoun base e-, probably connected with eva 'exactly so' (MW; CDIAL 2527)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C27-true]
 **एवम्** means *thus*, *so*, *in this way*. On its own it answers a question: *just so*.
 
 Its real value is that it combines. Put it in front of the first word of this run and you get **एवम् अस्तु** (*evam astu*) — "so be it", the whole formula, made of two words you now own separately. That is what a small vocabulary buys: not five answers, but the joins between them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Evam* is an old adverb, built on the pronoun base *e-* and probably connected
+with *eva*, "exactly so" (MW, CDIAL 2527).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

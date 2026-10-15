@@ -14,7 +14,8 @@ romanization: "kuṇṭhaḥ"
 concept_tag: SA-QUAL215-KUNTHAH
 prerequisites: [SA-C215-mandah, SA-C215-tiksnah]
 sounds: []
-roots: []
+roots: [sanskrit-kuntha]
+etymology_hook: "kuṇṭha 'blunt', of uncertain origin: CDIAL 3261 weighs an Iranian kund 'blunt' and a group of 'defective' words"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C215-tiksnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C215-QUAL215-04]; assesses=[] -->
 
 **कुण्ठः** — *kuṇṭhaḥ* — "blunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuṇṭha* is of uncertain origin. CDIAL 3261 compares Persian *kund*, "blunt", but also counts it among a set of words for defects whose source is not settled. MW files it under a root √kuṇṭh.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

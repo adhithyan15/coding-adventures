@@ -14,7 +14,8 @@ romanization: "ślokaḥ"
 concept_tag: SA-SOUND-SHLOKA
 prerequisites: [SA-C50-song, SA-C48-goose, SA-C49-oh]
 sounds: []
-roots: []
+roots: [sanskrit-shloka, sanskrit-shrnoti]
+etymology_hook: "śloka 'sound, fame, stanza', probably from the root √śru 'hear' (MW; CDIAL 12748)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C50-song]
 Its older sense is "sound, and what is heard of a person" — fame, in other words. So a verse is named as a thing that carries a sound outward. Beside शब्दः, which is any sound, **श्लोकः** is a sound cut to a shape that can be remembered.
 
 Nearly the whole of the long Sanskrit story-poems is in this one shape, which is how the word came to mean the shape as well as the fame. Ends in **-अः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śloka* first meant a sound, then what is heard of a person, and then a stanza; MW
+and CDIAL 12748 connect it with the root √śru, "to hear". The Rāmāyaṇa's story
+that it began as *śoka*, "grief", is one MW calls fanciful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

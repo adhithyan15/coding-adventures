@@ -14,7 +14,8 @@ romanization: "vyastaḥ"
 concept_tag: SA-QUAL188-VYASTAH
 prerequisites: [SA-C188-trsitah, SA-C188-sajjah]
 sounds: []
-roots: []
+roots: [sanskrit-vyasta]
+etymology_hook: "vyasta ← vi 'apart' + √as 'throw': 'thrown apart, scattered' (MW); 'busy' is the later sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C188-sajjah]
 <!-- hl-knowledge: introduces=[SA-LEX-C188-QUAL188-03]; assesses=[] -->
 
 **व्यस्तः** — *vyastaḥ* — "busy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vyasta* comes from *vi-* with the root √as, "to throw", as its past participle (MW): "thrown apart, scattered". A mind scattered over many tasks is busy, and Hindi and Marathi use *vyast* in that sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

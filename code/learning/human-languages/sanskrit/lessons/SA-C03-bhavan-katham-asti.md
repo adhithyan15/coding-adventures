@@ -14,7 +14,8 @@ romanization: "bhavān katham asti?"
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [SA-C03-katham, SA-C02-bhavan, SA-C02-asti]
 sounds: []
-roots: [as-be]
+roots: [as-be, bhavat-honorific, ka-interrogative]
+etymology_hook: "bhavān ← bhavat 'being, present' (√bhū); katham ← the question stem ka-; asti ← √as 'be' (MW)"
 reviews_of: [SA-C02-bhavan, SA-C02-asti]
 duration:
   max_seconds: 210
@@ -54,8 +55,8 @@ second-person verb: *tvaṁ katham asi?* (*asi*, "you are").
 <!-- hl-knowledge: introduces=[SA-GRAMMAR-COPULA-THREE-PERSONS]; assesses=[] -->
 
 You now hold the "to be" verb across persons: *asmi* ("I am"), *asi*
-("you are"), *asti* ("is") — the ancestors, respectively, of
-English **am**, and (through Latin/Greek) of *is/est*. "How are you?" simply asks
+("you are"), *asti* ("is") — the cousins, respectively, of
+English **am**, and of English *is* and Latin *est*. "How are you?" simply asks
 after a *state*, and Sanskrit, unlike Tamil, has always kept a verb for it.
 
 ## Guided Practice

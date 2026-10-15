@@ -14,7 +14,8 @@ romanization: "hāraḥ"
 concept_tag: SA-THG192-HARAH
 prerequisites: [SA-C191-musalam, SA-C191-calani]
 sounds: []
-roots: []
+roots: [sanskrit-hara-necklace]
+etymology_hook: "hāra 'necklace'; MW gives it as a sense of hāra from √hṛ 'take'; CDIAL 14059 keeps it apart; Punjabi hār"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C191-calani]
 <!-- hl-knowledge: introduces=[SA-LEX-C192-THG192-01]; assesses=[] -->
 
 **हारः** — *hāraḥ* — "a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW lists "necklace, string of pearls" among the senses of *hāra*, a noun of the root √hṛ, "to carry, take". CDIAL 14059 treats the necklace word as a separate *hāra*, so the link is not settled. It lives on as Punjabi and Gujarati *hār*, "necklace".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

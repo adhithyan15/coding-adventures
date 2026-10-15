@@ -14,7 +14,8 @@ romanization: "pradhānācāryaḥ"
 concept_tag: SA-PPL210-PRADHANACARYAH
 prerequisites: [SA-C209-silpi, SA-C210-acaryah]
 sounds: []
-roots: []
+roots: [sanskrit-pradhana, sanskrit-acarya]
+etymology_hook: "pradhānācārya = pradhāna 'chief' + ācārya 'teacher'; MW lacks the compound, so the head-teacher sense is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C210-acaryah]
 <!-- hl-knowledge: introduces=[SA-LEX-C210-PPL210-02]; assesses=[] -->
 
 **प्रधानाचार्यः** — *pradhānācāryaḥ* — "a head teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pradhānācārya* is a compound of *pradhāna*, "chief, principal", built on *pra-* and the root √dhā, "to put" (MW), and *ācārya*, "teacher". MW does not list the compound, so its use for a school's head teacher is a modern pairing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

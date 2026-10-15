@@ -14,7 +14,8 @@ romanization: "rohati"
 concept_tag: SA-VERB-ROHATI
 prerequisites: [SA-C232-kupyati, SA-C233-varsati]
 sounds: []
-roots: []
+roots: [sanskrit-rohati]
+etymology_hook: "rohati ← root √ruh 'rise, grow, climb' (MW); Hindi rohanā 'to mount' (CDIAL 10862)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C233-varsati]
 <!-- hl-knowledge: introduces=[SA-LEX-C233-ACT233-02]; assesses=[] -->
 
 **रोहति** — *rohati* — "sprouts, grows".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rohati* is the present of the root √ruh, "to rise, grow, mount" (MW). In the Rigveda it means both "grows" and "climbs" (CDIAL 10862), and Hindi *rohanā* means "to mount, climb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
