@@ -1,6 +1,15 @@
 //! Complete portable shape/style/glyph traces with source-retained configuration.
 use super::*;
 
+#[derive(Default)]
+struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
+impl FontResolver for RecordingResolver {
+    type Handle=FakeHandle;
+    fn resolve(&self,query:&FontQuery)->Result<FakeHandle,FontResolutionError> {
+        self.0.borrow_mut().push(query.clone());Ok(FakeHandle)
+    }
+}
+
 #[test]
 fn railroad_style_retains_ordered_shapes_glyphs_and_complete_metadata() {
     let mut cells=0;
@@ -8,7 +17,17 @@ fn railroad_style_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let source=format!("---\nconfig:\n  railroad:\n    fontSize: {font_size}\n    padding: {padding}\n    fontFamily: Courier New\n    terminalFill: '#dcfce7'\n    terminalStroke: '#166534'\n    terminalTextColor: '#14532d'\n    nonTerminalFill: '#dbeafe'\n    nonTerminalStroke: '#1d4ed8'\n    nonTerminalTextColor: '#172554'\n    lineColor: '#dc2626'\n    strokeWidth: 3\n    markerFill: '#7c2d12'\n    specialFill: '#fef3c7'\n    specialStroke: '#b45309'\n    ruleNameColor: '#581c87'\n    showMarkers: {markers}\n    markerRadius: 8\n---\nrailroad-beta\nr = sequence(terminal(\"A\"), nonterminal(\"B\"), special(\"C\"));");
         let input=mermaid_parser::parse_railroad(&source).unwrap();let config=&input.config;
         let layout=diagram_layout_hierarchy::try_layout_railroad(&input).unwrap();let original=layout.clone();
-        let options=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);let scene=diagram_to_paint_railroad(&layout,&options);
+        let base=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);let resolver=RecordingResolver::default();
+        let options=DiagramToPaintOptions{background:base.background,device_pixel_ratio:base.device_pixel_ratio,
+            label_font:base.label_font,title_font:base.title_font,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
+        let scene=diagram_to_paint_railroad(&layout,&options);
+        // A metadata-only fontFamily transport cannot satisfy the actual
+        // four ordered resolver calls for the rule name and A/B/C leaves.
+        assert_eq!(*resolver.0.borrow(),vec![FontQuery::named("Courier New");4]);
+        let kinds:Vec<_>=scene.instructions.iter().map(|i|match i{PaintInstruction::Ellipse(_)=>0,
+            PaintInstruction::Path(_)=>1,PaintInstruction::Rect(_)=>2,PaintInstruction::GlyphRun(_)=>3,_=>4}).collect();
+        let mut expected_kinds=if markers{vec![0,0]}else{vec![]};
+        expected_kinds.extend([vec![1;4],vec![2;3],vec![3;4]].concat());assert_eq!(kinds,expected_kinds);
         assert_eq!(layout,original);let rule=&layout.rules[0];
         assert_eq!(scene.metadata,Some(HashMap::from([
             ("railroad.padding".into(),padding.to_string()),("railroad.verticalSeparation".into(),"8".into()),

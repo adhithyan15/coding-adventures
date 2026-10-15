@@ -49,6 +49,8 @@ recursive depth/remeasure bounds or complete Mermaid typography parity. Keep
 those debts explicit; do not silently count them as accepted safety contracts.
 The fixed92px rule-name column can overlap the expression even for a short
 name at huge accepted fonts; this horizontal fitting debt is also OPEN.
+Typed empty expressions with huge fonts can also leave their rule-name box
+outside the small fixed empty-expression row; that visual fitting debt is OPEN.
 
 The incoming default-metric counterexample at fontSize64 additionally needs a
 font-scaled declared label box: use max(24,fontSize*1.15) capped by the leaf's
