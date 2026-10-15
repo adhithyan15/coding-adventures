@@ -114,3 +114,10 @@ Refuse active compiler-flavor `compiler` fields and package-tool selectors
 `with-hc-pkg` / `ghc-pkg-location` as well. Cabal must infer the companion tool
 from the pinned GHC rather than preserve a competing tool/flavor. Comments and
 quoted unrelated values remain intact. These controls precede their behavior.
+
+Actual local Cabal3.16 executed PATH GHC successfully despite an absent
+ghc-location; preserve that failed semantic receipt44c4983c. The discovered
+compiler must also be pinned using top-level with-compiler, after refusing the
+original selector. A rendered ghc-location is not compiler-discovery evidence.
+Require executable missing with-compiler refusal and exact overlay path controls
+before accepting this successor. Exact macOS3.10 remains hosted PENDING.
