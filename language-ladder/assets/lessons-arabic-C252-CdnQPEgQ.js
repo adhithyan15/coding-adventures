@@ -1,0 +1,1036 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C252-alama
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14150
+chapter: 252
+type: word
+headword: "علامة"
+gloss: "a mark, a grade"
+romanization: "ʿalāma"
+concept_tag: AR-AMAL252-ALAMA
+prerequisites: [AR-C251-zamil, AR-C251-sharika]
+sounds: []
+roots: [ʿ-l-m]
+etymology_hook: "ʿalāma: built on the root ʿ-l-m, 'to know' (Lane); ʿalāma is a mark, a sign"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C251-AMAL251-04, AR-LEX-C251-AMAL251-05]
+introduces:
+  knowledge: [AR-LEX-C252-AMAL252-01]
+practises:
+  knowledge: [AR-LEX-C252-AMAL252-01, AR-LEX-C251-AMAL251-04, AR-LEX-C251-AMAL251-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C251-sharika]
+---
+
+# علامة (ʿalāma) — a mark, a grade
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C251-AMAL251-04, AR-LEX-C251-AMAL251-05] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for a colleague, then the Arabic for a company.
+
+## You'll want to know: علامة
+<!-- hl-knowledge: introduces=[AR-LEX-C252-AMAL252-01]; assesses=[] -->
+
+**علامة** — *ʿalāma* — "a mark, a grade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**علامة** (*ʿalāma*) is built on the native Arabic root *ʿ-l-m*, "to know; a mark" (Lane). *ʿAlāma* is a mark, a sign.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-01, AR-LEX-C251-AMAL251-04, AR-LEX-C251-AMAL251-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *ʿalāma*]
+- [YOU SAY: *ʿalāma*, once more]
+- [YOU SAY: say *ʿalāma*]
+- [YOU RECALL: say the Arabic for a colleague, then the Arabic for a company, then say *ʿalāma* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-01, AR-LEX-C251-AMAL251-04, AR-LEX-C251-AMAL251-05] -->
+
+[PAUSE 3s] What does علامة mean? ("A mark, a grade".) Say it once more.
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C252-barid
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14190
+chapter: 252
+type: word
+headword: "بريد"
+gloss: "post, mail"
+romanization: "barīd"
+concept_tag: AR-AMAL252-BARID
+prerequisites: [AR-C252-madda, AR-C252-rusum]
+sounds: []
+roots: [latin-veredus]
+etymology_hook: "barīd: usually traced to Latin veredus 'post-horse' via Greek (EtymDB); Lane's Persian account looks folk"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C252-AMAL252-03, AR-LEX-C252-AMAL252-04]
+introduces:
+  knowledge: [AR-LEX-C252-AMAL252-05]
+practises:
+  knowledge: [AR-LEX-C252-AMAL252-05, AR-LEX-C252-AMAL252-03, AR-LEX-C252-AMAL252-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C252-rusum]
+---
+
+# بريد (barīd) — post, mail
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-03, AR-LEX-C252-AMAL252-04] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for a school subject, then the Arabic for fees.
+
+## You'll want to know: بريد
+<!-- hl-knowledge: introduces=[AR-LEX-C252-AMAL252-05]; assesses=[] -->
+
+**بريد** — *barīd* — "post, mail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بريد** (*barīd*) is usually traced to Late Latin *veredus*, "post-horse", through Greek *beredos* (EtymDB), probably by way of Aramaic. Lane's sources call it Persian, from a phrase for the docked tails of post-mules, an account that looks like a folk etymology.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-05, AR-LEX-C252-AMAL252-03, AR-LEX-C252-AMAL252-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *barīd*]
+- [YOU SAY: *barīd*, once more]
+- [YOU SAY: say *barīd*]
+- [YOU RECALL: say the Arabic for a school subject, then the Arabic for fees, then say *barīd* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-05, AR-LEX-C252-AMAL252-03, AR-LEX-C252-AMAL252-04] -->
+
+[PAUSE 3s] What does بريد mean? ("Post, mail".) Say it once more.
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C252-madda
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14170
+chapter: 252
+type: word
+headword: "مادة"
+gloss: "a school subject"
+romanization: "mādda"
+concept_tag: AR-AMAL252-MADDA
+prerequisites: [AR-C252-alama, AR-C252-muhadara]
+sounds: []
+roots: [m-d-d]
+etymology_hook: "mādda: built on the root m-d-d, 'to stretch' (Lane); mādda is matter, the stuff a thing is drawn from"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C252-AMAL252-01, AR-LEX-C252-AMAL252-02]
+introduces:
+  knowledge: [AR-LEX-C252-AMAL252-03]
+practises:
+  knowledge: [AR-LEX-C252-AMAL252-03, AR-LEX-C252-AMAL252-01, AR-LEX-C252-AMAL252-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C252-muhadara]
+---
+
+# مادة (mādda) — a school subject
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-01, AR-LEX-C252-AMAL252-02] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for a mark, then the Arabic for a lecture.
+
+## You'll want to know: مادة
+<!-- hl-knowledge: introduces=[AR-LEX-C252-AMAL252-03]; assesses=[] -->
+
+**مادة** — *mādda* — "a school subject".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مادة** (*mādda*) is built on the native Arabic root *m-d-d*, "to stretch" (Lane). *Mādda* is matter, the stuff a thing is drawn from; the school subject is a modern sense.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-03, AR-LEX-C252-AMAL252-01, AR-LEX-C252-AMAL252-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *mādda*]
+- [YOU SAY: *mādda*, once more]
+- [YOU SAY: say *mādda*]
+- [YOU RECALL: say the Arabic for a mark, then the Arabic for a lecture, then say *mādda* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-03, AR-LEX-C252-AMAL252-01, AR-LEX-C252-AMAL252-02] -->
+
+[PAUSE 3s] What does مادة mean? ("A school subject".) Say it once more.
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C252-muhadara
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14160
+chapter: 252
+type: word
+headword: "محاضرة"
+gloss: "a lecture"
+romanization: "muḥāḍara"
+concept_tag: AR-AMAL252-MUHADARA
+prerequisites: [AR-C251-sharika, AR-C252-alama]
+sounds: []
+roots: [ḥ-ḍ-r]
+etymology_hook: "muḥāḍara: built on the root ḥ-ḍ-r, 'to be present' (Lane)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C251-AMAL251-05, AR-LEX-C252-AMAL252-01]
+introduces:
+  knowledge: [AR-LEX-C252-AMAL252-02]
+practises:
+  knowledge: [AR-LEX-C252-AMAL252-02, AR-LEX-C251-AMAL251-05, AR-LEX-C252-AMAL252-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C252-alama]
+---
+
+# محاضرة (muḥāḍara) — a lecture
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C251-AMAL251-05, AR-LEX-C252-AMAL252-01] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for a company, then the Arabic for a mark.
+
+## You'll want to know: محاضرة
+<!-- hl-knowledge: introduces=[AR-LEX-C252-AMAL252-02]; assesses=[] -->
+
+**محاضرة** — *muḥāḍara* — "a lecture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محاضرة** (*muḥāḍara*) is built on the native Arabic root *ḥ-ḍ-r*, "to be present" (Lane). *Muḥāḍara* is the verbal noun of Form III, "a talk given in person".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-02, AR-LEX-C251-AMAL251-05, AR-LEX-C252-AMAL252-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *muḥāḍara*]
+- [YOU SAY: *muḥāḍara*, once more]
+- [YOU SAY: say *muḥāḍara*]
+- [YOU RECALL: say the Arabic for a company, then the Arabic for a mark, then say *muḥāḍara* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-02, AR-LEX-C251-AMAL251-05, AR-LEX-C252-AMAL252-01] -->
+
+[PAUSE 3s] What does محاضرة mean? ("A lecture".) Say it once more.
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C252-rusum
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14180
+chapter: 252
+type: word
+headword: "رسوم"
+gloss: "fees"
+romanization: "rusūm"
+concept_tag: AR-AMAL252-RUSUM
+prerequisites: [AR-C252-muhadara, AR-C252-madda]
+sounds: []
+roots: [r-s-m]
+etymology_hook: "rusūm: built on the root r-s-m, 'a trace, a mark' (Lane); rusūm is the plural of rasm, 'a set charge'"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C252-AMAL252-02, AR-LEX-C252-AMAL252-03]
+introduces:
+  knowledge: [AR-LEX-C252-AMAL252-04]
+practises:
+  knowledge: [AR-LEX-C252-AMAL252-04, AR-LEX-C252-AMAL252-02, AR-LEX-C252-AMAL252-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C252-madda]
+---
+
+# رسوم (rusūm) — fees
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-02, AR-LEX-C252-AMAL252-03] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for a lecture, then the Arabic for a school subject.
+
+## You'll want to know: رسوم
+<!-- hl-knowledge: introduces=[AR-LEX-C252-AMAL252-04]; assesses=[] -->
+
+**رسوم** — *rusūm* — "fees".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رسوم** (*rusūm*) is built on the native Arabic root *r-s-m*, "a trace, a mark" (Lane). *Rusūm* is the plural of *rasm*, "a set charge".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-04, AR-LEX-C252-AMAL252-02, AR-LEX-C252-AMAL252-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *rusūm*]
+- [YOU SAY: *rusūm*, once more]
+- [YOU SAY: say *rusūm*]
+- [YOU RECALL: say the Arabic for a lecture, then the Arabic for a school subject, then say *rusūm* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-04, AR-LEX-C252-AMAL252-02, AR-LEX-C252-AMAL252-03] -->
+
+[PAUSE 3s] What does رسوم mean? ("Fees".) Say it once more.
+`,d=e({default:()=>f}),f=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C253-dabbasa
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14240
+chapter: 253
+type: word
+headword: "دباسة"
+gloss: "a stapler"
+romanization: "dabbāsa"
+concept_tag: AR-AMAL253-DABBASA
+prerequisites: [AR-C253-mibrah, AR-C253-tabashir]
+sounds: []
+roots: [persian-dabbus]
+etymology_hook: "dabbāsa: built on dabbūs 'pin'; Lane's dabbūs, a mace, is arabicized from Persian"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C253-AMAL253-03, AR-LEX-C253-AMAL253-04]
+introduces:
+  knowledge: [AR-LEX-C253-AMAL253-05]
+practises:
+  knowledge: [AR-LEX-C253-AMAL253-05, AR-LEX-C253-AMAL253-03, AR-LEX-C253-AMAL253-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C253-tabashir]
+---
+
+# دباسة (dabbāsa) — a stapler
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-03, AR-LEX-C253-AMAL253-04] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for a pencil sharpener, then the Arabic for chalk.
+
+## You'll want to know: دباسة
+<!-- hl-knowledge: introduces=[AR-LEX-C253-AMAL253-05]; assesses=[] -->
+
+**دباسة** — *dabbāsa* — "a stapler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دباسة** (*dabbāsa*) is a modern word built on *dabbūs*, "pin". Lane's *dabbūs* is a mace, which his sources call arabicized from Persian.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-05, AR-LEX-C253-AMAL253-03, AR-LEX-C253-AMAL253-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *dabbāsa*]
+- [YOU SAY: *dabbāsa*, once more]
+- [YOU SAY: say *dabbāsa*]
+- [YOU RECALL: say the Arabic for a pencil sharpener, then the Arabic for chalk, then say *dabbāsa* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-05, AR-LEX-C253-AMAL253-03, AR-LEX-C253-AMAL253-04] -->
+
+[PAUSE 3s] What does دباسة mean? ("A stapler".) Say it once more.
+`,p=e({default:()=>m}),m=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C253-mibrah
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14220
+chapter: 253
+type: word
+headword: "مبراة"
+gloss: "a pencil sharpener"
+romanization: "mibrāh"
+concept_tag: AR-AMAL253-MIBRAH
+prerequisites: [AR-C253-tijara, AR-C253-mistara]
+sounds: []
+roots: [b-r-y]
+etymology_hook: "mibrāh: built on the root b-r-y, 'to pare (a reed pen)' (Lane); mibrāh is an instrument noun, 'a thing for paring'"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C253-AMAL253-01, AR-LEX-C253-AMAL253-02]
+introduces:
+  knowledge: [AR-LEX-C253-AMAL253-03]
+practises:
+  knowledge: [AR-LEX-C253-AMAL253-03, AR-LEX-C253-AMAL253-01, AR-LEX-C253-AMAL253-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C253-mistara]
+---
+
+# مبراة (mibrāh) — a pencil sharpener
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-01, AR-LEX-C253-AMAL253-02] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for trade, then the Arabic for a ruler.
+
+## You'll want to know: مبراة
+<!-- hl-knowledge: introduces=[AR-LEX-C253-AMAL253-03]; assesses=[] -->
+
+**مبراة** — *mibrāh* — "a pencil sharpener".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مبراة** (*mibrāh*) is built on the native Arabic root *b-r-y*, "to pare (a reed pen)" (Lane). *Mibrāh* is an instrument noun, "a thing for paring".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-03, AR-LEX-C253-AMAL253-01, AR-LEX-C253-AMAL253-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *mibrāh*]
+- [YOU SAY: *mibrāh*, once more]
+- [YOU SAY: say *mibrāh*]
+- [YOU RECALL: say the Arabic for trade, then the Arabic for a ruler, then say *mibrāh* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-03, AR-LEX-C253-AMAL253-01, AR-LEX-C253-AMAL253-02] -->
+
+[PAUSE 3s] What does مبراة mean? ("A pencil sharpener".) Say it once more.
+`,h=e({default:()=>g}),g=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C253-mistara
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14210
+chapter: 253
+type: word
+headword: "مسطرة"
+gloss: "a ruler"
+romanization: "misṭara"
+concept_tag: AR-AMAL253-MISTARA
+prerequisites: [AR-C252-barid, AR-C253-tijara]
+sounds: []
+roots: [s-ṭ-r]
+etymology_hook: "misṭara: built on the root s-ṭ-r, 'to write; to rule lines' (Lane); a thing for ruling lines"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C252-AMAL252-05, AR-LEX-C253-AMAL253-01]
+introduces:
+  knowledge: [AR-LEX-C253-AMAL253-02]
+practises:
+  knowledge: [AR-LEX-C253-AMAL253-02, AR-LEX-C252-AMAL252-05, AR-LEX-C253-AMAL253-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C253-tijara]
+---
+
+# مسطرة (misṭara) — a ruler
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-05, AR-LEX-C253-AMAL253-01] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for post, then the Arabic for trade.
+
+## You'll want to know: مسطرة
+<!-- hl-knowledge: introduces=[AR-LEX-C253-AMAL253-02]; assesses=[] -->
+
+**مسطرة** — *misṭara* — "a ruler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسطرة** (*misṭara*) is built on the native Arabic root *s-ṭ-r*, "to write; to rule lines" (Lane). *Misṭara* is an instrument noun, "a thing for ruling lines".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-02, AR-LEX-C252-AMAL252-05, AR-LEX-C253-AMAL253-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *misṭara*]
+- [YOU SAY: *misṭara*, once more]
+- [YOU SAY: say *misṭara*]
+- [YOU RECALL: say the Arabic for post, then the Arabic for trade, then say *misṭara* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-02, AR-LEX-C252-AMAL252-05, AR-LEX-C253-AMAL253-01] -->
+
+[PAUSE 3s] What does مسطرة mean? ("A ruler".) Say it once more.
+`,_=e({default:()=>v}),v=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C253-tabashir
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14230
+chapter: 253
+type: word
+headword: "طباشير"
+gloss: "chalk"
+romanization: "ṭabāshīr"
+concept_tag: AR-AMAL253-TABASHIR
+prerequisites: [AR-C253-mistara, AR-C253-mibrah]
+sounds: []
+roots: [persian-tabashir]
+etymology_hook: "ṭabāshīr: usually traced to Persian tabāshīr, a chalky bamboo substance"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C253-AMAL253-02, AR-LEX-C253-AMAL253-03]
+introduces:
+  knowledge: [AR-LEX-C253-AMAL253-04]
+practises:
+  knowledge: [AR-LEX-C253-AMAL253-04, AR-LEX-C253-AMAL253-02, AR-LEX-C253-AMAL253-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C253-mibrah]
+---
+
+# طباشير (ṭabāshīr) — chalk
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-02, AR-LEX-C253-AMAL253-03] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for a ruler, then the Arabic for a pencil sharpener.
+
+## You'll want to know: طباشير
+<!-- hl-knowledge: introduces=[AR-LEX-C253-AMAL253-04]; assesses=[] -->
+
+**طباشير** — *ṭabāshīr* — "chalk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طباشير** (*ṭabāshīr*) is usually traced to Persian *tabāshīr*, a chalky substance from bamboo; it has no entry in Lane.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-04, AR-LEX-C253-AMAL253-02, AR-LEX-C253-AMAL253-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *ṭabāshīr*]
+- [YOU SAY: *ṭabāshīr*, once more]
+- [YOU SAY: say *ṭabāshīr*]
+- [YOU RECALL: say the Arabic for a ruler, then the Arabic for a pencil sharpener, then say *ṭabāshīr* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-04, AR-LEX-C253-AMAL253-02, AR-LEX-C253-AMAL253-03] -->
+
+[PAUSE 3s] What does طباشير mean? ("Chalk".) Say it once more.
+`,y=e({default:()=>b}),b=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C253-tijara
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 14200
+chapter: 253
+type: word
+headword: "تجارة"
+gloss: "trade, commerce"
+romanization: "tijāra"
+concept_tag: AR-AMAL253-TIJARA
+prerequisites: [AR-C252-rusum, AR-C252-barid]
+sounds: []
+roots: [t-j-r]
+etymology_hook: "tijāra: built on the root t-j-r, 'to trade' (Lane); tijāra is the fiʿāla noun of a trade, 'commerce'"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C252-AMAL252-04, AR-LEX-C252-AMAL252-05]
+introduces:
+  knowledge: [AR-LEX-C253-AMAL253-01]
+practises:
+  knowledge: [AR-LEX-C253-AMAL253-01, AR-LEX-C252-AMAL252-04, AR-LEX-C252-AMAL252-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C252-barid]
+---
+
+# تجارة (tijāra) — trade, commerce
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C252-AMAL252-04, AR-LEX-C252-AMAL252-05] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for fees, then the Arabic for post.
+
+## You'll want to know: تجارة
+<!-- hl-knowledge: introduces=[AR-LEX-C253-AMAL253-01]; assesses=[] -->
+
+**تجارة** — *tijāra* — "trade, commerce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تجارة** (*tijāra*) is built on the native Arabic root *t-j-r*, "to trade" (Lane). *Tijāra* is the *fiʿāla* noun of a trade, "commerce".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-01, AR-LEX-C252-AMAL252-04, AR-LEX-C252-AMAL252-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *tijāra*]
+- [YOU SAY: *tijāra*, once more]
+- [YOU SAY: say *tijāra*]
+- [YOU RECALL: say the Arabic for fees, then the Arabic for post, then say *tijāra* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-01, AR-LEX-C252-AMAL252-04, AR-LEX-C252-AMAL252-05] -->
+
+[PAUSE 3s] What does تجارة mean? ("Trade, commerce".) Say it once more.
+`,x=e({default:()=>S}),S=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C254-ghala
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 14410
+chapter: 254
+type: word
+headword: "غلى"
+gloss: "to boil (of a liquid, intransitive)"
+romanization: "ghalā"
+concept_tag: AR-VERB-GHALA
+prerequisites: [AR-C254-qala, AR-C254-shawa]
+sounds: []
+roots: [gh-l-y]
+etymology_hook: "ghalā: built on the root gh-l-y, 'to boil' (Lane); ghalā is the plain verb, 'it boiled'"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C254-ACT254-01, AR-LEX-C254-ACT254-02]
+introduces:
+  knowledge: [AR-LEX-C254-ACT254-03]
+practises:
+  knowledge: [AR-LEX-C254-ACT254-03, AR-LEX-C254-ACT254-01, AR-LEX-C254-ACT254-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C254-shawa]
+---
+
+# غلى (ghalā) — to boil (of a liquid, intransitive)
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-01, AR-LEX-C254-ACT254-02] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for to fry, then the Arabic for to grill.
+
+## You'll want to know: غلى
+<!-- hl-knowledge: introduces=[AR-LEX-C254-ACT254-03]; assesses=[] -->
+
+**غلى** — *ghalā* — "to boil (of a liquid, intransitive)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غلى** (*ghalā*) is built on the native Arabic root *gh-l-y*, "to boil" (Lane). *Ghalā* is the plain verb, "it boiled".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-03, AR-LEX-C254-ACT254-01, AR-LEX-C254-ACT254-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *ghalā*]
+- [YOU SAY: *ghalā*, once more]
+- [YOU SAY: say *ghalā*]
+- [YOU RECALL: say the Arabic for to fry, then the Arabic for to grill, then say *ghalā* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-03, AR-LEX-C254-ACT254-01, AR-LEX-C254-ACT254-02] -->
+
+[PAUSE 3s] What does غلى mean? ("To boil (of a liquid, intransitive)".) Say it once more.
+`,C=e({default:()=>w}),w=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C254-khalata
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 14420
+chapter: 254
+type: word
+headword: "خلط"
+gloss: "to mix"
+romanization: "khalaṭa"
+concept_tag: AR-VERB-KHALATA
+prerequisites: [AR-C254-shawa, AR-C254-ghala]
+sounds: []
+roots: [kh-l-ṭ]
+etymology_hook: "khalaṭa: built on the root kh-l-ṭ, 'to mix' (Lane); khalaṭa is the plain verb, 'he mixed'"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C254-ACT254-02, AR-LEX-C254-ACT254-03]
+introduces:
+  knowledge: [AR-LEX-C254-ACT254-04]
+practises:
+  knowledge: [AR-LEX-C254-ACT254-04, AR-LEX-C254-ACT254-02, AR-LEX-C254-ACT254-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C254-ghala]
+---
+
+# خلط (khalaṭa) — to mix
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-02, AR-LEX-C254-ACT254-03] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for to grill, then the Arabic for to boil.
+
+## You'll want to know: خلط
+<!-- hl-knowledge: introduces=[AR-LEX-C254-ACT254-04]; assesses=[] -->
+
+**خلط** — *khalaṭa* — "to mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خلط** (*khalaṭa*) is built on the native Arabic root *kh-l-ṭ*, "to mix" (Lane). *Khalaṭa* is the plain verb, "he mixed".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-04, AR-LEX-C254-ACT254-02, AR-LEX-C254-ACT254-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *khalaṭa*]
+- [YOU SAY: *khalaṭa*, once more]
+- [YOU SAY: say *khalaṭa*]
+- [YOU RECALL: say the Arabic for to grill, then the Arabic for to boil, then say *khalaṭa* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-04, AR-LEX-C254-ACT254-02, AR-LEX-C254-ACT254-03] -->
+
+[PAUSE 3s] What does خلط mean? ("To mix".) Say it once more.
+`,T=e({default:()=>E}),E=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C254-qala
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 14390
+chapter: 254
+type: word
+headword: "قلى"
+gloss: "to fry"
+romanization: "qalā"
+concept_tag: AR-VERB-QALA
+prerequisites: [AR-C253-tabashir, AR-C253-dabbasa]
+sounds: []
+roots: [q-l-y]
+etymology_hook: "qalā: built on the root q-l-y, 'to fry' (Lane); qalā is the plain verb, 'he fried'"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C253-AMAL253-04, AR-LEX-C253-AMAL253-05]
+introduces:
+  knowledge: [AR-LEX-C254-ACT254-01]
+practises:
+  knowledge: [AR-LEX-C254-ACT254-01, AR-LEX-C253-AMAL253-04, AR-LEX-C253-AMAL253-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C253-dabbasa]
+---
+
+# قلى (qalā) — to fry
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-04, AR-LEX-C253-AMAL253-05] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for chalk, then the Arabic for a stapler.
+
+## You'll want to know: قلى
+<!-- hl-knowledge: introduces=[AR-LEX-C254-ACT254-01]; assesses=[] -->
+
+**قلى** — *qalā* — "to fry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قلى** (*qalā*) is built on the native Arabic root *q-l-y*, "to fry" (Lane). *Qalā* is the plain verb, "he fried".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-01, AR-LEX-C253-AMAL253-04, AR-LEX-C253-AMAL253-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *qalā*]
+- [YOU SAY: *qalā*, once more]
+- [YOU SAY: say *qalā*]
+- [YOU RECALL: say the Arabic for chalk, then the Arabic for a stapler, then say *qalā* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-01, AR-LEX-C253-AMAL253-04, AR-LEX-C253-AMAL253-05] -->
+
+[PAUSE 3s] What does قلى mean? ("To fry".) Say it once more.
+`,D=e({default:()=>O}),O=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C254-qashshara
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 14430
+chapter: 254
+type: word
+headword: "قشر"
+gloss: "to peel"
+romanization: "qashshara"
+concept_tag: AR-VERB-QASHSHARA
+prerequisites: [AR-C254-ghala, AR-C254-khalata]
+sounds: []
+roots: [q-sh-r]
+etymology_hook: "qashshara: built on the root q-sh-r, 'bark, peel' (Lane); qashshara is Form II, 'to strip the peel'"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C254-ACT254-03, AR-LEX-C254-ACT254-04]
+introduces:
+  knowledge: [AR-LEX-C254-ACT254-05]
+practises:
+  knowledge: [AR-LEX-C254-ACT254-05, AR-LEX-C254-ACT254-03, AR-LEX-C254-ACT254-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C254-khalata]
+---
+
+# قشر (qashshara) — to peel
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-03, AR-LEX-C254-ACT254-04] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for to boil, then the Arabic for to mix.
+
+## You'll want to know: قشر
+<!-- hl-knowledge: introduces=[AR-LEX-C254-ACT254-05]; assesses=[] -->
+
+**قشر** — *qashshara* — "to peel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قشر** (*qashshara*) is built on the native Arabic root *q-sh-r*, "bark, peel" (Lane). *Qashshara* is Form II, "to strip the peel".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-05, AR-LEX-C254-ACT254-03, AR-LEX-C254-ACT254-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *qashshara*]
+- [YOU SAY: *qashshara*, once more]
+- [YOU SAY: say *qashshara*]
+- [YOU RECALL: say the Arabic for to boil, then the Arabic for to mix, then say *qashshara* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-05, AR-LEX-C254-ACT254-03, AR-LEX-C254-ACT254-04] -->
+
+[PAUSE 3s] What does قشر mean? ("To peel".) Say it once more.
+`,k=e({default:()=>A}),A=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-C254-shawa
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 14400
+chapter: 254
+type: word
+headword: "شوى"
+gloss: "to grill"
+romanization: "shawā"
+concept_tag: AR-VERB-SHAWA
+prerequisites: [AR-C253-dabbasa, AR-C254-qala]
+sounds: []
+roots: [sh-w-y]
+etymology_hook: "shawā: built on the root sh-w-y, 'to roast' (Lane); shawā is the plain verb, 'he roasted'"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [AR-LEX-C253-AMAL253-05, AR-LEX-C254-ACT254-01]
+introduces:
+  knowledge: [AR-LEX-C254-ACT254-02]
+practises:
+  knowledge: [AR-LEX-C254-ACT254-02, AR-LEX-C253-AMAL253-05, AR-LEX-C254-ACT254-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C254-qala]
+---
+
+# شوى (shawā) — to grill
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C253-AMAL253-05, AR-LEX-C254-ACT254-01] -->
+
+[PAUSE 2s] Before the new one: say the Arabic for a stapler, then the Arabic for to fry.
+
+## You'll want to know: شوى
+<!-- hl-knowledge: introduces=[AR-LEX-C254-ACT254-02]; assesses=[] -->
+
+**شوى** — *shawā* — "to grill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شوى** (*shawā*) is built on the native Arabic root *sh-w-y*, "to roast" (Lane). *Shawā* is the plain verb, "he roasted".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-02, AR-LEX-C253-AMAL253-05, AR-LEX-C254-ACT254-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *shawā*]
+- [YOU SAY: *shawā*, once more]
+- [YOU SAY: say *shawā*]
+- [YOU RECALL: say the Arabic for a stapler, then the Arabic for to fry, then say *shawā* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C254-ACT254-02, AR-LEX-C253-AMAL253-05, AR-LEX-C254-ACT254-01] -->
+
+[PAUSE 3s] What does شوى mean? ("To grill".) Say it once more.
+`;export{x as a,h as c,l as d,s as f,t as h,C as i,p as l,r as m,D as n,y as o,a as p,T as r,_ as s,k as t,d as u};
