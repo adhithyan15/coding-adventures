@@ -1,0 +1,11 @@
+{
+  "id": "SA-C266-mixed-market-practice",
+  "pathSegment": "SA-PATH-266-MARKET266",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-266-MARKET266",
+      "order": 4
+    }
+  ]
+}

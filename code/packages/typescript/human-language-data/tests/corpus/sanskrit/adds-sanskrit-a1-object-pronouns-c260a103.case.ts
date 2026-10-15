@@ -140,11 +140,11 @@ it("adds the Sanskrit A1 object-pronoun series one number at a time", () => {
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   expect(coverage).toMatchObject({
     enumerated: 164,
-    // 145 -> 146 belongs to the later first-person-future tranche and 146 ->
-    // 147 to the meal-ordering tranche; this test still pins the exact
+    // 145 -> 146 belongs to the later first-person-future tranche, 146 -> 147
+    // to meal ordering, and 147 -> 149 to the market tranche; this test still pins the exact
     // object-pronoun probe above.
-    covered: 147,
-    unmapped: 17,
+    covered: 149,
+    unmapped: 15,
     partial: 0,
   });
   expect(coverage.byCategory["Sarvanāma — the pronoun"]).toEqual({

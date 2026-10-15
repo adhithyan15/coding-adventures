@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C266-mixed-market-practice",
+    "language": "sanskrit",
+    "chapter": 266,
+    "sequence": 15800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c0ba86fd1f6fae4"
+  },
+  "findings": []
+}
