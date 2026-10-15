@@ -23,7 +23,7 @@ fn railroad_style_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let scene=diagram_to_paint_railroad(&layout,&options);
         // Bold rule labels and normal leaves have two distinct font keys.
         // Repeated normal leaves share the cache; compare ordered real queries.
-        let mut bold_query=FontQuery::named("Courier New");bold_query.weight=700;
+        let mut bold_query=FontQuery::named("Courier New");bold_query.weight=text_interfaces::FontWeight::BOLD;
         assert_eq!(*resolver.0.borrow(),vec![bold_query,FontQuery::named("Courier New")]);
         let kinds:Vec<_>=scene.instructions.iter().map(|i|match i{PaintInstruction::Ellipse(_)=>0,
             PaintInstruction::Path(_)=>1,PaintInstruction::Rect(_)=>2,PaintInstruction::GlyphRun(_)=>3,_=>4}).collect();
@@ -83,7 +83,7 @@ fn railroad_theme_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let scene=diagram_to_paint_railroad(&layout,&options);
         // Bold rule labels and normal leaves have two distinct font keys.
         // Repeated normal leaves share the cache; compare ordered real queries.
-        let mut bold_query=FontQuery::named("Courier New");bold_query.weight=700;
+        let mut bold_query=FontQuery::named("Courier New");bold_query.weight=text_interfaces::FontWeight::BOLD;
         assert_eq!(*resolver.0.borrow(),vec![bold_query,FontQuery::named("Courier New")]);
         let kinds:Vec<_>=scene.instructions.iter().map(|i|match i{PaintInstruction::Ellipse(_)=>0,
             PaintInstruction::Path(_)=>1,PaintInstruction::Rect(_)=>2,PaintInstruction::GlyphRun(_)=>3,_=>4}).collect();
@@ -143,7 +143,7 @@ fn railroad_sanitize_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let scene=diagram_to_paint_railroad(&layout,&options);
         // Bold rule labels and normal leaves have two distinct font keys.
         // Repeated normal leaves share the cache; compare ordered real queries.
-        let mut bold_query=FontQuery::named("Courier New");bold_query.weight=700;
+        let mut bold_query=FontQuery::named("Courier New");bold_query.weight=text_interfaces::FontWeight::BOLD;
         assert_eq!(*resolver.0.borrow(),vec![bold_query,FontQuery::named("Courier New")]);
         let kinds:Vec<_>=scene.instructions.iter().map(|i|match i{PaintInstruction::Ellipse(_)=>0,
             PaintInstruction::Path(_)=>1,PaintInstruction::Rect(_)=>2,PaintInstruction::GlyphRun(_)=>3,_=>4}).collect();
@@ -203,7 +203,7 @@ fn railroad_compact_true_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let scene=diagram_to_paint_railroad(&layout,&options);
         // Bold rule labels and normal leaves have two distinct font keys.
         // Repeated normal leaves share the cache; compare ordered real queries.
-        let mut bold_query=FontQuery::named("Courier New");bold_query.weight=700;
+        let mut bold_query=FontQuery::named("Courier New");bold_query.weight=text_interfaces::FontWeight::BOLD;
         assert_eq!(*resolver.0.borrow(),vec![bold_query,FontQuery::named("Courier New")]);
         let kinds:Vec<_>=scene.instructions.iter().map(|i|match i{PaintInstruction::Ellipse(_)=>0,
             PaintInstruction::Path(_)=>1,PaintInstruction::Rect(_)=>2,PaintInstruction::GlyphRun(_)=>3,_=>4}).collect();

@@ -42,7 +42,7 @@ fn railroad_labels_four_dialects_keep_exact_fonts_glyphs_ports_and_metadata() {
             let options=DiagramToPaintOptions{background:base.background,device_pixel_ratio:base.device_pixel_ratio,
                 label_font:base.label_font.clone(),title_font:base.title_font.clone(),shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
             let scene=diagram_to_paint_railroad(&layout,&options);assert_eq!(layout,original);
-            let mut bold_query=FontQuery::named("Courier New");bold_query.weight=700;
+            let mut bold_query=FontQuery::named("Courier New");bold_query.weight=text_interfaces::FontWeight::BOLD;
             assert_eq!(*resolver.0.borrow(),vec![bold_query,FontQuery::named("Courier New")]);
             let ellipses=scene.instructions.iter().filter_map(|p|if let PaintInstruction::Ellipse(e)=p{Some(e)}else{None}).collect::<Vec<_>>();
             assert_eq!(ellipses.len(),if markers{2}else{0});
