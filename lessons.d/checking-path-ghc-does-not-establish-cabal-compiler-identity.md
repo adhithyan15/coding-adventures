@@ -13,4 +13,8 @@ Also account for compiler flavor and package-tool selectors. Mocked controls do
 not establish hosted macOS acceptance; retain that as PENDING and Miri as
 DEFERRED/PENDING until genuine final-source validation.
 
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
+The companion-selector specification commit encountered a Git index lock while a
+previous command was still completing. Its staged specification was committed
+with the next test-only commit, still before behavior. Consume every pending Git
+session before issuing further index mutations; do not assume a yielded commit
+has finished and do not remove locks without checking the owning operation.

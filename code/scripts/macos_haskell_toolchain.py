@@ -94,6 +94,7 @@ def overlay_config(source: str, clang: str, ld: str, sdk: str,
     fields = {
         "program-locations": {"gcc-location": [clang], "ld-location": [ld],
                               "ghc-location": [] if ghc is None else [ghc],
+                              "ghc-pkg-location": [],
                               "hsc2hs-location": [] if hsc_wrapper is None else [str(hsc_wrapper)]},
         "program-default-options": {
             "ghc-options": options,
@@ -108,7 +109,7 @@ def overlay_config(source: str, clang: str, ld: str, sdk: str,
     names = re.compile(r"\b(program-locations|program-default-options)\b", re.I)
     for line in lines:
         active = unquoted_config_text(line).strip()
-        if re.search(r"\bwith-compiler\s*:", active, re.I):
+        if re.search(r"\b(?:with-compiler|compiler|with-hc-pkg)\s*:", active, re.I):
             raise ValueError("existing Cabal compiler selector requires review")
         if names.search(active) and (line[0].isspace() or active.casefold() not in fields):
             raise ValueError("unsupported managed Cabal section syntax")
