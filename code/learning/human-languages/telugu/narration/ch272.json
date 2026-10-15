@@ -4,7 +4,7 @@
   "chapter": 272,
   "title": "Trellis, Fence, Bush, Stem, Wing",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8f3106f343d41c5f",
+  "sourceHash": "fnv1a64:c770ef71e2ef9867",
   "lessons": [
     {
       "id": "TE-C272-pandiri",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b904c7d082a003f1",
+      "sourceHash": "fnv1a64:365ce2acd6e97d5d",
       "notice": null,
       "blocks": [
         {

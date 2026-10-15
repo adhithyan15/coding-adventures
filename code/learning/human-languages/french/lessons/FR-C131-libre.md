@@ -13,7 +13,7 @@ gloss: "free"
 concept_tag: FR-QUALITES83-LIBRE
 prerequisites: [FR-C130-joli, FR-C131-occupe]
 sounds: []
-roots: [liber-latin]
+roots: [liber-free-latin]
 etymology_hook: "libre ← Latin liber 'free' — English liberty and liberal"
 duration:
   max_seconds: 200

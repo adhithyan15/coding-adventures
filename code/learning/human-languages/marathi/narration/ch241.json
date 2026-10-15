@@ -4,7 +4,7 @@
   "chapter": 241,
   "title": "Flowerpot, Seedling, Trunk, Lawn, Footpath",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:33ebba4f31bed72a",
+  "sourceHash": "fnv1a64:e8d86c3f27a1132b",
   "lessons": [
     {
       "id": "MR-C241-kundi",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32a5795ea4b31c45",
+      "sourceHash": "fnv1a64:7cf7c5b06eba5586",
       "notice": null,
       "blocks": [
         {

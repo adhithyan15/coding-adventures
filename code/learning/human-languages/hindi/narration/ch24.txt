@@ -21,31 +21,31 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What ancient Proto-Indo-European root connects harā to German's gelb? (ǵʰelh₃-, "to shine" — Hindi's GREEN word is a genuine cousin of German's YELLOW word; French's jaune is usually placed in this family too, though that link is less secure.) Why can one root yield green and yellow words? (It once covered a broader shining yellow-to-green zone.) Next: the yellow word whose sound history is clear but meaning history is not.
+What ancient Proto-Indo-European root connects harā to German's gelb? (ǵʰelh₃-, "to shine" — Hindi's GREEN word is a genuine cousin of German's YELLOW word; French's jaune is usually placed in this family too, though that link is less secure.) Why can one root yield green and yellow words? (It once covered a broader shining yellow-to-green zone.) Next: the yellow word, whose sound history is clear, and the Sanskrit look-alike to keep apart from it.
 
 
 Lesson 2 of 2.
-पीला (pīlā) — clear sounds, uncertain meaning.
+पीला (pīlā) — clear sounds, and a look-alike to keep apart.
 
 Warm-up.
 [pause 2 seconds]
-Harā gave a secure ancient color family. Hindi's yellow word gives a secure sound chain wrapped around an unsolved semantic mystery.
+Harā gave a secure ancient color family. Hindi's yellow word gives a secure sound chain, and a Sanskrit look-alike to keep out of it.
 
 You'll want to know — The chain.
-पीला (pīlā, "yellow") traces through Prakrit पीअल (pīala) to Sanskrit पीतल (pītala), built on पीत (pīta).
-Pīta means "yellow," but also literally "drunk, quaffed," from a root meaning "to drink." Why do "yellow" and "drunk" share a word? The connection is not settled. One proposed path runs "drink" becomes "become full or swell" becomes "the color of fat" becomes "yellow," but sources flag that mechanism as uncertain.
+पीला (pīlā, "yellow") traces through Prakrit पीअल (pīala) to Sanskrit पीतल (pītala), built on पीत (pīta), "yellow" (CDIAL 8233, 8230).
+Sanskrit also has a pīta that means "drunk, quaffed," from the root pā-, "to drink." It is a different word. Monier-Williams lists the two as separate headwords, and CDIAL gives them separate entries (8229 and 8230): they only sound alike. MW suggests "yellow" may come from a root meaning "to swell," after the colour of butter and oil, and marks that as possible, not settled.
 What is solid is the ordinary sound history:
 pīta becomes pītala becomes pīala becomes pīlā.
-Keep the evidence levels separate: trust the forms; label the semantic bridge a hypothesis.
+Keep the evidence levels separate: trust the forms; do not let the look-alike into the chain.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: "pīlā" — yellow]
 [pause 8 seconds for the answer]
 [once you have stopped driving — trace: "pīta, pītala, pīala, pīlā"]
-[your turn — qualify: "drink becomes yellow is uncertain"]
+[your turn — qualify: "pīta, drunk, is a different word"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does pīta also mean? (Drunk, quaffed.) Is the bridge from drinking to yellow settled? (No.) What part is secure? (The sound chain pīta becomes pītala becomes pīala becomes pīlā.)
+Say whether pīta "drunk" is the word behind pīlā. (No: it is a separate word that only sounds like pīta "yellow".) Then name the part that is secure. (The sound chain pīta becomes pītala becomes pīala becomes pīlā.)

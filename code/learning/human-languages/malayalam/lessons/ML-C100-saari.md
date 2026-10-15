@@ -11,7 +11,7 @@ romanization: "sāri"
 concept_tag: ML-SARI
 prerequisites: [ML-C100-mundu, ML-C42-old]
 sounds: []
-roots: [sanskrit-shata]
+roots: [sanskrit-shati]
 etymology_hook: "sāri ← Sanskrit śāṭī 'strip of cloth, garment' (CDIAL 12381), through Prakrit and Hindustani"
 duration:
   max_seconds: 240

@@ -4,7 +4,7 @@
   "chapter": 140,
   "title": "Beard, Foot, Long, Short, Heavy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6efe54b53dad4aca",
+  "sourceHash": "fnv1a64:1f34082818df6ce9",
   "lessons": [
     {
       "id": "KA-C140-gadda",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:480ca4b76e9b7f7c",
+      "sourceHash": "fnv1a64:aa9ce9631d9e6511",
       "notice": null,
       "blocks": [
         {

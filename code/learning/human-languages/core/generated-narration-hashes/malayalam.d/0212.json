@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 212,
-  "sourceHash": "fnv1a64:68646215055ff6b7",
+  "sourceHash": "fnv1a64:a6b54c030e6bdd43",
   "lessonIds": [
     "ML-C212-kala",
     "ML-C212-samgitam",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch212.txt",
   "json": "malayalam/narration/ch212.json",
   "textHash": "fnv1a64:7f2c108dc87349dc",
-  "jsonHash": "fnv1a64:57f5d826c1560351",
+  "jsonHash": "fnv1a64:cc0708e7b0692f46",
   "findings": []
 }

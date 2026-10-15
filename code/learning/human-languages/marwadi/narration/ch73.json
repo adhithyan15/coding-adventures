@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "New, Old, Good, Bad, Long",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2188008d73bc47c7",
+  "sourceHash": "fnv1a64:7a02334074132dfe",
   "lessons": [
     {
       "id": "MW-C73-nuvo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ad3b640704ea83c",
+      "sourceHash": "fnv1a64:b2bb93bb6f6328af",
       "notice": null,
       "blocks": [
         {

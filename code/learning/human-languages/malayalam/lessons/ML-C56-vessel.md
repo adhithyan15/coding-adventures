@@ -11,7 +11,7 @@ romanization: "pātraṁ"
 concept_tag: ML-NOUN-VESSEL
 prerequisites: [ML-C56-knife, ML-C54-root]
 sounds: []
-roots: [sanskrit-patra]
+roots: [sanskrit-patra-vessel]
 etymology_hook: "pātraṁ ← Sanskrit pātra 'drinking vessel, dish', a tatsama (CDIAL 8055)"
 duration:
   max_seconds: 210

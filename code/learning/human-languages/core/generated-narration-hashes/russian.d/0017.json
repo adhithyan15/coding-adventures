@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 17,
-  "sourceHash": "fnv1a64:ad3e5de8f50d5276",
+  "sourceHash": "fnv1a64:75119a1b01abd155",
   "lessonIds": [
     "RU-C17-no",
     "RU-C17-a",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "russian/narration/ch17.txt",
   "json": "russian/narration/ch17.json",
-  "textHash": "fnv1a64:1a3bb8740b47c32e",
-  "jsonHash": "fnv1a64:7f6c5c3475679280",
+  "textHash": "fnv1a64:f7d441225c0f534d",
+  "jsonHash": "fnv1a64:2a64590a8e8dfa56",
   "findings": []
 }

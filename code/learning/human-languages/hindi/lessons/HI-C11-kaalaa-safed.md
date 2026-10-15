@@ -9,13 +9,13 @@ sequence: 550
 chapter: 11
 type: word
 headword: काला सफ़ेद
-gloss: black and white — one Sanskrit word tangled up with time and death, one a Persian loan
+gloss: black and white — black has a Sanskrit look-alike meaning time; white is a Persian loan
 romanization: "kālā safed"
 concept_tag: HI-COLOUR-BLACK-WHITE
 prerequisites: [HI-C10-shanivaar-ravivaar]
 sounds: [devanagari-long-aa, nukta-f]
 roots: [sanskrit-kala-black, safed-persian]
-etymology_hook: "काला kālā 'black' is traditionally linked to काल kāla, Sanskrit for 'time' and 'death' — the same word underlies Kali and Yama's title Kaala, though whether the two senses truly share one root is still debated; सफ़ेद safed is a Persian loan"
+etymology_hook: "kālā ← Sanskrit kāla 'black' (CDIAL 3083), a separate word from kāla 'time' (3084); safed ← Persian safēd"
 duration:
   max_seconds: 221
 requires:
@@ -37,22 +37,23 @@ reviews_of: [HI-C10-shanivaar-ravivaar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Hindi's word for black hides something bigger inside it: the very
-same word Sanskrit uses for **time itself** — and for death.
+[PAUSE 2s] Hindi's word for black has a look-alike: the Sanskrit word for
+**time**, and for death, sounds the same.
 
-## You'll want to know — काला — black, time, and death, tangled together
+## You'll want to know — काला — black, and a look-alike for time
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C11-KAALAA-SAFED-01]; assesses=[] -->
 
-**काला** (*kālā*) = "**black**," from Sanskrit **काल** (*kāla*), a word that
-covers both "**black/dark**" **and** "**time**." Sanskrit's own tradition
-ties the two together poetically — **time devours everything**, and that
-devouring is imagined as *dark* — and the same word names the fierce goddess
-**Kālī** ("the black/dark one") and stands as an epithet of **Yama**, the god
-of death. Be honest, though: whether "black" and "time" are truly **one and
-the same root**, or two separate ancient words that Sanskrit poetry and
-theology later **fused** into a single idea, is a real, still-debated
-question among linguists — the cultural connection is certain; the precise
-etymology underneath it is not.
+**काला** (*kālā*) = "**black**," from Sanskrit **काल** (*kāla*), "**black,
+dark**" (CDIAL 3083), which CDIAL takes from a Dravidian word. The goddess
+**Kālī**, "the dark one," is named from the same word.
+
+Sanskrit has a second **काल** (*kāla*), "**time**," and so "fate, death"
+(CDIAL 3084); as Time the destroyer it is linked with **Yama**, the god of
+death. CDIAL gives the two separate entries, and Monier-Williams lists them as
+two words. MW wonders whether "black" shares the root *kal-*, "to count," of
+"time," and marks the guess as uncertain. Sanskrit poetry and religious tradition
+still pair them: time devours everything, and that devouring is pictured as dark.
+That pairing is a cultural association, not the word's history.
 
 ## You'll want to know — सफ़ेद — a Persian loan
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C11-KAALAA-SAFED-02]; assesses=[] -->
@@ -67,17 +68,15 @@ that arrived from Persian or Arabic.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C11-KAALAA-SAFED-01, HI-CONCEPT-C11-KAALAA-SAFED-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "kāla" — time/black/death, then "kālā" — black]
+- [YOU SAY: "kālā" — black; then the other काल, "time," a separate word]
 - [YOU SAY: "safed" — white, a Persian loan]
 - [YOU SAY: the dot — नुक़्ता under फ turns pha into fa]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C11-KAALAA-SAFED-01, HI-CONCEPT-C11-KAALAA-SAFED-02] -->
 
-[PAUSE 3s] What does **काला**'s root **काल** (*kāla*) also mean, besides
-"black"? (**"Time"** — and by extension, **death**; the same word names the
-goddess **Kālī** and Yama's epithet **Kāla**.) Is it settled that "black" and
-"time" are the same root? (**No** — the cultural link is real and ancient,
-but linguists still debate whether it's one true root or two words later
-fused.) Where does **सफ़ेद** come from? (**Persian** *safēd* — the same kind
-of loan as *māf*, "sorry.")
+[PAUSE 3s] What does the other Sanskrit **काल** (*kāla*) mean? (**"Time"** —
+and so fate and death.) Is it the काल in **काला**? (**No** — CDIAL and MW list
+them as two words; the dark-and-time pairing is a cultural association.) Where
+does **सफ़ेद** come from? (**Persian** *safēd* — the same kind of loan as
+*māf*, "sorry.")

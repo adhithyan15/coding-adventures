@@ -14,7 +14,7 @@ romanization: "patlā"
 concept_tag: HI-ADJ-THIN
 prerequisites: [HI-C82-lambaa]
 sounds: []
-roots: [sanskrit-patra]
+roots: [sanskrit-pattrala]
 etymology_hook: "patlā ← Sanskrit pattrala 'leafy', and so 'leaf-like, thin', from pattra 'leaf' (CDIAL 7736)"
 duration:
   max_seconds: 240

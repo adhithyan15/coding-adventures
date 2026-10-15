@@ -14,7 +14,7 @@ romanization: "kaḷāśāla"
 concept_tag: TE-PANI311-KALASALA
 prerequisites: [TE-C310-kuli, TE-C310-udyogi]
 sounds: []
-roots: [sanskrit-kala, sanskrit-shala]
+roots: [sanskrit-kala-art, sanskrit-shala]
 etymology_hook: "kaḷāśāla: Sanskrit kalā 'art' (CDIAL 2927) + śālā 'house' (CDIAL 12414)"
 duration:
   max_seconds: 200

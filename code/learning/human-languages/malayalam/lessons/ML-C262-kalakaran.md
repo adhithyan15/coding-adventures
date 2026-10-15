@@ -14,7 +14,7 @@ romanization: "kalākāran"
 concept_tag: ML-JOLI262-KALAKARAN
 prerequisites: [ML-C262-kurippu, ML-C262-udaharanam]
 sounds: []
-roots: [sanskrit-kala]
+roots: [sanskrit-kala-art]
 etymology_hook: "kalākāran: Sanskrit kalā 'art' (CDIAL 2927) + kāra 'maker'"
 duration:
   max_seconds: 200

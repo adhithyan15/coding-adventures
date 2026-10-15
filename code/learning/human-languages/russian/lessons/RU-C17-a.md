@@ -11,7 +11,7 @@ concept_tag: RU-JOIN-BUT-CONTRAST
 romanization: a
 prerequisites: [RU-C17-no]
 sounds: []
-roots: [pie-uncertain]
+roots: [slavic-a]
 etymology_hook: "а is the first letter of the alphabet and also a word, exactly as и is — Russian's two commonest joiners are both single letters you learned to write before you knew they meant anything"
 duration:
   max_seconds: 250

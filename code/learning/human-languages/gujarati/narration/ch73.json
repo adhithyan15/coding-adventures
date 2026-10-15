@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "Light, New, Old, Hot, Cheap",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9c4e030ccb7c11e2",
+  "sourceHash": "fnv1a64:e04e51517f41b281",
   "lessons": [
     {
       "id": "GU-C73-light",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99dc64b9373d3a8f",
+      "sourceHash": "fnv1a64:dfc4b368788549a0",
       "notice": null,
       "blocks": [
         {

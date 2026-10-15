@@ -14,7 +14,7 @@ romanization: "jāte"
 concept_tag: BN-KARON218-JATE
 prerequisites: [BN-C218-jodio, BN-C218-jmon]
 sounds: []
-roots: [sanskrit-ya]
+roots: [sanskrit-ya-relative]
 etymology_hook: "jāte: jā 'which', the relative pronoun ← ya- (CDIAL 10391), + -te 'in'"
 duration:
   max_seconds: 200

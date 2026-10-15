@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "Sari, Shoe, Turban, Shirt, Telephone",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:771020faadf0025e",
+  "sourceHash": "fnv1a64:1a7a13b26f974ec0",
   "lessons": [
     {
       "id": "SA-C104-satika",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da126ff92563665b",
+      "sourceHash": "fnv1a64:7035abd868d9d2a8",
       "notice": null,
       "blocks": [
         {

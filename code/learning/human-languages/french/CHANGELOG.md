@@ -1,5 +1,9 @@
 # Changelog
 
+## Fixed — libre and livrer use the root slug for Latin līber "free"
+
+- **FR-C131-libre** and **FR-C150-livrer** move from `liber-latin` to `liber-free-latin`, the slug Portuguese *livre* and Spanish *libre* and *libertad* use. `liber-latin` also named *liber* "bark, book", a different Latin word (EtymDB lists Latin *liber* "free" and *liber* "book" as two entries; the "book" one is a cousin of English *leaf*). It now names only that word, in ES-C43-libro and PT-C227-livraria.
+
 ## Fixed — every taken-apart block now says where its word comes from
 
 Sixty-six French word lessons had a "taken apart" block that split the word or phrase into French parts, or explained its grammar, and never said where it came from (human-language-data `hasEmptyEtymologyBlock`, HL24 §9.4). Most are the generated wave's compounds and derivatives (*soixante-dix*, *salle à manger*, *dentiste*, *joueur*), whose parts the block named without tracing them. Sources: EtymDB 2.1 (Fourrier & Sagot 2020, CC BY-SA 4.0), read locally; every line is our own sentence, and each part is traced the way the lesson that teaches it already does. Empty etymology blocks 66 → 0.

@@ -4,7 +4,7 @@
   "chapter": 213,
   "title": "Foreign, Honest, Patient, Generous, Idle",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:eef457bcfc50cd1c",
+  "sourceHash": "fnv1a64:70ed20d936b164ea",
   "lessons": [
     {
       "id": "LA-C213-peregrinus",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c83053004dfc52e",
+      "sourceHash": "fnv1a64:1d7493908e81ca89",
       "notice": null,
       "blocks": [
         {
