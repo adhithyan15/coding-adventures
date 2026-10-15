@@ -138,14 +138,14 @@ it("turns owned Sanskrit market words into a gentle A1 price exchange", () => {
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   expect(coverage).toMatchObject({
     enumerated: 164,
-    covered: 152,
-    unmapped: 12,
+    covered: 153,
+    unmapped: 11,
     partial: 0,
   });
   expect(coverage.byCategory["Evaluative notions"]).toEqual({ enumerated: 4, covered: 4 });
   expect(coverage.byCategory[
     "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]).toEqual({ enumerated: 15, covered: 10 });
+  ]).toEqual({ enumerated: 15, covered: 11 });
   for (const id of ["SA-A1-EV-02", "SA-A1-M-09"]) {
     expect(coverage.points.find((point) => point.id === id)).toMatchObject({
       covered: true,

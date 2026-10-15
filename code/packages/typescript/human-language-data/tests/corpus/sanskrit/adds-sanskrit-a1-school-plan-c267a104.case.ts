@@ -136,13 +136,13 @@ it("turns owned Sanskrit school words into a gentle A1 school-day plan", () => {
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   expect(coverage).toMatchObject({
     enumerated: 164,
-    covered: 152,
-    unmapped: 12,
+    covered: 153,
+    unmapped: 11,
     partial: 0,
   });
   expect(coverage.byCategory[
     "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]).toEqual({ enumerated: 15, covered: 10 });
+  ]).toEqual({ enumerated: 15, covered: 11 });
   expect(coverage.points.find((point) => point.id === "SA-A1-M-03")).toMatchObject({
     covered: true,
     missingAtoms: [],
