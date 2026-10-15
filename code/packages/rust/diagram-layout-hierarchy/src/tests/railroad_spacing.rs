@@ -68,8 +68,8 @@ fn railroad_singleton_and_empty_sequence_have_exact_exit_geometry() {
             let layout=try_layout_railroad(&input(expression,config.clone(),false)).unwrap();
             let width=if empty{0.0}else{config.font_size*3.15+2.0*padding};
             let exit=layout.rules[0].paths.last().unwrap();
-            assert_eq!(exit.points[0].x,padding+130.0+width,"padding={padding},gap={gap},empty={empty}");
-            assert_eq!(exit.points[1].x,padding+130.0+width+24.0);
+            assert_eq!(exit.points[0].x,padding+3.0*config.font_size*0.61+40.0+width,"padding={padding},gap={gap},empty={empty}");
+            assert_eq!(exit.points[1].x,padding+3.0*config.font_size*0.61+40.0+width+5.0);
         }
     }}
     let normal=try_layout_railroad(&input(E::Terminal("A".into()),RailroadConfig::default(),false)).unwrap();
@@ -83,7 +83,7 @@ fn railroad_sequences_preserve_complete_ordered_leaf_connector_and_exit_geometry
         RailroadConfig{padding:65536.0,vertical_separation:65536.0,horizontal_separation:65536.0,..Default::default()}] {
         let p=config.padding;let gap=config.horizontal_separation;let width=config.font_size*3.15+2.0*p;
         let height=config.font_size*1.15+2.0*p;let sequence_height=height.max(36.0);
-        let origin=p+130.0;let content_y=16.0+2.0*p;
+        let origin=p+3.0*config.font_size*0.61+40.0;let content_y=16.0+2.0*p;
         let leaf_y=content_y+(sequence_height-height)/2.0;let center=content_y+sequence_height/2.0;
         let close=|actual:f64,expected:f64|assert!((actual-expected).abs()<1e-7,"{actual} != {expected}, config={config:?}");
         for nested in [false,true] {
@@ -93,7 +93,7 @@ fn railroad_sequences_preserve_complete_ordered_leaf_connector_and_exit_geometry
             assert_eq!(rule.elements.len(),3);
             for (index,(element,(label,kind))) in rule.elements.iter().zip([
                 ("A",diagram_ir::RailroadElementKind::Terminal),("B",diagram_ir::RailroadElementKind::NonTerminal),
-                ("C",diagram_ir::RailroadElementKind::Special)]).enumerate() {
+                ("? C ?",diagram_ir::RailroadElementKind::Special)]).enumerate() {
                 assert_eq!((&*element.label,&element.kind),(label,&kind));
                 close(element.x,origin+index as f64*(width+gap));close(element.y,leaf_y);
                 close(element.width,width);close(element.height,height);
@@ -105,8 +105,8 @@ fn railroad_sequences_preserve_complete_ordered_leaf_connector_and_exit_geometry
             let mut expected:Vec<Vec<(f64,f64)>>=pairs.into_iter().map(|(from,to)|vec![
                 (origin+from as f64*(width+gap)+width,center),(origin+to as f64*(width+gap),center)]).collect();
             let right=origin+3.0*width+2.0*gap;
-            expected.push(vec![(p+106.0,center),(origin,center)]);
-            expected.push(vec![(right,center),(right+24.0,center)]);
+            expected.push(vec![(origin-20.0+config.marker_radius,center),(origin,center)]);
+            expected.push(vec![(right,center),(right+10.0-config.marker_radius,center)]);
             assert_eq!(rule.paths.len(),4);
             for (path,points) in rule.paths.iter().zip(expected) {
                 assert!(!path.loopback);assert_eq!(path.points.len(),points.len());

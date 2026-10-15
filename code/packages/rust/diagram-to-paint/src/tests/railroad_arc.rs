@@ -17,7 +17,7 @@ fn railroad_arc_emits_exact_portable_commands_styles_order_and_metadata() {
     for (radius,points,commands) in cases {for loopback in [false,true] {
         let config=RailroadConfig {arc_radius:radius,line_color:"#123456".into(),stroke_width:3.0,show_markers:false,..Default::default()};
         let layout=LayoutedRailroadDiagram {width:100.0,height:60.0,title:None,accessibility_title:None,accessibility_description:None,
-            config,rules:vec![LayoutedRailroadRule{name:"r".into(),y:0.0,height:60.0,elements:vec![],
+            config,rules:vec![LayoutedRailroadRule{name:"r".into(),y:0.0,height:60.0,start_marker:Point{x:70.0,y:20.0},end_marker:Point{x:90.0,y:20.0},elements:vec![],
                 paths:vec![LayoutedRailroadPath{points:points.clone(),loopback}]}]};
         let original=layout.clone();let options=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
         let scene=diagram_to_paint_railroad(&layout,&options);assert_eq!(layout,original);

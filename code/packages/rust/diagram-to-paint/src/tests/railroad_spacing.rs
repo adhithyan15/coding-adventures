@@ -21,7 +21,7 @@ fn railroad_small_padding_keeps_exact_leaf_glyphs_inside_emitted_boxes() {
             let expected=layout_to_paint(&text,&LayoutToPaintOptions{width:layout.width,height:layout.height,
                 background:Color{r:0,g:0,b:0,a:0},device_pixel_ratio:1.0,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&FakeResolver});
             let leaf=|instructions:&[PaintInstruction]|instructions.iter().filter_map(|p|match p {
-                PaintInstruction::GlyphRun(run) if run.glyphs.len()==1&&[65,66,67].contains(&run.glyphs[0].glyph_id)=>Some(run.clone()),_=>None,
+                PaintInstruction::GlyphRun(run) if run.glyphs.iter().any(|g|[65,66,67].contains(&g.glyph_id))=>Some(run.clone()),_=>None,
             }).collect::<Vec<_>>();
             let actual=leaf(&scene.instructions);let expected=leaf(&expected.instructions);
             if actual!=expected {failures.push(format!("padding={padding} completeglyph mismatch: {actual:?} expected{expected:?}"));}
@@ -73,8 +73,8 @@ fn railroad_source_dialects_keep_complete_ordered_glyphs_and_config_metadata() {
         let rule=&layout.rules[0];assert_eq!(rule.elements.len(),1);let element=&rule.elements[0];
         let height=24.0_f64.min(element.height);
         let children=vec![
-            text_node_no_wrap("r",padding,rule.y+rule.height/2.0-14.0,92.0,28.0,
-                options.label_font.clone(),Color{r:0,g:0,b:102,a:255}),
+            text_node_no_wrap("r =",padding,rule.start_marker.y-14.0,3.0*14.0*0.61+20.0,28.0,
+                {let mut font=options.label_font.clone();font.weight=700;font},Color{r:0,g:0,b:102,a:255}),
             text_node_no_wrap(&element.label,element.x+padding,element.y+(element.height-height)/2.0,
                 element.width-2.0*padding,height,options.label_font.clone(),Color{r:0,g:0,b:0,a:255}),
         ];
@@ -86,7 +86,7 @@ fn railroad_source_dialects_keep_complete_ordered_glyphs_and_config_metadata() {
         }).collect::<Vec<_>>();
         let actual=runs(&scene.instructions);
         assert_eq!(actual,runs(&expected.instructions),"complete ordered source trace: {source}");
-        assert_eq!(actual.len(),2);assert_eq!(actual[1].glyphs.len(),1);
+        assert_eq!(actual.len(),2);assert_eq!(actual[1].glyphs.len(),element.label.chars().count());
         let run=&actual[1];let glyph=&run.glyphs[0];
         assert!(glyph.x>=element.x&&glyph.x+run.font_size/2.0<=element.x+element.width);
         assert!(glyph.y-run.font_size*0.8+0.01>=element.y&&glyph.y+run.font_size*0.2<=element.y+element.height+0.01);

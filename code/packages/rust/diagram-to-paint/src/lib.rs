@@ -9513,6 +9513,7 @@ mod tests {
     mod railroad_style;
     mod railroad_arc;
     mod railroad_circular;
+    mod railroad_labels;
     use super::*;
     use diagram_ir::{
         DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, LayoutedGraphDiagram,

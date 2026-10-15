@@ -68,7 +68,7 @@ fn railroad_circular_public_short_paths_and_collinear_reversals_keep_their_comma
         (vec![Point{x:0.0,y:0.0},Point{x:5.0,y:0.0},Point{x:0.0,y:0.0}],vec![M{x:0.0,y:0.0},L{x:5.0,y:0.0},L{x:0.0,y:0.0}]),
     ] {
         let diagram=LayoutedRailroadDiagram{width:100.0,height:50.0,title:None,accessibility_title:None,accessibility_description:None,
-            config:RailroadConfig{show_markers:false,..Default::default()},rules:vec![LayoutedRailroadRule{name:"r".into(),y:0.0,height:40.0,elements:vec![],paths:vec![LayoutedRailroadPath{points,loopback:false}]}]};
+            config:RailroadConfig{show_markers:false,..Default::default()},rules:vec![LayoutedRailroadRule{name:"r".into(),y:0.0,height:40.0,start_marker:Point{x:70.0,y:20.0},end_marker:Point{x:90.0,y:20.0},elements:vec![],paths:vec![LayoutedRailroadPath{points,loopback:false}]}]};
         let scene=diagram_to_paint_railroad(&diagram,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
         let paths:Vec<_>=scene.instructions.iter().filter_map(|i|if let PaintInstruction::Path(p)=i{Some(p)}else{None}).collect();
         assert_eq!(paths.len(),1);commands_close(&paths[0].commands,&commands);
@@ -122,15 +122,15 @@ fn railroad_circular_authored_choice_keeps_both_branch_directions_and_absolute_c
         let layout=diagram_layout_hierarchy::try_layout_railroad(&input).unwrap();
         let original=layout.clone();let rule=&layout.rules[0];
         assert_eq!(rule.elements.iter().map(|e|(e.x,e.y,e.width,e.height)).collect::<Vec<_>>(),
-            vec![(138.0,16.0,63.0,23.0),(138.0,41.0,63.0,23.0)]);
+            vec![(84.6,16.0,63.0,23.0),(84.6,41.0,63.0,23.0)]);
         let scene=diagram_to_paint_railroad(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
         assert_eq!(layout,original);
         let paths:Vec<_>=scene.instructions.iter().filter_map(|i|if let PaintInstruction::Path(p)=i{Some(p)}else{None}).collect();
         let expected=vec![left.clone(),right.clone(),reflect(&left),reflect(&right),
-            vec![M{x:106.0,y:40.0},L{x:130.0,y:40.0}],vec![M{x:209.0,y:40.0},L{x:233.0,y:40.0}]];
+            vec![M{x:115.0,y:40.0},L{x:130.0,y:40.0}],vec![M{x:209.0,y:40.0},L{x:214.0,y:40.0}]];
         assert_eq!(paths.len(),expected.len());
         for (path,golden) in paths.into_iter().zip(expected) {
-            commands_close(&path.commands,&golden);assert_eq!(path.stroke_dash,None);
+            commands_close(&path.commands,&translated_name_origin(&golden));assert_eq!(path.stroke_dash,None);
             assert_eq!((path.stroke.as_deref(),path.stroke_width),(Some("#000000"),Some(2.0)));
         }
         assert_eq!(scene.metadata,Some(HashMap::from([
@@ -157,18 +157,18 @@ fn railroad_circular_authored_bypass_and_loopback_keep_absolute_geometry_and_com
         let layout=diagram_layout_hierarchy::try_layout_railroad(&input).unwrap();let original=layout.clone();
         let scene=diagram_to_paint_railroad(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
         assert_eq!(layout,original);assert_eq!(layout.rules[0].elements.len(),1);
-        let e=&layout.rules[0].elements[0];assert_eq!((e.x,e.y,e.width,e.height),(138.0,24.0,63.0,23.0));
+        let e=&layout.rules[0].elements[0];assert_eq!((e.x,e.y,e.width,e.height),(84.6,24.0,63.0,23.0));
         let paths:Vec<_>=scene.instructions.iter().filter_map(|i|if let PaintInstruction::Path(p)=i{Some(p)}else{None}).collect();
         let mut expected=Vec::new();
         if loopback {expected.push((loop_golden(),Some(vec![4.0,3.0])));}
         expected.push((vec![M{x:130.0,y:35.5},L{x:138.0,y:35.5}],None));
         expected.push((vec![M{x:201.0,y:35.5},L{x:209.0,y:35.5}],None));
         if bypass {expected.push((bypass_golden(),None));}
-        expected.push((vec![M{x:106.0,y:35.5},L{x:130.0,y:35.5}],None));
-        expected.push((vec![M{x:209.0,y:35.5},L{x:233.0,y:35.5}],None));
+        expected.push((vec![M{x:115.0,y:35.5},L{x:130.0,y:35.5}],None));
+        expected.push((vec![M{x:209.0,y:35.5},L{x:214.0,y:35.5}],None));
         assert_eq!(paths.len(),expected.len());
         for (actual,(commands,dash)) in paths.iter().zip(expected) {
-            commands_close(&actual.commands,&commands);assert_eq!(actual.stroke_dash,dash);
+            commands_close(&actual.commands,&translated_name_origin(&commands));assert_eq!(actual.stroke_dash,dash);
             assert_eq!((actual.stroke.as_deref(),actual.stroke_width),(Some("#000000"),Some(2.0)));
         }
         assert_eq!(scene.metadata,Some(HashMap::from([
@@ -181,4 +181,14 @@ fn railroad_circular_authored_bypass_and_loopback_keep_absolute_geometry_and_com
         ])));cells+=1;
     }}
     assert_eq!(cells,6);
+}
+
+// Authored font20/name "r =" reserves36.6+20 and expression ingress20:
+// new origin76.6, old130. Root marker ports above are separately tabulated.
+fn translated_name_origin(commands:&[PathCommand])->Vec<PathCommand> {
+    commands.iter().map(|c|match *c {
+        M{x,y}=>M{x:x-53.4,y}, L{x,y}=>L{x:x-53.4,y},
+        C{cx1,cy1,cx2,cy2,x,y}=>C{cx1:cx1-53.4,cy1,cx2:cx2-53.4,cy2,x:x-53.4,y},
+        _=>panic!("unexpected authored command"),
+    }).collect()
 }

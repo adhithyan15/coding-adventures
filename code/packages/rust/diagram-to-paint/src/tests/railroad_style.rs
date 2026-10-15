@@ -21,10 +21,10 @@ fn railroad_style_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let options=DiagramToPaintOptions{background:base.background,device_pixel_ratio:base.device_pixel_ratio,
             label_font:base.label_font,title_font:base.title_font,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
         let scene=diagram_to_paint_railroad(&layout,&options);
-        // The shared paint font cache resolves this one font once for the
-        // rule name and A/B/C leaves. Metadata-only transport cannot satisfy
-        // the actual resolver query, including family/weight/style/stretch.
-        assert_eq!(*resolver.0.borrow(),vec![FontQuery::named("Courier New")]);
+        // Bold rule labels and normal leaves have two distinct font keys.
+        // Repeated normal leaves share the cache; compare ordered real queries.
+        let mut bold_query=FontQuery::named("Courier New");bold_query.weight=700;
+        assert_eq!(*resolver.0.borrow(),vec![bold_query,FontQuery::named("Courier New")]);
         let kinds:Vec<_>=scene.instructions.iter().map(|i|match i{PaintInstruction::Ellipse(_)=>0,
             PaintInstruction::Path(_)=>1,PaintInstruction::Rect(_)=>2,PaintInstruction::GlyphRun(_)=>3,_=>4}).collect();
         let mut expected_kinds=if markers{vec![0,0]}else{vec![]};
@@ -41,9 +41,8 @@ fn railroad_style_retains_ordered_shapes_glyphs_and_complete_metadata() {
         ])));
         let ellipses:Vec<_>=scene.instructions.iter().filter_map(|i|if let PaintInstruction::Ellipse(e)=i{Some(e)}else{None}).collect();
         assert_eq!(ellipses.len(),if markers{2}else{0});
-        let end=rule.paths.iter().flat_map(|p|&p.points).map(|p|p.x).fold(140.0,f64::max);
-        for (e,cx) in ellipses.iter().zip([padding+100.0,end+6.0]) {
-            assert_eq!((e.cx,e.cy,e.rx,e.ry),(cx,rule.y+rule.height/2.0,8.0,8.0));assert_eq!(e.fill.as_deref(),Some("#7c2d12"));assert_eq!(e.stroke,None);
+        for (e,marker) in ellipses.iter().zip([&rule.start_marker,&rule.end_marker]) {
+            assert_eq!((e.cx,e.cy,e.rx,e.ry),(marker.x,marker.y,8.0,8.0));assert_eq!(e.fill.as_deref(),Some("#7c2d12"));assert_eq!(e.stroke,None);
         }
         let paths:Vec<_>=scene.instructions.iter().filter_map(|i|if let PaintInstruction::Path(p)=i{Some(p.clone())}else{None}).collect();
         let expected:Vec<_>=rule.paths.iter().map(|p|line_path(&p.points,"#dc2626",3.0)).collect();assert_eq!(paths,expected);
@@ -55,7 +54,8 @@ fn railroad_style_retains_ordered_shapes_glyphs_and_complete_metadata() {
         }
         let mut font=options.label_font.clone();font.family="Courier New".into();font.size=font_size;
         let name_height=28.0_f64.max(font_size*1.15);
-        let mut children=vec![text_node_no_wrap("r",padding,rule.y+rule.height/2.0-name_height/2.0,92.0,name_height,font.clone(),Color{r:88,g:28,b:135,a:255})];
+        let mut name_font=font.clone();name_font.weight=700;
+        let mut children=vec![text_node_no_wrap("r =",padding,rule.start_marker.y-name_height/2.0,3.0*font_size*0.61+20.0,name_height,name_font,Color{r:88,g:28,b:135,a:255})];
         for (e,color) in rule.elements.iter().zip([Color{r:20,g:83,b:45,a:255},Color{r:23,g:37,b:84,a:255},Color{r:23,g:37,b:84,a:255}]) {
             let height=24.0_f64.max(font_size*1.15).min(e.height);
             children.push(text_node_no_wrap(&e.label,e.x+padding,e.y+(e.height-height)/2.0,e.width-2.0*padding,height,font.clone(),color));
@@ -63,7 +63,7 @@ fn railroad_style_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let expected=layout_to_paint(&PositionedNode{x:0.0,y:0.0,width:layout.width,height:layout.height,id:None,content:None,children,ext:HashMap::new()},&LayoutToPaintOptions{width:layout.width,height:layout.height,background:Color{r:0,g:0,b:0,a:0},device_pixel_ratio:1.0,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&FakeResolver});
         let glyphs=|v:&[PaintInstruction]|v.iter().filter_map(|i|if let PaintInstruction::GlyphRun(g)=i{Some(g.clone())}else{None}).collect::<Vec<_>>();
         let actual=glyphs(&scene.instructions);assert_eq!(actual,glyphs(&expected.instructions),"font={font_size},p={padding},markers={markers}");assert_eq!(actual.len(),4);
-        for (g,e) in actual[1..].iter().zip(&rule.elements) {assert_eq!(g.glyphs.len(),1);let p=&g.glyphs[0];assert!(p.x>=e.x&&p.x+g.font_size/2.0<=e.x+e.width+0.01);assert!(p.y-g.font_size*0.8+0.01>=e.y&&p.y+g.font_size*0.2<=e.y+e.height+0.01,"font={font_size}: {g:?} in {e:?}");}
+        for (g,e) in actual[1..].iter().zip(&rule.elements) {assert_eq!(g.glyphs.len(),e.label.chars().count());for p in &g.glyphs {assert!(p.x>=e.x&&p.x+g.font_size/2.0<=e.x+e.width+0.01);assert!(p.y-g.font_size*0.8+0.01>=e.y&&p.y+g.font_size*0.2<=e.y+e.height+0.01,"font={font_size}: {g:?} in {e:?}");}}
         assert_eq!(config.font_size,font_size);cells+=1;
     }}}
     assert_eq!(cells,40);
@@ -81,10 +81,10 @@ fn railroad_theme_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let options=DiagramToPaintOptions{background:base.background,device_pixel_ratio:base.device_pixel_ratio,
             label_font:base.label_font,title_font:base.title_font,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
         let scene=diagram_to_paint_railroad(&layout,&options);
-        // The shared paint font cache resolves this one font once for the
-        // rule name and A/B/C leaves. Metadata-only transport cannot satisfy
-        // the actual resolver query, including family/weight/style/stretch.
-        assert_eq!(*resolver.0.borrow(),vec![FontQuery::named("Courier New")]);
+        // Bold rule labels and normal leaves have two distinct font keys.
+        // Repeated normal leaves share the cache; compare ordered real queries.
+        let mut bold_query=FontQuery::named("Courier New");bold_query.weight=700;
+        assert_eq!(*resolver.0.borrow(),vec![bold_query,FontQuery::named("Courier New")]);
         let kinds:Vec<_>=scene.instructions.iter().map(|i|match i{PaintInstruction::Ellipse(_)=>0,
             PaintInstruction::Path(_)=>1,PaintInstruction::Rect(_)=>2,PaintInstruction::GlyphRun(_)=>3,_=>4}).collect();
         let mut expected_kinds=if markers{vec![0,0]}else{vec![]};
@@ -101,9 +101,8 @@ fn railroad_theme_retains_ordered_shapes_glyphs_and_complete_metadata() {
         ])));
         let ellipses:Vec<_>=scene.instructions.iter().filter_map(|i|if let PaintInstruction::Ellipse(e)=i{Some(e)}else{None}).collect();
         assert_eq!(ellipses.len(),if markers{2}else{0});
-        let end=rule.paths.iter().flat_map(|p|&p.points).map(|p|p.x).fold(140.0,f64::max);
-        for (e,cx) in ellipses.iter().zip([padding+100.0,end+6.0]) {
-            assert_eq!((e.cx,e.cy,e.rx,e.ry),(cx,rule.y+rule.height/2.0,8.0,8.0));assert_eq!(e.fill.as_deref(),Some("#7c2d12"));assert_eq!(e.stroke,None);
+        for (e,marker) in ellipses.iter().zip([&rule.start_marker,&rule.end_marker]) {
+            assert_eq!((e.cx,e.cy,e.rx,e.ry),(marker.x,marker.y,8.0,8.0));assert_eq!(e.fill.as_deref(),Some("#7c2d12"));assert_eq!(e.stroke,None);
         }
         let paths:Vec<_>=scene.instructions.iter().filter_map(|i|if let PaintInstruction::Path(p)=i{Some(p.clone())}else{None}).collect();
         let expected:Vec<_>=rule.paths.iter().map(|p|line_path(&p.points,"#dc2626",3.0)).collect();assert_eq!(paths,expected);
@@ -115,7 +114,8 @@ fn railroad_theme_retains_ordered_shapes_glyphs_and_complete_metadata() {
         }
         let mut font=options.label_font.clone();font.family="Courier New".into();font.size=font_size;
         let name_height=28.0_f64.max(font_size*1.15);
-        let mut children=vec![text_node_no_wrap("r",padding,rule.y+rule.height/2.0-name_height/2.0,92.0,name_height,font.clone(),Color{r:88,g:28,b:135,a:255})];
+        let mut name_font=font.clone();name_font.weight=700;
+        let mut children=vec![text_node_no_wrap("r =",padding,rule.start_marker.y-name_height/2.0,3.0*font_size*0.61+20.0,name_height,name_font,Color{r:88,g:28,b:135,a:255})];
         for (e,color) in rule.elements.iter().zip([Color{r:20,g:83,b:45,a:255},Color{r:23,g:37,b:84,a:255},Color{r:23,g:37,b:84,a:255}]) {
             let height=24.0_f64.max(font_size*1.15).min(e.height);
             children.push(text_node_no_wrap(&e.label,e.x+padding,e.y+(e.height-height)/2.0,e.width-2.0*padding,height,font.clone(),color));
@@ -123,7 +123,7 @@ fn railroad_theme_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let expected=layout_to_paint(&PositionedNode{x:0.0,y:0.0,width:layout.width,height:layout.height,id:None,content:None,children,ext:HashMap::new()},&LayoutToPaintOptions{width:layout.width,height:layout.height,background:Color{r:0,g:0,b:0,a:0},device_pixel_ratio:1.0,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&FakeResolver});
         let glyphs=|v:&[PaintInstruction]|v.iter().filter_map(|i|if let PaintInstruction::GlyphRun(g)=i{Some(g.clone())}else{None}).collect::<Vec<_>>();
         let actual=glyphs(&scene.instructions);assert_eq!(actual,glyphs(&expected.instructions),"font={font_size},p={padding},markers={markers}");assert_eq!(actual.len(),4);
-        for (g,e) in actual[1..].iter().zip(&rule.elements) {assert_eq!(g.glyphs.len(),1);let p=&g.glyphs[0];assert!(p.x>=e.x&&p.x+g.font_size/2.0<=e.x+e.width+0.01);assert!(p.y-g.font_size*0.8+0.01>=e.y&&p.y+g.font_size*0.2<=e.y+e.height+0.01,"font={font_size}: {g:?} in {e:?}");}
+        for (g,e) in actual[1..].iter().zip(&rule.elements) {assert_eq!(g.glyphs.len(),e.label.chars().count());for p in &g.glyphs {assert!(p.x>=e.x&&p.x+g.font_size/2.0<=e.x+e.width+0.01);assert!(p.y-g.font_size*0.8+0.01>=e.y&&p.y+g.font_size*0.2<=e.y+e.height+0.01,"font={font_size}: {g:?} in {e:?}");}}
         assert_eq!(config.font_size,font_size);cells+=1;
     }}}
     assert_eq!(cells,40);
@@ -141,10 +141,10 @@ fn railroad_sanitize_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let options=DiagramToPaintOptions{background:base.background,device_pixel_ratio:base.device_pixel_ratio,
             label_font:base.label_font,title_font:base.title_font,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
         let scene=diagram_to_paint_railroad(&layout,&options);
-        // The shared paint font cache resolves this one font once for the
-        // rule name and A/B/C leaves. Metadata-only transport cannot satisfy
-        // the actual resolver query, including family/weight/style/stretch.
-        assert_eq!(*resolver.0.borrow(),vec![FontQuery::named("Courier New")]);
+        // Bold rule labels and normal leaves have two distinct font keys.
+        // Repeated normal leaves share the cache; compare ordered real queries.
+        let mut bold_query=FontQuery::named("Courier New");bold_query.weight=700;
+        assert_eq!(*resolver.0.borrow(),vec![bold_query,FontQuery::named("Courier New")]);
         let kinds:Vec<_>=scene.instructions.iter().map(|i|match i{PaintInstruction::Ellipse(_)=>0,
             PaintInstruction::Path(_)=>1,PaintInstruction::Rect(_)=>2,PaintInstruction::GlyphRun(_)=>3,_=>4}).collect();
         let mut expected_kinds=if markers{vec![0,0]}else{vec![]};
@@ -161,9 +161,8 @@ fn railroad_sanitize_retains_ordered_shapes_glyphs_and_complete_metadata() {
         ])));
         let ellipses:Vec<_>=scene.instructions.iter().filter_map(|i|if let PaintInstruction::Ellipse(e)=i{Some(e)}else{None}).collect();
         assert_eq!(ellipses.len(),if markers{2}else{0});
-        let end=rule.paths.iter().flat_map(|p|&p.points).map(|p|p.x).fold(140.0,f64::max);
-        for (e,cx) in ellipses.iter().zip([padding+100.0,end+6.0]) {
-            assert_eq!((e.cx,e.cy,e.rx,e.ry),(cx,rule.y+rule.height/2.0,8.0,8.0));assert_eq!(e.fill.as_deref(),Some("#dc2626"));assert_eq!(e.stroke,None);
+        for (e,marker) in ellipses.iter().zip([&rule.start_marker,&rule.end_marker]) {
+            assert_eq!((e.cx,e.cy,e.rx,e.ry),(marker.x,marker.y,8.0,8.0));assert_eq!(e.fill.as_deref(),Some("#dc2626"));assert_eq!(e.stroke,None);
         }
         let paths:Vec<_>=scene.instructions.iter().filter_map(|i|if let PaintInstruction::Path(p)=i{Some(p.clone())}else{None}).collect();
         let expected:Vec<_>=rule.paths.iter().map(|p|line_path(&p.points,"#dc2626",3.0)).collect();assert_eq!(paths,expected);
@@ -175,7 +174,8 @@ fn railroad_sanitize_retains_ordered_shapes_glyphs_and_complete_metadata() {
         }
         let mut font=options.label_font.clone();font.family="Courier New".into();font.size=font_size;
         let name_height=28.0_f64.max(font_size*1.15);
-        let mut children=vec![text_node_no_wrap("r",padding,rule.y+rule.height/2.0-name_height/2.0,92.0,name_height,font.clone(),Color{r:88,g:28,b:135,a:255})];
+        let mut name_font=font.clone();name_font.weight=700;
+        let mut children=vec![text_node_no_wrap("r =",padding,rule.start_marker.y-name_height/2.0,3.0*font_size*0.61+20.0,name_height,name_font,Color{r:88,g:28,b:135,a:255})];
         for (e,color) in rule.elements.iter().zip([Color{r:20,g:83,b:45,a:255},Color{r:23,g:37,b:84,a:255},Color{r:23,g:37,b:84,a:255}]) {
             let height=24.0_f64.max(font_size*1.15).min(e.height);
             children.push(text_node_no_wrap(&e.label,e.x+padding,e.y+(e.height-height)/2.0,e.width-2.0*padding,height,font.clone(),color));
@@ -183,7 +183,7 @@ fn railroad_sanitize_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let expected=layout_to_paint(&PositionedNode{x:0.0,y:0.0,width:layout.width,height:layout.height,id:None,content:None,children,ext:HashMap::new()},&LayoutToPaintOptions{width:layout.width,height:layout.height,background:Color{r:0,g:0,b:0,a:0},device_pixel_ratio:1.0,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&FakeResolver});
         let glyphs=|v:&[PaintInstruction]|v.iter().filter_map(|i|if let PaintInstruction::GlyphRun(g)=i{Some(g.clone())}else{None}).collect::<Vec<_>>();
         let actual=glyphs(&scene.instructions);assert_eq!(actual,glyphs(&expected.instructions),"font={font_size},p={padding},markers={markers}");assert_eq!(actual.len(),4);
-        for (g,e) in actual[1..].iter().zip(&rule.elements) {assert_eq!(g.glyphs.len(),1);let p=&g.glyphs[0];assert!(p.x>=e.x&&p.x+g.font_size/2.0<=e.x+e.width+0.01);assert!(p.y-g.font_size*0.8+0.01>=e.y&&p.y+g.font_size*0.2<=e.y+e.height+0.01,"font={font_size}: {g:?} in {e:?}");}
+        for (g,e) in actual[1..].iter().zip(&rule.elements) {assert_eq!(g.glyphs.len(),e.label.chars().count());for p in &g.glyphs {assert!(p.x>=e.x&&p.x+g.font_size/2.0<=e.x+e.width+0.01);assert!(p.y-g.font_size*0.8+0.01>=e.y&&p.y+g.font_size*0.2<=e.y+e.height+0.01,"font={font_size}: {g:?} in {e:?}");}}
         assert_eq!(config.font_size,font_size);cells+=1;
     }}}
     assert_eq!(cells,40);
@@ -201,10 +201,10 @@ fn railroad_compact_true_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let options=DiagramToPaintOptions{background:base.background,device_pixel_ratio:base.device_pixel_ratio,
             label_font:base.label_font,title_font:base.title_font,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
         let scene=diagram_to_paint_railroad(&layout,&options);
-        // The shared paint font cache resolves this one font once for the
-        // rule name and A/B/C leaves. Metadata-only transport cannot satisfy
-        // the actual resolver query, including family/weight/style/stretch.
-        assert_eq!(*resolver.0.borrow(),vec![FontQuery::named("Courier New")]);
+        // Bold rule labels and normal leaves have two distinct font keys.
+        // Repeated normal leaves share the cache; compare ordered real queries.
+        let mut bold_query=FontQuery::named("Courier New");bold_query.weight=700;
+        assert_eq!(*resolver.0.borrow(),vec![bold_query,FontQuery::named("Courier New")]);
         let kinds:Vec<_>=scene.instructions.iter().map(|i|match i{PaintInstruction::Ellipse(_)=>0,
             PaintInstruction::Path(_)=>1,PaintInstruction::Rect(_)=>2,PaintInstruction::GlyphRun(_)=>3,_=>4}).collect();
         let mut expected_kinds=if markers{vec![0,0]}else{vec![]};
@@ -221,9 +221,8 @@ fn railroad_compact_true_retains_ordered_shapes_glyphs_and_complete_metadata() {
         ])));
         let ellipses:Vec<_>=scene.instructions.iter().filter_map(|i|if let PaintInstruction::Ellipse(e)=i{Some(e)}else{None}).collect();
         assert_eq!(ellipses.len(),if markers{2}else{0});
-        let end=rule.paths.iter().flat_map(|p|&p.points).map(|p|p.x).fold(140.0,f64::max);
-        for (e,cx) in ellipses.iter().zip([padding+100.0,end+6.0]) {
-            assert_eq!((e.cx,e.cy,e.rx,e.ry),(cx,rule.y+rule.height/2.0,8.0,8.0));assert_eq!(e.fill.as_deref(),Some("#7c2d12"));assert_eq!(e.stroke,None);
+        for (e,marker) in ellipses.iter().zip([&rule.start_marker,&rule.end_marker]) {
+            assert_eq!((e.cx,e.cy,e.rx,e.ry),(marker.x,marker.y,8.0,8.0));assert_eq!(e.fill.as_deref(),Some("#7c2d12"));assert_eq!(e.stroke,None);
         }
         let paths:Vec<_>=scene.instructions.iter().filter_map(|i|if let PaintInstruction::Path(p)=i{Some(p.clone())}else{None}).collect();
         let expected:Vec<_>=rule.paths.iter().map(|p|line_path(&p.points,"#dc2626",3.0)).collect();assert_eq!(paths,expected);
@@ -235,7 +234,8 @@ fn railroad_compact_true_retains_ordered_shapes_glyphs_and_complete_metadata() {
         }
         let mut font=options.label_font.clone();font.family="Courier New".into();font.size=font_size;
         let name_height=28.0_f64.max(font_size*1.15);
-        let mut children=vec![text_node_no_wrap("r",padding,rule.y+rule.height/2.0-name_height/2.0,92.0,name_height,font.clone(),Color{r:88,g:28,b:135,a:255})];
+        let mut name_font=font.clone();name_font.weight=700;
+        let mut children=vec![text_node_no_wrap("r =",padding,rule.start_marker.y-name_height/2.0,3.0*font_size*0.61+20.0,name_height,name_font,Color{r:88,g:28,b:135,a:255})];
         for (e,color) in rule.elements.iter().zip([Color{r:20,g:83,b:45,a:255},Color{r:23,g:37,b:84,a:255},Color{r:23,g:37,b:84,a:255}]) {
             let height=24.0_f64.max(font_size*1.15).min(e.height);
             children.push(text_node_no_wrap(&e.label,e.x+padding,e.y+(e.height-height)/2.0,e.width-2.0*padding,height,font.clone(),color));
@@ -243,7 +243,7 @@ fn railroad_compact_true_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let expected=layout_to_paint(&PositionedNode{x:0.0,y:0.0,width:layout.width,height:layout.height,id:None,content:None,children,ext:HashMap::new()},&LayoutToPaintOptions{width:layout.width,height:layout.height,background:Color{r:0,g:0,b:0,a:0},device_pixel_ratio:1.0,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&FakeResolver});
         let glyphs=|v:&[PaintInstruction]|v.iter().filter_map(|i|if let PaintInstruction::GlyphRun(g)=i{Some(g.clone())}else{None}).collect::<Vec<_>>();
         let actual=glyphs(&scene.instructions);assert_eq!(actual,glyphs(&expected.instructions),"font={font_size},p={padding},markers={markers}");assert_eq!(actual.len(),4);
-        for (g,e) in actual[1..].iter().zip(&rule.elements) {assert_eq!(g.glyphs.len(),1);let p=&g.glyphs[0];assert!(p.x>=e.x&&p.x+g.font_size/2.0<=e.x+e.width+0.01);assert!(p.y-g.font_size*0.8+0.01>=e.y&&p.y+g.font_size*0.2<=e.y+e.height+0.01,"font={font_size}: {g:?} in {e:?}");}
+        for (g,e) in actual[1..].iter().zip(&rule.elements) {assert_eq!(g.glyphs.len(),e.label.chars().count());for p in &g.glyphs {assert!(p.x>=e.x&&p.x+g.font_size/2.0<=e.x+e.width+0.01);assert!(p.y-g.font_size*0.8+0.01>=e.y&&p.y+g.font_size*0.2<=e.y+e.height+0.01,"font={font_size}: {g:?} in {e:?}");}}
         assert_eq!(config.font_size,font_size);cells+=1;
     }}}
     assert_eq!(cells,40);
