@@ -2,6 +2,21 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04a Wardley current checkpoint -->
+Latest main6c4e Wardley12paths/24blobs rawintegration WITHHELD by static225cc760,
+manifestbce452cf: derived numeric overflow, axis1 stagefont-1, unsound quoted/
+nested config and typed/body-size admission. Spec committed before tests/import/
+repair in separate R2 branch from native14e3. R1e3 fullnative38995/source/HEAD/
+index/target stay FROZEN; strict6/focus50/1/1 pass/source2cc7257b, fullterminal
+PENDING. Wardley tests/implementation have NOT started; own checked typed/local
+source adapter and independent whole-scene oracles must precede acceptance.
+Preserve37Ishi/232Venn/67IR, native6/166 and prior failure/receipt/source identities.
+SolePR17288 publishede16c UNMERGED/CONFLICTING/AUTOOFF; hosted currenthead gates,
+actual macOS rootcause, native14 fullcarrier/Wardley/Miri remain OPEN.
+Miri DEFERRED/PENDING, frozen run/source/inputs/target/receipts untouched/unpolled,
+no duplicate/termination. FullClosure/outputbyte/full lineage/CV04b OPEN.
+<!-- /CV04a Wardley current checkpoint -->
+
 <!-- CV04a native14 current checkpoint -->
 Latest inspected main47ee139e (#17596) adds9 native14 compiler/LANG paths after
 integrated020c. Raw incoming security5172625c WITHHOLDS integration:3 shared
