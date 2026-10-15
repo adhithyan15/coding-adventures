@@ -411,6 +411,9 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
             assert_eq!((diagram.config.node_radius, diagram.config.node_label_offset), (9.0, 12.0));
             assert_eq!((diagram.config.axis_font_size, diagram.config.label_font_size), (15.0, 13.0));
             assert!(diagram.config.show_grid); assert!(!diagram.config.use_max_width);
+            assert_eq!((&diagram.config.theme.background_color, &diagram.config.theme.axis_color,
+                &diagram.config.theme.component_fill, &diagram.config.theme.link_stroke),
+                (&"#f8fafc".to_string(), &"#123456".to_string(), &"#abcdef".to_string(), &"#6789ab".to_string()));
         }
     }
 }
