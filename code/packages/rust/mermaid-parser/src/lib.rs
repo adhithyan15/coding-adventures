@@ -5528,7 +5528,15 @@ fn venn_object_member<'a>(source: &'a str, key: &str) -> Option<&'a str> {
 }
 
 fn venn_init_config(source: &str) -> Option<&str> {
-    source.lines().find_map(|line| {
+    // Match the semantic preparation envelope. Init-looking literal content in
+    // the leading YAML document is data, even if its line has directive syntax.
+    let mut lines = source.lines().peekable();
+    while lines.peek().is_some_and(|line| line.trim().is_empty()) { lines.next(); }
+    if lines.peek().is_some_and(|line| line.trim() == "---") {
+        lines.next();
+        for line in lines.by_ref() { if line.trim() == "---" { break; } }
+    }
+    lines.find_map(|line| {
         let directive = line.trim().strip_prefix("%%{")?.strip_suffix("}%%")?.trim();
         let payload = directive.strip_prefix("init")?.trim_start().strip_prefix(':')?.trim();
         let end = venn_object_end(payload)?;
