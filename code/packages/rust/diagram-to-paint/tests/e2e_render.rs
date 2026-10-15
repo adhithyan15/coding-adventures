@@ -4414,6 +4414,38 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_mermaid_railroad_theme_fallbacks_to_png() {
+        let diagram = parse_railroad("---\nthemeVariables:\n  fontFamily: Georgia\n  fontSize: 17px\n  secondBkg: '#fef3c7'\n  secondaryBorderColor: '#b45309'\n  secondaryTextColor: '#78350f'\n  mainBkg: '#dbeafe'\n  primaryBorderColor: '#1d4ed8'\n  primaryTextColor: '#172554'\n  lineColor: '#15803d'\n  tertiaryColor: '#fce7f3'\n  tertiaryBorderColor: '#be185d'\n  titleColor: '#581c87'\nconfig:\n  railroad:\n    terminalFill: '#dcfce7'\n---\nrailroad-beta\nvalue = sequence(terminal(\"x\"), nonterminal(\"item\"), special(\"end\"));")
+            .expect("railroad theme fallback parse failed");
+        let layout = layout_railroad(&diagram);
+        assert_eq!(layout.config.font_size, 17.0);
+        assert!(layout.rules[0].elements[1].width > 70.0);
+        let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_railroad(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("railroad.fontFamily")), Some(&"Georgia".to_string()));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#15803d"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(marker) if marker.fill.as_deref() == Some("#15803d"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dcfce7") && rect.stroke.as_deref() == Some("#b45309"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dbeafe") && rect.stroke.as_deref() == Some("#1d4ed8"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fce7f3") && rect.stroke.as_deref() == Some("#be185d"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 17.0
+                && run.fill.as_deref() == Some("rgb(88, 28, 135)"))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_railroad_theme_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
     fn render_mermaid_railroad_ebnf_to_png() {
         let diagram = parse_railroad("railroad-ebnf-beta\ntitle 'Expression grammar'\nexpression = term, ( '+' term | '-' term )*;\nterm = factor, ( '*' factor | '/' factor )*;\nfactor = number | '(', expression, ')';")
             .expect("railroad EBNF parse failed");

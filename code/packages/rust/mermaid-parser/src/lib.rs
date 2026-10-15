@@ -7682,9 +7682,21 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
     let front_matter = mermaid_front_matter_section(source, &["config", "railroad"]);
     let config_source = mermaid_directive_object(source, "railroad")
         .or(front_matter.as_deref()).unwrap_or("");
+    let theme_front_matter = mermaid_front_matter_section(source, &["themeVariables"])
+        .or_else(|| mermaid_front_matter_section(source, &["config", "themeVariables"]));
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .or(theme_front_matter.as_deref()).unwrap_or("");
     let value = |name: &str| {
         quadrant_directive_value(config_source, name).or_else(|| {
             config_source.lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name).then(|| value.trim().trim_matches(['\"', '\'']).to_string())
+            })
+        }).filter(|value| !value.is_empty())
+    };
+    let theme_value = |name: &str| {
+        quadrant_directive_value(theme_source, name).or_else(|| {
+            theme_source.lines().find_map(|line| {
                 let (key, value) = line.trim().split_once(':')?;
                 (key.trim() == name).then(|| value.trim().trim_matches(['\"', '\'']).to_string())
             })
@@ -7714,7 +7726,16 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
         }
     };
     let string = |name: &str, default: &str| value(name).unwrap_or_else(|| default.to_string());
-    let font_size = parse("fontSize", defaults.font_size)?;
+    let theme_string = |primary: &str, secondary: Option<&str>, default: &str| {
+        theme_value(primary)
+            .or_else(|| secondary.and_then(&theme_value))
+            .unwrap_or_else(|| default.to_string())
+    };
+    let theme_font_size = theme_value("fontSize")
+        .and_then(|value| value.trim_end_matches("px").parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0)
+        .unwrap_or(defaults.font_size);
+    let font_size = parse("fontSize", theme_font_size)?;
     if font_size <= 0.0 {
         return Err(ParseError {
             message: "Mermaid Railroad fontSize must be a positive number".into(), line: 1, col: 1,
@@ -7726,19 +7747,19 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
         horizontal_separation: parse("horizontalSeparation", 10.0)?,
         arc_radius: parse("arcRadius", defaults.arc_radius)?,
         font_size,
-        font_family: string("fontFamily", &defaults.font_family),
-        terminal_fill: string("terminalFill", &defaults.terminal_fill),
-        terminal_stroke: string("terminalStroke", &defaults.terminal_stroke),
-        terminal_text_color: string("terminalTextColor", &defaults.terminal_text_color),
-        non_terminal_fill: string("nonTerminalFill", &defaults.non_terminal_fill),
-        non_terminal_stroke: string("nonTerminalStroke", &defaults.non_terminal_stroke),
-        non_terminal_text_color: string("nonTerminalTextColor", &defaults.non_terminal_text_color),
-        line_color: string("lineColor", &defaults.line_color),
+        font_family: string("fontFamily", &theme_string("fontFamily", None, &defaults.font_family)),
+        terminal_fill: string("terminalFill", &theme_string("secondBkg", Some("secondaryColor"), &defaults.terminal_fill)),
+        terminal_stroke: string("terminalStroke", &theme_string("secondaryBorderColor", Some("lineColor"), &defaults.terminal_stroke)),
+        terminal_text_color: string("terminalTextColor", &theme_string("secondaryTextColor", Some("textColor"), &defaults.terminal_text_color)),
+        non_terminal_fill: string("nonTerminalFill", &theme_string("mainBkg", Some("background"), &defaults.non_terminal_fill)),
+        non_terminal_stroke: string("nonTerminalStroke", &theme_string("primaryBorderColor", Some("lineColor"), &defaults.non_terminal_stroke)),
+        non_terminal_text_color: string("nonTerminalTextColor", &theme_string("primaryTextColor", Some("textColor"), &defaults.non_terminal_text_color)),
+        line_color: string("lineColor", &theme_string("lineColor", None, &defaults.line_color)),
         stroke_width: parse("strokeWidth", defaults.stroke_width)?,
-        marker_fill: string("markerFill", &defaults.marker_fill),
-        special_fill: string("specialFill", &defaults.special_fill),
-        special_stroke: string("specialStroke", &defaults.special_stroke),
-        rule_name_color: string("ruleNameColor", &defaults.rule_name_color),
+        marker_fill: string("markerFill", &theme_string("lineColor", None, &defaults.marker_fill)),
+        special_fill: string("specialFill", &theme_string("tertiaryColor", Some("secondaryColor"), &defaults.special_fill)),
+        special_stroke: string("specialStroke", &theme_string("tertiaryBorderColor", Some("secondaryBorderColor"), &defaults.special_stroke)),
+        rule_name_color: string("ruleNameColor", &theme_string("titleColor", Some("textColor"), &defaults.rule_name_color)),
         show_markers: parse_bool("showMarkers", defaults.show_markers)?,
         marker_radius: parse("markerRadius", defaults.marker_radius)?,
     })
