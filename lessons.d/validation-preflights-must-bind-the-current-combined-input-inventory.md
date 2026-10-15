@@ -84,3 +84,13 @@ Unicode JSON with explicit UTF-8 on Windows; use simple statements rather than
 an invalid assignment expression inside a comprehension iterable. Resolve real
 package paths before file reads and bound glob inventories instead of dumping
 hundreds of historical shards. These diagnostic failures give no test acceptance.
+
+A dedicated absolute-unit cap increase changes signed and wrapped boundaries,
+not only the six obvious direct/nested literal shapes. The native14 focused run
+actually failed49P/1F because old13-minus1 consumes14 absolute units and is now
+admitted; two old wrapped13-plus1 cases have the same budget. Preserve that failed
+101 log/incomplete wrapper1 receipt. Migrate exactly those three refusals to
+15-unit counterparts, add their old14-unit expressions as explicit positive
+formatter/read-once controls, and retain the new14-minus1/rounding/exp/structural/
+effect/work refusals. Production and caps stay fixed; rerun the actual focused
+suite at the new source rather than relabeling the failed earlier receipt.

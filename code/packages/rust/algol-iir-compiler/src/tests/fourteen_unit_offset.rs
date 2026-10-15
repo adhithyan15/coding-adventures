@@ -5,6 +5,9 @@ use super::*;
 fn canonical_fourteen_unit_forms_have_typed_output_routes_and_independent_arms() {
     // These include every formerly refused fourteen-unit boundary shape.
     for expression in [
+        "entier(sign(pick()) + 13 - 1)",
+        "entier(abs(entier(sign(pick()) + 13) + 1))",
+        "entier(entier(abs(sign(pick()) + 13) + 1))",
         "entier(sign(pick()) + 14)",
         "entier(sign(pick()) - 14)",
         "entier((sign(pick()) + 7) + 7)",

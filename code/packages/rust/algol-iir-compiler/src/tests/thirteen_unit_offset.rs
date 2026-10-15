@@ -74,9 +74,9 @@ fn thirteen_unit_proofs_refuse_fifteen_units_rounding_traps_and_exp_widening() {
         "entier((sign(pick()) + 13) * 1)",
         "entier(exp(sign(pick())) + 13)",
         "entier(exp(sign(pick()) + 13))",
-        "entier(sign(pick()) + 13 - 1)",
-        "entier(abs(entier(sign(pick()) + 13) + 1))",
-        "entier(entier(abs(sign(pick()) + 13) + 1))",
+        "entier(sign(pick()) + 14 - 1)",
+        "entier(abs(entier(sign(pick()) + 14) + 1))",
+        "entier(entier(abs(sign(pick()) + 14) + 1))",
     ] {
         let source = format!("begin real procedure pick; pick := 3.5; real saved; saved := {expression}; output(saved) end");
         assert!(matches!(compile_source(&source, "thirteen_unit_refusal"), Err(CompileError::Type(m)) if m.contains("cannot print a real value")), "{source}");
