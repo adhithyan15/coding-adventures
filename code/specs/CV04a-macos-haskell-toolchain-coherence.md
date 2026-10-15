@@ -96,3 +96,16 @@ full required checks remain mandatory. Update docs/lessons/backlog/issues and
 obtain new exact-source security review; preserve the original WITHHELD report.
 
 Generated-driver execution addendum: the real portable process test found Windows os.execv splitting spaced arguments. Execute the real hsc2hs with a subprocess argument vector, relay its exact normal exit code, and re-raise POSIX terminating signals in the wrapper process. Preserve the real eight-pass/one-fail d646 receipt; this strengthens portable argument transport without claiming macOS compiler acceptance.
+
+## Compiler identity addendum before behavior
+
+The edeb review found that checking PATH GHC9.4.8 did not bind Cabal's effective
+compiler: preserved with-compiler or program-locations ghc-location could select
+another compatible compiler. Refuse existing active compiler selectors, including
+normalized names and structural variants, before publication. Pin the discovered
+absolute, version-checked GHC path in the overlay's managed ghc-location field.
+The same pinned overlay must drive every Cabal refusal and positive probe and
+subsequent builds. Preserve commented selectors and all unrelated configuration.
+Commit executable refusal and exact-path tests before this repair; repeat local
+checks and independent exact-source review. Hosted macOS acceptance remains
+PENDING; native9 is separately terminal1809P0F1existingignored/78 plus strict0.
