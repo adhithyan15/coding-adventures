@@ -139,7 +139,10 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 1422 -> 1428: chapter 266 retrieves already-owned market language, adds
     // one first-person buyer form and one price-exchange frame, then closes
     // with two model-free retrievals. It adds no idiom, sense, or culture claim.
-    lessons: 1428,
+    // 1428 -> 1434: chapter 267 retrieves already-owned school language, adds
+    // one school-plan frame, then closes with two model-free school-day plans.
+    // It adds no idiom, sense, or culture claim.
+    lessons: 1434,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

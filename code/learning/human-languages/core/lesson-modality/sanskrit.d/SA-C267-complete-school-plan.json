@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C267-complete-school-plan",
+    "language": "sanskrit",
+    "chapter": 267,
+    "sequence": 15850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f28f615b29eaf61"
+  },
+  "findings": []
+}
