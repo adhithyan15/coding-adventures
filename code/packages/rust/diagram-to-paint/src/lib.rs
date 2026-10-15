@@ -13137,7 +13137,7 @@ emphasized --> direct
             for titled in [false,true] { for authored in [false,true] {
                 let palette=if specific {"  titleColor: red\n  textColor: blue\n  vennTitleTextColor: '#112233'\n  vennSetTextColor: '#445566'"}
                     else {"  titleColor: '#112233'\n  textColor: '#445566'"};
-                let source=format!("---\nconfig:\n  venn:\n    width: 400\n    height: 300\n    padding: 25\nthemeVariables:\n  fontFamily: {family}\n{palette}\n---\nvenn-beta\n{}set a[\"A\"]: 1\nset b[\"B\"]: 1\nunion a,b[\"U\"]: 0.5\ntext a,b note[\"N\"]\nstyle a fill:#ff0000,stroke:#123456,stroke-width:3,fill-opacity:0.5{}",
+                let source=format!("---\nconfig:\n  venn:\n    width: 400\n    height: 300\n    padding: 25\nthemeVariables:\n  fontFamily: {family}\n{palette}\n---\nvenn-beta\n{}set a[\"A\"]: 1\nset b[\"B\"]: 1\nunion a,b[\"U\"]: 0.5\ntext note[\"N\"]\nstyle a fill:#ff0000,stroke:#123456,stroke-width:3,fill-opacity:0.5{}",
                     if titled {"title T\n"} else {""}, if authored {",color:#ff0000"} else {""});
                 let config=diagram_ir::VennConfig {width:400.0,height:300.0,padding:25.0,use_max_width:true,use_debug_layout:false,
                     font_family:family.into(),title_text_color:"#112233".into(),set_text_color:"#445566".into()};
