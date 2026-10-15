@@ -221,8 +221,72 @@ fn ishikawa_label_width(label: &str) -> f64 {
     (label.chars().count() as f64 * 7.0 + 20.0).clamp(72.0, 180.0)
 }
 
-/// Map Wardley visibility/evolution coordinates onto a deterministic Cartesian canvas.
+/// Compatibility entry: caller-owned Wardley IR must satisfy checked admission.
 pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
+    try_layout_wardley(diagram).expect("unsupported Wardley geometry")
+}
+
+/// Name the input scalar/reference, or a failed complete derived postcondition.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum WardleyLayoutError {
+    Width, Height, Padding, NodeRadius, NodeLabelOffset, AxisFontSize, LabelFontSize,
+    NodeCoordinates, EvolutionTarget, UnknownLinkEndpoint, UnknownEvolutionComponent,
+    DerivedGeometry,
+}
+
+/// Check every scalar before empty-map shortcuts and every reference before the
+/// supported mapper's lookups. Finite inputs alone are not a derived-value proof.
+pub fn try_layout_wardley(diagram: &WardleyDiagram) -> Result<LayoutedWardleyDiagram, WardleyLayoutError> {
+    let positive = |v:f64| v.is_finite() && v>0.0 && v<=diagram_ir::MAX_WARDLEY_SCALAR;
+    let nonnegative = |v:f64| v.is_finite() && (0.0..=diagram_ir::MAX_WARDLEY_SCALAR).contains(&v);
+    let font = |v:f64| v.is_finite() && (1.0..=diagram_ir::MAX_WARDLEY_SCALAR).contains(&v);
+    let c=&diagram.config;
+    if !positive(c.width) {return Err(WardleyLayoutError::Width);}
+    if !positive(c.height) {return Err(WardleyLayoutError::Height);}
+    if !nonnegative(c.padding) {return Err(WardleyLayoutError::Padding);}
+    if !positive(c.node_radius) {return Err(WardleyLayoutError::NodeRadius);}
+    if !nonnegative(c.node_label_offset) {return Err(WardleyLayoutError::NodeLabelOffset);}
+    if !font(c.axis_font_size) {return Err(WardleyLayoutError::AxisFontSize);}
+    if !font(c.label_font_size) {return Err(WardleyLayoutError::LabelFontSize);}
+    let normalized=|v:f64| v.is_finite() && (0.0..=1.0).contains(&v);
+    if diagram.nodes.iter().any(|n|!normalized(n.visibility)||!normalized(n.evolution)) {
+        return Err(WardleyLayoutError::NodeCoordinates);
+    }
+    if diagram.evolves.iter().any(|e|!normalized(e.target)) {return Err(WardleyLayoutError::EvolutionTarget);}
+    let names:HashSet<_>=diagram.nodes.iter().map(|n|n.label.as_str()).collect();
+    if diagram.links.iter().any(|l|!names.contains(l.source.as_str())||!names.contains(l.target.as_str())) {
+        return Err(WardleyLayoutError::UnknownLinkEndpoint);
+    }
+    if diagram.evolves.iter().any(|e|!names.contains(e.component.as_str())) {
+        return Err(WardleyLayoutError::UnknownEvolutionComponent);
+    }
+    let result=layout_wardley_supported(diagram);
+    validate_wardley_geometry(&result)?;
+    Ok(result)
+}
+
+fn validate_wardley_geometry(layout:&LayoutedWardleyDiagram)->Result<(),WardleyLayoutError> {
+    let positive=|v:f64| v.is_finite() && v>0.0;
+    let nonnegative=|v:f64| v.is_finite() && v>=0.0;
+    let point=|p:&Point| p.x.is_finite() && p.y.is_finite();
+    let c=&layout.config;
+    // These are the paint route's exact radius/title/stage parameters. The
+    // postcondition stays explicit even though bounded admission proves them.
+    if !positive(layout.width)||!positive(layout.height)
+        ||!nonnegative(c.padding)||!nonnegative(c.node_label_offset)
+        ||!positive(c.node_radius)||!positive(c.node_radius*1.35)
+        ||!positive(c.axis_font_size)||!positive(c.axis_font_size*1.05)
+        ||!positive((c.axis_font_size-2.0).max(1.0))||!positive(c.label_font_size)
+        ||layout.nodes.iter().any(|n|!point(&n.position))
+        ||layout.links.iter().any(|l|!point(&l.from)||!point(&l.to))
+        ||layout.evolves.iter().any(|e|!point(&e.from)||!point(&e.to)) {
+        return Err(WardleyLayoutError::DerivedGeometry);
+    }
+    Ok(())
+}
+
+/// Map already-admitted coordinates with the preserved ordinary arithmetic.
+fn layout_wardley_supported(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
     let width = diagram.config.width.max(420.0); let height = diagram.config.height.max(300.0);
     let left = diagram.config.padding.min(width / 3.0); let right = left;
     let top = diagram.config.padding.min(height / 3.0); let bottom = top;
