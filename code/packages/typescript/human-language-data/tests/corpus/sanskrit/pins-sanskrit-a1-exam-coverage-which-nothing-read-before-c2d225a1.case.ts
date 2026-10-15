@@ -81,7 +81,7 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
   // from the Spanish A1 point set and drops what Sanskrit has not got, so its
-  // denominator is the smallest of the twenty-five. 95% of 164 is not
+  // denominator is the smallest of the twenty-five. 96% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
     "sanskrit A1 (partial inventory): 157/164 points covered (96%)",

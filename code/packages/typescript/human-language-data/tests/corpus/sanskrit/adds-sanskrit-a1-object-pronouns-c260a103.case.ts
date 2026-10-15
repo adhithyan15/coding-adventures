@@ -144,8 +144,9 @@ it("adds the Sanskrit A1 object-pronoun series one number at a time", () => {
     // to meal ordering, 147 -> 149 to the market tranche and 149 -> 150 to the
     // school-plan tranche, 150 -> 151 from service locations, 151 -> 152 from
     // media words, 152 -> 153 from modern-technology retrieval, 153 -> 154
-    // from spoken requests, and 154 -> 155 from the bounded condolence; this
-    // test still pins the exact object-pronoun probe.
+    // from spoken requests, 154 -> 155 from the bounded condolence, 155 -> 156
+    // from the bounded reflexive, and 156 -> 157 from the bounded rental;
+    // this test still pins the exact object-pronoun probe.
     covered: 157,
     unmapped: 7,
     partial: 0,
