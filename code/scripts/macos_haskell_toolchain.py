@@ -13,6 +13,8 @@ import os
 import platform
 import re
 import shutil
+import shlex
+import sys
 import subprocess
 from pathlib import Path, PurePosixPath
 from typing import Callable
@@ -35,15 +37,42 @@ def checked_macos_path(value: str) -> str:
     return value
 
 
-def phase_options(clang: str, sdk: str) -> list[str]:
+def phase_options(clang: str, sdk: str, ld: str) -> list[str]:
     checked_macos_path(clang)
     checked_macos_path(sdk)
+    checked_macos_path(ld)
     return ["-pgmc", clang, "-pgma", clang, "-pgml", clang,
             "-optc-isysroot", "-optc" + sdk, "-opta-isysroot", "-opta" + sdk,
-            "-optl-isysroot", "-optl" + sdk]
+            "-optl-isysroot", "-optl" + sdk, "-optl-fuse-ld=" + ld]
 
 
-def overlay_config(source: str, clang: str, ld: str, sdk: str) -> str:
+def unquoted_config_text(line: str) -> str:
+    """Expose structure only, without treating quoted arguments as sections."""
+    output = []
+    quote = None
+    escaped = False
+    for index, character in enumerate(line):
+        if quote is not None:
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == quote:
+                quote = None
+            output.append(" ")
+        elif character in "\"'":
+            quote = character
+            output.append(" ")
+        elif line[index:index + 2] == "--" and (index == 0 or line[index - 1].isspace()):
+            break
+        else:
+            output.append(character)
+    return "".join(output)
+
+
+def overlay_config(source: str, clang: str, ld: str, sdk: str,
+                   *, hsc_wrapper: Path | None = None,
+                   phase_override: tuple[str, Path] | None = None) -> str:
     """Preserve every unmanaged line; refuse competing active tool overrides.
 
     Fresh hosted configs normally contain commented defaults. A preexisting
@@ -51,20 +80,36 @@ def overlay_config(source: str, clang: str, ld: str, sdk: str) -> str:
     Paths use Cabal's quoted argument tokens, never a shell command string.
     """
     checked_macos_path(ld)
-    options = phase_options(clang, sdk)
+    options = phase_options(clang, sdk, ld)
+    if phase_override is not None:
+        phase, missing = phase_override
+        if phase not in {"-pgmc", "-pgma", "-pgml"} or not missing.is_absolute():
+            raise ValueError("invalid internal phase refusal")
+        options[options.index(phase) + 1] = str(missing)
+    if hsc_wrapper is not None and (not hsc_wrapper.is_absolute()
+            or any(ord(c) < 32 for c in str(hsc_wrapper))):
+        raise ValueError("invalid generated hsc2hs wrapper path")
     fields = {
-        "program-locations": {"gcc-location": [clang], "ld-location": [ld]},
+        "program-locations": {"gcc-location": [clang], "ld-location": [ld],
+                              "hsc2hs-location": [] if hsc_wrapper is None else [str(hsc_wrapper)]},
         "program-default-options": {
             "ghc-options": options,
             "hsc2hs-options": ["--cc=" + clang, "--ld=" + clang,
                                "--cflag=-isysroot", "--cflag=" + sdk,
-                               "--lflag=-isysroot", "--lflag=" + sdk],
+                               "--lflag=-isysroot", "--lflag=" + sdk, "--lflag=-fuse-ld=" + ld],
         },
     }
     lines = source.splitlines(keepends=True)
+    # Cabal normalizes names. Admit only the line-oriented managed sections
+    # implemented here; alternate brace/indent forms must never evade refusal.
+    names = re.compile(r"\b(program-locations|program-default-options)\b", re.I)
+    for line in lines:
+        active = unquoted_config_text(line).strip()
+        if names.search(active) and (line[0].isspace() or active.casefold() not in fields):
+            raise ValueError("unsupported managed Cabal section syntax")
     for section, managed in fields.items():
         starts = [i for i, line in enumerate(lines)
-                  if line and not line[0].isspace() and line.strip() == section]
+                  if line and not line[0].isspace() and line.strip().casefold() == section]
         if len(starts) > 1:
             raise ValueError("duplicate active Cabal section: " + section)
         if starts:
@@ -75,8 +120,11 @@ def overlay_config(source: str, clang: str, ld: str, sdk: str) -> str:
             for line in lines[start + 1:end]:
                 if line.lstrip().startswith("--"):
                     continue
+                active = unquoted_config_text(line)
+                if any(c in active for c in "{};"):
+                    raise ValueError("unsupported managed Cabal section structure")
                 match = re.match(r"\s+([A-Za-z0-9-]+)\s*:", line)
-                if match and match[1] in managed:
+                if match and match[1].casefold() in managed:
                     raise ValueError("existing managed Cabal field: " + match[1])
         else:
             if lines and not lines[-1].endswith("\n"):
@@ -84,21 +132,49 @@ def overlay_config(source: str, clang: str, ld: str, sdk: str) -> str:
             lines.append(section + "\n")
             end = len(lines)
         additions = ["  " + field + ": " + " ".join(json.dumps(v) for v in values) + "\n"
-                     for field, values in managed.items()]
+                     for field, values in managed.items() if values]
         lines[end:end] = additions
     return "".join(lines)
+
+
+def write_hsc_driver(output: Path, real_hsc2hs: str, clang: str, ld: str, sdk: str) -> tuple[Path, list[str]]:
+    """Append forced hsc2hs arguments after Cabal's own choices, and trace them."""
+    forced = ["--cc=" + clang, "--ld=" + clang,
+              "--cflag=-isysroot", "--cflag=" + sdk,
+              "--lflag=-isysroot", "--lflag=" + sdk, "--lflag=-fuse-ld=" + ld,
+              "--cflag=-DCI_TOOLCHAIN_HSC=1"]
+    driver = output / "hsc2hs-driver.py"
+    (output / "hsc2hs-driver.json").write_text(json.dumps({"real_hsc2hs": real_hsc2hs, "forced": forced}), encoding="utf-8")
+    driver.write_text("import json, os, sys\nfrom pathlib import Path\np=Path(__file__)\nc=json.loads(p.with_suffix('.json').read_text(encoding='utf-8'))\na=[c['real_hsc2hs'],*sys.argv[1:],*c['forced']]\nwith (p.parent/'hsc2hs-invocations.jsonl').open('a',encoding='utf-8') as f:\n f.write(json.dumps({'argv':a})+'\\n')\nos.execv(c['real_hsc2hs'],a)\n", encoding="utf-8")
+    wrapper = output / "hsc2hs"
+    wrapper.write_text("#!/bin/sh\nexec " + shlex.quote(sys.executable) + " " + shlex.quote(str(driver)) + ' "$@"\n', encoding="utf-8")
+    wrapper.chmod(0o700)
+    return wrapper, forced
+
+
+def verify_hsc_route(output: Path, real_hsc2hs: str, forced: list[str]) -> int:
+    trace = output / "hsc2hs-invocations.jsonl"
+    if not trace.is_file():
+        raise RuntimeError("Cabal did not invoke the selected hsc2hs wrapper")
+    events = [json.loads(line)["argv"] for line in trace.read_text(encoding="utf-8").splitlines()]
+    source_events = [argv for argv in events if any(Path(arg).name == "Main.hsc" for arg in argv[1:])]
+    if not source_events or any(argv[0] != real_hsc2hs or argv[-len(forced):] != forced for argv in source_events):
+        raise RuntimeError("Cabal hsc2hs effective driver arguments do not match the selected route")
+    return len(source_events)
 
 
 def bootstrap(output: Path, github_env: Path, env: dict[str, str],
               *, runner: Callable = subprocess.run) -> dict:
     """Fail closed at every step; publish CABAL_CONFIG only after real probes."""
-    output.mkdir(parents=True, exist_ok=False)
+    output = output.resolve()
+    output.mkdir(parents=True, mode=0o700, exist_ok=False)
     receipt = {"success": False, "commands": [], "local_miri": "DEFERRED/PENDING"}
     receipt_path = output / "receipt.json"
     def save() -> None:
         receipt_path.write_text(json.dumps(receipt, indent=2), encoding="utf-8")
     def run(label: str, command: list[str], *, cwd: Path = output,
-            child_env: dict[str, str] | None = None) -> str:
+            child_env: dict[str, str] | None = None,
+            expected_refusal: Path | None = None) -> str:
         result = runner(command, cwd=cwd, env=dict(env if child_env is None else child_env),
                         capture_output=True, text=True, check=False)
         log = output / (label + ".log")
@@ -107,7 +183,13 @@ def bootstrap(output: Path, github_env: Path, env: dict[str, str],
                                     "exit": result.returncode, "log": str(log),
                                     "sha256": hashlib.sha256(log.read_bytes()).hexdigest()})
         save()
-        if result.returncode:
+        if expected_refusal is not None:
+            text = result.stdout + result.stderr
+            if result.returncode == 0 or "could not execute:" not in text or str(expected_refusal) not in text:
+                raise RuntimeError(f"{label} did not prove the configured phase refusal; see {log}")
+            receipt["commands"][-1]["expected_refusal"] = str(expected_refusal)
+            save()
+        elif result.returncode:
             raise RuntimeError(f"{label} failed ({result.returncode}); see {log}")
         return result.stdout
     try:
@@ -118,12 +200,14 @@ def bootstrap(output: Path, github_env: Path, env: dict[str, str],
         clang = checked_macos_path(run("discover-clang", ["/usr/bin/xcrun", "--sdk", "macosx", "--find", "clang"]).strip())
         ld = checked_macos_path(run("discover-ld", ["/usr/bin/xcrun", "--sdk", "macosx", "--find", "ld"]).strip())
         sdk = checked_macos_path(run("discover-sdk", ["/usr/bin/xcrun", "--sdk", "macosx", "--show-sdk-path"]).strip())
-        ghc, cabal = (shutil.which(name, path=env.get("PATH")) for name in ("ghc", "cabal"))
-        if not ghc or not cabal:
-            raise RuntimeError("GHC and Cabal must be installed before macOS bootstrap")
-        receipt.update(clang=clang, ld=ld, sdk=sdk, ghc=ghc, cabal=cabal)
+        ghc, cabal, hsc2hs = (shutil.which(name, path=env.get("PATH")) for name in ("ghc", "cabal", "hsc2hs"))
+        if not ghc or not cabal or not hsc2hs:
+            raise RuntimeError("GHC, hsc2hs and Cabal must be installed before macOS bootstrap")
+        receipt.update(clang=clang, ld=ld, sdk=sdk, ghc=ghc, cabal=cabal, hsc2hs=hsc2hs)
+        wrapper, forced_hsc = write_hsc_driver(output, hsc2hs, clang, ld, sdk)
+        receipt["hsc_wrapper_sha256"] = hashlib.sha256(wrapper.read_bytes()).hexdigest()
         config = output / "cabal.config"
-        config.write_text(overlay_config(original_bytes.decode("utf-8"), clang, ld, sdk), encoding="utf-8")
+        config.write_text(overlay_config(original_bytes.decode("utf-8"), clang, ld, sdk, hsc_wrapper=wrapper), encoding="utf-8")
         receipt["overlay_config_sha256"] = hashlib.sha256(config.read_bytes()).hexdigest()
         run("clang-version", [clang, "--version"])
         if run("ghc-version", [ghc, "--numeric-version"]).strip() != "9.4.8":
@@ -134,28 +218,39 @@ def bootstrap(output: Path, github_env: Path, env: dict[str, str],
         c_main = output / "probe.c"
         c_main.write_text('#include <stdio.h>\nint main(void) { puts("42"); return 0; }\n', encoding="utf-8")
         c_binary = output / "c-probe"
-        run("c-build", [clang, "-isysroot", sdk, str(c_main), "-o", str(c_binary)])
+        run("c-build", [clang, "-isysroot", sdk, "-fuse-ld=" + ld, str(c_main), "-o", str(c_binary)])
         if run("c-run", [str(c_binary)]).strip() != "42":
             raise RuntimeError("C runtime output mismatch")
         package = output / "cabal-probe"
         package.mkdir()
-        main_hs = package / "Main.hs"
+        main_hs = output / "Main.hs"
         main_hs.write_text('{-# LANGUAGE ForeignFunctionInterface #-}\nmodule Main where\nimport Foreign.C.Types\nforeign import ccall "ci_answer" answer :: IO CInt\nmain :: IO ()\nmain = answer >>= print . (+ (1 :: Int)) . fromIntegral\n', encoding="utf-8")
         answer_c = package / "answer.c"
         answer_c.write_text("int ci_answer(void) { return 41; }\n", encoding="utf-8")
         ghc_dir = output / "ghc-probe"
         ghc_dir.mkdir()
         ghc_binary = ghc_dir / "probe"
-        run("ghc-build", [ghc, *phase_options(clang, sdk), str(main_hs), str(answer_c),
+        run("ghc-build", [ghc, *phase_options(clang, sdk, ld), str(main_hs), str(answer_c),
                           "-outputdir", str(ghc_dir), "-o", str(ghc_binary), "-v"], cwd=ghc_dir)
         if run("ghc-run", [str(ghc_binary)]).strip() != "42":
             raise RuntimeError("GHC foreign-C runtime output mismatch")
-        (package / "ci-toolchain-probe.cabal").write_text("cabal-version: 2.4\nname: ci-toolchain-probe\nversion: 0.0.0\nbuild-type: Simple\nexecutable ci-toolchain-probe\n  main-is: Main.hs\n  c-sources: answer.c\n  build-depends: base >= 4.17 && < 4.18\n  default-language: Haskell2010\n", encoding="utf-8")
+        (package / "ci-toolchain-probe.cabal").write_text("cabal-version: 2.4\nname: ci-toolchain-probe\nversion: 0.0.0\nbuild-type: Simple\nexecutable ci-toolchain-probe\n  main-is: Main.hsc\n  c-sources: answer.c\n  build-depends: base >= 4.17 && < 4.18\n  default-language: Haskell2010\n", encoding="utf-8")
         (package / "cabal.project").write_text("packages: .\n", encoding="utf-8")
+        (package / "Main.hsc").write_text('{-# LANGUAGE ForeignFunctionInterface #-}\nmodule Main where\nimport Foreign.C.Types\nforeign import ccall "ci_answer" answer :: IO CInt\nprobe_marker :: Int\nprobe_marker = #{const CI_TOOLCHAIN_HSC}\nmain :: IO ()\nmain = answer >>= print . (+ probe_marker) . fromIntegral\n', encoding="utf-8")
+        for phase in ["-pgmc", "-pgma", "-pgml"]:
+            name = phase.removeprefix("-")
+            missing = output / ("missing-" + name)
+            refused = output / ("refuse-" + name + ".config")
+            refused.write_text(overlay_config(original_bytes.decode("utf-8"), clang, ld, sdk,
+                hsc_wrapper=wrapper, phase_override=(phase, missing)), encoding="utf-8")
+            run("cabal-refuse-" + name, [cabal, "v2-build", "--offline", "exe:ci-toolchain-probe"],
+                cwd=package, child_env=dict(env, CABAL_CONFIG=str(refused)), expected_refusal=missing)
         cabal_env = dict(env, CABAL_CONFIG=str(config))
         run("cabal-build", [cabal, "v2-build", "--offline", "exe:ci-toolchain-probe"], cwd=package, child_env=cabal_env)
         if run("cabal-run", [cabal, "v2-run", "--offline", "-v0", "exe:ci-toolchain-probe"], cwd=package, child_env=cabal_env).strip() != "42":
             raise RuntimeError("Cabal foreign-C runtime output mismatch")
+        receipt["hsc_source_invocations"] = verify_hsc_route(output, hsc2hs, forced_hsc)
+        receipt["hsc_trace_sha256"] = hashlib.sha256((output / "hsc2hs-invocations.jsonl").read_bytes()).hexdigest()
         if original.read_bytes() != original_bytes:
             raise RuntimeError("original Cabal configuration changed during bootstrap")
         if any(c in str(config) for c in "\n\r"):
