@@ -81,7 +81,7 @@ paradigm, and it does not ask you to derive their sandhi.
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-PATTERN-C274-RENTAL-01] -->
 
-[PAUSE 4s] Read the question and answer once slowly. Then say them together as
+[PAUSE 4s] Listen to the question and answer once slowly. Then say them together as
 one exchange about whether a house is rented.
 
 ## Wrap-up Recall

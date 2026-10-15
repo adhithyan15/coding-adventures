@@ -3,8 +3,8 @@
   "language": "sanskrit",
   "chapter": 274,
   "title": "One rental exchange, held as a whole",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e1e206e6070e060d",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:10eea70b7a0db4a5",
   "lessons": [
     {
       "id": "SA-C274-meet-one-rental-exchange",
@@ -14,22 +14,13 @@
       "romanization": "kiṃ tat bhāṭakitaṃ gṛham? — na, ahaṃ bhāṭakaṃ na dadāmi",
       "gloss": "Is that a rented house? No, I do not pay rent.",
       "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "eyes-or-hands-step"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc27b81c958e1ee4",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
-        ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
-      },
+      "sourceHash": "fnv1a64:24295f4cab4449c0",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -91,7 +82,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the question and answer once slowly. Then say them together as one exchange about whether a house is rented."
+              "text": "Listen to the question and answer once slowly. Then say them together as one exchange about whether a house is rented."
             }
           ]
         },
