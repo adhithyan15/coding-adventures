@@ -193,6 +193,29 @@ class MacosHaskellToolchainTests(unittest.TestCase):
         self.assertTrue(all(Path(v[1]["env"]["CABAL_CONFIG"]).parent == root / "output" for v in cabal))
         self.assertTrue(all("--offline" in v[0] for v in cabal))
 
+    def test_mock_root_uses_the_same_canonical_identity_as_bootstrap(self):
+        # A lexical parent segment reproduces macOS /var -> /private/var
+        # spelling differences without requiring symlink privileges on Windows.
+        # The production output is already resolved; every mock comparison must
+        # use that identity too, including the child-config assertions above.
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp).resolve()
+            (base / "walk").mkdir()
+            canonical = base / "actual"
+            canonical.mkdir()
+            temporary = mock.Mock(name="noncanonical_temporary_directory")
+            temporary.name = str(base / "walk/../actual")
+            with mock.patch.object(tempfile, "TemporaryDirectory", return_value=temporary):
+                root, github_env, receipt, commands = self.run_mock_bootstrap()
+            self.assertTrue(receipt["success"])
+            self.assertEqual(canonical, root)
+            self.assertEqual("EXISTING=retained\nCABAL_CONFIG=" + str(root / "output/cabal.config") + "\n",
+                             github_env.read_text(encoding="utf-8"))
+            configs = [Path(options["env"]["CABAL_CONFIG"]) for command, options in commands
+                       if "v2-build" in command or "v2-run" in command]
+            self.assertEqual(5, len(configs))
+            self.assertTrue(all(config.parent == root / "output" for config in configs))
+
     def test_each_tool_failure_and_wrong_runtime_output_publish_nothing(self):
         for stage in range(1, 17):
             with self.subTest(stage=stage):
