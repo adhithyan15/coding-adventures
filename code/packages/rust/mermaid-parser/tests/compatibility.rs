@@ -2868,6 +2868,33 @@ fn railroad_preserves_backend_neutral_style_config() {
 }
 
 #[test]
+fn railroad_resolves_theme_variables_before_explicit_style_overrides() {
+    let diagram = parse_railroad(
+        "---\nthemeVariables:\n  fontFamily: Georgia\n  fontSize: 17px\n  secondBkg: '#fef3c7'\n  secondaryBorderColor: '#b45309'\n  secondaryTextColor: '#78350f'\n  mainBkg: '#dbeafe'\n  primaryBorderColor: '#1d4ed8'\n  primaryTextColor: '#172554'\n  lineColor: '#15803d'\n  tertiaryColor: '#fce7f3'\n  tertiaryBorderColor: '#be185d'\n  titleColor: '#581c87'\nconfig:\n  railroad:\n    terminalFill: '#dcfce7'\n---\nrailroad-beta\nvalue = sequence(terminal(\"x\"), nonterminal(\"item\"), special(\"end\"));",
+    ).expect("Railroad theme variables should resolve into semantic config");
+    assert_eq!(diagram.config.font_family, "Georgia");
+    assert_eq!(diagram.config.font_size, 17.0);
+    assert_eq!(diagram.config.terminal_fill, "#dcfce7");
+    assert_eq!(diagram.config.terminal_stroke, "#b45309");
+    assert_eq!(diagram.config.terminal_text_color, "#78350f");
+    assert_eq!(diagram.config.non_terminal_fill, "#dbeafe");
+    assert_eq!(diagram.config.non_terminal_stroke, "#1d4ed8");
+    assert_eq!(diagram.config.non_terminal_text_color, "#172554");
+    assert_eq!(diagram.config.line_color, "#15803d");
+    assert_eq!(diagram.config.marker_fill, "#15803d");
+    assert_eq!(diagram.config.special_fill, "#fce7f3");
+    assert_eq!(diagram.config.special_stroke, "#be185d");
+    assert_eq!(diagram.config.rule_name_color, "#581c87");
+
+    let init = parse_railroad(
+        "%%{init: {\"themeVariables\": {\"secondaryColor\": \"#aabbcc\", \"lineColor\": \"#112233\"}, \"railroad\": {\"lineColor\": \"#334455\"}}}%%\nrailroad-beta\nvalue = terminal(\"x\");",
+    ).expect("Railroad init theme variables should parse");
+    assert_eq!(init.config.terminal_fill, "#aabbcc");
+    assert_eq!(init.config.marker_fill, "#112233");
+    assert_eq!(init.config.line_color, "#334455");
+}
+
+#[test]
 fn info_dispatches_to_dedicated_version_ir() {
     match parse_any_mermaid("info showInfo").expect("info should parse") {
         mermaid_parser::MermaidDiagram::Info(diagram) => assert_eq!(diagram.version, "11.16.1"),
