@@ -45,7 +45,7 @@ variety: standard-colloquial
 No Sanskrit model is shown before you answer.
 
 [PAUSE 12s] Choose a shop or market and a different familiar item. Say that
-you buy it. Ask its price. The shopkeeper says that the price is one hundred
+you buy it. Ask its price. The shopkeeper says that the price is twenty
 rupees. Request the item politely and close with thanks.
 
 ## What you've built: check after speaking

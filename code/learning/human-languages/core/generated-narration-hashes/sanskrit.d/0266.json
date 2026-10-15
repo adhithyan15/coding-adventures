@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 266,
-  "sourceHash": "fnv1a64:55139d9990dd688a",
+  "sourceHash": "fnv1a64:0040c334a926b3e8",
   "lessonIds": [
     "SA-C266-market-recall",
     "SA-C266-krinami",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "sanskrit/narration/ch266.txt",
   "json": "sanskrit/narration/ch266.json",
-  "textHash": "fnv1a64:72d47217bd3a574a",
-  "jsonHash": "fnv1a64:04a9eda9b4d99988",
+  "textHash": "fnv1a64:16c0c3d61ca986a7",
+  "jsonHash": "fnv1a64:8678d2f29283c99f",
   "findings": []
 }

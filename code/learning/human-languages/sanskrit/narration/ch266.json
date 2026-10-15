@@ -4,7 +4,7 @@
   "chapter": 266,
   "title": "A small market exchange",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:55139d9990dd688a",
+  "sourceHash": "fnv1a64:0040c334a926b3e8",
   "lessons": [
     {
       "id": "SA-C266-market-recall",
@@ -558,7 +558,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7414c4dea6983e33",
+      "sourceHash": "fnv1a64:a96fa77a91b53701",
       "notice": null,
       "blocks": [
         {
@@ -595,7 +595,7 @@
             },
             {
               "kind": "speech",
-              "text": "Choose a shop or market and a different familiar item. Say that you buy it. Ask its price. The shopkeeper says that the price is one hundred rupees. Request the item politely and close with thanks."
+              "text": "Choose a shop or market and a different familiar item. Say that you buy it. Ask its price. The shopkeeper says that the price is twenty rupees. Request the item politely and close with thanks."
             }
           ]
         },
