@@ -24,8 +24,8 @@ multiplication or division of that additive form by finite static terms. A
 single additional built-in `entier` may wrap a supported bounded transform
 rooted in `sign(...)`, including the exact `entier(sign(...))` root. A real
 name-formal result is also allowed when its actual has the same proof. Up to
-eight exact additive offset units may remain inside that bounded transform,
-either as one exact `8` term or a checked sum of exact `1` through `7` terms,
+nine exact additive offset units may remain inside that bounded transform,
+either as one exact `9` term or a checked sum of exact `1` through `8` terms,
 with the cap tracked through parentheses and supported wrappers and applied per
 conditional path. Unary
 signs, arithmetic composition with finite static operands, and real-valued
