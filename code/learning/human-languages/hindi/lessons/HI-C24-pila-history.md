@@ -13,7 +13,7 @@ gloss: yellow — a clear sound-history chain, and a Sanskrit look-alike that me
 romanization: "pīlā"
 prerequisites: [HI-C24-hara-pila]
 sounds: [retroflex-l, vowel-length-i]
-roots: [sanskrit-pitala]
+roots: [sanskrit-pitala, sanskrit-pita-yellow]
 etymology_hook: "pīlā ← pītala ← pīta 'yellow' (CDIAL 8233, 8230); pīta 'drunk' is a separate word that only sounds alike"
 duration:
   max_seconds: 180

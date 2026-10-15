@@ -42,8 +42,8 @@ reviews_of: [RU-W08-tochka, RU-C17-no, RU-C09-nos, RU-C09-rot]
 - [YOU RECALL: *нос*, inherited straight from the root behind English *nose*]
 - [YOU RECALL: *рот*, probably from a verb meaning **to dig** — a snout rooting
   the ground]
-- [YOU RECALL: the one question mark at the **end**, and *но*, the *but* with no
-  cousin]
+- [YOU RECALL: the one question mark at the **end**, and *но*, *but*, likely kin
+  to *now*]
 
 ## You'll want to know first — что
 <!-- hl-knowledge: introduces=[RU-LEX-CHTO-01]; assesses=[RU-LEX-NOS, RU-PUNCT-VOPROS-01] -->

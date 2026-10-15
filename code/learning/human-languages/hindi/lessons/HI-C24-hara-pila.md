@@ -14,7 +14,7 @@ romanization: "harā"
 concept_tag: HI-COLOUR-GREEN-YELLOW
 prerequisites: [HI-C23-billi-history]
 sounds: [retroflex-l, vowel-length-aa]
-roots: [pie-ghelh3-shine]
+roots: [sanskrit-harita, pie-ghelh3-shine]
 etymology_hook: "harā ← Sanskrit harita 'green, yellowish, tawny', from PIE *ǵʰelh₃- 'to shine', the root of German gelb"
 duration:
   max_seconds: 190
