@@ -1,0 +1,22 @@
+{
+  "chapter": 269,
+  "title": "Six communication words, gently joined",
+  "label": "ch:sa-media-communication",
+  "canDo": "I can retrieve six familiar media and communication words from meaning.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C269-media-final-retrieval",
+    "kind": "production",
+    "summary": "Complete chapter 269 by independently retrieving six media and communication meanings a second time.",
+    "assesses": [
+      "SA-LEX-C222-THG222-05",
+      "SA-LEX-C104-THINGS104-05",
+      "SA-LEX-C269-MEDIA-01",
+      "SA-LEX-C105-THINGS105-01",
+      "SA-LEX-C269-MEDIA-02",
+      "SA-LEX-C120-THINGS120-03"
+    ]
+  }
+}
