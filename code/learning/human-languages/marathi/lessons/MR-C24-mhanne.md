@@ -69,7 +69,7 @@ that*, which is how a good many Marathi sentences turn a corner.
 "speaks." The opening **भ** *bh-* did something Marathi is fond of: it shifted
 to the **म्ह** *mh-* cluster, breath and nasal at once. Hindi kept a plainer
 descendant in *bhannā*. Set beside *sāṅgṇe*, which CDIAL traces to a verb for
-counting, Marathi ended up with one verb for reciting outward and one for
+counting, Marathi ended up with one verb for telling a person and one for
 plain uttering.
 
 ## Guided Practice

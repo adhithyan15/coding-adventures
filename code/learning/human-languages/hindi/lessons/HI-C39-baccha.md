@@ -9,13 +9,13 @@ sequence: 1070
 chapter: 39
 type: word
 headword: बच्चा / बच्ची / बछड़ा
-gloss: boy child / girl child / calf — Persian siblings beside an inherited Sanskrit cousin
+gloss: boy child / girl child / calf — usually traced to Persian, beside an inherited Sanskrit cousin
 romanization: "bacchā / bacchī / bachṛā"
 concept_tag: HI-PERSON-CHILD
 prerequisites: [HI-C39-dost, HI-C12-pitaa-maataa, HI-C19-age-grammar]
 sounds: [geminate-cca, devanagari-long-aa]
 roots: [persian-bacca, vatsa-sanskrit]
-etymology_hook: "bacchā: usually Persian bacca, a sister of Sanskrit vatsa; CDIAL 424 offers inherited apatya 'offspring' instead"
+etymology_hook: "bacchā: usually Persian bacca, a sister of Sanskrit vatsa; CDIAL 424 puts Panjabi baccā under apatya 'offspring'"
 duration:
   max_seconds: 245
 requires:
@@ -62,7 +62,8 @@ years someone *is of*, rather than how many they *have*.
 
 Persian *bacca* did **not** come from Sanskrit **वत्स** (*vatsa*), "calf." They
 are **sisters**, one Indo-Iranian word down two branches, and Hindi had
-*already* inherited the Sanskrit one as **बछड़ा** (*bachṛā*), "calf."
+*already* inherited the Sanskrit one as **बछड़ा** (*bachṛā*), "calf" (CDIAL 11241 records it as
+*bacheṛā*, under *vatsatara*).
 
 So Hindi holds both, one word by two roads, as with **दरवाज़ा** and
 **द्वार**, through the Persian relay that brought **दोस्त**.
@@ -84,7 +85,7 @@ On that road, a child is a **yearling**, named by age, where **पिता** an
 [PAUSE 1s]
 - [YOU SAY: *bacchā* and *bacchī*; then *merā bacchā*, *merī bacchī*]
 - [YOU SAY: the family — *merā pitā, merī mātā, merā bacchā*]
-- [YOU SAY: the two roads — *bacchā* from Persian, *bachṛā* inherited; one word]
+- [YOU SAY: the two roads — *bacchā* usually from Persian, *bachṛā* inherited; one word]
 - [YOU SAY: *vetus*, *vitulus*, *wether* — and the meaning under all of them
   (year)]
 

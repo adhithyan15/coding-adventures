@@ -86,8 +86,8 @@
 
 - **Ch. 34 — Four Verbs of the Mind** (`HI-C34-*`): *sochnā* → *samajhnā* →
   *paṛhnā* → *likhnā*, one verb per lesson. The chapter's thread is that not one
-  of Hindi's mind-verbs began as a mind-verb. *sochnā* ← **शोचति** *śocati*, "to
-  burn, to grieve" — and the noun **सोच** still means *thought* **and** *worry*;
+  of Hindi's mind-verbs began as a mind-verb. *sochnā* ← *śocyate*, "is
+  pained", on the root *śuc-* "burn, grieve" (CDIAL 12621) — and the noun **सोच** still means *thought* **and** *worry*;
   *samajhnā* ← *sam-* "fully" + **बुध्** *budh-* "to wake," which is the root of
   **Buddha** and of English **bode/forebode/forbid**; *paṛhnā* ← **पठति**
   *paṭhati*, "to **recite aloud**," which is why one verb still means *read* and
