@@ -20,4 +20,4 @@ The lessons creator truncates long filename slugs. Use the actual printed path;
 the first helper assumed the full title's slug and stopped before any commit or
 test edit. Its specification edit and generated lesson remained available.
 
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
+The first final docs gate found this shard still retained the creator template after its actual lesson body. Remove the template and run the real lessons validator; explanatory prose alone does not satisfy that gate.
