@@ -67,7 +67,7 @@ it("asks for a person and requests quiet twice in Sanskrit A1", () => {
   expect(quietLesson?.body).toContain(
     "https://sanskritdocuments.org/learning_tools/ashtadhyayi/vyakhya/3/3.4.63.htm",
   );
-  expect(quietLesson?.body).toContain("does not teach the imperative paradigm");
+  expect(quietLesson?.body).toMatch(/does not teach the\s+imperative paradigm/u);
 
   const retrievalLessons = chapterLessons.slice(2);
   for (const lesson of retrievalLessons) {

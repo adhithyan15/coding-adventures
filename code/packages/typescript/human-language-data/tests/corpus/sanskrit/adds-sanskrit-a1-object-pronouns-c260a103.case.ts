@@ -143,10 +143,10 @@ it("adds the Sanskrit A1 object-pronoun series one number at a time", () => {
     // 145 -> 146 belongs to the later first-person-future tranche, 146 -> 147
     // to meal ordering, 147 -> 149 to the market tranche and 149 -> 150 to the
     // school-plan tranche, 150 -> 151 from service locations, 151 -> 152 from
-    // media words, and 152 -> 153 from modern-technology retrieval; this test
-    // still pins the exact object-pronoun probe.
-    covered: 153,
-    unmapped: 11,
+    // media words, 152 -> 153 from modern-technology retrieval, and 153 -> 154
+    // from spoken requests; this test still pins the exact object-pronoun probe.
+    covered: 154,
+    unmapped: 10,
     partial: 0,
   });
   expect(coverage.byCategory["Sarvanāma — the pronoun"]).toEqual({

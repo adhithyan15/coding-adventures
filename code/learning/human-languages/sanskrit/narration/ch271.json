@@ -1,0 +1,361 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 271,
+  "title": "Two spoken requests, gently joined",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:c49349df960f8656",
+  "lessons": [
+    {
+      "id": "SA-C271-ask-for-a-person",
+      "sequence": 16020,
+      "title": "Ask for a familiar person",
+      "headword": "अध्यापकः कुत्र अस्ति?",
+      "romanization": "adhyāpakaḥ kutra asti?",
+      "gloss": "ask where a familiar person is",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b98f9cb3c19fb883",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall three known pieces: अध्यापकः, “teacher”; कुत्र, “where?”; and अस्ति, “is.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: build the person request",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put the familiar person first, then the familiar location question:"
+            },
+            {
+              "kind": "speech",
+              "text": "अध्यापकः कुत्र अस्ति? adhyāpakaḥ kutra asti? “Where is the teacher?”"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing in this turn is a new noun or question word. The new skill is the complete turn: asking where a familiar person is so you can speak with them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You arrive at school and need the teacher. Ask where the teacher is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अध्यापकः कुत्र अस्ति? (adhyāpakaḥ kutra asti?) is one bounded way to ask for a familiar person. It does not establish a general service-counter script."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask: “Where is the teacher?”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C271-request-quiet",
+      "sequence": 16030,
+      "title": "कृपया तूष्णीं भव (kṛpayā tūṣṇīṃ bhava) — please be quiet",
+      "headword": "कृपया तूष्णीं भव",
+      "romanization": "kṛpayā tūṣṇīṃ bhava",
+      "gloss": "please be quiet — one sourced familiar-person request",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:997ef30a32a99ddb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall कृपया, “please,” and the complete person request from the previous lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कृपया तूष्णीं भव",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कृपया तूष्णीं भव। kṛpayā tūṣṇīṃ bhava. “Please be quiet.”"
+            },
+            {
+              "kind": "speech",
+              "text": "The Board of School Education Haryana copy of the NCERT Class 10 Śemuṣī Sanskrit reader uses the exact command तूष्णीं भव. The grammatical commentary on Pāṇini 3.4.63 also explicitly treats तूष्णीम् with √भू. The कृपया at the front is the “please” you already know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one complete request",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This lesson owns the complete familiar-person request. It does not teach the imperative paradigm, and it does not license you to manufacture other command forms from भव."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A familiar person is speaking while you need silence. Ask politely: “Please be quiet.”"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the complete sourced request for “Please be quiet”?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C271-spoken-requests-first-retrieval",
+      "sequence": 16040,
+      "title": "Two spoken requests: round one",
+      "headword": "(independent spoken-request retrieval, first round)",
+      "romanization": "",
+      "gloss": "independently retrieve a person request and a quiet request",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9e36705d1eca305",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Prepare to retrieve two complete spoken turns from meaning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: independent retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No Sanskrit model is shown before you answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for these two turns, in order: “Where is the teacher?” Then: “Please be quiet.”"
+            },
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built: check after answering",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now check: अध्यापकः कुत्र अस्ति? (adhyāpakaḥ kutra asti?) asks where the teacher is. कृपया तूष्णीं भव। (kṛpayā tūṣṇīṃ bhava.) asks a familiar person, politely, to be quiet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall: boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have retrieved two bounded turns once without a visible model. That is not a claim of general command formation or conversation-wide ability."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C271-spoken-requests-final-retrieval",
+      "sequence": 16050,
+      "title": "Two spoken requests: round two",
+      "headword": "(independent spoken-request retrieval, second round)",
+      "romanization": "",
+      "gloss": "independently retrieve the quiet and person requests in reverse order",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8fe0b11b862b84ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Prepare to retrieve the same two turns in a fresh order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: independent retrieval in a fresh order",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No Sanskrit model is shown before you answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for these two turns in reverse order: “Please be quiet.” Then: “Where is the teacher?”"
+            },
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built: check after answering",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now check: कृपया तूष्णीं भव। (kṛpayā tūṣṇīṃ bhava.) is the quiet request. अध्यापकः कुत्र अस्ति? (adhyāpakaḥ kutra asti?) is the person request."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall: boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can retrieve these two bounded spoken acts twice without a visible model. This is not evidence of general imperative mastery, conversational competence, human validation, learner attainment, or exam readiness."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

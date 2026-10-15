@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C271-spoken-requests-final-retrieval",
+    "language": "sanskrit",
+    "chapter": 271,
+    "sequence": 16050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8fe0b11b862b84ac"
+  },
+  "findings": []
+}
