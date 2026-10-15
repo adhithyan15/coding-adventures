@@ -26,9 +26,9 @@ rasterization, full CSS/theme/palette and resource/area parity remain OPEN.
 Native8 source668954e8 focused875compiler/incoming1/owned9 PASS,516 actualcells
 (456 retained +60 new) on six available backends; absentCLR notcounted.
 Canonical budget/comment only7→8/range[-9,9]; shared exp/log/legacy/effects/
-readonce/conversion/resource8192 guards preserved. Fullsix strict0; unfiltered
-session51969 RUNNING, no terminal acceptance. Source review0654acee PASS.
-R2 source/target frozen; no mutation until actual terminal then independent review.
+readonce/conversion/resource8192 guards preserved. Fullsix strict0; actual unfiltered
+session51969 EXIT0:1804P0F/1existingignored/78targets, testsSHA695d00e73451dd1812ec1899cd575e3e34306c6b3959e776100ea0acbb6b0e44.
+Source review0654acee PASS; independent terminal review pending. R2 remains fixed668.
 
 12:58 live maincd617cd4 includes native9#17569, Vennpalette#17572 open;
 dynamic exact-head overlap audit/spec-first reconciliation still required.
