@@ -4,7 +4,7 @@
   "chapter": 314,
   "title": "Mason, Plumber, Mechanic, Watchman, Milkman",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:72a9a477a647456d",
+  "sourceHash": "fnv1a64:0d9567c12fefbfdf",
   "lessons": [
     {
       "id": "TE-C314-mestri",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a265a6930acd5a31",
+      "sourceHash": "fnv1a64:c8e68110f4ccbbe6",
       "notice": null,
       "blocks": [
         {

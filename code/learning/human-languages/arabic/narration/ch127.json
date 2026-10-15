@@ -4,7 +4,7 @@
   "chapter": 127,
   "title": "Curtain, Lock, Handkerchief, Bracelet, Earring",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fbf929e4746237b3",
+  "sourceHash": "fnv1a64:f0564131b7c4d0a4",
   "lessons": [
     {
       "id": "AR-C127-sitara",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9b0d920768a78cd",
+      "sourceHash": "fnv1a64:9f583b0fc4c65d3f",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "قفل (qufl) is built on the native Arabic root q-f-l, \"to return; to lock\" (Lane), and Lane lists qufl, \"a lock\", under it. The same root gives qāfila, \"a caravan\"."
+              "text": "قفل (qufl) is built on the native Arabic root q-f-l. Lane does not list qufl itself, but under q-f-l he gives aqfala l-bāba, \"he locked the door\", and qāfila, \"a company returning from a journey\", that is, \"a caravan\"."
             }
           ]
         },

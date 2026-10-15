@@ -12,7 +12,7 @@ concept_tag: MR-JOIN-KII
 prerequisites: [MR-R34-reasons, MR-C23-vatne]
 sounds: [matra-ii]
 roots: []
-etymology_hook: "की is the Sanskrit question stem ka- again, reused as a linker, like Persian ke"
+etymology_hook: "की 'that' is a loan: CDIAL, after Bloch, takes it from Hindi ki, which is Persian ke (CDIAL 3164)"
 duration:
   max_seconds: 220
 requires:
@@ -66,10 +66,10 @@ main verb was denied.
 clause underneath as a REASON, **की** puts one underneath as the CONTENT. Both
 keep the main clause first, which is Marathi's steady habit.
 
-**की** comes from the same Sanskrit question stem **क-** that gave you **का**
-and **काय**. Persian does exactly the same thing with its own *ke*, and for the
-same reason: a question word is already a placeholder, so it is the natural
-thing to put where a whole sentence is about to arrive.
+**की** looks like **का** and **काय**, but it is a loan. CDIAL, following
+Bloch, keeps it apart from the native *kī̃*, "or" (from Sanskrit *kím*), and
+takes it from Hindi *ki*, which Hindi had from Persian *ke* (CDIAL 3164).
+Persian uses *ke* for exactly this job, and the word travelled with the job.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-JOIN-KII, MR-LEX-VATNE, MR-LEX-MAHIT-JANNE] -->

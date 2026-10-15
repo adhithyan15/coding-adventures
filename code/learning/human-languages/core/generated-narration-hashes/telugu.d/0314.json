@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 314,
-  "sourceHash": "fnv1a64:72a9a477a647456d",
+  "sourceHash": "fnv1a64:0d9567c12fefbfdf",
   "lessonIds": [
     "TE-C314-mestri",
     "TE-C314-plambaru",
@@ -16,6 +16,6 @@
   "text": "telugu/narration/ch314.txt",
   "json": "telugu/narration/ch314.json",
   "textHash": "fnv1a64:733aec3209ba4935",
-  "jsonHash": "fnv1a64:f9dc305f84613d81",
+  "jsonHash": "fnv1a64:2c37887fc1bcc4fa",
   "findings": []
 }

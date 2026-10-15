@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d438cf08840ea131",
+  "sourceHash": "fnv1a64:09ebe89b3482544c",
   "lessons": [
     {
       "id": "HI-C11-kaalaa-safed",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:568074e9d242044b",
+      "sourceHash": "fnv1a64:03461e04ca7d4485",
       "notice": null,
       "blocks": [
         {
