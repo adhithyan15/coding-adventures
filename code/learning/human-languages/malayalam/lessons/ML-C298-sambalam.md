@@ -10,12 +10,12 @@ chapter: 298
 type: word
 headword: "ശമ്പളം"
 gloss: "a salary"
-romanization: "śambaḷaṁ"
+romanization: "śampaḷaṁ"
 concept_tag: ML-JOLI298-SAMBALAM
 prerequisites: [ML-C298-palacarakku, ML-C298-pakkarru]
 sounds: []
 roots: [sanskrit-shambala]
-etymology_hook: "śambaḷaṁ ← Sanskrit śambala 'provisions for a journey', a tadbhava (CDIAL 12315)"
+etymology_hook: "śampaḷaṁ ← Sanskrit śambala 'provisions for a journey', a tadbhava (CDIAL 12315)"
 duration:
   max_seconds: 200
 requires:
@@ -32,7 +32,7 @@ variety: standard-colloquial
 reviews_of: [ML-C298-pakkarru]
 ---
 
-# ശമ്പളം (śambaḷaṁ) — a salary
+# ശമ്പളം (śampaḷaṁ) — a salary
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C298-JOLI298-01, ML-LEX-C298-JOLI298-02] -->
@@ -42,12 +42,12 @@ reviews_of: [ML-C298-pakkarru]
 ## You'll want to know: ശമ്പളം
 <!-- hl-knowledge: introduces=[ML-LEX-C298-JOLI298-03]; assesses=[] -->
 
-**ശമ്പളം** — *śambaḷaṁ* — "a salary".
+**ശമ്പളം** — *śampaḷaṁ* — "a salary".
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ശമ്പളം** (*śambaḷaṁ*) ← Sanskrit *śambala*, "provisions for a journey", reshaped as a tadbhava (its *l* became *ḷ*), with Malayalam's noun ending *-ṁ* (CDIAL 12315). Provisions for the road became regular pay.
+**ശമ്പളം** (*śampaḷaṁ*) ← Sanskrit *śambala*, "provisions for a journey", reshaped as a tadbhava (its *l* became *ḷ*), with Malayalam's noun ending *-ṁ* (CDIAL 12315). Provisions for the road became regular pay.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -58,10 +58,10 @@ One more word for this chapter.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C298-JOLI298-03, ML-LEX-C298-JOLI298-01, ML-LEX-C298-JOLI298-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: *śambaḷaṁ*]
-- [YOU SAY: *śambaḷaṁ*, once more]
-- [YOU SAY: say *śambaḷaṁ*]
-- [YOU RECALL: say the Malayalam for groceries, then the Malayalam for a packet, then say *śambaḷaṁ* again]
+- [YOU SAY: *śampaḷaṁ*]
+- [YOU SAY: *śampaḷaṁ*, once more]
+- [YOU SAY: say *śampaḷaṁ*]
+- [YOU RECALL: say the Malayalam for groceries, then the Malayalam for a packet, then say *śampaḷaṁ* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C298-JOLI298-03, ML-LEX-C298-JOLI298-01, ML-LEX-C298-JOLI298-02] -->

@@ -7,7 +7,7 @@ chapter: 1
 type: phrase
 headword: جی ہاں
 romanization: jī hā̃
-gloss: yes
+gloss: 'yes'
 concept_tag: RESPONSE-YES
 prerequisites: [UR-C01-shukriya]
 sounds: [rtl, long-i, nasal-vowel]

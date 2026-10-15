@@ -6,7 +6,7 @@ sequence: 80
 chapter: 2
 type: word
 headword: la tarde
-gloss: afternoon (la tarde — feminine; also: late)
+gloss: 'afternoon (la tarde — feminine; also: late)'
 concept_tag: TIME-AFTERNOON
 prerequisites: [ES-C01-dia, ES-C01-buenos-dias]
 sounds: [vowel-a, stress-default-vowel-ns]

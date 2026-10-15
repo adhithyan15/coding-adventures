@@ -12,7 +12,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [FA-C04-hal]
 sounds: [rtl, short-vowels-unwritten, vav-o]
 roots: [persian-che, arabic-tawr]
-etymology_hook: Chetor is Persian che “what” plus Arabic-loan tor “manner”: literally “in what manner?”
+etymology_hook: 'Chetor is Persian che “what” plus Arabic-loan tor “manner”: literally “in what manner?”'
 duration:
   max_seconds: 220
 requires:

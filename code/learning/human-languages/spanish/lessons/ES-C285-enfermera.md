@@ -6,7 +6,7 @@ sequence: 3400
 chapter: 285
 type: word
 headword: la enfermera
-gloss: the nurse — from infirmus, not firm: named after the patient, not the work
+gloss: 'the nurse — from infirmus, not firm: named after the patient, not the work'
 concept_tag: ES-ROLE-NURSE
 prerequisites: [ES-C285-maestro]
 sounds: [nasal-n, r-tap]
