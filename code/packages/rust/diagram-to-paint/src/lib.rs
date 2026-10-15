@@ -13179,8 +13179,8 @@ emphasized --> direct
                     ("venn.titleTextColor".into(),"#112233".into()),("venn.setTextColor".into(),"#445566".into())]))};
                 assert_eq!(actual,expected,"whole scene, every primitive/glyph/style/order/config field");
                 let mut queries=Vec::new();
-                if titled {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(800)).with_style(text_interfaces::FontStyle::Italic).with_stretch(FontStretch::Expanded));}
-                queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(600)).with_style(text_interfaces::FontStyle::Italic).with_stretch(FontStretch::Condensed));
+                if titled {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(800)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Expanded));}
+                queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(600)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Condensed));
                 assert_eq!(*resolver.0.borrow(),queries,"all ordered resolver calls");
             }}}}
     }
