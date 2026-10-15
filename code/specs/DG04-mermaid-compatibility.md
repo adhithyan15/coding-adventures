@@ -752,9 +752,15 @@ stroke color, and stroke width continue to take precedence during Paint lowering
 Repeated `style` directives now cascade per property in source order for both set
 regions and attached text IDs, matching Mermaid's style-map merge behavior without
 discarding unrelated properties from earlier declarations.
-Venn style colors accept safe CSS names, hex values, and numeric color functions;
-unsafe functional payloads fail parsing. Stroke widths must be finite and
-non-negative, while fill opacity is constrained to the CSS range from zero to one.
+Recognized Venn style values use a bounded lexical color subset and reject
+unsafe functional payloads; this does not validate all CSS names, function
+arities or component ranges. Source token syntax remains narrower than the color
+helper (percent style values reject). Stroke widths must be finite/nonnegative
+without a new upper cap, and fill opacity must be finite within zero to one.
+Invalid recognized properties reject the whole parse before target resolution,
+including ignored targets or later repairing directives. Invalid theme fallback
+remains its distinct contract. Actual df058580 affected suites pass957/43 with
+strict14 and208 complete scene/query cases; full rendering parity stays open.
 
 ### Ishikawa Native Slice
 

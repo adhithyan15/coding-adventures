@@ -10,5 +10,5 @@ one unchanged parent-only archive ignore, and strict all-target Clippy for all
 runtime has 116 sources/696 actual cells on six available backends; all636 old
 tuples and106 old sources stay exact. CLR is unavailable and uncounted.
 Source/native-focused review19fd3975 and style-focused76b54bb9 passed; independent
-full terminal review is pending. Hosted checks and publication remain separate.
+full terminal reviewac4a0fec passed. Hosted checks and publication remain separate.
 Final-source Miri **DEFERRED/PENDING**, never passed.

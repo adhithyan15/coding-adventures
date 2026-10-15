@@ -100,3 +100,9 @@ explicitly inventory consumed external resources before transferring acceptance.
 New main6814c2ce (four paths, parent0e) adds Venn style hardening plus rgba corpus.
 Incoming review4c2351ea permits a bounded narrow parser reconstruction but
 withholds integration acceptance. Current full source excludes that commit.
+
+Independent exact f630 terminal reviewac4a0fec passed the actual2765/120 run,
+compiler884/LANG500/696focused tuples. Later df058580 reruns the changed style14
+cone only; native counts retain f630 attribution by exact package/code and21
+mapped external-resource identity with four named documentation exceptions.
+No blanket dynamic resource, hosted, Miri or full Closure acceptance inferred.

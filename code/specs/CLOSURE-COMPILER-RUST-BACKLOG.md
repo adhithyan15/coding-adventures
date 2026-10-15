@@ -3,50 +3,49 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a Venn config integration checkpoint -->
-Local source f630e6ad reconciles0e main through whole225568-entry closed proof:
-49incoming paths,42pure/seven reconstructions, entire owned compiler prefix
-retained except four dedicated canonical11-unit edits after actual tests-first
-reds. Shared folded-f64/exp/log/effect/alias/pre/post/resource guards exact.
+Local accepted source df058580 reconciles inspected main6814c2ce through closed
+four-path merge13c73a37/two independently reconstructed full files. Entire owned
+parser production is retained except the specified style match/two helpers;
+all old config/theme/palette origin/numeric guards remain. Actual full14 style
+957P/0F/0ignored across43 targets and strict all-target warning/unknown-lint
+denial PASS. Exact source review71203c6a and terminal
+review0e7f6ef6 PASS. Full receipt
+CV04a-venn-style-validation-delivery-df058580.json; strict435f66a1 and tests502b63da.
 
-Actual source `f630e6ad` passed 2,765 tests across 120 targets, zero failures,
-one unchanged parent-only archive ignore, and strict all-target Clippy for all
-20 affected packages. Compiler884 and full unfiltered LANG500 passed. Focused
-runtime has 116 sources/696 actual cells on six available backends; all636 old
-tuples and106 old sources stay exact. CLR is unavailable and uncounted.
-Source/native-focused review19fd3975 and style-focused76b54bb9 passed; independent
-full terminal review is pending. Hosted checks and publication remain separate.
-Final-source Miri **DEFERRED/PENDING**, never passed.
+Tests-first unsafe-value reds retained.918 exact eager errors,342 complete valid
+IR cases,2percent lexer errors,12original invalid-cascade errors/12valid complete
+IR companions, exact external corpus style,208wholeScene/query cases (192old
+exact+16RGBA/rawstroke). Invalid JSON fills remain exacterrors; valid title
+companions preserve complete config/theme oracles. Failed percent/label fixture
+attempts retained with lessons; no false green. No full CSS/visual parity claim.
 
-Venn source58 debug/default repair has actual943/41/strict14 and independent
-review7b0ccafb. Current f630 adds12wholeIR and16wholeScene/query cascade cases,
-retaining176old complete cases:192total. Package inventories native166/2844,
-style50/802; registry376 exact, only three expected local versions changed.
-Current full receipt CV04a-cascade-eleven-delivery-f630e6ad-validation.json:
-strict1b231a1c0585df7b226427d4a26a04b333782023f1f326ff4b832dddaab58e52;
-tests5b5ea0e9731967b41f1bacb10d54e48085642d0599855ddc929b5551eeb52efa.
-Historical Closure36/3705 exact316e is input attribution, not new execution.
-External grammar/corpus attribution requires its own inventory, not package-only
-counts. Source/native-focused19fd3975 and style-focused76b54bb9 pass; terminal
-review pending. Previous failed raw/schema/adapter and numeric-proof runs retained.
+Native actual execution remains f630e6ad:full20 actual2765P/0F/1unchangedarchive
+ignore/120targets+strict20; compiler884/full unfilteredLANG500;116sources/
+696runtime cells on six actual backends (636oldexact+60new), no absentCLR count.
+Independent terminalac4a0fec PASS. Native166/2844 inputs retain f630 except four
+namedMD paths, and21mapped external-native resources remain mode/type/blob/SHA
+exact. Independent resource review4bc13419/actual integrated proof separate
+static conservative routes from unclosed dynamic/generated/toolchain/OS inputs.
+Grammar606 overapproximation differs onlyVenncorpus; newstyle suites execute it.
+Historical Closure36/3705 plus three static includes retain316e attribution,
+not new execution or a full dynamic closure. Registry376 exact; only local parser
+0.501 to0.502 changed in this slice. No new crates.io dependency.
 
-Live main6814c2ce adds four Venn style-validation paths, not yet imported.
-Incoming audit4c2351ea requires eager exact parse errors, reversible old12IR
-positive fixture split, all192valid scene/query cases retained, lexical-color
-limitations explicit and external corpus inputs accounted. Spec-first slice next.
-Actual published8d macOS fixture failure /var-/private repaired test-onlyd2:
+Actual published8d macOS job116532526128 fixture failure is repaired test-onlyd2:
 12portable tests/pinned Ruff0.15.20 pass, independentba137475; production helper/
-workflow319 exact. PATH Ruff0.16 inherited8diagnostics retainedfailed. Actual
-hosted Python3.10/C/GHC/hsc2hs/Cabal link acceptance still mandatory.
+workflow319 exact, Unix-only Windows reactor selection7e retained. PATHRuff0.16
+eight inherited diagnostics stay failed; none newly suppressed. Actual hosted
+Python3.10/C/GHC/hsc2hs/Cabal and every required check remain mandatory.
 
-Sole PR17288 remains published8d73f88f, conflicting/unmerged/autoOFF. Local work
-not published. Finish current-main reconciliation/docs/exact reviews/fresh unforced
-plan before same-PR push; require exact-head conflict-free/review-clean terminal
-acceptable required CI before auto-merge. Verify fetched merge reachability before
-cleanup. Miri **DEFERRED/PENDING**, never passed; frozen source/inputs/process/
-target/receipts untouched/unpolled, no duplicate/termination. Delivery first,
-genuine final-source Miri afterward. Full Closure parity/output-byte-source/
-stable IDs/pass-sweep/all transformation lineage OPEN; heartbeat ACTIVE. Base
-ESTree canonical boundary, own types, no new crates.io dependencies retained.
+Sole implementation PR17288; current delivery requires exact documentation-only
+carrier review, fresh main/openPR/epic audit and unforced plan, then verified
+normal same-PR push. Auto-mergeOFF until current conflict-free/review-clean
+exact-head terminal acceptable required CI. Actual fetched merge reachability
+and payload proof precede cleanup/CV04b. Miri **DEFERRED/PENDING**, never passed:
+frozen checkout/process/inputs/target/receipts untouched/unpolled, no duplicate/
+termination. Deliver implementation first then genuine final-source Miri.
+Full Closure parity/output-byte-source/stable IDs/pass-sweep/all transformation
+lineage OPEN; heartbeat ACTIVE. Base ESTree canonical boundary/own types retained.
 <!-- /CV04a Venn config integration checkpoint -->
 
 <!-- CV04a pathwise pending checkpoint -->
