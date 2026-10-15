@@ -4846,18 +4846,19 @@ impl Compiler {
                 }
                 break;
             }
-            // Only canonical small literals enter the new unit budget. A
+            // Only canonical small literals enter this dedicated budget of
+            // three; a sign root therefore stays within [-4, 4]. A
             // generic f64 fold is not an exact proof for integer arithmetic
             // near2^53, and must not hide another unit in a nested subtree.
             let tokens=direct_tokens(current);
             if tokens.len()==1&&direct_nodes(current).is_empty() {
                 let amount=match tokens[0].effective_type_name() {
-                    "INTEGER_LIT"=>tokens[0].value.parse::<u64>().ok().filter(|v|*v<=2),
+                    "INTEGER_LIT"=>tokens[0].value.parse::<u64>().ok().filter(|v|*v<=3),
                     "REAL_LIT"=>tokens[0].value.parse::<f64>().ok().and_then(|v|
-                        [0.0,1.0,2.0].iter().position(|allowed|*allowed==v).map(|v|v as u64)),
+                        [0.0,1.0,2.0,3.0].iter().position(|allowed|*allowed==v).map(|v|v as u64)),
                     _=>None,
                 }?;
-                units=units.checked_add(amount)?;if units>2 {return None;}continue;
+                units=units.checked_add(amount)?;if units>3 {return None;}continue;
             }
             if matches!(current.rule_name.as_str(),"expr_add"|"simple_arith") {
                 let sequence=pieces(current);
