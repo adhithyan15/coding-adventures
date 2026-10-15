@@ -107,7 +107,9 @@ directory and supplies the selected macOS compiler, linker and SDK only to
 Haskell. It preserves the original config and other languages' developer/SDK
 environment. Before publishing `CABAL_CONFIG`, real C/GHC/Cabal foreign-C probes
 must run successfully; exact absent-driver refusals and an hsc2hs invocation
-trace establish that configured tools are actually used. This diagnoses the
+trace establish that configured tools are actually used. The copied config pins
+the compiler path checked as GHC9.4.8; competing compiler-flavor and package-tool
+selectors fail bootstrap for review. This diagnoses the
 observed GHC9.4.8/SDK27 linker failure before expensive package tests. Portable
 controls and Windows GHC/Cabal receipts do not establish macOS acceptance.
 Required hosted checks remain pending. Miri is **DEFERRED/PENDING**, never passed.

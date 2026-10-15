@@ -140,7 +140,9 @@ def overlay_config(source: str, clang: str, ld: str, sdk: str,
         additions = ["  " + field + ": " + " ".join(json.dumps(v) for v in values) + "\n"
                      for field, values in managed.items() if values]
         lines[end:end] = additions
-    return "".join(lines)
+    # Cabal's compiler discovery does not reliably honor ghc-location alone.
+    # Put the reviewed compiler in the top-level selector for every consumer.
+    return ("with-compiler: " + ghc + "\n" if ghc is not None else "") + "".join(lines)
 
 
 def write_hsc_driver(output: Path, real_hsc2hs: str, clang: str, ld: str, sdk: str) -> tuple[Path, list[str]]:
