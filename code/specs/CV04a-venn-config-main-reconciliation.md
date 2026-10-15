@@ -15,6 +15,15 @@ invalid individual values fall back to defaults. They do not inherit secondary
 front-matter fields. Defaults are width800/height450/padding8/useMaxWidthtrue/
 useDebugLayoutfalse. Booleans are transport and metadata, with no geometry branch.
 
+Scope Venn directive lookup to actual closed single-line init directives (the
+forms admitted by this line grammar). Recognize a quoted `venn` object key with
+a colon and immediate object value, ignoring quoted value/string contents.
+The incoming whole-source helper can otherwise mistake a quoted set name and
+style object for canvas configuration, or a quoted `venn` value followed by an
+unrelated object. Add exact no-directive/quoted-body/non-init/malformed-init and
+quoted-value controls. Keep all other dialect extractors byte-exact; this bounded
+Venn path is not a general JSON5 parser or a multiline-directive parity claim.
+
 Finite alone is insufficient for this new text-reachable canvas path. The
 incoming width=height=1e308 with four equal sets and a labeled union can overflow
 the centroid sum even though individual circle coordinates are finite. This is
