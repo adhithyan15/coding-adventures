@@ -14,7 +14,7 @@ repair: CV04a-ishikawa-theme-main-reconciliation.md. Keep shared/Venn helpers,
 closed whole-tree import, actual new-field red controls, Ishikawa-only reader
 repair, complete IR/layout/scene/query oracles, affected14 execution/review,
 new final docs/current-main plan/carrier review before normal solePR17288 push.
-Existing829/729 publisher/gates must not be relabeled for this new source.
+Existing a786/729 publisher/gates must not be relabeled for this new source.
 Current published8f remains unmerged/autoOFF with actual macOS failure OPEN.
 
 Current local typography source04712174 retains closed main9ea15c06 through
