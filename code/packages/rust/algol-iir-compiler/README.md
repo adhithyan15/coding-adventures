@@ -1,18 +1,17 @@
 # algol-iir-compiler
 
-The bounded outer-`entier` proof accepts cumulative offsets of at most nine
+The bounded outer-`entier` proof accepts cumulative offsets of at most ten
 absolute units around one unshadowed direct `sign` call, including supported
-unary `abs`/`entier` wrappers. New offsets use canonical literal values 0..9;
+unary `abs`/`entier` wrappers. New offsets use canonical literal values 0..10;
 wrappers never reset the checked budget. The legacy one-unit proof is retained
 at entry. One conditional front checks each branch independently. Exact
 read-once Real name identity lowering and alias/effect invalidation remain;
 the shared `exp`/`ln` classifier stays narrower. General folding, recursive
 conditional and arbitrary-function composition require separate proofs.
 
-The nine-unit source passed 878 compiler library tests and the complete affected
-six-package suite: 1,809 passed over 78 targets, with one existing ignore, plus
-strict lint. Independent source and terminal reviews passed. Hosted CI remains
-pending; final-source Miri is **DEFERRED/PENDING**, never passed.
+Source `f9494966` passed 1,814 tests over 78 targets, with 1 unchanged ignore, plus strict all-target lint. Compiler 881 and full unfiltered LANG 498 passed.
+Independent source and terminal reviews passed. Hosted CI remains pending;
+final-source Miri is **DEFERRED/PENDING**, never passed.
 
 Rust frontend for compiling a conservative ALGOL 60 scalar subset into the
 shared LANG VM `interpreter_ir::IIRModule`.

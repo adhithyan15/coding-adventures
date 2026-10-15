@@ -75,3 +75,40 @@ documentation-only mergeb2f123eb retains published372 plus only this spec and
 the saved-helper lesson. Incoming2f auditd782c1ca WITHHELD its raw shared widening;
 use the bounded four-edit canonical repair above. No native10 import, tests,
 implementation or Cargo execution has occurred. Miri remains DEFERRED/PENDING.
+
+## Actual local acceptance
+
+Local ten-unit source `f94949663ffe49794f85402d5580e8cf6b246c81` reconciles inspected main `2f160fa4`
+through a complete closed merge: nine incoming paths, four pure imports, five
+bounded reconstructions, all 225,511 other entries retained. All owned compiler
+production bytes remain equal to accepted `cdca2e11` except four dedicated
+canonical budget/comment edits. Shared exp/log and folding guards remain exact.
+
+Source `f9494966` passed 1,814 tests over 78 targets, with 1 unchanged ignore, plus strict all-target lint. Compiler 881 and full unfiltered LANG 498 passed.
+Runtime evidence: 106 owned sources / 636 actual cells on NativeAot, LLVM, Wasm,
+JVM, VM and JIT; 576 previous tuples exact, 60 new normal-exit/output/order cells.
+Unavailable CLR is not counted. Canonical positives, independent arms, formatter
+routes, true-eleven/folded-ten, shadow/effect/alias and 8192-limit controls passed.
+Actual raw and tests-first failures are retained.
+
+Independent source review `5c9af2bd` and terminal review
+`446f5f4f` passed for this exact source. Style attribution remains
+tested `55afa2b5`: actual 932/41 + strict, 104 complete scenes/query traces;
+50-package inputs exact except eight named Markdown paths. Standalone Closure
+36 roots / 3,705 objects retain `316e7878` inputs; no new execution claim.
+CI/helper inputs equal `319dc1fe`, Windows Unix-only reactor selection retained.
+Registry 376 tuples exact; local lock changes only six expected package versions.
+
+Published PR #17288 still carries `372ba713` until a separately verified push;
+auto-merge OFF, no current-head hosted acceptance. Local documentation, fresh
+main/open-PR audit, unforced build plan and exact-carrier security must pass
+before same-PR delivery. Required hosted macOS/Windows/other checks, review-clean
+conflict-free terminal status, actual merge reachability and cleanup remain gates.
+No CI waiver; Windows selection is not socket support, local Cabal is not macOS.
+
+Final-source Miri **DEFERRED/PENDING, never passed**; frozen checkout/process/
+inputs/target/receipts untouched and unpolled. Deliver implementation first,
+then obtain genuine final-source Miri. Full Closure parity, output-byte/source
+joins, stable IDs, pass/sweep order and folding/renaming/inlining/motion/merging/
+deletion lineage remain OPEN; heartbeat ACTIVE. Base ESTree, owned types and
+unrelated local edits preserved.
