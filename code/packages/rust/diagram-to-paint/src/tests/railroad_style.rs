@@ -21,9 +21,10 @@ fn railroad_style_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let options=DiagramToPaintOptions{background:base.background,device_pixel_ratio:base.device_pixel_ratio,
             label_font:base.label_font,title_font:base.title_font,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
         let scene=diagram_to_paint_railroad(&layout,&options);
-        // A metadata-only fontFamily transport cannot satisfy the actual
-        // four ordered resolver calls for the rule name and A/B/C leaves.
-        assert_eq!(*resolver.0.borrow(),vec![FontQuery::named("Courier New");4]);
+        // The shared paint font cache resolves this one font once for the
+        // rule name and A/B/C leaves. Metadata-only transport cannot satisfy
+        // the actual resolver query, including family/weight/style/stretch.
+        assert_eq!(*resolver.0.borrow(),vec![FontQuery::named("Courier New")]);
         let kinds:Vec<_>=scene.instructions.iter().map(|i|match i{PaintInstruction::Ellipse(_)=>0,
             PaintInstruction::Path(_)=>1,PaintInstruction::Rect(_)=>2,PaintInstruction::GlyphRun(_)=>3,_=>4}).collect();
         let mut expected_kinds=if markers{vec![0,0]}else{vec![]};
