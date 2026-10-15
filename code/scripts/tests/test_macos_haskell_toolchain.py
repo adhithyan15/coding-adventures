@@ -148,6 +148,25 @@ class MacosHaskellToolchainTests(unittest.TestCase):
         self.assertEqual({"CABAL_CONFIG": str(config), "PATH": "/tools", "UNCHANGED": "retained"}, env)
         return root, github_env, receipt, commands
 
+    def test_competing_compiler_identity_refused_and_selected_path_pinned(self):
+        for source in [
+            "with-compiler: /other/ghc\n",
+            "WITH-COMPILER: /other/ghc -- competing\n",
+            "  with-compiler: /other/ghc\n",
+            "{ with-compiler: /other/ghc }\n",
+            "program-locations\n  ghc-location: /other/ghc\n",
+            "PROGRAM-LOCATIONS -- retained comment\n  GHC-LOCATION: /other/ghc\n",
+        ]:
+            with self.subTest(source=source):
+                with self.assertRaises(ValueError):
+                    toolchain.overlay_config(source, CLANG, LD, SDK)
+        root, _, receipt, commands = self.run_mock_bootstrap()
+        self.assertTrue(receipt["success"])
+        for _, options in commands:
+            config = Path(options["env"].get("CABAL_CONFIG", ""))
+            if config.parent == root / "output":
+                self.assertIn('  ghc-location: "/tools/ghc"', config.read_text(encoding="utf-8").splitlines())
+
     def test_success_publishes_only_cabal_config_after_all_probes(self):
         root, github_env, receipt, commands = self.run_mock_bootstrap()
         self.assertTrue(receipt["success"])
