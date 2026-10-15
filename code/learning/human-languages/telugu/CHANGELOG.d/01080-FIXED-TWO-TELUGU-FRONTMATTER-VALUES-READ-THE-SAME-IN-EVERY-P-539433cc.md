@@ -1,0 +1,5 @@
+## Fixed — two Telugu frontmatter values read the same in every parser
+
+- TE-C20-vatavaranam had an unquoted `gloss:` with a colon and a space inside it (`gloss: … Kannada's Persian+Sanskrit hybrid: vata ("air/wind") + …`), which a strict YAML parser reads as the start of a second key and rejects. It is now one single-quoted scalar, with an apostrophe written `''`. The wording is unchanged.
+- The repository's reader returns exactly the text it returned before for every value, and PyYAML now returns that same text.
+- TE-C34-adugu's etymology_hook ran over three lines inside double quotes. The repository's reader stopped at the first line, kept a stray opening quote, and read the second line as a made-up key `naming:`, so the hook it served was cut off mid-sentence. The hook is now one single-quoted line that says what the lesson body says: Tamil, Kannada and Malayalam have no matching verb, and DEDR's firmest match is Parji *aḍ-*, from central India. The branch point it used to carry (Telugu is South-Central Dravidian) stays in the body.

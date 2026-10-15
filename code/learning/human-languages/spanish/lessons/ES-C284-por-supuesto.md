@@ -6,7 +6,7 @@ sequence: 3360
 chapter: 284
 type: phrase
 headword: por supuesto
-gloss: of course — supponere, to place under: it was already under the conversation
+gloss: 'of course — supponere, to place under: it was already under the conversation'
 concept_tag: ES-REPLY-OF-COURSE
 prerequisites: [ES-C284-exacto]
 sounds: [diphthong-ue, s-clear]

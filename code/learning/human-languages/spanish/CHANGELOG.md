@@ -1,5 +1,11 @@
 # Changelog
 
+## Fixed — twenty-eight frontmatter values are valid YAML
+
+- ES-C02-tarde, ES-C282-abrazo, ES-C282-saludo, ES-C282-sonrisa, ES-C283-amable, ES-C283-disculpe, ES-C284-cierto, ES-C284-de-acuerdo, ES-C284-por-supuesto, ES-C284-seguro, ES-C285-enfermera, ES-C285-vecino, ES-C287-plato, ES-C287-vaso, ES-C288-despedida, ES-C288-llegada, ES-C288-salida, ES-C288-vuelta, ES-C295-orilla, ES-C295-sendero, ES-C297-tenedor, ES-C298-sin-duda, ES-C299-ganado, ES-C299-granja, ES-C38-luego and ES-C469-llamada had an unquoted `gloss:` with a colon and a space inside it (`gloss: … — feminine; also: late) …`), which a strict YAML parser reads as the start of a second key and rejects. Each is now one single-quoted scalar, with an apostrophe written `''`. The wording is unchanged.
+- ES-C19-no's `headword: no` and ES-C19-si's `gloss: yes` are now quoted (`'no'` and `'yes'`), so a YAML 1.1 parser no longer reads them as booleans. The repository's reader always kept them as text.
+- The repository's reader returns exactly the text it returned before for every value, and PyYAML now returns that same text.
+
 ## Fixed — forty-three glosses are valid YAML
 
 - **ES-C06-espanol**'s `gloss: "Spanish" — the language, …` and forty-two more had a `gloss:` that opened with a quoted English word and went on past the closing quote (`gloss: "day" — …`), which a strict YAML parser rejects. Each is now one single-quoted scalar, with an apostrophe written `''`. The wording is unchanged. The lessons are ES-C02-un, ES-C03-vos, ES-C06-espanol, ES-C06-habla, ES-C06-hablas, ES-C06-hablo, ES-C07-come, ES-C07-comemos, ES-C07-comen-viven, ES-C07-comes, ES-C07-como, ES-C07-hablais, ES-C07-hablamos, ES-C07-hablan, ES-C07-vivimos, ES-C08-tenemos, ES-C08-tienen, ES-C09-estamos, ES-C09-estan, ES-C09-somos, ES-C09-son, ES-C10-vamos, ES-C10-van, ES-C42-la, ES-C42-lo, ES-C42-te, ES-C44-las, ES-C44-los, ES-C45-los-las, ES-C45-nos, ES-C45-nosotros, ES-C45-os, ES-C46-le, ES-C46-les, ES-C48-cuando, ES-C49-he-hablado, ES-C51-para, ES-C51-por, ES-C53-lo-que, ES-C54-hay-que, ES-C54-hay, ES-R01-no-entiendo and ES-R02-mas-despacio.

@@ -6,7 +6,7 @@ sequence: 3370
 chapter: 285
 type: word
 headword: el vecino
-gloss: the neighbour — from vicus, a village street: the person off your own block
+gloss: 'the neighbour — from vicus, a village street: the person off your own block'
 concept_tag: ES-ROLE-NEIGHBOUR
 prerequisites: [ES-C284-por-supuesto]
 sounds: [soft-c, vowel-i]

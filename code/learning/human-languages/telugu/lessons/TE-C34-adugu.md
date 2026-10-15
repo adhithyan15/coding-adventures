@@ -12,9 +12,7 @@ concept_tag: VERB-ASK
 prerequisites: [TE-C34-tiisuko, TE-C07-numbers-6-10]
 sounds: [telugu-retroflex-dda, independent-vowel-a]
 roots: [adugu-ask-dravidian, sanskrit-prashna-question]
-etymology_hook: "the four literary sisters share no ask-verb, and the Dravidian dictionary's firmest match for అడుగు is Parji aḍ- — the clue to a fact worth
-naming: Telugu is South-Central Dravidian, with Gondi and Kui, while Tamil,
-Kannada and Malayalam are South Dravidian"
+etymology_hook: 'aḍugu ''ask'': no match in Tamil, Kannada or Malayalam; DEDR''s firmest match is Parji aḍ-, from central India'
 duration:
   max_seconds: 295
 requires:

@@ -12,7 +12,7 @@ gloss: the two-stroke katakana sign for hi — the remaining sign in coffee
 prerequisites: [JA-W06-long-mark]
 sounds: [mora]
 roots: []
-etymology_hook: Two spare strokes finish the borrowed word: a short left stroke, then the longer bent body.
+etymology_hook: 'Two spare strokes finish the borrowed word: a short left stroke, then the longer bent body.'
 duration:
   max_seconds: 175
 requires:

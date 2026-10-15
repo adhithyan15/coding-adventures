@@ -6,7 +6,7 @@ sequence: 4280
 chapter: 114
 type: review
 headword: (nine letters)
-gloss: second pass: the same nine letters, from the word back to the letter
+gloss: 'second pass: the same nine letters, from the word back to the letter'
 romanization: "onpatu akṣarangaḷ"
 concept_tag: ML-LETTERS-FROM-WORDS
 prerequisites: [ML-W113-sha, ML-W113-nga, ML-W113-lla, ML-W113-kha, ML-W114-dha, ML-W114-ba, ML-W114-chillu-rr, ML-W114-chha, ML-W114-ai-sign]

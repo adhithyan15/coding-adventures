@@ -12,7 +12,7 @@ concept_tag: FAREWELL-SOON
 prerequisites: [PA-C35-changa-ji, PA-C02-khushi]
 sounds: [kanna-aa, bihari-ii, bindi-nasal]
 roots: [persian-jald, arabic-jald, mil-meet]
-etymology_hook: ਜਲਦੀ is built on Persian jald, "quick, hurried", itself from Arabic jald, and carries the Persian -ī that turns an adjective into a quality; ਮਿਲਾਂਗੇ is the future of ਮਿਲਣਾ, "to meet", already met in phir milaange. So the phrase is one borrowed word and one inherited one, in the order Punjabi always uses: the adverb first, the verb last.
+etymology_hook: 'ਜਲਦੀ is built on Persian jald, "quick, hurried", itself from Arabic jald, and carries the Persian -ī that turns an adjective into a quality; ਮਿਲਾਂਗੇ is the future of ਮਿਲਣਾ, "to meet", already met in phir milaange. So the phrase is one borrowed word and one inherited one, in the order Punjabi always uses: the adverb first, the verb last.'
 duration:
   max_seconds: 285
 requires:

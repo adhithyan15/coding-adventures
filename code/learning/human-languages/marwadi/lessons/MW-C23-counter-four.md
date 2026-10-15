@@ -11,7 +11,7 @@ gloss: a three-turn bargaining exchange in four separately scored skills
 prerequisites: [MW-R23-bargain-two]
 sounds: [mixed]
 roots: []
-etymology_hook: Ask, react, counter: the first exchange in this track that has more than one turn.
+etymology_hook: 'Ask, react, counter: the first exchange in this track that has more than one turn.'
 duration:
   max_seconds: 295
 requires:

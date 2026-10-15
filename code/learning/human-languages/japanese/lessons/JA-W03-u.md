@@ -12,7 +12,7 @@ gloss: the hiragana sign for the mora u — two strokes, and here it lengthens t
 prerequisites: [JA-W03-to]
 sounds: [mora]
 roots: []
-etymology_hook: う after と does not add a syllable: it holds the o for a second beat, which is why arigatou ends the way it sounds.
+etymology_hook: 'う after と does not add a syllable: it holds the o for a second beat, which is why arigatou ends the way it sounds.'
 duration:
   max_seconds: 190
 requires:

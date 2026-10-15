@@ -6,7 +6,7 @@ sequence: 710
 chapter: 20
 type: word
 headword: வானிலை
-gloss: weather — most likely a NATIVE Dravidian compound, unlike Kannada/Telugu/Malayalam's Sanskrit compounds: vaanam ("sky") + nilai ("state, standing")
+gloss: 'weather — most likely a NATIVE Dravidian compound, unlike Kannada/Telugu/Malayalam''s Sanskrit compounds: vaanam ("sky") + nilai ("state, standing")'
 romanization: "vāṉilai"
 concept_tag: TA-WEATHER
 prerequisites: [TA-C18-mani-homophone-time, TA-C20-pathinondru-irupathu]

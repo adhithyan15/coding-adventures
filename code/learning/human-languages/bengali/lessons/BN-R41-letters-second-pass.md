@@ -6,7 +6,7 @@ sequence: 2220
 chapter: 41
 type: review
 headword: (five letters)
-gloss: second pass: the same five letters, from the word back to the letter
+gloss: 'second pass: the same five letters, from the word back to the letter'
 romanization: "pā̃cṭi akṣar"
 concept_tag: BN-LETTERS-FROM-WORDS
 prerequisites: [BN-W41-anusvar, BN-W41-bisarga, BN-W41-jha, BN-W41-pha, BN-W41-sha]

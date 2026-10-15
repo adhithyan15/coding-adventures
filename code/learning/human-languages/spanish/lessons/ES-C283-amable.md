@@ -6,7 +6,7 @@ sequence: 3290
 chapter: 283
 type: word
 headword: amable
-gloss: kind — Latin amabilis, loveable: the person it is easy to be fond of
+gloss: 'kind — Latin amabilis, loveable: the person it is easy to be fond of'
 concept_tag: ES-COURTESY-KIND
 prerequisites: [ES-C283-permiso]
 sounds: [vowel-a, b-soft]

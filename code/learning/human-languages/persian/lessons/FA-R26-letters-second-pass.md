@@ -6,7 +6,7 @@ sequence: 1180
 chapter: 26
 type: review
 headword: (eighteen letters)
-gloss: second pass: the same eighteen letters, from the word back to the letter
+gloss: 'second pass: the same eighteen letters, from the word back to the letter'
 romanization: "hejdah harf"
 concept_tag: FA-LETTERS-FROM-WORDS
 prerequisites: [FA-W22-re, FA-W22-ze, FA-W22-dal, FA-W23-he-jimi, FA-W23-jim, FA-W23-khe, FA-W23-che, FA-W24-pe, FA-W24-ye, FA-W24-kaf, FA-W24-gaf, FA-W25-shin, FA-W25-sad, FA-W25-ta, FA-W25-za, FA-W26-fe, FA-W26-ghaf, FA-W26-alef-madd]
