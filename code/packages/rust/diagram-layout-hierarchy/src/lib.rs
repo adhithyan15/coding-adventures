@@ -216,31 +216,61 @@ fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
             ((cursor - x - config.horizontal_separation).max(0.0), max_height)
         }
         RailroadExpression::Choice(alternatives) => {
+            let radius = config.arc_radius;
             let gap = config.vertical_separation; let mut cursor_y = y; let mut max_width: f64 = 0.0; let mut sizes = Vec::new();
-            for alternative in alternatives { let size = layout_railroad_expression(alternative, x + 28.0, cursor_y, config, elements, paths); sizes.push((cursor_y, size)); cursor_y += size.1 + gap; max_width = max_width.max(size.0); }
+            for alternative in alternatives { let size = layout_railroad_expression(alternative, x + radius * 2.0, cursor_y, config, elements, paths); sizes.push((cursor_y, size)); cursor_y += size.1 + gap; max_width = max_width.max(size.0); }
             let height = (cursor_y - y - gap).max(36.0); let middle = y + height / 2.0;
             for (alt_y, (alt_width, alt_height)) in sizes { let alt_center = alt_y + alt_height / 2.0;
-                paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + 14.0, y: alt_center }, Point { x: x + 28.0, y: alt_center }], loopback: false });
-                paths.push(LayoutedRailroadPath { points: vec![Point { x: x + 28.0 + alt_width, y: alt_center }, Point { x: x + 42.0 + max_width, y: alt_center }, Point { x: x + 56.0 + max_width, y: middle }], loopback: false }); }
-            (max_width + 56.0, height)
+                let left = if (alt_center - middle).abs() <= f64::EPSILON {
+                    vec![Point { x, y: middle }, Point { x: x + radius * 2.0, y: middle }]
+                } else {
+                    vec![Point { x, y: middle }, Point { x: x + radius, y: middle },
+                        Point { x: x + radius, y: alt_center }, Point { x: x + radius * 2.0, y: alt_center }]
+                };
+                paths.push(LayoutedRailroadPath { points: left, loopback: false });
+                let right_start = x + radius * 2.0 + alt_width;
+                let right_lane = x + radius * 3.0 + max_width;
+                let exit = x + radius * 4.0 + max_width;
+                let right = if (alt_center - middle).abs() <= f64::EPSILON {
+                    vec![Point { x: right_start, y: middle }, Point { x: exit, y: middle }]
+                } else {
+                    vec![Point { x: right_start, y: alt_center }, Point { x: right_lane, y: alt_center },
+                        Point { x: right_lane, y: middle }, Point { x: exit, y: middle }]
+                };
+                paths.push(LayoutedRailroadPath { points: right, loopback: false }); }
+            (max_width + radius * 4.0, height)
         }
         RailroadExpression::Optional(element) => {
-            let inner_y = y + 14.0;
-            let (inner_width, inner_height) = layout_railroad_expression(element, x + 24.0, inner_y, config, elements, paths);
-            let height = inner_height + 28.0; let middle = inner_y + inner_height / 2.0; let bypass_y = y + 4.0;
-            let exit_x = x + inner_width + 48.0;
-            paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + 24.0, y: middle }], loopback: false });
-            paths.push(LayoutedRailroadPath { points: vec![Point { x: x + 24.0 + inner_width, y: middle }, Point { x: exit_x, y: middle }], loopback: false });
-            paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + 12.0, y: bypass_y }, Point { x: exit_x - 12.0, y: bypass_y }, Point { x: exit_x, y: middle }], loopback: false });
-            (inner_width + 48.0, height)
+            let radius = config.arc_radius;
+            let inner_y = y + radius * 2.0;
+            let (inner_width, inner_height) = layout_railroad_expression(element, x + radius * 2.0, inner_y, config, elements, paths);
+            let height = inner_height + radius * 2.0; let middle = inner_y + inner_height / 2.0;
+            let exit_x = x + inner_width + radius * 4.0;
+            paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + radius * 2.0, y: middle }], loopback: false });
+            paths.push(LayoutedRailroadPath { points: vec![Point { x: x + radius * 2.0 + inner_width, y: middle }, Point { x: exit_x, y: middle }], loopback: false });
+            paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + radius, y: middle },
+                Point { x: x + radius, y }, Point { x: exit_x - radius, y },
+                Point { x: exit_x - radius, y: middle }, Point { x: exit_x, y: middle }], loopback: false });
+            (inner_width + radius * 4.0, height)
         }
         RailroadExpression::Repetition { element, min, .. } => {
-            let inner_y = y + 15.0;
-            let (inner_width, inner_height) = layout_railroad_expression(element, x, inner_y, config, elements, paths);
-            let height = inner_height + 30.0; let middle = inner_y + inner_height / 2.0; let loop_y = inner_y + inner_height + 9.0;
-            paths.push(LayoutedRailroadPath { points: vec![Point { x: x + inner_width, y: middle }, Point { x: x + inner_width, y: loop_y }, Point { x, y: loop_y }, Point { x, y: middle }], loopback: true });
-            if *min == 0 { paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + 12.0, y: y + 4.0 }, Point { x: x + inner_width - 12.0, y: y + 4.0 }, Point { x: x + inner_width, y: middle }], loopback: false }); }
-            (inner_width, height)
+            let radius = config.arc_radius;
+            let has_bypass = *min == 0;
+            let inner_y = y + if has_bypass { radius * 2.0 } else { 0.0 };
+            let inner_x = x + radius * 2.0;
+            let (inner_width, inner_height) = layout_railroad_expression(element, inner_x, inner_y, config, elements, paths);
+            let total_width = inner_width + radius * 4.0;
+            let height = inner_height + radius * 2.0 + if has_bypass { radius * 2.0 } else { 0.0 };
+            let middle = inner_y + inner_height / 2.0; let loop_y = inner_y + inner_height + radius * 2.0;
+            paths.push(LayoutedRailroadPath { points: vec![Point { x: inner_x + inner_width, y: middle },
+                Point { x: x + total_width - radius, y: middle }, Point { x: x + total_width - radius, y: loop_y },
+                Point { x: x + radius, y: loop_y }, Point { x: x + radius, y: middle }, Point { x: inner_x, y: middle }], loopback: true });
+            paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: inner_x, y: middle }], loopback: false });
+            paths.push(LayoutedRailroadPath { points: vec![Point { x: inner_x + inner_width, y: middle }, Point { x: x + total_width, y: middle }], loopback: false });
+            if has_bypass { paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + radius, y: middle },
+                Point { x: x + radius, y }, Point { x: x + total_width - radius, y },
+                Point { x: x + total_width - radius, y: middle }, Point { x: x + total_width, y: middle }], loopback: false }); }
+            (total_width, height)
         }
     }
 }
@@ -261,18 +291,19 @@ fn measure_railroad_expression(expr: &RailroadExpression, config: &diagram_ir::R
         }
         RailroadExpression::Choice(alternatives) => {
             let sizes: Vec<_> = alternatives.iter().map(|item| measure_railroad_expression(item, config)).collect();
-            let width = sizes.iter().map(|size| size.0).fold(0.0, f64::max) + 56.0;
+            let width = sizes.iter().map(|size| size.0).fold(0.0, f64::max) + config.arc_radius * 4.0;
             let height = sizes.iter().map(|size| size.1).sum::<f64>()
                 + config.vertical_separation * alternatives.len().saturating_sub(1) as f64;
             (width, height.max(36.0))
         }
         RailroadExpression::Optional(element) => {
             let (width, height) = measure_railroad_expression(element, config);
-            (width + 48.0, height + 28.0)
+            (width + config.arc_radius * 4.0, height + config.arc_radius * 2.0)
         }
-        RailroadExpression::Repetition { element, .. } => {
+        RailroadExpression::Repetition { element, min, .. } => {
             let (width, height) = measure_railroad_expression(element, config);
-            (width, height + 30.0)
+            (width + config.arc_radius * 4.0,
+                height + config.arc_radius * 2.0 + if *min == 0 { config.arc_radius * 2.0 } else { 0.0 })
         }
     }
 }
@@ -1329,5 +1360,30 @@ mod tests {
         assert!(spacious.width > compact.width);
         assert!(spacious.height > compact.height);
         assert!(spacious.rules[0].elements[1].x > compact.rules[0].elements[1].x);
+    }
+
+    #[test]
+    fn railroad_layout_applies_configured_arc_radius_to_branch_geometry() {
+        use diagram_ir::{RailroadConfig, RailroadDiagram, RailroadExpression, RailroadRule};
+        let expression = RailroadExpression::Optional(Box::new(RailroadExpression::Choice(vec![
+            RailroadExpression::Terminal("a".into()),
+            RailroadExpression::Terminal("b".into()),
+        ])));
+        let layout_with_radius = |arc_radius| layout_railroad(&RailroadDiagram {
+            title: None, accessibility_title: None, accessibility_description: None,
+            config: RailroadConfig { arc_radius, ..Default::default() },
+            rules: vec![RailroadRule { name: "value".into(), definition: expression.clone() }],
+        });
+        let tight = layout_with_radius(4.0);
+        let wide = layout_with_radius(24.0);
+        assert!(wide.width > tight.width);
+        assert!(wide.rules[0].height > tight.rules[0].height);
+        assert_ne!(wide.rules[0].paths, tight.rules[0].paths);
+        for layout in [&tight, &wide] {
+            let rule = &layout.rules[0];
+            assert!(rule.paths.iter().flat_map(|path| &path.points).all(|point|
+                point.x >= 0.0 && point.x <= layout.width
+                    && point.y >= rule.y && point.y <= rule.y + rule.height));
+        }
     }
 }

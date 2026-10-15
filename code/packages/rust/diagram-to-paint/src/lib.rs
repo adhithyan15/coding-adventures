@@ -1979,6 +1979,9 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             }
         }
         for path in &rule.paths { let mut paint = line_path(&path.points, &diagram.config.line_color, diagram.config.stroke_width);
+            if diagram.config.arc_radius > 0.0 && path.points.len() > 2 {
+                paint.commands = rounded_swimlane_path(&path.points, diagram.config.arc_radius).0;
+            }
             if path.loopback { paint.stroke_dash = Some(vec![4.0, 3.0]); } instructions.push(PaintInstruction::Path(paint)); }
         for element in &rule.elements {
             let (fill, stroke, text_color, radius) = match element.kind {
@@ -2009,6 +2012,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("railroad.padding".into(), diagram.config.padding.to_string());
     metadata.insert("railroad.verticalSeparation".into(), diagram.config.vertical_separation.to_string());
     metadata.insert("railroad.horizontalSeparation".into(), diagram.config.horizontal_separation.to_string());
+    metadata.insert("railroad.arcRadius".into(), diagram.config.arc_radius.to_string());
     metadata.insert("railroad.fontSize".into(), diagram.config.font_size.to_string());
     metadata.insert("railroad.fontFamily".into(), diagram.config.font_family.clone());
     metadata.insert("railroad.lineColor".into(), diagram.config.line_color.clone());
