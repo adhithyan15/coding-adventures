@@ -75,3 +75,5 @@ merge reachability before cleanup. Full parity/source-byte/transformation
 lineage/CV04b remain OPEN. Miri DEFERRED/PENDING, never passed; frozen checkout/
 process/inputs/target/receipts untouched/unpolled, no duplicate/termination.
 Deliver implementation first, then genuine final-source Miri; heartbeat ACTIVE.
+
+Actual execution checkpoint: source05e61228 focused17/7/3 and full14 strict0,925P0F0ignored/40targets. Test SHA81277110, strictSHA1ea40480. Source/focused review69728c64 PASS; terminal/carrier review pending. Native668 fullsix still running (strict0); no terminal native acceptance. Live maincd617 native9merged/Vennpalette17572open need dynamic reconciliation. Windowsd400 tcp-reactor unsupported Unix FD build failure newly captured; macHaskell SDK/link failure remains open. No publication or full-objective acceptance; Miri DEFERRED/PENDING.
