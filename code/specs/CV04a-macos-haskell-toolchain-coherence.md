@@ -94,3 +94,5 @@ GHC, SDK, PATH, developer selection or original Cabal config mutation. Fake
 traces in portable tests prove only control flow; all actual hosted probes and
 full required checks remain mandatory. Update docs/lessons/backlog/issues and
 obtain new exact-source security review; preserve the original WITHHELD report.
+
+Generated-driver execution addendum: the real portable process test found Windows os.execv splitting spaced arguments. Execute the real hsc2hs with a subprocess argument vector, relay its exact normal exit code, and re-raise POSIX terminating signals in the wrapper process. Preserve the real eight-pass/one-fail d646 receipt; this strengthens portable argument transport without claiming macOS compiler acceptance.
