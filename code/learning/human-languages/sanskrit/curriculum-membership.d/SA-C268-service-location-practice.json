@@ -1,0 +1,11 @@
+{
+  "id": "SA-C268-service-location-practice",
+  "pathSegment": "SA-PATH-268-SERVICE268",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-268-SERVICE268",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:eb9f453e1ae4a529",
+  "lessonIds": [
+    "SA-C268-service-recall",
+    "SA-C268-vittakosah",
+    "SA-C268-post-health-location",
+    "SA-C268-bank-police-location",
+    "SA-C268-service-location-practice",
+    "SA-C268-service-location-retrieval"
+  ],
+  "tex": "sanskrit/book/chapters/ch268-four-services-on-one-small-map.tex"
+}

@@ -55,24 +55,27 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // 149 -> 150: chapter 267 composes already-owned school vocabulary with
   // one school-plan frame, then independently retrieves the plan twice before
   // SA-A1-M-03 closes.
-  expect(coverage.covered).toBe(150);
-  expect(coverage.unmapped).toBe(14);
+  // 150 -> 151: chapter 268 adds one sourced financial-bank word, joins it to
+  // three already-owned service referents and the known location question,
+  // then retrieves the bounded exchange twice before SA-A1-M-08 closes.
+  expect(coverage.covered).toBe(151);
+  expect(coverage.unmapped).toBe(13);
   expect(coverage.partial).toBe(0);
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
   // from the Spanish A1 point set and drops what Sanskrit has not got, so its
-  // denominator is the smallest of the twenty-five. 86% of 164 is not
+  // denominator is the smallest of the twenty-five. 92% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 150/164 points covered (91%)",
+    "sanskrit A1 (partial inventory): 151/164 points covered (92%)",
   );
-  // Where the 14 gaps actually are, named rather than counted. Two columns hold
-  // 10 of them, and they are the two an editorially derived A1 inventory is
+  // Where the 13 gaps actually are, named rather than counted. Two columns hold
+  // 9 of them, and they are the two an editorially derived A1 inventory is
   // bound to strain on: the revival vocabulary a classical corpus never had,
   // and the orthography beyond the characters the script ladder teaches.
   expect(coverage.byCategory[
     "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]!).toEqual({ enumerated: 15, covered: 8 });
+  ]!).toEqual({ enumerated: 15, covered: 9 });
   expect(coverage.byCategory["Lipi — the script and its orthography"]!).toEqual({
     enumerated: 10,
     covered: 7,

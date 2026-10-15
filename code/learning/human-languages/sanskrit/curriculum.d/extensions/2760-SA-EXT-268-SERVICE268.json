@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-268-SERVICE268",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask where four familiar public services are and answer here or there.",
+  "prerequisites": [
+    "SA-EXT-267-SCHOOL267"
+  ]
+}
