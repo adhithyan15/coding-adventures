@@ -58,3 +58,23 @@ fn venn_huge_source_union_uses_default_scalars() {
     assert_eq!(d.config,VennConfig {padding:0.0,..Default::default()});
     assert_eq!(d.regions.last().unwrap().sets,vec!["A","B","C","D"]);
 }
+
+#[test]
+fn venn_nested_keys_and_quoted_field_names_are_decoys() {
+    for prefix in [
+        "%%{init: {'other':{'venn':{'width':640}}}}%%",
+        "%%{init: {'other':[{'venn':{'width':640}}]}}%%",
+        "%%{init: {'venn':{'other':{'width':640}}}}%%",
+        "%%{init: {'venn':{'other':[{'width':640}]}}}%%",
+        r#"%%{init: {"venn":{"note":"width","other":640}}}%%"#,
+    ] { assert_eq!(config(prefix),VennConfig::default(),"{prefix}"); }
+    for prefix in [
+        "%%{init: {'other':{'venn':{'width':640}},'venn':{'width':720}}}%%",
+        "%%{init: {'venn':{'other':{'width':640},'width':720}}}%%",
+        "%%{init: {'venn':{'other':[{'width':640}],'width':720}}}%%",
+    ] { assert_eq!(config(prefix),VennConfig {width:720.0,..Default::default()},"{prefix}"); }
+    for prefix in [
+        "%%{init: {'venn':{'width':640}}%%", // missing the init object's close
+        "%%{init: {'venn':{'width':640}} trailing}%%",
+    ] { assert_eq!(config(prefix),VennConfig::default(),"{prefix}"); }
+}
