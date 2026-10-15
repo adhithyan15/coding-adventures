@@ -739,6 +739,9 @@ available as backend-neutral PaintScene metadata.
 Venn-specific title and set text colors plus the global font family now resolve
 from `themeVariables`, survive typed config IR and layout, and drive portable
 title and region glyph runs. Per-region authored text colors retain precedence.
+The Mermaid `venn1` through `venn8` theme palette likewise survives semantic IR
+and layout before PaintScene lowering selects set fills. Explicit set fills retain
+precedence, and invalid theme colors fall back independently to the native palette.
 
 ### Ishikawa Native Slice
 
