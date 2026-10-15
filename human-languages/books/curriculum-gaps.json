@@ -31,9 +31,9 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 3,
     "wordLessons": 25693,
-    "wordLessonsWithoutEtymologyHook": 2387,
-    "wordLessonsWithoutVisibleEtymology": 2356,
-    "wordLessonsWithEmptyEtymologyBlock": 367,
+    "wordLessonsWithoutEtymologyHook": 1200,
+    "wordLessonsWithoutVisibleEtymology": 1161,
+    "wordLessonsWithEmptyEtymologyBlock": 348,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -13611,7 +13611,7 @@
           "totalGlyphs": 41,
           "lessonViolations": 0,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 16
+          "lessonsWithForeignScript": 17
         },
         {
           "language": "bengali",
@@ -13837,7 +13837,7 @@
       "summary": {
         "lessonViolations": 0,
         "systemViolations": 0,
-        "lessonsWithForeignScript": 217,
+        "lessonsWithForeignScript": 218,
         "maxForeignGlyphsInALesson": 26,
         "steepestLesson": null
       }
@@ -341698,10 +341698,10 @@
       {
         "language": "arabic",
         "wordLessons": 1262,
-        "wordLessonsWithoutEtymologyHook": 1187,
-        "wordLessonsWithoutVisibleEtymology": 1195,
-        "wordLessonsWithoutAnyEtymology": 1174,
-        "wordLessonsWithEmptyEtymologyBlock": 19
+        "wordLessonsWithoutEtymologyHook": 0,
+        "wordLessonsWithoutVisibleEtymology": 0,
+        "wordLessonsWithoutAnyEtymology": 0,
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "bengali",
@@ -341882,12 +341882,12 @@
     ],
     "summary": {
       "wordLessons": 25693,
-      "wordLessonsWithoutEtymologyHook": 2387,
-      "wordLessonsWithoutVisibleEtymology": 2356,
-      "wordLessonsWithoutAnyEtymology": 2272,
-      "wordLessonsWithEmptyEtymologyBlock": 367,
-      "hookPercent": 90,
-      "visiblePercent": 90
+      "wordLessonsWithoutEtymologyHook": 1200,
+      "wordLessonsWithoutVisibleEtymology": 1161,
+      "wordLessonsWithoutAnyEtymology": 1098,
+      "wordLessonsWithEmptyEtymologyBlock": 348,
+      "hookPercent": 95,
+      "visiblePercent": 95
     }
   },
   "writingStages": {
@@ -454544,17 +454544,17 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 19769,
-    "underspent": 18752,
-    "neverSpent": 14931,
+    "roots": 20604,
+    "underspent": 19561,
+    "neverSpent": 15532,
     "payoffDistribution": {
-      "0": 14931,
-      "1": 2763,
-      "2": 1058,
-      "3": 486,
-      "4": 239,
+      "0": 15532,
+      "1": 2919,
+      "2": 1110,
+      "3": 504,
+      "4": 246,
       "5": 118,
-      "6": 58,
+      "6": 59,
       "7": 38,
       "8": 14,
       "9": 14,
@@ -454604,33 +454604,33 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 29128,
-    "usesBeforeIntroduction": 54406,
-    "technicalUsesBeforeIntroduction": 8863,
-    "technicalLessons": 5790,
+    "usesBeforeIntroduction": 55132,
+    "technicalUsesBeforeIntroduction": 9464,
+    "technicalLessons": 6315,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 3429
+        "lessons": 3558
       },
       {
         "term": "noun",
-        "lessons": 1788
-      },
-      {
-        "term": "adjective",
-        "lessons": 427
+        "lessons": 2006
       },
       {
         "term": "participle",
-        "lessons": 378
+        "lessons": 512
+      },
+      {
+        "term": "adjective",
+        "lessons": 490
       },
       {
         "term": "case",
-        "lessons": 309
+        "lessons": 310
       },
       {
         "term": "pronoun",
-        "lessons": 295
+        "lessons": 296
       }
     ]
   },
@@ -454641,7 +454641,7 @@
   },
   "glyphCoverage": {
     "filesScanned": 5926,
-    "mainCharacters": 154,
+    "mainCharacters": 153,
     "scriptCharacters": 829,
     "gaps": 0
   }
