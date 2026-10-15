@@ -2,13 +2,11 @@
 
 Owned conditional-unit programs require exact stdout and normal exit,
 including markers proving the condition and chosen branch execute once.
-Six locally available backends executed all 96 owned sources (576 cells),
-including ten new nine-unit programs; the previous 86 sources and 516 cells
-remain exact. Ordered new branch markers are CL8/CR10; CLR execution is not inferred.
-Complete six-package native/compiler/downstream validation passed 1,809
-tests over 78 targets with one existing ignored test, plus strict lint;
-full unfiltered LANG passed 496. Independent source and terminal reviews passed;
-hosted CI remains a separate gate.
+Six locally available backends executed all 106 owned sources (636 cells),
+including ten new ten-unit programs; the previous 96 sources and 576 cells
+remain exact. New branch markers are CL9/CR11; unavailable CLR is not counted.
+Source `f9494966` passed 1,814 tests over 78 targets, with 1 unchanged ignore, plus strict all-target lint. Compiler 881 and full unfiltered LANG 498 passed.
+Independent source and terminal reviews passed; hosted CI remains a separate gate.
 Final-source Miri remains **DEFERRED/PENDING**, never passed, under the
 user-authorized delivery-first sequencing.
 
