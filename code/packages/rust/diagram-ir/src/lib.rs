@@ -1874,7 +1874,7 @@ pub struct LayoutedVennCircle {
     pub id: String, pub label: String, pub cx: f64, pub cy: f64, pub radius: f64, pub style: VennStyle,
 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedVennLabel { pub text: String, pub x: f64, pub y: f64, pub style: VennStyle }
+pub struct LayoutedVennLabel { pub text: String, pub x: f64, pub y: f64, pub font_size: f64, pub style: VennStyle }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedVennDebugCircle { pub cx: f64, pub cy: f64, pub radius: f64 }
 #[derive(Clone, Debug, PartialEq)]
