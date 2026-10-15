@@ -52,8 +52,11 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // 147 -> 149: chapter 266 composes the already-owned market vocabulary with
   // one first-person buyer form and one price turn, then independently
   // retrieves the exchange twice before SA-A1-EV-02 and SA-A1-M-09 close.
-  expect(coverage.covered).toBe(149);
-  expect(coverage.unmapped).toBe(15);
+  // 149 -> 150: chapter 267 composes already-owned school vocabulary with
+  // one school-plan frame, then independently retrieves the plan twice before
+  // SA-A1-M-03 closes.
+  expect(coverage.covered).toBe(150);
+  expect(coverage.unmapped).toBe(14);
   expect(coverage.partial).toBe(0);
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
@@ -61,15 +64,15 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // denominator is the smallest of the twenty-five. 86% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 149/164 points covered (91%)",
+    "sanskrit A1 (partial inventory): 150/164 points covered (91%)",
   );
-  // Where the 15 gaps actually are, named rather than counted. Two columns hold
-  // 11 of them, and they are the two an editorially derived A1 inventory is
+  // Where the 14 gaps actually are, named rather than counted. Two columns hold
+  // 10 of them, and they are the two an editorially derived A1 inventory is
   // bound to strain on: the revival vocabulary a classical corpus never had,
   // and the orthography beyond the characters the script ladder teaches.
   expect(coverage.byCategory[
     "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]!).toEqual({ enumerated: 15, covered: 7 });
+  ]!).toEqual({ enumerated: 15, covered: 8 });
   expect(coverage.byCategory["Lipi — the script and its orthography"]!).toEqual({
     enumerated: 10,
     covered: 7,

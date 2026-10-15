@@ -1,0 +1,32 @@
+{
+  "chapter": 267,
+  "title": "One small school-day plan",
+  "label": "ch:sa-school-day-plan",
+  "canDo": "I can ask when an exam will be and state a short homework and study plan.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "SA-C267-school-plan-retrieval",
+    "kind": "production",
+    "summary": "Complete chapter 267 by independently asking and answering an exam-time question and stating two schoolwork plans.",
+    "assesses": [
+      "SA-LEX-C83-SCHOOL-01",
+      "SA-LEX-C83-SCHOOL-02",
+      "SA-LEX-C83-SCHOOL-03",
+      "SA-LEX-C83-SCHOOL-04",
+      "SA-LEX-C83-SCHOOL-05",
+      "SA-LEX-C140-READ140-02",
+      "SA-LEX-C168-SCH168-01",
+      "SA-LEX-C169-SCH169-02",
+      "SA-LEX-C255-SCH255-04",
+      "SA-LEX-C255-SCH255-05",
+      "SA-LEX-C18-ASK-01",
+      "SA-LEX-C139-FUT139-02",
+      "SA-LEX-C139-FUT139-04",
+      "SA-VERB-C264-KARISYAMI-01",
+      "SA-VERB-C264-PATHISYAMI-02",
+      "SA-PATTERN-C267-SCHOOL-PLAN-01"
+    ]
+  }
+}

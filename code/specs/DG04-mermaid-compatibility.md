@@ -876,9 +876,12 @@ Root `themeVariables` now provide Mermaid-compatible typography and color
 fallbacks for terminals, non-terminals, specials, connections, markers, and
 rule names. Explicit Railroad options retain precedence, and the resolved
 values continue through layout and backend-neutral PaintScene lowering.
+Color and font-family options now follow the pinned Mermaid allowlists before
+entering semantic IR: supported CSS colors and portable family lists survive,
+while unsafe or malformed values fall back to the resolved theme defaults.
 
-This is intentionally partial. Upstream curve geometry, theme/config
-sanitization, comment styling, compact mode, and exact typography remain
+This is intentionally partial. Upstream curve geometry, comment styling,
+compact mode, and exact typography remain
 unsupported rather than being counted as compatible.
 
 ### Info Full Compatibility

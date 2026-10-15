@@ -2895,6 +2895,18 @@ fn railroad_resolves_theme_variables_before_explicit_style_overrides() {
 }
 
 #[test]
+fn railroad_sanitizes_portable_colors_and_font_families() {
+    let diagram = parse_railroad(
+        "---\nthemeVariables:\n  fontFamily: 'Georgia; color: red'\n  secondBkg: '#aabbcc'\n  lineColor: '#12zzzz'\nconfig:\n  railroad:\n    terminalFill: 'url(javascript:alert(1))'\n    terminalTextColor: 'hsl(120 50% 50%)'\n---\nrailroad-beta\nvalue = terminal(\"x\");",
+    ).expect("Railroad invalid styles should fall back safely");
+    assert_eq!(diagram.config.font_family, "monospace");
+    assert_eq!(diagram.config.terminal_fill, "#aabbcc");
+    assert_eq!(diagram.config.terminal_text_color, "hsl(120 50% 50%)");
+    assert_eq!(diagram.config.line_color, "#000000");
+    assert_eq!(diagram.config.marker_fill, "#000000");
+}
+
+#[test]
 fn info_dispatches_to_dedicated_version_ir() {
     match parse_any_mermaid("info showInfo").expect("info should parse") {
         mermaid_parser::MermaidDiagram::Info(diagram) => assert_eq!(diagram.version, "11.16.1"),

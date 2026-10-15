@@ -111,13 +111,13 @@ it("turns owned Sanskrit meal words into a gentle A1 order", () => {
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   expect(coverage).toMatchObject({
     enumerated: 164,
-    covered: 149,
-    unmapped: 15,
+    covered: 150,
+    unmapped: 14,
     partial: 0,
   });
   expect(coverage.byCategory[
     "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]).toEqual({ enumerated: 15, covered: 7 });
+  ]).toEqual({ enumerated: 15, covered: 8 });
   expect(coverage.points.find((point) => point.id === "SA-A1-M-02")).toMatchObject({
     covered: true,
     missingAtoms: [],
