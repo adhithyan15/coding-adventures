@@ -599,7 +599,7 @@ use diagram_ir::{
     TemporalKind, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
-    CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaDiagram,
+    CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram,
     WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewConfig, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind, TreeViewTheme,
 };
@@ -5769,7 +5769,7 @@ fn venn_error(line: usize, message: impl Into<String>) -> ParseError { ParseErro
 
 /// Parse Mermaid 11.16.1 indentation-based Ishikawa diagrams into causal IR.
 pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
-    let diagram_padding = parse_ishikawa_padding(source);
+    let config = parse_ishikawa_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_ishikawa(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(ISHIKAWA_PARSER_GRAMMAR_SOURCE)
@@ -5795,25 +5795,35 @@ pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
         causes.push(IshikawaCause { id: id.clone(), label: label.clone(), parent_id, depth });
         stack.push((effective_indent, id));
     }
-    Ok(IshikawaDiagram { effect: effect.clone(), causes, diagram_padding })
+    Ok(IshikawaDiagram { effect: effect.clone(), causes, config })
 }
 
-fn parse_ishikawa_padding(source: &str) -> f64 {
+fn parse_ishikawa_config(source: &str) -> IshikawaConfig {
+    let defaults = IshikawaConfig::default();
     let front_matter = mermaid_front_matter_section(source, &["config", "ishikawa"]);
     let config = mermaid_directive_object(source, "ishikawa")
         .or(front_matter.as_deref())
         .unwrap_or("");
-    quadrant_directive_value(config, "diagramPadding")
-        .or_else(|| {
-            config.lines().find_map(|line| {
-                let (name, value) = line.trim().split_once(':')?;
-                (name.trim() == "diagramPadding")
-                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
-            })
-        })
-        .and_then(|value| value.parse::<f64>().ok())
-        .filter(|value| value.is_finite() && *value >= 0.0)
-        .unwrap_or(20.0)
+    let value = |name: &str| quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    }));
+    let diagram_padding = value("diagramPadding").and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(defaults.diagram_padding);
+    let use_max_width = value("useMaxWidth").and_then(|value| match value.to_ascii_lowercase().as_str() {
+        "true" => Some(true), "false" => Some(false), _ => None,
+    }).unwrap_or(defaults.use_max_width);
+    let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme = mermaid_directive_object(source, "themeVariables").or(theme_front.as_deref()).unwrap_or("");
+    let theme_value = |name: &str| quadrant_directive_value(theme, name).or_else(|| theme.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    }));
+    IshikawaConfig { diagram_padding, use_max_width,
+        font_family: sanitize_railroad_font_family(theme_value("fontFamily").as_deref(), &defaults.font_family),
+        line_color: sanitize_railroad_color(theme_value("lineColor").as_deref(), &defaults.line_color),
+        fill_color: sanitize_railroad_color(theme_value("mainBkg").as_deref(), &defaults.fill_color),
+        text_color: sanitize_railroad_color(theme_value("textColor").as_deref(), &defaults.text_color) }
 }
 
 fn indentation_width(line: &str) -> usize {

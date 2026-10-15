@@ -2397,7 +2397,12 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
 /// Lower Ishikawa fishbone geometry into backend-neutral paths, a rect, and glyph runs.
 pub fn diagram_to_paint_ishikawa<S, M, R>(diagram: &LayoutedIshikawaDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
-    let stroke = "#334155".to_string();
+    let stroke = diagram.config.line_color.clone();
+    let text_color = css_to_color(&diagram.config.text_color);
+    let mut label_font = options.label_font.clone();
+    label_font.family.clone_from(&diagram.config.font_family);
+    let mut title_font = options.title_font.clone();
+    title_font.family.clone_from(&diagram.config.font_family);
     let mut instructions = vec![PaintInstruction::Path(line_path(
         &[diagram.spine_from.clone(), diagram.spine_to.clone()], &stroke, 3.0,
     ))];
@@ -2407,25 +2412,31 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             &[bone.from.clone(), bone.to.clone()], &stroke, if bone.depth == 1 { 2.5 } else { 1.5 },
         )));
         text_children.push(text_node(&bone.label, bone.label_position.x - 55.0, bone.label_position.y - 10.0,
-            110.0, 24.0, options.label_font.clone(), Color { r: 30, g: 41, b: 59, a: 255 }));
+            110.0, 24.0, label_font.clone(), text_color));
     }
     instructions.push(PaintInstruction::Rect(PaintRect {
         base: PaintBase::default(), x: diagram.effect_x, y: diagram.effect_y, width: diagram.effect_width,
-        height: diagram.effect_height, fill: Some("#fef3c7".into()), stroke: Some("#92400e".into()),
+        height: diagram.effect_height, fill: Some(diagram.config.fill_color.clone()), stroke: Some(stroke.clone()),
         stroke_width: Some(2.0), corner_radius: Some(8.0), stroke_dash: None, stroke_dash_offset: None,
     }));
     text_children.push(text_node(&diagram.effect, diagram.effect_x + 8.0, diagram.effect_y + 8.0,
-        diagram.effect_width - 16.0, diagram.effect_height - 16.0, options.title_font.clone(),
-        Color { r: 120, g: 53, b: 15, a: 255 }));
+        diagram.effect_width - 16.0, diagram.effect_height - 16.0, title_font, text_color));
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
         id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
         width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
         shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
     });
     instructions.extend(text_scene.instructions);
+    let mut metadata = HashMap::new();
+    metadata.insert("ishikawa.diagramPadding".into(), diagram.config.diagram_padding.to_string());
+    metadata.insert("ishikawa.useMaxWidth".into(), diagram.config.use_max_width.to_string());
+    metadata.insert("ishikawa.fontFamily".into(), diagram.config.font_family.clone());
+    metadata.insert("ishikawa.lineColor".into(), diagram.config.line_color.clone());
+    metadata.insert("ishikawa.fillColor".into(), diagram.config.fill_color.clone());
+    metadata.insert("ishikawa.textColor".into(), diagram.config.text_color.clone());
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
-        instructions, id: None, metadata: None }
+        instructions, id: None, metadata: Some(metadata) }
 }
 
 /// Lower a Wardley strategic map into backend-neutral paths, ellipses, and glyph runs.
@@ -13353,6 +13364,8 @@ emphasized --> direct
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedIshikawaDiagram { width: 600.0, height: 360.0, effect: "Delay".into(),
+            config: diagram_ir::IshikawaConfig { font_family: "Georgia".into(), line_color: "#123456".into(),
+                fill_color: "#abcdef".into(), text_color: "#654321".into(), ..Default::default() },
             effect_x: 430.0, effect_y: 150.0, effect_width: 150.0, effect_height: 60.0,
             spine_from: Point { x: 30.0, y: 180.0 }, spine_to: Point { x: 430.0, y: 180.0 },
             bones: vec![diagram_ir::LayoutedIshikawaBone { from: Point { x: 100.0, y: 80.0 },
@@ -13360,8 +13373,14 @@ emphasized --> direct
                 label_position: Point { x: 100.0, y: 68.0 }, depth: 1 }], };
         let scene = diagram_to_paint_ishikawa(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#123456"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef")
+                && rect.stroke.as_deref() == Some("#123456"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(101, 67, 33)"))));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontFamily")), Some(&"Georgia".to_string()));
     }
 
 

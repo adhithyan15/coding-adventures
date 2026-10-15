@@ -184,7 +184,7 @@ fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64
 /// Lay out an Ishikawa causal tree as an alternating fishbone.
 pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> LayoutedIshikawaDiagram {
     let width = canvas_width.max(560.0); let height = (width * 0.58).max(360.0);
-    let padding = diagram.diagram_padding.min(width / 4.0).min(height / 4.0);
+    let padding = diagram.config.diagram_padding.min(width / 4.0).min(height / 4.0);
     let spine_y = height / 2.0; let spine_from = Point { x: padding + 16.0, y: spine_y };
     let effect_width = 150.0; let effect_height = 58.0; let effect_x = width - effect_width - padding;
     let spine_to = Point { x: effect_x, y: spine_y };
@@ -209,7 +209,7 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
             label: cause.label.clone(), label_position: Point { x: tip.x, y: tip.y - sign * 12.0 }, depth: cause.depth });
         anchors.insert(&cause.id, tip);
     }
-    LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), effect_x, effect_y: spine_y - effect_height / 2.0,
+    LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), config: diagram.config.clone(), effect_x, effect_y: spine_y - effect_height / 2.0,
         effect_width, effect_height, spine_from, spine_to, bones }
 }
 
@@ -543,13 +543,13 @@ mod tests {
         let diagram = IshikawaDiagram { effect: "Problem".into(), causes: vec![
             IshikawaCause { id: "a".into(), label: "A".into(), parent_id: None, depth: 1 },
             IshikawaCause { id: "b".into(), label: "B".into(), parent_id: None, depth: 1 },
-        ], diagram_padding: 20.0 };
+        ], config: Default::default() };
         let layout = layout_ishikawa(&diagram, 640.0);
         assert!(layout.bones[0].from.y < layout.spine_from.y);
         assert!(layout.bones[1].from.y > layout.spine_from.y);
 
         let mut padded = diagram.clone();
-        padded.diagram_padding = 64.0;
+        padded.config.diagram_padding = 64.0;
         let padded_layout = layout_ishikawa(&padded, 640.0);
         assert_eq!(padded_layout.spine_from.x, 80.0);
         assert_eq!(padded_layout.width - (padded_layout.effect_x + padded_layout.effect_width), 64.0);

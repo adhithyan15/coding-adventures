@@ -4573,9 +4573,10 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_ishikawa_to_png() {
-        let diagram = parse_ishikawa("%%{init: {\"ishikawa\": {\"diagramPadding\": 64}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews\n  Tools\n    Slow builds").expect("ishikawa parse failed");
+        let diagram = parse_ishikawa("%%{init: {\"ishikawa\": {\"diagramPadding\": 64, \"useMaxWidth\": true}, \"themeVariables\": {\"fontFamily\": \"Georgia\", \"lineColor\": \"#123456\", \"mainBkg\": \"#abcdef\", \"textColor\": \"#654321\"}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews\n  Tools\n    Slow builds").expect("ishikawa parse failed");
         let layout = layout_ishikawa(&diagram, 720.0);
-        assert_eq!(diagram.diagram_padding, 64.0);
+        assert_eq!(diagram.config.diagram_padding, 64.0);
+        assert!(diagram.config.use_max_width);
         assert_eq!(layout.spine_from.x, 80.0);
         assert_eq!(layout.width - (layout.effect_x + layout.effect_width), 64.0);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
@@ -4584,7 +4585,13 @@ line "Target" [35, 50, 68, 82]"##,
             label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 15.0),
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#123456"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef")
+                && rect.stroke.as_deref() == Some("#123456"))));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.useMaxWidth")), Some(&"true".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontFamily")), Some(&"Georgia".to_string()));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_ishikawa_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);

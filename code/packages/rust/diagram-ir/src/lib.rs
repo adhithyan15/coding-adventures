@@ -1892,11 +1892,18 @@ pub struct LayoutedVennDiagram {
 #[derive(Clone, Debug, PartialEq)]
 pub struct IshikawaCause { pub id: String, pub label: String, pub parent_id: Option<String>, pub depth: usize }
 #[derive(Clone, Debug, PartialEq)]
-pub struct IshikawaDiagram { pub effect: String, pub causes: Vec<IshikawaCause>, pub diagram_padding: f64 }
+pub struct IshikawaConfig { pub diagram_padding: f64, pub use_max_width: bool, pub font_family: String,
+    pub line_color: String, pub fill_color: String, pub text_color: String }
+impl Default for IshikawaConfig { fn default() -> Self { Self { diagram_padding: 20.0, use_max_width: false,
+    font_family: "sans-serif".into(), line_color: "#333333".into(), fill_color: "#ffffff".into(), text_color: "#333333".into() } } }
+#[derive(Clone, Debug, PartialEq)]
+pub struct IshikawaDiagram { pub effect: String, pub causes: Vec<IshikawaCause>, pub config: IshikawaConfig }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedIshikawaBone { pub from: Point, pub to: Point, pub label: String, pub label_position: Point, pub depth: usize }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedIshikawaDiagram { pub width: f64, pub height: f64, pub effect: String, pub effect_x: f64, pub effect_y: f64, pub effect_width: f64, pub effect_height: f64, pub spine_from: Point, pub spine_to: Point, pub bones: Vec<LayoutedIshikawaBone> }
+pub struct LayoutedIshikawaDiagram { pub width: f64, pub height: f64, pub effect: String, pub config: IshikawaConfig,
+    pub effect_x: f64, pub effect_y: f64, pub effect_width: f64, pub effect_height: f64,
+    pub spine_from: Point, pub spine_to: Point, pub bones: Vec<LayoutedIshikawaBone> }
 
 // STRATEGIC MAP FAMILY
 #[derive(Clone, Debug, PartialEq)]

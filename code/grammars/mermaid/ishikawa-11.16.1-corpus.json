@@ -5,6 +5,6 @@
     {"name":"basic","source":"ishikawa-beta\nBlurry Photo\n  Process\n    Out of focus\n  User\n    Shaky hands"},
     {"name":"unindented-causes","source":"ishikawa\nProblem\nCause A\n  Subcause A1\nCause B"},
     {"name":"indented-effect","source":"ishikawa-beta\n    Problem\nCause A\n  Subcause A1\nCause B"},
-    {"name":"diagram-padding-config","source":"%%{init: {\"ishikawa\": {\"diagramPadding\": 64}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews"}
+    {"name":"diagram-padding-config","source":"%%{init: {\"ishikawa\": {\"diagramPadding\": 64, \"useMaxWidth\": true}, \"themeVariables\": {\"fontFamily\": \"Georgia\", \"lineColor\": \"#123456\", \"mainBkg\": \"#abcdef\", \"textColor\": \"#654321\"}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews"}
   ]
 }
