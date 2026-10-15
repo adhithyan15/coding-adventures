@@ -148,7 +148,7 @@ describe("book-generation storage boundary", () => {
 
   it("does not hide a dangling owner-directory symlink behind a legacy monolith", () => {
     const root = fixture();
-    symlinkSync(join(root, "missing-owner-tree"), join(root, "core", "book-generation.d"));
+    symlinkSync(join(root, "missing-owner-tree"), join(root, "core", "book-generation.d"), process.platform === "win32" ? "junction" : "dir");
     expect(() => loadBookGenerationConfig(root)).toThrow(/real owner directory|symbolic link/);
   });
 });
@@ -297,15 +297,21 @@ describe("canonical book generator filesystem shell", () => {
     }
   });
 
-  it.runIf(process.platform !== "win32")(
+  it(
     "rejects a returned generated root resurrected as a real or dangling link",
-    () => {
+    (ctx) => {
       for (const dangling of [false, true]) {
         const root = fixture();
         const retiredRoot = addAuthoredBookFragments(root);
         const target = join(root, dangling ? "missing.tex" : "outside.tex");
         if (!dangling) writeFileSync(target, "outside\n");
-        symlinkSync(target, retiredRoot);
+        try {
+          symlinkSync(target, retiredRoot, "file");
+        } catch (error) {
+          if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+          ctx.skip();
+          return;
+        }
 
         vi.spyOn(process.stderr, "write").mockImplementation(() => true);
         expect(runBookGeneration(["--check"], root), String(dangling)).toBe(1);
@@ -317,17 +323,21 @@ describe("canonical book generator filesystem shell", () => {
     },
   );
 
-  it("refuses to write through a symlinked hash-owner directory or file", () => {
+  it("refuses to write through a symlinked hash-owner directory", () => {
     const root = fixture();
     const outside = mkdtempSync(join(tmpdir(), "human-language-book-outside-"));
     roots.push(outside);
     mkdirSync(join(root, "core", "generated-book-hashes"), { recursive: true });
-    symlinkSync(outside, join(root, "core", "generated-book-hashes", "test.d"));
+    symlinkSync(outside, join(root, "core", "generated-book-hashes", "test.d"), process.platform === "win32" ? "junction" : "dir");
     expect(() => runBookGeneration(["--write"], root)).toThrow(
       /real directory/,
     );
+  });
 
-    rmSync(join(root, "core", "generated-book-hashes", "test.d"));
+  it("refuses to write through a symlinked hash-owner file", (ctx) => {
+    const root = fixture();
+    const outside = mkdtempSync(join(tmpdir(), "human-language-book-outside-"));
+    roots.push(outside);
     expect(runBookGeneration(["--write"], root)).toBe(0);
     const owner = join(
       root,
@@ -339,7 +349,13 @@ describe("canonical book generator filesystem shell", () => {
     rmSync(owner);
     const victim = join(outside, "victim.json");
     writeFileSync(victim, "unchanged\n");
-    symlinkSync(victim, owner);
+    try {
+      symlinkSync(victim, owner, "file");
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+      ctx.skip();
+      return;
+    }
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runBookGeneration(["--check"], root)).toBe(1);
     expect(() => runBookGeneration(["--write"], root)).toThrow(

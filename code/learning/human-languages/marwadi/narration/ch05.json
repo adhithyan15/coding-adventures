@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Mharo Naam: Give One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3bc05de338447aac",
+  "sourceHash": "fnv1a64:5a7bc4f1e9f68dfe",
   "lessons": [
     {
       "id": "MW-C05-hear-mharo",
@@ -866,7 +866,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40fe61634d45aedf",
+      "sourceHash": "fnv1a64:234523a33b6fad1d",
       "notice": null,
       "blocks": [
         {

@@ -61,8 +61,10 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // 151 -> 152: chapter 269 adds sourced modern radio and internet words to
   // four already-owned media referents, then retrieves all six twice before
   // SA-A1-M-06 closes.
-  expect(coverage.covered).toBe(152);
-  expect(coverage.unmapped).toBe(12);
+  // 152 -> 153: chapter 270 retrieves the already-owned computer and internet
+  // nouns twice before SA-A1-M-13 closes, without claiming digital literacy.
+  expect(coverage.covered).toBe(153);
+  expect(coverage.unmapped).toBe(11);
   expect(coverage.partial).toBe(0);
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
@@ -70,7 +72,7 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // denominator is the smallest of the twenty-five. 93% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 152/164 points covered (93%)",
+    "sanskrit A1 (partial inventory): 153/164 points covered (93%)",
   );
   // Where the 12 gaps actually are, named rather than counted. Two columns hold
   // 8 of them, and they are the two an editorially derived A1 inventory is
@@ -78,7 +80,7 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // and the orthography beyond the characters the script ladder teaches.
   expect(coverage.byCategory[
     "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]!).toEqual({ enumerated: 15, covered: 10 });
+  ]!).toEqual({ enumerated: 15, covered: 11 });
   expect(coverage.byCategory["Lipi — the script and its orthography"]!).toEqual({
     enumerated: 10,
     covered: 7,

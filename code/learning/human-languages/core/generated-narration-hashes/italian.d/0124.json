@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 124,
-  "sourceHash": "fnv1a64:8dba4617d12c2499",
+  "sourceHash": "fnv1a64:e73166aaf90f1ff2",
   "lessonIds": [
     "IT-C124-occupato",
     "IT-C124-libero",
@@ -14,6 +14,6 @@
   "text": "italian/narration/ch124.txt",
   "json": "italian/narration/ch124.json",
   "textHash": "fnv1a64:ba4f8f4ddffbc866",
-  "jsonHash": "fnv1a64:d4295c40a7b5ca4a",
+  "jsonHash": "fnv1a64:4aa6bf3707371694",
   "findings": []
 }

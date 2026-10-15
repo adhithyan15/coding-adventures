@@ -4,7 +4,7 @@
   "chapter": 275,
   "title": "Priest, Artist, Poet, Music, Play",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8de8add984fda4f2",
+  "sourceHash": "fnv1a64:b0fbffdcd260d7a6",
   "lessons": [
     {
       "id": "TE-C275-pujari",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e4c1be8242b4ada",
+      "sourceHash": "fnv1a64:11e0d5c03c2a6c2e",
       "notice": null,
       "blocks": [
         {

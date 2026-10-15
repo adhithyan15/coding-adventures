@@ -13,7 +13,7 @@ gloss: "a freedman"
 concept_tag: LA-RES220-LIBERTUS
 prerequisites: [LA-C219-fabula, LA-C220-ancilla]
 sounds: []
-roots: [libertus-latin, liber-latin]
+roots: [libertus-latin, liber-free-latin]
 etymology_hook: "lībertus 'freedman' — built on līberō 'to set free'"
 duration:
   max_seconds: 200

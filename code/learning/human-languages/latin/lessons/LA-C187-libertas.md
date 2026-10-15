@@ -13,7 +13,7 @@ gloss: "freedom"
 concept_tag: LA-RES187-LIBERTAS
 prerequisites: [LA-C187-dux, LA-C187-victoria]
 sounds: []
-roots: [libertas-latin, liber-latin]
+roots: [libertas-latin, liber-free-latin]
 etymology_hook: "lībertās 'freedom' — built on līber 'free'"
 duration:
   max_seconds: 200

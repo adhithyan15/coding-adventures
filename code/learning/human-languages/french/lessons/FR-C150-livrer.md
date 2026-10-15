@@ -13,7 +13,7 @@ gloss: "to deliver"
 concept_tag: FR-VERB-LIVRER
 prerequisites: [FR-C150-bavarder, FR-C150-brancher]
 sounds: []
-roots: [liber-latin]
+roots: [liber-free-latin]
 etymology_hook: "livrer ← Latin liberare 'to set free' — the Latin of libre; English deliver"
 duration:
   max_seconds: 200

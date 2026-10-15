@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 272,
-  "sourceHash": "fnv1a64:8f3106f343d41c5f",
+  "sourceHash": "fnv1a64:c770ef71e2ef9867",
   "lessonIds": [
     "TE-C272-pandiri",
     "TE-C272-kance",
@@ -16,6 +16,6 @@
   "text": "telugu/narration/ch272.txt",
   "json": "telugu/narration/ch272.json",
   "textHash": "fnv1a64:f4365f4f8577c2e3",
-  "jsonHash": "fnv1a64:084efe2434dc09e8",
+  "jsonHash": "fnv1a64:696e9d879db08789",
   "findings": []
 }

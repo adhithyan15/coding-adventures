@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 73,
-  "sourceHash": "fnv1a64:9c4e030ccb7c11e2",
+  "sourceHash": "fnv1a64:e04e51517f41b281",
   "lessonIds": [
     "GU-C73-light",
     "GU-C73-new",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch73.txt",
   "json": "gujarati/narration/ch73.json",
   "textHash": "fnv1a64:5e68ba3f3aa7a50b",
-  "jsonHash": "fnv1a64:780f064b79dd0958",
+  "jsonHash": "fnv1a64:a2fec32f4e9f2b05",
   "findings": []
 }

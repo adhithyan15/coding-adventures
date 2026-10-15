@@ -14,7 +14,7 @@ romanization: "pāy"
 concept_tag: MR-BODY70-PAY
 prerequisites: [MR-C61-dahava, MR-C70-hat]
 sounds: []
-roots: [sanskrit-pada]
+roots: [sanskrit-pada-foot]
 etymology_hook: "pāy ← Sanskrit pāda 'foot', a tadbhava (CDIAL 8056)"
 duration:
   max_seconds: 200

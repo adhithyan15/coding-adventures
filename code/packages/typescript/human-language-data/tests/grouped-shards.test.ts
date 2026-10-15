@@ -467,7 +467,7 @@ describe("strict owner tree", () => {
     writeOwners(path);
     const section = join(path, BOOK_GENERATION_DIRECTORY, "targets.d");
     rmSync(section, { recursive: true });
-    symlinkSync(join(path, BOOK_GENERATION_DIRECTORY, "handwritten.d"), section);
+    symlinkSync(join(path, BOOK_GENERATION_DIRECTORY, "handwritten.d"), section, process.platform === "win32" ? "junction" : "dir");
     expect(() => readBookGenerationOwners(path)).toThrow(/symbolic link|real directory/);
   });
 

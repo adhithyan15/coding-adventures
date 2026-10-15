@@ -13,7 +13,7 @@ gloss: "children"
 concept_tag: LA-FAMILIA2-LIBERI
 prerequisites: [LA-C71-maritus, LA-C71-uxor]
 sounds: []
-roots: [liberi-latin, liber-latin]
+roots: [liberi-latin, liber-free-latin]
 etymology_hook: "līberī 'children' — the plural of līber 'free': the free-born of a household"
 duration:
   max_seconds: 200

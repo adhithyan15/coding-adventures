@@ -1,0 +1,11 @@
+{
+  "id": "SA-C270-modern-technology-final-retrieval",
+  "pathSegment": "SA-PATH-270-TECH270",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-270-TECH270",
+      "order": 1
+    }
+  ]
+}

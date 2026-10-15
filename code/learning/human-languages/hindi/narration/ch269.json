@@ -4,7 +4,7 @@
   "chapter": 269,
   "title": "Coal, Gas, A wok, A rolling pin, A sieve",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:6bd61933d3be0eee",
+  "sourceHash": "fnv1a64:b1e380074203d9e0",
   "lessons": [
     {
       "id": "HI-C269-koyla",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1996388212bf8cb4",
+      "sourceHash": "fnv1a64:a3839b7114e89e02",
       "notice": null,
       "blocks": [
         {

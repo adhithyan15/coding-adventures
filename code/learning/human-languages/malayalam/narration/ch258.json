@@ -4,7 +4,7 @@
   "chapter": 258,
   "title": "Paint, Shape, Circle, Square, Triangle",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9fb148fbfaca3a7d",
+  "sourceHash": "fnv1a64:512c1905764bf364",
   "lessons": [
     {
       "id": "ML-C258-cayam",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea93877db5953c23",
+      "sourceHash": "fnv1a64:a091ef901e5df010",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ചതുരം (caturaṁ) from Sanskrit catura, \"square\", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 4595). It is built on catur, \"four\"."
+              "text": "ചതുരം (caturaṁ) from Sanskrit catura, \"square\", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 4595). CDIAL stars that sense: it is inferred, not found in a text; the texts have catura \"elephant stable\" and caturikā \"square court\". It is built on catur, \"four\"."
             }
           ]
         },

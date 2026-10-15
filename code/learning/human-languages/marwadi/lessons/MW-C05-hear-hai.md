@@ -11,7 +11,7 @@ gloss: is, the small copula closing the name statement
 concept_tag: WORD-IS
 prerequisites: [MW-C05-naam]
 sounds: [open-ai]
-roots: [sanskrit-akshati]
+roots: [sanskrit-akseti]
 etymology_hook: "hai 'is': CDIAL lists Old Hindi āhaï and Old Marwari chai under ākṣēti (CDIAL 1031); often traced to asti"
 duration:
   max_seconds: 150

@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Thin, Light, Heavy, Important, Green",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cd42b29ea2b76c05",
+  "sourceHash": "fnv1a64:c12d8435cc03a188",
   "lessons": [
     {
       "id": "PA-C83-patla",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ae07bf9cc9296f2",
+      "sourceHash": "fnv1a64:50454f0773ab9b17",
       "notice": null,
       "blocks": [
         {

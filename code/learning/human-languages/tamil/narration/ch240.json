@@ -4,7 +4,7 @@
   "chapter": 240,
   "title": "Firm, Round, Square, Sharp, Wonderful",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8901df2b7ebe906e",
+  "sourceHash": "fnv1a64:98f283107bbb744f",
   "lessons": [
     {
       "id": "TA-C240-urutiyana",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ba4d55c427733bd",
+      "sourceHash": "fnv1a64:fd114cb98c1f212b",
       "notice": null,
       "blocks": [
         {

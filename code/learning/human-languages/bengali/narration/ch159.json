@@ -4,7 +4,7 @@
   "chapter": 159,
   "title": "So, Since, If, Yet, Otherwise",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fc455931c5eeaf5e",
+  "sourceHash": "fnv1a64:b7406e902c3da377",
   "lessons": [
     {
       "id": "BN-C159-tai",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d142d4182e9cfe5",
+      "sourceHash": "fnv1a64:325627d63dc78c16",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Green and Yellow",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:18a59495148df9c6",
+  "sourceHash": "fnv1a64:651bcb7675d9a109",
   "lessons": [
     {
       "id": "HI-C24-hara-pila",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e35bf14473240035",
+      "sourceHash": "fnv1a64:6472345dd7e0fafc",
       "notice": null,
       "blocks": [
         {
@@ -94,7 +94,7 @@
             },
             {
               "kind": "speech",
-              "text": "What ancient Proto-Indo-European root connects harā to German's gelb? (ǵʰelh₃-, \"to shine\" — Hindi's GREEN word is a genuine cousin of German's YELLOW word; French's jaune is usually placed in this family too, though that link is less secure.) Why can one root yield green and yellow words? (It once covered a broader shining yellow-to-green zone.) Next: the yellow word whose sound history is clear but meaning history is not."
+              "text": "What ancient Proto-Indo-European root connects harā to German's gelb? (ǵʰelh₃-, \"to shine\" — Hindi's GREEN word is a genuine cousin of German's YELLOW word; French's jaune is usually placed in this family too, though that link is less secure.) Why can one root yield green and yellow words? (It once covered a broader shining yellow-to-green zone.) Next: the yellow word, whose sound history is clear, and the Sanskrit look-alike to keep apart from it."
             }
           ]
         }
@@ -103,17 +103,17 @@
     {
       "id": "HI-C24-pila-history",
       "sequence": 750,
-      "title": "पीला (pīlā) — clear sounds, uncertain meaning",
+      "title": "पीला (pīlā) — clear sounds, and a look-alike to keep apart",
       "headword": "पीला",
       "romanization": "pīlā",
-      "gloss": "yellow — a clear sound-history chain built on a Sanskrit word that also means drunk",
+      "gloss": "yellow — a clear sound-history chain, and a Sanskrit look-alike that means drunk",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bd6a5fbe19abc6b",
+      "sourceHash": "fnv1a64:ca3fd4819995d2a3",
       "notice": null,
       "blocks": [
         {
@@ -129,7 +129,7 @@
             },
             {
               "kind": "speech",
-              "text": "Harā gave a secure ancient color family. Hindi's yellow word gives a secure sound chain wrapped around an unsolved semantic mystery."
+              "text": "Harā gave a secure ancient color family. Hindi's yellow word gives a secure sound chain, and a Sanskrit look-alike to keep out of it."
             }
           ]
         },
@@ -140,11 +140,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पीला (pīlā, \"yellow\") traces through Prakrit पीअल (pīala) to Sanskrit पीतल (pītala), built on पीत (pīta)."
+              "text": "पीला (pīlā, \"yellow\") traces through Prakrit पीअल (pīala) to Sanskrit पीतल (pītala), built on पीत (pīta), \"yellow\" (CDIAL 8233, 8230)."
             },
             {
               "kind": "speech",
-              "text": "Pīta means \"yellow,\" but also literally \"drunk, quaffed,\" from a root meaning \"to drink.\" Why do \"yellow\" and \"drunk\" share a word? The connection is not settled. One proposed path runs \"drink\" becomes \"become full or swell\" becomes \"the color of fat\" becomes \"yellow,\" but sources flag that mechanism as uncertain."
+              "text": "Sanskrit also has a pīta that means \"drunk, quaffed,\" from the root pā-, \"to drink.\" It is a different word. Monier-Williams lists the two as separate headwords, and CDIAL gives them separate entries (8229 and 8230): they only sound alike. MW suggests \"yellow\" may come from a root meaning \"to swell,\" after the colour of butter and oil, and marks that as possible, not settled."
             },
             {
               "kind": "speech",
@@ -156,7 +156,7 @@
             },
             {
               "kind": "speech",
-              "text": "Keep the evidence levels separate: trust the forms; label the semantic bridge a hypothesis."
+              "text": "Keep the evidence levels separate: trust the forms; do not let the look-alike into the chain."
             }
           ]
         },
@@ -192,11 +192,11 @@
             {
               "kind": "prompt",
               "action": "QUALIFY",
-              "instruction": "\"drink becomes yellow is uncertain\"",
+              "instruction": "\"pīta, drunk, is a different word\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU QUALIFY: \"drink → yellow is uncertain\"]"
+              "source": "[YOU QUALIFY: \"pīta, drunk, is a different word\"]"
             }
           ]
         },
@@ -213,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does pīta also mean? (Drunk, quaffed.) Is the bridge from drinking to yellow settled? (No.) What part is secure? (The sound chain pīta becomes pītala becomes pīala becomes pīlā.)"
+              "text": "Say whether pīta \"drunk\" is the word behind pīlā. (No: it is a separate word that only sounds like pīta \"yellow\".) Then name the part that is secure. (The sound chain pīta becomes pītala becomes pīala becomes pīlā.)"
             }
           ]
         }

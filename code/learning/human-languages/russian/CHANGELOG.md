@@ -1,5 +1,12 @@
 # Changelog — Russian track
 
+## Fixed — Russian root slugs no longer join unrelated words
+
+- **`pie-uncertain` is retired.** Seven unrelated words shared it, so the cousins join treated them as one etymon. Each now has its own slug, from Vasmer: RU-C09-rot `slavic-rutu` (Old Russian *рътъ*); RU-C11-do-skorogo `slavic-skoru`, shared with RU-C238-skoraya-pomoshch; RU-C11-do-vstrechi `slavic-sreti`, shared with RU-C141-vstrechat (Vasmer puts *встреча* with *встретить*); RU-C13-sok `slavic-soku`; RU-C17-a `slavic-a`; RU-C17-no `slavic-nu` (Old Russian *нъ*); RU-C20-khotet `slavic-khoteti`, shared with RU-C154-khotya.
+- **RU-C16-i** moves from `pie-hei` to `slavic-i`. `pie-hei` is the root of *идти*; Vasmer takes the conjunction *и* as probably an old case form of a pointing pronoun (the lesson's "pointing stem"), not as kin of *идти*.
+- **RU-C137-proshlyy** moves from `pie-hei` to `slavic-khoditi`. *Прошлый* is built on *прошёл*, and Vasmer puts *шёл* with *ходить*, not with *идти*, as RU-C03-idti already says. The taken-apart block said *про-* "with *идти*"; it and the hook now name *шёл* and *ходить* instead. `pie-hei` now names only *идти*.
+- **RU-C17-no** no longer says *но* has no English cousin and that the histories disagree. Vasmer takes Old Russian *nŭ* as probably related to the old word for "now" (Lithuanian, Sanskrit and Gothic *nu*), and reports another account as less likely, so the hook, block heading, block and recall now call English *now* a likely cousin, paraphrased and hedged. The *но* recall lines in RU-C18-chto-vopros and RU-C21-izvinite say the same. The knowledge atom keeps its id, `RU-ETYMON-NO-NO-COUSIN`, because other lessons cite it.
+
 ## Fixed — every taken-apart block now says where its word comes from
 
 Fifty-two Russian word lessons had a "taken apart" block that split the word into a prefix, a root and an ending, all Russian, and never said where the root came from (human-language-data `hasEmptyEtymologyBlock`, HL24 §9.4). Each block now says it, from Vasmer's dictionary (the tamila-krashtan/vasmer database, read locally). Vasmer is copyrighted: every sentence is a paraphrase, cited "(Vasmer)" or "Vasmer relates…", and no phrase of his is copied. Words a block names are spelled as the lesson already spells them, or romanized. Empty etymology blocks 52 → 0.

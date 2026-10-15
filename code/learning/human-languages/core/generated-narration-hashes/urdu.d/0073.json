@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 73,
-  "sourceHash": "fnv1a64:232724112bc78d13",
+  "sourceHash": "fnv1a64:4233f096d8aceb8c",
   "lessonIds": [
     "UR-C73-mota",
     "UR-C73-patla",
@@ -14,6 +14,6 @@
   "text": "urdu/narration/ch73.txt",
   "json": "urdu/narration/ch73.json",
   "textHash": "fnv1a64:45a8718083a5c857",
-  "jsonHash": "fnv1a64:b0b4bd84fd631729",
+  "jsonHash": "fnv1a64:9af4e339fa185715",
   "findings": []
 }

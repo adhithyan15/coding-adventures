@@ -14,7 +14,7 @@ romanization: "jehetu"
 concept_tag: BN-KARON159-JEHETU
 prerequisites: [BN-C158-siling, BN-C159-tai]
 sounds: []
-roots: [sanskrit-ya, sanskrit-hetu]
+roots: [sanskrit-ya-relative, sanskrit-hetu]
 etymology_hook: "jehetu: je 'which' ← ya- (CDIAL 10391) + hetu 'cause', Sanskrit hetu"
 duration:
   max_seconds: 200

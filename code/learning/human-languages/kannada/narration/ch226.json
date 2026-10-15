@@ -4,7 +4,7 @@
   "chapter": 226,
   "title": "Art, Aunt, Daughter-in-law, Son-in-law, Sister-in-law",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e5aecbf7fc3d52c0",
+  "sourceHash": "fnv1a64:cd4c097385bcee14",
   "lessons": [
     {
       "id": "KA-C226-kale",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:160d3b07635bb14b",
+      "sourceHash": "fnv1a64:794c0fda63655463",
       "notice": null,
       "blocks": [
         {

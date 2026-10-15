@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0a834888cf4ea37e",
+  "sourceHash": "fnv1a64:a1b06925c9fbc588",
   "lessons": [
     {
       "id": "HI-C51-flower",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ada0cf41c25707a4",
+      "sourceHash": "fnv1a64:3f07ab4d4f7e16da",
       "notice": null,
       "blocks": [
         {

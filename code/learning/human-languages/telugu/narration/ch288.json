@@ -4,7 +4,7 @@
   "chapter": 288,
   "title": "Operation, Indigestion, Constipation, Diabetes, Blood pressure",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b81ed4349199b30a",
+  "sourceHash": "fnv1a64:cca044a522630dab",
   "lessons": [
     {
       "id": "TE-C288-aparesanu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f2365f1e2ed0f32",
+      "sourceHash": "fnv1a64:4f9a5cd3970ea56c",
       "notice": null,
       "blocks": [
         {

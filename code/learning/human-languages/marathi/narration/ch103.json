@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "Ant, Duck, New, Old, Bad",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:d84b749cc1aeb17f",
+  "sourceHash": "fnv1a64:ed11cbb017b6ea17",
   "lessons": [
     {
       "id": "MR-C103-mungi",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc1c2ac18ee5a0ec",
+      "sourceHash": "fnv1a64:c4a83a4947ec0b6d",
       "notice": null,
       "blocks": [
         {

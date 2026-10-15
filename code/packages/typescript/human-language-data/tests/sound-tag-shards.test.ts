@@ -143,20 +143,7 @@ describe("sound-tag direct owners", () => {
     ).toThrow(/unexpected/);
   });
 
-  it("rejects symlinked owners and a resurrected aggregate", () => {
-    const linked = temporaryRoot();
-    writeOwners(linked);
-    rmSync(join(linked, "core", "sound-tags.d", "spanish.json"));
-    symlinkSync(
-      join(linked, "core", "sound-tags.d", "tamil.json"),
-      join(linked, "core", "sound-tags.d", "spanish.json"),
-    );
-    expect(() =>
-      readSoundTagRegistryOwners(linked, {
-        expectedLanguages: ["spanish", "tamil"],
-      }),
-    ).toThrow(/real direct-child/);
-
+  it("rejects a resurrected aggregate", () => {
     const resurrected = temporaryRoot();
     writeOwners(resurrected);
     writeFileSync(
@@ -169,6 +156,28 @@ describe("sound-tag direct owners", () => {
         expectedLanguages: ["spanish", "tamil"],
       }),
     ).toThrow(/present beside canonical/);
+  });
+
+  it("rejects a symlinked sound-tag owner", (ctx) => {
+    const linked = temporaryRoot();
+    writeOwners(linked);
+    rmSync(join(linked, "core", "sound-tags.d", "spanish.json"));
+    try {
+      symlinkSync(
+        join(linked, "core", "sound-tags.d", "tamil.json"),
+        join(linked, "core", "sound-tags.d", "spanish.json"),
+        "file",
+      );
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+      ctx.skip();
+      return;
+    }
+    expect(() =>
+      readSoundTagRegistryOwners(linked, {
+        expectedLanguages: ["spanish", "tamil"],
+      }),
+    ).toThrow(/real direct-child/);
   });
 });
 
@@ -202,7 +211,7 @@ describe("sound-tag migration", () => {
     mkdirSync(join(root, "core"), { recursive: true });
     const aggregate = join(root, "core", "sound-tags.json");
     writeFileSync(aggregate, serializeSoundTagRegistry(registry), "utf8");
-    symlinkSync(root, join(root, "core", "sound-tags.d"));
+    symlinkSync(root, join(root, "core", "sound-tags.d"), process.platform === "win32" ? "junction" : "dir");
 
     expect(() => shardLedger(root, SOUND_TAG_PLAN)).toThrow(
       /symbolic link|real directory/,
