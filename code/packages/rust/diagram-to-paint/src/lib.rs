@@ -13121,6 +13121,72 @@ emphasized --> direct
     }
 
     #[test]
+    fn venn_theme_source_to_complete_scene_and_ordered_font_queries() {
+        use std::cell::RefCell;
+        struct RecordingResolver(RefCell<Vec<FontQuery>>);
+        impl FontResolver for RecordingResolver {
+            type Handle = FakeHandle;
+            fn resolve(&self, q: &FontQuery) -> Result<FakeHandle, FontResolutionError> {
+                self.0.borrow_mut().push(q.clone()); Ok(FakeHandle)
+            }
+        }
+        // Sixteen independent cells: both families, palette precedence, title,
+        // and an authored label override. Expected primitives are tabulated;
+        // neither production lowering nor actual layout supplies the oracle.
+        for family in ["Georgia", "Times New Roman"] { for specific in [false,true] {
+            for titled in [false,true] { for authored in [false,true] {
+                let palette=if specific {"  titleColor: red\n  textColor: blue\n  vennTitleTextColor: '#112233'\n  vennSetTextColor: '#445566'"}
+                    else {"  titleColor: '#112233'\n  textColor: '#445566'"};
+                let source=format!("---\nconfig:\n  venn:\n    width: 400\n    height: 300\n    padding: 25\nthemeVariables:\n  fontFamily: {family}\n{palette}\n---\nvenn-beta\n{}set a[\"A\"]: 1\nset b[\"B\"]: 1\nunion a,b[\"U\"]: 0.5\ntext a,b note[\"N\"]\nstyle a fill:#ff0000,stroke:#123456,stroke-width:3,fill-opacity:0.5{}",
+                    if titled {"title T\n"} else {""}, if authored {",color:#ff0000"} else {""});
+                let config=diagram_ir::VennConfig {width:400.0,height:300.0,padding:25.0,use_max_width:true,use_debug_layout:false,
+                    font_family:family.into(),title_text_color:"#112233".into(),set_text_color:"#445566".into()};
+                let parsed=mermaid_parser::parse_venn(&source).unwrap();
+                assert_eq!(parsed.config,config,"complete source config: {source}");
+                let actual_layout=diagram_layout_geometric::try_layout_venn(&parsed).unwrap();
+                let (cx_a,cx_b,cy,radius,label_a,label_b)=if titled {(234.56,165.44,167.0,54.0,265.88,134.12)}
+                    else {(240.0,160.0,150.0,62.5,276.25,123.75)};
+                let special=diagram_ir::VennStyle {fill:Some("#ff0000".into()),stroke:Some("#123456".into()),
+                    stroke_width:Some(3.0),fill_opacity:Some(0.5),text_color:authored.then(|| "#ff0000".into())};
+                let layout=LayoutedVennDiagram {width:config.width,height:config.height,title:titled.then(|| "T".into()),config:config.clone(),
+                    circles:vec![diagram_ir::LayoutedVennCircle {id:"a".into(),label:"A".into(),cx:cx_a,cy,radius,style:special.clone()},
+                        diagram_ir::LayoutedVennCircle {id:"b".into(),label:"B".into(),cx:cx_b,cy,radius,style:Default::default()}],
+                    labels:vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:label_a,y:cy,style:special},
+                        diagram_ir::LayoutedVennLabel {text:"B".into(),x:label_b,y:cy,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:cy,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}]};
+                assert_eq!(actual_layout,layout,"complete checked layout transport");
+                let resolver=RecordingResolver(RefCell::new(Vec::new()));
+                let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
+                let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,
+                    label_font:FontSpec {family:"Caller Font".into(),weight:600,italic:true,stretch:FontStretch::Condensed,..defaults.label_font},
+                    title_font:FontSpec {family:"Caller Title".into(),weight:800,italic:true,stretch:FontStretch::Expanded,..defaults.title_font},shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
+                let actual=diagram_to_paint_venn(&actual_layout,&options);
+                let mut instructions=vec![PaintInstruction::Ellipse(PaintEllipse {base:PaintBase::default(),cx:cx_a,cy,rx:radius,ry:radius,
+                    fill:Some("rgba(255,0,0,0.5)".into()),stroke:Some("#123456".into()),stroke_width:Some(3.0),stroke_dash:None,stroke_dash_offset:None}),
+                    PaintInstruction::Ellipse(PaintEllipse {base:PaintBase::default(),cx:cx_b,cy,rx:radius,ry:radius,
+                    fill:Some("rgba(245,158,11,0.38)".into()),stroke:Some("#334155".into()),stroke_width:Some(2.0),stroke_dash:None,stroke_dash_offset:None})];
+                let glyph=|c:char,x,y,size,fill:&str| PaintInstruction::GlyphRun(PaintGlyphRun {base:PaintBase::default(),
+                    glyphs:vec![GlyphPosition {glyph_id:c as u32,x,y}],font_ref:"fake:test".into(),font_size:size,fill:Some(fill.into())});
+                if titled {instructions.push(glyph('T',config.width/2.0-4.5,19.4,18.0,"rgb(17, 34, 51)"));}
+                for (c,x,y,color) in [('A',label_a-3.5,cy,if authored {"rgb(255, 0, 0)"} else {"rgb(68, 85, 102)"}),
+                    ('B',label_b-3.5,cy,"rgb(68, 85, 102)"),('U',196.5,cy,"rgb(68, 85, 102)"),('N',196.5,cy+20.0,"rgb(68, 85, 102)")] {
+                    instructions.push(glyph(c,x,y-12.0+11.2,14.0,color));
+                }
+                let expected=PaintScene {width:config.width,height:config.height,background:"rgb(255,255,255)".into(),instructions,id:None,
+                    metadata:Some(HashMap::from([("venn.width".into(),config.width.to_string()),("venn.height".into(),config.height.to_string()),
+                    ("venn.padding".into(),config.padding.to_string()),("venn.useMaxWidth".into(),"true".into()),("venn.useDebugLayout".into(),"false".into()),("venn.fontFamily".into(),family.into()),
+                    ("venn.titleTextColor".into(),"#112233".into()),("venn.setTextColor".into(),"#445566".into())]))};
+                assert_eq!(actual,expected,"whole scene, every primitive/glyph/style/order/config field");
+                let mut queries=Vec::new();
+                if titled {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(800)).with_style(text_interfaces::FontStyle::Italic).with_stretch(FontStretch::Expanded));}
+                queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(600)).with_style(text_interfaces::FontStyle::Italic).with_stretch(FontStretch::Condensed));
+                assert_eq!(*resolver.0.borrow(),queries,"all ordered resolver calls");
+            }}}}
+        }
+    }
+
+    #[test]
     fn ishikawa_lowers_to_backend_neutral_paths_rect_and_glyphs() {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
