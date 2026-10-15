@@ -3,6 +3,20 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a Venn config integration checkpoint -->
+Current-main drift after local acceptance: main557693e4 (#17592) adds twelve
+Ishikawa theme paths over9ea. Local carrier729cb245 passed source/docs/plan
+review7cc7166e only in the9ea frame; no publication attempted or acceptance
+transferred to557. Incoming24 blobs/12paths verified manifest64d69e99;
+independent audit2f77b81b WITHHOLDS integration for direct-member/source-origin
+and active-quote defects in the new settings. Spec606c2d52 precedes import/tests/
+repair: CV04a-ishikawa-theme-main-reconciliation.md. Keep shared/Venn helpers,
+232 full scene/query cells and native inputs unchanged. Next bounded slice:
+closed whole-tree import, actual new-field red controls, Ishikawa-only reader
+repair, complete IR/layout/scene/query oracles, affected14 execution/review,
+new final docs/current-main plan/carrier review before normal solePR17288 push.
+Existing829/729 publisher/gates must not be relabeled for this new source.
+Current published8f remains unmerged/autoOFF with actual macOS failure OPEN.
+
 Current local typography source04712174 retains closed main9ea15c06 through
 whole225617-entry merge0f328cef:313incoming/308pure/five reconstructed paths.
 Entire checked/indexed production retained with declared typography hunks and
