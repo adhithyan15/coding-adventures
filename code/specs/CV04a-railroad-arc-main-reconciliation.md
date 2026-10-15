@@ -68,3 +68,10 @@ remeasure and general floating-hop debts remain OPEN. Base ESTree/owned types
 remain binding. Full Closure parity/output-byte-source joins/stable identities
 and fold/rename/inline/motion/merge/delete lineage/CV04b remain OPEN. Genuine
 final-source Miri follows implementation delivery; heartbeat stays ACTIVE.
+
+Final attribution correction: Cargo package names are not globally unique.
+The old36/3699 inventory overlaid the program grammar-tools manifest onto the
+resolved workspace package. Preserve resolved Cargo manifest paths; the complete
+36-root inventory is3705 objects, all exact to actual tested source316e. Keep
+the failed carrier helper and prior receipts; this corrects input attribution,
+not execution. The final carrier includes this note and the collision lesson.

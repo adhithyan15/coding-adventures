@@ -45,10 +45,13 @@ Complete166 native forward packages/2810 committed objects EXACT5ed at4d,
 no exceptions. Final carrier must prove only named documentation changes.
 Registry376 identity/version/source/checksum tuples exact; no new crates.io.
 
-Final README/changelog/backlog carrier changes13 Markdown paths. Real document/
-lesson checks, fresh unforced production plan, complete Closure36/3699 input
+Final README/changelog/backlog carrier changes16 Markdown paths. Real document/
+lesson checks, fresh unforced production plan, complete Closure36/3705 input
 attribution for historical compiler1093/181+strict (not new execution) and
-independent exact-head carrier review gate push. Current published-head
+independent exact-head carrier review gate push. The old3699 count used the
+program grammar-tools root after a name collision; corrected resolved Cargo
+manifest paths give3705 exact316e objects. Failed a275 audit and old receipts
+remain, with no acceptance inferred from the failed helper. Current published-head
 conflict-free/review-clean terminal acceptable required/native hosted checks
 alone permit squash auto-merge; actual fetched-main merge reachability gates
 cleanup. Old Forme and historical TaskApp failures are not fixed by inference.
