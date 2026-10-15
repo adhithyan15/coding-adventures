@@ -55,7 +55,7 @@ fn railroad_style_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let mut font=options.label_font.clone();font.family="Courier New".into();font.size=font_size;
         let name_height=28.0_f64.max(font_size*1.15);
         let mut name_font=font.clone();name_font.weight=700;
-        let mut children=vec![text_node_no_wrap("r =",padding,rule.start_marker.y-name_height/2.0,3.0*font_size*0.61+20.0,name_height,name_font,Color{r:88,g:28,b:135,a:255})];
+        let mut children=vec![text_node_no_wrap("r =",padding,rule.start_marker.y-name_height/2.0,rule.start_marker.x-padding,name_height,name_font,Color{r:88,g:28,b:135,a:255})];
         for (e,color) in rule.elements.iter().zip([Color{r:20,g:83,b:45,a:255},Color{r:23,g:37,b:84,a:255},Color{r:23,g:37,b:84,a:255}]) {
             let height=24.0_f64.max(font_size*1.15).min(e.height);
             children.push(text_node_no_wrap(&e.label,e.x+padding,e.y+(e.height-height)/2.0,e.width-2.0*padding,height,font.clone(),color));
@@ -115,7 +115,7 @@ fn railroad_theme_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let mut font=options.label_font.clone();font.family="Courier New".into();font.size=font_size;
         let name_height=28.0_f64.max(font_size*1.15);
         let mut name_font=font.clone();name_font.weight=700;
-        let mut children=vec![text_node_no_wrap("r =",padding,rule.start_marker.y-name_height/2.0,3.0*font_size*0.61+20.0,name_height,name_font,Color{r:88,g:28,b:135,a:255})];
+        let mut children=vec![text_node_no_wrap("r =",padding,rule.start_marker.y-name_height/2.0,rule.start_marker.x-padding,name_height,name_font,Color{r:88,g:28,b:135,a:255})];
         for (e,color) in rule.elements.iter().zip([Color{r:20,g:83,b:45,a:255},Color{r:23,g:37,b:84,a:255},Color{r:23,g:37,b:84,a:255}]) {
             let height=24.0_f64.max(font_size*1.15).min(e.height);
             children.push(text_node_no_wrap(&e.label,e.x+padding,e.y+(e.height-height)/2.0,e.width-2.0*padding,height,font.clone(),color));
@@ -175,7 +175,7 @@ fn railroad_sanitize_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let mut font=options.label_font.clone();font.family="Courier New".into();font.size=font_size;
         let name_height=28.0_f64.max(font_size*1.15);
         let mut name_font=font.clone();name_font.weight=700;
-        let mut children=vec![text_node_no_wrap("r =",padding,rule.start_marker.y-name_height/2.0,3.0*font_size*0.61+20.0,name_height,name_font,Color{r:88,g:28,b:135,a:255})];
+        let mut children=vec![text_node_no_wrap("r =",padding,rule.start_marker.y-name_height/2.0,rule.start_marker.x-padding,name_height,name_font,Color{r:88,g:28,b:135,a:255})];
         for (e,color) in rule.elements.iter().zip([Color{r:20,g:83,b:45,a:255},Color{r:23,g:37,b:84,a:255},Color{r:23,g:37,b:84,a:255}]) {
             let height=24.0_f64.max(font_size*1.15).min(e.height);
             children.push(text_node_no_wrap(&e.label,e.x+padding,e.y+(e.height-height)/2.0,e.width-2.0*padding,height,font.clone(),color));
@@ -235,7 +235,7 @@ fn railroad_compact_true_retains_ordered_shapes_glyphs_and_complete_metadata() {
         let mut font=options.label_font.clone();font.family="Courier New".into();font.size=font_size;
         let name_height=28.0_f64.max(font_size*1.15);
         let mut name_font=font.clone();name_font.weight=700;
-        let mut children=vec![text_node_no_wrap("r =",padding,rule.start_marker.y-name_height/2.0,3.0*font_size*0.61+20.0,name_height,name_font,Color{r:88,g:28,b:135,a:255})];
+        let mut children=vec![text_node_no_wrap("r =",padding,rule.start_marker.y-name_height/2.0,rule.start_marker.x-padding,name_height,name_font,Color{r:88,g:28,b:135,a:255})];
         for (e,color) in rule.elements.iter().zip([Color{r:20,g:83,b:45,a:255},Color{r:23,g:37,b:84,a:255},Color{r:23,g:37,b:84,a:255}]) {
             let height=24.0_f64.max(font_size*1.15).min(e.height);
             children.push(text_node_no_wrap(&e.label,e.x+padding,e.y+(e.height-height)/2.0,e.width-2.0*padding,height,font.clone(),color));

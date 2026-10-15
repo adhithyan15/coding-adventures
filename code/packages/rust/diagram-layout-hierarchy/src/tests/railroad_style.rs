@@ -34,3 +34,22 @@ fn railroad_style_preserves_all_valid_scalars_and_font_measured_boxes() {
     }}}
     assert_eq!(cells,80);
 }
+
+#[test]
+fn railroad_explicit_marker_points_cross_the_complete_derived_geometry_gate() {
+    let layout=try_layout_railroad(&input(RailroadConfig::default(),false,false)).unwrap();
+    assert!(railroad_geometry_is_valid(&layout));
+    let mut cells=0;
+    for marker in [0,1] {for axis in [0,1] {for value in [f64::NAN,f64::INFINITY,f64::NEG_INFINITY] {
+        let mut forged=layout.clone();
+        let point=if marker==0 {&mut forged.rules[0].start_marker}else{&mut forged.rules[0].end_marker};
+        if axis==0 {point.x=value;}else{point.y=value;}
+        assert!(!railroad_geometry_is_valid(&forged),"marker={marker},axis={axis},value={value}");
+        cells+=1;
+    }}}
+    assert_eq!(cells,12);
+    // A negative finite marker coordinate is separate visual-clearance debt;
+    // the gate promises finite points, not arbitrary marker enclosure.
+    let mut finite=layout.clone();finite.rules[0].start_marker.x=-1.0;
+    assert!(railroad_geometry_is_valid(&finite));
+}

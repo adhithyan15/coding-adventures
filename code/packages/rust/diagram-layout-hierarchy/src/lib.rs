@@ -219,14 +219,20 @@ pub fn try_layout_railroad(diagram: &RailroadDiagram) -> Result<LayoutedRailroad
         }
     }
     let layout=layout_railroad_supported(diagram);
-    let rectangle=|x:f64,y:f64,w:f64,h:f64| [x,y,w,h].iter().all(|v|v.is_finite())&&w>=0.0&&h>=0.0;
-    if !rectangle(0.0,0.0,layout.width,layout.height) || layout.rules.iter().any(|rule|
-        !rectangle(0.0,rule.y,layout.width,rule.height)
-        || rule.elements.iter().any(|e|!rectangle(e.x,e.y,e.width,e.height))
-        || rule.paths.iter().flat_map(|p|&p.points).any(|p|!p.x.is_finite()||!p.y.is_finite())) {
+    if !railroad_geometry_is_valid(&layout) {
         return Err(RailroadLayoutError::InvalidDerivedGeometry);
     }
     Ok(layout)
+}
+
+// Keep the complete derived-layout predicate testable independently of the
+// arithmetic that constructs it. This is private and does not admit forged IR.
+fn railroad_geometry_is_valid(layout:&LayoutedRailroadDiagram)->bool {
+    let rectangle=|x:f64,y:f64,w:f64,h:f64| [x,y,w,h].iter().all(|v|v.is_finite())&&w>=0.0&&h>=0.0;
+    rectangle(0.0,0.0,layout.width,layout.height) && !layout.rules.iter().any(|rule|
+        !rectangle(0.0,rule.y,layout.width,rule.height)
+        || rule.elements.iter().any(|e|!rectangle(e.x,e.y,e.width,e.height))
+        || rule.paths.iter().flat_map(|p|&p.points).any(|p|!p.x.is_finite()||!p.y.is_finite()))
 }
 
 fn layout_railroad_supported(diagram: &RailroadDiagram) -> LayoutedRailroadDiagram {
