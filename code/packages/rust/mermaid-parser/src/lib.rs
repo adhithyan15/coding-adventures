@@ -5545,21 +5545,22 @@ fn venn_init_config(source: &str) -> Option<&str> {
 fn venn_front_matter_config(source: &str) -> Option<String> {
     let mut lines = source.lines().skip_while(|line| line.trim().is_empty());
     if lines.next()?.trim() != "---" { return None; }
-    let mut parents: Vec<(usize, &str)> = Vec::new();
+    let mut parents: Vec<(usize, &str, bool)> = Vec::new();
     let mut output = String::new();
     for line in lines {
         let trimmed = line.trim();
         if trimmed == "---" { break; }
         if trimmed.is_empty() || trimmed.starts_with('#') { continue; }
         let indent = line.len() - line.trim_start().len();
-        while parents.last().is_some_and(|(parent, _)| indent <= *parent) { parents.pop(); }
+        while parents.last().is_some_and(|(parent, _, _)| indent <= *parent) { parents.pop(); }
         let Some((key, value)) = trimmed.split_once(':') else { continue; };
-        if parents.len() == 2 && parents[0].1 == "config" && parents[1].1 == "venn" && !value.trim().is_empty() {
+        if parents.len() == 2 && parents[0].1 == "config" && parents[0].2
+            && parents[1].1 == "venn" && parents[1].2 && !value.trim().is_empty() {
             output.push_str(trimmed); output.push('\n');
         }
         // Keep every parent, including unknown maps, arrays and scalar/block
         // keys. Their descendants cannot masquerade as direct Venn members.
-        parents.push((indent, key.trim()));
+        parents.push((indent, key.trim(), value.trim().is_empty()));
     }
     (!output.is_empty()).then_some(output)
 }
