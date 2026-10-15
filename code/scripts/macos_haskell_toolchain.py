@@ -234,7 +234,7 @@ def bootstrap(output: Path, github_env: Path, env: dict[str, str],
                           "-outputdir", str(ghc_dir), "-o", str(ghc_binary), "-v"], cwd=ghc_dir)
         if run("ghc-run", [str(ghc_binary)]).strip() != "42":
             raise RuntimeError("GHC foreign-C runtime output mismatch")
-        (package / "ci-toolchain-probe.cabal").write_text("cabal-version: 2.4\nname: ci-toolchain-probe\nversion: 0.0.0\nbuild-type: Simple\nexecutable ci-toolchain-probe\n  main-is: Main.hsc\n  c-sources: answer.c\n  build-depends: base >= 4.17 && < 4.18\n  default-language: Haskell2010\n", encoding="utf-8")
+        (package / "ci-toolchain-probe.cabal").write_text("cabal-version: 2.4\nname: ci-toolchain-probe\nversion: 0.0.0\nbuild-type: Simple\nexecutable ci-toolchain-probe\n  main-is: Main.hs\n  c-sources: answer.c\n  build-depends: base >= 4.17 && < 4.18\n  default-language: Haskell2010\n", encoding="utf-8")
         (package / "cabal.project").write_text("packages: .\n", encoding="utf-8")
         (package / "Main.hsc").write_text('{-# LANGUAGE ForeignFunctionInterface #-}\nmodule Main where\nimport Foreign.C.Types\nforeign import ccall "ci_answer" answer :: IO CInt\nprobe_marker :: Int\nprobe_marker = #{const CI_TOOLCHAIN_HSC}\nmain :: IO ()\nmain = answer >>= print . (+ probe_marker) . fromIntegral\n', encoding="utf-8")
         for phase in ["-pgmc", "-pgma", "-pgml"]:
