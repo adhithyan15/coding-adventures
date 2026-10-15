@@ -2,6 +2,38 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04a native13 current checkpoint -->
+Native13 exact18f40528: actual unfiltered six-package Cargo1830P/0F/1existing
+archive ignore/78targets, compiler891/fullLANG504, strict all-target0 PASS.
+Sourcef6fa29b6/terminal7905fdb8 plus clarification70623dcf independent PASS.
+Full test loga571ee55, strict50b1cbf5; reconciled terminal receiptc2dfb5d8.
+Original Python wrapper actually exited1 on stale expectedLANG503 after Cargo0;
+original incomplete receipt remains unchanged. All78 actual count vectors equal
+old0cc except887→891 and502→504: four compiler tests plus incoming/owned LANG
+tests. Read-only reconciliation verifies complete source/log/command/input
+bindings; no command is relabeled and no test rerun is inferred.
+Only four dedicated canonical budget/comment/list/cap edits12→13; shared exp/
+legacy/identity/effect/value/conversion/trap/work bytes exact8837. Preserve old
+structural13 conditional refusal. All126 old runtime sources/756 events exact,
+ten new/60 yield136/816 actual six-backend cells, unavailableCLR uncounted.
+Native166/2850 objects,1457 rawRust/TOML,21 external static resources/registry376
+verified. Style3e966/44+strict and Closure36/3705+3static remain prior-source
+attribution, not new execution/dynamic closure. Native source18f unchanged.
+Latest inspected main42a2ac10 includes boxed Ishikawa262a and Sanskrit after
+human snapshotfcd. Native source18f does not integrate those increments.
+Box-label spec46b2b53d committed in separate idle railroad worktree before any
+tests/import; lessonseb47 record count-guard and incoming-audit assumptions.
+Full Venn232/owned Ishikawa21 source/layout/scene/query oracles must be retained
+with explicit intended box/dimension/text-frame migration; no dropped cases or
+numeric tolerance change. New style validation and current-main carrier remain
+PENDING. SolePR17288 published8837 UNMERGED/AUTOOFF; real macOS phase-refusal
+root cause/required exact-head CI/current conflict/review/merge gates OPEN.
+Miri **DEFERRED/PENDING**, never passed; frozen run/source/inputs/target/receipts
+untouched/unpolled/no duplicate/termination. Delivery first then genuine final-
+source Miri. Full Closure parity/output-byte-source/stableIDs/spans/pass-sweep/
+fold/rename/inline/motion/merge/delete lineage/CV04b remain OPEN; heartbeatACTIVE.
+<!-- /CV04a native13 current checkpoint -->
+
 <!-- CV04a Venn config integration checkpoint -->
 Local Ishikawa source3e729cea reconciles inspected main557693e4 through exact
 whole225621-entry merge708c1c30:12incoming/5pure/seven three-way paths. Owned
