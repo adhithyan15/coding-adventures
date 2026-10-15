@@ -13183,7 +13183,6 @@ emphasized --> direct
                 queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(600)).with_style(text_interfaces::FontStyle::Italic).with_stretch(FontStretch::Condensed));
                 assert_eq!(*resolver.0.borrow(),queries,"all ordered resolver calls");
             }}}}
-        }
     }
 
     #[test]
