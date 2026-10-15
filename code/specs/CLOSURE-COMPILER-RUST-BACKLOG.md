@@ -3,70 +3,59 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a pathwise pending checkpoint -->
-October 14: bounded native and Railroad reconciliation PASS locally. Delivery
-source is 9aa50e7d; documentation carrier fc7281d4 has passed documentation,
-lessons and production-plan checks. Publication to sole PR #17288 is PENDING;
-auto-merge remains OFF. Exact published-head CI, independent final carrier
-review and actual merge reachability remain delivery gates.
+October15 local style source965a405f: spec-first main7757 conflict reconciliation
+PASS locally, publication PENDING to sole PR17288. Published bf1 is conflicted
+against main7757; local965 resolves that style conflict. New main2fb (#17535)
+adds two-unit ALGOL bounds and produces a separate actual compiler conflict
+with local965. That next native integration remains PENDING; auto-merge OFF.
+Current-head CI/merge acceptance is not claimed.
 
-Native/compiler source 63b8647b: complete affected six-package unfiltered
-suites ACTUALLY EXIT 0, 1769 PASS / 0 FAIL / 1 existing ignored over 78 targets;
-ALGOL 854 and full LANG 480 included, strict all-targets EXIT 0. Tests SHA256:
-acec2ec5b6f8b81afafbe614496673d0920bb3e744b4e1961c5c8b15545c75ad.
-The shared sign helper remains narrow. A dedicated flat-unit proof admits one
-conditional front with BOTH strict roots; exact read-once NameReal identity
-evaluation preserves actual alias effects without cached/fresh proof forwarding.
-Malformed wrappers/signatures/nonidentity bodies and name-writing conditions
-retain refusal. Sixteen owned runtime sources / 96 actual cells on six available
-backends verify exact stdout, normal exit and ordered CL0/CR2 evaluation; CLR
-execution is not inferred. Independent source63 review PASS, SHA256:
-c415e4e99bb5d5ee58e56c65640db0b3e06db89d3bd8f39977f5d2f5931442e7.
+Spec8108 precedes actual merge8718: complete3904 incoming paths,3897 pure,
+7 independently reconstructed overlaps,221299 retained owned objects; one
+explicit paint resolution keeps both enclosed label boxes and producer styles.
+Incoming checked-font clamp panic and large-font fixed-box regression had real
+red controls: all88 exact typed refusals failed (including captured NaN/negative
+panics); font64 complete glyph trace failed. Parser176 exact style refusals
+already passed via the retained bounded parser helper. Intentional producer
+font-formula/palette/metadata oracle changes and incorrect four-vs-one cached
+font-query expectation are preserved as distinct failed receipts.
 
-Separate successor checkout/target preserves native and frozen Miri inputs.
-Spec910652 precedes actual main3a Railroad/Sanskrit merge2f744c8d: closed 51
-paths, 44 pure incoming / 7 independently exact overlaps / 225137 retained
-owned objects. Incoming overflow, gap cancellation and zero-padding glyph
-findings had actual 168 parser admission / 18 glyph-box failures; compile-only
-harness/API reds remain distinct. Final9aa complete fourteen-package diagram/
-parser/paint/downstream suites ACTUALLY EXIT 0, 865 PASS / 0 FAIL / 0 ignored
-over 33 targets, strict all-targets EXIT 0. Tests SHA256:
-8c8881bfdbadcd664d18c04a7473c822080382e4ad816d55f51ca16fe570f6a4.
+All six spacing/style numeric values are checked before arithmetic; finite cap
+65536, font strictly positive, others nonnegative. Leaf/rule-name text boxes
+scale with font size. Final965 focused parser2/layout9/paint3 PASS. Complete
+affected14-package strict EXIT0 and unfiltered tests ACTUALLY EXIT0,
+871PASS/0FAIL/0ignored/34targets. Tests SHA256 1dc35834680928fc049ce652d5c0a2cb43d059884b3a4456e0c3cd6e8e7a3f77.
+Independent exact-source security PASS SHA256 d81059d65aec07152a1f58686f57ba653884f9b2a472afc11125ef07d878a5e8.
+Controls retain old spacing168parser/84typed,96geometry,40empty-singleton,
+18typed+66source glyphs, ordered connectors and production limits. New controls
+verify176 style parser refusals,120 complete configs plus zero stroke/radius,
+88 exact typed refusals,80 valid typed scalar cases and40 complete portable
+style scenes with glyph/path vectors, geometry/style fields, all10 metadata,
+global cross-kind order and the actual complete single cached FontQuery.
 
-All three Railroad settings have finite inclusive 0..65536 parser and checked
-typed admission. Sequence extents use n-1 gaps; small leaf label boxes stay
-enclosed. Controls verify 168 exact parser refusals / 120 retained configs,
-84 typed refusals / 96 geometry / 40 empty-singleton cells, ordered distinct-leaf
-flat/nested connectors and two-rule gaps, plus 18 typed / 66 source complete
-ordered glyph traces, metric bounds and exact metadata. Old hop32/16, 8192,
-geometry16128 and production-limit controls are preserved. Independent final9aa
-security PASS, report SHA256:
-4f7e57d5d2c409d4ecd9f68d8ef8d8eb4b75491b8ea71894881a235130240981.
+Native source63 ACTUAL affected6-package tests1769PASS/0FAIL/1existingignored/
+78targets and strict0 remain accepted, including ALGOL854 and LANG480. Owned
+16 runtime sources/96 actual backend cells retain exact stdout/exit/evaluation
+order; no CLR inference. All166 forward native packages are inventoried:
+runtime/test/config objects exact, only4 known documentation changes (2802
+current objects). Registry376 identities/checksums exact; no new crates.io.
+Standalone Closure36 source inventory and prior1093/181+strict source
+attribution must be retained in the final carrier proof, not relabeled reruns.
 
-Complete native forward closure: 166 packages / 2800 objects exact63 to9aa;
-carrier changes only README/changelog documentation. Complete standalone
-Closure36-package inventory: all3699 objects exact316e tofc. Earlier standalone
-1093 tests / 181 targets and strict EXIT0 remain source-attributed execution;
-the separate failed historical affected run is not relabeled. Registry376
-identities/checksums exact; no new crates.io dependencies. R2 checker runtime460
-files exact to the preserved build, checker source/config exact63. Actual R2
-doc-shard check EXIT0, lessons1253/0 problems, diffcheck0. Actual unforced current
-production plan EXIT0 selects Closure native tests on Linux/macOS/Windows and
-Windows OS suites using the source-identical, previously tested Go planner.
-Receipts: CV04a-railroad-carrier-fc7281d4-{validation,doc-checks}.json.
-
-Fresh audit main085 contains unrelated Arabic curriculum changes after the
-integrated main3a. Published4c macOS CI actually failed the TaskApp iOS first-row
-assertion; no code cause established. Retry request403 while workflow running,
-no accepted rerun. These old-head checks do not establish successor acceptance.
-Current published-head terminal acceptable required checks, review-clean/
-conflict-free state and fetched-main merge reachability gate merge and cleanup.
-
-Base ESTree / owned types retained. Full Closure parity, output-byte/source joins,
-all transformation lineage/CV04b, generic conditional/range composition and
-Railroad custom-font/forged-layout/depth/remeasure/general floating-hop debts
-remain OPEN. Miri DEFERRED/PENDING, never passed; frozen497 checkout, inputs,
-target, run and receipts untouched and unpolled. Implementation/delivery comes
-first, genuine final-source Miri afterward. Full objective OPEN; heartbeat ACTIVE.
+Final README/changelog/backlog/issue, doc checker/lessons/current production
+plan and independent exact-head carrier review gate samePR push. Exact current
+published-head terminal acceptable required checks, conflict-free/review-clean
+state and actual fetched-main merge reachability gate merge/cleanup. Prior4c
+macOS TaskApp first-row failure remains historical, not repaired by inference.
+Base ESTree/owned types retained. Full Closure parity/output-byte-source joins/
+all fold/rename/inline/motion/merge/delete lineage/CV04b remain OPEN. Railroad
+custom-font/long-label, marker/stroke visual enclosure, fixed rule-column and
+typed-empty large-font fitting, forged-layout/depth/remeasure and general
+floating-hop debts remain OPEN. Miri DEFERRED/PENDING, never passed; frozen497
+checkout/inputs/target/run/receipts untouched and unpolled. Implementation first,
+genuine final-source Miri afterward; full objective OPEN, heartbeat ACTIVE.
+Next bounded slice: spec-first main2fb compiler reconciliation and affected
+native validation in a separate successor; retain this accepted style source.
 <!-- /CV04a pathwise pending checkpoint -->
 
 <!-- CV04a active delivery checkpoint -->

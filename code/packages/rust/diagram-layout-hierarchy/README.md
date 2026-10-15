@@ -1,5 +1,11 @@
 # diagram-layout-hierarchy
 
+`try_layout_railroad` validates all six numeric spacing/style values before
+font clamp or derived arithmetic, including empty diagrams. Invalid font size,
+stroke width or marker radius returns `UnsupportedStyle`; spacing errors stay
+unchanged. Font measurement retains the producer's 14px default (44.1px minimum
+leaf content width and 16.1px height before padding).
+
 `try_layout_railroad` checks each finite0..65536 spacing setting before
 arithmetic and returns a typed field error or derived-geometry refusal.
 `layout_railroad` retains its infallible signature as a compatibility wrapper

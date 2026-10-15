@@ -1,5 +1,12 @@
 # diagram-to-paint
 
+Railroad paints the resolved portable styles and scales declared leaf/rule-name
+text boxes with font size. Portable controls compare complete ordered glyph and
+path vectors, shape geometry/styles, all ten metadata keys, actual cached font
+queries and global instruction-kind order. Marker/stroke visual enclosure,
+fixed rule-name columns and typed-empty/large-font fitting remain limitations;
+this does not claim arbitrary custom-font or long-label fitting.
+
 Railroad leaves with zero/small padding keep their declared text box inside the
 leaf before glyph shaping. Complete ordered default-font glyph traces and
 actual metric bounds are checked through all four source dialects, along with

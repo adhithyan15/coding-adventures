@@ -1,5 +1,10 @@
 # diagram-ir
 
+Railroad configuration also carries font family/size, portable colors, stroke
+width and marker visibility/radius. Numeric style fields share the finite
+65536 cap with spacing; font size is strictly positive, and stroke/radius are
+nonnegative. Defaults and accepted values are retained without clamping.
+
 `RailroadConfig` carries padding and vertical/horizontal separation unchanged.
 Each setting has a supported finite inclusive0..65536 range, exported as
 `MAX_RAILROAD_SPACING` and enforced by parsers and checked hierarchy layout.
