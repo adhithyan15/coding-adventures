@@ -48,6 +48,14 @@ fitting, marker/stroke visual enclosure, forged LayoutedIR paint admission,
 recursive depth/remeasure bounds or complete Mermaid typography parity. Keep
 those debts explicit; do not silently count them as accepted safety contracts.
 
+The incoming default-metric counterexample at fontSize64 additionally needs a
+font-scaled declared label box: use max(24,fontSize*1.15) capped by the leaf's
+height, preserving normal/default sizing. Give rule names max(28,fontSize*1.15)
+height centered at the existing rule center. Test the complete ordered glyph
+trace and real 0.8/0.2-em metric bounds at tiny, default, fractional,64 and cap
+sizes. This closes the concrete fixed-height regression without promising
+arbitrary custom-font or long-label fitting.
+
 Run complete affected fourteen-package diagram/parser/paint/downstream suites
 and strict lint on fixed source. Prove the full native/compiler dependency
 inputs unchanged from accepted63 or rerun affected native suites. Registry
