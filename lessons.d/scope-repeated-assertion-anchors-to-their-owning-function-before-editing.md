@@ -14,3 +14,8 @@ function and preflight every planned replacement before writing any file. On
 retry, compare partially written files with both the original Git blob and the
 exact intended result; never reset unrelated work. Keep old oracle bodies and
 assertions reversible and require actual tests after the repaired edit.
+
+A later typography migration caught the same repeated assertion before any
+source write. Its next preflight also refused an assumed include anchor: the
+geometry tests were separate modules. Inspect module wiring and fixture imports
+as well as the named function before generating a multi-file test migration.

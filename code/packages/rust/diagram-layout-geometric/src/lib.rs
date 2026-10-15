@@ -640,3 +640,6 @@ mod venn_config_contract;
 
 #[cfg(test)]
 mod venn_debug_contract;
+
+#[cfg(test)]
+mod venn_typography_contract;

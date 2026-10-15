@@ -13159,10 +13159,10 @@ emphasized --> direct
                 let layout=LayoutedVennDiagram {width:config.width,height:config.height,title:titled.then(|| "T".into()),config:config.clone(),
                     circles:vec![diagram_ir::LayoutedVennCircle {id:"a".into(),label:"A".into(),cx:240.0,cy:150.0,radius:62.5,style:special.clone()},
                         diagram_ir::LayoutedVennCircle {id:"b".into(),label:"B".into(),cx:160.0,cy:150.0,radius:62.5,style:Default::default()}],
-                    labels:vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:276.25,y:150.0,style:special},
-                        diagram_ir::LayoutedVennLabel {text:"B".into(),x:123.75,y:150.0,style:Default::default()},
-                        diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:150.0,style:Default::default()},
-                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:170.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
+                    labels:vec![diagram_ir::LayoutedVennLabel {font_size:14.0,text:"A".into(),x:276.25,y:150.0,style:special},
+                        diagram_ir::LayoutedVennLabel {font_size:14.0,text:"B".into(),x:123.75,y:150.0,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {font_size:14.0,text:"U".into(),x:200.0,y:150.0,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {font_size:14.0,text:"N".into(),x:200.0,y:170.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
                 let resolver=RecordingResolver(RefCell::new(Vec::new()));
                 let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
                 let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,
@@ -13186,7 +13186,7 @@ emphasized --> direct
                 for (i,color) in ["#60a5fa","#f59e0b","#34d399","#f472b6","#a78bfa","#22d3ee","#fb7185","#a3e635"].iter().enumerate() {
                     expected.metadata.as_mut().unwrap().insert(format!("venn.themeColor{}",i+1),(*color).into());
                 }
-                let actual=restore_reviewed_venn_defaults(actual,&layout);
+                let actual=restore_reviewed_venn_typography(restore_reviewed_venn_defaults(actual,&layout),&layout);
                 assert_eq!(actual,expected,"whole scene, every primitive/glyph/style/order/config field");
                 let mut queries=Vec::new();
                 if titled {queries.push(FontQuery::named("sans-serif").with_weight(text_interfaces::FontWeight(700)));}
@@ -13233,10 +13233,10 @@ emphasized --> direct
                 let layout=LayoutedVennDiagram {width:config.width,height:config.height,title:titled.then(|| "T".into()),config:config.clone(),
                     circles:vec![diagram_ir::LayoutedVennCircle {id:"a".into(),label:"A".into(),cx:cx_a,cy,radius,style:special.clone()},
                         diagram_ir::LayoutedVennCircle {id:"b".into(),label:"B".into(),cx:cx_b,cy,radius,style:Default::default()}],
-                    labels:vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:label_a,y:cy,style:special},
-                        diagram_ir::LayoutedVennLabel {text:"B".into(),x:label_b,y:cy,style:Default::default()},
-                        diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:cy,style:Default::default()},
-                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
+                    labels:vec![diagram_ir::LayoutedVennLabel {font_size:12.0,text:"A".into(),x:label_a,y:cy,style:special},
+                        diagram_ir::LayoutedVennLabel {font_size:12.0,text:"B".into(),x:label_b,y:cy,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {font_size:12.0,text:"U".into(),x:200.0,y:cy,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {font_size:10.0,text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
                 assert_eq!(actual_layout,layout,"complete checked layout transport");
                 let resolver=RecordingResolver(RefCell::new(Vec::new()));
                 let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
@@ -13262,7 +13262,7 @@ emphasized --> direct
                 for (i,color) in ["#60a5fa","#f59e0b","#34d399","#f472b6","#a78bfa","#22d3ee","#fb7185","#a3e635"].iter().enumerate() {
                     expected.metadata.as_mut().unwrap().insert(format!("venn.themeColor{}",i+1),(*color).into());
                 }
-                let actual=restore_reviewed_venn_defaults(actual,&layout);
+                let actual=restore_reviewed_venn_typography(restore_reviewed_venn_defaults(actual,&layout),&layout);
                 assert_eq!(actual,expected,"whole scene, every primitive/glyph/style/order/config field");
                 let mut queries=Vec::new();
                 if titled {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(800)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Expanded));}
@@ -13309,10 +13309,10 @@ emphasized --> direct
                 let layout=LayoutedVennDiagram {width:config.width,height:config.height,title:titled.then(|| "T".into()),config:config.clone(),
                     circles:vec![diagram_ir::LayoutedVennCircle {id:"a".into(),label:"A".into(),cx:cx_a,cy,radius,style:special.clone()},
                         diagram_ir::LayoutedVennCircle {id:"b".into(),label:"B".into(),cx:cx_b,cy,radius,style:Default::default()}],
-                    labels:vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:label_a,y:cy,style:special},
-                        diagram_ir::LayoutedVennLabel {text:"B".into(),x:label_b,y:cy,style:Default::default()},
-                        diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:cy,style:Default::default()},
-                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
+                    labels:vec![diagram_ir::LayoutedVennLabel {font_size:12.0,text:"A".into(),x:label_a,y:cy,style:special},
+                        diagram_ir::LayoutedVennLabel {font_size:12.0,text:"B".into(),x:label_b,y:cy,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {font_size:12.0,text:"U".into(),x:200.0,y:cy,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {font_size:10.0,text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
                 assert_eq!(actual_layout,layout,"complete checked layout transport");
                 let resolver=RecordingResolver(RefCell::new(Vec::new()));
                 let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
@@ -13338,7 +13338,7 @@ emphasized --> direct
                 for (i,color) in colors.iter().enumerate() {
                     expected.metadata.as_mut().unwrap().insert(format!("venn.themeColor{}",i+1),color.clone());
                 }
-                let actual=restore_reviewed_venn_defaults(actual,&layout);
+                let actual=restore_reviewed_venn_typography(restore_reviewed_venn_defaults(actual,&layout),&layout);
                 assert_eq!(actual,expected,"whole source palette scene, including exact metadata/config");
                 let mut queries=Vec::new();
                 if titled {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(800)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Expanded));}

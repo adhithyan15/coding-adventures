@@ -87,9 +87,9 @@ fn venn_debug_source_to_complete_layout_scene_and_ordered_font_queries() {
         let source=format!("---\nconfig:\n  venn:\n    width: 400\n    height: 300\n    padding: 25\n    useDebugLayout: {debug}\nthemeVariables:\n  fontFamily: {family}\n  venn1: '#112233'\n  venn2: '#445566'\n---\nvenn-beta\nset a[\"A\"]: 1\nset b[\"B\"]: 1\nunion a,b[\"U\"]: 0.5\ntext n[\"N\"]\n{}style a fill:#abcdef,stroke:#123456,stroke-width:3,fill-opacity:0.5{}",if double {"text m[\"M\"]\n"} else {""},if authored {",color:#ff0000"} else {""});
         let parsed=mermaid_parser::parse_venn(&source).unwrap();let config=diagram_ir::VennConfig {width:400.0,height:300.0,padding:25.0,use_debug_layout:debug,font_family:family.into(),theme_colors:palette.clone(),..Default::default()};assert_eq!(parsed.config,config);
         let special=diagram_ir::VennStyle {fill:Some("#abcdef".into()),stroke:Some("#123456".into()),stroke_width:Some(3.0),fill_opacity:Some(0.5),text_color:authored.then(||"#ff0000".into())};
-        let mut labels=vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:276.25,y:150.0,style:special.clone()},
-            diagram_ir::LayoutedVennLabel {text:"B".into(),x:123.75,y:150.0,style:Default::default()},diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:150.0,style:Default::default()},diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:170.0,style:Default::default()}];
-        if double {labels.push(diagram_ir::LayoutedVennLabel {text:"M".into(),x:200.0,y:170.0,style:Default::default()});}
+        let mut labels=vec![diagram_ir::LayoutedVennLabel {font_size:12.0,text:"A".into(),x:276.25,y:150.0,style:special.clone()},
+            diagram_ir::LayoutedVennLabel {font_size:12.0,text:"B".into(),x:123.75,y:150.0,style:Default::default()},diagram_ir::LayoutedVennLabel {font_size:12.0,text:"U".into(),x:200.0,y:150.0,style:Default::default()},diagram_ir::LayoutedVennLabel {font_size:10.0,text:"N".into(),x:200.0,y:170.0,style:Default::default()}];
+        if double {labels.push(diagram_ir::LayoutedVennLabel {font_size:10.0,text:"M".into(),x:200.0,y:170.0,style:Default::default()});}
         let debug_circles=if debug {vec![diagram_ir::LayoutedVennDebugCircle {cx:200.0,cy:150.0,radius:22.5}]} else {vec![]};
         let debug_cells=if debug {if double {vec![diagram_ir::LayoutedVennDebugCell {x:178.625,y:141.75,width:21.375,height:42.75},diagram_ir::LayoutedVennDebugCell {x:200.0,y:141.75,width:21.375,height:42.75}]} else {vec![diagram_ir::LayoutedVennDebugCell {x:178.625,y:141.75,width:42.75,height:42.75}]}} else {vec![]};
         let layout=LayoutedVennDiagram {width:400.0,height:300.0,title:None,config,circles:vec![diagram_ir::LayoutedVennCircle {id:"a".into(),label:"A".into(),cx:240.0,cy:150.0,radius:62.5,style:special},diagram_ir::LayoutedVennCircle {id:"b".into(),label:"B".into(),cx:160.0,cy:150.0,radius:62.5,style:Default::default()}],labels,debug_circles,debug_cells};
@@ -102,6 +102,35 @@ fn venn_debug_source_to_complete_layout_scene_and_ordered_font_queries() {
         if double {instructions.push(glyph('M',196.5,170.0-12.0+11.2,"rgb(15, 23, 42)"));}
         let expected=PaintScene {width:400.0,height:300.0,background:"rgb(255,255,255)".into(),instructions,id:None,metadata:Some(venn_debug_metadata(400.0,300.0,25.0,debug,family,&palette))};
         let resolver=VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,label_font:defaults.label_font,title_font:defaults.title_font,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
-        assert_eq!(diagram_to_paint_venn(&layout,&options),expected,"complete source scene {source}");assert_eq!(*resolver.0.borrow(),vec![FontQuery::named(family)],"ordered source font queries");
+        assert_eq!(restore_reviewed_venn_typography(diagram_to_paint_venn(&layout,&options),&layout),expected,"complete source scene {source}");assert_eq!(*resolver.0.borrow(),vec![FontQuery::named(family)],"ordered source font queries");
     }}}}
+}
+
+// Preserve every older complete oracle. Only the declared one-character font
+// metric change is reversible; validate its new size/identity/order/position
+// first. All other glyph/base/style fields, primitives, metadata and queries
+// remain subject to the original whole-scene equality.
+fn restore_reviewed_venn_typography(mut scene: PaintScene, layout: &LayoutedVennDiagram) -> PaintScene {
+    let mut cursor=layout.circles.len()+layout.debug_circles.len()+layout.debug_cells.len();
+    assert_eq!(scene.instructions.len(),cursor+usize::from(layout.title.is_some())+layout.labels.len(),"legacy adapter permits no extra/missing instructions");
+    if let Some(title)=&layout.title {
+        assert_eq!(title,"T","only the declared one-character legacy title");
+        assert!(matches!(layout.width,400.0|800.0));
+        let size=if layout.width==400.0 {8.0} else {16.0};
+        let PaintInstruction::GlyphRun(run)=&mut scene.instructions[cursor] else {panic!("title order changed");};
+        assert_eq!(run.font_size,size,"resolved title typography before reversal");
+        assert_eq!(run.glyphs,vec![GlyphPosition {glyph_id:'T' as u32,x:layout.width/2.0-size/4.0,y:5.0+size*0.8}],"complete new title glyph geometry before reversal");
+        run.font_size=18.0;run.glyphs[0].x=layout.width/2.0-4.5;run.glyphs[0].y=19.4;cursor+=1;
+    }
+    for label in &layout.labels {
+        let mut chars=label.text.chars();let c=chars.next().expect("one legacy character");
+        assert!(chars.next().is_none(),"only one-character legacy labels may be reversed");
+        assert!(matches!(c,'A'|'B'|'U'|'N'|'M'),"unknown legacy glyph");
+        assert!(matches!(label.font_size,10.0|12.0|14.0),"only declared legacy generated/caller font sizes");
+        let PaintInstruction::GlyphRun(run)=&mut scene.instructions[cursor] else {panic!("label order changed");};
+        assert_eq!(run.font_size,label.font_size,"resolved label typography before reversal");
+        assert_eq!(run.glyphs,vec![GlyphPosition {glyph_id:c as u32,x:label.x-label.font_size/4.0,y:label.y-12.0+label.font_size*0.8}],"complete new label glyph geometry before reversal");
+        run.font_size=14.0;run.glyphs[0].x=label.x-3.5;run.glyphs[0].y=label.y-12.0+11.2;cursor+=1;
+    }
+    assert_eq!(cursor,scene.instructions.len());scene
 }

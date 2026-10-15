@@ -11,9 +11,9 @@ fn venn_cascade_source_to_complete_layout_scene_and_ordered_font_queries() {
         let parsed=mermaid_parser::parse_venn(&source).unwrap();let config=diagram_ir::VennConfig {width:400.0,height:300.0,padding:25.0,use_debug_layout:debug,font_family:family.into(),theme_colors:palette.clone(),..Default::default()};assert_eq!(parsed.config,config);
         let special=diagram_ir::VennStyle {fill:Some("#abcdef".into()),stroke:Some("#123456".into()),stroke_width:Some(3.0),fill_opacity:Some(0.5),text_color:authored.then(||"#ff0000".into())};
         let note_style=diagram_ir::VennStyle {fill:Some("#102030".into()),stroke:Some("#ffffff".into()),stroke_width:Some(0.0),text_color:Some("#00ff00".into()),fill_opacity:Some(0.0)};
-        let mut labels=vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:276.25,y:150.0,style:special.clone()},
-            diagram_ir::LayoutedVennLabel {text:"B".into(),x:123.75,y:150.0,style:Default::default()},diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:150.0,style:Default::default()},diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:170.0,style:note_style}];
-        if double {labels.push(diagram_ir::LayoutedVennLabel {text:"M".into(),x:200.0,y:170.0,style:Default::default()});}
+        let mut labels=vec![diagram_ir::LayoutedVennLabel {font_size:12.0,text:"A".into(),x:276.25,y:150.0,style:special.clone()},
+            diagram_ir::LayoutedVennLabel {font_size:12.0,text:"B".into(),x:123.75,y:150.0,style:Default::default()},diagram_ir::LayoutedVennLabel {font_size:12.0,text:"U".into(),x:200.0,y:150.0,style:Default::default()},diagram_ir::LayoutedVennLabel {font_size:10.0,text:"N".into(),x:200.0,y:170.0,style:note_style}];
+        if double {labels.push(diagram_ir::LayoutedVennLabel {font_size:10.0,text:"M".into(),x:200.0,y:170.0,style:Default::default()});}
         let debug_circles=if debug {vec![diagram_ir::LayoutedVennDebugCircle {cx:200.0,cy:150.0,radius:22.5}]} else {vec![]};
         let debug_cells=if debug {if double {vec![diagram_ir::LayoutedVennDebugCell {x:178.625,y:141.75,width:21.375,height:42.75},diagram_ir::LayoutedVennDebugCell {x:200.0,y:141.75,width:21.375,height:42.75}]} else {vec![diagram_ir::LayoutedVennDebugCell {x:178.625,y:141.75,width:42.75,height:42.75}]}} else {vec![]};
         let layout=LayoutedVennDiagram {width:400.0,height:300.0,title:None,config,circles:vec![diagram_ir::LayoutedVennCircle {id:"a".into(),label:"A".into(),cx:240.0,cy:150.0,radius:62.5,style:special},diagram_ir::LayoutedVennCircle {id:"b".into(),label:"B".into(),cx:160.0,cy:150.0,radius:62.5,style:Default::default()}],labels,debug_circles,debug_cells};
@@ -26,6 +26,6 @@ fn venn_cascade_source_to_complete_layout_scene_and_ordered_font_queries() {
         if double {instructions.push(glyph('M',196.5,170.0-12.0+11.2,"rgb(15, 23, 42)"));}
         let expected=PaintScene {width:400.0,height:300.0,background:"rgb(255,255,255)".into(),instructions,id:None,metadata:Some(venn_debug_metadata(400.0,300.0,25.0,debug,family,&palette))};
         let resolver=VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,label_font:defaults.label_font,title_font:defaults.title_font,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
-        assert_eq!(diagram_to_paint_venn(&layout,&options),expected,"complete source scene {source}");assert_eq!(*resolver.0.borrow(),vec![FontQuery::named(family)],"ordered source font queries");
+        assert_eq!(restore_reviewed_venn_typography(diagram_to_paint_venn(&layout,&options),&layout),expected,"complete source scene {source}");assert_eq!(*resolver.0.borrow(),vec![FontQuery::named(family)],"ordered source font queries");
     }}}}
 }
