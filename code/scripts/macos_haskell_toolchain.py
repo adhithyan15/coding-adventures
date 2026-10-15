@@ -191,16 +191,22 @@ def bootstrap(output: Path, github_env: Path, env: dict[str, str],
                                     "exit": result.returncode, "log": str(log),
                                     "sha256": hashlib.sha256(log.read_bytes()).hexdigest()})
         save()
+        # A hosted failure must carry its own bounded diagnostic: the complete
+        # log is on a runner that may already be gone. JSON quoting keeps child
+        # newlines/control bytes from becoming physical workflow command lines.
+        # Diagnostic text never establishes the separate exact refusal proof.
         if expected_refusal is not None:
             text = result.stdout + result.stderr
             failures = {line.partition("could not execute: ")[2].strip() for line in text.splitlines()
                         if "could not execute: " in line}
             if result.returncode == 0 or str(expected_refusal) not in failures:
-                raise RuntimeError(f"{label} did not prove the configured phase refusal; see {log}")
+                tail = json.dumps((result.stdout + result.stderr)[-4096:])
+                raise RuntimeError(f"{label} did not prove the configured phase refusal; see {log}; diagnostic_tail={tail}")
             receipt["commands"][-1]["expected_refusal"] = str(expected_refusal)
             save()
         elif result.returncode:
-            raise RuntimeError(f"{label} failed ({result.returncode}); see {log}")
+            tail = json.dumps((result.stdout + result.stderr)[-4096:])
+            raise RuntimeError(f"{label} failed ({result.returncode}); see {log}; diagnostic_tail={tail}")
         return result.stdout
     try:
         original = locate_config(env, Path.home())
