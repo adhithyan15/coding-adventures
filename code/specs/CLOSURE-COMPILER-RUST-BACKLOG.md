@@ -31,8 +31,8 @@ separate terminal extension PASS SHA256
 63f168c6e9b2e8a3b1c1f4b4746b5fd19d1f7943113a3c393df9c9f83158ee85.
 
 Accepted style source965 retains actual871/34/strict0 receipts. Complete style
-forward50-package inventory has761 current objects: all753 nondoc objects are
-exact, only8 known documentation changes. This is source attribution, not a
+forward50-package inventory has761 current objects: all753 other predecessor
+objects are exact, only8 known documentation changes. This is source attribution, not a
 new style execution. Registry376 tuples/checksums exact; no new crates.io.
 Standalone Closure36/3699 and prior1093/181+strict require complete carrier
 input attribution, not relabeled execution. Documentation/checker/lessons,
