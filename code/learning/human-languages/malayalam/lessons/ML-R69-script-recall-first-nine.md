@@ -7,7 +7,7 @@ chapter: 69
 type: review
 headword: "(ക ര ന മ ത ഴ ് ി ാ)"
 gloss: cold retrieval of the first nine pieces this book taught one per chapter, sorted into letters, a killer, and two hangers
-romanization: "onnaam onpath"
+romanization: "onnāṁ ompatŭ"
 concept_tag: ML-SCRIPT-RECALL-FIRST-NINE
 prerequisites: [ML-S01-letter-ka, ML-S109-letter-ra, ML-S02-sign-virama, ML-S03-vowel-sign-i, ML-S04-vowel-sign-aa, ML-S05-letter-na, ML-S114-letter-ma, ML-S08-letter-ta, ML-S118-letter-llla]
 sounds: []

@@ -14,7 +14,7 @@ romanization: "sochnā / soch / sochtā / sochtī / sochte"
 concept_tag: VERB-THINK
 prerequisites: [HI-C05-bolta-hun, HI-C07-nahin]
 sounds: [matra-o, dental-na]
-roots: [shoc-grieve]
+roots: [sanskrit-shocyate, sanskrit-shuc]
 etymology_hook: "sochnā: CDIAL 12621 lists it under Sanskrit śocyate 'is made to feel pain', from the root śuc- 'burn, grieve'"
 duration:
   max_seconds: 250

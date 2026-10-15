@@ -14,7 +14,7 @@ romanization: "rājamārgaḥ"
 concept_tag: SA-LOC96-RAJAMARGAH
 prerequisites: [SA-C95-anyatra, SA-C95-vithi]
 sounds: []
-roots: [sanskrit-raja, sanskrit-marga]
+roots: [sanskrit-rajan, sanskrit-marga]
 etymology_hook: "rājamārga ← rājan 'king' + mārga 'road': 'the king's highway' (MW); mārga is from mṛga 'game' (MW)"
 duration:
   max_seconds: 200

@@ -6,13 +6,13 @@ sequence: 470
 chapter: 18
 type: word
 headword: മണി
-gloss: hour — Malayalam's OWN dictionary tradition treats bell/hour/gem as ONE Sanskrit word, unlike Tamil's closely related maṇi, which its own dictionaries split into two unrelated homophones
+gloss: hour — first a bell or gong; DEDR lists it as a Dravidian word shared with Tamil, and only queries a link to Sanskrit maṇi 'jewel'
 romanization: "maṇi"
 concept_tag: ML-TIME-HOUR
 prerequisites: [ML-C17-paathira]
 sounds: [malayalam-retroflex-nna, malayalam-vowel-sign-i]
-roots: [sanskrit-mani-gem-bell]
-etymology_hook: "മണി (maṇi, 'hour, bell, gem') — Malayalam's Wiktionary entry treats ALL these senses as ONE word borrowed from Sanskrit मणि (maṇi, 'gem'); this is genuinely different from how Tamil's OWN dictionaries treat its cognate மணி, which splits into two separate, unrelated words (a native 'bell/hour' word and a separate Sanskrit 'gem' loan) — two closest-cousin languages, two different scholarly pictures of the very same word"
+roots: [dravidian-mani-bell]
+etymology_hook: "maṇi 'bell, hour': Dravidian, with Tamil maṇi (DEDR 4672); DEDR queries a link to Sanskrit maṇi 'jewel'"
 duration:
   max_seconds: 285
 requires:
@@ -29,42 +29,29 @@ variety: standard-colloquial
 reviews_of: [ML-C17-paathira, ML-C17-ucha-paathira]
 ---
 
-# മണി — one word in Malayalam's dictionaries, two in Tamil's
+# മണി — the bell that tells the hour
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Kannada and Telugu both borrowed Sanskrit's "bell" word for "hour."
-Malayalam's story is genuinely murkier — and it's about to disagree with its
-closest cousin, Tamil, on how this exact word is even structured.
+[PAUSE 2s] An hour you can hear: before clocks were everywhere, a bell struck
+it. Malayalam still names the hour after the bell.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C18-MANI-01]; assesses=[] -->
 
-**മണി** (*maṇi*) = "**hour, o'clock**" — and it also means "**bell, gong**" and
-"**gem, jewel, pearl**." Here's the honest, slightly untidy part: Malayalam's own
-dictionary tradition treats **all three of these senses as ONE word**, borrowed
-from Sanskrit **मणि** (*maṇi*, "gem, jewel, pearl") — the same Sanskrit word
-behind names like *Manipravalam* and the mantra syllable in "*om maṇi padme
-hum*." Under this account, "bell/hour" isn't a separate native word at all — it's
-just another meaning that grew out of the same borrowed "gem" word (a
-bell-shaped gem or ornament, perhaps, extending to the bell itself, and then to
-the hour it announces).
+**മണി** (*maṇi*) = "**hour, o'clock**", and also "**bell, gong**". The bell
+came first: the hour is the stroke of the bell that announces it.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C18-MANI-02]; assesses=[] -->
 
-Here's what makes this genuinely interesting rather than settled: Tamil's closely
-related cognate **மணி** is analyzed very differently by Tamil's own reference
-dictionaries — as **two separate, unrelated words** that happen to be spelled and
-pronounced identically: a **native Dravidian** "bell, gong" word (which extends to
-"hour"), and a completely separate Sanskrit loan meaning "gem." The broader
-comparative Dravidian dictionary (DEDR) does list Malayalam among the languages
-sharing that native "bell" word too — but even DEDR flags a possible Sanskrit
-connection for the whole word-family as unresolved. So: two closest-cousin
-languages, and even the specialists don't fully agree on whether this is one
-Sanskrit word wearing three meanings, or a native word and a Sanskrit word that
-just happen to sound alike.
+The Dravidian Etymological Dictionary lists this word as Dravidian (DEDR 4672):
+Tamil *maṇi*, "bell, gong, hour", Malayalam *maṇi*, "little bells, gong, hour by
+the bell", with Kota, Toda and Tulu bell words beside them. DEDR then adds a
+query: perhaps from Sanskrit *maṇi*, "jewel". It does not decide. Malayalam's
+own row hints at how the two could meet, since its little bells were worn as
+jewels, but that link stays an open question, not a finding.
 
 ## Grammar Lens: telling the time
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -76,18 +63,15 @@ just happen to sound alike.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C18-MANI-01, ML-CONCEPT-C18-MANI-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "maṇi" — hour, also "bell," also "gem" — genuinely debated whether
-  that's one word or two]
+- [YOU SAY: "maṇi" — hour, and the bell that strikes it]
 - [YOU SAY: "oru maṇi" — one o'clock]
-- [YOU SAY: the honest point — Malayalam's own dictionaries call it one Sanskrit
-  word; Tamil's call the bell/hour sense a separate, native word]
+- [YOU SAY: the honest point — DEDR lists maṇi as a Dravidian bell word shared
+  with Tamil, and only queries a Sanskrit "jewel" source]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C18-MANI-01, ML-CONCEPT-C18-MANI-02] -->
 
-[PAUSE 3s] According to Malayalam's own dictionary tradition, are "hour," "bell,"
-and "gem" one word or two? (**One** — all traced to Sanskrit *maṇi*, "gem.") How
-does Tamil's own dictionary tradition treat its cognate word differently? (As
-**two separate, unrelated homophones** — a native "bell/hour" word and a distinct
-Sanskrit "gem" loan.) Is this fully settled? (**No** — even the comparative
-Dravidian dictionary flags the Sanskrit connection as an open question.)
+[PAUSE 3s] What did *maṇi* name before it named the hour? (**A bell or gong**.)
+Which language family does DEDR put it in, and with which Tamil word? (**Dravidian**,
+with Tamil *maṇi*, "bell, gong, hour".) Is a link to Sanskrit *maṇi*, "jewel",
+settled? (**No** — DEDR marks it with a query.)

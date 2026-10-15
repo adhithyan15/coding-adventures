@@ -11,7 +11,7 @@ romanization: nyet
 concept_tag: RESPONSE-NO
 prerequisites: [RU-C01-da]
 sounds: [cyrillic-false-friends, e-ye]
-roots: [ne]
+roots: [pie-ne]
 etymology_hook: "нет ← не + (е)сть 'not is'; не is PIE *ne → English no, not, never, nay; Latin nōn"
 duration:
   max_seconds: 240

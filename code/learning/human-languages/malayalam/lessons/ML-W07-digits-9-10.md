@@ -53,5 +53,5 @@ hear: [YOU HEAR: *ombatŭ*]. (**൯**.)
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-SCRIPT-DIGITS-9-10-07] -->
 
-[PAUSE 3s] Which shape means ten? (**൰**.) Read **൯**. (***Ompathu.***) This
+[PAUSE 3s] Which shape means ten? (**൰**.) Read **൯**. (***Ompatŭ.***) This
 lesson added two shapes, not five.

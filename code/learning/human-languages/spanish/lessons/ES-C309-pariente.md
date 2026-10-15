@@ -10,8 +10,8 @@ gloss: the relative --- Latin parere, to give birth; English parent and postpart
 concept_tag: ES-KIN-RELATIVE
 prerequisites: [ES-C309-apodo]
 sounds: [diphthong-ie, r-tap]
-roots: [parere]
-etymology_hook: "pariente is Latin parere, to bring forth --- English parent and postpartum come off it, but pariente means relative, not parent, and that is a false friend"
+roots: [parens-latin, parere-bear-latin]
+etymology_hook: "pariente ← Latin parens, from parere 'to bring forth'; it means relative, not parent: a false friend"
 duration:
   max_seconds: 240
 requires:

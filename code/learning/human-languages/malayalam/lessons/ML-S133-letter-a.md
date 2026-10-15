@@ -47,7 +47,7 @@ It is an **independent vowel** — the shape this vowel takes when a word *begin
 
 You have already said a word that starts with it.
 
-- **അതെ** *athe* — yes ("that [is so]")
+- **അതെ** *ate* — yes ("that [is so]")
 
 Malayalam writes a word-initial vowel with a letter of its own. Inside a word
 this vowel would be a small sign hung on a consonant; at the front of a word

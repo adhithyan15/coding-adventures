@@ -11,7 +11,7 @@ concept_tag: ES-WORD-ESPANOL
 prerequisites: [ES-C06-estudiar, ES-W02-enye-formas]
 sounds: [enye-ny]
 roots: [hispania-latin]
-etymology_hook: "español ← Hispania (Roman name for Iberia); the -ñol ending brings back the ñ"
+etymology_hook: "español ← Occitan espaignol ← Latin Hispania (Roman name for Iberia); the -ñol ending keeps the ñ"
 duration:
   max_seconds: 200
 requires:
@@ -40,10 +40,11 @@ is inside it — because *español* is not a Spanish-made word at all.
 <!-- hl-knowledge: introduces=[ES-LEX-ESPANOL, ES-ETYMON-HISPANIA]; assesses=[] -->
 
 **español** = "Spanish" — both the language and a Spaniard — from
-**Hispania**, the **Roman** name for the Iberian peninsula. The path
-*Hispania → hispaniolus → español* wore the word down, and there is the
-**ñ** again, exactly the *-ni-* squeeze you met in the writing lesson
-(*Hispaniolus* → *españ-ol*). Say it *es-pa-**NYOL***.
+**Hispania**, the **Roman** name for the Iberian peninsula. It did not wear
+down inside Spanish: it is usually traced, after Corominas and the DLE,
+through Occitan *espaignol* to medieval Latin *Hispaniolus*. There is the
+**ñ** again, the *-ni-* squeeze you met in the writing lesson (*Hispaniolus*
+→ *españ-ol*). Say it *es-pa-**NYOL***.
 
 Two footnotes worth having:
 
@@ -59,7 +60,7 @@ Two footnotes worth having:
 
 [PAUSE 1s]
 - [YOU SAY: "español" — *es-pa-NYOL*]
-- [YOU SAY: the path — "Hispania, hispaniolus, español"]
+- [YOU SAY: the path — "Hispania, Hispaniolus, espaignol, español"]
 - [YOU SAY: "español" then English "Hispanic" — same root]
 
 ## Wrap-up Recall

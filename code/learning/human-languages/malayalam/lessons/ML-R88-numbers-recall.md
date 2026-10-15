@@ -7,7 +7,7 @@ chapter: 88
 type: review
 headword: (counting past twenty)
 gloss: cold retrieval of the tens, the one that breaks the run, a hundred, and how a ten joins a digit
-romanization: irupathinŭ mēle enna ōrmma
+romanization: irupatinŭ mēle enna ōrmma
 concept_tag: ML-NUMBERS-RECALL
 prerequisites: [ML-C88-compound-numbers]
 sounds: []

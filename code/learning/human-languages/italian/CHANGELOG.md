@@ -1,5 +1,9 @@
 # Changelog
 
+## Fixed — perché hedges where its ché comes from
+
+- **IT-C32-perche** said *ché* is "from *quid*" outright. It now says *ché* is usually traced to Latin *quid* "what", which agrees with IT-C31-che (*quid*, with *quem*), and adds, hedged, that Latin *quia* "because" is often named behind the answering sense. The duplicate note on the accent went, since the next paragraph explains it, and one sentence was tightened; the lesson computes 281 s, down from 285. `max_seconds` is unchanged.
+
 ## Fixed — libero uses the root slug for Latin līber "free"
 
 - **IT-C124-libero** moves from `liber-latin` to `liber-free-latin`, the slug Portuguese *livre* and Spanish *libre* use. `liber-latin` also named *liber* "bark, book", a different Latin word (EtymDB lists the two as separate entries); it now names only that one.

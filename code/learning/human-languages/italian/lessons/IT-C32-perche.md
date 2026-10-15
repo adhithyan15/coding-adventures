@@ -54,8 +54,8 @@ The same word, spelled the same way, does both:
 > — **Perché non prendi il caffè?** — Why aren't you having the coffee?
 > — **Perché non mi piace.** — Because I don't like it.
 
-That exchange is the point of the lesson: question and answer open with the
-identical word, and an Italian hears no oddity in it. Spanish splits them —
+Question and answer open with the identical word, and an Italian hears no
+oddity in it. Spanish splits them —
 *¿por qué?* asking, *porque* answering — and Italian asks you to remember
 nothing.
 
@@ -67,8 +67,8 @@ as they are, and until this line it had no way to let you say *because*.
 
 **Perché** is **per** + **ché**, both inherited from Latin (EtymDB 2.1). *Per*,
 "for, through", is the *per* of English *per cent*. *Ché* is the **che** of the
-last chapter, from *quid*, wearing an accent because it now carries the
-stress at the end.
+last chapter, usually traced to Latin *quid*, "what", with *quia*, "because",
+often named behind the answering sense.
 
 So *perché* is literally "**for what**" — which is how a question about a reason
 becomes a statement of one. English does the same with another preposition:

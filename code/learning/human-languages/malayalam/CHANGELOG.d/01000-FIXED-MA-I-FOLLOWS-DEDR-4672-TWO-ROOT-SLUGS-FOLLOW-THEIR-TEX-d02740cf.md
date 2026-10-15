@@ -1,0 +1,17 @@
+## Fixed — maṇi follows DEDR 4672, two root slugs follow their text, and older romanizations follow the track's letter values
+
+- **ML-C18-mani** is rewritten to follow DEDR 4672. Its gloss, title, hook and blocks gave a Wiktionary-only account, that "hour", "bell" and "gem" are one word borrowed from Sanskrit *maṇi* "gem". DEDR 4672 lists Malayalam *maṇi* "little bells (worn as jewels), gong, hour by the bell" as Dravidian, with Tamil, Kota, Toda and Tulu bell words, and only queries a source in Sanskrit *maṇi* "jewel". The lesson now says that, hedged as DEDR hedges it. The 421-character hook is now 103 characters, both uses of a forbidden filler word are gone, and the knowledge atom ids are kept. Its root moves from `sanskrit-mani-gem-bell` to `dravidian-mani-bell`; no Sanskrit slug is kept, because DEDR's query is not a finding. `sanskrit-mani-gem-bell` is no longer used.
+- **ML-C161-tamara**'s recall line said Tamil dictionaries treat "bell" and "hour" as two look-alike words. It now gives the answer ML-C18-mani teaches: both, because the hour is named after the bell.
+- **ML-C139-hour** and **ML-C102-ethra-manikku** move from `sanskrit-mani-gem-bell` to `dravidian-mani-bell`. Their corrected text gives *maṇi* "bell, hour" under DEDR 4672. The two Tamil *maṇi* lessons now use the same slug, so the cousins join links the Malayalam and Tamil bell words.
+- **ML-C45-grandfather** and **ML-C45-grandmother** move from `dravidian-accan-father` to `prakrit-ajja`. Their blocks were already corrected to say that *accan* "father" and *acci* "mother" are listed by DEDR 50 but taken there as probably Indo-Aryan, Prakrit *ajja*, Sanskrit *ārya* "noble" (CDIAL 1347). The old slug called the word Dravidian, and its "-father" gloss did not fit *acci*.
+- **Romanizations.** The track writes ത as *t*, ത്ത as *tt*, ി as short *i* and ൾ as *ḷ* (*pātirā*, *nallatŭ*, *pattŭ*, *patinonnāṁ*, *irupatŭ*, *tōḷ*, *saikkiḷ*). Older forms that did not, each checked against its Malayalam codepoints:
+  - അതെ *athe* → *ate* in ML-C01-athe and the nine other lessons that use it. ML-C01-athe's letter note called ത "tha, a soft *th* as in *this*"; it now calls it *ta*, a soft dental *t*, as ML-S08-letter-ta teaches.
+  - പത്താം *pathāṁ* → *pattāṁ*, and പത്ത് *pathŭ* → *pattŭ* (ML-C68-tenth, ML-C68-eleventh, ML-C68-ninth).
+  - ഒമ്പതാം *ompathāṁ* → *ompatāṁ*, ഒമ്പത് *ompathŭ* → *ompatŭ*, *on-pathŭ* → *on-patŭ* (ML-C68-ninth, ML-C68-tenth), and *Ompathu* → *Ompatŭ* (ML-C07-numbers-6-10, ML-W07-digits-9-10).
+  - ഇരുപതാം *irupathāṁ* → *irupatāṁ*, the joining shape *pathin-* → *patin-* (ML-C68-eleventh, ML-C68-at-first), and *irupathinŭ* → *irupatinŭ* (ML-R88-numbers-recall).
+  - എൺപത് *eṇpathŭ* → *eṇpatŭ* (ML-C88-tens, ML-C88-ninety-hundred).
+  - തൊലി *tolī* → *toli*: the vowel sign is short ി (ML-C154-toli, ML-R159-first-pass-the-house-and-the-town).
+  - കവിൾ *kavil* → *kaviḷ*: the final letter is chillu ḷ, not chillu l (ML-C155-kavil, ML-R159-second-pass-nature-and-food).
+  - The ML-R69 and ML-R70 recall romanizations "onnaam onpath" and "randaam onpath" are now *onnāṁ ompatŭ* and *raṇṭāṁ ompatŭ*, the track's spellings of ഒന്നാം, രണ്ടാം and ഒമ്പത്.
+- **ML-C36-makan**'s hook, 347 characters, is now 98 with the same claim, because the lesson was touched for *ate*.
+- Lesson ids and file names are unchanged (ML-C01-athe keeps its id). The README, roadmap and session map still spell *athe*, and the book chapters and narration keep the old spellings until they are regenerated.

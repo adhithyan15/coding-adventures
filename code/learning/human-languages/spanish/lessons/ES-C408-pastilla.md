@@ -10,7 +10,7 @@ gloss: pill or tablet
 concept_tag: ES-HEALTH-PASTILLA
 prerequisites: [ES-C408-doctor]
 sounds: [stress-penultimate, ll-y]
-roots: [pasta-spanish, diminutive-illa]
+roots: [pastillus-latin]
 etymology_hook: "pastilla ← Latin pastillus 'a little loaf, a lozenge'; it only looks like pasta + -illa"
 duration:
   max_seconds: 220
