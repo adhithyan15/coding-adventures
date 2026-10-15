@@ -1,5 +1,3 @@
-# Changelog
-
 ## Unreleased — isolated cumulative two-unit offsets
 
 Reconcile main's two-unit outer-entier bounds in a dedicated iterative proof.

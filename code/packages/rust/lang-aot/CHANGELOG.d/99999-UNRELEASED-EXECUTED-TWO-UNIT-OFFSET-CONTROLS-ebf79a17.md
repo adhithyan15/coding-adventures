@@ -1,5 +1,3 @@
-# Changelog
-
 ## Unreleased — executed two-unit offset controls
 
 Add ten owned two-unit programs to the existing sixteen. Execute all 26 sources
