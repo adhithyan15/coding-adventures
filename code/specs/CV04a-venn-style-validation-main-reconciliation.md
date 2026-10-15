@@ -87,8 +87,8 @@ Do not weaken validation or silently discard those fixtures.
 
 Before adapting, retain each original JSON-fill source literally as an exact
 ParseError assertion. Add a valid companion carrying the identical JSON payload
-as a set label plus explicit safe fill. Keep the complete old config oracle,
-assert the label payload and safe fill exactly; all other function bytes and
+as a title plus explicit safe fill. Keep the complete old config oracle,
+assert the title payload and safe fill exactly; all other function bytes and
 source-origin cases remain. This preserves body/config isolation while removing
 the obsolete invalid-color-admission assumption. Preserve all192 prior valid
 scene/query inputs byte-exact. For the12IR matrix, assert exact errors from each
@@ -96,3 +96,10 @@ original invalid source, remove only its two declared nope lines for the valid
 whole-IR assertion, and keep every expected object/other assertion unchanged.
 Independent isolated opacity errors remain mandatory so first-width errors do
 not hide a missing check. Full tests and source/terminal review gate acceptance.
+
+The first valid-companion attempt at62e3c8a0 used set labels. Actual tokenizer
+rules exclude embedded double quotes in both quoted and unquoted bracket labels;
+the two companion tests failed before style parsing. Retain that failed receipt.
+Use the existing title-statement route, whose admitted literal alphabet includes
+the exact JSON payload, without changing production token/grammar rules. The
+original stricter-domain error assertions and full config oracles stay exact.
