@@ -2082,6 +2082,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
 pub fn diagram_to_paint_venn<S, M, R>(diagram: &LayoutedVennDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
     let mut instructions = Vec::new();
+    let scale = diagram.width / 1600.0;
     for (index, circle) in diagram.circles.iter().enumerate() {
         let fill = circle.style.fill.clone().unwrap_or_else(|| {
             diagram.config.theme_colors.get(index % diagram.config.theme_colors.len().max(1))
@@ -2089,9 +2090,9 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         });
         instructions.push(PaintInstruction::Ellipse(PaintEllipse {
             base: PaintBase::default(), cx: circle.cx, cy: circle.cy, rx: circle.radius, ry: circle.radius,
-            fill: Some(with_opacity(&fill, circle.style.fill_opacity.unwrap_or(0.38))),
-            stroke: Some(circle.style.stroke.clone().unwrap_or_else(|| "#334155".into())),
-            stroke_width: Some(circle.style.stroke_width.unwrap_or(2.0)), stroke_dash: None, stroke_dash_offset: None,
+            fill: Some(with_opacity(&fill, circle.style.fill_opacity.unwrap_or(0.1))),
+            stroke: Some(circle.style.stroke.clone().unwrap_or_else(|| fill.clone())),
+            stroke_width: Some(circle.style.stroke_width.unwrap_or(5.0 * scale)), stroke_dash: None, stroke_dash_offset: None,
         }));
     }
     for circle in &diagram.debug_circles {
@@ -11403,9 +11404,15 @@ mod tests {
         let fills: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
             PaintInstruction::Ellipse(ellipse) => ellipse.fill.as_deref(), _ => None,
         }).collect();
-        assert_eq!(fills, ["rgba(17,34,51,0.38)", "rgba(171,205,239,0.38)"]);
+        assert_eq!(fills, ["rgba(17,34,51,0.1)", "rgba(171,205,239,0.1)"]);
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.themeColor1")),
             Some(&"#112233".to_string()));
+        let ellipses: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::Ellipse(ellipse) => Some(ellipse), _ => None,
+        }).collect();
+        assert_eq!(ellipses[0].stroke.as_deref(), Some("#112233"));
+        assert_eq!(ellipses[0].stroke_width, Some(1.25));
+        assert_eq!(ellipses[1].stroke.as_deref(), Some("#abcdef"));
     }
 
     #[test]

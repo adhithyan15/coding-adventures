@@ -746,6 +746,9 @@ When `useDebugLayout` is enabled, layout applies Mermaid 11.16.1's text-area
 radius and grid-cell equations to the native deterministic centers and records
 explicit debug IR. Paint lowering emits portable dashed purple circles and teal
 cells without backend-specific logic.
+Unstyled set circles now follow Mermaid's palette-derived stroke, ten-percent
+fill opacity, and width-scaled five-unit stroke defaults. Authored fill opacity,
+stroke color, and stroke width continue to take precedence during Paint lowering.
 
 ### Ishikawa Native Slice
 
