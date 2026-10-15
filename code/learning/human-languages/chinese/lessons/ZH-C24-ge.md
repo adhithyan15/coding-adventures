@@ -11,8 +11,8 @@ gloss: "gè — the measure word, and the fact that a Mandarin number cannot tou
 concept_tag: ZH-MEASURE-GE
 prerequisites: [ZH-W24-ge, ZH-C23-huati, ZH-W20-ba, ZH-C20-ba, ZH-W17-guo-observe, ZH-C13-hear-daxuesheng]
 sounds: [tone-4]
-roots: []
-etymology_hook: "san ren is not how you say three people; san ge ren is. It is one of the two or three things that mark a beginner's Mandarin as wrong before anything else does."
+roots: [middle-chinese-kah]
+etymology_hook: "gè: inherited, from Middle Chinese kaH, a word for a single piece"
 duration:
   max_seconds: 230
 requires:
@@ -80,6 +80,11 @@ the same tone change the hundred lesson taught on 一百.
 Mandarin has dozens of measure words, each tied to a shape or a kind of thing,
 and 个 is the general-purpose one. Use 个 when you do not know which is right,
 and you will be understood every time.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**个** is inherited from Middle Chinese *kaH*, "a single piece".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-GE-01, ZH-GRAMMAR-MEASURE-WORD-01] -->

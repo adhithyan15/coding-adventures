@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-CLASSMATE
 gloss: classmate; schoolmate, now read and written
 prerequisites: [ZH-W15-tong]
 sounds: [tone-2]
-roots: []
-etymology_hook: The new frame character joins secure 学 to carry the already heard word.
+roots: [middle-chinese-duwng-same, middle-chinese-haewk]
+etymology_hook: "tóngxué: 'together' + 'learn', from Middle Chinese duwng and haewk; people who learn together"
 duration:
   max_seconds: 150
 requires:
@@ -44,6 +44,10 @@ reviews_of: [ZH-C15-hear-tongxue, ZH-W15-tong, ZH-C13-xue]
 [YOU READ: the pair without pinyin]
 
 Both syllables rise.
+
+Both are inherited from Middle Chinese: *duwng*, "same, together", and *haewk*,
+"to learn" (Guangyun, in Baxter's transcription). A classmate is someone who
+learns with you.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-TONGXUE-01, ZH-LEX-TONGXUE-01, ZH-SCRIPT-TONG-01, ZH-SCRIPT-XUE-01] -->

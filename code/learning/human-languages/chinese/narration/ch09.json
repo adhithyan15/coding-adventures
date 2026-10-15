@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "What?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6afc07226f1a9596",
+  "sourceHash": "fnv1a64:300987e85ff41334",
   "lessons": [
     {
       "id": "ZH-W09-shen",
@@ -361,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d63b464a95fb10c9",
+      "sourceHash": "fnv1a64:e815fd37cbba7399",
       "notice": null,
       "blocks": [
         {
@@ -392,7 +392,7 @@
             },
             {
               "kind": "speech",
-              "text": "shén rises; me is light and toneless behind it. Both characters are ones you have just written."
+              "text": "shén rises; me is light and toneless behind it. Both characters are ones you have already written."
             },
             {
               "kind": "speech",
@@ -404,7 +404,11 @@
             },
             {
               "kind": "speech",
-              "text": "And keep the levels apart. The pieces you drew inside 什 (shén) — the person and the ten — belong to that character, not to this word. \"Person plus ten\" explains nothing about what. Some words are built; some are just words."
+              "text": "And keep the levels apart. The pieces you drew inside 什 (shén) — the person and the ten — belong to that character, not to this word. \"Person plus ten\" explains nothing about what. Some words are built; others are not."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from is not settled. It appears in writing from about the Tang dynasty, spelled several ways, and its two characters were chosen for their sound."
             }
           ]
         },

@@ -11,8 +11,8 @@ concept_tag: ZH-LANGUAGE-IDENTITY-HANYU
 gloss: the Chinese language; Mandarin
 prerequisites: [ZH-C16-hanzi]
 sounds: [tone-4, tone-3]
-roots: []
-etymology_hook: The known Han label gains yǔ, language or speech, to name the language.
+roots: [middle-chinese-xanh, middle-chinese-ngjoX]
+etymology_hook: "hànyǔ: built from Middle Chinese xanH, the Han river and dynasty, and ngjoX 'words, speech'"
 duration:
   max_seconds: 125
 requires:
@@ -44,6 +44,9 @@ reviews_of: [ZH-C16-hanzi]
 Keep the known falling *hàn*. Then let *yǔ* dip in third tone. The new written
 half waits; today the contrast is heard: *hànzì* is a character, *hànyǔ* is the
 language.
+
+*Hànyǔ* is built from Middle Chinese *xanH*, the Han river and dynasty, and
+*ngjoX*, "words, speech".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HANYU-01] -->

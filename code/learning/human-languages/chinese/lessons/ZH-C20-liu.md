@@ -11,8 +11,8 @@ gloss: "six — the sixth number, and the first one past where this book stopped
 concept_tag: ZH-NUMBER-SIX
 prerequisites: [ZH-W20-liu]
 sounds: [tone-4, tone-lexical]
-roots: []
-etymology_hook: "liu is fourth tone, the sharp fall, and it is the first number this book has taught in seventeen chapters."
+roots: [middle-chinese-ljuwk]
+etymology_hook: "liù 'six': inherited, from Middle Chinese ljuwk; usually compared with Tibetan drug"
 duration:
   max_seconds: 250
 requires:
@@ -58,6 +58,13 @@ This book taught 一 二 三 四 五 in chapter 3 and then stopped. For seventee
 chapters it could name a family, a school and a greeting and could not count to
 six — could not give an age, a price, a floor or a date. **六** is where that
 starts being paid back.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**六** *liù* is inherited from Middle Chinese *ljuwk*, "six", which lost its
+final *k* in Mandarin (Guangyun, in Baxter's transcription). It is usually
+compared with Tibetan *drug*, a likely Sino-Tibetan cognate.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-LIU, ZH-LEX-NUM-SI] -->

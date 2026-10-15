@@ -11,8 +11,8 @@ gloss: "the digit and the character — which one a price, a date and a phone nu
 concept_tag: ZH-DIGITS-VS-CHARACTERS
 prerequisites: [ZH-C21-bai]
 sounds: []
-roots: []
-etymology_hook: "A Chinese price tag is written 5, not 五: a reader who has the character and not the digit still cannot read a price, and the two are not interchangeable."
+roots: [middle-chinese-ngux-five]
+etymology_hook: "5 is a Hindu-Arabic digit, from India through Arabic; 五 wǔ is the inherited word, Middle Chinese nguX"
 duration:
   max_seconds: 265
 requires:
@@ -62,6 +62,14 @@ the useful part: the digits cost you nothing to learn and everything to ignore.
 One convention worth carrying: on a bill or a cheque an amount is often written
 twice, once in digits and once in characters, because the characters are much
 harder to alter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The digits are the Hindu-Arabic numerals, devised in India and carried west
+through Arabic; they came into everyday Chinese use only in modern times. **五**
+is the inherited word, from Middle Chinese *nguX* (Guangyun, in Baxter's
+transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-ARABIC-DIGITS, ZH-CULTURE-DIGIT-REGISTER, ZH-LEX-ERSHI, ZH-LEX-NUM-SHI] -->

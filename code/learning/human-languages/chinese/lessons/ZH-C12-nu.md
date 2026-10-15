@@ -11,8 +11,8 @@ gloss: female; woman
 concept_tag: ZH-PERSON-FEMALE
 prerequisites: [ZH-C12-ren]
 sounds: [tone-3]
-roots: []
-etymology_hook: The three-stroke component from 好 now stands alone as the Level 1 word female or woman.
+roots: [middle-chinese-nrjox]
+etymology_hook: "nǚ 'woman': inherited, from Middle Chinese nrjoX (Guangyun, Baxter's transcription)"
 duration:
   max_seconds: 175
 requires:
@@ -44,6 +44,12 @@ reviews_of: [ZH-C12-ren, ZH-W01-nu, ZH-C01-hao]
 Say it low: *nǚ*. The rounded vowel is the same written **ü** you met in the
 character lesson. On its own, 女 labels female gender; it is not a polite way to
 call out to a woman. Here you are learning the word for reading and building.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**女** *nǚ* is inherited from Middle Chinese *nrjoX*, "woman" (Guangyun, in
+Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NU-01, ZH-SCRIPT-NU-01] -->

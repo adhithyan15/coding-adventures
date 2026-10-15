@@ -11,8 +11,8 @@ gloss: daughter
 concept_tag: ZH-FAMILY-DAUGHTER
 prerequisites: [ZH-C12-erzi]
 sounds: [tone-3, tone-2]
-roots: []
-etymology_hook: The known female word joins the new child character; hear the whole kinship word before reading it.
+roots: [middle-chinese-nrjox, middle-chinese-nye]
+etymology_hook: "nǚ'ér 'daughter': built from Middle Chinese nrjoX 'woman' and nye 'infant', both inherited"
 duration:
   max_seconds: 140
 requires:
@@ -44,6 +44,8 @@ reviews_of: [ZH-C12-nu, ZH-C12-erzi]
 Say two clear syllables: low *nǚ*, rising *ér*. The apostrophe only keeps the
 vowel boundary visible in pinyin. It is not a pause and not part of the Chinese
 writing.
+
+*Nǚ'ér* is built from Middle Chinese *nrjoX*, "woman", and *nye*, "infant".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUER-01] -->

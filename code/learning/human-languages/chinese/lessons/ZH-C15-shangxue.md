@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-ATTEND
 gloss: go to school; attend school, built from known characters
 prerequisites: [ZH-C15-hear-shangxue]
 sounds: [tone-4, tone-2]
-roots: []
-etymology_hook: Two old characters now carry one new school action.
+roots: [middle-chinese-dzyangx, middle-chinese-haewk]
+etymology_hook: "shàngxué: 'go up' + 'learning', from Middle Chinese dzyangX and haewk"
 duration:
   max_seconds: 145
 requires:
@@ -42,6 +42,9 @@ reviews_of: [ZH-C15-hear-shangxue, ZH-C07-shang, ZH-C13-xue]
 > **上学** — *shàngxué* — **go to school; attend school**
 
 Read the pair without pinyin: falling, then rising.
+
+Both are inherited from Middle Chinese: *dzyangX*, "to go up", and *haewk*,
+"learning" (Guangyun, in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-SHANGXUE-01, ZH-LEX-SHANGXUE-01, ZH-SCRIPT-SHANG, ZH-SCRIPT-XUE-01] -->

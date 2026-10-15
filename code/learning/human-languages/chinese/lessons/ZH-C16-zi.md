@@ -11,8 +11,8 @@ gloss: a written Chinese character, recovered without pinyin
 concept_tag: ZH-LANGUAGE-IDENTITY-CHARACTER
 prerequisites: [ZH-C16-hear-zi]
 sounds: [tone-4]
-roots: []
-etymology_hook: The already-written roof over child now receives its independent spoken meaning.
+roots: [middle-chinese-dzih]
+etymology_hook: "zì 'character': inherited, from Middle Chinese dziH; the Shuowen gives an older sense, 'to bear, nurse'"
 duration:
   max_seconds: 145
 requires:
@@ -43,6 +43,10 @@ reviews_of: [ZH-C16-hear-zi, ZH-W08-zi]
 
 Hide the pinyin. Read 字 from its familiar roof-over-child shape, then say its
 falling tone. You are attaching a standalone word to writing you already know.
+
+**字** is inherited from Middle Chinese *dziH* (Guangyun, in Baxter's
+transcription). The Guangyun quotes the Shuowen dictionary for an older sense,
+"to bear and nurse children"; "written character" came later.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-ZI-CHAR] -->

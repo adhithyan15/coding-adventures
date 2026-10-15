@@ -11,8 +11,8 @@ gloss: two
 concept_tag: ZH-NUMBER-TWO
 prerequisites: [ZH-W03-er, ZH-W01-er]
 sounds: [tone-4, tone-lexical]
-roots: []
-etymology_hook: 二 is the same syllable as the component 尔 you already know, saved from confusion only by its tone.
+roots: [middle-chinese-nyijh]
+etymology_hook: "èr 'two': inherited, from Middle Chinese nyijH (Guangyun, Baxter's transcription)"
 duration:
   max_seconds: 250
 requires:
@@ -60,6 +60,12 @@ You met this idea once already, when 好 *hǎo* "good" turned into 好 *hào* "f
 of" on a change of pitch alone. That was one character with two readings; this
 is two characters colliding in sound. Both are the same lesson: **in Mandarin
 the pitch is not decoration on the word. It is part of the word.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**二** *èr* is inherited from Middle Chinese *nyijH*, "two" (Guangyun, in
+Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-ER, ZH-TONE-LEXICAL] -->

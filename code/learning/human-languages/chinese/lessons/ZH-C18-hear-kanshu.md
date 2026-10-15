@@ -10,8 +10,8 @@ romanization: kànshū
 gloss: to read a book or read books
 prerequisites: [ZH-C18-shu]
 sounds: [tone-1, tone-4]
-roots: []
-etymology_hook: Mandarin composes the activity transparently: kàn, look at, plus shū, book.
+roots: [middle-chinese-khanh, middle-chinese-syo]
+etymology_hook: "kànshū: built from Middle Chinese khanH 'to look' and syo 'writing'"
 duration:
   max_seconds: 120
 requires:
@@ -42,6 +42,8 @@ reviews_of: [ZH-C18-kan, ZH-C18-shu]
 
 Let *kàn* fall and keep *shū* level. Mandarin says **look-at + book** for the
 activity **read**. Keep the characters hidden for one more tiny step.
+
+*Kànshū* is built from Middle Chinese *khanH*, "to look", and *syo*, "writing".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KANSHU-01] -->

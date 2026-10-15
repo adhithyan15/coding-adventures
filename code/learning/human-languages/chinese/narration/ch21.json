@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Ten Words, Ninety-Nine Numbers",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1ae8802e1c1172b0",
+  "sourceHash": "fnv1a64:59e7932602bae9c0",
   "lessons": [
     {
       "id": "ZH-C21-shiyi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ef82cfc5e8e9fe1",
+      "sourceHash": "fnv1a64:e0525a0ca3b135bf",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "十一 (shíyī) is a Chinese formation, ten and one, and both pieces are inherited from Middle Chinese: dzyip, \"ten\", and 'jit, \"one\" (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -106,7 +117,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -152,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ce56f6ba09211e2",
+      "sourceHash": "fnv1a64:a0c13ebc02a7ba46",
       "notice": null,
       "blocks": [
         {
@@ -202,7 +213,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "九十九, ninety-nine, is the drill this book has been waiting for. jiǔ is third tone and so is the jiǔ at the end, and the rule you met in chapter 1 applies: a third tone before another third tone lifts and becomes a rise."
+              "text": "九十九, ninety-nine, is the drill this book has been waiting for. jiǔ is third tone and so is the jiǔ at the end, and the rule you met with nǐ hǎo applies: a third tone before another third tone lifts and becomes a rise."
             },
             {
               "kind": "speech",
@@ -212,6 +223,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "二十 (èrshí) is a Chinese formation, two tens, made of words inherited from Middle Chinese: nyijH, \"two\", and dzyip, \"ten\" (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -254,7 +276,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -454,7 +476,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b0355454ff4fc4f",
+      "sourceHash": "fnv1a64:b0d5df6f773c2b92",
       "notice": null,
       "blocks": [
         {
@@ -514,6 +536,10 @@
             {
               "kind": "speech",
               "text": "So the number that sounds simplest in the run is the one that changes most, and a hundred is where a learner meets it first."
+            },
+            {
+              "kind": "speech",
+              "text": "Both words are inherited from Middle Chinese: 'jit, \"one\", and paek, \"hundred\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },
@@ -598,7 +624,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d3e8b09838e56dd",
+      "sourceHash": "fnv1a64:e9b2af54be994373",
       "notice": null,
       "blocks": [
         {
@@ -660,6 +686,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The digits are the Hindu-Arabic numerals, devised in India and carried west through Arabic; they came into everyday Chinese use only in modern times. 五 is the inherited word, from Middle Chinese nguX (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -693,7 +730,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

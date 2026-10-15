@@ -11,8 +11,8 @@ gloss: "duì — 'right', and on its own the commonest way to agree in spoken Ma
 concept_tag: ZH-LEX-CORRECT
 prerequisites: [ZH-W26-dui, ZH-C25-ti, ZH-C22-zhongguoren, ZH-C19-nihaoma, ZH-C18-hear-kan, ZH-C12-hear-jiaren]
 sounds: [tone-4]
-roots: []
-etymology_hook: "One word answers two of this book's open questions at once: whether something is correct, and how to show you are following."
+roots: [middle-chinese-twojh]
+etymology_hook: "duì: inherited, from Middle Chinese twojH 'to answer; to match'; 'correct' is the later sense"
 duration:
   max_seconds: 225
 requires:
@@ -84,6 +84,12 @@ Careful with one thing. **对** agrees with a **statement**. It is not a general
 *yes*: asked a question with a verb in it, a Mandarin speaker answers by repeating
 the verb — **是** for a 是 question, **有** for a 有 question. 对 is for agreeing
 that what was said is so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**对** is inherited from Middle Chinese *twojH*, glossed "to answer; to match"
+(Guangyun); "correct" is the later sense.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DUI-01, ZH-PRAGMATIC-DUI-BACKCHANNEL-01] -->

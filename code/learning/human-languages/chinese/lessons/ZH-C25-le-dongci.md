@@ -11,8 +11,8 @@ gloss: "le after a verb: the event is finished — and this is aspect, not tense
 concept_tag: VERB-PAST
 prerequisites: [ZH-W25-le, ZH-C24-you, ZH-C20-practice, ZH-C21-shiyi, ZH-C17-zhongguo, ZH-C13-hear-xuesheng]
 sounds: [tone-neutral]
-roots: []
-etymology_hook: "Seven Spanish points spend themselves on locating an event in the past; Mandarin does it with one toneless particle and a time word."
+roots: [middle-chinese-lewx]
+etymology_hook: "le: from the verb liǎo 'to finish', Middle Chinese lewX; the particle grew out of it"
 duration:
   max_seconds: 225
 requires:
@@ -79,6 +79,13 @@ perfect and two participles on the same job. English has *read*, *have read*,
 The verb still does not change. It never will. What changed is that a finished
 event can now be told apart from an unfinished one — and that is done by adding a
 particle, not by reshaping a word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**了** is inherited from Middle Chinese *lewX*, "to finish" (Guangyun). As a verb
+it is still read *liǎo*, and the toneless particle is usually said to have grown
+out of it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-LE-01, ZH-GRAMMAR-LE-COMPLETION-01] -->

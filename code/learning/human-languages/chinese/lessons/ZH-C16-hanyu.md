@@ -11,8 +11,8 @@ concept_tag: ZH-LANGUAGE-IDENTITY-HANYU
 gloss: the Chinese language; Mandarin
 prerequisites: [ZH-W16-yu-delayed]
 sounds: [tone-4, tone-3]
-roots: []
-etymology_hook: Han Chinese plus language or speech makes 汉语, the Chinese language.
+roots: [middle-chinese-xanh, middle-chinese-ngjoX]
+etymology_hook: "hànyǔ: Middle Chinese xanH, the Han river and dynasty, + ngjoX 'words, speech'"
 duration:
   max_seconds: 160
 requires:
@@ -44,6 +44,10 @@ reviews_of: [ZH-C16-hear-hanyu, ZH-W16-yu-delayed, ZH-C16-hanzi]
 > **汉语**
 
 It joins Han Chinese + language: *hànyǔ*, **the Chinese language**.
+
+Both are inherited from Middle Chinese: *xanH*, the river that gave the Han
+dynasty its name, and *ngjoX*, "words, speech" (Guangyun, in Baxter's
+transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-HANYU-01] -->

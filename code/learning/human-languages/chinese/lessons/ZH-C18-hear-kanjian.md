@@ -10,8 +10,8 @@ romanization: kànjiàn
 gloss: to see or catch sight of
 prerequisites: [ZH-C18-kan]
 sounds: [tone-4]
-roots: []
-etymology_hook: Kàn, look, plus the familiar jiàn from zàijiàn becomes seeing something successfully.
+roots: [middle-chinese-khanh, middle-chinese-kenh]
+etymology_hook: "kànjiàn: built from Middle Chinese khanH 'to look' and kenH 'to see'"
 duration:
   max_seconds: 120
 requires:
@@ -42,6 +42,8 @@ reviews_of: [ZH-C18-kan, ZH-C06-zaijian]
 
 Both syllables fall. The familiar *jiàn* now follows *kàn*: you look and
 successfully perceive. Keep the characters hidden for this sound-first step.
+
+*Kànjiàn* is built from Middle Chinese *khanH*, "to look", and *kenH*, "to see".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KANJIAN-01] -->

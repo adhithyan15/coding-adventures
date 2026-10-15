@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "De — The Hinge",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9fded9446ec3049b",
+  "sourceHash": "fnv1a64:11000a847d3e738c",
   "lessons": [
     {
       "id": "ZH-W23-de",
@@ -229,7 +229,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a01f9b908f22923",
+      "sourceHash": "fnv1a64:3bed27ebe8baed56",
       "notice": null,
       "blocks": [
         {
@@ -359,6 +359,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "的 (de) is a borrowed spelling. The character's own Middle Chinese reading is tek, \"bright; a target\"; the particle is usually traced to a Tang-period particle written with another character, read tejX. The details are not settled."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -392,7 +403,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

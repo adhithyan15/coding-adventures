@@ -11,8 +11,8 @@ romanization: kànshū
 gloss: to read a book or read books
 prerequisites: [ZH-C18-hear-kanshu]
 sounds: [tone-1, tone-4]
-roots: []
-etymology_hook: Two freshly secure characters compose literally: 看, look at, plus 书, book.
+roots: [middle-chinese-khanh, middle-chinese-syo]
+etymology_hook: "kànshū: 'look' + 'writing, book', from Middle Chinese khanH and syo"
 duration:
   max_seconds: 145
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-C18-hear-kanshu, ZH-C18-kan, ZH-C18-shu]
 
 Read the action first and its object second. No new character is hiding here:
 看 + 书 gives the whole reading activity.
+
+Both are inherited from Middle Chinese: *khanH*, "look", and *syo*, "writing,
+book" (Guangyun, in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-KANSHU-01] -->

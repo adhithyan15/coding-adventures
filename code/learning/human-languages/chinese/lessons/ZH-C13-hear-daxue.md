@@ -11,8 +11,8 @@ gloss: university; college
 concept_tag: ZH-SCHOOL-UNIVERSITY
 prerequisites: [ZH-C13-xuesheng]
 sounds: [tone-4, tone-2]
-roots: []
-etymology_hook: Big plus study names a university; both spoken parts are known before the compound appears.
+roots: [middle-chinese-dah, middle-chinese-haewk]
+etymology_hook: "dàxué: built from Middle Chinese daH 'big' and haewk 'learning'"
 duration:
   max_seconds: 125
 requires:
@@ -42,6 +42,8 @@ reviews_of: [ZH-C13-da, ZH-C13-xue]
 > *dàxué* — **university; college**
 
 Let *dà* fall, then let *xué* rise. Together they name a university or college.
+
+*Dàxué* is built from Middle Chinese *daH*, "big", and *haewk*, "learning".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DAXUE-01] -->
