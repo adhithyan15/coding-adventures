@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C268-vittakosah",
+    "language": "sanskrit",
+    "chapter": 268,
+    "sequence": 15890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:266099d34f123e35"
+  },
+  "findings": []
+}
