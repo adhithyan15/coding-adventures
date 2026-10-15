@@ -13,7 +13,8 @@ gloss: "a street, a village"
 concept_tag: LA-LOC116-VICUS
 prerequisites: [LA-C116-atrium, LA-C116-angulus, LA-C58-phrases]
 sounds: []
-roots: []
+roots: [vicus-latin]
+etymology_hook: "vīcus 'village' — inherited, usually traced to PIE *weik- 'settlement'; English -wick names come from it"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [LA-C116-angulus]
 <!-- hl-knowledge: introduces=[LA-LEX-C116-LOC116-05]; assesses=[] -->
 
 **vīcus, vīcī** — "a street, a village".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vīcus** is inherited, usually traced to Proto-Indo-European *\*weik-*, "settlement, household" (EtymDB 2.1); Greek *oikos*, "house", is a cousin (Lewis & Short). English place names in -wick and -wich, such as Norwich, come from *vīcus*, borrowed early.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

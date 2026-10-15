@@ -14,7 +14,8 @@ romanization: "ḥaqq"
 concept_tag: AR-CAN108-HAQQ
 prerequisites: [AR-C108-lada, AR-C108-quwwa, AR-C08-al-jumua-as-sabt, AR-C08-al-jumua-as-sabt]
 sounds: []
-roots: []
+roots: [ḥ-q-q]
+etymology_hook: "ḥaqq: built on the root ḥ-q-q, 'to be true, to be due' (Lane); ḥaqq is what is true and what is due: a right"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C108-quwwa]
 <!-- hl-knowledge: introduces=[AR-LEX-C108-CAN108-04]; assesses=[] -->
 
 **حق** — *ḥaqq* — "a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حق** (*ḥaqq*) is built on the native Arabic root *ḥ-q-q*, "to be true, to be due" (Lane). *Ḥaqq* is what is true and what is due: a right.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

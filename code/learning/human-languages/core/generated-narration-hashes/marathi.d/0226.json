@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 226,
-  "sourceHash": "fnv1a64:69f5561dbe53df73",
+  "sourceHash": "fnv1a64:0eca5bae04480b5d",
   "lessonIds": [
     "MR-C226-sucavne",
     "MR-C226-parat-dene",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch226.txt",
   "json": "marathi/narration/ch226.json",
-  "textHash": "fnv1a64:02305fa8d2e3f7be",
-  "jsonHash": "fnv1a64:4f20185df527318e",
+  "textHash": "fnv1a64:02f51f0f03e857a9",
+  "jsonHash": "fnv1a64:69c31c68d7333ef2",
   "findings": []
 }

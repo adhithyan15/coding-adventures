@@ -15,6 +15,9 @@ You'll want to know.
 mhāro — my, before a masculine singular noun.
 Listen twice: mhā-ro. Say it once. The breath after m belongs to the word; do not insert a full vowel between m and h. You do not need to spell it today.
 
+The word, taken apart.
+mhāro is the Marwari "my". CDIAL lists no Marwari mhāro; its nearest row is Old Gujarati māharaü, "my", under the first-person stem ma- (CDIAL 9691), beside Old Marwari meraü. How the word took its mh- is not settled.
+
 Guided Practice.
 Say my when you hear mhāro. Say water when you hear pāṇī. Change the order and do it once more.
 
@@ -87,6 +90,9 @@ You'll want to know.
 म् + हा + रो becomes म्हारो — mhāro — my.
 Every piece is known. The virāma removes the vowel from म so म्ह begins mh, not maha.
 
+The word, taken apart.
+म्हारो (mhāro) is the Marwari "my". CDIAL lists no Marwari mhāro; its nearest row is Old Gujarati māharaü, "my", under the first-person stem ma- (CDIAL 9691), beside Old Marwari meraü. How the word took its mh- is not settled.
+
 Guided Practice.
 [once you have stopped driving — cover: म्हारो (mhāro) after a five-second look, then wait five seconds]
 [once you have stopped driving — write: the word — then uncover it, compare म्ह, ा, and रो separately, and repair only the piece that differs]
@@ -111,6 +117,7 @@ Then hear mhāro and say my.
 You'll want to know.
 nām — name.
 Listen twice, then say it once. Marwadi nām, Sanskrit nāman, and English name are distant members of the same old word family. That history is a memory hook; today's task is only sound and meaning.
+Old Marwari had nāva (CDIAL 7067).
 
 Guided Practice.
 Say name when you hear nām. Say my when you hear mhāro. Change the order once.
@@ -160,6 +167,9 @@ You'll want to know.
 न (na) + ा + म becomes नाम — nām — name.
 Nothing new is hiding here: dental न (na), known long ा, and known म.
 
+The word, taken apart.
+नाम (nām) goes back to Sanskrit nāman, "name", the same ancient word as English name. CDIAL lists Gujarati nām under it, and an older Marwari form nāva (CDIAL 7067); nām keeps the Sanskrit shape.
+
 Guided Practice.
 [once you have stopped driving — cover: नाम (nām) after a five-second look, then wait five seconds]
 [once you have stopped driving — write: the word once — then uncover it, compare one piece at a time, and repair only a differing piece]
@@ -181,6 +191,9 @@ Hear mhāro and nām in either order, then give each meaning.
 You'll want to know.
 hai — is.
 Listen twice, then say it once. This tiny copula closes the name statement. Do not spell it yet; one vowel sign is still missing from your hand.
+
+The word, taken apart.
+hai, "is", has no Marwari row in CDIAL. Under Sanskrit ākṣēti, "abides", it lists Old Hindi āhaï, "is", and Old Marwari chai, "exists" (CDIAL 1031). Many accounts trace hai instead to Sanskrit asti, "is"; the route is not settled.
 
 Guided Practice.
 Hear mhāro nām rām hai. Count four beats aloud: my | name | Ram | is. English changes the order in translation: My name is Ram.
@@ -227,6 +240,9 @@ Hear mhāro, nām, rām, hai in mixed order. Give each meaning.
 You'll want to know.
 म्हारो | नाम | राम | है। mhāro nām rām hai — My name is Ram.
 The written line adds no new sign. है is known ह plus ै (ai-mātrā). Replace राम with your chosen name when speaking; keep Ram for the first writing attempt because every sign is already yours.
+
+The phrase, taken apart.
+म्हारो नाम राम है (mhāro nām rām hai) joins four words with their own lessons: mhāro, "my", whose history is not settled; nām, "name", from Sanskrit nāman (CDIAL 7067); the Sanskrit name Rāma; and hai, "is", which CDIAL ties to Sanskrit ākṣēti, "abides" (CDIAL 1031).
 
 Guided Practice.
 hear the line and say the name the speaker gives.

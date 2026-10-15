@@ -14,7 +14,8 @@ romanization: "sĩṛi"
 concept_tag: BN-HOME61-SIRI
 prerequisites: [BN-C61-almari, BN-C61-mejhe]
 sounds: []
-roots: []
+roots: [indo-aryan-shridhi]
+etymology_hook: "sĩṛi ← *śrīḍhi 'resting-place, ladder', a reconstructed form; a tadbhava (CDIAL 12709)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C61-mejhe]
 <!-- hl-knowledge: introduces=[BN-LEX-C61-HOME61-03]; assesses=[] -->
 
 **সিঁড়ি** — *sĩṛi* — "stairs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সিঁড়ি** (*sĩṛi*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*śrīḍhi*, "resting-place, ladder", a form CDIAL reconstructs from its descendants (CDIAL 12709).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

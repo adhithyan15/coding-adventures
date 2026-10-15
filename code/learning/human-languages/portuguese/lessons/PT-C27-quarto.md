@@ -60,7 +60,8 @@ ending, agreeing with what it counts.
 <!-- hl-knowledge: introduces=[PT-ETYMON-QUARTO-03]; assesses=[] -->
 
 *Quatro* is four; *quarto* is four with the ordinal ending, and you can hear the
-cardinal inside it.
+cardinal inside it. **Quarto** is inherited from Latin *quartus*, "fourth",
+itself built on *quattuor*, "four" (EtymDB 2.1).
 
 **O quarto** also means "**a bedroom**", and that is the same word doing a second
 job: a *quarta parte*, a **fourth part** of a house, became the name for a room

@@ -14,7 +14,8 @@ romanization: "chappal"
 concept_tag: MW-THINGS129-CHAPPAL
 prerequisites: [MW-C128-angarkhi, MW-C129-kamij]
 sounds: []
-roots: []
+roots: [dravidian-ceppu]
+etymology_hook: "chappal: not in CDIAL; DEDR 1963 compares Hindi cappal, with a Cf., to Dravidian 'sandal' words such as Telugu ceppu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C129-kamij]
 <!-- hl-knowledge: introduces=[MW-LEX-C129-THINGS129-02]; assesses=[] -->
 
 **चप्पल** — *chappal* — "sandals".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **चप्पल** (*chappal*) is not settled. CDIAL has no entry for it; DEDR compares Hindi *cappal*, with a "Cf.", to Dravidian words for "sandal" such as Telugu *ceppu* (DEDR 1963).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

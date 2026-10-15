@@ -14,7 +14,8 @@ romanization: "qarz"
 concept_tag: UR-KAM209-QARZ
 prerequisites: [UR-C208-bichchhu, UR-C209-not]
 sounds: []
-roots: []
+roots: [arabic-qard]
+etymology_hook: "qarz ← Arabic qarḍ 'a loan', through Persian (Lane, root q-r-ḍ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C209-not]
 <!-- hl-knowledge: introduces=[UR-LEX-C209-KAM209-02]; assesses=[] -->
 
 **قرض** — *qarz* — "a debt, a loan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قرض** (*qarz*) is a loan from Arabic *qarḍ*, "a loan", which reached Urdu through Persian. Its Arabic root is *q-r-ḍ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

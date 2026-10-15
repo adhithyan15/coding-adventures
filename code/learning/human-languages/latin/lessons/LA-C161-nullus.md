@@ -13,7 +13,8 @@ gloss: "no, not any"
 concept_tag: LA-NEG161-NULLUS
 prerequisites: [LA-C161-nihil, LA-C161-nemo]
 sounds: []
-roots: []
+roots: [nullus-latin, ullus-latin]
+etymology_hook: "nūllus 'no, not any' — ne 'not' + ūllus 'any'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C161-nemo]
 <!-- hl-knowledge: introduces=[LA-LEX-C161-NEG161-03]; assesses=[] -->
 
 **nūllus, nūlla, nūllum** — "no, not any". It agrees with its noun: **nūlla epistula** — "no letter at all". English *null* and *annul* come from it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nūllus** is *ne*, "not", fused with *ūllus*, "any" (Lewis & Short): not any. *ūllus* itself is a diminutive of *ūnus*, "one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "komandiróvka"
 concept_tag: RU-RABOTA172-KOMANDIROVKA
 prerequisites: [RU-C172-karyera, RU-C172-pensiya]
 sounds: []
-roots: []
+roots: [mandare-latin]
+etymology_hook: "командировка is from командировать 'to send on duty', from German kommandieren"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C172-pensiya]
 <!-- hl-knowledge: introduces=[RU-LEX-C172-RABOTA172-04]; assesses=[] -->
 
 **командировка** (*komandiróvka*) — "a business trip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**командировка** is built on *командировать*, "to send on official duty", from German *kommandieren*, "to command", with *-ка*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

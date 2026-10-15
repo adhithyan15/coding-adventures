@@ -14,7 +14,8 @@ romanization: "sushi"
 concept_tag: JA-FOOD35-SUSHI
 prerequisites: [JA-C35-satou, JA-C35-udon]
 sounds: []
-roots: []
+roots: [japanese-sushi]
+etymology_hook: "sushi: native; usually from old sushi 'sour'; the spelling 寿司 is ateji (JMdict)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C35-udon]
 <!-- hl-knowledge: introduces=[JA-LEX-C35-FOOD35-03]; assesses=[] -->
 
 **すし** — *sushi* — "sushi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すし** (*sushi*) is a native word, inherited rather than borrowed. The usual account derives it from an old adjective *sushi*, "sour", for the vinegared rice. JMdict marks its common spelling with characters for "long life" and "manage" as ateji, chosen for their sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

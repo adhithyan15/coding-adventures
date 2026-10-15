@@ -14,7 +14,8 @@ romanization: "ekzámen"
 concept_tag: RU-THINGS111-EXAM
 prerequisites: [RU-C110-profession, RU-C110-class, RU-C27-words, RU-C27-pervoe-chtenie]
 sounds: []
-roots: []
+roots: [examen-latin]
+etymology_hook: "экзамен came through Polish egzamen from Latin examen 'a weighing, a test'"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [RU-C110-class]
 <!-- hl-knowledge: introduces=[RU-LEX-C111-THINGS111-01]; assesses=[] -->
 
 **экзамен** (*ekzámen*) — "an exam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**экзамен** — from Peter the Great's time; it came through Polish *egzamen* from Latin *exāmen*, "a weighing, a test" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

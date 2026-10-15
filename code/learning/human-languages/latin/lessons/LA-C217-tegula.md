@@ -13,7 +13,8 @@ gloss: "a roof tile"
 concept_tag: LA-RES217-TEGULA
 prerequisites: [LA-C216-defessus, LA-C216-vigil]
 sounds: []
-roots: []
+roots: [tegula-latin, tegere-latin]
+etymology_hook: "tēgula 'roof tile' — built on tegō 'to cover'; English tile"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C216-vigil]
 <!-- hl-knowledge: introduces=[LA-LEX-C217-RES217-01]; assesses=[] -->
 
 **tēgula, tēgulae** — "a roof tile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tēgula** is built on *tegō*, "to cover" (EtymDB 2.1), with *-ula*, an ending for a tool: the thing that covers. English *tile* was borrowed from it early.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

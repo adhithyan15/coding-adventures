@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 155,
-  "sourceHash": "fnv1a64:7dccb6b464e347a2",
+  "sourceHash": "fnv1a64:d066eea790683561",
   "lessonIds": [
     "FA-C155-dabirestan",
     "FA-C155-kalantari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch155.txt",
   "json": "persian/narration/ch155.json",
-  "textHash": "fnv1a64:1402866e25b93cb3",
-  "jsonHash": "fnv1a64:cd885581e3ed0994",
+  "textHash": "fnv1a64:115c238ab12ea758",
+  "jsonHash": "fnv1a64:5fc8f5cb7d5d0bdc",
   "findings": []
 }

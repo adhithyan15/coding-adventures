@@ -14,7 +14,8 @@ romanization: "jadīd"
 concept_tag: AR-ADJ82-JADID
 prerequisites: [AR-C81-kabir, AR-C81-saghir]
 sounds: []
-roots: []
+roots: [j-d-d]
+etymology_hook: "jadīd: built on the root j-d-d, 'to cut' (Lane); Lane gives jadīd first as 'cut, cut off', as cloth fresh from the loom"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C81-saghir]
 <!-- hl-knowledge: introduces=[AR-LEX-C82-ADJ82-01]; assesses=[] -->
 
 **جديد** — *jadīd* — "new".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جديد** (*jadīd*) is built on the native Arabic root *j-d-d*, "to cut" (Lane). Lane gives *jadīd* first as "cut, cut off", as cloth fresh from the loom; "new" became its common sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

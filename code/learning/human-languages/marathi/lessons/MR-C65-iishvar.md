@@ -14,7 +14,8 @@ gloss: "God"
 concept_tag: MR-ANCHOR-IISHVAR
 prerequisites: [MR-R64-rows-closed]
 sounds: []
-roots: []
+roots: [sanskrit-ishvara]
+etymology_hook: "īśvar ← Sanskrit īśvara 'master; god', a tatsama (CDIAL 1619)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard
 
 Say it: *īśvar*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ई**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ईश्वर** (*īśvar*) is Sanskrit *īśvara*, "master; god", taken over whole as a learned loan, a tatsama (CDIAL 1619). It is built on *īś*, "to be master of".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-IISHVAR] -->

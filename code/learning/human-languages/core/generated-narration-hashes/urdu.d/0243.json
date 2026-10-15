@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 243,
-  "sourceHash": "fnv1a64:11a5405694e48674",
+  "sourceHash": "fnv1a64:4691974727029b8c",
   "lessonIds": [
     "UR-C243-thakan",
     "UR-C243-taqat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch243.txt",
   "json": "urdu/narration/ch243.json",
-  "textHash": "fnv1a64:c8acf0e7812d71b9",
-  "jsonHash": "fnv1a64:568a1c811b58838b",
+  "textHash": "fnv1a64:82f45b952e575fbf",
+  "jsonHash": "fnv1a64:8f0d7998d935afaa",
   "findings": []
 }

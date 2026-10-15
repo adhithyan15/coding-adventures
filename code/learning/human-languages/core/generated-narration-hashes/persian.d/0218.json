@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 218,
-  "sourceHash": "fnv1a64:64e3ab1933968d07",
+  "sourceHash": "fnv1a64:7fa4358ff6820750",
   "lessonIds": [
     "FA-C218-dam-kardan",
     "FA-C218-sorfe-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch218.txt",
   "json": "persian/narration/ch218.json",
-  "textHash": "fnv1a64:9fe1e1f3db5a58cc",
-  "jsonHash": "fnv1a64:ff604fbf3c83958f",
+  "textHash": "fnv1a64:36b94188da2be7e5",
+  "jsonHash": "fnv1a64:2037a0858e07e525",
   "findings": []
 }

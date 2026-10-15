@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 263,
-  "sourceHash": "fnv1a64:dbd2e6c8d49735db",
+  "sourceHash": "fnv1a64:5f6837ded22d3599",
   "lessonIds": [
     "UR-C263-nanbai",
     "UR-C263-halvai",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch263.txt",
   "json": "urdu/narration/ch263.json",
-  "textHash": "fnv1a64:7f5a364b1cfddfe2",
-  "jsonHash": "fnv1a64:0758cf03593bec52",
+  "textHash": "fnv1a64:7e99c0e62857c399",
+  "jsonHash": "fnv1a64:77ad2246fb964f76",
   "findings": []
 }

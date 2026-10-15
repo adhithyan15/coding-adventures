@@ -14,7 +14,8 @@ romanization: "kalāvida"
 concept_tag: KA-KELASA305-KALAVIDA
 prerequisites: [KA-C304-ganita, KA-C305-arcaka]
 sounds: []
-roots: []
+roots: [sanskrit-kala]
+etymology_hook: "kalāvida ← Sanskrit kalā 'art' (CDIAL 2927) + -vid 'knowing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C305-arcaka]
 <!-- hl-knowledge: introduces=[KA-LEX-C305-KELASA305-02]; assesses=[] -->
 
 **ಕಲಾವಿದ** — *kalāvida* — "an artist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಲಾವಿದ** (*kalāvida*) is Sanskrit *kalā*, "any practical art" (CDIAL 2927), with *-vid*, "knowing": "one who knows an art". CDIAL 2927 takes the Sanskrit *kalā* itself from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,9 +14,10 @@ romanization: "se"
 concept_tag: HI-POST-SE
 prerequisites: [HI-C89-sintesis-jaari, HI-C36-ghar, HI-C13-haath]
 sounds: []
-roots: []
+roots: [sanskrit-sahita, sanskrit-sama]
+etymology_hook: "se ← Sanskrit sahita 'together with' (CDIAL 13310), or perhaps sama 'equal' (CDIAL 13173)"
 duration:
-  max_seconds: 240
+  max_seconds: 245
 requires:
   knowledge: [HI-LEX-C89-CONT-01, HI-CONCEPT-C36-GHAR-01, HI-CONCEPT-C13-HAATH-01, HI-LEX-C87-POST-01]
 introduces:
@@ -65,6 +66,8 @@ hand.
 
 Once you see that, the second use stops being a second word to learn. A vehicle
 you travel in takes **से** for exactly the same reason your hand does.
+
+CDIAL traces **से** to Sanskrit *sahita*, "together with" (CDIAL 13310), and lists it under *sama*, "equal", too (CDIAL 13173).
 
 ## Grammar Lens: two postpositions, one habit
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C90-ROUT-01, HI-LEX-C87-POST-01] -->

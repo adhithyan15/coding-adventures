@@ -14,7 +14,8 @@ romanization: "tane"
 concept_tag: JA-NATURE44-TANE
 prerequisites: [JA-C44-nami, JA-C44-tsuchi]
 sounds: []
-roots: []
+roots: [japanese-tane]
+etymology_hook: "tane: native Japanese, inherited, not borrowed; kanji 種 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C44-tsuchi]
 <!-- hl-knowledge: introduces=[JA-LEX-C44-NATURE44-04]; assesses=[] -->
 
 **たね** — *tane* — "a seed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たね** (*tane*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a candidate, then the Japanese for a pl
 You'll want to know: このむ.
 このむ — konomu — "to like, to prefer".
 
+The word, taken apart.
+このむ (konomu) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a plan, then the Japanese for to like.
 
 You'll want to know: このみ.
 このみ — konomi — "a liking, taste".
+
+The word, taken apart.
+このみ (konomi) is native: the noun made from konomu, "to like", by its stem (JMdict). It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for to like, then the Japanese for a liking
 You'll want to know: しゅみ.
 しゅみ — shumi — "a hobby".
 
+The word, taken apart.
+しゅみ (shumi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shu, "interest, what attracts one" (Middle Chinese tshjuH) and mi, "taste" (mj+jH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a liking, then the Japanese for a hobby
 You'll want to know: たのしみ.
 たのしみ — tanoshimi — "something to look forward to".
 
+The word, taken apart.
+たのしみ (tanoshimi) is native: the noun made from tanoshimu, "to enjoy", by its stem, beside tanoshii, "fun" (JMdict). It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a hobby, then the Japanese for somethin
 
 You'll want to know: あい.
 あい — ai — "love".
+
+The word, taken apart.
+あい (ai) is Sino-Japanese (kango): the on'yomi of a character meaning "love", a reading borrowed from Chinese (Middle Chinese 'ojH in Baxter's transcription; Unihan, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

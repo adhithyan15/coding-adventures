@@ -14,7 +14,8 @@ romanization: "kot"
 concept_tag: FA-CLOTHES75-KOT
 prerequisites: [FA-C74-kolah, FA-C74-kafsh]
 sounds: []
-roots: []
+roots: [english-coat]
+etymology_hook: "kot: a loan, usually traced to English coat 'coat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C74-kafsh]
 <!-- hl-knowledge: introduces=[FA-LEX-C75-CLOTHES75-01]; assesses=[] -->
 
 **کت** — *kot* — "a jacket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kot* is a loan, usually traced to English *coat*, "coat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

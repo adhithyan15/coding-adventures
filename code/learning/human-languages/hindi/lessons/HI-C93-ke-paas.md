@@ -14,9 +14,10 @@ romanization: "ghar ke pās"
 concept_tag: HI-POST-COMPOUND-PAAS
 prerequisites: [HI-C93-ke-binaa, HI-C36-ghar, HI-C84-mere-paas, HI-C56-shop]
 sounds: []
-roots: []
+roots: [sanskrit-ghara, sanskrit-parshva]
+etymology_hook: "ghar ← ghara 'house' (CDIAL 4428); pās ← Sanskrit pārśva 'side', pārśve 'near' (CDIAL 8118)"
 duration:
-  max_seconds: 240
+  max_seconds: 257
 requires:
   knowledge: [HI-LEX-C93-REL-02, HI-CONCEPT-C36-GHAR-01, HI-LEX-C84-POSS-05, HI-LEX-C56-ROAD-04]
 introduces:
@@ -45,6 +46,11 @@ what the second one actually means, because so far you have never been told.
 **दुकान घर के पास है।** — The shop is near the house.
 
 **पास** means *near*. It has meant *near* the whole time.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghar* comes from *ghara*, "house", which CDIAL finds hard to derive from Sanskrit *gṛha* (CDIAL 4428); *pās*, "near", from *pārśva*, "side", whose form *pārśve* meant "near" (CDIAL 8118).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-03, HI-LEX-C84-POSS-05] -->

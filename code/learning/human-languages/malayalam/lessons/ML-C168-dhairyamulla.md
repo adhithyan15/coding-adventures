@@ -14,7 +14,8 @@ romanization: "dhairyamuḷḷa"
 concept_tag: ML-QUAL168-DHAIRYAMULLA
 prerequisites: [ML-C168-talnna, ML-C168-palutta]
 sounds: []
-roots: []
+roots: [sanskrit-dhairya, dravidian-ul-be]
+etymology_hook: "dhairyamuḷḷa: Sanskrit dhairya 'firmness, courage' + native uḷḷa 'that has' (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C168-palutta]
 <!-- hl-knowledge: introduces=[ML-LEX-C168-QUAL168-05]; assesses=[] -->
 
 **ധൈര്യമുള്ള** — *dhairyamuḷḷa* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ധൈര്യമുള്ള** (*dhairyamuḷḷa*) joins Sanskrit *dhairya*, "firmness, courage", to native *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dhāvati"
 concept_tag: SA-VERB-RUN
 prerequisites: [SA-C70-shoulder, SA-C70-lip]
 sounds: []
-roots: []
+roots: [sanskrit-dhavati]
+etymology_hook: "dhāvati 'runs, flows' ← the root √dhāv 'run' (MW); Hindi dhāwnā 'to run' (CDIAL 6802)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,12 @@ reviews_of: [SA-C70-lip]
 
 **धावति** (*dhāvati*) — "(he, she) runs". It ends in **-ति** like **गच्छति**: one
 person, doing it now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Dhāvati* is the present of the root √dhāv, "to run, flow", already in the Rigveda
+(MW). CDIAL 6802 follows it into Hindi *dhāwnā*, "to run".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

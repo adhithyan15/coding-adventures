@@ -14,7 +14,8 @@ romanization: "hājarākuka"
 concept_tag: ML-VERB-HAJARAKUKA
 prerequisites: [ML-C226-parisodhikkuka, ML-C227-kuriccetukkuka]
 sounds: []
-roots: []
+roots: [arabic-hazir, aaka-dravidian]
+etymology_hook: "hājarākuka: hājar 'present', from Arabic ḥāḍir through Hindustani, + native ākuka 'to become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C227-kuriccetukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C227-KRIYA227-02]; assesses=[] -->
 
 **ഹാജരാകുക** — *hājarākuka* — "to be present, to attend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഹാജരാകുക** (*hājarākuka*) joins *hājar*, "present, in attendance", from Arabic *ḥāḍir* by way of Hindustani, to native *ākuka*, "to become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pensil"
 concept_tag: MR-THINGS134-PENSIL
 prerequisites: [MR-C134-patele, MR-C134-phala]
 sounds: []
-roots: []
+roots: [english-pencil]
+etymology_hook: "pensil ← English pencil"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C134-phala]
 <!-- hl-knowledge: introduces=[MR-LEX-C134-THINGS134-04]; assesses=[] -->
 
 **पेन्सिल** — *pensil* — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पेन्सिल** (*pensil*) is a loan from English *pencil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

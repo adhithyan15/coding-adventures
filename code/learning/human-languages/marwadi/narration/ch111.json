@@ -4,7 +4,7 @@
   "chapter": 111,
   "title": "To want, Wish, Mind, Hope, Demand",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:70643d56382d6575",
+  "sourceHash": "fnv1a64:5b1722ada69e6bae",
   "lessons": [
     {
       "id": "MW-C111-chavno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d15834f723359431",
+      "sourceHash": "fnv1a64:fe7647b5ecf8ddb6",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चावणो (chāvṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāh, \"see, look for, desire\", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari cāhaï under it (CDIAL 4775). CDIAL calls the further source of this reconstructed verb uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b7a53e0d5c2e3bd",
+      "sourceHash": "fnv1a64:0ded9c60059786cd",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इच्छा (ichchhā) is Sanskrit icchā, \"wish\", taken over whole as a learned loan, a tatsama (CDIAL 1557)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a044854543811e6b",
+      "sourceHash": "fnv1a64:960854afce1b9959",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मन (man) is Sanskrit manas, \"mind\", taken over whole as a learned loan, a tatsama (CDIAL 9822). The -as ending was dropped. English mind is a distant cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5a38a80d8139f1c",
+      "sourceHash": "fnv1a64:368a16a6c397f063",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आस (ās) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from āśā, \"wish, expectation\". CDIAL lists Old Marwari āsa under it (CDIAL 1456)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aec68c1eae220b3a",
+      "sourceHash": "fnv1a64:aac34a87b254e061",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मांग (mā̃g) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārgya, \"to be sought\". CDIAL lists Old Marwari māṃga under it (CDIAL 10078). मांग (mā̃g) is the noun of māṅgṇo, \"to ask for\"; the Old Marwari row means \"betrothed\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

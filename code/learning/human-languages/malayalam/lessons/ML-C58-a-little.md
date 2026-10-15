@@ -11,7 +11,8 @@ romanization: "kuṟaccŭ"
 concept_tag: ML-WORD-A-LITTLE
 prerequisites: [ML-C58-less, ML-C56-knife]
 sounds: []
-roots: []
+roots: [dravidian-kuru-short]
+etymology_hook: "kuṟaccŭ: native Dravidian, from the verb 'to dwindle, fall short', like kuṟavŭ (DEDR 1851)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ The same root as the word before it, turned a different way: from കുറ-, "t
 The difference matters at a table. കുറവ് complains that there is not enough; കുറച്ച് politely asks for a small amount. One is a verdict and the other is a request, and they are one syllable apart.
 
 Malayalam gets a great deal out of a single root by varying the tail on it, and this pair is a clean example — the same three sounds at the front, two different jobs at the back.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുറച്ച്** (*kuṟaccŭ*) is native Dravidian, a form of the verb "to dwindle, fall short", the same root as the word for "less"; DEDR 1851 lists the root with Tamil *kuṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

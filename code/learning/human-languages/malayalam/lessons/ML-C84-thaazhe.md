@@ -11,7 +11,8 @@ romanization: "tāḻe"
 concept_tag: ML-PLACE-BELOW
 prerequisites: [ML-C84-mukalil]
 sounds: []
-roots: []
+roots: [dravidian-tazh-low]
+etymology_hook: "tāḻe: native Dravidian, from the verb 'to sink, come low'; Tamil tāḻ (DEDR 3178)"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +52,11 @@ around it**:
 The owner-ending does not change and the order does not change. **Only the
 place-word swaps**, which is the whole point of learning the pattern before the
 words: each new one after this costs a word and nothing else.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**താഴെ** (*tāḻe*) is native Dravidian, from the verb "to sink, come low"; DEDR 3178 lists the root with Tamil *tāḻ* and Kannada *tāḻ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C84-PLACE-02, ML-LEX-C84-PLACE-01, ML-GRAMMAR-C84-POSTPOSITION-01, ML-LEX-C52-WELCOME-02] -->

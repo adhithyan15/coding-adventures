@@ -14,7 +14,8 @@ romanization: "monshi"
 concept_tag: FA-KAR250-MONSHI
 prerequisites: [FA-C249-karafs, FA-C249-albalu]
 sounds: []
-roots: []
+roots: [arabic-munsi]
+etymology_hook: "monshi ← Arabic munšiʾ 'composer, writer', root n-š-ʾ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C249-albalu]
 <!-- hl-knowledge: introduces=[FA-LEX-C250-KAR250-01]; assesses=[] -->
 
 **منشی** — *monshi* — "a secretary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*monshi* is borrowed from Arabic *munšiʾ*, "composer, writer". Its Arabic root is *n-š-ʾ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

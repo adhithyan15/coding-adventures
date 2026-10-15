@@ -14,7 +14,8 @@ romanization: "adbhutamaina"
 concept_tag: TE-GUNAM181-ADBHUTAMAINA
 prerequisites: [TE-C181-vasana, TE-C181-asaktikaramaina]
 sounds: []
-roots: []
+roots: [sanskrit-adbhuta, tamil-aaku-become]
+etymology_hook: "adbhutamaina: Sanskrit adbhuta 'wonderful' (CDIAL 240) + native aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C181-asaktikaramaina]
 <!-- hl-knowledge: introduces=[TE-LEX-C181-GUNAM181-04]; assesses=[] -->
 
 **అద్భుతమైన** — *adbhutamaina* — "wonderful, amazing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అద్భుతమైన** (*adbhutamaina*) is Sanskrit *adbhuta*, "wonderful" (CDIAL 240), with native *aina*, "which is", from *agu*, "to be" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tikoṇā"
 concept_tag: HI-QUAL237-TIKONA
 prerequisites: [HI-C236-gol, HI-C237-caukor]
 sounds: []
-roots: []
+roots: [sanskrit-kona]
+etymology_hook: "tikoṇā: ti- 'three' + koṇ 'corner', from Sanskrit koṇa, of Dravidian source (CDIAL 3504)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C237-caukor]
 <!-- hl-knowledge: introduces=[HI-LEX-C237-QUAL237-02]; assesses=[] -->
 
 **तिकोना** — *tikoṇā* — "triangular".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तिकोना** (*tikoṇā*) is "three-cornered": *ti-*, "three", and *koṇ*, "corner", from Sanskrit *koṇa*, which CDIAL takes from Dravidian (CDIAL 3504).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

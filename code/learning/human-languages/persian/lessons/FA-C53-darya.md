@@ -14,7 +14,8 @@ romanization: "daryâ"
 concept_tag: FA-NATURE53-DARYA
 prerequisites: [FA-C53-mase, FA-C53-abr]
 sounds: []
-roots: []
+roots: [persian-darya]
+etymology_hook: "daryâ: inherited; Old Persian drayah- 'sea' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C53-abr]
 <!-- hl-knowledge: introduces=[FA-LEX-C53-NATURE53-03]; assesses=[] -->
 
 **دریا** — *daryâ* — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*daryâ* is a native Persian word, inherited rather than borrowed. Old Persian had *drayah-*, "sea" (EtymDB), and Middle Persian *drayāb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

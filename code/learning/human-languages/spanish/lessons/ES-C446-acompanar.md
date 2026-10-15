@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ACOMPANAR
 prerequisites: [ES-C446-mover, ES-C436-companero, ES-C26-pan]
 sounds: [enye, stress-final]
 roots: [panis-latin]
+etymology_hook: "acompañar — a- + compañ(ero) + -ar: to be the one you share bread with"
 duration:
   max_seconds: 275
 requires:
@@ -53,7 +54,7 @@ It is the ordinary way to offer to come along, and it is warmer than the English
 **a-** plus **compañ-** plus **-ar**, and the middle is the word you already
 took apart.
 
-**el compañero** is *com-* together plus *pānis*, bread — **the one you share
+**el compañero** is built from Latin *com-* together plus *pānis*, bread — **the one you share
 bread with**. So *acompañar* is **to go along as that person**, and a Spanish
 speaker offering *te acompaño* is, at root, offering to share a meal's worth of
 company.

@@ -14,7 +14,8 @@ romanization: "huruḷikāyi"
 concept_tag: KA-VASTU184-HURULIKAYI
 prerequisites: [KA-C184-sautekayi, KA-C184-bendekayi]
 sounds: []
-roots: []
+roots: [dravidian-kaay-unripe]
+etymology_hook: "huruḷikāyi: huruḷi 'horse gram', of uncertain origin, + native kāyi 'fruit' (DEDR 1459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C184-bendekayi]
 <!-- hl-knowledge: introduces=[KA-LEX-C184-VASTU184-03]; assesses=[] -->
 
 **ಹುರುಳಿಕಾಯಿ** — *huruḷikāyi* — "green beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುರುಳಿಕಾಯಿ** (*huruḷikāyi*) is *huruḷi*, "horse gram", whose origin is uncertain, and native *kāyi*, "unripe fruit, pod" (DEDR 1459): green bean pods. DEDR 1459 compares a reconstructed Indo-Aryan *\*kacca*, "raw, unripe" (CDIAL 2613).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Latin for to calculate, then the Latin for to knock.
 You'll want to know: plicō, plicāre.
 plicō, plicāre — "to fold".
 
+The word, taken apart.
+plicō is inherited, usually traced to Proto-Indo-European plek-, "to fold, to plait" (EtymDB 2.1); Greek plekō, "to plait", is a cousin (Lewis & Short). English ply and complicate come from its family.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to knock, then the Latin for to fold.
 
 You'll want to know: possideō, possidēre.
 possideō, possidēre — "to own, to possess".
+
+The word, taken apart.
+possideō is usually explained as potis, "master, able", with sedeō, "to sit" (EtymDB 2.1): to sit as master of something, so to own.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to fold, then the Latin for to own.
 You'll want to know: praeparō, praeparāre.
 praeparō, praeparāre — "to make ready in advance".
 
+The word, taken apart.
+praeparō is prae, "before", with parō, "to make ready" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to own, then the Latin for to make ready i
 You'll want to know: commodō, commodāre.
 commodō, commodāre — "to lend".
 
+The word, taken apart.
+commodō is built on commodus, "fitting, convenient" (Lewis & Short), itself con-, "with", and modus, "a measure": to make something available, to lend.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to make ready in advance, then the Latin f
 
 You'll want to know: prōpōnō, prōpōnere.
 prōpōnō, prōpōnere — "to propose, to put forward".
+
+The word, taken apart.
+prōpōnō is prō, "forward", with pōnō, "to put" (EtymDB 2.1): to put forward.
 
 What you've built.
 One more word for this chapter.

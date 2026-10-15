@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 185,
-  "sourceHash": "fnv1a64:02144fed5ef83e08",
+  "sourceHash": "fnv1a64:ae24867b8e2ba025",
   "lessonIds": [
     "FA-C185-tavajjoh-kardan",
     "FA-C185-hal-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch185.txt",
   "json": "persian/narration/ch185.json",
-  "textHash": "fnv1a64:ba6f171fb4e52478",
-  "jsonHash": "fnv1a64:12aae73e12743ad9",
+  "textHash": "fnv1a64:db1430bcef6f2054",
+  "jsonHash": "fnv1a64:ce99b901e7c4ecc5",
   "findings": []
 }

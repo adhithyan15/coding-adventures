@@ -14,7 +14,8 @@ romanization: "pólden"
 concept_tag: RU-TIME83-MIDDAY
 prerequisites: [RU-C82-that-2, RU-C82-such]
 sounds: []
-roots: []
+roots: [pie-dyew-shine]
+etymology_hook: "полдень is пол- 'half' + день 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C82-such]
 <!-- hl-knowledge: introduces=[RU-LEX-C83-TIME83-01]; assesses=[] -->
 
 **полдень** (*pólden*) — "midday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**полдень** is *пол-*, "half", with *день*, "day": the middle of the day. Vasmer relates *день* to Lithuanian *dienà*, "day", and thinks *пол-* probably kin to Albanian *palë*, "side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

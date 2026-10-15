@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 116,
-  "sourceHash": "fnv1a64:a368927865b57f07",
+  "sourceHash": "fnv1a64:f8ebe79e745a21ee",
   "lessonIds": [
     "AR-C116-ibriq",
     "AR-C116-miqlah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch116.txt",
   "json": "arabic/narration/ch116.json",
-  "textHash": "fnv1a64:cb27e8e2cee115e8",
-  "jsonHash": "fnv1a64:86f1564853cc06b7",
+  "textHash": "fnv1a64:9f96175c3351b63a",
+  "jsonHash": "fnv1a64:dda3e5a6e4ee2052",
   "findings": []
 }

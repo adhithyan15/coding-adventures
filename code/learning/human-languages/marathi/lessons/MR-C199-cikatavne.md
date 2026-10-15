@@ -15,6 +15,7 @@ concept_tag: MR-VERB-CIKATAVNE
 prerequisites: [MR-C198-mat-dene, MR-C198-svagat-karne]
 sounds: []
 roots: []
+etymology_hook: "cikaṭavṇe 'to stick, glue': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C198-svagat-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C199-ACT199-01]; assesses=[] -->
 
 **चिकटवणे** — *cikaṭavṇe* — "to stick, to glue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **चिकटवणे** (*cikaṭavṇe*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

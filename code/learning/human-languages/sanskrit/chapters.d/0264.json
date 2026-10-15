@@ -1,0 +1,21 @@
+{
+  "chapter": 264,
+  "title": "What I will do next",
+  "label": "ch:sa-near-term-first-person-plans",
+  "canDo": "I can make a near-term first-person plan with three taught future forms.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "SA-C264-first-person-future-retrieval",
+    "kind": "production",
+    "summary": "Complete chapter 264 by independently choosing a time and a taught first-person future action.",
+    "assesses": [
+      "SA-VERB-C263-GAMISYAMI-01",
+      "SA-GRAMMAR-C263-FUTURE-FIRST-SINGULAR-02",
+      "SA-VERB-C264-KARISYAMI-01",
+      "SA-VERB-C264-PATHISYAMI-02",
+      "SA-PATTERN-C264-NEAR-TERM-PLAN-03"
+    ]
+  }
+}

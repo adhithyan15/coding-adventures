@@ -14,7 +14,8 @@ romanization: "samīk"
 concept_tag: AR-SIFA179-SAMIK
 prerequisites: [AR-C179-ramadi, AR-C179-dhahabi]
 sounds: []
-roots: []
+roots: [s-m-k]
+etymology_hook: "samīk: built on the root s-m-k, 'to be high, to be thick' (Lane); samīk is the faʿīl adjective, 'thick'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C179-dhahabi]
 <!-- hl-knowledge: introduces=[AR-LEX-C179-SIFA179-03]; assesses=[] -->
 
 **سميك** — *samīk* — "thick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سميك** (*samīk*) is built on the native Arabic root *s-m-k*, "to be high, to be thick" (Lane). *Samīk* is the *faʿīl* adjective, "thick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

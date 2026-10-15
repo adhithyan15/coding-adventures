@@ -11,7 +11,8 @@ romanization: "taruvāta"
 concept_tag: TE-WORD-AFTER
 prerequisites: [TE-C64-in-that-case]
 sounds: []
-roots: []
+roots: [dravidian-tara-base]
+etymology_hook: "taruvāta: native Dravidian; DEDR 3142 lists taruvāta 'afterwards' itself, with Tamil taṟuvāy"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C64-in-that-case]
 The word is inherited. Standing alone at the front of a sentence it means "later", and it is the gentle way to put something off: తరువాత, not now, and no reason offered.
 
 తరువాత is also how a story gets kept moving. A listener who says it is asking you to go on.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తరువాత** (*taruvāta*) is native Dravidian. DEDR 3142 lists *taruvāta*, "afterwards, next", itself, with *taruvāyi*, "what follows", in an entry with Tamil *taṟuvāy*, "occasion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

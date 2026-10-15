@@ -13,7 +13,8 @@ gloss: "to breathe"
 concept_tag: LA-VERB-SPIRO
 prerequisites: [LA-C259-oro, LA-C259-commendo]
 sounds: []
-roots: []
+roots: [spirare-latin]
+etymology_hook: "spīrō 'to breathe' — probably from PIE *(s)peys- 'to blow'; English spirit"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C259-commendo]
 <!-- hl-knowledge: introduces=[LA-LEX-C259-ACT259-03]; assesses=[] -->
 
 **spīrō, spīrāre** — "to breathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spīrō** is probably inherited, from a Proto-Indo-European *\*(s)peys-*, "to blow, to breathe" (EtymDB 2.1); Lewis & Short call it doubtful. English *spirit* and *inspire* come from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "murīḥ"
 concept_tag: AR-QUAL145-MURIH
 prerequisites: [AR-C145-fakhm, AR-C145-basit]
 sounds: []
-roots: []
+roots: [r-w-ḥ]
+etymology_hook: "murīḥ: built on the root r-w-ḥ, 'rest' (Lane); murīḥ is the Form IV participle, 'giving rest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C145-basit]
 <!-- hl-knowledge: introduces=[AR-LEX-C145-QUAL145-04]; assesses=[] -->
 
 **مريح** — *murīḥ* — "comfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مريح** (*murīḥ*) is built on the native Arabic root *r-w-ḥ*, "rest; wind" (Lane). *Murīḥ* is the Form IV participle, "giving rest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ romanization: fahima
 prerequisites: [AR-C30-akala]
 sounds: [waw, faa, rtl-known-letters]
 roots: [f-h-m]
-etymology_hook: "فهم (fahima, 'he understood') runs a-i-a rather than a-a-a — the فَعِلَ (faʿila) shape Arabic keeps for states rather than deeds — and its root ف-ه-م yields فَهْم (fahm, 'understanding') and مَفْهوم (mafhūm), the done-to shape met in mashkūr and maqūl, which as a noun is 'a concept', a thing that has been understood; English fathom is Germanic and no relative, and this root, like أكل, has no English cousin at all"
+etymology_hook: "fahima: root f-h-m 'to understand' (Lane), giving fahm 'understanding' and mafhūm 'concept'"
 duration:
   max_seconds: 240
 requires:

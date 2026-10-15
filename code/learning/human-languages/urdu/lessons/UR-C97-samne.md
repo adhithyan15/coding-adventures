@@ -14,7 +14,8 @@ romanization: "sāmne"
 concept_tag: UR-LOC97-SAMNE
 prerequisites: [UR-C96-baen, UR-C97-sidha]
 sounds: []
-roots: []
+roots: [sanskrit-sammukha]
+etymology_hook: "sāmne: a form of sāmnā 'front part' ← Sanskrit saṃmukha 'facing' (CDIAL 12982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C97-sidha]
 <!-- hl-knowledge: introduces=[UR-LEX-C97-LOC97-02]; assesses=[] -->
 
 **سامنے** — *sāmne* — "in front, opposite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سامنے** (*sāmne*) is a form of *sāmnā*, "the front", a tadbhava of Sanskrit *saṃmukha*, "facing" (CDIAL 12982).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

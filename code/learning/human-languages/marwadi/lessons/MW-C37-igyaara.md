@@ -11,7 +11,8 @@ gloss: eleven, on the page — the new letter and one joined pair
 concept_tag: MW-NUMBER-ELEVEN-WRITTEN
 prerequisites: [MW-C37-hear-igyaara]
 sounds: [consonant-cluster, long-aa]
-roots: []
+roots: [sanskrit-ekadasha]
+etymology_hook: "igyārā ← Sanskrit ekādaśa 'eleven', a tadbhava (CDIAL 2485, Hindi and Gujarati rows)"
 duration:
   max_seconds: 170
 requires:
@@ -50,6 +51,11 @@ breath, no vowel between them.
 
 **रा** is chapter 1's **र** with the **ा** you have written more often than any
 other mark in this book.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इग्यारा** (*igyārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ekādaśa*, "eleven". CDIAL gives no Marwari form in this entry (CDIAL 2485); the match is through Hindi *igārah* and Gujarati *agyār*. It is *eka*, "one", and *daśa*, "ten".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-IGYAARA-01, MW-SCRIPT-I-INDEPENDENT-01] -->

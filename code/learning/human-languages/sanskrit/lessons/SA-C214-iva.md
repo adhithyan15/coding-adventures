@@ -14,7 +14,8 @@ romanization: "iva"
 concept_tag: SA-WHY214-IVA
 prerequisites: [SA-C214-eva, SA-C214-khalu]
 sounds: []
-roots: []
+roots: [sanskrit-iva]
+etymology_hook: "iva 'like, as if' ← the pronoun stem i- (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C214-khalu]
 <!-- hl-knowledge: introduces=[SA-LEX-C214-WHY214-03]; assesses=[] -->
 
 **इव** — *iva* — "like, as if".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*iva* is built on the pronoun stem *i-*, "this" (MW), and means "like, as it were". It follows the word it compares, as in *patheva*, "as if on a path".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

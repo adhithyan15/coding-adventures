@@ -14,7 +14,8 @@ romanization: "jôdio"
 concept_tag: BN-KARON218-JODIO
 prerequisites: [BN-C217-rum, BN-C217-stediyam]
 sounds: []
-roots: []
+roots: [sanskrit-yadi]
+etymology_hook: "jôdio: jôdi 'if', Sanskrit yadi (CDIAL 10410), + -o 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C217-stediyam]
 <!-- hl-knowledge: introduces=[BN-LEX-C218-KARON218-01]; assesses=[] -->
 
 **যদিও** — *jôdio* — "although".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যদিও** (*jôdio*) is *jôdi*, "if", Sanskrit *yadi* (CDIAL 10410), + *-o*, "even": "even if".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "muṟivŭ"
 concept_tag: ML-BODY-WOUND
 prerequisites: [ML-C117-tablet, ML-C117-vomiting]
 sounds: []
-roots: []
+roots: [dravidian-muri-break]
+etymology_hook: "muṟivŭ: native Dravidian, a noun from the verb 'to break, be cut'; Tamil muṟi (DEDR 5008)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C117-vomiting]
 <!-- hl-knowledge: introduces=[ML-LEX-C117-BODY-05]; assesses=[] -->
 
 **മുറിവ്** (*muṟivŭ*) — "a wound, a cut". **മുറിവുണ്ട്** — "there is a cut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുറിവ്** (*muṟivŭ*) is native Dravidian, a noun from the verb "to break, be cut"; DEDR 5008 lists the root with Tamil *muṟi*, Kannada *muṟi* and Telugu *muṟiyu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

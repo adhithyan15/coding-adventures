@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 144,
-  "sourceHash": "fnv1a64:db609579e263a62c",
+  "sourceHash": "fnv1a64:6e0875e2495e7c9a",
   "lessonIds": [
     "UR-C144-hal-hi-mein",
     "UR-C144-pehle-se",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch144.txt",
   "json": "urdu/narration/ch144.json",
-  "textHash": "fnv1a64:b4d4b19b4bd1d701",
-  "jsonHash": "fnv1a64:8d9d80df2f66faf3",
+  "textHash": "fnv1a64:0c50a6387a1a1430",
+  "jsonHash": "fnv1a64:69e2add645b75938",
   "findings": []
 }

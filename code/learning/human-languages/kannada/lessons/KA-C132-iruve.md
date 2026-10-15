@@ -14,7 +14,8 @@ romanization: "iruve"
 concept_tag: KA-THINGS132-IRUVE
 prerequisites: [KA-C132-navilu, KA-C132-citte]
 sounds: []
-roots: []
+roots: [dravidian-erumpu-ant]
+etymology_hook: "iruve: native Dravidian, one word with Tamil eṟumpu (DEDR 864)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C132-citte]
 <!-- hl-knowledge: introduces=[KA-LEX-C132-THINGS132-03]; assesses=[] -->
 
 **ಇರುವೆ** — *iruve* — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇರುವೆ** (*iruve*) is native Dravidian, one word with Tamil *eṟumpu* (DEDR 864). DEDR lists *iṟuve* among the Kannada forms; *ṟ* became *r*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

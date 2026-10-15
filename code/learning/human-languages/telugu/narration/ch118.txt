@@ -12,6 +12,9 @@ Before the new one: say the Telugu for coconut, then the Telugu for an onion.
 You'll want to know: టమాటా.
 టమాటా — ṭamāṭā — "a tomato".
 
+The word, taken apart.
+టమాటా (ṭamāṭā) is a loan from English tomato, a word that reached English from Nahuatl through Spanish.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for an onion, then the Telugu for a tomato.
 
 You'll want to know: బంగాళాదుంప.
 బంగాళాదుంప — baṅgāḷādumpa — "a potato".
+
+The word, taken apart.
+బంగాళాదుంప (baṅgāḷādumpa) is "the Bengal tuber": baṅgāḷā, "Bengal", and native dumpa, "bulbous root", which DEDR 3326A lists with Kannada dumpa, "a root".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for a tomato, then the Telugu for a potato.
 You'll want to know: వంకాయ.
 వంకాయ — vaṅkāya — "an aubergine".
 
+The word, taken apart.
+వంకాయ (vaṅkāya) is vaṅga, "brinjal", which DEDR 5301 lists with Kannada badane; and kāya, "unripe fruit". DEDR compares Sanskrit bhaṇṭākī, vaṅga and vṛntāka, "brinjal" (CDIAL 11503), names that CDIAL itself thinks probably go back to Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a potato, then the Telugu for an aubergin
 You'll want to know: అల్లం.
 అల్లం — allaṁ — "ginger".
 
+The word, taken apart.
+అల్లం (allaṁ) is usually traced to Sanskrit ārdraka, "fresh ginger" (CDIAL 1341), reshaped to Telugu sounds: a tadbhava. Pali already has adda-.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for an aubergine, then the Telugu for ginger.
 
 You'll want to know: వెల్లుల్లి.
 వెల్లుల్లి — vellulli — "garlic".
+
+The word, taken apart.
+వెల్లుల్లి (vellulli) is "white onion": native vel-, "white" (DEDR 5496), and ulli, "onion, garlic", one word with Tamil uḷḷi (DEDR 705).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "dandânpezeshk"
 concept_tag: FA-SALAMAT227-DANDANPEZESHK
 prerequisites: [FA-C227-bime, FA-C227-tasadof]
 sounds: []
-roots: []
+roots: [persian-dandan, persian-pezeshk]
+etymology_hook: "dandânpezeshk: Persian dandân 'tooth' + pezeshk 'doctor'; both inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C227-tasadof]
 <!-- hl-knowledge: introduces=[FA-LEX-C227-SALAMAT227-05]; assesses=[] -->
 
 **دندانپزشک** — *dandânpezeshk* — "a dentist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dandânpezeshk* is *dandân*, "tooth" (EtymDB), with *pezeshk*, "doctor" (usually traced to Middle Persian *bizešk*): the tooth-doctor. Both are inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

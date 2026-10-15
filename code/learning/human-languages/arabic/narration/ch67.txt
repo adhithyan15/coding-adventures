@@ -12,6 +12,9 @@ Before the new one: say the Arabic for bananas, then the Arabic for potatoes.
 You'll want to know: طماطم.
 طماطم — ṭamāṭim — "tomatoes".
 
+The word, taken apart.
+طماطم (ṭamāṭim) is a modern loan from a European name of the tomato, such as Spanish tomate, which goes back to Nahuatl tomatl. It has no Arabic root.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Arabic for potatoes, then the Arabic for tomatoes.
 
 You'll want to know: جزر.
 جزر — jazar — "carrots".
+
+The word, taken apart.
+جزر (jazar) is a loan: Lane records it as arabicized from Persian gazar, "carrot", the Arabic j standing for the Persian g. It only looks like the root j-z-r, "to cut".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Arabic for tomatoes, then the Arabic for carrots.
 You'll want to know: زبدة.
 زبدة — zubda — "butter".
 
+The word, taken apart.
+زبدة (zubda) is built on the native Arabic root z-b-d, "froth, foam; to take butter from milk" (Lane). The same root gives zabad, "froth, foam".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Arabic for carrots, then the Arabic for butter.
 You'll want to know: عسل.
 عسل — ʿasal — "honey".
 
+The word, taken apart.
+عسل (ʿasal) is built on the native Arabic root ʿ-s-l, "honey; to season with honey" (Lane). Lane's verb ʿasala means to prepare food with honey.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Arabic for butter, then the Arabic for honey.
 
 You'll want to know: عنب.
 عنب — ʿinab — "grapes".
+
+The word, taken apart.
+عنب (ʿinab) is built on the native Arabic root ʿ-n-b, "grapes" (Lane). Hebrew ʿenav, "grape", is its cousin.
 
 What you've built.
 One more word for this chapter.

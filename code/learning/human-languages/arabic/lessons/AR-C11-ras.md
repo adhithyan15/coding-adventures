@@ -12,7 +12,7 @@ concept_tag: AR-BODY-HEAD
 prerequisites: [AR-C10-akh-ukht]
 sounds: [hamza-medial, arabic-rtl]
 roots: [semitic-ras]
-etymology_hook: "رأس ra's 'head' is cognate with Hebrew rosh (Rosh Hashanah, 'head of the year') — and gives Arabic ra'iis 'president,' literally 'head [of state],' the same move English makes with capital/captain from Latin caput"
+etymology_hook: "raʾs: an old Semitic noun, cousin of Hebrew rosh, as in Rosh Hashanah; raʾīs 'chief' is on the same root"
 duration:
   max_seconds: 240
 requires:

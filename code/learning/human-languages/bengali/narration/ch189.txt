@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a flat, then the Bengali for a storey.
 You'll want to know: আদালত.
 আদালত — ādālôt — "a court of law".
 
+The word, taken apart.
+আদালত (ādālôt) is a loan from Arabic ʿadāla, "justice", which reached Bengali through Persian. Its Arabic root is ʿ-d-l (Lane). Persian keeps the -t of the Arabic ending.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a storey, then the Bengali for a court o
 
 You'll want to know: জেল.
 জেল — jel — "a prison".
+
+The word, taken apart.
+জেল (jel) is a loan from English jail.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a court of law, then the Bengali for a p
 You'll want to know: গুহা.
 গুহা — guhā — "a cave".
 
+The word, taken apart.
+গুহা (guhā) is Sanskrit guhā, "hiding place, cave", taken over whole as a learned loan, a tatsama. CDIAL lists Bengali gophā, "cave", under gupphā (CDIAL 4204), which it links to guhā only doubtfully.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a prison, then the Bengali for a cave.
 You'll want to know: খাদ.
 খাদ — khād — "a ravine".
 
+The word, taken apart.
+খাদ (khād), "a ravine", appears to go back to Sanskrit khāta, "dug up; a ditch", under which CDIAL lists Bengali khāī, "ditch", and a khād, "refuse" (CDIAL 3862); CDIAL does not list khād in the sense "ravine".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a cave, then the Bengali for a ravine.
 
 You'll want to know: ঝরনা.
 ঝরনা — jhôrnā — "a waterfall".
+
+The word, taken apart.
+ঝরনা (jhôrnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from jharati, "flowing down", a form CDIAL reconstructs from its descendants (CDIAL 5346). CDIAL lists the verb jharā, "to ooze out, drip"; jhôrnā is a noun built on it.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "caṭṭukaṁ"
 concept_tag: ML-VASTU331-CATTUKAM
 prerequisites: [ML-C330-svarnnam, ML-C331-cirava]
 sounds: []
-roots: []
+roots: [dravidian-cattukam-ladle]
+etymology_hook: "caṭṭukaṁ: native Dravidian, one word with Tamil caṭṭukam and Kannada saṭuka (DEDR 2309)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C331-cirava]
 <!-- hl-knowledge: introduces=[ML-LEX-C331-VASTU331-02]; assesses=[] -->
 
 **ചട്ടുകം** — *caṭṭukaṁ* — "a spatula".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചട്ടുകം** (*caṭṭukaṁ*) is native Dravidian, one word with Tamil *caṭṭukam* and Kannada *saṭuka* (DEDR 2309). DEDR 2309 compares Sanskrit *caṭuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: primary school; elementary school
 concept_tag: ZH-SCHOOL-PRIMARY
 prerequisites: [ZH-C14-xiao]
 sounds: [tone-3, tone-2]
-roots: []
-etymology_hook: Small plus study names primary school; both sounds are secure before the compound is shown.
+roots: [middle-chinese-sjewx, middle-chinese-haewk]
+etymology_hook: "xiǎoxué: built from Middle Chinese sjewX 'small' and haewk 'learning'"
 duration:
   max_seconds: 125
 requires:
@@ -42,6 +42,9 @@ reviews_of: [ZH-C14-xiao, ZH-C13-xue]
 > *xiǎoxué* — **primary school; elementary school**
 
 Keep *xiǎo* low, then let *xué* rise. No new character is hiding in this word.
+
+*Xiǎoxué* is built from Middle Chinese *sjewX*, "small", and *haewk*,
+"learning".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAOXUE-01] -->

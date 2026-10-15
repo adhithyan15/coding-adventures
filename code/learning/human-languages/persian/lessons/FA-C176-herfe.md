@@ -14,7 +14,8 @@ romanization: "herfe"
 concept_tag: FA-KAR176-HERFE
 prerequisites: [FA-C175-jarubarqi, FA-C175-lebasshuyi]
 sounds: []
-roots: []
+roots: [arabic-hirfa]
+etymology_hook: "herfe ← Arabic ḥirfa 'trade, occupation', root ḥ-r-f (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C175-lebasshuyi]
 <!-- hl-knowledge: introduces=[FA-LEX-C176-KAR176-01]; assesses=[] -->
 
 **حرفه** — *herfe* — "a profession".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*herfe* is borrowed from Arabic *ḥirfa*, "trade, occupation". Its Arabic root is *ḥ-r-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "rather"
 concept_tag: LA-CAUSA179-POTIUS
 prerequisites: [LA-C178-nisi, LA-C179-praesertim]
 sounds: []
-roots: []
+roots: [potius-latin, potis-latin]
+etymology_hook: "potius 'rather' — the comparative adverb of potis 'able'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C179-praesertim]
 <!-- hl-knowledge: introduces=[LA-LEX-C179-CAUSA179-02]; assesses=[] -->
 
 **potius** — "rather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**potius** is the comparative adverb of *potis*, "able, powerful" (Lewis & Short): more powerfully, so rather.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

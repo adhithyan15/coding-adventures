@@ -14,7 +14,8 @@ romanization: "vaiśākh"
 concept_tag: GU-TIME98-VAISAKH
 prerequisites: [GU-C97-phagan, GU-C97-caitra]
 sounds: []
-roots: []
+roots: [sanskrit-vaishakha]
+etymology_hook: "vaiśākh ← Sanskrit vaiśākha 'the month April-May', a tatsama (CDIAL 12149)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C97-caitra]
 <!-- hl-knowledge: introduces=[GU-LEX-C98-TIME98-01]; assesses=[] -->
 
 **વૈશાખ** (*vaiśākh*) — "Vaishakh, a Gujarati month".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વૈશાખ** (*vaiśākh*) is Sanskrit *vaiśākha*, "the month April-May", taken over whole as a learned loan, a tatsama (CDIAL 12149).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

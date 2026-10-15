@@ -1,5 +1,14 @@
 # Changelog
 
+## Fixed — every taken-apart block now says where its word comes from
+
+Sixty-six French word lessons had a "taken apart" block that split the word or phrase into French parts, or explained its grammar, and never said where it came from (human-language-data `hasEmptyEtymologyBlock`, HL24 §9.4). Most are the generated wave's compounds and derivatives (*soixante-dix*, *salle à manger*, *dentiste*, *joueur*), whose parts the block named without tracing them. Sources: EtymDB 2.1 (Fourrier & Sagot 2020, CC BY-SA 4.0), read locally; every line is our own sentence, and each part is traced the way the lesson that teaches it already does. Empty etymology blocks 66 → 0.
+
+- **New origin sentences (57).** One sentence each tracing the parts: inherited Latin sources with an EtymDB tag (*bon*, *jour*, *soir*, *comment*, *appeler*, *avoir* ← *habēre*, *où* ← *ubi* beside *ou* ← *aut*, *combien*, *pour*, *quoi*, *vouloir*, *pouvoir*, *par*, *dent*, *peur*, *joie*, *sac*, *jouer*, *feuille*, *lever*, *gros*, *compter*, *tourner*, *rendre*, *sembler*, *travailler*, *boire*, *marier*), Frankish *sal* and the Frankish *h* of *haut*, Italian *banca*, English *sport* and *comfortable*, and stated uncertainty where the track already gives it (*tirer*, *se fâcher*, the verb behind *viron*).
+- **Rewordings a signal can read (9).** The four Latin day names now read "is Latin *Martis diēs*" and so on; *printemps* is "two Latin words fused"; FR-C39-lui-elle says "Latin *illī* gave *lui*"; *poubelle* "comes from the name of" Eugène Poubelle; *courriel* is "coined from" *courrier électronique*; FR-C28-the says French borrowed *thé* from Dutch.
+- **Hooks (5).** FR-C32-ou, FR-C32-combien, FR-C32-pourquoi, FR-C33-vouloir and FR-C33-pouvoir had hooks about question register or politeness; each now gives the word's origin.
+- **Durations.** FR-C33-vouloir and FR-C33-pouvoir compute above 270 s; vouloir's introduction was tightened and pouvoir dropped an aside, so neither grew. No `max_seconds` was raised.
+
 ## Added — every word lesson says where its word comes from
 
 The 1,045 generated word lessons (FR-C49-bras through FR-C257-anniversaire, in sequence order) now carry both an `etymology_hook` and a visible `## The word, taken apart` block (`## The phrase, taken apart` for multi-word headwords), placed after the block that introduces the word. Seven earlier hand-written lessons that the measure missed gained the half they lacked: FR-C07-dimanche, FR-C08-il-est, FR-C14-avoir-etre-langues and FR-C15-areal a short taken-apart block, and FR-C21-le-temps-more, FR-C22-chien-chat-more and FR-C23-vert-jaune-more a hook. Every French word lesson now says where its word comes from (human-language-data: French word lessons without a hook 1048 → 0, without visible etymology 1049 → 0).

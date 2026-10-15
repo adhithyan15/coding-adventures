@@ -11,7 +11,8 @@ romanization: "nāku kāvāli"
 concept_tag: TE-EXPRESS-WANT
 prerequisites: [TE-C79-garu, TE-C32-telusu]
 sounds: []
-roots: []
+roots: [naan-dravidian, tamil-aaku-become]
+etymology_hook: "nāku kāvāli: native nāku 'to me' (DEDR 5160) + kāvāli 'must become', from kā- (DEDR 333)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C79-garu]
 You already have **వద్దు**, "no, I don't want it", which left you able to refuse a thing and unable to ask for one. కావాలి is the missing half.
 
 **నాకు టీ కావాలి** — "I want tea." The wanter sits in the dative నాకు, exactly like the knower of తెలుసు and the liker of ఇష్టం. It is the same Telugu design a fourth time.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నాకు కావాలి** (*nāku kāvāli*) is native Dravidian: *nāku*, "to me" (DEDR 5160), and *kāvāli*, "it must become", built on *kā-*, the stem of *agu*, "to be, become" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Taking Your Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9c416e8c09ce8016",
+  "sourceHash": "fnv1a64:cdba63ff0c4c9b11",
   "lessons": [
     {
       "id": "HI-C49-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d62c67f96690ed64",
+      "sourceHash": "fnv1a64:57c83097053ededf",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ab, 'now', with the emphatic -hī welded onto it: now and nothing but now. Behind ab stands Sanskrit adhunā."
+              "text": "Ab, 'now', with the emphatic -hī welded onto it: now and nothing but now. CDIAL traces ab to Sanskrit evam eva, 'exactly so', crossed with the pronoun stem a- (CDIAL 2528)."
             },
             {
               "kind": "speech",
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a0cba19034ac106",
+      "sourceHash": "fnv1a64:8eaaa5b6aa77983f",
       "notice": null,
       "blocks": [
         {
@@ -194,7 +194,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sanskrit parasu, 'the far day', lies underneath, and the language evidently never felt the lack of two separate words. Time is being measured here by distance from now, with the direction supplied by whatever the sentence is already doing."
+              "text": "Sanskrit paraśvas, 'the day after tomorrow', lies underneath (CDIAL 7799j), and the language evidently never felt the lack of two separate words. Time is being measured here by distance from now, with the direction supplied by whatever the sentence is already doing."
             }
           ]
         },
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f511499f2135796b",
+      "sourceHash": "fnv1a64:df69ecc94c417373",
       "notice": null,
       "blocks": [
         {
@@ -439,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b0b9d9448c7e04d",
+      "sourceHash": "fnv1a64:88e17ea12873f570",
       "notice": null,
       "blocks": [
         {
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc6c87baf3408a74",
+      "sourceHash": "fnv1a64:a81cdad60426a146",
       "notice": null,
       "blocks": [
         {

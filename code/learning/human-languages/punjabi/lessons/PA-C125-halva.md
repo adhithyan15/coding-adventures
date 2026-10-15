@@ -14,7 +14,8 @@ romanization: "halvā"
 concept_tag: PA-THINGS125-HALVA
 prerequisites: [PA-C124-lassi, PA-C124-khir]
 sounds: []
-roots: []
+roots: [arabic-halwa]
+etymology_hook: "halvā ← Arabic ḥalwā 'a sweetmeat', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C124-khir]
 <!-- hl-knowledge: introduces=[PA-LEX-C125-THINGS125-01]; assesses=[] -->
 
 **ਹਲਵਾ** — *halvā* — "halwa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਲਵਾ** (*halvā*) is a loan from Arabic *ḥalwā*, "a sweetmeat", which reached Punjabi through Persian. Its Arabic root is *ḥ-l-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

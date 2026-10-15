@@ -14,7 +14,8 @@ romanization: "nirjana"
 concept_tag: KA-GUNA292-NIRJANA
 prerequisites: [KA-C291-adbhuta, KA-C291-asaktikara]
 sounds: []
-roots: []
+roots: [sanskrit-nirjana]
+etymology_hook: "nirjana ← Sanskrit nirjana 'unpeopled', a tatsama (CDIAL 7322)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C291-asaktikara]
 <!-- hl-knowledge: introduces=[KA-LEX-C292-GUNA292-01]; assesses=[] -->
 
 **ನಿರ್ಜನ** — *nirjana* — "deserted".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿರ್ಜನ** (*nirjana*) is Sanskrit *nirjana*, "unpeopled", taken over whole as a learned loan, a tatsama (CDIAL 7322).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

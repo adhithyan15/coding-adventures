@@ -11,7 +11,8 @@ romanization: "vaṇṭi"
 concept_tag: ML-RIDE-VEHICLE
 prerequisites: [ML-C136-well, ML-C136-harbour]
 sounds: []
-roots: []
+roots: [sanskrit-bhanda-cart]
+etymology_hook: "vaṇṭi: DEDR appendix 50 lists it with Tamil vaṇṭi and traces it to Sanskrit bhāṇḍa 'goods'"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C136-harbour]
 <!-- hl-knowledge: introduces=[ML-LEX-C137-RIDE-01]; assesses=[] -->
 
 **വണ്ടി** (*vaṇṭi*) — "a vehicle", any cart, car or bus.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വണ്ടി** (*vaṇṭi*) is listed in DEDR appendix 50, among Dravidian words taken from Indo-Aryan, with Tamil *vaṇṭi* and Kannada *baṇḍi*, "cart". DEDR traces the word ultimately to Sanskrit *bhāṇḍa*, "goods, wares" (CDIAL 9440): the cart was named for what it carried.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

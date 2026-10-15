@@ -14,7 +14,8 @@ romanization: "hazār"
 concept_tag: PA-NUMBERS97-HAZAR
 prerequisites: [PA-C96-panjah, PA-C96-sau]
 sounds: []
-roots: []
+roots: [persian-hazar]
+etymology_hook: "hazār: usually traced to Persian hazār 'thousand'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C96-sau]
 <!-- hl-knowledge: introduces=[PA-LEX-C97-NUMBERS97-01]; assesses=[] -->
 
 **ਹਜ਼ਾਰ** — *hazār* — "a thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਜ਼ਾਰ** (*hazār*) is a loan, usually traced to Persian *hazār*, "thousand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

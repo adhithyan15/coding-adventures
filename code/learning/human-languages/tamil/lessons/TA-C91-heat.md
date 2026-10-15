@@ -46,7 +46,7 @@ reviews_of: [TA-C91-sunshine]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**சூடு** (*cūṭu*) is native Dravidian. DEDR 2654 lists Malayalam *cuṭuka*, "to be hot" and Kannada *suḍu*, "to burn". The entry lists *cūṭu*, "heat, burning", under *cuṭu*, "to be hot".
+**சூடு** (*cūṭu*) is native Dravidian. DEDR 2654 lists Malayalam *cuṭuka*, "to be hot" and Kannada *suḍu*, "to burn". The entry lists *cūṭu*, "heat, burning", under *cuṭu*, "to be hot", and compares Sanskrit *cūḍ-*, "to singe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

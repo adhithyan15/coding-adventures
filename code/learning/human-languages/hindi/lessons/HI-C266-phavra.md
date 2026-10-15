@@ -14,7 +14,8 @@ romanization: "phāvṛā"
 concept_tag: HI-THG266-PHAVRA
 prerequisites: [HI-C266-ari, HI-C266-kudal]
 sounds: []
-roots: []
+roots: [sanskrit-sphya]
+etymology_hook: "phāvṛā: CDIAL lists it under sphya 'wooden blade', calling the link possible but obscure (CDIAL 13839)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C266-kudal]
 <!-- hl-knowledge: introduces=[HI-LEX-C266-THG266-04]; assesses=[] -->
 
 **फावड़ा** — *phāvṛā* — "a spade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फावड़ा** (*phāvṛā*) is listed by CDIAL under Sanskrit *sphya*, "a flat wooden blade", but CDIAL calls the connexion possible yet obscure (CDIAL 13839).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: one to five — the two numbers that don't look like their neighbours'
 concept_tag: GU-NUMBERS-1-5
 prerequisites: [GU-C01-namaste]
 sounds: [long-aa, nasal-aa, e-sign, inherent-a]
-roots: [sanskrit-dvi, sanskrit-tri, sanskrit-panca]
-etymology_hook: "Gujarati be and tran differ from their neighbours; learn the five forms first, then trace be to dve and tran's restored r in the next short lesson"
+roots: [sanskrit-dvi, sanskrit-tri, sanskrit-panca, sanskrit-eka]
+etymology_hook: "ek ← eka, be ← dva, traṇ ← trīṇi, cār ← catvāraḥ, pāṁc ← pañca: all inherited (CDIAL 2462, 6648, 5994, 4655, 7655)"
 duration:
   max_seconds: 180
 requires:
@@ -54,6 +54,11 @@ Two won't — and both have a reason.
 Notice the script: Gujarati is Devanagari **without the top line**. Same letters,
 same system — the shirorekhā simply isn't drawn. If you've done the Hindi writing
 track you can feel the relationship immediately.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+All five are inherited Sanskrit numerals (CDIAL 2462, 6648, 5994, 4655, 7655). *Ek* continues a doubled *\*ekka-*, which CDIAL explains either as emphatic or as a later loan from Sanskrit; *be* goes back to *dva*, "two", *traṇ* to the neuter *trīṇi*, *cār* to *catvāraḥ*, and *pāṁc* to *pañca*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-NUMBERS-ONE-TO-FIVE, GU-SCRIPT-HEADLESS-CLUE] -->

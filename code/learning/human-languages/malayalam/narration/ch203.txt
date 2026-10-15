@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a drawback, then the Malayalam for fai
 You'll want to know: രുചിയുള്ള.
 രുചിയുള്ള — ruciyuḷḷa — "tasty".
 
+The word, taken apart.
+രുചിയുള്ള (ruciyuḷḷa) joins Sanskrit ruci, "light, beauty", later "relish, taste" (CDIAL 10762), to native -uḷḷa, "that has" (DEDR 697).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for fairness, then the Malayalam for tasty
 
 You'll want to know: ചീഞ്ഞ.
 ചീഞ്ഞ — cīñña — "rotten".
+
+The word, taken apart.
+ചീഞ്ഞ (cīñña) is native Dravidian, a past form of the verb "to rot, be spoiled": DEDR 1606 lists that verb with Tamil cī, "pus", and Kannada kī, "to become pus".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for tasty, then the Malayalam for rotten.
 You'll want to know: അയഞ്ഞ.
 അയഞ്ഞ — ayañña — "loose".
 
+The word, taken apart.
+അയഞ്ഞ (ayañña) is native Dravidian, a past form of the verb "to slacken"; DEDR 37 lists the root with Tamil acaṅku and Kannada asi.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for rotten, then the Malayalam for loose.
 You'll want to know: ഇറുകിയ.
 ഇറുകിയ — iṟukiya — "tight".
 
+The word, taken apart.
+ഇറുകിയ (iṟukiya) is native Dravidian, a past form of the verb "to become tight"; DEDR 524 lists the root with Tamil iṟuku, Kannada iṟaku and Telugu iṟuku.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for loose, then the Malayalam for tight.
 
 You'll want to know: കാലിയായ.
 കാലിയായ — kāliyāya — "empty".
+
+The word, taken apart.
+കാലിയായ (kāliyāya) joins kāli, "empty", from Arabic khālī by way of Persian and Hindustani, to native āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.

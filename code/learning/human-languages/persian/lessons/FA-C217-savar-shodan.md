@@ -14,7 +14,8 @@ romanization: "savâr shodan"
 concept_tag: FA-VERB-SAVAR-SHODAN
 prerequisites: [FA-C217-bazi-kardan, FA-C217-rah-raftan]
 sounds: []
-roots: []
+roots: [persian-savar, persian-shudan]
+etymology_hook: "savâr ← Old Persian asabāra- 'horseman' (EtymDB), + shodan 'to become'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C217-rah-raftan]
 <!-- hl-knowledge: introduces=[FA-LEX-C217-KONESH217-05]; assesses=[] -->
 
 **سوار شدن** — *savâr shodan* — "to get on (a vehicle)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*savâr shodan* is "to become a rider". *savâr* is inherited: Old Persian had *asabāra-*, "horseman" (EtymDB), built on the word for "horse". *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

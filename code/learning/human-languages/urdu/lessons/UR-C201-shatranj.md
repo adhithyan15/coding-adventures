@@ -14,7 +14,8 @@ romanization: "shatranj"
 concept_tag: UR-CHIZ201-SHATRANJ
 prerequisites: [UR-C201-haki, UR-C201-tenis]
 sounds: []
-roots: []
+roots: [arabic-shatranj]
+etymology_hook: "shatranj: through Persian from Arabic shaṭranj, from Middle Persian chatrang, from Sanskrit caturaṅga"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C201-tenis]
 <!-- hl-knowledge: introduces=[UR-LEX-C201-CHIZ201-03]; assesses=[] -->
 
 **شطرنج** — *shatranj* — "chess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شطرنج** (*shatranj*) came through Persian from Arabic *shaṭranj*. Arabic took it from Middle Persian *chatrang*, which goes back to Sanskrit *caturaṅga*, "having four limbs": an army of foot, horse, elephant and chariot.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

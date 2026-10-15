@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for once, then the Malayalam for to spend.
 You'll want to know: അടുത്ത.
 അടുത്ത — aṭutta — "next, coming". The future adds -ഉം (-uṁ) to the verb: പോകുക gives പോകും. അടുത്ത ആഴ്ച ഞാൻ കൊല്ലത്ത് പോകും — aṭutta āḻca ñān kollattŭ pōkuṁ — "Next week I will go to Kollam."
 
+The word, taken apart.
+അടുത്ത (aṭutta) is native Dravidian, a form of the verb "to come near"; DEDR 79 lists the root with Tamil aṭu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to spend, then the Malayalam for next.
 
 You'll want to know: ഇനി മുതൽ.
 ഇനി മുതൽ — ini mutal — "from now on". ഇനി മുതൽ ഞാൻ നേരത്തെ എഴുന്നേൽക്കും — ini mutal ñān nēratte eḻunnēlkkuṁ — "From now on I will get up early."
+
+The word, taken apart.
+ഇനി മുതൽ (ini mutal) is native Dravidian: ini, "henceforth", from the near-pointing base (DEDR 410, with Tamil iṉi), and mutal, "beginning" (DEDR 4950, with Tamil mutal).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for next, then the Malayalam for from now 
 You'll want to know: ഭാവി.
 ഭാവി — bhāvi — "the future". ഭാവിയിൽ ഞാൻ ഒരു അധ്യാപകൻ ആകും — bhāviyil ñān oru adhyāpakan ākuṁ — "In the future I will become a teacher."
 
+The word, taken apart.
+ഭാവി (bhāvi) from Sanskrit bhāvin, "that is to be, future", taken over whole as a tatsama. It is built on the root bhū, "to be, to become".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for from now on, then the Malayalam for th
 You'll want to know: തീരുമാനിക്കുക.
 തീരുമാനിക്കുക — tīrumānikkuka — "to decide". ഞാൻ പോകാൻ തീരുമാനിച്ചു — ñān pōkān tīrumāniccu — "I decided to go."
 
+The word, taken apart.
+തീരുമാനിക്കുക (tīrumānikkuka) is native Dravidian, the verb of tīrumānaṁ, "a decision", which DEDR 3278 lists with Tamil tīr, "to be settled".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for the future, then the Malayalam for to 
 
 You'll want to know: പ്രതീക്ഷിക്കുക.
 പ്രതീക്ഷിക്കുക — pratīkṣikkuka — "to expect, to hope for". ഞാൻ ഒരു മറുപടി പ്രതീക്ഷിക്കുന്നു — ñān oru maṟupaṭi pratīkṣikkunnu — "I am expecting a reply."
+
+The word, taken apart.
+പ്രതീക്ഷിക്കുക (pratīkṣikkuka) is built on Sanskrit pratīkṣā, "expectation, looking toward", with the ending that makes a Malayalam verb.
 
 What you've built.
 One more word for this chapter.

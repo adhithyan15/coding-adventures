@@ -14,7 +14,8 @@ romanization: "ubālnā"
 concept_tag: HI-VERB-UBALNA
 prerequisites: [HI-C177-manana, HI-C177-pisna]
 sounds: []
-roots: []
+roots: [indo-aryan-ubbal]
+etymology_hook: "ubālnā ← *ubbāl 'make boil', a reconstructed form; a tadbhava (CDIAL 2339)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C177-pisna]
 <!-- hl-knowledge: introduces=[HI-LEX-C177-ACT177-04]; assesses=[] -->
 
 **उबालना** — *ubālnā* — "to boil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उबालना** (*ubālnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ubbāl*, "make boil", a form CDIAL reconstructs from its descendants (CDIAL 2339). Morgenstierne traced it to *ud-*, "up", and an Indo-European root "to boil"; CDIAL finds the forms hard to fit and notes other possible sources.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

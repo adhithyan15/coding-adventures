@@ -14,7 +14,8 @@ romanization: "kursī"
 concept_tag: UR-HOME58-KURSI
 prerequisites: [UR-C57-ghar, UR-C58-khirki]
 sounds: []
-roots: []
+roots: [arabic-kursi]
+etymology_hook: "kursī ← Arabic kursī 'chair, throne', through Persian (Lane, root k-r-s)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C58-khirki]
 <!-- hl-knowledge: introduces=[UR-LEX-C58-HOME58-02]; assesses=[] -->
 
 **کرسی** — *kursī* — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کرسی** (*kursī*) is a loan from Arabic *kursī*, "chair, throne", which reached Urdu through Persian. Its Arabic root is *k-r-s* (Lane). Arabic itself most likely took it from Aramaic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

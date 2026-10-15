@@ -14,7 +14,8 @@ romanization: "satyavādī"
 concept_tag: SA-QUAL187-SATYAVADI
 prerequisites: [SA-C187-udarah, SA-C187-krpanah]
 sounds: []
-roots: []
+roots: [satya, vad-speak]
+etymology_hook: "satyavādin = satya 'true' + vādin 'speaker', from √vad 'speak' (MW); Hindi saccā (CDIAL 13112)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C187-krpanah]
 <!-- hl-knowledge: introduces=[SA-LEX-C187-QUAL187-04]; assesses=[] -->
 
 **सत्यवादी** — *satyavādī* — "truthful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*satyavādī* is a compound of *satya*, "true", and *vādin*, "one who says", from the root √vad, "to speak" (MW). *Satya* lives on as Hindi *saccā*, "true" (CDIAL 13112).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

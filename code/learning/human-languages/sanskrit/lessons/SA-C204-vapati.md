@@ -14,7 +14,8 @@ romanization: "vapati"
 concept_tag: SA-VERB-VAPATI
 prerequisites: [SA-C204-sucayati, SA-C204-khanati]
 sounds: []
-roots: []
+roots: [sanskrit-vapati]
+etymology_hook: "vapati ← root √vap 'strew, scatter seed, sow' (MW); Hindi bonā 'to sow' (CDIAL 11282)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C204-khanati]
 <!-- hl-knowledge: introduces=[SA-LEX-C204-ACT204-03]; assesses=[] -->
 
 **वपति** — *vapati* — "sows".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vapati* is the present of the root √vap, "to strew, scatter seed, sow" (MW); MW has a separate √vap, "to shear". CDIAL 11282 lists Hindi *bonā*, "to sow", under it, marking it as taken from Gujarati.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chiknā"
 concept_tag: UR-SIFAT161-CHIKNA
 prerequisites: [UR-C161-mahfuz, UR-C161-nazuk]
 sounds: []
-roots: []
+roots: [sanskrit-cikkana]
+etymology_hook: "chiknā ← Sanskrit cikkaṇa 'slippery, unctuous', a tadbhava (CDIAL 4782)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C161-nazuk]
 <!-- hl-knowledge: introduces=[UR-LEX-C161-SIFAT161-03]; assesses=[] -->
 
 **چکنا** — *chiknā* — "smooth; greasy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چکنا** (*chiknā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cikkaṇa*, "slippery, unctuous" (CDIAL 4782).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

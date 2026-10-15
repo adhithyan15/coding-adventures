@@ -14,7 +14,8 @@ romanization: "uyyāla"
 concept_tag: TE-VASTUVU190-UYYALA
 prerequisites: [TE-C190-yantram, TE-C190-sopha]
 sounds: []
-roots: []
+roots: [dravidian-uunjal-swing]
+etymology_hook: "uyyāla: native Dravidian, one word with Kannada uyyāle (DEDR 731)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C190-sopha]
 <!-- hl-knowledge: introduces=[TE-LEX-C190-VASTUVU190-04]; assesses=[] -->
 
 **ఉయ్యాల** — *uyyāla* — "a swing; a cradle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉయ్యాల** (*uyyāla*) is native Dravidian, one word with Kannada *uyyāle* (DEDR 731). DEDR lists Telugu *uyyāla*, "cradle, swing, hammock".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

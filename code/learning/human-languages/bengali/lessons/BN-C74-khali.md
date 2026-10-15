@@ -14,7 +14,8 @@ romanization: "khāli"
 concept_tag: BN-ADJ74-KHALI
 prerequisites: [BN-C74-nichu, BN-C74-bhorti]
 sounds: []
-roots: []
+roots: [arabic-khali]
+etymology_hook: "khāli ← Arabic khālī 'empty', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C74-bhorti]
 <!-- hl-knowledge: introduces=[BN-LEX-C74-ADJ74-05]; assesses=[] -->
 
 **খালি** — *khāli* — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খালি** (*khāli*) is a loan from Arabic *khālī*, "empty", which reached Bengali through Persian. Its Arabic root is *kh-l-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

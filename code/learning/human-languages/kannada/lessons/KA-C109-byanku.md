@@ -14,7 +14,8 @@ romanization: "byāṅku"
 concept_tag: KA-LOC109-BYANKU
 prerequisites: [KA-C109-devasthana, KA-C109-granthalaya, KA-C75-on-a-sign, KA-C75-ninth, KA-C75-tenth, KA-C75-eleventh, KA-C75-eleventh, KA-C75-short-form]
 sounds: []
-roots: []
+roots: [english-bank]
+etymology_hook: "byāṅku ← English bank"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [KA-C109-granthalaya]
 <!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-05]; assesses=[] -->
 
 **ಬ್ಯಾಂಕು** — *byāṅku* — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬ್ಯಾಂಕು** (*byāṅku*) is a loan from English *bank*. Kannada adds *-u* after the final consonant.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

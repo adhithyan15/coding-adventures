@@ -14,7 +14,8 @@ romanization: "nirddēśikkuka"
 concept_tag: ML-VERB-NIRDDESIKKUKA
 prerequisites: [ML-C229-samsayikkuka, ML-C229-yojikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-nirdesha]
+etymology_hook: "nirddēśikkuka ← Sanskrit nirdēśa 'instruction, pointing out' (CDIAL 7347) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C229-yojikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C230-KRIYA230-01]; assesses=[] -->
 
 **നിർദ്ദേശിക്കുക** — *nirddēśikkuka* — "to suggest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിർദ്ദേശിക്കുക** (*nirddēśikkuka*) is built on Sanskrit *nirdēśa*, "pointing out, instruction" (CDIAL 7347), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

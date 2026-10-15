@@ -14,7 +14,8 @@ romanization: "patjhaṛ"
 concept_tag: HI-THG222-PATJHAR
 prerequisites: [HI-C221-vartaman, HI-C221-vasant]
 sounds: []
-roots: []
+roots: [sanskrit-patra, indo-aryan-jhatati]
+etymology_hook: "patjhaṛ: pat 'leaf' (CDIAL 7733) + jhaṛ 'fall' (CDIAL 5328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C221-vasant]
 <!-- hl-knowledge: introduces=[HI-LEX-C222-THG222-01]; assesses=[] -->
 
 **पतझड़** — *patjhaṛ* — "autumn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पतझड़** (*patjhaṛ*) is "leaf-fall": *pat*, "leaf", from Sanskrit *pattra* (CDIAL 7733), and *jhaṛ*, from *jhaṛnā*, "to fall", which CDIAL lists under a reconstructed *\*jhaṭati*, "falls" (CDIAL 5328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

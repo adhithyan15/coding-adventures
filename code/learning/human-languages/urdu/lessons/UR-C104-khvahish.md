@@ -14,7 +14,8 @@ romanization: "khvāhish"
 concept_tag: UR-CAN104-KHVAHISH
 prerequisites: [UR-C104-qabil, UR-C104-chahiye]
 sounds: []
-roots: []
+roots: [persian-khwahish]
+etymology_hook: "khvāhish: usually traced to Persian khwāhish 'wish, desire'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C104-chahiye]
 <!-- hl-knowledge: introduces=[UR-LEX-C104-CAN104-04]; assesses=[] -->
 
 **خواہش** — *khvāhish* — "a wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خواہش** (*khvāhish*) is a loan, usually traced to Persian *khwāhish*, "wish, desire". It is built on *khwāstan*, "to want".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "akasmāt"
 concept_tag: KA-KARANA178-AKASMAT
 prerequisites: [KA-C177-vyatyasa, KA-C178-bekantale]
 sounds: []
-roots: []
+roots: [sanskrit-akasmat]
+etymology_hook: "akasmāt ← Sanskrit akasmāt 'without a cause, suddenly', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C178-bekantale]
 <!-- hl-knowledge: introduces=[KA-LEX-C178-KARANA178-02]; assesses=[] -->
 
 **ಅಕಸ್ಮಾತ್** — *akasmāt* — "by chance, accidentally".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಕಸ್ಮಾತ್** (*akasmāt*) is Sanskrit *akasmāt*, "without a cause, suddenly", literally "from no why", taken over whole: a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

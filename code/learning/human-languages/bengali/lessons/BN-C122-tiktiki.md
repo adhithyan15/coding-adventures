@@ -15,6 +15,7 @@ concept_tag: BN-THINGS122-TIKTIKI
 prerequisites: [BN-C122-mosha, BN-C122-kecho]
 sounds: []
 roots: []
+etymology_hook: "ṭikṭiki: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C122-kecho]
 <!-- hl-knowledge: introduces=[BN-LEX-C122-THINGS122-04]; assesses=[] -->
 
 **টিকটিকি** — *ṭikṭiki* — "a gecko".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **টিকটিকি** (*ṭikṭiki*) is not settled: CDIAL has no entry for it; the only Bengali word for a house lizard it gives is *jeṭhī*, under Sanskrit *jyaiṣṭhī* (CDIAL 5295), a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

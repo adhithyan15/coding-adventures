@@ -11,6 +11,7 @@ concept_tag: ES-VERB-APARCAR
 prerequisites: [ES-C488-despedirse, ES-C488-saludar]
 sounds: []
 roots: []
+etymology_hook: "aparcar — a- + parque 'park', a place where vehicles are left; parque is French parc"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C488-saludar]
 > *You cannot park here.*
 
 The verb behind *el aparcamiento*, the car park. In Latin America people say *estacionar*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aparcar** is built on *parque*, "a park", in the sense of a place where vehicles are kept; *parque* came from French *parc*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

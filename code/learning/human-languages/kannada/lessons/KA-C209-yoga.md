@@ -14,7 +14,8 @@ romanization: "yōga"
 concept_tag: KA-AROGYA209-YOGA
 prerequisites: [KA-C209-nirase, KA-C209-tamase]
 sounds: []
-roots: []
+roots: [sanskrit-yoga]
+etymology_hook: "yōga ← Sanskrit yoga 'yoking, work', a tatsama (CDIAL 10526)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C209-tamase]
 <!-- hl-knowledge: introduces=[KA-LEX-C209-AROGYA209-04]; assesses=[] -->
 
 **ಯೋಗ** — *yōga* — "yoga".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯೋಗ** (*yōga*) is Sanskrit *yoga*, "yoking, work", taken over whole as a learned loan, a tatsama (CDIAL 10526). The yoking became the discipline that yokes body and mind.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

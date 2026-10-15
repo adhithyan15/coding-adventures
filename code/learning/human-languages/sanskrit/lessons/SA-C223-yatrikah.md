@@ -14,7 +14,8 @@ romanization: "yātrikaḥ"
 concept_tag: SA-THG223-YATRIKAH
 prerequisites: [SA-C222-apanikah, SA-C222-patrika]
 sounds: []
-roots: []
+roots: [sanskrit-yatra]
+etymology_hook: "yātrika ← yātrā 'journey', from √yā 'go' + -ika (MW; CDIAL 10457)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C222-patrika]
 <!-- hl-knowledge: introduces=[SA-LEX-C223-THG223-01]; assesses=[] -->
 
 **यात्रिकः** — *yātrikaḥ* — "a traveller, a pilgrim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yātrika* is built on *yātrā*, "journey, procession", from the root √yā, "to go" (MW), with the suffix *-ika*: one on a journey (CDIAL 10457). *Yātrā* lives on as Sindhi *jāṭra*, "body of pilgrims" (CDIAL 10456).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

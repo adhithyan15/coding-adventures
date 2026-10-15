@@ -14,7 +14,8 @@ romanization: "kōṭāli"
 concept_tag: ML-VASTU328-KOTALI
 prerequisites: [ML-C328-selphu, ML-C328-karttan]
 sounds: []
-roots: []
+roots: [sanskrit-kuthara]
+etymology_hook: "kōṭāli: from Sanskrit kuṭhāra 'axe' (CDIAL 3244); DEDR appendix 32 lists it among Indo-Aryan loans"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C328-karttan]
 <!-- hl-knowledge: introduces=[ML-LEX-C328-VASTU328-04]; assesses=[] -->
 
 **കോടാലി** — *kōṭāli* — "an axe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കോടാലി** (*kōṭāli*) is listed in DEDR appendix 32, among Dravidian words taken from Indo-Aryan, with Tamil *kuṭāri* and Kannada *koḍali*; DEDR points to Sanskrit *kuṭhāra*, "axe" (CDIAL 3244), and CDIAL in turn thinks the Sanskrit word may itself be Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

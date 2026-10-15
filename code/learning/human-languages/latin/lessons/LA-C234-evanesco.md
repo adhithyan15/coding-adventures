@@ -13,7 +13,8 @@ gloss: "to vanish"
 concept_tag: LA-VERB-EVANESCO
 prerequisites: [LA-C234-demitto, LA-C234-colligo]
 sounds: []
-roots: []
+roots: [evanescere-latin, vanus-latin]
+etymology_hook: "ēvanēscō 'to vanish' — ex + vānēscō 'to become empty', from vānus; English vanish"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C234-colligo]
 <!-- hl-knowledge: introduces=[LA-LEX-C234-ACT234-03]; assesses=[] -->
 
 **ēvanēscō, ēvanēscere** — "to vanish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ēvanēscō** is *ex*, "out", with *vānēscō*, "to become empty", from *vānus*, "empty" (EtymDB 2.1): to empty out, to vanish. English *vanish* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

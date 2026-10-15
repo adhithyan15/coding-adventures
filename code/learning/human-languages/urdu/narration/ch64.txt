@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a tree, then the Urdu for a flower.
 You'll want to know: پتا.
 پتا — pattā — "a leaf".
 
+The word, taken apart.
+پتا (pattā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pattra, "wing-feather; leaf" (CDIAL 7733).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a flower, then the Urdu for a leaf.
 
 You'll want to know: پہاڑ.
 پہاڑ — pahāṛ — "a mountain".
+
+The word, taken apart.
+پہاڑ (pahāṛ) is a tadbhava, a word inherited and reshaped by sound change. It comes from pāhāḍa, "rock, hill", a form CDIAL reconstructs from its descendants (CDIAL 8141). CDIAL connects it, probably, with Sanskrit pāṣāṇa, "stone".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a leaf, then the Urdu for a mountain.
 You'll want to know: جنگل.
 جنگل — jangal — "a forest".
 
+The word, taken apart.
+جنگل (jangal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāṅgala, "arid, sparse in trees" (CDIAL 5177). CDIAL notes a likely non-Aryan origin. The sense moved from "waste land" to "forest", and English took it back as jungle.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a mountain, then the Urdu for a forest.
 You'll want to know: دریا.
 دریا — daryā — "a river".
 
+The word, taken apart.
+دریا (daryā) is a loan, usually traced to Persian daryā, "sea, great river".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a forest, then the Urdu for a river.
 
 You'll want to know: جھیل.
 جھیل — jhīl — "a lake".
+
+The word, taken apart.
+جھیل (jhīl) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhilla, "swamp, lake", a form CDIAL reconstructs from its descendants (CDIAL 5392).
 
 What you've built.
 One more word for this chapter.

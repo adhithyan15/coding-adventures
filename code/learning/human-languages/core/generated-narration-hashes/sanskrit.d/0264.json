@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:45175c3568ea0457",
+  "lessonIds": [
+    "SA-C264-karisyami",
+    "SA-C264-pathisyami",
+    "SA-C264-near-term-plan",
+    "SA-C264-mixed-plan-practice",
+    "SA-C264-first-person-future-retrieval"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch264.txt",
+  "json": "sanskrit/narration/ch264.json",
+  "textHash": "fnv1a64:4100b9d25ba073e4",
+  "jsonHash": "fnv1a64:4b84368ded1e1146",
+  "findings": []
+}

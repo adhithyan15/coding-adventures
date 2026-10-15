@@ -14,7 +14,8 @@ romanization: "bistar"
 concept_tag: UR-HOME58-BISTAR
 prerequisites: [UR-C58-divar, UR-C58-chhat]
 sounds: []
-roots: []
+roots: [persian-bistar]
+etymology_hook: "bistar: usually traced to Persian bistar 'bedding, bed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C58-chhat]
 <!-- hl-knowledge: introduces=[UR-LEX-C58-HOME58-05]; assesses=[] -->
 
 **بستر** — *bistar* — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بستر** (*bistar*) is a loan, usually traced to Persian *bistar*, "bedding, bed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

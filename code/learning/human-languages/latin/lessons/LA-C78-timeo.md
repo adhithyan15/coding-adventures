@@ -13,7 +13,8 @@ gloss: "to fear"
 concept_tag: LA-VERB-TIMEO
 prerequisites: [LA-C78-intro, LA-C78-redeo]
 sounds: []
-roots: []
+roots: [timere-latin]
+etymology_hook: "timeō 'to fear' — origin unknown; English timid and intimidate come from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C78-redeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C78-VERBA4-04]; assesses=[] -->
 
 **timeō, timēre** — "to fear". The verb of **timor**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**timeō** has no sure origin; no proposal is generally accepted. English *timid* and *intimidate* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a baker"
 concept_tag: LA-THINGS137-PISTOR
 prerequisites: [LA-C136-stomachus, LA-C137-faber]
 sounds: []
-roots: []
+roots: [pistor-latin, pinsere-latin]
+etymology_hook: "pistor 'baker' — built on pīnsō 'to pound': a pounder of grain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C137-faber]
 <!-- hl-knowledge: introduces=[LA-LEX-C137-THINGS137-02]; assesses=[] -->
 
 **pistor, pistōris** — "a baker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pistor** is built on *pīnsō*, "to pound, to crush" (Lewis & Short): a pounder of grain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

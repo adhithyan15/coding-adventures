@@ -13,7 +13,8 @@ gloss: "city walls"
 concept_tag: LA-RES280-MOENIA
 prerequisites: [LA-C280-turris, LA-C280-columna]
 sounds: []
-roots: []
+roots: [moenia-latin, munire-latin]
+etymology_hook: "moenia 'city walls' — kin to mūniō 'to fortify'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C280-columna]
 <!-- hl-knowledge: introduces=[LA-LEX-C280-RES280-03]; assesses=[] -->
 
 **moenia, moenium** — "city walls".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**moenia** belongs with *mūniō*, "to fortify, to wall in" (Lewis & Short); the deeper origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

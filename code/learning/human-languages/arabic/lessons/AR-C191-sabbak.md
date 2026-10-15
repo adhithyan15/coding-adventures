@@ -14,7 +14,8 @@ romanization: "sabbāk"
 concept_tag: AR-AMAL191-SABBAK
 prerequisites: [AR-C190-riyadiyyat, AR-C190-jughrafiya]
 sounds: []
-roots: []
+roots: [s-b-k]
+etymology_hook: "sabbāk: built on the root s-b-k, 'to melt and cast metal' (Lane); sabbāk is the faʿʿāl trade noun, 'caster of metal'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C190-jughrafiya]
 <!-- hl-knowledge: introduces=[AR-LEX-C191-AMAL191-01]; assesses=[] -->
 
 **سباك** — *sabbāk* — "a plumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سباك** (*sabbāk*) is built on the native Arabic root *s-b-k*, "to melt and cast metal" (Lane). *Sabbāk* is the *faʿʿāl* trade noun, "caster of metal"; the plumber is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

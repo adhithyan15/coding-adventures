@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 258,
-  "sourceHash": "fnv1a64:6ddc4911b57ac042",
+  "sourceHash": "fnv1a64:202c85d29cbc4541",
   "lessonIds": [
     "KA-C258-majjige",
     "KA-C258-benne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch258.txt",
   "json": "kannada/narration/ch258.json",
-  "textHash": "fnv1a64:3d7648e4a9d798cc",
-  "jsonHash": "fnv1a64:b2403019c5bd97e0",
+  "textHash": "fnv1a64:47039c7d14e2dccf",
+  "jsonHash": "fnv1a64:74ea56aa20cc6b7a",
   "findings": []
 }

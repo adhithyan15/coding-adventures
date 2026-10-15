@@ -14,7 +14,8 @@ romanization: "udāharaṇe"
 concept_tag: KA-KARANA253-UDAHARANE
 prerequisites: [KA-C252-jotege, KA-C252-ottige]
 sounds: []
-roots: []
+roots: [sanskrit-udaharana]
+etymology_hook: "udāharaṇe ← Sanskrit udāharaṇa 'example', with Kannada's -e"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C252-ottige]
 <!-- hl-knowledge: introduces=[KA-LEX-C253-KARANA253-01]; assesses=[] -->
 
 **ಉದಾಹರಣೆ** — *udāharaṇe* — "an example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉದಾಹರಣೆ** (*udāharaṇe*) is Sanskrit *udāharaṇa*, "example, illustration", with a final *-e*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

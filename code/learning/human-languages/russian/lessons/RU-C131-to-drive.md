@@ -14,7 +14,8 @@ romanization: "vodít"
 concept_tag: RU-VERB-TO-DRIVE
 prerequisites: [RU-C131-to-put, RU-C131-to-believe]
 sounds: []
-roots: []
+roots: [slavic-voditi]
+etymology_hook: "водить ← Proto-Slavic *voditi 'to lead'; Lithuanian vadyti 'to lead' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C131-to-believe]
 <!-- hl-knowledge: introduces=[RU-LEX-C131-ACT131-05]; assesses=[] -->
 
 **водить** (*vodít*) — "to drive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**водить** ← Proto-Slavic *\*voditi*, "to lead", with *вести*, "to lead" — inherited. Vasmer relates it to Lithuanian *vadýti* and Avestan *vādayeiti*, "leads". Driving a car is "leading" it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

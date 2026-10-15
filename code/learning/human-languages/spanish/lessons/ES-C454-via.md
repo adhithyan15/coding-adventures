@@ -11,6 +11,7 @@ concept_tag: ES-ROAD-VIA
 prerequisites: [ES-C454-obra, ES-C439-anden, ES-C322-todavia]
 sounds: [hiatus-ia, accent-i, v-b, stress-penultimate]
 roots: [via-latin]
+etymology_hook: "vía ← Latin via 'road' — inside todavía; English via, obvious, trivial"
 duration:
   max_seconds: 275
 requires:

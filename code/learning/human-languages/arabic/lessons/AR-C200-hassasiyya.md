@@ -14,7 +14,8 @@ romanization: "ḥassāsiyya"
 concept_tag: AR-SIHHA200-HASSASIYYA
 prerequisites: [AR-C200-zukam, AR-C200-sual]
 sounds: []
-roots: []
+roots: [ḥ-s-s]
+etymology_hook: "ḥassāsiyya: built on the root ḥ-s-s, 'to perceive' (Lane); ḥassāsiyya is a modern abstract noun from ḥassās, 'sensitive'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C200-sual]
 <!-- hl-knowledge: introduces=[AR-LEX-C200-SIHHA200-03]; assesses=[] -->
 
 **حساسية** — *ḥassāsiyya* — "an allergy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حساسية** (*ḥassāsiyya*) is built on the native Arabic root *ḥ-s-s*, "to perceive" (Lane). *Ḥassāsiyya* is a modern abstract noun from *ḥassās*, "sensitive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

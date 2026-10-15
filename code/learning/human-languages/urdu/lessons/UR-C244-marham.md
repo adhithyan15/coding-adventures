@@ -14,7 +14,8 @@ romanization: "marham"
 concept_tag: UR-SEHAT244-MARHAM
 prerequisites: [UR-C244-nishan, UR-C244-patti]
 sounds: []
-roots: []
+roots: [arabic-marham]
+etymology_hook: "marham ← Arabic marham 'ointment', through Persian (Lane, root r-h-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C244-patti]
 <!-- hl-knowledge: introduces=[UR-LEX-C244-SEHAT244-04]; assesses=[] -->
 
 **مرہم** — *marham* — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مرہم** (*marham*) is a loan from Arabic *marham*, "ointment", which reached Urdu through Persian. Its Arabic root is *r-h-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

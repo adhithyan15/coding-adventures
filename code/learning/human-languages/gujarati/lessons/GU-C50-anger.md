@@ -14,7 +14,8 @@ romanization: "gusso"
 concept_tag: GU-FEEL-ANGER
 prerequisites: [GU-C49-thirst, GU-C50-happiness]
 sounds: []
-roots: []
+roots: [arabic-ghussa]
+etymology_hook: "gusso ← Arabic ghuṣṣa 'a choking; grief', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C50-happiness]
 <!-- hl-knowledge: introduces=[GU-LEX-C50-FEEL-02]; assesses=[] -->
 
 **ગુસ્સો** (*gusso*) — "anger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગુસ્સો** (*gusso*) is a loan from Arabic *ghuṣṣa*, "a choking; grief", which reached Gujarati through Persian. Its Arabic root is *gh-ṣ-ṣ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

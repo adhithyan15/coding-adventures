@@ -14,7 +14,8 @@ romanization: "kūṭāte"
 concept_tag: ML-KARANAM281-KUTATE
 prerequisites: [ML-C280-itavali, ML-C281-matramalla]
 sounds: []
-roots: []
+roots: [dravidian-kudu-join]
+etymology_hook: "kūṭāte: native Dravidian, the negative of the verb 'to join, be added' (DEDR 1882)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C281-matramalla]
 <!-- hl-knowledge: introduces=[ML-LEX-C281-KARANAM281-02]; assesses=[] -->
 
 **കൂടാതെ** — *kūṭāte* — "besides, in addition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൂടാതെ** (*kūṭāte*) is native Dravidian, a negative form of the verb "to come together, be added" (DEDR 1882, with Tamil *kūṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

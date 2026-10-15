@@ -13,7 +13,8 @@ gloss: "mute, silent"
 concept_tag: LA-QUAL184-MUTUS
 prerequisites: [LA-C184-modestus, LA-C184-facundus]
 sounds: []
-roots: []
+roots: [mutus-latin]
+etymology_hook: "mūtus 'mute' — probably imitative: the 'mu' of closed lips"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C184-facundus]
 <!-- hl-knowledge: introduces=[LA-LEX-C184-QUAL184-04]; assesses=[] -->
 
 **mūtus, mūta, mūtum** — "mute, silent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mūtus** is probably built on an imitative sound, the mu of closed lips; Sanskrit *mūka-*, "dumb", is often compared (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

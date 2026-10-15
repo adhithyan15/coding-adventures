@@ -14,7 +14,8 @@ romanization: "ṭokrī"
 concept_tag: PA-THINGS117-TOKRI
 prerequisites: [PA-C116-jharu, PA-C117-kura]
 sounds: []
-roots: []
+roots: [indo-aryan-tokka]
+etymology_hook: "ṭokrī ← *ṭokka 'basket', a reconstructed form; a tadbhava (CDIAL 5477)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C117-kura]
 <!-- hl-knowledge: introduces=[PA-LEX-C117-THINGS117-02]; assesses=[] -->
 
 **ਟੋਕਰੀ** — *ṭokrī* — "a basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਟੋਕਰੀ** (*ṭokrī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭokka*, "basket", a form CDIAL reconstructs from its descendants (CDIAL 5477). CDIAL lists Punjabi *ṭokrā*, with an added *-r-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

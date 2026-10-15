@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 197,
-  "sourceHash": "fnv1a64:7ec01481cc5fb5e8",
+  "sourceHash": "fnv1a64:5a93370264530d49",
   "lessonIds": [
     "SA-C197-venuvanam",
     "SA-C197-indradhanuh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch197.txt",
   "json": "sanskrit/narration/ch197.json",
-  "textHash": "fnv1a64:69fd28996b816c94",
-  "jsonHash": "fnv1a64:431781f7a046eb76",
+  "textHash": "fnv1a64:3690b4605f7b8ea7",
+  "jsonHash": "fnv1a64:8d88268261147de4",
   "findings": []
 }

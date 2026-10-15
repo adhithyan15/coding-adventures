@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a matter, then the Malayalam for a sit
 You'll want to know: ഒഴികഴിവ്.
 ഒഴികഴിവ് — oḻikaḻivŭ — "an excuse".
 
+The word, taken apart.
+ഒഴികഴിവ് (oḻikaḻivŭ) is native Dravidian, a pair of verbal nouns, "escape and slipping away": the verb "to quit, give way" (DEDR 1009, with Tamil oḻi) and the verb "to pass, slip away" (DEDR 1356, with Tamil kaḻi).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a situation, then the Malayalam for an
 
 You'll want to know: കുറ്റം.
 കുറ്റം — kuṟṟaṁ — "blame, an offence".
+
+The word, taken apart.
+കുറ്റം (kuṟṟaṁ) is native Dravidian: DEDR 1851 lists it, "defect, fault, crime", under kuṟu, "short, defective", with Tamil kuṟu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for an excuse, then the Malayalam for blam
 You'll want to know: ഉത്തരവാദിത്തം.
 ഉത്തരവാദിത്തം — uttaravādittaṁ — "responsibility".
 
+The word, taken apart.
+ഉത്തരവാദിത്തം (uttaravādittaṁ) is built from Sanskrit uttara, "answer" (CDIAL 1767), and vāditva, "being a speaker": responsibility is being the one who must answer.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for blame, then the Malayalam for responsi
 You'll want to know: സാധ്യത.
 സാധ്യത — sādhyata — "a possibility, a likelihood".
 
+The word, taken apart.
+സാധ്യത (sādhyata) from Sanskrit sādhyatā, "feasibility", taken over whole as a tatsama. It is built on sādhya, "to be accomplished".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for responsibility, then the Malayalam for
 
 You'll want to know: അടിസ്ഥാനം.
 അടിസ്ഥാനം — aṭisthānaṁ — "a basis, a foundation".
+
+The word, taken apart.
+അടിസ്ഥാനം (aṭisthānaṁ) joins native aṭi, "sole, bottom" (DEDR 72, with Tamil aṭi), to Sanskrit sthāna, "place, stance" (CDIAL 13753): "the bottom place".
 
 What you've built.
 One more word for this chapter.

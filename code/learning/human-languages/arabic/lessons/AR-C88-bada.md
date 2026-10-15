@@ -14,7 +14,8 @@ romanization: "baʿda"
 concept_tag: AR-TIME88-BADA
 prerequisites: [AR-C87-ahyanan, AR-C87-qabla]
 sounds: []
-roots: []
+roots: [b-ʿ-d]
+etymology_hook: "baʿda: built on the root b-ʿ-d, 'to be far' (Lane); baʿda is 'after', what lies further on"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C87-qabla]
 <!-- hl-knowledge: introduces=[AR-LEX-C88-TIME88-01]; assesses=[] -->
 
 **بعد** — *baʿda* — "after".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بعد** (*baʿda*) is built on the native Arabic root *b-ʿ-d*, "to be far" (Lane). *Baʿda* is "after", what lies further on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

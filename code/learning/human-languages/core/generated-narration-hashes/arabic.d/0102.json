@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 102,
-  "sourceHash": "fnv1a64:1d7ef1cbea230083",
+  "sourceHash": "fnv1a64:3e12e2fa6c218e76",
   "lessonIds": [
     "AR-C102-sath",
     "AR-C102-daraj",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch102.txt",
   "json": "arabic/narration/ch102.json",
-  "textHash": "fnv1a64:de462f1635af913f",
-  "jsonHash": "fnv1a64:814ba12cb159fb60",
+  "textHash": "fnv1a64:7fd7c2805ccba79e",
+  "jsonHash": "fnv1a64:dd1ee5d89ee234cd",
   "findings": []
 }

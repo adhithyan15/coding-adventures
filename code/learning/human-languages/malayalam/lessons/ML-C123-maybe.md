@@ -11,7 +11,8 @@ romanization: "āyirikkāṁ"
 concept_tag: ML-RESP-MAYBE
 prerequisites: [ML-C123-notpossible, ML-C123-notlikethat]
 sounds: []
-roots: []
+roots: [aaka-dravidian, dravidian-iru-be]
+etymology_hook: "āyirikkāṁ: native Dravidian, 'may have become': āku 'become' (DEDR 333) + iru 'be' (DEDR 480) + -āṁ"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C123-notlikethat]
 
 **ആയിരിക്കാം** (*āyirikkāṁ*) — "maybe, it could be". **ഒരുപക്ഷേ** (*orupakṣē*),
 "perhaps", often comes before it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആയിരിക്കാം** (*āyirikkāṁ*) is native Dravidian: *āyi*, "having become" (DEDR 333, with Tamil *āku*), the verb "to be, to sit" (DEDR 480, with Tamil *iru*), and the ending *-āṁ*, "may". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

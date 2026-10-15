@@ -14,7 +14,8 @@ romanization: "ḥubb"
 concept_tag: AR-WORLD98-HUBB
 prerequisites: [AR-C98-rihla, AR-C98-utla]
 sounds: []
-roots: []
+roots: [h-b-b]
+etymology_hook: "ḥubb: built on the root ḥ-b-b, 'to love' (Lane); ḥubb is the verbal noun, 'love'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C98-utla]
 <!-- hl-knowledge: introduces=[AR-LEX-C98-WORLD98-05]; assesses=[] -->
 
 **حب** — *ḥubb* — "love".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حب** (*ḥubb*) is built on the native Arabic root *ḥ-b-b*, "to love" (Lane). *Ḥubb* is the verbal noun, "love".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 89,
-  "sourceHash": "fnv1a64:fa1f249f8788b80e",
+  "sourceHash": "fnv1a64:2cc25afe854a7c34",
   "lessonIds": [
     "JA-C89-kowasu",
     "JA-C89-wakasu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch89.txt",
   "json": "japanese/narration/ch89.json",
-  "textHash": "fnv1a64:c6fb2ab3a436763a",
-  "jsonHash": "fnv1a64:5aa836c09f6d64bd",
+  "textHash": "fnv1a64:921e184041fc1229",
+  "jsonHash": "fnv1a64:626f316227609752",
   "findings": []
 }

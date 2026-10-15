@@ -12,9 +12,9 @@ concept_tag: VERB-KNOW
 prerequisites: [TE-C32-cuudu]
 sounds: [telugu-vowel-sign-e, telugu-sa]
 roots: [teliyu-become-clear-dravidian, dravidian-dative-ku]
-etymology_hook: "తెలుసు comes from తెలియు, 'to become clear', so knowing is something that happens TO you — the verb takes no person ending and the knower sits in the dative, నాకు తెలుసు; Tamil's தெரி is the exact cousin, and Chapter 6's నాకు తెలుగు వచ్చు is the same shape with a different verb, marking a skill rather than a fact"
+etymology_hook: "telusu: from teliyu 'to become clear', native Dravidian, one word with Tamil teḷi (DEDR 3433)"
 duration:
-  max_seconds: 260
+  max_seconds: 293
 requires:
   knowledge: [TE-LEX-C32-UNDU-01, TE-GRAMMAR-C32-UNDU-02, TE-LEX-C32-VELLU-01, TE-GRAMMAR-C32-VELLU-02, TE-LEX-C32-CUUDU-01]
 introduces:
@@ -48,9 +48,9 @@ become clear, to be apparent" — a thing *telusu*-es to you the way a shape
 resolves out of fog. Its negative is **తెలియదు** (*teliyadu*), "it is not
 known."
 
-Tamil has the exact cousin, **தெரி** (*teri*). The other two sisters picked
-different words — Kannada **ಗೊತ್ತು**, *gottu*, Malayalam **അറിയാം**, *aṟiyām* —
-but all four build the sentence the same way, which is the point of this lesson.
+The verb is Dravidian: DEDR 3433 files *teliyu* with Tamil *teḷi*, "to become
+clear". Tamil's everyday match is **தெரி** (*teri*); Kannada and Malayalam use
+*gottu* and *aṟiyām*. All four build the sentence the same way.
 
 ## Grammar Lens: no person on the verb, so the person moves
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C32-TELUSU-02]; assesses=[] -->

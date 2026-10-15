@@ -14,7 +14,8 @@ romanization: "jīrṇaḥ"
 concept_tag: SA-QUAL155-JIRNAH
 prerequisites: [SA-C154-athava, SA-C155-nutanah]
 sounds: []
-roots: []
+roots: [sanskrit-jirna]
+etymology_hook: "jīrṇa 'worn out, old' is the past participle of √jṝ 'grow old' (CDIAL 5237), inherited (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C155-nutanah]
 <!-- hl-knowledge: introduces=[SA-LEX-C155-QUAL155-02]; assesses=[] -->
 
 **जीर्णः** — *jīrṇaḥ* — "worn out, old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jīrṇa* is the past participle of the root √jṝ "grow old, decay, be digested" (CDIAL 5237): "worn out, old", and also "digested". The root is inherited from Indo-European (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

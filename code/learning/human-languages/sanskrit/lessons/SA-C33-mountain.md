@@ -14,7 +14,8 @@ romanization: "parvataḥ"
 concept_tag: SA-LAND-PARVATA
 prerequisites: [SA-C33-bridge, SA-C31-star, SA-C32-grass]
 sounds: []
-roots: []
+roots: [sanskrit-parvata]
+etymology_hook: "parvata 'knotty, mountain' ← parvan 'knot, joint' (MW; CDIAL 7945)"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,13 @@ reviews_of: [SA-C33-bridge]
 
 **पर्वतः** is built on *parvan*, "a knot, a joint" — the same word for the joints of a bamboo cane and for the sections of a long poem. A mountain is the knotted, jointed land, and a range of them is a knotted spine.
 
-Hindi, Marathi and Nepali keep *parvat*. You met one range of them last chapter, in the snow.
+Hindi, Marathi and Nepali keep *parvat*. You met one range of them earlier, in the snow.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Parvata* is formed from *parvan*, "knot, joint": first "knotty, rugged", then
+"mountain" (MW, CDIAL 7945).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

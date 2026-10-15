@@ -11,7 +11,8 @@ romanization: "veyil"
 concept_tag: ML-NOUN-SUNSHINE
 prerequisites: [ML-C53-star, ML-C51-salutation]
 sounds: []
-roots: []
+roots: [dravidian-ve-burn]
+etymology_hook: "veyil: native Dravidian, built on the verb 'to be hot, burn', Tamil vē (DEDR 5517)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ After four borrowed words, an inherited one. വെയിൽ is Malayalam's own,
 That is worth pausing on. English talks about the weather by naming the sun; Malayalam reaches first for what the sun does to you standing in it. A Kochi sentence about the afternoon is far more likely to be about വെയിൽ than about *sūryan* at all. Step out of the shade and you have stepped into വെയിൽ.
 
 Beside it sits its opposite, തണൽ (*taṇal*), the shade — and between those two words most of a hot afternoon can be described without the sun being mentioned once.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വെയിൽ** (*veyil*) is native Dravidian, built on the verb "to be hot, to burn"; DEDR 5517 lists the root with Tamil *vē*, Kannada *bē* and Telugu *vēgu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

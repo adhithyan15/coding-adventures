@@ -14,7 +14,8 @@ romanization: "tṛtīyaḥ"
 concept_tag: SA-ORDINAL-THIRD
 prerequisites: [SA-C63-fourth, SA-C62-ninth, SA-C57-shaknoti, SA-C43-honest, SA-C06-numbers-1-5]
 sounds: []
-roots: []
+roots: [sanskrit-trtiya]
+etymology_hook: "tṛtīya 'third' ← tri 'three' (MW); MW compares Latin tertius and Gothic thridja; Hindi tījā (CDIAL 5912)"
 duration:
   max_seconds: 225
 requires:
@@ -60,6 +61,9 @@ Macdonell prints it **tri-tīya**, and the printed form is **तृतीयः*
 That second point is why this lesson is worth its place even for a reader who only wanted the vocabulary. **ऋ** arrived in this book as the first letter of **ऋतुः**, a word where it simply is what it is. Here it is the RESULT of something: a vowel that shifted when an ending was put on. The letter has a job, not just a shape.
 
 The English cousin kept the **-t-** ending instead: *thir-d*, from an older *thrid-*. Latin took the same road with *tertius*.
+
+*Tṛtīya* is built on *tri*, "three", and is inherited: MW compares Latin *tertius*
+and Gothic *thridja*, the cousin of English **third** (CDIAL 5912).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C63-ORDINAL-04, SA-GRAMMAR-C63-ORDINAL-TIYA-05] -->

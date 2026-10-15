@@ -13,7 +13,8 @@ gloss: "a bone"
 concept_tag: LA-THINGS136-OS
 prerequisites: [LA-C136-pollex, LA-C136-cutis]
 sounds: []
-roots: []
+roots: [os-latin]
+etymology_hook: "os 'bone' — inherited, usually traced to PIE *h3esth1 'bone'; Greek osteon is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C136-cutis]
 <!-- hl-knowledge: introduces=[LA-LEX-C136-THINGS136-04]; assesses=[] -->
 
 **os, ossis** — "a bone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**os**, *ossis*, is inherited, usually traced to Proto-Indo-European *\*h3esth1*, "bone" (EtymDB 2.1); Greek *osteon*, "bone", is a cousin (Lewis & Short). It is a different word from *ōs*, *ōris*, "mouth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

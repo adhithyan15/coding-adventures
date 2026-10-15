@@ -12,6 +12,9 @@ Before the new one: say the Marathi for always, then the Marathi for sometimes.
 You'll want to know: लवकर.
 लवकर — lavkar — "early, soon".
 
+The word, taken apart.
+The origin of लवकर (lavkar) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for sometimes, then the Marathi for early.
 
 You'll want to know: उशीर.
 उशीर — ushīr — "lateness; late".
+
+The word, taken apart.
+The origin of उशीर (ushīr) is not settled. CDIAL has no entry for it in this sense; its Marathi uśīr is a different word, the root of a fragrant grass (CDIAL 2384).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for early, then the Marathi for lateness; la
 You'll want to know: आधी.
 आधी — ādhī — "before".
 
+The word, taken apart.
+The origin of आधी (ādhī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for lateness; late, then the Marathi for bef
 You'll want to know: नंतर.
 नंतर — nantar — "after, later".
 
+The word, taken apart.
+नंतर (nantar) comes from Sanskrit anantaram, "immediately after", built on anantara, "having no interval" (CDIAL 287). CDIAL asks whether Marathi took the word straight from Sanskrit.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for before, then the Marathi for after.
 
 You'll want to know: वेळ.
 वेळ — veḷ — "time".
+
+The word, taken apart.
+वेळ (veḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from velā, "limit, boundary, time" (CDIAL 12115). CDIAL takes the Sanskrit word as probably from Dravidian.
 
 What you've built.
 One more word for this chapter.

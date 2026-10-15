@@ -14,7 +14,8 @@ romanization: "pappaṭaṁ"
 concept_tag: ML-THINGS164-PAPPATAM
 prerequisites: [ML-C163-parippu, ML-C164-aviyal]
 sounds: []
-roots: []
+roots: [dravidian-pappatam-wafer]
+etymology_hook: "pappaṭaṁ: native Dravidian, one word with Tamil pappaṭam and Kannada pappaḍi (DEDR 3928)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C164-aviyal]
 <!-- hl-knowledge: introduces=[ML-LEX-C164-THINGS164-02]; assesses=[] -->
 
 **പപ്പടം** — *pappaṭaṁ* — "a pappadam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പപ്പടം** (*pappaṭaṁ*) is native Dravidian, one word with Tamil *pappaṭam*, Kannada *pappaḍi* and Telugu *appaḍamu* (DEDR 3928). DEDR 3928 compares Sanskrit *parpaṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

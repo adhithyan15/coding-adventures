@@ -14,8 +14,8 @@ romanization: "enpitsu"
 concept_tag: JA-ANCHOR-ENPITSU
 prerequisites: [JA-C137-shinpai, JA-W01-e, JA-W01-n, JA-W13-tsu, JA-W136-ze, JA-W135-gu, JA-C128-komakai]
 sounds: [mora]
-roots: []
-etymology_hook: Enpitsu is the word for a pencil; its third sign is ひ with the small circle, a sign the book has not yet written.
+roots: [middle-chinese-ywen, middle-chinese-pit]
+etymology_hook: "enpitsu: Sino-Japanese 鉛 'lead' + 筆 'writing brush', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +52,11 @@ reviews_of: [JA-C137-shinpai, JA-W01-e, JA-W01-n, JA-W13-tsu, JA-W136-ze, JA-W13
 Four beats: *e–n–pi–tsu*. **え**, **ん** and **つ** you already write. The
 third sign is **ひ** with the small circle, so *hi* becomes *pi*. The next
 lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**えんぴつ** (*enpitsu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *en*, "lead" (Middle Chinese *ywen*) and *hitsu*, "writing brush" (*pit*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-ENPITSU, JA-SCRIPT-E-01, JA-SCRIPT-N-01, JA-SCRIPT-TSU-01] -->

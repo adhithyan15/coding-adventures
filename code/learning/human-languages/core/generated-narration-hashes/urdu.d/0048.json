@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 48,
-  "sourceHash": "fnv1a64:3f25e15c9ee4cfed",
+  "sourceHash": "fnv1a64:2b40a83f66272125",
   "lessonIds": [
     "UR-C48-khelna",
     "UR-C48-kharidna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch48.txt",
   "json": "urdu/narration/ch48.json",
-  "textHash": "fnv1a64:d261d8bdde7d0abe",
-  "jsonHash": "fnv1a64:9788d5ceb2675376",
+  "textHash": "fnv1a64:6372a7b7a4d4b864",
+  "jsonHash": "fnv1a64:a23f5e833253b971",
   "findings": []
 }

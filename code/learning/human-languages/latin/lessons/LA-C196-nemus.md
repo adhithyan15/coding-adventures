@@ -13,7 +13,8 @@ gloss: "a grove"
 concept_tag: LA-RES196-NEMUS
 prerequisites: [LA-C196-palus, LA-C196-pratum]
 sounds: []
-roots: []
+roots: [nemus-latin]
+etymology_hook: "nemus 'grove' — usually traced to PIE *nemos 'sacred place'; Greek nemos is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C196-pratum]
 <!-- hl-knowledge: introduces=[LA-LEX-C196-RES196-04]; assesses=[] -->
 
 **nemus, nemoris** — "a grove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nemus** is usually traced to Proto-Indo-European *\*nemos*, "a sacred place, a clearing" (EtymDB 2.1), from *\*nem-*, "to allot"; Greek *nemos*, "a woodland pasture", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

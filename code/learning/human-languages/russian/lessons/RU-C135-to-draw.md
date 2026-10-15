@@ -14,7 +14,8 @@ romanization: "risovát"
 concept_tag: RU-VERB-TO-DRAW
 prerequisites: [RU-C135-to-win, RU-C135-to-look]
 sounds: []
-roots: []
+roots: [german-reissen]
+etymology_hook: "рисовать came through Polish rysować from Middle High German rīzen, a cousin of English write"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C135-to-look]
 <!-- hl-knowledge: introduces=[RU-LEX-C135-ACT135-04]; assesses=[] -->
 
 **рисовать** (*risovát*) — "to draw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**рисовать** came through Polish *rysować* from Middle High German *rîzen*, Old High German *rîzzan*, "to scratch, to draw", a cousin of English *write* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

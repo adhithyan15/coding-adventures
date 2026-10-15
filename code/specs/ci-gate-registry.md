@@ -358,6 +358,16 @@ Rule 5 uses the **affected closure** — changed packages plus their transitive
 dependents, as computed by `directedgraph.AffectedNodes` — so listing only the
 packages a job directly exercises is sufficient; the graph supplies the rest.
 
+### D18S Windows applier native acceptance
+
+The `build-windows-os-suites` gate MUST also include affected packages
+`rust/chief-of-staff-windows-sandbox` and `rust/chief-of-staff-spawn-isolation`.
+The first holds the D18S Windows AppContainer applier, whose
+`tests/confinement.rs` runs only on Windows. The second holds
+`VerifiedExecutable`'s Windows half, tested by `tests/verified_exec_windows.rs`.
+Without the gate, a change to either compiles and lints on `windows-2025` but
+never runs those tests: the job is green and proves nothing about them.
+
 ### Closure compiler native Windows acceptance
 
 The Windows general package-test step is conditional on

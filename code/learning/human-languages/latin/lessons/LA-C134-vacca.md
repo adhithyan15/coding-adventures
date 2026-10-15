@@ -13,7 +13,8 @@ gloss: "a cow"
 concept_tag: LA-THINGS134-VACCA
 prerequisites: [LA-C133-vulpes, LA-C133-taurus]
 sounds: []
-roots: []
+roots: [vacca-latin]
+etymology_hook: "vacca 'cow' — probably from PIE *wokeh2 'cow'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C133-taurus]
 <!-- hl-knowledge: introduces=[LA-LEX-C134-THINGS134-01]; assesses=[] -->
 
 **vacca, vaccae** — "a cow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vacca** is probably inherited, traced to Proto-Indo-European *\*wokeh2*, "cow" (EtymDB 2.1); Lewis & Short compare Sanskrit *vacā*, "cow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

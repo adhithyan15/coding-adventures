@@ -10,7 +10,8 @@ gloss: "to watch, to keep an eye on"
 concept_tag: ES-VERB-VIGILAR
 prerequisites: [ES-C481-descartar, ES-C481-prever]
 sounds: []
-roots: []
+roots: [vigilare-latin]
+etymology_hook: "vigilar ← Latin vigilare 'to stay awake' — learned twin of velar 'to keep vigil'; English vigil"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C481-prever]
 > *Keep an eye on the children at the pool.*
 
 *Zona vigilada* on a sign means the area is watched.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vigilar** ← Latin *vigilare*, "to stay awake, to keep watch" (EtymDB 2.1) — a learned borrowing. Worn down in speech, the same verb became *velar*, "to stay up, to keep vigil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

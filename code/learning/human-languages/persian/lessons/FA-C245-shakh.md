@@ -14,7 +14,8 @@ romanization: "shâkh"
 concept_tag: FA-CHIZ245-SHAKH
 prerequisites: [FA-C245-lane, FA-C245-bal]
 sounds: []
-roots: []
+roots: [persian-shakh]
+etymology_hook: "shâkh: inherited, usually traced to Middle Persian šāx"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C245-bal]
 <!-- hl-knowledge: introduces=[FA-LEX-C245-CHIZ245-04]; assesses=[] -->
 
 **شاخ** — *shâkh* — "a horn (of an animal)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shâkh* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *šāx*, "branch, horn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

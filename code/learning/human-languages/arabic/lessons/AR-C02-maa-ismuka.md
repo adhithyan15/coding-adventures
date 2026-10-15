@@ -11,7 +11,8 @@ gloss: what's your name?
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [AR-C02-maa, AR-C02-ism, AR-C02-anta-anti]
 sounds: []
-roots: []
+roots: [s-m-w]
+etymology_hook: "mā ismuka: mā 'what', an inherited question word, + ism 'name' (root s-m-w, Lane) + -ka 'your'"
 duration:
   max_seconds: 180
 requires:
@@ -54,6 +55,11 @@ No "is," the possessive glued on, the gender carried in the suffix.
 
 "My name" takes **ي** (*-ī*), "your name" takes **ك** (*-ka/-ki*). The suffixes
 *are* the grammar of the exchange. Answer with *ismī Arun*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ما اسمك** (*mā ismuka*) is built from *mā*, "what", an inherited Semitic question word, and *ismuka*, "your name": *ism*, on the root *s-m-w* (Lane), with *-ka*, "your".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-MAA-ISMUKA-01, AR-CONCEPT-C02-MAA-ISMUKA-02] -->

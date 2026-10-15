@@ -14,7 +14,8 @@ romanization: "darzī"
 concept_tag: PA-THINGS139-DARZI
 prerequisites: [PA-C138-adhiapak, PA-C139-tankhah]
 sounds: []
-roots: []
+roots: [persian-darzi]
+etymology_hook: "darzī: usually traced to Persian darzī 'tailor'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C139-tankhah]
 <!-- hl-knowledge: introduces=[PA-LEX-C139-THINGS139-02]; assesses=[] -->
 
 **ਦਰਜ਼ੀ** — *darzī* — "a tailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦਰਜ਼ੀ** (*darzī*) is a loan, usually traced to Persian *darzī*, "tailor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

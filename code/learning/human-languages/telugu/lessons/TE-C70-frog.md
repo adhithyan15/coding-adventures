@@ -11,7 +11,8 @@ romanization: "kappa"
 concept_tag: TE-NOUN-FROG
 prerequisites: [TE-C70-mouse]
 sounds: []
-roots: []
+roots: [dravidian-kappe-frog]
+etymology_hook: "kappa: native Dravidian, one word with Kannada kappe (DEDR 1224)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C70-mouse]
 It is inherited and it belongs to the rains. The first కప్ప heard after dark is how a గ్రామం knows the season turned, before anybody looks at a calendar.
 
 Telugu uses it for somebody whose world is small — a కప్ప in a well, which is a picture a dozen unrelated languages reached for on their own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కప్ప** (*kappa*) is native Dravidian, one word with Kannada *kappe* (DEDR 1224). DEDR lists Telugu *kappa*, "frog".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

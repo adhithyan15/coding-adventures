@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a work shift, then the Kannada for an ad
 You'll want to know: ಬೀಳು.
 ಬೀಳು — bīḷu — "to fall".
 
+The word, taken apart.
+ಬೀಳು (bīḷu) is native Dravidian, one word with Tamil vīḻ (DEDR 5430). DEDR gives the older Kannada bīḻ, "to fall": the old v- has become b-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for an advance, then the Kannada for to fall
 
 You'll want to know: ಹಿಂದಿರುಗು.
 ಹಿಂದಿರುಗು — hindirugu — "to return, to come back".
+
+The word, taken apart.
+ಹಿಂದಿರುಗು (hindirugu) is native Dravidian, usually explained as hindu, "back, behind" (DEDR 4205, older pindu), and tirugu, "to turn" (DEDR 3246): "to turn back".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to fall, then the Kannada for to return.
 You'll want to know: ಮುಟ್ಟು.
 ಮುಟ್ಟು — muṭṭu — "to touch".
 
+The word, taken apart.
+ಮುಟ್ಟು (muṭṭu) is native Dravidian, one word with Tamil muṭṭu, Telugu muṭṭu and Malayalam muṭṭuka (DEDR 4934). DEDR lists muṭṭu itself, "to touch, reach".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to return, then the Kannada for to touch
 You'll want to know: ಎತ್ತು.
 ಎತ್ತು — ettu — "to lift".
 
+The word, taken apart.
+ಎತ್ತು (ettu) is native Dravidian, one word with Telugu ettu, "to lift up" (DEDR 796). DEDR lists ettu itself, "to lift, raise".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to touch, then the Kannada for to lift.
 
 You'll want to know: ಎಸೆ.
 ಎಸೆ — ese — "to throw".
+
+The word, taken apart.
+ಎಸೆ (ese) is native Dravidian, one word with Tamil ey (DEDR 805). DEDR lists esu, ese, "to shoot (an arrow), throw".
 
 What you've built.
 One more word for this chapter.

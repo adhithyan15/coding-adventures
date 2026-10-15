@@ -14,7 +14,8 @@ romanization: "śilpī"
 concept_tag: SA-PPL209-SILPI
 prerequisites: [SA-C209-nartakah, SA-C209-citrakarah]
 sounds: []
-roots: []
+roots: [sanskrit-shilpin, sanskrit-shilpa]
+etymology_hook: "śilpin ← śilpa 'art, craft' + -in 'having'; MW calls śilpa 'of doubtful derivation'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C209-citrakarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C209-PPL209-05]; assesses=[] -->
 
 **शिल्पी** — *śilpī* — "a craftsman, a sculptor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śilpī* is the nominative of *śilpin*, "one who has a craft", built on *śilpa*, "art, craft" (MW). MW calls *śilpa* "of doubtful derivation", so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

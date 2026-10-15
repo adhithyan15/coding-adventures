@@ -14,7 +14,8 @@ romanization: "paisā"
 concept_tag: PA-SCHOOL72-PAISA
 prerequisites: [PA-C71-sakul, PA-C72-basta]
 sounds: []
-roots: []
+roots: [indo-aryan-padamsha]
+etymology_hook: "paisā ← *padāṁśa 'quarter part'; CDIAL marks the Punjabi word as taken from Hindi (CDIAL 7761)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C72-basta]
 <!-- hl-knowledge: introduces=[PA-LEX-C72-SCHOOL72-02]; assesses=[] -->
 
 **ਪੈਸਾ** — *paisā* — "money".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੈਸਾ** (*paisā*) came into Punjabi from Hindi: CDIAL lists Hindi *paisā* under a reconstructed *\*padāṁśa*, "quarter part", and marks the Punjabi word as taken from it (CDIAL 7761).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,9 @@ concept_tag: ES-THING-PAGINA-WEB
 prerequisites: [ES-C393-internet, ES-C393-ordenador, ES-C393-correo-electronico, ES-W02-cuatro-lineas-ayer]
 sounds: [vowel-a, g-soft, stress-antepenultimate]
 roots: [pangere-latin]
+etymology_hook: "página ← Latin pagina, from pangere 'to fasten'; web is English, taken whole"
 duration:
-  max_seconds: 240
+  max_seconds: 266
 requires:
   knowledge: [ES-LEX-INTERNET, ES-LEX-ORDENADOR, ES-LEX-CORREO-ELECTRONICO, ES-WRITING-CONNECTED-COMPOSITION]
 introduces:
@@ -58,13 +59,12 @@ the machine. Say what is missing: the thing on the screen itself.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-LEX-C422-TECH-01]; assesses=[] -->
 
-**la página web** — "the web page." Two words from two thousand years apart,
-and only one of them was borrowed.
+**la página web** — "the web page." Two words from two thousand years apart:
+one taken from Latin books, one from English.
 
 **Página** is Latin **pagina**, from **pangere**, "to fasten, to fix in place."
-A Roman *pagina* was "a column of writing", named for the way vine-growers
-fastened shoots to a trellis: each one was writing **fixed into a
-frame**.
+A Roman *pagina* was a page; Festus, a Roman scholar, explained the name by
+the lines of verse **fastened** into it (Lewis & Short).
 
 | word | what got fastened |
 |---|---|

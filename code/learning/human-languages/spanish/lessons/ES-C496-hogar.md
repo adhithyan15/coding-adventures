@@ -10,7 +10,8 @@ gloss: "the home"
 concept_tag: ES-REF-HOGAR
 prerequisites: [ES-C495-desaparecer, ES-C495-ladron]
 sounds: []
-roots: []
+roots: [focus-latin]
+etymology_hook: "hogar ← Old Spanish fogar, from Latin focus 'hearth': f- became h- — English focus"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C495-ladron]
 > *Products for the home.*
 
 A warmer word than *la casa*; shop signs use it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hogar** ← Old Spanish *fogar* (EtymDB 2.1), from spoken Latin *\*focaris*, built on *focus*, "a hearth" — inherited: *f-* became *h-*. A home was named for its fire.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

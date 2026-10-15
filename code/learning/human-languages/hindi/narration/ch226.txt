@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to wring, then the Hindi for to dry.
 You'll want to know: सूखना.
 सूखना — sūkhnā — "to dry (by itself)".
 
+The word, taken apart.
+सूखना (sūkhnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from śuṣkati, "becomes dry", a form CDIAL reconstructs from its descendants (CDIAL 12552). It is built on Sanskrit śuṣka, "dried".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to dry, then the Hindi for to dry.
 
 You'll want to know: बिगड़ना.
 बिगड़ना — bigaṛnā — "to go wrong, to spoil".
+
+The word, taken apart.
+बिगड़ना (bigaṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vighaṭate, "flies apart; is marred" (CDIAL 11673).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to dry, then the Hindi for to go wrong.
 You'll want to know: बनाना.
 बनाना — banānā — "to make".
 
+The word, taken apart.
+बनाना (banānā) is the causing form of bannā, "to be made", which CDIAL lists under Sanskrit vanati, "desires, gains, makes ready" (CDIAL 11260).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to go wrong, then the Hindi for to make.
 You'll want to know: बनना.
 बनना — bannā — "to be made, to become".
 
+The word, taken apart.
+बनना (bannā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vanati, "desires, gains, makes ready" (CDIAL 11260).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to make, then the Hindi for to be made.
 
 You'll want to know: टूटना.
 टूटना — ṭūṭnā — "to break (by itself)".
+
+The word, taken apart.
+टूटना (ṭūṭnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from truṭyati, "is broken" (CDIAL 6065).
 
 What you've built.
 One more word for this chapter.

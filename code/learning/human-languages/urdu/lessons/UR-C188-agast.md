@@ -14,7 +14,8 @@ romanization: "agast"
 concept_tag: UR-VAQT188-AGAST
 prerequisites: [UR-C188-jun, UR-C188-julai]
 sounds: []
-roots: []
+roots: [english-august]
+etymology_hook: "agast ← English August"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C188-julai]
 <!-- hl-knowledge: introduces=[UR-LEX-C188-VAQT188-05]; assesses=[] -->
 
 **اگست** — *agast* — "August".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اگست** (*agast*) is a loan from English *August*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

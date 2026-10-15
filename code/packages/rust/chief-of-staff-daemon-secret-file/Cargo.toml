@@ -5,6 +5,10 @@ edition = "2021"
 description = "Race-resistant owner-only secret-file loading for the D18 Chief daemon"
 license = "MIT"
 
+[features]
+# `write_test_secret`, for other crates' tests only.
+test-support = []
+
 [dependencies]
 coding_adventures_zeroize = { path = "../zeroize" }
 

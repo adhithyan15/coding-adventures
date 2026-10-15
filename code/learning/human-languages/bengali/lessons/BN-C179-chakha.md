@@ -14,7 +14,8 @@ romanization: "chākhā"
 concept_tag: BN-VERB-CHAKHA
 prerequisites: [BN-C178-bikreta, BN-C178-kreta]
 sounds: []
-roots: []
+roots: [indo-aryan-cakshati]
+etymology_hook: "chākhā ← *cakṣati 'tastes', a reconstructed form; a tadbhava (CDIAL 4557)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C178-kreta]
 <!-- hl-knowledge: introduces=[BN-LEX-C179-ACT179-01]; assesses=[] -->
 
 **চাখা** — *chākhā* — "to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চাখা** (*chākhā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cakṣati*, "tastes", a form CDIAL reconstructs from its descendants (CDIAL 4557). CDIAL lists Bengali *cākhā*, "to taste".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

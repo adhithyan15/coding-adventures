@@ -12,6 +12,7 @@ concept_tag: KA-ORDINAL-SHORT-FORM
 prerequisites: [KA-C75-eleventh, KA-C75-seventh, KA-C72-want, KA-C60-goat, KA-C74-first]
 sounds: []
 roots: [dravidian-mutal-beginning]
+etymology_hook: "modalanē: native modalu 'beginning' (DEDR 4950) + the short ordinal ending -anē"
 duration:
   max_seconds: 210
 requires:
@@ -55,6 +56,11 @@ the **ೆ** lengthens to **ೇ**, and that is all:
 
 Both are worth having, and for different reasons: you need to recognise the long
 one on a printed page, and you need to produce the short one at a door.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊದಲನೇ** (*modalanē*) is built from *modalu*, "beginning, the first thing", native Dravidian (DEDR 4950), with *-anē*, the everyday short form of the ordinal ending *-aneya*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C75-ORDINAL-08, KA-LEX-C74-ORDINAL-04] -->

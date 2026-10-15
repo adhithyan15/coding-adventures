@@ -14,7 +14,8 @@ romanization: "gaḷo"
 concept_tag: MW-BODY44-GALO
 prerequisites: [MW-C44-bal, MW-C44-dant]
 sounds: []
-roots: []
+roots: [sanskrit-gala]
+etymology_hook: "gaḷo ← Sanskrit gala 'throat, neck', a tadbhava (CDIAL 4070, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C44-dant]
 <!-- hl-knowledge: introduces=[MW-LEX-C44-BODY44-05]; assesses=[] -->
 
 **गळो** — *gaḷo* — "the throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गळो** (*gaḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gala*, "throat, neck". CDIAL lists Marwari *gaḷo* under it (CDIAL 4070).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

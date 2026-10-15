@@ -12,6 +12,9 @@ Before the new one: say the Bengali for yoghurt, then the Bengali for an onion.
 You'll want to know: রুটি.
 রুটি — ruṭi — "bread".
 
+The word, taken apart.
+রুটি (ruṭi) is a tadbhava, a word inherited and reshaped by sound change. It comes from roṭṭa, "bread", a form CDIAL reconstructs from its descendants (CDIAL 10837). Late Sanskrit has rōṭikā.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for an onion, then the Bengali for bread.
 
 You'll want to know: আম.
 আম — ām — "a mango".
+
+The word, taken apart.
+আম (ām) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from āmra, "mango tree; its fruit" (CDIAL 1268).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for bread, then the Bengali for a mango.
 You'll want to know: সবজি.
 সবজি — sôbji — "vegetables".
 
+The word, taken apart.
+সবজি (sôbji) is a loan, usually traced to Persian sabzī, "greenness, greens". It is built on Persian sabz, "green".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a mango, then the Bengali for vegetables
 You'll want to know: বাড়ি.
 বাড়ি — bāṛi — "a house, home".
 
+The word, taken apart.
+বাড়ি (bāṛi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāṭikā, "enclosure, garden" (CDIAL 11480). CDIAL glosses the Bengali form "garden".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for vegetables, then the Bengali for a house
 
 You'll want to know: জানালা.
 জানালা — jānālā — "a window".
+
+The word, taken apart.
+জানালা (jānālā) is a loan from Portuguese janela, "window".
 
 What you've built.
 One more word for this chapter.

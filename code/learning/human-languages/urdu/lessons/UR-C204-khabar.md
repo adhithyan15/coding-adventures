@@ -14,7 +14,8 @@ romanization: "khabar"
 concept_tag: UR-CHIZ204-KHABAR
 prerequisites: [UR-C203-pota, UR-C204-nambar]
 sounds: []
-roots: []
+roots: [arabic-khabar]
+etymology_hook: "khabar ← Arabic khabar 'news, report', through Persian (Lane, root kh-b-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C204-nambar]
 <!-- hl-knowledge: introduces=[UR-LEX-C204-CHIZ204-02]; assesses=[] -->
 
 **خبر** — *khabar* — "news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خبر** (*khabar*) is a loan from Arabic *khabar*, "news, report", which reached Urdu through Persian. Its Arabic root is *kh-b-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

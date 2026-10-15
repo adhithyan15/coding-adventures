@@ -14,7 +14,8 @@ romanization: "pustakālay"
 concept_tag: GU-THINGS128-PUSTAKALAY
 prerequisites: [GU-C128-karkhanu, GU-C128-hotel]
 sounds: []
-roots: []
+roots: [sanskrit-pustaka, sanskrit-alaya]
+etymology_hook: "pustakālay: Sanskrit pustaka 'book' + ālaya 'abode', a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C128-hotel]
 <!-- hl-knowledge: introduces=[GU-LEX-C128-THINGS128-04]; assesses=[] -->
 
 **પુસ્તકાલય** (*pustakālay*) — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પુસ્તકાલય** (*pustakālay*) is a Sanskrit compound, a tatsama: *pustaka*, "book", and *ālaya*, "abode". CDIAL traces *pustaka* itself to Iranian (CDIAL 8413).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

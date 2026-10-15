@@ -14,7 +14,8 @@ romanization: "maz"
 concept_tag: RU-ZDOROV238-MAZ
 prerequisites: [RU-C237-pereyezzhat, RU-C237-zarabatyvat]
 sounds: []
-roots: []
+roots: [slavic-mazati]
+etymology_hook: "мазь is from мазать 'to smear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C237-zarabatyvat]
 <!-- hl-knowledge: introduces=[RU-LEX-C238-ZDOROV238-01]; assesses=[] -->
 
 **мазь** (*maz*) — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мазь** comes from *мазать*, "to smear" (Vasmer): what is smeared on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

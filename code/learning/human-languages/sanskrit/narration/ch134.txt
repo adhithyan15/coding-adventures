@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for swims, then the Sanskrit for jumps.
 You'll want to know: छिनत्ति.
 छिनत्ति — chinatti — "cuts".
 
+The word, taken apart.
+chinatti comes from the root √chid "cut, split", with the nasal -na- that class-7 verbs push inside the root (MW). MW sets √chid beside Greek schizō "split", the source of English schism, and Latin scindo; Gujarati kept it as chiṇvũ "to slit" (CDIAL 5045).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for jumps, then the Sanskrit for cuts.
 
 You'll want to know: भिनत्ति.
 भिनत्ति — bhinatti — "breaks".
+
+The word, taken apart.
+bhinatti comes from the root √bhid "split, break", with the class-7 infix -na- (MW). The root is inherited from Indo-European (EtymDB): MW sets it beside Latin findo "split" and English bite.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for cuts, then the Sanskrit for breaks.
 You'll want to know: स्थापयति.
 स्थापयति — sthāpayati — "places, puts".
 
+The word, taken apart.
+sthāpayati is the causative of the root √sthā "stand": "makes stand, sets up, places" (CDIAL 13756). MW sets √sthā beside Latin stare and English stand; Bengali kept the causative as thuoyā "to put, keep" (CDIAL 13756).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for breaks, then the Sanskrit for places.
 You'll want to know: प्रेषयति.
 प्रेषयति — preṣayati — "sends".
 
+The word, taken apart.
+preṣayati comes from pra "forth" and the root √iṣ "set in motion, send" (MW; CDIAL 9003): "drives on, sends forth". Pali kept it as peseti "sends", especially with a message (CDIAL 9003).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for places, then the Sanskrit for sends.
 
 You'll want to know: अन्विष्यति.
 अन्विष्यति — anviṣyati — "searches".
+
+The word, taken apart.
+anviṣyati comes from anu "after" and the root √iṣ "seek, wish" (MW's third √iṣ): "seeks after, searches". It is the same √iṣ as icchati "wishes".
 
 What you've built.
 One more word for this chapter.

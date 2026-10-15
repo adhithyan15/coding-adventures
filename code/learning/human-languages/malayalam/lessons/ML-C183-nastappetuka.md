@@ -14,7 +14,8 @@ romanization: "naṣṭappeṭuka"
 concept_tag: ML-VERB-NASTAPPETUKA
 prerequisites: [ML-C183-sramikkuka, ML-C183-kittuka]
 sounds: []
-roots: []
+roots: [sanskrit-nashta, dravidian-padu-happen]
+etymology_hook: "naṣṭappeṭuka: Sanskrit naṣṭa 'lost' (CDIAL 7027) + native peṭuka 'to fall into' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C183-kittuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C183-KRIYA183-05]; assesses=[] -->
 
 **നഷ്ടപ്പെടുക** — *naṣṭappeṭuka* — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നഷ്ടപ്പെടുക** (*naṣṭappeṭuka*) joins Sanskrit *naṣṭa*, "lost, destroyed" (CDIAL 7027), to native *peṭuka*, "to fall into, to happen" (DEDR 3853, with Tamil *paṭu*): "to fall into loss".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "baṛhnā"
 concept_tag: UR-VERB-BARHNA
 prerequisites: [UR-C142-chhupna, UR-C142-bachna]
 sounds: []
-roots: []
+roots: [sanskrit-vardhate]
+etymology_hook: "baṛhnā ← Sanskrit vardhate 'grows, increases', a tadbhava (CDIAL 11376)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C142-bachna]
 <!-- hl-knowledge: introduces=[UR-LEX-C142-ACT142-05]; assesses=[] -->
 
 **بڑھنا** — *baṛhnā* — "to grow, to increase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بڑھنا** (*baṛhnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vardhate*, "grows, increases" (CDIAL 11376).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

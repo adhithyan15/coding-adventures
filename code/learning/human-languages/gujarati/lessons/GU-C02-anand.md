@@ -12,6 +12,7 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [GU-C02-maarun-naam-chhe]
 sounds: [independent-aa, nd-conjunct]
 roots: [ananda-sanskrit]
+etymology_hook: "ānand: Sanskrit ānanda 'happiness, bliss', a tatsama, on nand 'to rejoice' (CDIAL 1172)"
 duration:
   max_seconds: 240
 requires:

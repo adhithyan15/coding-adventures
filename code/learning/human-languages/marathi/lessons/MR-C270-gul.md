@@ -14,7 +14,8 @@ romanization: "gūḷ"
 concept_tag: MR-VASTU270-GUL
 prerequisites: [MR-C270-badam, MR-C270-manuka]
 sounds: []
-roots: []
+roots: [sanskrit-guda]
+etymology_hook: "gūḷ ← Sanskrit guḍa 'boiled sugarcane juice, molasses', a tadbhava (CDIAL 4182)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C270-manuka]
 <!-- hl-knowledge: introduces=[MR-LEX-C270-VASTU270-03]; assesses=[] -->
 
 **गूळ** — *gūḷ* — "jaggery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गूळ** (*gūḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *guḍa*, "boiled sugarcane juice, molasses" (CDIAL 4182).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

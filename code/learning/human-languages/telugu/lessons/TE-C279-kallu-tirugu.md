@@ -14,7 +14,8 @@ romanization: "kaḷḷu tirugu"
 concept_tag: TE-VERB-KALLU-TIRUGU
 prerequisites: [TE-C279-koluko, TE-C279-ubbu]
 sounds: []
-roots: []
+roots: [proto-dravidian-kan-eye, dravidian-tiri-turn]
+etymology_hook: "kaḷḷu tirugu: native kaḷḷu 'eyes' (DEDR 1159) + tirugu 'to turn' (DEDR 3246)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C279-ubbu]
 <!-- hl-knowledge: introduces=[TE-LEX-C279-KRIYA279-03]; assesses=[] -->
 
 **కళ్ళు తిరుగు** — *kaḷḷu tirugu* — "to feel dizzy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కళ్ళు తిరుగు** (*kaḷḷu tirugu*) is native Dravidian: *kaḷḷu*, "eyes", the plural of *kannu*, "eye" (DEDR 1159), and *tirugu*, "to turn", one word with Tamil *tiri* (DEDR 3246): "the eyes turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

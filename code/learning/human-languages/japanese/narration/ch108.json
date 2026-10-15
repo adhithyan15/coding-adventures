@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Shellfish, Sea bream, Shark, Squirrel, Wild boar",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1a8beb4680d52ff9",
+  "sourceHash": "fnv1a64:f8141600aad85613",
   "lessons": [
     {
       "id": "JA-C108-kai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b74c175158e88407",
+      "sourceHash": "fnv1a64:115d4b74d2981f00",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かい (kai) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a128b761a23774b",
+      "sourceHash": "fnv1a64:2c10c27d979e7314",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たい (tai) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77a402efdcc33be9",
+      "sourceHash": "fnv1a64:03cdeb5980038a3d",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さめ (same) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19e8df1b62dfc57d",
+      "sourceHash": "fnv1a64:f88016e25e7f8207",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りす (risu) is usually explained as Sino-Japanese: the on'yomi of two characters, \"chestnut\" (Middle Chinese lit) and \"rat\" (Middle Chinese syoX), borrowed from Chinese and worn down. JMdict marks it as usually written in kana."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c3bc3657cee9e8a",
+      "sourceHash": "fnv1a64:cd6f24ccc8e9eb33",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いのしし (inoshishi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

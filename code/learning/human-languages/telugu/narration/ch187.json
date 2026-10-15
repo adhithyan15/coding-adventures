@@ -4,7 +4,7 @@
   "chapter": 187,
   "title": "Bee, Lizard, Insect, Sparrow, Koel",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8c7e41e9df078c5d",
+  "sourceHash": "fnv1a64:dfb7458cbd37ea88",
   "lessons": [
     {
       "id": "TE-C187-tenetiga",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:623f8af5ea972833",
+      "sourceHash": "fnv1a64:f7b1982b1c0e10c8",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తేనెటీగ (tēneṭīga) is native Dravidian: tēne, \"honey\", one word with Tamil tēṉ (DEDR 3268), and īga, \"fly\", one word with Tamil ī, \"fly, bee\" (DEDR 533). For the first, DEDR compares, with a query, Prakrit tiṇisa, \"honeycomb\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9370e858bee2ff88",
+      "sourceHash": "fnv1a64:39c8cb63ec1fa9a2",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బల్లి (balli) is native Dravidian. DEDR 3994 lists palli and balli, \"lizard\", with Tamil palli and Kannada palli. DEDR compares Sanskrit pallī, \"small house lizard\" (CDIAL 7973), a lexicon word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:280c7aae8635f315",
+      "sourceHash": "fnv1a64:5f4b5fb14bfcce86",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పురుగు (purugu) is native Dravidian. DEDR 4312 lists purugu, \"worm, any insect\", with Tamil puḻu, \"worm\", and Kannada puḻu, \"worm, insect\". DEDR compares several Sanskrit words for \"worm\", among them pīlu, \"worm\" (CDIAL 8240), which CDIAL takes from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da817e60971684ee",
+      "sourceHash": "fnv1a64:b65c7dcd3d693ce9",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పిచ్చుక (piccuka) is native Dravidian. DEDR 4190 lists piccuka, \"sparrow\", with Gadba piske, \"sparrow\", and Kuwi piṛska, \"sparrow\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:782eecfc748e0b7b",
+      "sourceHash": "fnv1a64:9279cec35b5ce11f",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కోకిల (kōkila) is Sanskrit kōkila, \"the Indian cuckoo\", taken over whole as a learned loan, a tatsama (CDIAL 3483)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Listen, Learn, Answer, Wait, Give",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e1d1c383a42b7a15",
+  "sourceHash": "fnv1a64:b04e452bdc13e6ff",
   "lessons": [
     {
       "id": "RU-C41-slushat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:953df1857dc859de",
+      "sourceHash": "fnv1a64:129ff28187655e2a",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "слушать (slúshat) from Proto-Slavic slušati, built on слух, \"hearing\" — inherited. Vasmer relates it to Lithuanian klausýti, \"to listen\", and Old High German hlosēn, \"to listen\"; English listen is a cousin, from PIE ḱlew-, \"to hear\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab6838ec5e0b1932",
+      "sourceHash": "fnv1a64:91399d8605833d2a",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "учить (uchít) from Proto-Slavic učiti — inherited, first \"to accustom\". Vasmer links it with привыкнуть, \"to grow accustomed\", Lithuanian jaukìnti, \"to tame\", and Sanskrit úcyati, \"is accustomed\": to teach was to accustom someone to a thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09bbeda035bf271b",
+      "sourceHash": "fnv1a64:d8807c2672f19b45",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "отвечать (otvechát) goes with ответ, \"an answer\": от-, \"back\", with an old root вет-, \"counsel, word\". Old Russian větŭ meant \"counsel, agreement\", and the same root is in привет, \"hi\", and совет, \"advice\" (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:267b009b0b250ed4",
+      "sourceHash": "fnv1a64:faf83c0f06e9fe37",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ждать (zhdat) from Proto-Slavic žĭdati — inherited. Vasmer relates it to Lithuanian geĩsti, \"to long for\", and Old Prussian gēide, \"they wait\": to wait was to long for something."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9a2d5e494b45a10",
+      "sourceHash": "fnv1a64:890f55d453911eff",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "давать (davát) is the ongoing partner of дать, \"to give\", built on the same root (Vasmer). Vasmer relates дать to Lithuanian dúoti, Greek didōmi and Sanskrit dadāti, all \"to give\", from PIE deh₃-, \"to give\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

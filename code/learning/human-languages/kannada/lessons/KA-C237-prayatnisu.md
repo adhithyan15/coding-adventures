@@ -14,7 +14,8 @@ romanization: "prayatnisu"
 concept_tag: KA-VERB-PRAYATNISU
 prerequisites: [KA-C237-saripadisu, KA-C237-hode]
 sounds: []
-roots: []
+roots: [sanskrit-prayatna]
+etymology_hook: "prayatnisu: Sanskrit prayatna 'effort' + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C237-hode]
 <!-- hl-knowledge: introduces=[KA-LEX-C237-KRIYE237-05]; assesses=[] -->
 
 **ಪ್ರಯತ್ನಿಸು** — *prayatnisu* — "to try".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರಯತ್ನಿಸು** (*prayatnisu*) is Sanskrit *prayatna*, "effort, endeavour", made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

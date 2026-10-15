@@ -14,7 +14,8 @@ romanization: "nattou"
 concept_tag: JA-THINGS70-NATTOU
 prerequisites: [JA-C69-natsuyasumi, JA-C70-mochi]
 sounds: []
-roots: []
+roots: [middle-chinese-nop, middle-chinese-duwh]
+etymology_hook: "nattou: Sino-Japanese 納 'receive' + 豆 'bean', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C70-mochi]
 <!-- hl-knowledge: introduces=[JA-LEX-C70-THINGS70-02]; assesses=[] -->
 
 **なっとう** — *nattou* — "natto, fermented soybeans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なっとう** (*nattou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *nō*, "receive, store" (Middle Chinese *nop*) and *tō*, "bean" (*duwH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). *Nō* is shortened to *nat* before *tō*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nhāvṇo"
 concept_tag: MW-VERB-NHAVNO
 prerequisites: [MW-C102-koi, MW-C102-harek]
 sounds: []
-roots: []
+roots: [sanskrit-snati]
+etymology_hook: "nhāvṇo ← Sanskrit snāti 'bathes', a tadbhava (CDIAL 13786, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C102-harek]
 <!-- hl-knowledge: introduces=[MW-LEX-C103-ACT103-01]; assesses=[] -->
 
 **न्हावणो** — *nhāvṇo* — "to bathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**न्हावणो** (*nhāvṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *snāti*, "bathes". CDIAL gives no Marwari form in this entry (CDIAL 13786); the match is through Hindi *nhānā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

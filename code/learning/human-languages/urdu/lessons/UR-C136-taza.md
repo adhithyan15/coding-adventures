@@ -14,7 +14,8 @@ romanization: "tāzā"
 concept_tag: UR-QUAL136-TAZA
 prerequisites: [UR-C135-bhuka, UR-C136-pyasa]
 sounds: []
-roots: []
+roots: [persian-taza]
+etymology_hook: "tāzā: usually traced to Persian tāza 'fresh'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C136-pyasa]
 <!-- hl-knowledge: introduces=[UR-LEX-C136-QUAL136-02]; assesses=[] -->
 
 **تازہ** — *tāzā* — "fresh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تازہ** (*tāzā*) is a loan, usually traced to Persian *tāza*, "fresh".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

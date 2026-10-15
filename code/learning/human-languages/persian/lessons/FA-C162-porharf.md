@@ -14,7 +14,8 @@ romanization: "porharf"
 concept_tag: FA-SEFAT162-PORHARF
 prerequisites: [FA-C162-lazem, FA-C162-dalir]
 sounds: []
-roots: []
+roots: [persian-pur, arabic-harf]
+etymology_hook: "porharf: Persian por 'full' (EtymDB) + harf ← Arabic ḥarf 'letter', root ḥ-r-f (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C162-dalir]
 <!-- hl-knowledge: introduces=[FA-LEX-C162-SEFAT162-05]; assesses=[] -->
 
 **پرحرف** — *porharf* — "talkative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*porharf* is *por*, "full", with *harf*, "word, talk": full of talk. *por* is inherited (Middle Persian *purr*, EtymDB); *harf* is borrowed from Arabic *ḥarf*, "letter, edge" (root *ḥ-r-f*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khālī"
 concept_tag: GU-QUAL136-KHALI
 prerequisites: [GU-C135-paku, GU-C135-kacu]
 sounds: []
-roots: []
+roots: [persian-khali]
+etymology_hook: "khālī ← Arabic khālī 'empty', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C135-kacu]
 <!-- hl-knowledge: introduces=[GU-LEX-C136-QUAL136-01]; assesses=[] -->
 
 **ખાલી** (*khālī*) — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખાલી** (*khālī*) is a loan from Arabic *khālī*, "empty", which reached Gujarati through Persian. Its Arabic root is *kh-l-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

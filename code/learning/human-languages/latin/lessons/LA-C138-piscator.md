@@ -13,7 +13,8 @@ gloss: "a fisherman"
 concept_tag: LA-THINGS138-PISCATOR
 prerequisites: [LA-C137-tonsor, LA-C137-pastor]
 sounds: []
-roots: []
+roots: [piscator-latin, piscis-latin]
+etymology_hook: "piscātor 'fisherman' — built on piscor 'to fish', from piscis 'fish'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C137-pastor]
 <!-- hl-knowledge: introduces=[LA-LEX-C138-THINGS138-01]; assesses=[] -->
 
 **piscātor, piscātōris** — "a fisherman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**piscātor** is built on *piscor*, "to fish", from *piscis*, "a fish" (EtymDB 2.1), with *-tor*, "one who does it". *piscis* is usually traced to Proto-Indo-European *\*pisk-*, "fish" (EtymDB 2.1); English *fish* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

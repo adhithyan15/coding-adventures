@@ -14,7 +14,8 @@ romanization: "rikshā"
 concept_tag: UR-CHIZ202-RIKSHA
 prerequisites: [UR-C202-musafir, UR-C202-taiksi]
 sounds: []
-roots: []
+roots: [english-rickshaw]
+etymology_hook: "rikshā ← English rickshaw"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C202-taiksi]
 <!-- hl-knowledge: introduces=[UR-LEX-C202-CHIZ202-05]; assesses=[] -->
 
 **رکشہ** — *rikshā* — "a rickshaw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رکشہ** (*rikshā*) is a loan from English *rickshaw*. English shortened it from Japanese *jinrikisha*, "man-powered vehicle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

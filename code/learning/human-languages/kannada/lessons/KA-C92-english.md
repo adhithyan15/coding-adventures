@@ -11,7 +11,8 @@ romanization: "iṅgliṣ"
 concept_tag: KA-WORK-ENGLISH
 prerequisites: [KA-C92-office, KA-C92-job]
 sounds: []
-roots: []
+roots: [english-english]
+etymology_hook: "iṅgliṣ ← English English"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C92-job]
 
 **ನನಗೆ ಇಂಗ್ಲಿಷ್ ಗೊತ್ತು** (*nanage iṅgliṣ gottu*) — "I know English", built
 like **ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇಂಗ್ಲಿಷ್** (*iṅgliṣ*) is a loan from English *English*. It names the language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

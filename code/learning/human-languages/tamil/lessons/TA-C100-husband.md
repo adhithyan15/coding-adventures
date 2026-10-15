@@ -46,7 +46,7 @@ reviews_of: [TA-C100-boy]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**கணவர்** (*kaṇavar*) is native Dravidian (DEDR 1173). The entry lists *kaṇavaṉ*, "husband"; *-ar* is the respectful ending.
+**கணவர்** (*kaṇavar*) is native Dravidian (DEDR 1173). The entry lists *kaṇavaṉ*, "husband"; *-ar* is the respectful ending. DEDR compares Sanskrit (lexicons) *gaṇḍa*, "hero".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

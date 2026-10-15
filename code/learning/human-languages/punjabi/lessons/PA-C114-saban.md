@@ -14,7 +14,8 @@ romanization: "sābaṇ"
 concept_tag: PA-THINGS114-SABAN
 prerequisites: [PA-C113-patila, PA-C113-kanghi]
 sounds: []
-roots: []
+roots: [arabic-sabun]
+etymology_hook: "sābaṇ ← Arabic ṣābūn 'soap', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C113-kanghi]
 <!-- hl-knowledge: introduces=[PA-LEX-C114-THINGS114-01]; assesses=[] -->
 
 **ਸਾਬਣ** — *sābaṇ* — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਾਬਣ** (*sābaṇ*) is a loan from Arabic *ṣābūn*, "soap", which reached Punjabi through Persian. Its Arabic root is *ṣ-b-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

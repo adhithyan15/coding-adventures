@@ -13,7 +13,8 @@ gloss: "pain, grief"
 concept_tag: LA-MORBUS-DOLOR
 prerequisites: [LA-C67-febris, LA-C67-tussis]
 sounds: []
-roots: []
+roots: [dolor-latin, dolere-latin]
+etymology_hook: "dolor 'pain' — built on doleō 'to hurt'; the family is usually traced to PIE *delh1- 'to split'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C67-tussis]
 <!-- hl-knowledge: introduces=[LA-LEX-C67-MORBUS-03]; assesses=[] -->
 
 **dolor, dolōris** — "pain, grief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dolor** is built on *doleō*, "to hurt, to grieve" (Lewis & Short), with the ending *-or*, "a state". The family is usually traced to Proto-Indo-European *\*delh1-*, "to split, to hew" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

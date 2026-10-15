@@ -14,7 +14,8 @@ romanization: "rish"
 concept_tag: FA-THINGS123-RISH
 prerequisites: [FA-C122-khofash, FA-C123-pishani]
 sounds: []
-roots: []
+roots: [persian-rish]
+etymology_hook: "rish: inherited, usually traced to Middle Persian rēš"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C123-pishani]
 <!-- hl-knowledge: introduces=[FA-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **ریش** — *rish* — "a beard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rish* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *rēš*, "beard". (Persian also has *rish*, "wound", a different word spelled the same.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

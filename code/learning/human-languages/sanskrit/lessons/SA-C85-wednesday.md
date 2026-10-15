@@ -14,7 +14,8 @@ romanization: "budhavāsaraḥ"
 concept_tag: SA-WEEK-WEDNESDAY
 prerequisites: [SA-C85-monday, SA-C85-tuesday]
 sounds: []
-roots: []
+roots: [sanskrit-budha, sanskrit-vasara]
+etymology_hook: "budhavāsara ← budha 'awake, wise', the name of Mercury, from √budh 'wake' + vāsara 'day' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C85-tuesday]
 <!-- hl-knowledge: introduces=[SA-LEX-C85-WEEK-04]; assesses=[] -->
 
 **बुधवासरः** (*budhavāsaraḥ*) — "Wednesday", the day of **बुध**, Mercury.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Budhavāsara* is built from *budha*, "awake, wise", from the root √budh, "to
+wake", the name given to Mercury, and *vāsara*, "day" (MW). MW records the day as
+*budhavāra*, with *vāra*, "turn", in place of *vāsara*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

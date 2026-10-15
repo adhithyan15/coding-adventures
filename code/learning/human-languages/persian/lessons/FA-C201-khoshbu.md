@@ -14,7 +14,8 @@ romanization: "khoshbu"
 concept_tag: FA-SEFAT201-KHOSHBU
 prerequisites: [FA-C200-khodkhah, FA-C201-shabih]
 sounds: []
-roots: []
+roots: [khush-persian, persian-bu, persian-khushbu]
+etymology_hook: "khoshbu: Persian khosh 'pleasant' + bu 'smell'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C201-shabih]
 <!-- hl-knowledge: introduces=[FA-LEX-C201-SEFAT201-02]; assesses=[] -->
 
 **خوشبو** — *khoshbu* — "fragrant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khoshbu* is *khosh*, "pleasant", with *bu*, "smell": pleasant-smelling. Both are native Persian; *bu* is usually traced to Middle Persian *bōy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

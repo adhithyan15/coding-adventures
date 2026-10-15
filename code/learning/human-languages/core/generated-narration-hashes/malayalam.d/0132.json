@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 132,
-  "sourceHash": "fnv1a64:6f829523831e55eb",
+  "sourceHash": "fnv1a64:def3b861dbe2870d",
   "lessonIds": [
     "ML-C132-dosa",
     "ML-C132-sambar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch132.txt",
   "json": "malayalam/narration/ch132.json",
-  "textHash": "fnv1a64:e6fe353b4639e369",
-  "jsonHash": "fnv1a64:1e7a61b499308113",
+  "textHash": "fnv1a64:eea4af4e102210d6",
+  "jsonHash": "fnv1a64:f9686646421f4401",
   "findings": []
 }

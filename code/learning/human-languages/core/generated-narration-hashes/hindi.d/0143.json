@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 143,
-  "sourceHash": "fnv1a64:7ee8caa06e44bf91",
+  "sourceHash": "fnv1a64:bb0ffc0ea4e41601",
   "lessonIds": [
     "HI-C143-jhil",
     "HI-C143-samudra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch143.txt",
   "json": "hindi/narration/ch143.json",
-  "textHash": "fnv1a64:d286217a91e27bbc",
-  "jsonHash": "fnv1a64:7586acb95d43d5b7",
+  "textHash": "fnv1a64:6ca18dd095bc0541",
+  "jsonHash": "fnv1a64:cdc11bfe482c367a",
   "findings": []
 }

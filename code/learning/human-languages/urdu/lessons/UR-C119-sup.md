@@ -14,7 +14,8 @@ romanization: "sūp"
 concept_tag: UR-THINGS119-SUP
 prerequisites: [UR-C118-lassi, UR-C119-jus]
 sounds: []
-roots: []
+roots: [english-soup]
+etymology_hook: "sūp ← English soup"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C119-jus]
 <!-- hl-knowledge: introduces=[UR-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **سوپ** — *sūp* — "soup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سوپ** (*sūp*) is a loan from English *soup*. It is a different word from Hindi *sūp*, "winnowing basket", from Sanskrit *śūrpa* (CDIAL 12573).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

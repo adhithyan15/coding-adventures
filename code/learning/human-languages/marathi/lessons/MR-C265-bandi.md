@@ -14,7 +14,8 @@ romanization: "bandī"
 concept_tag: MR-VASTU265-BANDI
 prerequisites: [MR-C264-javai, MR-C265-parvangi]
 sounds: []
-roots: []
+roots: [persian-band]
+etymology_hook: "bandī 'ban': built on band 'shut', usually traced to Persian band"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C265-parvangi]
 <!-- hl-knowledge: introduces=[MR-LEX-C265-VASTU265-02]; assesses=[] -->
 
 **बंदी** — *bandī* — "a ban".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बंदी** (*bandī*), "a ban", is built on *band*, "shut, closed", a word usually traced to Persian *band*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

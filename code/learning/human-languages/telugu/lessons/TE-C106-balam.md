@@ -14,7 +14,8 @@ romanization: "balaṁ"
 concept_tag: TE-CAN106-BALAM
 prerequisites: [TE-C106-asti, TE-C106-yajamani]
 sounds: []
-roots: []
+roots: [sanskrit-bala]
+etymology_hook: "balaṁ ← Sanskrit bala 'power, strength', a tatsama (CDIAL 9161)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C106-yajamani]
 <!-- hl-knowledge: introduces=[TE-LEX-C106-CAN106-05]; assesses=[] -->
 
 **బలం** — *balaṁ* — "strength".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బలం** (*balaṁ*) is Sanskrit *bala*, "power, strength", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 9161).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

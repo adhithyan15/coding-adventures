@@ -11,8 +11,8 @@ gloss: I am fine, thank you
 concept_tag: UR-C04-MAIN-THIK-HUN
 prerequisites: [UR-C04-thik, UR-C04-main-hun-more]
 sounds: [rtl, nasal-vowel, retroflex-aspirated-th, long-i, long-u]
-roots: [shared-hindustani-thik, indo-aryan-copula, arabic-shukr]
-etymology_hook: The reply puts shared Hindustani ṭhīk inside inherited Urdu grammar and closes with Persian-shaped Arabic-rooted shukriyā already learned in Chapter 1.
+roots: [shared-hindustani-thik, indo-aryan-copula, arabic-shukr, indo-aryan-thikka]
+etymology_hook: "maiṅ (CDIAL 9691), ṭhīk ← *ṭhīkka (5503), hūṅ: inherited; shukriyā ← Arabic shukr via Persian"
 duration:
   max_seconds: 220
 requires:
@@ -49,6 +49,11 @@ reviews_of: [UR-C04-main-hun, UR-C04-thik, UR-C01-shukriya]
 
 No word is new. The step is assembling the words quickly enough to answer a
 real person.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**میں ٹھیک ہوں، شکریہ** (*maiṅ ṭhīk hūṅ, shukriyā*) mixes Urdu's two layers. *maiṅ*, "I" (CDIAL 9691), *ṭhīk*, "fine", from a reconstructed *\*ṭhīkka*, "firm, right" (CDIAL 5503), and *hūṅ*, "am", are inherited; *shukriyā* is built on Arabic *shukr*, "thanks", which reached Urdu through Persian (Lane, root *sh-k-r*).
 
 ## Grammar Lens: keep the copula final
 <!-- hl-knowledge: introduces=[UR-GRAMMAR-WELLBEING-WORD-ORDER]; assesses=[] -->

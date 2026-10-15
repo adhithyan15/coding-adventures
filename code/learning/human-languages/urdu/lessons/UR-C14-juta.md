@@ -12,7 +12,7 @@ concept_tag: UR-SHOE
 prerequisites: [UR-C14-qamiz]
 sounds: [rtl, long-u, te-dots-vs-tte-loop]
 roots: [sanskrit-yukta, pie-yewg]
-etymology_hook: jūtā continues Sauraseni Prakrit jutta, "joined," from Sanskrit yukta ("joined, yoked"), from Proto-Indo-European *yewg- "to yoke." That root also gives English yoke directly, and gives Sanskrit its own word yoga -- so jūtā, yoke, and yoga are three words from one root, each keeping a different piece of the old meaning "joined."
+etymology_hook: "jūtā ← Sanskrit yukta 'joined, yoked' (CDIAL 10479), from PIE *yewg-, the root of English yoke"
 duration:
   max_seconds: 280
 requires:
@@ -64,8 +64,7 @@ from *ṭhīk*: the same scoop, but **ت** carries two dots above where
 ## The word, taken apart — three words, one old root
 <!-- hl-knowledge: introduces=[UR-ETYMON-JUTA-YOKE]; assesses=[UR-LEX-JUTA] -->
 
-**jūtā** continues Sauraseni Prakrit *jutta*, "joined," from Sanskrit
-*yukta*, "joined, yoked," from Proto-Indo-European
+**jūtā** continues Prakrit *jutta*, "joined," from Sanskrit *yukta*, "joined, yoked" (CDIAL 10479), from Proto-Indo-European
 **\*yewg-**, "to yoke." That root gives English **yoke** directly, the
 wooden bar that joins two oxen. It also gives Sanskrit its own word
 **yoga** — literally "a joining, a yoking" — the same root, kept inside

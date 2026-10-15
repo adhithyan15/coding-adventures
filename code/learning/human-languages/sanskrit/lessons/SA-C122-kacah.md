@@ -14,7 +14,8 @@ romanization: "kācaḥ"
 concept_tag: SA-THINGS122-KACAH
 prerequisites: [SA-C121-suvarnam, SA-C122-rajatam]
 sounds: []
-roots: []
+roots: [sanskrit-kaca-glass]
+etymology_hook: "kāca 'glass' (ŚBr); MW cites a grammarians' root √kac; origin uncertain; Hindi kāc (CDIAL 3007)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C122-rajatam]
 <!-- hl-knowledge: introduces=[SA-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **काचः** — *kācaḥ* — "glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kāca* "glass" goes back to the Śatapatha Brāhmaṇa, where it means glass beads; MW cites only a grammarians' root √kac for it, so its origin is uncertain. It lives on as Hindi and Gujarati *kāc* "glass" (CDIAL 3007).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

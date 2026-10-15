@@ -14,7 +14,8 @@ romanization: "majbūt"
 concept_tag: GU-QUAL137-MAJBUT
 prerequisites: [GU-C137-garib, GU-C137-juvan]
 sounds: []
-roots: []
+roots: [arabic-madbut]
+etymology_hook: "majbūt ← Arabic maḍbūṭ 'held firm, secured', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C137-juvan]
 <!-- hl-knowledge: introduces=[GU-LEX-C137-QUAL137-03]; assesses=[] -->
 
 **મજબૂત** (*majbūt*) — "strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મજબૂત** (*majbūt*) is a loan from Arabic *maḍbūṭ*, "held firm, secured", which reached Gujarati through Persian. Its Arabic root is *ḍ-b-ṭ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

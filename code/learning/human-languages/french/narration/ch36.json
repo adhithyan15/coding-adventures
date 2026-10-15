@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Asking a Question — Three Ways, and Which One to Use",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:0ba150210b1c1d38",
+  "sourceHash": "fnv1a64:d7cd975a0e7307f3",
   "lessons": [
     {
       "id": "FR-C32-intonation",
@@ -241,7 +241,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3382adead379fb5d",
+      "sourceHash": "fnv1a64:7f4cec236e17882b",
       "notice": null,
       "blocks": [
         {
@@ -292,7 +292,7 @@
             },
             {
               "kind": "speech",
-              "text": "The grave accent is the only difference in writing, and in speech there is no difference at all: both are oo. This is the one place in French where an accent does nothing to the sound and everything to the meaning, which is why it is never optional."
+              "text": "The grave accent is the only difference in writing, and in speech there is no difference at all: both are oo. This is the one place in French where an accent does nothing to the sound and everything to the meaning, which is why it is never optional. The two were different words in Latin: où from ubi, \"where\", and ou from aut, \"or\" (EtymDB 2.1)."
             },
             {
               "kind": "speech",
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3576d0008e8b345c",
+      "sourceHash": "fnv1a64:b11c40c946f72a31",
       "notice": null,
       "blocks": [
         {
@@ -614,7 +614,7 @@
             },
             {
               "kind": "speech",
-              "text": "English splits this and French does not. Much for things you measure, many for things you count — French uses combien for both and lets the noun sort it out. One word fewer to choose between, and one of the rare places French is simpler than English."
+              "text": "English splits this and French does not. Much for things you measure, many for things you count — French uses combien for both and lets the noun sort it out. One word fewer to choose between, and one of the rare places French is simpler than English. Combien is Old French com + bien, \"how well\", with bien from Latin bene (EtymDB 2.1)."
             },
             {
               "kind": "speech",
@@ -683,7 +683,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bcaa32debce87db",
+      "sourceHash": "fnv1a64:cb80afad7728ce4f",
       "notice": null,
       "blocks": [
         {
@@ -722,7 +722,7 @@
             },
             {
               "kind": "speech",
-              "text": "For what? French built its why out of two words you can still see inside it, and English does the same thing in what for?"
+              "text": "For what? French built its why out of two words you can still see inside it, and English does the same thing in what for? Both halves are Latin underneath: pour from Vulgar Latin por, quoi from quid, \"what\" (EtymDB 2.1)."
             },
             {
               "kind": "speech",

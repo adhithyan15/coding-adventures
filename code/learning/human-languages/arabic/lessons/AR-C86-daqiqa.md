@@ -14,7 +14,8 @@ romanization: "daqīqa"
 concept_tag: AR-ADJ86-DAQIQA
 prerequisites: [AR-C86-usbu, AR-C86-shahr]
 sounds: []
-roots: []
+roots: [d-q-q]
+etymology_hook: "daqīqa: built on the root d-q-q, 'to be fine, thin, small' (Lane); daqīqa is 'a fine, small part', here of the hour"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C86-shahr]
 <!-- hl-knowledge: introduces=[AR-LEX-C86-ADJ86-05]; assesses=[] -->
 
 **دقيقة** — *daqīqa* — "a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دقيقة** (*daqīqa*) is built on the native Arabic root *d-q-q*, "to be fine, thin, small" (Lane). *Daqīqa* is "a fine, small part", here of the hour.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

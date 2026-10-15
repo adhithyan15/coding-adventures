@@ -11,6 +11,7 @@ concept_tag: ES-REF-GASOLINA
 prerequisites: [ES-C489-aparcar, ES-C489-atasco]
 sounds: []
 roots: []
+etymology_hook: "gasolina ← English gasoline, built on gas, coined by Van Helmont from Greek khaos"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C489-atasco]
 > *I have to put petrol in.*
 
 *La gasolinera* is the petrol station.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gasolina** ← English *gasoline* (EtymDB 2.1), built on *gas*, a word coined in the 1600s by the Flemish chemist Van Helmont from Greek *khaos*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

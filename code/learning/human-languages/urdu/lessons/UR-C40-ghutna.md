@@ -14,7 +14,8 @@ romanization: "ghuṭnā"
 concept_tag: UR-BODY40-GHUTNA
 prerequisites: [UR-C40-khun, UR-C40-tang]
 sounds: []
-roots: []
+roots: [sanskrit-ghuta]
+etymology_hook: "ghuṭnā ← *ghuṭṭa, a variant of Sanskrit ghuṭa 'ankle', which CDIAL takes from Dravidian (CDIAL 4479)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C40-tang]
 <!-- hl-knowledge: introduces=[UR-LEX-C40-BODY40-04]; assesses=[] -->
 
 **گھٹنا** — *ghuṭnā* — "a knee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گھٹنا** (*ghuṭnā*) is a tadbhava, a word inherited and reshaped by sound change. CDIAL lists it under *\*ghuṭṭa*, a variant it reconstructs beside Sanskrit *ghuṭa*, "ankle", and takes the Sanskrit word from Dravidian; it allows a second source in the variant *ghuṇṭa* (CDIAL 4479).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

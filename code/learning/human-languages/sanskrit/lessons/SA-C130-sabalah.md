@@ -14,7 +14,8 @@ romanization: "sabalaḥ"
 concept_tag: SA-QUAL130-SABALAH
 prerequisites: [SA-C130-murkhah, SA-C130-alasah]
 sounds: []
-roots: []
+roots: [sanskrit-sabala]
+etymology_hook: "sabala ← sa 'with' + bala 'strength': 'with strength', powerful (MW, already in the Rigveda)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C130-alasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C130-QUAL130-03]; assesses=[] -->
 
 **सबलः** — *sabalaḥ* — "strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sabala* is built from *sa* "with" and *bala* "strength, force": "having strength", so "powerful, strong", already in the Rigveda (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

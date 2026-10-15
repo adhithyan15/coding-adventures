@@ -14,6 +14,9 @@ Before the new one: say the Bengali for round, then the Bengali for purple.
 You'll want to know: গোলাপি.
 গোলাপি — golāpi — "pink".
 
+The word, taken apart.
+গোলাপি (golāpi) is golāp, "rose", with the ending -i: "rose-coloured". Golāp is usually traced to Persian gulāb, "rose-water".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Bengali for purple, then the Bengali for pink.
 
 You'll want to know: দুঃখী.
 দুঃখী — dukhi — "sad".
+
+The word, taken apart.
+দুঃখী (dukhi) is Sanskrit duḥkhin, "in pain, unhappy", taken over whole as a learned loan, a tatsama. CDIAL lists the inherited Bengali dukh, "sorrow, pain", under Sanskrit duḥkha (CDIAL 6375).
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Bengali for pink, then the Bengali for sad.
 You'll want to know: রাগী.
 রাগী — rāgi — "angry".
 
+The word, taken apart.
+রাগী (rāgi) is rāg, "anger", with the ending -i. Rāg is Sanskrit rāga, "colour, passion", which in Bengali has come to mean anger.
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Bengali for sad, then the Bengali for angry.
 You'll want to know: ক্লান্ত.
 ক্লান্ত — klāntô — "tired".
 
+The word, taken apart.
+ক্লান্ত (klāntô) is Sanskrit klānta, "wearied", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Bengali for angry, then the Bengali for tired.
 
 You'll want to know: সুস্থ.
 সুস্থ — susthô — "healthy".
+
+The word, taken apart.
+সুস্থ (susthô) is Sanskrit sustha, "healthy, comfortable", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

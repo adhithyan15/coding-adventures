@@ -14,7 +14,8 @@ romanization: "pratiśyāyaḥ"
 concept_tag: SA-WEL181-PRATISYAYAH
 prerequisites: [SA-C180-vidvan, SA-C181-dantapida]
 sounds: []
-roots: []
+roots: [sanskrit-pratishyaya]
+etymology_hook: "pratiśyāya 'a cold, catarrh' ← prati- + the root √śyai 'congeal' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C181-dantapida]
 <!-- hl-knowledge: introduces=[SA-LEX-C181-WEL181-02]; assesses=[] -->
 
 **प्रतिश्यायः** — *pratiśyāyaḥ* — "a head cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pratiśyāya* is built on *prati-* and the root √śyai, "to congeal, freeze" (MW). MW glosses it, and its twin *pratiśyā*, as "a cold, catarrh".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

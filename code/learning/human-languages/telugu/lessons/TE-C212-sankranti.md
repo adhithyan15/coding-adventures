@@ -14,7 +14,8 @@ romanization: "saṅkrānti"
 concept_tag: TE-SAMAYAM212-SANKRANTI
 prerequisites: [TE-C212-civaraku, TE-C212-varaku]
 sounds: []
-roots: []
+roots: [sanskrit-sankranti]
+etymology_hook: "saṅkrānti ← Sanskrit saṁkrānti 'going from one place to another; passage of a heavenly body', a tatsama (CDIAL 12835)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C212-varaku]
 <!-- hl-knowledge: introduces=[TE-LEX-C212-SAMAYAM212-05]; assesses=[] -->
 
 **సంక్రాంతి** — *saṅkrānti* — "Sankranti, the January harvest festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సంక్రాంతి** (*saṅkrānti*) is Sanskrit *saṁkrānti*, "going from one place to another; passage of a heavenly body", taken over whole as a learned loan, a tatsama (CDIAL 12835). The festival marks the sun's passage into Capricorn.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

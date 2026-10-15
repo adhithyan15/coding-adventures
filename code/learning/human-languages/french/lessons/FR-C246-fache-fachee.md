@@ -46,7 +46,7 @@ reviews_of: [FR-C246-bavard-bavarde]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**fâché** is the past participle of the verb in *se fâcher*, "to get angry": angered.
+**fâché** is the past participle of the verb in *se fâcher*, "to get angry": angered. *Fâcher* is of uncertain origin, usually traced to Latin *fastīdium*, "disgust".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

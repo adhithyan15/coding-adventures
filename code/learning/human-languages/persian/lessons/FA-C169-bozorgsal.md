@@ -14,7 +14,8 @@ romanization: "bozorgsâl"
 concept_tag: FA-CHIZ169-BOZORGSAL
 prerequisites: [FA-C168-viza, FA-C168-form]
 sounds: []
-roots: []
+roots: [persian-buzurg, persian-sal]
+etymology_hook: "bozorgsâl: Persian bozorg 'big' + sâl 'year', both inherited (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C168-form]
 <!-- hl-knowledge: introduces=[FA-LEX-C169-CHIZ169-01]; assesses=[] -->
 
 **بزرگسال** — *bozorgsâl* — "an adult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bozorgsâl* is *bozorg*, "big", with *sâl*, "year": big in years. Both are inherited; EtymDB traces *bozorg* to Middle Persian *wuzurg* and *sâl* to Middle Persian *sāl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

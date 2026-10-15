@@ -14,7 +14,8 @@ romanization: "pūjā"
 concept_tag: HI-THG217-PUJA
 prerequisites: [HI-C217-amrud, HI-C217-tyohar]
 sounds: []
-roots: []
+roots: [sanskrit-puja]
+etymology_hook: "pūjā ← Sanskrit pūjā 'honour, worship', a tatsama (CDIAL 8317)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C217-tyohar]
 <!-- hl-knowledge: introduces=[HI-LEX-C217-THG217-04]; assesses=[] -->
 
 **पूजा** — *pūjā* — "worship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पूजा** (*pūjā*) is Sanskrit *pūjā*, "honour, worship", taken over whole as a learned loan, a tatsama (CDIAL 8317).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

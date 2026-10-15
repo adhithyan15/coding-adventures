@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 221,
-  "sourceHash": "fnv1a64:dacf596df3187f67",
+  "sourceHash": "fnv1a64:4efd9f0f46d678c3",
   "lessonIds": [
     "TE-C221-godhuma-rangu",
     "TE-C221-vendi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch221.txt",
   "json": "telugu/narration/ch221.json",
-  "textHash": "fnv1a64:91c9c7c04876e61d",
-  "jsonHash": "fnv1a64:24ee68e057c7fed9",
+  "textHash": "fnv1a64:87181d7d5efcdc5c",
+  "jsonHash": "fnv1a64:7b8c5ee2f7c83da2",
   "findings": []
 }

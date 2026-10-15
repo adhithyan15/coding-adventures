@@ -14,7 +14,8 @@ romanization: "tappanisari"
 concept_tag: TE-GUNAM259-TAPPANISARI
 prerequisites: [TE-C259-sonta, TE-C259-biji]
 sounds: []
-roots: []
+roots: [dravidian-tappu-slip, sari]
+etymology_hook: "tappanisari: native tappu 'to miss' (DEDR 3071) + ani 'saying' + sari 'right', of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C259-biji]
 <!-- hl-knowledge: introduces=[TE-LEX-C259-GUNAM259-05]; assesses=[] -->
 
 **తప్పనిసరి** — *tappanisari* — "compulsory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తప్పనిసరి** (*tappanisari*) is native *tappu*, "to miss, fail" (DEDR 3071), with *ani*, "saying", and *sari*, "right", whose origin is uncertain: "right to say it cannot be missed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

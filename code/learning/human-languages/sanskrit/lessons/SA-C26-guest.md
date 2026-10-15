@@ -14,7 +14,8 @@ romanization: "atithiḥ"
 concept_tag: SA-PERSON-GUEST
 prerequisites: [SA-C26-king, SA-C24-cloth, SA-C25-tooth, SA-C18-k-words]
 sounds: []
-roots: []
+roots: [sanskrit-atithi]
+etymology_hook: "atithi 'guest': MW gives √at 'wander' or a-tithi 'no fixed day'; which is right is not settled"
 duration:
   max_seconds: 210
 requires:
@@ -45,9 +46,15 @@ reviews_of: [SA-C26-king]
 
 **अतिथिः** (*atithiḥ*) — "a guest".
 
-**अतिथिः** is a guest. Tradition reads the word as *a-tithi*, "one without a date" — the visitor who arrives unannounced, on no appointed day, and must be fed anyway. Linguists prefer a root meaning "to wander" and derive it as "the wanderer".
+**अतिथिः** is a guest. Tradition reads the word as *a-tithi*, "one without a date" — the visitor who arrives unannounced, on no appointed day, and must be fed anyway. MW also gives a root meaning "to wander", which would make it "the wanderer".
 
 Keep the traditional reading; keep also the fact that it is a reading. Either way the famous line **अतिथिदेवो भव** — "be one to whom the guest is a god" — tells you how much weight the word carries.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW gives both accounts of *atithi*: the root √at, "to wander", or *a-tithi*, "one
+who has no fixed day for coming". Which one is right is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

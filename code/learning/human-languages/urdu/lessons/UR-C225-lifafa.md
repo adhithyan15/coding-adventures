@@ -14,7 +14,8 @@ romanization: "lifāfā"
 concept_tag: UR-CHIZ225-LIFAFA
 prerequisites: [UR-C224-plet, UR-C224-katori]
 sounds: []
-roots: []
+roots: [arabic-lifafa]
+etymology_hook: "lifāfā ← Arabic lifāfa 'a wrapper', through Persian (Lane, root l-f-f)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C224-katori]
 <!-- hl-knowledge: introduces=[UR-LEX-C225-CHIZ225-01]; assesses=[] -->
 
 **لفافہ** — *lifāfā* — "an envelope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لفافہ** (*lifāfā*) is a loan from Arabic *lifāfa*, "a wrapper", which reached Urdu through Persian. Its Arabic root is *l-f-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a knife"
 concept_tag: LA-DOMUS2-CULTER
 prerequisites: [LA-C83-lucerna, LA-C83-poculum]
 sounds: []
-roots: []
+roots: [culter-latin]
+etymology_hook: "culter 'knife' — probably from PIE *kelHtro- 'knife'; English coulter, a plough blade, comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C83-poculum]
 <!-- hl-knowledge: introduces=[LA-LEX-C83-DOMUS2-05]; assesses=[] -->
 
 **culter, cultrī** — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**culter** is probably inherited, from a Proto-Indo-European *\*kelHtro-*, "knife", built on *\*(s)kelH-*, "to split, to cut" (EtymDB 2.1). English *coulter*, the blade in front of a ploughshare, comes from *culter*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

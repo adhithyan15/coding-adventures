@@ -14,7 +14,8 @@ romanization: "kā̃"
 concept_tag: PA-THINGS133-KA
 prerequisites: [PA-C133-gadha, PA-C133-ullu]
 sounds: []
-roots: []
+roots: [sanskrit-kaka]
+etymology_hook: "kāṁ ← Sanskrit kāka 'crow', a tadbhava (CDIAL 2993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C133-ullu]
 <!-- hl-knowledge: introduces=[PA-LEX-C133-THINGS133-05]; assesses=[] -->
 
 **ਕਾਂ** — *kā̃* — "a crow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕਾਂ** (*kāṁ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kāka*, "crow" (CDIAL 2993). CDIAL calls the word partly imitative.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "lakṣyam"
 concept_tag: SA-WRK201-LAKSYAM
 prerequisites: [SA-C200-vivadah, SA-C201-yojana]
 sounds: []
-roots: []
+roots: [sanskrit-lakshya]
+etymology_hook: "lakṣya 'aim, target' ← lakṣa 'mark, stake', from √lakṣ 'mark, observe' (MW; CDIAL 10881)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C201-yojana]
 <!-- hl-knowledge: introduces=[SA-LEX-C201-WRK201-02]; assesses=[] -->
 
 **लक्ष्यम्** — *lakṣyam* — "a goal, a target".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lakṣya* is built on *lakṣa*, "mark, sign, stake", from the root √lakṣ, "to mark, observe" (MW). The Muṇḍaka Upaniṣad already uses it for an aim or target (CDIAL 10881). *Lakṣa* also became "100,000", the source of Hindi *lākh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

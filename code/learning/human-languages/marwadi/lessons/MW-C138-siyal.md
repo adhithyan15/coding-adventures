@@ -14,7 +14,8 @@ romanization: "siyāḷ"
 concept_tag: MW-THINGS138-SIYAL
 prerequisites: [MW-C138-hiran, MW-C138-lukri]
 sounds: []
-roots: []
+roots: [sanskrit-shrgala]
+etymology_hook: "siyāḷ ← Sanskrit śṛgāla 'jackal', a tadbhava (CDIAL 12578, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C138-lukri]
 <!-- hl-knowledge: introduces=[MW-LEX-C138-THINGS138-05]; assesses=[] -->
 
 **सियाळ** — *siyāḷ* — "a jackal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सियाळ** (*siyāḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śṛgāla*, "jackal". CDIAL gives no Marwari form in this entry (CDIAL 12578); the match is through Hindi *siyāl* and Gujarati *siyāḷ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

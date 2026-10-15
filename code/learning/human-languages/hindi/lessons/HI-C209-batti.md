@@ -14,7 +14,8 @@ romanization: "battī"
 concept_tag: HI-THG209-BATTI
 prerequisites: [HI-C209-pyala, HI-C209-sui]
 sounds: []
-roots: []
+roots: [sanskrit-varti]
+etymology_hook: "battī ← Sanskrit varti 'wick; lamp', a tadbhava (CDIAL 11359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C209-sui]
 <!-- hl-knowledge: introduces=[HI-LEX-C209-THG209-04]; assesses=[] -->
 
 **बत्ती** — *battī* — "a lamp, a light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बत्ती** (*battī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *varti*, "wick; lamp" (CDIAL 11359).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

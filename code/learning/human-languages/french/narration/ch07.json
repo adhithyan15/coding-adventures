@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Days of the Week",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e8d3a6572ed60ee3",
+  "sourceHash": "fnv1a64:bd367f07b83a9ad2",
   "lessons": [
     {
       "id": "FR-C07-lune",
@@ -294,7 +294,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf58f3d7e16c351e",
+      "sourceHash": "fnv1a64:1d250b1dadfeffd2",
       "notice": null,
       "blocks": [
         {
@@ -336,7 +336,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "mardi is Martis diēs, \"the day of Mars\" — the god of war, and the red planet named for him."
+              "text": "mardi is Latin Martis diēs, \"the day of Mars\" — the god of war, and the red planet named for him."
             }
           ]
         },
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:946d00b7bba8a538",
+      "sourceHash": "fnv1a64:2056b3416f241bc0",
       "notice": null,
       "blocks": [
         {
@@ -473,7 +473,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "mercredi is Mercuriī diēs, \"the day of Mercury\" — the messenger of the gods, and the swiftest planet. English kept the god's name in mercurial, \"quick-changing,\" and gave it to the metal that runs like water."
+              "text": "mercredi is Latin Mercuriī diēs, \"the day of Mercury\" — the messenger of the gods, and the swiftest planet. English kept the god's name in mercurial, \"quick-changing,\" and gave it to the metal that runs like water."
             }
           ]
         },
@@ -560,7 +560,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c7ea649cd267ab3",
+      "sourceHash": "fnv1a64:6104844654da1217",
       "notice": null,
       "blocks": [
         {
@@ -606,7 +606,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "jeudi is Jovis diēs, \"the day of Jove\" — Jove being the other name of Jupiter, king of the gods and the largest planet. English keeps Jove in the phrase by Jove, and keeps the god's temperament in jovial: cheerful, the way people born under Jupiter were said to be."
+              "text": "jeudi is Latin Jovis diēs, \"the day of Jove\" — Jove being the other name of Jupiter, king of the gods and the largest planet. English keeps Jove in the phrase by Jove, and keeps the god's temperament in jovial: cheerful, the way people born under Jupiter were said to be."
             }
           ]
         },
@@ -693,7 +693,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9e876779322b81c",
+      "sourceHash": "fnv1a64:a19d73fcfa5e9dc4",
       "notice": null,
       "blocks": [
         {
@@ -735,7 +735,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vendredi is Veneris diēs, \"the day of Venus\" — goddess of love and the brightest thing in the sky after the Sun and Moon. Her name is still in English venerate, \"to hold in reverence.\""
+              "text": "vendredi is Latin Veneris diēs, \"the day of Venus\" — goddess of love and the brightest thing in the sky after the Sun and Moon. Her name is still in English venerate, \"to hold in reverence.\""
             }
           ]
         },

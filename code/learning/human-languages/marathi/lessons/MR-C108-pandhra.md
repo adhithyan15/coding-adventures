@@ -14,7 +14,8 @@ romanization: "pāṇḍhrā"
 concept_tag: MR-ADJ108-PANDHRA
 prerequisites: [MR-C107-nila, MR-C108-kala]
 sounds: []
-roots: []
+roots: [sanskrit-pandura]
+etymology_hook: "pāṇḍhrā ← Sanskrit pāṇḍura 'whitish, pale, white', a tadbhava (CDIAL 8047)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C108-kala]
 <!-- hl-knowledge: introduces=[MR-LEX-C108-ADJ108-02]; assesses=[] -->
 
 **पांढरा** — *pāṇḍhrā* — "white".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पांढरा** (*pāṇḍhrā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pāṇḍura*, "whitish, pale, white" (CDIAL 8047). CDIAL lists Marathi *pāṇḍhrā*, "white".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

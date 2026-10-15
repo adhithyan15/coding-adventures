@@ -14,7 +14,8 @@ romanization: "bilkul"
 concept_tag: UR-SIFAT195-BILKUL
 prerequisites: [UR-C195-achanak, UR-C195-zyada]
 sounds: []
-roots: []
+roots: [arabic-kull]
+etymology_hook: "bilkul ← Arabic bi-l-kull 'with the whole' (Lane, root k-l-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C195-zyada]
 <!-- hl-knowledge: introduces=[UR-LEX-C195-SIFAT195-04]; assesses=[] -->
 
 **بالکل** — *bilkul* — "completely, quite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بالکل** (*bilkul*) is Arabic *bi-l-kull*, "with the whole", which reached Urdu through Persian (Lane, root *k-l-l*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

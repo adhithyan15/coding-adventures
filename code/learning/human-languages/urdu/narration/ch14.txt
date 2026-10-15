@@ -60,7 +60,7 @@ From the right edge: ج, و, ت, ا.
 ت te is new, and it shares its base shape with ṭe, already known from ṭhīk: the same scoop, but ت carries two dots above where ṭe carries a small raised loop instead. Two dots make it plain dental t; the loop makes it the retroflex ṭ the tongue curls back for.
 
 The word, taken apart — three words, one old root.
-jūtā continues Sauraseni Prakrit jutta, "joined," from Sanskrit yukta, "joined, yoked," from Proto-Indo-European yewg-, "to yoke." That root gives English yoke directly, the wooden bar that joins two oxen. It also gives Sanskrit its own word yoga — literally "a joining, a yoking" — the same root, kept inside one language this time rather than split across two. جوتا keeps the oldest, plainest sense: a thing joined onto the foot.
+jūtā continues Prakrit jutta, "joined," from Sanskrit yukta, "joined, yoked" (CDIAL 10479), from Proto-Indo-European yewg-, "to yoke." That root gives English yoke directly, the wooden bar that joins two oxen. It also gives Sanskrit its own word yoga — literally "a joining, a yoking" — the same root, kept inside one language this time rather than split across two. جوتا keeps the oldest, plainest sense: a thing joined onto the foot.
 
 Guided Practice.
 [your turn — say: jūtā — shoe; then merā jūtā kālā hai]
@@ -91,7 +91,7 @@ merī ṭopī safed hai. — "My cap is white."
 ٹوپی (ṭopī) is feminine, like روٹی and qamīz.
 
 The word, taken apart — nothing behind it, something ahead.
-ٹوپی (ṭopī) is inherited from Sauraseni Prakrit ṭopiā, "helmet," related to Sanskrit ṭopikā. No further root is documented behind that — another honest dead end, like روٹی and کان.
+ٹوپی (ṭopī) is inherited: CDIAL lists it under a reconstructed ṭoppa, "hat, covering", beside Prakrit ṭopiā, "helmet", and late Sanskrit ṭopikā, "turban" (CDIAL 5481). No further root is documented behind that — another honest dead end, like روٹی and کان.
 But ٹوپی did something those two never did: it left Urdu and Hindi and became an English word. Topee, first recorded in English between 1825 and 1835, is borrowed directly from Hindi ṭopī, "hat" — the lightweight sun hat worn across British India. نیلا's cousin nīlī took four languages and a chemistry lab to become English aniline. ٹوپی walked straight into English as itself.
 
 Guided Practice.
@@ -125,7 +125,7 @@ You'll want to know first — one word.
 کوٹ (koṭ) is masculine.
 
 The word, taken apart — a third layer, and every direction covered.
-کوٹ (koṭ) is borrowed directly from English coat — a modern loan, one generation old rather than a thousand years. It happens to look identical to an older, unrelated کوٹ (koṭ) meaning "fort," inherited from Sanskrit koṭṭa — the two are homographs, not cousins, and the spelling gives no warning either way.
+کوٹ (koṭ) is borrowed directly from English coat — a modern loan, one generation old rather than a thousand years. It happens to look identical to an older, unrelated کوٹ (koṭ) meaning "fort," inherited from Sanskrit koṭṭa (CDIAL 3500) — the two are homographs, not cousins, and the spelling gives no warning either way.
 This book has named two layers before now: the inherited Indo-Aryan core, and the Persian-Arabic literary layer borrowed centuries ago. کوٹ (koṭ) is the first clear example of a third layer — everyday English loans, arriving through more recent contact. And this chapter has now shown every direction a loanword can travel in one small set of four: Persian and Arabic into Urdu (qamīz), Urdu straight out into English (ٹوپی (ṭopī)), and English straight into Urdu (کوٹ (koṭ)).
 
 Guided Practice.

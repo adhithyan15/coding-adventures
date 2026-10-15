@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Courtesy Words",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9714b0f431d654c6",
+  "sourceHash": "fnv1a64:e94e3f955c341db5",
   "lessons": [
     {
       "id": "TE-C51-gratitude",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b21958c3f0ed6285",
+      "sourceHash": "fnv1a64:3af5c019998719fa",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కృతజ్ఞత (kṛtajñata) is Sanskrit kṛtajñatā, \"gratitude\", from kṛtajña, \"knowing what has been done\", taken over as a learned loan, a tatsama, with the final -ā shortened."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -333,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ec85c10cd74acd2",
+      "sourceHash": "fnv1a64:53be96d7a2e75fb4",
       "notice": null,
       "blocks": [
         {
@@ -374,6 +385,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మేలు (mēlu) is native Dravidian, one word with Tamil mē and Kannada mē (DEDR 5086). DEDR lists Telugu mēlu, \"good, advantage, better\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -384,7 +406,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -442,7 +464,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -473,7 +495,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e22620f56655bce5",
+      "sourceHash": "fnv1a64:2393656e5687b98d",
       "notice": null,
       "blocks": [
         {
@@ -514,6 +536,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గౌరవం (gauravaṁ) is Sanskrit gaurava, \"weight; venerableness\", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 4346)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -524,7 +557,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -582,7 +615,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -782,7 +815,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:287e3b04c24477b1",
+      "sourceHash": "fnv1a64:25d0d68da01890f5",
       "notice": null,
       "blocks": [
         {
@@ -827,6 +860,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆశీర్వాదం (āśīrvādaṁ) is Sanskrit āśīrvāda, \"blessing\", taken over whole as a learned loan, a tatsama: āśis, \"wish, blessing\" (CDIAL 1457), and vāda, \"utterance\" (CDIAL 11507)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -837,7 +881,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -895,7 +939,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1076,7 +1120,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9df4b9c0637b646",
+      "sourceHash": "fnv1a64:930178a38c1c6e1c",
       "notice": null,
       "blocks": [
         {
@@ -1115,7 +1159,11 @@
             },
             {
               "kind": "speech",
-              "text": "Hold on to దండ; it comes back in the next chapter carrying flowers."
+              "text": "Hold on to దండ; a word of the same shape comes back in the next chapter carrying flowers."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 6128 lists Sanskrit daṇḍa, \"stick, staff\", which it thinks probably non-Aryan; the greeting is usually explained through daṇḍa-praṇāma, the full prostration."
             }
           ]
         },

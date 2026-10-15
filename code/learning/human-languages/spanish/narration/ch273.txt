@@ -18,7 +18,7 @@ en pri-MER lu-GAR. see reference.
 
 The word, taken apart.
 en primer lugar — "in the first place, firstly."
-Primer is Latin primarius, "of the first rank" — English primary, prime. Lugar is locus, "place" — English local, locate. Literally: in the first place, and English kept the phrase intact.
+Primer is Latin primarius, "of the first rank" — English primary, prime. Lugar is Latin localis, "of a place", from locus, "place" — English local, locate. Literally: in the first place, and English kept the phrase intact.
 Its partners are en segundo lugar and por último, "lastly."
 
 What you've built.
@@ -58,6 +58,7 @@ The word, taken apart.
 además — "furthermore, moreover, besides."
 Take it apart: a + de + más — "to, of, more." It is built out of three words you already have, and más is the comparison word from the experience chapter.
 So it means, quite literally, "in addition to more." Spanish built its heaviest additive connector out of its lightest pieces.
+A is Latin ad, de is Latin de, and más is Latin magis, "more".
 
 What you've built.
 También adds an item: hablo español; también hablo francés. Además adds a point: es difícil. Además, es caro.
@@ -132,7 +133,7 @@ lo KUAL. see reference.
 
 The word, taken apart.
 lo cual — "which", where the which points at an entire preceding clause.
-Cual is Latin qualis, "of what kind" — English quality and the -al of equal. The neuter lo in front is what widens its target: not a noun, but everything just said.
+Cual is Latin qualis, "of what kind" — English quality. The neuter lo in front is what widens its target: not a noun, but everything just said.
 Llegó tarde, lo cual me sorprendió. — "He arrived late, which surprised me." What surprised me is not he, and not late. It is the whole fact.
 
 What you've built.

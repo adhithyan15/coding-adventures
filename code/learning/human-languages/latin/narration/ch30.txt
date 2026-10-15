@@ -15,6 +15,9 @@ Bonam noctem = "good night" — but notice: not bona nox (nominative). Latin wis
 Grammar Lens: Be honest: real grammar, not a real citation.
 Here's the careful part, matching the same honesty already applied to quōmodo tē habēs?, nihil est, and crās tē vidēbō: the accusative-of-wishing principle itself is genuine, solid Classical Latin grammar. But this specific fixed phrase, bonam noctem, is not actually attested as a Roman farewell formula in any surviving classical text — it appears to be a later, post-classical convention, built correctly from real grammar but not itself a citation. Treat the grammar as reliable and the exact phrase as a well-formed construction, not a quotation from a Roman text.
 
+The phrase, taken apart.
+bonam noctem builds on bonus "good", which Old Latin wrote duenos (EtymDB 2.1). It is usually traced to Proto-Italic dwenos, "good", and perhaps to a root for "to show favour" (EtymDB 2.1).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "bonam noctem" — "good night," accusative]

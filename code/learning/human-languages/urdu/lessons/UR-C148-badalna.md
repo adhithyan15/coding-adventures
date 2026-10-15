@@ -14,7 +14,8 @@ romanization: "badalnā"
 concept_tag: UR-VERB-BADALNA
 prerequisites: [UR-C147-ghabrana, UR-C148-chunna]
 sounds: []
-roots: []
+roots: [arabic-badal]
+etymology_hook: "badalnā ← Arabic badal 'a substitute, an exchange', through Persian (Lane, root b-d-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C148-chunna]
 <!-- hl-knowledge: introduces=[UR-LEX-C148-ACT148-02]; assesses=[] -->
 
 **بدلنا** — *badalnā* — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بدلنا** (*badalnā*) is a loan from Arabic *badal*, "a substitute, an exchange", which reached Urdu through Persian. Its Arabic root is *b-d-l* (Lane). Urdu made a verb of it with *-nā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

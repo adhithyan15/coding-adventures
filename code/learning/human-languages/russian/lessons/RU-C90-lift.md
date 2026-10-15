@@ -14,7 +14,8 @@ romanization: "lift"
 concept_tag: RU-LOC90-LIFT
 prerequisites: [RU-C89-traffic-lights, RU-C90-car-park]
 sounds: []
-roots: []
+roots: [english-lift]
+etymology_hook: "лифт ← English lift"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C90-car-park]
 <!-- hl-knowledge: introduces=[RU-LEX-C90-LOC90-02]; assesses=[] -->
 
 **лифт** (*lift*) — "a lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лифт** comes from English *lift* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

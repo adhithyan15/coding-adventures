@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 132,
-  "sourceHash": "fnv1a64:a5ad602fc243371c",
+  "sourceHash": "fnv1a64:26025f22e1334d39",
   "lessonIds": [
     "LA-C132-anser",
     "LA-C132-apis",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch132.txt",
   "json": "latin/narration/ch132.json",
-  "textHash": "fnv1a64:ba8ad804bef53338",
-  "jsonHash": "fnv1a64:bf8bfe88a10755ac",
+  "textHash": "fnv1a64:a75f5cd6ac27f5d5",
+  "jsonHash": "fnv1a64:fbaedde0689e9da3",
   "findings": []
 }

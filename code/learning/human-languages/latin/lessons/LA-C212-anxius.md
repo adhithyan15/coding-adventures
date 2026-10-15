@@ -13,7 +13,8 @@ gloss: "anxious"
 concept_tag: LA-QUAL212-ANXIUS
 prerequisites: [LA-C212-curiosus, LA-C212-invidus]
 sounds: []
-roots: []
+roots: [anxius-latin, angere-latin]
+etymology_hook: "anxius 'anxious' — built on angō 'to choke, to distress'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C212-invidus]
 <!-- hl-knowledge: introduces=[LA-LEX-C212-QUAL212-03]; assesses=[] -->
 
 **anxius, anxia, anxium** — "anxious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anxius** is built on *angō*, "to squeeze, to choke, to distress" (Lewis & Short): choked with worry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

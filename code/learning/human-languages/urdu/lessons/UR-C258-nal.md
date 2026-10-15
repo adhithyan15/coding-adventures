@@ -14,7 +14,8 @@ romanization: "nal"
 concept_tag: UR-CHIZ258-NAL
 prerequisites: [UR-C258-auzar, UR-C258-paip]
 sounds: []
-roots: []
+roots: [sanskrit-nada]
+etymology_hook: "nal 'a pipe, a tap': CDIAL lists nalā 'hollow reed' under naḍaka, a form beside Sanskrit naḍa 'reed' (CDIAL 6936)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C258-paip]
 <!-- hl-knowledge: introduces=[UR-LEX-C258-CHIZ258-04]; assesses=[] -->
 
 **نل** — *nal* — "a tap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نل** (*nal*) is "a tube". CDIAL lists Hindi *nalā*, "hollow reed, windpipe", under *naḍaka*, "hollow of a bone", a form beside Sanskrit *naḍa*, "a kind of reed", and notes possible Dravidian contact (CDIAL 6936).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

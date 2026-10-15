@@ -14,7 +14,8 @@ romanization: "cappani"
 concept_tag: TE-GUNAM179-CAPPANI
 prerequisites: [TE-C178-saku, TE-C179-kammani]
 sounds: []
-roots: []
+roots: [dravidian-cappai-insipid]
+etymology_hook: "cappani: native Dravidian; DEDR 2337 lists cappani 'tasteless' with Tamil cappai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C179-kammani]
 <!-- hl-knowledge: introduces=[TE-LEX-C179-GUNAM179-02]; assesses=[] -->
 
 **చప్పని** — *cappani* — "bland, tasteless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చప్పని** (*cappani*) is native Dravidian. DEDR 2337 lists *cappani*, "tasteless, insipid", with Tamil *cappai* and Kannada *cappage*, "insipid". DEDR compares Sanskrit *capaṭa*, "tasteless", a lexicon word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

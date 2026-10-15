@@ -14,7 +14,8 @@ romanization: "pokúpka"
 concept_tag: RU-RABOTA201-POKUPKA
 prerequisites: [RU-C201-sdacha, RU-C201-skidka]
 sounds: []
-roots: []
+roots: [caupo-latin]
+etymology_hook: "покупка is from покупать 'to buy', from купить, a Gothic loan from Latin caupo"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C201-skidka]
 <!-- hl-knowledge: introduces=[RU-LEX-C201-RABOTA201-03]; assesses=[] -->
 
 **покупка** (*pokúpka*) — "a purchase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**покупка** comes from *покупать*, "to buy", with *-ка*: a thing bought. *купить* came from Gothic *kaupōn*, "to trade", from Latin *caupō*, "a trader" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

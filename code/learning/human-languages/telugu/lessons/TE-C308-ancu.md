@@ -14,7 +14,8 @@ romanization: "añcu"
 concept_tag: TE-VASTUVU308-ANCU
 prerequisites: [TE-C308-gunta, TE-C308-mukka]
 sounds: []
-roots: []
+roots: [dravidian-ancu-edge]
+etymology_hook: "añcu: Dravidian; DEDR 57 lists ancu 'border, edge' with Kannada añcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C308-mukka]
 <!-- hl-knowledge: introduces=[TE-LEX-C308-VASTUVU308-03]; assesses=[] -->
 
 **అంచు** — *añcu* — "an edge, a rim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అంచు** (*añcu*) is Dravidian. DEDR 57 lists *añcu*, "border, edge, brim", with Kannada *añcu*, "edge", and notes that Tamil *aṉsu* was borrowed from Telugu. DEDR compares Sanskrit *añcala*, "border of a garment" (CDIAL 168).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

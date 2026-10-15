@@ -14,7 +14,8 @@ romanization: "ko"
 concept_tag: HI-POST-KO
 prerequisites: [HI-C91-aadmi-unchanged, HI-C86-aapko-use, HI-C90-se]
 sounds: []
-roots: []
+roots: [sanskrit-kaksha]
+etymology_hook: "ko: listed by CDIAL under kakṣa 'armpit' as an adverb and postposition: 'at the side of' became 'to' (14342)"
 duration:
   max_seconds: 240
 requires:
@@ -65,6 +66,8 @@ by word order and nothing else. Hindi puts **को** on an object when it is a
 **person** or a **particular** thing, and leaves it bare otherwise. Spanish does
 the same with **a** before a human object, so the demand is not unique to Hindi
 — only the marker is.
+
+CDIAL lists **को** under Sanskrit *kakṣa*, "armpit" (CDIAL 14342): "at the side of" became "to".
 
 ## Grammar Lens: three postpositions, one habit
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C91-NOUN-05, HI-LEX-C90-ROUT-01, HI-LEX-C87-POST-01] -->

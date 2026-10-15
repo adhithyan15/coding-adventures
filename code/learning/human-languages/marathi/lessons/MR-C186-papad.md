@@ -14,7 +14,8 @@ romanization: "pāpaḍ"
 concept_tag: MR-VASTU186-PAPAD
 prerequisites: [MR-C185-parabhav, MR-C185-spardha]
 sounds: []
-roots: []
+roots: [sanskrit-parpata]
+etymology_hook: "pāpaḍ ← Sanskrit parpaṭa 'thin cake of rice or pease-meal', a tadbhava (CDIAL 7934)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C185-spardha]
 <!-- hl-knowledge: introduces=[MR-LEX-C186-VASTU186-01]; assesses=[] -->
 
 **पापड** — *pāpaḍ* — "a papad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पापड** (*pāpaḍ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *parpaṭa*, "thin cake of rice or pease-meal" (CDIAL 7934).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

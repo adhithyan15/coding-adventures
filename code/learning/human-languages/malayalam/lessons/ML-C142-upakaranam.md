@@ -14,7 +14,8 @@ romanization: "upakaraṇaṁ"
 concept_tag: ML-CAN142-UPAKARANAM
 prerequisites: [ML-C142-avakasam, ML-C142-avasaram, ML-C23-divasam]
 sounds: []
-roots: []
+roots: [sanskrit-upakarana]
+etymology_hook: "upakaraṇaṁ ← Sanskrit upakaraṇa 'implement', a tatsama (CDIAL 2138)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C142-avasaram]
 <!-- hl-knowledge: introduces=[ML-LEX-C142-CAN142-05]; assesses=[] -->
 
 **ഉപകരണം** — *upakaraṇaṁ* — "a tool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉപകരണം** (*upakaraṇaṁ*) ← Sanskrit *upakaraṇa*, "implement", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 2138).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

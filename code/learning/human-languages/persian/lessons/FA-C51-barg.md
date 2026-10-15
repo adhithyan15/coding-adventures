@@ -14,7 +14,8 @@ romanization: "barg"
 concept_tag: FA-SCHOOL51-BARG
 prerequisites: [FA-C51-derakht, FA-C51-gol]
 sounds: []
-roots: []
+roots: [persian-barg]
+etymology_hook: "barg ← Middle Persian warg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C51-gol]
 <!-- hl-knowledge: introduces=[FA-LEX-C51-SCHOOL51-05]; assesses=[] -->
 
 **برگ** — *barg* — "a leaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*barg* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *warg*, "leaf" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

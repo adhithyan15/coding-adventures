@@ -14,7 +14,8 @@ romanization: "mori"
 concept_tag: JA-NATURE42-MORI
 prerequisites: [JA-C42-umi, JA-C42-kusa]
 sounds: []
-roots: []
+roots: [japanese-mori]
+etymology_hook: "mori: native Japanese, inherited, not borrowed; kanji 森 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C42-kusa]
 <!-- hl-knowledge: introduces=[JA-LEX-C42-NATURE42-04]; assesses=[] -->
 
 **もり** — *mori* — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**もり** (*mori*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kabīr"
 concept_tag: AR-ANIMALS81-KABIR
 prerequisites: [AR-C81-himar, AR-C81-dajaja]
 sounds: []
-roots: []
+roots: [k-b-r]
+etymology_hook: "kabīr: built on the root k-b-r, 'to be great, to grow old' (Lane); the same root gives akbar, 'greater'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C81-dajaja]
 <!-- hl-knowledge: introduces=[AR-LEX-C81-ANIMALS81-04]; assesses=[] -->
 
 **كبير** — *kabīr* — "big".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كبير** (*kabīr*) is built on the native Arabic root *k-b-r*, "to be great, to grow old" (Lane). The same root gives *akbar*, "greater".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

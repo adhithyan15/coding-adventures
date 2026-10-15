@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:235eefc66408d520",
+  "sourceHash": "fnv1a64:57e9758d7fb3a4d7",
   "lessons": [
     {
       "id": "GU-C04-malishun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0144b312a2b8e94f",
+      "sourceHash": "fnv1a64:5f283e813b818fbb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -67,6 +67,10 @@
             {
               "kind": "speech",
               "text": "મળીશું (maḷīshũ, \"we will meet\") is the future of મળવું (maḷvũ, \"to meet\"), from Sanskrit મિલ્ (mil-, \"to join, unite\") — the same root as Hindi milnā and Punjabi milṇā. Note the retroflex ળ (ḷ): Gujarati keeps this extra letter — like Marathi and the Dravidian south, and unlike Hindi. The ending -શું (-shũ) is the \"we will\" future."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists maḷvũ under Sanskrit milati, \"meets, encounters\" (CDIAL 10133)."
             }
           ]
         },
@@ -153,7 +157,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1f85579f351e7970",
+      "sourceHash": "fnv1a64:d5c71321e9026c50",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -200,7 +204,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "કાલ (kāl) means both \"tomorrow\" and \"yesterday\" — the day on either side of today — from Sanskrit કાલ (kāla, \"time\"). (It is the very same kāla behind Hindi's kal, Bengali's kāl, and Punjabi's akāl \"timeless.\") The verb's tense tells which: kāle maḷīshũ (future becomes \"tomorrow we'll meet\"), kāle maḷyā (past becomes \"we met yesterday\"). So કાલે મળીશું = \"tomorrow we'll meet\" = \"see you tomorrow.\""
+              "text": "કાલ (kāl) means both \"tomorrow\" and \"yesterday\" — the day on either side of today — from Sanskrit kalya, \"dawn; at dawn, tomorrow\", itself built on kāla, \"time\" (CDIAL 3104). (Hindi's kal comes from the same word.) The verb's tense tells which: kāle maḷīshũ (future becomes \"tomorrow we'll meet\"), kāle maḷyā (past becomes \"we met yesterday\"). So કાલે મળીશું = \"tomorrow we'll meet\" = \"see you tomorrow.\""
             }
           ]
         },
@@ -276,7 +280,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6618000081b6df94",
+      "sourceHash": "fnv1a64:6c0038a4420251bc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -323,7 +327,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "પાછા (pāchhā, \"back, again, returning\") is from Sanskrit પશ્ચાત્ (paścāt, \"behind, afterward\") — the same \"behind/after\" root behind English post- words, distantly. It carries the sense of return: pāchhā āvvũ (\"to come back\"), pāchhā jāvũ (\"to go back\"). Add it to \"we'll meet\" and you get the warm goodbye of the next lesson."
+              "text": "પાછા (pāchhā, \"back, again, returning\") goes back to paśca, \"hinder part\", a form drawn from Sanskrit paścāt, \"behind, afterward\" (CDIAL 7990). It carries the sense of return: pāchhā āvvũ (\"to come back\"), pāchhā jāvũ (\"to go back\"). Add it to \"we'll meet\" and you get the warm goodbye of the next lesson."
             }
           ]
         },
@@ -390,7 +394,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efef7a1e4987397a",
+      "sourceHash": "fnv1a64:ee683797276e6668",
       "notice": null,
       "blocks": [
         {
@@ -423,6 +427,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both words are inherited. CDIAL lists pāchhā under paśca, \"hinder part\" (CDIAL 7990), and maḷvũ under Sanskrit milati, \"meets\" (CDIAL 10133)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -462,7 +477,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

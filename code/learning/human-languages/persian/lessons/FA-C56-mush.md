@@ -14,7 +14,8 @@ romanization: "mush"
 concept_tag: FA-ANIMALS56-MUSH
 prerequisites: [FA-C55-gusfand, FA-C55-parande]
 sounds: []
-roots: []
+roots: [persian-mush]
+etymology_hook: "mush: inherited, usually traced to Middle Persian mūš"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C55-parande]
 <!-- hl-knowledge: introduces=[FA-LEX-C56-ANIMALS56-01]; assesses=[] -->
 
 **موش** — *mush* — "a mouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mush* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *mūš*, "mouse". English *mouse* and Latin *mūs* are the same Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "spaṣṭa"
 concept_tag: KA-GUNA218-SPASTA
 prerequisites: [KA-C218-siddha, KA-C218-labhya]
 sounds: []
-roots: []
+roots: [sanskrit-spashta]
+etymology_hook: "spaṣṭa ← Sanskrit spaṣṭa 'clear, distinct', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C218-labhya]
 <!-- hl-knowledge: introduces=[KA-LEX-C218-GUNA218-03]; assesses=[] -->
 
 **ಸ್ಪಷ್ಟ** — *spaṣṭa* — "clear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ಪಷ್ಟ** (*spaṣṭa*) is Sanskrit *spaṣṭa*, "clear, distinct", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mausī"
 concept_tag: HI-AUNT-MAUSI
 prerequisites: [HI-C116-nani, HI-C116-chacha]
 sounds: []
-roots: []
+roots: [sanskrit-matuhshvasr]
+etymology_hook: "mausī ← Sanskrit mātuḥṣvasṛ 'mother's sister', a tadbhava (CDIAL 10001)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C116-chacha]
 **मौसी** (*mausī*) — "aunt", your mother's sister.
 
 It is often explained as **माँ जैसी**, "like a mother": the aunt closest to a mother's place.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मौसी** (*mausī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mātuḥṣvasṛ*, "mother's sister" (CDIAL 10001). It is built from *mātṛ*, "mother", and *svasṛ*, "sister".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

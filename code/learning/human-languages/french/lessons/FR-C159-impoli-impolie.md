@@ -46,7 +46,7 @@ reviews_of: [FR-C159-poli-polie]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**impoli** — *im-*, "not", and *poli*, "polite".
+**impoli** — *im-*, "not", and *poli*, "polite". *Poli* ← Latin *polītus*, "polished" (EtymDB 2.1), and *im-* is Latin *in-*, "not", before *p*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

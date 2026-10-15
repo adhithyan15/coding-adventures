@@ -14,7 +14,8 @@ romanization: "aplōḍ māḍu"
 concept_tag: KA-VERB-APLOD-MADU
 prerequisites: [KA-C163-hondiko, KA-C163-nedu]
 sounds: []
-roots: []
+roots: [english-upload, maadu-do-dravidian]
+etymology_hook: "aplōḍ māḍu: English upload + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C163-nedu]
 <!-- hl-knowledge: introduces=[KA-LEX-C164-KRIYE164-01]; assesses=[] -->
 
 **ಅಪ್ಲೋಡ್ ಮಾಡು** — *aplōḍ māḍu* — "to upload".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಪ್ಲೋಡ್ ಮಾಡು** (*aplōḍ māḍu*) is English *upload* with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

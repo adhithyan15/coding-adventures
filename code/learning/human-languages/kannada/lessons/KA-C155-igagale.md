@@ -14,7 +14,8 @@ romanization: "īgāgalē"
 concept_tag: KA-HINDE155-IGAGALE
 prerequisites: [KA-C154-enadaru, KA-C155-ittichege]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, tamil-aaku-become]
+etymology_hook: "īgāgalē: native īga 'now' (DEDR 410) + āgalē 'already become', from āgu (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C155-ittichege]
 <!-- hl-knowledge: introduces=[KA-LEX-C155-HINDE155-02]; assesses=[] -->
 
 **ಈಗಾಗಲೇ** — *īgāgalē* — "already". **ನಾನು ಈಗಾಗಲೇ ಊಟ ಮಾಡಿದೆ** — *nānu īgāgalē ūṭa māḍide* — "I have already eaten."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಈಗಾಗಲೇ** (*īgāgalē*) is native Dravidian: *īga*, "now" (DEDR 410), and *āgalē*, "has already become", from *āgu*, "to become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

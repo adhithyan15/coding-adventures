@@ -14,7 +14,8 @@ romanization: "rātribhojanam"
 concept_tag: SA-THG254-RATRIBHOJANAM
 prerequisites: [SA-C254-syenah, SA-C254-pratarasah]
 sounds: []
-roots: []
+roots: [sanskrit-ratri, sanskrit-bhojana]
+etymology_hook: "rātribhojana = rātri 'night' + bhojana 'eating', from √bhuj 'enjoy, eat' (MW; CDIAL 9630)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C254-pratarasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C254-THG254-04]; assesses=[] -->
 
 **रात्रिभोजनम्** — *rātribhojanam* — "dinner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rātribhojana* is a compound of *rātri*, "night", and *bhojana*, "eating, food", from the root √bhuj, "to enjoy, eat" (CDIAL 9630). MW lists the compound as "eating at night"; its use for the evening meal is the modern one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

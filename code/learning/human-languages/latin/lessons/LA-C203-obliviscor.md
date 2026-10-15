@@ -13,7 +13,8 @@ gloss: "to forget"
 concept_tag: LA-VERB-OBLIVISCOR
 prerequisites: [LA-C203-consumo, LA-C203-vexo]
 sounds: []
-roots: []
+roots: [oblivisci-latin]
+etymology_hook: "oblīvīscor 'to forget' — perhaps ob 'over' + a root for wiping; uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C203-vexo]
 <!-- hl-knowledge: introduces=[LA-LEX-C203-ACT203-05]; assesses=[] -->
 
 **oblīvīscor, oblīvīscī** — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**oblīvīscor** is usually explained as *ob*, "over", with a root for smearing or smoothing: the mind wiped over. Lewis & Short tie it instead to *līvor*, "a dark colour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

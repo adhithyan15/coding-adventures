@@ -14,7 +14,8 @@ romanization: "matlab"
 concept_tag: HI-AGAIN-MEANING
 prerequisites: [HI-C110-ekminat, HI-C110-rukie]
 sounds: []
-roots: []
+roots: [arabic-matlab]
+etymology_hook: "matlab ← Arabic maṭlab 'something sought, an aim', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C110-rukie]
 
 **धीरे का मतलब क्या है?** — "what does *dhīre* mean?". Put any word in front of **का मतलब
 क्या है?** and it becomes the question that turns any speaker into a teacher.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मतलब** (*matlab*) is a loan from Arabic *maṭlab*, "something sought, an aim", which reached Hindi through Persian. Its Arabic root is *ṭ-l-b* (Lane). Hindi uses it for what a word aims at: its meaning.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

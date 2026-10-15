@@ -14,7 +14,8 @@ romanization: "shawq"
 concept_tag: AR-WANT112-SHAWQ
 prerequisites: [AR-C111-umniyya, AR-C111-tafdil]
 sounds: []
-roots: []
+roots: [sh-w-q]
+etymology_hook: "shawq: built on the root sh-w-q, 'to long for' (Lane); shawq is the verbal noun, 'longing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C111-tafdil]
 <!-- hl-knowledge: introduces=[AR-LEX-C112-WANT112-01]; assesses=[] -->
 
 **شوق** — *shawq* — "longing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شوق** (*shawq*) is built on the native Arabic root *sh-w-q*, "to long for" (Lane). *Shawq* is the verbal noun, "longing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

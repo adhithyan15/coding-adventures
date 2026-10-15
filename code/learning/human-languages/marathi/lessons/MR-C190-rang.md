@@ -15,6 +15,7 @@ concept_tag: MR-VASTU190-RANG
 prerequisites: [MR-C190-vahtuk, MR-C190-pravasi]
 sounds: []
 roots: []
+etymology_hook: "rāṅg 'queue, line': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C190-pravasi]
 <!-- hl-knowledge: introduces=[MR-LEX-C190-VASTU190-04]; assesses=[] -->
 
 **रांग** — *rāṅg* — "a queue, a line".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **रांग** (*rāṅg*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

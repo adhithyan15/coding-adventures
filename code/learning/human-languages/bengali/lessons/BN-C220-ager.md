@@ -14,7 +14,8 @@ romanization: "āger"
 concept_tag: BN-GUN220-AGER
 prerequisites: [BN-C220-bhoyongkor, BN-C220-durdanto]
 sounds: []
-roots: []
+roots: [sanskrit-agra]
+etymology_hook: "āger: āge 'before' ← agra 'front' (CDIAL 68) + -r 'of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C220-durdanto]
 <!-- hl-knowledge: introduces=[BN-LEX-C220-GUN220-05]; assesses=[] -->
 
 **আগের** — *āger* — "previous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আগের** (*āger*) is *āge*, "before, formerly", from Sanskrit *agra*, "front" (CDIAL 68), + *-r*, "of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

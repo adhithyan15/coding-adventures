@@ -14,7 +14,8 @@ romanization: "ab"
 concept_tag: UR-TIME93-AB
 prerequisites: [UR-C93-paune, UR-C93-adha]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva]
+etymology_hook: "ab: CDIAL lists it under Sanskrit evam eva 'exactly so', crossed with the pronoun stem a- (CDIAL 2528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C93-adha]
 <!-- hl-knowledge: introduces=[UR-LEX-C93-TIME93-03]; assesses=[] -->
 
 **اب** — *ab* — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اب** (*ab*) is inherited. CDIAL lists it under Sanskrit *evam eva*, "exactly so", crossed with the pronoun stem *a-*, "this", and lists *kab*, "when", *tab*, "then", and *jab*, "when", beside it (CDIAL 2528).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

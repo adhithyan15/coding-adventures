@@ -14,7 +14,8 @@ romanization: "film"
 concept_tag: UR-CHIZ228-FILM
 prerequisites: [UR-C228-tim, UR-C228-khilari]
 sounds: []
-roots: []
+roots: [english-film]
+etymology_hook: "film ← English film"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C228-khilari]
 <!-- hl-knowledge: introduces=[UR-LEX-C228-CHIZ228-04]; assesses=[] -->
 
 **فلم** — *film* — "a film".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فلم** (*film*) is a loan from English *film*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

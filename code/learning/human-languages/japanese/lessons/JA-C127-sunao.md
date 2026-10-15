@@ -14,7 +14,8 @@ romanization: "sunao"
 concept_tag: JA-QUAL127-SUNAO
 prerequisites: [JA-C127-sawayaka, JA-C127-odayaka]
 sounds: []
-roots: []
+roots: [middle-chinese-suh, japanese-nao]
+etymology_hook: "sunao: Sino-Japanese su 素 'plain' + native nao 'straight'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C127-odayaka]
 <!-- hl-knowledge: introduces=[JA-LEX-C127-QUAL127-05]; assesses=[] -->
 
 **すなお** — *sunao* — "honest, straightforward".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すなお** (*sunao*) mixes the two layers: *su*, "plain", the on'yomi of its first character, borrowed from Chinese (Middle Chinese *suH*), and native *nao*, "straight" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

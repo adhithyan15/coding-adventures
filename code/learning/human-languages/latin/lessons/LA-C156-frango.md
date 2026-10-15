@@ -13,7 +13,8 @@ gloss: "to break"
 concept_tag: LA-VERB-FRANGO
 prerequisites: [LA-C155-exuo, LA-C155-purgo]
 sounds: []
-roots: []
+roots: [frangere-latin]
+etymology_hook: "frangō 'to break' — inherited, usually traced to PIE *bhreg- 'to break'; English break is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C155-purgo]
 <!-- hl-knowledge: introduces=[LA-LEX-C156-ACT156-01]; assesses=[] -->
 
 **frangō, frangere** — "to break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frangō** is inherited, usually traced to Proto-Indo-European *\*bhreg-*, "to break" (EtymDB 2.1); English *break* is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

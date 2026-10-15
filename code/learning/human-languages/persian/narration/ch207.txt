@@ -12,6 +12,9 @@ Before the new one: say the Persian for a printer, then the Persian for an addre
 You'll want to know: هفت سین.
 هفت سین — haft-sin — "the haft-sin (Nowruz table of seven S-items)".
 
+The word, taken apart.
+haft-sin is haft, "seven" (inherited, EtymDB), with sin, the name of the letter s: seven things whose names begin with s. The letter name sin comes from Arabic.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for an address, then the Persian for the haf
 
 You'll want to know: هدیه.
 هدیه — hediye — "a present, a gift".
+
+The word, taken apart.
+hediye is borrowed from Arabic hadiyya, "gift, present". Its Arabic root is h-d-y (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for the haft-sin, then the Persian for a pre
 You'll want to know: سنت.
 سنت — sonnat — "a tradition".
 
+The word, taken apart.
+sonnat is borrowed from Arabic sunna, "custom, way". Its Arabic root is s-n-n (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a present, then the Persian for a tradit
 You'll want to know: مهمانی.
 مهمانی — mehmâni — "a party".
 
+The word, taken apart.
+mehmâni is mehmân, "guest", with the ending -i: an occasion for guests. mehmân is inherited: EtymDB traces it to Middle Persian mehmān.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a tradition, then the Persian for a part
 
 You'll want to know: ساز.
 ساز — sâz — "a musical instrument".
+
+The word, taken apart.
+sâz is sâz-, the present stem of sâkhtan, "to make, to fit": a thing made and fitted, then a musical instrument. The verb is native, usually traced to Middle Persian sāxtan.
 
 What you've built.
 One more word for this chapter.

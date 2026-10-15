@@ -13,7 +13,8 @@ gloss: "a cup"
 concept_tag: LA-THINGS141-CALIX
 prerequisites: [LA-C141-spongia, LA-C141-urna]
 sounds: []
-roots: []
+roots: [calix-latin]
+etymology_hook: "calix 'cup' — related to Greek kylix 'drinking cup'; English chalice comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C141-urna]
 <!-- hl-knowledge: introduces=[LA-LEX-C141-THINGS141-05]; assesses=[] -->
 
 **calix, calicis** — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calix** is related to Greek *kylix*, "a drinking cup" (EtymDB 2.1), though whether Latin borrowed it is uncertain. It is a different word from Greek *kalyx*, "a flower bud". English *chalice* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

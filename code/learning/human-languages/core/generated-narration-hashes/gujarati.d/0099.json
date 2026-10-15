@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 99,
-  "sourceHash": "fnv1a64:3d7bdf6bdda22202",
+  "sourceHash": "fnv1a64:b238a2967f38032c",
   "lessonIds": [
     "GU-C99-pelu",
     "GU-C99-avu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch99.txt",
   "json": "gujarati/narration/ch99.json",
-  "textHash": "fnv1a64:e27df1d678289a98",
-  "jsonHash": "fnv1a64:8dc407d0de7eaf44",
+  "textHash": "fnv1a64:081f61184782fa69",
+  "jsonHash": "fnv1a64:dfa469a51fb9370e",
   "findings": []
 }

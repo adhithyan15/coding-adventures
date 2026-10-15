@@ -11,7 +11,8 @@ romanization: "guruvu"
 concept_tag: TE-NOUN-TEACHER
 prerequisites: [TE-C47-stomach]
 sounds: []
-roots: []
+roots: [sanskrit-guru]
+etymology_hook: "guruvu ← Sanskrit guru 'heavy' (CDIAL 4209), with the Telugu ending -vu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [TE-C47-stomach]
 Sanskrit *guru* means "heavy". The teacher is the weighty one — the one whose word carries weight — and Telugu added its own **-వు** to make గురువు.
 
 You have already said the word without being told. గురువారం, Thursday, is Guru's day: the guru there is Jupiter, the heaviest wanderer the naked eye can find and the teacher of the gods. Latin named the same weekday for Jove, which is the same planet under another name.
+
+CDIAL 4209 lists Sanskrit *guru*, "heavy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dūr"
 concept_tag: PA-TIME87-DUR
 prerequisites: [PA-C87-der, PA-C87-pahilam]
 sounds: []
-roots: []
+roots: [sanskrit-dura]
+etymology_hook: "dūr ← Sanskrit dūra 'distant', a tadbhava (CDIAL 6495)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C87-pahilam]
 <!-- hl-knowledge: introduces=[PA-LEX-C87-TIME87-05]; assesses=[] -->
 
 **ਦੂਰ** — *dūr* — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਦੂਰ** (*dūr*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dūra*, "distant" (CDIAL 6495).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

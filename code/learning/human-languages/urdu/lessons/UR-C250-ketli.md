@@ -14,7 +14,8 @@ romanization: "ketlī"
 concept_tag: UR-CHIZ250-KETLI
 prerequisites: [UR-C250-karahi, UR-C250-tandur]
 sounds: []
-roots: []
+roots: [english-kettle]
+etymology_hook: "ketlī ← English kettle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C250-tandur]
 <!-- hl-knowledge: introduces=[UR-LEX-C250-CHIZ250-05]; assesses=[] -->
 
 **کیتلی** — *ketlī* — "a kettle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کیتلی** (*ketlī*) is a loan from English *kettle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bimaze"
 concept_tag: FA-SEFAT202-BIMAZE
 prerequisites: [FA-C202-khoshtip, FA-C202-kamrang]
 sounds: []
-roots: []
+roots: [maza-persian]
+etymology_hook: "bimaze: Persian bi- 'without' + maze 'taste'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C202-kamrang]
 <!-- hl-knowledge: introduces=[FA-LEX-C202-SEFAT202-05]; assesses=[] -->
 
 **بیمزه** — *bimaze* — "bland, tasteless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bimaze* is built from *bi-*, "without", and *maze*, "taste": tasteless. Both are native Persian words, inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

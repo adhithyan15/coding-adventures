@@ -14,7 +14,8 @@ romanization: "naṭa"
 concept_tag: KA-KELASA305-NATA
 prerequisites: [KA-C305-kalavida, KA-C305-gayaka]
 sounds: []
-roots: []
+roots: [sanskrit-nata]
+etymology_hook: "naṭa ← Sanskrit naṭa 'dancer, actor', a tatsama (CDIAL 6933)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C305-gayaka]
 <!-- hl-knowledge: introduces=[KA-LEX-C305-KELASA305-04]; assesses=[] -->
 
 **ನಟ** — *naṭa* — "an actor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಟ** (*naṭa*) is Sanskrit *naṭa*, "dancer, actor", taken over whole as a learned loan, a tatsama (CDIAL 6933). CDIAL 6933 thinks the Sanskrit word itself probably came from a Middle Indo-Aryan form. DEDR 2936 has a Kannada *naṭike*, "the cracking of joints", but that is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

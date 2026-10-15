@@ -14,7 +14,8 @@ romanization: "khargosh"
 concept_tag: UR-THINGS127-KHARGOSH
 prerequisites: [UR-C127-machchhar, UR-C127-makkhi]
 sounds: []
-roots: []
+roots: [persian-khargosh]
+etymology_hook: "khargosh: usually traced to Persian khargōsh 'hare'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C127-makkhi]
 <!-- hl-knowledge: introduces=[UR-LEX-C127-THINGS127-05]; assesses=[] -->
 
 **خرگوش** — *khargosh* — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خرگوش** (*khargosh*) is a loan, usually traced to Persian *khargōsh*, "hare". It is built from *khar*, "donkey", and *gōsh*, "ear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

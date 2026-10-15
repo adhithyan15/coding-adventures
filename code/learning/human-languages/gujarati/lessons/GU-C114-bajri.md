@@ -14,7 +14,8 @@ romanization: "bājrī"
 concept_tag: GU-THINGS114-BAJRI
 prerequisites: [GU-C113-cana, GU-C113-mag]
 sounds: []
-roots: []
+roots: [indo-aryan-bajjara]
+etymology_hook: "bājrī ← *bājjara 'millet', a reconstructed form; a tadbhava (CDIAL 9201)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C113-mag]
 <!-- hl-knowledge: introduces=[GU-LEX-C114-THINGS114-01]; assesses=[] -->
 
 **બાજરી** (*bājrī*) — "millet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બાજરી** (*bājrī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bājjara*, "millet", a form CDIAL reconstructs from its descendants (CDIAL 9201).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "saṁyam"
 concept_tag: MR-AAROGYA170-SAMYAM
 prerequisites: [MR-C170-matsar, MR-C170-kantala]
 sounds: []
-roots: []
+roots: [sanskrit-samyama]
+etymology_hook: "saṁyam: Sanskrit saṁyama 'holding together, restraint', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C170-kantala]
 <!-- hl-knowledge: introduces=[MR-LEX-C170-AAROGYA170-04]; assesses=[] -->
 
 **संयम** — *saṁyam* — "patience, restraint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संयम** (*saṁyam*) is Sanskrit *saṁyama*, "holding together, restraint", a tatsama built on *yam*, "to hold". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

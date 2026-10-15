@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 77,
-  "sourceHash": "fnv1a64:5e1a54b208589aba",
+  "sourceHash": "fnv1a64:75cfffb87618874b",
   "lessonIds": [
     "MR-C77-shejari",
     "MR-C77-pahuna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch77.txt",
   "json": "marathi/narration/ch77.json",
-  "textHash": "fnv1a64:2549f1c5d98c2d43",
-  "jsonHash": "fnv1a64:8b241ef2ba726199",
+  "textHash": "fnv1a64:1916637b1f563d48",
+  "jsonHash": "fnv1a64:27fd41bfeb31322d",
   "findings": []
 }

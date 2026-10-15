@@ -12,6 +12,9 @@ Before the new one: say the Urdu for the one, then the Urdu for here.
 You'll want to know: دوپہر.
 دوپہر — dopahar — "midday, afternoon".
 
+The word, taken apart.
+دوپہر (dopahar) is "two watches": do, "two" (CDIAL 6648), and pahar, a watch of about three hours, counted from sunrise. CDIAL lists pahar under Sanskrit prahara, "a watch", and asks whether that word is a Sanskritization of Persian pahra, "watch" (CDIAL 8900).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for here, then the Urdu for midday.
 
 You'll want to know: سویرا.
 سویرا — saverā — "early morning".
+
+The word, taken apart.
+سویرا (saverā) is a tadbhava, a word inherited and reshaped by sound change. It comes from savela, "in time, early", a form CDIAL reconstructs from its descendants (CDIAL 13291). It is built from sa-, "with", and velā, "time".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for midday, then the Urdu for early morning.
 You'll want to know: آدھی رات.
 آدھی رات — ādhī rāt — "midnight".
 
+The phrase, taken apart.
+آدھی رات (ādhī rāt) is "half night". ādhī, "half", comes from Sanskrit ardha, "half" (CDIAL 644), and rāt, "night", from rātrī, "night" (CDIAL 10702).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for early morning, then the Urdu for midnight.
 You'll want to know: پرسوں.
 پرسوں — parsoṅ — "the day after tomorrow; the day before yesterday".
 
+The word, taken apart.
+پرسوں (parsoṅ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paraśvas, "the day after tomorrow" (CDIAL 7799j).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for midnight, then the Urdu for the day after t
 
 You'll want to know: اتوار.
 اتوار — itvār — "Sunday".
+
+The word, taken apart.
+اتوار (itvār) is usually traced to ādityavāra, "Sunday", the day of āditya, the sun, with vāra, "day of the week". CDIAL reconstructs that word from Prakrit and Sindhi forms and lists no Hindi or Urdu form (CDIAL 1154).
 
 What you've built.
 One more word for this chapter.

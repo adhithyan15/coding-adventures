@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for vomiting, then the Malayalam for a wou
 You'll want to know: തണുപ്പ്.
 തണുപ്പ് (taṇuppŭ) — "cold", the cold of the weather rather than the illness ജലദോഷം. നല്ല തണുപ്പ് — "it's really cold".
 
+The word, taken apart.
+തണുപ്പ് (taṇuppŭ) is native Dravidian, a noun from taṇ, "cold, cool"; DEDR 3045 lists the root with Tamil taṇ and Kannada taṇ.
+
 What you've built.
 The cold you feel outside.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a wound, then the Malayalam for the co
 
 You'll want to know: ചൂട്.
 ചൂട് (cūṭŭ) — "heat", and also "hot". നല്ല ചൂട് — "it's really hot".
+
+The word, taken apart.
+ചൂട് (cūṭŭ) is native Dravidian, one word with Tamil cuṭu and Kannada suḍu (DEDR 2654). DEDR 2654 compares Sanskrit cūḍ.
 
 What you've built.
 The opposite of taṇuppŭ.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for the cold, then the Malayalam for heat.
 You'll want to know: ഉറക്കം.
 ഉറക്കം (uṟakkaṁ) — "sleep". എനിക്ക് ഉറക്കം വരുന്നു — "I'm getting sleepy", literally "sleep is coming to me".
 
+The word, taken apart.
+ഉറക്കം (uṟakkaṁ) is native Dravidian, the noun of the verb "to sleep"; DEDR 707 lists the root with Tamil uṟakkam.
+
 What you've built.
 Sleep arrives, in Malayalam.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for heat, then the Malayalam for sleep.
 You'll want to know: മഞ്ഞ്.
 മഞ്ഞ് (maññŭ) — "mist, dew", and the word for snow too. Kerala's hills have the mist.
 
+The word, taken apart.
+മഞ്ഞ് (maññŭ) is native Dravidian, one word with Tamil mañcu, Kannada mañju and Telugu mancu (DEDR 4641).
+
 What you've built.
 Cool weather's word.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for sleep, then the Malayalam for mist.
 
 You'll want to know: ഇടിമിന്നൽ.
 ഇടിമിന്നൽ (iṭiminnal) — "thunder and lightning": ഇടി (iṭi), "thunder", and മിന്നൽ (minnal), "lightning". The monsoon brings both.
+
+The word, taken apart.
+ഇടിമിന്നൽ (iṭiminnal) is native Dravidian: iṭi, "thunder" (DEDR 438, with Tamil iṭi), and minnal, "lightning" (DEDR 4876, with Tamil miṉ, "flash").
 
 What you've built.
 Two storm words in one.

@@ -14,7 +14,8 @@ romanization: "fīziyāʾ"
 concept_tag: AR-AMAL222-FIZIYA
 prerequisites: [AR-C222-ulum, AR-C222-kimiya]
 sounds: []
-roots: []
+roots: [greek-physike]
+etymology_hook: "fīziyāʾ: a modern loan from European physics, from Greek physikē 'study of nature'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C222-kimiya]
 <!-- hl-knowledge: introduces=[AR-LEX-C222-AMAL222-03]; assesses=[] -->
 
 **فيزياء** — *fīziyāʾ* — "physics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فيزياء** (*fīziyāʾ*) is a modern loan from European *physics*, which goes back to Greek *physikē*, "the study of nature"; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

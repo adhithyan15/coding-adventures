@@ -14,7 +14,8 @@ romanization: "sharm"
 concept_tag: UR-CHIZ257-SHARM
 prerequisites: [UR-C257-mohabbat, UR-C257-dosti]
 sounds: []
-roots: []
+roots: [persian-sharm]
+etymology_hook: "sharm: usually traced to Persian sharm 'shame'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C257-dosti]
 <!-- hl-knowledge: introduces=[UR-LEX-C257-CHIZ257-05]; assesses=[] -->
 
 **شرم** — *sharm* — "shame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شرم** (*sharm*) is a loan, usually traced to Persian *sharm*, "shame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

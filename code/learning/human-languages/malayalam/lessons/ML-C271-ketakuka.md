@@ -14,7 +14,8 @@ romanization: "kēṭākuka"
 concept_tag: ML-VERB-KETAKUKA
 prerequisites: [ML-C271-katam-kotukkuka, ML-C271-paniyuka]
 sounds: []
-roots: []
+roots: [dravidian-kedu-ruin, aaka-dravidian]
+etymology_hook: "kēṭākuka: native Dravidian, 'become damaged': kēṭu (DEDR 1942) + ākuka (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C271-paniyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C271-KRIYA271-04]; assesses=[] -->
 
 **കേടാകുക** — *kēṭākuka* — "to break down, to go bad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കേടാകുക** (*kēṭākuka*) is native Dravidian, "become damaged": *kēṭu*, "damage" (DEDR 1942), and *ākuka*, "to become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

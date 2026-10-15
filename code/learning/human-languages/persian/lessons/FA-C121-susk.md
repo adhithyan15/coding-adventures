@@ -15,6 +15,7 @@ concept_tag: FA-THINGS121-SUSK
 prerequisites: [FA-C120-kavir, FA-C121-gavmish]
 sounds: []
 roots: []
+etymology_hook: "susk: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C121-gavmish]
 <!-- hl-knowledge: introduces=[FA-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **سوسک** — *susk* — "a beetle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*susk* is the everyday word for a beetle, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "soppu"
 concept_tag: KA-VASTU184-SOPPU
 prerequisites: [KA-C184-bendekayi, KA-C184-hurulikayi]
 sounds: []
-roots: []
+roots: [dravidian-soppu-greens]
+etymology_hook: "soppu: native Dravidian, one word with Malayalam cappu (DEDR 2673)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C184-hurulikayi]
 <!-- hl-knowledge: introduces=[KA-LEX-C184-VASTU184-04]; assesses=[] -->
 
 **ಸೊಪ್ಪು** — *soppu* — "leafy greens".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೊಪ್ಪು** (*soppu*) is native Dravidian, one word with Malayalam *cappu* (DEDR 2673). DEDR lists *sappu*, *soppu*, "green leaves, greens".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

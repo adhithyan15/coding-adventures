@@ -14,7 +14,8 @@ romanization: "grām"
 concept_tag: BN-TOWN84-GRAM
 prerequisites: [BN-C84-saikel, BN-C84-bajar]
 sounds: []
-roots: []
+roots: [sanskrit-grama]
+etymology_hook: "grām ← Sanskrit grāma 'village', a tatsama; CDIAL lists the inherited form gāṁ (CDIAL 4368)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C84-bajar]
 <!-- hl-knowledge: introduces=[BN-LEX-C84-TOWN84-04]; assesses=[] -->
 
 **গ্রাম** — *grām* — "a village".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**গ্রাম** (*grām*) is Sanskrit *grāma*, "troop, village", taken over whole as a learned loan, a tatsama (CDIAL 4368). The word inherited from it is *gāṁ*, "village", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

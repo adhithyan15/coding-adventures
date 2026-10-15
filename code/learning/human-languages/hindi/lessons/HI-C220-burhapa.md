@@ -14,7 +14,8 @@ romanization: "buṛhāpā"
 concept_tag: HI-THG220-BURHAPA
 prerequisites: [HI-C220-bacpan, HI-C220-javani]
 sounds: []
-roots: []
+roots: [indo-aryan-buddha]
+etymology_hook: "buṛhāpā: būṛhā 'old', from *buḍḍha 'old' (CDIAL 9271), with -āpā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C220-javani]
 <!-- hl-knowledge: introduces=[HI-LEX-C220-THG220-04]; assesses=[] -->
 
 **बुढ़ापा** — *buṛhāpā* — "old age".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बुढ़ापा** (*buṛhāpā*) is *būṛhā*, "old", with the ending *-āpā*, "-ness". CDIAL lists *būṛhā* under a reconstructed *\*buḍḍha*, "old" (CDIAL 9271).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

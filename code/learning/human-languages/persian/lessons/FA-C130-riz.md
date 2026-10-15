@@ -15,6 +15,7 @@ concept_tag: FA-QUAL130-RIZ
 prerequisites: [FA-C130-salem, FA-C130-dorosht]
 sounds: []
 roots: []
+etymology_hook: "riz: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C130-dorosht]
 <!-- hl-knowledge: introduces=[FA-LEX-C130-QUAL130-03]; assesses=[] -->
 
 **ریز** — *riz* — "tiny, fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*riz* is a native Persian word, but no source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

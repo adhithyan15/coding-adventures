@@ -14,7 +14,8 @@ romanization: "caṭni"
 concept_tag: KA-VASTU294-CATNI
 prerequisites: [KA-C294-kadalekayi, KA-C294-masale]
 sounds: []
-roots: []
+roots: [hindustani-catni]
+etymology_hook: "caṭni ← Hindustani caṭnī, usually linked with caṭ- 'to lick' (CDIAL 4573)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C294-masale]
 <!-- hl-knowledge: introduces=[KA-LEX-C294-VASTU294-03]; assesses=[] -->
 
 **ಚಟ್ನಿ** — *caṭni* — "chutney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಟ್ನಿ** (*caṭni*) is Hindustani *caṭnī*, "chutney", usually linked with the verb for "to lick, taste", which CDIAL 4573 reconstructs as *\*caṭṭ*, "lick, taste".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

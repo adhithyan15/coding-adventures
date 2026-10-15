@@ -11,6 +11,7 @@ concept_tag: IRONY-MARKER
 prerequisites: [ES-C272-es-que]
 sounds: [vowel-e, vowel-o]
 roots: [clarus]
+etymology_hook: "claro ← Latin clarus 'bright, clear' — English clear, the name Clara"
 duration:
   max_seconds: 240
 requires:

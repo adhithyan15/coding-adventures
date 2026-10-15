@@ -14,7 +14,8 @@ romanization: "mākôṛsā"
 concept_tag: BN-JINIS250-MAKORSA
 prerequisites: [BN-C250-jiraph, BN-C250-jebra]
 sounds: []
-roots: []
+roots: [sanskrit-markata]
+etymology_hook: "mākôṛsā ← Sanskrit markaṭa 'spider', a tadbhava (CDIAL 9883)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C250-jebra]
 <!-- hl-knowledge: introduces=[BN-LEX-C250-JINIS250-04]; assesses=[] -->
 
 **মাকড়সা** — *mākôṛsā* — "a spider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাকড়সা** (*mākôṛsā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *markaṭa*, "spider" (CDIAL 9883). CDIAL lists Bengali *mākaṛ*, "spider"; *mākôṛsā* adds an ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

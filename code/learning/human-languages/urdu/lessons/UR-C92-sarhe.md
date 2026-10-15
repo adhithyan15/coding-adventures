@@ -14,7 +14,8 @@ romanization: "sāṛhe"
 concept_tag: UR-TIME92-SARHE
 prerequisites: [UR-C92-budh, UR-C92-baje]
 sounds: []
-roots: []
+roots: [sanskrit-sardha]
+etymology_hook: "sāṛhe ← Sanskrit sārdha 'plus a half', a tadbhava (CDIAL 13369)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C92-baje]
 <!-- hl-knowledge: introduces=[UR-LEX-C92-TIME92-04]; assesses=[] -->
 
 **ساڑھے** — *sāṛhe* — "half past (plus a half)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ساڑھے** (*sāṛhe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sārdha*, "plus a half" (CDIAL 13369). It is built from *sa-*, "with", and *ardha*, "half".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

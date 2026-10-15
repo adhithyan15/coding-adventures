@@ -12,6 +12,7 @@ concept_tag: MR-GRAMMAR-WH-ORDER
 prerequisites: [MR-C02-aahe, MR-C02-kaay, MR-C02-tumche-naav-kaay-aahe, MR-C03-kasa, MR-C03-tumhi-kase-aahat, MR-C37-kiti, MR-C38-kuthe, MR-C38-kadhi]
 sounds: []
 roots: []
+etymology_hook: "kuṭhe: usually traced to Sanskrit kutra 'where', on the question stem ka-; CDIAL has no entry for it"
 duration:
   max_seconds: 230
 requires:
@@ -55,6 +56,11 @@ Compare those two pairs. In each, exactly one word changed and nothing else
 moved. That is the whole rule, and it is worth having as a rule rather than as
 two memorised phrases: it means every asking word you own works in every
 sentence you own, without rearrangement.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कुठे** is usually traced to Sanskrit *kutra*, "where", on the same question stem *ka-* as **काय**. CDIAL has no entry for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-WH-ORDER, MR-QUESTION-KUTHE, MR-QUESTION-KADHI, MR-QUESTION-KITI] -->

@@ -14,7 +14,8 @@ romanization: "śīkhavvũ"
 concept_tag: GU-VERB-SHIKHAVVU
 prerequisites: [GU-C89-answer, GU-C89-bhanvu]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "śīkhavvũ: the causing form of śīkhvũ 'to learn' ← Sanskrit śikṣate 'learns' (CDIAL 12430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C89-bhanvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C89-SCHOOL-05]; assesses=[] -->
 
 **શીખવવું** (*śīkhavvũ*) — "to teach". The causative of **શીખવું**, to learn.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શીખવવું** (*śīkhavvũ*) is the causing form of *śīkhvũ*, "to learn": to teach is to make someone learn. CDIAL lists both under Sanskrit *śikṣate*, "learns" (CDIAL 12430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "loyal"
 concept_tag: LA-QUAL243-FIDELIS
 prerequisites: [LA-C243-dubius, LA-C243-fidus]
 sounds: []
-roots: []
+roots: [fidelis-latin, fides-latin]
+etymology_hook: "fīdēlis 'loyal' — built on fidēs 'trust, faith'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C243-fidus]
 <!-- hl-knowledge: introduces=[LA-LEX-C243-QUAL243-03]; assesses=[] -->
 
 **fīdēlis, fīdēle** — "loyal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fīdēlis** is built on *fidēs*, "trust, faith" (Lewis & Short), with *-ēlis*, "having the quality of": faithful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

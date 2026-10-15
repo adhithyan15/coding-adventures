@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a plough, then the Sanskrit for a sickl
 You'll want to know: बिल्वम्.
 बिल्वम् — bilvam — "a bael fruit".
 
+The word, taken apart.
+bilva is of Dravidian origin, CDIAL 9248 says, while DEDR 5509 sets Dravidian wood-apple words such as Telugu velāga beside it only with a question mark. It lives on as Hindi bīl, the tree.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a sickle, then the Sanskrit for a bael 
 
 You'll want to know: नारंगम्.
 नारंगम् — nāraṅgam — "an orange".
+
+The word, taken apart.
+nāraṅga names the orange tree, first in Suśruta (CDIAL 7073); MW gives no derivation, so its origin is uncertain. EtymDB traces it west: Persian borrowed it as nārang, Arabic took nāranj, and through Old French it became English orange. At home it stays as Hindi nāraṅgī.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a bael fruit, then the Sanskrit for an 
 You'll want to know: कपित्थः.
 कपित्थः — kapitthaḥ — "a wood apple".
 
+The word, taken apart.
+MW reads kapittha as kapi, "monkey", with -ttha, a form of stha, "standing, dwelling": the tree monkeys live in. CDIAL 2749 disagrees: it compares the ending of aśvattha, the sacred fig, and thinks the link with kapi is probably only folk etymology, so the origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for an orange, then the Sanskrit for a wood
 You'll want to know: सेवफलम्.
 सेवफलम् — sevaphalam — "an apple".
 
+The word, taken apart.
+sevaphala is seva, "apple", with phala, "fruit". MW lists seva only from the lexicons and derives it uncertainly from √sev or √siv, so its source is uncertain, and MW does not list the compound, so the pairing is modern.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a wood apple, then the Sanskrit for an 
 
 You'll want to know: चिपिटकः.
 चिपिटकः — cipiṭakaḥ — "flattened rice".
+
+The word, taken apart.
+cipiṭaka is cipiṭa, "flat, flattened" (MW), with the suffix -ka: rice beaten flat. It lives on as Hindi cūṛā and Bengali ciṛā (CDIAL 4818).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "kôrmôchārī"
 concept_tag: BN-KAJ235-KORMOCHARI
 prerequisites: [BN-C234-bbohar, BN-C235-miting]
 sounds: []
-roots: []
+roots: [sanskrit-karman, sanskrit-carin]
+etymology_hook: "kôrmôchārī: Sanskrit karman 'work' + cārin 'moving, acting', tatsama parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C235-miting]
 <!-- hl-knowledge: introduces=[BN-LEX-C235-KAJ235-02]; assesses=[] -->
 
 **কর্মচারী** — *kôrmôchārī* — "an employee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কর্মচারী** (*kôrmôchārī*) is built from Sanskrit *karman*, "work", and *cārin*, "moving, acting", both taken over whole: "one who acts in the work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

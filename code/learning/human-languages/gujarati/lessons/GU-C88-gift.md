@@ -14,7 +14,8 @@ romanization: "bheṭ"
 concept_tag: GU-CARRY-GIFT
 prerequisites: [GU-C88-wallet, GU-C88-letter]
 sounds: []
-roots: []
+roots: [indo-aryan-bhit]
+etymology_hook: "bheṭ 'meeting, gift' ← *bhiṭ 'meet, throng', a reconstructed form (CDIAL 9490)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C88-letter]
 <!-- hl-knowledge: introduces=[GU-LEX-C88-CARRY-05]; assesses=[] -->
 
 **ભેટ** (*bheṭ*) — "a gift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભેટ** (*bheṭ*) is inherited. CDIAL lists Gujarati *bheṭ*, "meeting", with *bheṭvũ*, "to meet", and *bheṭiyo*, "bearer of a gift", under a reconstructed *\*bhiṭ*, "meet, throng" (CDIAL 9490).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

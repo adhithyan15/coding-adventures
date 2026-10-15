@@ -14,7 +14,8 @@ romanization: "beñcŭ"
 concept_tag: ML-VASTU328-BENCU
 prerequisites: [ML-C327-tenicca, ML-C327-cilanti]
 sounds: []
-roots: []
+roots: [english-bench]
+etymology_hook: "beñcŭ ← English bench"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C327-cilanti]
 <!-- hl-knowledge: introduces=[ML-LEX-C328-VASTU328-01]; assesses=[] -->
 
 **ബെഞ്ച്** — *beñcŭ* — "a bench".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബെഞ്ച്** (*beñcŭ*) ← English *bench*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

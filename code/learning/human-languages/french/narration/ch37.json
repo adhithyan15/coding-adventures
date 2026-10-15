@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Want, Can, Must",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1094d292df994599",
+  "sourceHash": "fnv1a64:948212c0a76d7cc4",
   "lessons": [
     {
       "id": "FR-C33-vouloir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16dd350a27f16901",
+      "sourceHash": "fnv1a64:fef121beececac04",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vouloir — to want. Here are the singular forms, which is what you need first:"
+              "text": "vouloir — to want. It comes from Latin velle, through Vulgar Latin volēre (EtymDB 2.1). The singular forms first:"
             },
             {
               "kind": "speech",
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "Then a want needs something wanted, and it follows directly:"
+              "text": "A want needs something wanted:"
             },
             {
               "kind": "speech",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5da40ce08043ee4",
+      "sourceHash": "fnv1a64:c83b96ac0253d6bb",
       "notice": null,
       "blocks": [
         {
@@ -194,7 +194,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pouvoir — to be able, and in practice can. The singular:"
+              "text": "pouvoir — to be able, and in practice can. It comes from Old French povoir (EtymDB 2.1), from Vulgar Latin potēre. The singular:"
             },
             {
               "kind": "speech",
@@ -210,7 +210,7 @@
             },
             {
               "kind": "speech",
-              "text": "That final t is silent — until you invert. Peut-il? wakes it, and needs no added -t- the way parle-t-il did, because this verb already has one. Peux, peux, peut — and note it rhymes with nothing in vouloir, but behaves identically."
+              "text": "That final t is silent — until you invert. Peut-il? wakes it, and needs no added -t- the way parle-t-il did, because this verb already has one."
             },
             {
               "kind": "speech",

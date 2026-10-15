@@ -14,7 +14,8 @@ romanization: "dukān"
 concept_tag: UR-PLACE79-DUKAN
 prerequisites: [UR-C79-upar, UR-C79-niche]
 sounds: []
-roots: []
+roots: [arabic-dukkan]
+etymology_hook: "dukān ← Arabic dukkān 'shop', through Persian (Lane, root d-k-n)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C79-niche]
 <!-- hl-knowledge: introduces=[UR-LEX-C79-PLACE79-03]; assesses=[] -->
 
 **دکان** — *dukān* — "a shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دکان** (*dukān*) is a loan from Arabic *dukkān*, "shop", which reached Urdu through Persian. Its Arabic root is *d-k-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

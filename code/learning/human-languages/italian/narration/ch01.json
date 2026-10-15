@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c021d28350be4145",
+  "sourceHash": "fnv1a64:e94ca76250c410c8",
   "lessons": [
     {
       "id": "IT-C01-ciao",
@@ -726,7 +726,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5762cc4de541363c",
+      "sourceHash": "fnv1a64:674f0bdfab4a18a0",
       "notice": null,
       "blocks": [
         {
@@ -754,6 +754,10 @@
             {
               "kind": "speech",
               "text": "buon (\"good\") + giorno (\"day\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves are inherited from Latin: buon from bonus, \"good\", and giorno from diurnum, \"daytime\" (EtymDB 2.1)."
             },
             {
               "kind": "speech",

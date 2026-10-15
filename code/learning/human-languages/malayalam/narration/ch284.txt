@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for temporary, then the Malayalam for dire
 You'll want to know: കൂറ്റൻ.
 കൂറ്റൻ — kūṟṟan — "huge".
 
+The word, taken apart.
+കൂറ്റൻ (kūṟṟan) is of uncertain origin. DEDR 1924 lists a Malayalam kūṟṟan meaning "enemy, destroyer", and whether "huge" is the same word is not known.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for directly, then the Malayalam for huge.
 
 You'll want to know: വലിപ്പം.
 വലിപ്പം — valippaṁ — "size".
+
+The word, taken apart.
+വലിപ്പം (valippaṁ) is native Dravidian, the noun of val, "great, strong"; DEDR 5276 lists the root with Tamil val and Kannada bal.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for huge, then the Malayalam for size.
 You'll want to know: രസകരമായ.
 രസകരമായ — rasakaramāya — "interesting, fun".
 
+The word, taken apart.
+രസകരമായ (rasakaramāya) is Sanskrit rasa, "sap, taste, relish" (CDIAL 10650), and -kara, "making", with native āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for size, then the Malayalam for interesti
 You'll want to know: വിരസമായ.
 വിരസമായ — virasamāya — "boring".
 
+The word, taken apart.
+വിരസമായ (virasamāya) joins Sanskrit virasa, "juiceless, tasteless" (CDIAL 11849), to native āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for interesting, then the Malayalam for bo
 
 You'll want to know: അപകടകരമായ.
 അപകടകരമായ — apakaṭakaramāya — "dangerous".
+
+The word, taken apart.
+അപകടകരമായ (apakaṭakaramāya) is apakaṭam, "accident", with Sanskrit -kara, "making" (CDIAL 2779), and native āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.

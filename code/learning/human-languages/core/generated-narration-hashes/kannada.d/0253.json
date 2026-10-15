@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 253,
-  "sourceHash": "fnv1a64:b8527da14db29097",
+  "sourceHash": "fnv1a64:9ae51666340f4485",
   "lessonIds": [
     "KA-C253-udaharane",
     "KA-C253-ghatane",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch253.txt",
   "json": "kannada/narration/ch253.json",
-  "textHash": "fnv1a64:30ff837157505bc4",
-  "jsonHash": "fnv1a64:9a3839fb81d9f209",
+  "textHash": "fnv1a64:918dabe7aa645542",
+  "jsonHash": "fnv1a64:262817840059dad4",
   "findings": []
 }

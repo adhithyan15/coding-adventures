@@ -14,7 +14,8 @@ romanization: "kond"
 concept_tag: FA-SEFAT164-KOND
 prerequisites: [FA-C164-behtar, FA-C164-movaffaq]
 sounds: []
-roots: []
+roots: [persian-kund]
+etymology_hook: "kond: inherited; EtymDB: an Indo-Iranian word for 'blunt, dull'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C164-movaffaq]
 <!-- hl-knowledge: introduces=[FA-LEX-C164-SEFAT164-03]; assesses=[] -->
 
 **کند** — *kond* — "blunt; slow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kond* is a native Persian word, inherited rather than borrowed: EtymDB takes it back to an Indo-Iranian word for "blunt, dull". (It also lists *qand*, "sugar candy", a different word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

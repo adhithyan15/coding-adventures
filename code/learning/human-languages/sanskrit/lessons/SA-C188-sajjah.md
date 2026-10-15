@@ -14,7 +14,8 @@ romanization: "sajjaḥ"
 concept_tag: SA-QUAL188-SAJJAH
 prerequisites: [SA-C187-patuh, SA-C188-trsitah]
 sounds: []
-roots: []
+roots: [sanskrit-sajja]
+etymology_hook: "sajja 'ready', which MW files under sajj, a form of √sañj 'cling, fasten': fixed in place"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C188-trsitah]
 <!-- hl-knowledge: introduces=[SA-LEX-C188-QUAL188-02]; assesses=[] -->
 
 **सज्जः** — *sajjaḥ* — "ready".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sajja* comes from *sajj*, a form of the root √sañj, "to cling, fasten", under which MW files it. Its first senses are "fixed, prepared, equipped": what is fastened in place is ready.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

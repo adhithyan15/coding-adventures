@@ -49,6 +49,7 @@ line on the restaurant's docket, the number you quote on the phone.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C431-PEDIDO-01] -->
 
 **el pedido** is the past participle of **pedir**, to ask for, used as a noun.
+*Pedir* ← Latin *petere*, "to seek" (EtymDB 2.1).
 What was asked for. Spanish does this constantly, and once you see it you will
 see it everywhere:
 

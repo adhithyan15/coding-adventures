@@ -14,7 +14,8 @@ romanization: "kurumuḷakŭ"
 concept_tag: ML-THINGS150-KURUMULAKU
 prerequisites: [ML-C150-takkali, ML-C150-valutana]
 sounds: []
-roots: []
+roots: [dravidian-kuru-seed, dravidian-milaku-pepper]
+etymology_hook: "kurumuḷakŭ: native Dravidian, 'seed pepper': kuru 'kernel' (DEDR 1781) + muḷakŭ 'pepper' (DEDR 4867)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C150-valutana]
 <!-- hl-knowledge: introduces=[ML-LEX-C150-THINGS150-04]; assesses=[] -->
 
 **കുരുമുളക്** — *kurumuḷakŭ* — "black pepper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുരുമുളക്** (*kurumuḷakŭ*) is native Dravidian, "seed pepper": *kuru*, "kernel, seed" (DEDR 1781, with Tamil *kuru*), and *muḷakŭ*, "pepper" (DEDR 4867). Once the chilli took *muḷakŭ*, the old pepper needed the extra word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

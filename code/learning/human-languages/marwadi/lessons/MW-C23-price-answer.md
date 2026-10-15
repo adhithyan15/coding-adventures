@@ -11,8 +11,8 @@ gloss: this is very expensive, written from four words already written
 concept_tag: MW-SHOPPING-PRICE-ANSWER-WRITTEN
 prerequisites: [MW-C23-hear-price-answer]
 sounds: [semivowel-y, aspirated-gh, nasal, open-ai]
-roots: []
-etymology_hook: Two words in this line begin with the same breathed gh, and only one of them is new this chapter.
+roots: [sanskrit-ghana, sanskrit-mahargha]
+etymology_hook: "ye ghaṇo mahaṅgo hai: ghaṇo ← ghana (CDIAL 4424); mahaṅgo ← mahārgha (CDIAL 9954)"
 duration:
   max_seconds: 200
 requires:
@@ -48,6 +48,11 @@ reviews_of: [MW-C23-hear-price-answer, MW-C23-ghano, MW-C15-mahango, MW-W03-anus
 Four written words, each written before. The dot above **महंगो** is the same
 **ं** that sits in **मंदिर**; it is the only mark in the line that is easy to
 drop, so check for it last.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ये घणो महंगो है** (*ye ghaṇo mahaṅgo hai*) joins words with their own lessons: *ghaṇo*, "very", from Sanskrit *ghana*, "dense", listed by CDIAL as Marwari *ghaṇo* (CDIAL 4424); and *mahaṅgo*, "expensive", from Sanskrit *mahārgha*, "high-priced" (CDIAL 9954). *ye* and *hai* are older (CDIAL 2530, 1031).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PRICE-ANSWER-01, MW-SCRIPT-ANUSVARA-01] -->

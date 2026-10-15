@@ -15,6 +15,7 @@ concept_tag: MR-VERB-THOTHAVNE
 prerequisites: [MR-C195-purne, MR-C195-jalne]
 sounds: []
 roots: []
+etymology_hook: "ṭhoṭhāvṇe 'to knock': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C195-jalne]
 <!-- hl-knowledge: introduces=[MR-LEX-C195-ACT195-04]; assesses=[] -->
 
 **ठोठावणे** — *ṭhoṭhāvṇe* — "to knock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ठोठावणे** (*ṭhoṭhāvṇe*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

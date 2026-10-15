@@ -14,7 +14,8 @@ romanization: "smeshnóy"
 concept_tag: RU-KACH245-SMESHNOY
 prerequisites: [RU-C244-svetlyy, RU-C245-strannyy]
 sounds: []
-roots: []
+roots: [slavic-smijati]
+etymology_hook: "смешной is from смех 'laughter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C245-strannyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C245-KACH245-02]; assesses=[] -->
 
 **смешной** (*smeshnóy*) — "funny".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**смешной** comes from *смех*, "laughter", with *-ной*: what makes people laugh.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

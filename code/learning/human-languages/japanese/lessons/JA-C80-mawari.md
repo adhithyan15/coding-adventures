@@ -14,7 +14,8 @@ romanization: "mawari"
 concept_tag: JA-LOC80-MAWARI
 prerequisites: [JA-C80-hougaku, JA-C80-chikamichi]
 sounds: []
-roots: []
+roots: [japanese-mawaru]
+etymology_hook: "mawari: native, the noun from mawaru 'to go round'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C80-chikamichi]
 <!-- hl-knowledge: introduces=[JA-LEX-C80-LOC80-05]; assesses=[] -->
 
 **まわり** — *mawari* — "the surroundings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まわり** (*mawari*) is native: the noun made from *mawaru*, "to go round", by its stem (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

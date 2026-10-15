@@ -14,7 +14,8 @@ romanization: "wajada"
 concept_tag: AR-VERB-WAJADA
 prerequisites: [AR-C62-waqafa, AR-C62-bahatha]
 sounds: []
-roots: []
+roots: [w-j-d]
+etymology_hook: "wajada: built on the root w-j-d, 'to find' (Lane); wajada is the plain verb, 'he found'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C62-bahatha]
 <!-- hl-knowledge: introduces=[AR-LEX-C62-VERBS62-03]; assesses=[] -->
 
 **وجد** — *wajada* — "to find (he found)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وجد** (*wajada*) is built on the native Arabic root *w-j-d*, "to find" (Lane). *Wajada* is the plain verb, "he found".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

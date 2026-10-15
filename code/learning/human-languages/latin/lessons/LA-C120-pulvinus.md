@@ -13,7 +13,8 @@ gloss: "a cushion, a pillow"
 concept_tag: LA-THINGS120-PULVINUS
 prerequisites: [LA-C120-saccus, LA-C120-cista]
 sounds: []
-roots: []
+roots: [pulvinus-latin]
+etymology_hook: "pulvīnus 'cushion' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C120-cista]
 <!-- hl-knowledge: introduces=[LA-LEX-C120-THINGS120-03]; assesses=[] -->
 
 **pulvīnus, pulvīnī** — "a cushion, a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pulvīnus** has no sure origin; the link with *pulvis*, "dust", that EtymDB 2.1 records is doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

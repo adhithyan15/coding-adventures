@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 82,
-  "sourceHash": "fnv1a64:f05cea44ded223f9",
+  "sourceHash": "fnv1a64:03174c5fabd49d7d",
   "lessonIds": [
     "FA-C82-aknun",
     "FA-C82-hargez",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch82.txt",
   "json": "persian/narration/ch82.json",
-  "textHash": "fnv1a64:b0f1acea096f2aed",
-  "jsonHash": "fnv1a64:a9b82c85516b7392",
+  "textHash": "fnv1a64:51a564e6d389d5c4",
+  "jsonHash": "fnv1a64:ac4edef1f0ebfc11",
   "findings": []
 }

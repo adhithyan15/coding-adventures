@@ -14,7 +14,8 @@ romanization: "tulāsŭ"
 concept_tag: ML-JOLI260-TULASU
 prerequisites: [ML-C260-kaccavatam, ML-C260-kaccavatakkaran]
 sounds: []
-roots: []
+roots: [sanskrit-tula]
+etymology_hook: "tulāsŭ: built on Sanskrit tulā 'balance' (CDIAL 5886); the ending is not clear"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C260-kaccavatakkaran]
 <!-- hl-knowledge: introduces=[ML-LEX-C260-JOLI260-03]; assesses=[] -->
 
 **തുലാസ്** — *tulāsŭ* — "a weighing scale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുലാസ്** (*tulāsŭ*) is built on Sanskrit *tulā*, "balance, weight" (CDIAL 5886); how it came by its ending is not clear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

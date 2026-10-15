@@ -134,7 +134,7 @@ You'll want to know: The sentence.
 piece: ನನಗೆ nanage, "to me" — the dative from the last lesson.
 piece: ಕನ್ನಡ kannaḍa, Kannada (Ch. 5).
 piece: ಗೊತ್ತು gottu, "known".
-You are not the subject: nānu has moved into the dative, and the sentence is about kannaḍa. And gottu is not an action — it is "[is] known." Nothing here is doing anything.
+You are not the subject: nānu has moved into the dative, and the sentence is about kannaḍa. And gottu is not an action — it is "[is] known." Nothing here is doing anything. Gottu is the same root as Tamil kuṟi, "a mark" (DEDR 1847).
 
 Grammar Lens: Why: things that happen to you.
 Kannada separates what you do from what happens to you. Speaking is an action, so Ch. 5 used nānu. Knowing, liking, wanting arrive — so the person goes in the dative.

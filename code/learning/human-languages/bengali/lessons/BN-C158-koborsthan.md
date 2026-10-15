@@ -14,7 +14,8 @@ romanization: "kôbôrsthān"
 concept_tag: BN-JAYGA158-KOBORSTHAN
 prerequisites: [BN-C157-khal, BN-C157-chiriyakhana]
 sounds: []
-roots: []
+roots: [arabic-qabr, sanskrit-sthana]
+etymology_hook: "kôbôrsthān: kôbôr 'grave' ← Arabic qabr, through Persian, + sthān 'place', Sanskrit sthāna"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C157-chiriyakhana]
 <!-- hl-knowledge: introduces=[BN-LEX-C158-JAYGA158-01]; assesses=[] -->
 
 **কবরস্থান** — *kôbôrsthān* — "a graveyard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কবরস্থান** (*kôbôrsthān*) is *kôbôr*, "grave", from Arabic *qabr*, "grave", which reached Bengali through Persian (Lane), + *sthān*, "place", Sanskrit *sthāna* taken over whole. Persian has the matching *qabristān*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

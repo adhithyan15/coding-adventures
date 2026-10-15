@@ -14,7 +14,8 @@ romanization: "āṭo"
 concept_tag: MW-VERBS61-ATO
 prerequisites: [MW-C61-angur, MW-C61-nimbu]
 sounds: []
-roots: []
+roots: [indo-aryan-arta]
+etymology_hook: "āṭo ← *ārta 'flour', reconstructed (CDIAL 1338, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C61-nimbu]
 <!-- hl-knowledge: introduces=[MW-LEX-C61-VERBS61-03]; assesses=[] -->
 
 **आटो** — *āṭo* — "flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आटो** (*āṭo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ārta*, "flour", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 1338); the match is through Hindi *āṭā* and Gujarati *āṭo*. CDIAL compares Persian *ārd*, "flour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

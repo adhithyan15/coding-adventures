@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a college, then the Marathi for a museum
 You'll want to know: इंद्रधनुष्य.
 इंद्रधनुष्य — indradhanuṣya — "a rainbow".
 
+The word, taken apart.
+इंद्रधनुष्य (indradhanuṣya) is Sanskrit indradhanus, "Indra's bow", a tatsama: Indra, the sky god, and dhanus, "bow".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a museum, then the Marathi for a rainbow
 
 You'll want to know: गारा.
 गारा — gārā — "hail".
+
+The word, taken apart.
+गारा (gārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karaka, "hail" (CDIAL 2782). CDIAL lists the Marathi word here with a query.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a rainbow, then the Marathi for hail.
 You'll want to know: वसंत.
 वसंत — vasant — "springtime".
 
+The word, taken apart.
+वसंत (vasant) is Sanskrit vasanta, "spring season", taken over whole as a learned loan, a tatsama (CDIAL 11439).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for hail, then the Marathi for springtime.
 You'll want to know: ग्रह.
 ग्रह — grah — "a planet".
 
+The word, taken apart.
+ग्रह (grah) is Sanskrit graha, "seizing", taken over whole as a learned loan, a tatsama (CDIAL 4363). The "seizers" were the planets, thought to grip human fate.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for springtime, then the Marathi for a plane
 
 You'll want to know: स्वातंत्र्य.
 स्वातंत्र्य — svātantrya — "freedom".
+
+The word, taken apart.
+स्वातंत्र्य (svātantrya) is Sanskrit svātantrya, "independence", a tatsama built on svatantra: sva, "own", and tantra, "rule". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

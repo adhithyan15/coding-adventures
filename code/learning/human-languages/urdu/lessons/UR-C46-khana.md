@@ -14,7 +14,8 @@ romanization: "khānā"
 concept_tag: UR-VERB-KHANA
 prerequisites: [UR-C45-mehman, UR-C46-ustad]
 sounds: []
-roots: []
+roots: [sanskrit-khadati, khadana-sanskrit]
+etymology_hook: "khānā 'to eat' ← khādati 'chews, eats' (CDIAL 3865); khānā 'food' ← khādana 'food' (CDIAL 3867)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C46-ustad]
 <!-- hl-knowledge: introduces=[UR-LEX-C46-FAMILY46-02]; assesses=[] -->
 
 **کھانا** — *khānā* — "to eat; food".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھانا** (*khānā*) is two inherited words that met in one shape. The verb "to eat" comes from Sanskrit *khādati*, "chews, eats" (CDIAL 3865), and the noun "food" from *khādana*, "eating, food" (CDIAL 3867).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

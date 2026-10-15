@@ -15,6 +15,7 @@ concept_tag: BN-VERB-BERANO
 prerequisites: [BN-C237-thamano, BN-C237-par-hooya]
 sounds: []
 roots: []
+etymology_hook: "beṛāno: origin not settled; CDIAL lists beṛā 'to surround' (CDIAL 12132) but not 'to stroll'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C237-par-hooya]
 <!-- hl-knowledge: introduces=[BN-LEX-C237-ACT237-05]; assesses=[] -->
 
 **বেড়ানো** — *beṛāno* — "to go on an outing, to stroll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **বেড়ানো** (*beṛāno*) is not settled. CDIAL lists Bengali *beṛā*, "to surround (with a fence)", under Sanskrit *veṣṭayati*, "wraps up, surrounds" (CDIAL 12132), but not the sense "to stroll".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

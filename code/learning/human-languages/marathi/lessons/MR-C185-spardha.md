@@ -14,7 +14,8 @@ romanization: "spardhā"
 concept_tag: MR-VASTU185-SPARDHA
 prerequisites: [MR-C185-vijay, MR-C185-parabhav]
 sounds: []
-roots: []
+roots: [sanskrit-spardha]
+etymology_hook: "spardhā: Sanskrit spardhā 'rivalry, competition', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C185-parabhav]
 <!-- hl-knowledge: introduces=[MR-LEX-C185-VASTU185-05]; assesses=[] -->
 
 **स्पर्धा** — *spardhā* — "a competition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्पर्धा** (*spardhā*) is Sanskrit *spardhā*, "rivalry, emulation", a tatsama. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

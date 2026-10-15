@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 144,
-  "sourceHash": "fnv1a64:5f393dcb30b30c3e",
+  "sourceHash": "fnv1a64:5ab846a4e6ac77e6",
   "lessonIds": [
     "MW-C144-sundar",
     "MW-C144-rupalo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch144.txt",
   "json": "marwadi/narration/ch144.json",
-  "textHash": "fnv1a64:8124e72e63166e02",
-  "jsonHash": "fnv1a64:f14183e4aa35bfb3",
+  "textHash": "fnv1a64:8778c2c5ac12640b",
+  "jsonHash": "fnv1a64:f98043a764c4556e",
   "findings": []
 }

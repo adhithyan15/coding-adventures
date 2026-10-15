@@ -11,7 +11,8 @@ romanization: "haḷeya"
 concept_tag: KA-ADJ-OLD
 prerequisites: [KA-C42-new, KA-C41-that, KA-C41-here]
 sounds: []
-roots: []
+roots: [dravidian-pazha-old]
+etymology_hook: "haḷeya: native Dravidian, older Kannada paḻe 'old' (DEDR 3999); Tamil paḻa"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **ಹೊಸ** *hosa* a moment ago. Put them side by side and nothing abo
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಳೆಯ** (*haḷeya*) is native Dravidian, the adjective of *haḷe*, "old". DEDR 3999 gives the older Kannada form *paḻe*, with Tamil *paḻa* and Malayalam *paḻa*: the *p-* has become *h-* and the *ḻ* has become *ḷ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-05, KA-LEX-C41-DEIXIS-02, KA-LEX-C41-DEIXIS-03] -->

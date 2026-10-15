@@ -14,7 +14,8 @@ romanization: "utpatati"
 concept_tag: SA-VERB-UTPATATI
 prerequisites: [SA-C144-bhajati, SA-C144-tolayati]
 sounds: []
-roots: []
+roots: [sanskrit-utpatati, sanskrit-patati]
+etymology_hook: "utpatati ← ud 'up' + √pat 'fly, fall' (MW; CDIAL 1810), which MW compares with Greek petomai 'fly'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C144-tolayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C144-ACT144-03]; assesses=[] -->
 
 **उत्पतति** — *utpatati* — "flies up, jumps up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*utpatati* comes from *ud* "up" and the root √pat "fly, fall" (MW; CDIAL 1810): "flies up, jumps up". MW compares √pat with Greek *petomai* "fly" and Latin *peto*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

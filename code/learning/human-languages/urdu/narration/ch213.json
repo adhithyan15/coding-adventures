@@ -4,7 +4,7 @@
   "chapter": 213,
   "title": "To deliver, To lift, To drop, To throw, To pull",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3ae0ed9f5b8d96c5",
+  "sourceHash": "fnv1a64:a4c9afed503d08d2",
   "lessons": [
     {
       "id": "UR-C213-pahunchana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6968dec01eae3afe",
+      "sourceHash": "fnv1a64:5b8531d2a4c8112b",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پہنچانا (pahuṅchānā) is the causing form of pahuṅchnā, \"to arrive\": to deliver is to make something arrive. CDIAL lists pahuṅchnā under Sanskrit prabhūta, \"much, great\", which Prakrit made into a verb, \"is strong, reaches\" (CDIAL 8716)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c99e3b57eebe1b40",
+      "sourceHash": "fnv1a64:aead561fde077fc0",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اٹھانا (uṭhānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ut-sthāpayati, \"raises\", a form CDIAL reconstructs from its descendants (CDIAL 1903). It is built on sthā-, \"to stand\": to lift is to make something stand up."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e798b3ab3e2a1d73",
+      "sourceHash": "fnv1a64:4248b94127a2b07e",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گرانا (girānā) is the causing form of girnā, \"to fall\": to drop is to make something fall. CDIAL lists girnā under a reconstructed girati, \"drips, falls\" (CDIAL 4159)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c041e4494832d86",
+      "sourceHash": "fnv1a64:7ed4b90eca1e651e",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پھینکنا (pheṅknā) is a tadbhava, a word inherited and reshaped by sound change. It comes from pheṅk, \"throw\", a form CDIAL reconstructs from its descendants (CDIAL 9106). It is a form CDIAL gives beside a reconstructed phekk, \"throw\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:864dfb4e8a1a37a9",
+      "sourceHash": "fnv1a64:3960b1bba7d892ff",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کھینچنا (khīṅchnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from khiñc, \"drag, pull\", a form CDIAL reconstructs from its descendants (CDIAL 3881)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "kā̃pnā"
 concept_tag: HI-VERB-KAPNA
 prerequisites: [HI-C231-jamhailena, HI-C231-khasna]
 sounds: []
-roots: []
+roots: [sanskrit-kampate]
+etymology_hook: "kāṁpnā ← Sanskrit kampate 'trembles, shivers', a tadbhava (CDIAL 2767)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C231-khasna]
 <!-- hl-knowledge: introduces=[HI-LEX-C232-ACT232-01]; assesses=[] -->
 
 **काँपना** — *kā̃pnā* — "to shiver, to tremble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काँपना** (*kāṁpnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kampate*, "trembles, shivers" (CDIAL 2767).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

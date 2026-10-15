@@ -54,7 +54,8 @@ reviews_of: [ES-C298-tal-vez]
 **puede ser** — "could be," "it may be so."
 
 There is nothing here you do not already own. *Poder*, to be able, with its
-stressed *o* cracking open into *ue* the way it always does. *Ser*, to be. Put
+stressed *o* cracking open into *ue* the way it always does. *Ser*, to be. *Poder* ← Vulgar Latin *\*potēre*, a remake of *posse*
+(EtymDB 2.1); *ser* merged Latin *esse*, "to be", with *sedēre*, "to sit". Put
 them together and you have said "it is able to be," which is a very exact
 description of what "maybe" actually claims.
 

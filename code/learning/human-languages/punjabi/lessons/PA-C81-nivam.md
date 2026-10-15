@@ -14,7 +14,8 @@ romanization: "nīvāṁ"
 concept_tag: PA-ADJ81-NIVAM
 prerequisites: [PA-C81-sasta, PA-C81-uchcha]
 sounds: []
-roots: []
+roots: [sanskrit-nipa]
+etymology_hook: "nīvāṁ ← Sanskrit nīpa 'situated low, deep', a tadbhava (CDIAL 7548)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C81-uchcha]
 <!-- hl-knowledge: introduces=[PA-LEX-C81-ADJ81-05]; assesses=[] -->
 
 **ਨੀਵਾਂ** — *nīvāṁ* — "low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਨੀਵਾਂ** (*nīvāṁ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nīpa*, "situated low, deep" (CDIAL 7548).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

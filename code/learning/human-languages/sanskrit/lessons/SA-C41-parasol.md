@@ -14,7 +14,8 @@ romanization: "chatram"
 concept_tag: SA-CRAFT-CHATRA
 prerequisites: [SA-C41-mirror, SA-C39-snake, SA-C40-sweet]
 sounds: []
-roots: []
+roots: [sanskrit-chattra]
+etymology_hook: "chattra 'parasol' ← the root √chad 'cover' (CDIAL 4972); it lives on as Hindi chātā 'umbrella'"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C41-mirror]
 From *chad*, "to cover". The covering is the whole of it — what the **छत्रम्** covers you from, sun or water, the word does not say.
 
 It went east as well as up in the world: Hindi *chātā*, the umbrella anyone carries, is this word worn smooth.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Chattra* is built on the root √chad, "to cover" (MW, CDIAL 4972). It lives on as
+Hindi *chātā*, "umbrella".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

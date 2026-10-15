@@ -11,9 +11,10 @@ romanization: "veḷḷavuṁ ariyuṁ pāluṁ"
 concept_tag: ML-JOIN-UM-LIST
 prerequisites: [ML-C70-um, ML-C39-paal]
 sounds: []
-roots: []
+roots: [dravidian-um-and, proto-dravidian-paal-milk]
+etymology_hook: "pāl 'milk' is native Dravidian, one word with Tamil pāl (DEDR 4096); the joining -um is native too"
 duration:
-  max_seconds: 240
+  max_seconds: 298
 requires:
   knowledge: [ML-CONCEPT-C70-UM-01, ML-CONCEPT-C39-PAAL-01]
 introduces:
@@ -72,6 +73,8 @@ one, so the full **ല** comes back to carry it.
 **It is the vowel that decides, not the position.** You have had
 **നിങ്ങൾക്ക്** since the age question, and its **ൾ** sits in the middle of the
 word and stays a **ൾ** — because **ക്ക്** brings no vowel onto it.
+
+**Where the word comes from.** *pāl*, "milk", is native Dravidian, one word with Tamil *pāl* and Kannada *pāl* (DEDR 4096). DEDR 4096 compares Sanskrit *pālana*, with a query.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C70-UM-02, ML-CONCEPT-C70-UM-01] -->

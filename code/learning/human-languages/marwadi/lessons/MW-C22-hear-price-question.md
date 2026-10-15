@@ -11,8 +11,8 @@ gloss: how much is this? — the price question, heard whole before it is read
 concept_tag: MW-SHOPPING-PRICE-QUESTION
 prerequisites: [MW-C22-kitno]
 sounds: [semivowel-y, retroflex-n, long-uu, open-ai]
-roots: []
-etymology_hook: The question the shopping chapters were explicitly written without.
+roots: [indo-aryan-kiyatta]
+etymology_hook: "ye kitṇe kū hai: ye (CDIAL 2530) + kitṇe ← *kiyatta (CDIAL 3167) + kū + hai (CDIAL 1031)"
 duration:
   max_seconds: 180
 requires:
@@ -54,6 +54,11 @@ that word before *kū*, exactly as the source prints it; learn the whole line as
 one heard shape now and the bending will be taught on its own later.
 
 Hear it twice. Say it once as if the thing you are asking about were in front of you.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The new piece in *ye kitṇe kū hai* is *kū*, which CDIAL does not list, so its history is not settled; compare Hindi *ko* (CDIAL 14342). *kitṇe*, "how much", is from *\*kiyatta* (CDIAL 3167); *ye* and *hai* are older (CDIAL 2530, 1031).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PRICE-QUESTION-01] -->

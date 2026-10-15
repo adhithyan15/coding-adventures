@@ -14,7 +14,8 @@ romanization: "cappaṭe"
 concept_tag: KA-GUNA256-CAPPATE
 prerequisites: [KA-C255-gundage, KA-C256-tollu]
 sounds: []
-roots: []
+roots: [dravidian-cappai-flat]
+etymology_hook: "cappaṭe: native Dravidian, one word with Tamil cappaṭṭai and Telugu cappi (DEDR 2331)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C256-tollu]
 <!-- hl-knowledge: introduces=[KA-LEX-C256-GUNA256-02]; assesses=[] -->
 
 **ಚಪ್ಪಟೆ** — *cappaṭe* — "flat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಪ್ಪಟೆ** (*cappaṭe*) is native Dravidian, one word with Tamil *cappaṭṭai*, Telugu *cappi* and Malayalam *cappaṭa* (DEDR 2331). DEDR lists *cappaṭe*, "flatness, flat". DEDR 2331 compares Sanskrit *carpaṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

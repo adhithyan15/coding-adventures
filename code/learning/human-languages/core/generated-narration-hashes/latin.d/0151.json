@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 151,
-  "sourceHash": "fnv1a64:91c0950b6550d507",
+  "sourceHash": "fnv1a64:52825297e8b57bf8",
   "lessonIds": [
     "LA-C151-superbus",
     "LA-C151-benignus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch151.txt",
   "json": "latin/narration/ch151.json",
-  "textHash": "fnv1a64:7a13023665f5a833",
-  "jsonHash": "fnv1a64:59683ac27f0f6cbc",
+  "textHash": "fnv1a64:6dd416a55979be63",
+  "jsonHash": "fnv1a64:bb8fab998f147cc4",
   "findings": []
 }

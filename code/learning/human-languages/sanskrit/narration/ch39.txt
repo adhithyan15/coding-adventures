@@ -12,7 +12,7 @@ Before the new word: what did mṛttikā mean?
 You'll want to know: धेनुः.
 धेनुः (dhenuḥ) — "a cow".
 धेनुः (dhenuḥ) is a cow, and first of all a cow in milk.
-It stands on dhe, "to suckle" — a root that reaches a long way west: Latin fēmina, the one who nurses, and fīlius, the one nursed, and English fecund behind them both.
+It stands on dhe, "to suckle" — a root that reaches a long way west: MW compares Greek thēlē, "nipple", and Latin fēlāre, "to suck".
 दुग्धम्, the milk you already ask for, comes from a different root altogether, the one that means to draw milk off. The animal is named for the giving, the drink for the taking.
 
 What you've built.
@@ -44,9 +44,12 @@ Before the new word: what did dhenuḥ mean?
 
 You'll want to know: विहगः.
 विहगः (vihagaḥ) — "a bird".
-विहगः (vihagaḥ) is a bird, and the word says how it moves: vi-, "apart, across", with ga, "going".
-That going-piece is the one inside गच्छति, the first doing-word in this book. A विहगः (vihagaḥ) is simply the one that goes across.
-Across what is unsaid, and does not need saying: आकाशः, the open sky, is the only place it could be.
+विहगः (vihagaḥ) is a bird, and the word says how it moves: viha, "the sky, the air", with ga, "going".
+That going-piece is the one inside गच्छति, the first doing-word in this book. A विहगः (vihagaḥ) is simply the sky-goer.
+Viha is a rarer sky-word than आकाशः, but the picture is the same: the open air is where a bird goes.
+
+The word, taken apart.
+MW explains vihaga as viha, "the sky", with ga, "going", a piece built on the root √gam: "sky-goer".
 
 What you've built.
 A bird named for crossing the sky.
@@ -80,6 +83,9 @@ You'll want to know: मत्स्यः.
 मत्स्यः (matsyaḥ) is a fish, in a नदी or in a market basket.
 It wore down eastward into machh, which is why the fish on a Hindi menu is machhlī and the Bengali one is machh.
 Westward there is nothing to point at: no agreed European cousin has been found. A fish seems to be one of the things each family named for itself.
+
+The word, taken apart.
+Matsya is already in the Rigveda, but no agreed European cousin is known, so its deeper origin is not settled. It lives on as Bengali māch and, with an added -l-, Hindi machlī (CDIAL 9758).
 
 What you've built.
 A fish, and a word that travelled east but not west.
@@ -146,6 +152,9 @@ You'll want to know: सर्पः.
 सर्पः (sarpaḥ) is a snake, named for what it does: sṛp, "to creep, to glide".
 Latin has the same root, showing up as serpere, and serpent comes to English straight out of it. Reptile arrives by a parallel road from a Latin word meaning much the same thing.
 A सर्पः (sarpaḥ) belongs in the तृणम् rather than on the शिला, and that is where the old texts usually put it.
+
+The word, taken apart.
+Sarpa is built on the root √sṛp, "to creep, glide" (MW, CDIAL 13271). It is inherited: MW compares Greek herpō and Latin serpere, "to creep".
 
 What you've built.
 Five creatures: one in milk, one across the sky, one in the river, one at the door, one in the grass.

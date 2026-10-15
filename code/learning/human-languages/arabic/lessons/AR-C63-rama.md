@@ -14,7 +14,8 @@ romanization: "ramā"
 concept_tag: AR-VERB-RAMA
 prerequisites: [AR-C62-labisa, AR-C62-taraka]
 sounds: []
-roots: []
+roots: [r-m-y]
+etymology_hook: "ramā: built on the root r-m-y, 'to throw, to shoot' (Lane); ramā is the plain verb, 'he threw'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C62-taraka]
 <!-- hl-knowledge: introduces=[AR-LEX-C63-VERBS63-01]; assesses=[] -->
 
 **رمى** — *ramā* — "to throw (he threw)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رمى** (*ramā*) is built on the native Arabic root *r-m-y*, "to throw, to shoot" (Lane). *Ramā* is the plain verb, "he threw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

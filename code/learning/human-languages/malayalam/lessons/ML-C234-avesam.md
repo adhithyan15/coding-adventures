@@ -14,7 +14,8 @@ romanization: "āvēśaṁ"
 concept_tag: ML-AROGYAM234-AVESAM
 prerequisites: [ML-C234-nirasa, ML-C234-atmavisvasam]
 sounds: []
-roots: []
+roots: [sanskrit-avesha]
+etymology_hook: "āvēśaṁ ← Sanskrit āvēśa 'entering, possession', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C234-atmavisvasam]
 <!-- hl-knowledge: introduces=[ML-LEX-C234-AROGYAM234-04]; assesses=[] -->
 
 **ആവേശം** — *āvēśaṁ* — "excitement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആവേശം** (*āvēśaṁ*) ← Sanskrit *āvēśa*, "entering, possession", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*. Excitement is named as a possession.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

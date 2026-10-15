@@ -14,7 +14,8 @@ romanization: "kāmār"
 concept_tag: BN-THINGS125-KAMAR
 prerequisites: [BN-C125-chamra, BN-C125-jele]
 sounds: []
-roots: []
+roots: [sanskrit-karmara]
+etymology_hook: "kāmār ← Sanskrit karmāra 'blacksmith', a tadbhava (CDIAL 2898)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C125-jele]
 <!-- hl-knowledge: introduces=[BN-LEX-C125-THINGS125-03]; assesses=[] -->
 
 **কামার** — *kāmār* — "a blacksmith".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কামার** (*kāmār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karmāra*, "blacksmith" (CDIAL 2898). CDIAL reports Chatterji's view that the word may be Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

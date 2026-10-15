@@ -14,7 +14,8 @@ romanization: "ettuka"
 concept_tag: ML-VERB-ETTUKA
 prerequisites: [ML-C225-otikkuka, ML-C225-ninnuka]
 sounds: []
-roots: []
+roots: [dravidian-ettu-reach]
+etymology_hook: "ettuka: native Dravidian, one word with Tamil eytu and Kannada aydu (DEDR 809)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C225-ninnuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C225-KRIYA225-03]; assesses=[] -->
 
 **എത്തുക** — *ettuka* — "to arrive, to reach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എത്തുക** (*ettuka*) is native Dravidian, one word with Tamil *eytu*, Kannada *aydu* and Telugu *ey(i)du* (DEDR 809).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

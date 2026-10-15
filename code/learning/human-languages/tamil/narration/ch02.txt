@@ -68,6 +68,7 @@ The phrase, taken apart.
 eṉ (my) + peyar (name) + your name.
 என் பெயர் … (eṉ peyar …) = "my name …" becomes "my name is…"
 Eṉ peyar Arun. becomes "My name is Arun."
+Both words are native Dravidian: eṉ (DEDR 5160) and peyar (DEDR 4410).
 
 Grammar Lens: Tamil has no word for "is" here.
 Look at what's missing: there is no verb. Tamil sets "my name" beside "Arun" — eṉ peyar Arun — and the "is" is simply understood. This is the zero copula: for equational sentences (X is Y), Dravidian needs no "to be" at all — where English needs is, Hindi needs hai, Arabic (you'll see) also drops it. Tamil says only "my name Arun."
@@ -141,7 +142,7 @@ Assemble the question — your + name + what — and note, again, no "is."
 The phrase, taken apart.
 உங்கள் (uṅgaḷ, "your") = the possessive of nīṅgaḷ ("you," respectful).
 உங்கள் பெயர் என்ன? (uṅgaḷ peyar eṉṉa?) = literally "your name what?" = "what's your name?"
-Three words, no verb — the zero copula holds for questions too. Tamil never adds an "is."
+Three words, no verb — the zero copula holds for questions too. Tamil never adds an "is." All three words are native Dravidian: uṅgaḷ (DEDR 3688), peyar (DEDR 4410) and eṉṉa (DEDR 5151).
 
 Grammar Lens: answer, and the familiar version.
 Answer with the sentence you built: Eṉ peyar Arun. The familiar "your" swaps uṅgaḷ for uṉ (from nī): uṉ peyar eṉṉa?

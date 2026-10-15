@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a lesson, then the Urdu for a question.
 You'll want to know: جواب.
 جواب — javāb — "an answer".
 
+The word, taken apart.
+جواب (javāb) is a loan from Arabic jawāb, "an answer", which reached Urdu through Persian. Its Arabic root is j-w-b (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a question, then the Urdu for an answer.
 
 You'll want to know: لفظ.
 لفظ — lafz — "a word".
+
+The word, taken apart.
+لفظ (lafz) is a loan from Arabic lafẓ, "utterance, word", which reached Urdu through Persian. Its Arabic root is l-f-ẓ (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for an answer, then the Urdu for a word.
 You'll want to know: کھیل.
 کھیل — khel — "a game".
 
+The word, taken apart.
+کھیل (khel) is inherited from a reconstructed khel-, "play" (CDIAL 3918). CDIAL links it with Sanskrit krīḍati, "plays": if that verb has a non-Aryan source, these forms may share it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a word, then the Urdu for a game.
 You'll want to know: درخت.
 درخت — darakht — "a tree".
 
+The word, taken apart.
+درخت (darakht) is a loan, usually traced to Persian darakht, "tree".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a game, then the Urdu for a tree.
 
 You'll want to know: پھول.
 پھول — phūl — "a flower".
+
+The word, taken apart.
+پھول (phūl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from phulla, "blown (of flowers)" (CDIAL 9092).
 
 What you've built.
 One more word for this chapter.

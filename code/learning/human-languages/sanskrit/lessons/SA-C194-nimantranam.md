@@ -14,7 +14,8 @@ romanization: "nimantraṇam"
 concept_tag: SA-THG194-NIMANTRANAM
 prerequisites: [SA-C193-upakaranam, SA-C194-paritosikam]
 sounds: []
-roots: []
+roots: [sanskrit-nimantrana]
+etymology_hook: "nimantraṇa ← ni- + mantraya- 'take counsel', from mantra, on √man 'think' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C194-paritosikam]
 <!-- hl-knowledge: introduces=[SA-LEX-C194-THG194-02]; assesses=[] -->
 
 **निमन्त्रणम्** — *nimantraṇam* — "an invitation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nimantraṇa* is built on *ni-* and *mantrayate*, "speaks, takes counsel", a verb MW makes from *mantra*, which is built on the root √man, "to think". MW glosses it "invitation, a summons", and Hindi took it over as *nimantraṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

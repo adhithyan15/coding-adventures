@@ -14,7 +14,8 @@ romanization: "ṭāng"
 concept_tag: UR-BODY40-TANG
 prerequisites: [UR-C40-chehra, UR-C40-khun]
 sounds: []
-roots: []
+roots: [sanskrit-tanga]
+etymology_hook: "ṭāng ← Sanskrit ṭaṅga 'leg', a word of the old lexicons (CDIAL 5428)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C40-khun]
 <!-- hl-knowledge: introduces=[UR-LEX-C40-BODY40-03]; assesses=[] -->
 
 **ٹانگ** — *ṭāng* — "a leg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹانگ** (*ṭāng*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ṭaṅga*, "leg" (CDIAL 5428). CDIAL lists it under *ṭaṅka*, which the old lexicons gloss both "rod, spike" and "leg", and asks whether the word first meant "stick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

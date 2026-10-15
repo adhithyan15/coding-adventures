@@ -15,6 +15,7 @@ concept_tag: MR-QUAL151-BHITRA
 prerequisites: [MR-C151-pramanik, MR-C151-dhadsi]
 sounds: []
 roots: []
+etymology_hook: "bhitrā 'timid': origin not settled; perhaps on bhī 'fear', but CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C151-dhadsi]
 <!-- hl-knowledge: introduces=[MR-LEX-C151-QUAL151-03]; assesses=[] -->
 
 **भित्रा** — *bhitrā* — "timid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **भित्रा** (*bhitrā*) is not settled. It may be built on Sanskrit *bhī*, "to fear", but CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

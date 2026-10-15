@@ -15,6 +15,7 @@ concept_tag: MR-VERB-PETAVNE
 prerequisites: [MR-C161-jahirat, MR-C161-pavti]
 sounds: []
 roots: []
+etymology_hook: "peṭavṇe 'to set alight': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C161-pavti]
 <!-- hl-knowledge: introduces=[MR-LEX-C162-ACT162-01]; assesses=[] -->
 
 **पेटवणे** — *petavṇe* — "to light, to set alight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **पेटवणे** (*petavṇe*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

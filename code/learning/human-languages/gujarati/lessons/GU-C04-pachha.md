@@ -11,7 +11,8 @@ gloss: again, back
 concept_tag: GU-WORD-PACHHA
 prerequisites: [GU-C01-aavjo]
 sounds: [long-aa, chh]
-roots: [pashcha-behind]
+roots: [pashcha-behind, indo-aryan-pashca]
+etymology_hook: "pāchhā ← *paśca 'hinder part', drawn from Sanskrit paścāt 'behind, afterward' (CDIAL 7990)"
 duration:
   max_seconds: 180
 requires:
@@ -47,9 +48,7 @@ have the other half — *āvjo* ("come again") — from the earlier courtesy cha
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C04-PACHHA-01] -->
 
-**પાછા** (*pāchhā*, "back, again, returning") is from Sanskrit **પશ્ચાત્**
-(*paścāt*, "behind, afterward") — the same "behind/after" root behind English
-*post-* words, distantly. It carries the sense of *return*: *pāchhā āvvũ* ("to
+**પાછા** (*pāchhā*, "back, again, returning") goes back to *\*paśca*, "hinder part", a form drawn from Sanskrit *paścāt*, "behind, afterward" (CDIAL 7990). It carries the sense of *return*: *pāchhā āvvũ* ("to
 come back"), *pāchhā jāvũ* ("to go back"). Add it to "we'll meet" and you get the
 warm goodbye of the next lesson.
 

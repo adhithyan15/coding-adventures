@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a temple, then the Bengali for a hotel.
 You'll want to know: পুলিশ.
 পুলিশ — pulish — "the police".
 
+The word, taken apart.
+পুলিশ (pulish) is a loan from English police.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a hotel, then the Bengali for the police
 
 You'll want to know: সাইকেল.
 সাইকেল — sāikel — "a bicycle".
+
+The word, taken apart.
+সাইকেল (sāikel) is a loan from English cycle.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for the police, then the Bengali for a bicyc
 You'll want to know: বাজার.
 বাজার — bājār — "a market".
 
+The word, taken apart.
+বাজার (bājār) is a loan, usually traced to Persian bāzār, "market".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a bicycle, then the Bengali for a market
 You'll want to know: গ্রাম.
 গ্রাম — grām — "a village".
 
+The word, taken apart.
+গ্রাম (grām) is Sanskrit grāma, "troop, village", taken over whole as a learned loan, a tatsama (CDIAL 4368). The word inherited from it is gāṁ, "village", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a market, then the Bengali for a village
 
 You'll want to know: শহর.
 শহর — shôhôr — "a city".
+
+The word, taken apart.
+শহর (shôhôr) is a loan, usually traced to Persian shahr, "city".
 
 What you've built.
 One more word for this chapter.

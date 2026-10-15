@@ -14,7 +14,8 @@ romanization: "ārohati"
 concept_tag: SA-VERB-AROHATI
 prerequisites: [SA-C135-pathayati, SA-C135-vismarati]
 sounds: []
-roots: []
+roots: [sanskrit-arohati]
+etymology_hook: "ārohati ← ā 'onto' + √ruh 'climb, grow' (MW; CDIAL 1335); Hindi arohnā 'to mount'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C135-vismarati]
 <!-- hl-knowledge: introduces=[SA-LEX-C135-ACT135-04]; assesses=[] -->
 
 **आरोहति** — *ārohati* — "climbs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ārohati* comes from *ā* "onto, up to" and the root √ruh "climb, rise, grow" (MW; CDIAL 1335): "climbs up, mounts". It lives on as Hindi *arohnā* "to mount, ride" (CDIAL 1335).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -335,10 +335,28 @@ describe("the live corpus", () => {
     // bare-vs-tagged entries wrapping a shape entry, and the shape entries are
     // what went away.
     //
+    // 82 -> 78. The Spanish etymology review read both sides of four pairs and
+    // moved the bare Spanish slugs onto the tagged spelling the corpus already
+    // used: dicere (ES-C277-es-decir), habitare (ES-C268-habitacion and the new
+    // ES-C507-habitante), merces (ES-C03-usted-origin) and sperare
+    // (ES-C269-espero). Each pair was the same Latin word.
+    //
+    // 78 -> 77: `ananda` against `ananda-sanskrit`. The bare slug's only user
+    // was MR-C02-anand, whose आनंद is Sanskrit *ānanda* exactly as in the five
+    // lessons tagging it `ananda-sanskrit`, so the Marathi etymology review
+    // moved it onto the tagged slug.
+    //
+    // 77 -> 76: `s-l-m` against `semitic-s-l-m`. Both spelled the one Arabic
+    // root s-l-m 'to be safe' (Lane): the bare slug on AR-C01's salām and
+    // AR-C192's istalama, the tagged one on AR-C04's salāma and the AR-W00/W12
+    // writing lessons that spell the same greeting. The etymology-hygiene pass
+    // moved the six tagged Arabic lessons onto the bare slug that Arabic,
+    // Persian and Urdu already share, so the split is gone.
+    //
     // THIS NUMBER MAY ONLY FALL.
     const baselineFile = loadRootSlugBaseline(defaultCurriculumRoot());
-    expect(baselineFile.splits).toHaveLength(82);
-    expect(findRootSlugSplits()).toHaveLength(82);
+    expect(baselineFile.splits).toHaveLength(76);
+    expect(findRootSlugSplits()).toHaveLength(76);
     expect(findRootSlugSplits().every((split) => split.kind === "bare-vs-tagged")).toBe(true);
   });
 });

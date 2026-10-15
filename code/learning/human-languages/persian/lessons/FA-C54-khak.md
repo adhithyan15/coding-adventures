@@ -14,7 +14,8 @@ romanization: "khâk"
 concept_tag: FA-NATURE54-KHAK
 prerequisites: [FA-C53-atash, FA-C53-barf]
 sounds: []
-roots: []
+roots: [persian-khak]
+etymology_hook: "khâk ← Middle Persian xāk (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C53-barf]
 <!-- hl-knowledge: introduces=[FA-LEX-C54-NATURE54-01]; assesses=[] -->
 
 **خاک** — *khâk* — "soil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâk* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *xāk*, "earth, dust" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

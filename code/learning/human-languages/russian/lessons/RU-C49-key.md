@@ -14,7 +14,8 @@ romanization: "klyuch"
 concept_tag: RU-HOME2-KEY
 prerequisites: [RU-C49-bed, RU-C49-lamp]
 sounds: []
-roots: []
+roots: [pie-kleh2w]
+etymology_hook: "ключ ← Proto-Slavic *ključĭ; Latin clavis 'key' and Greek kleis 'key' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C49-lamp]
 <!-- hl-knowledge: introduces=[RU-LEX-C49-HOME2-05]; assesses=[] -->
 
 **ключ** (*klyuch*) — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ключ** ← Proto-Slavic *\*ključĭ* — inherited. Vasmer relates it to Greek *kleís*, "key", and Latin *clāvis*, "key", and *claudō*, "I shut". The *ключ* that means "a spring" may be the same word or another.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

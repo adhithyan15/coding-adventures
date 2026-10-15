@@ -14,7 +14,8 @@ romanization: "anduvalla"
 concept_tag: TE-WANT108-ANDUVALLA
 prerequisites: [TE-C108-nirnayincu, TE-C108-karanam]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic, dravidian-val-strong]
+etymology_hook: "anduvalla: native andu 'there' (DEDR 1) + valla 'by means of' (DEDR 5276)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C108-karanam]
 <!-- hl-knowledge: introduces=[TE-LEX-C108-WANT108-04]; assesses=[] -->
 
 **అందువల్ల** — *anduvalla* — "therefore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అందువల్ల** (*anduvalla*) is native Dravidian: *andu*, "there, that", on the far-pointing base of DEDR 1, and *valla*, "because of", which DEDR 5276 lists as the postposition *valana*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

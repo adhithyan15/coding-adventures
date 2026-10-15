@@ -14,7 +14,8 @@ romanization: "haftā"
 concept_tag: HI-TIME191-HAFTA
 prerequisites: [HI-C190-ciz, HI-C190-rang]
 sounds: []
-roots: []
+roots: [persian-hafta]
+etymology_hook: "haftā: usually traced to Persian hafta 'week'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C190-rang]
 <!-- hl-knowledge: introduces=[HI-LEX-C191-TIME191-01]; assesses=[] -->
 
 **हफ़्ता** — *haftā* — "a week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हफ़्ता** (*haftā*) is a loan, usually traced to Persian *hafta*, "week". It is built on *haft*, "seven".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

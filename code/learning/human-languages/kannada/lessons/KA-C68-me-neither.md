@@ -11,9 +11,10 @@ romanization: "nanagū gottilla"
 concept_tag: KA-PHRASE-MENEITHER
 prerequisites: [KA-C68-dont-know, KA-C52-garland, KA-C45-wife, KA-C45-husband, KA-C45-grandmother, KA-C66-harvest, KA-C67-and]
 sounds: []
-roots: []
+roots: [naan-dravidian, dravidian-kuri-mark, il]
+etymology_hook: "nanagū gottilla: native nanage 'to me' (DEDR 5160) + -ū 'too', gottu 'known' (DEDR 1847), illa (DEDR 2559)"
 duration:
-  max_seconds: 210
+  max_seconds: 214
 requires:
   knowledge: [KA-LEX-C68-DENY-05, KA-GRAMMAR-C67-LINK-06, KA-LEX-C06-DATIVE-SUBJECT-01]
 introduces:
@@ -51,6 +52,11 @@ The dative sentences you already own take the second one.
 
 This is the turn a short exchange needs most and almost never gets taught: one
 person shrugs, and you agree with the shrug.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನನಗೂ ಗೊತ್ತಿಲ್ಲ** (*nanagū gottilla*) is native Dravidian throughout: *nanagū*, "to me too", from *nānu*, "I" (DEDR 5160), *gottu*, "known" (DEDR 1847), and *illa*, "is not" (DEDR 2559).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

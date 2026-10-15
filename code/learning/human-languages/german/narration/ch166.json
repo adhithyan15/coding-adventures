@@ -4,7 +4,7 @@
   "chapter": 166,
   "title": "A reason, A solution, Experience, A possibility, The afternoon",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:13a449092047c473",
+  "sourceHash": "fnv1a64:3afe6ca5005fd85b",
   "lessons": [
     {
       "id": "GE-C166-grund",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:301f0204114aae0c",
+      "sourceHash": "fnv1a64:9761ac4a204b0954",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Nachmittag is the word for \"after\" + Mittag, \"noon\": after noon, built the same way as English afternoon."
+              "text": "Nachmittag is the word for \"after\" + Mittag, \"noon\": after noon, built the same way as English afternoon. Mittag is built from Mitte, \"middle\", inherited from Proto-Germanic midją (EtymDB 2.1), and Tag, \"day\"."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "sakūl"
 concept_tag: PA-HOME71-SAKUL
 prerequisites: [PA-C71-kalam, PA-C71-akhbar]
 sounds: []
-roots: []
+roots: [english-school]
+etymology_hook: "sakūl ← English school"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C71-akhbar]
 <!-- hl-knowledge: introduces=[PA-LEX-C71-HOME71-05]; assesses=[] -->
 
 **ਸਕੂਲ** — *sakūl* — "a school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਕੂਲ** (*sakūl*) is a loan from English *school*. Punjabi puts a vowel between the *s* and the *k*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

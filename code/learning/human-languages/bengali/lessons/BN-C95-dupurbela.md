@@ -14,7 +14,8 @@ romanization: "dupurbelā"
 concept_tag: BN-TIME95-DUPURBELA
 prerequisites: [BN-C95-saradin, BN-C95-sararat]
 sounds: []
-roots: []
+roots: [sanskrit-prahara, sanskrit-vela]
+etymology_hook: "dupurbelā: dupur 'midday', usually from dviprahara 'second watch' (CDIAL 8900), + belā ← velā 'time' (CDIAL 12115)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C95-sararat]
 <!-- hl-knowledge: introduces=[BN-LEX-C95-TIME95-04]; assesses=[] -->
 
 **দুপুরবেলা** — *dupurbelā* — "the midday hours".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দুপুরবেলা** (*dupurbelā*) is *dupur*, "midday", usually explained as Sanskrit *dviprahara*, "the second watch" (CDIAL 8900), + *belā*, "time", from Sanskrit *velā*, "limit, time", a word CDIAL thinks probably Dravidian (CDIAL 12115).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

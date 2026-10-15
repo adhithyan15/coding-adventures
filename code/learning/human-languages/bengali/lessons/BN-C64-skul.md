@@ -14,7 +14,8 @@ romanization: "skul"
 concept_tag: BN-SCHOOL64-SKUL
 prerequisites: [BN-C64-kolom, BN-C64-kagoj]
 sounds: []
-roots: []
+roots: [english-school]
+etymology_hook: "skul ← English school"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C64-kagoj]
 <!-- hl-knowledge: introduces=[BN-LEX-C64-SCHOOL64-03]; assesses=[] -->
 
 **স্কুল** — *skul* — "a school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্কুল** (*skul*) is a loan from English *school*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

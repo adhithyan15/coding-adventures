@@ -14,7 +14,8 @@ romanization: "chūṅki"
 concept_tag: UR-VAJAH159-CHUNKI
 prerequisites: [UR-C158-kaife, UR-C159-is-liye]
 sounds: []
-roots: []
+roots: [persian-chunki]
+etymology_hook: "chūṅki: usually traced to Persian chūnki 'since', chūn 'as' + ki 'that'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C159-is-liye]
 <!-- hl-knowledge: introduces=[UR-LEX-C159-VAJAH159-02]; assesses=[] -->
 
 **چونکہ** — *chūṅki* — "since, because".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چونکہ** (*chūṅki*) is usually traced to Persian *chūnki*, "since", built from *chūn*, "as", and *ki*, "that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

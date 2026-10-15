@@ -14,7 +14,8 @@ romanization: "chaṭāī"
 concept_tag: UR-CHIZ197-CHATAI
 prerequisites: [UR-C196-naujavan, UR-C196-jadid]
 sounds: []
-roots: []
+roots: [indo-aryan-catta]
+etymology_hook: "chaṭāī ← *caṭṭa 'bamboo matting', a reconstructed form; a tadbhava (CDIAL 4574)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C196-jadid]
 <!-- hl-knowledge: introduces=[UR-LEX-C197-CHIZ197-01]; assesses=[] -->
 
 **چٹائی** — *chaṭāī* — "a mat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چٹائی** (*chaṭāī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*caṭṭa*, "bamboo matting", a form CDIAL reconstructs from its descendants (CDIAL 4574).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

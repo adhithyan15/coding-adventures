@@ -14,7 +14,8 @@ romanization: "dhokādāyak"
 concept_tag: MR-QUAL152-DHOKADAYAK
 prerequisites: [MR-C151-prasiddh, MR-C152-suraksit]
 sounds: []
-roots: []
+roots: [indo-aryan-dhroksha, sanskrit-dayaka]
+etymology_hook: "dhokādāyak: dhokā 'danger' ← *dhrōkṣa 'deceit' (CDIAL 6894) + Sanskrit dāyaka 'giving'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C152-suraksit]
 <!-- hl-knowledge: introduces=[MR-LEX-C152-QUAL152-02]; assesses=[] -->
 
 **धोकादायक** — *dhokādāyak* — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धोकादायक** (*dhokādāyak*) is *dhokā*, "danger", with Sanskrit *dāyaka*, "giving". CDIAL lists Marathi *dhokā*, "fear", under a reconstructed *\*dhrōkṣa*, "deceit" (CDIAL 6894).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

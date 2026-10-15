@@ -14,7 +14,8 @@ romanization: "tenpura"
 concept_tag: JA-THING137-TENPURA
 prerequisites: [JA-W137-pu, JA-W11-te, JA-W01-n, JA-W08-ra, JA-C137-enpitsu, JA-C135-ginkou, JA-C129-atsukamashii]
 sounds: [mora]
-roots: []
+roots: [portuguese-tempero]
+etymology_hook: "tenpura: from Portuguese, tempero 'seasoning' or têmporas 'Ember Days' (JMdict); which is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +53,11 @@ light batter and fried. English borrowed the word from Japanese.
 The new sign is spent at once. **て** and **ん**, then **ぷ** and **ら**: four
 beats, *te–n–pu–ra*. After **ん** the *p* comes out clearly, as in
 **しんぱい**. You write every sign in it now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**てんぷら** (*tenpura*) is a loanword, usually traced to Portuguese. JMdict names two candidates, *tempero*, "seasoning", and *têmporas*, the Ember Days of fasting; which one is the source is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C137-TENPURA, JA-SCRIPT-PU-01, JA-LEX-ANCHOR-KIPPU, JA-SCRIPT-TE-01, JA-SCRIPT-N-01, JA-SCRIPT-RA-01] -->

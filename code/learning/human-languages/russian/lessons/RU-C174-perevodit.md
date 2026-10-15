@@ -14,7 +14,8 @@ romanization: "perevodít"
 concept_tag: RU-VERB-PEREVODIT
 prerequisites: [RU-C174-opisyvat, RU-C174-povtoryat]
 sounds: []
-roots: []
+roots: [slavic-voditi]
+etymology_hook: "переводить is пере- 'across' + водить 'to lead': to lead words across into another language"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C174-povtoryat]
 <!-- hl-knowledge: introduces=[RU-LEX-C174-ACT174-04]; assesses=[] -->
 
 **переводить** (*perevodít*) — "to translate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**переводить** is *пере-*, "across", with *водить*, "to lead": to translate is to lead words across, as Latin *trānslātus* is "carried across".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

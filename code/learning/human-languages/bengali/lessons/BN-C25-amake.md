@@ -11,8 +11,8 @@ gloss: me — the object form of আমি, and the word chapter nine's dative f
 concept_tag: BN-LEX-AMAKE
 prerequisites: [BN-C25-ke-suffix, BN-C09-bhalo-laga, BN-C03-ami, BN-C02-amar]
 sounds: []
-roots: []
-etymology_hook: "Chapter nine taught a frame in which good sticks TO somebody rather than somebody liking a thing — and then had no word to fill the somebody slot. This is that word, arriving twenty-seven chapters late."
+roots: [asmad-first-person]
+etymology_hook: "āmāke: āmā-, from asmad 'we' (CDIAL 986), + -ke, whose origin is not settled"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +52,11 @@ exception:
 | me | **আমাকে** | **-কে** |
 
 Same stem **আমা-**, three endings, no memorisation.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The stem **আমা-** goes back to Sanskrit *asmad*, the stem of "we" (CDIAL 986); where the ending **-কে** comes from is not settled.
 
 ## Grammar Lens: the frame that had no filler
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C25-AMAKE-01, BN-GRAMMAR-C09-DATIVE-02, BN-LEX-C09-BHALOLAGA-01, BN-CONCEPT-C03-BHALO-01, BN-LEX-C10-CHA-01] -->

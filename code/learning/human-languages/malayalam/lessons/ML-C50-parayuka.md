@@ -11,9 +11,10 @@ romanization: paṟayuka
 concept_tag: ML-SAY
 prerequisites: [ML-C33-cintikkuka]
 sounds: []
-roots: []
+roots: [dravidian-parai-say]
+etymology_hook: "paṟayuka: native Dravidian 'to say', one word with Tamil paṟai and Kannada paṟe (DEDR 4031)"
 duration:
-  max_seconds: 240
+  max_seconds: 251
 requires:
   knowledge: [ML-CONCEPT-C33-CINTIKKUKA-01]
 introduces:
@@ -71,6 +72,8 @@ when somebody speaks, with no other job attached.
 
 **-ഉക** (*-uka*) is the dictionary ending you have seen on every verb in this
 book: *aṟiyuka*, *cintikkuka*, *cōdikkuka*, *cērkkuka*.
+
+DEDR 4031 lists *paṟayuka* with Tamil *paṟai* and Kannada *paṟe*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C50-PARAYUKA-01, ML-CONCEPT-C33-CINTIKKUKA-01] -->

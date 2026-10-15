@@ -14,7 +14,8 @@ romanization: "cācā"
 concept_tag: HI-GRAND-CHACHA
 prerequisites: [HI-C116-nana, HI-C116-nani]
 sounds: []
-roots: []
+roots: [indo-aryan-cacca]
+etymology_hook: "cācā ← *cācca 'uncle', a reconstructed form; a tadbhava (CDIAL 4734)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C116-nani]
 **चाचा** (*cācā*) — "uncle", your father's younger brother.
 
 Like the grandparents, an uncle's name says whose brother he is. **मेरे चाचा** — "my uncle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चाचा** (*cācā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cācca*, "uncle", a form CDIAL reconstructs from its descendants (CDIAL 4734). CDIAL suggests, with a query, a nursery word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

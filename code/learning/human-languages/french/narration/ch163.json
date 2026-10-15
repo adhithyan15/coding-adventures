@@ -4,7 +4,7 @@
   "chapter": 163,
   "title": "Flat, Dining room, Balcony, Lock, Doorbell",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f3221a7721bfe4dc",
+  "sourceHash": "fnv1a64:3996c1eca833bc1c",
   "lessons": [
     {
       "id": "FR-C163-appartement",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc6797def0f2f33c",
+      "sourceHash": "fnv1a64:f706138587c77e54",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "salle à manger — \"room for eating\": salle, \"a room\", à, \"for\", and manger, \"to eat\"."
+              "text": "salle à manger — \"room for eating\": salle, \"a room\", à, \"for\", and manger, \"to eat\". Salle from Frankish sal, \"hall\", à from Latin ad, and manger from Latin manducāre, \"to chew\" (EtymDB 2.1)."
             }
           ]
         },

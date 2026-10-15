@@ -14,7 +14,8 @@ romanization: "kaníkuly"
 concept_tag: RU-VREMYA182-KANIKULY
 prerequisites: [RU-C181-may, RU-C182-teper]
 sounds: []
-roots: []
+roots: [canis-latin]
+etymology_hook: "каникулы probably came through Polish from Latin canicula, 'little dog', the star Sirius of the hot days"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C182-teper]
 <!-- hl-knowledge: introduces=[RU-LEX-C182-VREMYA182-02]; assesses=[] -->
 
 **каникулы** (*kaníkuly*) — "school holidays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**каникулы** probably came through Polish *kanikuła* from Latin *canīcula*, "little dog", the star Sirius: *diēs canīculārēs*, "the dog days", the hottest weeks of the year (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

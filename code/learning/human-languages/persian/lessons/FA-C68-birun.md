@@ -14,7 +14,8 @@ romanization: "birun"
 concept_tag: FA-PLACE68-BIRUN
 prerequisites: [FA-C67-nazdik, FA-C68-dakhel]
 sounds: []
-roots: []
+roots: [persian-birun]
+etymology_hook: "birun: inherited, usually traced to Middle Persian bērōn"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C68-dakhel]
 <!-- hl-knowledge: introduces=[FA-LEX-C68-PLACE68-02]; assesses=[] -->
 
 **بیرون** — *birun* — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*birun* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *bērōn*, "outside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

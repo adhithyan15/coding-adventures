@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Mother and Father",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:060700872c846772",
+  "sourceHash": "fnv1a64:2c1485aaae823ecc",
   "lessons": [
     {
       "id": "RU-C12-mama",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:341ffb3b12a57e93",
+      "sourceHash": "fnv1a64:0373b14497ac704e",
       "notice": null,
       "blocks": [
         {
@@ -191,6 +191,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "папа (pápa) is a nursery word, like Greek páppa and Latin pāpa, \"father\". Vasmer thinks Russian probably took it from French papa, as German did; the old noble папа (pápa), stressed on its last syllable, is surely French."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: when biology beats the ending",
           "segments": [
@@ -205,7 +216,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -245,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

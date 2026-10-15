@@ -14,7 +14,8 @@ romanization: "pohṇe"
 concept_tag: MR-VERB-POHNE
 prerequisites: [MR-C82-phekne, MR-C82-udne]
 sounds: []
-roots: []
+roots: [sanskrit-pravahati]
+etymology_hook: "pohṇe ← Sanskrit pravahati 'carries forward; drives on', a tadbhava (CDIAL 8792)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C82-udne]
 <!-- hl-knowledge: introduces=[MR-LEX-C82-VERBS82-03]; assesses=[] -->
 
 **पोहणे** — *pohṇe* — "to swim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पोहणे** (*pohṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pravahati*, "carries forward; drives on" (CDIAL 8792). CDIAL glosses the Marathi verb "to swim, float".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "thakṇo"
 concept_tag: MW-VERB-THAKNO
 prerequisites: [MW-C108-kudno, MW-C109-parno]
 sounds: []
-roots: []
+roots: [indo-aryan-sthakk]
+etymology_hook: "thakṇo ← *sthakk 'stop, halt'; its link with sthā 'stand' is not clear (CDIAL 13737)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C109-parno]
 <!-- hl-knowledge: introduces=[MW-LEX-C109-ACT109-02]; assesses=[] -->
 
 **थकणो** — *thakṇo* — "to get tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**थकणो** (*thakṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*sthakk*, "stop, halt", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 13737); the match is through Hindi *thaknā* and Gujarati *thākvũ*. CDIAL thinks a link with *sthā*, "stand", probable but not clear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

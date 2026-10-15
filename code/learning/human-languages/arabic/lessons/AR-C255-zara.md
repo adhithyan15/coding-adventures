@@ -14,7 +14,8 @@ romanization: "zāra"
 concept_tag: AR-VERB-ZARA
 prerequisites: [AR-C254-qashshara, AR-C255-taakhkhara]
 sounds: []
-roots: []
+roots: [z-w-r]
+etymology_hook: "zāra: built on the root z-w-r, 'to visit' (Lane); zāra is the plain verb, 'he visited'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C255-taakhkhara]
 <!-- hl-knowledge: introduces=[AR-LEX-C255-ACT255-02]; assesses=[] -->
 
 **زار** — *zāra* — "to visit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زار** (*zāra*) is built on the native Arabic root *z-w-r*, "to visit" (Lane). *Zāra* is the plain verb, "he visited".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

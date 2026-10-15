@@ -14,7 +14,8 @@ romanization: "ḥarīr"
 concept_tag: AR-SHAY219-HARIR
 prerequisites: [AR-C219-zujaj, AR-C219-nuhas]
 sounds: []
-roots: []
+roots: [ḥ-r-r]
+etymology_hook: "ḥarīr: an old noun for silk, listed by Lane under ḥ-r-r, the root of ḥarr 'heat' and ḥurr 'free'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C219-nuhas]
 <!-- hl-knowledge: introduces=[AR-LEX-C219-SHAY219-05]; assesses=[] -->
 
 **حرير** — *ḥarīr* — "silk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حرير** (*ḥarīr*), "silk", is an old native noun, filed under the root *ḥ-r-r* (Lane), the root of *ḥarr*, "heat", and *ḥurr*, "free"; Lane does not tie silk to either sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

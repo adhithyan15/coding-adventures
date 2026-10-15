@@ -14,7 +14,8 @@ romanization: "bhoṭ"
 concept_tag: BN-JINIS202-BHOT
 prerequisites: [BN-C202-dakat, BN-C202-mamla]
 sounds: []
-roots: []
+roots: [english-vote]
+etymology_hook: "bhoṭ ← English vote"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C202-mamla]
 <!-- hl-knowledge: introduces=[BN-LEX-C202-JINIS202-05]; assesses=[] -->
 
 **ভোট** — *bhoṭ* — "a vote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভোট** (*bhoṭ*) is a loan from English *vote*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

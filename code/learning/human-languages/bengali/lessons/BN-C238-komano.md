@@ -14,7 +14,8 @@ romanization: "kômāno"
 concept_tag: BN-VERB-KOMANO
 prerequisites: [BN-C238-mora, BN-C238-barano]
 sounds: []
-roots: []
+roots: [persian-kam]
+etymology_hook: "kômāno: on kôm 'less', usually traced to Persian kam 'little, less', + -āno 'make'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C238-barano]
 <!-- hl-knowledge: introduces=[BN-LEX-C238-ACT238-03]; assesses=[] -->
 
 **কমানো** — *kômāno* — "to reduce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কমানো** (*kômāno*) is built on *kôm*, "less", usually traced to Persian *kam*, "little, less", with the causing ending *-āno*: "to make less".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

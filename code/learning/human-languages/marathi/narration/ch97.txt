@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a forest, then the Marathi for a river.
 You'll want to know: तलाव.
 तलाव — talāv — "a lake".
 
+The word, taken apart.
+तलाव (talāv) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from taḍāga, "pool" (CDIAL 5635).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a river, then the Marathi for a lake.
 
 You'll want to know: दगड.
 दगड — dagaḍ — "a stone".
+
+The word, taken apart.
+The origin of दगड (dagaḍ) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a lake, then the Marathi for a stone.
 You'll want to know: वाळू.
 वाळू — vāḷū — "sand".
 
+The word, taken apart.
+वाळू (vāḷū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vālukā, "sand, gravel" (CDIAL 11580).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a stone, then the Marathi for sand.
 You'll want to know: शेत.
 शेत — shet — "a field".
 
+The word, taken apart.
+शेत (shet) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣetra, "land" (CDIAL 3735).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for sand, then the Marathi for a field.
 
 You'll want to know: तारा.
 तारा — tārā — "a star".
+
+The word, taken apart.
+तारा (tārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it, as a masculine, under tāraka, "belonging to the stars", a form beside Sanskrit tārā, "fixed star" (CDIAL 5798).
 
 What you've built.
 One more word for this chapter.

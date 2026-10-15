@@ -14,7 +14,8 @@ romanization: "bhājī"
 concept_tag: MR-THINGS136-BHAJI
 prerequisites: [MR-C136-svetar, MR-C136-poli]
 sounds: []
-roots: []
+roots: [sanskrit-bharjita]
+etymology_hook: "bhājī ← Sanskrit bharjita 'fried, parched', a tadbhava (CDIAL 9401)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C136-poli]
 <!-- hl-knowledge: introduces=[MR-LEX-C136-THINGS136-04]; assesses=[] -->
 
 **भाजी** — *bhājī* — "a vegetable dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भाजी** (*bhājī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bharjita*, "fried, parched" (CDIAL 9401).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

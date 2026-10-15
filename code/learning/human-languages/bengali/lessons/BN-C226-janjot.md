@@ -14,7 +14,8 @@ romanization: "jānjôṭ"
 concept_tag: BN-JINIS226-JANJOT
 prerequisites: [BN-C225-natok, BN-C225-kobita]
 sounds: []
-roots: []
+roots: [sanskrit-yana, sanskrit-jata]
+etymology_hook: "jānjôṭ: jān 'vehicle', Sanskrit yāna, + jôṭ 'tangle', apparently with jaṭā 'matted hair' (CDIAL 5086)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C225-kobita]
 <!-- hl-knowledge: introduces=[BN-LEX-C226-JINIS226-01]; assesses=[] -->
 
 **যানজট** — *jānjôṭ* — "a traffic jam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**যানজট** (*jānjôṭ*) is *jān*, "vehicle", Sanskrit *yāna* taken over whole, + *jôṭ*, "tangle", which appears to belong with Sanskrit *jaṭā*, "matted hair", a word CDIAL traces to Dravidian or Munda (CDIAL 5086): "a tangle of vehicles".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

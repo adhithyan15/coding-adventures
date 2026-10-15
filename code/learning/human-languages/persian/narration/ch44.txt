@@ -12,6 +12,9 @@ Before the new one: say the Persian for breakfast, then the Persian for lunch.
 You'll want to know: شام.
 شام — shâm — "dinner".
 
+The word, taken apart.
+shâm is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian šām, "evening meal". (EtymDB links it to Arabic šām, the name of Syria, but that is a different word that happens to be spelled the same.)
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for lunch, then the Persian for dinner.
 
 You'll want to know: آبمیوه.
 آبمیوه — âbmive — "juice".
+
+The word, taken apart.
+âbmive is built from two inherited words: âb, "water" (Middle Persian āb, EtymDB), and mive, "fruit" (Middle Persian mēwag, EtymDB): "fruit water".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for dinner, then the Persian for juice.
 You'll want to know: کیک.
 کیک — keyk — "a cake".
 
+The word, taken apart.
+keyk is a loan, usually traced to English cake, "cake".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for juice, then the Persian for a cake.
 You'll want to know: پنیر.
 پنیر — panir — "cheese".
 
+The word, taken apart.
+panir is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian panīr, "cheese".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a cake, then the Persian for cheese.
 
 You'll want to know: شیر.
 شیر — shir — "milk; a lion".
+
+The word, taken apart.
+shir is two inherited words that now sound alike. "Milk" is usually traced to Middle Persian šīr, and "lion" to Middle Persian šēr; Iranian Persian merged their vowels, so the two fell together.
 
 What you've built.
 One more word for this chapter.

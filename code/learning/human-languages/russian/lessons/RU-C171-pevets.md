@@ -14,7 +14,8 @@ romanization: "pevéts"
 concept_tag: RU-RABOTA171-PEVETS
 prerequisites: [RU-C170-schyot, RU-C170-nalichnyye]
 sounds: []
-roots: []
+roots: [slavic-peti]
+etymology_hook: "певец is петь 'to sing' + -ец, 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C170-nalichnyye]
 <!-- hl-knowledge: introduces=[RU-LEX-C171-RABOTA171-01]; assesses=[] -->
 
 **певец** (*pevéts*) — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**певец** comes from *петь*, "to sing" (Vasmer), with *-ец*, "one who does it".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

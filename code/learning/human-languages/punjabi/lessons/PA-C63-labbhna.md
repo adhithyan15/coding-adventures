@@ -14,7 +14,8 @@ romanization: "labbhṇā"
 concept_tag: PA-VERB-LABBHNA
 prerequisites: [PA-C62-chhaddna, PA-C62-udikna]
 sounds: []
-roots: []
+roots: [sanskrit-labhyate]
+etymology_hook: "labbhṇā ← Sanskrit labhyate 'is taken', a tadbhava (CDIAL 10950)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C62-udikna]
 <!-- hl-knowledge: introduces=[PA-LEX-C63-VERBS63-01]; assesses=[] -->
 
 **ਲੱਭਣਾ** — *labbhṇā* — "to find, to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਲੱਭਣਾ** (*labbhṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *labhyate*, "is taken" (CDIAL 10950).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

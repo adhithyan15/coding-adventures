@@ -13,7 +13,8 @@ gloss: "to stroll"
 concept_tag: LA-VERB-SPATIOR
 prerequisites: [LA-C257-offero, LA-C257-observo]
 sounds: []
-roots: []
+roots: [spatiari-latin, spatium-latin]
+etymology_hook: "spatior 'to stroll' — built on spatium 'space'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C257-observo]
 <!-- hl-knowledge: introduces=[LA-LEX-C257-ACT257-05]; assesses=[] -->
 
 **spatior, spatiārī** — "to stroll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**spatior** is built on *spatium*, "space, room": to take up room, to walk about. Where *spatium* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

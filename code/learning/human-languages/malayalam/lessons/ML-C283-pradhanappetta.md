@@ -14,7 +14,8 @@ romanization: "pradhānappeṭṭa"
 concept_tag: ML-GUNAM283-PRADHANAPPETTA
 prerequisites: [ML-C282-vijayam, ML-C283-atiyantara]
 sounds: []
-roots: []
+roots: [sanskrit-pradhana, dravidian-padu-happen]
+etymology_hook: "pradhānappeṭṭa: Sanskrit pradhāna 'chief' + native peṭṭa 'that has fallen into' (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C283-atiyantara]
 <!-- hl-knowledge: introduces=[ML-LEX-C283-GUNAM283-02]; assesses=[] -->
 
 **പ്രധാനപ്പെട്ട** — *pradhānappeṭṭa* — "important".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രധാനപ്പെട്ട** (*pradhānappeṭṭa*) joins Sanskrit *pradhāna*, "chief, principal", to native *peṭṭa*, a form of the verb "to fall into, happen" (DEDR 3853).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

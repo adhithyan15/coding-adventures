@@ -14,7 +14,8 @@ romanization: "munduvarisu"
 concept_tag: KA-VERB-MUNDUVARISU
 prerequisites: [KA-C202-duru-kodu, KA-C202-nondayisu]
 sounds: []
-roots: []
+roots: [dravidian-mun-front]
+etymology_hook: "munduvarisu: native mundu 'ahead' (DEDR 5020) + varisu; the second part is not explained in DEDR"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C202-nondayisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C202-KRIYE202-03]; assesses=[] -->
 
 **ಮುಂದುವರಿಸು** — *munduvarisu* — "to continue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಂದುವರಿಸು** (*munduvarisu*) begins with native *mundu*, "ahead, onward" (DEDR 5020). DEDR does not explain the second part, *-varisu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Joining Things Together",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:40753d49d422e4bb",
+  "sourceHash": "fnv1a64:f3d22dfed6dc6d71",
   "lessons": [
     {
       "id": "ML-C70-um",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33208e0225488103",
+      "sourceHash": "fnv1a64:2dbf1b00e7919d9b",
       "notice": null,
       "blocks": [
         {
@@ -104,6 +104,10 @@
             {
               "kind": "speech",
               "text": "Neither is a special case to memorise. Both are the same instinct a mouth has when one sound runs into another, and Malayalam writes down what the mouth already does."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the words come from. The ending -um is native Dravidian; Tamil joins a list with the same -um. Both nouns are native as well: veḷḷam, \"water\", is one word with Tamil veḷḷam, \"flood\" (DEDR 5503), and ari, \"rice\", with Tamil ari (DEDR 215)."
             }
           ]
         },
@@ -188,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b969429a04c0cfa5",
+      "sourceHash": "fnv1a64:2e91da9aed1937b4",
       "notice": null,
       "blocks": [
         {
@@ -277,6 +281,10 @@
             {
               "kind": "speech",
               "text": "It is the vowel that decides, not the position. You have had നിങ്ങൾക്ക് since the age question, and its ൾ sits in the middle of the word and stays a ൾ — because ക്ക് brings no vowel onto it."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. pāl, \"milk\", is native Dravidian, one word with Tamil pāl and Kannada pāl (DEDR 4096). DEDR 4096 compares Sanskrit pālana, with a query."
             }
           ]
         },
@@ -361,7 +369,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f51aea0cfc973dc",
+      "sourceHash": "fnv1a64:5400c176cd5d115e",
       "notice": null,
       "blocks": [
         {
@@ -447,6 +455,10 @@
             {
               "kind": "speech",
               "text": "Reach for whichever arrives first. A learner who says the long one has said the thing; the ending will come with hearing it."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the words come from. cāya, \"tea\", came through Hindustani cāy from Chinese chá. kāppi, \"coffee\", is English coffee, a word that goes back through Dutch and Turkish to Arabic qahwa. The choosing ending -ō is native."
             }
           ]
         },

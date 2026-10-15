@@ -14,7 +14,8 @@ romanization: "dush gereftan"
 concept_tag: FA-VERB-DUSH-GEREFTAN
 prerequisites: [FA-C178-jamedadi, FA-C178-karname]
 sounds: []
-roots: []
+roots: [french-douche]
+etymology_hook: "dush ← French douche 'shower' (EtymDB), + Persian gereftan 'to take'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C178-karname]
 <!-- hl-knowledge: introduces=[FA-LEX-C179-KONESH179-01]; assesses=[] -->
 
 **دوش گرفتن** — *dush gereftan* — "to take a shower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dush gereftan* is "to take a shower": *dush* is borrowed from French *douche*, "shower" (EtymDB), and *gereftan*, "to take", is native. (Persian *dush*, "shoulder", is a different, native word.) *gereftan*, "to take", is an inherited verb; EtymDB takes it back to the Indo-European root *\*gʰrebh₂-*, "to seize".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

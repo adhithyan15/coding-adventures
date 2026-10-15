@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Thirteen to Sixteen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a308462df33e106f",
+  "sourceHash": "fnv1a64:f41808404de832e2",
   "lessons": [
     {
       "id": "MR-C57-tera",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b44509e041c82660",
+      "sourceHash": "fnv1a64:eb19ead2c0ac2f7c",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c91abbb11b62430",
+      "sourceHash": "fnv1a64:e0f32d9149e363a4",
       "notice": null,
       "blocks": [
         {
@@ -294,7 +294,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49af6e3724e613cb",
+      "sourceHash": "fnv1a64:a452221d808add78",
       "notice": null,
       "blocks": [
         {
@@ -434,7 +434,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e416502aa1ef9542",
+      "sourceHash": "fnv1a64:d98424e48c64c9a2",
       "notice": null,
       "blocks": [
         {

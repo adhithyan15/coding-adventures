@@ -11,6 +11,7 @@ concept_tag: TRANSPORT-TICKET
 prerequisites: [ES-C268-donde-esta, ES-C267-pregunta-si-no, ES-C267-verdad-no]
 sounds: [vowel-a, vowel-e]
 roots: [bulla]
+etymology_hook: "billete ← French billet 'a short note', from Latin bulla 'a seal' — English bulletin"
 duration:
   max_seconds: 240
 requires:

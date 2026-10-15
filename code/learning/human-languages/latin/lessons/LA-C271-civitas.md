@@ -13,7 +13,8 @@ gloss: "a state; citizenship"
 concept_tag: LA-RES271-CIVITAS
 prerequisites: [LA-C270-remus, LA-C271-populus]
 sounds: []
-roots: []
+roots: [civitas-latin, civis-latin]
+etymology_hook: "cīvitās 'state' — built on cīvis 'citizen'; English city"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C271-populus]
 <!-- hl-knowledge: introduces=[LA-LEX-C271-RES271-02]; assesses=[] -->
 
 **cīvitās, cīvitātis** — "a state; citizenship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cīvitās** is built on *cīvis*, "a citizen" (Lewis & Short), with *-tās*, an ending for a quality: the body of citizens. English *city* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

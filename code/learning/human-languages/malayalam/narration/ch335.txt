@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a company, then the Malayalam for a me
 You'll want to know: ബിരുദം.
 ബിരുദം — birudaṁ — "a degree".
 
+The word, taken apart.
+ബിരുദം (birudaṁ) comes from Sanskrit biruda, "a title, a panegyric". DEDR 5414 compares that Sanskrit word with Dravidian ones, Tamil virutu and Kannada biruda, "badge of honour".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a meeting, then the Malayalam for a de
 
 You'll want to know: വിഷയം.
 വിഷയം — viṣayaṁ — "a subject, a topic".
+
+The word, taken apart.
+വിഷയം (viṣayaṁ) from Sanskrit viṣaya, "scope, sphere", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 11973).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a degree, then the Malayalam for a sub
 You'll want to know: കണക്ക്.
 കണക്ക് — kaṇakkŭ — "mathematics; accounts".
 
+The word, taken apart.
+കണക്ക് (kaṇakkŭ) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a subject, then the Malayalam for math
 You'll want to know: ഗൃഹപാഠം.
 ഗൃഹപാഠം — gṛhapāṭhaṁ — "homework".
 
+The word, taken apart.
+ഗൃഹപാഠം (gṛhapāṭhaṁ) is a modern compound of Sanskrit gṛha, "house" (CDIAL 4240), and pāṭha, "lesson" (CDIAL 8035).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for mathematics, then the Malayalam for ho
 
 You'll want to know: അക്ഷരം.
 അക്ഷരം — akṣaraṁ — "a letter (of the alphabet)".
+
+The word, taken apart.
+അക്ഷരം (akṣaraṁ) from Sanskrit akṣara, "indestructible; syllable", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 38). A syllable was "the imperishable", and became a letter.
 
 What you've built.
 One more word for this chapter.

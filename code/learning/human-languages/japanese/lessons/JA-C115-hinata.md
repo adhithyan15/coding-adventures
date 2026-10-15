@@ -14,7 +14,8 @@ romanization: "hinata"
 concept_tag: JA-THINGS115-HINATA
 prerequisites: [JA-C115-futa, JA-C115-mato]
 sounds: []
-roots: []
+roots: [japanese-hi-sun]
+etymology_hook: "hinata: native hi 'sun' + old na 'of' + ta 'side', as usually explained"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C115-mato]
 <!-- hl-knowledge: introduces=[JA-LEX-C115-THINGS115-03]; assesses=[] -->
 
 **ひなた** — *hinata* — "a sunny spot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひなた** (*hinata*) is native: *hi*, "sun", usually explained with an old *na*, "of", and *ta*, "side; place": the side the sun is on. JMdict writes it with "sun" and "face towards". It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

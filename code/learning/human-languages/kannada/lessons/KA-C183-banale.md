@@ -14,7 +14,8 @@ romanization: "bāṇale"
 concept_tag: KA-VASTU183-BANALE
 prerequisites: [KA-C182-magida, KA-C182-svanta]
 sounds: []
-roots: []
+roots: [dravidian-baanale-pan]
+etymology_hook: "bāṇale: native Dravidian, one word with Telugu bāṇali 'frying pan' (DEDR 4069)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C182-svanta]
 <!-- hl-knowledge: introduces=[KA-LEX-C183-VASTU183-01]; assesses=[] -->
 
 **ಬಾಣಲೆ** — *bāṇale* — "a frying pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾಣಲೆ** (*bāṇale*) is native Dravidian, one word with Telugu *bāṇali* and Tulu *baṇalè* (DEDR 4069); Tamil *pāṇali* is a loan from Telugu. DEDR lists *bāṇale* itself, "frying pan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

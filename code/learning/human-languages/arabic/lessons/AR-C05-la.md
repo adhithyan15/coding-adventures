@@ -12,7 +12,7 @@ concept_tag: RESPONSE-NO
 prerequisites: [AR-C05-naam]
 sounds: [lam-alif-ligature, arabic-rtl]
 roots: [la-negation]
-etymology_hook: "لا lā is the great Arabic 'no' — the same word that opens the shahada, lā ilāha illā llāh, 'there is no god but God'"
+etymology_hook: "lā: an inherited Semitic negative with no three-letter root; Hebrew lō 'not' is its cousin"
 duration:
   max_seconds: 240
 requires:
@@ -70,6 +70,11 @@ You now have the pair:
 |---|---|---|
 | yes | **نعم** | *naʿam* |
 | no | **لا** | *lā* |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لا** (*lā*) is an old negative particle inherited from the Semitic parent language, not built on a three-letter root; Hebrew *lō*, "no, not", is its cousin.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C05-LA-01, AR-CONCEPT-C05-LA-02] -->

@@ -6,6 +6,12 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `write_test_secret(path, bytes)`, behind a new `test-support` feature:
+  the crate's own test writer (Unix mode 0600; Windows: the user as owner
+  and a protected DACL with only the user's ACE), for other crates' tests
+  that feed secrets to a loader built on this one. The CLI's vault tests
+  needed it on windows-2025, where no portable `std` call sets that DACL.
+  Production builds never enable the feature.
 - `check_owner_only_directory` (D18S P2.6d-3): a no-follow walk to a
   directory owned by the effective user with nothing granted to group or
   others. The launcher runs it on every directory holding secrets before

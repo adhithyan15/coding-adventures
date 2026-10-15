@@ -14,7 +14,8 @@ romanization: "moṇḍu"
 concept_tag: KA-GUNA219-MONDU
 prerequisites: [KA-C218-udara, KA-C219-samanya]
 sounds: []
-roots: []
+roots: [dravidian-monda-blunt]
+etymology_hook: "moṇḍu: native Dravidian, one word with Telugu moṇḍi and Malayalam mōḻa (DEDR 5114)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C219-samanya]
 <!-- hl-knowledge: introduces=[KA-LEX-C219-GUNA219-02]; assesses=[] -->
 
 **ಮೊಂಡು** — *moṇḍu* — "blunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊಂಡು** (*moṇḍu*) is native Dravidian, one word with Telugu *moṇḍi* and Malayalam *mōḻa* (DEDR 5114). DEDR lists *moṇḍu*, "blunt, maimed". DEDR 5114 compares Sanskrit *muṇḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

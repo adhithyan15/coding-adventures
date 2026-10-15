@@ -13,7 +13,8 @@ gloss: "to endure, to put up with"
 concept_tag: LA-VERB-TOLERO
 prerequisites: [LA-C170-premo, LA-C171-fallo]
 sounds: []
-roots: []
+roots: [tolerare-latin]
+etymology_hook: "tolerō 'to endure' — inherited, usually traced to PIE *telh2- 'to bear'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C171-fallo]
 <!-- hl-knowledge: introduces=[LA-LEX-C171-ACT171-02]; assesses=[] -->
 
 **tolerō, tolerāre** — "to endure, to put up with".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tolerō** is inherited, usually traced to Proto-Indo-European *\*telh2-*, "to bear, to endure" (EtymDB 2.1); *tollō*, "to lift", comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

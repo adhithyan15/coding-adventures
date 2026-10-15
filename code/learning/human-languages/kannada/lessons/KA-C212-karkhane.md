@@ -14,7 +14,8 @@ romanization: "kārkhāne"
 concept_tag: KA-STHALA212-KARKHANE
 prerequisites: [KA-C211-avadhi, KA-C212-bandaru]
 sounds: []
-roots: []
+roots: [persian-karkhana]
+etymology_hook: "kārkhāne ← Persian kārxāna 'workshop', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C212-bandaru]
 <!-- hl-knowledge: introduces=[KA-LEX-C212-STHALA212-02]; assesses=[] -->
 
 **ಕಾರ್ಖಾನೆ** — *kārkhāne* — "a factory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾರ್ಖಾನೆ** (*kārkhāne*) is a loan from Persian *kārxāna*, "workshop": *kār*, "work", and *xāna*, "house". It came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

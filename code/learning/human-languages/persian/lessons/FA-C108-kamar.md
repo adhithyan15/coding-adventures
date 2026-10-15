@@ -14,7 +14,8 @@ romanization: "kamar"
 concept_tag: FA-THINGS108-KAMAR
 prerequisites: [FA-C108-nakhon, FA-C108-sine]
 sounds: []
-roots: []
+roots: [persian-kamar]
+etymology_hook: "kamar ← Middle Persian kamar (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C108-sine]
 <!-- hl-knowledge: introduces=[FA-LEX-C108-THINGS108-05]; assesses=[] -->
 
 **کمر** — *kamar* — "the waist, the back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kamar* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *kamar*, "waist, belt, girdle" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

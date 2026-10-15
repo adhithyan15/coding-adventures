@@ -14,7 +14,8 @@ romanization: "chatr"
 concept_tag: FA-CHIZ240-CHATR
 prerequisites: [FA-C240-dokme, FA-C240-astin]
 sounds: []
-roots: []
+roots: [sanskrit-chattra]
+etymology_hook: "chatr: a loan, usually traced to Sanskrit chattra 'parasol'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C240-astin]
 <!-- hl-knowledge: introduces=[FA-LEX-C240-CHIZ240-03]; assesses=[] -->
 
 **چتر** — *chatr* — "an umbrella".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chatr* is a loan, usually traced to Sanskrit *chattra*, "parasol".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

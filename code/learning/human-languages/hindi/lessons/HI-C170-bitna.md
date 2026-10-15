@@ -14,7 +14,8 @@ romanization: "bītnā"
 concept_tag: HI-VERB-BITNA
 prerequisites: [HI-C170-marna, HI-C170-jina]
 sounds: []
-roots: []
+roots: [sanskrit-vrtta]
+etymology_hook: "bītnā ← Sanskrit vṛtta 'turned; passed (of time)', a tadbhava (CDIAL 12069)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C170-jina]
 <!-- hl-knowledge: introduces=[HI-LEX-C170-ACT170-03]; assesses=[] -->
 
 **बीतना** — *bītnā* — "to pass (of time)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बीतना** (*bītnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vṛtta*, "turned; passed (of time)" (CDIAL 12069).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chakkar"
 concept_tag: UR-SEHAT154-CHAKKAR
 prerequisites: [UR-C154-pasina, UR-C154-ulti]
 sounds: []
-roots: []
+roots: [sanskrit-cakra]
+etymology_hook: "chakkar goes back to Sanskrit cakra 'wheel, circle'; CDIAL lists Hindi cāk 'wheel' there (CDIAL 4538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C154-ulti]
 <!-- hl-knowledge: introduces=[UR-LEX-C154-SEHAT154-05]; assesses=[] -->
 
 **چکر** — *chakkar* — "dizziness; a round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چکر** (*chakkar*) goes back to Sanskrit *cakra*, "wheel, circle". CDIAL lists the inherited Hindi *cāk*, "wheel", under it (CDIAL 4538), but not *chakkar* itself, which keeps more of the Sanskrit shape.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

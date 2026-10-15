@@ -14,7 +14,8 @@ romanization: "upayōgikkuka"
 concept_tag: ML-VERB-UPAYOGIKKUKA
 prerequisites: [ML-C182-olikkuka, ML-C183-tirannetukkuka]
 sounds: []
-roots: []
+roots: [sanskrit-upayoga]
+etymology_hook: "upayōgikkuka ← Sanskrit upayōga 'use, application' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C183-tirannetukkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C183-KRIYA183-02]; assesses=[] -->
 
 **ഉപയോഗിക്കുക** — *upayōgikkuka* — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉപയോഗിക്കുക** (*upayōgikkuka*) is built on Sanskrit *upayōga*, "use, application", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

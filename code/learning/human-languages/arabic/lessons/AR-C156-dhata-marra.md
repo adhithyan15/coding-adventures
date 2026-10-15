@@ -14,7 +14,8 @@ romanization: "dhāta marra"
 concept_tag: AR-MADI156-DHATA-MARRA
 prerequisites: [AR-C156-bil-fil, AR-C156-al-madi]
 sounds: []
-roots: []
+roots: [m-r-r]
+etymology_hook: "dhāta marra: dhāta 'possessing' + marra 'a passing, a time', from m-r-r 'to pass' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C156-al-madi]
 <!-- hl-knowledge: introduces=[AR-LEX-C156-MADI156-04]; assesses=[] -->
 
 **ذات مرة** — *dhāta marra* — "once, one time". It opens a story: **ذات مرة كانت هنا بحيرة** — *dhāta marra kānat hunā buḥayra* — "Once there was a lake here." **كانت** is the past of *to be*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ذات مرة** (*dhāta marra*) is built from *dhāta*, "one possessing", and *marra*, "a time, a single passing", from the root *m-r-r*, "to pass" (Lane): "on one occasion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

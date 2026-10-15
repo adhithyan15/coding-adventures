@@ -11,7 +11,8 @@ gloss: with, together with — and, said on its own, "that's right", which is th
 concept_tag: MR-POSTP-BAROBAR
 prerequisites: [MR-R44-directions, MR-C11-mitra, MR-C01-baram]
 sounds: [inherent-a]
-roots: []
+roots: [persian-barabar]
+etymology_hook: "barobar: usually traced to Persian barābar 'equal, level'"
 duration:
   max_seconds: 220
 requires:
@@ -64,6 +65,11 @@ that lines up alongside another is both *with* it and *right*.
 
 So one word gives you a way to travel with somebody and a way to agree with
 them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बरोबर** (*barobar*) is a loan, usually traced to Persian *barābar*, "equal, level". Marathi uses it for "with" and, said alone, for "that's right".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-POSTP-BAROBAR, MR-LEX-MITRA, MR-GRAMMAR-OBLIQUE, MR-LEX-TITHE, MR-LEX-BARAM-01] -->

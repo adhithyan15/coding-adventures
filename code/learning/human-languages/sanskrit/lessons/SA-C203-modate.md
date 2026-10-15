@@ -14,7 +14,8 @@ romanization: "modate"
 concept_tag: SA-VERB-MODATE
 prerequisites: [SA-C202-pascima, SA-C202-uttara]
 sounds: []
-roots: []
+roots: [sanskrit-modate]
+etymology_hook: "modate ← root √mud 'be merry, rejoice' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C202-uttara]
 <!-- hl-knowledge: introduces=[SA-LEX-C203-ACT203-01]; assesses=[] -->
 
 **मोदते** — *modate* — "rejoices".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*modate* is the present of the root √mud, "to be merry, glad, rejoice" (MW). The same root gives *mud*, "joy"; MW gives it no older source, so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for an eyebrow, then the Sanskrit for the s
 You'll want to know: गुल्फः.
 गुल्फः — gulphaḥ — "an ankle".
 
+The word, taken apart.
+gulpha "the ankle", also kulpha in the Rigveda, is perhaps borrowed from Dravidian: CDIAL 4216, after Burrow, takes the wavering k- and g- as a sign of that and compares a Dravidian word for "hoof". It lives on as Marathi gophā "ankle" (CDIAL 4216).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for the skin, then the Sanskrit for an ankl
 
 You'll want to know: अंगुलिः.
 अंगुलिः — aṅguliḥ — "a finger".
+
+The word, taken apart.
+aṅguli "a finger, a toe" is built on the base aṅgu-, the same base as aṅguṣṭha "thumb" (CDIAL 135, 137). It lives on as Hindi uṅglī "finger" (CDIAL 135).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for an ankle, then the Sanskrit for a finge
 You'll want to know: कक्षः.
 कक्षः — kakṣaḥ — "a room".
 
+The word, taken apart.
+kakṣa first meant "a hiding place" and "the armpit", which MW calls the most concealed part of the body; its feminine kakṣā also names a walled enclosure or a private room. MW compares Latin coxa "hip", and EtymDB counts it as inherited from Indo-European.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a finger, then the Sanskrit for a room.
 You'll want to know: आसन्दी.
 आसन्दी — āsandī — "a chair".
 
+The word, taken apart.
+āsandī "a chair, a stool" is old, in the Atharvaveda, and comes from ā "on" + the root √sad "sit" (CDIAL 1485). MW sets √sad beside Latin sedere and English sit: an inherited Indo-European root.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a room, then the Sanskrit for a chair.
 
 You'll want to know: फलकम्.
 फलकम् — phalakam — "a board, a plank".
+
+The word, taken apart.
+phalaka "a board, a plank, a bench" is found from the Brāhmaṇas on (MW). CDIAL 9053 refers it to the root √phal "burst, split", the root MW files it under, and MW compares √phal with English split. Nepali kept it as phalek "board, plank" (CDIAL 9053).
 
 What you've built.
 One more word for this chapter.

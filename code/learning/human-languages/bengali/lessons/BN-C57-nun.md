@@ -14,7 +14,8 @@ romanization: "nun"
 concept_tag: BN-FOOD57-NUN
 prerequisites: [BN-C56-alu, BN-C57-gajor]
 sounds: []
-roots: []
+roots: [sanskrit-lavana]
+etymology_hook: "nun ← Sanskrit lavaṇa 'salt'; CDIAL lists Oriya nuṇa there (CDIAL 10978) and Bengali nuniyā 'salted' (CDIAL 10983)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C57-gajor]
 <!-- hl-knowledge: introduces=[BN-LEX-C57-FOOD57-02]; assesses=[] -->
 
 **নুন** — *nun* — "salt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নুন** (*nun*) goes back to Sanskrit *lavaṇa*, "salt". CDIAL gives no Bengali form under that entry, but it lists Oriya *nuṇa* there (CDIAL 10978), and Bengali *nuniyā*, "salted", under the related *lavaṇita*, "salted" (CDIAL 10983).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

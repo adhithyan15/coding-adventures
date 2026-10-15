@@ -14,7 +14,8 @@ romanization: "mehmān"
 concept_tag: UR-FAMILY45-MEHMAN
 prerequisites: [UR-C45-admi, UR-C45-parosi]
 sounds: []
-roots: []
+roots: [persian-mihman]
+etymology_hook: "mehmān: usually traced to Persian mihmān 'guest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C45-parosi]
 <!-- hl-knowledge: introduces=[UR-LEX-C45-FAMILY45-05]; assesses=[] -->
 
 **مہمان** — *mehmān* — "a guest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مہمان** (*mehmān*) is a loan, usually traced to Persian *mihmān*, "guest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

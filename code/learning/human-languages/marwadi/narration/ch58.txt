@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to write, then the Marwadi for to think.
 You'll want to know: पूछणो.
 पूछणो — pūchhṇo — "to ask".
 
+The word, taken apart.
+पूछणो (pūchhṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pṛcchati, "asks". CDIAL lists Old Marwari pūchaï under it (CDIAL 8352).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to think, then the Marwadi for to ask.
 
 You'll want to know: करणो.
 करणो — karṇo — "to do".
+
+The word, taken apart.
+करणो (karṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karoti, "does". CDIAL lists Old Marwari karaï under it (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to ask, then the Marwadi for to do.
 You'll want to know: मांस.
 मांस — mā̃s — "meat".
 
+The word, taken apart.
+मांस (mā̃s) goes back to Sanskrit māṃsa, "flesh", and keeps its shape almost whole. CDIAL lists Hindi and Gujarati mā̃s under it (CDIAL 9982); it gives no Marwari form there.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to do, then the Marwadi for meat.
 You'll want to know: माछली.
 माछली — māchhlī — "a fish".
 
+The word, taken apart.
+माछली (māchhlī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from matsya, "fish". CDIAL lists Old Marwari māchalī under it (CDIAL 9758). CDIAL explains the -l- as an added suffix.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for meat, then the Marwadi for a fish.
 
 You'll want to know: चावळ.
 चावळ — chāvaḷ — "rice".
+
+The word, taken apart.
+चावळ (chāvaḷ) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāvala, "husked rice", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari cāvala under it (CDIAL 4749). CDIAL thinks it may come from the same non-Aryan source as Sanskrit taṇḍula, "rice".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "pôrer"
 concept_tag: BN-GUN247-PORER
 prerequisites: [BN-C246-sonali, BN-C246-akashi]
 sounds: []
-roots: []
+roots: [sanskrit-para]
+etymology_hook: "pôrer: pôr 'after', Sanskrit para 'later, other', + -er 'of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C246-akashi]
 <!-- hl-knowledge: introduces=[BN-LEX-C247-GUN247-01]; assesses=[] -->
 
 **পরের** — *pôrer* — "next, following".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পরের** (*pôrer*) is *pôr*, "after", Sanskrit *para*, "later, other", + *-er*, "of".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

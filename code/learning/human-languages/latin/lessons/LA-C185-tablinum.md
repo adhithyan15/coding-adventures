@@ -13,7 +13,8 @@ gloss: "a study (room)"
 concept_tag: LA-RES185-TABLINUM
 prerequisites: [LA-C184-claudus, LA-C185-cella]
 sounds: []
-roots: []
+roots: [tablinum-latin, tabula-latin]
+etymology_hook: "tablīnum 'study' — built on tabula 'tablet, records'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C185-cella]
 <!-- hl-knowledge: introduces=[LA-LEX-C185-RES185-02]; assesses=[] -->
 
 **tablīnum, tablīnī** — "a study (room)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tablīnum** is built on *tabula*, "a writing tablet, records" (EtymDB 2.1): the room where the family's records were kept.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

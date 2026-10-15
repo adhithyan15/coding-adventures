@@ -13,7 +13,8 @@ gloss: "to decide, to set up"
 concept_tag: LA-VERB-CONSTITUO
 prerequisites: [LA-C163-postea, LA-C163-consilium]
 sounds: []
-roots: []
+roots: [constituere-latin, statuere-latin]
+etymology_hook: "cōnstituō 'to decide, to set up' — con- 'firmly' + statuō 'to set up'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C163-consilium]
 <!-- hl-knowledge: introduces=[LA-LEX-C163-FUT163-04]; assesses=[] -->
 
 **cōnstituō, cōnstituere** — "to decide, to set up". Third-conjugation verbs, with a short **-ere**, make their future with **-am**, **-ēs**, **-et**: **Crās cōnstituam.** — "I will decide tomorrow." English *constitute* and *constitution* come from it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cōnstituō** is *con-*, "together, firmly", with *statuō*, "to set up" (Lewis & Short), its a weakened to i: to set firmly in place.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jīvan"
 concept_tag: HI-THG220-JIVAN
 prerequisites: [HI-C220-javani, HI-C220-burhapa]
 sounds: []
-roots: []
+roots: [sanskrit-jivana]
+etymology_hook: "jīvan ← Sanskrit jīvana 'life', a tatsama (CDIAL 5243)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C220-burhapa]
 <!-- hl-knowledge: introduces=[HI-LEX-C220-THG220-05]; assesses=[] -->
 
 **जीवन** — *jīvan* — "life".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जीवन** (*jīvan*) is Sanskrit *jīvana*, "life", taken over whole as a learned loan, a tatsama (CDIAL 5243). CDIAL lists the inherited form as *jīan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

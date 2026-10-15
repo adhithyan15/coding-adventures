@@ -14,7 +14,8 @@ romanization: "khazidan"
 concept_tag: FA-VERB-KHAZIDAN
 prerequisites: [FA-C186-chekidan, FA-C186-larzidan]
 sounds: []
-roots: []
+roots: [persian-khazidan]
+etymology_hook: "khazidan: inherited, usually traced to Middle Persian xazīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C186-larzidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C186-KONESH186-05]; assesses=[] -->
 
 **خزیدن** — *khazidan* — "to crawl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khazidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *xazīdan*, "to crawl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

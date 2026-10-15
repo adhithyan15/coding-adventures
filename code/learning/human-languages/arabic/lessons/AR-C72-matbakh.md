@@ -14,7 +14,8 @@ romanization: "maṭbakh"
 concept_tag: AR-HOME72-MATBAKH
 prerequisites: [AR-C72-zujaja, AR-C72-bab]
 sounds: []
-roots: []
+roots: [ṭ-b-kh]
+etymology_hook: "maṭbakh: built on the root ṭ-b-kh, 'to cook' (Lane); maṭbakh is the ma- place noun, 'a place of cooking'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C72-bab]
 <!-- hl-knowledge: introduces=[AR-LEX-C72-HOME72-04]; assesses=[] -->
 
 **مطبخ** — *maṭbakh* — "a kitchen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مطبخ** (*maṭbakh*) is built on the native Arabic root *ṭ-b-kh*, "to cook" (Lane). *Maṭbakh* is the *ma-* place noun, "a place of cooking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

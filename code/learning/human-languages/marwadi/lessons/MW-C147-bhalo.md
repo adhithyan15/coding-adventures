@@ -14,7 +14,8 @@ romanization: "bhalo"
 concept_tag: MW-QUAL147-BHALO
 prerequisites: [MW-C147-dayalu, MW-C147-kanjus]
 sounds: []
-roots: []
+roots: [sanskrit-bhalla]
+etymology_hook: "bhalo ← Sanskrit bhalla 'auspicious', a tadbhava (CDIAL 9408, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C147-kanjus]
 <!-- hl-knowledge: introduces=[MW-LEX-C147-QUAL147-05]; assesses=[] -->
 
 **भलो** — *bhalo* — "good-natured".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भलो** (*bhalo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhalla*, "auspicious". CDIAL lists Old Marwari *bhalaü* under it (CDIAL 9408). CDIAL builds the Sanskrit word on *bhadra*, "good".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

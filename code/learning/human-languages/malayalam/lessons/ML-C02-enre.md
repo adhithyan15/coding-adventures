@@ -12,6 +12,7 @@ concept_tag: PRONOUN-MY
 prerequisites: [ML-C02-peru, ML-C01-nandi]
 sounds: [nre-conjunct]
 roots: [njaan-dravidian]
+etymology_hook: "enṟe 'my': native Dravidian, built on en-, the oblique stem of the word for 'I' (DEDR 5160)"
 duration:
   max_seconds: 180
 requires:
@@ -48,6 +49,8 @@ reviews_of: [ML-C02-peru]
 first-person family, not to the Indo-European family behind English *I/my*.
 You will meet the related word for "I" in its own lesson; today you only need
 *enṟe*.
+
+Its *en-* is the oblique stem that DEDR 5160 gives for the first person, as in Tamil *eṉ-*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENRE-01, ML-LEX-NANDI-01, ML-ETYMON-NANDI-NAL-01] -->

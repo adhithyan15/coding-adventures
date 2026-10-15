@@ -14,7 +14,8 @@ romanization: "shumi"
 concept_tag: JA-LIKE94-SHUMI
 prerequisites: [JA-C94-konomu, JA-C94-konomi]
 sounds: []
-roots: []
+roots: [middle-chinese-tshjuh, middle-chinese-mjxjh]
+etymology_hook: "shumi: Sino-Japanese 趣 'interest' + 味 'taste', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C94-konomi]
 <!-- hl-knowledge: introduces=[JA-LEX-C94-LIKE94-03]; assesses=[] -->
 
 **しゅみ** — *shumi* — "a hobby".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しゅみ** (*shumi*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shu*, "interest, what attracts one" (Middle Chinese *tshjuH*) and *mi*, "taste" (*mj+jH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

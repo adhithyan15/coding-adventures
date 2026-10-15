@@ -14,7 +14,8 @@ romanization: "tuffāḥ"
 concept_tag: AR-THINGS129-TUFFAH
 prerequisites: [AR-C129-thum, AR-C129-khiyar]
 sounds: []
-roots: []
+roots: [t-f-ḥ]
+etymology_hook: "tuffāḥ: built on the root t-f-ḥ, 'the apple' (Lane); Lane quotes a source calling it an Arabic word, not arabicized"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C129-khiyar]
 <!-- hl-knowledge: introduces=[AR-LEX-C129-THINGS129-04]; assesses=[] -->
 
 **تفاح** — *tuffāḥ* — "apples".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تفاح** (*tuffāḥ*) is built on the native Arabic root *t-f-ḥ*, "the apple" (Lane). Lane quotes a source calling it an Arabic word, not arabicized; Hebrew *tappuaḥ* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

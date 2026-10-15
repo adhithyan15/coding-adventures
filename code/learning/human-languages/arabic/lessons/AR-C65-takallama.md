@@ -14,7 +14,8 @@ romanization: "takallama"
 concept_tag: AR-VERB-TAKALLAMA
 prerequisites: [AR-C64-intazara, AR-C64-rajaa]
 sounds: []
-roots: []
+roots: [k-l-m]
+etymology_hook: "takallama: built on the root k-l-m, 'to speak to' (Lane); takallama is Form V, 'to speak'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C64-rajaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C65-VERBS65-01]; assesses=[] -->
 
 **تكلم** — *takallama* — "to speak (he spoke)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تكلم** (*takallama*) is built on the native Arabic root *k-l-m*, "to speak to; speech" (Lane). *Takallama* is Form V, "to speak"; the same root gives *kalima*, "a word", and *kalām*, "speech".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

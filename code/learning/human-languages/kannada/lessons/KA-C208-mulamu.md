@@ -14,7 +14,8 @@ romanization: "mulāmu"
 concept_tag: KA-AROGYA208-MULAMU
 prerequisites: [KA-C208-deha, KA-C208-cuccumaddu]
 sounds: []
-roots: []
+roots: [kannada-mulamu]
+etymology_hook: "mulāmu: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C208-cuccumaddu]
 <!-- hl-knowledge: introduces=[KA-LEX-C208-AROGYA208-03]; assesses=[] -->
 
 **ಮುಲಾಮು** — *mulāmu* — "an ointment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಮುಲಾಮು** (*mulāmu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

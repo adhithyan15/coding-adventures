@@ -14,7 +14,8 @@ romanization: "vozmózhnyy"
 concept_tag: RU-KACH188-VOZMOZHNYY
 prerequisites: [RU-C188-vrednyy, RU-C188-nuzhnyy]
 sounds: []
-roots: []
+roots: [pie-magh]
+etymology_hook: "возможный is воз- + мож-, from мочь 'to be able': what can be"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C188-nuzhnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C188-KACH188-04]; assesses=[] -->
 
 **возможный** (*vozmózhnyy*) — "possible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**возможный** is *воз-* with *мож-*, from *мочь*, "to be able", *могу*, "I can": "what can be".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

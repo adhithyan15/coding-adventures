@@ -14,7 +14,8 @@ romanization: "somvār"
 concept_tag: MW-TIME91-SOMVAR
 prerequisites: [MW-C90-parsu, MW-C91-pachhai]
 sounds: []
-roots: []
+roots: [sanskrit-soma, sanskrit-vara-day]
+etymology_hook: "somvār: Sanskrit soma 'the moon' + vāra 'day of the week' (CDIAL 13608, 11547), a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C91-pachhai]
 <!-- hl-knowledge: introduces=[MW-LEX-C91-TIME91-02]; assesses=[] -->
 
 **सोमवार** — *somvār* — "Monday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोमवार** (*somvār*) is a Sanskrit compound, a tatsama: *soma*, "the moon" (CDIAL 13608), and *vāra*, "day of the week", whose inherited Old Marwari form is *bāra*, "turn, time" (CDIAL 11547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

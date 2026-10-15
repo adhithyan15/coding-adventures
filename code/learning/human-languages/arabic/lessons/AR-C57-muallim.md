@@ -14,7 +14,8 @@ romanization: "muʿallim"
 concept_tag: AR-FAMILY57-MUALLIM
 prerequisites: [AR-C56-imraa, AR-C56-dayf]
 sounds: []
-roots: []
+roots: [ʿ-l-m]
+etymology_hook: "muʿallim: built on the root ʿ-l-m, 'to know' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C56-dayf]
 <!-- hl-knowledge: introduces=[AR-LEX-C57-FAMILY57-01]; assesses=[] -->
 
 **معلم** — *muʿallim* — "a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**معلم** (*muʿallim*) is built on the native Arabic root *ʿ-l-m*, "to know" (Lane). *Muʿallim* is the Form II participle, "one who makes others know", a teacher.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

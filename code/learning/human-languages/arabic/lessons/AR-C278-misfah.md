@@ -14,7 +14,8 @@ romanization: "miṣfāh"
 concept_tag: AR-SHAY278-MISFAH
 prerequisites: [AR-C278-ghallaya, AR-C278-siniyya]
 sounds: []
-roots: []
+roots: [ṣ-f-w]
+etymology_hook: "miṣfāh: built on the root ṣ-f-w, 'to be clear' (Lane); miṣfāh is an instrument noun, 'a thing for making clear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C278-siniyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C278-SHAY278-03]; assesses=[] -->
 
 **مصفاة** — *miṣfāh* — "a strainer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مصفاة** (*miṣfāh*) is built on the native Arabic root *ṣ-f-w*, "to be clear" (Lane). *Miṣfāh* is an instrument noun, "a thing for making clear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

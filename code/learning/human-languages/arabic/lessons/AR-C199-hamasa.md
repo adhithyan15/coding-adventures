@@ -14,7 +14,8 @@ romanization: "hamasa"
 concept_tag: AR-VERB-HAMASA
 prerequisites: [AR-C199-adda, AR-C199-nafakha]
 sounds: []
-roots: []
+roots: [h-m-s]
+etymology_hook: "hamasa: built on the root h-m-s, 'to whisper' (Lane); hamasa is the plain verb, 'he whispered'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C199-nafakha]
 <!-- hl-knowledge: introduces=[AR-LEX-C199-ACT199-04]; assesses=[] -->
 
 **همس** — *hamasa* — "to whisper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**همس** (*hamasa*) is built on the native Arabic root *h-m-s*, "to whisper" (Lane). *Hamasa* is the plain verb, "he whispered".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

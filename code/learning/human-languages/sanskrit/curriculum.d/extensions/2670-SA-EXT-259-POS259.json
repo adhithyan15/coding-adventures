@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-259-POS259",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can distinguish one possessor from several and use asmākam and yuṣmākam in known noun frames.",
+  "prerequisites": [
+    "SA-EXT-258-A2WRITING"
+  ]
+}

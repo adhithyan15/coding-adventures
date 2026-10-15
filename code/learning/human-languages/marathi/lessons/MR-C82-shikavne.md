@@ -14,7 +14,8 @@ romanization: "shikavṇe"
 concept_tag: MR-VERB-SHIKAVNE
 prerequisites: [MR-C82-udne, MR-C82-pohne]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "śikavṇe: the 'make' form of śikṇe 'to learn', from Sanskrit śikṣate 'learns' (CDIAL 12430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C82-pohne]
 <!-- hl-knowledge: introduces=[MR-LEX-C82-VERBS82-04]; assesses=[] -->
 
 **शिकवणे** — *shikavṇe* — "to teach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिकवणे** (*shikavṇe*) is the "make" form of **शिकणे**, "to learn": teaching is making someone learn. CDIAL lists both under Sanskrit *śikṣate*, "learns" (CDIAL 12430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: "yǒu — 'to have', and also 'there is': one verb where Spanish spends t
 concept_tag: VERB-HAVE
 prerequisites: [ZH-W24-you, ZH-C23-de, ZH-W20-liu, ZH-C20-liu, ZH-R17-character-language-r2, ZH-C14-hear-xiao]
 sounds: [tone-3]
-roots: []
-etymology_hook: "Three Spanish points — possession, existence and the impersonal haber — all land on this one Mandarin verb."
+roots: [middle-chinese-hjuwx]
+etymology_hook: "yǒu 'to have; there is': inherited, from Middle Chinese hjuwX; both jobs are old"
 duration:
   max_seconds: 225
 requires:
@@ -78,6 +78,12 @@ the only one of its kind:
 negate this. The negative of 有 is *méi yǒu*, said with a different negator
 altogether, whose character this book has not yet taught. Hold the rule now and
 the writing later: **不有 is never Mandarin.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**有** *yǒu* is inherited from Middle Chinese *hjuwX*, "to have; to exist"
+(Guangyun, in Baxter's transcription); both of its jobs are old ones.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-YOU-01, ZH-GRAMMAR-YOU-EXISTENCE-01] -->

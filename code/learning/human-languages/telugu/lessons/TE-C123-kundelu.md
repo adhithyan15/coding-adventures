@@ -14,7 +14,8 @@ romanization: "kundēlu"
 concept_tag: TE-THINGS123-KUNDELU
 prerequisites: [TE-C123-elugubanti, TE-C123-koti]
 sounds: []
-roots: []
+roots: [dravidian-kuntu-squat]
+etymology_hook: "kundēlu: native Dravidian; DEDR 1728 lists the Telugu word for 'hare' under kuntu 'to squat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C123-koti]
 <!-- hl-knowledge: introduces=[TE-LEX-C123-THINGS123-05]; assesses=[] -->
 
 **కుందేలు** — *kundēlu* — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కుందేలు** (*kundēlu*) is native Dravidian. DEDR 1728 lists the Telugu word for "hare" under the verb for squatting, with Tamil *kuntu*, "to sit on the heels".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

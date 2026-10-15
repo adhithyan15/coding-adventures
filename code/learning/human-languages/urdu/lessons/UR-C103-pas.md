@@ -14,7 +14,8 @@ romanization: "pās"
 concept_tag: UR-LOC103-PAS
 prerequisites: [UR-C103-hawaijahaz, UR-C103-relgari]
 sounds: []
-roots: []
+roots: [sanskrit-parshva]
+etymology_hook: "pās ← Sanskrit pārśve 'near', a form of pārśva 'side' (CDIAL 8118)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C103-relgari]
 <!-- hl-knowledge: introduces=[UR-LEX-C103-LOC103-03]; assesses=[] -->
 
 **پاس** — *pās* — "near; with (someone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پاس** (*pās*) is inherited. It comes from Sanskrit *pārśve*, "near", a form of *pārśva*, "side" (CDIAL 8118).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

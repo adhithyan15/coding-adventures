@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "What It Costs",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:64c26468c5e59a60",
+  "sourceHash": "fnv1a64:3a3d943aa5f4fe50",
   "lessons": [
     {
       "id": "ML-C91-kada",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84975e2ef61ad9a3",
+      "sourceHash": "fnv1a64:3c6b4e40b9873d6a",
       "notice": null,
       "blocks": [
         {
@@ -68,6 +68,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കട (kaṭa) is native Dravidian, one word with Tamil kaṭai (DEDR 1142). Its first sense is \"market\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -107,7 +118,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -138,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0636889a8d5495cc",
+      "sourceHash": "fnv1a64:69a75d5c6621b887",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വില പണം (vila paṇaṁ): vila, \"price\", is native Dravidian, from the verb \"to sell\" (DEDR 5421, with Tamil vil and Kannada bil). paṇaṁ, \"money\", is Sanskrit paṇa, \"a coin\" (CDIAL 7715), which CDIAL itself thinks came into Sanskrit from Austroasiatic."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -256,7 +278,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -287,7 +309,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea09350ce5334a23",
+      "sourceHash": "fnv1a64:061524f56554c60d",
       "notice": null,
       "blocks": [
         {
@@ -357,6 +379,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എത്ര രൂപ (etra rūpa): etra, \"how many\", is native Dravidian (DEDR 5151). rūpa, \"rupee\", goes back through Hindustani rupayā to Sanskrit rūpya, \"stamped; silver\" (CDIAL 10805)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -414,7 +447,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:bbd32090cd94cb88",
+      "sourceHash": "fnv1a64:562cff8eafa00939",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -501,6 +534,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വാങ്ങുക (vāṅṅuka) is native Dravidian, one word with Tamil vāṅku (DEDR 5336). Its older senses are \"to take, receive, choose\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -549,7 +593,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

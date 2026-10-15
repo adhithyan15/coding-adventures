@@ -14,7 +14,8 @@ romanization: "ōḍisu"
 concept_tag: KA-VERB-ODISU
 prerequisites: [KA-C273-suttadu, KA-C273-datu]
 sounds: []
-roots: []
+roots: [dravidian-odu-run]
+etymology_hook: "ōḍisu: native Dravidian, 'make run', from ōḍu 'to run' (DEDR 1041)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C273-datu]
 <!-- hl-knowledge: introduces=[KA-LEX-C273-KRIYE273-04]; assesses=[] -->
 
 **ಓಡಿಸು** — *ōḍisu* — "to drive, to ride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಓಡಿಸು** (*ōḍisu*) is native Dravidian, from *ōḍu*, "to run", and DEDR 1041 lists *ōḍisu*, "to cause to run, drive away", itself; the entry also has Tamil *ōṭu* and Telugu *ōḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

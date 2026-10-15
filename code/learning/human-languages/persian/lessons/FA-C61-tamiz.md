@@ -14,7 +14,8 @@ romanization: "tamiz"
 concept_tag: FA-ADJ61-TAMIZ
 prerequisites: [FA-C61-puldar, FA-C61-faghir]
 sounds: []
-roots: []
+roots: [arabic-tamyiz]
+etymology_hook: "tamiz ← Arabic tamyīz 'discerning, telling apart', root m-y-z (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C61-faghir]
 <!-- hl-knowledge: introduces=[FA-LEX-C61-ADJ61-05]; assesses=[] -->
 
 **تمیز** — *tamiz* — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tamiz* is borrowed from Arabic *tamyīz*, "discerning, telling apart". Its Arabic root is *m-y-z* (Lane). Persian shifted it to "clean".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

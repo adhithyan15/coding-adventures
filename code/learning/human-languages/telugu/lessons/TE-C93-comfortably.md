@@ -11,7 +11,8 @@ romanization: "hāyigā"
 concept_tag: TE-FINE-COMFORTABLY
 prerequisites: [TE-C92-weakness, TE-C93-wellbeing]
 sounds: []
-roots: []
+roots: [telugu-haayi-comfort]
+etymology_hook: "hāyigā: hāyi 'comfort', of uncertain origin, + the adverb ending -gā"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C93-wellbeing]
 **హాయిగా** (*hāyigā*) — "comfortably, pleasantly".
 
 **హాయిగా ఉంది** — "it is pleasant", said of a cool breeze, a good rest, an easy day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**హాయిగా** (*hāyigā*) is *hāyi*, "comfort, pleasantness", with the adverb ending *-gā*. The origin of *hāyi* is uncertain: neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

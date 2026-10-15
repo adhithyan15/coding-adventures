@@ -3859,7 +3859,10 @@ impl Compiler {
                         (
                             ProcedureParamMode::Name,
                             ProcedureParamType::Scalar(ScalarType::Real),
-                        ) => self.is_selector_call_safe_runtime_real_value(actual),
+                        ) => {
+                            self.is_selector_call_safe_runtime_real_value(actual)
+                                || self.is_selector_call_safe_standard_entier_sign_root(actual)
+                        }
                         _ => true,
                     }
                 });
@@ -3872,6 +3875,243 @@ impl Compiler {
         }
         let children = direct_nodes(node);
         children.len() == 1 && self.is_selector_call_safe_real_procedure_result(children[0])
+    }
+
+    fn is_selector_call_safe_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        if node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            if let Some(source_name) = source_name {
+                let target_name = self.resolve_procedure_identity(&source_name);
+                if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.builtin_sign_operand(actuals[0]).is_some_and(|operand| {
+                            self.is_selector_call_safe_runtime_real_root(operand)
+                        });
+                }
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_entier_sign_root(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1 && self.is_selector_call_safe_entier_sign_root(children[0])
+    }
+
+    fn is_selector_call_safe_signed_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        if self.is_selector_call_safe_entier_sign_root(node) {
+            return true;
+        }
+        if let Some((sign, child)) = single_signed_child(node) {
+            return matches!(sign, "+" | "-")
+                && self.is_selector_call_safe_signed_entier_sign_root(child);
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_signed_entier_sign_root(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1
+            && self.is_selector_call_safe_signed_entier_sign_root(children[0])
+    }
+
+    fn is_selector_call_safe_additive_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        if self.is_selector_call_safe_signed_entier_sign_root(node) {
+            return true;
+        }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            let operand_start = usize::from(matches!(
+                sequence.first(),
+                Some(Piece::Op(op)) if matches!(op.as_str(), "+" | "-")
+            ));
+            let additive_len = sequence.len().saturating_sub(operand_start);
+            if additive_len >= 3 && additive_len % 2 == 1 {
+                let mut saw_bounded_root = false;
+                for (index, piece) in sequence.iter().skip(operand_start).enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_selector_call_safe_signed_entier_sign_root(operand) {
+                            if saw_bounded_root {
+                                return false;
+                            }
+                            saw_bounded_root = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return false;
+                    }
+                }
+                return saw_bounded_root;
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_additive_entier_sign_root(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1
+            && self.is_selector_call_safe_additive_entier_sign_root(children[0])
+    }
+
+    fn is_selector_call_safe_multiplicative_entier_sign_root(
+        &self,
+        node: &GrammarASTNode,
+    ) -> bool {
+        if self.is_selector_call_safe_additive_entier_sign_root(node) {
+            return true;
+        }
+        if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut saw_bounded_root = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return false;
+                        };
+                        if self.is_selector_call_safe_additive_entier_sign_root(operand) {
+                            if saw_bounded_root {
+                                return false;
+                            }
+                            saw_bounded_root = true;
+                        } else if expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_none()
+                        {
+                            return false;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "*" | "/")) {
+                        return false;
+                    }
+                }
+                return saw_bounded_root;
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_multiplicative_entier_sign_root(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1
+            && self.is_selector_call_safe_multiplicative_entier_sign_root(children[0])
+    }
+
+    fn is_selector_call_safe_powered_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        if self.is_selector_call_safe_multiplicative_entier_sign_root(node) {
+            return true;
+        }
+        if node.rule_name == "expr_pow" {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index == 0 {
+                        let Piece::Node(base) = piece else {
+                            return false;
+                        };
+                        if !self.is_selector_call_safe_multiplicative_entier_sign_root(base) {
+                            return false;
+                        }
+                    } else if index % 2 == 0 {
+                        let Piece::Node(exponent) = piece else {
+                            return false;
+                        };
+                        if expr_static_real_arithmetic_value_with(exponent, &|_| None).is_none() {
+                            return false;
+                        }
+                    } else if !matches!(
+                        piece,
+                        Piece::Op(op) if matches!(op.as_str(), "^" | "**")
+                    ) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_powered_entier_sign_root(child);
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1
+            && self.is_selector_call_safe_powered_entier_sign_root(children[0])
+    }
+
+    fn is_selector_call_safe_standard_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        self.is_selector_call_safe_standard_entier_sign_root_with_depth(node, 6)
+    }
+
+    fn is_selector_call_safe_standard_entier_sign_root_with_depth(
+        &self,
+        node: &GrammarASTNode,
+        remaining_standard_calls: usize,
+    ) -> bool {
+        if self.is_selector_call_safe_powered_entier_sign_root(node) {
+            return true;
+        }
+        if remaining_standard_calls > 0 && node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            if let Some(source_name) = source_name {
+                let target_name = self.resolve_procedure_identity(&source_name);
+                if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.builtin_sign_operand(actuals[0]).is_some_and(|operand| {
+                            self.is_selector_call_safe_runtime_real_root(operand)
+                        });
+                }
+                if !self.proc_sigs.contains_key(&target_name)
+                    && matches!(
+                        target_name.as_str(),
+                        "abs" | "sign" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+                    )
+                {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.is_selector_call_safe_standard_entier_sign_root_with_depth(
+                            actuals[0],
+                            remaining_standard_calls - 1,
+                        );
+                }
+            }
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.is_selector_call_safe_standard_entier_sign_root_with_depth(
+                child,
+                remaining_standard_calls,
+            );
+        }
+        if !direct_tokens(node).is_empty() {
+            return false;
+        }
+        let children = direct_nodes(node);
+        children.len() == 1
+            && self.is_selector_call_safe_standard_entier_sign_root_with_depth(
+                children[0],
+                remaining_standard_calls,
+            )
     }
 
     fn builtin_nonnegative_bounded_sign_operand<'n>(
@@ -4438,11 +4678,123 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
+        let operand = self.builtin_sign_operand_unchecked(node)?;
+        (self.builtin_sign_unit_offset_count(node)? <= 6).then_some(operand)
+    }
+
+    fn builtin_sign_unit_offset_count(&self, node: &GrammarASTNode) -> Option<usize> {
         if let Some((_condition, then_node, else_node)) =
             self.conditional_expression_parts(node)
         {
-            let then_operand = self.builtin_sign_operand(then_node)?;
-            let else_operand = self.builtin_sign_operand(else_node)?;
+            return Some(
+                self.builtin_sign_unit_offset_count(then_node)?
+                    .max(self.builtin_sign_unit_offset_count(else_node)?),
+            );
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.builtin_sign_unit_offset_count(child);
+        }
+        if let Some((sign, child)) = single_signed_child(node) {
+            return matches!(sign, "+" | "-")
+                .then(|| self.builtin_sign_unit_offset_count(child))?;
+        }
+        if pieces(node)
+            .iter()
+            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+        {
+            return self.builtin_sign_unit_offset_count(literal_power_identity_base(
+                node, true,
+            )?);
+        }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut count = 0usize;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return None;
+                        };
+                        if self.builtin_sign_operand_unchecked(operand).is_some() {
+                            count = count
+                                .checked_add(self.builtin_sign_unit_offset_count(operand)?)?;
+                        } else {
+                            let value =
+                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
+                            if value != 0.0 {
+                                let units = match value.abs() {
+                                    1.0 => 1,
+                                    2.0 => 2,
+                                    3.0 => 3,
+                                    4.0 => 4,
+                                    5.0 => 5,
+                                    6.0 => 6,
+                                    _ => return None,
+                                };
+                                count = count.checked_add(units)?;
+                            }
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return None;
+                    }
+                }
+                return Some(count);
+            }
+        }
+        if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return None;
+                        };
+                        if self.builtin_sign_operand_unchecked(operand).is_some() {
+                            return self.builtin_sign_unit_offset_count(operand);
+                        }
+                    }
+                }
+                return None;
+            }
+        }
+        if node.rule_name != "proc_call" {
+            let children = direct_nodes(node);
+            if direct_tokens(node).is_empty() && children.len() == 1 {
+                return self.builtin_sign_unit_offset_count(children[0]);
+            }
+            return None;
+        }
+        let source_name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&source_name);
+        if self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return None;
+        }
+        match target_name.as_str() {
+            "sign" => Some(0),
+            "abs" | "entier" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan" => {
+                self.builtin_sign_unit_offset_count(actuals[0])
+            }
+            _ => None,
+        }
+    }
+
+    fn builtin_sign_operand_unchecked<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_operand = self.builtin_sign_operand_unchecked(then_node)?;
+            let else_operand = self.builtin_sign_operand_unchecked(else_node)?;
             if self.is_selector_call_safe_runtime_real_root(then_operand)
                 && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
@@ -4451,11 +4803,11 @@ impl Compiler {
             return None;
         }
         if let Some(child) = single_parenthesized_child(node) {
-            return self.builtin_sign_operand(child);
+            return self.builtin_sign_operand_unchecked(child);
         }
         if let Some((sign, child)) = single_signed_child(node) {
             if matches!(sign, "+" | "-") {
-                return self.builtin_sign_operand(child);
+                return self.builtin_sign_operand_unchecked(child);
             }
             return None;
         }
@@ -4464,7 +4816,7 @@ impl Compiler {
             .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
         {
             if let Some(base) = literal_power_identity_base(node, true) {
-                return self.builtin_sign_operand(base);
+                return self.builtin_sign_operand_unchecked(base);
             }
             return None;
         }
@@ -4477,14 +4829,18 @@ impl Compiler {
                         let Piece::Node(operand) = piece else {
                             return None;
                         };
-                        if let Some(operand) = self.builtin_sign_operand(operand) {
+                        if let Some(operand) = self.builtin_sign_operand_unchecked(operand) {
                             if sign_operand.replace(operand).is_some() {
                                 return None;
                             }
-                        } else if !expr_static_real_arithmetic_value_with(operand, &|_| None)
-                            .is_some_and(|value| value == 0.0)
-                        {
-                            return None;
+                        } else {
+                            let value =
+                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
+                            if value != 0.0
+                                && !matches!(value.abs(), 1.0 | 2.0 | 3.0 | 4.0 | 5.0 | 6.0)
+                            {
+                                return None;
+                            }
                         }
                     } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
                         return None;
@@ -4506,7 +4862,7 @@ impl Compiler {
                         let Piece::Node(operand) = piece else {
                             return None;
                         };
-                        if let Some(operand) = self.builtin_sign_operand(operand) {
+                        if let Some(operand) = self.builtin_sign_operand_unchecked(operand) {
                             if sign_operand.replace(operand).is_some() {
                                 return None;
                             }
@@ -4547,7 +4903,7 @@ impl Compiler {
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
-                return self.builtin_sign_operand(children[0]);
+                return self.builtin_sign_operand_unchecked(children[0]);
             }
             return None;
         }
@@ -4566,11 +4922,11 @@ impl Compiler {
         }
         match target_name.as_str() {
             "sign" => Some(actuals[0]),
-            "abs" | "entier" => self.builtin_sign_operand(actuals[0]),
+            "abs" | "entier" => self.builtin_sign_operand_unchecked(actuals[0]),
             "sqrt" => self.builtin_nonnegative_bounded_sign_operand(actuals[0]),
-            "sin" | "cos" | "arctan" => self.builtin_sign_operand(actuals[0]),
+            "sin" | "cos" | "arctan" => self.builtin_sign_operand_unchecked(actuals[0]),
             "exp" if !self.contains_builtin_exp_call(actuals[0]) => {
-                self.builtin_sign_operand(actuals[0])
+                self.builtin_sign_operand_unchecked(actuals[0])
             }
             "ln" => self
                 .builtin_single_exp_sign_operand(actuals[0])
@@ -4729,6 +5085,9 @@ impl Compiler {
         if self.is_selector_call_safe_runtime_real_value(node) {
             return true;
         }
+        if self.is_selector_call_safe_signed_entier_sign_root(node) {
+            return true;
+        }
         if let Some((sign, child)) = single_signed_child(node) {
             return matches!(sign, "+" | "-")
                 && self.is_selector_call_safe_runtime_real_root(child);
@@ -4808,6 +5167,25 @@ impl Compiler {
                 }
                 if saw_runtime_real_root {
                     return true;
+                }
+            }
+        }
+        if node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            if let Some(source_name) = source_name {
+                let target_name = self.resolve_procedure_identity(&source_name);
+                if !self.proc_sigs.contains_key(&target_name)
+                    && matches!(
+                        target_name.as_str(),
+                        "abs" | "sign" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+                    )
+                {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self.is_selector_call_safe_runtime_real_root(actuals[0]);
                 }
             }
         }
@@ -13695,20 +14073,404 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_calling_selectors_allow_standard_function_local_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 12.25; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then abs(left) else sqrt(right)) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 12.25; real left, right; left := leftvalue(); right := rightvalue(); output(if choose() then abs(left) else sqrt(right)) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose standard-function transforms of unaliased local runtime-real expressions for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_entier_sign_local_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then entier(sign(left)) else entier(sign(right)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then entier(sign(left)) else entier(sign(right)); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose exact entier-sign transforms of unaliased local runtime-real expressions for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose real name-formal results rooted in exact transforms of unaliased local runtime-real expressions for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_signed_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left))) else relay(+entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left))) else relay(+entier(sign(right))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose signed exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_additive_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose additive exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_multiplicative_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay((-entier(sign(left)) + 2.0) * 3.0) else relay((+entier(sign(right)) - 0.0) / 1.0); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay((-entier(sign(left)) + 2.0) * 3.0) else relay((+entier(sign(right)) - 0.0) / 1.0); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose multiplicative exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_powered_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(((-entier(sign(left)) + 2.0) * 3.0) ^ 2) else relay(((+entier(sign(right)) - 0.0) / 1.0) ^ 1); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(((-entier(sign(left)) + 2.0) * 3.0) ^ 2) else relay(((+entier(sign(right)) - 0.0) / 1.0) ^ 1); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose powered exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_standard_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)) else relay(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)) else relay(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_nested_standard_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))) else relay(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))) else relay(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose two nested standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_triple_nested_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)))) else relay(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)))) else relay(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose three nested standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_quadruple_nested_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose four nested standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_quintuple_nested_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(abs(abs(abs(entier(sign(left)))))))) else relay(abs(abs(abs(abs(abs(entier(sign(right)))))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(abs(abs(abs(entier(sign(left)))))))) else relay(abs(abs(abs(abs(abs(entier(sign(right)))))))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose five nested standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_sextuple_nested_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(abs(abs(abs(abs(entier(sign(left))))))))) else relay(abs(abs(abs(abs(abs(abs(entier(sign(right))))))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(abs(abs(abs(abs(entier(sign(left))))))))) else relay(abs(abs(abs(abs(abs(abs(entier(sign(right))))))))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose six nested standard-function exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_sign_wrapped_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right)))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right)))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose sign-wrapped exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_entier_wrapped_standard_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose entier-wrapped exact local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_entier_wrapped_bounded_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(abs(entier(sign(left))))) else relay(entier(abs(entier(sign(right))))); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(abs(entier(sign(left))))) else relay(entier(abs(entier(sign(right))))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose entier-wrapped bounded local transforms through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_six_unit_offset_bounded_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 1)) else relay(entier(entier(sign(right)) + 1)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 1)) else relay(entier(entier(sign(right)) + 1)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) - 1)) else relay(entier(entier(sign(right)) - 1)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 2)) else relay(entier(entier(sign(right)) + 2)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 2) else ((entier(sign(right)) + 1) + 1))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 3)) else relay(entier(entier(sign(right)) + 3)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 3) else ((entier(sign(right)) + 1) + 2))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 4)) else relay(entier(entier(sign(right)) + 4)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 4) else ((entier(sign(right)) + 1) + 3))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 5)) else relay(entier(entier(sign(right)) + 5)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 5) else ((entier(sign(right)) + 2) + 3))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 6)) else relay(entier(entier(sign(right)) + 6)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 6) else ((entier(sign(right)) + 1) + 5))); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose a six-unit-offset bounded local transform through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
     fn al4_runtime_real_conditional_selector_calls_reject_unsafe_local_branches() {
         for source in [
-            "begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real x; x := pick(); output(if choose() then abs(x) else abs(x)) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real procedure abs(x); real x; abs := x; real x; x := pick(); output(if choose() then abs(x) else abs(x)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x) else echo(x)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x + 1.0) else echo(x + 1.0)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x * 2.0) else echo(x * 2.0)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x ^ 2) else echo(x ^ 2)) end",
             "begin boolean procedure choose; choose := true; integer procedure sign(x); value x; real x; sign := 1; real procedure echo(x); real x; echo := x; output(if choose() then echo(sign(-2.5)) else echo(sign(-2.5))) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real left, right, result; left := pick(); right := pick(); result := if choose() then entier(sign(left)) else entier(sign(right)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(-entier(sign(left))) else relay(+entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay((-entier(sign(left)) + 2.0) * 3.0) else relay((+entier(sign(right)) - 0.0) / 1.0); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(((-entier(sign(left)) + 2.0) * 3.0) ^ 2) else relay(((+entier(sign(right)) - 0.0) / 1.0) ^ 1); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) + entier(sign(right))) else relay(entier(sign(right)) + entier(sign(left))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) * entier(sign(right))) else relay(entier(sign(right)) / entier(sign(left))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) ^ entier(sign(right))) else relay(entier(sign(right)) ^ entier(sign(left))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left)) ^ right) else relay(entier(sign(right)) ^ left); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(abs(entier(left)))) else relay(entier(abs(entier(right)))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; integer procedure entier(x); value x; real x; entier := 1; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(abs(entier(sign(left))))) else relay(entier(abs(entier(sign(right))))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 7)) else relay(entier(entier(sign(right)) + 7)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 6 + 1)) else relay(entier(entier(sign(right)) + 1 + 6)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 6) else (entier(sign(right)) + 6)) + 1)); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
                 "a calling selector must not admit transformed locals or overridden builtins",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_reject_septuple_nested_standard_local_name_actual_branches()
+    {
+        let source = "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(abs(abs(abs(abs(abs(abs(abs(entier(sign(left)))))))))) else relay(abs(abs(abs(abs(abs(abs(abs(entier(sign(right)))))))))); output(result) end";
+        let err = compile_source(source, "test")
+            .expect_err("seven nested standard-function wrappers must remain outside the bounded selector proof");
+        assert!(format!("{err:?}").contains("input nests deeper than the supported limit"));
     }
 
     #[test]
@@ -13719,6 +14481,12 @@ mod tests {
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left + 1.0 else right - 0.25) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left * 2.0 else 14.0 / right) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then left ^ 2 else right ^ 1) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right; procedure capture; right := 0.0; left := pick(); right := pick(); output(if choose() then abs(left) else sqrt(right)) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then entier(sign(left)) else entier(sign(right)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then relay(-entier(sign(left))) else relay(+entier(sign(right))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; procedure capture; right := 0.0; left := pick(); right := pick(); result := if choose() then relay((-entier(sign(left)) + 2.0) * 3.0) else relay((+entier(sign(right)) - 0.0) / 1.0); output(result) end",
         ] {
             let err = compile_source(source, "test")
                 .expect_err("shared storage must remain invalid across a calling selector");
@@ -13994,10 +14762,21 @@ mod tests {
         for source in [
             "begin real procedure pick; pick := -2.25; real x; x := entier(sign(pick()) + 0); output(x) end",
             "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(0 - abs(sign(pick()))))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 1))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 2))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 1) + 1)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 3))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 1) + 2)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 4))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 2) + 2)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 5))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 2) + 3)))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(entier(sign(pick())) + 6))) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(abs((sign(pick()) + 1) + 5)))) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
-                    "exact additive zero preserves the bounded sign result through entier for {source:?}: {error}"
+                    "an exact additive zero or six-unit offset preserves the bounded sign result through entier for {source:?}: {error}"
                 )
             });
             let main = module.get_function("main").expect("has main");
@@ -14012,11 +14791,14 @@ mod tests {
     #[test]
     fn al4_additive_entier_sign_widening_rejects_unproven_terms() {
         for source in [
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 7); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 6 + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 6) + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(abs((sign(pick()) + 4) + 3)); output(result) end",
             "begin real procedure pick; pick := -2.25; integer zero; real result; zero := 0; result := entier(sign(pick()) + zero); output(result) end",
         ] {
             let err = compile_source(source, "test")
-                .expect_err("a nonzero or variable additive term exceeds the bounded sign proof");
+                .expect_err("more than six additive units or a variable term exceeds the bounded sign proof");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }

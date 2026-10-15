@@ -14,7 +14,8 @@ romanization: "chap kardan"
 concept_tag: FA-VERB-CHAP-KARDAN
 prerequisites: [FA-C220-tamam-kardan, FA-C220-qabul-shodan]
 sounds: []
-roots: []
+roots: [hindi-chap, pie-kwer]
+etymology_hook: "chap ← Hindi chāp 'stamp' (EtymDB), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C220-qabul-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C220-KONESH220-04]; assesses=[] -->
 
 **چاپ کردن** — *chap kardan* — "to print".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chap kardan* pairs *chap*, "print", with *kardan*. *chap* is an Indian loan: EtymDB traces it to Hindi *chāp*, "stamp". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

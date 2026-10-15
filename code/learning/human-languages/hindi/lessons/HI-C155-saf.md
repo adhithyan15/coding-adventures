@@ -14,7 +14,8 @@ romanization: "sāf"
 concept_tag: HI-QUAL155-SAF
 prerequisites: [HI-C155-naram, HI-C155-sakht]
 sounds: []
-roots: []
+roots: [arabic-safi]
+etymology_hook: "sāf ← Arabic ṣāfī 'pure, clear', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C155-sakht]
 <!-- hl-knowledge: introduces=[HI-LEX-C155-QUAL155-03]; assesses=[] -->
 
 **साफ़** — *sāf* — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साफ़** (*sāf*) is a loan from Arabic *ṣāfī*, "pure, clear", which reached Hindi through Persian. Its Arabic root is *ṣ-f-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

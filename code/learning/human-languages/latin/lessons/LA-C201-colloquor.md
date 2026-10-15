@@ -13,7 +13,8 @@ gloss: "to talk together"
 concept_tag: LA-VERB-COLLOQUOR
 prerequisites: [LA-C200-recuso, LA-C200-volito]
 sounds: []
-roots: []
+roots: [colloqui-latin, loqui-latin]
+etymology_hook: "colloquor 'to talk together' — con- 'together' + loquor 'to speak'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C200-volito]
 <!-- hl-knowledge: introduces=[LA-LEX-C201-ACT201-01]; assesses=[] -->
 
 **colloquor, colloquī** — "to talk together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**colloquor** is *con-*, "together", with *loquor*, "to speak" (EtymDB 2.1). English *colloquial* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

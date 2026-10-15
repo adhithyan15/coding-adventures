@@ -14,7 +14,8 @@ romanization: "mulāqāt"
 concept_tag: HI-NOUN-MEETING
 prerequisites: [HI-C49-set-out, HI-C47-neighbour, HI-C48-absolutely]
 sounds: []
-roots: []
+roots: [arabic-mulaqat]
+etymology_hook: "mulāqāt ← Arabic mulāqāt 'meeting', through Persian (Lane, root l-q-y)"
 duration:
   max_seconds: 210
 requires:

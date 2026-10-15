@@ -14,7 +14,8 @@ romanization: "dâman"
 concept_tag: FA-THINGS96-DAMAN
 prerequisites: [FA-C96-tup, FA-C96-badbadak]
 sounds: []
-roots: []
+roots: [persian-daman]
+etymology_hook: "dâman: inherited, usually traced to Middle Persian dāman"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C96-badbadak]
 <!-- hl-knowledge: introduces=[FA-LEX-C96-THINGS96-05]; assesses=[] -->
 
 **دامن** — *dâman* — "a skirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dâman* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dāman*, "hem of a garment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

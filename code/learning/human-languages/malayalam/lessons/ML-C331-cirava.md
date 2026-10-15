@@ -14,7 +14,8 @@ romanization: "cirava"
 concept_tag: ML-VASTU331-CIRAVA
 prerequisites: [ML-C330-cakku, ML-C330-svarnnam]
 sounds: []
-roots: []
+roots: [dravidian-cira-scrape]
+etymology_hook: "cirava: native Dravidian; DEDR 1564 lists Malayalam cirava 'coconut scraper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C330-svarnnam]
 <!-- hl-knowledge: introduces=[ML-LEX-C331-VASTU331-01]; assesses=[] -->
 
 **ചിരവ** — *cirava* — "a coconut scraper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചിരവ** (*cirava*) is native Dravidian: DEDR 1564 lists it, "a grater, scraper for coconuts", with Tamil *cirai*, "to scrape".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

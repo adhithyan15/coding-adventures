@@ -14,7 +14,8 @@ romanization: "delfín"
 concept_tag: RU-THINGS118-DOLPHIN
 prerequisites: [RU-C118-owl, RU-C118-whale]
 sounds: []
-roots: []
+roots: [greek-delphis]
+etymology_hook: "дельфин ← German Delphin, from Greek delphis"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C118-whale]
 <!-- hl-knowledge: introduces=[RU-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **дельфин** (*delfín*) — "a dolphin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дельфин** comes from German *Delphin* (Vasmer), from Latin *delphīnus*, Greek *delphís*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

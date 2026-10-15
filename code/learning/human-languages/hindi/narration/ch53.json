@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b7ee9c7dfd4914dc",
+  "sourceHash": "fnv1a64:e66c993b9dd17f86",
   "lessons": [
     {
       "id": "HI-C53-shoulder",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a6d70578ec30f3b",
+      "sourceHash": "fnv1a64:969e2ff793b2fc2b",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ae73dede44bff4c",
+      "sourceHash": "fnv1a64:96a71fefcafa1c40",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +200,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घुटना (ghuṭnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghuṭa, \"ankle\" (CDIAL 4479). CDIAL takes the Sanskrit word from Dravidian, and allows a second source in its variant ghuṇṭa."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -210,7 +221,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +279,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -299,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5a2e91fa27920c5",
+      "sourceHash": "fnv1a64:1509c39d3261a1a5",
       "notice": null,
       "blocks": [
         {
@@ -439,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f4dae10e7cd7d1c",
+      "sourceHash": "fnv1a64:f660c81a3d2ddd50",
       "notice": null,
       "blocks": [
         {
@@ -470,7 +481,7 @@
             },
             {
               "kind": "speech",
-              "text": "From Sanskrit पृष्ठ (pṛṣṭha), 'back, surface'. The heavy -ṛṣṭh- in the middle collapsed and paid for itself by lengthening the vowel in front of it."
+              "text": "From Sanskrit pṛṣṭi, 'back', a sister of पृष्ठ (pṛṣṭha), also \"back\" (CDIAL 8370). The heavy -ṛṣṭ- in the middle collapsed and paid for itself by lengthening the vowel in front of it."
             },
             {
               "kind": "speech",
@@ -579,7 +590,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e3e76215d8061b9",
+      "sourceHash": "fnv1a64:d41ee453088bd0c8",
       "notice": null,
       "blocks": [
         {

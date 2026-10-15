@@ -14,7 +14,8 @@ romanization: "zirzamin"
 concept_tag: FA-MAKAN232-ZIRZAMIN
 prerequisites: [FA-C231-zadgah, FA-C232-kashi]
 sounds: []
-roots: []
+roots: [persian-zamin]
+etymology_hook: "zirzamin: Persian zir 'under' + zamin 'ground'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C232-kashi]
 <!-- hl-knowledge: introduces=[FA-LEX-C232-MAKAN232-02]; assesses=[] -->
 
 **زیرزمین** — *zirzamin* — "a basement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zirzamin* is *zir*, "under", with *zamin*, "ground": under the ground. Both are native Persian; *zamin* is usually traced to Middle Persian *zamīg*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

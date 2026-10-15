@@ -14,7 +14,8 @@ romanization: "nongrā"
 concept_tag: BN-ADJ75-NONGRA
 prerequisites: [BN-C75-dhoni, BN-C75-gorib]
 sounds: []
-roots: []
+roots: [indo-aryan-lukka]
+etymology_hook: "nongrā: CDIAL lists noṅarā 'filthy' under *luṅgara, in a group of words for 'defective' (CDIAL 11072)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C75-gorib]
 <!-- hl-knowledge: introduces=[BN-LEX-C75-ADJ75-03]; assesses=[] -->
 
 **নোংরা** — *nongrā* — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Bengali *noṅarā*, "filthy", under *\*luṅgara*, one of a group of forms for "defective" that it reconstructs (CDIAL 11072).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

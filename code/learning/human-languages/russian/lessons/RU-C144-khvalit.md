@@ -14,7 +14,8 @@ romanization: "khvalít"
 concept_tag: RU-VERB-KHVALIT
 prerequisites: [RU-C144-nravitsya, RU-C144-nenavidet]
 sounds: []
-roots: []
+roots: [slavic-khvala]
+etymology_hook: "хвалить is from хвала 'praise', a word with no sure etymology, Vasmer says"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C144-nenavidet]
 <!-- hl-knowledge: introduces=[RU-LEX-C144-ACT144-04]; assesses=[] -->
 
 **хвалить** (*khvalít*) — "to praise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**хвалить** comes from *хвала*, "praise". Vasmer says it has no reliable etymology; one view reshapes *слава*, "glory", with the *х-* of *хула*, "blame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

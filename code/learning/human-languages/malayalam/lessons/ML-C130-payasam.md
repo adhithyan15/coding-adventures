@@ -11,7 +11,8 @@ romanization: "pāyasaṁ"
 concept_tag: ML-MEALS-PAYASAM
 prerequisites: [ML-C130-dinner, ML-C130-feast]
 sounds: []
-roots: []
+roots: [sanskrit-payasa]
+etymology_hook: "pāyasaṁ ← Sanskrit pāyasa 'food made with milk, rice boiled in milk', a tatsama (CDIAL 8099)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C130-feast]
 
 **പായസം** (*pāyasaṁ*) — a sweet made with **പാൽ** or **ശർക്കര**, the last dish of a
 **സദ്യ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പായസം** (*pāyasaṁ*) ← Sanskrit *pāyasa*, "food made with milk, rice boiled in milk", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 8099). It is built on Sanskrit *payas*, "milk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

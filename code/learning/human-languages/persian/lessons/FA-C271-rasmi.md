@@ -14,7 +14,8 @@ romanization: "rasmi"
 concept_tag: FA-SEFAT271-RASMI
 prerequisites: [FA-C271-khareji, FA-C271-mahalli]
 sounds: []
-roots: []
+roots: [arabic-rasmi]
+etymology_hook: "rasmi ← Arabic rasmī 'formal, official', root r-s-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C271-mahalli]
 <!-- hl-knowledge: introduces=[FA-LEX-C271-SEFAT271-04]; assesses=[] -->
 
 **رسمی** — *rasmi* — "official, formal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rasmi* is borrowed from Arabic *rasmī*, "formal, official". Its Arabic root is *r-s-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

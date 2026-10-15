@@ -15,6 +15,7 @@ concept_tag: UR-THINGS119-PARATHA
 prerequisites: [UR-C119-sup, UR-C119-nan]
 sounds: []
 roots: []
+etymology_hook: "parāṭhā: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C119-nan]
 <!-- hl-knowledge: introduces=[UR-LEX-C119-THINGS119-04]; assesses=[] -->
 
 **پراٹھا** — *parāṭhā* — "a paratha, a layered flatbread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **پراٹھا** (*parāṭhā*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

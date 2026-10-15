@@ -14,7 +14,8 @@ romanization: "khun"
 concept_tag: FA-BODY29-KHUN
 prerequisites: [FA-C28-gardan, FA-C28-surat]
 sounds: []
-roots: []
+roots: [persian-khun]
+etymology_hook: "khun ← Middle Persian xōn (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C28-surat]
 <!-- hl-knowledge: introduces=[FA-LEX-C29-BODY29-01]; assesses=[] -->
 
 **خون** — *khun* — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khun* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *xōn*, "blood" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

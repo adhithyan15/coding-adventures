@@ -13,7 +13,8 @@ gloss: "a coin"
 concept_tag: LA-THINGS123-NUMMUS
 prerequisites: [LA-C123-lagoena, LA-C123-crumena]
 sounds: []
-roots: []
+roots: [nummus-latin]
+etymology_hook: "nummus 'coin' — probably from Sicilian Greek noummos, a coin name"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C123-crumena]
 <!-- hl-knowledge: introduces=[LA-LEX-C123-THINGS123-05]; assesses=[] -->
 
 **nummus, nummī** — "a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nummus** probably came from the Greek of Sicily and south Italy, where *noummos*, "a coin", was in use; Lewis & Short connect it with Greek *nemō*, "to distribute". English *numismatic*, "of coins", comes from the Greek family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

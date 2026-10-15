@@ -14,7 +14,8 @@ romanization: "intaẓara"
 concept_tag: AR-VERB-INTAZARA
 prerequisites: [AR-C64-amila, AR-C64-sakana]
 sounds: []
-roots: []
+roots: [n-ẓ-r]
+etymology_hook: "intaẓara: built on the root n-ẓ-r, 'to look at' (Lane); Form VIII intaẓara is 'to look out for', to wait"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C64-sakana]
 <!-- hl-knowledge: introduces=[AR-LEX-C64-VERBS64-04]; assesses=[] -->
 
 **انتظر** — *intaẓara* — "to wait (he waited)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انتظر** (*intaẓara*) is built on the native Arabic root *n-ẓ-r*, "to look at" (Lane). Form VIII *intaẓara* is "to look out for", to wait.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

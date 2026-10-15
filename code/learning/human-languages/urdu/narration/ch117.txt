@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a pear, then the Urdu for a date.
 You'll want to know: بادام.
 بادام — bādām — "an almond".
 
+The word, taken apart.
+بادام (bādām) is a loan, usually traced to Persian bādām, "almond".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a date, then the Urdu for an almond.
 
 You'll want to know: مونگ پھلی.
 مونگ پھلی — mūṅgphalī — "a peanut".
+
+The word, taken apart.
+مونگ پھلی (mūṅgphalī) is "mung-pod": mūṅg, "the mung bean", from Sanskrit mudga (CDIAL 10198), and phalī, "pod", from phala, "fruit" (CDIAL 9051).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for an almond, then the Urdu for a peanut.
 You'll want to know: دہی.
 دہی — dahī — "yoghurt".
 
+The word, taken apart.
+دہی (dahī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadhi, "thick sour milk" (CDIAL 6146).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a peanut, then the Urdu for yoghurt.
 You'll want to know: تیل.
 تیل — tel — "oil".
 
+The word, taken apart.
+تیل (tel) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from taila, "sesame oil, oil" (CDIAL 5958). It is built on tila, "sesame".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for yoghurt, then the Urdu for oil.
 
 You'll want to know: آٹا.
 آٹا — āṭā — "flour".
+
+The word, taken apart.
+آٹا (āṭā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ārta, "flour", a form CDIAL reconstructs from its descendants (CDIAL 1338). CDIAL compares Persian ārd, "flour".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "cindu"
 concept_tag: TE-VERB-CINDU
 prerequisites: [TE-C164-cimpu, TE-C164-cuttu]
 sounds: []
-roots: []
+roots: [dravidian-citar-scatter]
+etymology_hook: "cindu: native Dravidian; DEDR 1546 lists cindu 'to spill' with Malayalam cintuka 'to be spilt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C164-cuttu]
 <!-- hl-knowledge: introduces=[TE-LEX-C165-KRIYA165-01]; assesses=[] -->
 
 **చిందు** — *cindu* — "to spill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చిందు** (*cindu*) is native Dravidian. DEDR 1546 lists *cindu*, "to be spilt; to spill", with Malayalam *cintuka*, "to be spilt", and Tamil *citar*, "to scatter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

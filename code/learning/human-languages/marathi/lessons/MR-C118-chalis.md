@@ -14,7 +14,8 @@ romanization: "chāḷīs"
 concept_tag: MR-NUMBERS118-CHALIS
 prerequisites: [MR-C117-chappal, MR-C117-tis]
 sounds: []
-roots: []
+roots: [sanskrit-catvarimshat]
+etymology_hook: "chāḷīs ← Sanskrit catvāriṁśat 'forty', a tadbhava (CDIAL 4656)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C117-tis]
 <!-- hl-knowledge: introduces=[MR-LEX-C118-NUMBERS118-01]; assesses=[] -->
 
 **चाळीस** — *chāḷīs* — "forty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चाळीस** (*chāḷīs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catvāriṁśat*, "forty" (CDIAL 4656). CDIAL notes that its *ch-*, where Marathi would say *ts-*, was taken from Hindi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

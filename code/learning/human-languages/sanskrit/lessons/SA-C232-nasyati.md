@@ -14,7 +14,8 @@ romanization: "naśyati"
 concept_tag: SA-VERB-NASYATI
 prerequisites: [SA-C232-jayate, SA-C232-mriyate]
 sounds: []
-roots: []
+roots: [sanskrit-nashyati]
+etymology_hook: "naśyati ← root √naś 'be lost, perish'; MW compares Latin nex; Hindi nasnā (CDIAL 7027)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C232-mriyate]
 <!-- hl-knowledge: introduces=[SA-LEX-C232-ACT232-04]; assesses=[] -->
 
 **नश्यति** — *naśyati* — "is lost, perishes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*naśyati* is the present of the root √naś, "to be lost, perish, vanish" (MW). MW compares Latin *nex*, "violent death", and *nocēre*, "to harm". It lives on as Hindi *nasnā*, "to be lost, flee" (CDIAL 7027).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

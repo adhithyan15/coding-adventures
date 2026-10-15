@@ -14,7 +14,8 @@ romanization: "sānt"
 concept_tag: MW-QUAL146-SANT
 prerequisites: [MW-C145-narangi, MW-C146-chamkilo]
 sounds: []
-roots: []
+roots: [sanskrit-shanta]
+etymology_hook: "sānt ← Sanskrit śānta 'abated, calm', a semi-tatsama (CDIAL 12390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C146-chamkilo]
 <!-- hl-knowledge: introduces=[MW-LEX-C146-QUAL146-02]; assesses=[] -->
 
 **सांत** — *sānt* — "calm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सांत** (*sānt*) is a semi-tatsama: Sanskrit *śānta*, "abated, calm", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 12390). Marwadi says the *ś* as *s*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

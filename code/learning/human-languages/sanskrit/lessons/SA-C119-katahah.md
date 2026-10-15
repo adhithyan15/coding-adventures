@@ -14,7 +14,8 @@ romanization: "kaṭāhaḥ"
 concept_tag: SA-THINGS119-KATAHAH
 prerequisites: [SA-C118-phalakam, SA-C119-darvi]
 sounds: []
-roots: []
+roots: [sanskrit-kataha]
+etymology_hook: "kaṭāha 'pan, cauldron' (MBh); MW and CDIAL give no derivation; Hindi kaṛāhī (CDIAL 2638)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C119-darvi]
 <!-- hl-knowledge: introduces=[SA-LEX-C119-THINGS119-02]; assesses=[] -->
 
 **कटाहः** — *kaṭāhaḥ* — "a frying pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kaṭāha* "a frying pan, a cauldron with handles" appears from the Mahābhārata on, and neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Hindi *kaṛāhī* "frying pan" (CDIAL 2638).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

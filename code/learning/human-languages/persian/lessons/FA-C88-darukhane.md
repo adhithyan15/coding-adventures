@@ -14,7 +14,8 @@ romanization: "dârukhâne"
 concept_tag: FA-LOC88-DARUKHANE
 prerequisites: [FA-C87-kelisa, FA-C88-ketabkhane]
 sounds: []
-roots: []
+roots: [persian-daru, persian-khana]
+etymology_hook: "dârukhâne: Persian dâru 'medicine' (EtymDB) + khâne 'house'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C88-ketabkhane]
 <!-- hl-knowledge: introduces=[FA-LEX-C88-LOC88-02]; assesses=[] -->
 
 **داروخانه** — *dârukhâne* — "a pharmacy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dârukhâne* is *dâru*, "medicine", with *khâne*, "house": the house of medicines. Both parts are native; *dâru* continues Middle Persian *dārūg* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

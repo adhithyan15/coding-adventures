@@ -11,7 +11,8 @@ romanization: "āśīrvāda"
 concept_tag: KA-NOUN-BLESSING
 prerequisites: [KA-C51-respect, KA-C49-perhaps]
 sounds: []
-roots: []
+roots: [sanskrit-ashirvada]
+etymology_hook: "āśīrvāda ← Sanskrit āśīrvāda 'a blessing', āśīs 'wish' + vāda 'saying' (CDIAL 11507)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C51-respect]
 *āśis*, 'a wish, a prayer', and *vāda*, 'a speaking'. A blessing is the speaking-out of a wish.
 
 Now look hard at the second half. ವಾದ is the same *-vāda* this book handed you on its very first page, inside ಧನ್ಯವಾದ — the speaking of 'worthy'. Thanks and a blessing come from one carpenter: take a good word, set 'speaking' behind it, and you have named the act of saying it aloud.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಶೀರ್ವಾದ** (*āśīrvāda*) is Sanskrit *āśīrvāda*, taken over whole: *āśīs*, "a wish, a blessing", and *vāda*, "a saying" (CDIAL 11507).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

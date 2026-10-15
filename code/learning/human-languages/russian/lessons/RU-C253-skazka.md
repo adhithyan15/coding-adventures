@@ -14,7 +14,8 @@ romanization: "skázka"
 concept_tag: RU-VESHCH253-SKAZKA
 prerequisites: [RU-C252-beg, RU-C252-plavaniye]
 sounds: []
-roots: []
+roots: [slavic-kazati]
+etymology_hook: "сказка is from сказать 'to tell', from казать 'to show'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C252-plavaniye]
 <!-- hl-knowledge: introduces=[RU-LEX-C253-VESHCH253-01]; assesses=[] -->
 
 **сказка** (*skázka*) — "a fairy tale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сказка** comes from *\*sŭkazŭka*, from *казать*, "to show, to say" (Vasmer); it is recorded from the 1600s, before which a tale was a *баснь*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kṛśaḥ"
 concept_tag: SA-QUAL132-KRSAH
 prerequisites: [SA-C131-spastah, SA-C131-sthulah]
 sounds: []
-roots: []
+roots: [sanskrit-krsha]
+etymology_hook: "kṛśa 'lean, thin' (RV) is inherited from Indo-European (EtymDB); Pali kisa (CDIAL 3441)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C131-sthulah]
 <!-- hl-knowledge: introduces=[SA-LEX-C132-QUAL132-01]; assesses=[] -->
 
 **कृशः** — *kṛśaḥ* — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kṛśa* "lean, thin, emaciated" is old, in the Rigveda, and is inherited from Indo-European (EtymDB). Pali wore it down to *kisa* "lean" (CDIAL 3441).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

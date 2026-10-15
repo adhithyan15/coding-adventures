@@ -14,7 +14,8 @@ romanization: "khīlo"
 concept_tag: MW-THINGS127-KHILO
 prerequisites: [MW-C126-rassi, MW-C126-khuti]
 sounds: []
-roots: []
+roots: [sanskrit-kila]
+etymology_hook: "khīlo ← Sanskrit kīla 'stake, peg', perhaps non-Aryan (CDIAL 3202, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C126-khuti]
 <!-- hl-knowledge: introduces=[MW-LEX-C127-THINGS127-01]; assesses=[] -->
 
 **खीलो** — *khīlo* — "a nail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खीलो** (*khīlo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kīla*, "stake, peg". CDIAL gives no Marwari form in this entry (CDIAL 3202); the match is through Gujarati *khīlo*. CDIAL notes that the *k*/*kh* variation points to a non-Aryan source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

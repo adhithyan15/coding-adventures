@@ -11,12 +11,26 @@ when both exits establish it for the same slot, and side-effect-free conditional
 value selectors may choose between proven runtime-real branches. Calling
 selectors may choose between selector-safe runtime-real expressions rooted in
 direct formatter-safe real procedure results or unaliased local runtime-real
-snapshots through unary signs, additive or multiplicative composition, and
-powers with finite static operands. Standard-function transforms, globals,
-captured locals, and other real-name branches remain conservative. A real name-formal result is also allowed
-when its actual has the same proof. Unary signs, arithmetic composition with finite static operands,
-and real-valued standard functions preserve it, while a finite static real
-actual is safe directly. Variable-free exact `sign` and exact-range `entier`
+snapshots through unary signs, additive, multiplicative, or power composition
+with finite static operands and pure supported standard-function
+transforms, plus the exact bounded `entier(sign(...))` transform. Unrestricted
+runtime `entier`, globals, captured locals, and other real-name branches remain
+conservative. A specialised real name formal may carry that exact transform
+through power composition and up to six supported built-in numeric transforms,
+including integer-valued `sign`. It may also carry the same unaliased
+local-rooted proof through a selector, including unary signs around the exact
+bounded transform, additive composition with finite static terms, and
+multiplication or division of that additive form by finite static terms. A
+single additional built-in `entier` may wrap a supported bounded transform
+rooted in `sign(...)`, including the exact `entier(sign(...))` root. A real
+name-formal result is also allowed when its actual has the same proof. Up to
+six exact additive offset units may remain inside that bounded transform,
+either as one exact `6` term or a checked sum of exact `1`, `2`, `3`, `4`, and `5` terms,
+with the cap tracked through parentheses and supported wrappers and applied per
+conditional path. Unary
+signs, arithmetic composition with finite static operands, and real-valued
+standard functions preserve it, while a finite static real actual is safe
+directly. Variable-free exact `sign` and exact-range `entier`
 results may also widen through a real name formal. Other real name-actual
 provenance remains conservative.
 Built-in `sign` also preserves the proof for a selector-safe runtime-real

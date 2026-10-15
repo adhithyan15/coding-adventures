@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to hang, then the Bengali for to tie.
 You'll want to know: শুকানো.
 শুকানো — shukāno — "to dry".
 
+The word, taken apart.
+শুকানো (shukāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from śuṣkati, "becomes dry", a form CDIAL reconstructs from its descendants (CDIAL 12552). CDIAL lists the causing form, Bengali sukāna.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to tie, then the Bengali for to dry.
 
 You'll want to know: ভেজানো.
 ভেজানো — bhejāno — "to soak".
+
+The word, taken apart.
+ভেজানো (bhejāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhiyajyate, "is smeared, gets wet", a form CDIAL reconstructs from its descendants (CDIAL 9502). Bhejāno is the causing form of bhijā, "to get wet", which CDIAL lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to dry, then the Bengali for to soak.
 You'll want to know: কাচা.
 কাচা — kāchā — "to launder, to wash (clothes)".
 
+The word, taken apart.
+The origin of কাচা (kāchā) is not settled: CDIAL has no Bengali verb of this shape meaning "to wash", and a search by form and by the glosses "wash" and "clean" finds nothing close.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to soak, then the Bengali for to launder
 You'll want to know: আঁচড়ানো.
 আঁচড়ানো — ā̃chṛāno — "to comb".
 
+The word, taken apart.
+আঁচড়ানো (ā̃chṛāno) (āṁchṛāno), "to comb, to scratch", appears to belong with Assamese āṁsor, "scratch", which CDIAL lists under añca, "curve", a form it reconstructs (CDIAL 165); CDIAL gives no Bengali form there.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to launder, then the Bengali for to comb
 
 You'll want to know: কামড়ানো.
 কামড়ানো — kāmṛāno — "to bite".
+
+The word, taken apart.
+The origin of কামড়ানো (kāmṛāno) is not settled: CDIAL has no entry for it, and a search by form and by the gloss "bite" finds nothing close.
 
 What you've built.
 One more word for this chapter.

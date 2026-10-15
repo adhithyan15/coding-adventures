@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 219,
-  "sourceHash": "fnv1a64:d4697df2b8f949d2",
+  "sourceHash": "fnv1a64:e7e161c455166363",
   "lessonIds": [
     "FR-C219-ennuyeux-ennuyeuse",
     "FR-C219-amusant-amusante",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch219.txt",
   "json": "french/narration/ch219.json",
-  "textHash": "fnv1a64:400bb0ab30f4b417",
-  "jsonHash": "fnv1a64:8516223ef5add3b4",
+  "textHash": "fnv1a64:537ff8f27865deef",
+  "jsonHash": "fnv1a64:74dd7b8a3d0a0838",
   "findings": []
 }

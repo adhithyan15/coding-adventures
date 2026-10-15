@@ -12,6 +12,9 @@ Before the new one: say the Latin for the liver, then the Latin for a kidney.
 You'll want to know: patientia, patientiae.
 patientia, patientiae — "patience".
 
+The word, taken apart.
+patientia is built on patior, "to suffer" (Lewis & Short), through patiēns, "enduring", with -ia, an ending for a quality.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a kidney, then the Latin for patience.
 
 You'll want to know: lacrima, lacrimae.
 lacrima, lacrimae — "a tear".
+
+The word, taken apart.
+lacrima is inherited, usually traced to Proto-Indo-European dakru-, "tear" (EtymDB 2.1). Old Latin had dacruma with d (Lewis & Short); Greek dakry, "tear", and English tear are cousins.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for patience, then the Latin for a tear.
 You'll want to know: rīsus, rīsūs.
 rīsus, rīsūs — "a laugh".
 
+The word, taken apart.
+rīsus is built on rīdeō, "to laugh", from its stem rīs-: a laughing.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a tear, then the Latin for a laugh.
 You'll want to know: vōx, vōcis.
 vōx, vōcis — "a voice".
 
+The word, taken apart.
+vōx is inherited, usually traced to Proto-Indo-European wōkws, "voice", from wekw-, "to speak" (EtymDB 2.1); vocō, "to call", is its verb (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a laugh, then the Latin for a voice.
 
 You'll want to know: animus, animī.
 animus, animī — "mind, spirit".
+
+The word, taken apart.
+animus is inherited, usually traced to Proto-Indo-European h2enh1mos, "breath", from h2enh1-, "to breathe" (EtymDB 2.1); Greek anemos, "wind", is a cousin (Lewis & Short). anima, "breath, soul", is its partner.
 
 What you've built.
 One more word for this chapter.

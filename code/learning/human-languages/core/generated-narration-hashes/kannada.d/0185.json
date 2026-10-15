@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 185,
-  "sourceHash": "fnv1a64:222e2d4dc99ddd14",
+  "sourceHash": "fnv1a64:4c8f5dc87ecb8398",
   "lessonIds": [
     "KA-C185-notu",
     "KA-C185-nanya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch185.txt",
   "json": "kannada/narration/ch185.json",
-  "textHash": "fnv1a64:4d60fcd39ea76a08",
-  "jsonHash": "fnv1a64:2934a9a0ff5bcdfc",
+  "textHash": "fnv1a64:f6ae2bfdf70300cf",
+  "jsonHash": "fnv1a64:7648e737097f36d5",
   "findings": []
 }

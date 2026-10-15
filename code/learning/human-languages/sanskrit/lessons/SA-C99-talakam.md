@@ -14,7 +14,8 @@ romanization: "tālakam"
 concept_tag: SA-THINGS99-TALAKAM
 prerequisites: [SA-C99-kambalah, SA-C99-yavanika]
 sounds: []
-roots: []
+roots: [sanskrit-talaka]
+etymology_hook: "tālaka 'bolt, lock' is perhaps borrowed from Dravidian (CDIAL 5749; DEDR 3179); Hindi tālā 'lock'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C99-yavanika]
 <!-- hl-knowledge: introduces=[SA-LEX-C99-THINGS99-05]; assesses=[] -->
 
 **तालकम्** — *tālakam* — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tālaka* "a lock, a bolt" is known only from the old word lists (MW). CDIAL 5749 and DEDR 3179 compare it with a Dravidian family of words for a door bar or bolt, so it is perhaps borrowed from Dravidian. It lives on as Hindi *tālā* "lock" (CDIAL 5749).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

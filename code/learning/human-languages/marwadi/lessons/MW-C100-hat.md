@@ -14,7 +14,8 @@ romanization: "hāṭ"
 concept_tag: MW-LOC100-HAT
 prerequisites: [MW-C100-haveli, MW-C100-melo]
 sounds: []
-roots: []
+roots: [sanskrit-hatta]
+etymology_hook: "hāṭ ← Sanskrit haṭṭa 'market, fair', a tadbhava (CDIAL 13944, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C100-melo]
 <!-- hl-knowledge: introduces=[MW-LEX-C100-LOC100-05]; assesses=[] -->
 
 **हाट** — *hāṭ* — "a weekly market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हाट** (*hāṭ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *haṭṭa*, "market, fair". CDIAL lists Old Marwari *hāṭi* under it (CDIAL 13944).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bātu"
 concept_tag: TE-THINGS126-BATU
 prerequisites: [TE-C125-sitakokacilaka, TE-C125-kaki]
 sounds: []
-roots: []
+roots: [hindustani-batakh]
+etymology_hook: "bātu: usually traced to the northern word for 'duck', Hindustani baṭ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C125-kaki]
 <!-- hl-knowledge: introduces=[TE-LEX-C126-THINGS126-01]; assesses=[] -->
 
 **బాతు** — *bātu* — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బాతు** (*bātu*) is usually traced to the northern word for a duck, Hindustani *baṭ*, *baṭak*. Neither DEDR nor CDIAL records the Telugu word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

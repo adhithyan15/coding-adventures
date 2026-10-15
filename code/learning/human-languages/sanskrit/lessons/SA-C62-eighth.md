@@ -14,7 +14,8 @@ romanization: "aṣṭamaḥ"
 concept_tag: SA-ORDINAL-EIGHTH
 prerequisites: [SA-C62-seventh, SA-C60-danda, SA-C55-gatva, SA-C42-a-little, SA-C19-eight]
 sounds: []
-roots: []
+roots: [sanskrit-ashtama]
+etymology_hook: "aṣṭama 'eighth' ← aṣṭan 'eight' + -ma; aṣṭan is inherited, cousin of Latin octō (MW; CDIAL 937)"
 duration:
   max_seconds: 210
 requires:
@@ -57,6 +58,9 @@ Eight is where the cousins stop agreeing. Latin's eighth is **octāvus** — not
 Sanskrit does nothing unusual at all here. **अष्ट** takes **-म** exactly as **सप्त** did.
 
 That is worth noticing for a reason beyond the word: it tells you that the **-म** ending is not merely common in Sanskrit but PRODUCTIVE — the ending a speaker reaches for by default, rather than one of several stored shapes. You will meet the one number in this range where that is not true, and it will stand out.
+
+*Aṣṭa* is an inherited numeral: MW compares Latin *octō* and English *eight*, and
+the ordinal is already in the Rigveda (CDIAL 937).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C62-ORDINAL-04] -->

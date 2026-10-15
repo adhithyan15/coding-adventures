@@ -47,7 +47,7 @@ reviews_of: [TA-C206-maitanam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**நீச்சல் குளம்** (*nīccal kuḷam*) is native: *nīccal*, "swimming", from *nīntu*, "to swim" (DEDR 3687), and *kuḷam*, "pond, tank" (DEDR 1828).
+**நீச்சல் குளம்** (*nīccal kuḷam*) is native: *nīccal*, "swimming", from *nīntu*, "to swim" (DEDR 3687), and *kuḷam*, "pond, tank" (DEDR 1828, which compares Sanskrit *kūla*, "pond").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

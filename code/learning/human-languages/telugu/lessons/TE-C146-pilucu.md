@@ -14,7 +14,8 @@ romanization: "pilucu"
 concept_tag: TE-VERB-PILUCU
 prerequisites: [TE-C146-ceru, TE-C146-vesuko]
 sounds: []
-roots: []
+roots: [dravidian-pilucu-call]
+etymology_hook: "pilucu: native Dravidian, one word with Tamil piḷiṟu (DEDR 4195)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C146-vesuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C146-ACT146-03]; assesses=[] -->
 
 **పిలుచు** — *pilucu* — "to call".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పిలుచు** (*pilucu*) is native Dravidian, one word with Tamil *piḷiṟu* (DEDR 4195). DEDR lists Telugu *pilucu*, "to call, invite".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

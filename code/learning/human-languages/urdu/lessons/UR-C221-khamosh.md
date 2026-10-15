@@ -14,7 +14,8 @@ romanization: "khāmosh"
 concept_tag: UR-SIFAT221-KHAMOSH
 prerequisites: [UR-C221-hairan, UR-C221-sharmila]
 sounds: []
-roots: []
+roots: [persian-khamosh]
+etymology_hook: "khāmosh: usually traced to Persian khāmōsh 'silent'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C221-sharmila]
 <!-- hl-knowledge: introduces=[UR-LEX-C221-SIFAT221-04]; assesses=[] -->
 
 **خاموش** — *khāmosh* — "quiet, silent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خاموش** (*khāmosh*) is a loan, usually traced to Persian *khāmōsh*, "silent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

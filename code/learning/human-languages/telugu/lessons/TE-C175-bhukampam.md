@@ -14,7 +14,8 @@ romanization: "bhūkampaṁ"
 concept_tag: TE-STHALAM175-BHUKAMPAM
 prerequisites: [TE-C175-gumpu, TE-C175-prapancam]
 sounds: []
-roots: []
+roots: [sanskrit-bhu, sanskrit-kampa]
+etymology_hook: "bhūkampaṁ: Sanskrit bhū 'ground' (CDIAL 9546) + kampa 'tremor' (CDIAL 2765)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C175-prapancam]
 <!-- hl-knowledge: introduces=[TE-LEX-C175-STHALAM175-03]; assesses=[] -->
 
 **భూకంపం** — *bhūkampaṁ* — "an earthquake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భూకంపం** (*bhūkampaṁ*) is Sanskrit: *bhū*, "world; ground" (CDIAL 9546), and *kampa*, "tremor" (CDIAL 2765), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

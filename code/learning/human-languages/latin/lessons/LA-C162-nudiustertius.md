@@ -13,7 +13,8 @@ gloss: "the day before yesterday"
 concept_tag: LA-PAS162-NUDIUSTERTIUS
 prerequisites: [LA-C161-neque, LA-C162-nuper]
 sounds: []
-roots: []
+roots: [nudiustertius-latin, dies-latin]
+etymology_hook: "nudiustertius 'the day before yesterday' — fused from nunc diēs tertius 'now is the third day'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C162-nuper]
 <!-- hl-knowledge: introduces=[LA-LEX-C162-PAS162-02]; assesses=[] -->
 
 **nudiustertius** — "the day before yesterday". It is **nunc diēs tertius**, "now (is) the third day": counting today, yesterday is the second. **Nudiustertius epistulam scrīpsī.** — "The day before yesterday I wrote a letter."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nudiustertius** is fused from *nunc diēs tertius*, "now (is) the third day". Latin also said *nudiusquārtus*, "three days ago", on the same pattern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

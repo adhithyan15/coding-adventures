@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "Ladle, Water supply, Kettle, Tray, Can",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:112f5cfc5798b19b",
+  "sourceHash": "fnv1a64:ce895e3fabbf5b54",
   "lessons": [
     {
       "id": "JA-C103-otama",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5c95d279eee628a",
+      "sourceHash": "fnv1a64:93340478109e75f3",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おたま (otama) is native: the polite o- and tama, \"ball\", the ladle's round bowl. JMdict marks it as a shortened word. It is inherited rather than borrowed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1f21c00f85aea3e",
+      "sourceHash": "fnv1a64:7491a2c637403e91",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すいどう (suidou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sui, \"water\" (Middle Chinese sywijX) and dō, \"way, path\" (dawX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8f6528a58f2ed4d",
+      "sourceHash": "fnv1a64:88c0a2772660356c",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やかん (yakan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yaku, \"medicine\" (Middle Chinese yak) and kan, \"jar\" (kwanH, the reading of its fuller older form) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). It was a pot for brewing medicine, and yaku shortened to ya; JMdict marks it as usually written in kana."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9aa864217183086",
+      "sourceHash": "fnv1a64:05a5ca8caf169cf5",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おぼん (obon) is the native polite prefix o- with bon, \"tray, basin\", the on'yomi of its character, borrowed from Chinese (Middle Chinese bwon; JMdict, Unihan)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2636391a77f0e743",
+      "sourceHash": "fnv1a64:8c76b668d757a4c7",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かん (kan) is a loanword: JMdict gives its source as Dutch kan, or English can. Its kanji, a character for an earthen jar, is marked as ateji, chosen for its sound."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

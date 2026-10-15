@@ -14,7 +14,8 @@ romanization: "shurfa"
 concept_tag: AR-LOC101-SHURFA
 prerequisites: [AR-C101-mabna, AR-C101-hammam]
 sounds: []
-roots: []
+roots: [sh-r-f]
+etymology_hook: "shurfa: built on the root sh-r-f, 'to be high, to overlook' (Lane); Lane's shurfa is a battlement on top of a wall"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C101-hammam]
 <!-- hl-knowledge: introduces=[AR-LEX-C101-LOC101-05]; assesses=[] -->
 
 **شرفة** — *shurfa* — "a balcony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شرفة** (*shurfa*) is built on the native Arabic root *sh-r-f*, "to be high, to overlook" (Lane). Lane's *shurfa* is a battlement on top of a wall; the balcony is a later use.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

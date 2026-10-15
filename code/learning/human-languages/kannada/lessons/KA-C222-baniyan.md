@@ -14,7 +14,8 @@ romanization: "baniyan"
 concept_tag: KA-VASTU222-BANIYAN
 prerequisites: [KA-C222-langa, KA-C222-ravike]
 sounds: []
-roots: []
+roots: [english-banian]
+etymology_hook: "baniyan ← Indian English banian, from Gujarati vāṇiyo 'trader'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C222-ravike]
 <!-- hl-knowledge: introduces=[KA-LEX-C222-VASTU222-04]; assesses=[] -->
 
 **ಬನಿಯನ್** — *baniyan* — "a vest, an undershirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬನಿಯನ್** (*baniyan*) is a loan from Indian English *banian*, "an undershirt", named after the *banian*, the trader, from Gujarati *vāṇiyo*, whose loose shirt it was.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

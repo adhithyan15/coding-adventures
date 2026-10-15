@@ -14,7 +14,8 @@ romanization: "ẓill"
 concept_tag: AR-THINGS134-ZILL
 prerequisites: [AR-C133-asifa, AR-C134-daw]
 sounds: []
-roots: []
+roots: [ẓ-l-l]
+etymology_hook: "ẓill: built on the root ẓ-l-l, 'shade, shadow' (Lane); Hebrew tsel, 'shadow', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C134-daw]
 <!-- hl-knowledge: introduces=[AR-LEX-C134-THINGS134-02]; assesses=[] -->
 
 **ظل** — *ẓill* — "shade, a shadow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ظل** (*ẓill*) is built on the native Arabic root *ẓ-l-l*, "shade, shadow" (Lane). Hebrew *tsel*, "shadow", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ gloss: "a drum"
 concept_tag: TE-ANCHOR-DAPPU
 prerequisites: [TE-S144-digit-5]
 sounds: []
-roots: []
+roots: [telugu-dappu-drum]
+etymology_hook: "ḍappu: origin uncertain; neither DEDR nor CDIAL lists it, though both have drum words of similar shape"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *ḍappu*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **డ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **డప్పు** (*ḍappu*) is uncertain. Neither DEDR nor CDIAL lists it. Both have drum words of a similar shape, but neither is a sure source: DEDR 3082 lists Telugu *tappeṭa*, "a kind of drum", and CDIAL 5531 lists Gujarati *ḍaph* under Sanskrit *ḍamaru*, "drum", a word CDIAL takes as imitating the sound, perhaps from Munda.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-ANCHOR-DAPPU] -->

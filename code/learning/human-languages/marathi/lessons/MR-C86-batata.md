@@ -14,7 +14,8 @@ romanization: "baṭāṭā"
 concept_tag: MR-FOOD86-BATATA
 prerequisites: [MR-C85-safarchand, MR-C86-kele]
 sounds: []
-roots: []
+roots: [portuguese-batata]
+etymology_hook: "baṭāṭā ← Portuguese batata 'potato'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C86-kele]
 <!-- hl-knowledge: introduces=[MR-LEX-C86-FOOD86-02]; assesses=[] -->
 
 **बटाटा** — *baṭāṭā* — "a potato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बटाटा** (*baṭāṭā*) is a loan from Portuguese *batata*, "potato".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

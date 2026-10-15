@@ -14,7 +14,8 @@ romanization: "bādshāh"
 concept_tag: UR-KAM179-BADSHAH
 prerequisites: [UR-C179-munshi, UR-C179-vazir]
 sounds: []
-roots: []
+roots: [persian-padshah]
+etymology_hook: "bādshāh: usually traced to Persian pādshāh 'king'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C179-vazir]
 <!-- hl-knowledge: introduces=[UR-LEX-C179-KAM179-05]; assesses=[] -->
 
 **بادشاہ** — *bādshāh* — "a king".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بادشاہ** (*bādshāh*) is a loan, usually traced to Persian *pādshāh*, "king". It is built on *shāh*, "king".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

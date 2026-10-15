@@ -14,7 +14,8 @@ romanization: "camcī"
 concept_tag: GU-TABLE-SPOON
 prerequisites: [GU-C61-plate, GU-C61-bowl]
 sounds: []
-roots: []
+roots: [persian-chamcha]
+etymology_hook: "camcī: usually traced to Persian chamcha 'spoon, ladle', which Persian took from Turkic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C61-bowl]
 <!-- hl-knowledge: introduces=[GU-LEX-C61-TABLE-03]; assesses=[] -->
 
 **ચમચી** (*camcī*) — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચમચી** (*camcī*) is a loan, usually traced to Persian *chamcha*, "spoon, ladle", a word Persian itself took from Turkic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

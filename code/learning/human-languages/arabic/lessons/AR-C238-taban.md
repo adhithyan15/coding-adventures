@@ -14,7 +14,8 @@ romanization: "ṭabʿan"
 concept_tag: AR-SABAB238-TABAN
 prerequisites: [AR-C238-mithl, AR-C238-tamaman]
 sounds: []
-roots: []
+roots: [ṭ-b-ʿ]
+etymology_hook: "ṭabʿan: built on the root ṭ-b-ʿ, 'to seal, to stamp' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C238-tamaman]
 <!-- hl-knowledge: introduces=[AR-LEX-C238-SABAB238-03]; assesses=[] -->
 
 **طبعا** — *ṭabʿan* — "of course".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طبعا** (*ṭabʿan*) is built on the native Arabic root *ṭ-b-ʿ*, "to seal, to stamp" (Lane). *Ṭabʿan* is *ṭabʿ*, "nature", with the adverb ending *-an*: "by nature, of course".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

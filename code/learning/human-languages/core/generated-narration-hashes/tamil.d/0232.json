@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 232,
-  "sourceHash": "fnv1a64:b270ba1e49104a08",
+  "sourceHash": "fnv1a64:f95d060ea7c6a75c",
   "lessonIds": [
     "TA-C232-palvali",
     "TA-C232-kayam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "tamil/narration/ch232.txt",
   "json": "tamil/narration/ch232.json",
-  "textHash": "fnv1a64:57a5463a557f5447",
-  "jsonHash": "fnv1a64:d038fd3a6b3fc267",
+  "textHash": "fnv1a64:a8878096deb0ba9a",
+  "jsonHash": "fnv1a64:01ed9686f4a13671",
   "findings": []
 }

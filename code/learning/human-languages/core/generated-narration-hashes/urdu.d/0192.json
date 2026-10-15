@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 192,
-  "sourceHash": "fnv1a64:00a84c8565010301",
+  "sourceHash": "fnv1a64:2a12225ed6fc5f5b",
   "lessonIds": [
     "UR-C192-balki",
     "UR-C192-shayad",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch192.txt",
   "json": "urdu/narration/ch192.json",
-  "textHash": "fnv1a64:26fca5594480f22a",
-  "jsonHash": "fnv1a64:312f0f5cc3cb27de",
+  "textHash": "fnv1a64:4822afb20aec5c90",
+  "jsonHash": "fnv1a64:ca454f751b4ed983",
   "findings": []
 }

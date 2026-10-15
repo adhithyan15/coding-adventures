@@ -46,7 +46,7 @@ reviews_of: [GE-C221-sonnig]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**sparsam** is *sparen*, "to save", + *-sam*, the ending of English *-some*: given to saving.
+**sparsam** is *sparen*, "to save", + *-sam*, a cousin of English *-some*: given to saving.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

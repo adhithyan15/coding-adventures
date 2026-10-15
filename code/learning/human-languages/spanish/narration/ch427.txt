@@ -18,6 +18,7 @@ verb: vender. the one who does it: el vendedor.
 verb: jugar. the one who does it: el jugador.
 verb: ganar. the one who does it: el ganador.
 The ending is productive, which is the property worth having. You are not learning a word; you are learning a machine that turns any verb you know into the person who does it.
+Vender is Latin vendere, "to sell".
 
 Grammar Lens: where the ending puts the stress.
 Every -dor noun stresses its last syllable: vende-DOR, trabaja-DOR, juga-DOR. None of them carries a written accent, because a word ending in -r is stressed on the last syllable by default and the accent marks only departures from the default.
@@ -52,6 +53,7 @@ Comprar minus -ar, plus -dor. No new rule, which is the point of teaching the pa
 [a table of 2 rows, read aloud]
 side: sells. verb: vender. person: el vendedor.
 side: buys. verb: comprar. person: el comprador.
+Comprar is Latin comparare, "to procure", worn down in speech; vender is Latin vendere, "to sell".
 
 Grammar Lens: the pair that names an economy.
 These two words are how a form, a contract or a news item names the parties to a sale. They are not shop vocabulary — el vendedor in a shop is the assistant, but vendedor and comprador together are the roles, the way English says seller and buyer rather than shopkeeper and customer.
@@ -130,6 +132,7 @@ thing: la bomba — the pump. the person who works with it: el bombero.
 thing: el pan — bread. the person who works with it: el panadero.
 thing: la carta — the letter. the person who works with it: el cartero.
 So Spanish has -dor for the one who does the action and -ero for the one who works with the thing.
+Bomba is usually taken to imitate the sound of a boom, through Latin bombus, "a booming noise", from Greek (EtymDB 2.1).
 
 Grammar Lens: three endings, three logics.
 [a table of 3 rows, read aloud]
@@ -205,9 +208,8 @@ Say el vendedor and el comprador. You can name both parties to a sale. Say where
 
 The word, taken apart.
 la empresa — "the company, the firm."
-From Latin in- + prehendere, "to take hold of." An empresa is literally a thing taken on — an undertaking.
-English took the same idea through French and got enterprise, from entre-.
-prendre, the same two pieces in the other Romance language. The words are cousins built to the same plan.
+Spanish took it from Italian impresa, built on Latin in- + prehendere, "to take hold of." An empresa is literally a thing taken on — an undertaking.
+English took the same idea from French enterprise, entre- + prendre: a different prefix on the same verb, built to the same plan.
 The difference is what each language did with it afterwards. English enterprise mostly means the venture; Spanish empresa means both the venture and the firm that carries it out. For an A1 form asking where you work, empresa is the everyday word — it is what English calls the company.
 Prehendere is generous, and two of its descendants are already useful to you: aprender, to learn, is to take hold of something; and sorprender, to surprise, is to take somebody from above.
 

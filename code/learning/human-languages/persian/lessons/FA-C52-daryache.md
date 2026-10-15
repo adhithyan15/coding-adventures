@@ -14,7 +14,8 @@ romanization: "daryâche"
 concept_tag: FA-NATURE52-DARYACHE
 prerequisites: [FA-C52-jangal, FA-C52-rudkhane]
 sounds: []
-roots: []
+roots: [persian-darya]
+etymology_hook: "daryâche: Persian daryâ 'sea' + -che 'little'; daryâ is inherited (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C52-rudkhane]
 <!-- hl-knowledge: introduces=[FA-LEX-C52-NATURE52-04]; assesses=[] -->
 
 **دریاچه** — *daryâche* — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*daryâche* is *daryâ*, "sea", with the small-thing ending *-che*: a little sea. *daryâ* is inherited; Old Persian had *drayah-*, "sea" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

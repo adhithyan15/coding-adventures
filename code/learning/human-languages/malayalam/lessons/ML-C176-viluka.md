@@ -14,7 +14,8 @@ romanization: "vīḻuka"
 concept_tag: ML-VERB-VILUKA
 prerequisites: [ML-C176-nintuka, ML-C176-catuka]
 sounds: []
-roots: []
+roots: [dravidian-vizhu-fall]
+etymology_hook: "vīḻuka: native Dravidian, one word with Tamil viḻu and Kannada bīḻ (DEDR 5430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C176-catuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C176-ACT176-04]; assesses=[] -->
 
 **വീഴുക** — *vīḻuka* — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വീഴുക** (*vīḻuka*) is native Dravidian, one word with Tamil *viḻu* and Kannada *bīḻ* (DEDR 5430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

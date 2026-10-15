@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a calendar date, then the Sanskrit for 
 You'll want to know: इतः.
 इतः — itaḥ — "from here".
 
+The word, taken apart.
+itaḥ is built from the pronoun base i-, the base of idam "this", and the ending -tas "from": "from this place, hence" (MW). It is the same -tas as in yataḥ, ataḥ and tataḥ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a century, then the Sanskrit for from h
 
 You'll want to know: ततः.
 ततः — tataḥ — "from there, then".
+
+The word, taken apart.
+tataḥ is built from the pronoun base ta- "that" and the ending -tas "from" (MW; CDIAL 5639): "from there", and so "then, after that". It answers yataḥ "from where", and the base ta- is inherited from Indo-European, the same word as English that (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for from here, then the Sanskrit for from t
 You'll want to know: उभयतः.
 उभयतः — ubhayataḥ — "on both sides".
 
+The word, taken apart.
+ubhayataḥ is built from ubhaya "both, of both kinds" and the ending -tas "from, on the side of": "on both sides" (MW). MW sets ubha "both" beside Greek amphō, Latin ambo and Gothic bai, the cousin of English both.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for from there, then the Sanskrit for on bo
 You'll want to know: परितः.
 परितः — paritaḥ — "all around".
 
+The word, taken apart.
+paritaḥ is built from the prefix pari "around, about" and the ending -tas (MW; CDIAL 7830): "from all around, all around". MW sets pari beside Greek peri "around", as in perimeter.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for on both sides, then the Sanskrit for al
 
 You'll want to know: समन्ततः.
 समन्ततः — samantataḥ — "on all sides".
+
+The word, taken apart.
+samantataḥ is built from samanta "having the ends together, whole, on every side", that is sam "together" + anta "end", with the ending -tas (MW): "from every side, all around".
 
 What you've built.
 One more word for this chapter.

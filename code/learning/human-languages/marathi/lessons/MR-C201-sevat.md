@@ -15,6 +15,7 @@ concept_tag: MR-VEL201-SEVAT
 prerequisites: [MR-C201-suryasta, MR-C201-suryoday]
 sounds: []
 roots: []
+etymology_hook: "śevaṭ 'the end': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C201-suryoday]
 <!-- hl-knowledge: introduces=[MR-LEX-C201-VEL201-05]; assesses=[] -->
 
 **शेवट** — *śevaṭ* — "the end".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **शेवट** (*śevaṭ*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

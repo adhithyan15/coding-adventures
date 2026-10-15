@@ -14,7 +14,8 @@ romanization: "phirāylā jāṇe"
 concept_tag: MR-VERB-PHIRAYLA-JANE
 prerequisites: [MR-C195-thothavne, MR-C195-tulna-karne]
 sounds: []
-roots: []
+roots: [indo-aryan-phirati, sanskrit-yati]
+etymology_hook: "phirāylā: from phirṇe 'to wander' ← *phirati (CDIAL 9078); jāṇe ← yāti 'goes' (CDIAL 10452)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C195-tulna-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C196-ACT196-01]; assesses=[] -->
 
 **फिरायला जाणे** — *phirāylā jāṇe* — "to go for a walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फिरायला** is "for wandering", from **फिरणे**, "to wander, turn", which CDIAL lists under a reconstructed *\*phirati*, "moves, wanders" (CDIAL 9078). **जाणे** comes from Sanskrit *yāti*, "goes" (CDIAL 10452).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

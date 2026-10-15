@@ -14,7 +14,8 @@ romanization: "caṅṅala"
 concept_tag: ML-VASTU294-CANNALA
 prerequisites: [ML-C294-tippetti, ML-C294-talu]
 sounds: []
-roots: []
+roots: [sanskrit-shrnkhala]
+etymology_hook: "caṅṅala: a tadbhava of Sanskrit śṛṅkhala 'chain' (CDIAL 12580)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C294-talu]
 <!-- hl-knowledge: introduces=[ML-LEX-C294-VASTU294-04]; assesses=[] -->
 
 **ചങ്ങല** — *caṅṅala* — "a chain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചങ്ങല** (*caṅṅala*) is a tadbhava of Sanskrit *śṛṅkhala*, "chain" (CDIAL 12580), reshaped in the mouth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

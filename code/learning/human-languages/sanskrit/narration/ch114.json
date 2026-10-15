@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "Sheep, Pigeon, Owl, Heron, Bee",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4923fe84224f8845",
+  "sourceHash": "fnv1a64:e52ac17960879f8e",
   "lessons": [
     {
       "id": "SA-C114-mesah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:778da90974b4620f",
+      "sourceHash": "fnv1a64:fae09001240de246",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "meṣa \"a ram, a sheep\" is inherited from Indo-European (EtymDB): Avestan maēša and Persian mīš \"ewe\" are cousins. In astronomy it names Aries, the first sign of the zodiac (MW). Hindi kept it as mes \"ram\" (CDIAL 10334)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ce868b1f8ebd9ef",
+      "sourceHash": "fnv1a64:13f2c8201c8b0ffe",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kapota \"a dove, a pigeon\" is old, in the Rigveda, and is inherited from Indo-Iranian (EtymDB). Its cousin is Persian kabūtar \"pigeon\", which Hindi and Urdu took from Persian, so the Hindi pigeon is a Persian cousin of this Sanskrit word."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c95441290a25f561",
+      "sourceHash": "fnv1a64:282ca9162ce9e20b",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ulūka \"an owl\" is old, in the Rigveda; MW cites only a grammarians' root √val for it, so its origin is uncertain. It lives on as Hindi ullū \"owl\", and Punjabi and Gujarati ullū also means \"fool\" (CDIAL 2359)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8fb6795df523b5a",
+      "sourceHash": "fnv1a64:34beab346f7b5c0d",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "baka \"a heron, a crane\" is probably imitative in origin, as CDIAL 9115 explains after EWA, which is why its k survives into the modern forms. It lives on as Hindi bagulā and Bengali bak (CDIAL 9115)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a82befcfb62bcdd",
+      "sourceHash": "fnv1a64:d63051ef528afeee",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bhramara \"a large black bee\" is filed by MW under the root √bhram \"wander, whirl\", which MW compares with Greek bremō and Latin fremere \"roar, hum\" (EtymDB gives an Indo-European root \"make noise\"). It lives on as Hindi bhaũrā \"black bee\" (CDIAL 9651)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

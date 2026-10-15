@@ -14,7 +14,8 @@ romanization: "sôbji"
 concept_tag: BN-FOOD59-SOBJI
 prerequisites: [BN-C59-ruti, BN-C59-am]
 sounds: []
-roots: []
+roots: [sabz-persian]
+etymology_hook: "sôbji: usually traced to Persian sabzī 'greenness, greens'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C59-am]
 <!-- hl-knowledge: introduces=[BN-LEX-C59-FOOD59-03]; assesses=[] -->
 
 **সবজি** — *sôbji* — "vegetables".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সবজি** (*sôbji*) is a loan, usually traced to Persian *sabzī*, "greenness, greens". It is built on Persian *sabz*, "green".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 50,
-  "sourceHash": "fnv1a64:5990106842d7052b",
+  "sourceHash": "fnv1a64:c4599bf2b76db966",
   "lessonIds": [
     "GU-C50-happiness",
     "GU-C50-anger",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch50.txt",
   "json": "gujarati/narration/ch50.json",
-  "textHash": "fnv1a64:ad2251dcddf43609",
-  "jsonHash": "fnv1a64:467c51157d14ccc2",
+  "textHash": "fnv1a64:fa863d9a99c7a4b9",
+  "jsonHash": "fnv1a64:109e1deb113424d2",
   "findings": []
 }

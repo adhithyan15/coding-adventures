@@ -13,7 +13,8 @@ gloss: "thrifty, sparing"
 concept_tag: LA-QUAL269-PARCUS
 prerequisites: [LA-C269-sobrius, LA-C269-avarus]
 sounds: []
-roots: []
+roots: [parcus-latin, parcere-latin]
+etymology_hook: "parcus 'thrifty' — kin to parcō 'to spare'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C269-avarus]
 <!-- hl-knowledge: introduces=[LA-LEX-C269-QUAL269-05]; assesses=[] -->
 
 **parcus, parca, parcum** — "thrifty, sparing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parcus** belongs with *parcō*, "to spare, to be sparing" (Lewis & Short), whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: please — a word you can say on its own, and a frame waiting to be fille
 concept_tag: COURTESY-PLEASE
 prerequisites: [ZH-W11-qing]
 sounds: [tone-3]
-roots: []
-etymology_hook: 请 is the word English would translate as please, but it behaves less like please and more like an invitation, which is worth knowing before you use it.
+roots: [middle-chinese-tshjengx]
+etymology_hook: "qǐng: inherited, from Middle Chinese tshjengX 'to request, ask'; please grew out of asking"
 duration:
   max_seconds: 240
 requires:
@@ -48,6 +48,10 @@ to"**. Where English *please* softens a demand, 请 **hands the action over**.
 Which is why it works **on its own**. Hold a door and say 请 — that is *after
 you*, *go ahead*, *be my guest*. Offer someone a seat and say 请. No other words
 needed, and none of them would be an apology for asking.
+
+The word is inherited from Middle Chinese *tshjengX*, glossed "to beg, to
+request, to ask" (Guangyun, in Baxter's transcription): the asking sense is the
+old one.
 
 ## Why it's said this way — where English and Mandarin part company
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-QING] -->

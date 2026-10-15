@@ -14,7 +14,8 @@ romanization: "bechā"
 concept_tag: BN-VERB-BECHA
 prerequisites: [BN-C49-khla, BN-C49-kena]
 sounds: []
-roots: []
+roots: [indo-aryan-vetyayati]
+etymology_hook: "bechā ← *vetyayati 'makes a price', a reconstructed form; a tadbhava (CDIAL 12100)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C49-kena]
 <!-- hl-knowledge: introduces=[BN-LEX-C49-VERBS49-03]; assesses=[] -->
 
 **বেচা** — *bechā* — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বেচা** (*bechā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vetyayati*, "makes a price", a form CDIAL reconstructs from its descendants (CDIAL 12100).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

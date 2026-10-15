@@ -14,7 +14,8 @@ romanization: "māṁs"
 concept_tag: MR-VERBS84-MAMS
 prerequisites: [MR-C84-dharne, MR-C84-padne]
 sounds: []
-roots: []
+roots: [sanskrit-mamsa]
+etymology_hook: "māṁs ← Sanskrit māṁsa 'flesh', a tatsama (CDIAL 9982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C84-padne]
 <!-- hl-knowledge: introduces=[MR-LEX-C84-VERBS84-05]; assesses=[] -->
 
 **मांस** — *māṁs* — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मांस** (*māṁs*) is Sanskrit *māṁsa*, "flesh", taken over whole as a learned loan, a tatsama (CDIAL 9982). CDIAL lists the inherited Marathi forms *mās* and *māṁs*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

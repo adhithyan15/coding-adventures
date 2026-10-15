@@ -14,7 +14,8 @@ romanization: "dṛṣṭi"
 concept_tag: KA-AROGYA170-DRSTI
 prerequisites: [KA-C169-bhavane, KA-C170-herige]
 sounds: []
-roots: []
+roots: [sanskrit-drshti]
+etymology_hook: "dṛṣṭi ← Sanskrit dṛṣṭi 'seeing, sight', a tatsama (CDIAL 6520)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C170-herige]
 <!-- hl-knowledge: introduces=[KA-LEX-C170-AROGYA170-02]; assesses=[] -->
 
 **ದೃಷ್ಟಿ** — *dṛṣṭi* — "eyesight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದೃಷ್ಟಿ** (*dṛṣṭi*) is Sanskrit *dṛṣṭi*, "seeing, sight", taken over whole as a learned loan, a tatsama (CDIAL 6520).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

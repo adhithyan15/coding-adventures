@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 270,
-  "sourceHash": "fnv1a64:a7c102fa4baefe72",
+  "sourceHash": "fnv1a64:0e895a2d0eda47b2",
   "lessonIds": [
     "TE-C270-tapela",
     "TE-C270-kundi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch270.txt",
   "json": "telugu/narration/ch270.json",
-  "textHash": "fnv1a64:e16f6b82dd1dd386",
-  "jsonHash": "fnv1a64:2e0704654de182b2",
+  "textHash": "fnv1a64:409b8711ad4106b9",
+  "jsonHash": "fnv1a64:9c415c13c5be2846",
   "findings": []
 }

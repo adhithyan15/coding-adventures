@@ -14,7 +14,8 @@ romanization: "pālā"
 concept_tag: BN-VERB-PALA
 prerequisites: [BN-C180-rojgar-kora, BN-C180-dkhashona-kora]
 sounds: []
-roots: []
+roots: [sanskrit-palayati]
+etymology_hook: "pālā ← Sanskrit pālayati 'guards, protects', a tadbhava (CDIAL 8129)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C180-dkhashona-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C180-ACT180-03]; assesses=[] -->
 
 **পালা** — *pālā* — "to rear, to keep (animals)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পালা** (*pālā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pālayati*, "guards, protects" (CDIAL 8129). CDIAL lists Bengali *pālā*, "to rear, keep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

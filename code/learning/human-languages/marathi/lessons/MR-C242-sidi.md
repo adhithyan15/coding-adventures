@@ -14,7 +14,8 @@ romanization: "śiḍī"
 concept_tag: MR-VASTU242-SIDI
 prerequisites: [MR-C242-vit, MR-C242-dhaga]
 sounds: []
-roots: []
+roots: [indo-aryan-shridhi]
+etymology_hook: "śiḍī ← *śrīḍhi 'resting-place, ladder', a reconstructed form; a tadbhava (CDIAL 12709)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C242-dhaga]
 <!-- hl-knowledge: introduces=[MR-LEX-C242-VASTU242-05]; assesses=[] -->
 
 **शिडी** — *śiḍī* — "a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिडी** (*śiḍī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*śrīḍhi*, "resting-place, ladder", a form CDIAL reconstructs from its descendants (CDIAL 12709).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

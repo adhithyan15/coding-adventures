@@ -14,7 +14,8 @@ romanization: "tāro"
 concept_tag: GU-SKY-STAR
 prerequisites: [GU-C68-monkey, GU-C68-snake]
 sounds: []
-roots: []
+roots: [sanskrit-tara]
+etymology_hook: "tāro: listed under tāraka 'of the stars', beside Sanskrit tārā 'fixed star' (CDIAL 5798)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C68-snake]
 <!-- hl-knowledge: introduces=[GU-LEX-C69-SKY-01]; assesses=[] -->
 
 **તારો** (*tāro*) — "a star". Out at **રાત**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તારો** (*tāro*) is a tadbhava. CDIAL lists it under *tāraka*, "belonging to the stars", a form beside Sanskrit *tārā*, "fixed star" (CDIAL 5798).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

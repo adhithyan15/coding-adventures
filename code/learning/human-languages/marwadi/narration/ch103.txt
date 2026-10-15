@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for someone, then the Marwadi for each.
 You'll want to know: न्हावणो.
 न्हावणो — nhāvṇo — "to bathe".
 
+The word, taken apart.
+न्हावणो (nhāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from snāti, "bathes". CDIAL gives no Marwari form in this entry (CDIAL 13786); the match is through Hindi nhānā.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for each, then the Marwadi for to bathe.
 
 You'll want to know: पकावणो.
 पकावणो — pakāvṇo — "to cook".
+
+The word, taken apart.
+पकावणो (pakāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pakva, "cooked, ripe". CDIAL lists Old Marwari pākaï under it (CDIAL 7621). The Old Marwari row means "becomes ripe"; पकावणो (pakāvṇo) is its causing form, "make cooked". The root is pac, "to cook".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to bathe, then the Marwadi for to cook.
 You'll want to know: बणावणो.
 बणावणो — baṇāvṇo — "to make".
 
+The word, taken apart.
+CDIAL gives no Marwari row for बणावणो (baṇāvṇo), "to make". It lists Old Awadhi banāvaï, "makes", and Hindi bannā, "to be made", under Sanskrit vanati, "desires, gains, makes ready" (CDIAL 11260), and notes a rival account from Sanskrit varṇayati, "describes". The match is through those languages.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to cook, then the Marwadi for to make.
 You'll want to know: तोड़णो.
 तोड़णो — toṛṇo — "to break".
 
+The word, taken apart.
+तोड़णो (toṛṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from troṭayati, "breaks, tears". CDIAL lists Marwari toṛṇo under it (CDIAL 6079).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to make, then the Marwadi for to break.
 
 You'll want to know: जोड़णो.
 जोड़णो — joṛṇo — "to join".
+
+The word, taken apart.
+जोड़णो (joṛṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from yoṭayati, "joins", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari jōḍaï under it (CDIAL 10496). CDIAL builds it on yuṭati, "is joined".
 
 What you've built.
 One more word for this chapter.

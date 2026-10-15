@@ -11,7 +11,8 @@ romanization: "gōru"
 concept_tag: TE-NOUN-NAIL
 prerequisites: [TE-C57-lip]
 sounds: []
-roots: []
+roots: [dravidian-ukir-nail]
+etymology_hook: "gōru: native Dravidian, one word with Tamil ukir and Kannada ugur, 'nail, claw' (DEDR 561)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C57-lip]
 It goes on the end of వేలు, which you already have. వేలి గోరు is the fingernail said in full, when the plain word would be unclear.
 
 గోరువెచ్చని, "nail-warm", is the Telugu word for lukewarm water — the temperature you test by dipping a fingertip. A measurement made with the body, before there were thermometers.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గోరు** (*gōru*) is native Dravidian, one word with Tamil *ukir* and Kannada *ugur*, "nail, claw" (DEDR 561). The Telugu form has a *g-* in front, like its Gondi and Kui cousins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

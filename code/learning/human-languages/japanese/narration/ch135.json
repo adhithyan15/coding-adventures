@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Hospital and Bank: Bi, Gu, Ge and Gi",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0a59d7ee2f912cb4",
+  "sourceHash": "fnv1a64:912abf9ec6598f7c",
   "lessons": [
     {
       "id": "JA-C135-byouin",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c889e3b6cfc17e2c",
+      "sourceHash": "fnv1a64:278ab5293ce59085",
       "notice": null,
       "blocks": [
         {
@@ -87,6 +87,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びょういん (byōin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are byō, \"illness\" (Middle Chinese bjaengH) and in, \"courtyard; institution\" (hjwenH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -126,7 +137,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -338,7 +349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a404667ec5e3e982",
+      "sourceHash": "fnv1a64:260207092609c5eb",
       "notice": null,
       "blocks": [
         {
@@ -411,6 +422,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どようび (doyōbi) mixes the two layers: do, \"earth\" (Middle Chinese thuX), and yō, one of the seven \"planets\" of old astronomy, sun and moon among them, that name the days (Middle Chinese yewH), both borrowed from Chinese, with native hi, \"day\", voiced to bi (JMdict; Unihan)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -450,7 +472,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -501,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5faf87f2fabae918",
+      "sourceHash": "fnv1a64:cb0f84dd5431ccf1",
       "notice": null,
       "blocks": [
         {
@@ -578,6 +600,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いりぐち (iriguchi) is a native compound, inherited rather than borrowed: iri, \"entering\", from iru, \"to enter\", and kuchi, \"mouth\", voiced to guchi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -617,7 +650,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -818,7 +851,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d10bc602e294531d",
+      "sourceHash": "fnv1a64:f5ef20832fe3543f",
       "notice": null,
       "blocks": [
         {
@@ -891,6 +924,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "でぐち (deguchi) is a native compound, inherited rather than borrowed: de, \"going out\", from deru, \"to go out\", and kuchi, \"mouth\", voiced to guchi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -930,7 +974,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -980,7 +1024,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:486429d0957ae937",
+      "sourceHash": "fnv1a64:1b3b505650864d50",
       "notice": null,
       "blocks": [
         {
@@ -1053,6 +1097,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "げつようび (getsuyōbi) mixes the two layers: getsu, \"moon\" (Middle Chinese ngjwot), and yō, one of the seven \"planets\" of old astronomy, sun and moon among them, that name the days (Middle Chinese yewH), both borrowed from Chinese, with native hi, \"day\", voiced to bi (JMdict; Unihan)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1092,7 +1147,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1295,7 +1350,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89925104b0fede91",
+      "sourceHash": "fnv1a64:7d557a8ff119b542",
       "notice": null,
       "blocks": [
         {
@@ -1368,6 +1423,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "げんき (genki) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gen, \"first, origin\" (Middle Chinese ngjwon) and ki, \"air, spirit\" (khj+jH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1407,7 +1473,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1457,7 +1523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:626f415888d5c8ef",
+      "sourceHash": "fnv1a64:bc11399bd33d8e64",
       "notice": null,
       "blocks": [
         {
@@ -1530,6 +1596,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎんこう (ginkō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gin, \"silver\" (Middle Chinese ngin) and kō, in its sense \"a row, a line; a trading firm\" (hang) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1569,7 +1646,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

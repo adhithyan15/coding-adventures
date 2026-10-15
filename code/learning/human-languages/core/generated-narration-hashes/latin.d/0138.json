@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 138,
-  "sourceHash": "fnv1a64:26af5d14d820039a",
+  "sourceHash": "fnv1a64:db1bd72301d57a4c",
   "lessonIds": [
     "LA-C138-piscator",
     "LA-C138-servus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch138.txt",
   "json": "latin/narration/ch138.json",
-  "textHash": "fnv1a64:4ad5db8f6725b65d",
-  "jsonHash": "fnv1a64:c2a4fff086ad40b8",
+  "textHash": "fnv1a64:1c06c3484a94c8ed",
+  "jsonHash": "fnv1a64:5a5665cce3429907",
   "findings": []
 }

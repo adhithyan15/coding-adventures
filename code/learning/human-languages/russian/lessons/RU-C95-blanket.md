@@ -14,7 +14,8 @@ romanization: "odeyálo"
 concept_tag: RU-THINGS95-BLANKET
 prerequisites: [RU-C95-curtain, RU-C95-pillow]
 sounds: []
-roots: []
+roots: [pie-dheh1-put]
+etymology_hook: "одеяло is from Old Russian одеяти 'to cover', from одеть 'to dress'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C95-pillow]
 <!-- hl-knowledge: introduces=[RU-LEX-C95-THINGS95-05]; assesses=[] -->
 
 **одеяло** (*odeyálo*) — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**одеяло** comes from Old Russian *одеяти*, "to cover, to clothe", the repeated-action form of *одеть*, "to dress" (Vasmer): a blanket is what covers you.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

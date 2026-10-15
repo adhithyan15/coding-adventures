@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a company, then the Kannada for a class.
 You'll want to know: ವರದಿ.
 ವರದಿ — varadi — "a report".
 
+The word, taken apart.
+Where ವರದಿ (varadi) comes from is uncertain: neither DEDR nor CDIAL records it, under its form or under "report".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a class, then the Kannada for a report.
 
 You'll want to know: ಸಮಸ್ಯೆ.
 ಸಮಸ್ಯೆ — samasye — "a problem".
+
+The word, taken apart.
+ಸಮಸ್ಯೆ (samasye) is Sanskrit samasyā, built on samasyati, "puts together, combines" (CDIAL 13197a), with the Kannada -e for final -ā: a problem is something to be put together.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a report, then the Kannada for a problem
 You'll want to know: ಸುದ್ದಿ.
 ಸುದ್ದಿ — suddi — "news".
 
+The word, taken apart.
+ಸುದ್ದಿ (suddi) comes from Sanskrit śuddhi, "cleansing, purity; information, news", reshaped to Kannada sounds: a tadbhava (CDIAL 12523). Ś became s and ddh became dd.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a problem, then the Kannada for news.
 You'll want to know: ಮಾಹಿತಿ.
 ಮಾಹಿತಿ — māhiti — "information".
 
+The word, taken apart.
+Where ಮಾಹಿತಿ (māhiti) comes from is uncertain: DEDR and CDIAL do not list it. It is often traced, through Marathi māhitī, to Arabic māhiyat, "nature, particulars", by way of Persian.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for news, then the Kannada for information.
 
 You'll want to know: ಅಂಕ.
 ಅಂಕ — aṅka — "a mark, a score".
+
+The word, taken apart.
+ಅಂಕ (aṅka) is Sanskrit aṅka, "curved line, mark, sign", taken over whole as a learned loan, a tatsama (CDIAL 100). DEDR 29 has a Kannada aṅka, "fight", but that is a different word.
 
 What you've built.
 One more word for this chapter.

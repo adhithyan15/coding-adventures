@@ -14,7 +14,8 @@ romanization: "khālā"
 concept_tag: UR-CHIZ203-KHALA
 prerequisites: [UR-C202-riksha, UR-C203-mamun]
 sounds: []
-roots: []
+roots: [arabic-khala]
+etymology_hook: "khālā ← Arabic khāla 'a mother's sister', through Persian (Lane, root kh-w-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C203-mamun]
 <!-- hl-knowledge: introduces=[UR-LEX-C203-CHIZ203-02]; assesses=[] -->
 
 **خالہ** — *khālā* — "a maternal aunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خالہ** (*khālā*) is a loan from Arabic *khāla*, "a mother's sister", which reached Urdu through Persian. Its Arabic root is *kh-w-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

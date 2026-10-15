@@ -14,7 +14,8 @@ romanization: "qavi"
 concept_tag: FA-SEFAT199-QAVI
 prerequisites: [FA-C199-alude, FA-C199-charb]
 sounds: []
-roots: []
+roots: [arabic-qawi]
+etymology_hook: "qavi ← Arabic qawī 'strong', root q-w-y (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C199-charb]
 <!-- hl-knowledge: introduces=[FA-LEX-C199-SEFAT199-03]; assesses=[] -->
 
 **قوی** — *qavi* — "strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qavi* is borrowed from Arabic *qawī*, "strong". Its Arabic root is *q-w-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḍoṅgar"
 concept_tag: MR-NATURE96-DONGAR
 prerequisites: [MR-C96-phul, MR-C96-pan]
 sounds: []
-roots: []
+roots: [indo-aryan-donga]
+etymology_hook: "ḍoṅgar ← *ḍōṅga- 'hill', one of the forms CDIAL groups under *ṭakka 'hill' (CDIAL 5423)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C96-pan]
 <!-- hl-knowledge: introduces=[MR-LEX-C96-NATURE96-03]; assesses=[] -->
 
 **डोंगर** — *ḍoṅgar* — "a mountain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डोंगर** (*ḍoṅgar*) goes back to *\*ḍōṅga-*, "hill", one of a group of forms CDIAL reconstructs under *\*ṭakka*, "hill" (CDIAL 5423). CDIAL says the variety of forms points to a non-Aryan, perhaps Munda, origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-HOME-CALEFACCION
 prerequisites: [ES-C443-sintesis-animo, ES-C334-calor, ES-C334-frio, ES-C441-factura]
 sounds: [written-accent, stress-final]
 roots: [calor-latin, facere-latin]
+etymology_hook: "calefacción — cale- (calor 'heat') + -facción (facere 'to make'): heat-making"
 duration:
   max_seconds: 265
 requires:
@@ -47,7 +48,8 @@ calefacción* — to put the heating on.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C444-CASA-01, ES-LEX-C334-BODY-34] -->
 
-Two pieces, and you own both.
+Two pieces, and you own both. The word is borrowed from Latin *calefactiō*,
+"a heating" (EtymDB 2.1).
 
 | piece | where you have it |
 |---|---|

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to play, then the Urdu for to touch.
 You'll want to know: بنانا.
 بنانا — banānā — "to make".
 
+The word, taken apart.
+بنانا (banānā) is the causing form of bannā, "to be made", which CDIAL lists under Sanskrit vanati, "desires, gains, makes ready" (CDIAL 11260).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to touch, then the Urdu for to make.
 
 You'll want to know: توڑنا.
 توڑنا — toṛnā — "to break".
+
+The word, taken apart.
+توڑنا (toṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from troṭayati, "breaks, tears" (CDIAL 6079).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to make, then the Urdu for to break.
 You'll want to know: جلانا.
 جلانا — jalānā — "to burn, to light".
 
+The word, taken apart.
+جلانا (jalānā) is the causing form of jalnā, "to burn": to light is to make something burn. CDIAL lists both under Sanskrit jvalati, "burns brightly" (CDIAL 5306).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to break, then the Urdu for to burn.
 You'll want to know: بھاگنا.
 بھاگنا — bhāgnā — "to run away".
 
+The word, taken apart.
+بھاگنا (bhāgnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhagna, "broken, routed" (CDIAL 9361). It is the past form of bhajyate, "is broken". Bloch linked the sense "flee" with a different old verb; CDIAL finds that unnecessary, since "broken" could come to mean "routed, fled".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to burn, then the Urdu for to run away.
 
 You'll want to know: بلانا.
 بلانا — bulānā — "to call".
+
+The word, taken apart.
+بلانا (bulānā) is the causing form of bolnā, "to speak": to call someone is to make them speak back. CDIAL lists both under a reconstructed boll-, "speak" (CDIAL 9321).
 
 What you've built.
 One more word for this chapter.

@@ -54,7 +54,7 @@ same kind of stretch).
 ## The word, taken apart - A more precise word exists too — a thin but real comparison
 <!-- hl-knowledge: introduces=[TE-ETYMON-C28-MADHYAHNAM-WIDENED-02]; assesses=[] -->
 
-Telugu also has **అపరాహ్నం** (**aparāhnam**), from the same classical
+Telugu also has **అపరాహ్నం** (**aparāhnam**), a tatsama from the same classical
 **five-part Sanskrit day division** already found behind Kannada's
 **అపరాహ్న** — *prāta/udaya* (sunrise), *saṅgava*, *madhyāhna* (noon),
 *aparāhna* ("later afternoon" specifically), *sāyāhna* (evening). Be

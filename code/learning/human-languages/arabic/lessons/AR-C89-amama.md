@@ -14,7 +14,8 @@ romanization: "amāma"
 concept_tag: AR-PLACE89-AMAMA
 prerequisites: [AR-C89-fawqa, AR-C89-tahta]
 sounds: []
-roots: []
+roots: [ʾ-m-m]
+etymology_hook: "amāma: built on the root ʾ-m-m, 'to aim at, to lead' (Lane); the same root gives imām, 'the one who leads'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C89-tahta]
 <!-- hl-knowledge: introduces=[AR-LEX-C89-PLACE89-04]; assesses=[] -->
 
 **أمام** — *amāma* — "in front of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أمام** (*amāma*) is built on the native Arabic root *ʾ-m-m*, "to aim at, to lead" (Lane). The same root gives *imām*, "the one who leads".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

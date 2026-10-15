@@ -14,7 +14,8 @@ romanization: "taḍāgaḥ"
 concept_tag: SA-WATER-POND
 prerequisites: [SA-C82-lake, SA-C82-well]
 sounds: []
-roots: []
+roots: [sanskrit-tadaga]
+etymology_hook: "taḍāga 'pool, tank' is first found in a Gṛhyasūtra; origin unclear; Hindi talāu 'pond' (CDIAL 5635)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C82-well]
 <!-- hl-knowledge: introduces=[SA-LEX-C82-WATER-03]; assesses=[] -->
 
 **तडागः** (*taḍāgaḥ*) — "a pond", a village tank with steps.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Taḍāga* appears in the ritual handbooks and the epics (CDIAL 5635), but its
+origin is unclear: MW gives no root. It lives on as Hindi *talāu*, "pond".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

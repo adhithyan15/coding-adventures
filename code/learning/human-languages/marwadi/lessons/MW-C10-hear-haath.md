@@ -11,8 +11,8 @@ gloss: hand
 concept_tag: MW-DIRECTION-HAND
 prerequisites: [MW-R10-places-three]
 sounds: [breathy-h, long-aa, aspirated-th]
-roots: []
-etymology_hook: The direction source uses hand in right and left turns; meaning arrives before the familiar spelling.
+roots: [hasta-sanskrit]
+etymology_hook: "hāth ← Sanskrit hasta 'hand', a tadbhava (CDIAL 14024, Marwari row)"
 duration:
   max_seconds: 135
 requires:
@@ -46,6 +46,11 @@ reviews_of: [MW-R10-places-three, MW-C10-ghar]
 
 The source uses this word in right-hand and left-hand direction cues. Say the
 one long beat. Writing waits even though every sign is familiar.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hāth* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasta*, "hand". CDIAL lists Marwari *hāth* under it (CDIAL 14024).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAATH-01] -->

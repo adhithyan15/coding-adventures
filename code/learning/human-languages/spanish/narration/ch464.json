@@ -4,7 +4,7 @@
   "chapter": 464,
   "title": "La cita perdida",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f7792f218781e9c7",
+  "sourceHash": "fnv1a64:4c8706c8a5b78cd8",
   "lessons": [
     {
       "id": "ES-C464-recordar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb78b04842b49653",
+      "sourceHash": "fnv1a64:febf9bae6d6a1e7c",
       "notice": null,
       "blocks": [
         {
@@ -105,7 +105,7 @@
             },
             {
               "kind": "speech",
-              "text": "The family is everywhere once seen: el acuerdo, an agreement — hearts brought together — and recordar's English cousin record, which is literally a thing committed to memory. Courage is cor too, by way of French, and so is concordance."
+              "text": "The family is everywhere once seen: el acuerdo, an agreement — hearts brought together — and recordar's English relative record, which is literally a thing committed to memory. Courage is cor too, by way of French, and so is concordance."
             },
             {
               "kind": "speech",
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bac9e5bbfc24d70b",
+      "sourceHash": "fnv1a64:b413db57167c4618",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d382d5f97ac9be7",
+      "sourceHash": "fnv1a64:a1d9e97d2f89ac0b",
       "notice": null,
       "blocks": [
         {

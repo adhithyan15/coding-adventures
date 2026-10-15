@@ -14,7 +14,8 @@ romanization: "siwār"
 concept_tag: AR-THINGS127-SIWAR
 prerequisites: [AR-C127-qifl, AR-C127-mindil]
 sounds: []
-roots: []
+roots: [persian-dastwar]
+etymology_hook: "siwār: Lane's sources call it arabicized from Persian dastwār 'bracelet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C127-mindil]
 <!-- hl-knowledge: introduces=[AR-LEX-C127-THINGS127-04]; assesses=[] -->
 
 **سوار** — *siwār* — "a bracelet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سوار** (*siwār*) is listed by Lane under *s-w-r*, and his sources call it arabicized from Persian *dastwār*, "bracelet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

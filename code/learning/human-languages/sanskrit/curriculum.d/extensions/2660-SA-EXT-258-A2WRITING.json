@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-258-A2WRITING",
+  "stage": "A2",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can independently write a model-free connected 70–90 word Sanskrit message in Devanagari for a named reader and practical purpose.",
+  "prerequisites": [
+    "SA-EXT-257-TRV257"
+  ]
+}

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a nest, then the Sanskrit for an egg.
 You'll want to know: वाक्यम्.
 वाक्यम् — vākyam — "a sentence".
 
+The word, taken apart.
+vākya is built on the root √vac, "to speak" (MW): a sentence is something said (CDIAL 11468). The root is inherited from Indo-European, and MW compares Latin vōx, "voice".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for an egg, then the Sanskrit for a sentenc
 
 You'll want to know: भाषा.
 भाषा — bhāṣā — "a language".
+
+The word, taken apart.
+bhāṣā is built on the root √bhāṣ, "to speak" (MW). MW notes it meant everyday spoken language, as opposed to the language of the Veda; CDIAL 9479 lists it, and Hindi and Telugu still use it for "language".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a sentence, then the Sanskrit for a lan
 You'll want to know: व्याकरणम्.
 व्याकरणम् — vyākaraṇam — "grammar".
 
+The word, taken apart.
+vyākaraṇa is built on vi-ā- with the root √kṛ, "to do, make" (MW). The verb means "to separate, explain", so grammar is the taking apart of language (CDIAL 12182).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a language, then the Sanskrit for gramm
 You'll want to know: गणितम्.
 गणितम् — gaṇitam — "mathematics".
 
+The word, taken apart.
+gaṇita is the past participle of gaṇayati, "counts", built on the root √gaṇ (MW; CDIAL 3996). "What is counted" became "reckoning", and then mathematics.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for grammar, then the Sanskrit for mathemat
 
 You'll want to know: विज्ञानम्.
 विज्ञानम् — vijñānam — "science".
+
+The word, taken apart.
+vijñāna is built on vi- and the root √jñā, "to know" (MW), the root of jānāti, "knows". It first meant "the act of discerning" (CDIAL 11707), and later "science".
 
 What you've built.
 One more word for this chapter.

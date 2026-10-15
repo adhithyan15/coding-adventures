@@ -14,7 +14,8 @@ romanization: "mūlī"
 concept_tag: HI-THG216-MULI
 prerequisites: [HI-C215-dayalu, HI-C216-mugphali]
 sounds: []
-roots: []
+roots: [sanskrit-mula]
+etymology_hook: "mūlī ← Sanskrit mūla 'root; radish', likely of non-Aryan origin; a tadbhava (CDIAL 10250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C216-mugphali]
 <!-- hl-knowledge: introduces=[HI-LEX-C216-THG216-02]; assesses=[] -->
 
 **मूली** — *mūlī* — "a radish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मूली** (*mūlī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mūla*, "root; radish" (CDIAL 10250). CDIAL thinks a non-Aryan, perhaps Dravidian, origin likely, comparing Tamil *muḷḷaṅki*, "radish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

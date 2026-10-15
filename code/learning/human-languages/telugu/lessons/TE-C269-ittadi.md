@@ -14,7 +14,8 @@ romanization: "ittaḍi"
 concept_tag: TE-VASTUVU269-ITTADI
 prerequisites: [TE-C269-jalleda, TE-C269-cekka]
 sounds: []
-roots: []
+roots: [telugu-ittadi-brass]
+etymology_hook: "ittaḍi: origin uncertain; perhaps Sanskrit pittala 'brass' (CDIAL 8184), which no source links to it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C269-cekka]
 <!-- hl-knowledge: introduces=[TE-LEX-C269-VASTUVU269-05]; assesses=[] -->
 
 **ఇత్తడి** — *ittaḍi* — "brass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ఇత్తడి** (*ittaḍi*) is uncertain. DEDR does not list it. CDIAL 8184 has Sanskrit *pittala*, "brass", which may be its source, but no source says so.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

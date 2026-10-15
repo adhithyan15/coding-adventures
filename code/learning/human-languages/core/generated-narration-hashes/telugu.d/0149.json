@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 149,
-  "sourceHash": "fnv1a64:5d6620258cc42186",
+  "sourceHash": "fnv1a64:04c89af0ecb64d58",
   "lessonIds": [
     "TE-C149-naducu",
     "TE-C149-muyu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch149.txt",
   "json": "telugu/narration/ch149.json",
-  "textHash": "fnv1a64:98e0367370c3449b",
-  "jsonHash": "fnv1a64:1a509d11c96f7cf5",
+  "textHash": "fnv1a64:78e4c9568cedd382",
+  "jsonHash": "fnv1a64:5c329f906802dc98",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to deliver, then the Kannada for to over
 You'll want to know: ಮಾಯವಾಗು.
 ಮಾಯವಾಗು — māyavāgu — "to vanish, to disappear".
 
+The word, taken apart.
+ಮಾಯವಾಗು (māyavāgu) is Sanskrit māyā, "illusion, magic" (CDIAL 10060), with native āgu, "to become" (DEDR 333): "to become magic", to vanish as if by a trick. DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to overtake, then the Kannada for to van
 
 You'll want to know: ಪ್ಯಾಕ್ ಮಾಡು.
 ಪ್ಯಾಕ್ ಮಾಡು — pyāk māḍu — "to pack".
+
+The word, taken apart.
+ಪ್ಯಾಕ್ ಮಾಡು (pyāk māḍu) is English pack with native māḍu, "to do" (DEDR 4797).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to vanish, then the Kannada for to pack.
 You'll want to know: ಕಳಚು.
 ಕಳಚು — kaḷacu — "to take off (clothes), to detach".
 
+The word, taken apart.
+ಕಳಚು (kaḷacu) is native Dravidian, one word with Tamil kaḷ, Telugu kalupu and Malayalam kaḷa (DEDR 1373). DEDR lists kaḷacu, "to remove, pull off".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to pack, then the Kannada for to take of
 You'll want to know: ಫೇಲಾಗು.
 ಫೇಲಾಗು — phēlāgu — "to fail (an exam)".
 
+The word, taken apart.
+ಫೇಲಾಗು (phēlāgu) is English fail with native āgu, "to become" (DEDR 333). DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to take off, then the Kannada for to fai
 
 You'll want to know: ಸಿಕ್ಕಿಹಾಕಿಕೊಳ್ಳು.
 ಸಿಕ್ಕಿಹಾಕಿಕೊಳ್ಳು — sikkihākikoḷḷu — "to get stuck, to get caught".
+
+The word, taken apart.
+ಸಿಕ್ಕಿಹಾಕಿಕೊಳ್ಳು (sikkihākikoḷḷu) is sikki, "having got caught", from native sikku, "to become entangled, be caught" (DEDR 2498), with hāku, "to put", whose history neither DEDR nor CDIAL gives, and koḷḷu, "to take" (DEDR 2151), which turns the action back on yourself.
 
 What you've built.
 One more word for this chapter.

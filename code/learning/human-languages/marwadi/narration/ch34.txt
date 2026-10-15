@@ -18,6 +18,9 @@ bīs — twenty.
 Long ī, then the same closing s as das. Marwari marks its tens with that s: das, bīs.
 Twenty arrives before the numbers between ten and twenty, and that is not an accident of ordering. Marwari builds nineteen by subtraction — ughaṇīs, one short of twenty — the same way the dictionary records ekuṇcālīs, one short of forty, for thirty-nine. A language that counts down to its round numbers has to be taught the round number first. Teaching the teens before twenty would print twenty in bold in a lesson that had not taught it.
 
+The word, taken apart.
+bīs is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from viṃśati, "twenty". CDIAL lists Old Marwari bīsa under it (CDIAL 11616).
+
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages.
 [question — say your answer, then pause 14 seconds]
@@ -39,6 +42,9 @@ You'll want to know.
 ब + ी + स becomes बीस — bīs — twenty.
 Every piece is second-hand. ब came in with बस, the bus. ी came in with पाणी. स closes दस as well.
 Write दस and बीस (bīs) one under the other and look at the last sign of each.
+
+The word, taken apart.
+बीस (bīs) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from viṃśati, "twenty". CDIAL lists Old Marwari bīsa under it (CDIAL 11616).
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -64,6 +70,9 @@ so — a hundred.
 One consonant and one long vowel. The largest number this book teaches is the shortest word in it.
 Say do, no, so. Two, nine, a hundred: all three are one consonant plus the same long o, and nothing but that consonant tells them apart. At a noisy counter this is where a price gets misheard, so it is worth drilling the three together rather than in the order they were taught.
 
+The word, taken apart.
+so is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śata, "hundred". CDIAL lists Old Marwari sau under it (CDIAL 12278). English hundred holds a cousin of the same ancient word.
+
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Turner, A Comparative Dictionary of the Indo-Aryan Languages.
 [question — say your answer, then pause 14 seconds]
@@ -85,6 +94,9 @@ You'll want to know.
 स + ो becomes सो — so — a hundred.
 Now write the three short ones in a column: दो, नो, सो (so). The mark on the right never changes. The letter on the left is the entire difference between two, nine and a hundred.
 That column is worth keeping. It is the one place in this book where a single mistaken stroke changes a price by a factor of fifty.
+
+The word, taken apart.
+सो (so) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śata, "hundred". CDIAL lists Old Marwari sau under it (CDIAL 12278). English hundred holds a cousin of the same ancient word.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -112,6 +124,9 @@ Chapter 27 taught the question. The answer had no words in it, so a learner who 
 The answer turn is one word long. A seller names the figure and stops; there is no verb, no unit, no sentence. That is what makes it hearable — the whole of it is a number, and this book now has twelve of them.
 Hear the same question answered das, bīs, so in turn and say which is dearest.
 
+The phrase, taken apart.
+In the question and its answer, the new piece is bīs, "twenty", which CDIAL lists as Old Marwari bīsa under Sanskrit viṃśati, "twenty" (CDIAL 11616). The question words have their own lessons: kitṇe from kiyatta, "how great" (CDIAL 3167), and hai, "is" (CDIAL 1031).
+
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Marwari Pathshala, Lesson 9.
 [question — say your answer, then pause 14 seconds]
@@ -130,6 +145,9 @@ You'll want to know.
 ये कितणे कू है? — बीस। (ye kitṇe kū hai? — bīs.)
 The question was writable in chapter 27. The answer became writable two lessons ago. Putting them on one line adds no sign at all.
 Note the danda after the answer. A price is a complete turn even at one word long, and Devanagari closes it the same way it closes a sentence.
+
+The phrase, taken apart.
+In the question and its answer, the new piece is बीस (bīs), "twenty", which CDIAL lists as Old Marwari bīsa under Sanskrit viṃśati, "twenty" (CDIAL 11616). The question words have their own lessons: kitṇe from kiyatta, "how great" (CDIAL 3167), and hai, "is" (CDIAL 1031).
 
 Guided Practice.
 [once you have stopped driving — write: the question and answer as two lines; then the answer line three more times, with दस, बीस (bīs) and सो (so) in turn, and read each pair aloud]
@@ -155,6 +173,9 @@ Chapter 28 taught thoṛu sasto karo — make it a bit cheaper. That is a wish. 
 Put a number where thoṛu sasto stood and the same verb becomes an offer. The buyer names the price now.
 Hear the pair run end to end: the seller says bīs, the buyer says das karo. This is the first exchange in the book where both sides have said an amount.
 
+The phrase, taken apart.
+das karo joins two inherited words with their own lessons: das, "ten", which CDIAL lists as Marwari das under Sanskrit daśa (CDIAL 6227), and karo, "make", from Sanskrit karoti, "does" (CDIAL 2814).
+
 Wrap-up Recall.
 Source: Marwari Pathshala, Lesson 9.
 [question — say your answer, then pause 16 seconds]
@@ -172,6 +193,9 @@ You'll want to know.
 दस + करो। becomes दस करो। — das karo. — make it ten.
 Nothing new for the hand. करो came in with the bargaining request, दस came in two chapters ago, and the number goes in front.
 Swap the figure and the offer changes: पांच करो।, बीस (bīs) करो।. The verb never moves.
+
+The phrase, taken apart.
+दस करो (das karo) joins two inherited words with their own lessons: das, "ten", which CDIAL lists as Marwari das under Sanskrit daśa (CDIAL 6227), and karo, "make", from Sanskrit karoti, "does" (CDIAL 2814).
 
 Guided Practice.
 [once you have stopped driving — write: दस करो। (das karo.) from a cover; then the same line twice more with पांच and बीस (bīs) in the number slot, and read all three aloud as offers against a seller's सो (so)।]

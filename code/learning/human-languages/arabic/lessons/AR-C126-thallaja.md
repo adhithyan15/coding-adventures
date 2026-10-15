@@ -14,7 +14,8 @@ romanization: "thallāja"
 concept_tag: AR-THINGS126-THALLAJA
 prerequisites: [AR-C126-dumya, AR-C126-luba]
 sounds: []
-roots: []
+roots: [th-l-j]
+etymology_hook: "thallāja: built on the root th-l-j, 'snow' (Lane); thallāja is a modern word, 'the snow-maker'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C126-luba]
 <!-- hl-knowledge: introduces=[AR-LEX-C126-THINGS126-05]; assesses=[] -->
 
 **ثلاجة** — *thallāja* — "a fridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثلاجة** (*thallāja*) is built on the native Arabic root *th-l-j*, "snow" (Lane). *Thallāja* is a modern word, "the snow-maker".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 115,
-  "sourceHash": "fnv1a64:a2c51ec61e0abec3",
+  "sourceHash": "fnv1a64:20edd59503e52302",
   "lessonIds": [
     "RU-C115-thunderstorm",
     "RU-C115-ice",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch115.txt",
   "json": "russian/narration/ch115.json",
-  "textHash": "fnv1a64:b9ad49e15559232b",
-  "jsonHash": "fnv1a64:e84be4cbd15085d9",
+  "textHash": "fnv1a64:f192321ce25c7556",
+  "jsonHash": "fnv1a64:20662dc129ac86d6",
   "findings": []
 }

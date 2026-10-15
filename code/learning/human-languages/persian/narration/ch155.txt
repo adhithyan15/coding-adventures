@@ -12,6 +12,9 @@ Before the new one: say the Persian for a café, then the Persian for a doctor's
 You'll want to know: دبیرستان.
 دبیرستان — dabirestân — "a secondary school".
 
+The word, taken apart.
+dabirestân is a native Persian word, inherited rather than borrowed: it continues Middle Persian dibīrestān, "school" (EtymDB). It is dabir, "scribe, teacher", with -estân, "place of".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a doctor's surgery, then the Persian for
 
 You'll want to know: کلانتری.
 کلانتری — kalântari — "a police station".
+
+The word, taken apart.
+kalântari is built from kalântar, "headman", and the ending -i, "office of". kalântar is kalân, "big", with the comparative -tar: "the bigger one". All the pieces are native Persian, inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a secondary school, then the Persian for
 You'll want to know: شهرداری.
 شهرداری — shahrdâri — "the town hall".
 
+The word, taken apart.
+shahrdâri is shahr, "city" (Middle Persian šahr, EtymDB), with dâr, "holding" (from dâshtan), and -i: the office that holds the city. All are native.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a police station, then the Persian for t
 You'll want to know: سفارت.
 سفارت — sefârat — "an embassy".
 
+The word, taken apart.
+sefârat is borrowed from Arabic sifāra, "embassy, mission". Its Arabic root is s-f-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for the town hall, then the Persian for an e
 
 You'll want to know: گمرک.
 گمرک — gomrok — "customs".
+
+The word, taken apart.
+gomrok goes back to Byzantine Greek kommerkion, "customs duty", from Latin commercium, "trade" (EtymDB); it is usually said to have reached Persian through Turkish gümrük.
 
 What you've built.
 One more word for this chapter.

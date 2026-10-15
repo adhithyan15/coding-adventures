@@ -14,7 +14,8 @@ romanization: "rassī"
 concept_tag: UR-THINGS107-RASSI
 prerequisites: [UR-C107-chadar, UR-C107-balti]
 sounds: []
-roots: []
+roots: [sanskrit-rashmi]
+etymology_hook: "rassī ← Sanskrit raśmi 'rope, ray'; CDIAL marks the Hindi form as taken from Punjabi (CDIAL 10648)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C107-balti]
 <!-- hl-knowledge: introduces=[UR-LEX-C107-THINGS107-05]; assesses=[] -->
 
 **رسی** — *rassī* — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رسی** (*rassī*) goes back to Sanskrit *raśmi*, "rope, bridle, ray of light" (CDIAL 10648). CDIAL marks the Hindi form *rassī* as taken over from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rājadhāni"
 concept_tag: TE-STHALAM214-RAJADHANI
 prerequisites: [TE-C214-vimanasrayam, TE-C214-kudali]
 sounds: []
-roots: []
+roots: [sanskrit-rajan]
+etymology_hook: "rājadhāni ← Sanskrit rājadhānī 'royal seat', from rājan 'king' (CDIAL 10679)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C214-kudali]
 <!-- hl-knowledge: introduces=[TE-LEX-C214-STHALAM214-04]; assesses=[] -->
 
 **రాజధాని** — *rājadhāni* — "a capital city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రాజధాని** (*rājadhāni*) is Sanskrit *rājadhānī*, "royal seat", from *rājan*, "king" (CDIAL 10679), with the final *-ī* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

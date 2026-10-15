@@ -14,7 +14,8 @@ romanization: "kāpṇī karṇe"
 concept_tag: MR-VERB-KAPNI-KARNE
 prerequisites: [MR-C199-bhet-dene, MR-C199-vinne]
 sounds: []
-roots: []
+roots: [sanskrit-kalpana, sanskrit-karoti]
+etymology_hook: "kāpṇī ← Sanskrit kalpana 'cutting' (CDIAL 2943); karṇe ← karoti 'does' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C199-vinne]
 <!-- hl-knowledge: introduces=[MR-LEX-C199-ACT199-05]; assesses=[] -->
 
 **कापणी करणे** — *kāpṇī karṇe* — "to harvest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कापणी**, "reaping", comes from Sanskrit *kalpana*, "cutting" (CDIAL 2943). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chhupānā"
 concept_tag: UR-VERB-CHHUPANA
 prerequisites: [UR-C214-jaldi-karna, UR-C214-der-karna]
 sounds: []
-roots: []
+roots: [indo-aryan-chupp]
+etymology_hook: "chhupānā: the causing form of chhupnā 'to hide' ← *chupp 'cover, hide' (CDIAL 5058)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C214-der-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C214-ACT214-03]; assesses=[] -->
 
 **چھپانا** — *chhupānā* — "to conceal, to hide (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چھپانا** (*chhupānā*) is the causing form of *chhupnā*, "to be hidden", which CDIAL lists under a reconstructed *\*chupp*, "cover, hide" (CDIAL 5058).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

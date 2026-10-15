@@ -14,7 +14,8 @@ romanization: "hasi"
 concept_tag: KA-GUNA179-HASI
 prerequisites: [KA-C179-taja, KA-C179-halasida]
 sounds: []
-roots: []
+roots: [dravidian-paca-green]
+etymology_hook: "hasi: native Dravidian; DEDR 3821 lists older pasi 'greenness, rawness'; Tamil paca"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C179-halasida]
 <!-- hl-knowledge: introduces=[KA-LEX-C179-GUNA179-03]; assesses=[] -->
 
 **ಹಸಿ** — *hasi* — "raw, uncooked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಸಿ** (*hasi*) is native Dravidian, of the root for "green", and DEDR 3821 lists older Kannada *pasi*, "greenness, unripeness, rawness", itself; the entry also has Tamil *paca*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

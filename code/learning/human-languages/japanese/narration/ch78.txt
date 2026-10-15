@@ -12,6 +12,9 @@ Before the new one: say the Japanese for the fifth of the month; some day, then 
 You'll want to know: どこ.
 どこ — doko — "where".
 
+The word, taken apart.
+どこ (doko) is native: do-, the root of "which", with -ko, "place", as in koko, "here". It is inherited rather than borrowed, and JMdict marks it as usually written in kana.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for the sixth of the month, then the Japane
 
 You'll want to know: ちかく.
 ちかく — chikaku — "nearby".
+
+The word, taken apart.
+ちかく (chikaku) is native: the adverb and noun form of chikai, "near" (JMdict). It is inherited rather than borrowed; its kanji is a kun'yomi attached later.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for where, then the Japanese for nearby.
 You'll want to know: うしろ.
 うしろ — ushiro — "behind".
 
+The word, taken apart.
+うしろ (ushiro) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for nearby, then the Japanese for behind.
 You'll want to know: よこ.
 よこ — yoko — "beside".
 
+The word, taken apart.
+よこ (yoko) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for behind, then the Japanese for beside.
 
 You'll want to know: まんなか.
 まんなか — mannaka — "the very middle".
+
+The word, taken apart.
+まんなか (mannaka) is a native compound, inherited rather than borrowed: ma, "true, very", with a nasal beat added, and naka, "middle" (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "tṛṇam"
 concept_tag: SA-TREE-TRINA
 prerequisites: [SA-C32-leaf, SA-C30-flower, SA-C31-star]
 sounds: []
-roots: []
+roots: [sanskrit-trna]
+etymology_hook: "tṛṇa 'grass' is inherited: MW compares Gothic thaurnus 'thorn'; Hindi tinkā 'a straw' (CDIAL 5906)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C32-leaf]
 **तृणम्** covers a single blade and a whole field of it. It is the low green stuff a **तरुः** stands in.
 
 English *thorn* is the same word: Old English *thorn*, Gothic *thaurnus*, from a shape like **\*trnus**, "a stiff thing that grows up out of the ground". Sanskrit kept the mild end of that meaning and Germanic kept the sharp end, which is a common way for one word to become two things.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Tṛṇa* is inherited: MW compares Gothic *thaurnus*, "thorn", the cousin of English
+**thorn**. It lives on as Hindi *tinkā*, "a straw" (CDIAL 5906).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

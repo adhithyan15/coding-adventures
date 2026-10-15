@@ -14,7 +14,8 @@ romanization: "sach"
 concept_tag: UR-QUAL132-SACH
 prerequisites: [UR-C132-ganda, UR-C132-amir]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "sach ← Sanskrit satya 'true', a tadbhava (CDIAL 13112)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C132-amir]
 <!-- hl-knowledge: introduces=[UR-LEX-C132-QUAL132-03]; assesses=[] -->
 
 **سچ** — *sach* — "true; the truth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سچ** (*sach*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *satya*, "true" (CDIAL 13112).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

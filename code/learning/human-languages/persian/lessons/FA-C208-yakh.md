@@ -14,7 +14,8 @@ romanization: "yakh"
 concept_tag: FA-CHIZ208-YAKH
 prerequisites: [FA-C207-saz, FA-C208-hava]
 sounds: []
-roots: []
+roots: [persian-yakh]
+etymology_hook: "yakh: inherited, usually traced to Middle Persian yax"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C208-hava]
 <!-- hl-knowledge: introduces=[FA-LEX-C208-CHIZ208-02]; assesses=[] -->
 
 **یخ** — *yakh* — "ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yakh* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *yax*, "ice". EtymDB takes it back to Proto-Iranian *\*aixa-*, "ice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

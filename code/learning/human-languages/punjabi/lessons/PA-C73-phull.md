@@ -14,7 +14,8 @@ romanization: "phull"
 concept_tag: PA-SCHOOL73-PHULL
 prerequisites: [PA-C73-chitthi, PA-C73-rukkh]
 sounds: []
-roots: []
+roots: [sanskrit-phulla]
+etymology_hook: "phull ← Sanskrit phulla 'expanded, blown (of flowers)', a tadbhava (CDIAL 9092)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C73-rukkh]
 <!-- hl-knowledge: introduces=[PA-LEX-C73-SCHOOL73-04]; assesses=[] -->
 
 **ਫੁੱਲ** — *phull* — "a flower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਫੁੱਲ** (*phull*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *phulla*, "expanded, blown (of flowers)" (CDIAL 9092).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

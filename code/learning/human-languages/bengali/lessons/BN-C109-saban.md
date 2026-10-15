@@ -14,7 +14,8 @@ romanization: "sābān"
 concept_tag: BN-THINGS109-SABAN
 prerequisites: [BN-C108-madur, BN-C109-chiruni]
 sounds: []
-roots: []
+roots: [portuguese-sabao, arabic-sabun]
+etymology_hook: "sābān: usually traced to Portuguese sabão 'soap'; Arabic ṣābūn, through Persian, gave Hindi sābun"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C109-chiruni]
 <!-- hl-knowledge: introduces=[BN-LEX-C109-THINGS109-02]; assesses=[] -->
 
 **সাবান** — *sābān* — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাবান** (*sābān*) is usually traced to Portuguese *sabão*, "soap"; Arabic *ṣābūn*, root *ṣ-b-n* (Lane), reached Hindi as *sābun* through Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

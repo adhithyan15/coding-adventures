@@ -14,7 +14,8 @@ romanization: "kūhṇī"
 concept_tag: PA-THINGS135-KUHNI
 prerequisites: [PA-C135-pitth, PA-C135-lakk]
 sounds: []
-roots: []
+roots: [sanskrit-kaphoni]
+etymology_hook: "kūhṇī ← Sanskrit kaphoṇi 'elbow', probably from Munda; a tadbhava (CDIAL 2757)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C135-lakk]
 <!-- hl-knowledge: introduces=[PA-LEX-C135-THINGS135-05]; assesses=[] -->
 
 **ਕੂਹਣੀ** — *kūhṇī* — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੂਹਣੀ** (*kūhṇī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaphoṇi*, "elbow" (CDIAL 2757). CDIAL takes the Sanskrit word, probably, from Munda rather than Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

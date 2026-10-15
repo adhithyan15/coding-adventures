@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 144,
-  "sourceHash": "fnv1a64:32d36e7bfa2eb055",
+  "sourceHash": "fnv1a64:0b120a8e1420f158",
   "lessonIds": [
     "FA-C144-rahnamayi-kardan",
     "FA-C144-neshan-dadan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch144.txt",
   "json": "persian/narration/ch144.json",
-  "textHash": "fnv1a64:ec94160cf5017452",
-  "jsonHash": "fnv1a64:19e8c49aa0e716ea",
+  "textHash": "fnv1a64:d22bf1a976c99b4c",
+  "jsonHash": "fnv1a64:1e5788f31a7000d6",
   "findings": []
 }

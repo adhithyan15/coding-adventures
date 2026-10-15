@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-PRIMARY-STUDENT
 gloss: primary-school student, built from known characters
 prerequisites: [ZH-C14-hear-xiaoxuesheng]
 sounds: [tone-3, tone-2, tone-neutral]
-roots: []
-etymology_hook: Three secured characters carry the longest word without adding visual load.
+roots: [middle-chinese-sjewx, middle-chinese-haewk, middle-chinese-srjaeng]
+etymology_hook: "xiǎoxuésheng: xiǎoxué + sheng, all three pieces inherited from Middle Chinese sjewX, haewk, srjaeng"
 duration:
   max_seconds: 165
 requires:
@@ -42,6 +42,10 @@ reviews_of: [ZH-C14-hear-xiaoxuesheng, ZH-C14-xiaoxue, ZH-C13-xuesheng]
 > **小学生** — *xiǎoxuésheng* — **primary-school student**
 
 Track three characters and three beats. Read it once without pinyin.
+
+All three pieces are inherited from Middle Chinese, *sjewX*, *haewk* and
+*srjaeng* (Guangyun, in Baxter's transcription), and Chinese joined them as
+primary school plus student.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAOXUESHENG-01, ZH-SCRIPT-XIAO-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->

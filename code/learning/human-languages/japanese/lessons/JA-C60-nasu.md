@@ -14,7 +14,8 @@ romanization: "nasu"
 concept_tag: JA-NUMBERS60-NASU
 prerequisites: [JA-C60-man, JA-C60-juuni]
 sounds: []
-roots: []
+roots: [japanese-nasu]
+etymology_hook: "nasu: native; written 茄子, read as a whole; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C60-juuni]
 <!-- hl-knowledge: introduces=[JA-LEX-C60-NUMBERS60-03]; assesses=[] -->
 
 **なす** — *nasu* — "an aubergine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なす** (*nasu*) is a native word, inherited rather than borrowed. JMdict writes it with the characters for "eggplant" and the noun ending "child", read as a whole, and marks it as usually written in kana. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

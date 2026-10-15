@@ -14,7 +14,8 @@ romanization: "nôkôl"
 concept_tag: BN-GUN219-NOKOL
 prerequisites: [BN-C218-tahole, BN-C218-mane]
 sounds: []
-roots: []
+roots: [arabic-naql]
+etymology_hook: "nôkôl ← Arabic naql 'a copying, a transfer', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C218-mane]
 <!-- hl-knowledge: introduces=[BN-LEX-C219-GUN219-01]; assesses=[] -->
 
 **নকল** — *nôkôl* — "fake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নকল** (*nôkôl*) is a loan from Arabic *naql*, "a copying, a transfer", which reached Bengali through Persian. Its Arabic root is *n-q-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

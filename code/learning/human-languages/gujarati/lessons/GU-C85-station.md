@@ -14,7 +14,8 @@ romanization: "sṭeśan"
 concept_tag: GU-TRAVEL-STATION
 prerequisites: [GU-C85-bus, GU-C85-train]
 sounds: []
-roots: []
+roots: [english-station]
+etymology_hook: "sṭeśan ← English station"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C85-train]
 <!-- hl-knowledge: introduces=[GU-LEX-C85-TRAVEL-03]; assesses=[] -->
 
 **સ્ટેશન** (*sṭeśan*) — "a station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સ્ટેશન** (*sṭeśan*) is a loan from English *station*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "priróda"
 concept_tag: RU-VESHCH195-PRIRODA
 prerequisites: [RU-C194-svyokla, RU-C194-gorokh]
 sounds: []
-roots: []
+roots: [slavic-rodu]
+etymology_hook: "природа is при- + род 'birth, kin': what one is born with"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C194-gorokh]
 <!-- hl-knowledge: introduces=[RU-LEX-C195-VESHCH195-01]; assesses=[] -->
 
 **природа** (*priróda*) — "nature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**природа** is *при-* with *род*, "birth, kin": what one is born with, then nature itself. It copies Greek *phýsis* and Latin *nātūra*, both "birth, nature".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

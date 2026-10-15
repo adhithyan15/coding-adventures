@@ -14,7 +14,8 @@ romanization: "miṭānā"
 concept_tag: UR-VERB-MITANA
 prerequisites: [UR-C149-phisalna, UR-C150-rangna]
 sounds: []
-roots: []
+roots: [sanskrit-mrshta]
+etymology_hook: "miṭānā: the causing form of miṭnā 'to be rubbed out' ← Sanskrit mṛṣṭa 'rubbed' (CDIAL 10299)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C150-rangna]
 <!-- hl-knowledge: introduces=[UR-LEX-C150-ACT150-02]; assesses=[] -->
 
 **مٹانا** — *miṭānā* — "to rub out, to erase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مٹانا** (*miṭānā*) is the causing form of *miṭnā*, "to be rubbed out". CDIAL lists *miṭnā* under Sanskrit *mṛṣṭa*, "rubbed, washed" (CDIAL 10299).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

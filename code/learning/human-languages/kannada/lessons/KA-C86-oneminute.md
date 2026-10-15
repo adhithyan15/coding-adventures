@@ -11,7 +11,8 @@ romanization: "ondu nimiṣa"
 concept_tag: KA-REP-MINUTE
 prerequisites: [KA-C85-meaning, KA-C85-writeit]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, sanskrit-nimesha]
+etymology_hook: "ondu nimiṣa: native ondu 'one' (DEDR 990) + nimiṣa ← Sanskrit nimeṣa 'a wink, a moment' (CDIAL 7243)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C85-writeit]
 chapter; **ನಿಮಿಷ** (*nimiṣa*) is "minute".
 
 Say it with a raised hand when you need a moment.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಂದು ನಿಮಿಷ** (*ondu nimiṣa*) is *ondu*, "one" (DEDR 990), native, and *nimiṣa*, "minute", from Sanskrit *nimeṣa*, "a wink, a moment" (CDIAL 7243). A minute is "a blink".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḥādith"
 concept_tag: AR-SIHHA262-HADITH2
 prerequisites: [AR-C262-harara, AR-C262-dimada]
 sounds: []
-roots: []
+roots: [ḥ-d-th]
+etymology_hook: "ḥādith: built on the root ḥ-d-th, 'to be new' (Lane); ḥādith is the active participle, 'a thing that happens'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C262-dimada]
 <!-- hl-knowledge: introduces=[AR-LEX-C262-SIHHA262-04]; assesses=[] -->
 
 **حادث** — *ḥādith* — "an accident".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حادث** (*ḥādith*) is built on the native Arabic root *ḥ-d-th*, "to be new; to happen" (Lane). *Ḥādith* is the active participle, "a thing that happens".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

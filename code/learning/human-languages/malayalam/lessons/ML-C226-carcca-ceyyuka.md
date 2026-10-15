@@ -14,7 +14,8 @@ romanization: "carcca ceyyuka"
 concept_tag: ML-VERB-CARCCA-CEYYUKA
 prerequisites: [ML-C225-matannuka, ML-C225-kontupokuka]
 sounds: []
-roots: []
+roots: [sanskrit-carca, cey-do-dravidian]
+etymology_hook: "carcca ceyyuka: Sanskrit carcā 'repetition, deliberation' (CDIAL 4695) + native ceyyuka (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C225-kontupokuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C226-KRIYA226-01]; assesses=[] -->
 
 **ചർച്ച ചെയ്യുക** — *carcca ceyyuka* — "to discuss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചർച്ച ചെയ്യുക** (*carcca ceyyuka*) joins Sanskrit *carcā*, "repetition, going over" (CDIAL 4695), to native *ceyyuka*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

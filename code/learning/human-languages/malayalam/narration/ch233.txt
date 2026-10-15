@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to flow, then the Malayalam for to unf
 You'll want to know: കണങ്കാൽ.
 കണങ്കാൽ — kaṇaṅkāl — "the ankle".
 
+The word, taken apart.
+കണങ്കാൽ (kaṇaṅkāl) is native Dravidian, "the joint of the leg": kaṇ, "a joint, a node" (DEDR 1160, with Tamil kaṇ), and kāl, "leg" (DEDR 1479).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to unfold, then the Malayalam for the 
 
 You'll want to know: ചോര.
 ചോര — cōra — "blood".
+
+The word, taken apart.
+ചോര (cōra) is native Dravidian: DEDR 2883 lists it, "blood", under the verb "to flow, ooze", with Tamil cōr.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for the ankle, then the Malayalam for bloo
 You'll want to know: ശ്വാസം.
 ശ്വാസം — śvāsaṁ — "breath".
 
+The word, taken apart.
+ശ്വാസം (śvāsaṁ) from Sanskrit śvāsa, "breath, breathing", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 12769).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for blood, then the Malayalam for breath.
 You'll want to know: വയറിളക്കം.
 വയറിളക്കം — vayaṟiḷakkaṁ — "diarrhoea".
 
+The word, taken apart.
+വയറിളക്കം (vayaṟiḷakkaṁ) is native Dravidian, "the belly's loosening": vayaṟŭ, "belly" (DEDR 5259), and a noun from the verb "to move, shake loose" (DEDR 509, with Tamil iḷaku).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for breath, then the Malayalam for diarrho
 
 You'll want to know: അലർജി.
 അലർജി — alarji — "an allergy".
+
+The word, taken apart.
+അലർജി (alarji) from English allergy, from Greek allos, "other", and ergon, "work".
 
 What you've built.
 One more word for this chapter.

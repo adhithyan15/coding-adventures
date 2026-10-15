@@ -14,7 +14,8 @@ romanization: "phaḷ"
 concept_tag: MR-FOOD85-PHAL
 prerequisites: [MR-C85-bhat, MR-C85-dal]
 sounds: []
-roots: []
+roots: [sanskrit-phala]
+etymology_hook: "phaḷ ← Sanskrit phala 'fruit' (CDIAL 9051), which CDIAL compares with Dravidian words for ripe fruit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C85-dal]
 <!-- hl-knowledge: introduces=[MR-LEX-C85-FOOD85-04]; assesses=[] -->
 
 **फळ** — *phaḷ* — "a fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फळ** (*phaḷ*) is a tadbhava of Sanskrit *phala*, "fruit" (CDIAL 9051). CDIAL compares Tamil *paṛam*, "ripe fruit", and Telugu *paṇḍu*, "to ripen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tuḻayuka"
 concept_tag: ML-VERB-TULAYUKA
 prerequisites: [ML-C190-arruka, ML-C191-citaruka]
 sounds: []
-roots: []
+roots: [dravidian-tuzha-paddle]
+etymology_hook: "tuḻayuka: native Dravidian, one word with Tamil tuḻa and Kannada toḻasu (DEDR 3356)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C191-citaruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C191-KRIYA191-02]; assesses=[] -->
 
 **തുഴയുക** — *tuḻayuka* — "to row (a boat)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുഴയുക** (*tuḻayuka*) is native Dravidian, one word with Tamil *tuḻa* and Kannada *toḻasu* (DEDR 3356).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

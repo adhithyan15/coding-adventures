@@ -14,7 +14,8 @@ romanization: "thānā"
 concept_tag: BN-JAYGA188-THANA
 prerequisites: [BN-C188-bishvobidyaloy, BN-C188-kolej]
 sounds: []
-roots: []
+roots: [sanskrit-sthana]
+etymology_hook: "thānā ← Sanskrit sthāna 'firm stance; place of abode', a tadbhava (CDIAL 13753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C188-kolej]
 <!-- hl-knowledge: introduces=[BN-LEX-C188-JAYGA188-03]; assesses=[] -->
 
 **থানা** — *thānā* — "a police station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**থানা** (*thānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sthāna*, "firm stance; place of abode" (CDIAL 13753). CDIAL lists Bengali *thānā*, "post, watch-house, police station".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: VERB-SPEAK
 prerequisites: [HI-C03-hun]
 sounds: [matra-o]
 roots: [bol-speak]
+etymology_hook: "bolnā ← *bōll 'speak', a form CDIAL reconstructs behind Prakrit bolla- (CDIAL 9321)"
 duration:
   max_seconds: 240
 requires:

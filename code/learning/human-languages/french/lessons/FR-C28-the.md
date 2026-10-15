@@ -57,7 +57,7 @@ Traders who bought the leaf overland or through Mandarin-speaking ports
 carried home **chá**: it travelled into Persian, into Arabic, into Hindi.
 Dutch traders bought their tea specifically at **Amoy**, in Hokkien territory,
 and carried home **tê** instead — which became Dutch **thee**, then French
-**thé**, English **tea**, German **Tee**.
+**thé**, English **tea**, German **Tee**. French borrowed **thé** from Dutch.
 
 So *café* and *thé* make a matched pair with opposite stories: *café* is one
 word repeated unchanged at every stop; *thé* is the *same original word*, worn

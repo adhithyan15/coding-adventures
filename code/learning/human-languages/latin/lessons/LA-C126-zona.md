@@ -13,7 +13,8 @@ gloss: "a belt"
 concept_tag: LA-THINGS126-ZONA
 prerequisites: [LA-C125-stola, LA-C126-pallium]
 sounds: []
-roots: []
+roots: [zona-latin]
+etymology_hook: "zōna 'belt' — borrowed from Greek zōnē 'belt'; English zone"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C126-pallium]
 <!-- hl-knowledge: introduces=[LA-LEX-C126-THINGS126-02]; assesses=[] -->
 
 **zōna, zōnae** — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**zōna** was borrowed from Greek *zōnē*, "a belt, a girdle" (Lewis & Short). English *zone* is the same word: the climate belts of the earth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

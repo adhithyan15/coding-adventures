@@ -14,7 +14,8 @@ romanization: "duḥkhī"
 concept_tag: SA-QUAL243-DUHKHI
 prerequisites: [SA-C243-svasthah, SA-C243-sukhi]
 sounds: []
-roots: []
+roots: [sanskrit-duhkha]
+etymology_hook: "duḥkhin ← duḥkha 'pain', formed after sukha (CDIAL 6375); Hindi dukh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C243-sukhi]
 <!-- hl-knowledge: introduces=[SA-LEX-C243-QUAL243-05]; assesses=[] -->
 
 **दुःखी** — *duḥkhī* — "unhappy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*duḥkhī* is the nominative of *duḥkhin*, "pained, afflicted", built on *duḥkha*, "pain, sorrow" (MW). CDIAL 6375 says *duḥkha* was formed after *sukha*, as its opposite. It lives on as Hindi *dukh*, "sorrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

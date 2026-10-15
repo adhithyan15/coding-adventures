@@ -14,7 +14,8 @@ romanization: "jāhiz"
 concept_tag: AR-SIFA240-JAHIZ
 prerequisites: [AR-C239-shakk, AR-C240-muattal]
 sounds: []
-roots: []
+roots: [j-h-z]
+etymology_hook: "jāhiz: built on the root j-h-z, 'to equip, to make ready' (Lane); jāhiz is the active participle, 'ready'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C240-muattal]
 <!-- hl-knowledge: introduces=[AR-LEX-C240-SIFA240-02]; assesses=[] -->
 
 **جاهز** — *jāhiz* — "ready".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جاهز** (*jāhiz*) is built on the native Arabic root *j-h-z*, "to equip, to make ready" (Lane). *Jāhiz* is the active participle, "ready".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Persian for a hospital, then the Persian for ill.
 You'll want to know: درد.
 درد — dard — "pain".
 
+The word, taken apart.
+dard is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian dard, "pain".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for ill, then the Persian for pain.
 
 You'll want to know: دارو.
 دارو — dâru — "medicine".
+
+The word, taken apart.
+dâru is a native Persian word, inherited rather than borrowed: it continues Middle Persian dārūg, "drug, medicine" (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for pain, then the Persian for medicine.
 You'll want to know: تشنه.
 تشنه — teshne — "thirsty".
 
+The word, taken apart.
+teshne is a native Persian word, inherited rather than borrowed: it continues Middle Persian tišnag, "thirsty" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for medicine, then the Persian for thirsty.
 You'll want to know: گرسنه.
 گرسنه — gorosne — "hungry".
 
+The word, taken apart.
+gorosne is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian gursag, "hungry".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for thirsty, then the Persian for hungry.
 
 You'll want to know: خوشحال.
 خوشحال — khoshhâl — "happy".
+
+The word, taken apart.
+khoshhâl is khosh, "pleasant, good", with hâl, "state": a pleasant state. khosh is inherited and usually traced to Middle Persian xwaš; hâl is borrowed from Arabic ḥāl, "state, condition" (root ḥ-w-l, Lane).
 
 What you've built.
 One more word for this chapter.

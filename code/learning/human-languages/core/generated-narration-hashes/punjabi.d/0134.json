@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 134,
-  "sourceHash": "fnv1a64:aeb408999c38def5",
+  "sourceHash": "fnv1a64:bc0a91a7964caca9",
   "lessonIds": [
     "PA-C134-gallh",
     "PA-C134-mattha",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "punjabi/narration/ch134.txt",
   "json": "punjabi/narration/ch134.json",
-  "textHash": "fnv1a64:79c6b19b354ff772",
-  "jsonHash": "fnv1a64:6d9aaafe95e6a660",
+  "textHash": "fnv1a64:468b0e4a8e721566",
+  "jsonHash": "fnv1a64:e532dd2854531000",
   "findings": []
 }

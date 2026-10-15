@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a needle, then the Marwadi for thread.
 You'll want to know: कैंची.
 कैंची — kaiñchī — "scissors".
 
+The word, taken apart.
+कैंची (kaiñchī) is a loan, usually traced to Persian qaičī, "scissors". Persian took the word from Turkish.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for thread, then the Marwadi for scissors.
 
 You'll want to know: लालटेण.
 लालटेण — lālṭeṇ — "a lantern".
+
+The word, taken apart.
+लालटेण (lālṭeṇ) is a loan from English lantern. Marwadi ends it in ṇ.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for scissors, then the Marwadi for a lantern
 You'll want to know: मोमबत्ती.
 मोमबत्ती — mombattī — "a candle".
 
+The word, taken apart.
+मोमबत्ती (mombattī) is a wax wick: mom, "wax", usually traced to Persian mom, with battī, "wick", which CDIAL lists as Hindi battī under Sanskrit varti, "wick" (CDIAL 11359).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a lantern, then the Marwadi for a candle
 You'll want to know: माचिस.
 माचिस — māchis — "matches".
 
+The word, taken apart.
+माचिस (māchis) is a loan from English matches.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a candle, then the Marwadi for matches.
 
 You'll want to know: लकड़ी.
 लकड़ी — lakṛī — "wood".
+
+The word, taken apart.
+लकड़ी (lakṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lakuṭa, "club". CDIAL gives no Marwari form in this entry (CDIAL 10875); the match is through Hindi lakṛī.
 
 What you've built.
 One more word for this chapter.

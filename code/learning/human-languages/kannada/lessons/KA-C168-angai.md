@@ -14,7 +14,8 @@ romanization: "aṅgai"
 concept_tag: KA-AROGYA168-ANGAI
 prerequisites: [KA-C168-himmadi, KA-C168-tode]
 sounds: []
-roots: []
+roots: [dravidian-akam-inside, dravidian-kai-hand]
+etymology_hook: "aṅgai: native, 'palm of the hand'; DEDR 7 lists aṅ-gey, with Tamil aṅkai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C168-tode]
 <!-- hl-knowledge: introduces=[KA-LEX-C168-AROGYA168-05]; assesses=[] -->
 
 **ಅಂಗೈ** — *aṅgai* — "the palm (of the hand)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂಗೈ** (*aṅgai*) is native Dravidian, "the inside of the hand": DEDR 7 lists Kannada *aṅ-gey*, "palm of the hand", with Tamil *aṅkai*, under the root for "inside", and the second part is *kai*, "hand" (DEDR 2023).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

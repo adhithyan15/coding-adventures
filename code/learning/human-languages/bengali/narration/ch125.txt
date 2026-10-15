@@ -12,6 +12,9 @@ Before the new one: say the Bengali for an eyebrow, then the Bengali for a bone.
 You'll want to know: চামড়া.
 চামড়া — chāmṛā — "skin".
 
+The word, taken apart.
+চামড়া (chāmṛā) is cām, "skin, leather", which CDIAL lists under Sanskrit carman, "hide, skin" (CDIAL 4701), with the ending -ṛā.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a bone, then the Bengali for skin.
 
 You'll want to know: জেলে.
 জেলে — jele — "a fisherman".
+
+The word, taken apart.
+জেলে (jele) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jālika, "bird-catcher" (CDIAL 5217). CDIAL writes the Bengali form jāle, "fisherman"; it is built on jāla, "net".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for skin, then the Bengali for a fisherman.
 You'll want to know: কামার.
 কামার — kāmār — "a blacksmith".
 
+The word, taken apart.
+কামার (kāmār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karmāra, "blacksmith" (CDIAL 2898). CDIAL reports Chatterji's view that the word may be Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a fisherman, then the Bengali for a blac
 You'll want to know: কুমোর.
 কুমোর — kumor — "a potter".
 
+The word, taken apart.
+কুমোর (kumor) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kumbhakāra, "potter" (CDIAL 3310). CDIAL writes the Bengali form kumār.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a blacksmith, then the Bengali for a pot
 
 You'll want to know: তাঁতি.
 তাঁতি — tā̃ti — "a weaver".
+
+The word, taken apart.
+তাঁতি (tā̃ti) (tāṁti) is a tadbhava, a word inherited and reshaped by sound change. It comes from tantrika, "weaver", a form CDIAL reconstructs from its descendants (CDIAL 5666).
 
 What you've built.
 One more word for this chapter.

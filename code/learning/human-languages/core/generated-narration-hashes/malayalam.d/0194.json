@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 194,
-  "sourceHash": "fnv1a64:5a75ad6d1f603ba8",
+  "sourceHash": "fnv1a64:952cda7b375c353c",
   "lessonIds": [
     "ML-C194-prasavam",
     "ML-C194-opparesan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch194.txt",
   "json": "malayalam/narration/ch194.json",
-  "textHash": "fnv1a64:c0b10861b71048e2",
-  "jsonHash": "fnv1a64:177d584daf17e4f5",
+  "textHash": "fnv1a64:d06fdf17b3de7f3e",
+  "jsonHash": "fnv1a64:7db5ccf61bbdd67f",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 263,
-  "sourceHash": "fnv1a64:e1637d4bcc2f91f1",
+  "sourceHash": "fnv1a64:cfcf2a560a715862",
   "lessonIds": [
     "HI-C263-jhumka",
     "HI-C263-bindi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch263.txt",
   "json": "hindi/narration/ch263.json",
-  "textHash": "fnv1a64:4d725ef87f8e6435",
-  "jsonHash": "fnv1a64:fa9093d7a6cbdd59",
+  "textHash": "fnv1a64:973585962cd509ab",
+  "jsonHash": "fnv1a64:2f22d1e4748e6b06",
   "findings": []
 }

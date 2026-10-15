@@ -11,8 +11,8 @@ gloss: four, on the page — written with the very first sign this book taught
 concept_tag: MW-NUMBER-FOUR-WRITTEN
 prerequisites: [MW-C32-hear-chaar]
 sounds: [unaspirated-ch, long-aa, tapped-r]
-roots: []
-etymology_hook: The book opened on र in raam; four ends on the same sign, and needs nothing the hand has not had since page one.
+roots: [sanskrit-catvaras]
+etymology_hook: "chār ← Sanskrit catvāri 'four', a tadbhava (CDIAL 4655, Old Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -47,6 +47,11 @@ write three.
 **र** was the first sign this book ever asked the hand to make, in chapter 1,
 on the way to **राम**. Thirty-one chapters later it closes the fourth number.
 Every sign in **चार** is older than the market this number is for.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चार** (*chār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catvāri*, "four". CDIAL lists Old Marwari *cyāri* under it (CDIAL 4655). Hindi and Gujarati have *cār*, as Marwadi does.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHAAR-01, MW-SCRIPT-TEEN-01, MW-SCRIPT-EK-01] -->

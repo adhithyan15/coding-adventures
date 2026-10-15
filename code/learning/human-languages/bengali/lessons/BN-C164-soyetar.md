@@ -14,7 +14,8 @@ romanization: "soyeṭār"
 concept_tag: BN-JINIS164-SOYETAR
 prerequisites: [BN-C164-jins, BN-C164-haphpnt]
 sounds: []
-roots: []
+roots: [english-sweater]
+etymology_hook: "soyeṭār ← English sweater"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C164-haphpnt]
 <!-- hl-knowledge: introduces=[BN-LEX-C164-JINIS164-05]; assesses=[] -->
 
 **সোয়েটার** — *soyeṭār* — "a sweater".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সোয়েটার** (*soyeṭār*) is a loan from English *sweater*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

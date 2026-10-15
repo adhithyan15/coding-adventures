@@ -13,7 +13,8 @@ gloss: "nearest, next"
 concept_tag: LA-QUAL267-PROXIMUS
 prerequisites: [LA-C267-praecipuus, LA-C267-pristinus]
 sounds: []
-roots: []
+roots: [proximus-latin, prope-latin]
+etymology_hook: "proximus 'nearest' — the superlative belonging to prope 'near'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C267-pristinus]
 <!-- hl-knowledge: introduces=[LA-LEX-C267-QUAL267-05]; assesses=[] -->
 
 **proximus, proxima, proximum** — "nearest, next".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**proximus** is usually traced to Proto-Indo-European *\*prokwismmos*, "nearest" (EtymDB 2.1), the superlative belonging to *prope*, "near"; Lewis & Short list it under *propior*, "nearer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

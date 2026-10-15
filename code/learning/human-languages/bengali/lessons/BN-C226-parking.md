@@ -14,7 +14,8 @@ romanization: "pārking"
 concept_tag: BN-JINIS226-PARKING
 prerequisites: [BN-C226-jorimana, BN-C226-laisens]
 sounds: []
-roots: []
+roots: [english-parking]
+etymology_hook: "pārking ← English parking"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C226-laisens]
 <!-- hl-knowledge: introduces=[BN-LEX-C226-JINIS226-04]; assesses=[] -->
 
 **পার্কিং** — *pārking* — "parking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পার্কিং** (*pārking*) is a loan from English *parking*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a song, a poem"
 concept_tag: LA-RES246-CARMEN
 prerequisites: [LA-C245-imperator, LA-C245-regnum]
 sounds: []
-roots: []
+roots: [carmen-latin, canere-latin]
+etymology_hook: "carmen 'song' — usually explained as *can-men, from canō 'to sing'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C245-regnum]
 <!-- hl-knowledge: introduces=[LA-LEX-C246-RES246-01]; assesses=[] -->
 
 **carmen, carminis** — "a song, a poem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**carmen** is usually explained as *\*can-men*, "a singing", built on *canō*, "to sing", with *-men*, an ending for a result: a song. Varro gives an old form *casmen* (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

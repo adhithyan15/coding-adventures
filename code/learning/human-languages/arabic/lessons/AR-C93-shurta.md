@@ -14,7 +14,8 @@ romanization: "shurṭa"
 concept_tag: AR-TOWN93-SHURTA
 prerequisites: [AR-C92-funduq, AR-C92-maktab]
 sounds: []
-roots: []
+roots: [sh-r-ṭ]
+etymology_hook: "shurṭa: built on the root sh-r-ṭ, 'to make a condition' (Lane); Lane's shurṭa is the picked men of an army"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C92-maktab]
 <!-- hl-knowledge: introduces=[AR-LEX-C93-TOWN93-01]; assesses=[] -->
 
 **شرطة** — *shurṭa* — "the police".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شرطة** (*shurṭa*) is built on the native Arabic root *sh-r-ṭ*, "to make a condition; a sign, a mark" (Lane). Lane's *shurṭa* is the picked men of an army; the police are a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

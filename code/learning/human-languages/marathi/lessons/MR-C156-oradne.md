@@ -14,7 +14,8 @@ romanization: "oraḍṇe"
 concept_tag: MR-VERB-ORADNE
 prerequisites: [MR-C156-dakhavne, MR-C156-vajavne]
 sounds: []
-roots: []
+roots: [indo-aryan-uparatati]
+etymology_hook: "oraḍṇe ← *uparaṭati 'shouts to', a reconstructed form; a tadbhava (CDIAL 2211)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C156-vajavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C156-ACT156-03]; assesses=[] -->
 
 **ओरडणे** — *oraḍṇe* — "to shout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ओरडणे** (*oraḍṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*uparaṭati*, "shouts to", a form CDIAL reconstructs from its descendants (CDIAL 2211). It is *upa*, "to", and *raṭ*, "to cry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

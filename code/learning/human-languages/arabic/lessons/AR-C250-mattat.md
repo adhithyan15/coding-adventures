@@ -14,7 +14,8 @@ romanization: "maṭṭāṭ"
 concept_tag: AR-SHAY250-MATTAT
 prerequisites: [AR-C250-tub, AR-C250-rukham]
 sounds: []
-roots: []
+roots: [m-ṭ-ṭ]
+etymology_hook: "maṭṭāṭ: built on the root m-ṭ-ṭ, 'to stretch' (Lane); maṭṭāṭ is a modern faʿʿāl word, 'the stretchy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C250-rukham]
 <!-- hl-knowledge: introduces=[AR-LEX-C250-SHAY250-04]; assesses=[] -->
 
 **مطاط** — *maṭṭāṭ* — "rubber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مطاط** (*maṭṭāṭ*) is built on the native Arabic root *m-ṭ-ṭ*, "to stretch" (Lane). *Maṭṭāṭ* is a modern *faʿʿāl* word, "the stretchy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

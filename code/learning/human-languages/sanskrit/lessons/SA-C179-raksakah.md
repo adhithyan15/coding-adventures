@@ -14,7 +14,8 @@ romanization: "rakṣakaḥ"
 concept_tag: SA-PPL179-RAKSAKAH
 prerequisites: [SA-C178-snusa, SA-C179-sainikah]
 sounds: []
-roots: []
+roots: [sanskrit-rakshati]
+etymology_hook: "rakṣaka ← root √rakṣ 'guard, protect' + agent -aka (MW; CDIAL 10545)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C179-sainikah]
 <!-- hl-knowledge: introduces=[SA-LEX-C179-PPL179-02]; assesses=[] -->
 
 **रक्षकः** — *rakṣakaḥ* — "a guard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rakṣaka* is built on the root √rakṣ, "to guard, protect", with the agent suffix *-aka* (MW): "one who guards". CDIAL 10545 records it as "watchman", and the verb *rakṣati* lives on as Hindi *rakhnā*, "to keep" (CDIAL 10547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "udarapīḍā"
 concept_tag: SA-WEL150-UDARAPIDA
 prerequisites: [SA-C150-sothah, SA-C150-vamanam]
 sounds: []
-roots: []
+roots: [sanskrit-udarapida]
+etymology_hook: "udarapīḍā ← udara 'belly' + pīḍā 'pain' (√pīḍ 'press, hurt', MW): 'belly-pain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C150-vamanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C150-WEL150-05]; assesses=[] -->
 
 **उदरपीडा** — *udarapīḍā* — "a stomach ache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*udarapīḍā* is built from *udara* "belly, stomach", already in the Rigveda, and *pīḍā* "pain", from the root √pīḍ "press, hurt" (MW): "belly-pain", a stomach ache.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

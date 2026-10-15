@@ -14,7 +14,8 @@ romanization: "navā"
 concept_tag: MR-ANIMALS103-NAVA
 prerequisites: [MR-C103-mungi, MR-C103-badak]
 sounds: []
-roots: []
+roots: [sanskrit-nava]
+etymology_hook: "navā ← Sanskrit nava 'new, young', a tadbhava (CDIAL 6983)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C103-badak]
 <!-- hl-knowledge: introduces=[MR-LEX-C103-ANIMALS103-03]; assesses=[] -->
 
 **नवा** — *navā* — "new".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नवा** (*navā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nava*, "new, young" (CDIAL 6983). The same ancient word as English *new*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

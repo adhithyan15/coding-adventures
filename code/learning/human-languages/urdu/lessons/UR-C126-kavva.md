@@ -14,7 +14,8 @@ romanization: "kavvā"
 concept_tag: UR-THINGS126-KAVVA
 prerequisites: [UR-C125-jazira, UR-C125-chirya]
 sounds: []
-roots: []
+roots: [sanskrit-kaka]
+etymology_hook: "kavvā ← Sanskrit kāka 'crow', a tadbhava (CDIAL 2993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C125-chirya]
 <!-- hl-knowledge: introduces=[UR-LEX-C126-THINGS126-01]; assesses=[] -->
 
 **کوا** — *kavvā* — "a crow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کوا** (*kavvā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kāka*, "crow" (CDIAL 2993). CDIAL notes that the later forms partly imitate the bird's call.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

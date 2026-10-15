@@ -11,6 +11,7 @@ concept_tag: ES-VERB-DISFRUTAR
 prerequisites: [ES-C440-celebrar, ES-C367-fruta, ES-C438-descansar]
 sounds: [stress-final, s-t-cluster]
 roots: [fructus-latin]
+etymology_hook: "disfrutar — dis- + fruta: to take the fruit of; Latin fructus 'produce'"
 duration:
   max_seconds: 275
 requires:

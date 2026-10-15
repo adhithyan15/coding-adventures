@@ -14,7 +14,8 @@ romanization: "hār"
 concept_tag: UR-CHIZ166-HAR
 prerequisites: [UR-C166-belt, UR-C166-bali]
 sounds: []
-roots: []
+roots: [sanskrit-hara-necklace]
+etymology_hook: "hār ← Sanskrit hāra 'necklace', a tadbhava (CDIAL 14059)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C166-bali]
 <!-- hl-knowledge: introduces=[UR-LEX-C166-CHIZ166-04]; assesses=[] -->
 
 **ہار** — *hār* — "a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہار** (*hār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hāra*, "necklace" (CDIAL 14059).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

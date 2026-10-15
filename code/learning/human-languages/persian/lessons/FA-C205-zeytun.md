@@ -14,7 +14,8 @@ romanization: "zeytun"
 concept_tag: FA-CHIZ205-ZEYTUN
 prerequisites: [FA-C205-makaroni, FA-C205-qeyme]
 sounds: []
-roots: []
+roots: [arabic-zaytun]
+etymology_hook: "zeytun ← Arabic zaytūn 'olive', root z-y-t (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C205-qeyme]
 <!-- hl-knowledge: introduces=[FA-LEX-C205-CHIZ205-05]; assesses=[] -->
 
 **زیتون** — *zeytun* — "an olive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zeytun* is borrowed from Arabic *zaytūn*, "olive". Its Arabic root is *z-y-t* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

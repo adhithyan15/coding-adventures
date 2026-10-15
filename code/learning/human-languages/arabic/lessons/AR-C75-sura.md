@@ -14,7 +14,8 @@ romanization: "ṣūra"
 concept_tag: AR-SCHOOL75-SURA
 prerequisites: [AR-C74-jawab, AR-C75-kalima]
 sounds: []
-roots: []
+roots: [ṣ-w-r]
+etymology_hook: "ṣūra: built on the root ṣ-w-r, 'to form, to fashion' (Lane); ṣūra is a form, an image"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C75-kalima]
 <!-- hl-knowledge: introduces=[AR-LEX-C75-SCHOOL75-02]; assesses=[] -->
 
 **صورة** — *ṣūra* — "a picture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صورة** (*ṣūra*) is built on the native Arabic root *ṣ-w-r*, "to form, to fashion" (Lane). *Ṣūra* is a form, an image.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

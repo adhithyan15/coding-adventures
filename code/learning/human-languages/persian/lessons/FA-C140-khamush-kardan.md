@@ -14,7 +14,8 @@ romanization: "khâmush kardan"
 concept_tag: FA-VERB-KHAMUSH-KARDAN
 prerequisites: [FA-C140-pak-kardan, FA-C140-roshan-kardan]
 sounds: []
-roots: []
+roots: [persian-khamosh, pie-kwer]
+etymology_hook: "khâmush kardan: khâmush ← Middle Persian xāmōš 'silent' (EtymDB) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C140-roshan-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C140-KONESH140-04]; assesses=[] -->
 
 **خاموش کردن** — *khâmush kardan* — "to switch off, to put out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâmush kardan* pairs *khâmush*, "silent, out", with *kardan*, "to make". *khâmush* is inherited: EtymDB traces it to Middle Persian *xāmōš*, "silent". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

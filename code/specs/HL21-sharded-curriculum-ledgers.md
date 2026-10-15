@@ -741,3 +741,26 @@ separate script, never wired into `vitest run`.
    and the French, Japanese, and Marwadi chapter ledgers were each normalized in
    a separate, deliberate commit whose whole content was reformatting. That
    keeps "no data changed" reviewable instead of burying it inside a migration.
+
+---
+
+## 9. Derived whole-track digest snapshots are not owners
+
+The canonical curriculum graph is already held by version-controlled direct
+owners: one chapter shard, path/spine/extension shard, and lesson-membership
+shard per stable identity. A SHA-256 over the fully assembled track does not own
+any additional information. It is a generated summary of those owners.
+
+The first conflict-reduction pass moved one corpus-wide graph digest into one
+file per track. That removed cross-language conflicts, but it still required
+every independent author in the *same* track to rewrite the same generated
+file. Punjabi demonstrated the remaining serialization point: its curriculum
+digest was touched by 22 commits from 2026-10-01 through the #17411 audit.
+
+Those mutable aggregate pins are therefore retired. The loader and tests prove
+the useful properties directly from the canonical shards: safe regular files,
+valid schemas and references, complete unique membership ownership, contiguous
+ordering, and deterministic assembly. Git review shows which direct owners
+changed. Reintroducing a tracked checksum or count over a whole track would add
+derived state without adding an ownership boundary and would violate this
+specification's central rule: no one file may serialize independent work.

@@ -12,6 +12,9 @@ Before the new one: say the Japanese for something to look forward to, then the 
 You'll want to know: かのう.
 かのう — kanou — "possible".
 
+The word, taken apart.
+かのう (kanou) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, "may, can" (Middle Chinese khaX) and nō, "to be able" (nong) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Before the new one: say the Japanese for love, then the Japanese for possible.
 You'll want to know: とくい.
 とくい — tokui — "good at".
 
+The word, taken apart.
+とくい (tokui) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are toku, "obtain, gain" (Middle Chinese tok) and i, "thought, mind" ('iH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -73,6 +79,9 @@ Before the new one: say the Japanese for possible, then the Japanese for good at
 
 You'll want to know: にがて.
 にがて — nigate — "poor at".
+
+The word, taken apart.
+にがて (nigate) is a native compound, inherited rather than borrowed: niga, "bitter", from nigai, and te, "hand", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -110,6 +119,9 @@ Before the new one: say the Japanese for good at, then the Japanese for poor at.
 You'll want to know: もちもの.
 もちもの — mochimono — "belongings".
 
+The word, taken apart.
+もちもの (mochimono) is a native compound, inherited rather than borrowed: mochi, "holding", from motsu, "to hold", and mono, "thing" (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -140,6 +152,9 @@ Before the new one: say the Japanese for poor at, then the Japanese for belongin
 
 You'll want to know: おかねもち.
 おかねもち — okanemochi — "a rich person".
+
+The word, taken apart.
+おかねもち (okanemochi) is native: the polite o-, kane, "money", and mochi, "holder", from motsu, "to hold" (JMdict). It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.

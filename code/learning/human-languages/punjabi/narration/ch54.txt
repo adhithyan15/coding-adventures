@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a son, then the Punjabi for a daughter.
 You'll want to know: ਦਾਦਾ.
 ਦਾਦਾ — dādā — "a grandfather (father's father)".
 
+The word, taken apart.
+ਦਾਦਾ (dādā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261). CDIAL lists Punjabi dāddā, "father's father".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a daughter, then the Punjabi for a grand
 
 You'll want to know: ਦਾਦੀ.
 ਦਾਦੀ — dādī — "a grandmother (father's mother)".
+
+The word, taken apart.
+ਦਾਦੀ (dādī) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261). It is the feminine of dādā; CDIAL lists Punjabi dāddī beside dāddā.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a grandfather, then the Punjabi for a gr
 You'll want to know: ਨਾਨਾ.
 ਨਾਨਾ — nānā — "a grandfather (mother's father)".
 
+The word, taken apart.
+ਨਾਨਾ (nānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from nānna, "a term of respect for an older relative", a form CDIAL reconstructs from its descendants (CDIAL 7059). CDIAL lists Punjabi nānā, "mother's father".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a grandmother, then the Punjabi for a gr
 You'll want to know: ਨਾਨੀ.
 ਨਾਨੀ — nānī — "a grandmother (mother's mother)".
 
+The word, taken apart.
+ਨਾਨੀ (nānī) is a tadbhava, a word inherited and reshaped by sound change. It comes from nānna, "a term of respect for an older relative", a form CDIAL reconstructs from its descendants (CDIAL 7059). It is the feminine of nānā, "mother's father".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a grandfather, then the Punjabi for a gr
 
 You'll want to know: ਪਤੀ.
 ਪਤੀ — patī — "a husband".
+
+The word, taken apart.
+ਪਤੀ (patī) is Sanskrit pati, "master, husband", taken over whole as a learned loan, a tatsama (CDIAL 7727). CDIAL lists the inherited Punjabi form as paī, "husband".
 
 What you've built.
 One more word for this chapter.

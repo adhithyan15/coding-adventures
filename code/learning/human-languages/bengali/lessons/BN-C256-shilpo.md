@@ -14,7 +14,8 @@ romanization: "shilpô"
 concept_tag: BN-JINIS256-SHILPO
 prerequisites: [BN-C256-itihas, BN-C256-bigyan]
 sounds: []
-roots: []
+roots: [sanskrit-shilpa]
+etymology_hook: "shilpô ← Sanskrit śilpa 'art, craft', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C256-bigyan]
 <!-- hl-knowledge: introduces=[BN-LEX-C256-JINIS256-04]; assesses=[] -->
 
 **শিল্প** — *shilpô* — "art; industry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শিল্প** (*shilpô*) is Sanskrit *śilpa*, "art, craft", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

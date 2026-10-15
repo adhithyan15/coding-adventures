@@ -14,7 +14,8 @@ romanization: "āgāmī"
 concept_tag: SA-FUT139-AGAMI
 prerequisites: [SA-C139-bhavisyat, SA-C139-svah]
 sounds: []
-roots: []
+roots: [sanskrit-agamin]
+etymology_hook: "āgāmin 'coming, future' ← ā-√gam 'come', on √gam 'go' (MW; CDIAL 1048)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C139-svah]
 <!-- hl-knowledge: introduces=[SA-LEX-C139-FUT139-03]; assesses=[] -->
 
 **आगामी** — *āgāmī* — "coming, next". It stands before the time word and takes its ending: **आगामिनि सप्ताहे** — "next week"; **आगामिनि संवत्सरे** — "next year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āgāmī* is the nominative of *āgāmin* "coming, approaching", built from *ā-√gam* "come", the root √gam "go" with *ā* "toward" (MW; CDIAL 1048). From "coming" it means "next, future".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

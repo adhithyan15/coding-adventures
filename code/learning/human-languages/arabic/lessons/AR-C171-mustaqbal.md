@@ -14,7 +14,8 @@ romanization: "mustaqbal"
 concept_tag: AR-WAQT171-MUSTAQBAL
 prerequisites: [AR-C170-mutaakhkhiran, AR-C170-abadan]
 sounds: []
-roots: []
+roots: [q-b-l]
+etymology_hook: "mustaqbal: built on the root q-b-l, 'to face, to receive' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C170-abadan]
 <!-- hl-knowledge: introduces=[AR-LEX-C171-WAQT171-01]; assesses=[] -->
 
 **مستقبل** — *mustaqbal* — "the future".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مستقبل** (*mustaqbal*) is built on the native Arabic root *q-b-l*, "to face, to receive" (Lane). *Mustaqbal* is the Form X passive participle, "what is faced, what is met": the future.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 356,
   "title": "From When, For How Long, And All At Once",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2ce8a86a2a35fe06",
+  "sourceHash": "fnv1a64:ebae223e245db6dd",
   "lessons": [
     {
       "id": "ES-C356-desde",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a8852e78ed56859",
+      "sourceHash": "fnv1a64:df649e3f0e95759b",
       "notice": null,
       "blocks": [
         {
@@ -80,7 +80,7 @@
             },
             {
               "kind": "speech",
-              "text": "Desde is dē + ex + dē. Three prepositions, all doing the same job, fused into one word of two beats."
+              "text": "Desde is built from Latin dē + ex + dē. Three prepositions, all doing the same job, fused into one word of two beats."
             },
             {
               "kind": "speech",

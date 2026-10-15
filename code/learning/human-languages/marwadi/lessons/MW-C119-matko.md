@@ -14,7 +14,8 @@ romanization: "maṭko"
 concept_tag: MW-THINGS119-MATKO
 prerequisites: [MW-C118-hadi, MW-C118-gharo]
 sounds: []
-roots: []
+roots: [sanskrit-mrda]
+etymology_hook: "maṭko ← Sanskrit mṛdā 'earth, clay', a tadbhava (CDIAL 10291, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C118-gharo]
 <!-- hl-knowledge: introduces=[MW-LEX-C119-THINGS119-01]; assesses=[] -->
 
 **मटको** — *maṭko* — "a large clay pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मटको** (*maṭko*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mṛdā*, "earth, clay". CDIAL gives no Marwari form in this entry (CDIAL 10291); the match is through Hindi *maṭkā*. CDIAL explains the *-k-* as an added suffix: a clay jar.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

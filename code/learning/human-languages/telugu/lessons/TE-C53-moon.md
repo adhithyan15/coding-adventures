@@ -11,7 +11,8 @@ romanization: "candruḍu"
 concept_tag: TE-NOUN-MOON
 prerequisites: [TE-C53-sun]
 sounds: []
-roots: []
+roots: [sanskrit-candra]
+etymology_hook: "candruḍu ← Sanskrit candra 'shining; moon' (CDIAL 4661), with the Telugu ending -uḍu"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ Sanskrit *candra* means "shining, bright", and it carries the same **-డు** t
 The inherited word here is నెల, which you already have as the word for a month. One shape for the moon and for the stretch of time it measures — the moon is the oldest calendar there is, and Telugu keeps that fact inside a single word.
 
 *candra* went a long way west as well. It shares an ancestor with the Latin piece that gives English *candle* and *incandescent*: a very old root for burning white.
+
+CDIAL 4661 lists Sanskrit *candra*, "shining; moon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

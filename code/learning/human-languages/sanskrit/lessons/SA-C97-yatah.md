@@ -14,7 +14,8 @@ romanization: "yataḥ"
 concept_tag: SA-LOC97-YATAH
 prerequisites: [SA-C97-sthanakam, SA-C97-karanam]
 sounds: []
-roots: []
+roots: [sanskrit-yatas]
+etymology_hook: "yataḥ ← relative stem ya- + -tas 'from', 'from which' (MW; MW compares Greek hos); Pali yato"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C97-karanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C97-LOC97-05]; assesses=[] -->
 
 **यतः** — *yataḥ* — "because, since".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yataḥ* is built from the relative stem *ya-* "which" and the ending *-tas* "from": "from which", so "since, because" (MW). MW compares the relative *ya-* with Greek *hos* "who". Pali kept the word as *yato* (CDIAL 10401).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

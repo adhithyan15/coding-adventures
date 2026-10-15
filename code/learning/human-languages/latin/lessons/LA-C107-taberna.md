@@ -13,7 +13,8 @@ gloss: "a shop, an inn"
 concept_tag: LA-URBS-TABERNA
 prerequisites: [LA-C107-forum, LA-C107-templum]
 sounds: []
-roots: []
+roots: [taberna-latin]
+etymology_hook: "taberna 'shop, inn' — origin uncertain; perhaps from trabs 'beam': a plank hut"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C107-templum]
 <!-- hl-knowledge: introduces=[LA-LEX-C107-URBS-05]; assesses=[] -->
 
 **taberna, tabernae** — "a shop, an inn". English *tavern*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**taberna** has no sure origin; one common view derives it from *trabs*, "a beam": a hut of planks.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

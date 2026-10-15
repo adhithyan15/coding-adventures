@@ -14,7 +14,8 @@ romanization: "ūhisu"
 concept_tag: KA-VERB-UHISU
 prerequisites: [KA-C276-samadhana-madu, KA-C276-hemmepadu]
 sounds: []
-roots: []
+roots: [sanskrit-uha]
+etymology_hook: "ūhisu: Sanskrit ūha 'consideration' (CDIAL 2443) + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C276-hemmepadu]
 <!-- hl-knowledge: introduces=[KA-LEX-C277-KRIYE277-01]; assesses=[] -->
 
 **ಊಹಿಸು** — *ūhisu* — "to guess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಊಹಿಸು** (*ūhisu*) is Sanskrit *ūha*, "consideration, guess" (CDIAL 2443), made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

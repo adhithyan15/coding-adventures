@@ -11,8 +11,8 @@ gloss: price
 concept_tag: MW-SHOPPING-PRICE
 prerequisites: [MW-C13-vastu]
 sounds: [aspirated-bh, long-aa, voiced-v]
-roots: []
-etymology_hook: The price word follows shop and item without adding a written sign.
+roots: [sanskrit-bhava]
+etymology_hook: "bhāv 'price' ← Sanskrit bhāva 'being, state'; CDIAL lists Gujarati bhāv 'market rate' (CDIAL 9475)"
 duration:
   max_seconds: 145
 requires:
@@ -48,6 +48,11 @@ Then recall market. [YOU WRITE: the words for money and cloud, then **मां*
 
 Say the single long beat from a price-tag cue. This lesson teaches the noun;
 asking the final price remains later phrase work.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhāv* goes back to Sanskrit *bhāva*, "being, thing, state", and keeps the Sanskrit shape. CDIAL lists Gujarati and Marathi *bhāv*, "market rate", under it (CDIAL 9475), with the worn Hindi form *bhāu*, "price"; it gives no Marwari form there.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BHAAV-01] -->

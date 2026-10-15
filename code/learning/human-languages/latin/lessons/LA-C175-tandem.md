@@ -13,7 +13,8 @@ gloss: "at last"
 concept_tag: LA-TEMP175-TANDEM
 prerequisites: [LA-C174-vox, LA-C174-animus]
 sounds: []
-roots: []
+roots: [tandem-latin, tam-latin]
+etymology_hook: "tandem 'at last' — tam 'so far' + the pointing ending -dem"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C174-animus]
 <!-- hl-knowledge: introduces=[LA-LEX-C175-TEMP175-01]; assesses=[] -->
 
 **tandem** — "at last".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tandem** is *tam*, "so far", with *-dem*, a pointing ending (Lewis & Short): so far and no further, at last.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

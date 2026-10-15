@@ -14,7 +14,8 @@ romanization: "āku"
 concept_tag: TE-THINGS120-AKU
 prerequisites: [TE-C120-sarassu, TE-C120-adavi]
 sounds: []
-roots: []
+roots: [dravidian-aaku-leaf]
+etymology_hook: "āku: native Dravidian, one word with Kannada āku 'leaf' (DEDR 335)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C120-adavi]
 <!-- hl-knowledge: introduces=[TE-LEX-C120-THINGS120-04]; assesses=[] -->
 
 **ఆకు** — *āku* — "a leaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆకు** (*āku*) is native Dravidian, one word with Kannada *āku*, "leaf" (DEDR 335).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

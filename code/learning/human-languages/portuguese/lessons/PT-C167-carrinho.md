@@ -46,7 +46,8 @@ reviews_of: [PT-C166-destino]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**carrinho** is *carro*, "cart", with *-inho*, "little".
+**carrinho** is *carro*, "cart", with *-inho*, "little". *Carro* is inherited
+from Latin *carrus*, "wagon", which Latin itself borrowed from Gaulish (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

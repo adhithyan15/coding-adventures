@@ -14,7 +14,8 @@ romanization: "noutbúk"
 concept_tag: RU-VESHCH191-NOUTBUK
 prerequisites: [RU-C191-provod, RU-C191-zaryadka]
 sounds: []
-roots: []
+roots: [english-notebook]
+etymology_hook: "ноутбук ← English notebook"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C191-zaryadka]
 <!-- hl-knowledge: introduces=[RU-LEX-C191-VESHCH191-05]; assesses=[] -->
 
 **ноутбук** (*noutbúk*) — "a laptop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ноутбук** comes from English *notebook*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

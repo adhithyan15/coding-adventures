@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 218,
-  "sourceHash": "fnv1a64:bad60479193a21be",
+  "sourceHash": "fnv1a64:54c59cefed71b032",
   "lessonIds": [
     "UR-C218-sitambar",
     "UR-C218-aktubar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch218.txt",
   "json": "urdu/narration/ch218.json",
-  "textHash": "fnv1a64:35d432fa26bfec27",
-  "jsonHash": "fnv1a64:ede1a8359bd33eea",
+  "textHash": "fnv1a64:84ac1d11837e8c9d",
+  "jsonHash": "fnv1a64:6e6048d8d6299b5e",
   "findings": []
 }

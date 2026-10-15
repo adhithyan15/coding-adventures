@@ -14,7 +14,8 @@ romanization: "farīq"
 concept_tag: AR-SHAY277-FARIQ
 prerequisites: [AR-C277-kura, AR-C277-mubara]
 sounds: []
-roots: []
+roots: [f-r-q]
+etymology_hook: "farīq: built on the root f-r-q, 'to separate' (Lane); farīq is a party set apart, a team"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C277-mubara]
 <!-- hl-knowledge: introduces=[AR-LEX-C277-SHAY277-03]; assesses=[] -->
 
 **فريق** — *farīq* — "a team".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فريق** (*farīq*) is built on the native Arabic root *f-r-q*, "to separate" (Lane). *Farīq* is a party set apart, a team.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

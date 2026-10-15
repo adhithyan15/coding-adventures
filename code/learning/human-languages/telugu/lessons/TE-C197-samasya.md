@@ -14,7 +14,8 @@ romanization: "samasya"
 concept_tag: TE-PANI197-SAMASYA
 prerequisites: [TE-C197-vadrangi, TE-C197-racayita]
 sounds: []
-roots: []
+roots: [sanskrit-samasya]
+etymology_hook: "samasya ← Sanskrit samasyā 'a problem set to be completed', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C197-racayita]
 <!-- hl-knowledge: introduces=[TE-LEX-C197-PANI197-03]; assesses=[] -->
 
 **సమస్య** — *samasya* — "a problem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సమస్య** (*samasya*) is Sanskrit *samasyā*, "a problem set to be completed", taken over as a learned loan, a tatsama, with the final *-ā* shortened.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

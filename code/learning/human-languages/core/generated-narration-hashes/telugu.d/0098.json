@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 98,
-  "sourceHash": "fnv1a64:fb190b8368211455",
+  "sourceHash": "fnv1a64:40eed8d1746399c3",
   "lessonIds": [
     "TE-C98-nothing",
     "TE-C98-notyet",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch98.txt",
   "json": "telugu/narration/ch98.json",
-  "textHash": "fnv1a64:fa82637297f227f0",
-  "jsonHash": "fnv1a64:f09ffd761ccf875a",
+  "textHash": "fnv1a64:adb17441db87cfa8",
+  "jsonHash": "fnv1a64:3c32e08d26b48047",
   "findings": []
 }

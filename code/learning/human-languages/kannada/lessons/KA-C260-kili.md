@@ -14,7 +14,8 @@ romanization: "kīli"
 concept_tag: KA-VASTU260-KILI
 prerequisites: [KA-C259-sara, KA-C260-samanu]
 sounds: []
-roots: []
+roots: [dravidian-app-26-kil]
+etymology_hook: "kīli: probably kīlu 'pin, bolt', an Indo-Aryan loan (DEDR App. 26) from Sanskrit kīla"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C260-samanu]
 <!-- hl-knowledge: introduces=[KA-LEX-C260-VASTU260-02]; assesses=[] -->
 
 **ಕೀಲಿ** — *kīli* — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೀಲಿ** (*kīli*) is probably the same word as *kīlu*, "a pin, a bolt", which DEDR lists among Indo-Aryan loans (DEDR App. 26): it goes back to Sanskrit *kīla*, "a stake, a bolt" (CDIAL 3202). CDIAL 3202 adds that the Sanskrit word itself may be of non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

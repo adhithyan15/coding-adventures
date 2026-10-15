@@ -14,7 +14,8 @@ romanization: "resturân"
 concept_tag: FA-TOWN73-RESTURAN
 prerequisites: [FA-C72-shahr, FA-C73-forudgah]
 sounds: []
-roots: []
+roots: [french-restaurant]
+etymology_hook: "resturân ← French restaurant 'restaurant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C73-forudgah]
 <!-- hl-knowledge: introduces=[FA-LEX-C73-TOWN73-02]; assesses=[] -->
 
 **رستوران** — *resturân* — "a restaurant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*resturân* is borrowed from French *restaurant*, "restaurant" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

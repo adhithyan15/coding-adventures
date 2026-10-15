@@ -47,8 +47,10 @@ pub enum DiagramShape {
     LinedCylinder,
     Display,
     DividedRect,
+    TitledRect,
     WindowPane,
     FilledCircle,
+    Anchor,
     LoopLimit,
     ManualInput,
     MultiDocument,
@@ -1946,7 +1948,14 @@ pub struct SwimlaneNode {
     pub classes: Vec<String>, pub style: DiagramStyle,
 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct SwimlaneLane { pub id: String, pub label: String, pub node_ids: Vec<String> }
+pub struct SwimlaneLane {
+    pub id: String, pub label: String, pub node_ids: Vec<String>, pub classes: Vec<String>, pub style: DiagramStyle,
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneGroup {
+    pub id: String, pub label: String, pub lane_id: String, pub parent_id: Option<String>, pub node_ids: Vec<String>,
+    pub classes: Vec<String>, pub style: DiagramStyle,
+}
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick, Invisible }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1967,14 +1976,64 @@ pub struct SwimlaneEdge {
     pub curve: Option<SwimlaneEdgeCurve>,
 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct SwimlaneDiagram {
-    pub direction: DiagramDirection, pub title: Option<String>, pub accessibility_title: Option<String>,
-    pub accessibility_description: Option<String>, pub lanes: Vec<SwimlaneLane>, pub nodes: Vec<SwimlaneNode>,
-    pub edges: Vec<SwimlaneEdge>, pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
-    pub line_hops: Option<SwimlaneLineHops>, pub automatic_lane_ordering: bool,
+pub struct SwimlaneTheme {
+    pub main_background: String, pub node_border: String, pub line_color: String,
+    pub primary_text_color: String, pub font_family: Option<String>, pub font_size: Option<f64>,
+    pub text_color: String, pub edge_label_background: Option<String>,
+    pub cluster_background: Option<String>, pub cluster_border: Option<String>,
+    pub title_color: Option<String>,
+    pub node_text_color: Option<String>, pub arrowhead_color: Option<String>,
+    pub stroke_width: Option<f64>,
+}
+impl Default for SwimlaneTheme {
+    fn default() -> Self {
+        Self {
+            main_background: "#ffffff".into(),
+            node_border: "#1565c0".into(),
+            line_color: "#455a64".into(),
+            primary_text_color: "#0d47a1".into(),
+            font_family: None,
+            font_size: None,
+            text_color: "#37474f".into(),
+            edge_label_background: None,
+            cluster_background: None,
+            cluster_border: None,
+            title_color: None,
+            node_text_color: None,
+            arrowhead_color: None,
+            stroke_width: None,
+        }
+    }
+}
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct SwimlaneFlowchartConfig {
+    pub node_spacing: Option<f64>, pub rank_spacing: Option<f64>,
+    pub diagram_padding: Option<f64>, pub curve: Option<SwimlaneEdgeCurve>,
+    pub wrapping_width: Option<f64>, pub padding: Option<f64>,
+    pub title_top_margin: Option<f64>,
+    pub subgraph_title_margin_top: Option<f64>, pub subgraph_title_margin_bottom: Option<f64>,
 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedSwimlaneLane { pub id: String, pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
+pub struct SwimlaneDiagram {
+    pub direction: DiagramDirection, pub title: Option<String>, pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>, pub lanes: Vec<SwimlaneLane>, pub groups: Vec<SwimlaneGroup>, pub nodes: Vec<SwimlaneNode>,
+    pub edges: Vec<SwimlaneEdge>, pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
+    pub line_hops: Option<SwimlaneLineHops>, pub automatic_lane_ordering: bool,
+    pub ignore_cross_lane_edges: bool, pub optimize_ranks_by_crossings: bool,
+    pub flowchart_config: SwimlaneFlowchartConfig,
+    pub theme: SwimlaneTheme,
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedSwimlaneLane {
+    pub id: String, pub label: String, pub classes: Vec<String>, pub style: DiagramStyle,
+    pub x: f64, pub y: f64, pub width: f64, pub height: f64,
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedSwimlaneGroup {
+    pub id: String, pub label: String, pub lane_id: String, pub parent_id: Option<String>,
+    pub classes: Vec<String>, pub style: DiagramStyle,
+    pub x: f64, pub y: f64, pub width: f64, pub height: f64,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneNode {
     pub id: String, pub label: String, pub shape: DiagramShape, pub classes: Vec<String>, pub style: DiagramStyle,
@@ -1992,9 +2051,13 @@ pub struct LayoutedSwimlaneEdge {
 pub struct LayoutedSwimlaneDiagram {
     pub width: f64, pub height: f64, pub direction: DiagramDirection, pub title: Option<String>,
     pub accessibility_title: Option<String>, pub accessibility_description: Option<String>,
-    pub lanes: Vec<LayoutedSwimlaneLane>, pub nodes: Vec<LayoutedSwimlaneNode>, pub edges: Vec<LayoutedSwimlaneEdge>,
+    pub lanes: Vec<LayoutedSwimlaneLane>, pub groups: Vec<LayoutedSwimlaneGroup>,
+    pub nodes: Vec<LayoutedSwimlaneNode>, pub edges: Vec<LayoutedSwimlaneEdge>,
     pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>, pub line_hops: Option<SwimlaneLineHops>,
-    pub automatic_lane_ordering: bool,
+    pub automatic_lane_ordering: bool, pub ignore_cross_lane_edges: bool,
+    pub optimize_ranks_by_crossings: bool,
+    pub flowchart_config: SwimlaneFlowchartConfig,
+    pub theme: SwimlaneTheme,
 }
 
 // GRAMMAR VISUALIZATION FAMILY
@@ -2008,7 +2071,30 @@ pub enum RailroadExpression {
 #[derive(Clone, Debug, PartialEq)]
 pub struct RailroadRule { pub name: String, pub definition: RailroadExpression }
 #[derive(Clone, Debug, PartialEq)]
-pub struct RailroadDiagram { pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub rules: Vec<RailroadRule> }
+pub struct RailroadConfig {
+    pub compact_mode: bool, pub padding: f64, pub vertical_separation: f64, pub horizontal_separation: f64, pub arc_radius: f64,
+    pub font_size: f64, pub font_family: String,
+    pub terminal_fill: String, pub terminal_stroke: String, pub terminal_text_color: String,
+    pub non_terminal_fill: String, pub non_terminal_stroke: String, pub non_terminal_text_color: String,
+    pub line_color: String, pub stroke_width: f64, pub marker_fill: String,
+    pub special_fill: String, pub special_stroke: String, pub rule_name_color: String,
+    pub show_markers: bool, pub marker_radius: f64,
+}
+impl Default for RailroadConfig {
+    fn default() -> Self {
+        Self {
+            compact_mode: false, padding: 10.0, vertical_separation: 8.0, horizontal_separation: 10.0, arc_radius: 10.0,
+            font_size: 14.0, font_family: "monospace".into(),
+            terminal_fill: "#FFFFC0".into(), terminal_stroke: "#000000".into(), terminal_text_color: "#000000".into(),
+            non_terminal_fill: "#FFFFFF".into(), non_terminal_stroke: "#000000".into(), non_terminal_text_color: "#000000".into(),
+            line_color: "#000000".into(), stroke_width: 2.0, marker_fill: "#000000".into(),
+            special_fill: "#F0E0FF".into(), special_stroke: "#8800CC".into(), rule_name_color: "#000066".into(),
+            show_markers: true, marker_radius: 5.0,
+        }
+    }
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct RailroadDiagram { pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub config: RailroadConfig, pub rules: Vec<RailroadRule> }
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum RailroadElementKind { Terminal, NonTerminal, Special }
 #[derive(Clone, Debug, PartialEq)]
@@ -2018,7 +2104,7 @@ pub struct LayoutedRailroadPath { pub points: Vec<Point>, pub loopback: bool }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedRailroadRule { pub name: String, pub y: f64, pub height: f64, pub elements: Vec<LayoutedRailroadElement>, pub paths: Vec<LayoutedRailroadPath> }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedRailroadDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub rules: Vec<LayoutedRailroadRule> }
+pub struct LayoutedRailroadDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub config: RailroadConfig, pub rules: Vec<LayoutedRailroadRule> }
 
 // BUILD INFORMATION FAMILY
 #[derive(Clone, Debug, Eq, PartialEq)]

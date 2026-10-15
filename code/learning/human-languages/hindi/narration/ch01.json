@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2173b1bafd57660d",
+  "sourceHash": "fnv1a64:348352d0038d276d",
   "lessons": [
     {
       "id": "HI-C01-namaste",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a4fc5235017ac8db",
+      "sourceHash": "fnv1a64:c388322c84bee119",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -194,7 +194,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d15c1ebc1d16dc5b",
+      "sourceHash": "fnv1a64:bfe31a421bb2450f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -380,7 +380,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b07c2c315c41a389",
+      "sourceHash": "fnv1a64:7c48f59357868065",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -564,7 +564,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b1515b61ad80d608",
+      "sourceHash": "fnv1a64:7c94f475ea074738",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -736,7 +736,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a9f2d875508b0e15",
+      "sourceHash": "fnv1a64:c1fee5a6ff2a7f3d",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -14,7 +14,8 @@ romanization: "śvasikkuka"
 concept_tag: ML-VERB-SVASIKKUKA
 prerequisites: [ML-C303-labhikkuka, ML-C303-vilapesuka]
 sounds: []
-roots: []
+roots: [sanskrit-shvasa]
+etymology_hook: "śvasikkuka ← Sanskrit śvāsa 'breath' (CDIAL 12769) + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C303-vilapesuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C304-KRIYA304-01]; assesses=[] -->
 
 **ശ്വസിക്കുക** — *śvasikkuka* — "to breathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശ്വസിക്കുക** (*śvasikkuka*) is built on Sanskrit *śvas*, "to breathe", as in *śvāsa*, "breath" (CDIAL 12769), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

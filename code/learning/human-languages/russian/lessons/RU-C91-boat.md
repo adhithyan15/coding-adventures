@@ -14,7 +14,8 @@ romanization: "lódka"
 concept_tag: RU-LOC91-BOAT
 prerequisites: [RU-C91-tram, RU-C91-ship]
 sounds: []
-roots: []
+roots: [slavic-oldija]
+etymology_hook: "лодка is a diminutive of ладья 'boat', Proto-Slavic *oldĭji; Lithuanian aldijà 'canoe' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C91-ship]
 <!-- hl-knowledge: introduces=[RU-LEX-C91-LOC91-05]; assesses=[] -->
 
 **лодка** (*lódka*) — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лодка** is old *lodŭka*, a diminutive of *лодья*, now *ладья*, "a boat", from Proto-Slavic *\*oldĭji* — inherited. Vasmer relates it to Lithuanian *aldijà*, "canoe", and Swedish *ålla*, "a trough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

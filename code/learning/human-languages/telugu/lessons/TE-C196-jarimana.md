@@ -14,7 +14,8 @@ romanization: "jarimānā"
 concept_tag: TE-PANI196-JARIMANA
 prerequisites: [TE-C195-samavesam, TE-C196-phiju]
 sounds: []
-roots: []
+roots: [persian-jurmana]
+etymology_hook: "jarimānā ← Persian jurmāna 'fine, penalty', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C196-phiju]
 <!-- hl-knowledge: introduces=[TE-LEX-C196-PANI196-02]; assesses=[] -->
 
 **జరిమానా** — *jarimānā* — "a fine, a penalty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జరిమానా** (*jarimānā*) is a loan from Persian *jurmāna*, "fine, penalty", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

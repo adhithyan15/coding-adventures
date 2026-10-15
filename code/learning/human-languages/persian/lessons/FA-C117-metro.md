@@ -14,7 +14,8 @@ romanization: "metro"
 concept_tag: FA-THINGS117-METRO
 prerequisites: [FA-C117-nave, FA-C117-taksi]
 sounds: []
-roots: []
+roots: [french-metro]
+etymology_hook: "metro: a loan, usually traced to French métro 'metro'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C117-taksi]
 <!-- hl-knowledge: introduces=[FA-LEX-C117-THINGS117-03]; assesses=[] -->
 
 **مترو** — *metro* — "the metro".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*metro* is a loan, usually traced to French *métro*, "metro".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "innondu"
 concept_tag: KA-DET-ANOTHER
 prerequisites: [KA-C70-i-think, KA-C07-ondu, KA-C64-still, KA-C55-river, KA-C37-kannu, KA-C36-magalu, KA-C36-maga, KA-C69-is-it]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "innondu: native innu 'more, yet' (DEDR 410) + ondu 'one' (DEDR 990): 'one more'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Two pieces, both of them yours already: ಇನ್ನೂ (*innū*, "still, yet") 
 
 **ಇನ್ನೊಂದು ಚಹಾ** (*innondu cahā*) — "another tea." That is what you say when the
 cup is empty and the answer is yes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇನ್ನೊಂದು** (*innondu*) is native Dravidian: *innu*, "more, yet" (DEDR 410), and *ondu*, "one" (DEDR 990). It is "one more".
 
 ## Grammar Lens: one, and one more
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C71-MORE-02]; assesses=[] -->

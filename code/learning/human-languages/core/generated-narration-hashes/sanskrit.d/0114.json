@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 114,
-  "sourceHash": "fnv1a64:4923fe84224f8845",
+  "sourceHash": "fnv1a64:e52ac17960879f8e",
   "lessonIds": [
     "SA-C114-mesah",
     "SA-C114-kapotah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch114.txt",
   "json": "sanskrit/narration/ch114.json",
-  "textHash": "fnv1a64:49623fe3a8366b99",
-  "jsonHash": "fnv1a64:1f48db208808c43c",
+  "textHash": "fnv1a64:ca732e2faad036e4",
+  "jsonHash": "fnv1a64:1ba3d7982f80dcb1",
   "findings": []
 }

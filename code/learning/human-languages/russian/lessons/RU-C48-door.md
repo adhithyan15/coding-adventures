@@ -14,7 +14,8 @@ romanization: "dver"
 concept_tag: RU-HOME1-DOOR
 prerequisites: [RU-C48-kitchen, RU-C48-window]
 sounds: []
-roots: []
+roots: [pie-dhwer]
+etymology_hook: "дверь ← Proto-Slavic *dvĭrĭ; Latin fores, Greek thyra and English door are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C48-window]
 <!-- hl-knowledge: introduces=[RU-LEX-C48-HOME1-05]; assesses=[] -->
 
 **дверь** (*dver*) — "a door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дверь** ← Proto-Slavic *\*dvĭrĭ* — inherited. Vasmer lists Lithuanian *dùrys*, Gothic *daúr*, Greek *thýra* and Latin *forēs*: English *door* is a cousin, from PIE *\*dʰwer-*, "door".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

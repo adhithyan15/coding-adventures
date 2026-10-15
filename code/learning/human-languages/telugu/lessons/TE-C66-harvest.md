@@ -11,7 +11,8 @@ romanization: "paṇṭa"
 concept_tag: TE-NOUN-HARVEST
 prerequisites: [TE-C66-threshing-floor]
 sounds: []
-roots: []
+roots: [dravidian-pazhu-ripen]
+etymology_hook: "paṇṭa: native Dravidian; DEDR 4004 lists paṇṭa 'crop' under paṇḍu 'to ripen', with Tamil paḻu"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C66-threshing-floor]
 Telugu uses it well outside the field. A good year at anything is a మంచి పంట, and somebody talking about how their children turned out will reach for the word without meaning anything about rice at all.
 
 When the పంట is in and the కల్లం is swept, the day and the season finish together, and there is nothing left to do but say వెళ్ళొస్తాను.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పంట** (*paṇṭa*) is native Dravidian. DEDR 4004 lists *paṇṭa*, "produce, crop", under *paṇḍu*, "to ripen", with Tamil *paḻu*, "to ripen". DEDR compares Sanskrit *phala*, "fruit" (CDIAL 9051).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "prauḍh"
 concept_tag: MR-VASTU238-PRAUDH
 prerequisites: [MR-C238-pardesi, MR-C238-paryatak]
 sounds: []
-roots: []
+roots: [sanskrit-praudha]
+etymology_hook: "prauḍh ← Sanskrit prauḍha 'full of; strong, full-grown', a tatsama (CDIAL 9021)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C238-paryatak]
 <!-- hl-knowledge: introduces=[MR-LEX-C238-VASTU238-05]; assesses=[] -->
 
 **प्रौढ** — *prauḍh* — "an adult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रौढ** (*prauḍh*) is Sanskrit *prauḍha*, "full of; strong, full-grown", taken over whole as a learned loan, a tatsama (CDIAL 9021). CDIAL thinks the Sanskrit form was shaped in part by a non-Aryan word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

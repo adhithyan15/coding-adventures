@@ -14,7 +14,8 @@ romanization: "sambaḷa"
 concept_tag: KA-KELASA194-SAMBALA
 prerequisites: [KA-C193-cauka, KA-C193-trikona]
 sounds: []
-roots: []
+roots: [sanskrit-shambala]
+etymology_hook: "sambaḷa: origin not settled; perhaps Sanskrit śambala 'provisions for a journey' (CDIAL 12315)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C193-trikona]
 <!-- hl-knowledge: introduces=[KA-LEX-C194-KELASA194-01]; assesses=[] -->
 
 **ಸಂಬಳ** — *sambaḷa* — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ಸಂಬಳ** (*sambaḷa*) comes from is not settled: DEDR does not record it. It may be Sanskrit *śambala*, "provisions for a journey" (CDIAL 12315), but CDIAL does not list the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

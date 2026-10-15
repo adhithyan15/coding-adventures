@@ -14,7 +14,8 @@ romanization: "kampanī"
 concept_tag: MR-KAAM192-KAMPANI
 prerequisites: [MR-C191-tapsil, MR-C191-mahiti]
 sounds: []
-roots: []
+roots: [english-company]
+etymology_hook: "kampanī ← English company"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C191-mahiti]
 <!-- hl-knowledge: introduces=[MR-LEX-C192-KAAM192-01]; assesses=[] -->
 
 **कंपनी** — *kampanī* — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कंपनी** (*kampanī*) is a loan from English *company*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

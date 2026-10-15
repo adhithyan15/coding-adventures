@@ -14,7 +14,8 @@ romanization: "vinográd"
 concept_tag: RU-VESHCH223-VINOGRAD
 prerequisites: [RU-C223-limon, RU-C223-banan]
 sounds: []
-roots: []
+roots: [vinum-latin]
+etymology_hook: "виноград is Church Slavonic, вино 'wine' + град 'enclosure': a vineyard"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C223-banan]
 <!-- hl-knowledge: introduces=[RU-LEX-C223-VESHCH223-05]; assesses=[] -->
 
 **виноград** (*vinográd*) — "grapes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**виноград** — taken from Church Slavonic, says Vasmer, where it meant "a vine, a vineyard": *вино*, "wine", with *град*, "an enclosure". Some see a model in Gothic *weinagards*, "vineyard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

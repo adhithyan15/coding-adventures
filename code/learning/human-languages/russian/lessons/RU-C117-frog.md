@@ -14,7 +14,8 @@ romanization: "lyagúshka"
 concept_tag: RU-THINGS117-FROG
 prerequisites: [RU-C117-tiger, RU-C117-butterfly]
 sounds: []
-roots: []
+roots: [slavic-ljaga]
+etymology_hook: "лягушка is from ляга 'thigh' and лягать 'to kick': the kicker"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C117-butterfly]
 <!-- hl-knowledge: introduces=[RU-LEX-C117-THINGS117-04]; assesses=[] -->
 
 **лягушка** (*lyagúshka*) — "a frog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лягушка** comes from *ляга*, "a thigh", and *лягать*, "to kick" (Vasmer): the frog as the kicker.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

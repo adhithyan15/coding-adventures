@@ -14,7 +14,8 @@ romanization: "ozhóg"
 concept_tag: RU-ZDOROV210-OZHOG
 prerequisites: [RU-C209-shutit, RU-C209-zhenitsya]
 sounds: []
-roots: []
+roots: [slavic-zheg]
+etymology_hook: "ожог is о- + жог, from жечь 'to burn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C209-zhenitsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C210-ZDOROV210-01]; assesses=[] -->
 
 **ожог** (*ozhóg*) — "a burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ожог** is *о-* with *жог*, from *жечь*, "to burn": a burn mark.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

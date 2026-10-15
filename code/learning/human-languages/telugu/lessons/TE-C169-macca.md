@@ -14,7 +14,8 @@ romanization: "macca"
 concept_tag: TE-AROGYAM169-MACCA
 prerequisites: [TE-C169-bobba, TE-C169-daddurlu]
 sounds: []
-roots: []
+roots: [dravidian-maccu-spot]
+etymology_hook: "macca: native Dravidian, one word with Tamil maccu and Kannada macca (DEDR 4632)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C169-daddurlu]
 <!-- hl-knowledge: introduces=[TE-LEX-C169-AROGYAM169-04]; assesses=[] -->
 
 **మచ్చ** — *macca* — "a scar, a spot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మచ్చ** (*macca*) is native Dravidian, one word with Tamil *maccu* and Kannada *macca* (DEDR 4632). DEDR lists Telugu *macca*, "spot, mole, scar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

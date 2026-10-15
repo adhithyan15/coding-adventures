@@ -14,7 +14,8 @@ romanization: "anār"
 concept_tag: UR-THINGS116-ANAR
 prerequisites: [UR-C115-tarbuz, UR-C116-kharbuza]
 sounds: []
-roots: []
+roots: [persian-anar]
+etymology_hook: "anār: usually traced to Persian anār 'pomegranate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C116-kharbuza]
 <!-- hl-knowledge: introduces=[UR-LEX-C116-THINGS116-02]; assesses=[] -->
 
 **انار** — *anār* — "a pomegranate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انار** (*anār*) is a loan, usually traced to Persian *anār*, "pomegranate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

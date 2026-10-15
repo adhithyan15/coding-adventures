@@ -14,7 +14,8 @@ romanization: "donyâ"
 concept_tag: FA-NUMBERS77-DONYA
 prerequisites: [FA-C77-panjah, FA-C77-hezar]
 sounds: []
-roots: []
+roots: [arabic-dunya]
+etymology_hook: "donyâ ← Arabic dunyā 'the nearer world, this life', root d-n-w (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C77-hezar]
 <!-- hl-knowledge: introduces=[FA-LEX-C77-NUMBERS77-03]; assesses=[] -->
 
 **دنیا** — *donyâ* — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*donyâ* is borrowed from Arabic *dunyā*, "the nearer world, this life". Its Arabic root is *d-n-w* (Lane). It is the word for "nearer": this world, as against the next.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

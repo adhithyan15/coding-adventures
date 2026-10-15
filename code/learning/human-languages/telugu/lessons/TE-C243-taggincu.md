@@ -14,7 +14,8 @@ romanization: "taggiñcu"
 concept_tag: TE-VERB-TAGGINCU
 prerequisites: [TE-C242-istri-ceyu, TE-C243-pariskarincu]
 sounds: []
-roots: []
+roots: [dravidian-tazh-low]
+etymology_hook: "taggiñcu: native Dravidian; DEDR 3178 lists taggu 'to decrease' with Tamil tāḻ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C243-pariskarincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C243-KRIYA243-02]; assesses=[] -->
 
 **తగ్గించు** — *taggiñcu* — "to reduce, to lower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తగ్గించు** (*taggiñcu*) is native Dravidian, made from *taggu*, "to decrease, be reduced", which DEDR 3178 lists with Tamil *tāḻ*, "to fall low, decrease".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

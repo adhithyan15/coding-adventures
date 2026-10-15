@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 469,
-  "sourceHash": "fnv1a64:2b8a6909f303c539",
+  "sourceHash": "fnv1a64:2362d5c89e660977",
   "lessonIds": [
     "ES-C469-imprimir",
     "ES-C469-impresora",
@@ -14,7 +14,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch469.txt",
   "json": "spanish/narration/ch469.json",
-  "textHash": "fnv1a64:c71122286f676c75",
-  "jsonHash": "fnv1a64:57c7de0e6a87b21c",
+  "textHash": "fnv1a64:e711124b5f8abd3e",
+  "jsonHash": "fnv1a64:fad1a152cb26887c",
   "findings": []
 }

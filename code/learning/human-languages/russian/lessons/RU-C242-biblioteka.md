@@ -14,7 +14,8 @@ romanization: "bibliotéka"
 concept_tag: RU-MESTO242-BIBLIOTEKA
 prerequisites: [RU-C241-naprotiv, RU-C241-mezhdu]
 sounds: []
-roots: []
+roots: [bibliotheca-latin]
+etymology_hook: "библиотека came through Polish biblioteka from Latin bibliotheca, Greek bibliothēkē 'a book store'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C241-mezhdu]
 <!-- hl-knowledge: introduces=[RU-LEX-C242-MESTO242-01]; assesses=[] -->
 
 **библиотека** (*bibliotéka*) — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**библиотека** — from Peter the Great's time; it came through Polish *biblioteka* from Latin *bibliothēca*, Greek *bibliothḗkē*, "a store of books" (Vasmer). Older Russian borrowed the Greek word as *вивлиофика*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "janūb"
 concept_tag: AR-LOC104-JANUB
 prerequisites: [AR-C103-zawiya, AR-C103-shamal]
 sounds: []
-roots: []
+roots: [j-n-b]
+etymology_hook: "janūb: built on the root j-n-b, 'the side' (Lane); Lane gives janūb as the south wind"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C103-shamal]
 <!-- hl-knowledge: introduces=[AR-LEX-C104-LOC104-01]; assesses=[] -->
 
 **جنوب** — *janūb* — "south".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جنوب** (*janūb*) is built on the native Arabic root *j-n-b*, "the side" (Lane). Lane gives *janūb* as the south wind; the same root gives *jānib*, "side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

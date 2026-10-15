@@ -4,7 +4,7 @@
   "chapter": 198,
   "title": "Promise, Discount, Sales, Coin, Banknote",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:503988db9f08add9",
+  "sourceHash": "fnv1a64:81245e70a3c92dca",
   "lessons": [
     {
       "id": "FR-C198-promesse",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a85261eb0aaa10a",
+      "sourceHash": "fnv1a64:7b58d6de02e9fd26",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "billet de banque — billet, \"a note\", de, \"of\", and banque, \"bank\"."
+              "text": "billet de banque — billet, \"a note\", de, \"of\", and banque, \"bank\". Billet from Old French billette, from Latin bulla (EtymDB 2.1); banque is borrowed from Italian banca, \"a bench\", the money-changer's table."
             }
           ]
         },

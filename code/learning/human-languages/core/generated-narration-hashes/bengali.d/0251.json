@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 251,
-  "sourceHash": "fnv1a64:27ecb3495ca15c28",
+  "sourceHash": "fnv1a64:68fc4cb66da8b1c1",
   "lessonIds": [
     "BN-C251-nach",
     "BN-C251-prodorshoni",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch251.txt",
   "json": "bengali/narration/ch251.json",
-  "textHash": "fnv1a64:9d35ad310557ac59",
-  "jsonHash": "fnv1a64:c59a42e7cb5ebff2",
+  "textHash": "fnv1a64:460766b2b04e24e5",
+  "jsonHash": "fnv1a64:a881c80e8281e733",
   "findings": []
 }

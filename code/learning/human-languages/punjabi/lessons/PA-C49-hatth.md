@@ -14,7 +14,8 @@ romanization: "hatth"
 concept_tag: PA-BODY49-HATTH
 prerequisites: [PA-C44-tija, PA-C44-chautha]
 sounds: []
-roots: []
+roots: [hasta-sanskrit]
+etymology_hook: "hatth ← Sanskrit hasta 'hand', a tadbhava (CDIAL 14024)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C44-chautha]
 <!-- hl-knowledge: introduces=[PA-LEX-C49-BODY49-01]; assesses=[] -->
 
 **ਹੱਥ** — *hatth* — "a hand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹੱਥ** (*hatth*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasta*, "hand" (CDIAL 14024).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,7 +12,7 @@ concept_tag: FA-NUMBER-FIFTEEN
 prerequisites: [FA-C18-sizdah]
 sounds: [rtl, persian-pe, long-a]
 roots: [pie-penkwe]
-etymology_hook: "panzdah and shanzdah both gain an n before the dah that panj and shesh do not have, which is the one irregularity in the whole run of teens."
+etymology_hook: "pânzdah: inherited, usually traced to Middle Persian pānzdah: panj 'five' + dah 'ten'"
 duration:
   max_seconds: 250
 requires:
@@ -49,6 +49,11 @@ the place you would expect it, and there is a **z** that came from the *j*.
 Sixteen does the same thing: *shânzdah*, from *shesh*. Fifteen and
 sixteen are the only two of the nine teens that bend this far, and they bend the
 same way — so it is one irregularity, met once, not two.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pânzdah* is inherited: it is usually traced to Middle Persian *pānzdah*, built from *panj*, "five", and *dah*, "ten".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-PANZDAH, FA-GRAMMAR-TEENS-DAH, FA-LEX-SHESH] -->

@@ -11,7 +11,8 @@ romanization: "ṭikeṭ"
 concept_tag: KA-FIND-TICKET
 prerequisites: [KA-C99-weight, KA-C100-map]
 sounds: []
-roots: []
+roots: [english-ticket]
+etymology_hook: "ṭikeṭ ← English ticket"
 duration:
   max_seconds: 200
 requires:

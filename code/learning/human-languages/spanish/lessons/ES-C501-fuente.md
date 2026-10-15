@@ -10,7 +10,8 @@ gloss: "the fountain; the source"
 concept_tag: ES-REF-FUENTE
 prerequisites: [ES-C501-regresar, ES-C501-senal]
 sounds: []
-roots: []
+roots: [fons-latin]
+etymology_hook: "fuente ← Latin fons, fontem 'a spring': stressed o became ue — English fountain"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C501-senal]
 > *See you at the fountain in the square.*
 
 *Una fuente de información* — a source of information.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fuente** ← Latin *fons*, *fontem*, "a spring" (EtymDB 2.1) — inherited: the stressed *o* opened into *ue*. A source is where a river springs.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

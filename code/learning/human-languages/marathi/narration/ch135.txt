@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a pencil, then the Marathi for an eraser
 You'll want to know: दप्तर.
 दप्तर — daptar — "a school bag".
 
+The word, taken apart.
+दप्तर (daptar) is a loan, usually traced through Persian to Arabic daftar, "register, account book" (Lane), which Arabic itself took from Greek. Marathi uses it for a school bag, the bag that holds the books.
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Before the new one: say the Marathi for an eraser, then the Marathi for a school
 You'll want to know: परीक्षा.
 परीक्षा — parīkṣā — "an exam".
 
+The word, taken apart.
+परीक्षा (parīkṣā) is Sanskrit parīkṣā, "inspection, test", taken over whole as a learned loan, a tatsama (CDIAL 7904).
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Marathi for a school bag, then the Marathi for an ex
 
 You'll want to know: वर्ग.
 वर्ग — varg — "a class".
+
+The word, taken apart.
+वर्ग (varg) is Sanskrit varga, "class, group", taken over whole as a learned loan, a tatsama (CDIAL 11331).
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Marathi for an exam, then the Marathi for a class.
 You'll want to know: अभ्यास.
 अभ्यास — abhyās — "study".
 
+The word, taken apart.
+अभ्यास (abhyās) is Sanskrit abhyāsa, "repetition, practice", taken over whole, a tatsama. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Marathi for a class, then the Marathi for study.
 
 You'll want to know: शर्ट.
 शर्ट — śarṭ — "a shirt".
+
+The word, taken apart.
+शर्ट (śarṭ) is a loan from English shirt.
 
 What you've built.
 One more word for this chapter.

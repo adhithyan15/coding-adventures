@@ -14,7 +14,8 @@ romanization: "naṣṭa"
 concept_tag: KA-KELASA233-NASTA
 prerequisites: [KA-C233-dinasi, KA-C233-labha]
 sounds: []
-roots: []
+roots: [sanskrit-nashta]
+etymology_hook: "naṣṭa ← Sanskrit naṣṭa 'lost, perished', a tatsama (CDIAL 7027)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C233-labha]
 <!-- hl-knowledge: introduces=[KA-LEX-C233-KELASA233-03]; assesses=[] -->
 
 **ನಷ್ಟ** — *naṣṭa* — "a loss (of money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಷ್ಟ** (*naṣṭa*) is Sanskrit *naṣṭa*, "lost, perished", taken over whole as a learned loan, a tatsama (CDIAL 7027). What is lost is a loss.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

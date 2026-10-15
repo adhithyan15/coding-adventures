@@ -16,7 +16,8 @@ The letters in this word.
 फ (pha, an aspirated p — a puff of breath) + ि (the i-mātrā, written before the consonant but read after) + र (ra) becomes फिर (phir).
 
 The word, taken apart.
-फिर (phir) means "again, then, afterwards." It is a native Indo-Aryan adverb (from Prakrit, ultimately tied to the sense "back, return") with no tidy English cognate — but its job is one English shares: it turns a parting into a promise. English "see you again," Hindi phir milenge ("we'll meet again"). The optimism is the same; only the word is Indian.
+फिर (phir) means "again, then, afterwards." It is a native Indo-Aryan adverb (the form "having turned" of a reconstructed phirati, "turns", CDIAL.
+with no tidy English cognate — but its job is one English shares: it turns a parting into a promise. English "see you again," Hindi phir milenge ("we'll meet again"). The optimism is the same; only the word is Indian.
 
 Sounds you'll need.
 फ (pha, an aspirated p) + ि (the i-mātrā, written before but read after) + र (ra) becomes फिर (phir).
@@ -77,7 +78,7 @@ Warm-up.
 The warm, everyday goodbye — the one you actually hear, far more than Chapter 1's formal alvidā.
 
 The phrase, taken apart.
-फिर मिलेंगे = फिर (phir, "again") + मिलेंगे (milenge, "we will meet") — "we'll meet again." Where Chapter 1's अलविदा (alvidā) is a grave, final farewell (and, fittingly, a Perso-Arabic word — al-widā, "the farewell"), phir milenge is native, everyday, and hopeful. It is the exact sibling of the "promise of return" goodbyes across South Asia — Tamil, Bengali, Marathi all say "I'll come again" rather than "goodbye."
+फिर मिलेंगे = फिर (phir, "again") + मिलेंगे (milenge, "we will meet") — "we'll meet again." Where Chapter 1's अलविदा (alvidā) is a grave, final farewell (and, fittingly, a Perso-Arabic word — al-widā, "the farewell"), phir milenge is native, everyday, and hopeful: फिर goes back to phirati, "turns" (CDIAL 9078), and मिलेंगे to Sanskrit milati, "meets" (CDIAL 10133). It is the exact sibling of the "promise of return" goodbyes across South Asia — Tamil, Bengali, Marathi all say "I'll come again" rather than "goodbye."
 
 Grammar Lens: two registers of goodbye.
 अलविदा (alvidā) — formal, final, Perso-Arabic; for long or last partings.
@@ -111,7 +112,7 @@ The letters in this word.
 क (ka) + ल (la) becomes कल (kal). Two of the simplest letters, one of the trickiest words.
 
 The word, taken apart.
-कल (kal) means both "tomorrow" and "yesterday" — the same word for the day on either side of today. It is from Sanskrit काल (kāla, "time") — the very root that sits inside Punjabi's akāl ("timeless"). Hindi trusts context (and the verb's tense) to tell which kal you mean: kal milte haiṁ (present-ish becomes "tomorrow"), kal milā (past becomes "yesterday").
+कल (kal) means both "tomorrow" and "yesterday" — the same word for the day on either side of today. It is from Sanskrit kalya, "dawn, tomorrow", built on काल (kāla, "time") (CDIAL 3104) — the very root that sits inside Punjabi's akāl ("timeless"). Hindi trusts context (and the verb's tense) to tell which kal you mean: kal milte haiṁ (present-ish becomes "tomorrow"), kal milā (past becomes "yesterday").
 कल मिलते हैं (kal milte haiṁ) = kal ("tomorrow") + milte haiṁ ("we meet," present used for a near-certain future) becomes "see you tomorrow."
 
 Grammar Lens: the present-for-future.

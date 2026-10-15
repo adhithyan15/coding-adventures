@@ -14,7 +14,8 @@ romanization: "sittar"
 concept_tag: MW-NUMBERS86-SITTAR
 prerequisites: [MW-C86-pachas, MW-C86-sath]
 sounds: []
-roots: []
+roots: [sanskrit-saptati]
+etymology_hook: "sittar ← Sanskrit saptati 'seventy', a tadbhava (CDIAL 13143, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C86-sath]
 <!-- hl-knowledge: introduces=[MW-LEX-C86-NUMBERS86-05]; assesses=[] -->
 
 **सित्तर** — *sittar* — "seventy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सित्तर** (*sittar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saptati*, "seventy". CDIAL gives no Marwari form in this entry (CDIAL 13143); the match is through Hindi *sattar* and Gujarati *sitter*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 127,
-  "sourceHash": "fnv1a64:f5b998604fc8d215",
+  "sourceHash": "fnv1a64:f0564131b7c4d0a4",
   "lessonIds": [
     "AR-C127-sitara",
     "AR-C127-qifl",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch127.txt",
   "json": "arabic/narration/ch127.json",
-  "textHash": "fnv1a64:6298f0d75f7853eb",
-  "jsonHash": "fnv1a64:6c5d073d359d3365",
+  "textHash": "fnv1a64:6066a6aaf0f87c56",
+  "jsonHash": "fnv1a64:99fbfbad64082f21",
   "findings": []
 }

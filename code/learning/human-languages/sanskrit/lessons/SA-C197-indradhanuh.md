@@ -14,7 +14,8 @@ romanization: "indradhanuḥ"
 concept_tag: SA-THG197-INDRADHANUH
 prerequisites: [SA-C196-guha, SA-C197-venuvanam]
 sounds: []
-roots: []
+roots: [sanskrit-indra, sanskrit-dhanus]
+etymology_hook: "indradhanus = Indra, god of the storm + dhanus 'bow': 'Indra's bow', the rainbow (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C197-venuvanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C197-THG197-02]; assesses=[] -->
 
 **इन्द्रधनुः** — *indradhanuḥ* — "a rainbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*indradhanus* is built from *Indra*, the god of thunder and rain, and *dhanus*, "bow" (MW): the rainbow is Indra's bow. Hindi and Telugu took the compound over unchanged.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

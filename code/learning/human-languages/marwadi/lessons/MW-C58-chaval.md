@@ -14,7 +14,8 @@ romanization: "chāvaḷ"
 concept_tag: MW-VERBS58-CHAVAL
 prerequisites: [MW-C58-mas, MW-C58-machhli]
 sounds: []
-roots: []
+roots: [indo-aryan-cavala]
+etymology_hook: "chāvaḷ ← *cāvala 'husked rice', reconstructed, possibly non-Aryan (CDIAL 4749, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C58-machhli]
 <!-- hl-knowledge: introduces=[MW-LEX-C58-VERBS58-05]; assesses=[] -->
 
 **चावळ** — *chāvaḷ* — "rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चावळ** (*chāvaḷ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*cāvala*, "husked rice", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari *cāvala* under it (CDIAL 4749). CDIAL thinks it may come from the same non-Aryan source as Sanskrit *taṇḍula*, "rice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

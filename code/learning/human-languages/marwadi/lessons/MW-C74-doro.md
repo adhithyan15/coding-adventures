@@ -14,7 +14,8 @@ romanization: "doro"
 concept_tag: MW-ADJ74-DORO
 prerequisites: [MW-C74-tej, MW-C74-soro]
 sounds: []
-roots: []
+roots: [sanskrit-duhkha]
+etymology_hook: "doro 'difficult': not settled; a lead is duḥkha, whose Hindi descendant duhelā means 'difficult' (CDIAL 6375)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C74-soro]
 <!-- hl-knowledge: introduces=[MW-LEX-C74-ADJ74-05]; assesses=[] -->
 
 **दोरो** — *doro* — "difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **दोरो** (*doro*) is not settled; CDIAL has no entry for it. A likely relative is Hindi *duhelā* and Gujarati *dohelũ*, "difficult", which CDIAL lists under Sanskrit *duḥkha*, "difficulty, pain" (CDIAL 6375), but that entry does not explain the *r* of **दोरो** (*doro*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

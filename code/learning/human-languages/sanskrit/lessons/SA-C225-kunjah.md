@@ -14,7 +14,8 @@ romanization: "kuñjaḥ"
 concept_tag: SA-THG225-KUNJAH
 prerequisites: [SA-C225-marubhumih, SA-C225-kananam]
 sounds: []
-roots: []
+roots: [sanskrit-kunja]
+etymology_hook: "kuñja 'bower, thicket' (MW; CDIAL 3226); no derivation is given, so its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C225-kananam]
 <!-- hl-knowledge: introduces=[SA-LEX-C225-THG225-04]; assesses=[] -->
 
 **कुञ्जः** — *kuñjaḥ* — "a bower, a thicket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuñja* is a place overgrown with plants and creepers, a bower (MW; CDIAL 3226). Neither dictionary gives it a derivation, so its origin is uncertain. Hindi *kũjṛā*, "vegetable seller", is built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vivarikkuka"
 concept_tag: ML-VERB-VIVARIKKUKA
 prerequisites: [ML-C309-tiriccariyuka, ML-C309-puttuka]
 sounds: []
-roots: []
+roots: [sanskrit-vivara]
+etymology_hook: "vivarikkuka ← Sanskrit vivaraṇa 'opening up, explanation' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C309-puttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C309-KRIYA309-04]; assesses=[] -->
 
 **വിവരിക്കുക** — *vivarikkuka* — "to describe, to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിവരിക്കുക** (*vivarikkuka*) is built on Sanskrit *vivaraṇa*, "opening up, explanation", from *vivara*, "an opening" (CDIAL 11915), with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

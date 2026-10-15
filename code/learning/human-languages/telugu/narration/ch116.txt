@@ -12,6 +12,9 @@ Before the new one: say the Telugu for a curry, then the Telugu for dal.
 You'll want to know: సాంబారు.
 సాంబారు — sāmbāru — "sambar".
 
+The word, taken apart.
+The origin of సాంబారు (sāmbāru) is uncertain. Neither DEDR nor CDIAL records it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for dal, then the Telugu for sambar.
 
 You'll want to know: రసం.
 రసం — rasaṁ — "rasam".
+
+The word, taken apart.
+రసం (rasaṁ) is Sanskrit rasa, "sap, juice; taste", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 10650).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for sambar, then the Telugu for rasam.
 You'll want to know: గుడ్డు.
 గుడ్డు — guḍḍu — "an egg".
 
+The word, taken apart.
+గుడ్డు (guḍḍu) is native Dravidian, one word with Kannada guḍḍu, "eyeball, egg" (DEDR 1680). DEDR compares Sanskrit guṭikā and guḍa, "ball, globe" (CDIAL 4181).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for rasam, then the Telugu for an egg.
 You'll want to know: చేప.
 చేప — cēpa — "a fish".
 
+The word, taken apart.
+చేప (cēpa) is native Dravidian. DEDR 1252 lists the Telugu word for "fish" with Tamil kayal, "carp", and compares, with a query, the kai- of Sanskrit kaivarta, "fisherman" (CDIAL 3469).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for an egg, then the Telugu for a fish.
 
 You'll want to know: మాంసం.
 మాంసం — māṁsaṁ — "meat".
+
+The word, taken apart.
+మాంసం (māṁsaṁ) is Sanskrit māṁsa, "flesh", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 9982).
 
 What you've built.
 One more word for this chapter.

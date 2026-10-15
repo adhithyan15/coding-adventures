@@ -14,7 +14,8 @@ romanization: "halvā"
 concept_tag: HI-THG210-HALVA
 prerequisites: [HI-C210-paratha, HI-C210-khicri]
 sounds: []
-roots: []
+roots: [arabic-halwa]
+etymology_hook: "halvā ← Arabic ḥalwā 'a sweetmeat', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C210-khicri]
 <!-- hl-knowledge: introduces=[HI-LEX-C210-THG210-03]; assesses=[] -->
 
 **हलवा** — *halvā* — "halwa (a sweet)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हलवा** (*halvā*) is a loan from Arabic *ḥalwā*, "a sweetmeat", which reached Hindi through Persian. Its Arabic root is *ḥ-l-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

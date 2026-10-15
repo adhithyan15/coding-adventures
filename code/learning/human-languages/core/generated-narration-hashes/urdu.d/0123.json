@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 123,
-  "sourceHash": "fnv1a64:f8190cf27f4449e4",
+  "sourceHash": "fnv1a64:129c2790840f8cc8",
   "lessonIds": [
     "UR-C123-nadi",
     "UR-C123-mitti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch123.txt",
   "json": "urdu/narration/ch123.json",
-  "textHash": "fnv1a64:ccf8aee617dd482c",
-  "jsonHash": "fnv1a64:31b7c5c9909c673e",
+  "textHash": "fnv1a64:ae6d7f7e250a5e1a",
+  "jsonHash": "fnv1a64:c92aaef9fa30d7a0",
   "findings": []
 }

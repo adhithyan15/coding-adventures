@@ -14,7 +14,8 @@ romanization: "kā̃ṭā"
 concept_tag: UR-HOME60-KATA
 prerequisites: [UR-C60-chammach, UR-C60-chhuri]
 sounds: []
-roots: []
+roots: [sanskrit-kantaka]
+etymology_hook: "kā̃ṭā ← Sanskrit kaṇṭaka 'thorn', a tadbhava (CDIAL 2668)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C60-chhuri]
 <!-- hl-knowledge: introduces=[UR-LEX-C60-HOME60-05]; assesses=[] -->
 
 **کانٹا** — *kā̃ṭā* — "a fork; a thorn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کانٹا** (*kā̃ṭā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṇṭaka*, "thorn" (CDIAL 2668).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

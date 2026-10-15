@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "If, and When",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b97b3e5d3fe55569",
+  "sourceHash": "fnv1a64:3fa314270ad3e29e",
   "lessons": [
     {
       "id": "PA-C41-je",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96e89021a742c4dc",
+      "sourceHash": "fnv1a64:53083b5a271243c1",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,10 @@
             {
               "kind": "speech",
               "text": "ਜੇ (je) stands at the front of the condition, where English also puts if. That is worth noticing: most of the small words in this book — the postpositions, ਮੈਨੂੰ's ending — come after what they apply to. ਜੇ (je) comes first, and that alone tells the ear a condition is starting."
+            },
+            {
+              "kind": "speech",
+              "text": "Je is inherited from Sanskrit yadi, \"if\", which CDIAL lists with Punjabi je (CDIAL 10410)."
             }
           ]
         },
@@ -139,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c75bcf6c0af0e74",
+      "sourceHash": "fnv1a64:4109139c3afa5e93",
       "notice": null,
       "blocks": [
         {
@@ -197,6 +201,10 @@
             {
               "kind": "speech",
               "text": "The result half is free to be negative, which is where this meets the chapter that opened this run."
+            },
+            {
+              "kind": "speech",
+              "text": "Both ends are old. Je comes from Sanskrit yadi, \"if\" (CDIAL 10410). For tāṁ, CDIAL gives no Punjabi form, but lists Lahnda tāṁ, \"so, indeed, then\", under Sanskrit tathā, \"so, in that way\" (CDIAL 5646)."
             }
           ]
         },
@@ -375,7 +383,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4266dbec83c8c04e",
+      "sourceHash": "fnv1a64:eabb3c34e9270d86",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -436,6 +444,10 @@
             {
               "kind": "speech",
               "text": "That is not a coincidence. Punjabi builds a family of clause-openers on that one letter, the way it builds its questions on ਕ. You now own two members of it, and the pattern is worth more than either word alone."
+            },
+            {
+              "kind": "speech",
+              "text": "Jadoṁ is usually linked to Sanskrit yadā, \"when\", on the relative stem ya-. CDIAL lists Lahnda jāṁ, \"when\", under yadā (CDIAL 10409), but no Punjabi form."
             }
           ]
         },
@@ -511,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:580d468f8e9875f0",
+      "sourceHash": "fnv1a64:3fe56b28d988c4bf",
       "notice": null,
       "blocks": [
         {
@@ -569,6 +581,10 @@
             {
               "kind": "speech",
               "text": "Cause and purpose are different answers to the same why, and a language that used one word for both would make its learners guess. Punjabi does not."
+            },
+            {
+              "kind": "speech",
+              "text": "Laī is usually explained as a form of laiṇā, \"to take\", which goes back to Sanskrit labhate, \"catches, takes\" (CDIAL 10948)."
             }
           ]
         },

@@ -11,6 +11,7 @@ concept_tag: ES-WORK-JEFE
 prerequisites: [ES-C462-decidirse, ES-C24-cabeza, ES-C394-trabajo]
 sounds: [j-jota, stress-penultimate]
 roots: [caput-latin]
+etymology_hook: "jefe ← French chef, from Latin caput 'head' — kin to cabeza; English chief"
 duration:
   max_seconds: 275
 requires:

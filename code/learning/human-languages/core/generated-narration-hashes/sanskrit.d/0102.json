@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 102,
-  "sourceHash": "fnv1a64:cfe6ccbc46b51a04",
+  "sourceHash": "fnv1a64:126cede0c490c86a",
   "lessonIds": [
     "SA-C102-sthali",
     "SA-C102-casakah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch102.txt",
   "json": "sanskrit/narration/ch102.json",
-  "textHash": "fnv1a64:700057494601d46d",
-  "jsonHash": "fnv1a64:96cf8975f720efbf",
+  "textHash": "fnv1a64:7c0d0c80699c65af",
+  "jsonHash": "fnv1a64:ba1672943e159966",
   "findings": []
 }

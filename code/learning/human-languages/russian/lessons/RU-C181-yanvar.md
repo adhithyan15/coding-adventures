@@ -14,7 +14,8 @@ romanization: "yanvár"
 concept_tag: RU-VREMYA181-YANVAR
 prerequisites: [RU-C180-vitamin, RU-C180-lyogkiye]
 sounds: []
-roots: []
+roots: [janus-latin]
+etymology_hook: "январь came through Greek ianouarios from Latin ianuarius, the month of Janus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C180-lyogkiye]
 <!-- hl-knowledge: introduces=[RU-LEX-C181-VREMYA181-01]; assesses=[] -->
 
 **январь** (*yanvár*) — "January".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**январь** — Church Slavonic *генуарь*, from 1117; it came through Byzantine Greek *ianouários* from Latin *iānuārius*, the month of Janus (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

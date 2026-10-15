@@ -14,7 +14,8 @@ romanization: "kamīj"
 concept_tag: MW-THINGS129-KAMIJ
 prerequisites: [MW-C128-kachali, MW-C128-angarkhi]
 sounds: []
-roots: []
+roots: [arabic-qamis]
+etymology_hook: "kamīj ← Arabic qamīṣ 'shirt', through Persian (Lane, root q-m-ṣ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C128-angarkhi]
 <!-- hl-knowledge: introduces=[MW-LEX-C129-THINGS129-01]; assesses=[] -->
 
 **कमीज** — *kamīj* — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कमीज** (*kamīj*) is a loan from Arabic *qamīṣ*, "shirt", which reached Marwadi through Persian. Its Arabic root is *q-m-ṣ* (Lane). Persian says it *qamīz*; Marwadi says the last sound as *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

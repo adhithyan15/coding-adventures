@@ -14,7 +14,8 @@ romanization: "furn"
 concept_tag: AR-THINGS116-FURN
 prerequisites: [AR-C116-ibriq, AR-C116-miqlah]
 sounds: []
-roots: []
+roots: [furnus-latin]
+etymology_hook: "furn: Lane: apparently from, or cognate with, Latin furnus 'oven'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C116-miqlah]
 <!-- hl-knowledge: introduces=[AR-LEX-C116-THINGS116-03]; assesses=[] -->
 
 **فرن** — *furn* — "an oven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فرن** (*furn*) is an oven for bread. Lane notes that it seems to come from, or be cognate with, Latin *furnus*, "oven"; it is usually taken as a loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "aṅgṛāī"
 concept_tag: HI-THG275-ANGRAI
 prerequisites: [HI-C275-jhapki, HI-C275-karvat]
 sounds: []
-roots: []
+roots: [sanskrit-anga]
+etymology_hook: "aṅgṛāī: built on aṅg 'limb, body' (CDIAL 114); CDIAL does not list the word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C275-karvat]
 <!-- hl-knowledge: introduces=[HI-LEX-C275-THG275-05]; assesses=[] -->
 
 **अंगड़ाई** — *aṅgṛāī* — "a stretch (of the body)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अंगड़ाई** (*aṅgṛāī*) is built on *aṅg*, "limb, body", from Sanskrit *aṅga* (CDIAL 114), but CDIAL does not list the word itself, so its exact path is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

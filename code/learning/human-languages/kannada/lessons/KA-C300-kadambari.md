@@ -14,7 +14,8 @@ romanization: "kādambari"
 concept_tag: KA-VASTU300-KADAMBARI
 prerequisites: [KA-C300-karyakrama, KA-C300-dharavahi]
 sounds: []
-roots: []
+roots: [sanskrit-kadambari]
+etymology_hook: "kādambari: from Kādambarī, the title of Bāṇa's Sanskrit prose romance"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C300-dharavahi]
 <!-- hl-knowledge: introduces=[KA-LEX-C300-VASTU300-05]; assesses=[] -->
 
 **ಕಾದಂಬರಿ** — *kādambari* — "a novel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾದಂಬರಿ** (*kādambari*) is the title of a famous Sanskrit prose romance, Bāṇa's *Kādambarī*. The word comes from that title, which came to mean any novel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

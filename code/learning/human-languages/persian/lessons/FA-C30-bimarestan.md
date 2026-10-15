@@ -14,7 +14,8 @@ romanization: "bimârestân"
 concept_tag: FA-BODY30-BIMARESTAN
 prerequisites: [FA-C30-bazu, FA-C30-tab]
 sounds: []
-roots: []
+roots: [persian-bimar, persian-stan]
+etymology_hook: "bimârestân: Persian bimâr 'sick' (Middle Persian wēmār, EtymDB) + -estân 'place of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C30-tab]
 <!-- hl-knowledge: introduces=[FA-LEX-C30-BODY30-04]; assesses=[] -->
 
 **بیمارستان** — *bimârestân* — "a hospital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bimârestân* is built from *bimâr*, "sick", and the place suffix *-estân*: "the place of the sick". Both pieces are inherited: *bimâr* continues Middle Persian *wēmār* (EtymDB), and *-estân* is the Persian suffix of place names that *Pakistan* also uses.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

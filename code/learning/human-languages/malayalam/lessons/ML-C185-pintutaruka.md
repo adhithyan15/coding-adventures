@@ -14,7 +14,8 @@ romanization: "pintuṭaruka"
 concept_tag: ML-VERB-PINTUTARUKA
 prerequisites: [ML-C185-carju-ceyyuka, ML-C185-parakkuka]
 sounds: []
-roots: []
+roots: [dravidian-pin-behind, dravidian-todu-touch]
+etymology_hook: "pintuṭaruka: native Dravidian, 'pursue from behind': pin (DEDR 4205) + a verb 'to continue, pursue' (DEDR 3480)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C185-parakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C185-KRIYA185-05]; assesses=[] -->
 
 **പിന്തുടരുക** — *pintuṭaruka* — "to follow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പിന്തുടരുക** (*pintuṭaruka*) is native Dravidian, "pursue from behind": *pin*, "behind" (DEDR 4205, with Tamil *piṉ*), and the verb "to be linked, continue, pursue" (DEDR 3480, with Tamil *toṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "paṛhānā"
 concept_tag: UR-VERB-PARHANA
 prerequisites: [UR-C146-ishtihar, UR-C146-rasid]
 sounds: []
-roots: []
+roots: [sanskrit-pathati]
+etymology_hook: "paṛhānā: the causing form of paṛhnā 'to read' ← Sanskrit paṭhati (CDIAL 7712)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C146-rasid]
 <!-- hl-knowledge: introduces=[UR-LEX-C147-ACT147-01]; assesses=[] -->
 
 **پڑھانا** — *paṛhānā* — "to tutor, to teach (lessons)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پڑھانا** (*paṛhānā*) is the causing form of *paṛhnā*, "to read": to teach is to make someone read. CDIAL lists both under Sanskrit *paṭhati*, "repeats aloud, reads" (CDIAL 7712).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

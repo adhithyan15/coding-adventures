@@ -14,7 +14,8 @@ romanization: "paṅkuvekkuka"
 concept_tag: ML-VERB-PANKUVEKKUKA
 prerequisites: [ML-C185-parakkuka, ML-C185-pintutaruka]
 sounds: []
-roots: []
+roots: [dravidian-paku-share, dravidian-vai-place]
+etymology_hook: "paṅkuvekkuka: native Dravidian, 'lay out shares': paṅku (DEDR 3808) + vekkuka 'to place' (DEDR 5549)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C185-pintutaruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C186-KRIYA186-01]; assesses=[] -->
 
 **പങ്കുവെക്കുക** — *paṅkuvekkuka* — "to share".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പങ്കുവെക്കുക** (*paṅkuvekkuka*) is native Dravidian, "lay out in shares": *paṅku*, "part, share" (DEDR 3808, with Tamil *paku*, "to divide"), and *vekkuka*, "to put, place" (DEDR 5549, with Tamil *vai*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

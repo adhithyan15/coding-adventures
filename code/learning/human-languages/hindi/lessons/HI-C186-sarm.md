@@ -14,7 +14,8 @@ romanization: "śarm"
 concept_tag: HI-THG186-SARM
 prerequisites: [HI-C186-gussa, HI-C186-pyar]
 sounds: []
-roots: []
+roots: [persian-sharm]
+etymology_hook: "śarm: usually traced to Persian sharm 'shame'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C186-pyar]
 <!-- hl-knowledge: introduces=[HI-LEX-C186-THG186-03]; assesses=[] -->
 
 **शर्म** — *śarm* — "shame, shyness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शर्म** (*śarm*) is a loan, usually traced to Persian *sharm*, "shame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

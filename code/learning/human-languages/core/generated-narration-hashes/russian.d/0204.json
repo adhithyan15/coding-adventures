@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 204,
-  "sourceHash": "fnv1a64:173926e78eba56c1",
+  "sourceHash": "fnv1a64:12f35b5972398e4b",
   "lessonIds": [
     "RU-C204-probovat",
     "RU-C204-zakazyvat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch204.txt",
   "json": "russian/narration/ch204.json",
-  "textHash": "fnv1a64:838038e8d6891e4d",
-  "jsonHash": "fnv1a64:e37f5b8cf130bff5",
+  "textHash": "fnv1a64:7909bf8df3c9228d",
+  "jsonHash": "fnv1a64:1d9efe27be14ccc6",
   "findings": []
 }

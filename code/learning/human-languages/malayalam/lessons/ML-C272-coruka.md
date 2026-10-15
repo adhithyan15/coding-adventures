@@ -14,7 +14,8 @@ romanization: "cōruka"
 concept_tag: ML-VERB-CORUKA
 prerequisites: [ML-C272-neyyuka, ML-C272-tulaykkuka]
 sounds: []
-roots: []
+roots: [dravidian-cor-flow]
+etymology_hook: "cōruka: native Dravidian, one word with Tamil cōr and Kannada sōr (DEDR 2883)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C272-tulaykkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C272-KRIYA272-05]; assesses=[] -->
 
 **ചോരുക** — *cōruka* — "to leak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചോരുക** (*cōruka*) is native Dravidian, one word with Tamil *cōr* and Kannada *sōr* (DEDR 2883).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

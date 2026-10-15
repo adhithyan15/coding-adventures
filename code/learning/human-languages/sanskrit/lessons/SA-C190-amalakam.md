@@ -14,7 +14,8 @@ romanization: "āmalakam"
 concept_tag: SA-THG190-AMALAKAM
 prerequisites: [SA-C190-yavah, SA-C190-kharjuram]
 sounds: []
-roots: []
+roots: [sanskrit-amalaka]
+etymology_hook: "āmalaka 'emblic myrobalan', in the Chāndogya Upaniṣad (CDIAL 1247); origin uncertain; Punjabi āmlā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C190-kharjuram]
 <!-- hl-knowledge: introduces=[SA-LEX-C190-THG190-04]; assesses=[] -->
 
 **आमलकम्** — *āmalakam* — "an amla, gooseberry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āmalaka* names the emblic tree and its sour fruit, already in the Chāndogya Upaniṣad (CDIAL 1247). MW gives no derivation, so its origin is uncertain. CDIAL lists Punjabi *āmlā* among its descendants.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

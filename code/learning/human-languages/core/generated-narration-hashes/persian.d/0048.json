@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 48,
-  "sourceHash": "fnv1a64:e58024890804582e",
+  "sourceHash": "fnv1a64:715959a7b6b0b072",
   "lessonIds": [
     "FA-C48-bottri",
     "FA-C48-ashpazkhane",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch48.txt",
   "json": "persian/narration/ch48.json",
-  "textHash": "fnv1a64:6ae7e69d85b45b71",
-  "jsonHash": "fnv1a64:576b4d39c33c41c3",
+  "textHash": "fnv1a64:3ec428615b035e51",
+  "jsonHash": "fnv1a64:4bf3a86e212efc46",
   "findings": []
 }

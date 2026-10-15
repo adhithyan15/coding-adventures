@@ -12,7 +12,7 @@ concept_tag: BN-GRAM-CLASSIFIER
 prerequisites: [BN-W05-tta, BN-C15-jama, BN-C11-bhai, BN-C10-cha]
 sounds: []
 roots: []
-etymology_hook: "Bengali has no word for the, and never had one. What it has instead is a suffix glued to the end of the noun — and Bengali is not alone in this: the same job is done by a stuck-on ending in Assamese, Odia and, far away and unrelated, in Swedish and Romanian."
+etymology_hook: "-ṭā: origin not settled; CDIAL asks whether the -ṭā of Assamese eṭā 'one' is vṛtta 'round' (CDIAL 2462)"
 duration:
   max_seconds: 250
 requires:
@@ -56,6 +56,11 @@ front. It is **টা**, stuck on the end.
 
 Nothing goes between the noun and it, and nothing comes before the noun. The
 noun and its ending are written as one word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **টা** comes from is not settled. CDIAL, a dictionary of words rather than endings, has no entry for it; under Sanskrit *ēka*, "one", it asks whether the *-ṭā* of Assamese *eṭā*, "one", is Sanskrit *vṛtta*, "round", and leaves the question open (CDIAL 2462).
 
 ## Grammar Lens: why this is called a classifier and not an article
 <!-- hl-knowledge: introduces=[]; assesses=[BN-GRAMMAR-C20-CLASSIFIER-01, BN-LEX-C11-BHAI-01] -->

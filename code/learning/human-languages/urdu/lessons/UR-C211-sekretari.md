@@ -14,7 +14,8 @@ romanization: "sekreṭarī"
 concept_tag: UR-KAM211-SEKRETARI
 prerequisites: [UR-C210-lohar, UR-C210-barhai]
 sounds: []
-roots: []
+roots: [english-secretary]
+etymology_hook: "sekreṭarī ← English secretary"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C210-barhai]
 <!-- hl-knowledge: introduces=[UR-LEX-C211-KAM211-01]; assesses=[] -->
 
 **سیکرٹری** — *sekreṭarī* — "a secretary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سیکرٹری** (*sekreṭarī*) is a loan from English *secretary*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

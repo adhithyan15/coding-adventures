@@ -15,6 +15,7 @@ concept_tag: HI-DEIXIS-WHERE
 prerequisites: [HI-C40-who]
 sounds: []
 roots: []
+etymology_hook: "kahāṁ: question stem k- (kyā, kaun) + the place ending -hāṁ of yahāṁ; CDIAL has no entry, so its history is open"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,11 @@ Its partner is **कौन** *kaun*, which you met in the last lesson: both open
 **k-**, the asking sound. Its other partners, **यहाँ** *yahā̃* and **वहाँ**
 *vahā̃*, differ from it only at the front. That is the whole system, and the
 last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कहाँ** (*kahāṁ*) pairs the question stem *k-* of **क्या** and **कौन** with the place ending *-hāṁ* of **यहाँ**, "here", and **वहाँ**, "there". CDIAL has no entry for it, so its older history is uncertain.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-06] -->

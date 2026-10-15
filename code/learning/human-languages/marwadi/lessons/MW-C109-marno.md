@@ -14,7 +14,8 @@ romanization: "mārṇo"
 concept_tag: MW-VERB-MARNO
 prerequisites: [MW-C109-jitno, MW-C109-harno]
 sounds: []
-roots: []
+roots: [sanskrit-marayati]
+etymology_hook: "mārṇo ← Sanskrit mārayati 'kills', a tadbhava (CDIAL 10066, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C109-harno]
 <!-- hl-knowledge: introduces=[MW-LEX-C109-ACT109-05]; assesses=[] -->
 
 **मारणो** — *mārṇo* — "to hit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मारणो** (*mārṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mārayati*, "kills". CDIAL lists Old Marwari *māraï* under it (CDIAL 10066).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

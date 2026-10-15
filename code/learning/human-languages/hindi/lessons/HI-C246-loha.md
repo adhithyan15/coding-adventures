@@ -14,7 +14,8 @@ romanization: "lohā"
 concept_tag: HI-THG246-LOHA
 prerequisites: [HI-C245-darjan, HI-C245-jora]
 sounds: []
-roots: []
+roots: [sanskrit-loha]
+etymology_hook: "lohā ← Sanskrit loha 'red; copper; iron', a tadbhava (CDIAL 11158)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C245-jora]
 <!-- hl-knowledge: introduces=[HI-LEX-C246-THG246-01]; assesses=[] -->
 
 **लोहा** — *lohā* — "iron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लोहा** (*lohā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *loha*, "red; copper; iron" (CDIAL 11158).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kôṛā"
 concept_tag: BN-GUN161-KORA
 prerequisites: [BN-C161-bhodro, BN-C161-komol]
 sounds: []
-roots: []
+roots: [sanskrit-kaddati]
+etymology_hook: "kôṛā ← Sanskrit kaḍḍati 'is rough', a tadbhava (CDIAL 2657)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C161-komol]
 <!-- hl-knowledge: introduces=[BN-LEX-C161-GUN161-03]; assesses=[] -->
 
 **কড়া** — *kôṛā* — "strict; strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কড়া** (*kôṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaḍḍati*, "is rough" (CDIAL 2657). CDIAL lists Bengali *kaṛā*, "rough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

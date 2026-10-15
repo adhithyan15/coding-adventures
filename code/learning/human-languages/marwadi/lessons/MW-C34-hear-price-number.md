@@ -11,8 +11,8 @@ gloss: the price question, and for the first time an answer this book can unders
 concept_tag: MW-FUNCTION-PRICE-NUMBER
 prerequisites: [MW-C34-so]
 sounds: [mixed]
-roots: []
-etymology_hook: Chapter 27 taught the question and left the answer as a hole; the hole is the size of one number.
+roots: [sanskrit-vimshati]
+etymology_hook: "ye kitṇe kū hai, bīs: bīs 'twenty' ← Sanskrit viṃśati, Old Marwari bīsa (CDIAL 11616)"
 duration:
   max_seconds: 185
 requires:
@@ -59,6 +59,11 @@ is a number, and this book now has twelve of them.
 
 Hear the same question answered *das*, *bīs*, *so* in turn and say which
 is dearest.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+In the question and its answer, the new piece is *bīs*, "twenty", which CDIAL lists as Old Marwari *bīsa* under Sanskrit *viṃśati*, "twenty" (CDIAL 11616). The question words have their own lessons: *kitṇe* from *\*kiyatta*, "how great" (CDIAL 3167), and *hai*, "is" (CDIAL 1031).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PRICE-NUMBER-01] -->

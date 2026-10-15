@@ -12,6 +12,9 @@ Before the new one: say the Bengali for advice, then the Bengali for the truth.
 You'll want to know: ব্যর্থতা.
 ব্যর্থতা — bærthôtā — "failure".
 
+The word, taken apart.
+ব্যর্থতা (bærthôtā) is Sanskrit vyartha, "useless, vain", + the ending -tā, "-ness", both taken over whole.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for the truth, then the Bengali for failure.
 
 You'll want to know: জীবন.
 জীবন — jībôn — "life".
+
+The word, taken apart.
+জীবন (jībôn) is Sanskrit jīvana, "life", taken over whole as a learned loan, a tatsama (CDIAL 5243). The inherited form is jion, "remaining alive", which CDIAL lists.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for failure, then the Bengali for life.
 You'll want to know: মৃত্যু.
 মৃত্যু — mrityu — "death".
 
+The word, taken apart.
+মৃত্যু (mrityu) is Sanskrit mṛtyu, "death", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for life, then the Bengali for death.
 You'll want to know: ভাগ্য.
 ভাগ্য — bhāgyô — "luck, fate".
 
+The word, taken apart.
+ভাগ্য (bhāgyô) is Sanskrit bhāgya, "fortune, lot", taken over whole as a learned loan, a tatsama (CDIAL 9434). The word inherited from it is bhāg, "fortune", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for death, then the Bengali for luck.
 
 You'll want to know: সিদ্ধান্ত.
 সিদ্ধান্ত — siddhāntô — "a decision".
+
+The word, taken apart.
+সিদ্ধান্ত (siddhāntô) is Sanskrit siddhānta, "settled conclusion", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

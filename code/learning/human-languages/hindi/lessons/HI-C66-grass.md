@@ -14,7 +14,8 @@ romanization: "ghās"
 concept_tag: HI-NOUN-GRASS
 prerequisites: [HI-C66-grain, HI-C64-little, HI-C65-trust]
 sounds: []
-roots: []
+roots: [sanskrit-ghasa]
+etymology_hook: "ghās ← Sanskrit ghāsa 'food, pasture grass', inherited (CDIAL 4471)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C66-grain]
 Sanskrit घास (*ghāsa*), 'fodder', on the root घस् (*ghas-*), 'to eat'. Grass is named from the eating end: it is not a plant, it is what an animal is given.
 
 That is still how the word behaves. Cut घास travels home on a head or a bicycle for the भैंस and the गाय, and the lawn sense — grass you keep and do not feed to anything — is the newer, city meaning laid on top.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घास** (*ghās*) is inherited from Sanskrit *ghāsa*, "food, pasture grass", and has come down with almost no change (CDIAL 4471).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

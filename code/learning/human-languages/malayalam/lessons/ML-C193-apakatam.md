@@ -14,7 +14,8 @@ romanization: "apakaṭaṁ"
 concept_tag: ML-AROGYAM193-APAKATAM
 prerequisites: [ML-C192-tuta, ML-C192-ara]
 sounds: []
-roots: []
+roots: [sanskrit-apakata]
+etymology_hook: "apakaṭaṁ: a Sanskrit-built word, apa 'away, ill' + a second part; its exact formation is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C192-ara]
 <!-- hl-knowledge: introduces=[ML-LEX-C193-AROGYAM193-01]; assesses=[] -->
 
 **അപകടം** — *apakaṭaṁ* — "an accident".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അപകടം** (*apakaṭaṁ*) is built from Sanskrit material: *apa-*, "away, ill", with a second part whose source is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

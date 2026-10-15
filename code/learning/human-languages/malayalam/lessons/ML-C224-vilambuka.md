@@ -14,7 +14,8 @@ romanization: "viḷambuka"
 concept_tag: ML-VERB-VILAMBUKA
 prerequisites: [ML-C223-marruka, ML-C224-kalarttuka]
 sounds: []
-roots: []
+roots: [dravidian-vilampu-serve]
+etymology_hook: "viḷambuka: native Dravidian, one word with Tamil viḷampu (DEDR 5434)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C224-kalarttuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C224-KRIYA224-02]; assesses=[] -->
 
 **വിളമ്പുക** — *viḷambuka* — "to serve (food)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിളമ്പുക** (*viḷambuka*) is native Dravidian, one word with Tamil *viḷampu* (DEDR 5434).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

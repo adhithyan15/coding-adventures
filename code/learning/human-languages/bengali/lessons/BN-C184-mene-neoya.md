@@ -14,7 +14,8 @@ romanization: "mene neoyā"
 concept_tag: BN-VERB-MENE-NEOYA
 prerequisites: [BN-C183-jaga, BN-C183-snan-kora]
 sounds: []
-roots: []
+roots: [sanskrit-manyate, sanskrit-nayati]
+etymology_hook: "mene neoyā: mene, of mānā 'to consider' ← manyate (CDIAL 9857), + neoyā 'to take' ← nayati (CDIAL 6966)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C183-snan-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C184-ACT184-01]; assesses=[] -->
 
 **মেনে নেওয়া** — *mene neoyā* — "to accept".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মেনে নেওয়া** (*mene neoyā*) is *mene*, "having accepted", a form of *mānā*, "to consider, obey", from Sanskrit *manyate*, "thinks, agrees" (CDIAL 9857), + *neoyā*, "to take", from Sanskrit *nayati*, "leads, carries off" (CDIAL 6966).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

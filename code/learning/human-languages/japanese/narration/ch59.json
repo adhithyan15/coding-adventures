@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Hat, Socks, Glasses, Thirty, Thousand",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b0a89303a10834b3",
+  "sourceHash": "fnv1a64:24c7e62ceebccfdc",
   "lessons": [
     {
       "id": "JA-C59-boushi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3bf326737a5dc0fe",
+      "sourceHash": "fnv1a64:c4037c9b8bd1d7d9",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぼうし (boushi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bō, \"hat\" (Middle Chinese mawH) and shi, \"child; a noun ending\" (tsiX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7b98c718d54b914",
+      "sourceHash": "fnv1a64:1bf769d65860fd91",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くつした (kutsushita) is a compound of kutsu, \"shoe\", and native shita, \"under\", both kun'yomi of its kanji (JMdict, KANJIDIC2). Kutsu is usually counted native, but whether it is inherited or an early loan is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c8bcd5442dcfbe7",
+      "sourceHash": "fnv1a64:ec5364439dc9966e",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めがね (megane) is native, inherited rather than borrowed, usually taken apart as me, \"eye\", and kane, \"metal\", voiced to gane. JMdict writes it with characters for \"eye\" and \"mirror\", read as a whole, and marks it as usually written in kana."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d12e106e3b385af0",
+      "sourceHash": "fnv1a64:809233d2a4dd1745",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さんじゅう (sanjuu) (sanjū) is Sino-Japanese: san, \"three\" (Middle Chinese sam), and jū, \"ten\" (Middle Chinese dzyip), both on'yomi borrowed from Chinese."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b065444ccbea910",
+      "sourceHash": "fnv1a64:ac488312bd91ccac",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せん (sen) is Sino-Japanese (kango): the on'yomi of a character meaning \"thousand\", a reading borrowed from Chinese (Middle Chinese tshen in Baxter's transcription; Unihan, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

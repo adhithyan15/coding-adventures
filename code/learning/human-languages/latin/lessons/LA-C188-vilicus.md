@@ -13,7 +13,8 @@ gloss: "a farm manager"
 concept_tag: LA-RES188-VILICUS
 prerequisites: [LA-C188-textor, LA-C188-figulus]
 sounds: []
-roots: []
+roots: [vilicus-latin, villa-latin]
+etymology_hook: "vīlicus 'farm manager' — built on vīlla 'farmhouse'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C188-figulus]
 <!-- hl-knowledge: introduces=[LA-LEX-C188-RES188-04]; assesses=[] -->
 
 **vīlicus, vīlicī** — "a farm manager".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vīlicus** is built on *vīlla*, "a farmhouse" (Lewis & Short): the man in charge of the farm.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

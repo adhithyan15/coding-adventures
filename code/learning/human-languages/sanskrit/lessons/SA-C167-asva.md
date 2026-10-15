@@ -14,7 +14,8 @@ romanization: "aśvā"
 concept_tag: SA-THG167-ASVA
 prerequisites: [SA-C167-vatsah, SA-C167-aja]
 sounds: []
-roots: []
+roots: [sanskrit-ashva]
+etymology_hook: "aśvā 'mare' is the feminine of aśva 'horse', inherited, cousin of Latin equa 'mare' (EtymDB; MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C167-aja]
 <!-- hl-knowledge: introduces=[SA-LEX-C167-THG167-05]; assesses=[] -->
 
 **अश्वा** — *aśvā* — "a mare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aśvā* is the feminine of *aśva* "horse". It is inherited from Indo-European: MW sets *aśva* beside Latin *equus* and Greek *hippos*, and EtymDB pairs *aśvā* with Latin *equa* "mare".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

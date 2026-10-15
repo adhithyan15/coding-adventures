@@ -14,7 +14,8 @@ romanization: "māmā"
 concept_tag: HI-AUNT-MAMA
 prerequisites: [HI-C117-mausi, HI-C117-bua]
 sounds: []
-roots: []
+roots: [sanskrit-mama]
+etymology_hook: "māmā ← Sanskrit māma 'uncle', a nursery word; a tadbhava (CDIAL 10055)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C117-bua]
 **मामा** (*māmā*) — "uncle", your mother's brother.
 
 Beside **चाचा**, the father's brother, it completes the uncles you meet most.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मामा** (*māmā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *māma*, "uncle" (CDIAL 10055). CDIAL calls it a nursery word and notes similar words in Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

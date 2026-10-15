@@ -12,6 +12,9 @@ Before the new one: say the Marathi for an exercise book, then the Marathi for a
 You'll want to know: शाळा.
 शाळा — shāḷā — "a school".
 
+The word, taken apart.
+शाळा (shāḷā) is Sanskrit śālā, "shed, house", lightly reshaped with Marathi ळ. CDIAL lists the inherited Marathi form as sāḷ, "workshop, school" (CDIAL 12414).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a pen, then the Marathi for a school.
 
 You'll want to know: नकाशा.
 नकाशा — nakāshā — "a map".
+
+The word, taken apart.
+नकाशा (nakāshā) is a loan from Arabic naqsh, "a painting, an engraving", which reached Marathi through Persian. Its Arabic root is n-q-sh (Lane). Persian naqsha came to mean a plan or map.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a school, then the Marathi for a map.
 You'll want to know: धडा.
 धडा — dhaḍā — "a lesson".
 
+The word, taken apart.
+The origin of धडा (dhaḍā) is not settled. Neither CDIAL nor DEDR has an entry for it in the sense "lesson".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a map, then the Marathi for a lesson.
 You'll want to know: प्रश्न.
 प्रश्न — prashna — "a question".
 
+The word, taken apart.
+प्रश्न (prashna) is Sanskrit praśna, "question", taken over whole as a learned loan, a tatsama (CDIAL 8818). It is built on prach, "to ask".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a lesson, then the Marathi for a questio
 
 You'll want to know: उत्तर.
 उत्तर — uttar — "an answer".
+
+The word, taken apart.
+उत्तर (uttar) is Sanskrit uttara, "upper, following", a tatsama; as a noun it already meant "answer" in the Ramayana (CDIAL 1767).
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 67,
-  "sourceHash": "fnv1a64:89e572f10f20ed1b",
+  "sourceHash": "fnv1a64:ba6285b9f459db2d",
   "lessonIds": [
     "UR-C67-registan",
     "UR-C67-kutta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch67.txt",
   "json": "urdu/narration/ch67.json",
-  "textHash": "fnv1a64:947fdc6f63be9e62",
-  "jsonHash": "fnv1a64:b708d27acb8f9d0f",
+  "textHash": "fnv1a64:5733d296785f36ea",
+  "jsonHash": "fnv1a64:7cde2024ae78a782",
   "findings": []
 }

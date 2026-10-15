@@ -14,7 +14,8 @@ romanization: "oggaraṇe hāku"
 concept_tag: KA-VERB-OGGARANE-HAKU
 prerequisites: [KA-C241-kanduhidi, KA-C241-sala-pade]
 sounds: []
-roots: []
+roots: [dravidian-app-17-oggarane]
+etymology_hook: "oggaraṇe hāku: oggaraṇe 'seasoning', an Indo-Aryan loan (DEDR App. 17), + hāku 'to put'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C241-sala-pade]
 <!-- hl-knowledge: introduces=[KA-LEX-C242-KRIYE242-01]; assesses=[] -->
 
 **ಒಗ್ಗರಣೆ ಹಾಕು** — *oggaraṇe hāku* — "to temper (fry spices in hot oil)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಗ್ಗರಣೆ ಹಾಕು** (*oggaraṇe hāku*) is *oggaraṇe*, "seasoning", which DEDR lists among Indo-Aryan loans (DEDR App. 17), and *hāku*, "to put", whose history neither DEDR nor CDIAL gives.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added — `[styles] version` (UI90 §4 step 1)
+
+- `StylesSection` gains `version: u8`. It defaults to `1`, and `2` opts
+  into the mosstyle v2 property table. Any other value (`0`, `3`, a
+  string) is the new `ManifestError::InvalidStyleVersion`.
+- `StylesSection` now implements `Default` by hand, so the default
+  version is 1.
+
 ### Fixed — `bundle-identifier` documentation (UI89 §3.5)
 
 The comment on `is_bundle_identifier` said Android accepts what it accepts;

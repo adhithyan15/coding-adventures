@@ -47,7 +47,7 @@ You'll want to know: தமிழில்.
 -இல் is "in", added to the name of the language. ஆங்கிலத்தில் would be "in English".
 
 The word, taken apart.
-தமிழில் (tamiḻil) is tamiḻ, native (DEDR 3080), with the locative -il, "in".
+தமிழில் (tamiḻil) is tamiḻ, native (DEDR 3080, which compares Sanskrit draviḍa), with the locative -il, "in".
 
 What you've built.
 A way to name the language you want.

@@ -15,6 +15,7 @@ concept_tag: MR-TIME110-KADHIKADHI
 prerequisites: [MR-C110-ata, MR-C110-nehmi]
 sounds: []
 roots: []
+etymology_hook: "kadhīkadhī: kadhī 'when' said twice; kadhī is usually traced to Sanskrit kadā 'when'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C110-nehmi]
 <!-- hl-knowledge: introduces=[MR-LEX-C110-TIME110-05]; assesses=[] -->
 
 **कधीकधी** — *kadhīkadhī* — "sometimes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कधीकधी** (*kadhīkadhī*) is **कधी**, "when", said twice. **कधी** is usually traced to Sanskrit *kadā*, "when"; CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

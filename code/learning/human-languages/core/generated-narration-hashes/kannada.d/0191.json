@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 191,
-  "sourceHash": "fnv1a64:c2025919f77dba1b",
+  "sourceHash": "fnv1a64:e49a6e8df45ffa0c",
   "lessonIds": [
     "KA-C191-citra",
     "KA-C191-kride",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch191.txt",
   "json": "kannada/narration/ch191.json",
-  "textHash": "fnv1a64:7fc3d04a7629cf65",
-  "jsonHash": "fnv1a64:b9b5d41cf4061fd4",
+  "textHash": "fnv1a64:5c73eae1b58a0b96",
+  "jsonHash": "fnv1a64:4408304e337c9193",
   "findings": []
 }

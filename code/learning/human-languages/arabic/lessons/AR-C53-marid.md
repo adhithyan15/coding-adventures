@@ -14,7 +14,8 @@ romanization: "marīḍ"
 concept_tag: AR-HEALTH53-MARID
 prerequisites: [AR-C53-humma, AR-C53-mustashfa]
 sounds: []
-roots: []
+roots: [m-r-ḍ]
+etymology_hook: "marīḍ: built on the root m-r-ḍ, 'to be ill' (Lane); marīḍ is the faʿīl adjective, 'ill, sick'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C53-mustashfa]
 <!-- hl-knowledge: introduces=[AR-LEX-C53-HEALTH53-03]; assesses=[] -->
 
 **مريض** — *marīḍ* — "ill, sick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مريض** (*marīḍ*) is built on the native Arabic root *m-r-ḍ*, "to be ill" (Lane). *Marīḍ* is the *faʿīl* adjective, "ill, sick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

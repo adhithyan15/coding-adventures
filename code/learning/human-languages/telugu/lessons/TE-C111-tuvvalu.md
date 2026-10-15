@@ -14,7 +14,8 @@ romanization: "tuvvālu"
 concept_tag: TE-THINGS111-TUVVALU
 prerequisites: [TE-C111-duvvena, TE-C111-sabbu]
 sounds: []
-roots: []
+roots: [portuguese-toalha]
+etymology_hook: "tuvvālu: usually traced to Portuguese toalha 'towel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C111-sabbu]
 <!-- hl-knowledge: introduces=[TE-LEX-C111-THINGS111-03]; assesses=[] -->
 
 **తువ్వాలు** — *tuvvālu* — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తువ్వాలు** (*tuvvālu*) is usually traced to Portuguese *toalha*, "towel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jhôṛ"
 concept_tag: BN-JINIS255-JHOR
 prerequisites: [BN-C254-aoyaj, BN-C255-rod]
 sounds: []
-roots: []
+roots: [indo-aryan-jhadi]
+etymology_hook: "jhôṛ ← *jhaḍī 'rainstorm', a reconstructed form; a tadbhava (CDIAL 5329)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C255-rod]
 <!-- hl-knowledge: introduces=[BN-LEX-C255-JINIS255-02]; assesses=[] -->
 
 **ঝড়** — *jhôṛ* — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ঝড়** (*jhôṛ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhaḍī*, "rainstorm", a form CDIAL reconstructs from its descendants (CDIAL 5329). CDIAL lists Bengali *jhaṛ*, "storm, high wind", and reports a view that the word is Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

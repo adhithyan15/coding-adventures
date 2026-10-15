@@ -14,7 +14,8 @@ romanization: "cābī"
 concept_tag: HI-THG184-CABI
 prerequisites: [HI-C183-rasoi, HI-C184-fars]
 sounds: []
-roots: []
+roots: [portuguese-chave]
+etymology_hook: "cābī: usually traced to Portuguese chave 'key'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C184-fars]
 <!-- hl-knowledge: introduces=[HI-LEX-C184-THG184-02]; assesses=[] -->
 
 **चाबी** — *cābī* — "a key".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चाबी** (*cābī*) is usually traced to Portuguese *chave*, "key".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

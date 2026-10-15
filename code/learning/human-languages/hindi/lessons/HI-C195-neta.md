@@ -14,7 +14,8 @@ romanization: "netā"
 concept_tag: HI-THG195-NETA
 prerequisites: [HI-C195-gayak, HI-C195-khilari]
 sounds: []
-roots: []
+roots: [sanskrit-netr]
+etymology_hook: "netā ← Sanskrit netṛ 'leader', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C195-khilari]
 <!-- hl-knowledge: introduces=[HI-LEX-C195-THG195-05]; assesses=[] -->
 
 **नेता** — *netā* — "a leader, a politician".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नेता** (*netā*) is Sanskrit *netṛ*, "leader", taken over whole as a learned loan, a tatsama. Hindi took its nominative, *netā*, "the leader".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

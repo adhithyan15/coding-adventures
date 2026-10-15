@@ -14,7 +14,8 @@ romanization: "davākhānũ"
 concept_tag: GU-TOWN-CLINIC
 prerequisites: [GU-C83-howmuch, GU-C83-which]
 sounds: []
-roots: []
+roots: [arabic-dawa, persian-khana]
+etymology_hook: "davākhānũ: davā 'medicine', from Arabic dawāʾ (Lane), + Persian khāna 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C83-which]
 <!-- hl-knowledge: introduces=[GU-LEX-C84-TOWN-01]; assesses=[] -->
 
 **દવાખાનું** (*davākhānũ*) — "a clinic, a dispensary". Where the **દવા** is.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દવાખાનું** (*davākhānũ*) is a compound of two loans: *davā*, "medicine", from Arabic *dawāʾ*, "remedy" (Lane, root *d-w-y*), and *khānũ*, from Persian *khāna*, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

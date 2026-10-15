@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a bucket, then the Urdu for a rope.
 You'll want to know: کیل.
 کیل — kīl — "a nail".
 
+The word, taken apart.
+کیل (kīl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kīla, "stake, peg" (CDIAL 3202). CDIAL notes that both an Indo-European and a non-Aryan source have been proposed.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a rope, then the Urdu for a nail.
 
 You'll want to know: ہتھوڑا.
 ہتھوڑا — hathauṛā — "a hammer".
+
+The word, taken apart.
+ہتھوڑا (hathauṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from hastakūṭa, "hand hammer", a form CDIAL reconstructs from its descendants (CDIAL 14028). It is built from hasta, "hand", and kūṭa, "hammer".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a nail, then the Urdu for a hammer.
 You'll want to know: تالا.
 تالا — tālā — "a lock".
 
+The word, taken apart.
+تالا (tālā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tāla, "latch, bolt" (CDIAL 5749). CDIAL compares a Tamil word for "bar, bolt, latch".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a hammer, then the Urdu for a lock.
 You'll want to know: پنکھا.
 پنکھا — pankhā — "a fan".
 
+The word, taken apart.
+پنکھا (pankhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pakṣa, "wing, feather; fan" (CDIAL 7627). CDIAL notes the nasal and asks whether puṅkha, "feathered end of an arrow", crossed with it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a lock, then the Urdu for a fan.
 
 You'll want to know: بجلی.
 بجلی — bijlī — "electricity; lightning".
+
+The word, taken apart.
+بجلی (bijlī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vidyullatā, "forked lightning" (CDIAL 11745). It is built from vidyut, "lightning", and latā, "creeper": lightning as a forking vine. The sense "electricity" came later.
 
 What you've built.
 One more word for this chapter.

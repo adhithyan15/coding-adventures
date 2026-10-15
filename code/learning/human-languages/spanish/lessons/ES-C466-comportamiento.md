@@ -11,6 +11,7 @@ concept_tag: ES-ASK-COMPORTAMIENTO
 prerequisites: [ES-C466-visible, ES-C463-importar, ES-C450-entrenamiento]
 sounds: [stress-penultimate, diphthong-ie]
 roots: [comportare-latin]
+etymology_hook: "comportamiento — comportarse, Latin com- + portare 'to carry': carrying yourself"
 duration:
   max_seconds: 275
 requires:
@@ -53,7 +54,7 @@ is the formal word; a parent at home is more likely to say *se porta bien* or
 
 **com-**, together, plus **portare**, to carry — the *portare* you had under
 *importar*, where carrying something **in** turned out to be the whole of what
-Rome meant by it.
+Rome meant by it. *Comportar* ← Latin *comportāre* (EtymDB 2.1).
 
 To *comportarse* is to **carry yourself**, and English does the identical
 thing: *conduct* is *con-* plus *ducere*, to lead — to lead yourself. Two

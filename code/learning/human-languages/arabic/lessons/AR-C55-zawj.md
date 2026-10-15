@@ -14,7 +14,8 @@ romanization: "zawj"
 concept_tag: AR-FAMILY55-ZAWJ
 prerequisites: [AR-C55-amm, AR-C55-khal]
 sounds: []
-roots: []
+roots: [z-w-j]
+etymology_hook: "zawj: one of a pair in Lane (z-w-j); usually traced through Aramaic zūgā to Greek zeugos 'yoke' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C55-khal]
 <!-- hl-knowledge: introduces=[AR-LEX-C55-FAMILY55-04]; assesses=[] -->
 
 **زوج** — *zawj* — "a husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زوج** (*zawj*) is listed by Lane under *z-w-j* as one of a pair, a mate. It is usually traced, through Aramaic *zūgā*, to Greek *zeugos*, "yoke, pair" (EtymDB); Lane gives no foreign source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

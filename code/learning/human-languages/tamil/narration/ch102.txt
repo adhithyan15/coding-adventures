@@ -47,7 +47,7 @@ You'll want to know: பெரியம்மா.
 அம்மா is the mother you know.
 
 The word, taken apart.
-பெரியம்மா (periyammā) is native: periya, "big" (DEDR 4411), and ammā, "mother" (DEDR 183): "the big mother".
+பெரியம்மா (periyammā) is native: periya, "big" (DEDR 4411), and ammā, "mother" (DEDR 183, which compares Sanskrit ambā, "mother"): "the big mother".
 
 What you've built.
 The big mother.
@@ -80,7 +80,7 @@ You'll want to know: மாமியார்.
 It is built on the same மாமா root as the uncle.
 
 The word, taken apart.
-மாமியார் (māmiyār) is native Dravidian (DEDR 4813). The entry lists māmi, "mother-in-law", beside māmā, "uncle"; -yār is the respectful ending.
+மாமியார் (māmiyār) is native Dravidian (DEDR 4813). The entry lists māmi, "mother-in-law", beside māmā, "uncle", which it compares with Sanskrit māma; -yār is the respectful ending.
 
 What you've built.
 An in-law.

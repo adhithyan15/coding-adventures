@@ -14,7 +14,8 @@ romanization: "guḷḷe"
 concept_tag: KA-AROGYA245-GULLE
 prerequisites: [KA-C245-alarji, KA-C245-uta]
 sounds: []
-roots: []
+roots: [dravidian-gulle-blister]
+etymology_hook: "guḷḷe: native Dravidian, one word with Telugu gulla (DEDR 1795)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C245-uta]
 <!-- hl-knowledge: introduces=[KA-LEX-C245-AROGYA245-04]; assesses=[] -->
 
 **ಗುಳ್ಳೆ** — *guḷḷe* — "a pimple, a blister".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗುಳ್ಳೆ** (*guḷḷe*) is native Dravidian, one word with Telugu *gulla* (DEDR 1795). DEDR lists *guḷḷe*, "bubble, blister".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

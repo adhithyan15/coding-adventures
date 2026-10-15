@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-GUION-BAJO
 prerequisites: [ES-C428-arroba]
 sounds: [g-hard, stress-penultimate]
 roots: []
+etymology_hook: "guion bajo — guion 'hyphen' + bajo 'low': the low hyphen"
 duration:
   max_seconds: 240
 requires:
@@ -48,6 +49,8 @@ English names it *under-score*, from the typewriter habit of scoring a line
 *under* text to underline it. Spanish names it by where it sits relative to the
 mark it resembles. Two languages, two entirely reasonable descriptions of the
 same key.
+
+*Bajo* is Late Latin *bassus*, "low".
 
 ## Grammar Lens: the address, complete
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C428-02, ES-ORTH-C428-01, ES-ORTH-C424-07] -->

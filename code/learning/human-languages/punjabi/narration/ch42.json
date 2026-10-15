@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "He, We, and the One Who",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d881bd45b373f3f2",
+  "sourceHash": "fnv1a64:bba126f5c1f35ba6",
   "lessons": [
     {
       "id": "PA-C42-oh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6273a8d5fa49bee3",
+      "sourceHash": "fnv1a64:3f360c3635237420",
       "notice": null,
       "blocks": [
         {
@@ -90,6 +90,10 @@
             {
               "kind": "speech",
               "text": "With this the pronoun set is complete: ਮੈਂ, ਤੂੰ / ਤੁਸੀਂ, ਉਹ (oh)."
+            },
+            {
+              "kind": "speech",
+              "text": "Oh is inherited. CDIAL lists Punjabi o, \"that\", under Sanskrit asau, \"that\", whose other forms, on a stem amu-, gave the later words for \"that\" (CDIAL 972)."
             }
           ]
         },
@@ -165,7 +169,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c1d47309d0bbd30",
+      "sourceHash": "fnv1a64:a6e780e726293b23",
       "notice": null,
       "blocks": [
         {
@@ -232,6 +236,10 @@
             {
               "kind": "speech",
               "text": "Punjabi often leaves the pronoun out when the ending already carries it, which is why nothing sounded wrong. But you cannot say we on its own, or put it in front of anything else, until you have the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Asīṁ is inherited. CDIAL lists it under asmad, the base of the Sanskrit plural forms of \"we, us\" (CDIAL 986)."
             }
           ]
         },
@@ -419,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6664304f2becf270",
+      "sourceHash": "fnv1a64:04fcdb6d29209d43",
       "notice": null,
       "blocks": [
         {
@@ -486,6 +494,10 @@
             {
               "kind": "speech",
               "text": "Punjabi marks a describing clause at its front, the way it marked a condition with ਜੇ. Once you hear the ਜ, you know a clause is starting and that something will come back to be pointed at."
+            },
+            {
+              "kind": "speech",
+              "text": "Jo is inherited: CDIAL lists it under the Sanskrit relative pronoun ya- (CDIAL 10391)."
             }
           ]
         },
@@ -561,7 +573,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d513662045b2ba9",
+      "sourceHash": "fnv1a64:f15e35c5343cc691",
       "notice": null,
       "blocks": [
         {
@@ -632,6 +644,10 @@
             {
               "kind": "speech",
               "text": "ਜੇ … ਤਾਂ, ਜੋ (jo) … ਉਹ (oh). One habit, and you have met it twice."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves are inherited: jo from the Sanskrit relative ya- (CDIAL 10391), and oh from asau, \"that\" (CDIAL 972)."
             }
           ]
         },

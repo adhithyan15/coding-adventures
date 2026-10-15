@@ -11,8 +11,8 @@ gloss: How are you? — respectfully to a man / woman
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [UR-C04-kaise-kaisi]
 sounds: [rtl, ai-diphthong, nasal-vowel, urdu-question-mark]
-roots: [indo-aryan-k-question-family, indo-aryan-copula]
-etymology_hook: Urdu pairs honorific āp with the plural copula haiṅ while kaise or kaisī keeps the addressee visible.
+roots: [indo-aryan-k-question-family, indo-aryan-copula, sanskrit-atman, sanskrit-kidrsha]
+etymology_hook: "āp ← ātman 'self' (CDIAL 1135); kaise ← kīdṛśa 'of what kind' (CDIAL 3197); haiṅ inherited"
 duration:
   max_seconds: 240
 requires:
@@ -49,6 +49,11 @@ for a woman. One final copula completes the question.
 The order is **you + how + are?** Keep **ہیں** *haiṅ* final, exactly as **ہے** *hai*
 stayed final in the name question. Respectful **āp** takes this plural-shaped
 copula even when speaking to one person.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The two questions **آپ کیسے ہیں** and **آپ کیسی ہیں** (*āp kaise haiṅ*, *āp kaisī haiṅ*) are built from inherited words. *āp* comes from Sanskrit *ātman*, "self" (CDIAL 1135); *kaise* and *kaisī* are forms of *kaisā*, which CDIAL lists under Sanskrit *kīdṛśa*, "of what kind" (CDIAL 3197); and *haiṅ*, "are", is the plural partner of *hai*, usually traced to Sanskrit *asti*, "is".
 
 ## Grammar Lens: respect does not erase agreement
 <!-- hl-knowledge: introduces=[UR-PRAGMATICS-RESPECTFUL-GENDER-CHOICE]; assesses=[] -->

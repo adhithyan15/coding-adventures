@@ -11,9 +11,10 @@ romanization: "vannāl"
 concept_tag: ML-IF-CLAUSE
 prerequisites: [ML-C75-umbol, ML-C32-varuka]
 sounds: []
-roots: []
+roots: [va-come-dravidian]
+etymology_hook: "vannāl: native Dravidian, the past of 'to come' (DEDR 5270) + the native conditional -āl"
 duration:
-  max_seconds: 240
+  max_seconds: 298
 requires:
   knowledge: [ML-GRAMMAR-C75-UMBOL-01, ML-CONCEPT-C32-VARUKA-02]
 introduces:
@@ -66,6 +67,8 @@ Take the **past** form and swap its last vowel for **ആൽ**:
 
 Both rows lose a vowel and gain the same ending, and whatever the past did to
 the stem of *to come*, the conditional keeps.
+
+Both parts are native Dravidian (DEDR 5270).
 
 ## Grammar Lens: the past form is not about the past
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C75-AAL-01] -->

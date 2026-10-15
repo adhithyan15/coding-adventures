@@ -14,7 +14,8 @@ romanization: "badnām"
 concept_tag: UR-SIFAT196-BADNAM
 prerequisites: [UR-C195-laparvah, UR-C196-bechain]
 sounds: []
-roots: []
+roots: [persian-bad, persian-nam-name]
+etymology_hook: "badnām: Persian bad 'bad' + nām 'name'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C196-bechain]
 <!-- hl-knowledge: introduces=[UR-LEX-C196-SIFAT196-02]; assesses=[] -->
 
 **بدنام** — *badnām* — "notorious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بدنام** (*badnām*) is "bad-named". It joins Persian *bad*, "bad", and *nām*, "name".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for an advert, then the Urdu for a receipt.
 You'll want to know: پڑھانا.
 پڑھانا — paṛhānā — "to tutor, to teach (lessons)".
 
+The word, taken apart.
+پڑھانا (paṛhānā) is the causing form of paṛhnā, "to read": to teach is to make someone read. CDIAL lists both under Sanskrit paṭhati, "repeats aloud, reads" (CDIAL 7712).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a receipt, then the Urdu for to tutor.
 
 You'll want to know: یاد کرنا.
 یاد کرنا — yād karnā — "to memorise; to remember".
+
+The phrase, taken apart.
+یاد کرنا (yād karnā) joins yād, "memory", usually traced to Persian yād, and karnā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to tutor, then the Urdu for to memorise; to
 You'll want to know: چیخنا.
 چیخنا — chīkhnā — "to scream, to shout".
 
+The word, taken apart.
+The origin of چیخنا (chīkhnā) is uncertain. CDIAL lists a Hindi cīkhnā only in the sense "to taste" (CDIAL 4557), which is a different word.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to memorise; to remember, then the Urdu for
 You'll want to know: مسکرانا.
 مسکرانا — muskurānā — "to smile".
 
+The word, taken apart.
+مسکرانا (muskurānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from muss, "smile, sob", a form CDIAL reconstructs from its descendants (CDIAL 10227). CDIAL notes an added -k-.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to scream, then the Urdu for to smile.
 
 You'll want to know: گھبرانا.
 گھبرانا — ghabrānā — "to panic, to get flustered".
+
+The word, taken apart.
+گھبرانا (ghabrānā) belongs with ghābrā, "startled", which CDIAL lists under a reconstructed ghabbhara, "confused" (CDIAL 4427).
 
 What you've built.
 One more word for this chapter.

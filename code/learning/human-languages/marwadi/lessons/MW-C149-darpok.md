@@ -14,7 +14,8 @@ romanization: "ḍarpok"
 concept_tag: MW-QUAL149-DARPOK
 prerequisites: [MW-C149-puro, MW-C149-khus]
 sounds: []
-roots: []
+roots: [sanskrit-dara]
+etymology_hook: "ḍarpok: on ḍar 'fear' ← Sanskrit dara (CDIAL 6186); its ending is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C149-khus]
 <!-- hl-knowledge: introduces=[MW-LEX-C149-QUAL149-03]; assesses=[] -->
 
 **डरपोक** — *ḍarpok* — "timid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**डरपोक** (*ḍarpok*) is built on *ḍar*, "fear", which CDIAL lists as Marwari *ḍar* under Sanskrit *dara*, "fear" (CDIAL 6186). CDIAL has no entry for the ending *-pok*, so that part is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

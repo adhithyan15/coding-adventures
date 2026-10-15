@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 1,
-  "sourceHash": "fnv1a64:55b03b4a1b2d5753",
+  "sourceHash": "fnv1a64:94bcb7066831c2b6",
   "lessonIds": [
     "LA-C01-salve",
     "LA-W01-salve-guided-copy",
@@ -17,7 +17,7 @@
   "drivablePrefix": 1,
   "text": "latin/narration/ch01.txt",
   "json": "latin/narration/ch01.json",
-  "textHash": "fnv1a64:056ffc09c7ac98cf",
-  "jsonHash": "fnv1a64:c1a48f95b3639bdb",
+  "textHash": "fnv1a64:4390a1cbf0bfc080",
+  "jsonHash": "fnv1a64:9107ed1d6ed60fce",
   "findings": []
 }

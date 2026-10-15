@@ -14,7 +14,8 @@ romanization: "dinkāl"
 concept_tag: BN-TIME94-DINKAL
 prerequisites: [BN-C93-shuru, BN-C93-ajkal]
 sounds: []
-roots: []
+roots: [sanskrit-dina, sanskrit-kaala-time]
+etymology_hook: "dinkāl: din 'day' ← dina (CDIAL 6328) + kāl 'time' ← kāla (CDIAL 3084)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C93-ajkal]
 <!-- hl-knowledge: introduces=[BN-LEX-C94-TIME94-01]; assesses=[] -->
 
 **দিনকাল** — *dinkāl* — "these days, the times".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দিনকাল** (*dinkāl*) is *din*, "day", from Sanskrit *dina* (CDIAL 6328), + *kāl*, "time", from Sanskrit *kāla* (CDIAL 3084).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

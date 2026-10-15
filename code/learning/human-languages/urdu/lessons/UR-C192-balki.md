@@ -14,7 +14,8 @@ romanization: "balki"
 concept_tag: UR-VAJAH192-BALKI
 prerequisites: [UR-C191-qabristan, UR-C191-minar]
 sounds: []
-roots: []
+roots: [persian-balki]
+etymology_hook: "balki: usually traced to Persian balki 'but rather', bal 'but' + ki 'that'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C191-minar]
 <!-- hl-knowledge: introduces=[UR-LEX-C192-VAJAH192-01]; assesses=[] -->
 
 **بلکہ** — *balki* — "but rather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بلکہ** (*balki*) is usually traced to Persian *balki*, "but rather", built from *bal*, "but", and *ki*, "that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

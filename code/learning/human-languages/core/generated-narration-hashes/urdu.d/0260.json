@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 260,
-  "sourceHash": "fnv1a64:c4b335e92e85da29",
+  "sourceHash": "fnv1a64:20d44cb408ae5f9e",
   "lessonIds": [
     "UR-C260-kofta",
     "UR-C260-tikka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch260.txt",
   "json": "urdu/narration/ch260.json",
-  "textHash": "fnv1a64:939020144eb5bd07",
-  "jsonHash": "fnv1a64:4d8679a69eca1088",
+  "textHash": "fnv1a64:b4c2c0473df45508",
+  "jsonHash": "fnv1a64:930ee04125414c71",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a suburb, then the Marathi for up.
 You'll want to know: नक्की.
 नक्की — nakkī — "certainly, for sure".
 
+The word, taken apart.
+The origin of नक्की (nakkī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for up, then the Marathi for certainly.
 
 You'll want to know: खरोखर.
 खरोखर — kharokhar — "really".
+
+The word, taken apart.
+खरोखर (kharokhar) is kharā, "true", doubled with a linking -ो-. CDIAL lists Marathi kharā, "pure, good, firm", under Sanskrit khara, "hard, sharp" (CDIAL 3819).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for certainly, then the Marathi for really.
 You'll want to know: जवळजवळ.
 जवळजवळ — javaḷjavaḷ — "almost".
 
+The word, taken apart.
+जवळजवळ (javaḷjavaḷ) is जवळ, "near", said twice: "near-near". The origin of जवळ is not settled; CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for really, then the Marathi for almost.
 You'll want to know: सुमारे.
 सुमारे — sumāre — "about, approximately".
 
+The word, taken apart.
+सुमारे (sumāre) is often traced to Persian shumār, "count, number", but no source here settles it. Neither CDIAL nor DEDR has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for almost, then the Marathi for about.
 
 You'll want to know: फक्त.
 फक्त — phakta — "only".
+
+The word, taken apart.
+फक्त (phakta) is a loan, usually traced through Persian to Arabic faqaṭ, "only", with फ for the f.
 
 What you've built.
 One more word for this chapter.

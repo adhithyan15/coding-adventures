@@ -12,6 +12,9 @@ Before the new one: say the Marathi for fast, then the Marathi for expensive.
 You'll want to know: स्वस्त.
 स्वस्त — svasta — "cheap".
 
+The word, taken apart.
+The origin of स्वस्त (svasta) is not settled: CDIAL has no entry for it, nor for Hindi sastā.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for expensive, then the Marathi for cheap.
 
 You'll want to know: रिकामा.
 रिकामा — rikāmā — "empty".
+
+The word, taken apart.
+रिकामा (rikāmā) is a tadbhava, a word inherited and reshaped by sound change. It comes from rikṇakarman, "doing empty work", a form CDIAL reconstructs from its descendants (CDIAL 10728). It joins a reconstructed rikṇa- to karman, "work".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for cheap, then the Marathi for empty.
 You'll want to know: श्रीमंत.
 श्रीमंत — shrīmant — "rich".
 
+The word, taken apart.
+श्रीमंत (shrīmant) is Sanskrit śrīmant, "glorious, wealthy", a tatsama built on śrī, "wealth, splendour". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for empty, then the Marathi for rich.
 You'll want to know: गरीब.
 गरीब — garīb — "poor".
 
+The word, taken apart.
+गरीब (garīb) is a loan from Arabic gharīb, "a stranger", which reached Marathi through Persian. Its Arabic root is gh-r-b (Lane). Persian and Indian use moved it from "a stranger" to "poor".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for rich, then the Marathi for poor.
 
 You'll want to know: घाण.
 घाण — ghāṇ — "dirt; dirty".
+
+The word, taken apart.
+घाण (ghāṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghrāṇa, "smelling, smell" (CDIAL 4531). CDIAL glosses the Marathi word "stink".
 
 What you've built.
 One more word for this chapter.

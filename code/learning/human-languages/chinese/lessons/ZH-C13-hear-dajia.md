@@ -11,8 +11,8 @@ gloss: everyone
 concept_tag: ZH-SCHOOL-EVERYONE
 prerequisites: [ZH-C13-da]
 sounds: [tone-4, tone-1]
-roots: []
-etymology_hook: Big plus family becomes everyone; both parts are already available before the compound is shown.
+roots: [middle-chinese-dah, middle-chinese-kae]
+etymology_hook: "dàjiā: built from Middle Chinese daH 'big' and kae 'household'"
 duration:
   max_seconds: 125
 requires:
@@ -43,6 +43,8 @@ reviews_of: [ZH-C13-da, ZH-C12-jia]
 
 Hear two beats: falling *dà*, then level *jiā*. The whole word means everyone.
 Its written form will contain only characters you already know.
+
+*Dàjiā* is built from Middle Chinese *daH*, "big", and *kae*, "household".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DAJIA-01] -->

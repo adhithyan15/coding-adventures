@@ -14,7 +14,8 @@ romanization: "nowruz"
 concept_tag: FA-ZAMAN191-NOWRUZ
 prerequisites: [FA-C191-qarar, FA-C191-mohlat]
 sounds: []
-roots: []
+roots: [persian-nau, persian-roz]
+etymology_hook: "nowruz ← Middle Persian nōg rōz 'New Year's day' (EtymDB): now 'new' + ruz 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C191-mohlat]
 <!-- hl-knowledge: introduces=[FA-LEX-C191-ZAMAN191-04]; assesses=[] -->
 
 **نوروز** — *nowruz* — "Nowruz, the Persian New Year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nowruz* is *now*, "new", with *ruz*, "day" (EtymDB): the new day. Middle Persian already had *nōg rōz*, "New Year's day" (EtymDB). Both parts are inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "zāwiya"
 concept_tag: AR-LOC103-ZAWIYA
 prerequisites: [AR-C103-yasar, AR-C103-wasat, AR-C01-sabah-al-khayr]
 sounds: []
-roots: []
+roots: [z-w-y]
+etymology_hook: "zāwiya: built on the root z-w-y, 'to draw together, to gather' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C103-wasat]
 <!-- hl-knowledge: introduces=[AR-LEX-C103-LOC103-04]; assesses=[] -->
 
 **زاوية** — *zāwiya* — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زاوية** (*zāwiya*) is built on the native Arabic root *z-w-y*, "to draw together, to gather" (Lane). *Zāwiya* is the feminine active participle, a corner where things gather.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

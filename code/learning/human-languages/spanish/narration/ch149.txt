@@ -44,7 +44,7 @@ Spanish: dieciséis. literally: diez y seis, "ten and six".
 Spanish: diecisiete. literally: diez y siete, "ten and seven".
 Spanish: dieciocho. literally: diez y ocho, "ten and eight".
 Spanish: diecinueve. literally: diez y nueve, "ten and nine".
-No fusion. You can hear diez plainly at the front of every one, and the number you already know sitting right behind it.
+No fusion. You can hear diez plainly at the front of every one, and the number you already know sitting right behind it. Every piece is inherited: diez from Latin decem, seis from sex, and the rest likewise (EtymDB 2.1).
 
 Grammar Lens: a formula, not a list.
 This is the structural difference that makes 15/16 a real boundary in Spanish rather than a convenient place to pause:

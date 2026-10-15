@@ -14,7 +14,8 @@ romanization: "phalāṭ"
 concept_tag: MR-VASTU236-PHALAT
 prerequisites: [MR-C235-kantalvana, MR-C235-sampurna]
 sounds: []
-roots: []
+roots: [english-platform]
+etymology_hook: "phalāṭ: usually traced to English platform"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C235-sampurna]
 <!-- hl-knowledge: introduces=[MR-LEX-C236-VASTU236-01]; assesses=[] -->
 
 **फलाट** — *phalāṭ* — "a platform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फलाट** (*phalāṭ*) is usually traced to English *platform*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

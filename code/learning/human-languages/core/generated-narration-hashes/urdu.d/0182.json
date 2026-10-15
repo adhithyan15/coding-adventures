@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 182,
-  "sourceHash": "fnv1a64:aad605270c7ced0f",
+  "sourceHash": "fnv1a64:5961fc64c850d0a4",
   "lessonIds": [
     "UR-C182-thakna",
     "UR-C182-aram-karna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch182.txt",
   "json": "urdu/narration/ch182.json",
-  "textHash": "fnv1a64:2919936113539708",
-  "jsonHash": "fnv1a64:eb356df26d98382b",
+  "textHash": "fnv1a64:a75c534536842498",
+  "jsonHash": "fnv1a64:47257cc150120d7e",
   "findings": []
 }

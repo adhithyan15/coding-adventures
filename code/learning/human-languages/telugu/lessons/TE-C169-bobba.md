@@ -14,7 +14,8 @@ romanization: "bobba"
 concept_tag: TE-AROGYAM169-BOBBA
 prerequisites: [TE-C168-sahanam, TE-C169-pundu]
 sounds: []
-roots: []
+roots: [dravidian-pokkul-blister]
+etymology_hook: "bobba: native Dravidian; DEDR 4455 lists bobba 'blister' with Kannada bobbe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C169-pundu]
 <!-- hl-knowledge: introduces=[TE-LEX-C169-AROGYAM169-02]; assesses=[] -->
 
 **బొబ్బ** — *bobba* — "a blister".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బొబ్బ** (*bobba*) is native Dravidian. DEDR 4455 lists *bobba*, "blister", with Kannada *bobbe* and Malayalam *pokkuḷa*, "blister". DEDR compares Nepali *phoko*, "blister" (CDIAL 8391), a word group CDIAL thinks probably came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

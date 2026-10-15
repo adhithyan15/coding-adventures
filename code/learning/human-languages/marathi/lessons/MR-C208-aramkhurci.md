@@ -14,7 +14,8 @@ romanization: "ārāmkhurcī"
 concept_tag: MR-VASTU208-ARAMKHURCI
 prerequisites: [MR-C207-vyasta, MR-C207-mokla]
 sounds: []
-roots: []
+roots: [persian-aram, arabic-kursi]
+etymology_hook: "ārāmkhurcī: ārām 'rest' (usually traced to Persian) + khurcī 'chair' ← Arabic kursī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C207-mokla]
 <!-- hl-knowledge: introduces=[MR-LEX-C208-VASTU208-01]; assesses=[] -->
 
 **आरामखुर्ची** — *ārāmkhurcī* — "an armchair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आरामखुर्ची** (*ārāmkhurcī*) is "rest-chair": *ārām*, "rest, ease", usually traced to Persian *ārām*, and **खुर्ची**, "chair", from Arabic *kursī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

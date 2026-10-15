@@ -14,7 +14,8 @@ romanization: "yatate"
 concept_tag: SA-VERB-YATATE
 prerequisites: [SA-C175-vahati, SA-C175-sahate]
 sounds: []
-roots: []
+roots: [sanskrit-yatate]
+etymology_hook: "yatate ← root √yat 'strive, exert oneself'; MW thinks it probably related to √yam 'stretch, hold out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C175-sahate]
 <!-- hl-knowledge: introduces=[SA-LEX-C175-ACT175-05]; assesses=[] -->
 
 **यतते** — *yatate* — "tries, strives".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yatate* is built on the root √yat, "to strive after, endeavour" (MW). MW suggests the root is probably related to √yam, with a first sense "to stretch", but gives that link only as a probability.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

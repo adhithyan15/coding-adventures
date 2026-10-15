@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 74,
-  "sourceHash": "fnv1a64:6b6ef87d14ef5cab",
+  "sourceHash": "fnv1a64:b260995d0ec30310",
   "lessonIds": [
     "BN-C74-dami",
     "BN-C74-sosta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch74.txt",
   "json": "bengali/narration/ch74.json",
-  "textHash": "fnv1a64:d08f30b95e7d248b",
-  "jsonHash": "fnv1a64:364882b9ffc6e273",
+  "textHash": "fnv1a64:ca7ca1bf63d09bdd",
+  "jsonHash": "fnv1a64:63618378f47b7fb2",
   "findings": []
 }

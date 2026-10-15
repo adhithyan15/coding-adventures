@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a birthday, then the Bengali for late.
 You'll want to know: জায়গা.
 জায়গা — jāygā — "a place".
 
+The word, taken apart.
+জায়গা (jāygā) is a loan, usually traced to Persian jāygāh, "place, position".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for late, then the Bengali for a place.
 
 You'll want to know: ফুটপাত.
 ফুটপাত — phuṭpāt — "a pavement".
+
+The word, taken apart.
+ফুটপাত (phuṭpāt) is a loan from English footpath.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a place, then the Bengali for a pavement
 You'll want to know: মোড়.
 মোড় — moṛ — "a corner, a crossroads".
 
+The word, taken apart.
+CDIAL lists Bengali moṛ, "head of a street", under Sanskrit mūrdhan, "head, top" (CDIAL 10247), and Bengali moṛ, "a twist", under mōṭati, "twists" (CDIAL 10186). Which of the two lies behind মোড় (moṛ), "a corner, a crossroads", is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a pavement, then the Bengali for a corne
 You'll want to know: খাল.
 খাল — khāl — "a canal".
 
+The word, taken apart.
+খাল (khāl) is a tadbhava, a word inherited and reshaped by sound change. It comes from khāla, "trench, creek, canal", a form CDIAL reconstructs from its descendants (CDIAL 3849). CDIAL lists Bengali khāl, "trench, canal", beside Sanskrit khalla, "canal".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a corner, then the Bengali for a canal.
 
 You'll want to know: চিড়িয়াখানা.
 চিড়িয়াখানা — chiṛiyākhānā — "a zoo".
+
+The word, taken apart.
+চিড়িয়াখানা (chiṛiyākhānā) is chiṛiyā, "bird", + khānā, "house". CDIAL takes Bengali chiṛiyā from Hindi ciṛiyā, under Sanskrit caṭaka, "sparrow", a word it calls imitative (CDIAL 4571); khānā is usually traced to Persian khāna, "house".
 
 What you've built.
 One more word for this chapter.

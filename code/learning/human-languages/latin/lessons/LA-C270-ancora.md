@@ -13,7 +13,8 @@ gloss: "an anchor"
 concept_tag: LA-RES270-ANCORA
 prerequisites: [LA-C270-basilica, LA-C270-curia]
 sounds: []
-roots: []
+roots: [ancora-latin]
+etymology_hook: "ancora 'anchor' — borrowed from Greek ankyra 'anchor'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C270-curia]
 <!-- hl-knowledge: introduces=[LA-LEX-C270-RES270-04]; assesses=[] -->
 
 **ancora, ancorae** — "an anchor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ancora** was borrowed from Greek *ankyra*, "anchor" (EtymDB 2.1), from a root for bending: a hooked thing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

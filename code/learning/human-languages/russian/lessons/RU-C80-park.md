@@ -14,7 +14,8 @@ romanization: "park"
 concept_tag: RU-PLACES-PARK
 prerequisites: [RU-C80-pharmacy, RU-C80-church]
 sounds: []
-roots: []
+roots: [parricus-latin]
+etymology_hook: "парк came through German Park or English park, from French parc, Medieval Latin parricus 'enclosure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C80-church]
 <!-- hl-knowledge: introduces=[RU-LEX-C80-PLACES-04]; assesses=[] -->
 
 **парк** (*park*) — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**парк** came through German *Park* or English *park* from French *parc*, Medieval Latin *parricus*, "an enclosure, a pen" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

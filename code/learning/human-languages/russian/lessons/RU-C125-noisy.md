@@ -14,7 +14,8 @@ romanization: "shúmnyy"
 concept_tag: RU-QUAL125-NOISY
 prerequisites: [RU-C125-closed, RU-C125-quiet]
 sounds: []
-roots: []
+roots: [slavic-shumu]
+etymology_hook: "шумный is шум 'noise' + -ный; the origin of шум is guesswork or sound-imitation"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C125-quiet]
 <!-- hl-knowledge: introduces=[RU-LEX-C125-QUAL125-05]; assesses=[] -->
 
 **шумный** (*shúmnyy*) — "noisy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**шумный** is *шум*, "noise", with *-ный*. Vasmer calls a link of *шум* with Sanskrit *śúṣma-*, "hissing", guesswork; others take it as imitating a sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

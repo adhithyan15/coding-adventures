@@ -4,7 +4,7 @@
   "chapter": 183,
   "title": "Como Se Dice --- The Sentence That Unlocks the Rest",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f9f9787b11ac023a",
+  "sourceHash": "fnv1a64:15970485b7f4efe7",
   "lessons": [
     {
       "id": "ES-C52-como-se-dice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0516ebb636b5b24",
+      "sourceHash": "fnv1a64:872c91a08fd43da3",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which is exactly right, because you are not asking for their personal opinion. You are asking what the word is."
+              "text": "Dice is decir, Latin dicere, \"to say\": the question asks how a thing is said."
             },
             {
               "kind": "speech",

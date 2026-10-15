@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for weak, then the Sanskrit for clear.
 You'll want to know: कृष्णः.
 कृष्णः — kṛṣṇaḥ — "black, dark".
 
+The word, taken apart.
+kṛṣṇa "black, dark" is old, in the Rigveda, and is inherited from Indo-European; Old Prussian kirsnan "black" is a cousin (EtymDB). As a name it is Krishna, "the dark one", whom Hindi calls kānh (CDIAL 3451).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for clear, then the Sanskrit for black.
 
 You'll want to know: धूसरः.
 धूसरः — dhūsaraḥ — "grey".
+
+The word, taken apart.
+dhūsara "dust-coloured, grey" is linked by CDIAL 6870 with words for dust, while MW suggests the root √dhvaṃs "fall to dust"; its exact formation is uncertain. Hindi and Marathi kept it as dhūsar "grey" (CDIAL 6870).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for black, then the Sanskrit for grey.
 You'll want to know: पाटलः.
 पाटलः — pāṭalaḥ — "pink".
 
+The word, taken apart.
+pāṭala "pale red, pink" also names the trumpet-flower tree (MW). Neither MW nor CDIAL 8033 gives a derivation, so its origin is uncertain; DEDR 4075 compares Dravidian names for that tree.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for grey, then the Sanskrit for pink.
 You'll want to know: स्पष्टः.
 स्पष्टः — spaṣṭaḥ — "clear".
 
+The word, taken apart.
+spaṣṭa "clearly perceived, distinct" belongs to the root √spaś "see, spy" (MW), inherited from Indo-European (EtymDB). MW sets √spaś beside Greek skeptomai, Latin specio and English spy.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for pink, then the Sanskrit for clear.
 
 You'll want to know: स्थूलः.
 स्थूलः — sthūlaḥ — "thick, fat".
+
+The word, taken apart.
+sthūla "large, thick, stout" comes, according to MW, from √sthū, a form of √sthā "stand": "solid, firm-standing". It is old, in the Atharvaveda, and lives on as Punjabi ṭhullhā "fat, coarse" (CDIAL 13776).
 
 What you've built.
 One more word for this chapter.

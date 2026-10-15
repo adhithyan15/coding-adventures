@@ -12,6 +12,9 @@ Before the new one: say the Urdu for medicine, then the Urdu for thirst.
 You'll want to know: بھوک.
 بھوک — bhūk — "hunger".
 
+The word, taken apart.
+بھوک (bhūk) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bubhukṣā, "desire to eat, hunger" (CDIAL 9286).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for thirst, then the Urdu for hunger.
 
 You'll want to know: خوش.
 خوش — khush — "happy".
+
+The word, taken apart.
+خوش (khush) is a loan, usually traced to Persian khush, "happy, pleasant".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for hunger, then the Urdu for happy.
 You'll want to know: اداس.
 اداس — udās — "sad".
 
+The word, taken apart.
+اداس (udās) is usually traced to Sanskrit udāsa, "indifference", from ud-ās-, "to sit apart". CDIAL does not list it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for happy, then the Urdu for sad.
 You'll want to know: باپ.
 باپ — bāp — "a father".
 
+The word, taken apart.
+باپ (bāp) is a tadbhava, a word inherited and reshaped by sound change. It comes from bāppa, "father", a form CDIAL reconstructs from its descendants (CDIAL 9209). CDIAL groups it with other nursery words.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for sad, then the Urdu for a father.
 
 You'll want to know: ابو.
 ابو — abbū — "dad".
+
+The word, taken apart.
+ابو (abbū) is usually traced to Arabic abū, a form of ab, "father". Its Arabic root is ʾ-b-w (Lane).
 
 What you've built.
 One more word for this chapter.

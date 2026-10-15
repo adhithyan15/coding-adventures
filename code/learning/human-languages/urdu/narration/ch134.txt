@@ -12,6 +12,9 @@ Before the new one: say the Urdu for soft, then the Urdu for hard.
 You'll want to know: گیلا.
 گیلا — gīlā — "wet".
 
+The word, taken apart.
+گیلا (gīlā) is a tadbhava, a word inherited and reshaped by sound change. It comes from grilla, "wet, damp", a form CDIAL reconstructs from its descendants (CDIAL 4386). CDIAL calls a further link with gṛdla very doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for hard, then the Urdu for wet.
 
 You'll want to know: سوکھا.
 سوکھا — sūkhā — "dry".
+
+The word, taken apart.
+سوکھا (sūkhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śuṣka, "dried" (CDIAL 12548).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for wet, then the Urdu for dry.
 You'll want to know: چوڑا.
 چوڑا — chauṛā — "wide".
 
+The word, taken apart.
+چوڑا (chauṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ca-uḍa, "wide, open", a form CDIAL reconstructs from its descendants (CDIAL 4534). CDIAL suggests, with a "possibly", that it was built on cau-, "four".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for dry, then the Urdu for wide.
 You'll want to know: تنگ.
 تنگ — tang — "narrow, tight".
 
+The word, taken apart.
+تنگ (tang) is a loan, usually traced to Persian tang, "narrow, tight".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for wide, then the Urdu for narrow.
 
 You'll want to know: گہرا.
 گہرا — gahrā — "deep, dark (of colour)".
+
+The word, taken apart.
+گہرا (gahrā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gabhīra, "deep, solemn" (CDIAL 4024).
 
 What you've built.
 One more word for this chapter.

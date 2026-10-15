@@ -14,7 +14,8 @@ gloss: "a dress"
 concept_tag: ML-ANCHOR-UDUPPU
 prerequisites: [ML-S110-letter-va]
 sounds: []
-roots: []
+roots: [dravidian-utu-wear]
+etymology_hook: "uṭuppŭ: native Dravidian, a noun from the verb 'to put on clothes', Tamil uṭu (DEDR 587)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard-colloquial
 **ഉടുപ്പ്** — *uṭuppŭ* — "a dress".
 
 Say it: *uṭuppŭ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ഉ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉടുപ്പ്** (*uṭuppŭ*) is native Dravidian, a noun made from the verb for putting on clothes; DEDR 587 lists the root with Tamil *uṭu*, Kannada *uḍu* and Telugu *uḍupu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-UDUPPU] -->

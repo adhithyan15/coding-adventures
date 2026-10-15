@@ -14,7 +14,8 @@ romanization: "jins"
 concept_tag: BN-JINIS164-JINS
 prerequisites: [BN-C164-phail, BN-C164-poshak]
 sounds: []
-roots: []
+roots: [english-jeans]
+etymology_hook: "jins ← English jeans"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C164-poshak]
 <!-- hl-knowledge: introduces=[BN-LEX-C164-JINIS164-03]; assesses=[] -->
 
 **জিনস** — *jins* — "jeans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জিনস** (*jins*) is a loan from English *jeans*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

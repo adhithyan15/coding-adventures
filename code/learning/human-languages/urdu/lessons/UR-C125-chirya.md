@@ -14,7 +14,8 @@ romanization: "chiṛyā"
 concept_tag: UR-THINGS125-CHIRYA
 prerequisites: [UR-C125-sahil, UR-C125-jazira]
 sounds: []
-roots: []
+roots: [sanskrit-cataka]
+etymology_hook: "chiṛyā ← Sanskrit caṭaka 'sparrow', a word imitating the call; a tadbhava (CDIAL 4571)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C125-jazira]
 <!-- hl-knowledge: introduces=[UR-LEX-C125-THINGS125-05]; assesses=[] -->
 
 **چڑیا** — *chiṛyā* — "a sparrow, a little bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چڑیا** (*chiṛyā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caṭaka*, "sparrow" (CDIAL 4571), through a variant *\*ciṭaka*. CDIAL calls the word imitative of the bird's call, with similar words in Dravidian and Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

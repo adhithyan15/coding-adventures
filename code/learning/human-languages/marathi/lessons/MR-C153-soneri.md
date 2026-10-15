@@ -14,7 +14,8 @@ romanization: "sonerī"
 concept_tag: MR-QUAL153-SONERI
 prerequisites: [MR-C152-naringi, MR-C153-karda]
 sounds: []
-roots: []
+roots: [indo-aryan-suvarnadhara]
+etymology_hook: "sonerī ← *suvarṇadhara 'containing gold', a reconstructed form; a tadbhava (CDIAL 13522)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C153-karda]
 <!-- hl-knowledge: introduces=[MR-LEX-C153-QUAL153-02]; assesses=[] -->
 
 **सोनेरी** — *sonerī* — "golden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोनेरी** (*sonerī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*suvarṇadhara*, "containing gold", a form CDIAL reconstructs from its descendants (CDIAL 13522). It is built on *suvarṇa*, "gold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

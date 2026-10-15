@@ -14,7 +14,8 @@ romanization: "pyāṇṭu"
 concept_tag: TE-VASTUVU263-PYANTU
 prerequisites: [TE-C263-verusanaga, TE-C263-ruci]
 sounds: []
-roots: []
+roots: [english-pants]
+etymology_hook: "pyāṇṭu ← English pants"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C263-ruci]
 <!-- hl-knowledge: introduces=[TE-LEX-C263-VASTUVU263-03]; assesses=[] -->
 
 **ప్యాంటు** — *pyāṇṭu* — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్యాంటు** (*pyāṇṭu*) is a loan from English *pants*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

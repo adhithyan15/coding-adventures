@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 127,
-  "sourceHash": "fnv1a64:561ff18bf0f57f57",
+  "sourceHash": "fnv1a64:cf5a414c5fcd18fc",
   "lessonIds": [
     "HI-C127-malumnahin",
     "HI-C127-bilkulnahin",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch127.txt",
   "json": "hindi/narration/ch127.json",
-  "textHash": "fnv1a64:9ae4f6b06b1f4055",
-  "jsonHash": "fnv1a64:3010171be21d80d8",
+  "textHash": "fnv1a64:b06f88c44fd0448d",
+  "jsonHash": "fnv1a64:7ae4e8cf2768092a",
   "findings": []
 }

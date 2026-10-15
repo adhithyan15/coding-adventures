@@ -11,7 +11,8 @@ romanization: "hullu"
 concept_tag: KA-NOUN-GRASS
 prerequisites: [KA-C66-field, KA-C64-also]
 sounds: []
-roots: []
+roots: [dravidian-pul-grass]
+etymology_hook: "hullu: native Dravidian, one word with Tamil pul (DEDR 4300)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C66-field]
 ಹುಲ್ಲು is what comes up on ground nobody planted, and it is why the ಹಸು and the ಮೇಕೆ from the animal chapter are walked out of the yard at all.
 
 Say it carefully against ಹಲ್ಲು, the tooth-word. One vowel sign separates them and the rest of the two words is identical. It is the closest pair this book has handed you, and the good news is that the ಹಸು eats the one with your teeth.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುಲ್ಲು** (*hullu*) is native Dravidian, one word with Tamil *pul* (DEDR 4300). DEDR gives the older Kannada *pul*: the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

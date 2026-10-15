@@ -43,6 +43,9 @@ You'll want to know: बेटी.
 बेटी (beṭī) — "daughter".
 The same stem, with -ī in place of -ā — exactly the swap that turns बच्चा into बच्ची. A great deal of Hindi gender lives in that one final vowel, and this pair is the cleanest example you have met so far: nothing else in the word moves.
 
+The word, taken apart.
+बेटी (beṭī) is the feminine of बेटा (beṭā), "son". CDIAL lists both under a reconstructed beṭṭa, in an entry headed biḍḍa, "defective", beside Prakrit biṭṭa, "boy" (CDIAL 9238). No Sanskrit source is agreed.
+
 What you've built.
 Two of four, and one vowel doing all the work.
 
@@ -71,6 +74,9 @@ Before the new one: what did beṭī mean?
 You'll want to know: परिवार.
 परिवार (parivār) — "family".
 Sanskrit, and it comes apart in the hand: pari-, 'around', on the root vṛ, 'to cover, to enclose'. Your family, in this word, is what surrounds you. The same root gives आवरण (āvaraṇ), 'a covering' — one root, two very different everyday words.
+
+The word, taken apart.
+परिवार (parivār) is Sanskrit parivāra, "surroundings; followers", taken over whole as a learned loan, a tatsama (CDIAL 7876). Hindi narrowed it to the people around you: the family.
 
 What you've built.
 Three of four, and a word you can take apart rather than memorise.

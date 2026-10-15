@@ -14,7 +14,8 @@ romanization: "glāsu"
 concept_tag: TE-THINGS112-GLASU
 prerequisites: [TE-C112-kalam, TE-C112-kagitam]
 sounds: []
-roots: []
+roots: [english-glass]
+etymology_hook: "glāsu ← English glass, with Telugu's added -u"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C112-kagitam]
 <!-- hl-knowledge: introduces=[TE-LEX-C112-THINGS112-04]; assesses=[] -->
 
 **గ్లాసు** — *glāsu* — "a drinking glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గ్లాసు** (*glāsu*) is a loan from English *glass*, with Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

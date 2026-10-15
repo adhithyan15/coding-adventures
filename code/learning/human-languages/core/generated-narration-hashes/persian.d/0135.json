@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 135,
-  "sourceHash": "fnv1a64:24de426cd552425a",
+  "sourceHash": "fnv1a64:4d91e525cd003ba0",
   "lessonIds": [
     "FA-C135-randan",
     "FA-C135-mandan",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch135.txt",
   "json": "persian/narration/ch135.json",
-  "textHash": "fnv1a64:409c41b516ba0215",
-  "jsonHash": "fnv1a64:88175fbb141188cf",
+  "textHash": "fnv1a64:c192d6f471d48d58",
+  "jsonHash": "fnv1a64:6a2a0be9783134d7",
   "findings": []
 }

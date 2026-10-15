@@ -14,7 +14,8 @@ romanization: "sitār"
 concept_tag: UR-CHIZ254-SITAR
 prerequisites: [UR-C254-navil, UR-C254-nazm]
 sounds: []
-roots: []
+roots: [persian-sitar]
+etymology_hook: "sitār: usually traced to Persian sitār 'three strings'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C254-nazm]
 <!-- hl-knowledge: introduces=[UR-LEX-C254-CHIZ254-03]; assesses=[] -->
 
 **ستار** — *sitār* — "a sitar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ستار** (*sitār*) is a loan, usually traced to Persian *sitār*, "three strings". It is built from *sih*, "three", and *tār*, "string".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

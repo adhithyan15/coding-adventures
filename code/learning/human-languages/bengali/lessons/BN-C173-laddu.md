@@ -14,7 +14,8 @@ romanization: "lāḍḍu"
 concept_tag: BN-JINIS173-LADDU
 prerequisites: [BN-C172-britti, BN-C173-jilipi]
 sounds: []
-roots: []
+roots: [sanskrit-laddu]
+etymology_hook: "lāḍḍu: matches Sanskrit laḍḍu 'a sweetmeat'; the inherited form is lāṛu (CDIAL 10926)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C173-jilipi]
 <!-- hl-knowledge: introduces=[BN-LEX-C173-JINIS173-02]; assesses=[] -->
 
 **লাড্ডু** — *lāḍḍu* — "a laddu".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লাড্ডু** (*lāḍḍu*) matches Sanskrit *laḍḍu*, "a kind of sweetmeat"; the Bengali word inherited from it is *lāṛu*, which CDIAL lists (CDIAL 10926). CDIAL takes the Sanskrit word as probably the same as *\*laḍḍu*, "lump", and notes a proposed link with Munda words for "lump".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

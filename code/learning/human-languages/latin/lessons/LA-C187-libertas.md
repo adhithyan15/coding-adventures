@@ -13,7 +13,8 @@ gloss: "freedom"
 concept_tag: LA-RES187-LIBERTAS
 prerequisites: [LA-C187-dux, LA-C187-victoria]
 sounds: []
-roots: []
+roots: [libertas-latin, liber-latin]
+etymology_hook: "lībertās 'freedom' — built on līber 'free'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C187-victoria]
 <!-- hl-knowledge: introduces=[LA-LEX-C187-RES187-04]; assesses=[] -->
 
 **lībertās, lībertātis** — "freedom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lībertās** is built on *līber*, "free" (Lewis & Short), with *-tās*, an ending for a quality. *līber* is usually traced to Proto-Indo-European *\*h1lewdheros*, "free" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

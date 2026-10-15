@@ -14,6 +14,9 @@ casarse — "to get married".
 Se casan en junio. They are getting married in June.
 It goes with con: casarse con alguien.
 
+The word, taken apart.
+casarse is the reflexive of casar, "to marry" (EtymDB 2.1), built on casa, "house": to marry was to set up house. Casa is Latin casa, "a hut, a cottage".
+
 What you've built.
 One more word for reading notices, forms and messages.
 
@@ -43,6 +46,9 @@ Before the new one: say the Spanish for to have fun, then the Spanish for to get
 You'll want to know: divorciarse.
 divorciarse — "to get divorced".
 Mis tíos se divorciaron hace años. My aunt and uncle got divorced years ago.
+
+The word, taken apart.
+divorciarse is built on divorcio, "divorce", Latin divortium, "a separation" (Lewis & Short), from divertere, "to turn different ways" — the verb behind divertirse, "to have fun". Divorcio is learned: its -ti- became -ci-, not the z of speech.
 
 What you've built.
 One more word for reading notices, forms and messages.
@@ -75,6 +81,9 @@ enamorarse — "to fall in love".
 Se enamoró de su vecino. She fell in love with her neighbour.
 It goes with de: enamorarse de alguien.
 
+The word, taken apart.
+enamorarse is en-, amor, "love", and -ar: to go into love. Amor is Latin amor.
+
 What you've built.
 One more word for reading notices, forms and messages.
 
@@ -106,6 +115,9 @@ despedirse — "to say goodbye".
 Me despido de todos antes de salir. I say goodbye to everyone before leaving.
 The e breaks into i: me despido.
 
+The word, taken apart.
+despedirse contains pedir, "to ask", from Latin petere; EtymDB 2.1 traces it to de and Latin expetere, "to ask for, to demand".
+
 What you've built.
 One more word for reading notices, forms and messages.
 
@@ -136,6 +148,9 @@ You'll want to know: saludar.
 saludar — "to greet, to say hello".
 Saluda a tu madre de mi parte. Say hello to your mother from me.
 The verb behind el saludo, the greeting.
+
+The word, taken apart.
+saludar from Latin salutare, "to greet, to wish good health" (EtymDB 2.1), from salus, salutis, "health" — inherited: the -t- became -d-. The salud you raise a glass to is the same word.
 
 What you've built.
 One more word for reading notices, forms and messages.

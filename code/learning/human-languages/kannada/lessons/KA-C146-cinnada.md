@@ -14,7 +14,8 @@ romanization: "cinnada"
 concept_tag: KA-QUAL146-CINNADA
 prerequisites: [KA-C146-bhayankara, KA-C146-dhairyavanta]
 sounds: []
-roots: []
+roots: [dravidian-cinna-gold]
+etymology_hook: "cinnada: native Dravidian, one word with Tamil ciṉṉam (DEDR 2596)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C146-dhairyavanta]
 <!-- hl-knowledge: introduces=[KA-LEX-C146-QUAL146-04]; assesses=[] -->
 
 **ಚಿನ್ನದ** — *cinnada* — "golden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚಿನ್ನದ** (*cinnada*) is native Dravidian, one word with Tamil *ciṉṉam* (DEDR 2596). *Cinnada* is "of gold", from *cinna*, "gold", which DEDR lists with Tamil *ciṉṉam*, "gold coin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

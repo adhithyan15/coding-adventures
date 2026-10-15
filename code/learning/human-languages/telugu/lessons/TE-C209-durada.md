@@ -14,7 +14,8 @@ romanization: "durada"
 concept_tag: TE-AROGYAM209-DURADA
 prerequisites: [TE-C208-puttu, TE-C208-edurkonu]
 sounds: []
-roots: []
+roots: [dravidian-cori-itch]
+etymology_hook: "durada: native Dravidian; DEDR 2865 lists durada 'itching' with Kannada tuṟi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C208-edurkonu]
 <!-- hl-knowledge: introduces=[TE-LEX-C209-AROGYAM209-01]; assesses=[] -->
 
 **దురద** — *durada* — "an itch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దురద** (*durada*) is native Dravidian. DEDR 2865 lists *durada*, "itching", with Kannada *tuṟi* and Tamil *coṟi*, "itching".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

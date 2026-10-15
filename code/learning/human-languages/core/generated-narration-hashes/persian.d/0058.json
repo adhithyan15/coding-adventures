@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 58,
-  "sourceHash": "fnv1a64:ec1048855f43c4b2",
+  "sourceHash": "fnv1a64:0050f6bd6e75bf97",
   "lessonIds": [
     "FA-C58-gorg",
     "FA-C58-bozorg",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch58.txt",
   "json": "persian/narration/ch58.json",
-  "textHash": "fnv1a64:4f361a70cd1c1af3",
-  "jsonHash": "fnv1a64:4ef8e5cf32ca3941",
+  "textHash": "fnv1a64:47ab932f5b49b122",
+  "jsonHash": "fnv1a64:d7eea926dabfb685",
   "findings": []
 }

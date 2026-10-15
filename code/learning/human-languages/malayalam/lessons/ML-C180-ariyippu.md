@@ -14,7 +14,8 @@ romanization: "aṟiyippŭ"
 concept_tag: ML-VAYANA180-ARIYIPPU
 prerequisites: [ML-C179-pratikshikkuka, ML-C180-samayappattika]
 sounds: []
-roots: []
+roots: [dravidian-ari-know]
+etymology_hook: "aṟiyippŭ: native Dravidian, 'a making known', from the verb to know; Tamil aṟi (DEDR 314)"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [ML-C180-samayappattika]
 
 The notice says **ഇന്ന് കട അടച്ചിരിക്കുന്നു** — *innŭ kaṭa aṭaccirikkunnu* —
 "The shop is closed today." Come back on another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അറിയിപ്പ്** (*aṟiyippŭ*) is native Dravidian, a noun from the causative of the verb "to know": "a making known"; DEDR 314 lists the root with Tamil *aṟi* and Kannada *aṟi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gānā"
 concept_tag: UR-VERB-GANA
 prerequisites: [UR-C49-hasna, UR-C49-rona]
 sounds: []
-roots: []
+roots: [sanskrit-gayati]
+etymology_hook: "gānā: listed by CDIAL under gāpayati, the second form beside Sanskrit gāyati 'sings' (CDIAL 4135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C49-rona]
 <!-- hl-knowledge: introduces=[UR-LEX-C50-VERBS50-01]; assesses=[] -->
 
 **گانا** — *gānā* — "to sing; a song".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گانا** (*gānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it under *gāpayati*, the second form it gives beside *gāyati*, "sings" (CDIAL 4135). The noun "a song" is the same word, used for what is sung.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

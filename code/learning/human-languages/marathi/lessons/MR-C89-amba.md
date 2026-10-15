@@ -14,7 +14,8 @@ romanization: "āmbā"
 concept_tag: MR-FOOD89-AMBA
 prerequisites: [MR-C88-dahi, MR-C89-kanda]
 sounds: []
-roots: []
+roots: [sanskrit-amra]
+etymology_hook: "āmbā ← Sanskrit āmra 'mango tree; its fruit', a tadbhava (CDIAL 1268)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C89-kanda]
 <!-- hl-knowledge: introduces=[MR-LEX-C89-FOOD89-02]; assesses=[] -->
 
 **आंबा** — *āmbā* — "a mango".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आंबा** (*āmbā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *āmra*, "mango tree; its fruit" (CDIAL 1268).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

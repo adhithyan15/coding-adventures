@@ -14,7 +14,8 @@ romanization: "proñchanam"
 concept_tag: SA-THINGS101-PRONCHANAM
 prerequisites: [SA-C101-kankatika, SA-C101-phenakam]
 sounds: []
-roots: []
+roots: [sanskrit-pronchana]
+etymology_hook: "proñchana 'wiping' ← proñchati 'wipes'; CDIAL 9011 doubts pra + √uñch, perhaps Dravidian; Hindi pochnā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C101-phenakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C101-THINGS101-03]; assesses=[] -->
 
 **प्रोञ्छनम्** — *proñchanam* — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*proñchana* "wiping" is formed from *proñchati* "wipes off", which MW splits as *pra* + √uñch. CDIAL 9011 finds that link doubtful and suggests the verb is a Sanskritized Prakrit word, perhaps from Dravidian; Hindi *pochnā* "to wipe" comes from it. Using *proñchana* for a towel is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

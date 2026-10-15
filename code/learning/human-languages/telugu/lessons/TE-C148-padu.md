@@ -14,7 +14,8 @@ romanization: "pāḍu"
 concept_tag: TE-VERB-PADU
 prerequisites: [TE-C148-kalcu, TE-C148-arpu]
 sounds: []
-roots: []
+roots: [dravidian-paadu-sing]
+etymology_hook: "pāḍu: native Dravidian, one word with Tamil pāṭu and Kannada pāḍu (DEDR 4065)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C148-arpu]
 <!-- hl-knowledge: introduces=[TE-LEX-C148-ACT148-04]; assesses=[] -->
 
 **పాడు** — *pāḍu* — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పాడు** (*pāḍu*) is native Dravidian, one word with Tamil *pāṭu* and Kannada *pāḍu* (DEDR 4065). DEDR lists Telugu *pāḍu*, "to sing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

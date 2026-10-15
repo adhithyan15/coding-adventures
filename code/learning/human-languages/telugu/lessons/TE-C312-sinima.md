@@ -14,7 +14,8 @@ romanization: "sinimā"
 concept_tag: TE-PANI312-SINIMA
 prerequisites: [TE-C312-katha, TE-C312-ata]
 sounds: []
-roots: []
+roots: [english-cinema]
+etymology_hook: "sinimā ← English cinema"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C312-ata]
 <!-- hl-knowledge: introduces=[TE-LEX-C312-PANI312-03]; assesses=[] -->
 
 **సినిమా** — *sinimā* — "a film, the cinema".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సినిమా** (*sinimā*) is a loan from English *cinema*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

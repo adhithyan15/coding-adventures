@@ -4,7 +4,7 @@
   "chapter": 132,
   "title": "This and That: So, Re and Ru",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8a69dfc551aca497",
+  "sourceHash": "fnv1a64:27ddb2859c04adfb",
   "lessons": [
     {
       "id": "JA-C132-soko",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d4845912e91adc6",
+      "sourceHash": "fnv1a64:33308467dae2b10d",
       "notice": null,
       "blocks": [
         {
@@ -83,6 +83,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "そこ (soko) is native: so-, the root that points near the listener, with -ko, \"place\", as in koko (JMdict). It is inherited rather than borrowed, and is usually written in kana."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,7 +133,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -353,7 +364,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96eee856c890dc38",
+      "sourceHash": "fnv1a64:a3b5cf8af4a07c4d",
       "notice": null,
       "blocks": [
         {
@@ -417,6 +428,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "そと (soto) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -456,7 +478,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -506,7 +528,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19925938ee4239f8",
+      "sourceHash": "fnv1a64:e17dacfe8fd1a488",
       "notice": null,
       "blocks": [
         {
@@ -570,6 +592,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "これ (kore) is native: ko-, the root that points near the speaker, with -re, the ending of the thing words kore, sore, are (JMdict). It is inherited rather than borrowed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -609,7 +642,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -845,7 +878,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5bc6cbd50b4a726",
+      "sourceHash": "fnv1a64:6f263806e1df24e6",
       "notice": null,
       "blocks": [
         {
@@ -922,6 +955,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "それ (sore) is native: so-, the root that points near the listener, with -re, as in kore (JMdict). It is inherited rather than borrowed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -961,7 +1005,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1011,7 +1055,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3bdbb2a45abcc0b",
+      "sourceHash": "fnv1a64:3ff61d9c0a364609",
       "notice": null,
       "blocks": [
         {
@@ -1075,6 +1119,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くるま (kuruma) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). JMdict still lists \"wheel\" among its senses, and the word named wheeled carts long before cars."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1114,7 +1169,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

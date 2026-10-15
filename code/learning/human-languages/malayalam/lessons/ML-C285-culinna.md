@@ -14,7 +14,8 @@ romanization: "cuḷiñña"
 concept_tag: ML-GUNAM285-CULINNA
 prerequisites: [ML-C284-apakatakaramaya, ML-C285-paranna]
 sounds: []
-roots: []
+roots: [dravidian-culi-wrinkle]
+etymology_hook: "cuḷiñña: native Dravidian, 'wrinkled'; DEDR 2700 sets it beside Tamil cuḷi 'to be angry, frown'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C285-paranna]
 <!-- hl-knowledge: introduces=[ML-LEX-C285-GUNAM285-02]; assesses=[] -->
 
 **ചുളിഞ്ഞ** — *cuḷiñña* — "wrinkled, crumpled".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചുളിഞ്ഞ** (*cuḷiñña*) is native Dravidian, a past form of the verb "to be wrinkled". DEDR 2700 sets it beside Tamil *cuḷi*, "to be angry, show displeasure", and Tamil *cuḷukku*, "to screw one's face up in displeasure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

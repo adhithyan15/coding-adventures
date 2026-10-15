@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 151,
-  "sourceHash": "fnv1a64:278ea3e9071fee11",
+  "sourceHash": "fnv1a64:57841a9123bd3293",
   "lessonIds": [
     "BN-C151-bondho-kora",
     "BN-C151-gora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch151.txt",
   "json": "bengali/narration/ch151.json",
-  "textHash": "fnv1a64:3db5e74b218d4dc1",
-  "jsonHash": "fnv1a64:3c3341a5812f75b1",
+  "textHash": "fnv1a64:51685c70015e8846",
+  "jsonHash": "fnv1a64:82d914559324bbd3",
   "findings": []
 }

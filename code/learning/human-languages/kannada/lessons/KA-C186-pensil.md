@@ -14,7 +14,8 @@ romanization: "pensil"
 concept_tag: KA-VASTU186-PENSIL
 prerequisites: [KA-C186-sandesa, KA-C186-imel]
 sounds: []
-roots: []
+roots: [english-pencil]
+etymology_hook: "pensil ← English pencil"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C186-imel]
 <!-- hl-knowledge: introduces=[KA-LEX-C186-VASTU186-03]; assesses=[] -->
 
 **ಪೆನ್ಸಿಲ್** — *pensil* — "a pencil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪೆನ್ಸಿಲ್** (*pensil*) is a loan from English *pencil*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

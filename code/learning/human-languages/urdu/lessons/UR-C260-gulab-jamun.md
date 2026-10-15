@@ -14,7 +14,8 @@ romanization: "gulāb jāmun"
 concept_tag: UR-CHIZ260-GULAB-JAMUN
 prerequisites: [UR-C260-karhi, UR-C260-jalebi]
 sounds: []
-roots: []
+roots: [persian-gulab, indo-aryan-jambuna]
+etymology_hook: "gulāb 'rose-water' (Persian) + jāmun ← *jambūna (CDIAL 5136)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C260-jalebi]
 <!-- hl-knowledge: introduces=[UR-LEX-C260-CHIZ260-05]; assesses=[] -->
 
 **گلاب جامن** — *gulāb jāmun* — "a gulab jamun".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گلاب جامن** (*gulāb jāmun*) is "rose-water jāmun". *gulāb*, "rose-water", is Persian, from *gul*, "rose", and *āb*, "water"; *jāmun*, the dark jambolan fruit the sweet resembles, is listed by CDIAL under *\*jambūna*, a form beside Sanskrit *jambula* (CDIAL 5136).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

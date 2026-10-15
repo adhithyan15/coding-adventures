@@ -14,7 +14,8 @@ romanization: "gorre"
 concept_tag: TE-VASTUVU302-GORRE
 prerequisites: [TE-C302-eddu, TE-C302-duda]
 sounds: []
-roots: []
+roots: [dravidian-kori-sheep]
+etymology_hook: "gorre: native Dravidian, one word with Tamil koṟi and Kannada koṟi (DEDR 2165)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C302-duda]
 <!-- hl-knowledge: introduces=[TE-LEX-C302-VASTUVU302-03]; assesses=[] -->
 
 **గొర్రె** — *gorre* — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గొర్రె** (*gorre*) is native Dravidian, one word with Tamil *koṟi* and Kannada *koṟi* (DEDR 2165). DEDR lists Telugu *gorre*, "sheep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

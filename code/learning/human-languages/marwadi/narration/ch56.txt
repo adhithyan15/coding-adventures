@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to bring, then the Marwadi for to send.
 You'll want to know: गिणणो.
 गिणणो — giṇṇo — "to count".
 
+The word, taken apart.
+गिणणो (giṇṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gaṇayati, "counts". CDIAL lists Old Marwari giṇaï under it (CDIAL 3993). CDIAL thinks the Sanskrit verb itself probably goes back to gṛṇāti, "addresses, praises".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to send, then the Marwadi for to count.
 
 You'll want to know: पकड़णो.
 पकड़णो — pakaṛṇo — "to catch".
+
+The word, taken apart.
+पकड़णो (pakaṛṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from pakkaḍ, "seize", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari pakaṛṇo under it (CDIAL 7619). CDIAL calls a link with Sanskrit pragraha, "holding", obscure and doubtful.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to count, then the Marwadi for to catch.
 You'll want to know: काटणो.
 काटणो — kāṭṇo — "to cut".
 
+The word, taken apart.
+काटणो (kāṭṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kartati, "cuts". CDIAL lists Old Marwari kaṭaï under it (CDIAL 2854). The Old Marwari row means "to be cut"; Hindi kāṭnā and Gujarati kāṭvũ, "to cut", match काटणो (kāṭṇo) more closely.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to catch, then the Marwadi for to cut.
 You'll want to know: रोकणो.
 रोकणो — rokṇo — "to stop".
 
+The word, taken apart.
+रोकणो (rokṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from rokk, "stop", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 10827); the match is through Hindi roknā and Gujarati rokvũ. CDIAL says its link with Sanskrit rudh, "obstruct", is not clear.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to cut, then the Marwadi for to stop.
 
 You'll want to know: बताणो.
 बताणो — batāṇo — "to tell".
+
+The word, taken apart.
+The origin of बताणो (batāṇo) is not settled. CDIAL, searched by form and by meaning, has no entry for it or for Hindi batānā, "to tell".
 
 What you've built.
 One more word for this chapter.

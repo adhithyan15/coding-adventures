@@ -14,7 +14,8 @@ romanization: "jholāno"
 concept_tag: BN-VERB-JHOLANO
 prerequisites: [BN-C151-gora, BN-C151-sarano]
 sounds: []
-roots: []
+roots: [indo-aryan-jhulyati]
+etymology_hook: "jholāno ← *jhulyati 'swings', a reconstructed form; a tadbhava (CDIAL 5406)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C151-sarano]
 <!-- hl-knowledge: introduces=[BN-LEX-C151-ACT151-04]; assesses=[] -->
 
 **ঝোলানো** — *jholāno* — "to hang".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ঝোলানো** (*jholāno*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhulyati*, "swings", a form CDIAL reconstructs from its descendants (CDIAL 5406). *Jholāno* is the causing form of *jhulā*, "to swing, hang", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

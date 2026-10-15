@@ -11,7 +11,8 @@ romanization: "añcāṁ"
 concept_tag: ML-ORDINAL-FIFTH
 prerequisites: [ML-C67-fourth, ML-C67-first, ML-C67-second, ML-C67-third, ML-C66-harvest, ML-C63-fever, ML-C51-salutation]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "añcāṁ: native Dravidian, 'five' + the ordinal -āṁ; Tamil añcu 'five' (DEDR 2826)"
 duration:
   max_seconds: 240
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C67-fourth, ML-C67-first, ML-C67-second, ML-C67-third, ML-C66-ha
 
 **അഞ്ചാം** (*añcāṁ*) — "**fifth**". **അഞ്ച്** drops its **ŭ**, takes **ആം**, and
 the set is complete.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അഞ്ചാം** (*añcāṁ*) is native Dravidian: *añcŭ*, "five" (DEDR 2826, with Tamil *aintu*, *añcu* and Kannada *ay(i)du*), with the ordinal ending *-āṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C67-ORDINAL-01, ML-LEX-C67-ORDINAL-03, ML-LEX-C67-ORDINAL-05, ML-LEX-C67-ORDINAL-06, ML-LEX-C67-ORDINAL-07, ML-ETYMON-C67-ORDINAL-04] -->

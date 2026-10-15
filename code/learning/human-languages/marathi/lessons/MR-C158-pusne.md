@@ -14,7 +14,8 @@ romanization: "pusṇe"
 concept_tag: MR-VERB-PUSNE
 prerequisites: [MR-C157-thakne, MR-C157-jagne]
 sounds: []
-roots: []
+roots: [sanskrit-pronchati]
+etymology_hook: "pusṇe ← Sanskrit proñchati 'wipes off'; CDIAL suggests a Prakrit *poṁch-, perhaps from Dravidian (CDIAL 9011)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C157-jagne]
 <!-- hl-knowledge: introduces=[MR-LEX-C158-ACT158-01]; assesses=[] -->
 
 **पुसणे** — *pusṇe* — "to wipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुसणे** (*pusṇe*) is a tadbhava of Sanskrit *proñchati*, "wipes off" (CDIAL 9011). CDIAL suggests the Sanskrit verb renders a Middle Indo-Aryan *\*poṁch-*, perhaps from Dravidian, comparing Tamil *pūcu*, "to smear, rub".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

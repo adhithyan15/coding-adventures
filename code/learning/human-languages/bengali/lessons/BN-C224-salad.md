@@ -14,7 +14,8 @@ romanization: "sālād"
 concept_tag: BN-JINIS224-SALAD
 prerequisites: [BN-C223-chingri, BN-C223-ilish]
 sounds: []
-roots: []
+roots: [english-salad]
+etymology_hook: "sālād ← English salad"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C223-ilish]
 <!-- hl-knowledge: introduces=[BN-LEX-C224-JINIS224-01]; assesses=[] -->
 
 **সালাদ** — *sālād* — "a salad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সালাদ** (*sālād*) is a loan from English *salad*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

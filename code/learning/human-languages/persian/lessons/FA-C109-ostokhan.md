@@ -14,7 +14,8 @@ romanization: "ostokhân"
 concept_tag: FA-THINGS109-OSTOKHAN
 prerequisites: [FA-C109-abru, FA-C109-pust]
 sounds: []
-roots: []
+roots: [persian-ostokhan]
+etymology_hook: "ostokhân: inherited, usually traced to Middle Persian astuxān"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C109-pust]
 <!-- hl-knowledge: introduces=[FA-LEX-C109-THINGS109-03]; assesses=[] -->
 
 **استخوان** — *ostokhân* — "a bone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ostokhân* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *astuxān*, "bone". It is usually set beside Greek *osteon* and Latin *os*, "bone", as one Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

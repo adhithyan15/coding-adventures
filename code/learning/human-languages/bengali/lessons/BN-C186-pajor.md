@@ -14,7 +14,8 @@ romanization: "pā̃jôr"
 concept_tag: BN-SVASTHYO186-PAJOR
 prerequisites: [BN-C185-phoska, BN-C185-bndej]
 sounds: []
-roots: []
+roots: [sanskrit-panjara]
+etymology_hook: "pāṁjôr ← Sanskrit pañjara 'cage; skeleton, ribs', a tadbhava (CDIAL 7685)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C185-bndej]
 <!-- hl-knowledge: introduces=[BN-LEX-C186-SVASTHYO186-01]; assesses=[] -->
 
 **পাঁজর** — *pā̃jôr* — "a rib".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পাঁজর** (*pāṁjôr*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañjara*, "cage; skeleton, ribs" (CDIAL 7685). CDIAL lists Bengali *pāṁjar*, "the ribs, a rib".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

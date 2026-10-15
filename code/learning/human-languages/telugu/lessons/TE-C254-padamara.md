@@ -14,7 +14,8 @@ romanization: "paḍamara"
 concept_tag: TE-STHALAM254-PADAMARA
 prerequisites: [TE-C254-dikku, TE-C254-turpu]
 sounds: []
-roots: []
+roots: [dravidian-padu-lie]
+etymology_hook: "paḍamara: native Dravidian; DEDR 3852 lists paḍamara 'the west' under paḍu 'to fall, set'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C254-turpu]
 <!-- hl-knowledge: introduces=[TE-LEX-C254-STHALAM254-05]; assesses=[] -->
 
 **పడమర** — *paḍamara* — "west".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పడమర** (*paḍamara*) is native Dravidian. DEDR 3852 lists *paḍamara*, "the west", under *paḍu*, "to fall, lie", which Kannada uses for the setting sun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

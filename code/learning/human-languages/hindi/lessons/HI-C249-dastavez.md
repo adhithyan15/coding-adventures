@@ -14,7 +14,8 @@ romanization: "dastāvez"
 concept_tag: HI-THG249-DASTAVEZ
 prerequisites: [HI-C249-kampyutar, HI-C249-mobail]
 sounds: []
-roots: []
+roots: [persian-dastawez]
+etymology_hook: "dastāvez: usually traced to Persian dastāwēz 'a document, a deed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C249-mobail]
 <!-- hl-knowledge: introduces=[HI-LEX-C249-THG249-05]; assesses=[] -->
 
 **दस्तावेज़** — *dastāvez* — "a document".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दस्तावेज़** (*dastāvez*) is a loan, usually traced to Persian *dastāwēz*, "a document, a deed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

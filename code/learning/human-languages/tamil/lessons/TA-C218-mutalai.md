@@ -47,7 +47,7 @@ reviews_of: [TA-C218-varikkutirai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**முதலை** (*mutalai*) is native Dravidian. DEDR 4952 lists Malayalam *mutala*, Kannada *mosaḷe* and Telugu *mosali*.
+**முதலை** (*mutalai*) is native Dravidian. DEDR 4952 lists Malayalam *mutala*, Kannada *mosaḷe* and Telugu *mosali*. The entry compares Sanskrit (lexicons) *mācala*, "crocodile".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

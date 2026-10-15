@@ -14,7 +14,8 @@ romanization: "polchasá"
 concept_tag: RU-VREMYA149-POLCHASA
 prerequisites: [RU-C148-blednyy, RU-C148-ustalyy]
 sounds: []
-roots: []
+roots: [slavic-chasu]
+etymology_hook: "полчаса is пол- 'half' + часа, a form of час 'hour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C148-ustalyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C149-VREMYA149-01]; assesses=[] -->
 
 **полчаса** (*polchasá*) — "half an hour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**полчаса** is *пол-*, "half", with *часа*, a form of *час*, "hour". Vasmer traces *час* to Proto-Slavic *\*časŭ* and thinks *пол-* probably kin to Albanian *palë*, "side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

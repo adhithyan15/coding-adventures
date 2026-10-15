@@ -14,7 +14,8 @@ romanization: "parsū̃"
 concept_tag: MW-TIME90-PARSU
 prerequisites: [MW-C90-dinugai, MW-C90-parbhat]
 sounds: []
-roots: []
+roots: [sanskrit-parashvas]
+etymology_hook: "parsū̃ ← Sanskrit paraśvas 'the day after tomorrow', a tadbhava (CDIAL 7799j, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C90-parbhat]
 <!-- hl-knowledge: introduces=[MW-LEX-C90-TIME90-05]; assesses=[] -->
 
 **परसूं** — *parsū̃* — "the day after tomorrow; the day before yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परसूं** (*parsū̃*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *paraśvas*, "the day after tomorrow". CDIAL gives no Marwari form in this entry (CDIAL 7799j); the match is through Hindi *parsū̃*. It is built on *para*, "beyond", and *śvas*, "tomorrow"; like Hindi, Marwadi uses it for both directions in time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

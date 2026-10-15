@@ -14,7 +14,8 @@ romanization: "mozā"
 concept_tag: HI-THINGS135-MOZA
 prerequisites: [HI-C135-cappal, HI-C135-juta]
 sounds: []
-roots: []
+roots: [persian-moza]
+etymology_hook: "mozā: usually traced to Persian mōza 'sock, stocking'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C135-juta]
 <!-- hl-knowledge: introduces=[HI-LEX-C135-THINGS135-03]; assesses=[] -->
 
 **मोज़ा** — *mozā* — "a sock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोज़ा** (*mozā*) is a loan, usually traced to Persian *mōza*, "sock, stocking".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

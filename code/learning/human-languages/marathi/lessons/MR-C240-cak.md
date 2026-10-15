@@ -14,7 +14,8 @@ romanization: "cāk"
 concept_tag: MR-VASTU240-CAK
 prerequisites: [MR-C240-saman, MR-C240-asan]
 sounds: []
-roots: []
+roots: [sanskrit-cakra]
+etymology_hook: "cāk ← Sanskrit cakra 'wheel', a tadbhava (CDIAL 4538)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C240-asan]
 <!-- hl-knowledge: introduces=[MR-LEX-C240-VASTU240-05]; assesses=[] -->
 
 **चाक** — *cāk* — "a wheel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चाक** (*cāk*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cakra*, "wheel" (CDIAL 4538).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

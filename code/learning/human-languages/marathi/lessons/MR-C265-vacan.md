@@ -14,7 +14,8 @@ romanization: "vacan"
 concept_tag: MR-VASTU265-VACAN
 prerequisites: [MR-C265-suraksa, MR-C265-salla]
 sounds: []
-roots: []
+roots: [sanskrit-vacana]
+etymology_hook: "vacan ← Sanskrit vacana 'speaking; statement', a tatsama (CDIAL 11199)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C265-salla]
 <!-- hl-knowledge: introduces=[MR-LEX-C265-VASTU265-05]; assesses=[] -->
 
 **वचन** — *vacan* — "a promise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वचन** (*vacan*) is Sanskrit *vacana*, "speaking; statement", taken over whole as a learned loan, a tatsama (CDIAL 11199). It is built on *vac*, "to speak".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āṅgḷī"
 concept_tag: MW-BODY45-ANGLI
 prerequisites: [MW-C44-galo, MW-C45-pet]
 sounds: []
-roots: []
+roots: [sanskrit-anguli]
+etymology_hook: "āṅgḷī ← Sanskrit aṅguli 'finger, toe', a tadbhava (CDIAL 135, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C45-pet]
 <!-- hl-knowledge: introduces=[MW-LEX-C45-BODY45-02]; assesses=[] -->
 
 **आंगळी** — *āṅgḷī* — "a finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आंगळी** (*āṅgḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṅguli*, "finger, toe". CDIAL gives no Marwari form in this entry (CDIAL 135); the match is through Gujarati *ā̃gḷī*. Marwadi, like Gujarati, says the *l* curled back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

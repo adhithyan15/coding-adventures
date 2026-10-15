@@ -14,7 +14,8 @@ romanization: "saṛak"
 concept_tag: HI-NOUN-ROAD
 prerequisites: [HI-C55-sky, HI-C54-cow, HI-C55-sun]
 sounds: []
-roots: []
+roots: [sanskrit-srti]
+etymology_hook: "saṛak: CDIAL first gives Sanskrit sṛti 'road, path' (13577), then in its addenda śaṭati 'goes' (12269)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C55-sky]
 सड़क is an everyday word with a disputed history; the derivations offered for it do not agree, and none has become standard.
 
 It sits oddly beside the four words after it in this chapter, which are all traceable. A chapter of five words is a fair sample of a language, and one unsettled origin in five is about the honest rate.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सड़क** (*saṛak*) is inherited, but CDIAL gives two sources. It first lists the word under Sanskrit *sṛti*, "road, path" (CDIAL 13577), and in its addenda under *śaṭati*, "goes" (CDIAL 12269).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

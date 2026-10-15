@@ -14,7 +14,8 @@ romanization: "ghirāʾ"
 concept_tag: AR-SHAY279-GHIRA
 prerequisites: [AR-C279-isfanja, AR-C279-sharit]
 sounds: []
-roots: []
+roots: [gh-r-w]
+etymology_hook: "ghirāʾ: built on the root gh-r-w, 'glue' (Lane); ghirāʾ is glue"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C279-sharit]
 <!-- hl-knowledge: introduces=[AR-LEX-C279-SHAY279-05]; assesses=[] -->
 
 **غراء** — *ghirāʾ* — "glue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غراء** (*ghirāʾ*) is built on the native Arabic root *gh-r-w*, "glue" (Lane). *Ghirāʾ* is glue.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

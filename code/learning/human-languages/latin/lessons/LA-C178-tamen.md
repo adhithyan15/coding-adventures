@@ -13,7 +13,8 @@ gloss: "however, nevertheless"
 concept_tag: LA-CAUSA178-TAMEN
 prerequisites: [LA-C177-foris, LA-C178-igitur]
 sounds: []
-roots: []
+roots: [tamen-latin, tam-latin]
+etymology_hook: "tamen 'however' — probably tam 'so' + an uncertain ending"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C178-igitur]
 <!-- hl-knowledge: introduces=[LA-LEX-C178-CAUSA178-02]; assesses=[] -->
 
 **tamen** — "however, nevertheless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tamen** probably begins with *tam*, "so" (Lewis & Short), but the ending is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

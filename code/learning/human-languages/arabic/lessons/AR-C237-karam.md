@@ -14,7 +14,8 @@ romanization: "karam"
 concept_tag: AR-SABAB237-KARAM
 prerequisites: [AR-C236-sukkan, AR-C237-sabr]
 sounds: []
-roots: []
+roots: [k-r-m]
+etymology_hook: "karam: built on the root k-r-m, 'to be noble, to be generous' (Lane); karam is generosity"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C237-sabr]
 <!-- hl-knowledge: introduces=[AR-LEX-C237-SABAB237-02]; assesses=[] -->
 
 **كرم** — *karam* — "generosity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كرم** (*karam*) is built on the native Arabic root *k-r-m*, "to be noble, to be generous" (Lane). *Karam* is generosity.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

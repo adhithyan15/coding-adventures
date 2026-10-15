@@ -14,7 +14,8 @@ romanization: "dhīre"
 concept_tag: HI-ADV-SLOWLY
 prerequisites: [HI-C64-quickly, HI-C62-basket, HI-C63-sleep]
 sounds: []
-roots: []
+roots: [sanskrit-dhira]
+etymology_hook: "dhīre ← Sanskrit dhīra 'steady, resolute', a tadbhava (CDIAL 6817)"
 duration:
   max_seconds: 210
 requires:

@@ -11,7 +11,8 @@ gloss: "again, then"
 concept_tag: PA-WORD-PHIR
 prerequisites: [PA-C03-practice]
 sounds: [sihari-i]
-roots: []
+roots: [indo-aryan-phirati]
+etymology_hook: "phir ← *phirati 'turns': its absolutive, 'having turned', used as an adverb (CDIAL 9078)"
 duration:
   max_seconds: 180
 requires:

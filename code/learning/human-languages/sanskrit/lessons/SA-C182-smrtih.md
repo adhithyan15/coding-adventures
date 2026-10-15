@@ -14,7 +14,8 @@ romanization: "smṛtiḥ"
 concept_tag: SA-WEL182-SMRTIH
 prerequisites: [SA-C182-santosah, SA-C182-krtajnata]
 sounds: []
-roots: []
+roots: [sanskrit-smrti]
+etymology_hook: "smṛti ← root √smṛ 'remember'; MW compares Latin memor 'mindful'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C182-krtajnata]
 <!-- hl-knowledge: introduces=[SA-LEX-C182-WEL182-05]; assesses=[] -->
 
 **स्मृतिः** — *smṛtiḥ* — "memory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*smṛti* is built on the root √smṛ, "to remember", with the noun suffix *-ti* (MW). MW compares Latin *memor*, "mindful", the source of English *memory*. The same word names the body of remembered tradition, as opposed to *śruti*, what was heard.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

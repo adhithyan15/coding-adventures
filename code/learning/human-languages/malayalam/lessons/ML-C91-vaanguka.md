@@ -11,7 +11,8 @@ romanization: "vāṅṅuka"
 concept_tag: ML-VERB-BUY
 prerequisites: [ML-C91-ethra-rupa, ML-C34-edukkuka, ML-C46-book]
 sounds: []
-roots: []
+roots: [dravidian-vangu-take]
+etymology_hook: "vāṅṅuka: native Dravidian, one word with Tamil vāṅku (DEDR 5336)"
 duration:
   max_seconds: 250
 requires:
@@ -52,6 +53,11 @@ changed and the rule did not.
 With this word the chapter closes a circle. **You can name the place, ask the
 price, hear a number back, and say what you are doing there** — and of those
 four, only the place, the price and this verb were new.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വാങ്ങുക** (*vāṅṅuka*) is native Dravidian, one word with Tamil *vāṅku* (DEDR 5336). Its older senses are "to take, receive, choose".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C91-BUY-01, ML-LEX-C46-ASK-05, ML-LEX-C91-SHOP-01] -->

@@ -14,7 +14,8 @@ romanization: "ḍim"
 concept_tag: BN-FOOD58-DIM
 prerequisites: [BN-C58-komla, BN-C58-lebu]
 sounds: []
-roots: []
+roots: [sanskrit-dimba]
+etymology_hook: "ḍim ← Sanskrit ḍimba 'egg', a tadbhava (CDIAL 5550)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C58-lebu]
 <!-- hl-knowledge: introduces=[BN-LEX-C58-FOOD58-03]; assesses=[] -->
 
 **ডিম** — *ḍim* — "an egg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ডিম** (*ḍim*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ḍimba*, "egg" (CDIAL 5550). CDIAL suggests it may belong with a group of words for "lump".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -20,7 +20,7 @@ honā ends in -نا -nā. So does every Urdu verb when you name it. English mark
 That ending is also a tool. Strip -nā off and what remains is the stem, the piece everything else in the verb is built on. honā minus -nā leaves ho-. Learn the ending once, and every new verb hands you its own stem for free.
 
 The word, taken apart — the root English wore down to “be”.
-honā comes from Sanskrit bhavati, “becomes,” built on the root bhū-. The middle stage of Indo-Aryan softened that bh- to h-, so bhavati thinned to hoi and then to honā.
+honā comes from Sanskrit bhavati, “becomes” (CDIAL 9416), built on the root bhū-. The middle stage of Indo-Aryan softened that bh- to h-, so bhavati thinned to hoi and then to honā.
 The root is Indo-European: bʰuH-, “grow, become.” English kept it in be and been, and — by way of “the place where one dwells” — in build, booth, and bower. Latin held it as fuī “I was” and futūrus, which English borrowed as future. Greek held it as phúsis “nature,” which English borrowed as physics.
 
 Guided Practice.
@@ -103,7 +103,7 @@ The first word is the stem jā- plus -tā. It says going, and it agrees with the
 Two agreements, split across two words, in one short clause. English makes one agreement at most, and usually none. Say both Urdu lines and let the difference sit in the ear rather than on paper.
 
 The word, taken apart — a sound-law you can reuse.
-jānā continues Sanskrit yāti, “goes,” from the root yā-, “travel.” The change from y- to j- is not a quirk of this word: initial y- regularly hardened to j- on the road from Sanskrit into the middle stage of Indo-Aryan that Urdu descends from. Meet the law once and it decodes other words later.
+jānā continues Sanskrit yāti, “goes” (CDIAL 10452), from the root yā-, “travel.” The change from y- to j- is not a quirk of this word: initial y- regularly hardened to j- on the road from Sanskrit into the middle stage of Indo-Aryan that Urdu descends from. Meet the law once and it decodes other words later.
 English gives nothing here. The yā- root travelled north and west into Lithuanian and Slavic rather than into Germanic, so this is a word where Sanskrit is the whole hook and English cannot help.
 
 Guided Practice.
@@ -127,23 +127,23 @@ Lesson 4 of 7.
 
 Warm-up.
 [pause 2 seconds]
-Say jānā, then its stem jā-. The opposite direction is the same verb wearing a prefix.
+Say jānā, then its stem jā-. The opposite direction is a different verb.
 
 You'll want to know first — one word.
 آنا — ānā — to come.
 From the right edge: آ, then ن n, then ا long ā. That first shape is alif madd — alif wearing a small wave — and it is how Urdu writes a long ā at the start of a word. It opens āp too, which you will be able to spell out once pe arrives. Strip the -nā and the stem is ā-.
 
-The word, taken apart — a prefix welded to a verb you know.
-ānā continues Sanskrit āyāti, and that word is two pieces: ā-, “toward,” plus yā-, “go.” So the Urdu verb for coming is, underneath, the verb for going aimed back at the speaker. “Go toward me” is “come.”
-You already have the second piece: yā- is the same root that hardened into the j- of jānā. One Sanskrit verb, two Urdu words, and the difference between them is a direction marker.
-English does the identical trick with a Latin verb: venīre “to come” plus a prefix gives advent, convene, intervene, prevent, and revenue. Urdu welds its prefix on the front and lets the seam disappear; English keeps the seam visible.
+The word, taken apart — a verb of reaching.
+ānā is inherited. CDIAL lists it under Sanskrit āpayati, “causes to reach”, beside the older āpa, “came towards”, through Prakrit āvaï, “comes” (CDIAL 1200). So the Urdu verb for coming is, underneath, a verb of reaching: to come is to arrive where the speaker is.
+It is tempting to take ānā from āyāti, “comes near”, ā- “toward” plus yā- “go”, which would make it a twin of jānā. CDIAL lists no Hindi or Urdu word under āyāti (CDIAL 1288), though, and puts jānā under yāti, “goes” (CDIAL 10452): two verbs, not one.
+The root āp-, “reach, obtain”, is usually compared with Latin apīscī, “to reach”, whose participle aptus, “fitted”, gave English apt and adapt.
 
 Guided Practice.
 [your turn — say: ānā — to come]
 [pause 8 seconds for the answer]
 [your turn — pair: jānā away, ānā toward]
 [pause 8 seconds for the answer]
-[your turn — split: ā- “toward” + yā- “go”]
+[your turn — connect: ānā from āpayati, “causes to reach”]
 [pause 8 seconds for the answer]
 [once you have stopped driving — read: آنا (ānā), starting from alif madd]
 [your turn — recall: say khudā]
@@ -151,7 +151,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which two pieces are hiding inside ānā? (Ā- “toward” and yā- “go.”) Which Urdu verb shares the second piece? (Jānā.) And what does the stem become once -nā comes off? (Ā-.)
+Which Sanskrit verb of reaching stands behind ānā? (Āpayati, “causes to reach.”) Does jānā come from the same verb? (No: jānā comes from yāti, “goes.”) And what does the stem become once -nā comes off? (Ā-.)
 Source: Wiktionary: آنا (ānā).
 
 
@@ -223,7 +223,7 @@ maiṅ boltā hūṅ — I speak (man speaking) maiṅ boltī hūṅ — I speak
 Nothing new is being learned there. That is the point of a stem: the machine is already built, and each verb walks into it.
 
 The word, taken apart — where the trail goes cold.
-bolnā goes back to Prakrit bollaï, “speaks” — and then the trail stops. A link onward to Sanskrit brūte “speaks” has been proposed, but it is not settled, so treat it as a maybe rather than a fact.
+bolnā goes back to Prakrit bollaï, “speaks” — and then the trail stops. CDIAL reconstructs it as boll-, “speak” (CDIAL 9321), and reports proposals that tie it to Sanskrit vadati or bravīti, both “speaks”; none is settled, so treat them as maybes rather than facts.
 That plainness is the lesson. Urdu's everyday verbs are inherited Indo-Aryan and often short-rooted like this, while its formal and literary vocabulary was borrowed from Persian and Arabic and tends to be long, elegant, and easy to trace. Beside homely bolnā sits Persian-derived guftagū, “conversation,” from Persian guftan, “to speak.” Both are fully Urdu. One is the floor of the house; the other is the ornament on it — and the flowing nastaʿlīq hand Urdu is traditionally written in belongs to that same Persian inheritance.
 
 Guided Practice.
@@ -255,7 +255,7 @@ From the right edge: ج j, ا long ā, then ن, then ن a second time, then ا l
 That doubling is what keeps jānnā “to know” apart from jānā “to go.” One letter, and the whole meaning turns.
 
 The word, taken apart — the widest family in the chapter.
-jānnā continues Sanskrit jānāti, from the root jñā-, “know.” That root is Indo-European ǵneh₃-, and English is stuffed with it.
+jānnā continues Sanskrit jānāti, “knows” (CDIAL 5193), from the root jñā-, “know.” That root is Indo-European ǵneh₃-, and English is stuffed with it.
 Straight down the Germanic line: know, knowledge, can (once “to know how”), cunning, ken, and uncouth — literally “un-known.” Borrowed from Latin (g)nōscere: notice, note, notion, cognition, recognize, acquaint, and ignore, which is “not to know.” Borrowed from Greek gnōsis: diagnosis, prognosis, and agnostic.
 So the Urdu verb is not a stranger. It is a first cousin of the plainest word English has for the same idea, and every one of those borrowings is another place to hang it.
 

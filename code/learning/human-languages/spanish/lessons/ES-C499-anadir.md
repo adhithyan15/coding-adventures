@@ -10,7 +10,8 @@ gloss: "to add"
 concept_tag: ES-VERB-ANADIR
 prerequisites: [ES-C499-bocadillo, ES-C499-batido]
 sounds: []
-roots: []
+roots: [addere-latin]
+etymology_hook: "añadir — usually traced to spoken Latin *inaddere, built on addere 'to add'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C499-batido]
 > Añade un poco de sal.
 >
 > *Add a little salt.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**añadir** is usually traced to spoken Latin *\*inaddere*, "to add on", built on *addere*, "to add" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Latin for medicine, then the Latin for an illness.
 You'll want to know: aeger, aegra, aegrum.
 aeger, aegra, aegrum — "sick, ill". The opposite of sānus.
 
+The word, taken apart.
+aeger, "sick", has no sure origin; Lewis & Short list only tentative comparisons, and no proposal is generally accepted.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for an illness, then the Latin for sick.
 
 You'll want to know: fessus, fessa, fessum.
 fessus, fessa, fessum — "tired".
+
+The word, taken apart.
+fessus is the old participle of fatīscor, "to grow weary, to gape open". It belongs with fatīgō, "to tire out" (Lewis & Short). English fatigue comes from that verb through French.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for sick, then the Latin for tired.
 You'll want to know: famēs, famis.
 famēs, famis — "hunger". English famine.
 
+The word, taken apart.
+famēs has no sure origin. One proposal, which EtymDB 2.1 records, ties it to a Proto-Indo-European root dhH-, "to disappear".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for tired, then the Latin for hunger.
 You'll want to know: sitis, sitis.
 sitis, sitis — "thirst". aqua answers it.
 
+The word, taken apart.
+sitis is usually traced to Proto-Indo-European dhgwhitis, "a wasting, a decline" (EtymDB 2.1), the form behind Greek phthisis, "decline, consumption"; Lewis & Short still called it doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for hunger, then the Latin for thirst.
 
 You'll want to know: cūra, cūrae.
 cūra, cūrae — "care, worry". English cure and curator.
+
+The word, taken apart.
+cūra has no sure origin. EtymDB 2.1 records a proposal that traces it to Proto-Indo-European kweys-, "to heed", but it is not settled.
 
 What you've built.
 One more word for this chapter.

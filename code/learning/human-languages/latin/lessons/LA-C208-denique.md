@@ -13,7 +13,8 @@ gloss: "finally"
 concept_tag: LA-TEMP208-DENIQUE
 prerequisites: [LA-C207-ortus, LA-C207-diluculum]
 sounds: []
-roots: []
+roots: [denique-latin]
+etymology_hook: "dēnique 'finally' — origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C207-diluculum]
 <!-- hl-knowledge: introduces=[LA-LEX-C208-TEMP208-01]; assesses=[] -->
 
 **dēnique** — "finally".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēnique** has no sure origin; it may be built on *dē*, "down from", with *-que*, "and", but Lewis & Short call it doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

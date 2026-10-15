@@ -11,7 +11,8 @@ romanization: "jāgratta"
 concept_tag: TE-LEAVE-CARE
 prerequisites: [TE-C89-wedding, TE-C89-address]
 sounds: []
-roots: []
+roots: [sanskrit-jagrat]
+etymology_hook: "jāgratta ← Sanskrit jāgrat 'waking, watchful' (CDIAL 5174), reshaped as a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C89-address]
 
 **జాగ్రత్తగా వెళ్ళండి** — "go carefully", what a host says at the door, where English says
 "take care". The **-గా** is the ending that makes a manner.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జాగ్రత్త** (*jāgratta*) comes from Sanskrit *jāgrat*, "waking, wakefulness" (CDIAL 5174), reshaped to Telugu sounds: a tadbhava. Caution is staying awake.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

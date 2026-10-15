@@ -14,7 +14,8 @@ romanization: "safar"
 concept_tag: UR-WORLD87-SAFAR
 prerequisites: [UR-C86-rang, UR-C87-git]
 sounds: []
-roots: []
+roots: [arabic-safar]
+etymology_hook: "safar ← Arabic safar 'travel, a journey', through Persian (Lane, root s-f-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C87-git]
 <!-- hl-knowledge: introduces=[UR-LEX-C87-WORLD87-02]; assesses=[] -->
 
 **سفر** — *safar* — "a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سفر** (*safar*) is a loan from Arabic *safar*, "travel, a journey", which reached Urdu through Persian. Its Arabic root is *s-f-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

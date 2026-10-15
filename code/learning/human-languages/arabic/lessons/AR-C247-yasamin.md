@@ -14,7 +14,8 @@ romanization: "yāsamīn"
 concept_tag: AR-SHAY247-YASAMIN
 prerequisites: [AR-C247-ward, AR-C247-nakhla]
 sounds: []
-roots: []
+roots: [persian-yasaman]
+etymology_hook: "yāsamīn: from Persian yāsaman (EtymDB); English jasmine comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C247-nakhla]
 <!-- hl-knowledge: introduces=[AR-LEX-C247-SHAY247-05]; assesses=[] -->
 
 **ياسمين** — *yāsamīn* — "jasmine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ياسمين** (*yāsamīn*) is a loan from Persian *yāsaman*, *yāsamīn* (EtymDB); English *jasmine* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

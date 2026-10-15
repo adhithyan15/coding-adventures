@@ -14,7 +14,8 @@ romanization: "konkí"
 concept_tag: RU-VESHCH166-KONKI
 prerequisites: [RU-C165-yozh, RU-C166-lyzhi]
 sounds: []
-roots: []
+roots: [slavic-koni]
+etymology_hook: "коньки is from конь 'a horse': 'little horses'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C166-lyzhi]
 <!-- hl-knowledge: introduces=[RU-LEX-C166-VESHCH166-02]; assesses=[] -->
 
 **коньки** (*konkí*) — "skates".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**коньки** comes from *конь*, "a horse" (Vasmer), as "little horses"; a common explanation is that old skates had a horse's head carved at the toe.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

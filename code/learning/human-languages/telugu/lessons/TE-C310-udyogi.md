@@ -14,7 +14,8 @@ romanization: "udyōgi"
 concept_tag: TE-PANI310-UDYOGI
 prerequisites: [TE-C310-sagam, TE-C310-kuli]
 sounds: []
-roots: []
+roots: [sanskrit-udyoga]
+etymology_hook: "udyōgi ← Sanskrit udyōgin 'one at work', from udyōga (CDIAL 2055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C310-kuli]
 <!-- hl-knowledge: introduces=[TE-LEX-C310-PANI310-05]; assesses=[] -->
 
 **ఉద్యోగి** — *udyōgi* — "an employee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉద్యోగి** (*udyōgi*) is Sanskrit *udyōgin*, "one at work", from *udyōga*, "exertion" (CDIAL 2055), with the final *-n* dropped.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

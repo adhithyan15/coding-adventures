@@ -14,7 +14,8 @@ romanization: "rājya"
 concept_tag: HI-THG200-RAJYA
 prerequisites: [HI-C199-haddi, HI-C200-tvaca]
 sounds: []
-roots: []
+roots: [sanskrit-rajya]
+etymology_hook: "rājya ← Sanskrit rājya 'kingship, kingdom', a tatsama (CDIAL 10694)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C200-tvaca]
 <!-- hl-knowledge: introduces=[HI-LEX-C200-THG200-02]; assesses=[] -->
 
 **राज्य** — *rājya* — "a state".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**राज्य** (*rājya*) is Sanskrit *rājya*, "kingship, kingdom", taken over whole as a learned loan, a tatsama (CDIAL 10694). CDIAL lists the inherited form as *rāj*, "government".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

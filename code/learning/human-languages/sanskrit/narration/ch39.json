@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Animals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bffb0d505bef21b0",
+  "sourceHash": "fnv1a64:86e9844ff57fe5dd",
   "lessons": [
     {
       "id": "SA-C39-cow",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3dc66c3881581134",
+      "sourceHash": "fnv1a64:454fdf7a0a7909f4",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "It stands on dhe, \"to suckle\" — a root that reaches a long way west: Latin fēmina, the one who nurses, and fīlius, the one nursed, and English fecund behind them both."
+              "text": "It stands on dhe, \"to suckle\" — a root that reaches a long way west: MW compares Greek thēlē, \"nipple\", and Latin fēlāre, \"to suck\"."
             },
             {
               "kind": "speech",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acb455edf5db27d9",
+      "sourceHash": "fnv1a64:2f6b6668e6a63d59",
       "notice": null,
       "blocks": [
         {
@@ -194,20 +194,31 @@
             },
             {
               "kind": "speech",
-              "text": "विहगः (vihagaḥ) is a bird, and the word says how it moves: vi-, \"apart, across\", with ga, \"going\"."
+              "text": "विहगः (vihagaḥ) is a bird, and the word says how it moves: viha, \"the sky, the air\", with ga, \"going\"."
             },
             {
               "kind": "speech",
-              "text": "That going-piece is the one inside गच्छति, the first doing-word in this book. A विहगः (vihagaḥ) is simply the one that goes across."
+              "text": "That going-piece is the one inside गच्छति, the first doing-word in this book. A विहगः (vihagaḥ) is simply the sky-goer."
             },
             {
               "kind": "speech",
-              "text": "Across what is unsaid, and does not need saying: आकाशः, the open sky, is the only place it could be."
+              "text": "Viha is a rarer sky-word than आकाशः, but the picture is the same: the open air is where a bird goes."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW explains vihaga as viha, \"the sky\", with ga, \"going\", a piece built on the root √gam: \"sky-goer\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +229,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +287,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +318,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2601d1c822332781",
+      "sourceHash": "fnv1a64:3178eea73fd1077a",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +363,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Matsya is already in the Rigveda, but no agreed European cousin is known, so its deeper origin is not settled. It lives on as Bengali māch and, with an added -l-, Hindi machlī (CDIAL 9758)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +384,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +442,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +473,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:379940a0395fb42f",
+      "sourceHash": "fnv1a64:5e4556ee745636fe",
       "notice": null,
       "blocks": [
         {
@@ -595,7 +617,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ee5072f5fce2b11",
+      "sourceHash": "fnv1a64:559c92d3a93ed9e6",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +662,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sarpa is built on the root √sṛp, \"to creep, glide\" (MW, CDIAL 13271). It is inherited: MW compares Greek herpō and Latin serpere, \"to creep\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +683,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +741,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

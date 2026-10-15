@@ -14,7 +14,8 @@ romanization: "kohrā"
 concept_tag: UR-CHIZ233-KOHRA
 prerequisites: [UR-C232-zanjir, UR-C232-pech]
 sounds: []
-roots: []
+roots: [indo-aryan-kuha]
+etymology_hook: "kohrā ← *kuha 'fog, mist', a reconstructed form; a tadbhava (CDIAL 3386)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C232-pech]
 <!-- hl-knowledge: introduces=[UR-LEX-C233-CHIZ233-01]; assesses=[] -->
 
 **کہرا** — *kohrā* — "fog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کہرا** (*kohrā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kuha*, "fog, mist", a form CDIAL reconstructs from its descendants (CDIAL 3386).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

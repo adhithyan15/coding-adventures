@@ -14,7 +14,8 @@ romanization: "svāgat"
 concept_tag: GU-COURTESY-WELCOME
 prerequisites: [GU-C90-field, GU-C90-merchant]
 sounds: []
-roots: []
+roots: [sanskrit-svagata]
+etymology_hook: "svāgat ← Sanskrit svāgata 'welcome', a tatsama (CDIAL 13920)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C90-merchant]
 <!-- hl-knowledge: introduces=[GU-LEX-C91-COURTESY-01]; assesses=[] -->
 
 **સ્વાગત** (*svāgat*) — "welcome".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સ્વાગત** (*svāgat*) is Sanskrit *svāgata*, "welcome", taken over whole as a learned loan, a tatsama (CDIAL 13920). CDIAL lists Old Gujarati *sāiu*, "welcome", as the inherited form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: GREETING-FORMAL
 prerequisites: [AR-C01-salam, AR-C01-al, AR-W00-ba-family-marhaba, AR-C01-thabit]
 sounds: [ayn, ya, kaf]
 roots: [s-l-m]
+etymology_hook: "as-salāmu ʿalaykum: as-salām 'the peace' (root s-l-m, Lane) + ʿalaykum 'upon you'; Hebrew shalom ʿalekhem matches"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ verb “is” understood.
 
 The fixed reply is *wa-ʿalaykum as-salām*: “and upon you, peace.” Hear the
 little *wa-* at the front; it means “and.”
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**as-salāmu ʿalaykum** is built from *as-salām*, "the peace", on the native root *s-l-m*, "to be safe, whole" (Lane), and *ʿalaykum*, "upon you": *ʿalā*, "upon", with *-kum*, "you". Hebrew *shalom ʿalekhem* is the same greeting in a cousin language.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-C01-FULL-GREETING-11] -->

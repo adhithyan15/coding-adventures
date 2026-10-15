@@ -14,7 +14,8 @@ romanization: "kaṭhinaḥ"
 concept_tag: SA-DESCRIBE-HARD
 prerequisites: [SA-C89-far, SA-C89-near]
 sounds: []
-roots: []
+roots: [sanskrit-kathina]
+etymology_hook: "kaṭhina 'hard, stiff': CDIAL 2650 reports Mayrhofer's view that it is borrowed from Dravidian"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,12 @@ reviews_of: [SA-C89-near]
 
 **कठिनः** (*kaṭhinaḥ*) — "hard", both to touch and to do. **कठिनः पाठः** — "a hard
 lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kaṭhina* may be borrowed from Dravidian: CDIAL 2650 reports that Mayrhofer
+groups it with Tamil *kaṭṭu*, "hardness", and similar words as a loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

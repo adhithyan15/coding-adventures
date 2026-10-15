@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-FOUR
 prerequisites: [MW-C32-teen]
 sounds: [unaspirated-ch, long-aa, tapped-r]
 roots: [sanskrit-catvaras]
-etymology_hook: Four opens with the plain ch; six opens with the same sound plus a puff, and the two are one sign apart on the page.
+etymology_hook: "chār ← Sanskrit catvāri 'four', a tadbhava (CDIAL 4655, Old Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -50,6 +50,11 @@ Hold on to that, because the next chapter opens six with the same consonant
 carrying a puff. In Marwari, four and six begin a breath apart.
 
 Count: *ek, do, tīn, chār*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chār* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catvāri*, "four". CDIAL lists Old Marwari *cyāri* under it (CDIAL 4655). Hindi and Gujarati have *cār*, as Marwadi does.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHAAR-01] -->

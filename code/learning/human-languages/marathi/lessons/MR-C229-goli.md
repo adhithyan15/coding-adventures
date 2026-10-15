@@ -14,7 +14,8 @@ romanization: "goḷī"
 concept_tag: MR-AAROGYA229-GOLI
 prerequisites: [MR-C228-bacav-karne, MR-C228-nahise-hone]
 sounds: []
-roots: []
+roots: [sanskrit-gola]
+etymology_hook: "goḷī ← Sanskrit golikā 'little ball', from gola 'ball'; a tadbhava (CDIAL 4321)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C228-nahise-hone]
 <!-- hl-knowledge: introduces=[MR-LEX-C229-AAROGYA229-01]; assesses=[] -->
 
 **गोळी** — *goḷī* — "a tablet, a pill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गोळी** (*goḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *golikā*, "little ball", built on *gola*, "ball" (CDIAL 4321). CDIAL glosses the Marathi word "pill".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

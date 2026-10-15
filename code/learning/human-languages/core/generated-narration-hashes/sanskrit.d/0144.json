@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 144,
-  "sourceHash": "fnv1a64:7c4fcc93745108d4",
+  "sourceHash": "fnv1a64:64dab08fd4db6286",
   "lessonIds": [
     "SA-C144-bhajati",
     "SA-C144-tolayati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch144.txt",
   "json": "sanskrit/narration/ch144.json",
-  "textHash": "fnv1a64:13fd6e689c8934e8",
-  "jsonHash": "fnv1a64:917b89f6d3fda762",
+  "textHash": "fnv1a64:2cc7d58c04dfd72e",
+  "jsonHash": "fnv1a64:dc87b1d4d10cce91",
   "findings": []
 }

@@ -46,7 +46,7 @@ reviews_of: [FR-C219-ennuyeux-ennuyeuse]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**amusant** is the present participle of the verb in *s'amuser*, "to amuse": amusing.
+**amusant** is the present participle of the verb in *s'amuser*, "to amuse": amusing. *Amuser* ← Old French *amuser*, "to keep idle", from *muser*, "to gape" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

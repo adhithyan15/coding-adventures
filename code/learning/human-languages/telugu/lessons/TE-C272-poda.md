@@ -14,7 +14,8 @@ romanization: "poda"
 concept_tag: TE-VASTUVU272-PODA
 prerequisites: [TE-C272-pandiri, TE-C272-kance]
 sounds: []
-roots: []
+roots: [dravidian-putai-cover]
+etymology_hook: "poda: native Dravidian; DEDR 4509 lists poda 'bush' with Kannada podaṟ 'bush'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C272-kance]
 <!-- hl-knowledge: introduces=[TE-LEX-C272-VASTUVU272-03]; assesses=[] -->
 
 **పొద** — *poda* — "a bush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పొద** (*poda*) is native Dravidian. DEDR 4509 lists *poda*, "bush, thicket", with Kannada *podaṟ*, "bush, thicket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

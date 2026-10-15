@@ -14,7 +14,8 @@ romanization: "trúdnyy"
 concept_tag: RU-WORTH-HARD
 prerequisites: [RU-C66-slow, RU-C67-easy]
 sounds: []
-roots: []
+roots: [slavic-trudu]
+etymology_hook: "трудный is труд 'labour' + -ный; Lithuanian triūsas 'work, toil' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C67-easy]
 <!-- hl-knowledge: introduces=[RU-LEX-C67-WORTH-02]; assesses=[] -->
 
 **трудный** (*trúdnyy*) — "hard, difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**трудный** is *труд*, "labour, toil", with *-ный*. *труд* ← Proto-Slavic *\*trudŭ*; Vasmer relates it to Lithuanian *triūsas*, "work, bother", and Gothic *usþriutan*, "to trouble".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

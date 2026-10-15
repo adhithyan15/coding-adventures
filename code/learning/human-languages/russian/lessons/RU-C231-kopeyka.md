@@ -14,7 +14,8 @@ romanization: "kopéyka"
 concept_tag: RU-RABOTA231-KOPEYKA
 prerequisites: [RU-C230-okhrannik, RU-C230-nyanya]
 sounds: []
-roots: []
+roots: [slavic-kopije]
+etymology_hook: "копейка is from копьё 'a spear': the coin showed a rider with a spear"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C230-nyanya]
 <!-- hl-knowledge: introduces=[RU-LEX-C231-RABOTA231-01]; assesses=[] -->
 
 **копейка** (*kopéyka*) — "a kopeck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**копейка** — first a silver coin minted from 1535, showing the ruler on horseback with a spear; Vasmer derives it from *копьё*, "a spear", and calls a Turkic source less likely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

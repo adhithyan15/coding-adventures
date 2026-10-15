@@ -12,6 +12,9 @@ Before the new one: say the Russian for late, then the Russian for in the mornin
 You'll want to know: днём.
 днём (dnyom) — "in the daytime".
 
+The word, taken apart.
+днём (dnyom) is день, "day", in the form that says "by, during": "in the daytime". день is a cousin of Latin diēs, "day" (Vasmer).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for in the morning, then the Russian for in 
 
 You'll want to know: вечером.
 вечером (vécherom) — "in the evening".
+
+The word, taken apart.
+вечером (vécherom) is вечер, "evening", in the form that says "by, during": "in the evening". вечер is a cousin of Lithuanian vãkaras, "evening" (Vasmer).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for in the daytime, then the Russian for in 
 You'll want to know: ночью.
 ночью (nóchyu) — "at night".
 
+The word, taken apart.
+ночью (nóchyu) is ночь, "night", in the form that says "by, during": "at night". ночь is a cousin of Latin nox and English night (Vasmer).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for in the evening, then the Russian for at 
 You'll want to know: послезавтра.
 послезавтра (poslezávtra) — "the day after tomorrow".
 
+The word, taken apart.
+послезавтра (poslezávtra) is после, "after", with завтра, "tomorrow", itself за, "after", with утро, "morning". Where утро comes from is uncertain (Vasmer).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for at night, then the Russian for the day a
 
 You'll want to know: позавчера.
 позавчера (pozavcherá) — "the day before yesterday".
+
+The word, taken apart.
+позавчера (pozavcherá) is по- with за, "beyond", and вчера, "yesterday": the day on the far side of yesterday. вчера comes from вечер, "evening" (Vasmer).
 
 What you've built.
 One more word for this chapter.

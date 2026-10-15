@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for an opportunity, then the Sanskrit for e
 You'll want to know: मानचित्रम्.
 मानचित्रम् — mānacitram — "a map".
 
+The word, taken apart.
+mānacitra is a compound of māna, "measure, standard" (CDIAL 10041), and citra, "picture": a picture drawn to measure. MW does not list the compound, so it is a modern pairing for a map.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for experience, then the Sanskrit for a map
 
 You'll want to know: स्थानम्.
 स्थानम् — sthānam — "a place".
+
+The word, taken apart.
+sthāna is built on the root √sthā, "to stand" (MW): a place is where something stands. MW compares √sthā with Latin stāre and English stand. It lives on as Hindi thānā, "place, police station" (CDIAL 13753).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a map, then the Sanskrit for a place.
 You'll want to know: निवासः.
 निवासः — nivāsaḥ — "a stay, a residence".
 
+The word, taken apart.
+nivāsa is built on ni- and the root √vas, "to dwell, stay" (MW), the root of vasāmi, "I live", which you have already met. In the Mahābhārata it means "resting place, night quarters" (CDIAL 7421).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a place, then the Sanskrit for a stay.
 You'll want to know: अतिथिगृहम्.
 अतिथिगृहम् — atithigṛham — "a guest house".
 
+The word, taken apart.
+atithigṛha is a compound of atithi, "guest", and gṛha, "house" (MW). MW reports that atithi is said to come from a-tithi, "one who has no fixed day for coming", or from a root √at, "to wander". MW does not list the compound, so the pairing is modern.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a stay, then the Sanskrit for a guest h
 
 You'll want to know: प्रवासः.
 प्रवासः — pravāsaḥ — "a stay abroad, a journey".
+
+The word, taken apart.
+pravāsa is built on pra, "forth, away", and the root √vas, "to dwell" (MW): dwelling away from home. It is a Rigvedic word (CDIAL 8802), and Sinhala puvaha, "sojourning abroad", comes from it.
 
 What you've built.
 One more word for this chapter.

@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-MINUSCULA-INICIAL
 prerequisites: [ES-C426-mayusculas]
 sounds: []
 roots: []
+etymology_hook: "inicial ← Latin initialis 'at the beginning', from initium 'a beginning' — English initial"
 duration:
   max_seconds: 240
 requires:
@@ -49,6 +50,9 @@ Whether it is capitalised depends on **what stands in front of it**:
 
 With the forename present, the small word is lower-case. Standing alone at the
 head of the name, it takes the capital.
+
+*Inicial* is Latin *initialis*, "at the beginning" (Lewis & Short), from
+*initium*, "a beginning".
 
 ## Grammar Lens: why the rule has that shape
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C426-02, ES-ORTH-C426-01] -->

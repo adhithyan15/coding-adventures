@@ -15,6 +15,7 @@ concept_tag: FA-THINGS95-HULE
 prerequisites: [FA-C94-nakh, FA-C94-sabun]
 sounds: []
 roots: []
+etymology_hook: "hule: sometimes linked with Turkish havlu 'towel'; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C94-sabun]
 <!-- hl-knowledge: introduces=[FA-LEX-C95-THINGS95-01]; assesses=[] -->
 
 **حوله** — *hule* — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hule* is the everyday word for a towel; it is sometimes linked with Turkish *havlu*, "towel", but its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

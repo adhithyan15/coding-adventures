@@ -14,7 +14,8 @@ romanization: "chhe"
 concept_tag: PA-CLOTHES94-CHHE
 prerequisites: [PA-C94-topi, PA-C94-kamiz]
 sounds: []
-roots: []
+roots: [sanskrit-shash]
+etymology_hook: "chhe ← *kṣaṭ, the third form CDIAL gives beside Sanskrit ṣaṣ 'six' (CDIAL 12803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C94-kamiz]
 <!-- hl-knowledge: introduces=[PA-LEX-C94-CLOTHES94-05]; assesses=[] -->
 
 **ਛੇ** — *chhe* — "six".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਛੇ** (*chhe*) is inherited. CDIAL lists it under *\*kṣaṭ*, the third of the forms it gives beside Sanskrit *ṣaṣ*, "six" (CDIAL 12803).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

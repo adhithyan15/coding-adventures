@@ -14,7 +14,8 @@ romanization: "vraṇaḥ"
 concept_tag: SA-WEL150-VRANAH
 prerequisites: [SA-C149-nayakah, SA-C150-bhesajam]
 sounds: []
-roots: []
+roots: [sanskrit-vrana]
+etymology_hook: "vraṇa 'wound, sore' (Manu); MW and CDIAL 12227 give no derivation; origin uncertain; Marathi vaṇ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C150-bhesajam]
 <!-- hl-knowledge: introduces=[SA-LEX-C150-WEL150-02]; assesses=[] -->
 
 **व्रणः** — *vraṇaḥ* — "a wound".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vraṇa* "a wound, a sore, a scar" appears from the law book of Manu on, and neither MW nor CDIAL 12227 gives a derivation, so its origin is uncertain. Marathi wore it down to *vaṇ* (CDIAL 12227).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

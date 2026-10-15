@@ -14,7 +14,8 @@ romanization: "ḍaghaṭa"
 concept_tag: AR-VERB-DAGHATA
 prerequisites: [AR-C259-tabaa2, AR-C259-qafaza]
 sounds: []
-roots: []
+roots: [ḍ-gh-ṭ]
+etymology_hook: "ḍaghaṭa: built on the root ḍ-gh-ṭ, 'to press' (Lane); the word ḍaghaṭa is the plain verb, 'he pressed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C259-qafaza]
 <!-- hl-knowledge: introduces=[AR-LEX-C259-ACT259-05]; assesses=[] -->
 
 **ضغط** — *ḍaghaṭa* — "to press".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضغط** (*ḍaghaṭa*) is built on the native Arabic root *ḍ-gh-ṭ*, "to press" (Lane). The word *ḍaghaṭa* is the plain verb, "he pressed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

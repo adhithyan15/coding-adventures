@@ -14,7 +14,8 @@ romanization: "haraba"
 concept_tag: AR-VERB-HARABA
 prerequisites: [AR-C167-inzalaqa, AR-C167-anqadha]
 sounds: []
-roots: []
+roots: [h-r-b]
+etymology_hook: "haraba: built on the root h-r-b, 'to flee' (Lane); haraba is the plain verb, 'he fled'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C167-anqadha]
 <!-- hl-knowledge: introduces=[AR-LEX-C167-ACT167-04]; assesses=[] -->
 
 **هرب** — *haraba* — "to escape, to run away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هرب** (*haraba*) is built on the native Arabic root *h-r-b*, "to flee" (Lane). *Haraba* is the plain verb, "he fled".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

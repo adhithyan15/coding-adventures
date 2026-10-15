@@ -15,6 +15,7 @@ concept_tag: MR-KARAN203-NAKKI
 prerequisites: [MR-C202-upnagar, MR-C202-varati]
 sounds: []
 roots: []
+etymology_hook: "nakkī 'certainly': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C202-varati]
 <!-- hl-knowledge: introduces=[MR-LEX-C203-KARAN203-01]; assesses=[] -->
 
 **नक्की** — *nakkī* — "certainly, for sure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **नक्की** (*nakkī*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

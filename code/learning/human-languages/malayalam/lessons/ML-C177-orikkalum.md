@@ -14,7 +14,8 @@ romanization: "orikkaluṁ"
 concept_tag: ML-NISHEDHAM177-ORIKKALUM
 prerequisites: [ML-C176-jivikkuka, ML-C177-arum]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "orikkaluṁ: native Dravidian, orikkal 'once' (oru 'one', DEDR 990) + -uṁ 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C177-arum]
 <!-- hl-knowledge: introduces=[ML-LEX-C177-NISHEDHAM177-02]; assesses=[] -->
 
 **ഒരിക്കലും** — *orikkaluṁ* — "never (with a negative verb)". **ഞാൻ ഒരിക്കലും ഇറച്ചി കഴിക്കില്ല** — *ñān orikkaluṁ iṟacci kaḻikkilla* — "I will never eat meat."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒരിക്കലും** (*orikkaluṁ*) is native Dravidian: a word for "once", built on *oru*, "one" (DEDR 990), with *-uṁ*, "even": with a negative verb, "not even once".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

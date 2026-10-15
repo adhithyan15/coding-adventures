@@ -14,7 +14,8 @@ romanization: "cāhtā"
 concept_tag: MR-VASTU215-CAHTA
 prerequisites: [MR-C215-kheladu, MR-C215-prasiksak]
 sounds: []
-roots: []
+roots: [indo-aryan-cah]
+etymology_hook: "cāhtā: from cāhṇe 'to love, like' ← *cāh 'see, desire', of uncertain source (CDIAL 4775)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C215-prasiksak]
 <!-- hl-knowledge: introduces=[MR-LEX-C215-VASTU215-03]; assesses=[] -->
 
 **चाहता** — *cāhtā* — "a supporter, a fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चाहता** (*cāhtā*) is "one who likes", from Marathi *cāhṇẽ*, "to love, like", which CDIAL lists under a reconstructed *\*cāh-*, "see, look for, desire", whose source it calls uncertain (CDIAL 4775).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

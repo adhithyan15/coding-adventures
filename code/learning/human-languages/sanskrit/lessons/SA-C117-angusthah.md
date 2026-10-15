@@ -14,7 +14,8 @@ romanization: "aṅguṣṭhaḥ"
 concept_tag: SA-THINGS117-ANGUSTHAH
 prerequisites: [SA-C116-kurparah, SA-C116-manibandhah]
 sounds: []
-roots: []
+roots: [sanskrit-angushtha]
+etymology_hook: "aṅguṣṭha 'thumb' is built on aṅgu-, the base of aṅguli 'finger' (CDIAL 137); Punjabi aṅgūṭhā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C116-manibandhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C117-THINGS117-01]; assesses=[] -->
 
 **अंगुष्ठः** — *aṅguṣṭhaḥ* — "a thumb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aṅguṣṭha* "the thumb" is built on *aṅgu-*, the same base as *aṅguli* "finger" (CDIAL 137). It lives on as Hindi and Punjabi *aṅgūṭhā* "thumb" (CDIAL 137).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

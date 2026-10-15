@@ -14,7 +14,8 @@ romanization: "gharīb"
 concept_tag: AR-QUAL149-GHARIB
 prerequisites: [AR-C149-mulawwan, AR-C149-aniq, AR-C19-wahid-khamsa, AR-C19-wahid-khamsa, AR-C20-ahada-ashar-ishrun, AR-C20-ahada-ashar-ishrun]
 sounds: []
-roots: []
+roots: [gh-r-b]
+etymology_hook: "gharīb: built on the root gh-r-b, 'to go away' (Lane); Lane's gharīb is one far from his home, a stranger"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C149-aniq]
 <!-- hl-knowledge: introduces=[AR-LEX-C149-QUAL149-04]; assesses=[] -->
 
 **غريب** — *gharīb* — "strange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غريب** (*gharīb*) is built on the native Arabic root *gh-r-b*, "to go away" (Lane). Lane's *gharīb* is one far from his home, a stranger.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

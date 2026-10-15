@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 84,
-  "sourceHash": "fnv1a64:cec66c33d8c98197",
+  "sourceHash": "fnv1a64:c48d016a409cb67e",
   "lessonIds": [
     "UR-C84-chaudah",
     "UR-C84-pandrah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch84.txt",
   "json": "urdu/narration/ch84.json",
-  "textHash": "fnv1a64:89d5973f96abb201",
-  "jsonHash": "fnv1a64:657520028530eb03",
+  "textHash": "fnv1a64:a216fe0ad5878445",
+  "jsonHash": "fnv1a64:44cfe184a35949f7",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "tuâlet"
 concept_tag: FA-CHIZ165-TUALET
 prerequisites: [FA-C164-khalvat, FA-C165-van]
 sounds: []
-roots: []
+roots: [french-toilette]
+etymology_hook: "tuâlet ← French toilette 'small cloth; dressing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C165-van]
 <!-- hl-knowledge: introduces=[FA-LEX-C165-CHIZ165-02]; assesses=[] -->
 
 **توالت** — *tuâlet* — "a toilet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tuâlet* is borrowed from French *toilette*, "small cloth; dressing" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

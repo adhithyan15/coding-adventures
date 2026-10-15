@@ -14,7 +14,8 @@ romanization: "durust karṇe"
 concept_tag: MR-VERB-DURUST-KARNE
 prerequisites: [MR-C222-vidyapith, MR-C222-cuk]
 sounds: []
-roots: []
+roots: [persian-durust, sanskrit-karoti]
+etymology_hook: "durust: usually traced to Persian durust 'right, sound'; karṇe ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C222-cuk]
 <!-- hl-knowledge: introduces=[MR-LEX-C223-ACT223-01]; assesses=[] -->
 
 **दुरुस्त करणे** — *durust karṇe* — "to repair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुरुस्त**, "in order, mended", is usually traced to Persian *durust*, "right, sound". **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

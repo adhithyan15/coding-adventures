@@ -14,7 +14,8 @@ romanization: "vyakta karṇe"
 concept_tag: MR-VERB-VYAKTA-KARNE
 prerequisites: [MR-C256-usne-ghene, MR-C256-japne]
 sounds: []
-roots: []
+roots: [sanskrit-vyakta, sanskrit-karoti]
+etymology_hook: "vyakta: Sanskrit vyakta 'manifest', a tatsama; karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C256-japne]
 <!-- hl-knowledge: introduces=[MR-LEX-C256-ACT256-03]; assesses=[] -->
 
 **व्यक्त करणे** — *vyakta karṇe* — "to express".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**व्यक्त** is Sanskrit *vyakta*, "manifest, apparent", a tatsama. **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

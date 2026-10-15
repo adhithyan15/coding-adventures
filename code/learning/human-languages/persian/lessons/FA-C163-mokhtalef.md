@@ -14,7 +14,8 @@ romanization: "mokhtalef"
 concept_tag: FA-SEFAT163-MOKHTALEF
 prerequisites: [FA-C163-saf, FA-C163-kharab]
 sounds: []
-roots: []
+roots: [arabic-muhtalif]
+etymology_hook: "mokhtalef ← Arabic muḫtalif 'different, differing', root ḫ-l-f (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C163-kharab]
 <!-- hl-knowledge: introduces=[FA-LEX-C163-SEFAT163-05]; assesses=[] -->
 
 **مختلف** — *mokhtalef* — "different, various".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mokhtalef* is borrowed from Arabic *muḫtalif*, "different, differing". Its Arabic root is *ḫ-l-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

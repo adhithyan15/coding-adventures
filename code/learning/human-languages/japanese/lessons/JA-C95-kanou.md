@@ -14,7 +14,8 @@ romanization: "kanou"
 concept_tag: JA-CAN95-KANOU
 prerequisites: [JA-C94-tanoshimi, JA-C94-ai]
 sounds: []
-roots: []
+roots: [middle-chinese-khax, middle-chinese-nong]
+etymology_hook: "kanou: Sino-Japanese 可 'may' + 能 'to be able', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C94-ai]
 <!-- hl-knowledge: introduces=[JA-LEX-C95-CAN95-01]; assesses=[] -->
 
 **かのう** — *kanou* — "possible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かのう** (*kanou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ka*, "may, can" (Middle Chinese *khaX*) and *nō*, "to be able" (*nong*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

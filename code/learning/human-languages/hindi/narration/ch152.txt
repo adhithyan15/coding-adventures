@@ -12,6 +12,9 @@ Before the new one: say the Hindi for the chest, then the Hindi for the waist.
 You'll want to know: ख़ून.
 ख़ून — khūn — "blood".
 
+The word, taken apart.
+ख़ून (khūn) is a loan, usually traced to Persian khūn, "blood".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for the waist, then the Hindi for blood.
 
 You'll want to know: डाकघर.
 डाकघर — ḍākghar — "a post office".
+
+The word, taken apart.
+डाकघर (ḍākghar) is "post-house": ḍāk, "the post", from a reconstructed ḍakka, "relay, post", which CDIAL asks may belong with ḍakk, "shout" (CDIAL 5519), with ghar, "house", from ghara (CDIAL 4428).
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Say the four mind verbs and what each first meant: लिखना, to scratch; 
 You'll want to know: पुस्तकालय.
 पुस्तकालय — pustakālay — "a library".
 
+The word, taken apart.
+पुस्तकालय (pustakālay) is a tatsama compound, taken over whole from Sanskrit: pustaka, "book", and ālaya, "abode".
+
 What you've built.
 One more word for this chapter.
 
@@ -103,6 +112,9 @@ Name the week by its sky: सोमवार, the Moon's day, through शनि�
 You'll want to know: मंदिर.
 मंदिर — mandir — "a temple".
 
+The word, taken apart.
+मंदिर (mandir) is Sanskrit mandira, "house, palace, temple", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -131,6 +143,9 @@ Before the new one: say the Hindi for a library, then the Hindi for a temple.
 
 You'll want to know: मस्जिद.
 मस्जिद — masjid — "a mosque".
+
+The word, taken apart.
+मस्जिद (masjid) is a loan from Arabic masjid, "place of prostration, mosque", which reached Hindi through Persian. Its Arabic root is s-j-d (Lane).
 
 What you've built.
 One more word for this chapter.

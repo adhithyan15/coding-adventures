@@ -4,7 +4,7 @@
   "chapter": 256,
   "title": "To accept, To follow, To miss, To erase, To print",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7486392a843ed34a",
+  "sourceHash": "fnv1a64:2dec67d311e8a27b",
   "lessons": [
     {
       "id": "TA-C256-errukkol",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e54b34c5aee725c5",
+      "sourceHash": "fnv1a64:6508c04ef98e4bdb",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "தவறவிடு (tavaṟaviṭu) is native: tavaṟa, \"failing, missing\", from tavaṟu (DEDR 3068), and viṭu, \"to let go\" (DEDR 5393)."
+              "text": "தவறவிடு (tavaṟaviṭu) is native: tavaṟa, \"failing, missing\", from tavaṟu, \"to slip, to fail\" (DEDR 3071), and viṭu, \"to let go\" (DEDR 5393)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:131dd810ae9dc2a4",
+      "sourceHash": "fnv1a64:d7c1c338144f2a92",
       "notice": null,
       "blocks": [
         {

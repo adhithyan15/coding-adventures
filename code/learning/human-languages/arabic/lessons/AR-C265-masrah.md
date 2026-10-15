@@ -14,7 +14,8 @@ romanization: "masraḥ"
 concept_tag: AR-MAKAN265-MASRAH
 prerequisites: [AR-C264-ramadan, AR-C264-asr]
 sounds: []
-roots: []
+roots: [s-r-ḥ]
+etymology_hook: "masraḥ: built on the root s-r-ḥ, 'to send cattle out to pasture' (Lane); masraḥ is a pasture ground"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C264-asr]
 <!-- hl-knowledge: introduces=[AR-LEX-C265-MAKAN265-01]; assesses=[] -->
 
 **مسرح** — *masraḥ* — "a theatre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسرح** (*masraḥ*) is built on the native Arabic root *s-r-ḥ*, "to send cattle out to pasture" (Lane). *Masraḥ* is a pasture ground; the theatre is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

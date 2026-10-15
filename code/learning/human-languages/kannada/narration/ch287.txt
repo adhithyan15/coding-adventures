@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a platform, then the Kannada for abroad.
 You'll want to know: ದಡ.
 ದಡ — daḍa — "a riverbank".
 
+The word, taken apart.
+ದಡ (daḍa) is probably a tadbhava of Sanskrit taṭa, "slope, shore" (CDIAL 5629), through Prakrit taḍa; CDIAL does not list the Kannada word.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for abroad, then the Kannada for a riverbank
 
 You'll want to know: ಬರ.
 ಬರ — bara — "a drought".
+
+The word, taken apart.
+ಬರ (bara) is native Dravidian, one word with Tamil vaṟa, Telugu vaṟapu and Malayalam vaṟu (DEDR 5320). DEDR lists older baṟa, "dryness, barrenness, drought".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a riverbank, then the Kannada for a drou
 You'll want to know: ಭೂಕಂಪ.
 ಭೂಕಂಪ — bhūkampa — "an earthquake".
 
+The word, taken apart.
+ಭೂಕಂಪ (bhūkampa) is Sanskrit bhūkampa, "earthquake", taken over whole as a learned loan, a tatsama (CDIAL 9547). Bhū, "earth", and kampa, "trembling".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a drought, then the Kannada for an earth
 You'll want to know: ಪ್ರಪಂಚ.
 ಪ್ರಪಂಚ — prapañca — "the world".
 
+The word, taken apart.
+ಪ್ರಪಂಚ (prapañca) is Sanskrit prapañca, "expansion, the visible world".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for an earthquake, then the Kannada for the 
 
 You'll want to know: ಗೋಡೆ.
 ಗೋಡೆ — gōḍe — "a wall".
+
+The word, taken apart.
+ಗೋಡೆ (gōḍe) is native Dravidian, one word with Telugu gōḍa and Tulu gōḍè, "wall" (DEDR 2207). DEDR keeps it in a part of its own, apart from kōṭe, "fort, rampart".
 
 What you've built.
 One more word for this chapter.

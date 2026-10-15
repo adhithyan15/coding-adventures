@@ -14,7 +14,8 @@ romanization: "maccharadānī"
 concept_tag: HI-THG267-MACCHARADANI
 prerequisites: [HI-C266-gadda, HI-C267-rajai]
 sounds: []
-roots: []
+roots: [sanskrit-matsara-mosquito]
+etymology_hook: "maccharadānī: macchar 'mosquito' (CDIAL 9757) + Persian -dānī 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C267-rajai]
 <!-- hl-knowledge: introduces=[HI-LEX-C267-THG267-02]; assesses=[] -->
 
 **मच्छरदानी** — *maccharadānī* — "a mosquito net".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मच्छरदानी** (*maccharadānī*) is *macchar*, "mosquito", from Sanskrit *matsara* (CDIAL 9757), with the Persian ending *-dānī*, "holder, container".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chelovék"
 concept_tag: RU-VESHCH227-CHELOVEK
 prerequisites: [RU-C226-stikhi, RU-C227-shtraf]
 sounds: []
-roots: []
+roots: [slavic-chelovek]
+etymology_hook: "человек ← Proto-Slavic *čelověkŭ; Vasmer gives 'kin' + a word like Lithuanian vaikas 'child' as parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C227-shtraf]
 <!-- hl-knowledge: introduces=[RU-LEX-C227-VESHCH227-02]; assesses=[] -->
 
 **человек** (*chelovék*) — "a person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**человек** ← Proto-Slavic *\*čelověkŭ* — inherited. Vasmer reports the usual reading: the first part goes with *челядь*, "household people", and Sanskrit *kúla-*, "family"; the second with Lithuanian *vaĩkas*, "child, boy". Other accounts he finds less likely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

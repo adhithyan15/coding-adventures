@@ -14,7 +14,8 @@ romanization: "konya"
 concept_tag: JA-TIME73-KONYA
 prerequisites: [JA-C72-asahi, JA-C73-hinoiri]
 sounds: []
-roots: []
+roots: [middle-chinese-kim-now, middle-chinese-yaeh]
+etymology_hook: "konya: Sino-Japanese 今 'now' + 夜 'night', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C73-hinoiri]
 <!-- hl-knowledge: introduces=[JA-LEX-C73-TIME73-02]; assesses=[] -->
 
 **こんや** — *konya* — "tonight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こんや** (*konya*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kon*, "now, this" (Middle Chinese *kim*) and *ya*, "night" (*yaeH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

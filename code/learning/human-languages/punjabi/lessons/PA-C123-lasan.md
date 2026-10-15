@@ -14,7 +14,8 @@ romanization: "lasaṇ"
 concept_tag: PA-THINGS123-LASAN
 prerequisites: [PA-C122-baigan, PA-C122-gobhi]
 sounds: []
-roots: []
+roots: [sanskrit-lashuna]
+etymology_hook: "lasaṇ ← Sanskrit laśuna 'garlic', a tadbhava (CDIAL 10990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C122-gobhi]
 <!-- hl-knowledge: introduces=[PA-LEX-C123-THINGS123-01]; assesses=[] -->
 
 **ਲਸਣ** — *lasaṇ* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਲਸਣ** (*lasaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laśuna*, "garlic" (CDIAL 10990).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

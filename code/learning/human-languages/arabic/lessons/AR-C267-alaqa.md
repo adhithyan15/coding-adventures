@@ -14,7 +14,8 @@ romanization: "ʿalāqa"
 concept_tag: AR-SABAB267-ALAQA
 prerequisites: [AR-C267-din, AR-C267-salah]
 sounds: []
-roots: []
+roots: [ʿ-l-q]
+etymology_hook: "ʿalāqa: built on the root ʿ-l-q, 'to cling, to hang' (Lane); ʿalāqa is a tie, a connection"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C267-salah]
 <!-- hl-knowledge: introduces=[AR-LEX-C267-SABAB267-05]; assesses=[] -->
 
 **علاقة** — *ʿalāqa* — "a relationship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**علاقة** (*ʿalāqa*) is built on the native Arabic root *ʿ-l-q*, "to cling, to hang" (Lane). *ʿAlāqa* is a tie, a connection.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

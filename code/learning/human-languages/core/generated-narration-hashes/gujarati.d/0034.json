@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 34,
-  "sourceHash": "fnv1a64:947ba303e8592ef5",
+  "sourceHash": "fnv1a64:8c6578d0e3e4fb1b",
   "lessonIds": [
     "GU-C30-hear-chhokro",
     "GU-C30-hear-chhokri",
@@ -16,7 +16,7 @@
   "drivablePrefix": 6,
   "text": "gujarati/narration/ch34.txt",
   "json": "gujarati/narration/ch34.json",
-  "textHash": "fnv1a64:a44f74460e634d30",
-  "jsonHash": "fnv1a64:9e3e66ca1b6ed58d",
+  "textHash": "fnv1a64:61e766da1b4dfc04",
+  "jsonHash": "fnv1a64:39708e4cf0cb8cf7",
   "findings": []
 }

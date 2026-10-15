@@ -11,8 +11,8 @@ gloss: "xǐhuan — 'to like', an ordinary verb with an ordinary object, and no 
 concept_tag: VERB-LIKE-LOVE
 prerequisites: [ZH-W28-huan, ZH-W27-he, ZH-W24-ge, ZH-R18-looking-three-r1, ZH-W08-ming]
 sounds: [tone-3, tone-neutral]
-roots: []
-etymology_hook: "Spanish inverts gustar and Italian inverts piacere; Mandarin inverts nothing at all, and the liker is the subject."
+roots: [middle-chinese-xix, middle-chinese-xwan]
+etymology_hook: "xǐhuan: two words for joy, inherited from Middle Chinese xiX 'glad' and xwan 'joy'"
 duration:
   max_seconds: 230
 requires:
@@ -77,6 +77,12 @@ verb does not change, and the thing liked follows. It is the same shape as 我�
 And 不 works on it normally, which 有 did not:
 
 > **我不喜欢看书** — I don't like reading.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**喜欢** is a Chinese compound of two words for joy, both inherited from Middle
+Chinese: *xiX*, "glad", and *xwan*, "joy" (Guangyun, in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIHUAN-01, ZH-GRAMMAR-XIHUAN-TRANSITIVE-01] -->

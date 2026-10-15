@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-MIDDLE-STUDENT
 gloss: middle-school student, built from known characters
 prerequisites: [ZH-C15-hear-zhongxuesheng]
 sounds: [tone-1, tone-2, tone-neutral]
-roots: []
-etymology_hook: Three secure characters carry the longer word without adding visual load.
+roots: [middle-chinese-trjuwng, middle-chinese-haewk, middle-chinese-srjaeng]
+etymology_hook: "zhōngxuésheng: zhōngxué + sheng, all three pieces inherited from Middle Chinese trjuwng, haewk, srjaeng"
 duration:
   max_seconds: 155
 requires:
@@ -42,6 +42,10 @@ reviews_of: [ZH-C15-hear-zhongxuesheng, ZH-C15-zhongxue, ZH-C13-xuesheng]
 > **中学生** — *zhōngxuésheng* — **middle-school student**
 
 [YOU READ: all three characters once without pinyin]
+
+All three pieces are inherited from Middle Chinese, *trjuwng*, *haewk* and
+*srjaeng* (Guangyun, in Baxter's transcription), and Chinese joined them as
+middle school plus student.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGXUESHENG-01, ZH-LEX-ZHONGXUESHENG-01, ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->

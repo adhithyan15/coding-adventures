@@ -11,8 +11,8 @@ gloss: the counter you already own — what the tsu was doing all along
 concept_tag: JA-COUNTER-TSU
 prerequisites: [JA-R17-the-other-ten, JA-C15-roku, JA-C09-ichido, JA-C10-slower-please, JA-C01-koohii]
 sounds: [mora]
-roots: []
-etymology_hook: Wikipedia's counter-word article says a counter is a measure word used with a number; ichido has had one behind it since chapter nine.
+roots: [japanese-tsu-counter]
+etymology_hook: "-tsu: a native counter, inherited, the ending of the hito, futa, mi count (JMdict)"
 duration:
   max_seconds: 210
 requires:
@@ -64,8 +64,7 @@ one. That is why nine of the ten native words carry it and **とお** does not.
 ## You'll Want to Know — when to reach for it
 <!-- hl-knowledge: introduces=[]; assesses=[JA-GRAMMAR-COUNTER-01, JA-LEX-HITOTSU, JA-LEX-FUTATSU, JA-LEX-TOO, JA-LEX-KOOHII] -->
 
-Japanese has a great many counters and you will not learn them all here. What
-you can learn in one sentence is the rule that gets you through:
+Japanese has a great many counters. One rule gets you through:
 
 > **When you do not know the counter, use the ~つ series.** Up to ten it will
 > carry almost any ordinary object.
@@ -78,6 +77,11 @@ problem of choosing *can often be sidestepped* by using them. **ひとつ** to
 
 The rule has an edge, and it is the next lesson: **people and animals do not
 take ~つ.** They have counters of their own and there is no way round it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**…つ** (*-tsu*) is a native counter, inherited rather than borrowed; its older origin is not settled (JMdict).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-GRAMMAR-COUNTER-01, JA-LEX-ICHIDO, JA-LEX-KOOHII, JA-LEX-FUTATSU] -->

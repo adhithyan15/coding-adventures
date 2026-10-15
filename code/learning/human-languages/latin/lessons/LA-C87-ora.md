@@ -13,7 +13,8 @@ gloss: "a coast, an edge"
 concept_tag: LA-AQUA-ORA
 prerequisites: [LA-C87-rivus, LA-C87-fons]
 sounds: []
-roots: []
+roots: [ora-latin]
+etymology_hook: "ōra 'coast, edge' — origin uncertain; often linked with ōs, ōris 'mouth, opening'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C87-fons]
 <!-- hl-knowledge: introduces=[LA-LEX-C87-AQUA-05]; assesses=[] -->
 
 **ōra, ōrae** — "a coast, an edge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ōra** is of uncertain origin; it is often linked with *ōs*, *ōris*, "mouth, opening": an edge as a rim.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

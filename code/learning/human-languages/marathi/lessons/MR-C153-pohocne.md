@@ -14,7 +14,8 @@ romanization: "pohocṇe"
 concept_tag: MR-VERB-POHOCNE
 prerequisites: [MR-C153-cadhne, MR-C153-utarne]
 sounds: []
-roots: []
+roots: [sanskrit-prabhuta]
+etymology_hook: "pohocṇe ← Sanskrit prabhūta 'much, great', a tadbhava (CDIAL 8716)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C153-utarne]
 <!-- hl-knowledge: introduces=[MR-LEX-C153-QUAL153-05]; assesses=[] -->
 
 **पोहोचणे** — *pohocṇe* — "to arrive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पोहोचणे** (*pohocṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prabhūta*, "much, great" (CDIAL 8716). CDIAL glosses the Marathi verb "to arrive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

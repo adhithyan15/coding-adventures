@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 95,
-  "sourceHash": "fnv1a64:253b2b258313487d",
+  "sourceHash": "fnv1a64:bcf6303b14b73215",
   "lessonIds": [
     "MW-C95-basant",
     "MW-C95-tarkai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch95.txt",
   "json": "marwadi/narration/ch95.json",
-  "textHash": "fnv1a64:47ef8d99959e03eb",
-  "jsonHash": "fnv1a64:2adccb4168cb55e9",
+  "textHash": "fnv1a64:23e1f0771f8837c2",
+  "jsonHash": "fnv1a64:81e23032796d38dc",
   "findings": []
 }

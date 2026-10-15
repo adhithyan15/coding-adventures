@@ -13,7 +13,8 @@ gloss: "big, great"
 concept_tag: LA-MAGNUS-MAGNUS
 prerequisites: [LA-C92-elephantus, LA-C92-cervus]
 sounds: []
-roots: []
+roots: [magnus-latin]
+etymology_hook: "magnus 'big' — inherited, usually traced to PIE *megh2s 'great'; Greek megas is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C92-cervus]
 <!-- hl-knowledge: introduces=[LA-LEX-C93-MAGNUS-01]; assesses=[] -->
 
 **magnus, magna, magnum** — "big, great". English *magnify*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**magnus** is inherited, usually traced to Proto-Indo-European *\*mgh2nos*, "big", from *\*megh2s*, "great" (EtymDB 2.1); Greek *megas*, "great", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

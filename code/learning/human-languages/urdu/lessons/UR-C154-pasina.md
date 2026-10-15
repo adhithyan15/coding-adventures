@@ -14,7 +14,8 @@ romanization: "pasīnā"
 concept_tag: UR-SEHAT154-PASINA
 prerequisites: [UR-C154-tika, UR-C154-dharkan]
 sounds: []
-roots: []
+roots: [indo-aryan-prasvidana]
+etymology_hook: "pasīnā ← *prasvidana 'sweating', a reconstructed form; a tadbhava (CDIAL 8895)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C154-dharkan]
 <!-- hl-knowledge: introduces=[UR-LEX-C154-SEHAT154-03]; assesses=[] -->
 
 **پسینہ** — *pasīnā* — "sweat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پسینہ** (*pasīnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*prasvidana*, "sweating", a form CDIAL reconstructs from its descendants (CDIAL 8895). CDIAL also allows *prasvinna*, "sweated".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

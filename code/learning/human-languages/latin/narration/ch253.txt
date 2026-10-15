@@ -12,6 +12,9 @@ Before the new one: say the Latin for a candlestick, then the Latin for a small 
 You'll want to know: fēriae, fēriārum.
 fēriae, fēriārum — "holidays".
 
+The word, taken apart.
+fēriae comes from an older fēsiae (Lewis & Short), from the same root as fēstus, "festive". Both are usually traced to Proto-Indo-European dheh1s-, "god, sacred" (EtymDB 2.1). English fair, a market, comes from it through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a small tablet, then the Latin for holiday
 
 You'll want to know: convīvium, convīviī.
 convīvium, convīviī — "a banquet".
+
+The word, taken apart.
+convīvium is con-, "together", with the root of vīvō, "to live" (Lewis & Short): living together, then a shared meal.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for holidays, then the Latin for a banquet.
 You'll want to know: sacrificium, sacrificiī.
 sacrificium, sacrificiī — "a sacrifice".
 
+The word, taken apart.
+sacrificium is built from sacer, "holy", and faciō, "to make" (EtymDB 2.1): to make something holy. sacer is usually traced to Proto-Indo-European sh2kros, "sacred" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a banquet, then the Latin for a sacrifice.
 You'll want to know: āra, ārae.
 āra, ārae — "an altar".
 
+The word, taken apart.
+āra comes from an older āsa, as Oscan aasa, "altar", shows (Lewis & Short); it is usually traced to Proto-Indo-European h2eHs-, "to burn, a hearth" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a sacrifice, then the Latin for an altar.
 
 You'll want to know: dea, deae.
 dea, deae — "a goddess".
+
+The word, taken apart.
+dea is the feminine of deus, "a god" (Lewis & Short); Old Latin wrote it deiva (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

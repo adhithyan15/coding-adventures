@@ -14,7 +14,8 @@ romanization: "prakṛti"
 concept_tag: TE-VASTUVU304-PRAKRTI
 prerequisites: [TE-C303-ceraku, TE-C303-puja]
 sounds: []
-roots: []
+roots: [sanskrit-prakrti]
+etymology_hook: "prakṛti ← Sanskrit prakṛti 'cause, source, nature', a tatsama (CDIAL 8446)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C303-puja]
 <!-- hl-knowledge: introduces=[TE-LEX-C304-VASTUVU304-01]; assesses=[] -->
 
 **ప్రకృతి** — *prakṛti* — "nature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రకృతి** (*prakṛti*) is Sanskrit *prakṛti*, "cause, source, nature", taken over whole as a learned loan, a tatsama (CDIAL 8446).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

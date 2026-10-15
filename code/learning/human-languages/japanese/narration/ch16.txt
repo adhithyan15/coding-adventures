@@ -58,6 +58,9 @@ word: いち. what it is for: the number itself — one, counting aloud, a house
 word: ひとつ (hitotsu). what it is for: one thing — a thing you are pointing at.
 Wiktionary's usage note for ひとつ (hitotsu) is one sentence and it is the sentence this chapter turns on: it is used when the items counted have no specific counter category. Hold that. It will be the whole of the next chapter.
 
+The word, taken apart.
+ひとつ (hitotsu) is native: hito, the inherited word for "one", with the native counter -tsu. Hito is the kun'yomi of the character for one; none of the word is borrowed (KANJIDIC2).
+
 Guided Practice.
 [once you have stopped driving — write: ひとつ (hitotsu)]
 Say ichi, then hitotsu, and hear that they share nothing — not a beat, not a sound.
@@ -123,6 +126,9 @@ Three signs, and the only new one arrived last lesson.
 Now hear the two words together: ひとつ (hitotsu), ふたつ (futatsu). Both end in つ, and the part in front changes — hito-, futa-. That つ is not decoration. It is the piece doing the counting, and every word in this chapter but the last one carries it.
 に is two. ふたつ (futatsu) is two things. Same relation as いち and ひとつ (hitotsu), and again the two words share nothing at all.
 
+The word, taken apart.
+ふたつ (futatsu) is native: futa, the inherited word for "two", with the counter -tsu. Futa also opens futari, "two people" (KANJIDIC2).
+
 Guided Practice.
 [once you have stopped driving — write: ふたつ (futatsu)]
 Say the pair: hitotsu, futatsu. Then say ichi, ni straight after, and hear two different counts running side by side.
@@ -152,6 +158,9 @@ You'll Want to Know — hear and say.
 Every sign is already yours: み, the small っ, and つ.
 The small っ is the sign you met in ゆっくり: it holds the mouth shut for one beat. みっつ (mittsu) is three beats, and the middle one is silence.
 さん is three. みっつ (mittsu) is three things.
+
+The word, taken apart.
+みっつ (mittsu) is native: mi, the inherited word for "three", with the counter -tsu, the consonant held before it (KANJIDIC2).
 
 Guided Practice.
 [once you have stopped driving — write: みっつ (mittsu)]
@@ -193,6 +202,9 @@ number: three. borrowed: さん. native: み-.
 number: four. borrowed: shi. native: よ-.
 Every other line of the borrowed column is genuinely borrowed. At four, the native word came across into the borrowed count and stayed — which is why the number you actually say for four is よん and not shi. That is what chapter fourteen was pointing at, and you can now see both halves of it at once.
 
+The word, taken apart.
+よっつ (yottsu) is native: yo, the inherited word for "four", with the counter -tsu; yon is built on the same yo (KANJIDIC2).
+
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice — read, copy, recall.
 Write よっつ. Say yon, then yottsu, and hear the shared beat. Then say shi and hear that it has none.
@@ -220,6 +232,9 @@ You'll Want to Know — hear and say.
 いつつ (itsutsu) — i-tsu-tsu — five things.
 Three signs, and two of them are the same one. い, つ, つ.
 A warning worth one sentence: いつつ (itsutsu) opens on the same beat as いち, and the two have nothing to do with each other. ご is five; いつつ (itsutsu) is five things; いち is one. The ear will try to pair the wrong two.
+
+The word, taken apart.
+いつつ (itsutsu) is native: itsu, the inherited word for "five", with the counter -tsu (KANJIDIC2).
 
 Guided Practice.
 [once you have stopped driving — write: いつつ (itsutsu)]

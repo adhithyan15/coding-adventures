@@ -14,7 +14,8 @@ romanization: "grāhak"
 concept_tag: MR-VASTU219-GRAHAK
 prerequisites: [MR-C219-vyapar, MR-C219-dukandar]
 sounds: []
-roots: []
+roots: [sanskrit-grahaka]
+etymology_hook: "grāhak: Sanskrit grāhaka 'one who takes', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C219-dukandar]
 <!-- hl-knowledge: introduces=[MR-LEX-C219-VASTU219-05]; assesses=[] -->
 
 **ग्राहक** — *grāhak* — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ग्राहक** (*grāhak*) is Sanskrit *grāhaka*, "one who takes, buyer", a tatsama built on *grah*, "to take". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

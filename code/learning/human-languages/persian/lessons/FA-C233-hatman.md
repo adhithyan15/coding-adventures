@@ -14,7 +14,8 @@ romanization: "hatman"
 concept_tag: FA-CHERA233-HATMAN
 prerequisites: [FA-C232-narde, FA-C233-shayad]
 sounds: []
-roots: []
+roots: [arabic-hatman]
+etymology_hook: "hatman ← Arabic ḥatman 'necessarily, decidedly', root ḥ-t-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C233-shayad]
 <!-- hl-knowledge: introduces=[FA-LEX-C233-CHERA233-02]; assesses=[] -->
 
 **حتما** — *hatman* — "definitely, surely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hatman* is borrowed from Arabic *ḥatman*, "necessarily, decidedly". Its Arabic root is *ḥ-t-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

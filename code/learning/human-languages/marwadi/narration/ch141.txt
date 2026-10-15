@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for an ant, then the Marwadi for a scorpion.
 You'll want to know: चोखो.
 चोखो — chokho — "good, fine".
 
+The word, taken apart.
+चोखो (chokho) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cokṣa, "pure, clean". CDIAL lists Old Marwari cokha under it (CDIAL 4918). The Old Marwari row means "well".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for a scorpion, then the Marwadi for good.
 
 You'll want to know: खराब.
 खराब — kharāb — "bad, spoiled".
+
+The word, taken apart.
+खराब (kharāb) is a loan from Arabic ḫarāb, "ruin, desolation", which reached Marwadi through Persian. Its Arabic root is ḫ-r-b (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for good, then the Marwadi for bad.
 You'll want to know: सांकड़ो.
 सांकड़ो — sā̃kṛo — "narrow".
 
+The word, taken apart.
+सांकड़ो (sā̃kṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṃkaṭa, "contracted, narrow". CDIAL gives no Marwari form in this entry (CDIAL 12817); the match is through Gujarati sā̃kṛũ and Hindi sā̃kar. CDIAL thinks the Sanskrit word probably comes from saṃkṛta, "contracted".
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for bad, then the Marwadi for narrow.
 You'll want to know: चौड़ो.
 चौड़ो — chauṛo — "wide".
 
+The word, taken apart.
+चौड़ो (chauṛo) is a tadbhava, a word inherited and reshaped by sound change. It comes from ca-uḍa, "wide, open", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari cauḍaï under it (CDIAL 4534). The Old Marwari row means "in the open"; CDIAL thinks the word may be built on caü-, "four", from compounds of catur.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for narrow, then the Marwadi for wide.
 
 You'll want to know: गैरो.
 गैरो — gairo — "deep".
+
+The word, taken apart.
+गैरो (gairo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gabhīra, "deep". CDIAL lists Old Marwari gaharau under it (CDIAL 4024). Marwadi has lost the h that the Old Marwari form kept.
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 182,
-  "sourceHash": "fnv1a64:2a9d11dea84999f3",
+  "sourceHash": "fnv1a64:ea28a6c3b83346cf",
   "lessonIds": [
     "HI-C182-nav",
     "HI-C182-sit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch182.txt",
   "json": "hindi/narration/ch182.json",
-  "textHash": "fnv1a64:02a6adda066bb5b1",
-  "jsonHash": "fnv1a64:3122ff54bf9e6d6f",
+  "textHash": "fnv1a64:96385a8950014dea",
+  "jsonHash": "fnv1a64:a520045c12f922b3",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "sevaphalam"
 concept_tag: SA-THG219-SEVAPHALAM
 prerequisites: [SA-C219-narangam, SA-C219-kapitthah]
 sounds: []
-roots: []
+roots: [sanskrit-seva-apple, sanskrit-phala]
+etymology_hook: "sevaphala = seva 'apple', a lexicon word of uncertain source (MW), + phala 'fruit'; the pairing is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C219-kapitthah]
 <!-- hl-knowledge: introduces=[SA-LEX-C219-THG219-04]; assesses=[] -->
 
 **सेवफलम्** — *sevaphalam* — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sevaphala* is *seva*, "apple", with *phala*, "fruit". MW lists *seva* only from the lexicons and derives it uncertainly from √sev or √siv, so its source is uncertain, and MW does not list the compound, so the pairing is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

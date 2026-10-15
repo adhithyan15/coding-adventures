@@ -14,7 +14,8 @@ romanization: "nāṇayaṁ"
 concept_tag: ML-JOLI219-NANAYAM
 prerequisites: [ML-C218-cena, ML-C218-mattanna]
 sounds: []
-roots: []
+roots: [sanskrit-nanaka]
+etymology_hook: "nāṇayaṁ: from Sanskrit nāṇaka 'coin, anything stamped' (CDIAL 7050), reshaped"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C218-mattanna]
 <!-- hl-knowledge: introduces=[ML-LEX-C219-JOLI219-01]; assesses=[] -->
 
 **നാണയം** — *nāṇayaṁ* — "a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നാണയം** (*nāṇayaṁ*) is most likely Sanskrit *nāṇaka*, "coin, anything stamped" (CDIAL 7050), reshaped with a Malayalam ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

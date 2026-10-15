@@ -14,7 +14,8 @@ romanization: "lobh"
 concept_tag: BN-WANT97-LOBH
 prerequisites: [BN-C96-dorkar, BN-C96-proyojon]
 sounds: []
-roots: []
+roots: [sanskrit-lobha]
+etymology_hook: "lobh ← Sanskrit lobha 'eager desire, greed', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C96-proyojon]
 <!-- hl-knowledge: introduces=[BN-LEX-C97-WANT97-01]; assesses=[] -->
 
 **লোভ** — *lobh* — "greed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লোভ** (*lobh*) is Sanskrit *lobha*, "eager desire, greed", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

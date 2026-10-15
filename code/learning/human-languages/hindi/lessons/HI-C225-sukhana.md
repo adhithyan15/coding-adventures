@@ -14,7 +14,8 @@ romanization: "sukhānā"
 concept_tag: HI-VERB-SUKHANA
 prerequisites: [HI-C225-pochna, HI-C225-nicorna]
 sounds: []
-roots: []
+roots: [indo-aryan-shushkati]
+etymology_hook: "sukhānā: the causing form of sūkhnā 'to dry', from *śuṣkati 'becomes dry' (CDIAL 12552)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C225-nicorna]
 <!-- hl-knowledge: introduces=[HI-LEX-C225-ACT225-05]; assesses=[] -->
 
 **सुखाना** — *sukhānā* — "to dry (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुखाना** (*sukhānā*) is the causing form of *sūkhnā*, "to dry", which CDIAL lists under a reconstructed *\*śuṣkati*, "becomes dry", built on Sanskrit *śuṣka*, "dried" (CDIAL 12552).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

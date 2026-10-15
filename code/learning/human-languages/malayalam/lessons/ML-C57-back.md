@@ -11,7 +11,8 @@ romanization: "mutukŭ"
 concept_tag: ML-NOUN-BACK
 prerequisites: [ML-C57-neck, ML-C55-rock]
 sounds: []
-roots: []
+roots: [dravidian-mutuku-back]
+etymology_hook: "mutukŭ: native Dravidian, one word with Tamil mutuku and Telugu mucca (DEDR 4955)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *mutuku*, and it names the back of a body — the ridg
 Malayalam separates that from the general idea of behindness, which it handles with a different word altogether. മുതുക് stays on the body, so it is the word for the back that aches after a day bent over a വയൽ.
 
 It shows up in the ordinary phrase for carrying a child astride the hip or the back, which is how most Kerala infants travel.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുതുക്** (*mutukŭ*) is native Dravidian, one word with Tamil *mutuku* and Telugu *mucca* (DEDR 4955).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

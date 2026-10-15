@@ -15,6 +15,7 @@ concept_tag: MR-THINGS133-TOPLI
 prerequisites: [MR-C133-peti, MR-C133-pisvi]
 sounds: []
 roots: []
+etymology_hook: "ṭoplī: CDIAL lists Marathi ṭoplā 'basket' under *ṭōppa 'basket-work' (CDIAL 5482)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C133-pisvi]
 <!-- hl-knowledge: introduces=[MR-LEX-C133-THINGS133-04]; assesses=[] -->
 
 **टोपली** — *ṭoplī* — "a basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टोपली** (*ṭoplī*) is inherited. CDIAL lists Marathi *ṭoplā*, "basket", with an added *-l-*, under a reconstructed *\*ṭōppa*, "basket-work", and asks whether that is the same word as the *\*ṭōppa* behind **टोपी** (CDIAL 5482).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

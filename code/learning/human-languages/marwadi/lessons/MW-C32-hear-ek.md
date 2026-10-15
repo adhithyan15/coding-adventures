@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-ONE
 prerequisites: [MW-W32-e]
 sounds: [long-e, unaspirated-k]
 roots: [sanskrit-eka]
-etymology_hook: Marwari builds its big numbers by subtraction, so ek turns up inside thirty-nine as well as standing alone.
+etymology_hook: "ek ← Sanskrit eka 'one', a tadbhava (CDIAL 2462, Hindi and Gujarati rows)"
 duration:
   max_seconds: 165
 requires:
@@ -54,6 +54,11 @@ twelve number words this slice teaches.
 to a round number as readily as up from one: the dictionary records
 *ekuṇcālīs* for thirty-nine — one short of forty. Learn *ek* and a piece of
 thirty-nine comes with it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ek* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *eka*, "one". CDIAL gives no Marwari form in this entry (CDIAL 2462); the match is through Hindi *ek* and Gujarati *ek*. CDIAL traces it through a form with a doubled *k*, *\*ēkka*, which it explains either as emphasis or as a Middle Indo-Aryan loan from Sanskrit.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-EK-01] -->

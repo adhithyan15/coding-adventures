@@ -14,7 +14,8 @@ romanization: "piróg"
 concept_tag: RU-MEALS-PIE
 prerequisites: [RU-C46-dinner, RU-C46-porridge]
 sounds: []
-roots: []
+roots: [slavic-piru]
+etymology_hook: "пирог is usually built on пир 'feast'; another view starts from an old word for spelt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C46-porridge]
 <!-- hl-knowledge: introduces=[RU-LEX-C46-MEALS-05]; assesses=[] -->
 
 **пирог** (*piróg*) — "a pie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пирог** — Vasmer builds it on *пир*, "a feast", with the suffix *-ог*; others start from Old Russian *пыро*, "spelt", reshaped to match *пир*. Either way it is a Slavic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: take it, written with two signs and no mark below the line
 concept_tag: MW-VERB-TAKE-WRITTEN
 prerequisites: [MW-C24-hear-lo]
 sounds: [dental-l, long-o]
-roots: []
-etymology_hook: The shortest written word in the track so far, and both of its parts are years old by now.
+roots: [sanskrit-labhate]
+etymology_hook: "lo ← Sanskrit labhate 'takes', a tadbhava (CDIAL 10948, Old Marwari row)"
 duration:
   max_seconds: 160
 requires:
@@ -46,6 +46,11 @@ reviews_of: [MW-C24-hear-lo, MW-W07-la, MW-C11-baadal, MW-C16-thela, MW-C23-karo
 
 Two signs. The **ल** ends **बादल** and opens **ठेला**; here it stands alone with
 the **ो** you put on the end of **करो**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लो** (*lo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *labhate*, "catches, takes". CDIAL lists Old Marwari *lei* under it (CDIAL 10948). *lo* is the asking form of this verb.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-LO-01] -->

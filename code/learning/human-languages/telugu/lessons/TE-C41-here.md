@@ -11,7 +11,8 @@ romanization: "ikkaḍa"
 concept_tag: TE-DEIXIS-HERE
 prerequisites: [TE-C41-that]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "ikkaḍa: native Dravidian, on the near-pointing base i- 'this' (DEDR 410), which lists ikkaḍa itself"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner, the far one, comes in the next lesson. The two of them
 differ by one sound at the front — **i-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇక్కడ** (*ikkaḍa*) is native Dravidian, built on the near-pointing base *i-*, "this". DEDR 410 lists *ikkaḍa*, "this place, here", itself.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C41-DEIXIS-03] -->

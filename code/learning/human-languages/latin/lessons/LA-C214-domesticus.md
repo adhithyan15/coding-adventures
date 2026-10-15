@@ -13,7 +13,8 @@ gloss: "of the home, tame"
 concept_tag: LA-QUAL214-DOMESTICUS
 prerequisites: [LA-C214-saevus, LA-C214-ferus]
 sounds: []
-roots: []
+roots: [domesticus-latin, domus-latin]
+etymology_hook: "domesticus 'of the home' — built on domus 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C214-ferus]
 <!-- hl-knowledge: introduces=[LA-LEX-C214-QUAL214-03]; assesses=[] -->
 
 **domesticus, domestica, domesticum** — "of the home, tame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**domesticus** is built on *domus*, "house" (Lewis & Short), with *-ticus*, "belonging to": of the house. *domus* is usually traced to Proto-Indo-European *\*dom-*, "house" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

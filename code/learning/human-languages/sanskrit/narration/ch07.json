@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Core Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:84bff14bab67ef3d",
+  "sourceHash": "fnv1a64:ab5fd41accf209b6",
   "lessons": [
     {
       "id": "SA-C07-asti",
@@ -574,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85077216d5c5cc42",
+      "sourceHash": "fnv1a64:915637862fe85ac5",
       "notice": null,
       "blocks": [
         {
@@ -672,6 +672,10 @@
             {
               "kind": "speech",
               "text": "Sanskrit simply runs the system harder and more openly, with the seams left visible."
+            },
+            {
+              "kind": "speech",
+              "text": "The root itself, √gam, is inherited: MW compares English come."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "kavacam"
 concept_tag: SA-THG247-KAVACAM
 prerequisites: [SA-C247-banah, SA-C247-khadgah]
 sounds: []
-roots: []
+roots: [sanskrit-kavaca]
+etymology_hook: "kavaca 'coat of mail', borrowed from Dravidian according to Mayrhofer (CDIAL 2957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C247-khadgah]
 <!-- hl-knowledge: introduces=[SA-LEX-C247-THG247-03]; assesses=[] -->
 
 **कवचम्** — *kavacam* — "armour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kavaca* is a coat of mail or jacket, in the Śatapatha Brāhmaṇa. CDIAL 2957 follows Mayrhofer in taking it from Dravidian, while MW suggests a root √ku. MW also gives it for a mystical syllable used as an amulet.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pradarśana"
 concept_tag: TE-VASTUVU268-PRADARSANA
 prerequisites: [TE-C267-vennela, TE-C267-cikati]
 sounds: []
-roots: []
+roots: [sanskrit-pradarshana]
+etymology_hook: "pradarśana ← Sanskrit pradarśana 'showing', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C267-cikati]
 <!-- hl-knowledge: introduces=[TE-LEX-C268-VASTUVU268-01]; assesses=[] -->
 
 **ప్రదర్శన** — *pradarśana* — "a show, an exhibition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్రదర్శన** (*pradarśana*) is Sanskrit *pradarśana*, "showing, display", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

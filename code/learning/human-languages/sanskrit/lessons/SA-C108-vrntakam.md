@@ -14,7 +14,8 @@ romanization: "vṛntākam"
 concept_tag: SA-THINGS108-VRNTAKAM
 prerequisites: [SA-C108-palanduh, SA-C108-alukam]
 sounds: []
-roots: []
+roots: [sanskrit-vrntaka]
+etymology_hook: "vṛntāka 'aubergine' (CDIAL 9369) is one of a set of plant names probably from Dravidian (CDIAL 11503)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C108-alukam]
 <!-- hl-knowledge: introduces=[SA-LEX-C108-THINGS108-03]; assesses=[] -->
 
 **वृन्ताकम्** — *vṛntākam* — "an aubergine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vṛntāka* "the aubergine" is one of several Sanskrit names for the plant gathered in CDIAL 9369. CDIAL 11503 thinks the names probably share one origin and, after LM, gives it as Dravidian, while DEDR 5301 lists *vṛntāka* beside Dravidian words for the brinjal. Its sister form *vātiṅgaṇa* travelled west as Persian *bādingān* and lives on as Hindi *baigan* (CDIAL 11503).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

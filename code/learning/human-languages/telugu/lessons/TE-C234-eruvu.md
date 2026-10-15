@@ -14,7 +14,8 @@ romanization: "eruvu"
 concept_tag: TE-VASTUVU234-ERUVU
 prerequisites: [TE-C233-boggu, TE-C234-kuppa]
 sounds: []
-roots: []
+roots: [dravidian-eru-manure]
+etymology_hook: "eruvu: native Dravidian, one word with Tamil eru and Malayalam eru (DEDR 813)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C234-kuppa]
 <!-- hl-knowledge: introduces=[TE-LEX-C234-VASTUVU234-02]; assesses=[] -->
 
 **ఎరువు** — *eruvu* — "fertilizer, manure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎరువు** (*eruvu*) is native Dravidian, one word with Tamil *eru* and Malayalam *eru* (DEDR 813). DEDR lists Telugu *eruvu*, "manure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

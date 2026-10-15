@@ -14,7 +14,8 @@ romanization: "yo"
 concept_tag: MW-DEF101-YO
 prerequisites: [MW-C100-melo, MW-C100-hat]
 sounds: []
-roots: []
+roots: [sanskrit-esha]
+etymology_hook: "yo 'this': CDIAL lists Hindi yah under Sanskrit eṣa 'this' (CDIAL 2530); no Marwari form, path not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C100-hat]
 <!-- hl-knowledge: introduces=[MW-LEX-C101-DEF101-01]; assesses=[] -->
 
 **यो** — *yo* — "this".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Hindi *yah*, "this", under Sanskrit *eṣa*, "this" (CDIAL 2530). It gives no Marwari form, so the exact path to **यो** (*yo*) is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

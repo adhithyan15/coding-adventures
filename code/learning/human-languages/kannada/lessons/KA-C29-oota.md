@@ -14,7 +14,8 @@ gloss: "running, a race"
 concept_tag: KA-ANCHOR-OOTA
 prerequisites: [KA-S130-letter-ii]
 sounds: []
-roots: []
+roots: [dravidian-odu-run]
+etymology_hook: "ōṭa: native Dravidian, the noun of ōḍu 'to run' (DEDR 1041); Tamil ōṭu"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *ōṭa*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ಓ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಓಟ** (*ōṭa*) is native Dravidian, the noun of *ōḍu*, "to run", and DEDR 1041 lists *ōṭa* itself, "running, a race"; the entry also has Tamil *ōṭu*, Telugu *ōḍu* and Malayalam *ōṭuka*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-ANCHOR-OOTA] -->

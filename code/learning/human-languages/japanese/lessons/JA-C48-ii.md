@@ -14,7 +14,8 @@ romanization: "ii"
 concept_tag: JA-ANIMALS48-II
 prerequisites: [JA-C48-niwatori, JA-C48-chiisai]
 sounds: []
-roots: []
+roots: [japanese-yoi-good]
+etymology_hook: "ii: native, the spoken form of yoi 'good' (JMdict); inherited, not borrowed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C48-chiisai]
 <!-- hl-knowledge: introduces=[JA-LEX-C48-ANIMALS48-03]; assesses=[] -->
 
 **いい** — *ii* — "good".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いい** (*ii*) is a native word, a later spoken form of *yoi*, "good"; JMdict notes that *ii* stands for *yoi* in all its senses. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

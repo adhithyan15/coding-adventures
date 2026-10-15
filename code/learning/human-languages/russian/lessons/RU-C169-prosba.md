@@ -14,7 +14,8 @@ romanization: "prósba"
 concept_tag: RU-VESHCH169-PROSBA
 prerequisites: [RU-C168-rodstvennik, RU-C168-pensioner]
 sounds: []
-roots: []
+roots: [pie-prek]
+etymology_hook: "просьба is from просить 'to ask'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C168-pensioner]
 <!-- hl-knowledge: introduces=[RU-LEX-C169-VESHCH169-01]; assesses=[] -->
 
 **просьба** (*prósba*) — "a request".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**просьба** is a noun from *просить*, "to ask, to request", which Vasmer relates to Latin *precor*, "I pray", and German *fragen*, "to ask".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

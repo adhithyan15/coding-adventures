@@ -48,7 +48,8 @@ going back somewhere yourself, Spanish uses **volver** on its own.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C431-PEDIDO-02] -->
 
-**de-** back, plus **volver**, to turn. To turn a thing back.
+**de-** back, plus **volver**, to turn. To turn a thing back. *Volver* ← Latin
+*volvere*, "to roll, to turn" (EtymDB 2.1).
 
 That is the whole word, and it tells you the grammar too: **devolver** turns
 exactly like **volver**, which you already say. The **o** becomes **ue** when

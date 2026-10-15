@@ -14,7 +14,8 @@ romanization: "méstnyy"
 concept_tag: RU-KACH189-MESTNYY
 prerequisites: [RU-C189-chuzhoy, RU-C189-rodnoy]
 sounds: []
-roots: []
+roots: [slavic-mesto]
+etymology_hook: "местный is место 'a place' + -ный"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C189-rodnoy]
 <!-- hl-knowledge: introduces=[RU-LEX-C189-KACH189-03]; assesses=[] -->
 
 **местный** (*méstnyy*) — "local".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**местный** is *место*, "a place", with *-ный*: "of the place". Vasmer relates *место* to Lithuanian *mìsti*, "to feed oneself", despite a mismatch in accent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

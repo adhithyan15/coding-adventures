@@ -13,7 +13,8 @@ gloss: "a flag, a banner"
 concept_tag: LA-RES254-VEXILLUM
 prerequisites: [LA-C254-marsuppium, LA-C254-tabernaculum]
 sounds: []
-roots: []
+roots: [vexillum-latin, velum-latin]
+etymology_hook: "vexillum 'banner' — a diminutive of vēlum 'cloth, sail'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C254-tabernaculum]
 <!-- hl-knowledge: introduces=[LA-LEX-C254-RES254-05]; assesses=[] -->
 
 **vexillum, vexillī** — "a flag, a banner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vexillum** is a diminutive of *vēlum*, "a sail, a cloth" (Lewis & Short): a small cloth on a pole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khiccṇā"
 concept_tag: PA-VERB-KHICCNA
 prerequisites: [PA-C150-siuna, PA-C150-bharna]
 sounds: []
-roots: []
+roots: [indo-aryan-khinc]
+etymology_hook: "khiccṇā ← *khiñc 'drag, pull', a reconstructed form; a tadbhava (CDIAL 3881)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C150-bharna]
 <!-- hl-knowledge: introduces=[PA-LEX-C150-ACT150-03]; assesses=[] -->
 
 **ਖਿੱਚਣਾ** — *khiccṇā* — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖਿੱਚਣਾ** (*khiccṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khiñc*, "drag, pull", a form CDIAL reconstructs from its descendants (CDIAL 3881).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

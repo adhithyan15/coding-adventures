@@ -14,7 +14,8 @@ romanization: "amânat dâdan"
 concept_tag: FA-VERB-AMANAT-DADAN
 prerequisites: [FA-C185-eshtebah-kardan, FA-C185-amanat-gereftan]
 sounds: []
-roots: []
+roots: [arabic-amana]
+etymology_hook: "amânat ← Arabic amāna 'trust, something held in trust', root ʾ-m-n (Lane), + Persian dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C185-amanat-gereftan]
 <!-- hl-knowledge: introduces=[FA-LEX-C185-KONESH185-05]; assesses=[] -->
 
 **امانت دادن** — *amânat dâdan* — "to lend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*amânat dâdan* pairs *amânat*, borrowed from Arabic *amāna*, "trust, something held in trust" (root *ʾ-m-n*, Lane), with the Persian verb *dâdan*, "to give". *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

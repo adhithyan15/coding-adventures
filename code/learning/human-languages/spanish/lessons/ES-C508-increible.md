@@ -10,7 +10,8 @@ gloss: "incredible, unbelievable"
 concept_tag: ES-REF-INCREIBLE
 prerequisites: [ES-C507-habitante, ES-C507-debate]
 sounds: []
-roots: []
+roots: [credere-latin]
+etymology_hook: "increíble ← Latin incredibilis 'not to be believed', from credere — kin to creer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C507-debate]
 > ¡Es increíble!
 >
 > *It is incredible!*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**increíble** ← Latin *incredibilis*, "not to be believed" (EtymDB 2.1): *in-*, "not", and *credibilis*, from *credere*, "to believe" — the verb worn down in *creer*, "to believe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

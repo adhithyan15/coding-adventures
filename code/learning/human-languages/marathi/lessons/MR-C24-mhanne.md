@@ -12,7 +12,7 @@ concept_tag: MR-VERB-MHANNE
 prerequisites: [MR-C24-sangne]
 sounds: [halant-conjunct, retroflex-na]
 roots: [prakrit-bhanai-speak, sanskrit-bhan-speak]
-etymology_hook: "म्हणणे continues Prakrit bhaṇai from Sanskrit भणति bhaṇati \"speaks\"; the opening bh- turned into Marathi's own mh- cluster, and the same verb gives म्हणून mhaṇūn, \"therefore, saying that\""
+etymology_hook: "म्हणणे ← Prakrit bhaṇai ← Sanskrit bhaṇati 'speaks' (CDIAL 9383); the bh- became Marathi mh-"
 duration:
   max_seconds: 250
 requires:

@@ -14,7 +14,8 @@ romanization: "duniyā"
 concept_tag: MW-NUMBERS87-DUNIYA
 prerequisites: [MW-C87-hajar, MW-C87-lakh]
 sounds: []
-roots: []
+roots: [arabic-dunya]
+etymology_hook: "duniyā ← Arabic dunyā 'the world, this life', through Persian (Lane, root d-n-w)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C87-lakh]
 <!-- hl-knowledge: introduces=[MW-LEX-C87-NUMBERS87-05]; assesses=[] -->
 
 **दुनिया** — *duniyā* — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुनिया** (*duniyā*) is a loan from Arabic *dunyā*, "the world, this life", which reached Marwadi through Persian. Its Arabic root is *d-n-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

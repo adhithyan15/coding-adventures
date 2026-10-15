@@ -13,7 +13,8 @@ gloss: "similar, like"
 concept_tag: LA-QUAL266-SIMILIS
 prerequisites: [LA-C266-mirus, LA-C266-diversus]
 sounds: []
-roots: []
+roots: [similis-latin]
+etymology_hook: "similis 'similar' — usually traced to PIE *sem- 'one, together'; English same is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C266-diversus]
 <!-- hl-knowledge: introduces=[LA-LEX-C266-QUAL266-03]; assesses=[] -->
 
 **similis, simile** — "similar, like".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**similis** is inherited, usually traced to the Proto-Indo-European root *\*sem-*, "one, together" (EtymDB 2.1); Greek *homoios*, "like", and English *same* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

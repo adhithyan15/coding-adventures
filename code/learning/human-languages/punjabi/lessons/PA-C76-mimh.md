@@ -14,7 +14,8 @@ romanization: "mīṁh"
 concept_tag: PA-NATURE76-MIMH
 prerequisites: [PA-C76-agg, PA-C76-baraf]
 sounds: []
-roots: []
+roots: [sanskrit-megha]
+etymology_hook: "mīṁh ← Sanskrit megha 'cloud, rain', a tadbhava (CDIAL 10302)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C76-baraf]
 <!-- hl-knowledge: introduces=[PA-LEX-C76-NATURE76-04]; assesses=[] -->
 
 **ਮੀਂਹ** — *mīṁh* — "rain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੀਂਹ** (*mīṁh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *megha*, "cloud, rain" (CDIAL 10302). Punjabi kept the sense "rain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

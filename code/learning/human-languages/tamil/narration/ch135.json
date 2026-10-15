@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Electric fan, Scissors, Hammer, Nail, Ladder",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f6318a304ac5a1a4",
+  "sourceHash": "fnv1a64:7bb24ed23b3f8d76",
   "lessons": [
     {
       "id": "TA-C135-minviciri",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e46ee264f9044ec6",
+      "sourceHash": "fnv1a64:026e758d22a5e7c6",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "மின்விசிறி (miṉviciṟi) is a modern coinage from native parts: miṉ, \"lightning, electricity\" (DEDR 4876), and viciṟi, \"fan\" (DEDR 5450)."
+              "text": "மின்விசிறி (miṉviciṟi) is a modern coinage from native parts: miṉ, \"lightning, electricity\" (DEDR 4876), and viciṟi, \"fan\" (DEDR 5450, which compares Sanskrit vīj-, \"to fan\")."
             }
           ]
         },

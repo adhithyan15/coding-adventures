@@ -13,7 +13,8 @@ gloss: "a cloak"
 concept_tag: LA-THINGS126-PALLIUM
 prerequisites: [LA-C125-plaustrum, LA-C125-stola]
 sounds: []
-roots: []
+roots: [pallium-latin]
+etymology_hook: "pallium 'cloak' — kin to palla 'mantle'; origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C125-stola]
 <!-- hl-knowledge: introduces=[LA-LEX-C126-THINGS126-01]; assesses=[] -->
 
 **pallium, palliī** — "a cloak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pallium** belongs with *palla*, "a woman's mantle" (Lewis & Short); where the pair comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

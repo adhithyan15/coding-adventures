@@ -13,7 +13,8 @@ gloss: "special, chief"
 concept_tag: LA-QUAL267-PRAECIPUUS
 prerequisites: [LA-C267-pinguis, LA-C267-callidus]
 sounds: []
-roots: []
+roots: [praecipuus-latin, capere-latin]
+etymology_hook: "praecipuus 'chief' — built on praecipiō 'to take beforehand'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C267-callidus]
 <!-- hl-knowledge: introduces=[LA-LEX-C267-QUAL267-03]; assesses=[] -->
 
 **praecipuus, praecipua, praecipuum** — "special, chief".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**praecipuus** is built on *praecipiō*, "to take beforehand" (Lewis & Short), from *prae*, "before", and *capiō*, "to take": taken first, so chief.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

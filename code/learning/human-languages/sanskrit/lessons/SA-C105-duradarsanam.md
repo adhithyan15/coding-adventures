@@ -14,7 +14,8 @@ romanization: "dūradarśanam"
 concept_tag: SA-THINGS105-DURADARSANAM
 prerequisites: [SA-C104-kancukah, SA-C104-durabhasah]
 sounds: []
-roots: []
+roots: [sanskrit-dura]
+etymology_hook: "dūradarśana ← dūra 'far' + darśana 'seeing' (√dṛś 'see'): a modern coinage, like tele-vision"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C104-durabhasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C105-THINGS105-01]; assesses=[] -->
 
 **दूरदर्शनम्** — *dūradarśanam* — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dūradarśana* is built from *dūra* "far" and *darśana* "seeing", from the root √dṛś "see" (MW): "far-seeing". It is a modern coinage, made the way English *television* was made from Greek *tele* "far" + Latin *visio* "seeing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khuṣūṣan"
 concept_tag: AR-SABAB238-KHUSUSAN
 prerequisites: [AR-C238-taban, AR-C238-taqriban]
 sounds: []
-roots: []
+roots: [kh-ṣ-ṣ]
+etymology_hook: "khuṣūṣan: built on the root kh-ṣ-ṣ, 'to single out' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C238-taqriban]
 <!-- hl-knowledge: introduces=[AR-LEX-C238-SABAB238-05]; assesses=[] -->
 
 **خصوصا** — *khuṣūṣan* — "especially".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خصوصا** (*khuṣūṣan*) is built on the native Arabic root *kh-ṣ-ṣ*, "to single out" (Lane). *Khuṣūṣan* is *khuṣūṣ*, "singling out", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

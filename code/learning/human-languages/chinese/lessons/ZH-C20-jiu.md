@@ -11,8 +11,8 @@ gloss: "nine — third tone, and a dip you have had since ni"
 concept_tag: ZH-NUMBER-NINE
 prerequisites: [ZH-W20-jiu]
 sounds: [tone-3, tone-lexical]
-roots: []
-etymology_hook: "jiu is third tone, the low dip, so it joins ni, hao and wu -- and it will be the lesson where third-tone sandhi finally has two of them in a row."
+roots: [middle-chinese-kjuwx]
+etymology_hook: "jiǔ 'nine': inherited, from Middle Chinese kjuwX; usually compared with Tibetan dgu"
 duration:
   max_seconds: 255
 requires:
@@ -53,6 +53,13 @@ no puff of air. Say **qī jiǔ** and the only difference is the breath.
 
 Keep the dip in mind. Two third tones in a row do not both dip — the first one
 lifts — and nine is about to give this book its first pair of them.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**九** *jiǔ* is inherited from Middle Chinese *kjuwX*, "nine" (Guangyun, in
+Baxter's transcription); Mandarin softened the *k* to *j*. It is usually
+compared with Tibetan *dgu*, a likely Sino-Tibetan cognate.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-JIU, ZH-LEX-NUM-WU, ZH-LEX-NUM-BA] -->

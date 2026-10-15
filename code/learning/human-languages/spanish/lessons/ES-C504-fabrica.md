@@ -10,7 +10,8 @@ gloss: "the factory"
 concept_tag: ES-REF-FABRICA
 prerequisites: [ES-C504-contaminacion, ES-C504-proteger]
 sounds: []
-roots: []
+roots: [faber-latin]
+etymology_hook: "fábrica ← Latin fabrica 'a workshop', from faber 'smith' — learned twin of fragua 'forge'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C504-proteger]
 > *She works in a car factory.*
 
 A false friend: fabric is *la tela*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fábrica** ← Latin *fabrica*, "a workshop, a craft" (EtymDB 2.1), from *faber*, "a smith" — a learned word. Worn down in speech, the same Latin word became *fragua*, "a forge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

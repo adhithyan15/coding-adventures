@@ -14,7 +14,8 @@ romanization: "bheṛ"
 concept_tag: UR-ANIMALS68-BHER
 prerequisites: [UR-C67-gae, UR-C68-bakri]
 sounds: []
-roots: []
+roots: [sanskrit-bhedra]
+etymology_hook: "bheṛ ← Sanskrit bheḍra 'ram', which CDIAL takes from Austroasiatic; a tadbhava (CDIAL 9606)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C68-bakri]
 <!-- hl-knowledge: introduces=[UR-LEX-C68-ANIMALS68-02]; assesses=[] -->
 
 **بھیڑ** — *bheṛ* — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھیڑ** (*bheṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bheḍra*, "ram" (CDIAL 9606). CDIAL takes the word, after Przyluski, from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

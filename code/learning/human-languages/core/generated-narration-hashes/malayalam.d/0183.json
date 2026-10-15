@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 183,
-  "sourceHash": "fnv1a64:e3437734e054b800",
+  "sourceHash": "fnv1a64:2565f506329683c3",
   "lessonIds": [
     "ML-C183-tirannetukkuka",
     "ML-C183-upayogikkuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch183.txt",
   "json": "malayalam/narration/ch183.json",
-  "textHash": "fnv1a64:5d9489d7ff17958e",
-  "jsonHash": "fnv1a64:aece338e9dcafdf9",
+  "textHash": "fnv1a64:0ae596345c3eab98",
+  "jsonHash": "fnv1a64:00e285adf807c759",
   "findings": []
 }

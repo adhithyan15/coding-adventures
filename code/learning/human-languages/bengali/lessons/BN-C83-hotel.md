@@ -14,7 +14,8 @@ romanization: "hoṭel"
 concept_tag: BN-TOWN83-HOTEL
 prerequisites: [BN-C83-setu, BN-C83-mondir]
 sounds: []
-roots: []
+roots: [english-hotel]
+etymology_hook: "hoṭel ← English hotel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C83-mondir]
 <!-- hl-knowledge: introduces=[BN-LEX-C83-TOWN83-05]; assesses=[] -->
 
 **হোটেল** — *hoṭel* — "a hotel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হোটেল** (*hoṭel*) is a loan from English *hotel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

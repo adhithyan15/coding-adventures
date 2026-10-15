@@ -4,7 +4,7 @@
   "chapter": 218,
   "title": "Broom, Axe, Spade, Plough, Sickle",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2d9e2f388ea40f03",
+  "sourceHash": "fnv1a64:e7c595e6b1f39425",
   "lessons": [
     {
       "id": "SA-C218-sammarjani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdcb350b4a8dc113",
+      "sourceHash": "fnv1a64:743688dbfe1ade2b",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sammārjanī is built on sam-, \"together, thoroughly\", and the root √mṛj, \"to wipe, rub clean\". MW lists sammārjana, \"sweeping or cleansing thoroughly\", and also \"a wisp or broom\". MW compares √mṛj with Latin mulgēre and English milk."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ad73ceac8d395bd",
+      "sourceHash": "fnv1a64:facd7078c96a46ce",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kuṭhāra is probably borrowed from Dravidian: CDIAL 3244, following Mayrhofer, connects it with kuṭṭ-, \"to break, cut\" (CDIAL 3236). It lives on as Hindi kulhāṛā and kulhāṛī, \"axe\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8516aecd8af90041",
+      "sourceHash": "fnv1a64:3811fc7a8901ee4c",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "khanitra is built on the root √khan, \"to dig\", with the instrument suffix -tra (MW), and is already in the Rigveda (CDIAL 3814). It is the tool of khanati, \"digs\", which you have already met."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61abb2c3910ab862",
+      "sourceHash": "fnv1a64:f3f9f77f6052ba2d",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hala is the plough, and MW gives a root √hal, \"to plough\", while noting the root may have been made from the noun. Its deeper origin is uncertain. It lives on as Hindi hal, \"plough\" (CDIAL 14000)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8da2319e3a7c05ff",
+      "sourceHash": "fnv1a64:be11b3d7293a8a4e",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dātra is built on the root √do, \"to cut\", with the instrument suffix -tra (CDIAL 6260): \"the cutter\", a sickle. It is a different word from dātra, \"gift\", from √dā, \"to give\". Hindi dā, \"sickle, chopper\", comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

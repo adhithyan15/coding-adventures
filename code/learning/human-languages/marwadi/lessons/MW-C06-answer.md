@@ -11,8 +11,8 @@ gloss: I am fine.
 concept_tag: WORD-WELL
 prerequisites: [MW-W06-ttha]
 sounds: [long-uu, nasal-vowel, retroflex-tth, long-ii]
-roots: []
-etymology_hook: The sound-first answer now needs only two newly isolated signs.
+roots: [sanskrit-aham, indo-aryan-thikka]
+etymology_hook: "hū̃ 'I' ← Sanskrit aham (CDIAL 992); ṭhīk ← *ṭhīkka 'firm, right', prob. from sthita (CDIAL 5503)"
 duration:
   max_seconds: 190
 requires:
@@ -39,6 +39,11 @@ reviews_of: [MW-C06-hear-question, MW-C06-hear-answer, MW-W06-uu-matra, MW-W06-t
 
 [PAUSE 15s] Write **म्हारो** from memory. Say *hū̃ ṭhīk hū̃*, write **ू**, and
 write **ठ**.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+In **हूं ठीक हूं** (*hū̃ ṭhīk hū̃*), the first *hū̃*, "I", is listed by CDIAL as Old Marwari *hũ* under Sanskrit *aham*, "I" (CDIAL 992). *ṭhīk*, "fine, right", goes back to *\*ṭhīkka*, "firm, right", which CDIAL says is probably from Sanskrit *sthita*, "standing" (CDIAL 5503). The second *hū̃*, "am", has no Marwari row in CDIAL, so its exact source is not settled.
 
 ## Script — build three heard groups
 <!-- hl-knowledge: introduces=[MW-SCRIPT-HOON-01, MW-SCRIPT-THIK-01, MW-ANSWER-WELLBEING-01]; assesses=[MW-SCRIPT-UU-MATRA-01, MW-SCRIPT-TTHA-01] -->

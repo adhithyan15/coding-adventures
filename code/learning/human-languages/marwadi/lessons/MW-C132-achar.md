@@ -14,7 +14,8 @@ romanization: "achār"
 concept_tag: MW-THINGS132-ACHAR
 prerequisites: [MW-C131-gatta, MW-C131-papar]
 sounds: []
-roots: []
+roots: [persian-achar]
+etymology_hook: "achār: usually traced to Persian āčār 'pickle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C131-papar]
 <!-- hl-knowledge: introduces=[MW-LEX-C132-THINGS132-01]; assesses=[] -->
 
 **अचार** — *achār* — "pickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अचार** (*achār*) is a loan, usually traced to Persian *āčār*, "pickle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

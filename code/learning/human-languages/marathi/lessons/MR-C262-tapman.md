@@ -14,7 +14,8 @@ romanization: "tāpmān"
 concept_tag: MR-VASTU262-TAPMAN
 prerequisites: [MR-C261-tahanlela, MR-C261-ragit]
 sounds: []
-roots: []
+roots: [sanskrit-tapa, sanskrit-mana]
+etymology_hook: "tāpmān: Sanskrit tāpa 'heat' (CDIAL 5767) + māna 'measure'; a modern compound"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C261-ragit]
 <!-- hl-knowledge: introduces=[MR-LEX-C262-VASTU262-01]; assesses=[] -->
 
 **तापमान** — *tāpmān* — "temperature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तापमान** (*tāpmān*) is a modern compound of Sanskrit parts: *tāpa*, "heat, glow" (CDIAL 5767), and *māna*, "measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

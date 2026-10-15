@@ -46,7 +46,7 @@ reviews_of: [GE-C250-ausserdem]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**deshalb** is *des*, "of that", a form of *der*, + *halb*, an old word for "side, behalf" (as in English *behalf*): on that account.
+**deshalb** is *des*, "of that", a form of *der*, + *halb*, an old word for "side, behalf" (as in English *behalf*): on that account. *Halb* ← Proto-Germanic *\*halbaz* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

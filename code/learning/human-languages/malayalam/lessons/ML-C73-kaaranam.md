@@ -11,7 +11,8 @@ romanization: kāraṇaṁ
 concept_tag: ML-REASON
 prerequisites: [ML-C73-enthukondu]
 sounds: []
-roots: []
+roots: [sanskrit-karana]
+etymology_hook: "kāraṇaṁ ← Sanskrit kāraṇa 'cause', a tatsama (CDIAL 3057)"
 duration:
   max_seconds: 240
 requires:
@@ -50,6 +51,11 @@ The word is Sanskrit, **कारण** (*kāraṇa*), taken whole. That puts it 
 company as **ചിന്ത**, the thought-noun that *cintikkuka* stands on, and
 **സുപ്രഭാതം**, the good-morning this book teaches — Malayalam borrows a Sanskrit
 noun and puts it to work without reshaping it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാരണം** (*kāraṇaṁ*) ← Sanskrit *kāraṇa*, "cause", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 3057).
 
 ## Grammar Lens: it sits between the two halves
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C73-KAARANAM-01, ML-LEX-C73-WHY-01] -->

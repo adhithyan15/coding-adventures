@@ -14,7 +14,8 @@ romanization: "daṇḍ"
 concept_tag: MR-VASTU266-DAND
 prerequisites: [MR-C266-injin, MR-C266-mahamarg]
 sounds: []
-roots: []
+roots: [sanskrit-danda]
+etymology_hook: "daṇḍ ← Sanskrit daṇḍa 'stick, club; punishment', a tatsama (CDIAL 6128)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C266-mahamarg]
 <!-- hl-knowledge: introduces=[MR-LEX-C266-VASTU266-03]; assesses=[] -->
 
 **दंड** — *daṇḍ* — "a fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दंड** (*daṇḍ*) is Sanskrit *daṇḍa*, "stick, club; punishment", taken over whole as a learned loan, a tatsama (CDIAL 6128). CDIAL thinks the Sanskrit word probably non-Aryan. It lists the inherited Marathi form as *dāṁḍ*, "stick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

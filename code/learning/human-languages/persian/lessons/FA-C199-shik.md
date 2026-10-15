@@ -14,7 +14,8 @@ romanization: "shik"
 concept_tag: FA-SEFAT199-SHIK
 prerequisites: [FA-C199-qavi, FA-C199-rahat]
 sounds: []
-roots: []
+roots: [french-chic]
+etymology_hook: "shik ← French chic 'elegant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C199-rahat]
 <!-- hl-knowledge: introduces=[FA-LEX-C199-SEFAT199-05]; assesses=[] -->
 
 **شیک** — *shik* — "smart, stylish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shik* is borrowed from French *chic*, "elegant" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

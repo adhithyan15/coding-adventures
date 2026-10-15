@@ -14,7 +14,8 @@ romanization: "jim"
 concept_tag: BN-JAYGA245-JIM
 prerequisites: [BN-C244-restora, BN-C245-sinema-hol]
 sounds: []
-roots: []
+roots: [english-gym]
+etymology_hook: "jim ← English gym"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C245-sinema-hol]
 <!-- hl-knowledge: introduces=[BN-LEX-C245-JAYGA245-02]; assesses=[] -->
 
 **জিম** — *jim* — "a gym".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জিম** (*jim*) is a loan from English *gym*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

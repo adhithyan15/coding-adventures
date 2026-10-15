@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 66,
-  "sourceHash": "fnv1a64:fd8b306e82091035",
+  "sourceHash": "fnv1a64:ccbe68ee276c985b",
   "lessonIds": [
     "MR-C66-sakal",
     "MR-C66-dupar",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "marathi/narration/ch66.txt",
   "json": "marathi/narration/ch66.json",
-  "textHash": "fnv1a64:919d6beae3d712fd",
-  "jsonHash": "fnv1a64:b2f8a03d7c62418f",
+  "textHash": "fnv1a64:3e0ce1b03a0b3128",
+  "jsonHash": "fnv1a64:9d0ee76bb065012c",
   "findings": []
 }

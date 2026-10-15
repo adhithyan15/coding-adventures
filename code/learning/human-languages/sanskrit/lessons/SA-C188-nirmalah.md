@@ -14,7 +14,8 @@ romanization: "nirmalaḥ"
 concept_tag: SA-QUAL188-NIRMALAH
 prerequisites: [SA-C188-sajjah, SA-C188-vyastah]
 sounds: []
-roots: []
+roots: [sanskrit-nirmala, sanskrit-mala-dirt]
+etymology_hook: "nirmala = nis 'without' + mala 'dirt' (MW; CDIAL 7366)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C188-vyastah]
 <!-- hl-knowledge: introduces=[SA-LEX-C188-QUAL188-04]; assesses=[] -->
 
 **निर्मलः** — *nirmalaḥ* — "spotless, pure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nirmala* is built on *nis*, "without", and *mala*, "dirt, impurity" (MW; CDIAL 7366). *Mala* itself lives on as Hindi *mal*, "dirt" (CDIAL 9899).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

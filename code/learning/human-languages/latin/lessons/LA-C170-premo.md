@@ -13,7 +13,8 @@ gloss: "to press, to squeeze"
 concept_tag: LA-VERB-PREMO
 prerequisites: [LA-C170-admiror, LA-C170-suspicor]
 sounds: []
-roots: []
+roots: [premere-latin]
+etymology_hook: "premō 'to press' — probably from PIE *pres- 'to press'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C170-suspicor]
 <!-- hl-knowledge: introduces=[LA-LEX-C170-ACT170-05]; assesses=[] -->
 
 **premō, premere** — "to press, to squeeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**premō** is probably inherited, from a Proto-Indo-European *\*pres-*, "to press" (EtymDB 2.1); Lewis & Short call it doubtful. English *press* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

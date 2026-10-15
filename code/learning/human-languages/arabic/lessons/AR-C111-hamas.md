@@ -14,7 +14,8 @@ romanization: "ḥamās"
 concept_tag: AR-WANT111-HAMAS
 prerequisites: [AR-C111-ishtaqa, AR-C111-tawaqqu]
 sounds: []
-roots: []
+roots: [ḥ-m-s]
+etymology_hook: "ḥamās: built on the root ḥ-m-s, 'to be hard, to be zealous' (Lane); Lane's ḥamāsa is courage and zeal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C111-tawaqqu]
 <!-- hl-knowledge: introduces=[AR-LEX-C111-WANT111-03]; assesses=[] -->
 
 **حماس** — *ḥamās* — "enthusiasm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حماس** (*ḥamās*) is built on the native Arabic root *ḥ-m-s*, "to be hard, to be zealous" (Lane). Lane's *ḥamāsa* is courage and zeal; *ḥamās* is "enthusiasm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Two Things at Once",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:75a85176c45a06e6",
+  "sourceHash": "fnv1a64:832360e069a87e04",
   "lessons": [
     {
       "id": "UR-C20-aur",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a21e817762ceac09",
+      "sourceHash": "fnv1a64:83546bff8f6b9048",
       "notice": null,
       "blocks": [
         {
@@ -78,7 +78,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "اور (aur) is inherited, not borrowed — Sanskrit aparam, \"the other one, the further one,\" worn through Prakrit into one syllable. The counting sense is still there when the word stands alone in front of a noun: اور (aur) پانی means more water, not and water. Bengali's ār is the same word by the same road, which is the sort of relative Urdu's Persian layer usually hides."
+              "text": "اور (aur) is inherited, not borrowed — Sanskrit aparam, \"again, moreover\", the adverb of apara, \"other\" (CDIAL 434), worn through Prakrit into one syllable. The counting sense is still there when the word stands alone in front of a noun: اور (aur) پانی means more water, not and water. Bengali's ār is the same word by the same road, which is the sort of relative Urdu's Persian layer usually hides."
             }
           ]
         },
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2a1b5380088c591",
+      "sourceHash": "fnv1a64:2c7e9b90f5d2a5e1",
       "notice": null,
       "blocks": [
         {
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20f991b45bb230f7",
+      "sourceHash": "fnv1a64:250784ecebeb23ce",
       "notice": null,
       "blocks": [
         {
@@ -374,7 +374,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "لیکن (lekin) is Arabic lākin, and there is a negator inside it: Arabic lā, \"not,\" plus an old particle. English did the same thing by a different road — but is Old English be-ūtan, \"be out, except.\" Two unrelated languages built their adversative out of a word for leaving something aside."
+              "text": "لیکن (lekin) is Arabic lākin, \"but\", which reached Urdu through Persian; Lane lists it under the letters l-k-n. Some grammarians take it apart as lā, \"not\", plus an old particle, a reading that is not settled. If it is right, English did the same by a different road: but is Old English be-ūtan, \"be out, except\", and two unrelated languages built their adversative out of a word for leaving something aside."
             },
             {
               "kind": "speech",
@@ -467,7 +467,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:182eb799fdf482b1",
+      "sourceHash": "fnv1a64:a2b1ca4e962dde9b",
       "notice": null,
       "blocks": [
         {
@@ -517,6 +517,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹھیک ہے (ṭhīk hai) is \"it is right\". ṭhīk comes from a reconstructed ṭhīkka, \"firm, right\", which CDIAL derives, probably, from Sanskrit sthita, \"standing\" (CDIAL 5503); hai, \"is\", is usually traced to Sanskrit asti, \"is\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: agreeing, and taking it back",
           "segments": [
@@ -541,7 +552,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -590,7 +601,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

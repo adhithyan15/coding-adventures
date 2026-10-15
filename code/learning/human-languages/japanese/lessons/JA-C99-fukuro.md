@@ -14,7 +14,8 @@ romanization: "fukuro"
 concept_tag: JA-THINGS99-FUKURO
 prerequisites: [JA-C99-saifu, JA-C99-tsue]
 sounds: []
-roots: []
+roots: [japanese-fukuro]
+etymology_hook: "fukuro: native Japanese, inherited, not borrowed; kanji 袋 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C99-tsue]
 <!-- hl-knowledge: introduces=[JA-LEX-C99-THINGS99-03]; assesses=[] -->
 
 **ふくろ** — *fukuro* — "a bag, a sack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふくろ** (*fukuro*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

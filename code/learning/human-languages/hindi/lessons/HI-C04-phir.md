@@ -14,7 +14,8 @@ romanization: "phir"
 concept_tag: HI-WORD-PHIR
 prerequisites: [HI-C01-alvida]
 sounds: [matra-i, retroflex-ra]
-roots: []
+roots: [indo-aryan-phirati]
+etymology_hook: "phir ← *phirati 'turns': its absolutive, 'having turned', used as an adverb (CDIAL 9078)"
 duration:
   max_seconds: 180
 requires:
@@ -49,8 +50,8 @@ time**." Here it is.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C04-PHIR-01] -->
 
 **फिर** (*phir*) means "again, then, afterwards." It is a native Indo-Aryan
-adverb (from Prakrit, ultimately tied to the sense "back, return") with no tidy
-English cognate — but its *job* is one English shares: it turns a parting into a
+adverb (the form "having turned" of a reconstructed *\*phirati*, "turns", CDIAL
+9078) with no tidy English cognate — but its *job* is one English shares: it turns a parting into a
 promise. English "see you **again**," Hindi *phir milenge* ("we'll meet
 **again**"). The optimism is the same; only the word is Indian.
 

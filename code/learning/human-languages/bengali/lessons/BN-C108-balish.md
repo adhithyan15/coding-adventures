@@ -14,7 +14,8 @@ romanization: "bālish"
 concept_tag: BN-THINGS108-BALISH
 prerequisites: [BN-C107-balti, BN-C108-jhata]
 sounds: []
-roots: []
+roots: [persian-balish]
+etymology_hook: "bālish: usually traced to Persian bālish 'pillow, cushion'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C108-jhata]
 <!-- hl-knowledge: introduces=[BN-LEX-C108-THINGS108-02]; assesses=[] -->
 
 **বালিশ** — *bālish* — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বালিশ** (*bālish*) is a loan, usually traced to Persian *bālish*, "pillow, cushion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "nippu"
 concept_tag: TE-NOUN-FIRE
 prerequisites: [TE-C59-mud]
 sounds: []
-roots: []
+roots: [dravidian-neruppu-fire]
+etymology_hook: "nippu: native Dravidian, one word with Tamil neruppu and Malayalam nerippu, 'fire' (DEDR 2929)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,8 @@ reviews_of: [TE-C59-mud]
 So Telugu keeps a working fire and a ceremonial one, in the same way it keeps a పొద్దు and a సూర్యుడు. That split has turned up so often in these chapters that you can start expecting it: the old word does the work, the borrowed one does the ceremony.
 
 నిప్పు is what a house is banked down around at night, and putting it out is the last thing done before sleep. A good place to say వెళ్ళొస్తాను.
+
+DEDR 2929 lists Telugu *nippu*, "fire", with Tamil *neruppu* and Malayalam *nerippu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

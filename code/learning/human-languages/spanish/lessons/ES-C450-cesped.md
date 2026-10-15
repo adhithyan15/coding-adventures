@@ -11,6 +11,7 @@ concept_tag: ES-GROUND-CESPED
 prerequisites: [ES-C450-piedra, ES-C299-campo, ES-C444-plantar]
 sounds: [written-accent, soft-c, stress-penultimate]
 roots: [caespes-latin]
+etymology_hook: "césped ← Latin caespes 'a cut sod of turf'"
 duration:
   max_seconds: 275
 requires:

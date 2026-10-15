@@ -13,7 +13,8 @@ gloss: "a spring, a fountain"
 concept_tag: LA-AQUA-FONS
 prerequisites: [LA-C87-lacus, LA-C87-rivus]
 sounds: []
-roots: []
+roots: [fons-latin]
+etymology_hook: "fōns 'spring' — origin uncertain; an old link with fundō 'to pour' is doubtful"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C87-rivus]
 <!-- hl-knowledge: introduces=[LA-LEX-C87-AQUA-04]; assesses=[] -->
 
 **fōns, fontis** — "a spring, a fountain". English *fountain*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fōns** has no sure origin; Lewis & Short tie it to *fundō*, "to pour", but that link is doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a building, then the Marathi for a bathr
 You'll want to know: अंगण.
 अंगण — aṅgaṇ — "a courtyard".
 
+The word, taken apart.
+अंगण (aṅgaṇ) is Sanskrit aṅgaṇa, "courtyard", lightly reshaped. CDIAL lists the inherited Marathi form as āṅgṇẽ (CDIAL 118).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a bathroom, then the Marathi for a court
 
 You'll want to know: दरवाजा.
 दरवाजा — darvājā — "a door, a gate".
+
+The word, taken apart.
+दरवाजा (darvājā) is a loan, usually traced to Persian darvāza, "gate, door". Marathi writes the z as ज.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a courtyard, then the Marathi for a door
 You'll want to know: उशी.
 उशी — uśī — "a pillow".
 
+The word, taken apart.
+CDIAL lists उशी (uśī) twice: under ucchīrṣaka, "pillow", built on śīrṣa, "head" (CDIAL 1853), and under Sanskrit ōpaśa, "cushion, pillow" (CDIAL 2555), without choosing between them.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a door, then the Marathi for a pillow.
 You'll want to know: चादर.
 चादर — cādar — "a bedsheet".
 
+The word, taken apart.
+चादर (cādar) is a loan, usually traced to Persian chādar, "sheet, veil".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a pillow, then the Marathi for a bedshee
 
 You'll want to know: गादी.
 गादी — gādī — "a mattress".
+
+The word, taken apart.
+गादी (gādī) comes from a reconstructed garda, "seat" (CDIAL 4053). CDIAL compares Sanskrit garta, "high seat", and takes the word, with Burrow, as probably from Dravidian, comparing Kannada gaddige, "throne".
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 98,
-  "sourceHash": "fnv1a64:61b05687dcdc40bf",
+  "sourceHash": "fnv1a64:540c608b73f95019",
   "lessonIds": [
     "JA-C98-doushite",
     "JA-C98-riyuu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch98.txt",
   "json": "japanese/narration/ch98.json",
-  "textHash": "fnv1a64:002de3bd321ca8e9",
-  "jsonHash": "fnv1a64:609a4a804b7d0f79",
+  "textHash": "fnv1a64:488a22a891c609f2",
+  "jsonHash": "fnv1a64:7bcae79cf698b454",
   "findings": []
 }

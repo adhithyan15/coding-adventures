@@ -14,7 +14,8 @@ romanization: "naukarānī"
 concept_tag: HI-THG261-NAUKARANI
 prerequisites: [HI-C260-suci, HI-C260-ummidvar]
 sounds: []
-roots: []
+roots: [persian-naukar]
+etymology_hook: "naukarānī: naukar 'servant', usually traced to Persian naukar, + -ānī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C260-ummidvar]
 <!-- hl-knowledge: introduces=[HI-LEX-C261-THG261-01]; assesses=[] -->
 
 **नौकरानी** — *naukarānī* — "a maid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नौकरानी** (*naukarānī*) is *naukar*, "servant", usually traced to Persian *naukar*, with the ending *-ānī* that makes a feminine.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

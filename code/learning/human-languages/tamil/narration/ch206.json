@@ -4,7 +4,7 @@
   "chapter": 206,
   "title": "Church, Mosque, Hall, Playground, Swimming pool",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0ff97c4ce2adc1f5",
+  "sourceHash": "fnv1a64:1541ae991fa1c1d9",
   "lessons": [
     {
       "id": "TA-C206-tevalayam",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aee679a68b53e8de",
+      "sourceHash": "fnv1a64:254d001e530986ca",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "நீச்சல் குளம் (nīccal kuḷam) is native: nīccal, \"swimming\", from nīntu, \"to swim\" (DEDR 3687), and kuḷam, \"pond, tank\" (DEDR 1828)."
+              "text": "நீச்சல் குளம் (nīccal kuḷam) is native: nīccal, \"swimming\", from nīntu, \"to swim\" (DEDR 3687), and kuḷam, \"pond, tank\" (DEDR 1828, which compares Sanskrit kūla, \"pond\")."
             }
           ]
         },

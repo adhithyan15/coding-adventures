@@ -14,7 +14,8 @@ romanization: "roknā"
 concept_tag: UR-VERB-ROKNA
 prerequisites: [UR-C52-pakarna, UR-C52-katna]
 sounds: []
-roots: []
+roots: [indo-aryan-rokk]
+etymology_hook: "roknā ← *rokk 'stop', a reconstructed form; a tadbhava (CDIAL 10827)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C52-katna]
 <!-- hl-knowledge: introduces=[UR-LEX-C52-VERBS52-03]; assesses=[] -->
 
 **روکنا** — *roknā* — "to stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**روکنا** (*roknā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*rokk*, "stop", a form CDIAL reconstructs from its descendants (CDIAL 10827). CDIAL calls its link with Sanskrit *rudh-*, "to obstruct", not clear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

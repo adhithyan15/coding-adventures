@@ -13,7 +13,8 @@ gloss: "nobody, no one"
 concept_tag: LA-NEG161-NEMO
 prerequisites: [LA-C160-habito, LA-C161-nihil]
 sounds: []
-roots: []
+roots: [nemo-latin, latin-homo]
+etymology_hook: "nēmō 'nobody' — from ne hemō 'not a person', hemō being old homō"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C161-nihil]
 <!-- hl-knowledge: introduces=[LA-LEX-C161-NEG161-02]; assesses=[] -->
 
 **nēmō, nēminis** — "nobody, no one". **Nēmō venit.** — "Nobody is coming." It is **ne-**, "not", with an old form of **homō**, "a person": "not a person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nēmō** comes from *ne hemō*, "not a person" (EtymDB 2.1): *hemō* is an older form of *homō*, "a human being". Festus already took *nēmō* apart this way (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: MR-LEX-HUSHAAR
 prerequisites: [MR-C51-kharaab, MR-C11-mitra, MR-C46-huun]
 sounds: [matra-u, palatal-sha]
 roots: [persian-hush]
+etymology_hook: "hushār: usually traced to Persian hushyār 'alert, awake', built on hush 'wits'"
 duration:
   max_seconds: 210
 requires:

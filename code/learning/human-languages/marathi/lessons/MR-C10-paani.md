@@ -12,7 +12,7 @@ concept_tag: MR-FOOD-WATER
 prerequisites: [MR-C09-avadne]
 sounds: []
 roots: [sanskrit-paniya, sanskrit-pa-drink, pie-peh3-drink]
-etymology_hook: "पाणी continues Maharastri Prakrit pāṇīa, from Sanskrit पानीय pānīya, \"that which is to be drunk,\" built on पा pā- \"to drink,\" from Indo-European *peh3(i)- — the same root hiding inside English potion and poison (both through Latin potare, \"to drink\") and inside symposium (Greek sympotēs, \"one who drinks together\")"
+etymology_hook: "पाणी ← Prakrit pāṇīa ← Sanskrit pānīya 'to be drunk', root pā-, PIE *peh₃(i)-: English potion, poison"
 duration:
   max_seconds: 260
 requires:

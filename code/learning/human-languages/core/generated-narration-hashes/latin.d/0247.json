@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 247,
-  "sourceHash": "fnv1a64:2974e991894499a5",
+  "sourceHash": "fnv1a64:7588d64563f6f9f5",
   "lessonIds": [
     "LA-C247-geminus",
     "LA-C247-socer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch247.txt",
   "json": "latin/narration/ch247.json",
-  "textHash": "fnv1a64:bc511edfea0b76f0",
-  "jsonHash": "fnv1a64:1f2a852fc1384099",
+  "textHash": "fnv1a64:5ff66bb9a3cf3f38",
+  "jsonHash": "fnv1a64:d6ea8e1a37d2d9c7",
   "findings": []
 }

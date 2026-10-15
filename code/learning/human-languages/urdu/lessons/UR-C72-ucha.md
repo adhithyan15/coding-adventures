@@ -14,7 +14,8 @@ romanization: "ū̃chā"
 concept_tag: UR-ADJ72-UCHA
 prerequisites: [UR-C71-mahaga, UR-C71-sasta]
 sounds: []
-roots: []
+roots: [sanskrit-ucca]
+etymology_hook: "ū̃chā ← Sanskrit ucca 'tall, lofty', a tadbhava (CDIAL 1634)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C71-sasta]
 <!-- hl-knowledge: introduces=[UR-LEX-C72-ADJ72-01]; assesses=[] -->
 
 **اونچا** — *ū̃chā* — "high".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اونچا** (*ū̃chā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ucca*, "tall, lofty" (CDIAL 1634). CDIAL calls the influence of *udañc*, "turned upwards", on the nasal very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

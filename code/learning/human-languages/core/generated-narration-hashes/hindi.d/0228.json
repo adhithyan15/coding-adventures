@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 228,
-  "sourceHash": "fnv1a64:7deb9a637849e13b",
+  "sourceHash": "fnv1a64:afb5a1119b0ec386",
   "lessonIds": [
     "HI-C228-ugna",
     "HI-C228-ugana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch228.txt",
   "json": "hindi/narration/ch228.json",
-  "textHash": "fnv1a64:b001d0f3b425cda1",
-  "jsonHash": "fnv1a64:9d03d8477b770740",
+  "textHash": "fnv1a64:5ec8f53aa80fd6dc",
+  "jsonHash": "fnv1a64:b3a2497709959a37",
   "findings": []
 }

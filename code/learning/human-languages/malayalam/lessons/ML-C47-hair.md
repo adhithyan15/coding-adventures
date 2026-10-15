@@ -11,7 +11,8 @@ romanization: "muṭi"
 concept_tag: ML-NOUN-HAIR
 prerequisites: [ML-C47-tooth, ML-C45-grandmother]
 sounds: []
-roots: []
+roots: [dravidian-muti-knot]
+etymology_hook: "muṭi: native Dravidian, one word with Tamil muṭi and Kannada muḍi (DEDR 4921)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ The everyday word for the hair on a head. Tamil முடி (*muṭi*) is the s
 Kannada took a different route entirely, ಕೂದಲು (*kūdalu*), which Tamil also has as கூந்தல் (*kūntal*) for long hair worn loose. So the family has two hair-words and the sisters split over which one became the ordinary one.
 
 Malayalam keeps രോമം (*rōmaṁ*), a Sanskrit word, for hair on the body rather than the head — a second case of a borrowing taking the narrower job.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുടി** (*muṭi*) is native Dravidian, one word with Tamil *muṭi*, Kannada *muḍi* and Telugu *muḍi* (DEDR 4921). Its older senses are a knot and a tied-up top-knot: the hair was named for the way it was worn.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

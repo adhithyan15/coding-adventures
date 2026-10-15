@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to inform, then the Marathi for to compl
 You'll want to know: चोरणे.
 चोरणे — corṇe — "to steal".
 
+The word, taken apart.
+चोरणे (corṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from corayati, "steals" (CDIAL 4933). It is built on cora, "thief".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to complain, then the Marathi for to ste
 
 You'll want to know: शोधून काढणे.
 शोधून काढणे — śodhūn kāḍhṇe — "to discover".
+
+The word, taken apart.
+शोधून is "having searched", from śodhṇẽ, "to purify, search", which CDIAL lists under Sanskrit śoddhum, "to purify" (CDIAL 12626). काढणे comes from a reconstructed kaḍḍhati, "pulls, draws" (CDIAL 2660).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to steal, then the Marathi for to discov
 You'll want to know: सेवा करणे.
 सेवा करणे — sevā karṇe — "to serve".
 
+The word, taken apart.
+सेवा is Sanskrit sevā, "attendance on, homage", a tatsama (CDIAL 13595). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to discover, then the Marathi for to ser
 You'll want to know: सहन करणे.
 सहन करणे — sahan karṇe — "to bear, to endure".
 
+The word, taken apart.
+सहन is Sanskrit sahana, "endurance, patience", a tatsama (CDIAL 13305). करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to serve, then the Marathi for to bear.
 
 You'll want to know: स्वप्न पाहणे.
 स्वप्न पाहणे — svapna pāhṇe — "to dream".
+
+The word, taken apart.
+स्वप्न is Sanskrit svapna, "sleep, dream", a tatsama (CDIAL 13904). CDIAL lists पाहणे under a reconstructed pracāh-, "look for" (CDIAL 8492), and also under Sanskrit prabhāti, "shines forth, appears" (CDIAL 8709).
 
 What you've built.
 One more word for this chapter.

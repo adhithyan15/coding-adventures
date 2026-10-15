@@ -14,7 +14,8 @@ romanization: "bīmār"
 concept_tag: PA-BODY51-BIMAR
 prerequisites: [PA-C51-bukhar, PA-C51-haspatal]
 sounds: []
-roots: []
+roots: [persian-bimar]
+etymology_hook: "bīmār: usually traced to Persian bīmār 'ill, sick'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C51-haspatal]
 <!-- hl-knowledge: introduces=[PA-LEX-C51-BODY51-05]; assesses=[] -->
 
 **ਬੀਮਾਰ** — *bīmār* — "ill, sick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਬੀਮਾਰ** (*bīmār*) is a loan, usually traced to Persian *bīmār*, "ill, sick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

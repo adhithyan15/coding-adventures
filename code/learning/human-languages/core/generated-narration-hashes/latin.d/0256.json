@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 256,
-  "sourceHash": "fnv1a64:8b126964619c51da",
+  "sourceHash": "fnv1a64:45359af2c7fa5df3",
   "lessonIds": [
     "LA-C256-plaudo",
     "LA-C256-transeo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch256.txt",
   "json": "latin/narration/ch256.json",
-  "textHash": "fnv1a64:7e86eef3d9513820",
-  "jsonHash": "fnv1a64:cf1739c11af3a77b",
+  "textHash": "fnv1a64:61cac73665e05319",
+  "jsonHash": "fnv1a64:56eb90332f707744",
   "findings": []
 }

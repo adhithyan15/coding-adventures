@@ -14,8 +14,8 @@ romanization: "ocha o kudasai"
 concept_tag: JA-REQUEST-OCHA-O-KUDASAI
 prerequisites: [JA-C131-toshokan, JA-C131-ocha, JA-C10-itte-kudasai, JA-C117-hotate, JA-C128-komakai]
 sounds: [mora]
-roots: []
-etymology_hook: Kudasai is the same polite request that closed itte kudasai, please say it; here it asks for a thing rather than an action, and a particle marks the thing.
+roots: [chinese-cha, japanese-kudasaru]
+etymology_hook: "ocha o kudasai: ocha (cha from Chinese) + native o + kudasai, from kudasaru 'give'"
 duration:
   max_seconds: 200
 requires:
@@ -56,6 +56,11 @@ any thing you can name in front of it and the request works the same way.
 
 That word is spelled with a sign you have not written yet. It is said *o*, the
 same as **お**, but it is a different sign, and the next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おちゃを ください** (*ocha o kudasai*) puts known pieces together: *ocha*, polite *o-* with *cha*, borrowed from Chinese; the native particle *o*, which marks the thing; and *kudasai*, the request form of native *kudasaru*, "to give (to me)" (JMdict).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-GRAMMAR-OBJECT-WO, JA-LEX-ANCHOR-OCHA, JA-LEX-ITTE-KUDASAI] -->

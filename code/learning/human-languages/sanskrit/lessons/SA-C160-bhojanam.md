@@ -14,7 +14,8 @@ romanization: "bhojanam"
 concept_tag: SA-THG160-BHOJANAM
 prerequisites: [SA-C159-tilah, SA-C159-canakah]
 sounds: []
-roots: []
+roots: [sanskrit-bhojana]
+etymology_hook: "bhojana 'enjoying, eating, food' ← √bhuj 'enjoy, eat' (CDIAL 9630), which MW compares with Latin fungor"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C159-canakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C160-THG160-01]; assesses=[] -->
 
 **भोजनम्** — *bhojanam* — "a meal, food".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhojana* comes from the root √bhuj "enjoy, eat" (CDIAL 9630): "eating", and so "a meal, food", already in the Rigveda. MW compares √bhuj with Latin *fungor* "perform, enjoy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

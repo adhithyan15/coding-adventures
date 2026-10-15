@@ -11,7 +11,8 @@ gloss: sixteen — six-and-ten, carrying the ळ that is Marathi's own letter
 concept_tag: MR-LEX-SOLA
 prerequisites: [MR-C57-tera, MR-C57-chauda, MR-C57-pandhra]
 sounds: [matra-o, retroflex-la]
-roots: []
+roots: [sanskrit-shodasha]
+etymology_hook: "soḷā ← Sanskrit ṣoḍaśa 'sixteen', a tadbhava (CDIAL 12812)"
 duration:
   max_seconds: 210
 requires:

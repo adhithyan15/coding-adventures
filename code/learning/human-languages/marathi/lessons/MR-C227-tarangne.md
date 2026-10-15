@@ -14,7 +14,8 @@ romanization: "taraṅgṇe"
 concept_tag: MR-VERB-TARANGNE
 prerequisites: [MR-C227-atisayokti-karne, MR-C227-sajra-karne]
 sounds: []
-roots: []
+roots: [sanskrit-taranga]
+etymology_hook: "taraṅgṇe: a verb made from Sanskrit taraṅga 'wave' (CDIAL 5699)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C227-sajra-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C227-ACT227-04]; assesses=[] -->
 
 **तरंगणे** — *taraṅgṇe* — "to float".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तरंगणे** (*taraṅgṇe*) is a verb made from Sanskrit *taraṅga*, "wave" (CDIAL 5699): to float is to ride the waves.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

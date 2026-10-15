@@ -14,7 +14,8 @@ romanization: "dokān"
 concept_tag: BN-PLACE82-DOKAN
 prerequisites: [BN-C81-samne, BN-C82-pichhone]
 sounds: []
-roots: []
+roots: [arabic-dukkan]
+etymology_hook: "dokān ← Arabic dukkān 'shop', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C82-pichhone]
 <!-- hl-knowledge: introduces=[BN-LEX-C82-PLACE82-02]; assesses=[] -->
 
 **দোকান** — *dokān* — "a shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**দোকান** (*dokān*) is a loan from Arabic *dukkān*, "shop", which reached Bengali through Persian. Its Arabic root is *d-k-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

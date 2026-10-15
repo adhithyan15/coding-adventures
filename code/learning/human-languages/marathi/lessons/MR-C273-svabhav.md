@@ -14,7 +14,8 @@ romanization: "svabhāv"
 concept_tag: MR-VASTU273-SVABHAV
 prerequisites: [MR-C272-sandhi, MR-C273-athvan]
 sounds: []
-roots: []
+roots: [sanskrit-svabhava]
+etymology_hook: "svabhāv: Sanskrit svabhāva 'own nature', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C273-athvan]
 <!-- hl-knowledge: introduces=[MR-LEX-C273-VASTU273-02]; assesses=[] -->
 
 **स्वभाव** — *svabhāv* — "temperament, nature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्वभाव** (*svabhāv*) is Sanskrit *svabhāva*, "one's own nature", a tatsama: *sva*, "own", and *bhāva*, "being". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

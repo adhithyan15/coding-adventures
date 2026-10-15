@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a carrot, then the Hindi for a cauliflower
 You'll want to know: मटर.
 मटर — maṭar — "peas".
 
+The word, taken apart.
+मटर (maṭar) is a tadbhava, a word inherited and reshaped by sound change. It comes from maṭṭara, "pea", a form CDIAL reconstructs from its descendants (CDIAL 9724).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a cauliflower, then the Hindi for peas.
 
 You'll want to know: खीरा.
 खीरा — khīrā — "a cucumber".
+
+The word, taken apart.
+खीरा (khīrā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣīraka, "a fragrant plant" (CDIAL 3697). It is built on kṣīra, "milk"; the Sanskrit word is known only from the old word-lists.
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Say मुझे चाय पसंद है. पसंद is not a verb, and 
 You'll want to know: आम.
 आम — ām — "a mango".
 
+The word, taken apart.
+आम (ām) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from āmra, "mango tree; its fruit" (CDIAL 1268).
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Hindi for a cucumber, then the Hindi for a mango.
 You'll want to know: केला.
 केला — kelā — "a banana".
 
+The word, taken apart.
+केला (kelā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kadala, "the banana plant" (CDIAL 2712). CDIAL takes the Sanskrit word from an Austroasiatic language.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Hindi for a mango, then the Hindi for a banana.
 
 You'll want to know: सेब.
 सेब — seb — "an apple".
+
+The word, taken apart.
+सेब (seb) is a loan, usually traced to Persian sēb, "apple".
 
 What you've built.
 One more word for this chapter.

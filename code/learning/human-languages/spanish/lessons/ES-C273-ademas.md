@@ -11,6 +11,7 @@ concept_tag: CONNECTIVE-FURTHERMORE
 prerequisites: [ES-C273-en-primer-lugar]
 sounds: [vowel-a, vowel-o]
 roots: [ad de magis]
+etymology_hook: "además — a + de + más: 'to, of, more'; más is Latin magis 'more'"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +57,8 @@ chapter.
 
 So it means, quite literally, **"in addition to more."** Spanish built its
 heaviest additive connector out of its lightest pieces.
+
+*A* is Latin *ad*, *de* is Latin *de*, and *más* is Latin *magis*, "more".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[ES-SEMANTIC-ADDITIVE-ESCALATING]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 215,
-  "sourceHash": "fnv1a64:13e545160725ecdb",
+  "sourceHash": "fnv1a64:ac41e68c5789b46e",
   "lessonIds": [
     "FA-C215-nomre",
     "FA-C215-mashq",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch215.txt",
   "json": "persian/narration/ch215.json",
-  "textHash": "fnv1a64:4ee246f8a972e9a0",
-  "jsonHash": "fnv1a64:4487891e8457a83d",
+  "textHash": "fnv1a64:907eeed8bb2a65d4",
+  "jsonHash": "fnv1a64:24c3aafcdc536e14",
   "findings": []
 }

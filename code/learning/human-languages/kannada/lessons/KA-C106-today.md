@@ -11,7 +11,8 @@ romanization: "ivattu"
 concept_tag: KA-SOON-TODAY
 prerequisites: [KA-C105-appreciation, KA-C106-farewell]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-pozhutu-time]
+etymology_hook: "ivattu: native, usually explained as i- 'this' (DEDR 410) + hottu 'time' (DEDR 4559)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [KA-C106-farewell]
 <!-- hl-knowledge: introduces=[KA-LEX-C106-SOON-02]; assesses=[] -->
 
 **ಇವತ್ತು** (*ivattu*) — "today". **ನಾಳೆ** (*nāḷe*) is "tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಇವತ್ತು** (*ivattu*) is native Dravidian, usually explained as the near-pointing base *i-*, "this" (DEDR 410), with *hottu*, "time, sun" (DEDR 4559): "this day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

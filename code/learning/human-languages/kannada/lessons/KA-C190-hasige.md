@@ -14,7 +14,8 @@ romanization: "hāsige"
 concept_tag: KA-VASTU190-HASIGE
 prerequisites: [KA-C190-bencu, KA-C190-stulu]
 sounds: []
-roots: []
+roots: [dravidian-paacu-spread]
+etymology_hook: "hāsige: native Dravidian, from hāsu, older pāsu 'to spread' (DEDR 4088)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C190-stulu]
 <!-- hl-knowledge: introduces=[KA-LEX-C190-VASTU190-04]; assesses=[] -->
 
 **ಹಾಸಿಗೆ** — *hāsige* — "a mattress, bedding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಾಸಿಗೆ** (*hāsige*) is native Dravidian, from *hāsu*, "to spread", which DEDR 4088 lists as older Kannada *pāsu*, with *-ige*: bedding is what is spread out.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

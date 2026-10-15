@@ -14,7 +14,8 @@ romanization: "nāṭṭinpuṟaṁ"
 concept_tag: ML-STHALAM316-NATTINPURAM
 prerequisites: [ML-C316-atirtti, ML-C316-pancayattu]
 sounds: []
-roots: []
+roots: [dravidian-nadu-land, dravidian-puram-outside]
+etymology_hook: "nāṭṭinpuṟaṁ: native Dravidian, 'the country's outer side': nāṭu (DEDR 3638) + puṟam (DEDR 4333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C316-pancayattu]
 <!-- hl-knowledge: introduces=[ML-LEX-C316-STHALAM316-05]; assesses=[] -->
 
 **നാട്ടിൻപുറം** — *nāṭṭinpuṟaṁ* — "the countryside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നാട്ടിൻപുറം** (*nāṭṭinpuṟaṁ*) is native Dravidian, "the country side": *nāṭu*, "cultivated land, country" (DEDR 3638), and *puṟam*, "side, outside" (DEDR 4333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

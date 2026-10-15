@@ -14,7 +14,8 @@ romanization: "síla"
 concept_tag: RU-ZDOROV211-SILA
 prerequisites: [RU-C211-puls, RU-C211-davleniye]
 sounds: []
-roots: []
+roots: [slavic-sila]
+etymology_hook: "сила ← Proto-Slavic *sila; Lithuanian siela 'soul, feeling' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C211-davleniye]
 <!-- hl-knowledge: introduces=[RU-LEX-C211-ZDOROV211-05]; assesses=[] -->
 
 **сила** (*síla*) — "strength".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сила** ← Proto-Slavic *\*sila* — inherited. Vasmer relates it to Lithuanian *síela*, "soul, feeling", and Old Prussian *seilin*, "diligence".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

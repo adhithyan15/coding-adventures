@@ -14,7 +14,8 @@ romanization: "cekkŭ"
 concept_tag: ML-VASTU288-CEKKU
 prerequisites: [ML-C287-appil, ML-C288-palsal]
 sounds: []
-roots: []
+roots: [english-cheque]
+etymology_hook: "cekkŭ ← English cheque"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C288-palsal]
 <!-- hl-knowledge: introduces=[ML-LEX-C288-VASTU288-02]; assesses=[] -->
 
 **ചെക്ക്** — *cekkŭ* — "a cheque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചെക്ക്** (*cekkŭ*) ← English *cheque*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

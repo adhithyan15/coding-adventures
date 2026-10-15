@@ -14,7 +14,8 @@ romanization: "fukurou"
 concept_tag: JA-THINGS109-FUKUROU
 prerequisites: [JA-C109-washi, JA-C109-taka]
 sounds: []
-roots: []
+roots: [japanese-fukurou]
+etymology_hook: "fukurou: native Japanese, inherited, not borrowed; usually kana, kanji 梟 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C109-taka]
 <!-- hl-knowledge: introduces=[JA-LEX-C109-THINGS109-04]; assesses=[] -->
 
 **ふくろう** — *fukurou* — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふくろう** (*fukurou*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

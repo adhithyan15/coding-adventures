@@ -14,7 +14,8 @@ romanization: "fon karnā"
 concept_tag: UR-VERB-FON-KARNA
 prerequisites: [UR-C150-chhapna, UR-C150-dastkhat-karna]
 sounds: []
-roots: []
+roots: [english-phone, kr-do]
+etymology_hook: "fon ← English phone; karnā 'to do' ← Sanskrit karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C150-dastkhat-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C150-ACT150-05]; assesses=[] -->
 
 **فون کرنا** — *fon karnā* — "to phone".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فون کرنا** (*fon karnā*) joins *fon*, borrowed from English *phone*, and *karnā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tsuyoi"
 concept_tag: JA-ADJ51-TSUYOI
 prerequisites: [JA-C50-semai, JA-C50-omoi]
 sounds: []
-roots: []
+roots: [japanese-tsuyoi]
+etymology_hook: "tsuyoi: native Japanese, inherited, not borrowed; kanji 強い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C50-omoi]
 <!-- hl-knowledge: introduces=[JA-LEX-C51-ADJ51-01]; assesses=[] -->
 
 **つよい** — *tsuyoi* — "strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つよい** (*tsuyoi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

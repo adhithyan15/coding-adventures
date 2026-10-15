@@ -92,8 +92,10 @@ it("pins Persian's peace-root payoff inside the chapter-one practice", () => {
   expect(ledger.entries.find((entry) => entry.namespace === "roots" && entry.root === "s-l-m"))
     .toMatchObject({
       introducedBy: "FA-C01-salam",
-      payoffs: ["FA-C01-practice"],
-      payoffCount: 1,
+      // FA-C130-salem joined in the etymology pass: sâlem "healthy" is Arabic
+      // sālim, from the same root s-l-m (Lane), so it spends the peace root again.
+      payoffs: ["FA-C01-practice", "FA-C130-salem"],
+      payoffCount: 2,
     });
   expect(ledger.entries.find((entry) =>
     entry.namespace === "etymon-atom" && entry.root === "FA-ETYMON-SALAM-SLM-02"

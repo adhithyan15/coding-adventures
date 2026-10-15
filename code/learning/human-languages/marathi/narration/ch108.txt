@@ -12,6 +12,9 @@ Before the new one: say the Marathi for red, then the Marathi for blue.
 You'll want to know: काळा.
 काळा — kāḷā — "black".
 
+The word, taken apart.
+काळा (kāḷā) is a tadbhava of Sanskrit kāla, "black, dark-blue" (CDIAL 3083). CDIAL derives the Sanskrit word from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for blue, then the Marathi for black.
 
 You'll want to know: पांढरा.
 पांढरा — pāṇḍhrā — "white".
+
+The word, taken apart.
+पांढरा (pāṇḍhrā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pāṇḍura, "whitish, pale, white" (CDIAL 8047). CDIAL lists Marathi pāṇḍhrā, "white".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for black, then the Marathi for white.
 You'll want to know: तपकिरी.
 तपकिरी — tapkirī — "brown".
 
+The word, taken apart.
+तपकिरी (tapkirī) is tapkīr, "snuff", with the ending -ī: "snuff-coloured". The origin of tapkīr is not settled; CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for white, then the Marathi for brown.
 You'll want to know: गुलाबी.
 गुलाबी — gulābī — "pink".
 
+The word, taken apart.
+गुलाबी (gulābī) is a loan, usually traced to Persian gulābī, "rose-coloured". It is built on gulāb, "rose-water, rose": gul, "rose", and āb, "water".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for brown, then the Marathi for pink.
 
 You'll want to know: तरुण.
 तरुण — taruṇ — "young".
+
+The word, taken apart.
+तरुण (taruṇ) is Sanskrit taruṇa, "young, tender", taken over whole as a learned loan, a tatsama (CDIAL 5712).
 
 What you've built.
 One more word for this chapter.

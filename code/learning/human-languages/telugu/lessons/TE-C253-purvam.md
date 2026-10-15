@@ -14,7 +14,8 @@ romanization: "pūrvaṁ"
 concept_tag: TE-SAMAYAM253-PURVAM
 prerequisites: [TE-C253-eppudaina, TE-C253-prastutam]
 sounds: []
-roots: []
+roots: [sanskrit-purva]
+etymology_hook: "pūrvaṁ ← Sanskrit pūrva 'fore, first, eastern, ancient', a tatsama (CDIAL 8343)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C253-prastutam]
 <!-- hl-knowledge: introduces=[TE-LEX-C253-SAMAYAM253-04]; assesses=[] -->
 
 **పూర్వం** — *pūrvaṁ* — "in the past, formerly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పూర్వం** (*pūrvaṁ*) is Sanskrit *pūrva*, "fore, first, eastern, ancient", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 8343).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

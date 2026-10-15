@@ -14,7 +14,8 @@ romanization: "mobāil"
 concept_tag: HI-THG249-MOBAIL
 prerequisites: [HI-C249-eksath, HI-C249-kampyutar]
 sounds: []
-roots: []
+roots: [english-mobile]
+etymology_hook: "mobāil ← English mobile"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C249-kampyutar]
 <!-- hl-knowledge: introduces=[HI-LEX-C249-THG249-04]; assesses=[] -->
 
 **मोबाइल** — *mobāil* — "a mobile phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोबाइल** (*mobāil*) is a loan from English *mobile*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

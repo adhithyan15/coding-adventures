@@ -33,17 +33,17 @@ for already-constructed clients. Provider and channel output is validated agains
 the public wire bounds before it can turn into an authenticated-session framing
 failure.
 
-`ExactChannelKeyAuthority` is the corresponding pre-composition key registry. It
-consumes zeroizing secret owners, scopes every read or write key to one exact
-pipeline, agent, and channel, rejects duplicate or cross-direction registrations,
-and releases fresh short-lived crypto owners only when the current durable binding
-matches all three identities. It deliberately does not read files or define a
-vault format; those are replaceable provisioning adapters.
+The service serves no channel operation. Since D18S P2.6d-2c each agent's
+channel keys live only in that agent's broker process, which answers its
+receive, publish and acknowledge itself; the daemon holds no channel key. A
+channel request that reaches this service is answered `Unauthorized`, and in
+production none can: the supervisor refuses to launch a host bound to a
+channel without a broker.
 
-The production daemon injects this service only for a non-empty typed data-plane
-configuration. It provisions explicit operator-owned channel-key files and exact
-Ollama clients; absent or empty declarations retain the unavailable service. No
-secret format or default network endpoint is invented here.
+The production daemon injects this service only when it configures models
+or smart-home tool grants. It provisions exact Ollama clients; absent
+declarations retain the unavailable service. No secret format or default
+network endpoint is invented here.
 
 ## Validation
 

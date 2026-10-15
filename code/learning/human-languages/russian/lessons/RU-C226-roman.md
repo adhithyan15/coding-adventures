@@ -14,7 +14,8 @@ romanization: "román"
 concept_tag: RU-VESHCH226-ROMAN
 prerequisites: [RU-C226-baraban, RU-C226-tanets]
 sounds: []
-roots: []
+roots: [french-roman]
+etymology_hook: "роман ← French roman, Old French romanz, first 'a story in the Romance tongue', not in Latin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C226-tanets]
 <!-- hl-knowledge: introduces=[RU-LEX-C226-VESHCH226-04]; assesses=[] -->
 
 **роман** (*román*) — "a novel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**роман** came from German *Roman* or, more likely, straight from French *roman*, Old French *romanz*, first "a story in the common Romance tongue" rather than Latin, from Latin *rōmānicē*, "in the Roman way" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

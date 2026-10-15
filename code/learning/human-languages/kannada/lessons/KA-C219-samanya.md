@@ -14,7 +14,8 @@ romanization: "sāmānya"
 concept_tag: KA-GUNA219-SAMANYA
 prerequisites: [KA-C218-pramanika, KA-C218-udara]
 sounds: []
-roots: []
+roots: [sanskrit-samanya]
+etymology_hook: "sāmānya ← Sanskrit sāmānya 'equal, alike', a tatsama (CDIAL 13351)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C218-udara]
 <!-- hl-knowledge: introduces=[KA-LEX-C219-GUNA219-01]; assesses=[] -->
 
 **ಸಾಮಾನ್ಯ** — *sāmānya* — "ordinary, common".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಮಾನ್ಯ** (*sāmānya*) is Sanskrit *sāmānya*, "equal, alike", taken over whole as a learned loan, a tatsama (CDIAL 13351).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

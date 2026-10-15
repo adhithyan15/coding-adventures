@@ -14,7 +14,8 @@ romanization: "āmravṛkṣaḥ"
 concept_tag: SA-THG166-AMRAVRKSAH
 prerequisites: [SA-C166-asvatthah, SA-C166-nimbah]
 sounds: []
-roots: []
+roots: [sanskrit-amra]
+etymology_hook: "āmravṛkṣa ← āmra 'mango' + vṛkṣa 'tree' (MW); āmra lives on as Hindi ām (CDIAL 1268)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C166-nimbah]
 <!-- hl-knowledge: introduces=[SA-LEX-C166-THG166-03]; assesses=[] -->
 
 **आम्रवृक्षः** — *āmravṛkṣaḥ* — "a mango tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āmravṛkṣa* is built from *āmra* "mango" and *vṛkṣa* "tree" (MW). Neither MW nor CDIAL gives a derivation for *āmra*, so its origin is uncertain; it lives on as Hindi *ām* "mango" (CDIAL 1268).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

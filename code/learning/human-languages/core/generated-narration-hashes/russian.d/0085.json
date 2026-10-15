@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 85,
-  "sourceHash": "fnv1a64:9d44dc4a621ed503",
+  "sourceHash": "fnv1a64:41fb298e3b14fc23",
   "lessonIds": [
     "RU-C85-second",
     "RU-C85-weekend",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch85.txt",
   "json": "russian/narration/ch85.json",
-  "textHash": "fnv1a64:d7c668471eab0624",
-  "jsonHash": "fnv1a64:203d70e0490a7c23",
+  "textHash": "fnv1a64:77605e8912becb99",
+  "jsonHash": "fnv1a64:572d6644d3c82b6f",
   "findings": []
 }

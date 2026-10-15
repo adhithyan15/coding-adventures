@@ -14,7 +14,8 @@ romanization: "bhittiḥ"
 concept_tag: SA-DWELL-BHITTI
 prerequisites: [SA-C46-heat, SA-C45-morning, SA-C46-sun]
 sounds: []
-roots: []
+roots: [sanskrit-bhitti]
+etymology_hook: "bhitti 'split reed mat, wall' ← the root √bhid 'split'; MW compares Latin findō, English bite (CDIAL 9494)"
 duration:
   max_seconds: 210
 requires:

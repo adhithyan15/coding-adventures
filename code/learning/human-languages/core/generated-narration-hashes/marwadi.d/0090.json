@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 90,
-  "sourceHash": "fnv1a64:bf67f87a8ef627a6",
+  "sourceHash": "fnv1a64:bc11c25ae495a4c4",
   "lessonIds": [
     "MW-C90-dopar",
     "MW-C90-athan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch90.txt",
   "json": "marwadi/narration/ch90.json",
-  "textHash": "fnv1a64:0249e51f6d348f2d",
-  "jsonHash": "fnv1a64:ff3651c3d350b893",
+  "textHash": "fnv1a64:6993905e80a83e64",
+  "jsonHash": "fnv1a64:b638dd9fb327c944",
   "findings": []
 }

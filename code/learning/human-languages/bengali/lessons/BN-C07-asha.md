@@ -11,8 +11,8 @@ gloss: to come — the verb that never asks whether a man or a woman is speaking
 concept_tag: VERB-COME
 prerequisites: [BN-C07-jaowa, BN-C01-ashi]
 sounds: [s-to-sh, long-aa]
-roots: [aa-hither, asa-come]
-etymology_hook: "আসা carries Sanskrit's আ- 'hither', the very prefix that turns going into coming in Hindi ānā — and it is the plainest place to state Bengali's biggest simplification: the language has no grammatical gender at all, so āmi āsi is one form where Hindi splits ātā/ātī and Marathi yeto/yete"
+roots: [aa-hither, asa-come, sanskrit-asadati]
+etymology_hook: "আসা: CDIAL lists it under Sanskrit āsadati 'approaches' (1483); Chatterji derived it from āviśati 'enters'"
 duration:
   max_seconds: 270
 requires:
@@ -49,10 +49,8 @@ whole of it — and the one question it refuses to ask you.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 The **আ-** in front is Sanskrit's *ā-*, "hither, toward" — the very prefix that
-turns going into coming. Hindi's *ānā* is that *ā-* welded onto *yā-*, the go-verb
-of the last lesson: "go, but this way." Bengali shows the same prefix on a
-different stem, and the honest position on that stem is that its history is
-unsettled; this book will not invent one for it.
+turns going into coming. Bengali puts it on a stem whose history is not
+settled: CDIAL lists **আসা** under Sanskrit *āsadati*, "approaches" (CDIAL 1483), while Chatterji derived it from *āviśati*, "enters" (CDIAL 1437).
 
 ## Sounds you'll need: স
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -88,8 +86,8 @@ present, brings it straight back in *huṁ āvyo* / *huṁ āvī*.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C07-ASHA-01, BN-GRAMMAR-C07-ASHA-02] -->
 
-[PAUSE 3s] What does the **আ-** on this verb mean, and where else have you met
-it? (**Hither, toward** — it is the *ā-* inside Hindi's *ānā*.) How many forms of
+[PAUSE 3s] What does the **আ-** on this verb mean? (**Hither, toward** — the
+prefix that turns going into coming.) How many forms of
 "I come" does a Bengali speaker need? (**One** — *āmi āsi*, whoever is talking.)
 Is that true of the nouns too? (**Yes** — Bengali has no grammatical gender
 anywhere.) Next: a verb that swallows more than food.

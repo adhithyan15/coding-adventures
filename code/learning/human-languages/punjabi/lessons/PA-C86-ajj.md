@@ -14,7 +14,8 @@ romanization: "ajj"
 concept_tag: PA-TIME86-AJJ
 prerequisites: [PA-C86-ghanta, PA-C86-mint]
 sounds: []
-roots: []
+roots: [sanskrit-adya]
+etymology_hook: "ajj ← Sanskrit adya 'today', a tadbhava (CDIAL 242)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C86-mint]
 <!-- hl-knowledge: introduces=[PA-LEX-C86-TIME86-05]; assesses=[] -->
 
 **ਅੱਜ** — *ajj* — "today".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅੱਜ** (*ajj*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *adya*, "today" (CDIAL 242).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

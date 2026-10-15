@@ -11,8 +11,8 @@ gloss: middle school
 concept_tag: ZH-SCHOOL-MIDDLE-SCHOOL
 prerequisites: [ZH-C15-zhong]
 sounds: [tone-1, tone-2]
-roots: []
-etymology_hook: Middle plus study names middle school; both pieces are secure before the pair appears.
+roots: [middle-chinese-trjuwng, middle-chinese-haewk]
+etymology_hook: "zhōngxué: built from Middle Chinese trjuwng 'middle' and haewk 'learning'"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-C15-zhong, ZH-C13-xue]
 
 Hold *zhōng* level, then let *xué* rise. Hear the whole school word before
 seeing its two characters.
+
+*Zhōngxué* is built from Middle Chinese *trjuwng*, "middle", and *haewk*,
+"learning".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONGXUE-01] -->

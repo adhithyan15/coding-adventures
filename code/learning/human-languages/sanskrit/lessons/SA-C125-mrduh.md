@@ -14,7 +14,8 @@ romanization: "mṛduḥ"
 concept_tag: SA-THINGS125-MRDUH
 prerequisites: [SA-C125-nakulah, SA-C125-hrasvah]
 sounds: []
-roots: []
+roots: [sanskrit-mrdu]
+etymology_hook: "mṛdu 'soft' is inherited from Indo-European, cousin of English mild and Latin mollis (EtymDB); √mṛd 'press'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C125-hrasvah]
 <!-- hl-knowledge: introduces=[SA-LEX-C125-THINGS125-03]; assesses=[] -->
 
 **मृदुः** — *mṛduḥ* — "soft".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mṛdu* "soft, tender, mild" is inherited from Indo-European (EtymDB): English *mild* and Latin *mollis* "soft" are its cousins. CDIAL 10292 sets it under the root √mṛd "press, crush".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

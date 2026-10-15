@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 202,
-  "sourceHash": "fnv1a64:6eebf9864d921475",
+  "sourceHash": "fnv1a64:1b2dd4f338472295",
   "lessonIds": [
     "FA-C202-pare",
     "FA-C202-kaj",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch202.txt",
   "json": "persian/narration/ch202.json",
-  "textHash": "fnv1a64:c2b5f5c110e9865a",
-  "jsonHash": "fnv1a64:f0a439b054d0446d",
+  "textHash": "fnv1a64:624dcd4d0138a3a5",
+  "jsonHash": "fnv1a64:4d812cf5d3f35a82",
   "findings": []
 }

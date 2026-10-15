@@ -14,7 +14,8 @@ romanization: "ikhtafā"
 concept_tag: AR-VERB-IKHTAFA
 prerequisites: [AR-C167-anqadha, AR-C167-haraba]
 sounds: []
-roots: []
+roots: [kh-f-y]
+etymology_hook: "ikhtafā: built on the root kh-f-y, 'to be hidden' (Lane); ikhtafā is Form VIII, 'to hide oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C167-haraba]
 <!-- hl-knowledge: introduces=[AR-LEX-C167-ACT167-05]; assesses=[] -->
 
 **اختفى** — *ikhtafā* — "to disappear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اختفى** (*ikhtafā*) is built on the native Arabic root *kh-f-y*, "to be hidden" (Lane). *Ikhtafā* is Form VIII, "to hide oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

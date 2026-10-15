@@ -14,7 +14,8 @@ romanization: "ósen"
 concept_tag: RU-SEASONS-AUTUMN
 prerequisites: [RU-C71-spring, RU-C71-summer]
 sounds: []
-roots: []
+roots: [slavic-oseni]
+etymology_hook: "осень ← Proto-Slavic *esenĭ; Gothic asans 'harvest' and Old Prussian assanis 'autumn' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C71-summer]
 <!-- hl-knowledge: introduces=[RU-LEX-C71-SEASONS-05]; assesses=[] -->
 
 **осень** (*ósen*) — "autumn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**осень** ← Proto-Slavic *\*esenĭ* — inherited; East Slavic turned *je-* into *о-*. Vasmer relates it to Old Prussian *assanis*, "autumn", Gothic *asans*, "harvest", and Old High German *aran*, "harvest": autumn as the reaping season.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

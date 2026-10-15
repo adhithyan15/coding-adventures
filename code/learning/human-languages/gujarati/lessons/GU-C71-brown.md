@@ -14,7 +14,8 @@ romanization: "bhūro"
 concept_tag: GU-COLOUR2-BROWN
 prerequisites: [GU-C70-black, GU-C71-white]
 sounds: []
-roots: []
+roots: [indo-aryan-bhrura]
+etymology_hook: "bhūro ← *bhrūra 'brown', reconstructed; CDIAL compares Indo-European *bhrūno-, behind English brown (CDIAL 9690)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C71-white]
 <!-- hl-knowledge: introduces=[GU-LEX-C71-COLOUR2-02]; assesses=[] -->
 
 **ભૂરો** (*bhūro*) — "brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભૂરો** (*bhūro*) is a tadbhava. It comes from *\*bhrūra*, "brown", a form CDIAL reconstructs and sets beside Indo-European *\*bhrūro-* and *\*bhrūno-* (CDIAL 9690). The second is the source of English *brown*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

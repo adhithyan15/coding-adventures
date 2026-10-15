@@ -14,7 +14,8 @@ romanization: "oppiṭuka"
 concept_tag: ML-VERB-OPPITUKA
 prerequisites: [ML-C184-vyayamam-ceyyuka, ML-C184-purippikkuka]
 sounds: []
-roots: []
+roots: [dravidian-oppu-equal, dravidian-idu-put]
+etymology_hook: "oppiṭuka: native Dravidian, 'put a signature': oppu (DEDR 924) + iṭuka 'to put' (DEDR 442)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C184-purippikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C184-KRIYA184-05]; assesses=[] -->
 
 **ഒപ്പിടുക** — *oppiṭuka* — "to sign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒപ്പിടുക** (*oppiṭuka*) is native Dravidian, "put one's signature": *oppu*, "conformity; signature" (DEDR 924, with Kannada *oppu*), and *iṭuka*, "to put" (DEDR 442, with Tamil *iṭu*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

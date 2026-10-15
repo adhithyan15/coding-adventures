@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 160,
-  "sourceHash": "fnv1a64:9ab69c0d3a81f461",
+  "sourceHash": "fnv1a64:c2aedbbccd5587b6",
   "lessonIds": [
     "KA-C160-baggu",
     "KA-C160-horu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch160.txt",
   "json": "kannada/narration/ch160.json",
-  "textHash": "fnv1a64:2c8e1b54c971cf72",
-  "jsonHash": "fnv1a64:93f3cec610afc260",
+  "textHash": "fnv1a64:1e1566e40f10e293",
+  "jsonHash": "fnv1a64:dbe17d4a11deec53",
   "findings": []
 }

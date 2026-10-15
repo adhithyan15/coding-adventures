@@ -14,7 +14,8 @@ gloss: "a brick"
 concept_tag: TE-ANCHOR-ITIKA
 prerequisites: [TE-S112-letter-ca]
 sounds: []
-roots: []
+roots: [sanskrit-ishtaka]
+etymology_hook: "iṭuka: usually traced to Sanskrit iṣṭakā 'brick' (CDIAL 1600), a tadbhava; compare Prakrit iṭṭagā"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *iṭuka*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ఇ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇటుక** (*iṭuka*) is usually traced to Sanskrit *iṣṭakā*, "brick", reshaped to Telugu sounds: a tadbhava. CDIAL 1600 lists the Sanskrit word with Prakrit *iṭṭagā*, which has already lost the *ṣ*; it does not list the Telugu.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-ANCHOR-ITIKA] -->

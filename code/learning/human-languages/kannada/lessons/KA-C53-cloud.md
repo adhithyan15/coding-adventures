@@ -11,7 +11,8 @@ romanization: "mōḍa"
 concept_tag: KA-NOUN-CLOUD
 prerequisites: [KA-C53-star, KA-C51-salutation]
 sounds: []
-roots: []
+roots: [dravidian-moda-cloud]
+etymology_hook: "mōḍa: native Dravidian, one word with Tamil mūṭam and Telugu mōḍamu (DEDR 5033)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [KA-C53-star]
 Weather words stretch, and this one has. ಮೋಡ also describes a face that has gone dull and closed, and a mood that will not lift. English went the same way with *clouded* and *overcast*, from the far side of the world and with no contact at all. When two unrelated languages reach for the same picture, the picture is doing the work rather than any borrowing.
 
 With that, the sky is furnished.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೋಡ** (*mōḍa*) is native Dravidian, one word with Tamil *mūṭam* and Telugu *mōḍamu* (DEDR 5033).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

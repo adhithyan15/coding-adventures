@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for chickpeas, then the Gujarati for mung b
 You'll want to know: બાજરી.
 બાજરી (bājrī) — "millet".
 
+The word, taken apart.
+બાજરી (bājrī) is a tadbhava, a word inherited and reshaped by sound change. It comes from bājjara, "millet", a form CDIAL reconstructs from its descendants (CDIAL 9201).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for mung beans, then the Gujarati for mille
 
 You'll want to know: ઘઉં.
 ઘઉં (ghaũ) — "wheat".
+
+The word, taken apart.
+ઘઉં (ghaũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from godhūma, "wheat" (CDIAL 4287).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for millet, then the Gujarati for wheat.
 You'll want to know: મકાઈ.
 મકાઈ (makāī) — "maize".
 
+The word, taken apart.
+CDIAL lists મકાઈ (makāī) under the lexical Sanskrit markaka, the name of a bird, with a cross-reference to markaṭaka (CDIAL 9879). It does not explain how the name came to the grain, so its origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for wheat, then the Gujarati for maize.
 You'll want to know: રીંગણ.
 રીંગણ (rī̃gaṇ) — "an aubergine".
 
+The word, taken apart.
+CDIAL lists Gujarati rīṁgṇī, the egg-plant, and rīṁgṇũ, its fruit, under the lexical Sanskrit riṅgaṇī, the name of another plant (CDIAL 10738). રીંગણ (rī̃gaṇ) (rīṁgaṇ) is the same word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for maize, then the Gujarati for an aubergi
 
 You'll want to know: કોબી.
 કોબી (kobī) — "cabbage".
+
+The word, taken apart.
+The origin of કોબી (kobī) is not fully settled. It matches Hindi kobhī and gobhī, "cabbage", which CDIAL lists under Sanskrit gojihvikā, "a particular kind of plant" (CDIAL 4270), but CDIAL lists no Gujarati form there.
 
 What you've built.
 One more word for this chapter.

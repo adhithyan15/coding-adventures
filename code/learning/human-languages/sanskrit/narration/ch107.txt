@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for mung beans, then the Sanskrit for dal.
 You'll want to know: गुडः.
 गुडः — guḍaḥ — "jaggery".
 
+The word, taken apart.
+guḍa "boiled sugarcane juice, molasses" may be the same word as guḍa "a ball, a lump"; CDIAL 4182 raises that link as a question, so it is not settled. It lives on as Hindi guṛ and Marathi gūḷ "jaggery" (CDIAL 4182).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for dal, then the Sanskrit for jaggery.
 
 You'll want to know: मरीचम्.
 मरीचम् — marīcam — "pepper".
+
+The word, taken apart.
+marīca "black pepper" is taken to be borrowed from Austroasiatic (CDIAL 9875, after EWA). It lives on as Hindi mirc (CDIAL 9875).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for jaggery, then the Sanskrit for pepper.
 You'll want to know: हरिद्रा.
 हरिद्रा — haridrā — "turmeric".
 
+The word, taken apart.
+haridrā "turmeric" is built on hari "yellow, tawny", which MW sets beside English yellow and Latin helvus; how the -drā part is formed is unclear. It lives on as Hindi haldī "turmeric" (CDIAL 13992).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for pepper, then the Sanskrit for turmeric.
 You'll want to know: आर्द्रकम्.
 आर्द्रकम् — ārdrakam — "ginger".
 
+The word, taken apart.
+ārdraka is built on ārdra "wet, moist" with the suffix -ka: "the moist one", ginger in its undried state (MW). It lives on as Hindi and Bengali ādā "ginger" (CDIAL 1341).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for turmeric, then the Sanskrit for ginger.
 
 You'll want to know: लशुनम्.
 लशुनम् — laśunam — "garlic".
+
+The word, taken apart.
+laśuna "garlic" appears from the law books of Gautama on, also spelt lasuna and rasuna (MW). MW gives no derivation beyond the grammarians, so its origin is uncertain. It lives on as Hindi lahsun "garlic" (CDIAL 10990).
 
 What you've built.
 One more word for this chapter.

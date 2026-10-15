@@ -13,7 +13,8 @@ gloss: "patient"
 concept_tag: LA-QUAL213-PATIENS
 prerequisites: [LA-C213-peregrinus, LA-C213-probus]
 sounds: []
-roots: []
+roots: [patiens-latin, pati-latin]
+etymology_hook: "patiēns 'patient' — the participle of patior 'to endure'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C213-probus]
 <!-- hl-knowledge: introduces=[LA-LEX-C213-QUAL213-03]; assesses=[] -->
 
 **patiēns, patientis** — "patient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**patiēns** is the present participle of *patior*, "to suffer, to endure" (Lewis & Short): enduring.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

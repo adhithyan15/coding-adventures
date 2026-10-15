@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Days of the Week",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5e1291f40f6652b2",
+  "sourceHash": "fnv1a64:f7e87c54fd174951",
   "lessons": [
     {
       "id": "AR-C08-al-ahad-al-khamis",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:726eb8abf4c7809c",
+      "sourceHash": "fnv1a64:89389efe919a3a73",
       "notice": null,
       "blocks": [
         {
@@ -73,6 +73,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These weekdays are named by number. Al-aḥad is \"the one\" and al-ithnayn \"the two\"; ath-thulāthāʾ, al-arbiʿāʾ and al-khamīs are built on the roots of three, four and five, th-l-th, r-b-ʿ and kh-m-s (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -112,7 +123,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -143,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff25d883d174dbda",
+      "sourceHash": "fnv1a64:85e2a06697ab4c63",
       "notice": null,
       "blocks": [
         {
@@ -185,7 +196,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You may remember Latin borrowed the word Sabbatum from Hebrew to replace its own pagan diēs Saturnī — a loanword crossing from a Semitic language into an Italic one. Arabic's سبت (sabt) is a different kind of relationship entirely: Arabic is itself a Semitic language, in the same family as Hebrew. So as-sabt and Hebrew shabbāt aren't borrower-and-lender — they're cousins, both descending from the same ancient Semitic root س-ب-ت meaning \"to rest, to cease.\" Where Latin borrowed a foreign word, Arabic simply inherited a family word."
+              "text": "You may remember Latin borrowed the word Sabbatum from Hebrew to replace its own pagan diēs Saturnī — a loanword crossing from a Semitic language into an Italic one. Arabic's سبت (sabt) is a different kind of relationship entirely: Arabic is itself a Semitic language, in the same family as Hebrew. So as-sabt and Hebrew shabbāt share a root: an ancient Semitic root س-ب-ت meaning \"to rest, to cease,\" which Arabic has in its own right (Lane gives sabt as \"rest\"). Whether the day's name was inherited or taken from Jewish neighbours is debated; Latin plainly borrowed a foreign word."
             }
           ]
         },

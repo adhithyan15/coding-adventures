@@ -14,7 +14,8 @@ romanization: "pariṣkariñcu"
 concept_tag: TE-VERB-PARISKARINCU
 prerequisites: [TE-C242-modalupettu, TE-C242-istri-ceyu]
 sounds: []
-roots: []
+roots: [sanskrit-pariskara]
+etymology_hook: "pariṣkariñcu: Sanskrit pariṣkāra (CDIAL 7894) + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C242-istri-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C243-KRIYA243-01]; assesses=[] -->
 
 **పరిష్కరించు** — *pariṣkariñcu* — "to solve, to settle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పరిష్కరించు** (*pariṣkariñcu*) is Sanskrit *pariṣkāra*, which CDIAL 7894 glosses "ornament", made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

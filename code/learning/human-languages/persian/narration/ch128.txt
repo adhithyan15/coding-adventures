@@ -12,6 +12,9 @@ Before the new one: say the Persian for purple, then the Persian for grey.
 You'll want to know: طلایی.
 طلایی — talâyi — "golden".
 
+The word, taken apart.
+talâyi is talâ, "gold", with the colour ending -i. talâ is borrowed from Arabic ṭilāʾ, "coating, gilding" (root ṭ-l-y, Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for grey, then the Persian for golden.
 
 You'll want to know: گرد.
 گرد — gerd — "round".
+
+The word, taken apart.
+gerd is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian gird, "round". EtymDB takes it back to the Indo-European root wert-, "to turn", the root of Latin vertere. (It also lists gard, "dust", a different word.)
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for golden, then the Persian for round.
 You'll want to know: مهربان.
 مهربان — mehrabân — "kind".
 
+The word, taken apart.
+mehrabân is mehr, "love, kindness", with -bân, "keeper": one who keeps kindness. EtymDB traces it to Middle Persian mihrbān. mehr is also the name of the old god Mithra.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for round, then the Persian for kind.
 You'll want to know: ساده.
 ساده — sâde — "simple, plain".
 
+The word, taken apart.
+sâde is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian sādag, "simple".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for kind, then the Persian for simple.
 
 You'll want to know: آرام.
 آرام — ârâm — "calm, quiet".
+
+The word, taken apart.
+ârâm is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian ārām, "rest, calm". EtymDB takes it back to the Indo-European root h₁rem-, "to rest, to become calm".
 
 What you've built.
 One more word for this chapter.

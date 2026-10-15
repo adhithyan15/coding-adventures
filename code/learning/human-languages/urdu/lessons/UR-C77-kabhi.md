@@ -14,7 +14,8 @@ romanization: "kabhī"
 concept_tag: UR-TIME77-KABHI
 prerequisites: [UR-C76-phir, UR-C77-hamesha]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva]
+etymology_hook: "kabhī: listed by CDIAL under evam eva 'exactly so', crossed with the question stem ka- (CDIAL 2528)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C77-hamesha]
 <!-- hl-knowledge: introduces=[UR-LEX-C77-TIME77-02]; assesses=[] -->
 
 **کبھی** — *kabhī* — "sometimes, ever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کبھی** (*kabhī*) is inherited. CDIAL lists it under Sanskrit *evam eva*, "exactly so", crossed with the question stem *ka-* of *kyā* and *kaun* (CDIAL 2528).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

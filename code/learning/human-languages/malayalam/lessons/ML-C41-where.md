@@ -11,7 +11,8 @@ romanization: "eviṭe"
 concept_tag: ML-DEIXIS-WHERE
 prerequisites: [ML-C41-who, ML-C39-chaaya, ML-C39-kaapi]
 sounds: []
-roots: []
+roots: [e-interrogative-dravidian]
+etymology_hook: "eviṭe: native Dravidian, the asking base + the 'place' tail of iviṭe and aviṭe (DEDR 5151)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ Its partners are **ഇവിടെ** *iviṭe* and **അവിടെ** *aviṭe*
 already met. The three differ by one sound at the front — **e-** for ask — and
 that is not a coincidence. It is the whole system, and the last lesson of this
 chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**എവിടെ** (*eviṭe*) is native Dravidian: the old asking base with the same "place" tail as *iviṭe* and *aviṭe*. DEDR 5151 gathers the asking words, with Tamil *yāṇṭu*, "where".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-06, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02] -->

@@ -11,7 +11,8 @@ romanization: "oppaṁ"
 concept_tag: ML-WITH-COMPANY
 prerequisites: [ML-R85-sounds-recall, ML-C84-mukalil, ML-C02-enre, ML-C35-suhruthu]
 sounds: []
-roots: []
+roots: [dravidian-oppu-equal]
+etymology_hook: "oppaṁ: native Dravidian, from the root 'to be alike, agree'; Kannada oppu (DEDR 924)"
 duration:
   max_seconds: 260
 requires:
@@ -63,6 +64,11 @@ Now put a person in it who is not you. **സുഹൃത്ത്** ends in a co
 owner-form takes the ending consonants take:
 
 **സുഹൃത്തിന്റെ ഒപ്പം** — *suhṛtthinṟe oppaṁ* — together with a friend.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒപ്പം** (*oppaṁ*) is native Dravidian, from the root "to be alike, to agree"; DEDR 924 lists the root with Kannada *oppu* and Telugu *oppu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C86-WITH-01, ML-GRAMMAR-C84-POSTPOSITION-01, ML-LEX-ENRE-01, ML-CONCEPT-C35-SUHRUTHU-01, ML-GRAMMAR-C78-GENITIVE-NRE-01] -->

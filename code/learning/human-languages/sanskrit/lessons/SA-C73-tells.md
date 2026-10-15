@@ -14,7 +14,8 @@ romanization: "kathayati"
 concept_tag: SA-VERB-TELL
 prerequisites: [SA-C72-gives, SA-C73-sings]
 sounds: []
-roots: []
+roots: [sanskrit-kathayati, ka-interrogative]
+etymology_hook: "kathayati 'tells' ← kathā 'a telling', itself from katham 'how' (MW); Hindi kahnā 'to say' (CDIAL 2703)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C73-sings]
 <!-- hl-knowledge: introduces=[SA-LEX-C73-VOICE-02]; assesses=[] -->
 
 **कथयति** (*kathayati*) — "(he, she) tells". A **कथा**, "a story", is what is told.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kathayati* is a verb made from *kathā*, "a telling, a story" (CDIAL 2703), which
+MW traces to *katham*, "how": to tell is to tell how. It lives on as Hindi
+*kahnā*, "to say".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

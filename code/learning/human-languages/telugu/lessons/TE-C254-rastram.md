@@ -14,7 +14,8 @@ romanization: "rāṣṭraṁ"
 concept_tag: TE-STHALAM254-RASTRAM
 prerequisites: [TE-C253-purvam, TE-C253-tellavarujamu]
 sounds: []
-roots: []
+roots: [sanskrit-rashtra]
+etymology_hook: "rāṣṭraṁ ← Sanskrit rāṣṭra 'kingdom, country', a tatsama (CDIAL 10721)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C253-tellavarujamu]
 <!-- hl-knowledge: introduces=[TE-LEX-C254-STHALAM254-01]; assesses=[] -->
 
 **రాష్ట్రం** — *rāṣṭraṁ* — "a state".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రాష్ట్రం** (*rāṣṭraṁ*) is Sanskrit *rāṣṭra*, "kingdom, country", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 10721).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

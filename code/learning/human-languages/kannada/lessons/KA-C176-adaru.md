@@ -14,7 +14,8 @@ romanization: "ādarū"
 concept_tag: KA-KARANA176-ADARU
 prerequisites: [KA-C176-saluvagi, KA-C176-illadiddare]
 sounds: []
-roots: []
+roots: [tamil-aaku-become]
+etymology_hook: "ādarū: native, 'even if it becomes', from āgu 'to become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C176-illadiddare]
 <!-- hl-knowledge: introduces=[KA-LEX-C176-KARANA176-03]; assesses=[] -->
 
 **ಆದರೂ** — *ādarū* — "even so, nevertheless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆದರೂ** (*ādarū*) is native Dravidian: the "even if" form of *āgu*, "to become" (DEDR 333). "Even if it is so" is "even so". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

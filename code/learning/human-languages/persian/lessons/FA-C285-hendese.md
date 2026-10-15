@@ -14,7 +14,8 @@ romanization: "hendese"
 concept_tag: FA-KAR285-HENDESE
 prerequisites: [FA-C285-adabiyat, FA-C285-engelisi]
 sounds: []
-roots: []
+roots: [persian-andaza]
+etymology_hook: "hendese ← Arabic handasa; EtymDB traces it to Persian andâze 'measure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C285-engelisi]
 <!-- hl-knowledge: introduces=[FA-LEX-C285-KAR285-05]; assesses=[] -->
 
 **هندسه** — *hendese* — "geometry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hendese* is borrowed from Arabic *handasa*, "geometry", which EtymDB traces back to Persian *andâze*, "measure": a Persian word home again from Arabic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

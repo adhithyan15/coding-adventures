@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 193,
-  "sourceHash": "fnv1a64:c49d519b03250f81",
+  "sourceHash": "fnv1a64:4d43c85a7a6b880b",
   "lessonIds": [
     "HI-C193-adhyapak",
     "HI-C193-vakil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch193.txt",
   "json": "hindi/narration/ch193.json",
-  "textHash": "fnv1a64:5939c3d9dd9ce2d0",
-  "jsonHash": "fnv1a64:16ea43aa13ca543b",
+  "textHash": "fnv1a64:a474ee0d1bc98261",
+  "jsonHash": "fnv1a64:a18c7387ea75dab5",
   "findings": []
 }

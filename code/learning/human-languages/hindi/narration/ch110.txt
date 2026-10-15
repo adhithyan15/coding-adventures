@@ -13,6 +13,9 @@ You'll want to know: दोबारा.
 दोबारा (dobārā) — "again, a second time".
 दोबारा (dobārā) बोलिए — "please say it again". It is दो, "two", and बार, "a time".
 
+The word, taken apart.
+दोबारा (dobārā) is a loan, usually traced to Persian dobāra, "twice, a second time". It is built from do, "two", and bār, "a time".
+
 What you've built.
 The repair a beginner needs most.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for cold, then the Hindi for again.
 You'll want to know: ज़ोर से.
 ज़ोर से (zor se) — "loudly", literally "with force".
 थोड़ा ज़ोर से (zor se) बोलिए — "please speak a little louder", with the softening थोड़ा.
+
+The word, taken apart.
+ज़ोर से (zor se) is zor, "force", with se, "with". zor is usually traced to Persian zōr, "strength"; se is inherited (CDIAL 13310).
 
 What you've built.
 Again, and louder.
@@ -73,6 +79,9 @@ You'll want to know: एक मिनट.
 एक मिनट (ek minaṭ) — "one minute", said the way English says "a moment".
 English minute, borrowed, after the एक you count with.
 
+The word, taken apart.
+एक मिनट (ek minaṭ) is ek, "one", from Sanskrit eka (CDIAL 2462), and minaṭ, English minute.
+
 What you've built.
 A way to buy time while you find the word.
 
@@ -103,6 +112,9 @@ You'll want to know: रुकिए.
 रुकिए (rukie) — "please wait", "please stop".
 रुक (ruk, the stem of the verb "to stop") + -ie, the respectful ending of बोलिए becomes रुकिए (rukie). रुकिए (rukie), एक मिनट (ek minaṭ) — "wait, one minute".
 
+The word, taken apart.
+रुकिए (rukie) is the verb ruknā, "to stop", with the respectful ending -ie. CDIAL lists ruknā under a reconstructed rokk, "stop", whose link with Sanskrit rudh-, "to obstruct", it calls not clear (CDIAL 10827).
+
 What you've built.
 Wait, one minute, again, louder.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for one minute, then the Hindi for please wait
 You'll want to know: मतलब.
 मतलब (matlab) — "meaning".
 धीरे का मतलब (matlab) क्या है? — "what does dhīre mean?". Put any word in front of का मतलब (matlab) क्या है? and it becomes the question that turns any speaker into a teacher.
+
+The word, taken apart.
+मतलब (matlab) is a loan from Arabic maṭlab, "something sought, an aim", which reached Hindi through Persian. Its Arabic root is ṭ-l-b (Lane). Hindi uses it for what a word aims at: its meaning.
 
 What you've built.
 Again, louder, one minute, wait, what does it mean.

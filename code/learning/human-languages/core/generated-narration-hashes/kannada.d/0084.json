@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 84,
-  "sourceHash": "fnv1a64:95fd964b9410e6b6",
+  "sourceHash": "fnv1a64:64c33e1cbf669969",
   "lessonIds": [
     "KA-C84-thirst",
     "KA-C84-weariness",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch84.txt",
   "json": "kannada/narration/ch84.json",
-  "textHash": "fnv1a64:6bbbb5c5ea01b12c",
-  "jsonHash": "fnv1a64:7d9614d59fbbbe10",
+  "textHash": "fnv1a64:a75ae1d4e69ee15a",
+  "jsonHash": "fnv1a64:a110aaa510b50b21",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "masālā"
 concept_tag: MR-VASTU216-MASALA
 prerequisites: [MR-C216-srikhand, MR-C216-tak]
 sounds: []
-roots: []
+roots: [arabic-masalih]
+etymology_hook: "masālā ← Arabic maṣāliḥ 'things that are needful', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C216-tak]
 <!-- hl-knowledge: introduces=[MR-LEX-C216-VASTU216-03]; assesses=[] -->
 
 **मसाला** — *masālā* — "a spice mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मसाला** (*masālā*) is a loan from Arabic *maṣāliḥ*, "things that are needful", which reached Marathi through Persian. Its Arabic root is *ṣ-l-ḥ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

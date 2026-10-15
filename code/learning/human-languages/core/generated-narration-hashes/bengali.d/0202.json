@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 202,
-  "sourceHash": "fnv1a64:689c8d6e3b7c8cf2",
+  "sourceHash": "fnv1a64:a2f924b86cd6c92d",
   "lessonIds": [
     "BN-C202-bhata",
     "BN-C202-chor",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch202.txt",
   "json": "bengali/narration/ch202.json",
-  "textHash": "fnv1a64:9f49ff5d73f2cca2",
-  "jsonHash": "fnv1a64:5100c0fd0994ab1c",
+  "textHash": "fnv1a64:45e59cc9c7a9f598",
+  "jsonHash": "fnv1a64:3575437a9f057230",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "sāsre"
 concept_tag: MR-VASTU264-SASRE
 prerequisites: [MR-C264-jule, MR-C264-sasu]
 sounds: []
-roots: []
+roots: [sanskrit-shvashura]
+etymology_hook: "sāsre ← Sanskrit śvaśura 'husband's father', a tadbhava (CDIAL 12753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C264-sasu]
 <!-- hl-knowledge: introduces=[MR-LEX-C264-VASTU264-04]; assesses=[] -->
 
 **सासरे** — *sāsre* — "a father-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सासरे** (*sāsre*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śvaśura*, "husband's father" (CDIAL 12753). CDIAL adds that the Marathi word may come instead from *śvāśura*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

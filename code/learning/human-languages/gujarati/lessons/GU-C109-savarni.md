@@ -14,7 +14,8 @@ romanization: "sāvarṇī"
 concept_tag: GU-THINGS109-SAVARNI
 prerequisites: [GU-C109-batan, GU-C109-baldi]
 sounds: []
-roots: []
+roots: [sanskrit-samvarana]
+etymology_hook: "sāvarṇī ← saṁvaraṇa in the sense 'putting in order', a tadbhava (CDIAL 13014)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C109-baldi]
 <!-- hl-knowledge: introduces=[GU-LEX-C109-THINGS109-03]; assesses=[] -->
 
 **સાવરણી** (*sāvarṇī*) — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સાવરણી** (*sāvarṇī*) is a tadbhava. CDIAL lists it under Sanskrit *saṁvaraṇa*, "enclosure, covering", in a second sense it reconstructs, "putting in order" (CDIAL 13014).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

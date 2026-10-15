@@ -14,7 +14,8 @@ romanization: "kāfī"
 concept_tag: HI-NOTHING-ENOUGH
 prerequisites: [HI-C113-kuchnahin, HI-C113-abhinahin]
 sounds: []
-roots: []
+roots: [arabic-kafi]
+etymology_hook: "kāfī ← Arabic kāfī 'sufficient', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C113-abhinahin]
 **काफ़ी** (*kāfī*) — "enough", and before an adjective, "quite".
 
 **बस, काफ़ी है** — "that's enough", with the **बस** you know. **काफ़ी अच्छा** — "quite good".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काफ़ी** (*kāfī*) is a loan from Arabic *kāfī*, "sufficient", which reached Hindi through Persian. Its Arabic root is *k-f-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

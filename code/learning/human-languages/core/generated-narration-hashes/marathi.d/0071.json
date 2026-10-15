@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 71,
-  "sourceHash": "fnv1a64:db1537ddbd424c43",
+  "sourceHash": "fnv1a64:da00d7538ed5bd00",
   "lessonIds": [
     "MR-C71-pot",
     "MR-C71-khanda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch71.txt",
   "json": "marathi/narration/ch71.json",
-  "textHash": "fnv1a64:4f956aca38f703fc",
-  "jsonHash": "fnv1a64:ce92c7833f8b7b17",
+  "textHash": "fnv1a64:d1cefff90f92992d",
+  "jsonHash": "fnv1a64:d23879bb42a0caa2",
   "findings": []
 }

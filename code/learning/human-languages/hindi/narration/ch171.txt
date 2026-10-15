@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to lift, then the Hindi for to tell.
 You'll want to know: दिखाना.
 दिखाना — dikhānā — "to show".
 
+The word, taken apart.
+दिखाना (dikhānā) is the causing form of देखना, "to see": to show is to make someone see. CDIAL traces the verb to a reconstructed dṛkṣati, "sees" (CDIAL 6507).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to tell, then the Hindi for to show.
 
 You'll want to know: दिखना.
 दिखना — dikhnā — "to be seen, to appear".
+
+The word, taken apart.
+दिखना (dikhnā) is listed by CDIAL beside dīkhnā, "is seen", under a reconstructed dṛkṣati, "sees", crossed with Prakrit dīsaï, "is seen" (CDIAL 6507).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to show, then the Hindi for to be seen.
 You'll want to know: छिपाना.
 छिपाना — chipānā — "to hide (something)".
 
+The word, taken apart.
+छिपाना (chipānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from chipp, "press, cover, hide", a form CDIAL reconstructs from its descendants (CDIAL 4994). chipānā is the causing form of chipnā, "to hide oneself".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to be seen, then the Hindi for to hide.
 You'll want to know: छिपना.
 छिपना — chipnā — "to hide (oneself)".
 
+The word, taken apart.
+छिपना (chipnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from chipp, "press, cover, hide", a form CDIAL reconstructs from its descendants (CDIAL 4994).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to hide, then the Hindi for to hide.
 
 You'll want to know: रुकना.
 रुकना — ruknā — "to stop, to wait".
+
+The word, taken apart.
+रुकना (ruknā) is listed by CDIAL beside roknā, "to stop someone", under a reconstructed rokk, "stop"; CDIAL calls its link with Sanskrit rudh-, "to obstruct", not clear (CDIAL 10827).
 
 What you've built.
 One more word for this chapter.

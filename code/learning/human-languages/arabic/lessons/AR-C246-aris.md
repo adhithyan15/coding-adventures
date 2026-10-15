@@ -14,7 +14,8 @@ romanization: "ʿarīs"
 concept_tag: AR-SHAY246-ARIS
 prerequisites: [AR-C246-amma, AR-C246-tawam]
 sounds: []
-roots: []
+roots: [ʿ-r-s]
+etymology_hook: "ʿarīs: built on the root ʿ-r-s, 'to marry, to hold a wedding' (Lane); ʿarīs is the bridegroom"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C246-tawam]
 <!-- hl-knowledge: introduces=[AR-LEX-C246-SHAY246-05]; assesses=[] -->
 
 **عريس** — *ʿarīs* — "a bridegroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عريس** (*ʿarīs*) is built on the native Arabic root *ʿ-r-s*, "to marry, to hold a wedding" (Lane). *ʿArīs* is the bridegroom.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

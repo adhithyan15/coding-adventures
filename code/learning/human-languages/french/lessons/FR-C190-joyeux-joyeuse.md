@@ -46,7 +46,7 @@ reviews_of: [FR-C189-vraiment]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**joyeux** — *joie*, "joy", with *-eux*, "full of".
+**joyeux** — *joie*, "joy", with *-eux*, "full of". *Joie* ← Latin *gaudia*, "joys", and *-eux* ← Latin *-ōsus* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

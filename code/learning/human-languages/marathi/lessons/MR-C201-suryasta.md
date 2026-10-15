@@ -14,7 +14,8 @@ romanization: "sūryāsta"
 concept_tag: MR-VEL201-SURYASTA
 prerequisites: [MR-C201-paryant, MR-C201-dasak]
 sounds: []
-roots: []
+roots: [sanskrit-surya, sanskrit-asta]
+etymology_hook: "sūryāsta: Sanskrit sūrya 'sun' (CDIAL 13574) + asta 'home, setting' (CDIAL 973)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C201-dasak]
 <!-- hl-knowledge: introduces=[MR-LEX-C201-VEL201-03]; assesses=[] -->
 
 **सूर्यास्त** — *sūryāsta* — "sunset".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सूर्यास्त** (*sūryāsta*) is a compound of Sanskrit parts: *sūrya*, "sun" (CDIAL 13574), and *asta*, "home; setting (of the sun)" (CDIAL 973).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

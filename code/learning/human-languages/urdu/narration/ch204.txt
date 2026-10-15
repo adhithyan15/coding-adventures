@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a nephew, then the Urdu for a grandson.
 You'll want to know: نمبر.
 نمبر — nambar — "a number".
 
+The word, taken apart.
+نمبر (nambar) is a loan from English number.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a grandson, then the Urdu for a number.
 
 You'll want to know: خبر.
 خبر — khabar — "news".
+
+The word, taken apart.
+خبر (khabar) is a loan from Arabic khabar, "news, report", which reached Urdu through Persian. Its Arabic root is kh-b-r (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a number, then the Urdu for news.
 You'll want to know: بات.
 بات — bāt — "a matter, something said".
 
+The word, taken apart.
+بات (bāt) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vārttā, "livelihood; tidings" (CDIAL 11564).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for news, then the Urdu for a matter.
 You'll want to know: بات چیت.
 بات (bāt) چیت — bātchīt — "a conversation".
 
+The word, taken apart.
+بات چیت (bātchīt) is a rhyming pair: bāt, "talk", from Sanskrit vārttā (CDIAL 11564), and chīt, which CDIAL lists in this very pair under citti, "thought" (CDIAL 4801).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a matter, then the Urdu for a conversation.
 
 You'll want to know: مشورہ.
 مشورہ — mashvarā — "advice".
+
+The word, taken apart.
+مشورہ (mashvarā) is a loan from Arabic mashwara, "consultation", which reached Urdu through Persian. Its Arabic root is sh-w-r (Lane).
 
 What you've built.
 One more word for this chapter.

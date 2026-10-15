@@ -14,7 +14,8 @@ romanization: "chemodán"
 concept_tag: RU-LOC92-SUITCASE
 prerequisites: [RU-C91-boat, RU-C92-bicycle]
 sounds: []
-roots: []
+roots: [persian-jamadan]
+etymology_hook: "чемодан came through Tatar čamadan from Persian jāmadān 'a clothes-holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C92-bicycle]
 <!-- hl-knowledge: introduces=[RU-LEX-C92-LOC92-02]; assesses=[] -->
 
 **чемодан** (*chemodán*) — "a suitcase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**чемодан** came through Tatar *čamadan* from Persian *jāma-dān*, "a place for clothes": *jāma*, "garment", with *dān*, "holder" (Vasmer). An English traveller noted it in 1618.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

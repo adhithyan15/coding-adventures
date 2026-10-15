@@ -14,7 +14,8 @@ romanization: "āśvāsaṁ"
 concept_tag: ML-AROGYAM234-ASVASAM
 prerequisites: [ML-C234-atmavisvasam, ML-C234-avesam]
 sounds: []
-roots: []
+roots: [sanskrit-ashvasa]
+etymology_hook: "āśvāsaṁ ← Sanskrit āśvāsa 'breathing freely', a tatsama (CDIAL 1471)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C234-avesam]
 <!-- hl-knowledge: introduces=[ML-LEX-C234-AROGYAM234-05]; assesses=[] -->
 
 **ആശ്വാസം** — *āśvāsaṁ* — "relief, comfort".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആശ്വാസം** (*āśvāsaṁ*) ← Sanskrit *āśvāsa*, "breathing freely", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 1471). Relief is breathing freely again.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

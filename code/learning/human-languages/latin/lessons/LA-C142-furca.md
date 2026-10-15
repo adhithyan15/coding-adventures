@@ -13,7 +13,8 @@ gloss: "a fork, a pitchfork"
 concept_tag: LA-THINGS142-FURCA
 prerequisites: [LA-C141-urna, LA-C141-calix]
 sounds: []
-roots: []
+roots: [furca-latin]
+etymology_hook: "furca 'fork' — origin unknown; English fork was borrowed from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C141-calix]
 <!-- hl-knowledge: introduces=[LA-LEX-C142-THINGS142-01]; assesses=[] -->
 
 **furca, furcae** — "a fork, a pitchfork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**furca** has no sure origin; no proposal is generally accepted. English *fork* was borrowed from it early.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

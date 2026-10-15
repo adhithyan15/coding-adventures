@@ -14,7 +14,8 @@ romanization: "kīmtī"
 concept_tag: HI-QUAL241-KIMTI
 prerequisites: [HI-C241-niji, HI-C241-muft]
 sounds: []
-roots: []
+roots: [arabic-qima]
+etymology_hook: "kīmtī: qīmat 'price', from Arabic qīma 'value' (Lane), + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C241-muft]
 <!-- hl-knowledge: introduces=[HI-LEX-C241-QUAL241-04]; assesses=[] -->
 
 **क़ीमती** — *kīmtī* — "valuable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**क़ीमती** (*kīmtī*) is *kīmat*, "price", from Arabic *qīma*, "value", through Persian (Lane, root *q-w-m*), with the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

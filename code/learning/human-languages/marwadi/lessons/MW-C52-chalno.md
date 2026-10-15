@@ -14,7 +14,8 @@ romanization: "chālṇo"
 concept_tag: MW-VERB-CHALNO
 prerequisites: [MW-C52-sovno, MW-C52-uthno]
 sounds: []
-roots: []
+roots: [indo-aryan-calyati]
+etymology_hook: "chālṇo ← *calyati 'goes', reconstructed (CDIAL 4721, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C52-uthno]
 <!-- hl-knowledge: introduces=[MW-LEX-C52-VERBS52-04]; assesses=[] -->
 
 **चालणो** — *chālṇo* — "to walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चालणो** (*chālṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*calyati*, "goes", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari *cālṇo* under it (CDIAL 4721).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

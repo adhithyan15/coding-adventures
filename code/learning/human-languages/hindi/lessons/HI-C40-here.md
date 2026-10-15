@@ -14,7 +14,8 @@ romanization: "yahā̃"
 concept_tag: HI-DEIXIS-HERE
 prerequisites: [HI-C40-that, HI-C37-khaana]
 sounds: []
-roots: []
+roots: [sanskrit-iha]
+etymology_hook: "yahāṁ: CDIAL sets it beside Sanskrit iha 'here' as ultimately connected (CDIAL 1605)"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,11 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner, the far one, comes in the next lesson. The two of them differ by
 one sound at the front — **y-** for near — as **यह** and **वह** do, and that is
 not a coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**यहाँ** (*yahāṁ*) is inherited. CDIAL sets it beside Sanskrit *iha*, "here", as a form ultimately connected with it rather than its direct descendant (CDIAL 1605).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-03, HI-CONCEPT-C37-KHAANA-01, HI-CONCEPT-C37-KHAANA-02] -->

@@ -14,7 +14,8 @@ romanization: "kuṇḍalam"
 concept_tag: SA-THG161-KUNDALAM
 prerequisites: [SA-C161-mrdangah, SA-C161-nupuram]
 sounds: []
-roots: []
+roots: [sanskrit-kundala]
+etymology_hook: "kuṇḍala 'ring, earring' is borrowed from Dravidian, after Burrow (CDIAL 3268, EWA); Punjabi kuṇḍal 'earring'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C161-nupuram]
 <!-- hl-knowledge: introduces=[SA-LEX-C161-THG161-05]; assesses=[] -->
 
 **कुण्डलम्** — *kuṇḍalam* — "an earring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuṇḍala* "a ring, an earring" is taken to be borrowed from Dravidian, after Burrow (CDIAL 3268; EWA). It lives on as Punjabi *kuṇḍal* "coil, earring" (CDIAL 3268).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

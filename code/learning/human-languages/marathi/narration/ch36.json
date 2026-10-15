@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "When, After, and Too",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:60ff0364899daf5b",
+  "sourceHash": "fnv1a64:307bcc6f8959c6d8",
   "lessons": [
     {
       "id": "MR-C36-jevha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d23cc7fc79eafe61",
+      "sourceHash": "fnv1a64:68dc309eccdd4663",
       "notice": null,
       "blocks": [
         {
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a19b8af9391d1025",
+      "sourceHash": "fnv1a64:3be633e13a5c6369",
       "notice": null,
       "blocks": [
         {
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f926af5a6b7bec9",
+      "sourceHash": "fnv1a64:88ad078f7407ab1b",
       "notice": null,
       "blocks": [
         {

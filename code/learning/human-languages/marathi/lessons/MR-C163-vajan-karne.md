@@ -14,7 +14,8 @@ romanization: "vajan karṇe"
 concept_tag: MR-VERB-VAJAN-KARNE
 prerequisites: [MR-C163-thand-karne, MR-C163-rikame-karne]
 sounds: []
-roots: []
+roots: [arabic-wazn, sanskrit-karoti]
+etymology_hook: "vajan: usually traced, through Persian, to Arabic wazn 'weight'; karṇe ← karoti 'does' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C163-rikame-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C163-ACT163-03]; assesses=[] -->
 
 **वजन करणे** — *vajan karṇe* — "to weigh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वजन** is a loan, usually traced through Persian to Arabic *wazn*, "weight", whose root is *w-z-n* (Lane). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

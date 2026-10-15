@@ -14,7 +14,8 @@ romanization: "tapēlā"
 concept_tag: TE-VASTUVU270-TAPELA
 prerequisites: [TE-C269-cekka, TE-C269-ittadi]
 sounds: []
-roots: []
+roots: [telugu-tapela-pan]
+etymology_hook: "tapēlā: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'saucepan'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C269-ittadi]
 <!-- hl-knowledge: introduces=[TE-LEX-C270-VASTUVU270-01]; assesses=[] -->
 
 **తపేలా** — *tapēlā* — "a saucepan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **తపేలా** (*tapēlā*) is uncertain. DEDR and CDIAL list no word of this shape meaning "saucepan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

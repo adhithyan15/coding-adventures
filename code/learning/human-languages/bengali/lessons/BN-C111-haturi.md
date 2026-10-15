@@ -14,7 +14,8 @@ romanization: "hātuṛi"
 concept_tag: BN-THINGS111-HATURI
 prerequisites: [BN-C111-dori, BN-C111-perek]
 sounds: []
-roots: []
+roots: [indo-aryan-hastakuta]
+etymology_hook: "hātuṛi ← *hastakūṭa 'hand hammer', a reconstructed form; a tadbhava (CDIAL 14028)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C111-perek]
 <!-- hl-knowledge: introduces=[BN-LEX-C111-THINGS111-03]; assesses=[] -->
 
 **হাতুড়ি** — *hātuṛi* — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হাতুড়ি** (*hātuṛi*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*hastakūṭa*, "hand hammer", a form CDIAL reconstructs from its descendants (CDIAL 14028).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mujtahid"
 concept_tag: AR-SIFA178-MUJTAHID
 prerequisites: [AR-C178-mustajil, AR-C178-wadih]
 sounds: []
-roots: []
+roots: [j-h-d]
+etymology_hook: "mujtahid: built on the root j-h-d, 'to strive, to exert oneself' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C178-wadih]
 <!-- hl-knowledge: introduces=[AR-LEX-C178-SIFA178-05]; assesses=[] -->
 
 **مجتهد** — *mujtahid* — "hard-working".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مجتهد** (*mujtahid*) is built on the native Arabic root *j-h-d*, "to strive, to exert oneself" (Lane). *Mujtahid* is the Form VIII participle, "one who exerts himself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

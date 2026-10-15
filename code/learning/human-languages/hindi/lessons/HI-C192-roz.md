@@ -14,7 +14,8 @@ romanization: "roz"
 concept_tag: HI-FREQ192-ROZ
 prerequisites: [HI-C191-pal, HI-C191-minit]
 sounds: []
-roots: []
+roots: [persian-roz]
+etymology_hook: "roz: usually traced to Persian rōz 'day'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C191-minit]
 <!-- hl-knowledge: introduces=[HI-LEX-C192-FREQ192-01]; assesses=[] -->
 
 **रोज़** — *roz* — "every day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रोज़** (*roz*) is a loan, usually traced to Persian *rōz*, "day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

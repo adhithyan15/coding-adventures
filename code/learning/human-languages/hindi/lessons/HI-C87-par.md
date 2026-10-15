@@ -14,7 +14,8 @@ romanization: "par"
 concept_tag: HI-POST-AT-POINT
 prerequisites: [HI-C36-ghar, HI-C69-station, HI-C02-hai]
 sounds: []
-roots: []
+roots: [sanskrit-upari]
+etymology_hook: "par: usually traced to Sanskrit upari 'above, upon'"
 duration:
   max_seconds: 240
 requires:
@@ -63,6 +64,8 @@ small word goes.
 What पर wants is a **point** rather than an interior — a house you are at, a
 platform you are standing on. A place you are *inside* reaches for a different
 small word, which arrives later.
+
+**पर** is usually traced to Sanskrit *upari*, "above, upon".
 
 ## Grammar Lens: where the pieces land
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C87-POST-01, HI-CONCEPT-C02-HAI-01] -->

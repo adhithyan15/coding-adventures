@@ -13,7 +13,8 @@ gloss: "a step, a stair"
 concept_tag: LA-LOC117-GRADUS
 prerequisites: [LA-C116-angulus, LA-C116-vicus]
 sounds: []
-roots: []
+roots: [gradus-latin, gradi-latin]
+etymology_hook: "gradus 'step' — kin to gradior 'to step', from PIE *ghredh- 'to walk'; English grade, degree"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C116-vicus]
 <!-- hl-knowledge: introduces=[LA-LEX-C117-LOC117-01]; assesses=[] -->
 
 **gradus, gradūs** — "a step, a stair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gradus** belongs with *gradior*, "to step, to walk" (Lewis & Short), usually traced to Proto-Indo-European *\*ghredh-*, "to walk, to go" (EtymDB 2.1). English *grade* and *degree* come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

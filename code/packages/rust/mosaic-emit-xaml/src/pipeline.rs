@@ -36,7 +36,7 @@
 //!   defensively. A follow-up swaps in `<ContentPresenter>` when no
 //!   `Background`/`BorderThickness`/`Padding` are set.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Write as _;
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutPropValue, ScrollAxis};
@@ -1209,6 +1209,9 @@ struct EmitContext<'a> {
     table_font_size: Option<LayoutPropValue>,
     /// Flow of repeated siblings in the immediate layout container.
     horizontal_repeater: bool,
+    /// A wrapping Row can lower one repeated equal-fraction child to a
+    /// UniformGridLayout. The value is the derived number of columns.
+    uniform_repeater_columns: Option<usize>,
     /// Colgroup source and loop depth for structural header item widths.
     header_width_source: Option<(String, usize)>,
     /// Nearest generated container text style. Unique keys let nested styles
@@ -1268,6 +1271,7 @@ impl<'a> EmitContext<'a> {
             needs_font_size_support: false,
             table_font_size: None,
             horizontal_repeater: false,
+            uniform_repeater_columns: None,
             header_width_source: None,
             text_style_resource: None,
             text_style_resource_count: 0,
@@ -1464,6 +1468,12 @@ struct FlexHints {
     /// own default child-stretch behavior.
     width_full: bool,
     height_full: bool,
+    /// A bounded percentage width. It is only consumed when the surrounding
+    /// layout proves that proportional sizing is exact.
+    width_percent: Option<f64>,
+    /// Container-only: `flex-wrap: wrap`, consumed for the deliberately
+    /// narrow repeated equal-fraction Row shape.
+    flex_wrap: bool,
     /// Container-only: this part's own `align-items` value, when it's one
     /// this backend maps (today: only `center` is authored anywhere).
     align_items: Option<String>,
@@ -1540,6 +1550,23 @@ impl FlexAxis {
                 FlexAxis::Column => hints.height_full,
             }
     }
+
+    fn child_percentage(self, hints: &FlexHints) -> Option<f64> {
+        match self {
+            FlexAxis::Row => hints.width_percent,
+            FlexAxis::Column => None,
+        }
+    }
+}
+
+fn bounded_percentage(value: &str) -> Option<f64> {
+    let number = value
+        .trim()
+        .trim_matches('"')
+        .strip_suffix('%')?
+        .parse::<f64>()
+        .ok()?;
+    (number.is_finite() && number > 0.0 && number <= 100.0).then_some(number)
 }
 
 /// Scan a part's raw mosstyle props for the flex hints that have no XAML
@@ -1564,6 +1591,8 @@ fn extract_flex_hints(props: &[StyleProp]) -> FlexHints {
             }
             "width" if value == "100%" => hints.width_full = true,
             "height" if value == "100%" => hints.height_full = true,
+            "width" => hints.width_percent = bounded_percentage(value),
+            "flex-wrap" if value.trim_matches('"') == "wrap" => hints.flex_wrap = true,
             "align-items" if value == "center" => hints.align_items = Some(value.to_string()),
             // `align` (not `align-items`) is not a real mosstyle property
             // — per `UI15-mosstyle.md` §1/§11, alignment belongs in
@@ -1733,6 +1762,8 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
         let has_flex_hints = flex.flex_grow
             || flex.width_full
             || flex.height_full
+            || flex.width_percent.is_some()
+            || flex.flex_wrap
             || flex.align_items.is_some()
             || flex.justify_content.is_some();
         if !base_fragment.is_empty()
@@ -2683,6 +2714,111 @@ pub struct DroppedStyleProperty {
 /// today (grows or doesn't), so there is nothing a reader would recognise
 /// as "lost" by reporting it.
 pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<DroppedStyleProperty> {
+    dropped_style_properties_with_consumed(style, &HashSet::new())
+}
+
+/// Layout-aware style degradation report. Percentage sizes and wrapping are
+/// only removed from the report when the exact layout shape that consumes
+/// them is present.
+pub fn dropped_style_properties_in_layout(
+    style: &mosstyle_compiler::StyleDef,
+    layout: &LayoutNode,
+) -> Vec<DroppedStyleProperty> {
+    let part_styles = build_part_style_map(style);
+    let mut occurrences = HashMap::new();
+    collect_layout_style_occurrences(layout, &part_styles, &mut occurrences);
+    let consumed = occurrences
+        .into_iter()
+        .filter_map(|(property, (total, lowered))| {
+            (total > 0 && total == lowered).then_some(property)
+        })
+        .collect();
+    dropped_style_properties_with_consumed(style, &consumed)
+}
+
+type LayoutStyleOccurrences = HashMap<(String, String), (usize, usize)>;
+
+fn record_style_occurrence(
+    occurrences: &mut LayoutStyleOccurrences,
+    part: &str,
+    property: &str,
+    lowered: bool,
+) {
+    let counts = occurrences
+        .entry((part.to_string(), property.to_string()))
+        .or_default();
+    if lowered {
+        counts.1 += 1;
+    } else {
+        counts.0 += 1;
+    }
+}
+
+fn collect_layout_style_occurrences(
+    node: &LayoutNode,
+    part_styles: &PartStyleMap,
+    occurrences: &mut LayoutStyleOccurrences,
+) {
+    if let Some((part, entry)) = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part).map(|entry| (part, entry)))
+    {
+        if entry.flex.width_percent.is_some() {
+            record_style_occurrence(occurrences, part, "width", false);
+        }
+        if entry.flex.flex_wrap {
+            record_style_occurrence(occurrences, part, "flex-wrap", false);
+        }
+    }
+
+    let axis = match node.tag.as_str() {
+        "Row" => Some(FlexAxis::Row),
+        "Column" => Some(FlexAxis::Column),
+        _ => None,
+    };
+    if let Some(axis) = axis {
+        let space_between = node
+            .part_name
+            .as_deref()
+            .and_then(|part| part_styles.get(part))
+            .and_then(|entry| entry.flex.justify_content.as_deref())
+            == Some("space-between");
+        if let Ok(slots) = build_flex_slots(node, part_styles, axis, space_between) {
+            if proportional_slot_weights(&slots, part_styles, axis).is_some() {
+                for slot in &slots {
+                    if let FlexSlot::Node { node: child, .. } = slot {
+                        if let Some(part) = child.part_name.as_deref() {
+                            record_style_occurrence(occurrences, part, "width", true);
+                        }
+                    }
+                }
+            }
+        }
+
+        if uniform_repeater_columns(node, part_styles, axis).is_some() {
+            if let Some(part) = node.part_name.as_deref() {
+                record_style_occurrence(occurrences, part, "flex-wrap", true);
+            }
+            if let Some(item_part) = node
+                .children
+                .first()
+                .and_then(repeated_child)
+                .and_then(|item| item.part_name.as_deref())
+            {
+                record_style_occurrence(occurrences, item_part, "width", true);
+            }
+        }
+    }
+    for child in &node.children {
+        collect_layout_style_occurrences(child, part_styles, occurrences);
+    }
+}
+
+fn dropped_style_properties_with_consumed(
+    style: &mosstyle_compiler::StyleDef,
+    consumed: &HashSet<(String, String)>,
+) -> Vec<DroppedStyleProperty> {
     let mut out = Vec::new();
     for part in &style.parts {
         let (_, raw_drops) = build_style_fragment_with_drops(&part.base);
@@ -2690,6 +2826,9 @@ pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<Drop
             continue;
         }
         for drop in raw_drops {
+            if consumed.contains(&(part.name.clone(), drop.name.clone())) {
+                continue;
+            }
             if lowered_solid_per_edge_style(&part.base, &drop.name, &drop.value) {
                 continue;
             }
@@ -4565,6 +4704,42 @@ enum FlexSlot<'a> {
     Spacer,
 }
 
+fn build_flex_slots<'a>(
+    node: &'a LayoutNode,
+    part_styles: &PartStyleMap,
+    axis: FlexAxis,
+    space_between: bool,
+) -> Result<Vec<FlexSlot<'a>>, PipelineEmitError> {
+    let mut slots = Vec::with_capacity(node.children.len());
+    let mut i = 0;
+    while i < node.children.len() {
+        let child = &node.children[i];
+        if child.tag == "Else" {
+            return Err(PipelineEmitError::UnsupportedPrimitive(
+                "Else without preceding If".to_string(),
+            ));
+        }
+        if space_between && !slots.is_empty() {
+            slots.push(FlexSlot::Spacer);
+        }
+        if child.tag == "If" {
+            let else_node = node.children.get(i + 1).filter(|n| n.tag == "Else");
+            let grows = flex_child_grows(child, part_styles, axis);
+            slots.push(FlexSlot::If {
+                if_node: child,
+                else_node,
+                grows,
+            });
+            i += if else_node.is_some() { 2 } else { 1 };
+        } else {
+            let grows = flex_child_grows(child, part_styles, axis);
+            slots.push(FlexSlot::Node { node: child, grows });
+            i += 1;
+        }
+    }
+    Ok(slots)
+}
+
 /// Does `node`'s own part style request a star-sized cell on `axis`
 /// (`flex-grow`, or the main-axis `width`/`height: 100%` case — see
 /// `FlexAxis::child_grows`)?
@@ -4573,6 +4748,70 @@ fn flex_child_grows(node: &LayoutNode, part_styles: &PartStyleMap, axis: FlexAxi
         .as_deref()
         .and_then(|p| part_styles.get(p))
         .is_some_and(|entry| axis.child_grows(&entry.flex))
+}
+
+fn flex_child_percentage(
+    node: &LayoutNode,
+    part_styles: &PartStyleMap,
+    axis: FlexAxis,
+) -> Option<f64> {
+    node.part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .and_then(|entry| axis.child_percentage(&entry.flex))
+}
+
+/// Return proportional weights only when every logical child has a bounded
+/// percentage on the container's main axis and those percentages describe the
+/// whole axis. In that shape XAML star definitions are an exact lowering;
+/// partial or mixed rows remain on the existing Auto/star path and stay
+/// visible in degradation reporting.
+fn proportional_slot_weights(
+    slots: &[FlexSlot<'_>],
+    part_styles: &PartStyleMap,
+    axis: FlexAxis,
+) -> Option<Vec<f64>> {
+    let mut weights = Vec::with_capacity(slots.len());
+    for slot in slots {
+        let node = match slot {
+            FlexSlot::Node { node, .. } => *node,
+            FlexSlot::If { .. } | FlexSlot::Spacer => return None,
+        };
+        weights.push(flex_child_percentage(node, part_styles, axis)?);
+    }
+    let total = weights.iter().sum::<f64>();
+    (!weights.is_empty() && (total - 100.0).abs() <= 0.01).then_some(weights)
+}
+
+fn repeated_child(node: &LayoutNode) -> Option<&LayoutNode> {
+    (node.tag == "For" && node.children.len() == 1).then(|| &node.children[0])
+}
+
+/// Recognize a wrapping horizontal Row whose sole child is a `For` rendering
+/// one equal-width item. A reciprocal percentage such as 14.2857% derives a
+/// seven-column UniformGridLayout. Other wrapping shapes remain reported.
+fn uniform_repeater_columns(
+    node: &LayoutNode,
+    part_styles: &PartStyleMap,
+    axis: FlexAxis,
+) -> Option<usize> {
+    if axis != FlexAxis::Row
+        || !node
+            .part_name
+            .as_deref()
+            .and_then(|part| part_styles.get(part))
+            .is_some_and(|entry| entry.flex.flex_wrap)
+        || node.children.len() != 1
+    {
+        return None;
+    }
+    let item = repeated_child(&node.children[0])?;
+    let percentage = flex_child_percentage(item, part_styles, FlexAxis::Row)?;
+    let columns = (100.0 / percentage).round();
+    (columns.is_finite()
+        && (2.0..=100.0).contains(&columns)
+        && (percentage * columns - 100.0).abs() <= 0.01)
+        .then_some(columns as usize)
 }
 
 /// `Row`/`Column [name] { children }` → `<Grid>` with one
@@ -4646,52 +4885,37 @@ fn emit_flex_grid(
         .as_deref()
         .filter(|v| *v == "center")
         .map(|_| format!("{}=\"Center\"", axis.cross_align_property()));
+    let uniform_columns = uniform_repeater_columns(node, part_styles, axis);
 
     // -- Build the ordered slot list. An `If` looks ahead for a paired
     //    `Else` exactly like `emit_xaml_children` does — both branches
     //    are one logical slot even though `emit_if` emits two sibling
     //    `<ContentControl>`s for them. --
-    let mut slots: Vec<FlexSlot<'_>> = Vec::with_capacity(node.children.len());
-    let mut i = 0;
-    while i < node.children.len() {
-        let child = &node.children[i];
-        if child.tag == "Else" {
-            return Err(PipelineEmitError::UnsupportedPrimitive(
-                "Else without preceding If".to_string(),
-            ));
-        }
-        if space_between && !slots.is_empty() {
-            slots.push(FlexSlot::Spacer);
-        }
-        if child.tag == "If" {
-            let else_node = node.children.get(i + 1).filter(|n| n.tag == "Else");
-            let grows = flex_child_grows(child, part_styles, axis);
-            slots.push(FlexSlot::If {
-                if_node: child,
-                else_node,
-                grows,
-            });
-            i += if else_node.is_some() { 2 } else { 1 };
-        } else {
-            let grows = flex_child_grows(child, part_styles, axis);
-            slots.push(FlexSlot::Node { node: child, grows });
-            i += 1;
-        }
-    }
+    let slots = build_flex_slots(node, part_styles, axis, space_between)?;
+    let proportional_weights = proportional_slot_weights(&slots, part_styles, axis);
 
     // -- Definitions: one per slot, `"*"` for a growing child or a
     //    space-between spacer, `Auto` otherwise. --
     if !slots.is_empty() {
         writeln!(out, "{content_pad}<{}>", axis.definitions_tag()).unwrap();
         let def_pad = " ".repeat(content_indent + 4);
-        for slot in &slots {
+        for (slot_index, slot) in slots.iter().enumerate() {
             let grows = matches!(
                 slot,
                 FlexSlot::Spacer
                     | FlexSlot::Node { grows: true, .. }
                     | FlexSlot::If { grows: true, .. }
             );
-            let size = if grows { "*" } else { "Auto" };
+            let size = if let Some(weights) = proportional_weights.as_ref() {
+                format!("{}*", weights[slot_index])
+            } else if grows
+                || (uniform_columns.is_some()
+                    && matches!(slot, FlexSlot::Node { node, .. } if node.tag == "For"))
+            {
+                "*".to_string()
+            } else {
+                "Auto".to_string()
+            };
             writeln!(
                 out,
                 "{def_pad}<{} {}=\"{size}\"/>",
@@ -4730,7 +4954,12 @@ fn emit_flex_grid(
                 )?);
             }
             FlexSlot::Node { node: child, .. } => {
-                let body = emit_xaml_node(child, content_indent, part_styles, ctx)?;
+                let previous_uniform_columns = ctx.uniform_repeater_columns;
+                ctx.uniform_repeater_columns =
+                    (child.tag == "For").then_some(uniform_columns).flatten();
+                let body_result = emit_xaml_node(child, content_indent, part_styles, ctx);
+                ctx.uniform_repeater_columns = previous_uniform_columns;
+                let body = body_result?;
                 out.push_str(&inject_attr_into_first_element(&body, &combined_attr));
             }
         }
@@ -7516,6 +7745,7 @@ fn emit_for(
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let horizontal = ctx.horizontal_repeater;
+    let uniform_columns = ctx.uniform_repeater_columns;
     // -- 1. Extract and validate the For-required props --
     let as_name = find_prop_keyword(node, "as").ok_or_else(|| {
         PipelineEmitError::UnsupportedPrimitive("For block missing required prop 'as:'".to_string())
@@ -7809,9 +8039,11 @@ fn emit_for(
     }
     ctx.template_visual_state_groups.push(Vec::new());
     ctx.horizontal_repeater = false;
+    ctx.uniform_repeater_columns = None;
     let body_result =
         emit_xaml_single_content_children(&node.children, indent + 12, part_styles, ctx);
     ctx.horizontal_repeater = horizontal;
+    ctx.uniform_repeater_columns = uniform_columns;
     let mut template_visual_state_groups = ctx
         .template_visual_state_groups
         .pop()
@@ -7927,7 +8159,15 @@ fn emit_for(
         "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}, Mode=OneWay}}\"{style}>"
     )
     .unwrap();
-    if horizontal {
+    if let Some(columns) = uniform_columns {
+        writeln!(out, "{pad2}<ItemsRepeater.Layout>").unwrap();
+        writeln!(
+            out,
+            "{pad3}<UniformGridLayout Orientation=\"Horizontal\" MaximumRowsOrColumns=\"{columns}\" ItemsStretch=\"Fill\"/>"
+        )
+        .unwrap();
+        writeln!(out, "{pad2}</ItemsRepeater.Layout>").unwrap();
+    } else if horizontal {
         writeln!(out, "{pad2}<ItemsRepeater.Layout>").unwrap();
         writeln!(out, "{pad3}<StackLayout Orientation=\"Horizontal\"/>").unwrap();
         writeln!(out, "{pad2}</ItemsRepeater.Layout>").unwrap();
@@ -15554,6 +15794,217 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+    }
+
+    #[test]
+    fn complete_row_percentages_become_proportional_star_columns() {
+        let c = component("Foo", vec![], vec![]);
+        let child = |part: &str, text: &str| LayoutNode {
+            tag: "Text".to_string(),
+            part_name: Some(part.to_string()),
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String(text.to_string()),
+            }],
+            children: vec![],
+        };
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: vec![],
+                children: vec![child("left", "L"), child("right", "R")],
+            },
+        );
+        let mut s = style_for_box("left", vec![("width", "40%")]);
+        s.parts
+            .push(style_for_box("right", vec![("width", "60%")]).parts.remove(0));
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("<ColumnDefinition Width=\"40*\"/>")
+                && r.xaml.contains("<ColumnDefinition Width=\"60*\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert_eq!(dropped_style_properties(&s).len(), 2);
+        assert!(dropped_style_properties_in_layout(&s, &l.root).is_empty());
+    }
+
+    #[test]
+    fn reused_part_remains_reported_when_any_occurrence_is_not_lowered() {
+        let percent_child = || LayoutNode {
+            tag: "Box".to_string(),
+            part_name: Some("half".to_string()),
+            props: vec![],
+            children: vec![],
+        };
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: vec![],
+                children: vec![
+                    LayoutNode {
+                        tag: "Row".to_string(),
+                        part_name: None,
+                        props: vec![],
+                        children: vec![percent_child(), percent_child()],
+                    },
+                    percent_child(),
+                ],
+            },
+        );
+        let s = style_for_box("half", vec![("width", "50%")]);
+
+        let drops = dropped_style_properties_in_layout(&s, &l.root);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "width");
+    }
+
+    #[test]
+    fn conditional_percentage_slots_remain_auto_and_reported() {
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: vec![],
+                children: vec![
+                    LayoutNode {
+                        tag: "If".to_string(),
+                        part_name: Some("conditional".to_string()),
+                        props: vec![LayoutProp {
+                            name: "when".to_string(),
+                            value: LayoutPropValue::Keyword("true".to_string()),
+                        }],
+                        children: vec![LayoutNode {
+                            tag: "Box".to_string(),
+                            part_name: None,
+                            props: vec![],
+                            children: vec![],
+                        }],
+                    },
+                    LayoutNode {
+                        tag: "Box".to_string(),
+                        part_name: Some("remainder".to_string()),
+                        props: vec![],
+                        children: vec![],
+                    },
+                ],
+            },
+        );
+        let mut s = style_for_box("conditional", vec![("width", "40%")]);
+        s.parts.push(
+            style_for_box("remainder", vec![("width", "60%")])
+                .parts
+                .remove(0),
+        );
+
+        let xaml = compile(&component("Foo", vec![], vec![]), &l, &s).xaml;
+        assert!(!xaml.contains("Width=\"40*\""), "got:\n{xaml}");
+        assert!(!xaml.contains("Width=\"60*\""), "got:\n{xaml}");
+        let drops = dropped_style_properties_in_layout(&s, &l.root);
+        assert_eq!(drops.len(), 2, "got: {drops:?}");
+        assert!(drops.iter().any(|drop| drop.part == "conditional"));
+        assert!(drops.iter().any(|drop| drop.part == "remainder"));
+    }
+
+    #[test]
+    fn wrapping_repeated_fraction_uses_uniform_grid_layout() {
+        let c = component(
+            "Foo",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("grid".to_string()),
+                props: vec![],
+                children: vec![for_node(
+                    LayoutPropValue::SlotRef("items".to_string()),
+                    "item",
+                    None,
+                    vec![LayoutNode {
+                        tag: "Column".to_string(),
+                        part_name: Some("cell".to_string()),
+                        props: vec![],
+                        children: vec![],
+                    }],
+                )],
+            },
+        );
+        let mut s = style_for_box("grid", vec![("flex-wrap", "wrap")]);
+        s.parts
+            .push(style_for_box("cell", vec![("width", "25%")]).parts.remove(0));
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains(
+                "<UniformGridLayout Orientation=\"Horizontal\" MaximumRowsOrColumns=\"4\" ItemsStretch=\"Fill\"/>"
+            ),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<ColumnDefinition Width=\"*\"/>"),
+            "the repeater must receive the Row's available width:\n{}",
+            r.xaml
+        );
+        assert!(dropped_style_properties_in_layout(&s, &l.root).is_empty());
+
+        let mut unsupported = style_for_box("grid", vec![("flex-wrap", "wrap")]);
+        unsupported.parts.push(
+            style_for_box("cell", vec![("width", "30%")])
+                .parts
+                .remove(0),
+        );
+        let unsupported_xaml = compile(&c, &l, &unsupported).xaml;
+        assert!(
+            unsupported_xaml.contains("<StackLayout Orientation=\"Horizontal\"/>")
+                && !unsupported_xaml.contains("<UniformGridLayout"),
+            "got:\n{unsupported_xaml}"
+        );
+        let drops = dropped_style_properties_in_layout(&unsupported, &l.root);
+        assert_eq!(drops.len(), 2, "got: {drops:?}");
+        assert!(drops.iter().any(|drop| drop.name == "flex-wrap"));
+        assert!(drops.iter().any(|drop| drop.name == "width"));
+    }
+
+    #[test]
+    fn partial_or_non_reciprocal_percentages_remain_reported() {
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Box".to_string(),
+                    part_name: Some("partial".to_string()),
+                    props: vec![],
+                    children: vec![],
+                }],
+            },
+        );
+        let s = style_for_box("partial", vec![("width", "40%")]);
+        let r = compile(&component("Foo", vec![], vec![]), &l, &s);
+        assert!(
+            r.xaml.contains("<ColumnDefinition Width=\"Auto\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        let drops = dropped_style_properties_in_layout(&s, &l.root);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "width");
     }
 
     /// `justify-content: space-between` inserts a `"*"` spacer between

@@ -11,7 +11,8 @@ romanization: "talakaṟakkaṁ"
 concept_tag: ML-UNWELL-DIZZY
 prerequisites: [ML-C115-headache, ML-C115-rest]
 sounds: []
-roots: []
+roots: [dravidian-tala-kai, dravidian-karangu-whirl]
+etymology_hook: "talakaṟakkaṁ: native Dravidian, tala 'head' (DEDR 3103) + a noun from the verb 'to whirl' (DEDR 1387)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C115-rest]
 
 **തലകറക്കം** (*talakaṟakkaṁ*) — "dizziness", literally "head-turning": **തല**, "head",
 with **കറക്കം** (*kaṟakkaṁ*), "spinning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തലകറക്കം** (*talakaṟakkaṁ*) is native Dravidian: *tala*, "head" (DEDR 3103), with a noun from the verb "to turn round, whirl" (DEDR 1387, with Tamil *kaṟaṅku*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

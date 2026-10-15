@@ -15,6 +15,7 @@ concept_tag: GU-TIME95-TARAT
 prerequisites: [GU-C94-hamna, GU-C95-haji]
 sounds: []
 roots: []
+etymology_hook: "tarat: not fully settled; it matches Hindi turat 'quickly', listed under Sanskrit turant 'hastening' (CDIAL 5879)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C95-haji]
 <!-- hl-knowledge: introduces=[GU-LEX-C95-TIME95-02]; assesses=[] -->
 
 **તરત** (*tarat*) — "immediately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **તરત** (*tarat*) is not fully settled. It matches Hindi *turat*, "quickly", which CDIAL lists under Sanskrit *turant*, "hastening" (CDIAL 5879), but CDIAL lists no Gujarati form there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

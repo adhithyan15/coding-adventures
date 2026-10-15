@@ -14,7 +14,8 @@ romanization: "ṣaṭ"
 concept_tag: SA-NUM-SIX
 prerequisites: [SA-C18-k-words, SA-C06-number-cognates]
 sounds: []
-roots: []
+roots: [sanskrit-shash]
+etymology_hook: "ṣaṣ 'six' is inherited: MW compares Latin sex, Greek hex and English six (CDIAL 12803)"
 duration:
   max_seconds: 210
 requires:

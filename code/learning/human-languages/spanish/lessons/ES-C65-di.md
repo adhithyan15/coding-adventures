@@ -11,7 +11,7 @@ concept_tag: ES-PRETERITE-VER-DAR
 prerequisites: [ES-C65-vi-di]
 sounds: []
 roots: [dare-latin]
-etymology_hook: "dar is Latin dare, and its preterite went over to the -er endings early -- which is why an -ar verb ends up sounding like comer in the past"
+etymology_hook: "dar ← Latin dare 'to give'; di goes back to Latin dedi 'I gave', worn down"
 duration:
   max_seconds: 230
 requires:
@@ -53,6 +53,11 @@ one-syllable forms going bare. *Ver* does the same in the plural: *vimos*,
 
 [PAUSE 2s] Two verbs, one shared oddity, and now the last two named irregulars
 of the preterite are yours.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dar** ← Latin *dare*, "to give". Its past is Latin's own, worn down: *di* goes back to *dedi*, "I gave".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DAR, ES-GRAMMAR-DAR-PRETERITE, ES-GRAMMAR-VER-PRETERITE, ES-ORTHOGRAPHY-ONE-SYLLABLE-NO-ACCENT] -->

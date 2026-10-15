@@ -14,7 +14,8 @@ romanization: "ākāshi"
 concept_tag: BN-GUN246-AKASHI
 prerequisites: [BN-C246-bharotiyo, BN-C246-sonali]
 sounds: []
-roots: []
+roots: [sanskrit-akasha]
+etymology_hook: "ākāshi: Sanskrit ākāśa 'sky', a tatsama, + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C246-sonali]
 <!-- hl-knowledge: introduces=[BN-LEX-C246-GUN246-05]; assesses=[] -->
 
 **আকাশি** — *ākāshi* — "sky blue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আকাশি** (*ākāshi*) is Sanskrit *ākāśa*, "sky", taken over whole, + the ending *-i*, "of": "of the sky".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

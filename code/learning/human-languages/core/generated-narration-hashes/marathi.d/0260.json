@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 260,
-  "sourceHash": "fnv1a64:0158d1c3483474f9",
+  "sourceHash": "fnv1a64:1f0491aad937ccb4",
   "lessonIds": [
     "MR-C260-udar",
     "MR-C260-bolka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch260.txt",
   "json": "marathi/narration/ch260.json",
-  "textHash": "fnv1a64:a110af43ec5e9f12",
-  "jsonHash": "fnv1a64:ab2a3625158cfc81",
+  "textHash": "fnv1a64:6f87211eb8783e54",
+  "jsonHash": "fnv1a64:7ee8387773056651",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "utsāhī"
 concept_tag: MR-GUN174-UTSAHI
 prerequisites: [MR-C174-uddhat, MR-C174-apriya]
 sounds: []
-roots: []
+roots: [sanskrit-utsaha]
+etymology_hook: "utsāhī: Sanskrit utsāhin 'energetic', from utsāha 'power, firmness' (CDIAL 1882); a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C174-apriya]
 <!-- hl-knowledge: introduces=[MR-LEX-C174-GUN174-05]; assesses=[] -->
 
 **उत्साही** — *utsāhī* — "enthusiastic, energetic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उत्साही** (*utsāhī*) is Sanskrit *utsāhin*, "energetic", a tatsama built on *utsāha*, "power, firmness; joy" (CDIAL 1882).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

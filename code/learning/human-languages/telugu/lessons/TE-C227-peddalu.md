@@ -14,7 +14,8 @@ romanization: "peddalu"
 concept_tag: TE-VASTUVU227-PEDDALU
 prerequisites: [TE-C226-kardu, TE-C227-yuvakudu]
 sounds: []
-roots: []
+roots: [dravidian-peru-great]
+etymology_hook: "peddalu: native pedda 'great, elder' (DEDR 4411) + plural -lu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C227-yuvakudu]
 <!-- hl-knowledge: introduces=[TE-LEX-C227-VASTUVU227-02]; assesses=[] -->
 
 **పెద్దలు** — *peddalu* — "elders".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెద్దలు** (*peddalu*) is native Dravidian: *pedda*, "great, elder", one word with Tamil *periya*, "great, elder" (DEDR 4411), with the plural ending *-lu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

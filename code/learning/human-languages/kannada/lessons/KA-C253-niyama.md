@@ -14,7 +14,8 @@ romanization: "niyama"
 concept_tag: KA-KARANA253-NIYAMA
 prerequisites: [KA-C253-nenapu, KA-C253-jivana]
 sounds: []
-roots: []
+roots: [sanskrit-niyama]
+etymology_hook: "niyama ← Sanskrit niyama 'restraint; fixed law', a tatsama (CDIAL 7250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C253-jivana]
 <!-- hl-knowledge: introduces=[KA-LEX-C253-KARANA253-05]; assesses=[] -->
 
 **ನಿಯಮ** — *niyama* — "a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಯಮ** (*niyama*) is Sanskrit *niyama*, "restraint; fixed law", taken over whole as a learned loan, a tatsama (CDIAL 7250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

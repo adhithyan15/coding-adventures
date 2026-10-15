@@ -14,7 +14,8 @@ romanization: "sléva"
 concept_tag: RU-WHERE2-LEFT
 prerequisites: [RU-C72-above, RU-C73-below]
 sounds: []
-roots: []
+roots: [slavic-levu]
+etymology_hook: "слева is с 'from' + лева, from левый 'left'; Latin laevus 'left' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C73-below]
 <!-- hl-knowledge: introduces=[RU-LEX-C73-WHERE2-02]; assesses=[] -->
 
 **слева** (*sléva*) — "on the left".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**слева** is *с*, "from", with *лева*, a form of *левый*, "left": "from the left". *левый* ← Proto-Slavic *\*lěvŭ*, related to Latin *laevus* and Greek *laiós*, both "left" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

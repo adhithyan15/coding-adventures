@@ -14,7 +14,8 @@ romanization: "khuṭṭa"
 concept_tag: AR-WANT114-KHUTTA
 prerequisites: [AR-C113-amal, AR-C114-hadaf]
 sounds: []
-roots: []
+roots: [kh-ṭ-ṭ]
+etymology_hook: "khuṭṭa: built on the root kh-ṭ-ṭ, 'to draw a line' (Lane); khuṭṭa is a plan, a thing marked out"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C114-hadaf]
 <!-- hl-knowledge: introduces=[AR-LEX-C114-WANT114-02]; assesses=[] -->
 
 **خطة** — *khuṭṭa* — "a plan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خطة** (*khuṭṭa*) is built on the native Arabic root *kh-ṭ-ṭ*, "to draw a line" (Lane). Lane's *khuṭṭa* is a line, or an affair; the plan, a thing marked out, is a later sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sore"
 concept_tag: JA-THING132-SORE
 prerequisites: [JA-W132-re, JA-W132-so, JA-C132-kore, JA-C132-soko, JA-C118-wata, JA-C130-makkuro]
 sounds: [mora]
-roots: []
+roots: [japanese-so-that, japanese-re]
+etymology_hook: "sore: native so- 'near you' + -re, as in kore"
 duration:
   max_seconds: 200
 requires:
@@ -55,6 +56,11 @@ it a thing, as in **これ**. Put side by side, the four words line up:
 |---|---|
 | **ここ**, here | **そこ**, there |
 | **これ**, this | **それ**, that |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**それ** (*sore*) is native: *so-*, the root that points near the listener, with *-re*, as in *kore* (JMdict). It is inherited rather than borrowed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C132-SORE, JA-LEX-ANCHOR-KORE, JA-SCRIPT-SO-01, JA-SCRIPT-RE-01] -->

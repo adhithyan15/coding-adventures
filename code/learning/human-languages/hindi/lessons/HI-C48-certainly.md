@@ -14,7 +14,8 @@ romanization: "zarūr"
 concept_tag: HI-WORD-CERTAINLY
 prerequisites: [HI-C48-enough, HI-C46-ear, HI-C47-farmer]
 sounds: []
-roots: []
+roots: [arabic-darura]
+etymology_hook: "zarūr ← Arabic ḍarūra 'necessity', through Persian (Lane, root ḍ-r-r)"
 duration:
   max_seconds: 210
 requires:

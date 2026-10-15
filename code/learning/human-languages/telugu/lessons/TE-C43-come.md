@@ -11,7 +11,8 @@ romanization: "rā"
 concept_tag: TE-VERB-COME
 prerequisites: [TE-C32-raa]
 sounds: []
-roots: []
+roots: [dravidian-vaa-come]
+etymology_hook: "rā: native Dravidian, the command of vaccu 'to come' (DEDR 5270); Tamil vā, Kannada bā"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C32-raa]
 **రా** (*rā*) — "come".
 
 You met it beside its partner *vaccu-*; here it opens the run. The bare command, and one of the shortest words in the language: a single syllable that is a complete sentence. The old warning still holds: the tense endings attach to *vaccu-*, not to *rā*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రా** (*rā*) is native Dravidian: the command form of the verb DEDR 5270 lists as *vaccu*, "to come", one word with Tamil *varu* (command *vā*) and Kannada *bar* (command *bā*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

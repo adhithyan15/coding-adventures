@@ -14,7 +14,8 @@ romanization: "signæl"
 concept_tag: BN-JINIS205-SIGNL
 prerequisites: [BN-C204-badam, BN-C205-horn]
 sounds: []
-roots: []
+roots: [english-signal]
+etymology_hook: "signæl ← English signal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C205-horn]
 <!-- hl-knowledge: introduces=[BN-LEX-C205-JINIS205-02]; assesses=[] -->
 
 **সিগন্যাল** — *signæl* — "a signal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সিগন্যাল** (*signæl*) is a loan from English *signal*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

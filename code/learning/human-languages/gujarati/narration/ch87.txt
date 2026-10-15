@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a phone, then the Gujarati for the post
 You'll want to know: ધોતી.
 ધોતી (dhotī) — "a dhoti".
 
+The word, taken apart.
+ધોતી (dhotī) is a tadbhava. CDIAL lists it under dhotta, "cloth", a reconstructed form, and weighs it against a lexical Sanskrit dhotra (CDIAL 6881).
+
 What you've built.
 One more word for what we wear.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for the post, then the Gujarati for a dhoti
 
 You'll want to know: ખમીસ.
 ખમીસ (khamīs) — "a shirt".
+
+The word, taken apart.
+ખમીસ (khamīs) is a loan from Arabic qamīṣ, "shirt", which reached Gujarati through Persian. Its Arabic root is q-m-ṣ (Lane).
 
 What you've built.
 One more word for what we wear.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a dhoti, then the Gujarati for a shirt.
 You'll want to know: ચંપલ.
 ચંપલ (campal) — "sandals, slippers".
 
+The word, taken apart.
+ચંપલ (campal) is another form of cappal, "sandal". CDIAL has no entry for it. DEDR compares Hindi cappal, with a "Cf.", to the Dravidian words for a sandal, such as Telugu ceppu (DEDR 1963).
+
 What you've built.
 One more word for what we wear.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a shirt, then the Gujarati for sandals.
 You'll want to know: ટોપી.
 ટોપી (ṭopī) — "a cap, a hat".
 
+The word, taken apart.
+ટોપી (ṭopī) is a tadbhava. It comes from ṭoppa, "hat, covering", a form CDIAL reconstructs (CDIAL 5481). CDIAL thinks a link with Sanskrit āṭopa very doubtful.
+
 What you've built.
 One more word for what we wear.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for sandals, then the Gujarati for a cap.
 
 You'll want to know: છત્રી.
 છત્રી (chatrī) — "an umbrella". For the વરસાદ.
+
+The word, taken apart.
+છત્રી (chatrī) is built on Sanskrit chattra, "parasol", which had a feminine chattrikā (CDIAL 4972). CDIAL lists no Gujarati form there.
 
 What you've built.
 One more word for what we wear.

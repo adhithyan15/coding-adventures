@@ -11,7 +11,8 @@ romanization: "muṇṭŭ"
 concept_tag: ML-MUNDU
 prerequisites: [ML-R99-arts-recall, ML-C46-cloth, ML-C42-new]
 sounds: []
-roots: []
+roots: [dravidian-mundu-cloth]
+etymology_hook: "muṇṭŭ: native Dravidian, one word with Tamil muṇṭu and Kannada muṇḍu (DEDR 4947)"
 duration:
   max_seconds: 240
 requires:
@@ -57,6 +58,8 @@ Two things in that sentence you already know how to do, and neither is new:
   **മുണ്ടാണ്**, nothing slid in — the same join **പാട്ട്** takes.
 
 **So the only new thing here is the word itself.**
+
+**Where the word comes from.** It is native Dravidian: DEDR 4947 lists it with Tamil *muṇṭu* and Kannada *muṇḍu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C100-MUNDU-01, ML-LEX-C42-ADJ-04, ML-LEX-C41-DEIXIS-01] -->

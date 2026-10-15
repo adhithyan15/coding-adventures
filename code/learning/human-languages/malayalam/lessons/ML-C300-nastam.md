@@ -14,7 +14,8 @@ romanization: "naṣṭaṁ"
 concept_tag: ML-JOLI300-NASTAM
 prerequisites: [ML-C300-tukkam, ML-C300-labham]
 sounds: []
-roots: []
+roots: [sanskrit-nashta]
+etymology_hook: "naṣṭaṁ ← Sanskrit naṣṭa 'lost, destroyed', a tatsama (CDIAL 7027)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C300-labham]
 <!-- hl-knowledge: introduces=[ML-LEX-C300-JOLI300-05]; assesses=[] -->
 
 **നഷ്ടം** — *naṣṭaṁ* — "a loss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നഷ്ടം** (*naṣṭaṁ*) ← Sanskrit *naṣṭa*, "lost, destroyed", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 7027).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

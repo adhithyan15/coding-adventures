@@ -4,7 +4,7 @@
   "chapter": 425,
   "title": "The Letters Themselves",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:cd0cb32a480f3255",
+  "sourceHash": "fnv1a64:a3a2a09af9c730b4",
   "lessons": [
     {
       "id": "ES-C425-abecedario",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f2e0735981aa4f3",
+      "sourceHash": "fnv1a64:0333b64b04e775f1",
       "notice": null,
       "blocks": [
         {
@@ -222,7 +222,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09ec62f837914d16",
+      "sourceHash": "fnv1a64:374524b35bc11e52",
       "notice": null,
       "blocks": [
         {
@@ -381,7 +381,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4100cec172a13c20",
+      "sourceHash": "fnv1a64:9da03ebcd7714209",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +538,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df1c5e0dcf700779",
+      "sourceHash": "fnv1a64:5c4fe6864b301413",
       "notice": null,
       "blocks": [
         {
@@ -708,7 +708,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c94e1f80def9c8c3",
+      "sourceHash": "fnv1a64:a27bd031bb16b8e6",
       "notice": null,
       "blocks": [
         {

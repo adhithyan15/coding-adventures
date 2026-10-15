@@ -14,7 +14,8 @@ romanization: "zindā"
 concept_tag: UR-SIFAT248-ZINDA
 prerequisites: [UR-C247-khatarnak, UR-C248-jhuta]
 sounds: []
-roots: []
+roots: [persian-zinda]
+etymology_hook: "zindā: usually traced to Persian zinda 'alive'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C248-jhuta]
 <!-- hl-knowledge: introduces=[UR-LEX-C248-SIFAT248-02]; assesses=[] -->
 
 **زندہ** — *zindā* — "alive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زندہ** (*zindā*) is a loan, usually traced to Persian *zinda*, "alive".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "utsavaḥ"
 concept_tag: SA-THG163-UTSAVAH
 prerequisites: [SA-C163-krida, SA-C163-dyutam]
 sounds: []
-roots: []
+roots: [sanskrit-utsava]
+etymology_hook: "utsava ← ud-√sū 'set going': first 'enterprise' (RV), then 'festival' (MW; CDIAL 1876)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C163-dyutam]
 <!-- hl-knowledge: introduces=[SA-LEX-C163-THG163-03]; assesses=[] -->
 
 **उत्सवः** — *utsavaḥ* — "a festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*utsava* comes from *ud-√sū* "set going, stir up", the root √sū "impel" with *ud* "up" (MW; CDIAL 1876): in the Rigveda it means "an enterprise, a beginning", and later "a festival".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

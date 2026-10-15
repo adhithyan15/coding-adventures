@@ -14,7 +14,8 @@ romanization: "idānīm"
 concept_tag: SA-LEAVE-NOW
 prerequisites: [SA-C27-thus, SA-C26-teacher, SA-C27-so-be-it, SA-C17-time-words]
 sounds: []
-roots: []
+roots: [sanskrit-idanim]
+etymology_hook: "idānīm 'now' ← the near pronoun base i- 'this' (CDIAL 1567); MW splits it i-dānīm"
 duration:
   max_seconds: 210
 requires:
@@ -47,7 +48,13 @@ reviews_of: [SA-C27-thus]
 
 **इदानीम्** is *now*. It belongs with सदा, अद्य and ह्यः — always, today, yesterday — and it is the sharpest of them: not this day, this moment.
 
-It is built on the near-pointing stem you met with एतत्, "this one". The pointing system runs *a-* / *t-* / *k-*, and इदानीम् is the near end of it applied to time rather than to place: *this*-time. गच्छामि इदानीम् — "I am going now" — is a way to take your leave that reuses the verb you learned for exactly that purpose.
+It is built on a near-pointing stem, *i-*, a neighbour of the *e-* you met with एतत्, "this one". The pointing system runs *a-* / *t-* / *k-*, and इदानीम् is the near end of it applied to time rather than to place: *this*-time. गच्छामि इदानीम् — "I am going now" — is a way to take your leave that reuses the verb you learned for exactly that purpose.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Idānīm* is built on the near pronoun base *i-*, "this" (MW, CDIAL 1567), the base
+of *idam*, "this". It is already in the Rigveda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

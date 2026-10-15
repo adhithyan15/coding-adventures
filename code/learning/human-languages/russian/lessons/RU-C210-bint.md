@@ -14,7 +14,8 @@ romanization: "bint"
 concept_tag: RU-ZDOROV210-BINT
 prerequisites: [RU-C210-stomatolog, RU-C210-plastyr]
 sounds: []
-roots: []
+roots: [germanic-bindana]
+etymology_hook: "бинт ← German Binde 'a bandage', from binden 'to bind'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C210-plastyr]
 <!-- hl-knowledge: introduces=[RU-LEX-C210-ZDOROV210-05]; assesses=[] -->
 
 **бинт** (*bint*) — "a bandage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**бинт** comes from German *Binde*, "a bandage" (Vasmer), from *binden*, "to bind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

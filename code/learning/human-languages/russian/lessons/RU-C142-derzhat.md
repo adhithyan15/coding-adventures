@@ -14,7 +14,8 @@ romanization: "derzhát"
 concept_tag: RU-VERB-DERZHAT
 prerequisites: [RU-C141-izvinyatsya, RU-C142-nosit]
 sounds: []
-roots: []
+roots: [slavic-dirzhati]
+etymology_hook: "держать ← Proto-Slavic *dĭržati; Vasmer compares Avestan dražaite 'holds'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C142-nosit]
 <!-- hl-knowledge: introduces=[RU-LEX-C142-ACT142-02]; assesses=[] -->
 
 **держать** (*derzhát*) — "to hold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**держать** ← Proto-Slavic *\*dĭržati* — inherited. Vasmer reports a comparison with Avestan *dražaite*, "holds, keeps by one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

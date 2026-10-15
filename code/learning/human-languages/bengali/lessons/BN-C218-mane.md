@@ -14,7 +14,8 @@ romanization: "māne"
 concept_tag: BN-KARON218-MANE
 prerequisites: [BN-C218-jate, BN-C218-tahole]
 sounds: []
-roots: []
+roots: [arabic-mana]
+etymology_hook: "māne ← Arabic maʿnā 'meaning, sense', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C218-tahole]
 <!-- hl-knowledge: introduces=[BN-LEX-C218-KARON218-05]; assesses=[] -->
 
 **মানে** — *māne* — "that is, it means".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মানে** (*māne*) is a loan from Arabic *maʿnā*, "meaning, sense", which reached Bengali through Persian. Its Arabic root is *ʿ-n-y* (Lane). Bengali adds the ending *-e*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

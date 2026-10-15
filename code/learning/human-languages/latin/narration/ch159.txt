@@ -12,6 +12,9 @@ Before the new one: say the Latin for to dine, then the Latin for to taste.
 You'll want to know: sentiō, sentīre.
 sentiō, sentīre — "to feel".
 
+The word, taken apart.
+sentiō is inherited, usually traced to Proto-Indo-European sent-, "to head for, to go" (EtymDB 2.1). English send is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for to taste, then the Latin for to feel.
 
 You'll want to know: pendeō, pendēre.
 pendeō, pendēre — "to hang".
+
+The word, taken apart.
+pendeō is the intransitive partner of pendō, "to weigh, to hang up" (Lewis & Short): to be hanging. The pair is usually traced to Proto-Indo-European (s)pend-, "to stretch, to pull" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for to feel, then the Latin for to hang.
 You'll want to know: taceō, tacēre.
 taceō, tacēre — "to be silent".
 
+The word, taken apart.
+taceō is inherited from Proto-Italic takēō, "to be silent" (EtymDB 2.1), but Lewis & Short call its deeper origin doubtful. Gothic þahan, "to be silent", is often compared.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for to hang, then the Latin for to be silent.
 You'll want to know: servō, servāre.
 servō, servāre — "to keep, to save".
 
+The word, taken apart.
+servō is inherited, usually traced to Proto-Indo-European ser-, "to watch over, to protect" (EtymDB 2.1). It is probably not the same word as servus, "a slave".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for to be silent, then the Latin for to keep.
 
 You'll want to know: mūtō, mūtāre.
 mūtō, mūtāre — "to change".
+
+The word, taken apart.
+mūtō is usually traced to Proto-Indo-European mey-, "to change, to exchange", the root of mūtuus, "borrowed, mutual"; Lewis & Short's link with moveō, "to move", is less likely.
 
 What you've built.
 One more word for this chapter.

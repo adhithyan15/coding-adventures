@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to stare, then the Urdu for to search.
 You'll want to know: دھکیلنا.
 دھکیلنا — dhakelnā — "to push".
 
+The word, taken apart.
+دھکیلنا (dhakelnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhakk, "push, strike", a form CDIAL reconstructs from its descendants (CDIAL 6701).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to search, then the Urdu for to push.
 
 You'll want to know: بجھانا.
 بجھانا — bujhānā — "to put out (a fire or a light), to extinguish".
+
+The word, taken apart.
+بجھانا (bujhānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from vijjhāpayati, "extinguishes", a form CDIAL reconstructs from its descendants (CDIAL 11703). It is the causing form of vijjhāyati, "is burnt out"; it is a different word from būjhnā, "to understand" (CDIAL 9279).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to push, then the Urdu for to put out.
 You'll want to know: چلانا.
 چلانا — chalānā — "to drive, to operate".
 
+The word, taken apart.
+چلانا (chalānā) is the causing form of chalnā, "to move, to go": to drive is to make something go. CDIAL lists chalnā under Sanskrit calati, "moves" (CDIAL 4715).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to put out, then the Urdu for to drive.
 You'll want to know: رکنا.
 رکنا — ruknā — "to halt, to come to a stop".
 
+The word, taken apart.
+رکنا (ruknā) is listed by CDIAL beside roknā, "to stop", under a reconstructed rokk, "stop", whose link with Sanskrit rudh-, "to obstruct", CDIAL calls not clear (CDIAL 10827).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to drive, then the Urdu for to halt.
 
 You'll want to know: مڑنا.
 مڑنا — muṛnā — "to turn".
+
+The word, taken apart.
+مڑنا (muṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from muṭati, "twists" (CDIAL 10186).
 
 What you've built.
 One more word for this chapter.

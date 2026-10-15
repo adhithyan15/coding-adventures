@@ -14,7 +14,8 @@ romanization: "bara"
 concept_tag: KA-STHALA287-BARA
 prerequisites: [KA-C286-videsa, KA-C287-dada]
 sounds: []
-roots: []
+roots: [dravidian-varal-dry]
+etymology_hook: "bara: native Dravidian, one word with Tamil vaṟa and Telugu vaṟapu (DEDR 5320)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C287-dada]
 <!-- hl-knowledge: introduces=[KA-LEX-C287-STHALA287-02]; assesses=[] -->
 
 **ಬರ** — *bara* — "a drought".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬರ** (*bara*) is native Dravidian, one word with Tamil *vaṟa*, Telugu *vaṟapu* and Malayalam *vaṟu* (DEDR 5320). DEDR lists older *baṟa*, "dryness, barrenness, drought".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

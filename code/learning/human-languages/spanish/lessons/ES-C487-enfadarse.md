@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ENFADARSE
 prerequisites: [ES-C486-vacuna, ES-C487-alegrarse]
 sounds: []
 roots: []
+etymology_hook: "enfadarse — probably Galician-Portuguese enfadar 'to weary', built on fado 'fate', Latin fatum"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C487-alegrarse]
 > *My sister gets angry if I arrive late.*
 
 In much of Latin America people say *enojarse*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**enfadarse** probably comes from Galician-Portuguese *enfadar*, "to weary, to annoy", built on *fado*, "fate", Latin *fatum*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

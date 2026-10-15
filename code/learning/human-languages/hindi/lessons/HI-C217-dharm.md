@@ -14,7 +14,8 @@ romanization: "dharm"
 concept_tag: HI-THG217-DHARM
 prerequisites: [HI-C217-tyohar, HI-C217-puja]
 sounds: []
-roots: []
+roots: [sanskrit-dharma]
+etymology_hook: "dharm ← Sanskrit dharma 'what is established; law, duty, right', a tatsama (CDIAL 6753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C217-puja]
 <!-- hl-knowledge: introduces=[HI-LEX-C217-THG217-05]; assesses=[] -->
 
 **धर्म** — *dharm* — "religion, duty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धर्म** (*dharm*) is Sanskrit *dharma*, "what is established; law, duty, right", taken over whole as a learned loan, a tatsama (CDIAL 6753).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

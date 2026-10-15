@@ -49,7 +49,7 @@ reviews_of: [TA-C139-kirai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**பலாப்பழம்** (*palāppaḻam*) is native: *palā*, "jack tree" (DEDR 3988; Malayalam *plāvu*), and *paḻam*, "fruit" (DEDR 4004).
+**பலாப்பழம்** (*palāppaḻam*) is native: *palā*, "jack tree" (DEDR 3988; Malayalam *plāvu*), and *paḻam*, "fruit" (DEDR 4004). DEDR compares Sanskrit *panasa*, "jack tree", and *phala*, "fruit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

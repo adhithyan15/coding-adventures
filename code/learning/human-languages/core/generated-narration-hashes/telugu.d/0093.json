@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 93,
-  "sourceHash": "fnv1a64:b4ab8e188bf4c72a",
+  "sourceHash": "fnv1a64:053375d4c9b7489a",
   "lessonIds": [
     "TE-C93-wellbeing",
     "TE-C93-comfortably",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch93.txt",
   "json": "telugu/narration/ch93.json",
-  "textHash": "fnv1a64:59d1d51183c0f159",
-  "jsonHash": "fnv1a64:e2983412f15d73ca",
+  "textHash": "fnv1a64:362fdb56cb7222e8",
+  "jsonHash": "fnv1a64:f36d60b311a4375a",
   "findings": []
 }

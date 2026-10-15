@@ -12,6 +12,7 @@ concept_tag: QUESTION-WHAT
 prerequisites: [ML-C02-nii-ningal, ML-C02-enre, ML-C02-aanu]
 sounds: [ntu-conjunct]
 roots: [yaa-dravidian]
+etymology_hook: "entŭ 'what': native Dravidian, on the question stem yā- / e- (DEDR 5151)"
 duration:
   max_seconds: 180
 requires:
@@ -48,6 +49,8 @@ reviews_of: [ML-C02-nii-ningal, ML-C02-enre-peru-aanu]
 **\*yā-/\*e-** — the same Dravidian question-root as Tamil *eṉṉa* and Telugu
 *ēmiṭi*, heading Malayalam's question family: *entŭ* (what), *ār* (who), *eviṭe*
 (where).
+
+DEDR 5151 gathers that question stem: Malayalam *ētu*, *e*, Tamil *yā*, *ētu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENTU-01, ML-LEX-ENRE-01, ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01] -->

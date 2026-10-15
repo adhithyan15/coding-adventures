@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 168,
-  "sourceHash": "fnv1a64:7ff02d74c9be8715",
+  "sourceHash": "fnv1a64:1c75218959d3f9f9",
   "lessonIds": [
     "KA-C168-hane",
     "KA-C168-gantalu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch168.txt",
   "json": "kannada/narration/ch168.json",
-  "textHash": "fnv1a64:30f7ec431b2b09ca",
-  "jsonHash": "fnv1a64:b46b90e800b394d1",
+  "textHash": "fnv1a64:9f113902a14aa94a",
+  "jsonHash": "fnv1a64:558fc2f22d9ca6d1",
   "findings": []
 }

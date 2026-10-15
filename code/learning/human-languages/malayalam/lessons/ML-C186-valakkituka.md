@@ -14,7 +14,8 @@ romanization: "vaḻakkiṭuka"
 concept_tag: ML-VERB-VALAKKITUKA
 prerequisites: [ML-C186-pankuvekkuka, ML-C186-kettippitikkuka]
 sounds: []
-roots: []
+roots: [dravidian-vazhakku-dispute, dravidian-idu-put]
+etymology_hook: "vaḻakkiṭuka: native Dravidian, 'put up a quarrel': vaḻakku (DEDR 5292) + iṭuka (DEDR 442)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C186-kettippitikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C186-KRIYA186-03]; assesses=[] -->
 
 **വഴക്കിടുക** — *vaḻakkiṭuka* — "to quarrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വഴക്കിടുക** (*vaḻakkiṭuka*) is native Dravidian: *vaḻakku*, "lawsuit, quarrel" (DEDR 5292, with Tamil *vaḻaṅku*), and *iṭuka*, "to put" (DEDR 442).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

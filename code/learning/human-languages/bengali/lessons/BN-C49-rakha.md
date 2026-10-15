@@ -14,7 +14,8 @@ romanization: "rākhā"
 concept_tag: BN-VERB-RAKHA
 prerequisites: [BN-C49-kena, BN-C49-becha]
 sounds: []
-roots: []
+roots: [sanskrit-rakshati]
+etymology_hook: "rākhā ← Sanskrit rakṣati 'guards', a tadbhava (CDIAL 10547)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C49-becha]
 <!-- hl-knowledge: introduces=[BN-LEX-C49-VERBS49-04]; assesses=[] -->
 
 **রাখা** — *rākhā* — "to put, to keep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রাখা** (*rākhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *rakṣati*, "guards" (CDIAL 10547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

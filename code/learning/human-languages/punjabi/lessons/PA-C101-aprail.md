@@ -14,7 +14,8 @@ romanization: "aprail"
 concept_tag: PA-TIME101-APRAIL
 prerequisites: [PA-C101-farvari, PA-C101-marc]
 sounds: []
-roots: []
+roots: [english-april]
+etymology_hook: "aprail ← English April"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C101-marc]
 <!-- hl-knowledge: introduces=[PA-LEX-C101-TIME101-05]; assesses=[] -->
 
 **ਅਪ੍ਰੈਲ** — *aprail* — "April".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅਪ੍ਰੈਲ** (*aprail*) is a loan from English *April*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

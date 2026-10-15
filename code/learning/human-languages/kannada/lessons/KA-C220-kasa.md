@@ -14,7 +14,8 @@ romanization: "kasa"
 concept_tag: KA-VASTU220-KASA
 prerequisites: [KA-C220-phrij, KA-C220-phyan]
 sounds: []
-roots: []
+roots: [dravidian-kacadu-rubbish]
+etymology_hook: "kasa: native Dravidian, one word with Tamil kacaṭu and Telugu kasaṭu (DEDR 1088)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C220-phyan]
 <!-- hl-knowledge: introduces=[KA-LEX-C220-VASTU220-05]; assesses=[] -->
 
 **ಕಸ** — *kasa* — "rubbish, trash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಸ** (*kasa*) is native Dravidian, one word with Tamil *kacaṭu*, Telugu *kasaṭu* and Malayalam *kacci* (DEDR 1088). DEDR lists *kasa*, *kasavu*, "rubbish, sweepings". DEDR 1088 compares Sanskrit *kaccara*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

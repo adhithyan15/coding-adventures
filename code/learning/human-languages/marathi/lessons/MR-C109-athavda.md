@@ -14,7 +14,8 @@ romanization: "āṭhavḍā"
 concept_tag: MR-ADJ109-ATHAVDA
 prerequisites: [MR-C108-tarun, MR-C109-mhatara]
 sounds: []
-roots: []
+roots: [indo-aryan-ashtavara]
+etymology_hook: "āṭhavḍā ← *aṣṭavāra 'period of eight days', crossed with compounds of vāṭa (CDIAL 940)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C109-mhatara]
 <!-- hl-knowledge: introduces=[MR-LEX-C109-ADJ109-02]; assesses=[] -->
 
 **आठवडा** — *āṭhavḍā* — "a week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आठवडा** (*āṭhavḍā*) comes from *\*aṣṭavāra*, "period of eight days": *aṣṭa*, "eight", and *vāra*, "turn, day" (CDIAL 940). CDIAL notes that the Marathi form was crossed with compounds of *vāṭa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

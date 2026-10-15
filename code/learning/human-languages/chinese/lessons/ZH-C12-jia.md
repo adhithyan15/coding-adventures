@@ -11,8 +11,8 @@ concept_tag: ZH-FAMILY-HOME
 gloss: home or family, now read and written
 prerequisites: [ZH-W12-jia]
 sounds: [tone-1]
-roots: []
-etymology_hook: The spoken home now attaches to a character divided into a known roof and one lower body.
+roots: [middle-chinese-kae]
+etymology_hook: "jiā 'home': inherited, from Middle Chinese kae 'dwelling'; Mandarin softened the k to j"
 duration:
   max_seconds: 170
 requires:
@@ -45,6 +45,9 @@ reviews_of: [ZH-C12-hear-jia, ZH-W12-jia]
 
 The high line over *ā* records first tone; the character records no tone mark at
 all.
+
+**家** is inherited from Middle Chinese *kae*, "dwelling" (Guangyun, in Baxter's
+transcription); Mandarin softened its *k* to *j*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-JIA-01, ZH-SCRIPT-JIA-01] -->

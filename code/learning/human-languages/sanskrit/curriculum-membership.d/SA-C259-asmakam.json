@@ -1,0 +1,11 @@
+{
+  "id": "SA-C259-asmakam",
+  "pathSegment": "SA-PATH-259-POS259",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-259-POS259",
+      "order": 0
+    }
+  ]
+}

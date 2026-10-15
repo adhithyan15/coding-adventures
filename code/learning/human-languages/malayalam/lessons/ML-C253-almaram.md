@@ -14,7 +14,8 @@ romanization: "ālmaraṁ"
 concept_tag: ML-VASTU253-ALMARAM
 prerequisites: [ML-C252-kainittam, ML-C252-patakkam]
 sounds: []
-roots: []
+roots: [dravidian-al-banyan, dravidian-maram-tree]
+etymology_hook: "ālmaraṁ: native Dravidian, āl 'banyan' (DEDR 382) + maram 'tree' (DEDR 4711)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C252-patakkam]
 <!-- hl-knowledge: introduces=[ML-LEX-C253-VASTU253-01]; assesses=[] -->
 
 **ആൽമരം** — *ālmaraṁ* — "a banyan tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആൽമരം** (*ālmaraṁ*) is native Dravidian: *āl*, "banyan" (DEDR 382, with Tamil *āl* and Kannada *āl*), and *maram*, "tree" (DEDR 4711).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

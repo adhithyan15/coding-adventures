@@ -14,7 +14,8 @@ romanization: "rasâne"
 concept_tag: FA-CHIZ210-RASANE
 prerequisites: [FA-C209-kharchang, FA-C210-radiyo]
 sounds: []
-roots: []
+roots: [persian-rasid]
+etymology_hook: "rasâne: modern Persian coinage built on rasân- 'to make reach' (residan)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C210-radiyo]
 <!-- hl-knowledge: introduces=[FA-LEX-C210-CHIZ210-02]; assesses=[] -->
 
 **رسانه** — *rasâne* — "the media".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rasâne* is a modern Persian coinage built on *rasân-*, "making reach" (the causative of *residan*, "to reach"): what carries news to people.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

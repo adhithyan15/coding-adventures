@@ -12,6 +12,7 @@ concept_tag: MR-LEX-BARACH
 prerequisites: [MR-C54-puresa, MR-C01-baram, MR-C49-adj-prenominal]
 sounds: [matra-aa]
 roots: []
+etymology_hook: "barāc: barā 'well' + the emphatic -c; the origin of barā is not settled"
 duration:
   max_seconds: 210
 requires:
@@ -58,6 +59,11 @@ It agrees, because the **बरा** underneath it ends in **-आ**: **बरा
 Set the four amounts in order and the scale is complete:
 
 > **थोडं** a little · **पुरेसं** enough · **बरंच** quite a lot · **खूप** a lot.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बराच** (*barāch*) is **बरा** with the emphatic **-च**. The origin of **बरा** is not settled: neither CDIAL nor DEDR has an entry for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-BARACH, MR-LEX-PURESA, MR-LEX-THODA, MR-LEX-KHUP, MR-LEX-BARAM-01] -->

@@ -14,7 +14,8 @@ romanization: "maujūd"
 concept_tag: UR-SIFAT248-MAUJUD
 prerequisites: [UR-C248-murda, UR-C248-tandurust]
 sounds: []
-roots: []
+roots: [arabic-mawjud]
+etymology_hook: "maujūd ← Arabic mawjūd 'found, existing', through Persian (Lane, root w-j-d)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C248-tandurust]
 <!-- hl-knowledge: introduces=[UR-LEX-C248-SIFAT248-05]; assesses=[] -->
 
 **موجود** — *maujūd* — "present, available".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موجود** (*maujūd*) is a loan from Arabic *mawjūd*, "found, existing", which reached Urdu through Persian. Its Arabic root is *w-j-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

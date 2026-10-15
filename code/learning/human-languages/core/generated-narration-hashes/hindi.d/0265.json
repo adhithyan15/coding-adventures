@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 265,
-  "sourceHash": "fnv1a64:e133d591f10e7380",
+  "sourceHash": "fnv1a64:bbb62a333ebf4cb1",
   "lessonIds": [
     "HI-C265-patang",
     "HI-C265-jhula",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch265.txt",
   "json": "hindi/narration/ch265.json",
-  "textHash": "fnv1a64:83dc8507a5d8322f",
-  "jsonHash": "fnv1a64:937f13aec28d9581",
+  "textHash": "fnv1a64:958aa7bf21c170ce",
+  "jsonHash": "fnv1a64:638eed82630baf86",
   "findings": []
 }

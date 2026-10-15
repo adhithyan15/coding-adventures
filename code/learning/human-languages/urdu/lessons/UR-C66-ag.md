@@ -14,7 +14,8 @@ romanization: "āg"
 concept_tag: UR-NATURE66-AG
 prerequisites: [UR-C66-chad, UR-C66-samandar]
 sounds: []
-roots: []
+roots: [sanskrit-agni]
+etymology_hook: "āg ← Sanskrit agni 'fire', a tadbhava (CDIAL 55)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C66-samandar]
 <!-- hl-knowledge: introduces=[UR-LEX-C66-NATURE66-04]; assesses=[] -->
 
 **آگ** — *āg* — "fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آگ** (*āg*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *agni*, "fire" (CDIAL 55).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

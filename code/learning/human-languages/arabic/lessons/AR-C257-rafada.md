@@ -14,7 +14,8 @@ romanization: "rafaḍa"
 concept_tag: AR-VERB-RAFADA
 prerequisites: [AR-C256-tarjama, AR-C256-aada]
 sounds: []
-roots: []
+roots: [r-f-ḍ]
+etymology_hook: "rafaḍa: built on the root r-f-ḍ, 'to reject' (Lane); rafaḍa is the plain verb, 'he refused'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C256-aada]
 <!-- hl-knowledge: introduces=[AR-LEX-C257-ACT257-01]; assesses=[] -->
 
 **رفض** — *rafaḍa* — "to refuse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رفض** (*rafaḍa*) is built on the native Arabic root *r-f-ḍ*, "to reject" (Lane). *Rafaḍa* is the plain verb, "he refused".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

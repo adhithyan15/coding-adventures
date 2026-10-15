@@ -14,7 +14,8 @@ romanization: "divasbhar"
 concept_tag: MR-VEL258-DIVASBHAR
 prerequisites: [MR-C258-yug, MR-C258-ratrabhar]
 sounds: []
-roots: []
+roots: [sanskrit-divasa, sanskrit-bharati]
+etymology_hook: "divasbhar: divas 'day' ← divasa (CDIAL 6333) + bhar 'full' (CDIAL 9397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C258-ratrabhar]
 <!-- hl-knowledge: introduces=[MR-LEX-C258-VEL258-05]; assesses=[] -->
 
 **दिवसभर** — *divasbhar* — "all day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दिवसभर** (*divasbhar*) is *divas*, "day", from Sanskrit *divasa* (CDIAL 6333), with *-bhar*, "full", from *bharṇẽ*, "to fill" (CDIAL 9397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

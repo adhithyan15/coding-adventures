@@ -14,7 +14,8 @@ romanization: "ramaḍān"
 concept_tag: AR-WAQT264-RAMADAN
 prerequisites: [AR-C264-tufula, AR-C264-sahra]
 sounds: []
-roots: []
+roots: [r-m-ḍ]
+etymology_hook: "ramaḍān: built on the root r-m-ḍ, 'intense heat' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C264-sahra]
 <!-- hl-knowledge: introduces=[AR-LEX-C264-WAQT264-04]; assesses=[] -->
 
 **رمضان** — *ramaḍān* — "Ramadan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رمضان** (*ramaḍān*) is built on the native Arabic root *r-m-ḍ*, "intense heat" (Lane). *Ramaḍān*, the month of fasting, is named on the root of intense heat.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

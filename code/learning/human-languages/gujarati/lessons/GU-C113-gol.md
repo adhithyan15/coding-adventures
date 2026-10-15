@@ -14,7 +14,8 @@ romanization: "goḷ"
 concept_tag: GU-THINGS113-GOL
 prerequisites: [GU-C112-kot, GU-C113-khissu]
 sounds: []
-roots: []
+roots: [sanskrit-guda-molasses]
+etymology_hook: "goḷ ← Sanskrit guḍa 'boiled sugarcane juice, molasses'; CDIAL asks if it is guḍa 'ball' (CDIAL 4182)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C113-khissu]
 <!-- hl-knowledge: introduces=[GU-LEX-C113-THINGS113-02]; assesses=[] -->
 
 **ગોળ** (*goḷ*) — "jaggery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગોળ** (*goḷ*) is a tadbhava of Sanskrit *guḍa*, "boiled sugarcane juice, molasses" (CDIAL 4182). CDIAL asks whether this is the same word as *guḍa*, "ball".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

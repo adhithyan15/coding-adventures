@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Around the Yard",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:16600a3cb809a0b5",
+  "sourceHash": "fnv1a64:4f4099dec8856918",
   "lessons": [
     {
       "id": "TA-C58-cow",
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05581febff78ce7c",
+      "sourceHash": "fnv1a64:abbc485c9653d260",
       "notice": null,
       "blocks": [
         {
@@ -216,7 +216,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ஆடு (āṭu) is native Dravidian. DEDR 5152 lists Malayalam āṭu and Kannada āḍu."
+              "text": "ஆடு (āṭu) is native Dravidian. DEDR 5152 lists Malayalam āṭu and Kannada āḍu. The entry compares Sanskrit eḍa, \"a kind of sheep\" (CDIAL 2512)."
             }
           ]
         },
@@ -472,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a029c1d88950abd",
+      "sourceHash": "fnv1a64:492f1a29a1a175f5",
       "notice": null,
       "blocks": [
         {
@@ -518,7 +518,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "காக்கை (kākkai) is native Dravidian. DEDR 1425 lists Malayalam kākka, Kannada kāge and Telugu kāki. The word imitates the bird's call, and the entry gives the cry too."
+              "text": "காக்கை (kākkai) is native Dravidian. DEDR 1425 lists Malayalam kākka, Kannada kāge and Telugu kāki. The word imitates the bird's call, and the entry gives the cry too. It compares Sanskrit kāka, \"crow\", and notes that some forms may be borrowed back from Indo-Aryan."
             }
           ]
         },

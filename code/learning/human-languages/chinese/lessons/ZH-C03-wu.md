@@ -11,8 +11,8 @@ gloss: five
 concept_tag: NUMBER-ONE-TO-FIVE
 prerequisites: [ZH-W03-wu]
 sounds: [tone-3, tone-lexical]
-roots: []
-etymology_hook: 五 completes the run, and it is the first number you simply have to know rather than derive.
+roots: [middle-chinese-ngux-five]
+etymology_hook: "wǔ 'five': inherited, from Middle Chinese nguX; usually compared with Tibetan lnga"
 duration:
   max_seconds: 260
 requires:
@@ -70,6 +70,13 @@ level, down, dip**, and that rhythm is what a listener hears first.
 Five characters, and three ways one can come to you: two you derived, one was
 borrowed for its sound, and two you simply learned. That mix is Chinese writing
 in miniature, and you have now met all of it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**五** *wǔ* is inherited from Middle Chinese *nguX*, "five", whose *ng* Mandarin
+has lost (Guangyun, in Baxter's transcription). It is usually compared with
+Tibetan *lnga*, a likely Sino-Tibetan cognate.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-WU, ZH-LEX-NUM-YI] -->

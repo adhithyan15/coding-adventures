@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Saying Who You Are",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d2160b88e9c2bada",
+  "sourceHash": "fnv1a64:612c1ac6e401fc1c",
   "lessons": [
     {
       "id": "ZH-W08-wo",
@@ -677,7 +677,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ede96a0f41a5a050",
+      "sourceHash": "fnv1a64:64b0ba7988223612",
       "notice": null,
       "blocks": [
         {
@@ -721,6 +721,10 @@
             {
               "kind": "speech",
               "text": "So the word is \"name-character\", and that is not a stretched hook. A Chinese personal name is a small number of characters, usually two or three, each chosen deliberately for what it means. The word for \"name\" says what a name is made of."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese: mjieng, \"name\", and dziH, \"written character\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },

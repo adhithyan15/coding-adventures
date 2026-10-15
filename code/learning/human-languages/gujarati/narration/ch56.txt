@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for to bring, then the Gujarati for to drin
 You'll want to know: ગાવું.
 ગાવું (gāvũ) — "to sing".
 
+The word, taken apart.
+ગાવું (gāvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gāyati, "sings" (CDIAL 4135).
+
 What you've built.
 One more word for sing, dance, laugh, listen, learn.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for to drink, then the Gujarati for to sing
 
 You'll want to know: નાચવું.
 નાચવું (nācvũ) — "to dance".
+
+The word, taken apart.
+નાચવું (nācvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nṛtyati, "dances" (CDIAL 7583).
 
 What you've built.
 One more word for sing, dance, laugh, listen, learn.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for to sing, then the Gujarati for to dance
 You'll want to know: હસવું.
 હસવું (hasvũ) — "to laugh".
 
+The word, taken apart.
+હસવું (hasvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hasati, "laughs" (CDIAL 14021).
+
 What you've built.
 One more word for sing, dance, laugh, listen, learn.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for to dance, then the Gujarati for to laug
 You'll want to know: સાંભળવું.
 સાંભળવું (sā̃bhaḷvũ) — "to listen, to hear".
 
+The word, taken apart.
+સાંભળવું (sā̃bhaḷvũ) (sāṁbhaḷvũ) is a tadbhava, a word inherited and reshaped by sound change. It comes from saṁbhalati, "attends to", a form CDIAL reconstructs from its descendants (CDIAL 12962).
+
 What you've built.
 One more word for sing, dance, laugh, listen, learn.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for to laugh, then the Gujarati for to list
 
 You'll want to know: શીખવું.
 શીખવું (śīkhvũ) — "to learn". What you are doing now.
+
+The word, taken apart.
+શીખવું (śīkhvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śikṣate, "learns" (CDIAL 12430).
 
 What you've built.
 One more word for sing, dance, laugh, listen, learn.

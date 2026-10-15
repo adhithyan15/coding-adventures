@@ -14,7 +14,8 @@ romanization: "amai"
 concept_tag: JA-ADJ50-AMAI
 prerequisites: [JA-C49-hayai, JA-C49-yasashii]
 sounds: []
-roots: []
+roots: [japanese-amai]
+etymology_hook: "amai: native Japanese, inherited, not borrowed; kanji 甘い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C49-yasashii]
 <!-- hl-knowledge: introduces=[JA-LEX-C50-ADJ50-01]; assesses=[] -->
 
 **あまい** — *amai* — "sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あまい** (*amai*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

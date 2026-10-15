@@ -14,7 +14,8 @@ romanization: "bhujiyā"
 concept_tag: MW-THINGS134-BHUJIYA
 prerequisites: [MW-C134-lassi, MW-C134-kachori]
 sounds: []
-roots: []
+roots: [indo-aryan-bhrjjita]
+etymology_hook: "bhujiyā ← *bhṛjjita 'fried, parched', reconstructed (CDIAL 9584, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C134-kachori]
 <!-- hl-knowledge: introduces=[MW-LEX-C134-THINGS134-05]; assesses=[] -->
 
 **भुजिया** — *bhujiyā* — "bhujia".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भुजिया** (*bhujiyā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhṛjjita*, "fried, parched", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9584); the match is through Hindi *bhujiyā*. It is built on the root *bhrajj*, "to fry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "svāgataṁ"
 concept_tag: ML-COUR-WELCOME
 prerequisites: [ML-C124-invitation, ML-C124-gift]
 sounds: []
-roots: []
+roots: [sanskrit-svagata]
+etymology_hook: "svāgataṁ ← Sanskrit svāgata 'welcome', a tatsama (CDIAL 13920)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C124-gift]
 <!-- hl-knowledge: introduces=[ML-LEX-C124-WELCOME-04]; assesses=[] -->
 
 **സ്വാഗതം** (*svāgataṁ*) — "welcome", the formal greeting on a signboard or at a door.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്വാഗതം** (*svāgataṁ*) ← Sanskrit *svāgata*, "welcome", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 13920). Its parts are *su*, "well", and *āgata*, "come".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "nāku teliyadu"
 concept_tag: TE-NEGATE-KNOW
 prerequisites: [TE-C78-doyouknow, TE-C38-gunde]
 sounds: []
-roots: []
+roots: [naan-dravidian, teliyu-become-clear-dravidian]
+etymology_hook: "nāku teliyadu: native nāku 'to me' (DEDR 5160) + teliyadu 'is not known' (DEDR 3433)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C78-doyouknow]
 This is the answer to the last word, and it is probably the sentence you will need most often of anything in this book.
 
 It is not తెలుసు with లేదు after it. Telugu negates an ordinary verb from the inside, with **-అదు** on the stem: తెలియ- + -దు.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నాకు తెలియదు** (*nāku teliyadu*) is native Dravidian: *nāku*, "to me", built on *nā-*, the oblique stem of *nēnu* (DEDR 5160), and *teliyadu*, "it is not known", from *teliyu*, "to be known" (DEDR 3433).
 
 ## Grammar Lens: how Telugu says a verb did not happen
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C78-YESNO-03]; assesses=[] -->

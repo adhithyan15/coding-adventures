@@ -13,7 +13,8 @@ gloss: "a weight"
 concept_tag: LA-RES186-PONDUS
 prerequisites: [LA-C186-gubernator, LA-C186-mercatus]
 sounds: []
-roots: []
+roots: [pondus-latin, pendere-latin]
+etymology_hook: "pondus 'weight' — kin to pendō 'to weigh'; English pound"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C186-mercatus]
 <!-- hl-knowledge: introduces=[LA-LEX-C186-RES186-03]; assesses=[] -->
 
 **pondus, ponderis** — "a weight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pondus** belongs with *pendō*, "to weigh" (Lewis & Short), and is usually traced to Proto-Indo-European *\*(s)pend-*, "to stretch, to pull" (EtymDB 2.1). English *pound* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "unni"
 concept_tag: TE-VASTUVU306-UNNI
 prerequisites: [TE-C306-tolu, TE-C306-patti]
 sounds: []
-roots: []
+roots: [sanskrit-urna]
+etymology_hook: "unni: usually traced to Sanskrit ūrṇā 'wool' (CDIAL 2424)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C306-patti]
 <!-- hl-knowledge: introduces=[TE-LEX-C306-VASTUVU306-05]; assesses=[] -->
 
 **ఉన్ని** — *unni* — "wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉన్ని** (*unni*) is usually traced to Sanskrit *ūrṇā*, "wool" (CDIAL 2424), reshaped to Telugu sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

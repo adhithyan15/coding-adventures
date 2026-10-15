@@ -14,7 +14,8 @@ romanization: "tiḷaṅṅuka"
 concept_tag: ML-VERB-TILANNUKA
 prerequisites: [ML-C228-verukkuka, ML-C229-astamikkuka]
 sounds: []
-roots: []
+roots: [dravidian-tulangu-shine]
+etymology_hook: "tiḷaṅṅuka: native Dravidian, one word with Tamil tuḷaṅku and Kannada toḷagu (DEDR 3360)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C229-astamikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C229-KRIYA229-02]; assesses=[] -->
 
 **തിളങ്ങുക** — *tiḷaṅṅuka* — "to shine, to sparkle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തിളങ്ങുക** (*tiḷaṅṅuka*) is native Dravidian, one word with Tamil *tuḷaṅku* and Kannada *toḷagu* (DEDR 3360).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a habit, then the Punjabi for a skill.
 You'll want to know: ਕਲਾ.
 ਕਲਾ — kalā — "an art".
 
+The word, taken apart.
+ਕਲਾ (kalā) is Sanskrit kalā, "any practical art", taken over whole as a learned loan, a tatsama (CDIAL 2927). CDIAL takes the Sanskrit word itself from Dravidian. The inherited Punjabi form is kaḷ, "machine, art".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a skill, then the Punjabi for an art.
 
 You'll want to know: ਸੰਦ.
 ਸੰਦ — sand — "a tool".
+
+The word, taken apart.
+Where ਸੰਦ (sand) comes from is not settled: CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for an art, then the Punjabi for a tool.
 You'll want to know: ਲਿਆਕਤ.
 ਲਿਆਕਤ — liākat — "ability, merit".
 
+The word, taken apart.
+ਲਿਆਕਤ (liākat) is a loan from Arabic liyāqa, "fitness, merit", which reached Punjabi through Persian. Its Arabic root is l-y-q (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a tool, then the Punjabi for ability.
 You'll want to know: ਜਿੱਤਣਾ.
 ਜਿੱਤਣਾ — jittṇā — "to win".
 
+The word, taken apart.
+ਜਿੱਤਣਾ (jittṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jita, "won, conquered" (CDIAL 5224).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for ability, then the Punjabi for to win.
 
 You'll want to know: ਹਾਰਨਾ.
 ਹਾਰਨਾ — hārnā — "to lose (a game)".
+
+The word, taken apart.
+ਹਾਰਨਾ (hārnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hārayati, "causes to be taken; loses" (CDIAL 14061).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "pīvũ"
 concept_tag: GU-VERB-PIVU
 prerequisites: [GU-C55-aapvu, GU-C55-laavvu]
 sounds: []
-roots: []
+roots: [sanskrit-pibati]
+etymology_hook: "pīvũ ← Sanskrit pibati 'drinks', a tadbhava (CDIAL 8209)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C55-laavvu]
 <!-- hl-knowledge: introduces=[GU-LEX-C55-HOUSEWORK-05]; assesses=[] -->
 
 **પીવું** (*pīvũ*) — "to drink". What you do with **પાણી** and **ચા**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પીવું** (*pīvũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pibati*, "drinks" (CDIAL 8209).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

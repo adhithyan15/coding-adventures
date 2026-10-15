@@ -15,6 +15,7 @@ concept_tag: MR-THINGS139-GAVAT
 prerequisites: [MR-C139-jhara, MR-C139-dhabdhaba]
 sounds: []
 roots: []
+etymology_hook: "gavat 'grass': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C139-dhabdhaba]
 <!-- hl-knowledge: introduces=[MR-LEX-C139-THINGS139-04]; assesses=[] -->
 
 **गवत** — *gavat* — "grass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **गवत** (*gavat*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

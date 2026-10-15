@@ -14,7 +14,8 @@ romanization: "nīce"
 concept_tag: GU-WHERE1-DOWN
 prerequisites: [GU-C74-far, GU-C74-up]
 sounds: []
-roots: []
+roots: [sanskrit-nica]
+etymology_hook: "nīce: the adverb of nīcũ 'low' ← Sanskrit nīca 'low', a tadbhava (CDIAL 7540)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C74-up]
 <!-- hl-knowledge: introduces=[GU-LEX-C74-WHERE1-05]; assesses=[] -->
 
 **નીચે** (*nīce*) — "down, below".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નીચે** (*nīce*) is the adverb of *nīcũ*, "low", which CDIAL lists under Sanskrit *nīca*, "low" (CDIAL 7540). CDIAL explains the form as shaped by its opposite, *ucca*, "high".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

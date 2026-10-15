@@ -14,7 +14,8 @@ romanization: "garmī"
 concept_tag: GU-WEATHER-HEAT
 prerequisites: [GU-C66-wind, GU-C66-cloud]
 sounds: []
-roots: []
+roots: [persian-garmi]
+etymology_hook: "garmī: usually traced to Persian garmī 'heat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C66-cloud]
 <!-- hl-knowledge: introduces=[GU-LEX-C66-WEATHER-03]; assesses=[] -->
 
 **ગરમી** (*garmī*) — "heat, hot weather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગરમી** (*garmī*) is a loan, usually traced to Persian *garmī*, "heat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

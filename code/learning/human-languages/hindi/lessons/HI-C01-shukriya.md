@@ -15,6 +15,7 @@ concept_tag: COURTESY-THANKS-CASUAL
 prerequisites: [HI-C01-dhanyavad]
 sounds: [devanagari-inherent-a, matra-i, matra-aa, halant-conjunct]
 roots: [shukr]
+etymology_hook: "shukriyā ← Arabic shukr 'gratitude', root sh-k-r, through Persian"
 duration:
   max_seconds: 240
 requires:

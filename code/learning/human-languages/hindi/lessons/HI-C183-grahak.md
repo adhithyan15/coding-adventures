@@ -14,7 +14,8 @@ romanization: "grāhak"
 concept_tag: HI-THG183-GRAHAK
 prerequisites: [HI-C183-karkhana, HI-C183-dukandar]
 sounds: []
-roots: []
+roots: [sanskrit-grahaka]
+etymology_hook: "grāhak ← Sanskrit grāhaka 'one who takes', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C183-dukandar]
 <!-- hl-knowledge: introduces=[HI-LEX-C183-THG183-03]; assesses=[] -->
 
 **ग्राहक** — *grāhak* — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ग्राहक** (*grāhak*) is Sanskrit *grāhaka*, "one who takes", taken over whole as a learned loan, a tatsama. It is built on *grah-*, "to take".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

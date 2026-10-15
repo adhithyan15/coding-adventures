@@ -14,7 +14,8 @@ romanization: "arukimasu"
 concept_tag: JA-VERB-ARUKU
 prerequisites: [JA-C138-hatarakimasu, JA-C137-perapera, JA-C136-mizu, JA-C130-tashika]
 sounds: []
-roots: []
+roots: [japanese-aruku, japanese-masu-polite]
+etymology_hook: "arukimasu: native aruku 'walk' + polite -masu"
 duration:
   max_seconds: 200
 requires:
@@ -54,6 +55,11 @@ the last **く** becomes **き**, and **ます** follows. *aruk-u* becomes
 
 > **えきまで あるきます。** — *eki made arukimasu* — "I walk to the
 > station." **まで** means "as far as".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あるきます** (*arukimasu*) is native *aruku*, "to walk", with the polite ending *-masu*. The verb is inherited rather than borrowed; its kanji is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C138-ARUKIMASU, JA-LEX-C138-HATARAKIMASU] -->

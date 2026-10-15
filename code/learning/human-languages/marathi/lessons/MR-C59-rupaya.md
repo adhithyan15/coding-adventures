@@ -11,7 +11,8 @@ gloss: rupee — the unit a price is actually named in, and a word Sanskrit buil
 concept_tag: MR-LEX-RUPAYA
 prerequisites: [MR-R58-seventeen-to-twenty, MR-W59-ai-matra, MR-C59-paise]
 sounds: [matra-u, matra-aa]
-roots: []
+roots: [sanskrit-rupya]
+etymology_hook: "rupayā: usually traced to Sanskrit rūpya 'bearing a stamp; silver', built on rūpa 'form' (CDIAL 10805)"
 duration:
   max_seconds: 220
 requires:

@@ -13,7 +13,8 @@ gloss: "an answer"
 concept_tag: LA-RES226-RESPONSUM
 prerequisites: [LA-C226-studium, LA-C226-quaestio]
 sounds: []
-roots: []
+roots: [responsum-latin, latin-respondere, spondere-latin]
+etymology_hook: "respōnsum 'answer' — from respondeō 'to answer': re- + spondeō 'to pledge'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C226-quaestio]
 <!-- hl-knowledge: introduces=[LA-LEX-C226-RES226-05]; assesses=[] -->
 
 **respōnsum, respōnsī** — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**respōnsum** is the past participle of *respondeō*, "to answer" (Lewis & Short), used as a noun. *respondeō* is *re-*, "back", with *spondeō*, "to pledge" (EtymDB 2.1): to pledge back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

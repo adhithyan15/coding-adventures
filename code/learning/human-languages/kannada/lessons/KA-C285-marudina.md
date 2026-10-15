@@ -14,7 +14,8 @@ romanization: "marudina"
 concept_tag: KA-KALA285-MARUDINA
 prerequisites: [KA-C284-kelavomme, KA-C285-mukkalu]
 sounds: []
-roots: []
+roots: [matte-again-dravidian, sanskrit-dina]
+etymology_hook: "marudina: native maru 'next' (DEDR 4766) + Sanskrit dina 'day' (CDIAL 6328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C285-mukkalu]
 <!-- hl-knowledge: introduces=[KA-LEX-C285-KALA285-02]; assesses=[] -->
 
 **ಮರುದಿನ** — *marudina* — "the next day, the following day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮರುದಿನ** (*marudina*) joins native *maru*, "other, next", which DEDR 4766 lists as *maṟu*, to Sanskrit *dina*, "day" (CDIAL 6328): "the next day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

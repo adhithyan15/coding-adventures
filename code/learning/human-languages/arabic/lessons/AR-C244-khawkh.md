@@ -14,7 +14,8 @@ romanization: "khawkh"
 concept_tag: AR-SHAY244-KHAWKH
 prerequisites: [AR-C243-muzayyaf, AR-C244-zabadi]
 sounds: []
-roots: []
+roots: [kh-w-kh]
+etymology_hook: "khawkh: listed by Lane under kh-w-kh as the peach; EtymDB derives it from Aramaic ḥūḥā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C244-zabadi]
 <!-- hl-knowledge: introduces=[AR-LEX-C244-SHAY244-02]; assesses=[] -->
 
 **خوخ** — *khawkh* — "peaches".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خوخ** (*khawkh*) is listed by Lane under *kh-w-kh* as a well-known fruit, the peach, with no foreign source given; EtymDB derives it from Aramaic *ḥūḥā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

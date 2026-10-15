@@ -14,7 +14,8 @@ romanization: "chhāṛā"
 concept_tag: BN-VERB-CHHARA
 prerequisites: [BN-C52-harano, BN-C53-pora]
 sounds: []
-roots: []
+roots: [sanskrit-chardati]
+etymology_hook: "chhāṛā ← Sanskrit chardayati 'causes to flow over, vomits', a tadbhava (CDIAL 4998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C53-pora]
 <!-- hl-knowledge: introduces=[BN-LEX-C53-VERBS53-02]; assesses=[] -->
 
 **ছাড়া** — *chhāṛā* — "to leave, to let go".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছাড়া** (*chhāṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chardayati*, "causes to flow over, vomits" (CDIAL 4998). CDIAL gives its basic sense as "eject".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

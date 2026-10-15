@@ -11,7 +11,8 @@ gloss: the (al- — the attached article)
 concept_tag: GRAMMAR-THE
 prerequisites: [AR-C01-salam]
 sounds: [alif-lam, sun-moon-letters]
-roots: []
+roots: [al-article]
+etymology_hook: "al-: the old Arabic definite article, kept in English algebra and alcohol; its deeper Semitic origin is debated"
 reviews_of: [AR-C01-salam, AR-C01-marhaba]
 duration:
   max_seconds: 240
@@ -56,6 +57,8 @@ language of science and trade, and English and Spanish absorbed its words **with
 al- still attached**: **al**gebra (*al-jabr*), **al**cohol (*al-kuḥl*),
 **al**gorithm (*al-Khwārizmī*), **al**chemy, **al**manac. Learning Arabic *al-*
 is meeting an old friend you've been carrying in English all along.
+
+The article itself is old Arabic. Hebrew has *ha-* in the same job, and how the two are related is debated, so its deeper origin is not settled.
 
 ## Grammar Lens: sun letters and moon letters
 <!-- hl-knowledge: introduces=[AR-CONCEPT-SUN-MOON-10]; assesses=[] -->

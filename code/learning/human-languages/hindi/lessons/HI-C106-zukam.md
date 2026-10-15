@@ -14,7 +14,8 @@ romanization: "zukām"
 concept_tag: HI-UNWELL-COLD
 prerequisites: [HI-C63-pain, HI-C106-thakan]
 sounds: []
-roots: []
+roots: [arabic-zukam]
+etymology_hook: "zukām ← Arabic zukām 'a cold, catarrh', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C106-thakan]
 
 **मुझे ज़ुकाम है** — "I have a cold", literally "to me there is a cold". The person sits in
 **मुझे**, as in **मुझे चाय चाहिए**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ज़ुकाम** (*zukām*) is a loan from Arabic *zukām*, "a cold, catarrh", which reached Hindi through Persian. Its Arabic root is *z-k-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

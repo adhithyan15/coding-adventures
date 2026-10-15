@@ -14,7 +14,8 @@ romanization: "nasakha"
 concept_tag: AR-VERB-NASAKHA
 prerequisites: [AR-C161-ahassa, AR-C162-tabaa]
 sounds: []
-roots: []
+roots: [n-s-kh]
+etymology_hook: "nasakha: built on the root n-s-kh, 'to copy' (Lane); nasakha is the plain verb, 'he copied'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C162-tabaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C162-ACT162-02]; assesses=[] -->
 
 **نسخ** — *nasakha* — "to copy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نسخ** (*nasakha*) is built on the native Arabic root *n-s-kh*, "to copy; to abrogate" (Lane). *Nasakha* is the plain verb, "he copied".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

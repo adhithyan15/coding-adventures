@@ -14,7 +14,8 @@ romanization: "śāyi"
 concept_tag: KA-KELASA307-SAYI
 prerequisites: [KA-C307-godamu, KA-C307-phalaka]
 sounds: []
-roots: []
+roots: [persian-siyahi]
+etymology_hook: "śāyi ← Persian siyāhī 'ink, blackness', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C307-phalaka]
 <!-- hl-knowledge: introduces=[KA-LEX-C307-KELASA307-03]; assesses=[] -->
 
 **ಶಾಯಿ** — *śāyi* — "ink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶಾಯಿ** (*śāyi*) is Persian *siyāhī*, "blackness, ink", which came into Kannada through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

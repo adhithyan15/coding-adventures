@@ -14,7 +14,8 @@ romanization: "pirâhan"
 concept_tag: FA-TOWN73-PIRAHAN
 prerequisites: [FA-C73-resturan, FA-C73-lebas]
 sounds: []
-roots: []
+roots: [persian-pirahan]
+etymology_hook: "pirâhan: inherited, usually traced to Middle Persian pērāhan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C73-lebas]
 <!-- hl-knowledge: introduces=[FA-LEX-C73-TOWN73-04]; assesses=[] -->
 
 **پیراهن** — *pirâhan* — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pirâhan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *pērāhan*, "shirt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

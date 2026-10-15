@@ -14,7 +14,8 @@ romanization: "yuddha"
 concept_tag: MR-VASTU209-YUDDHA
 prerequisites: [MR-C208-thamba, MR-C209-arthavyavastha]
 sounds: []
-roots: []
+roots: [sanskrit-yuddha]
+etymology_hook: "yuddha ← Sanskrit yuddha 'fought; battle', a tatsama (CDIAL 10499)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C209-arthavyavastha]
 <!-- hl-knowledge: introduces=[MR-LEX-C209-VASTU209-02]; assesses=[] -->
 
 **युद्ध** — *yuddha* — "war".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**युद्ध** (*yuddha*) is Sanskrit *yuddha*, "fought; battle", taken over whole as a learned loan, a tatsama (CDIAL 10499).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

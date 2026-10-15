@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "The People in the Sentence",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d15a51960db40aaf",
+  "sourceHash": "fnv1a64:134cb4f01f59e1f1",
   "lessons": [
     {
       "id": "ML-C71-avan-aval",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b898d9a36d418778",
+      "sourceHash": "fnv1a64:45312a2a97dae572",
       "notice": null,
       "blocks": [
         {
@@ -98,6 +98,10 @@
             {
               "kind": "speech",
               "text": "A step up in respect needs a different word, and it arrives in the next lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the words come from. Both are native Dravidian, the far-pointing base with a masculine or feminine ending: DEDR 1 lists them with Tamil avaṉ, avaḷ."
             }
           ]
         },
@@ -182,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5947cae1f8158cba",
+      "sourceHash": "fnv1a64:3cac032002acbed0",
       "notice": null,
       "blocks": [
         {
@@ -256,6 +260,10 @@
             {
               "kind": "speech",
               "text": "Context decides between they and respectful he or she, and usually decides it without effort — a room with three people in it needs no help."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is native Dravidian, the far-pointing base with the plural of persons: DEDR 1 lists it with Tamil avar and Kannada avar."
             }
           ]
         },
@@ -340,7 +348,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:790a33251bd7fc40",
+      "sourceHash": "fnv1a64:0305d1e57ebe2bff",
       "notice": null,
       "blocks": [
         {
@@ -418,6 +426,10 @@
             {
               "kind": "speech",
               "text": "Tamil draws the same line with nāṅgaḷ against nām, and the two languages land on nearly the same pair of sounds — so a reader who has met one has most of the other."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the words come from. Both are native Dravidian: ñaṅṅaḷ belongs with Tamil yām, \"we\" (DEDR 5154), and nām with Tamil nām and Kannada nāvu (DEDR 3647)."
             }
           ]
         },

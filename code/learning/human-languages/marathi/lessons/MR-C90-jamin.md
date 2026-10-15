@@ -14,7 +14,8 @@ romanization: "jamīn"
 concept_tag: MR-HOME90-JAMIN
 prerequisites: [MR-C90-palang, MR-C90-kapat]
 sounds: []
-roots: []
+roots: [persian-zamin]
+etymology_hook: "jamīn: usually traced to Persian zamīn 'earth, ground'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C90-kapat]
 <!-- hl-knowledge: introduces=[MR-LEX-C90-HOME90-05]; assesses=[] -->
 
 **जमीन** — *jamīn* — "the ground, the floor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जमीन** (*jamīn*) is a loan, usually traced to Persian *zamīn*, "earth, ground". Marathi writes the *z* as **ज**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dhôrā"
 concept_tag: BN-VERB-DHORA
 prerequisites: [BN-C51-ana, BN-C51-gona]
 sounds: []
-roots: []
+roots: [sanskrit-dharati]
+etymology_hook: "dhôrā ← Sanskrit dharati 'holds, keeps', a tadbhava (CDIAL 6747)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C51-gona]
 <!-- hl-knowledge: introduces=[BN-LEX-C52-VERBS52-01]; assesses=[] -->
 
 **ধরা** — *dhôrā* — "to hold, to catch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধরা** (*dhôrā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dharati*, "holds, keeps" (CDIAL 6747).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

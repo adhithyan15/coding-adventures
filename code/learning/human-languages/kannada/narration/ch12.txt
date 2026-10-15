@@ -12,6 +12,7 @@ Kannada asks the same question Tamil does about any sibling: older, or younger? 
 The word, taken apart: Parents — native, and matching Tamil.
 ಅಪ್ಪ (appa) = "father" — matches Tamil appā closely.
 ಅಮ್ಮ (amma) = "mother" — matches Tamil ammā closely.
+Both are native Dravidian words (DEDR 156, 183).
 
 The word, taken apart: Four sibling words, age before gender.
 [a table of 4 rows, read aloud]
@@ -19,6 +20,7 @@ Kannada: ಅಣ್ಣ (aṇṇa). meaning: older brother. compare Tamil: aṇṇ
 Kannada: ತಮ್ಮ (tamma). meaning: younger brother. compare Tamil: tambi — near match.
 Kannada: ಅಕ್ಕ (akka). meaning: older sister. compare Tamil: akkā — near match.
 Kannada: ತಂಗಿ (tangi). meaning: younger sister. compare Tamil: tangai — near match.
+All four are native Dravidian, each with its own entry (DEDR 131, 3085, 23, 3015).
 Just like Tamil, Kannada has no single word that simply means "brother" or "sister" — you name the sibling's relative age every time, not just their gender. This age-first system runs across the whole Dravidian family, not just one language.
 
 Guided Practice.

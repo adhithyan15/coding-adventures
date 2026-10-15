@@ -14,7 +14,8 @@ romanization: "kuñce"
 concept_tag: TE-VASTUVU192-KUNCE
 prerequisites: [TE-C192-vatti, TE-C192-gollem]
 sounds: []
-roots: []
+roots: [telugu-kunce-brush]
+etymology_hook: "kuñce: probably native; DEDR 1639 has Kannada kuñca 'brush' and Tamil kuñcam 'weaver's brush'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C192-gollem]
 <!-- hl-knowledge: introduces=[TE-LEX-C192-VASTUVU192-03]; assesses=[] -->
 
 **కుంచె** — *kuñce* — "a paintbrush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కుంచె** (*kuñce*) is probably native Dravidian. DEDR 1639 does not list it, but has Kannada *kuñca*, "tassel, brush", and Tamil *kuñcam*, "weaver's brush", and compares Sanskrit *kūrca*, "brush" (CDIAL 3408).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 280,
-  "sourceHash": "fnv1a64:1c512fe978f4e7be",
+  "sourceHash": "fnv1a64:f5864e063fa9b11f",
   "lessonIds": [
     "ES-C280-queso",
     "ES-C280-huevo",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "spanish/narration/ch280.txt",
   "json": "spanish/narration/ch280.json",
-  "textHash": "fnv1a64:9c1abf63214d5366",
-  "jsonHash": "fnv1a64:9dd8a6c64acf7fb5",
+  "textHash": "fnv1a64:4f5f6ffbcc30465b",
+  "jsonHash": "fnv1a64:1f75535e98b0b482",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "aruzz"
 concept_tag: AR-FOOD66-ARUZZ
 prerequisites: [AR-C65-nazala, AR-C65-samak]
 sounds: []
-roots: []
+roots: [greek-oryza]
+etymology_hook: "aruzz: usually traced, probably via Aramaic, to Greek oryza 'rice' (EtymDB), itself an eastern word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C65-samak]
 <!-- hl-knowledge: introduces=[AR-LEX-C66-FOOD66-01]; assesses=[] -->
 
 **أرز** — *aruzz* — "rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أرز** (*aruzz*) is an old loan. It is usually traced, probably by way of Aramaic, to Greek *oryza*, "rice" (EtymDB), a word the Greeks had from further east. Lane lists *aruzz* under *ʾ-r-z* as a well-known grain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

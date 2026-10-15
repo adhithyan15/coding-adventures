@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to knit, then the Marathi for to harvest
 You'll want to know: स्नायू.
 स्नायू — snāyū — "a muscle".
 
+The word, taken apart.
+स्नायू (snāyū) is Sanskrit snāyu, "tendon, muscle, sinew", a tatsama. CDIAL lists the inherited Marathi form as sāv, "muscle, sinew, catgut" (CDIAL 13793).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to harvest, then the Marathi for a muscl
 
 You'll want to know: जखम.
 जखम — jakham — "a wound".
+
+The word, taken apart.
+जखम (jakham) is a loan, usually traced to Persian zakhm, "a wound", with Marathi ज for the z.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a muscle, then the Marathi for a wound.
 You'll want to know: व्रण.
 व्रण — vraṇ — "a scar".
 
+The word, taken apart.
+व्रण (vraṇ) is Sanskrit vraṇa, "abscess, boil, scar", a tatsama. CDIAL lists the inherited Marathi form as vaṇ, "scar" (CDIAL 12227).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a wound, then the Marathi for a scar.
 You'll want to know: सर्दी.
 सर्दी — sardī — "a head cold".
 
+The word, taken apart.
+सर्दी (sardī) is a loan, usually traced to Persian sardī, "coldness", built on sard, "cold".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a scar, then the Marathi for a head cold
 
 You'll want to know: चिठ्ठी.
 चिठ्ठी — ciṭṭhī — "a note; a prescription".
+
+The word, taken apart.
+चिठ्ठी (ciṭṭhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ciṣṭa, "message", a form CDIAL reconstructs from its descendants (CDIAL 4832). CDIAL compares Avestan činasti, "teaches, makes known". It glosses the Marathi word "letter".
 
 What you've built.
 One more word for this chapter.

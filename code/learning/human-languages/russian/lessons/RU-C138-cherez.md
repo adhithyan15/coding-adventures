@@ -14,7 +14,8 @@ romanization: "chérez"
 concept_tag: RU-FUT138-CHEREZ
 prerequisites: [RU-C137-sluchitsya, RU-C138-budushchiy]
 sounds: []
-roots: []
+roots: [slavic-chersu]
+etymology_hook: "через ← Proto-Slavic *čersŭ; Old Prussian kērscha 'across' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C138-budushchiy]
 <!-- hl-knowledge: introduces=[RU-LEX-C138-FUT138-02]; assesses=[] -->
 
 **через** (*chérez*) — "in (a week), after". Counted from now: **через неделю** — *chérez nedélyu* — "in a week". **неделя** changes to **неделю** after it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**через** ← Proto-Slavic *\*čersŭ*, "across" — inherited. Vasmer relates it to Old Prussian *kērscha*, "across", and Lithuanian *skersas*, "crosswise"; *чрез* is the Church Slavonic shape.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

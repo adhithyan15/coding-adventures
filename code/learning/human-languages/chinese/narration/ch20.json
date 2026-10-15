@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Six to Ten, and the Character That Was Already Here",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f0f838426af22fc6",
+  "sourceHash": "fnv1a64:4a44789816b62551",
   "lessons": [
     {
       "id": "ZH-W20-liu",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b4e7d086f52aa1c",
+      "sourceHash": "fnv1a64:12f0e832976f0230",
       "notice": null,
       "blocks": [
         {
@@ -229,6 +229,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "六 liù is inherited from Middle Chinese ljuwk, \"six\", which lost its final k in Mandarin (Guangyun, in Baxter's transcription). It is usually compared with Tibetan drug, a likely Sino-Tibetan cognate."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +264,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -437,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88aea644188b0b12",
+      "sourceHash": "fnv1a64:d4fd0035a754631d",
       "notice": null,
       "blocks": [
         {
@@ -487,6 +498,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "七 qī is inherited from Middle Chinese tshit, \"seven\" (Guangyun, in Baxter's transcription). Mandarin turned its tsh into the q you are practising and dropped the final t."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -511,7 +533,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -695,7 +717,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84b4a3cdffc74eb6",
+      "sourceHash": "fnv1a64:b30bba4766bb19e4",
       "notice": null,
       "blocks": [
         {
@@ -751,6 +773,10 @@
             {
               "kind": "speech",
               "text": "A number can carry that much only in a language where numbers sound like other words, and this is the clearest case of it a beginner will meet."
+            },
+            {
+              "kind": "speech",
+              "text": "The word itself is inherited from Middle Chinese peat, \"eight\" (Guangyun, in Baxter's transcription); the luck rests on a likeness of sound, not on where the word comes from."
             }
           ]
         },
@@ -959,7 +985,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f33f1610635b166",
+      "sourceHash": "fnv1a64:c667f58c89f5187c",
       "notice": null,
       "blocks": [
         {
@@ -1013,6 +1039,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "九 jiǔ is inherited from Middle Chinese kjuwX, \"nine\" (Guangyun, in Baxter's transcription); Mandarin softened the k to j. It is usually compared with Tibetan dgu, a likely Sino-Tibetan cognate."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1046,7 +1083,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1231,7 +1268,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b34eb9862c5e539e",
+      "sourceHash": "fnv1a64:594469442712e8fb",
       "notice": null,
       "blocks": [
         {
@@ -1296,6 +1333,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "十 shí is inherited from Middle Chinese dzyip, \"ten\", whose final p Mandarin lost (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1320,7 +1368,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

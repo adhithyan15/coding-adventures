@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 104,
-  "sourceHash": "fnv1a64:f14c69a1d855e2d8",
+  "sourceHash": "fnv1a64:fa6a6db09ee1fd2b",
   "lessonIds": [
     "FA-C104-dane",
     "FA-C104-sabze",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch104.txt",
   "json": "persian/narration/ch104.json",
-  "textHash": "fnv1a64:e931cdc29acc05c3",
-  "jsonHash": "fnv1a64:ddb7b96006711e21",
+  "textHash": "fnv1a64:62c3c113d481d99d",
+  "jsonHash": "fnv1a64:36d0fd69bf8ae2cd",
   "findings": []
 }

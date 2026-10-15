@@ -14,7 +14,8 @@ romanization: "taṇḍa"
 concept_tag: KA-VASTU191-TANDA
 prerequisites: [KA-C191-kride, KA-C191-pandya]
 sounds: []
-roots: []
+roots: [dravidian-tanda-troop]
+etymology_hook: "taṇḍa: native Dravidian, one word with Tamil taṇṭu and Telugu taṇḍā (DEDR 3055)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C191-pandya]
 <!-- hl-knowledge: introduces=[KA-LEX-C191-VASTU191-04]; assesses=[] -->
 
 **ತಂಡ** — *taṇḍa* — "a team".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಂಡ** (*taṇḍa*) is native Dravidian, one word with Tamil *taṇṭu*, Telugu *taṇḍā* and Malayalam *taṇṭu* (DEDR 3055). DEDR lists *taṇḍa* itself, "multitude, troop, party", and compares Apabhramsha *taṇḍaa*, "a group".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

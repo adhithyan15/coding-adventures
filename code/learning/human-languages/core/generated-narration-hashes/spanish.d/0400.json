@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 400,
-  "sourceHash": "fnv1a64:d6c11750a11db3e7",
+  "sourceHash": "fnv1a64:7bf15f0be2a47004",
   "lessonIds": [
     "ES-C400-tren",
     "ES-C400-vuelo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch400.txt",
   "json": "spanish/narration/ch400.json",
-  "textHash": "fnv1a64:cd618250e7245d80",
-  "jsonHash": "fnv1a64:1aaa60a1ee1921ca",
+  "textHash": "fnv1a64:e54a360f09f61981",
+  "jsonHash": "fnv1a64:2b6ade184ebb26eb",
   "findings": []
 }

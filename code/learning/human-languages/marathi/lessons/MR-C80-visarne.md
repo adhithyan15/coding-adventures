@@ -14,7 +14,8 @@ romanization: "visarṇe"
 concept_tag: MR-VERB-VISARNE
 prerequisites: [MR-C79-gane, MR-C79-nachne]
 sounds: []
-roots: []
+roots: [sanskrit-vismarati]
+etymology_hook: "visarṇe ← Sanskrit vismarati 'forgets', a tadbhava (CDIAL 12021)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C79-nachne]
 <!-- hl-knowledge: introduces=[MR-LEX-C80-VERBS80-01]; assesses=[] -->
 
 **विसरणे** — *visarṇe* — "to forget".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विसरणे** (*visarṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vismarati*, "forgets" (CDIAL 12021). It is *vi-*, "away", and *smṛ*, "to remember".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

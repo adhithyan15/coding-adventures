@@ -14,7 +14,8 @@ romanization: "ofitsiánt"
 concept_tag: RU-THINGS109-WAITER
 prerequisites: [RU-C109-firefighter, RU-C109-postman]
 sounds: []
-roots: []
+roots: [officium-latin]
+etymology_hook: "официант is probably from German Offiziant, built on Latin officium 'service'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C109-postman]
 <!-- hl-knowledge: introduces=[RU-LEX-C109-THINGS109-05]; assesses=[] -->
 
 **официант** (*ofitsiánt*) — "a waiter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**официант** is built on Latin *officium*, "duty, service", probably through German *Offiziant*, "a minor official": the one who serves.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

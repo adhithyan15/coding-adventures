@@ -14,7 +14,8 @@ romanization: "ibtalaʿa"
 concept_tag: AR-VERB-IBTALAA
 prerequisites: [AR-C193-sawama, AR-C193-tasawwaqa]
 sounds: []
-roots: []
+roots: [b-l-ʿ]
+etymology_hook: "ibtalaʿa: built on the root b-l-ʿ, 'to swallow' (Lane); ibtalaʿa is Form VIII, 'to swallow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C193-tasawwaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C194-ACT194-01]; assesses=[] -->
 
 **ابتلع** — *ibtalaʿa* — "to swallow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ابتلع** (*ibtalaʿa*) is built on the native Arabic root *b-l-ʿ*, "to swallow" (Lane). *Ibtalaʿa* is Form VIII, "to swallow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

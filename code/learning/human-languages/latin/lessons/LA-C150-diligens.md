@@ -13,7 +13,8 @@ gloss: "hard-working"
 concept_tag: LA-QUAL150-DILIGENS
 prerequisites: [LA-C150-cautus, LA-C150-piger]
 sounds: []
-roots: []
+roots: [diligens-latin, diligere-latin, legere-latin]
+etymology_hook: "dīligēns 'hard-working' — from dīligō 'to value': dis- + legō 'to choose'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C150-piger]
 <!-- hl-knowledge: introduces=[LA-LEX-C150-QUAL150-03]; assesses=[] -->
 
 **dīligēns, dīligentis** — "hard-working".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dīligēns** is the present participle of *dīligō*, "to value, to love" (Lewis & Short), from *dis-*, "apart", and *legō*, "to choose": one who chooses with care.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

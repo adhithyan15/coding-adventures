@@ -14,7 +14,8 @@ romanization: "sādh"
 concept_tag: BN-JINIS260-SADH
 prerequisites: [BN-C259-abedon, BN-C259-porichoypotro]
 sounds: []
-roots: []
+roots: [sanskrit-shraddha]
+etymology_hook: "sādh ← Sanskrit śraddhā 'trust; longing', a tadbhava (CDIAL 12678)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C259-porichoypotro]
 <!-- hl-knowledge: introduces=[BN-LEX-C260-JINIS260-01]; assesses=[] -->
 
 **সাধ** — *sādh* — "a longing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাধ** (*sādh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śraddhā*, "trust; longing" (CDIAL 12678). CDIAL lists Bengali *sādh*, "wish, fancy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

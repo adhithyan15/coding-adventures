@@ -14,7 +14,8 @@ romanization: "tera"
 concept_tag: TE-WHY109-TERA
 prerequisites: [TE-C109-dindu, TE-C109-duppati]
 sounds: []
-roots: []
+roots: [dravidian-tirai-curtain]
+etymology_hook: "tera: native Dravidian, one word with Kannada tere (DEDR 3244)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C109-duppati]
 <!-- hl-knowledge: introduces=[TE-LEX-C109-WHY109-05]; assesses=[] -->
 
 **తెర** — *tera* — "a curtain, a screen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తెర** (*tera*) is native Dravidian, one word with Kannada *tere* (DEDR 3244). DEDR lists Telugu *tera*, "screen, curtain, wave".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

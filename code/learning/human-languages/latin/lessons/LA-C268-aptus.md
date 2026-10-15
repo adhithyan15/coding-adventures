@@ -13,7 +13,8 @@ gloss: "fit, suited"
 concept_tag: LA-QUAL268-APTUS
 prerequisites: [LA-C268-alter, LA-C268-idoneus]
 sounds: []
-roots: []
+roots: [aptus-latin]
+etymology_hook: "aptus 'fit' — the old participle of apō 'to fasten': fastened on"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C268-idoneus]
 <!-- hl-knowledge: introduces=[LA-LEX-C268-QUAL268-03]; assesses=[] -->
 
 **aptus, apta, aptum** — "fit, suited".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aptus** is the old participle of *apō*, "to fasten, to attach" (Lewis & Short): fastened on, so fitted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "before, previously"
 concept_tag: LA-PAS162-ANTEA
 prerequisites: [LA-C162-nudiustertius, LA-C162-olim]
 sounds: []
-roots: []
+roots: [antea-latin, ante-latin]
+etymology_hook: "anteā 'before' — ante 'before' + eā 'that', like posteā"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C162-olim]
 <!-- hl-knowledge: introduces=[LA-LEX-C162-PAS162-04]; assesses=[] -->
 
 **anteā** — "before, previously". It is **ante**, "before", with **eā**. **Anteā Rōmae habitāvī.** — "Before, I lived in Rome." **habitāvī** is the perfect of **habitō**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**anteā** is *ante*, "before", with *eā*, "that" (Lewis & Short), like *posteā*, "afterwards", and *proptereā*, "because of that". *ante* is usually traced to Proto-Indo-European *\*h2enti*, "facing, in front" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

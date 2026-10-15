@@ -14,7 +14,8 @@ romanization: "sabab"
 concept_tag: AR-SABAB174-SABAB
 prerequisites: [AR-C173-qarra, AR-C173-burkan]
 sounds: []
-roots: []
+roots: [s-b-b]
+etymology_hook: "sabab: a native noun on s-b-b (Lane): a rope by which one reaches a thing, hence a means, a cause"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C173-burkan]
 <!-- hl-knowledge: introduces=[AR-LEX-C174-SABAB174-01]; assesses=[] -->
 
 **سبب** — *sabab* — "a reason, a cause".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سبب** (*sabab*) is a native noun, filed under the root *s-b-b* (Lane). Lane's *sabab* is a rope by which one reaches a thing, hence a means, a cause.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

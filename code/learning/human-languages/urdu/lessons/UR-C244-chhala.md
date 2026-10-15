@@ -14,7 +14,8 @@ romanization: "chhālā"
 concept_tag: UR-SEHAT244-CHHALA
 prerequisites: [UR-C243-qad, UR-C243-klinik]
 sounds: []
-roots: []
+roots: [sanskrit-challi]
+etymology_hook: "chhālā: CDIAL lists chālā 'skin' and chālī 'small blister' under challi 'bark', probably non-Aryan (CDIAL 5005)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C243-klinik]
 <!-- hl-knowledge: introduces=[UR-LEX-C244-SEHAT244-01]; assesses=[] -->
 
 **چھالا** — *chhālā* — "a blister".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چھالا** (*chhālā*) belongs with Hindi *chālā*, "skin, hide", and *chālī*, "a small blister", which CDIAL lists under Sanskrit *challi*, "bark", a word it thinks probably non-Aryan (CDIAL 5005).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

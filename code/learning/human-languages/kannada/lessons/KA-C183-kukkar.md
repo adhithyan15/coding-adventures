@@ -14,7 +14,8 @@ romanization: "kukkar"
 concept_tag: KA-VASTU183-KUKKAR
 prerequisites: [KA-C182-svanta, KA-C183-banale]
 sounds: []
-roots: []
+roots: [english-cooker]
+etymology_hook: "kukkar ← English cooker"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C183-banale]
 <!-- hl-knowledge: introduces=[KA-LEX-C183-VASTU183-02]; assesses=[] -->
 
 **ಕುಕ್ಕರ್** — *kukkar* — "a pressure cooker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುಕ್ಕರ್** (*kukkar*) is a loan from English *cooker*. The English *cooker* names the pressure cooker.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

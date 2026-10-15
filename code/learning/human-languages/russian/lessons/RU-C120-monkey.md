@@ -14,7 +14,8 @@ romanization: "obezyána"
 concept_tag: RU-THINGS120-MONKEY
 prerequisites: [RU-C119-chest, RU-C120-lion]
 sounds: []
-roots: []
+roots: [persian-abuzine]
+etymology_hook: "обезьяна ← Turkish and Persian abuzine 'monkey', perhaps reshaped to look Russian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C120-lion]
 <!-- hl-knowledge: introduces=[RU-LEX-C120-THINGS120-02]; assesses=[] -->
 
 **обезьяна** (*obezyána*) — "a monkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**обезьяна** — Old Russian *обезьяна*, recorded by Afanasy Nikitin; it comes from Turkish and Persian *abuzine*, "monkey", reshaped, it is thought, to look like Russian words with *о-* and *без-*, an account Vasmer finds not fully satisfying.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

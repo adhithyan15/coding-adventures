@@ -14,7 +14,8 @@ romanization: "saṅgṛhṇāti"
 concept_tag: SA-VERB-SANGRHNATI
 prerequisites: [SA-C177-pracchadayati, SA-C177-vitarati]
 sounds: []
-roots: []
+roots: [grah-seize]
+etymology_hook: "saṅgṛhṇāti ← sam 'together' + √grah 'seize' (MW): 'grasps together', hence 'collects'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C177-vitarati]
 <!-- hl-knowledge: introduces=[SA-LEX-C177-ACT177-03]; assesses=[] -->
 
 **संगृह्णाति** — *saṅgṛhṇāti* — "collects".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*saṅgṛhṇāti* is built on *sam* "together" and the root √grah, "to seize" (MW), the root of *gṛhṇāti*, "takes", which you have already met. To seize things together is to collect them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

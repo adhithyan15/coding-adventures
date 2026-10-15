@@ -14,7 +14,8 @@ romanization: "nērcukō"
 concept_tag: TE-VERB-NERCUKO
 prerequisites: [TE-C144-pampu, TE-C144-vetuku]
 sounds: []
-roots: []
+roots: [dravidian-ner-learn]
+etymology_hook: "nērcukō: native nērcu 'to learn' (DEDR 3770) + konu 'for oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C144-vetuku]
 <!-- hl-knowledge: introduces=[TE-LEX-C145-ACT145-01]; assesses=[] -->
 
 **నేర్చుకో** — *nērcukō* — "to learn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నేర్చుకో** (*nērcukō*) is native Dravidian: *nērcu*, "to learn", which DEDR 3770 lists, with *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

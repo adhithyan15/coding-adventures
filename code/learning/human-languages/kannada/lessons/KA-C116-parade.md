@@ -14,7 +14,8 @@ romanization: "parade"
 concept_tag: KA-THINGS116-PARADE
 prerequisites: [KA-C116-dimbu, KA-C116-kambali]
 sounds: []
-roots: []
+roots: [persian-parda]
+etymology_hook: "parade ← Persian parda 'curtain, veil', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C116-kambali]
 <!-- hl-knowledge: introduces=[KA-LEX-C116-THINGS116-03]; assesses=[] -->
 
 **ಪರದೆ** — *parade* — "a curtain, a screen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪರದೆ** (*parade*) is a loan from Persian *parda*, "curtain, veil", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

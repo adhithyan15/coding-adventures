@@ -14,7 +14,8 @@ romanization: "cuvaṭṭil"
 concept_tag: ML-STHALAM199-CUVATTIL
 prerequisites: [ML-C199-appuram, ML-C199-ippuram]
 sounds: []
-roots: []
+roots: [dravidian-cuvadu-foot]
+etymology_hook: "cuvaṭṭil: native Dravidian, cuvaṭu 'foot, base' (DEDR 2695) + the place ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C199-ippuram]
 <!-- hl-knowledge: introduces=[ML-LEX-C199-STHALAM199-05]; assesses=[] -->
 
 **ചുവട്ടിൽ** — *cuvaṭṭil* — "at the foot of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചുവട്ടിൽ** (*cuvaṭṭil*) is native Dravidian: *cuvaṭu*, "footprint, foot, base" (DEDR 2695, with Tamil *cuvaṭu*), with the place ending *-il*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

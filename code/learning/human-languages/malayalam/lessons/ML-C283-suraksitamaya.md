@@ -14,7 +14,8 @@ romanization: "surakṣitamāya"
 concept_tag: ML-GUNAM283-SURAKSITAMAYA
 prerequisites: [ML-C283-atiyantara, ML-C283-pradhanappetta]
 sounds: []
-roots: []
+roots: [sanskrit-suraksha, aaka-dravidian]
+etymology_hook: "surakṣitamāya: Sanskrit surakṣita 'well protected' (CDIAL 13499) + native āya (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C283-pradhanappetta]
 <!-- hl-knowledge: introduces=[ML-LEX-C283-GUNAM283-03]; assesses=[] -->
 
 **സുരക്ഷിതമായ** — *surakṣitamāya* — "safe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സുരക്ഷിതമായ** (*surakṣitamāya*) joins Sanskrit *surakṣita*, "well protected" (CDIAL 13499), to native *āya*, "having become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

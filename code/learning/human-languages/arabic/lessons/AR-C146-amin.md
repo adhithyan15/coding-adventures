@@ -14,7 +14,8 @@ romanization: "āmin"
 concept_tag: AR-QUAL146-AMIN
 prerequisites: [AR-C146-mufid, AR-C146-khatir]
 sounds: []
-roots: []
+roots: [ʾ-m-n]
+etymology_hook: "āmin: built on the root ʾ-m-n, 'to be safe, to trust' (Lane); āmin is the active participle, 'safe, secure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C146-khatir]
 <!-- hl-knowledge: introduces=[AR-LEX-C146-QUAL146-03]; assesses=[] -->
 
 **آمن** — *āmin* — "safe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آمن** (*āmin*) is built on the native Arabic root *ʾ-m-n*, "to be safe, to trust" (Lane). *Āmin* is the active participle, "safe, secure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

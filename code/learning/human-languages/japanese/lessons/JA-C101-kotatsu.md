@@ -14,7 +14,8 @@ romanization: "kotatsu"
 concept_tag: JA-THINGS101-KOTATSU
 prerequisites: [JA-C101-tansu, JA-C101-fusuma]
 sounds: []
-roots: []
+roots: [middle-chinese-gjox]
+etymology_hook: "kotatsu: 炬 'torch' + 燵, a character made in Japan; how the word formed is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C101-fusuma]
 <!-- hl-knowledge: introduces=[JA-LEX-C101-THINGS101-04]; assesses=[] -->
 
 **こたつ** — *kotatsu* — "a heated table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こたつ** (*kotatsu*) is written with *ko*, "torch, fire", a character borrowed from Chinese (Middle Chinese *gjoX*), and a second character that KANJIDIC2 marks as made in Japan (a kokuji). How the word was formed is not settled; JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

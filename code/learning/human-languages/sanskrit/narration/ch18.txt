@@ -17,6 +17,9 @@ Set it beside the word you just learned and something jumps out:
 सदा — always. कदा (kadā) — when?
 One letter apart, and the difference is the whole of this chapter. Sanskrit builds its question words on क् (k-), and it builds several of its answering words on स् (s-) or त् (t-). Ask with k-, answer with t-.
 
+The word, taken apart.
+Kadā is built on the question stem ka- (MW). It is inherited: MW compares Avestan kadha, Latin quandō and Lithuanian kada, all "when".
+
 What you've built.
 Your first k- word met deliberately. There are four more in this chapter, and by the end the pattern will be doing the remembering for you.
 
@@ -45,8 +48,11 @@ You'll want to know: किमर्थम्.
 किमर्थम् (kimartham) — "why?"
 It is transparently two pieces:
 किम् ("what") + अर्थम् ("for the purpose of, for the sake of").
-— literally "for what purpose?" Sanskrit does not have a single opaque word for why; it asks what the aim was, and lets the shape of the question show.
+— literally "for what purpose?" A bare kim can also ask why; this fuller word asks what the aim was, and lets the shape of the question show.
 अर्थ (artha) is worth keeping on its own. It means purpose, aim, meaning, and wealth all at once, and it is one of the four goals of life in the classical scheme. A word for "why" built on it is asking, quite seriously, what is this for?
+
+The word, taken apart.
+Kimartham is a compound of kim "what" and artha "aim, purpose", already in the Śatapatha Brāhmaṇa (MW, CDIAL 3165).
 
 What you've built.
 A compound you can take apart on sight — and k- again at the front, exactly as promised.
@@ -108,6 +114,9 @@ You'll want to know: कुतः.
 You already have कुत्र (kutra), "where?" Now compare the two endings:
 कुत्र — where, at what place. कुतः (kutaḥ) — from where, out of what place.
 The -tas ending means "from," and Sanskrit uses it far beyond question words. English once had this distinction too and has mostly lost it: where against whence, there against thence. Sanskrit keeps them working.
+
+The word, taken apart.
+Kutaḥ is built from the question base ku- with the ending -tas, "from" (MW, CDIAL 3271).
 
 What you've built.
 Four k- words, and a distinction English has let go of. When a language keeps a difference yours has dropped, that is worth noticing rather than flattening.

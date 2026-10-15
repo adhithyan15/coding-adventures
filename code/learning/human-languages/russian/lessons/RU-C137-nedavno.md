@@ -14,7 +14,8 @@ romanization: "nedávno"
 concept_tag: RU-PAS137-NEDAVNO
 prerequisites: [RU-C136-nikuda, RU-C136-zachem]
 sounds: []
-roots: []
+roots: [slavic-davu]
+etymology_hook: "недавно is не 'not' + давно 'long ago'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C136-zachem]
 <!-- hl-knowledge: introduces=[RU-LEX-C137-PAS137-01]; assesses=[] -->
 
 **недавно** (*nedávno*) — "recently". Russian's past usually ends in **-л**, with **-ла** for a woman: **Недавно я читал книгу.** — *nedávno ya chitál knígu* — "Recently I read a book." A woman says **читала**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**недавно** is *не*, "not", with *давно*, "long ago": not long ago. *давно* goes with old *даве*, "earlier". Vasmer relates *даве* to Latin *dūdum*, "a while ago", and Greek *dēn*, "long".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

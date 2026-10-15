@@ -14,7 +14,8 @@ romanization: "aṭuppŭ"
 concept_tag: ML-THINGS157-ATUPPU
 prerequisites: [ML-C156-koppa, ML-C157-kalam]
 sounds: []
-roots: []
+roots: [dravidian-atu-cook]
+etymology_hook: "aṭuppŭ: native Dravidian, built on the verb 'to cook'; Tamil aṭu (DEDR 76)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C157-kalam]
 <!-- hl-knowledge: introduces=[ML-LEX-C157-THINGS157-02]; assesses=[] -->
 
 **അടുപ്പ്** — *aṭuppŭ* — "a stove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അടുപ്പ്** (*aṭuppŭ*) is native Dravidian, built on the verb "to cook"; DEDR 76 lists Malayalam *aṭuppu*, "hearth", itself, beside Tamil *aṭu* and Kannada *aḍu*. DEDR 76 compares Sanskrit *aṭṭa*, "dried".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

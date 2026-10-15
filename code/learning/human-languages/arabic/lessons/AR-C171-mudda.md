@@ -14,7 +14,8 @@ romanization: "mudda"
 concept_tag: AR-WAQT171-MUDDA
 prerequisites: [AR-C170-abadan, AR-C171-mustaqbal]
 sounds: []
-roots: []
+roots: [m-d-d]
+etymology_hook: "mudda: built on the root m-d-d, 'to stretch' (Lane); mudda is a stretch of time"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C171-mustaqbal]
 <!-- hl-knowledge: introduces=[AR-LEX-C171-WAQT171-02]; assesses=[] -->
 
 **مدة** — *mudda* — "a period, a duration".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مدة** (*mudda*) is built on the native Arabic root *m-d-d*, "to stretch" (Lane). *Mudda* is a stretch of time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

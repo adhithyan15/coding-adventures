@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 205,
-  "sourceHash": "fnv1a64:ed6c0843792b23b1",
+  "sourceHash": "fnv1a64:06c0dcd3b911d410",
   "lessonIds": [
     "SA-C205-ksamate",
     "SA-C205-nindati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch205.txt",
   "json": "sanskrit/narration/ch205.json",
-  "textHash": "fnv1a64:39d0b6b5a88db1c7",
-  "jsonHash": "fnv1a64:f08c1e5598f06a10",
+  "textHash": "fnv1a64:4df909c5fe88dd01",
+  "jsonHash": "fnv1a64:2e95a7ba909c152a",
   "findings": []
 }

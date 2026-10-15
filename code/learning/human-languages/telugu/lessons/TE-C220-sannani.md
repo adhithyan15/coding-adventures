@@ -14,7 +14,8 @@ romanization: "sannani"
 concept_tag: TE-GUNAM220-SANNANI
 prerequisites: [TE-C220-nindu, TE-C220-lavu]
 sounds: []
-roots: []
+roots: [telugu-sanna-thin]
+etymology_hook: "sannani: origin uncertain; perhaps Prakrit saṇha 'fine, small', Sanskrit ślakṣṇa (CDIAL 12732)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C220-lavu]
 <!-- hl-knowledge: introduces=[TE-LEX-C220-GUNAM220-04]; assesses=[] -->
 
 **సన్నని** — *sannani* — "thin, slim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **సన్నని** (*sannani*) is uncertain. It may come from Prakrit *saṇha*, "fine, small", from Sanskrit *ślakṣṇa*, "smooth; thin" (CDIAL 12732), but no source says so.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

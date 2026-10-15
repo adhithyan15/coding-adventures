@@ -14,7 +14,8 @@ romanization: "parande"
 concept_tag: FA-ANIMALS55-PARANDE
 prerequisites: [FA-C55-boz, FA-C55-gusfand]
 sounds: []
-roots: []
+roots: [persian-par-wing]
+etymology_hook: "parande: Persian paridan 'to fly' + -ande '-ing'; built on par 'wing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C55-gusfand]
 <!-- hl-knowledge: introduces=[FA-LEX-C55-ANIMALS55-05]; assesses=[] -->
 
 **پرنده** — *parande* — "a bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*parande* is the "-ing" form of *paridan*, "to fly": "a flying one". The verb is built on *par*, "wing, feather", a native word usually traced to Middle Persian *parr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

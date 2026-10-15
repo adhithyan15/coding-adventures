@@ -11,7 +11,8 @@ gloss: see you tomorrow (and the કાલ puzzle)
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [GU-C04-malishun]
 sounds: [long-aa, e-sign]
-roots: [sanskrit-kaala-time]
+roots: [kalya-time]
+etymology_hook: "kāl ← Sanskrit kalya 'dawn; at dawn, tomorrow', built on kāla 'time' (CDIAL 3104)"
 duration:
   max_seconds: 240
 requires:
@@ -49,8 +50,7 @@ and **yesterday**.
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C04-KAALE-01, GU-CONCEPT-C04-MALISHUN-01] -->
 
 **કાલ** (*kāl*) means **both "tomorrow" and "yesterday"** — the day on either side
-of today — from Sanskrit **કાલ** (*kāla*, "time"). (It is the very same *kāla*
-behind Hindi's *kal*, Bengali's *kāl*, and Punjabi's *akāl* "timeless.") The verb's
+of today — from Sanskrit *kalya*, "dawn; at dawn, tomorrow", itself built on *kāla*, "time" (CDIAL 3104). (Hindi's *kal* comes from the same word.) The verb's
 tense tells which: *kāle maḷīshũ* (future → "**tomorrow** we'll meet"), *kāle maḷyā*
 (past → "we met **yesterday**"). So **કાલે મળીશું** = "tomorrow we'll meet" = "see
 you tomorrow."

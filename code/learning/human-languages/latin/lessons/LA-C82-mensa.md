@@ -13,7 +13,8 @@ gloss: "a table"
 concept_tag: LA-DOMUS1-MENSA
 prerequisites: [LA-C81-ficus, LA-C81-nux]
 sounds: []
-roots: []
+roots: [mensa-latin]
+etymology_hook: "mēnsa 'table' — origin uncertain; often linked to mēnsus 'measured'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C81-nux]
 <!-- hl-knowledge: introduces=[LA-LEX-C82-DOMUS1-01]; assesses=[] -->
 
 **mēnsa, mēnsae** — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mēnsa**, "table", has no sure origin. It is often linked to *mēnsus*, "measured", the participle of *mētior*, "to measure", but the link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

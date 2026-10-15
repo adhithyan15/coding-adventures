@@ -11,7 +11,8 @@ romanization: "hasu"
 concept_tag: KA-NOUN-COW
 prerequisites: [KA-C59-fire, KA-C58-a-little]
 sounds: []
-roots: []
+roots: [sanskrit-pashu]
+etymology_hook: "hasu ← Sanskrit paśu 'domestic animal' (CDIAL 7984), borrowed early enough for p- to become h-"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C59-fire]
 ಹಸು is inherited, and it is the animal a Karnataka household is built around. The ಹಾಲು you met in the drinks chapter comes out of it, and most of what a Kannada kitchen makes begins with what comes out of it.
 
 It belongs to the ರೈತ before it belongs to anybody, and in a ಹಳ್ಳಿ it is tied in the yard rather than kept in a shed, close enough to the ಬಾಗಿಲು that you step around it going in.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಸು** (*hasu*) comes from Sanskrit *paśu*, "domestic animal" (CDIAL 7984), through a Prakrit form *pasu*. It came in early enough to go through the same change as native words: the *p-* became *h-*. This is a tadbhava, a loan reshaped by Kannada sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

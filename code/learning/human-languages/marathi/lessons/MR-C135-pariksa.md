@@ -14,7 +14,8 @@ romanization: "parīkṣā"
 concept_tag: MR-THINGS135-PARIKSA
 prerequisites: [MR-C134-rabar, MR-C135-daptar, MR-C62-message, MR-C62-pahila-paath]
 sounds: []
-roots: []
+roots: [sanskrit-pariksha]
+etymology_hook: "parīkṣā ← Sanskrit parīkṣā 'inspection, test', a tatsama (CDIAL 7904)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [MR-C135-daptar]
 <!-- hl-knowledge: introduces=[MR-LEX-C135-THINGS135-02]; assesses=[] -->
 
 **परीक्षा** — *parīkṣā* — "an exam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परीक्षा** (*parīkṣā*) is Sanskrit *parīkṣā*, "inspection, test", taken over whole as a learned loan, a tatsama (CDIAL 7904).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

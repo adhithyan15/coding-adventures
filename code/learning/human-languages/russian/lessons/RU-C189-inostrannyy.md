@@ -14,7 +14,8 @@ romanization: "inostránnyy"
 concept_tag: RU-KACH189-INOSTRANNYY
 prerequisites: [RU-C189-rodnoy, RU-C189-mestnyy]
 sounds: []
-roots: []
+roots: [slavic-inu, slavic-storna]
+etymology_hook: "иностранный is иной 'other' + страна 'a country': of another country"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C189-mestnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C189-KACH189-04]; assesses=[] -->
 
 **иностранный** (*inostránnyy*) — "foreign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**иностранный** is *иной*, "other", with *страна*, "a country", the Church Slavonic shape of *сторона*, "side": "of another land". Vasmer confirms *страна* as borrowed from Church Slavonic, and relates *иной* to Latin *ūnus*, "one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

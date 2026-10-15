@@ -14,7 +14,8 @@ romanization: "kaṭiḥ"
 concept_tag: SA-THINGS117-KATIH
 prerequisites: [SA-C117-angusthah, SA-C117-vaksah]
 sounds: []
-roots: []
+roots: [sanskrit-kati-hip]
+etymology_hook: "kaṭi 'hip, waist' is rather from Dravidian than Indo-European, says CDIAL 2639; Marathi kaḍ 'side, waist'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C117-vaksah]
 <!-- hl-knowledge: introduces=[SA-LEX-C117-THINGS117-03]; assesses=[] -->
 
 **कटिः** — *kaṭiḥ* — "the waist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kaṭi* "the hip, the waist" has a disputed origin: CDIAL 2639 notes an Indo-European proposal but thinks it rather borrowed from Dravidian, comparing Kannada *kaḍe* "side". It lives on as Marathi *kaḍ* "side, waist" (CDIAL 2639).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

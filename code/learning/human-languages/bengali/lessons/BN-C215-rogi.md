@@ -14,7 +14,8 @@ romanization: "rogī"
 concept_tag: BN-SVASTHYO215-ROGI
 prerequisites: [BN-C215-molom, BN-C215-daktarkhana]
 sounds: []
-roots: []
+roots: [sanskrit-rogin]
+etymology_hook: "rogī ← Sanskrit rogin 'sick', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C215-daktarkhana]
 <!-- hl-knowledge: introduces=[BN-LEX-C215-SVASTHYO215-03]; assesses=[] -->
 
 **রোগী** — *rogī* — "a patient".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**রোগী** (*rogī*) is Sanskrit *rogin*, "sick", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tīkhũ"
 concept_tag: GU-QUAL132-TIKHU
 prerequisites: [GU-C132-gandu, GU-C132-khatu]
 sounds: []
-roots: []
+roots: [sanskrit-tikshna]
+etymology_hook: "tīkhũ ← Sanskrit tīkṣṇa 'sharp; hot, pungent', a tadbhava (CDIAL 5839)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C132-khatu]
 <!-- hl-knowledge: introduces=[GU-LEX-C132-QUAL132-04]; assesses=[] -->
 
 **તીખું** (*tīkhũ*) — "spicy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**તીખું** (*tīkhũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *tīkṣṇa*, "sharp; hot, pungent" (CDIAL 5839).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

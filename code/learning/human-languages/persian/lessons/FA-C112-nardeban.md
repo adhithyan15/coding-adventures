@@ -14,7 +14,8 @@ romanization: "nardebân"
 concept_tag: FA-THINGS112-NARDEBAN
 prerequisites: [FA-C111-satl, FA-C111-tanab]
 sounds: []
-roots: []
+roots: [persian-nardeban]
+etymology_hook: "nardebân: inherited, usually traced to Middle Persian nardubān"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C111-tanab]
 <!-- hl-knowledge: introduces=[FA-LEX-C112-THINGS112-01]; assesses=[] -->
 
 **نردبان** — *nardebân* — "a ladder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nardebân* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *nardubān*, "ladder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

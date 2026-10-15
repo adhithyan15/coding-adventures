@@ -12,6 +12,9 @@ Before the new one: say the Urdu for like that, then the Urdu for this much.
 You'll want to know: سب.
 سب — sab — "all, everyone".
 
+The word, taken apart.
+سب (sab) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sarva, "all, whole" (CDIAL 13276).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for this much, then the Urdu for all.
 
 You'll want to know: ہر.
 ہر — har — "every".
+
+The word, taken apart.
+ہر (har) is a loan, usually traced to Persian har, "every".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for all, then the Urdu for every.
 You'll want to know: کوئی.
 کوئی — koī — "someone, anyone, some".
 
+The word, taken apart.
+کوئی (koī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaścid, "someone, anyone" (CDIAL 2967).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for every, then the Urdu for someone.
 You'll want to know: کچھ.
 کچھ — kuchh — "something, some".
 
+The word, taken apart.
+کچھ (kuchh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kiṃcid, "anything" (CDIAL 3144). CDIAL notes that its -ch- comes from the masculine kaścid.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for someone, then the Urdu for something.
 
 You'll want to know: دونوں.
 دونوں — donoṅ — "both".
+
+The word, taken apart.
+دونوں (donoṅ) is do, "two", with an ending that makes "both". CDIAL lists donõ, "both", beside do under Sanskrit dva, "two" (CDIAL 6648).
 
 What you've built.
 One more word for this chapter.

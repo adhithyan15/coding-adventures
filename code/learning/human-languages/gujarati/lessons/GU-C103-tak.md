@@ -15,6 +15,7 @@ concept_tag: GU-CAN103-TAK
 prerequisites: [GU-C102-hak, GU-C103-adhikar]
 sounds: []
 roots: []
+etymology_hook: "tak 'chance': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C103-adhikar]
 <!-- hl-knowledge: introduces=[GU-LEX-C103-CAN103-02]; assesses=[] -->
 
 **તક** (*tak*) — "a chance, an opportunity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **તક** (*tak*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

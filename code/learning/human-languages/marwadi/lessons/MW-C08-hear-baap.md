@@ -11,8 +11,8 @@ gloss: father
 concept_tag: MW-FAMILY-FATHER
 prerequisites: [MW-C08-maa]
 sounds: [voiced-b, long-aa, unaspirated-p]
-roots: []
-etymology_hook: A second family meaning arrives by ear before its one new consonant.
+roots: [indo-aryan-bappa]
+etymology_hook: "bāp ← *bāppa 'father', a nursery word, reconstructed (CDIAL 9209)"
 duration:
   max_seconds: 150
 requires:
@@ -49,6 +49,11 @@ Then say water. [YOU WRITE: familiar **ल** and **क**, once each]
 Hear one long middle vowel: *bāp*. Say the word once without looking for its
 spelling. A respectful form such as *bāpūjī* can come later; this step keeps one
 meaning and one sound small.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bāp* is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bāppa*, "father", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9209); the match is through Hindi *bāp* and Gujarati *bāp*. CDIAL counts it among the nursery words.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAAP-01, MW-LEX-MAA-01] -->

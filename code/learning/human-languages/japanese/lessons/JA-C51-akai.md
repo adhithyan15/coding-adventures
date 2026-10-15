@@ -14,7 +14,8 @@ romanization: "akai"
 concept_tag: JA-ADJ51-AKAI
 prerequisites: [JA-C51-utsukushii, JA-C51-aoi]
 sounds: []
-roots: []
+roots: [japanese-akai]
+etymology_hook: "akai: native, the adjective from aka 'red'; inherited, not borrowed; kanji 赤い as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C51-aoi]
 <!-- hl-knowledge: introduces=[JA-LEX-C51-ADJ51-05]; assesses=[] -->
 
 **あかい** — *akai* — "red".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あかい** (*akai*) is native: the adjective made from the colour word *aka*, "red", with the ending *-i*; JMdict lists both. It is inherited rather than borrowed from Chinese, and the older origin of *aka* is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ gloss: "an answer; north"
 concept_tag: KA-ANCHOR-UTTARA
 prerequisites: [KA-S124-letter-pa]
 sounds: []
-roots: []
+roots: [sanskrit-uttara]
+etymology_hook: "uttara ← Sanskrit uttara 'upper, northern; answer', a tatsama (CDIAL 1767)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *uttara*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ಉ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉತ್ತರ** (*uttara*) is Sanskrit *uttara*, "upper, northern; answer", taken over whole as a learned loan, a tatsama (CDIAL 1767).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-ANCHOR-UTTARA] -->

@@ -11,7 +11,8 @@ romanization: "huṣāru"
 concept_tag: KA-LEAVE-CARE
 prerequisites: [KA-C88-comein, KA-C88-welcome]
 sounds: []
-roots: []
+roots: [persian-hoshyar]
+etymology_hook: "huṣāru ← Persian hušyār 'alert, careful', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C88-welcome]
 
 **ಹುಷಾರು** (*huṣāru*) — "careful, take care". Said at parting it means "look after
 yourself"; said on its own it can also mean "well again".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹುಷಾರು** (*huṣāru*) is a loan from Persian *hušyār*, "awake, alert, careful", which came to Kannada through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

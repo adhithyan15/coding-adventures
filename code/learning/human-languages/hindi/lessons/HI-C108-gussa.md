@@ -14,7 +14,8 @@ romanization: "gussā"
 concept_tag: HI-FEEL-ANGER
 prerequisites: [HI-C107-sehat, HI-C108-dar]
 sounds: []
-roots: []
+roots: [arabic-ghussa]
+etymology_hook: "gussā ← Arabic ghuṣṣa 'a choking; grief', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C108-dar]
 **गुस्सा** (*gussā*) — "anger".
 
 **मुझे गुस्सा आया** — "I got angry", literally "anger came to me", on the **आना** you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गुस्सा** (*gussā*) is a loan from Arabic *ghuṣṣa*, "a choking; grief", which reached Hindi through Persian. Its Arabic root is *gh-ṣ-ṣ* (Lane). In Hindi it came to mean "anger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

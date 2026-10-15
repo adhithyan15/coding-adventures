@@ -11,7 +11,8 @@ romanization: "ūṭa āytā"
 concept_tag: KA-GREET-EATEN
 prerequisites: [KA-C95-maybe, KA-C95-certainly]
 sounds: []
-roots: []
+roots: [dravidian-un-eat, tamil-aaku-become]
+etymology_hook: "ūṭa āytā: native ūṭa 'meal', from uṇ 'to eat' (DEDR 600), + āytā 'has it become?' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C95-certainly]
 
 **ಊಟ ಆಯ್ತಾ?** (*ūṭa āytā?*) — "have you eaten?", literally "has the meal happened?".
 In the south this is a greeting as much as a question.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಊಟ ಆಯ್ತಾ** (*ūṭa āytā*) is native Dravidian: *ūṭa*, "a meal", from *uṇ*, "to eat a meal", (DEDR 600, with Tamil *uṇ*), and *āytā*, "has it become?", from *āgu*, "to become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

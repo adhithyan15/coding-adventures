@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a fine thread, then the Marathi for a la
 You'll want to know: ठिकाण.
 ठिकाण — ṭhikāṇ — "a place, a spot".
 
+The word, taken apart.
+ठिकाण (ṭhikāṇ) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭhīkka, "firm, right", a form CDIAL reconstructs from its descendants (CDIAL 5503). CDIAL lists the Marathi word here only as a possibility; it derives the reconstruction, probably, from Sanskrit sthita, "standing".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a ladder, then the Marathi for a place.
 
 You'll want to know: देखावा.
 देखावा — dekhāvā — "a view, a scene".
+
+The word, taken apart.
+देखावा (dekhāvā) is built on dekhṇẽ, "to see", which comes from a reconstructed dēkṣati, "sees" (CDIAL 6507).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a place, then the Marathi for a view.
 You'll want to know: सहल.
 सहल — sahal — "an outing, a trip".
 
+The word, taken apart.
+The origin of सहल (sahal), "an outing", is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a view, then the Marathi for an outing.
 You'll want to know: तवा.
 तवा — tavā — "a griddle".
 
+The word, taken apart.
+तवा (tavā) is a tadbhava, a word inherited and reshaped by sound change. It comes from tapaka, "frying pan", a form CDIAL reconstructs from its descendants (CDIAL 5670). It is built on tap, "to heat".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for an outing, then the Marathi for a griddl
 
 You'll want to know: कढई.
 कढई — kaḍhaī — "a wok".
+
+The word, taken apart.
+कढई (kaḍhaī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṭāha, "boiler, saucepan with handles" (CDIAL 2638). CDIAL glosses the Marathi word "cauldron for boiling sugarcane juice".
 
 What you've built.
 One more word for this chapter.

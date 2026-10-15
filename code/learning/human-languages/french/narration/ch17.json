@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "To Have, and How Old You Are",
   "drivablePrefix": 14,
-  "sourceHash": "fnv1a64:8b3e0abcc964c893",
+  "sourceHash": "fnv1a64:edc747333fee28fc",
   "lessons": [
     {
       "id": "FR-C14-jai",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d2b5c49b5b4fadf",
+      "sourceHash": "fnv1a64:6c8fcf90c9fe4e0d",
       "notice": null,
       "blocks": [
         {
@@ -207,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "Keep that in mind as the paradigm fills in. You are learning six written forms and rather fewer sounds."
+              "text": "Keep that in mind as the paradigm fills in. You are learning six written forms and rather fewer sounds. Avoir itself is inherited from Latin habēre, \"to have\" (EtymDB 2.1)."
             }
           ]
         },
@@ -283,7 +283,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7eb4b338e1e3cc2e",
+      "sourceHash": "fnv1a64:b57fd9c61dcedf7e",
       "notice": null,
       "blocks": [
         {
@@ -329,7 +329,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "a is the form for il (he) and elle (she), and it is a single letter carrying an entire verb."
+              "text": "a is the form for il (he) and elle (she), and it is a single letter carrying an entire verb. It goes back to Latin habet, \"has\", worn down to one letter; avoir is inherited from habēre (EtymDB 2.1)."
             },
             {
               "kind": "speech",

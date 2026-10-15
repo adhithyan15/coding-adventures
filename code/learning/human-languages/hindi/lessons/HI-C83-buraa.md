@@ -14,7 +14,8 @@ romanization: "burā"
 concept_tag: HI-ADJ-BAD
 prerequisites: [HI-C41-good, HI-C82-motaa]
 sounds: []
-roots: []
+roots: [indo-aryan-bura]
+etymology_hook: "burā ← *bura 'defective', a form CDIAL reconstructs (CDIAL 9289)"
 duration:
   max_seconds: 240
 requires:
@@ -63,6 +64,8 @@ is worth more right now than being able to build it.
 A second everyday one: **बुरा लगना** — *burā lagnā*, "to feel hurt," literally
 *to strike one as bad*. Hindi describes being offended as something the remark
 does, not something you do.
+
+**बुरा** comes from a reconstructed *\*bura*, "defective" (CDIAL 9289).
 
 ## Grammar Lens: a pair that behaves identically
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C83-CHAR-01, HI-LEX-C41-ADJ-03, HI-GRAMMAR-C41-ADJ-SYSTEM] -->

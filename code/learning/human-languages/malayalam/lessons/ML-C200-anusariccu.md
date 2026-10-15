@@ -14,7 +14,8 @@ romanization: "anusariccŭ"
 concept_tag: ML-KARANAM200-ANUSARICCU
 prerequisites: [ML-C200-prasnam, ML-C200-pariharam]
 sounds: []
-roots: []
+roots: [sanskrit-anusarana]
+etymology_hook: "anusariccŭ: from Sanskrit anusaraṇa 'following' + a Malayalam verb form: 'having followed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C200-pariharam]
 <!-- hl-knowledge: introduces=[ML-LEX-C200-KARANAM200-05]; assesses=[] -->
 
 **അനുസരിച്ച്** — *anusariccŭ* — "according to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അനുസരിച്ച്** (*anusariccŭ*) is a Malayalam verb form, "having followed", built on Sanskrit *anusaraṇa*, "following, going after".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

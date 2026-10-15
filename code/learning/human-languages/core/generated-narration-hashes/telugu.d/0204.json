@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 204,
-  "sourceHash": "fnv1a64:09d3233f55a9a219",
+  "sourceHash": "fnv1a64:3eefb656496af2b7",
   "lessonIds": [
     "TE-C204-polcu",
     "TE-C204-ralu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch204.txt",
   "json": "telugu/narration/ch204.json",
-  "textHash": "fnv1a64:95d5bcb72fe26979",
-  "jsonHash": "fnv1a64:cdc7fb8119f4a4bb",
+  "textHash": "fnv1a64:c66dadcfd52d7f6c",
+  "jsonHash": "fnv1a64:cb44b39bf77347c1",
   "findings": []
 }

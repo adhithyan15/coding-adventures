@@ -13,7 +13,8 @@ gloss: "a hen"
 concept_tag: LA-ANIMALIA3-GALLINA
 prerequisites: [LA-C91-serpens, LA-C92-mus]
 sounds: []
-roots: []
+roots: [gallina-latin, gallus-latin]
+etymology_hook: "gallīna 'hen' — built on gallus 'rooster'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C92-mus]
 <!-- hl-knowledge: introduces=[LA-LEX-C92-ANIMALIA3-02]; assesses=[] -->
 
 **gallīna, gallīnae** — "a hen". It lays the **ōvum**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gallīna** is built on *gallus*, "a rooster" (Lewis & Short): the hen is the rooster's female. Where *gallus* comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

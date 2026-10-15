@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 52,
-  "sourceHash": "fnv1a64:81df81b2909de671",
+  "sourceHash": "fnv1a64:bc2386c828f012d6",
   "lessonIds": [
     "LA-C52-ubi",
     "LA-C52-cur",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch52.txt",
   "json": "latin/narration/ch52.json",
-  "textHash": "fnv1a64:bde127d6a76fde00",
-  "jsonHash": "fnv1a64:1119a243ebfac1eb",
+  "textHash": "fnv1a64:4f6b3451a25db65f",
+  "jsonHash": "fnv1a64:d4b03170140807fc",
   "findings": []
 }

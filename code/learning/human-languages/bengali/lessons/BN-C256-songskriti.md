@@ -14,7 +14,8 @@ romanization: "sôngskriti"
 concept_tag: BN-JINIS256-SONGSKRITI
 prerequisites: [BN-C255-dhoya, BN-C255-chhai]
 sounds: []
-roots: []
+roots: [sanskrit-samskrti]
+etymology_hook: "sôngskriti ← Sanskrit saṁskṛti 'refinement', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C255-chhai]
 <!-- hl-knowledge: introduces=[BN-LEX-C256-JINIS256-01]; assesses=[] -->
 
 **সংস্কৃতি** — *sôngskriti* — "culture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সংস্কৃতি** (*sôngskriti*) is Sanskrit *saṁskṛti*, "refinement", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

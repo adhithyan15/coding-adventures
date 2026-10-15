@@ -14,7 +14,8 @@ romanization: "sevakaḥ"
 concept_tag: SA-PPL147-SEVAKAH
 prerequisites: [SA-C146-pitrvyah, SA-C147-svami]
 sounds: []
-roots: []
+roots: [sanskrit-sevaka, sanskrit-seva]
+etymology_hook: "sevaka 'servant, attendant' ← √sev 'attend, serve' + -aka 'one who' (CDIAL 13592)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C147-svami]
 <!-- hl-knowledge: introduces=[SA-LEX-C147-PPL147-02]; assesses=[] -->
 
 **सेवकः** — *sevakaḥ* — "a servant, an attendant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sevaka* is built from the root √sev "attend on, serve" with the agent suffix *-aka* (CDIAL 13592): "one who attends", a servant. MW keeps it apart from a rare *sevaka* "one who sews", from √siv.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

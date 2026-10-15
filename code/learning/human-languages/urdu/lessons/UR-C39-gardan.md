@@ -14,7 +14,8 @@ romanization: "gardan"
 concept_tag: UR-BODY39-GARDAN
 prerequisites: [UR-C39-ungli, UR-C39-hot]
 sounds: []
-roots: []
+roots: [persian-gardan]
+etymology_hook: "gardan: usually traced to Persian gardan 'neck'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C39-hot]
 <!-- hl-knowledge: introduces=[UR-LEX-C39-BODY39-05]; assesses=[] -->
 
 **گردن** — *gardan* — "the neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گردن** (*gardan*) is a loan, usually traced to Persian *gardan*, "neck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

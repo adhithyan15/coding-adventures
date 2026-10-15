@@ -14,7 +14,8 @@ romanization: "vyañjanam"
 concept_tag: SA-THG160-VYANJANAM
 prerequisites: [SA-C159-canakah, SA-C160-bhojanam]
 sounds: []
-roots: []
+roots: [sanskrit-vyanjana]
+etymology_hook: "vyañjana ← vi-√añj 'anoint, display': 'what makes a thing appear'; also 'sauce, condiment' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C160-bhojanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C160-THG160-02]; assesses=[] -->
 
 **व्यञ्जनम्** — *vyañjanam* — "a curry, a side dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vyañjana* comes from *vi-√añj* "anoint, adorn, make appear", the root √añj "anoint" (CDIAL 12160): "decoration, sign", and in grammar "a consonant". MW also gives "seasoning, sauce, condiment", the sense behind a curry or side dish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

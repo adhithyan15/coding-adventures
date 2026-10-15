@@ -4,7 +4,7 @@
   "chapter": 277,
   "title": "Working From Sources --- Credit It, Restate It, Hold Both, Compress",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b78a75324002e58e",
+  "sourceHash": "fnv1a64:e75ba4e761ca0568",
   "lessons": [
     {
       "id": "ES-C277-segun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:077a23b04271c615",
+      "sourceHash": "fnv1a64:b2364ef1c2763d48",
       "notice": null,
       "blocks": [
         {
@@ -76,7 +76,7 @@
             },
             {
               "kind": "speech",
-              "text": "Latin secundum, \"following, next along\" — the same word as English second and, through it, sequence. To say según is literally to say following — following García, the number is higher."
+              "text": "Latin secundum, \"following, next along\" — the same word as English second; both come from sequi, \"to follow\", the root of sequence. To say según is literally to say following — following García, the number is higher."
             },
             {
               "kind": "speech",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cecacb6fc2424250",
+      "sourceHash": "fnv1a64:03cac9b995e29be2",
       "notice": null,
       "blocks": [
         {
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa02541ce8d2e9b0",
+      "sourceHash": "fnv1a64:675e68dffcd83e30",
       "notice": null,
       "blocks": [
         {
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50aaf74ecbe0dc80",
+      "sourceHash": "fnv1a64:f9c9385ba9093c7b",
       "notice": null,
       "blocks": [
         {

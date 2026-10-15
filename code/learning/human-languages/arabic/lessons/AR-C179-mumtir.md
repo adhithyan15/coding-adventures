@@ -14,7 +14,8 @@ romanization: "mumṭir"
 concept_tag: AR-SIFA179-MUMTIR
 prerequisites: [AR-C179-samik, AR-C179-ratb]
 sounds: []
-roots: []
+roots: [m-ṭ-r]
+etymology_hook: "mumṭir: built on the root m-ṭ-r, 'rain' (Lane); mumṭir is the Form IV participle, 'raining'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C179-ratb]
 <!-- hl-knowledge: introduces=[AR-LEX-C179-SIFA179-05]; assesses=[] -->
 
 **ممطر** — *mumṭir* — "rainy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ممطر** (*mumṭir*) is built on the native Arabic root *m-ṭ-r*, "rain; to rain" (Lane). *Mumṭir* is the Form IV participle, "raining".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

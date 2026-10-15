@@ -14,7 +14,8 @@ romanization: "āsmānī"
 concept_tag: MW-QUAL145-ASMANI
 prerequisites: [MW-C145-gulabi, MW-C145-kesariyo]
 sounds: []
-roots: []
+roots: [persian-asman]
+etymology_hook: "āsmānī: usually traced to Persian āsmānī 'sky-coloured'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C145-kesariyo]
 <!-- hl-knowledge: introduces=[MW-LEX-C145-QUAL145-03]; assesses=[] -->
 
 **आसमानी** — *āsmānī* — "sky-blue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आसमानी** (*āsmānī*) is a loan, usually traced to Persian *āsmānī*, "sky-coloured". It is built on Persian *āsmān*, "sky".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

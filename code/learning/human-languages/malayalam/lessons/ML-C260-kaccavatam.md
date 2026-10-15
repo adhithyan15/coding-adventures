@@ -14,7 +14,8 @@ romanization: "kaccavaṭaṁ"
 concept_tag: ML-JOLI260-KACCAVATAM
 prerequisites: [ML-C259-colam, ML-C259-katala]
 sounds: []
-roots: []
+roots: [malayalam-kaccavatam]
+etymology_hook: "kaccavaṭaṁ 'trade': of uncertain origin; neither DEDR nor CDIAL lists it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C259-katala]
 <!-- hl-knowledge: introduces=[ML-LEX-C260-JOLI260-01]; assesses=[] -->
 
 **കച്ചവടം** — *kaccavaṭaṁ* — "business, trade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കച്ചവടം** (*kaccavaṭaṁ*) is of uncertain origin; neither DEDR nor CDIAL lists it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -139,6 +139,7 @@ piece: con-. what it does: together.
 piece: centr-. what it does: el centro.
 piece: -arse. what it does: to yourself.
 That is the third verb in this chapter built by putting a prefix and an ending on a word you already owned — acercarse on cerca, concentrarse on centro. Look for the bare word inside before you look anything up.
+Centro is Latin centrum, from Greek kentron, the sharp point of a goad, and so the fixed point of a pair of compasses.
 
 Why it's said this way.
 El centro is not originally about the middle of a town.

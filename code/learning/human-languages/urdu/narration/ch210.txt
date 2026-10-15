@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a bill, then the Urdu for an expense.
 You'll want to know: نائی.
 نائی — nāī — "a barber".
 
+The word, taken apart.
+نائی (nāī) is a tadbhava, inherited and reshaped by sound change. CDIAL lists it under Sanskrit nāpita, "barber", and lists nāū, "barber", beside it under snāpaka, "bath attendant" (CDIAL 13792).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for an expense, then the Urdu for a barber.
 
 You'll want to know: دھوبی.
 دھوبی — dhobī — "a washerman".
+
+The word, taken apart.
+دھوبی (dhobī) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhauvati, "washes", a form CDIAL reconstructs from its descendants (CDIAL 6886). CDIAL notes that the forms with -b- spread from here into every language around.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a barber, then the Urdu for a washerman.
 You'll want to know: موچی.
 موچی — mochī — "a cobbler".
 
+The word, taken apart.
+موچی (mochī) comes from mocika, "tanner and cobbler", built on moca, "shoe", which CDIAL takes from an Iranian word, Pahlavi mōč, "shoe" (CDIAL 10349).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a washerman, then the Urdu for a cobbler.
 You'll want to know: لوہار.
 لوہار — lohār — "a blacksmith".
 
+The word, taken apart.
+لوہار (lohār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lohakāra, "iron-worker" (CDIAL 11159). It is built from loha, "iron", and kāra, "maker".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a cobbler, then the Urdu for a blacksmith.
 
 You'll want to know: بڑھئی.
 بڑھئی — baṛhaī — "a carpenter".
+
+The word, taken apart.
+بڑھئی (baṛhaī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vardhaki, "carpenter" (CDIAL 11375).
 
 What you've built.
 One more word for this chapter.

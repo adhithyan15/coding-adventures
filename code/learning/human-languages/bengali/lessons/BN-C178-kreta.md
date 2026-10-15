@@ -14,7 +14,8 @@ romanization: "kretā"
 concept_tag: BN-KAJ178-KRETA
 prerequisites: [BN-C178-dhatri, BN-C178-bikreta]
 sounds: []
-roots: []
+roots: [sanskrit-kreta]
+etymology_hook: "kretā ← Sanskrit kretā 'buyer', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C178-bikreta]
 <!-- hl-knowledge: introduces=[BN-LEX-C178-KAJ178-05]; assesses=[] -->
 
 **ক্রেতা** — *kretā* — "a buyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ক্রেতা** (*kretā*) is Sanskrit *kretā*, "buyer", taken over whole as a learned loan, a tatsama. It is the naming form of *kretṛ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

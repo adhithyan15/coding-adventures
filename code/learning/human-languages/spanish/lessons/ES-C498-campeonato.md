@@ -10,7 +10,8 @@ gloss: "the championship"
 concept_tag: ES-REF-CAMPEONATO
 prerequisites: [ES-C497-cuidar, ES-C497-amistad]
 sounds: []
-roots: []
+roots: [campus-latin]
+etymology_hook: "campeonato — campeón + -ato; campeón is Italian campione, from Latin campus 'a field'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C497-amistad]
 > Ganamos el campeonato de baloncesto.
 >
 > *We won the basketball championship.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**campeonato** is *campeón*, "champion", with *-ato*. *Campeón* came from Italian *campione* (EtymDB 2.1), a fighter in the field, from Latin *campus*, "a field".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

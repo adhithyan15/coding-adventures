@@ -14,7 +14,8 @@ romanization: "kinārā"
 concept_tag: UR-LOC97-KINARA
 prerequisites: [UR-C97-pichhe, UR-C97-bich]
 sounds: []
-roots: []
+roots: [persian-kinar]
+etymology_hook: "kinārā: usually traced to Persian kinār 'edge, shore'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C97-bich]
 <!-- hl-knowledge: introduces=[UR-LEX-C97-LOC97-05]; assesses=[] -->
 
 **کنارہ** — *kinārā* — "an edge, a bank, a shore".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کنارہ** (*kinārā*) is a loan, usually traced to Persian *kinār*, "edge, shore".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

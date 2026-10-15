@@ -14,7 +14,8 @@ romanization: "toḍṇe"
 concept_tag: MR-VERB-TODNE
 prerequisites: [MR-C154-nighne, MR-C154-palne]
 sounds: []
-roots: []
+roots: [sanskrit-trotayati]
+etymology_hook: "toḍṇe ← Sanskrit troṭayati 'breaks, tears', a tadbhava (CDIAL 6079)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C154-palne]
 <!-- hl-knowledge: introduces=[MR-LEX-C154-ACT154-04]; assesses=[] -->
 
 **तोडणे** — *toḍṇe* — "to break off, to cut down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तोडणे** (*toḍṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *troṭayati*, "breaks, tears" (CDIAL 6079).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

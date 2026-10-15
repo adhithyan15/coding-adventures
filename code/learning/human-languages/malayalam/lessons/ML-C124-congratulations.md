@@ -11,7 +11,8 @@ romanization: "abhinandanaṅṅaḷ"
 concept_tag: ML-COUR-CONGRATS
 prerequisites: [ML-C123-other, ML-C123-wrong]
 sounds: []
-roots: []
+roots: [sanskrit-abhinandana]
+etymology_hook: "abhinandanaṅṅaḷ ← Sanskrit abhinandana 'rejoicing, congratulation', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C123-wrong]
 
 **അഭിനന്ദനങ്ങൾ** (*abhinandanaṅṅaḷ*) — "congratulations". The ending **‑ങ്ങൾ** is the plural:
 many good wishes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അഭിനന്ദനങ്ങൾ** (*abhinandanaṅṅaḷ*) ← Sanskrit *abhinandana*, "rejoicing, congratulation", taken over whole as a tatsama, with the plural ending *-ṅṅaḷ*. Malayalam uses it in the plural, many congratulations.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

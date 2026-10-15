@@ -14,7 +14,8 @@ romanization: "lisān"
 concept_tag: AR-THINGS141-LISAN
 prerequisites: [AR-C140-kab, AR-C140-shafa, AR-C08-al-ahad-al-khamis, AR-C08-al-ahad-al-khamis, AR-C08-al-jumua-as-sabt, AR-C08-al-jumua-as-sabt]
 sounds: []
-roots: []
+roots: [l-s-n]
+etymology_hook: "lisān: built on the root l-s-n, 'the tongue' (Lane); Hebrew lashon, 'tongue', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C140-shafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C141-THINGS141-01]; assesses=[] -->
 
 **لسان** — *lisān* — "a tongue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لسان** (*lisān*) is built on the native Arabic root *l-s-n*, "the tongue" (Lane). Hebrew *lashon*, "tongue", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

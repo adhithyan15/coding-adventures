@@ -14,7 +14,8 @@ romanization: "ḥafīd"
 concept_tag: AR-SHAY246-HAFID
 prerequisites: [AR-C245-shasha, AR-C246-usra]
 sounds: []
-roots: []
+roots: [ḥ-f-d]
+etymology_hook: "ḥafīd: built on the root ḥ-f-d, 'to serve quickly' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C246-usra]
 <!-- hl-knowledge: introduces=[AR-LEX-C246-SHAY246-02]; assesses=[] -->
 
 **حفيد** — *ḥafīd* — "a grandson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حفيد** (*ḥafīd*) is built on the native Arabic root *ḥ-f-d*, "to serve quickly" (Lane). Lane gives *ḥāfid*, plural *ḥafada*, as a helper who serves quickly, and also gives *ḥafada* and *ḥafīd* for grandchildren.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

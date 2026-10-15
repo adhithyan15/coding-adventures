@@ -13,7 +13,8 @@ gloss: "dust"
 concept_tag: LA-RES275-PULVIS
 prerequisites: [LA-C275-sericum, LA-C275-lutum]
 sounds: []
-roots: []
+roots: [pulvis-latin]
+etymology_hook: "pulvis 'dust' — inherited, usually traced to PIE *pel- 'flour, dust'; English powder"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C275-lutum]
 <!-- hl-knowledge: introduces=[LA-LEX-C275-RES275-03]; assesses=[] -->
 
 **pulvis, pulveris** — "dust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**pulvis** is inherited, usually traced to Proto-Indo-European *\*pel-*, "flour, dust" (EtymDB 2.1); *pollen*, "fine flour", is from the same root. English *powder* comes from *pulvis* through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

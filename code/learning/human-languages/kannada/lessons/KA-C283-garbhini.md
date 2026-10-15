@@ -14,7 +14,8 @@ romanization: "garbhiṇi"
 concept_tag: KA-AROGYA283-GARBHINI
 prerequisites: [KA-C283-murita, KA-C283-aparesan]
 sounds: []
-roots: []
+roots: [sanskrit-garbhini]
+etymology_hook: "garbhiṇi ← Sanskrit garbhiṇī 'pregnant', a tatsama (CDIAL 4062)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C283-aparesan]
 <!-- hl-knowledge: introduces=[KA-LEX-C283-AROGYA283-05]; assesses=[] -->
 
 **ಗರ್ಭಿಣಿ** — *garbhiṇi* — "pregnant; a pregnant woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗರ್ಭಿಣಿ** (*garbhiṇi*) is Sanskrit *garbhiṇī*, "pregnant", taken over whole as a learned loan, a tatsama, with the final *-ī* shortened (CDIAL 4062).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

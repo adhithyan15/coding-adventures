@@ -14,7 +14,8 @@ romanization: "inhâ"
 concept_tag: FA-TIME82-INHA
 prerequisites: [FA-C82-in, FA-C82-an]
 sounds: []
-roots: []
+roots: [persian-in]
+etymology_hook: "inhâ: Persian in 'this' (Middle Persian ēn, EtymDB) + plural -hâ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C82-an]
 <!-- hl-knowledge: introduces=[FA-LEX-C82-TIME82-05]; assesses=[] -->
 
 **اینها** — *inhâ* — "these".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*inhâ* is *in*, "this", with the plural ending *-hâ*: "these". Both pieces are native Persian; *in* continues Middle Persian *ēn* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

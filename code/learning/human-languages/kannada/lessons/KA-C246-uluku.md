@@ -14,7 +14,8 @@ romanization: "uḷuku"
 concept_tag: KA-AROGYA246-ULUKU
 prerequisites: [KA-C245-gulle, KA-C245-cikitse]
 sounds: []
-roots: []
+roots: [dravidian-ulukku-sprain]
+etymology_hook: "uḷuku: native Dravidian, one word with Tamil uḷukku (DEDR 2702)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C245-cikitse]
 <!-- hl-knowledge: introduces=[KA-LEX-C246-AROGYA246-01]; assesses=[] -->
 
 **ಉಳುಕು** — *uḷuku* — "a sprain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಳುಕು** (*uḷuku*) is native Dravidian, one word with Tamil *uḷukku* (DEDR 2702). DEDR lists *uḷuku*, "a sprain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

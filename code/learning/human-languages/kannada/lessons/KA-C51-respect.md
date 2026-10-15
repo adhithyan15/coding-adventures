@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-RESPECT
 prerequisites: [KA-C51-favour, KA-C49-certainly]
 sounds: []
 roots: []
+etymology_hook: "gaurava ← Sanskrit gaurava 'weight, venerableness', from guru 'heavy' (CDIAL 4346, 4209)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C51-favour]
 Sanskrit *guru* means 'heavy'. Stretch its first vowel, which is a standard Sanskrit way of making an abstract noun, and you have *gaurava*: heaviness, and so weight, consequence, dignity, respect.
 
 The teacher is called *guru* by the same logic — the weighty one. And *guru* is a true relative of Latin *gravis*, so the English *grave* and *gravity* are this word arriving by another road. Kannada had already given it to you once, sitting quietly in the name of a weekday.
+
+CDIAL 4346 lists Sanskrit *gaurava*, "weight, venerableness", and CDIAL 4209 *guru*, "heavy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bidūn"
 concept_tag: AR-SABAB268-BIDUN
 prerequisites: [AR-C268-maan, AR-C268-hasaba]
 sounds: []
-roots: []
+roots: [d-w-n]
+etymology_hook: "bidūn: built from bi- + dūn 'below, short of', from the root d-w-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C268-hasaba]
 <!-- hl-knowledge: introduces=[AR-LEX-C268-SABAB268-03]; assesses=[] -->
 
 **بدون** — *bidūn* — "without".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بدون** (*bidūn*) is built from *bi-*, "with, by", and *dūn*, "below, short of", from the root *d-w-n* (Lane): "short of", hence "without".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

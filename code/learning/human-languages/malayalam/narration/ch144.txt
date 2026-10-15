@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a habit, then the Malayalam for a qual
 You'll want to know: അതുകൊണ്ട്.
 അതുകൊണ്ട് — atukoṇṭŭ — "so, therefore".
 
+The word, taken apart.
+അതുകൊണ്ട് (atukoṇṭŭ) is native Dravidian, "taking that": atŭ, "that" (DEDR 1), with koṇṭŭ, the past form of the verb "to take" (DEDR 2151, with Tamil koḷ).
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Two older, literary words for night: iravŭ and iruḷ. Which one is also the Ta
 You'll want to know: ഉദ്ദേശ്യം.
 ഉദ്ദേശ്യം — uddēśyaṁ — "a purpose, an intention".
 
+The word, taken apart.
+ഉദ്ദേശ്യം (uddēśyaṁ) from Sanskrit uddēśya, "to be aimed at, intended", taken over whole as a tatsama, with Malayalam's noun ending -ṁ.
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Malayalam for so, then the Malayalam for a purpose.
 
 You'll want to know: ഫലം.
 ഫലം — phalaṁ — "a result".
+
+The word, taken apart.
+ഫലം (phalaṁ) from Sanskrit phala, "fruit", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 9051). A result is the fruit of an action.
 
 What you've built.
 One more word for this chapter.
@@ -103,6 +112,9 @@ Say the two literary night words once more. (Iravŭ, iruḷ.)
 You'll want to know: ഹേതു.
 ഹേതു — hētu — "a cause".
 
+The word, taken apart.
+ഹേതു (hētu) from Sanskrit hētu, "motive, cause", taken over whole as a tatsama (CDIAL 14160).
+
 What you've built.
 One more word for this chapter.
 
@@ -131,6 +143,9 @@ Before the new one: say the Malayalam for a result, then the Malayalam for a cau
 
 You'll want to know: നിമിത്തം.
 നിമിത്തം — nimittaṁ — "on account of, because of".
+
+The word, taken apart.
+നിമിത്തം (nimittaṁ) from Sanskrit nimitta, "cause, omen", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 7241).
 
 What you've built.
 One more word for this chapter.

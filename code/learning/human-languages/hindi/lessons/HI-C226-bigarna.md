@@ -14,7 +14,8 @@ romanization: "bigaṛnā"
 concept_tag: HI-VERB-BIGARNA
 prerequisites: [HI-C225-sukhana, HI-C226-sukhna]
 sounds: []
-roots: []
+roots: [sanskrit-vighatate]
+etymology_hook: "bigaṛnā ← Sanskrit vighaṭate 'flies apart; is marred', a tadbhava (CDIAL 11673)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C226-sukhna]
 <!-- hl-knowledge: introduces=[HI-LEX-C226-ACT226-02]; assesses=[] -->
 
 **बिगड़ना** — *bigaṛnā* — "to go wrong, to spoil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बिगड़ना** (*bigaṛnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vighaṭate*, "flies apart; is marred" (CDIAL 11673).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

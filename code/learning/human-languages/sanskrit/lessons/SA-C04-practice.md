@@ -36,8 +36,8 @@ variety: classical
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-GACCHAMI] -->
 
-[PAUSE 2s] No new words. Three ways to part — the ancestors of the modern Indian
-goodbyes.
+[PAUSE 2s] No new words. Three ways to part, in the classical language behind many
+modern Indian goodbyes.
 
 ## Guided Practice
 
@@ -64,7 +64,7 @@ goodbyes.
 [PAUSE 1s each]
 - [YOU SAY: what *punar-darśanāya* literally means, and the case that gives the "for" ("for seeing again"; the dative *-āya*)]
 - [YOU SAY: what *darśana* means beyond "seeing" (a beholding — the *darśan* of a deity; the six schools of philosophy)]
-- [YOU SAY: the PIE root of *śvaḥ*, and the Hindi word that blurs it with "yesterday" (*\*ḱes-*; *kal*)]
+- [YOU SAY: whether the origin of *śvaḥ* is settled, and the one Hindi word that covers both tomorrow and yesterday (not settled; *kal*)]
 
 ## Script — the chapter's two shapes
 

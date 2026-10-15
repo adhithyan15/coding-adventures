@@ -14,7 +14,8 @@ romanization: "tafḍīl"
 concept_tag: AR-WANT111-TAFDIL
 prerequisites: [AR-C111-hamas, AR-C111-umniyya]
 sounds: []
-roots: []
+roots: [fadl]
+etymology_hook: "tafḍīl: built on the root f-ḍ-l, 'to exceed' (Lane); tafḍīl is the verbal noun of Form II, 'preferring'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C111-umniyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C111-WANT111-05]; assesses=[] -->
 
 **تفضيل** — *tafḍīl* — "a preference".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تفضيل** (*tafḍīl*) is built on the native Arabic root *f-ḍ-l*, "to exceed; excess, favour" (Lane). *Tafḍīl* is the verbal noun of Form II, "preferring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

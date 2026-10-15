@@ -14,7 +14,8 @@ romanization: "borshch"
 concept_tag: RU-VESHCH163-BORSHCH
 prerequisites: [RU-C163-sosiska, RU-C163-krevetka]
 sounds: []
-roots: []
+roots: [slavic-birshchi]
+etymology_hook: "борщ was first the plant hogweed, borščevik; the soup was once made from it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C163-krevetka]
 <!-- hl-knowledge: introduces=[RU-LEX-C163-VESHCH163-03]; assesses=[] -->
 
 **борщ** (*borshch*) — "borscht".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**борщ** first named a plant, hogweed, *борщевик*; the soup once cooked from it passed its name to the beet soup (Vasmer). Because the plant has sharp leaves, the name is derived from a root "bristly, prickly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "eṭlũ"
 concept_tag: GU-DEF101-ETLU
 prerequisites: [GU-C101-amuk, GU-C101-atlu]
 sounds: []
-roots: []
+roots: [sanskrit-iyattaka]
+etymology_hook: "eṭlũ ← Sanskrit iyattaka 'so little', on iyant 'so much' (CDIAL 1589)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C101-atlu]
 <!-- hl-knowledge: introduces=[GU-LEX-C101-DEF101-03]; assesses=[] -->
 
 **એટલું** (*eṭlũ*) — "that much".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**એટલું** (*eṭlũ*) is a tadbhava. CDIAL lists it under Sanskrit *iyattaka*, "so little", built on *iyant*, "so much" (CDIAL 1589).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

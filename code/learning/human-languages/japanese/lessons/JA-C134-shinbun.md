@@ -14,8 +14,8 @@ romanization: "shinbun"
 concept_tag: JA-ANCHOR-SHINBUN
 prerequisites: [JA-C134-benkyou, JA-W10-shi, JA-W01-n, JA-W134-ba, JA-W133-ki, JA-C123-natsukashii]
 sounds: [mora]
-roots: []
-etymology_hook: Shinbun is the word for a newspaper; its third sign is ふ with the voicing mark, a sign the book has not yet written.
+roots: [middle-chinese-sin, middle-chinese-mjun-hear]
+etymology_hook: "shinbun: Sino-Japanese 新 'new' + 聞 'hear', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +52,11 @@ reviews_of: [JA-C134-benkyou, JA-W10-shi, JA-W01-n, JA-W134-ba, JA-W133-ki, JA-C
 Four beats: *shi–n–bu–n*. **し** and both **ん** you already write. The third
 sign is **ふ** with the voicing mark, so *fu* becomes *bu*. The next lesson
 writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しんぶん** (*shinbun*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *shin*, "new" (Middle Chinese *sin*) and *bun*, "hear; news" (*mjun*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-SHINBUN, JA-SCRIPT-SHI-01, JA-SCRIPT-N-01] -->

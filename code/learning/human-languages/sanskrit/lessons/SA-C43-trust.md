@@ -14,7 +14,8 @@ romanization: "viśvāsaḥ"
 concept_tag: SA-COURTESY-VISHVASA
 prerequisites: [SA-C43-humility, SA-C41-mirror, SA-C42-a-little]
 sounds: []
-roots: []
+roots: [sanskrit-vishvasa]
+etymology_hook: "viśvāsa 'trust' ← vi + the root √śvas 'breathe': to breathe freely (MW; CDIAL 11966)"
 duration:
   max_seconds: 210
 requires:

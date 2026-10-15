@@ -14,7 +14,8 @@ romanization: "pas fardâ"
 concept_tag: FA-ZAMAN264-PAS-FARDA
 prerequisites: [FA-C264-kudaki, FA-C264-javani]
 sounds: []
-roots: []
+roots: [persian-pas, persian-farda]
+etymology_hook: "pas fardâ: Persian pas 'after' + fardâ 'tomorrow', both inherited (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C264-javani]
 <!-- hl-knowledge: introduces=[FA-LEX-C264-ZAMAN264-05]; assesses=[] -->
 
 **پس فردا** — *pas fardâ* — "the day after tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pas fardâ* is "after tomorrow": *pas*, "after", and *fardâ*, "tomorrow", are both inherited, from Middle Persian *pas* and *fradāg* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

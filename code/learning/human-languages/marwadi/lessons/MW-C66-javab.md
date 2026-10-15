@@ -14,7 +14,8 @@ romanization: "javāb"
 concept_tag: MW-SCHOOL66-JAVAB
 prerequisites: [MW-C66-skul, MW-C66-saval]
 sounds: []
-roots: []
+roots: [arabic-jawab]
+etymology_hook: "javāb ← Arabic jawāb 'an answer', through Persian (Lane, root j-w-b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C66-saval]
 <!-- hl-knowledge: introduces=[MW-LEX-C66-SCHOOL66-04]; assesses=[] -->
 
 **जवाब** — *javāb* — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जवाब** (*javāb*) is a loan from Arabic *jawāb*, "an answer", which reached Marwadi through Persian. Its Arabic root is *j-w-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

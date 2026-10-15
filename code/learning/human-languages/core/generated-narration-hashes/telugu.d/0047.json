@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 47,
-  "sourceHash": "fnv1a64:28629dad21d7e699",
+  "sourceHash": "fnv1a64:acdbc478965d4106",
   "lessonIds": [
     "TE-C47-leg",
     "TE-C47-tooth",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch47.txt",
   "json": "telugu/narration/ch47.json",
-  "textHash": "fnv1a64:cb409ca5f2cab9e8",
-  "jsonHash": "fnv1a64:a832a1bfa3c93268",
+  "textHash": "fnv1a64:792fd52acdc0c448",
+  "jsonHash": "fnv1a64:a8d46a9baadef0ff",
   "findings": []
 }

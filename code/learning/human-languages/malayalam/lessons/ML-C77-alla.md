@@ -11,9 +11,10 @@ romanization: "alla"
 concept_tag: ML-WORD-NOT-SO
 prerequisites: [ML-R76-want-recall, ML-C01-illa, ML-C02-aanu, ML-C48-teacher]
 sounds: []
-roots: []
+roots: [illa-not-dravidian-alla]
+etymology_hook: "alla: native Dravidian, one word with Tamil al- and Kannada alla (DEDR 234)"
 duration:
-  max_seconds: 240
+  max_seconds: 247
 requires:
   knowledge: [ML-LEX-ILLA-01, ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01, ML-LEX-AANU-01, ML-LEX-C48-ROLE-01]
 introduces:
@@ -45,6 +46,11 @@ something **is**, and the one that says something **is not there**.
 
 **അല്ല** is the negative of **ആണ്**. Where ആണ് says *X is Y*, അല്ല says *X is
 not Y* — and it sits in the same place, at the end, where the sentence closes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അല്ല** (*alla*) is native Dravidian, one word with Tamil *al-* and Kannada *alla* (DEDR 234). It denies what a thing is, where *illa* denies that it is there at all.
 
 ## Grammar Lens: Malayalam negates twice, and English only once
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C77-NEGATION-SPLIT-01]; assesses=[ML-LEX-ILLA-01, ML-LEX-C77-ALLA-01] -->

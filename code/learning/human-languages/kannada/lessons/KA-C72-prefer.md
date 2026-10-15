@@ -11,9 +11,10 @@ romanization: "nanage cahā iṣṭa, kāphi alla"
 concept_tag: KA-PHRASE-PREFER
 prerequisites: [KA-C72-do-you-like, KA-C68-is-not, KA-C67-or, KA-C56-box, KA-C10-vaara, KA-C07-ombattu, KA-C07-eelu]
 sounds: []
-roots: []
+roots: [sanskrit-ishta, dravidian-al-not]
+etymology_hook: "nanage cahā iṣṭa, kāphi alla: Sanskrit iṣṭa 'beloved' (CDIAL 1597), native alla 'is not' (DEDR 234)"
 duration:
-  max_seconds: 210
+  max_seconds: 255
 requires:
   knowledge: [KA-LEX-C72-WANT-05, KA-LEX-C68-DENY-01, KA-GRAMMAR-C68-DENY-02, KA-LEX-C67-LINK-02, KA-LEX-C34-ISHTA-01, KA-LEX-C39-CHAHA-01]
 introduces:
@@ -52,6 +53,11 @@ are doing the two things this chapter and the last one taught.
 
 **ಚಹಾ ಅಥವಾ ಕಾಫಿ? — ನನಗೆ ಚಹಾ ಇಷ್ಟ, ಕಾಫಿ ಅಲ್ಲ.** Question and answer, both of them
 built out of pieces you were given one at a time.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನನಗೆ ಚಹಾ ಇಷ್ಟ, ಕಾಫಿ ಅಲ್ಲ** (*nanage cahā iṣṭa, kāphi alla*) sets two loans against each other: *cahā*, through Hindustani, and *kāphi*, from English *coffee*. *Iṣṭa*, "liked", is Sanskrit *iṣṭa*, "sought, beloved" (CDIAL 1597); *nanage*, "to me" (DEDR 5160), and *alla*, "is not" (DEDR 234), are native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

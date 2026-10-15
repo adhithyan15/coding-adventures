@@ -14,7 +14,8 @@ romanization: "ṭābiʿa"
 concept_tag: AR-SHAY274-TABIA2
 prerequisites: [AR-C273-daqiq, AR-C273-tawabil]
 sounds: []
-roots: []
+roots: [ṭ-b-ʿ]
+etymology_hook: "ṭābiʿa: built on the root ṭ-b-ʿ, 'to seal, to stamp' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C273-tawabil]
 <!-- hl-knowledge: introduces=[AR-LEX-C274-SHAY274-01]; assesses=[] -->
 
 **طابعة** — *ṭābiʿa* — "a printer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طابعة** (*ṭābiʿa*) is built on the native Arabic root *ṭ-b-ʿ*, "to seal, to stamp" (Lane). *Ṭābiʿa* is the feminine active participle, "a thing that prints"; the printing sense is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

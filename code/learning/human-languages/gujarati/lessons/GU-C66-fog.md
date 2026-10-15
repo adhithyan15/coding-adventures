@@ -14,7 +14,8 @@ romanization: "dhummas"
 concept_tag: GU-WEATHER-FOG
 prerequisites: [GU-C66-heat, GU-C66-ice]
 sounds: []
-roots: []
+roots: [indo-aryan-dhumasha]
+etymology_hook: "dhummas ← *dhūmaśa 'smoky', a reconstructed form on dhūma 'smoke' (CDIAL 6855)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C66-ice]
 <!-- hl-knowledge: introduces=[GU-LEX-C66-WEATHER-05]; assesses=[] -->
 
 **ધુમ્મસ** (*dhummas*) — "fog, mist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ધુમ્મસ** (*dhummas*) is a tadbhava. It comes from *\*dhūmaśa*, "smoky", a form CDIAL reconstructs on Sanskrit *dhūma*, "smoke" (CDIAL 6855).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

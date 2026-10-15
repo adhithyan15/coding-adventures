@@ -11,8 +11,8 @@ gloss: "when — locating one event against another"
 concept_tag: GU-JOIN-JYAARE
 prerequisites: [GU-C35-jo-write, GU-C34-kemke]
 sounds: []
-roots: []
-etymology_hook: "જ્યારે is the relative જે wearing a time ending — the pattern the next chapter opens up."
+roots: [sanskrit-ya-relative]
+etymology_hook: "jyāre 'when': on the relative stem ja-, Sanskrit ya- (CDIAL 10391); CDIAL has no entry for jyāre itself"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +53,8 @@ answers *why*.
 It is not a random shape. The **જ્-** at its front belongs to a large family:
 Gujarati builds a whole set of clause-openers on that one stem, and you are
 learning a single member of it here rather than the pattern all at once.
+
+CDIAL has no entry for **જ્યારે** (*jyāre*) itself. Its stem is the relative one that goes back to Sanskrit *ya-* (CDIAL 10391); the rest of its history is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-JOIN-JYAARE-01, GU-JOIN-JO-TO-01] -->

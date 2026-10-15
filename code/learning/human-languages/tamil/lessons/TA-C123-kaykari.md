@@ -47,7 +47,7 @@ reviews_of: [TA-C122-iraicci]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**காய்கறி** (*kāykaṟi*) is native: *kāy*, "unripe fruit" (DEDR 1459), and *kaṟi*, "vegetables, curry" (DEDR 1391; Malayalam *kaṟi*).
+**காய்கறி** (*kāykaṟi*) is native: *kāy*, "unripe fruit" (DEDR 1459, which compares Indo-Aryan *\*kacca*, "raw"), and *kaṟi*, "vegetables, curry" (DEDR 1391; Malayalam *kaṟi*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

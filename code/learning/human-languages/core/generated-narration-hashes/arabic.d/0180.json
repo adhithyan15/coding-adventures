@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 180,
-  "sourceHash": "fnv1a64:ab738c6298bc58b5",
+  "sourceHash": "fnv1a64:c62fad7bb81d6abc",
   "lessonIds": [
     "AR-C180-musab",
     "AR-C180-rifi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch180.txt",
   "json": "arabic/narration/ch180.json",
-  "textHash": "fnv1a64:91f48299b10baf20",
-  "jsonHash": "fnv1a64:db8908ec5827d11c",
+  "textHash": "fnv1a64:452260d461b03b66",
+  "jsonHash": "fnv1a64:adbab7e477668962",
   "findings": []
 }

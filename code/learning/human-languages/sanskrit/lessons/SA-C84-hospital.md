@@ -14,7 +14,8 @@ romanization: "cikitsālayaḥ"
 concept_tag: SA-PLACE-HOSPITAL
 prerequisites: [SA-C83-exam, SA-C84-temple]
 sounds: []
-roots: []
+roots: [sanskrit-cikitsa, sanskrit-alaya]
+etymology_hook: "cikitsālaya ← cikitsā 'medical treatment' (from √cit) + ālaya 'dwelling'; the compound is modern"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,13 @@ reviews_of: [SA-C84-temple]
 
 **चिकित्सालयः** (*cikitsālayaḥ*) — "a hospital": **चिकित्सा**, "treatment", with the
 same **आलयः**, "home", as **विद्यालयः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Cikitsālaya* is built from *cikitsā*, "medical treatment", a noun MW files under
+the root √cit, "to perceive, attend to", and *ālaya*, "a dwelling". MW does not
+list the compound: pairing them for a hospital is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

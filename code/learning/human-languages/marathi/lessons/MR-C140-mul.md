@@ -14,7 +14,8 @@ romanization: "mūḷ"
 concept_tag: MR-THINGS140-MUL
 prerequisites: [MR-C139-gavat, MR-C139-phandi]
 sounds: []
-roots: []
+roots: [sanskrit-mula]
+etymology_hook: "mūḷ ← Sanskrit mūla 'root', perhaps of Dravidian origin; a tadbhava (CDIAL 10250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C139-phandi]
 <!-- hl-knowledge: introduces=[MR-LEX-C140-THINGS140-01]; assesses=[] -->
 
 **मूळ** — *mūḷ* — "a root".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मूळ** (*mūḷ*) is a tadbhava of Sanskrit *mūla*, "root" (CDIAL 10250). CDIAL thinks the variation in its forms supports a non-Aryan, perhaps Dravidian, origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

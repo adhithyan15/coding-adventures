@@ -14,7 +14,8 @@ romanization: "mawja"
 concept_tag: AR-SHAY247-MAWJA
 prerequisites: [AR-C246-aris, AR-C247-hawa]
 sounds: []
-roots: []
+roots: [m-w-j]
+etymology_hook: "mawja: built on the root m-w-j, 'to surge' (Lane); mawja is one wave"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C247-hawa]
 <!-- hl-knowledge: introduces=[AR-LEX-C247-SHAY247-02]; assesses=[] -->
 
 **موجة** — *mawja* — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موجة** (*mawja*) is built on the native Arabic root *m-w-j*, "to surge" (Lane). *Mawja* is one wave.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

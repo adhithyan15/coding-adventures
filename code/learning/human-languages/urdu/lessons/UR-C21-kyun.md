@@ -11,8 +11,8 @@ gloss: why — the k- question word chapter seventeen's family lesson had every 
 concept_tag: UR-QUESTION-WHY
 prerequisites: [UR-R20-joined-and-turned, UR-C17-kahan, UR-C03-kya]
 sounds: [nasal-vowel]
-roots: []
-etymology_hook: "کیوں is built on the same k- interrogative stem as کیا, کہاں and کون — Sanskrit ka-, the stem behind Latin quis and English who, what and where, so a reader who owns one of these owns the shape of all of them"
+roots: [ka-interrogative, kim]
+etymology_hook: "kyūṅ: built on the old question stem ka-, as kyā ← kim is (CDIAL 3164)"
 duration:
   max_seconds: 235
 requires:

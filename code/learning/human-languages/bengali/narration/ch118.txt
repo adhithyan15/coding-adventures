@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a radish, then the Bengali for uncooked 
 You'll want to know: রসগোল্লা.
 রসগোল্লা — rôsôgollā — "rasgulla".
 
+The word, taken apart.
+রসগোল্লা (rôsôgollā) is rôs, "juice, syrup", Sanskrit rasa, + gollā, "ball", which belongs with Bengali golā, "ball", from Sanskrit gōla (CDIAL 4321).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for uncooked rice, then the Bengali for rasg
 
 You'll want to know: পায়েস.
 পায়েস — pāyes — "rice pudding".
+
+The word, taken apart.
+পায়েস (pāyes) is Sanskrit pāyasa, "rice boiled in milk", lightly reshaped. CDIAL has that entry but lists no Bengali form under it (CDIAL 8099).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for rasgulla, then the Bengali for rice pudd
 You'll want to know: লুচি.
 লুচি — luchi — "a luchi".
 
+The word, taken apart.
+The origin of লুচি (luchi) is not settled: CDIAL has no entry for it, and a search by form and by gloss finds nothing close.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for rice pudding, then the Bengali for a luc
 You'll want to know: মুড়ি.
 মুড়ি — muṛi — "puffed rice".
 
+The word, taken apart.
+The origin of মুড়ি (muṛi) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "parched" and "puffed" finds nothing of this shape.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a luchi, then the Bengali for puffed ric
 
 You'll want to know: কফি.
 কফি — kôphi — "coffee".
+
+The word, taken apart.
+কফি (kôphi) is a loan from English coffee.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "kashtī"
 concept_tag: UR-TOWN81-KASHTI
 prerequisites: [UR-C81-hotal, UR-C81-polis]
 sounds: []
-roots: []
+roots: [persian-kishti]
+etymology_hook: "kashtī: usually traced to Persian kashtī 'boat, ship'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C81-polis]
 <!-- hl-knowledge: introduces=[UR-LEX-C81-TOWN81-04]; assesses=[] -->
 
 **کشتی** — *kashtī* — "a boat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کشتی** (*kashtī*) is a loan, usually traced to Persian *kashtī*, "boat, ship".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

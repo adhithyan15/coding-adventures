@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 104,
-  "sourceHash": "fnv1a64:6b2a50bc00f70059",
+  "sourceHash": "fnv1a64:66ccc4315308a642",
   "lessonIds": [
     "BN-C104-mapa",
     "BN-C104-darano",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch104.txt",
   "json": "bengali/narration/ch104.json",
-  "textHash": "fnv1a64:9bed810d70629bec",
-  "jsonHash": "fnv1a64:680bbe8e99c7ef6e",
+  "textHash": "fnv1a64:366b4ddc07c98da0",
+  "jsonHash": "fnv1a64:b90c308c9b29dcea",
   "findings": []
 }

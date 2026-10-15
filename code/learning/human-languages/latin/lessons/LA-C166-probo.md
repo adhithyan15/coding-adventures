@@ -13,7 +13,8 @@ gloss: "to approve, to prove"
 concept_tag: LA-VERB-PROBO
 prerequisites: [LA-C165-subrideo, LA-C165-clamo]
 sounds: []
-roots: []
+roots: [probare-latin, probus-latin]
+etymology_hook: "probō 'to approve, to prove' — built on probus 'good, honest'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C165-clamo]
 <!-- hl-knowledge: introduces=[LA-LEX-C166-ACT166-01]; assesses=[] -->
 
 **probō, probāre** — "to approve, to prove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**probō** is built on *probus*, "good, honest" (Lewis & Short): to find something good, to test and approve. *probus* is usually traced to Proto-Indo-European *\*pro-bhwo-*, "being in front, outstanding" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

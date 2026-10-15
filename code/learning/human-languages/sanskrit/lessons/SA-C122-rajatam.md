@@ -14,7 +14,8 @@ romanization: "rajatam"
 concept_tag: SA-THINGS122-RAJATAM
 prerequisites: [SA-C121-ratnam, SA-C121-suvarnam]
 sounds: []
-roots: []
+roots: [sanskrit-rajata]
+etymology_hook: "rajata 'whitish', then 'silver' is inherited from Indo-European, the same word as Latin argentum (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C121-suvarnam]
 <!-- hl-knowledge: introduces=[SA-LEX-C122-THINGS122-01]; assesses=[] -->
 
 **रजतम्** — *rajatam* — "silver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rajata* first meant "whitish, silvery" in the Rigveda and then "silver" (MW). It is inherited from Indo-European, the same word as Latin *argentum* "silver" (EtymDB), whose symbol *Ag* is still on the periodic table. Pali kept it as *rajata* (CDIAL 10576).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

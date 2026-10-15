@@ -14,7 +14,8 @@ romanization: "ḥadhafa"
 concept_tag: AR-VERB-HADHAFA
 prerequisites: [AR-C164-itaqada, AR-C164-tadhakkara]
 sounds: []
-roots: []
+roots: [ḥ-dh-f]
+etymology_hook: "ḥadhafa: built on the root ḥ-dh-f, 'to cut off, to drop' (Lane); ḥadhafa is the plain verb, 'he cut off'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C164-tadhakkara]
 <!-- hl-knowledge: introduces=[AR-LEX-C165-ACT165-01]; assesses=[] -->
 
 **حذف** — *ḥadhafa* — "to delete".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حذف** (*ḥadhafa*) is built on the native Arabic root *ḥ-dh-f*, "to cut off, to drop" (Lane). *Ḥadhafa* is the plain verb, "he cut off".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

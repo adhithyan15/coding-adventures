@@ -14,7 +14,8 @@ romanization: "gereh zadan"
 concept_tag: FA-VERB-GEREH-ZADAN
 prerequisites: [FA-C260-rande-kardan, FA-C260-surakh-kardan]
 sounds: []
-roots: []
+roots: [persian-zadan]
+etymology_hook: "gereh zadan: Persian gereh 'knot' (Middle Persian grih) + zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C260-surakh-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C260-KONESH260-03]; assesses=[] -->
 
 **گره زدن** — *gereh zadan* — "to tie a knot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gereh zadan* is "to strike a knot": *gereh*, "knot", is native, usually traced to Middle Persian *grih*. *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

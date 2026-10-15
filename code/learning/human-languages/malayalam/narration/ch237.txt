@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for dusk, then the Malayalam for a moment.
 You'll want to know: പകൽ.
 പകൽ — pakal — "daytime".
 
+The word, taken apart.
+പകൽ (pakal) is native Dravidian, one word with Tamil pakal, Kannada pagal and Telugu pagalu (DEDR 3805).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a moment, then the Malayalam for dayti
 
 You'll want to know: എന്നെങ്കിലും.
 എന്നെങ്കിലും — enneṅkiluṁ — "someday, ever".
+
+The word, taken apart.
+എന്നെങ്കിലും (enneṅkiluṁ) is native Dravidian: ennu, "what day", from the question stem (DEDR 5151), then a conditional form of the verb "to say" meaning "if" (DEDR 868), and -uṁ: "on whatever day it may be".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for daytime, then the Malayalam for someda
 You'll want to know: തലേന്ന്.
 തലേന്ന് — talēnnŭ — "the day before (an event)".
 
+The word, taken apart.
+തലേന്ന് (talēnnŭ) is native Dravidian, built on tala, "head, the front end" (DEDR 3103), with a word for "day": the day at the head of an event.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for someday, then the Malayalam for the da
 You'll want to know: പിറ്റേന്ന്.
 പിറ്റേന്ന് — piṟṟēnnŭ — "the following day".
 
+The word, taken apart.
+പിറ്റേന്ന് (piṟṟēnnŭ) is native Dravidian, "the day after": its first part belongs with pin, "after" (DEDR 4205, with Tamil piṉ), and its end is a word for "day".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for the day before, then the Malayalam for
 
 You'll want to know: മിനിഞ്ഞാന്ന്.
 മിനിഞ്ഞാന്ന് — miniññānnŭ — "the day before yesterday".
+
+The word, taken apart.
+മിനിഞ്ഞാന്ന് (miniññānnŭ) is native Dravidian: DEDR 2920 lists it, "the day before yesterday", under ñānnu, "day", with Tamil ñāṉṟu.
 
 What you've built.
 One more word for this chapter.

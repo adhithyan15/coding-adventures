@@ -11,9 +11,10 @@ romanization: "yāva"
 concept_tag: KA-Q-WHICH
 prerequisites: [KA-C71-when, KA-S139-letter-va, KA-C41-deixis-system, KA-C55-path, KA-C55-village, KA-C33-bare, KA-C33-artha-maadiko]
 sounds: []
-roots: []
+roots: [yaa-dravidian]
+etymology_hook: "yāva: native Dravidian, on the question base yā- (DEDR 5151), which lists yāva itself"
 duration:
-  max_seconds: 210
+  max_seconds: 285
 requires:
   knowledge: [KA-SCRIPT-RECOG-139, KA-LEX-C71-MORE-04, KA-GRAMMAR-C41-DEIXIS-SYSTEM, KA-LEX-C41-DEIXIS-05, KA-LEX-C46-ASK-05, KA-LEX-C67-LINK-02]
 introduces:
@@ -46,6 +47,11 @@ It goes in front of a noun, exactly where an adjective goes:
 Put it with the word for "or" and you can finally put a real choice to somebody:
 **ಚಹಾ ಅಥವಾ ಕಾಫಿ? ಯಾವ ಪುಸ್ತಕ?** — offer the two, then ask which. Until this word
 there was no way to ask anybody to pick.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಾವ** (*yāva*) is native Dravidian, built on the question base *yā-*. DEDR 5151 lists *yāva* itself, "what, which".
 
 ## Grammar Lens: the ya- family, and what each member asks
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C71-MORE-06]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "talāsh karnā"
 concept_tag: UR-VERB-TALASH-KARNA
 prerequisites: [UR-C239-sunghna, UR-C239-ghurna]
 sounds: []
-roots: []
+roots: [turkish-talash, kr-do]
+etymology_hook: "talāsh: usually traced, through Persian, to Turkic; karnā 'to do' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C239-ghurna]
 <!-- hl-knowledge: introduces=[UR-LEX-C239-ACT239-05]; assesses=[] -->
 
 **تلاش کرنا** — *talāsh karnā* — "to search".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تلاش کرنا** (*talāsh karnā*) joins *talāsh*, "search", usually traced, through Persian, to a Turkic word, and *karnā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

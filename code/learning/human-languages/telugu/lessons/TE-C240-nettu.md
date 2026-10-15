@@ -14,7 +14,8 @@ romanization: "neṭṭu"
 concept_tag: TE-VERB-NETTU
 prerequisites: [TE-C240-moyu, TE-C240-lagu]
 sounds: []
-roots: []
+roots: [dravidian-nerru-thrust]
+etymology_hook: "neṭṭu: native Dravidian; DEDR 3760 lists neṭṭu 'to push' with Tamil neṭṭu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C240-lagu]
 <!-- hl-knowledge: introduces=[TE-LEX-C240-KRIYA240-04]; assesses=[] -->
 
 **నెట్టు** — *neṭṭu* — "to push".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నెట్టు** (*neṭṭu*) is native Dravidian. DEDR 3760 lists *neṭṭu*, "to push, shove", with Tamil *neṭṭu*, "to thrust, push".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

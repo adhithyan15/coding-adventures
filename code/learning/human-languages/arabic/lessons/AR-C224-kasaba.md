@@ -14,7 +14,8 @@ romanization: "kasaba"
 concept_tag: AR-VERB-KASABA
 prerequisites: [AR-C223-tawa, AR-C223-allaqa]
 sounds: []
-roots: []
+roots: [k-s-b]
+etymology_hook: "kasaba: built on the root k-s-b, 'to gain, to earn' (Lane); kasaba is the plain verb, 'he earned'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C223-allaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C224-ACT224-01]; assesses=[] -->
 
 **كسب** — *kasaba* — "to earn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كسب** (*kasaba*) is built on the native Arabic root *k-s-b*, "to gain, to earn" (Lane). *Kasaba* is the plain verb, "he earned".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

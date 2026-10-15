@@ -14,7 +14,8 @@ romanization: "prepodavátel"
 concept_tag: RU-RABOTA229-PREPODAVATEL
 prerequisites: [RU-C229-menedzher, RU-C229-programmist]
 sounds: []
-roots: []
+roots: [pie-deh3-give]
+etymology_hook: "преподаватель is преподавать 'to teach' + -тель 'one who'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C229-programmist]
 <!-- hl-knowledge: introduces=[RU-LEX-C229-RABOTA229-05]; assesses=[] -->
 
 **преподаватель** (*prepodavátel*) — "a lecturer, a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**преподаватель** is *преподавать*, "to teach", with *-тель*, "one who does it". The verb is *пре-* and *по-* with *давать*, "to give". Vasmer takes *давать* from *дать*, "to give", kin to Lithuanian *dovanà*, "a gift".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Once More, and Which One",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ce7a6db2d89aaa4e",
+  "sourceHash": "fnv1a64:14bb2afff02e3ee5",
   "lessons": [
     {
       "id": "KA-C71-another",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd136d070b4d7dd3",
+      "sourceHash": "fnv1a64:8049f33f14762f44",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇನ್ನೊಂದು (innondu) is native Dravidian: innu, \"more, yet\" (DEDR 410), and ondu, \"one\" (DEDR 990). It is \"one more\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: one, and one more",
           "segments": [
@@ -78,7 +89,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -89,7 +100,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -174,7 +185,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -205,7 +216,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7731cde9a542dfc",
+      "sourceHash": "fnv1a64:3670a381173d057f",
       "notice": null,
       "blocks": [
         {
@@ -250,6 +261,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇನ್ನೊಂದು ಸಲ ಹೇಳಿ (innondu sala hēḷi) is innondu, \"one more\" (DEDR 410, 990), sala, \"time, turn\", native (DEDR 2781), and hēḷi, the polite form of hēḷu, \"to say\" (DEDR 4430)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -260,7 +282,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -336,7 +358,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -367,7 +389,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5785b324c4c04032",
+      "sourceHash": "fnv1a64:fd601302178c182e",
       "notice": null,
       "blocks": [
         {
@@ -412,6 +434,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಯಾವಾಗ (yāvāga) is native Dravidian: yāva, \"which\" (DEDR 5151), and āga, \"time, then\" (DEDR 1). It is \"at which time\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -422,7 +455,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -516,7 +549,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -736,7 +769,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19bd1b09f040032e",
+      "sourceHash": "fnv1a64:f71da8a7460247e8",
       "notice": null,
       "blocks": [
         {
@@ -777,6 +810,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಯಾವ (yāva) is native Dravidian, built on the question base yā-. DEDR 5151 lists yāva itself, \"what, which\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the ya- family, and what each member asks",
           "segments": [
@@ -791,7 +835,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -802,7 +846,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -905,7 +949,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

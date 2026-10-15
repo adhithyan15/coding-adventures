@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 49,
-  "sourceHash": "fnv1a64:81b78953491b350e",
+  "sourceHash": "fnv1a64:25f51270db1b414c",
   "lessonIds": [
     "GU-C49-pain",
     "GU-C49-medicine",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch49.txt",
   "json": "gujarati/narration/ch49.json",
-  "textHash": "fnv1a64:7c1f0baa85e3480a",
-  "jsonHash": "fnv1a64:3454da2ec35906e8",
+  "textHash": "fnv1a64:4e0093d1dd76dc0f",
+  "jsonHash": "fnv1a64:7b773af1b872191f",
   "findings": []
 }

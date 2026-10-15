@@ -14,7 +14,8 @@ romanization: "siddhā"
 concept_tag: PA-QUAL141-SIDDHA
 prerequisites: [PA-C141-bhola, PA-C141-gol]
 sounds: []
-roots: []
+roots: [sanskrit-siddha]
+etymology_hook: "siddhā ← Sanskrit siddha 'accomplished, perfected', a tadbhava (CDIAL 13401)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C141-gol]
 <!-- hl-knowledge: introduces=[PA-LEX-C141-QUAL141-05]; assesses=[] -->
 
 **ਸਿੱਧਾ** — *siddhā* — "straight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸਿੱਧਾ** (*siddhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *siddha*, "accomplished, perfected" (CDIAL 13401). CDIAL lists Lahnda *siddhā*, "straight, upright", beside the Punjabi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

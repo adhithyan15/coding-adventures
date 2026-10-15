@@ -12,6 +12,9 @@ Before the new one: say the Urdu for summer, then the Urdu for winter.
 You'll want to know: خزاں.
 خزاں — khizāṅ — "autumn".
 
+The word, taken apart.
+خزاں (khizāṅ) is a loan, usually traced to Persian khazān, "autumn".
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ A date needs an ordinal: say پہلا, دوسرا, تیسرا, the first, the se
 You'll want to know: تاریخ.
 تاریخ — tārīkh — "a date; history".
 
+The word, taken apart.
+تاریخ (tārīkh) is a loan from Arabic tārīkh, "a dating, a date", which reached Urdu through Persian. Its Arabic root is ʾ-r-kh (Lane). In Urdu it also means "history".
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Urdu for autumn, then the Urdu for a date; history.
 
 You'll want to know: آجکل.
 آجکل — ājkal — "these days, nowadays".
+
+The word, taken apart.
+آجکل (ājkal) is "today-tomorrow": āj, "today", from Sanskrit adya (CDIAL 242), and kal, from kalya, "dawn, tomorrow" (CDIAL 3104).
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Urdu for a date; history, then the Urdu for these da
 You'll want to know: پچھلا.
 پچھلا — pichhlā — "last, previous".
 
+The word, taken apart.
+پچھلا (pichhlā) is built on pīchhe, "behind", which CDIAL lists under a reconstructed paśca, "hinder part" (CDIAL 7990), with an -l- ending. CDIAL does not list pichhlā itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Urdu for these days, then the Urdu for last.
 
 You'll want to know: اگلا.
 اگلا — aglā — "next".
+
+The word, taken apart.
+اگلا (aglā) is built on Sanskrit agra, "top, front", with an -l- ending. CDIAL lists Hindi āgil, "foremost", made the same way (CDIAL 68), but not aglā itself.
 
 What you've built.
 One more word for this chapter.

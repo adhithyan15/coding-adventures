@@ -14,7 +14,8 @@ romanization: "ayaykkuka"
 concept_tag: ML-VERB-AYAYKKUKA
 prerequisites: [ML-C175-snehikkuka, ML-C175-vilkkuka]
 sounds: []
-roots: []
+roots: [dravidian-acai-send]
+etymology_hook: "ayaykkuka: native Dravidian, one word with Tamil acaṅku and Kannada asi (DEDR 37)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C175-vilkkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C175-ACT175-03]; assesses=[] -->
 
 **അയയ്ക്കുക** — *ayaykkuka* — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അയയ്ക്കുക** (*ayaykkuka*) is native Dravidian, one word with Tamil *acaṅku* and Kannada *asi* (DEDR 37). Its older senses are "to let go, to slacken".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

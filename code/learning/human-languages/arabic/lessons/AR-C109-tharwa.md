@@ -14,7 +14,8 @@ romanization: "tharwa"
 concept_tag: AR-CAN109-THARWA
 prerequisites: [AR-C108-haqq, AR-C108-malik]
 sounds: []
-roots: []
+roots: [th-r-w]
+etymology_hook: "tharwa: built on the root th-r-w, 'to be many, to be rich' (Lane); tharwa is abundance of wealth"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C108-malik]
 <!-- hl-knowledge: introduces=[AR-LEX-C109-CAN109-01]; assesses=[] -->
 
 **ثروة** — *tharwa* — "wealth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثروة** (*tharwa*) is built on the native Arabic root *th-r-w*, "to be many, to be rich" (Lane). *Tharwa* is abundance of wealth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

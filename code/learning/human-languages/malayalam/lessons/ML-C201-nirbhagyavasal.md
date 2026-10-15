@@ -14,7 +14,8 @@ romanization: "nirbhāgyavaśāl"
 concept_tag: ML-KARANAM201-NIRBHAGYAVASAL
 prerequisites: [ML-C201-olike, ML-C201-bhagyavasal]
 sounds: []
-roots: []
+roots: [sanskrit-bhagya, sanskrit-vasha]
+etymology_hook: "nirbhāgyavaśāl: Sanskrit nir- 'without' + bhāgya 'fortune' (CDIAL 9434) + vaśāt (CDIAL 11430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C201-bhagyavasal]
 <!-- hl-knowledge: introduces=[ML-LEX-C201-KARANAM201-04]; assesses=[] -->
 
 **നിർഭാഗ്യവശാൽ** — *nirbhāgyavaśāl* — "unfortunately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**നിർഭാഗ്യവശാൽ** (*nirbhāgyavaśāl*) is Sanskrit: *nir-*, "without", *bhāgya*, "fortune" (CDIAL 9434), and *vaśāt*, "by the power of" (CDIAL 11430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

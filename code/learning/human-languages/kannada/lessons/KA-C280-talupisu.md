@@ -14,7 +14,8 @@ romanization: "talupisu"
 concept_tag: KA-VERB-TALUPISU
 prerequisites: [KA-C280-cappale-tattu, KA-C280-kai-kuluku]
 sounds: []
-roots: []
+roots: [dravidian-talapu-reach]
+etymology_hook: "talupisu: native Dravidian, 'make reach', from talupu 'to reach' (DEDR 3102)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C280-kai-kuluku]
 <!-- hl-knowledge: introduces=[KA-LEX-C280-KRIYE280-04]; assesses=[] -->
 
 **ತಲುಪಿಸು** — *talupisu* — "to deliver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಲುಪಿಸು** (*talupisu*) is native Dravidian, from *talupu*, "to reach, arrive", and DEDR 3102 lists *talapisu*, "to cause to reach".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

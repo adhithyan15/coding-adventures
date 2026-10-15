@@ -14,7 +14,8 @@ romanization: "melakaḥ"
 concept_tag: SA-THG194-MELAKAH
 prerequisites: [SA-C194-sabha, SA-C194-gosthi]
 sounds: []
-roots: []
+roots: [sanskrit-mela, mil-meet]
+etymology_hook: "melaka ← mela 'meeting', from the root √mil 'meet' (MW); Hindi melā 'fair' (CDIAL 10331)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C194-gosthi]
 <!-- hl-knowledge: introduces=[SA-LEX-C194-THG194-05]; assesses=[] -->
 
 **मेलकः** — *melakaḥ* — "a fair, a gathering".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*melaka* is *mela*, "meeting", built on the root √mil, "to meet" (MW), with the suffix *-ka*. It lives on as Hindi *melā*, "fair" (CDIAL 10331).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

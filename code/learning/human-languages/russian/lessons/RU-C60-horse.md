@@ -14,7 +14,8 @@ romanization: "lóshad"
 concept_tag: RU-ANIMALS1-HORSE
 prerequisites: [RU-C60-dog, RU-C60-cat]
 sounds: []
-roots: []
+roots: [turkic-alasha]
+etymology_hook: "лошадь is an old loan from Turkic: Turkish alaša 'a horse, a gelding', Chuvash laša 'horse'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C60-cat]
 <!-- hl-knowledge: introduces=[RU-LEX-C60-ANIMALS1-03]; assesses=[] -->
 
 **лошадь** (*lóshad*) — "a horse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лошадь** — an old loan from Turkic, says Vasmer: compare Chuvash *laša*, "horse", and Turkish and Tatar *alaša*, "a horse, a gelding". It grew from *лоша*, with a suffix; the native word is *конь*, "a steed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

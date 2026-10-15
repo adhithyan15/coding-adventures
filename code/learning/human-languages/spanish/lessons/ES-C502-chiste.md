@@ -11,6 +11,7 @@ concept_tag: ES-REF-CHISTE
 prerequisites: [ES-C502-mencionar, ES-C502-charlar]
 sounds: []
 roots: []
+etymology_hook: "chiste — from chistar 'to make a sound', a verb built on the noise chist"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C502-charlar]
 > *My grandfather tells very bad jokes.*
 
 *Contar un chiste* — to tell a joke.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**chiste** comes from *chistar*, "to make the slightest sound" (EtymDB 2.1), a verb built on the whispered noise *chist*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

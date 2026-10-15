@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 231,
-  "sourceHash": "fnv1a64:cb02081564812880",
+  "sourceHash": "fnv1a64:87886e86f11ac951",
   "lessonIds": [
     "KA-C231-sahodyogi",
     "KA-C231-sabhe",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch231.txt",
   "json": "kannada/narration/ch231.json",
-  "textHash": "fnv1a64:7a610b7f557b4582",
-  "jsonHash": "fnv1a64:f521c5d50f7fe1f5",
+  "textHash": "fnv1a64:6a2e697aff874a73",
+  "jsonHash": "fnv1a64:5c6077c7bb47287b",
   "findings": []
 }

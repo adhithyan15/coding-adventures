@@ -14,7 +14,8 @@ romanization: "uddēśyaṁ"
 concept_tag: ML-WHY144-UDDESYAM
 prerequisites: [ML-C143-yogyata, ML-C144-atukontu, ML-C24-native-night-words]
 sounds: []
-roots: []
+roots: [sanskrit-uddeshya]
+etymology_hook: "uddēśyaṁ ← Sanskrit uddēśya 'to be aimed at, intended', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C144-atukontu]
 <!-- hl-knowledge: introduces=[ML-LEX-C144-WHY144-02]; assesses=[] -->
 
 **ഉദ്ദേശ്യം** — *uddēśyaṁ* — "a purpose, an intention".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉദ്ദേശ്യം** (*uddēśyaṁ*) ← Sanskrit *uddēśya*, "to be aimed at, intended", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

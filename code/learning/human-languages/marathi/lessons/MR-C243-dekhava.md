@@ -14,7 +14,8 @@ romanization: "dekhāvā"
 concept_tag: MR-VASTU243-DEKHAVA
 prerequisites: [MR-C242-sidi, MR-C243-thikan]
 sounds: []
-roots: []
+roots: [indo-aryan-drkshati]
+etymology_hook: "dekhāvā: from dekhṇe 'to see' ← *dēkṣati 'sees' (CDIAL 6507)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C243-thikan]
 <!-- hl-knowledge: introduces=[MR-LEX-C243-VASTU243-02]; assesses=[] -->
 
 **देखावा** — *dekhāvā* — "a view, a scene".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**देखावा** (*dekhāvā*) is built on *dekhṇẽ*, "to see", which comes from a reconstructed *\*dēkṣati*, "sees" (CDIAL 6507).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

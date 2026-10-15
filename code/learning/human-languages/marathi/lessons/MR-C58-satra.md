@@ -11,7 +11,8 @@ gloss: seventeen — seven-and-ten, and you can hear सात inside it
 concept_tag: MR-LEX-SATRA
 prerequisites: [MR-C57-pandhra, MR-C57-sola, MR-R57-thirteen-to-sixteen]
 sounds: [matra-aa]
-roots: []
+roots: [sanskrit-saptadasha]
+etymology_hook: "satrā ← Sanskrit saptadaśa 'seventeen': sapta 'seven' + daśa 'ten'; a tadbhava (CDIAL 13146)"
 duration:
   max_seconds: 210
 requires:

@@ -14,6 +14,9 @@ Before the new one: say the Gujarati for to pull, then the Gujarati for to throw
 You'll want to know: જાગવું.
 જાગવું (jāgvũ) — "to wake up".
 
+The word, taken apart.
+જાગવું (jāgvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāgrati, "are awake" (CDIAL 5175).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Gujarati for to throw, then the Gujarati for to wake
 
 You'll want to know: નાહવું.
 નાહવું (nāhvũ) — "to bathe".
+
+The word, taken apart.
+નાહવું (nāhvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from snāti, "bathes" (CDIAL 13786).
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ Before the new one: say the Gujarati for to wake up, then the Gujarati for to ba
 You'll want to know: પહેરવું.
 પહેરવું (pahervũ) — "to wear".
 
+The word, taken apart.
+પહેરવું (pahervũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paridadhāti, "sets round; puts on (clothes)" (CDIAL 7835).
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Gujarati for to bathe, then the Gujarati for to wear
 You'll want to know: ચલાવવું.
 ચલાવવું (calāvvũ) — "to drive, to run (a machine)".
 
+The word, taken apart.
+ચલાવવું (calāvvũ) is the causing form of cālvũ, "to move, walk", which CDIAL lists under calyati, "goes", built on Sanskrit calati, "goes away" (CDIAL 4721).
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Gujarati for to wear, then the Gujarati for to drive
 
 You'll want to know: ગણવું.
 ગણવું (gaṇvũ) — "to count".
+
+The word, taken apart.
+ગણવું (gaṇvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gaṇayati, "counts" (CDIAL 3993).
 
 What you've built.
 One more word for this chapter.

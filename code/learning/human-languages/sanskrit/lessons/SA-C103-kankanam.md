@@ -14,7 +14,8 @@ romanization: "kaṅkaṇam"
 concept_tag: SA-THINGS103-KANKANAM
 prerequisites: [SA-C103-kridanakam, SA-C103-anguliyakam]
 sounds: []
-roots: []
+roots: [sanskrit-kankana]
+etymology_hook: "kaṅkaṇa 'bracelet' (MBh); MW gives only a grammarians' root √kai, so its origin is uncertain; Punjabi kaṅgaṇ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C103-anguliyakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C103-THINGS103-04]; assesses=[] -->
 
 **कंकणम्** — *kaṅkaṇam* — "a bangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kaṅkaṇa* "a bracelet" is found from the Mahābhārata on (MW); MW cites only a grammarians' root √kai for it, so its origin is uncertain. It lives on as Punjabi *kaṅgaṇ* and Hindi *kaknā* "bracelet" (CDIAL 2597).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

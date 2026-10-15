@@ -14,7 +14,8 @@ romanization: "adya"
 concept_tag: SA-ADV-TODAY
 prerequisites: [SA-C17-night]
 sounds: []
-roots: []
+roots: [sanskrit-adya]
+etymology_hook: "adya 'today' ← the base a- 'this' + dya, a form of dyu 'day' (MW); Hindi āj (CDIAL 242)"
 duration:
   max_seconds: 210
 requires:
@@ -44,12 +45,19 @@ reviews_of: [SA-C17-night]
 **अद्य** (*adya*) — "today."
 
 Take it apart and the older shape shows: *a-* ("this") plus the same *dy-* that
-sits inside दिनम् and द्यौः. **This day** — said so often that the two halves
+sits inside द्यौः. **This day** — said so often that the two halves
 fused and stopped being separable for ordinary speakers.
 
 This is how a great many everyday words are built, in Sanskrit and elsewhere.
 English *today* is *to* + *day*, and *tomorrow* is *to* + *morrow*: the same
 trick, a thousand years later, in a different family.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Adya* is built from the pronoun base *a-* "this" and *dya*, a form of *dyu*
+"sky, day"; MW compares Latin *hodiē*, "today". It lives on as Hindi
+*āj* (CDIAL 242).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

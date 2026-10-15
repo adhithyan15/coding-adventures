@@ -14,7 +14,8 @@ romanization: "palakariñcu"
 concept_tag: TE-VERB-PALAKARINCU
 prerequisites: [TE-C161-natyam-ceyu, TE-C161-jarupuko]
 sounds: []
-roots: []
+roots: [telugu-palakarincu-greet]
+etymology_hook: "palakariñcu: native Dravidian; DEDR 3887 lists palukarincu 'to accost' under paluku 'to say'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C161-jarupuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C161-KRIYA161-03]; assesses=[] -->
 
 **పలకరించు** — *palakariñcu* — "to greet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పలకరించు** (*palakariñcu*) is native Dravidian. DEDR 3887 lists *palukarincu*, "to accost, speak to", under *paluku*, "to sound, answer, say".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "varadi"
 concept_tag: KA-KELASA269-VARADI
 prerequisites: [KA-C268-kampani, KA-C268-taragati]
 sounds: []
-roots: []
+roots: [kannada-varadi-report]
+etymology_hook: "varadi: origin uncertain; DEDR and CDIAL do not record it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C268-taragati]
 <!-- hl-knowledge: introduces=[KA-LEX-C269-KELASA269-01]; assesses=[] -->
 
 **ವರದಿ** — *varadi* — "a report".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Where **ವರದಿ** (*varadi*) comes from is uncertain: neither DEDR nor CDIAL records it, under its form or under "report".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

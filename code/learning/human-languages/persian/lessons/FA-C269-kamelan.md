@@ -14,7 +14,8 @@ romanization: "kâmelan"
 concept_tag: FA-CHERA269-KAMELAN
 prerequisites: [FA-C269-faqat, FA-C269-hatta]
 sounds: []
-roots: []
+roots: [arabic-kamilan]
+etymology_hook: "kâmelan ← Arabic kāmilan 'completely', root k-m-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C269-hatta]
 <!-- hl-knowledge: introduces=[FA-LEX-C269-CHERA269-03]; assesses=[] -->
 
 **کاملا** — *kâmelan* — "completely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kâmelan* is borrowed from Arabic *kāmilan*, "completely". Its Arabic root is *k-m-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

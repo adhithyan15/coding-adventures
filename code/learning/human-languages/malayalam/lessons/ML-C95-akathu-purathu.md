@@ -11,7 +11,8 @@ romanization: "akattŭ"
 concept_tag: ML-INSIDE-OUTSIDE
 prerequisites: [ML-C95-adaykkuka, ML-C02-aanu]
 sounds: []
-roots: []
+roots: [dravidian-akam-inside, dravidian-puram-outside]
+etymology_hook: "akattŭ, puṟattŭ: native Dravidian, akam 'inside' (DEDR 7) and puṟam 'outside' (DEDR 4333)"
 duration:
   max_seconds: 260
 requires:
@@ -59,6 +60,8 @@ The chapter before this had a pair the other way round: **ഇന്ന്** and
 **ഇന്നലെ** shared their *opening* and parted at the tail. Here the tail matches
 and the fronts part. **Both pairs are easy for the same reason** — one end holds
 still while you listen to the other.
+
+**Where the words come from.** Both are native Dravidian: *akam*, "inside, home" (DEDR 7, with Tamil *akam*), and *puṟam*, "the outside" (DEDR 4333, with Tamil *puṟam*), each with the place ending.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C95-INSIDE-01, ML-LEX-C95-OUTSIDE-01, ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-C52-WELCOME-01] -->

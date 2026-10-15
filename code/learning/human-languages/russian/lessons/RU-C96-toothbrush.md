@@ -14,7 +14,8 @@ romanization: "zubnáya shchyótka"
 concept_tag: RU-THINGS96-TOOTHBRUSH
 prerequisites: [RU-C96-towel, RU-C96-soap]
 sounds: []
-roots: []
+roots: [pie-gombhos]
+etymology_hook: "зубная щётка is 'tooth brush': зуб 'tooth' + щётка, from щеть 'bristle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C96-soap]
 <!-- hl-knowledge: introduces=[RU-LEX-C96-THINGS96-03]; assesses=[] -->
 
 **зубная щётка** (*zubnáya shchyótka*) — "a toothbrush".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**зубная щётка** is "tooth brush": *зубная*, from *зуб*, "tooth", with *щётка*, "brush", from *щеть*, "bristle", the root of *щетина*, "stubble". Vasmer finds the proposed origins of that root doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

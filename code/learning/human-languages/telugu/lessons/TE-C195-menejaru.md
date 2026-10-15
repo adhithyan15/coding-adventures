@@ -14,7 +14,8 @@ romanization: "mēnējaru"
 concept_tag: TE-PANI195-MENEJARU
 prerequisites: [TE-C195-adhikari, TE-C195-gumasta]
 sounds: []
-roots: []
+roots: [english-manager]
+etymology_hook: "mēnējaru ← English manager"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C195-gumasta]
 <!-- hl-knowledge: introduces=[TE-LEX-C195-PANI195-03]; assesses=[] -->
 
 **మేనేజరు** — *mēnējaru* — "a manager".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మేనేజరు** (*mēnējaru*) is a loan from English *manager*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

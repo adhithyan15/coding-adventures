@@ -14,7 +14,8 @@ romanization: "aji"
 concept_tag: JA-WORLD64-AJI
 prerequisites: [JA-C64-uni, JA-C64-iwashi]
 sounds: []
-roots: []
+roots: [japanese-aji]
+etymology_hook: "aji: native Japanese, inherited, not borrowed; kanji 味 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C64-iwashi]
 <!-- hl-knowledge: introduces=[JA-LEX-C64-WORLD64-05]; assesses=[] -->
 
 **あじ** — *aji* — "a flavour, a taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あじ** (*aji*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

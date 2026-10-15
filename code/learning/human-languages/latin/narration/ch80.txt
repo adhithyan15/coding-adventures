@@ -12,6 +12,9 @@ Before the new one: say the Latin for breakfast, then the Latin for meat.
 You'll want to know: cāseus, cāseī.
 cāseus, cāseī — "cheese".
 
+The word, taken apart.
+cāseus is probably inherited, from a Proto-Indo-European root kwat-, "to ferment, to turn sour" (EtymDB 2.1). English cheese was borrowed from cāseus very early.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for meat, then the Latin for cheese.
 
 You'll want to know: oleum, oleī.
 oleum, oleī — "oil". Pressed from the olive.
+
+The word, taken apart.
+oleum was borrowed from Greek elaion, "olive oil" (Lewis & Short), probably from an older Greek elaiwon (EtymDB 2.1). English oil comes from it through French.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for cheese, then the Latin for oil.
 You'll want to know: ūva, ūvae.
 ūva, ūvae — "a grape". What vīnum is made from.
 
+The word, taken apart.
+ūva, "grape", has no sure origin; Lewis & Short call it doubtful.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for oil, then the Latin for a grape.
 You'll want to know: holus, holeris.
 holus, holeris — "vegetables, greens".
 
+The word, taken apart.
+holus is inherited. Old Latin had helus, "greens", usually traced to Proto-Indo-European ghelh3-, "green, yellow" (EtymDB 2.1). English yellow is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a grape, then the Latin for vegetables.
 
 You'll want to know: olīva, olīvae.
 olīva, olīvae — "an olive".
+
+The word, taken apart.
+olīva was borrowed from Greek elaia, "olive" (Lewis & Short), probably from an older Greek elaiwa (EtymDB 2.1). English olive comes from it.
 
 What you've built.
 One more word for this chapter.

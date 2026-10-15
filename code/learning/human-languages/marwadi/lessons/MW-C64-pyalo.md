@@ -14,7 +14,8 @@ romanization: "pyālo"
 concept_tag: MW-HOME64-PYALO
 prerequisites: [MW-C63-pankho, MW-C63-chabi]
 sounds: []
-roots: []
+roots: [persian-piyala]
+etymology_hook: "pyālo: usually traced to Persian piyāla 'cup'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C63-chabi]
 <!-- hl-knowledge: introduces=[MW-LEX-C64-HOME64-01]; assesses=[] -->
 
 **प्यालो** — *pyālo* — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्यालो** (*pyālo*) is a loan, usually traced to Persian *piyāla*, "cup".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

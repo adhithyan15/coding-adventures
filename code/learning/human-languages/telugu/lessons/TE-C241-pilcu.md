@@ -14,7 +14,8 @@ romanization: "pīlcu"
 concept_tag: TE-VERB-PILCU
 prerequisites: [TE-C241-mingu, TE-C241-koruku]
 sounds: []
-roots: []
+roots: [dravidian-piir-suck]
+etymology_hook: "pīlcu: native Dravidian; DEDR 4223 lists pīl(u)cu 'to suck in, inhale' with Kannada pīr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C241-koruku]
 <!-- hl-knowledge: introduces=[TE-LEX-C241-KRIYA241-03]; assesses=[] -->
 
 **పీల్చు** — *pīlcu* — "to breathe in, to inhale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పీల్చు** (*pīlcu*) is native Dravidian. DEDR 4223 lists *pīlcu*, "to suck in, inhale", with Kannada *pīr*, "to suck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

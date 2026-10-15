@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a lawn, then the Marathi for a footpath.
 You'll want to know: चामडे.
 चामडे — cāmḍe — "leather".
 
+The word, taken apart.
+चामडे (cāmḍe) is built on Marathi cām, "hide, leather", which comes from Sanskrit carman, "hide, skin" (CDIAL 4701).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a footpath, then the Marathi for leather
 
 You'll want to know: धातू.
 धातू — dhātū — "metal".
+
+The word, taken apart.
+धातू (dhātū) is Sanskrit dhātu, "substance, element; metal", taken over whole as a learned loan, a tatsama (CDIAL 6773).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for leather, then the Marathi for metal.
 You'll want to know: वीट.
 वीट — vīṭ — "a brick".
 
+The word, taken apart.
+वीट (vīṭ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from iṣṭakā, "brick" (CDIAL 1600). CDIAL lists Marathi vīṭ beside īṭ.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for metal, then the Marathi for a brick.
 You'll want to know: धागा.
 धागा — dhāgā — "a fine thread, a yarn".
 
+The word, taken apart.
+धागा (dhāgā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhāgga, "thread", a form CDIAL reconstructs from its descendants (CDIAL 6770).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a brick, then the Marathi for a fine thr
 
 You'll want to know: शिडी.
 शिडी — śiḍī — "a ladder".
+
+The word, taken apart.
+शिडी (śiḍī) is a tadbhava, a word inherited and reshaped by sound change. It comes from śrīḍhi, "resting-place, ladder", a form CDIAL reconstructs from its descendants (CDIAL 12709).
 
 What you've built.
 One more word for this chapter.

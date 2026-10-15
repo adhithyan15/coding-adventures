@@ -14,7 +14,8 @@ romanization: "sharbat"
 concept_tag: UR-THINGS118-SHARBAT
 prerequisites: [UR-C118-chaklet, UR-C118-qahva]
 sounds: []
-roots: []
+roots: [arabic-sharbat]
+etymology_hook: "sharbat ← Arabic sharba 'a drink', through Persian (Lane, root sh-r-b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C118-qahva]
 <!-- hl-knowledge: introduces=[UR-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **شربت** — *sharbat* — "a sweet drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شربت** (*sharbat*) is a loan from Arabic *sharba*, "a drink", which reached Urdu through Persian. Its Arabic root is *sh-r-b* (Lane). The root means "to drink".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gushe"
 concept_tag: FA-LOC86-GUSHE
 prerequisites: [FA-C86-samt, FA-C86-taraf]
 sounds: []
-roots: []
+roots: [persian-gushe]
+etymology_hook: "gushe ← Middle Persian gōšag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C86-taraf]
 <!-- hl-knowledge: introduces=[FA-LEX-C86-LOC86-05]; assesses=[] -->
 
 **گوشه** — *gushe* — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gushe* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *gōšag*, "corner" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

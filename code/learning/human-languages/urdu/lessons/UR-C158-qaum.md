@@ -14,7 +14,8 @@ romanization: "qaum"
 concept_tag: UR-JAGAH158-QAUM
 prerequisites: [UR-C157-chauk, UR-C157-nahar]
 sounds: []
-roots: []
+roots: [arabic-qawm]
+etymology_hook: "qaum ← Arabic qawm 'a people', through Persian (Lane, root q-w-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C157-nahar]
 <!-- hl-knowledge: introduces=[UR-LEX-C158-JAGAH158-01]; assesses=[] -->
 
 **قوم** — *qaum* — "a nation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قوم** (*qaum*) is a loan from Arabic *qawm*, "a people", which reached Urdu through Persian. Its Arabic root is *q-w-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

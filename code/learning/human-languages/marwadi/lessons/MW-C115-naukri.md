@@ -14,7 +14,8 @@ romanization: "naukrī"
 concept_tag: MW-CAN115-NAUKRI
 prerequisites: [MW-C115-puji, MW-C115-kamai]
 sounds: []
-roots: []
+roots: [persian-naukar]
+etymology_hook: "naukrī: naukar 'servant', usually traced to Persian naukar, from Mongolic nökör 'companion', + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C115-kamai]
 <!-- hl-knowledge: introduces=[MW-LEX-C115-CAN115-05]; assesses=[] -->
 
 **नौकरी** — *naukrī* — "a job".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नौकरी** (*naukrī*) is a loan, usually traced to Persian *naukar*, "servant". Persian took *naukar* from Mongolic *nökör*, "companion"; Marwadi added the ending *-ī*, so "the work of a servant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

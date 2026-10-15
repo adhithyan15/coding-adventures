@@ -14,7 +14,8 @@ romanization: "fasl"
 concept_tag: FA-TIME80-FASL
 prerequisites: [FA-C80-payiz, FA-C80-zemestan]
 sounds: []
-roots: []
+roots: [arabic-fasl]
+etymology_hook: "fasl ← Arabic faṣl 'division, section; season', root f-ṣ-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C80-zemestan]
 <!-- hl-knowledge: introduces=[FA-LEX-C80-TIME80-05]; assesses=[] -->
 
 **فصل** — *fasl* — "a season".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*fasl* is borrowed from Arabic *faṣl*, "division, section; season". Its Arabic root is *f-ṣ-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "machidooshii"
 concept_tag: JA-WANT93-MACHIDOOSHII
 prerequisites: [JA-C92-tanomi, JA-C92-yokubou]
 sounds: []
-roots: []
+roots: [japanese-matsu, japanese-tooi]
+etymology_hook: "machidōshii: native machi 'waiting' (matsu) + -dōshii, from tōi 'far'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C92-yokubou]
 <!-- hl-knowledge: introduces=[JA-LEX-C93-WANT93-01]; assesses=[] -->
 
 **まちどおしい** — *machidooshii* — "long-awaited".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まちどおしい** (*machidōshii*) is native: *machi*, from *matsu*, "to wait", with *dōshii*, from *tōi*, "far", voiced: the waiting feels far (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

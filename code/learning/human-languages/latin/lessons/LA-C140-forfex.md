@@ -13,7 +13,8 @@ gloss: "scissors"
 concept_tag: LA-THINGS140-FORFEX
 prerequisites: [LA-C139-lanterna, LA-C140-pecten]
 sounds: []
-roots: []
+roots: [forfex-latin]
+etymology_hook: "forfex 'scissors' — origin uncertain; often linked with forceps 'tongs'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C140-pecten]
 <!-- hl-knowledge: introduces=[LA-LEX-C140-THINGS140-02]; assesses=[] -->
 
 **forfex, forficis** — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**forfex** has no sure origin; it is often linked with *forceps*, "tongs", but the link is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

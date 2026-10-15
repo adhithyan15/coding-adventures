@@ -14,7 +14,8 @@ romanization: "bôndhutvô"
 concept_tag: BN-JINIS253-BONDHUTVO
 prerequisites: [BN-C253-rosikota, BN-C253-hasi]
 sounds: []
-roots: []
+roots: [sanskrit-bandhu]
+etymology_hook: "bôndhutvô: Sanskrit bandhu 'kinsman, friend' + -tva '-ness', tatsama parts"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C253-hasi]
 <!-- hl-knowledge: introduces=[BN-LEX-C253-JINIS253-05]; assesses=[] -->
 
 **বন্ধুত্ব** — *bôndhutvô* — "friendship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বন্ধুত্ব** (*bôndhutvô*) is Sanskrit *bandhu*, "kinsman, friend", + the ending *-tva*, "-ness", both taken over whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

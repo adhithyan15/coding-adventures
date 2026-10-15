@@ -13,7 +13,8 @@ gloss: "alone, only"
 concept_tag: LA-QUAL152-SOLUS
 prerequisites: [LA-C152-validus, LA-C152-infirmus]
 sounds: []
-roots: []
+roots: [solus-latin]
+etymology_hook: "sōlus 'alone' — origin uncertain; perhaps kin to sē 'oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C152-infirmus]
 <!-- hl-knowledge: introduces=[LA-LEX-C152-QUAL152-03]; assesses=[] -->
 
 **sōlus, sōla, sōlum** — "alone, only".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sōlus** has no sure origin. It may belong with the reflexive *sē*, "oneself" (EtymDB 2.1 records Proto-Indo-European *\*swe*, "self, alone"); Lewis & Short link it with *sollus*, "whole".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

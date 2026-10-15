@@ -14,7 +14,8 @@ romanization: "capātī"
 concept_tag: TE-VASTUVU262-CAPATI
 prerequisites: [TE-C261-garuku, TE-C262-rotte]
 sounds: []
-roots: []
+roots: [hindustani-chapati]
+etymology_hook: "capātī ← Hindustani capātī 'flatbread'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C262-rotte]
 <!-- hl-knowledge: introduces=[TE-LEX-C262-VASTUVU262-02]; assesses=[] -->
 
 **చపాతీ** — *capātī* — "a chapati".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చపాతీ** (*capātī*) is a loan from Hindustani *capātī*, "flatbread".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

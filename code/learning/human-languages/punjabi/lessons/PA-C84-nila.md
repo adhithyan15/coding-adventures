@@ -14,7 +14,8 @@ romanization: "nīlā"
 concept_tag: PA-ADJ84-NILA
 prerequisites: [PA-C84-pila, PA-C84-lal]
 sounds: []
-roots: []
+roots: [sanskrit-nila]
+etymology_hook: "nīlā ← Sanskrit nīla 'dark blue, dark green, black', a tadbhava (CDIAL 7563)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C84-lal]
 <!-- hl-knowledge: introduces=[PA-LEX-C84-ADJ84-03]; assesses=[] -->
 
 **ਨੀਲਾ** — *nīlā* — "blue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਨੀਲਾ** (*nīlā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nīla*, "dark blue, dark green, black" (CDIAL 7563).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

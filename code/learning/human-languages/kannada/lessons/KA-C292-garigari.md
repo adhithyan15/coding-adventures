@@ -14,7 +14,8 @@ romanization: "garigari"
 concept_tag: KA-GUNA292-GARIGARI
 prerequisites: [KA-C291-asaktikara, KA-C292-nirjana]
 sounds: []
-roots: []
+roots: [dravidian-gara-crisp]
+etymology_hook: "garigari: a doubled sound word; compare gaṟa, the sound of crisp food (DEDR 1386)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C292-nirjana]
 <!-- hl-knowledge: introduces=[KA-LEX-C292-GUNA292-02]; assesses=[] -->
 
 **ಗರಿಗರಿ** — *garigari* — "crisp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗರಿಗರಿ** (*garigari*) is a doubled sound word. DEDR 1386 lists Kannada *gaṟa*, the sound of something very crisp being eaten.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

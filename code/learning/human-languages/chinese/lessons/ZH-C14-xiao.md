@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-SMALL
 gloss: small; little, now read and written
 prerequisites: [ZH-W14-xiao]
 sounds: [tone-3]
-roots: []
-etymology_hook: The heard third-tone word now attaches to one centre stroke and two side marks.
+roots: [middle-chinese-sjewx]
+etymology_hook: "xiǎo 'small': inherited, from Middle Chinese sjewX (Guangyun, Baxter's transcription)"
 duration:
   max_seconds: 145
 requires:
@@ -42,6 +42,9 @@ reviews_of: [ZH-C14-hear-xiao, ZH-W14-xiao]
 > **小** — *xiǎo* — **small; little**
 
 [YOU READ: the character without pinyin, then say it with a low third tone]
+
+**小** is inherited from Middle Chinese *sjewX*, "small" (Guangyun, in Baxter's
+transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAO-01, ZH-SCRIPT-XIAO-01] -->

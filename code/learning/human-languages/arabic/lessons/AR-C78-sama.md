@@ -14,7 +14,8 @@ romanization: "samāʾ"
 concept_tag: AR-NATURE78-SAMA
 prerequisites: [AR-C78-thalj, AR-C78-rih]
 sounds: []
-roots: []
+roots: [s-m-w]
+etymology_hook: "samāʾ: built on the root s-m-w, 'to be high' (Lane); samāʾ is what is high above: the sky"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C78-rih]
 <!-- hl-knowledge: introduces=[AR-LEX-C78-NATURE78-04]; assesses=[] -->
 
 **سماء** — *samāʾ* — "the sky".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سماء** (*samāʾ*) is built on the native Arabic root *s-m-w*, "to be high" (Lane). *Samāʾ* is what is high above: the sky.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

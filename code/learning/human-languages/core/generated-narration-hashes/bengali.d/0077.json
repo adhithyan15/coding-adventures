@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 77,
-  "sourceHash": "fnv1a64:49627872fc570f78",
+  "sourceHash": "fnv1a64:9762545b3790a38c",
   "lessonIds": [
     "BN-C77-mittha",
     "BN-C77-holud",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch77.txt",
   "json": "bengali/narration/ch77.json",
-  "textHash": "fnv1a64:f6096178f5d9321f",
-  "jsonHash": "fnv1a64:6c71f5f0765283c5",
+  "textHash": "fnv1a64:7c7ec462f0711170",
+  "jsonHash": "fnv1a64:90b3a8e3becb9b14",
   "findings": []
 }

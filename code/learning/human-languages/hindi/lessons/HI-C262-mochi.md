@@ -14,7 +14,8 @@ romanization: "mochī"
 concept_tag: HI-THG262-MOCHI
 prerequisites: [HI-C261-sunar, HI-C262-barhai]
 sounds: []
-roots: []
+roots: [indo-aryan-moca]
+etymology_hook: "mochī ← mocika 'cobbler' (CDIAL 10349), from an Iranian word for shoe (Pahlavi mōč)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C262-barhai]
 <!-- hl-knowledge: introduces=[HI-LEX-C262-THG262-02]; assesses=[] -->
 
 **मोची** — *mochī* — "a cobbler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोची** (*mochī*) goes back to Sanskrit *mocika*, "tanner and cobbler", recorded in Buddhist Sanskrit and built on *moca*, "shoe" (CDIAL 10349). CDIAL takes *moca* from an Iranian source, comparing Pahlavi (Middle Persian) *mōč*, "shoe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

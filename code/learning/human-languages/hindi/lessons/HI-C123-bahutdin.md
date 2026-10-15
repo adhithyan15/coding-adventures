@@ -14,7 +14,8 @@ romanization: "bahut din ho gae"
 concept_tag: HI-HAAL-LONG-TIME
 prerequisites: [HI-C123-kyahaal, HI-C123-sabthik]
 sounds: []
-roots: []
+roots: [sanskrit-bahutva, sanskrit-dina]
+etymology_hook: "bahut ← Sanskrit bahutva 'abundance' (CDIAL 9190); din ← dina 'day' (CDIAL 6328)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C123-sabthik]
 become".
 
 **बहुत** and **दिन** are both yours already.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बहुत दिन हो गए** (*bahut din ho gae*) is "many days have become". *bahut* comes from Sanskrit *bahutva*, "abundance" (CDIAL 9190), and *din* from *dina*, "day" (CDIAL 6328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

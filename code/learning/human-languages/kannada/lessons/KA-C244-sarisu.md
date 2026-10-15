@@ -14,7 +14,8 @@ romanization: "sarisu"
 concept_tag: KA-VERB-SARISU
 prerequisites: [KA-C243-nibhayisu, KA-C243-alladisu]
 sounds: []
-roots: []
+roots: [dravidian-cari-slide]
+etymology_hook: "sarisu: native Dravidian, 'make move aside', from sari 'to move aside' (DEDR 2360)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C243-alladisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C244-KRIYE244-01]; assesses=[] -->
 
 **ಸರಿಸು** — *sarisu* — "to move aside, to shift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸರಿಸು** (*sarisu*) is native Dravidian, from *sari*, "to move, go to one side", which DEDR 2360 lists, with *-isu*, "to make"; the entry also has Tamil *cari* and Telugu *jaragu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

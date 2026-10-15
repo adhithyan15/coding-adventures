@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 206,
-  "sourceHash": "fnv1a64:afa7b48f1004b3ae",
+  "sourceHash": "fnv1a64:95a4d06dd424125a",
   "lessonIds": [
     "BN-C206-silindar",
     "BN-C206-kukar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch206.txt",
   "json": "bengali/narration/ch206.json",
-  "textHash": "fnv1a64:73446f359fd0e1c0",
-  "jsonHash": "fnv1a64:2d3a58bdc3c42e0b",
+  "textHash": "fnv1a64:c48734eea94cf8b5",
+  "jsonHash": "fnv1a64:5269bf32d7bad640",
   "findings": []
 }

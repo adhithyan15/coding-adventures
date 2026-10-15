@@ -14,7 +14,8 @@ romanization: "aghlaqa"
 concept_tag: AR-VERB-AGHLAQA
 prerequisites: [AR-C59-wadaa, AR-C59-fataha]
 sounds: []
-roots: []
+roots: [gh-l-q]
+etymology_hook: "aghlaqa: built on the root gh-l-q, 'to shut, to lock' (Lane); aghlaqa is the Form IV verb, 'he shut'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C59-fataha]
 <!-- hl-knowledge: introduces=[AR-LEX-C59-VERBS59-05]; assesses=[] -->
 
 **أغلق** — *aghlaqa* — "to close (he closed)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أغلق** (*aghlaqa*) is built on the native Arabic root *gh-l-q*, "to shut, to lock" (Lane). *Aghlaqa* is the Form IV verb, "he shut".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

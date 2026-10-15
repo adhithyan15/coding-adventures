@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Crocodile, Mosquito, Fly, Bee, Butterfly",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5f5533bd5ae0dc2b",
+  "sourceHash": "fnv1a64:55fe368b0bcd5dfd",
   "lessons": [
     {
       "id": "AR-C136-timsah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c1171a3aec65065",
+      "sourceHash": "fnv1a64:1e6a17037b10135e",
       "notice": null,
       "blocks": [
         {
@@ -67,6 +67,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تمساح (timsāḥ) is listed by Lane under m-s-ḥ as the crocodile. It is usually traced to Coptic msah, the Egyptian word for the crocodile (EtymDB), with an added t-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -77,7 +88,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -126,7 +137,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -157,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:579522a5b9b17c93",
+      "sourceHash": "fnv1a64:3ffaff334d0957ee",
       "notice": null,
       "blocks": [
         {
@@ -190,6 +201,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بعوضة (baʿūḍa) is built on the native Arabic root b-ʿ-ḍ, \"gnats; to cut into parts\" (Lane). Baʿūḍa is one gnat, a mosquito."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -200,7 +222,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -249,7 +271,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -280,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:865a81e5b7039f98",
+      "sourceHash": "fnv1a64:6bcedaf486052802",
       "notice": null,
       "blocks": [
         {
@@ -313,6 +335,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ذبابة (dhubāba) is built on the native Arabic root dh-b-b, \"to drive away\" (Lane), said above all of flies; dhubāba is one fly of dhubāb. Hebrew zevuv, \"fly\", heard in the name Beelzebub, is its cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -323,7 +356,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -372,7 +405,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -403,7 +436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e44fbd35b67b9c40",
+      "sourceHash": "fnv1a64:d3a23b67a81b0aa3",
       "notice": null,
       "blocks": [
         {
@@ -436,6 +469,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نحلة (naḥla) is one bee of naḥl, \"bees\", an old native noun built on n-ḥ-l; Lane's brief article on this root does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -446,7 +490,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -495,7 +539,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -526,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31af126f6d1c4451",
+      "sourceHash": "fnv1a64:2a96a4f8baa9c636",
       "notice": null,
       "blocks": [
         {
@@ -559,6 +603,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فراشة (farāsha) is built on the native Arabic root f-r-sh, \"to spread out\" (Lane). Lane's farāsh are moths that fly into a lamp, and he adds that modern usage applies it to butterflies."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -569,7 +624,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -618,7 +673,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "nyāya"
 concept_tag: KA-KARANA216-NYAYA
 prerequisites: [KA-C216-yasassu, KA-C216-svatantrya]
 sounds: []
-roots: []
+roots: [sanskrit-nyaya]
+etymology_hook: "nyāya ← Sanskrit nyāya 'rule, manner, method', a tatsama (CDIAL 7614)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C216-svatantrya]
 <!-- hl-knowledge: introduces=[KA-LEX-C216-KARANA216-03]; assesses=[] -->
 
 **ನ್ಯಾಯ** — *nyāya* — "justice, fairness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನ್ಯಾಯ** (*nyāya*) is Sanskrit *nyāya*, "rule, manner, method", taken over whole as a learned loan, a tatsama (CDIAL 7614). The rule became what is fair.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

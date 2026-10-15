@@ -14,7 +14,8 @@ romanization: "vakil"
 concept_tag: FA-KAR250-VAKIL
 prerequisites: [FA-C250-monshi, FA-C250-mohandes]
 sounds: []
-roots: []
+roots: [arabic-wakil]
+etymology_hook: "vakil ← Arabic wakīl 'agent, one entrusted', root w-k-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C250-mohandes]
 <!-- hl-knowledge: introduces=[FA-LEX-C250-KAR250-03]; assesses=[] -->
 
 **وکیل** — *vakil* — "a lawyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vakil* is borrowed from Arabic *wakīl*, "agent, one entrusted". Its Arabic root is *w-k-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

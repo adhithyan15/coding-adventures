@@ -14,7 +14,8 @@ romanization: "thakan"
 concept_tag: UR-SEHAT243-THAKAN
 prerequisites: [UR-C242-khatm-karna, UR-C242-jari-rakhna]
 sounds: []
-roots: []
+roots: [indo-aryan-sthakk]
+etymology_hook: "thakan: from thaknā 'to become weary', listed under a reconstructed *sthakk 'stop, halt' (CDIAL 13737)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C242-jari-rakhna]
 <!-- hl-knowledge: introduces=[UR-LEX-C243-SEHAT243-01]; assesses=[] -->
 
 **تھکن** — *thakan* — "tiredness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تھکن** (*thakan*) is the noun of *thaknā*, "to get tired", which CDIAL lists under a reconstructed *\*sthakk*, "stop, halt" (CDIAL 13737).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

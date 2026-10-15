@@ -11,8 +11,8 @@ gloss: clothes or cloth
 concept_tag: MW-SHOPPING-CLOTHES-WRITTEN
 prerequisites: [MW-W15-nukta]
 sounds: [retroflex-flap, long-aa]
-roots: []
-etymology_hook: Familiar क, प, and ा now surround the new dotted consonant.
+roots: [sanskrit-karpata]
+etymology_hook: "kapṛā ← Sanskrit karpaṭa 'rag', which CDIAL takes from Austroasiatic (CDIAL 2871, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -43,6 +43,11 @@ reviews_of: [MW-C15-hear-kapda, MW-W15-nukta]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KAPDA-01, MW-SCRIPT-KAPDA-01] -->
 
 > **कप** + **ड़ा** → **कपड़ा** — *kapṛā* — clothes
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कपड़ा** (*kapṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karpaṭa*, "patched garment, rag". CDIAL lists Marwari *kapṛo* under it (CDIAL 2871). CDIAL takes the Sanskrit word itself from an Austroasiatic language.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KAPDA-01] -->

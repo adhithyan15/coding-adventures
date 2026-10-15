@@ -14,7 +14,8 @@ romanization: "tāḻŭ"
 concept_tag: ML-VASTU294-TALU
 prerequisites: [ML-C294-kalcappatu, ML-C294-tippetti]
 sounds: []
-roots: []
+roots: [dravidian-tazh-bolt]
+etymology_hook: "tāḻŭ: native Dravidian, one word with Tamil tāḻ and Kannada tāḻ (DEDR 3179)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C294-tippetti]
 <!-- hl-knowledge: introduces=[ML-LEX-C294-VASTU294-03]; assesses=[] -->
 
 **താഴ്** — *tāḻŭ* — "a padlock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**താഴ്** (*tāḻŭ*) is native Dravidian, one word with Tamil *tāḻ* and Kannada *tāḻ* (DEDR 3179). DEDR 3179 compares Sanskrit *tāḍa(ka)*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "konugōlu"
 concept_tag: TE-PANI273-KONUGOLU
 prerequisites: [TE-C273-taggimpu, TE-C273-sarukulu]
 sounds: []
-roots: []
+roots: [dravidian-kol-take]
+etymology_hook: "konugōlu: built on native konu 'to buy' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C273-sarukulu]
 <!-- hl-knowledge: introduces=[TE-LEX-C273-PANI273-05]; assesses=[] -->
 
 **కొనుగోలు** — *konugōlu* — "a purchase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొనుగోలు** (*konugōlu*) is built on native *konu*, "to buy, take" (DEDR 2151), one word with Tamil *koḷ*, "to receive, buy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

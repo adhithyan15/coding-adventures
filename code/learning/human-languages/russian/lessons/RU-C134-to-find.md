@@ -14,7 +14,8 @@ romanization: "nakhodít"
 concept_tag: RU-VERB-TO-FIND
 prerequisites: [RU-C134-to-go-for-a-walk, RU-C134-to-tidy-up]
 sounds: []
-roots: []
+roots: [slavic-khoditi]
+etymology_hook: "находить is на- 'onto' + ходить 'to walk': to come upon"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C134-to-tidy-up]
 <!-- hl-knowledge: introduces=[RU-LEX-C134-ACT134-04]; assesses=[] -->
 
 **находить** (*nakhodít*) — "to find".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**находить** is *на-*, "onto", with *ходить*, "to walk": to find is to come upon a thing. Vasmer ties *ход* to the Indo-European root *\*sed-*, "to sit", its *х* grown from an *s* after prefixes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tetsudau"
 concept_tag: JA-VERB-TETSUDAU
 prerequisites: [JA-C91-shimau, JA-C91-hirou]
 sounds: []
-roots: []
+roots: [japanese-te-hand, japanese-tsutau]
+etymology_hook: "tetsudau: native te 'hand' + tsutau 'to pass along' (voiced), as usually explained"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C91-hirou]
 <!-- hl-knowledge: introduces=[JA-LEX-C91-ACT91-04]; assesses=[] -->
 
 **てつだう** — *tetsudau* — "to help".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**てつだう** (*tetsudau*) is native: *te*, "hand", with *tsudau*, usually explained as *tsutau*, "to go along, to pass on", voiced (JMdict, KANJIDIC2). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

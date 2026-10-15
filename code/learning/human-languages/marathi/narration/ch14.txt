@@ -55,6 +55,9 @@ You'll want to know: जाणे.
 Strip the infinitive ending -णे and the stem is जा- jā-. On that stem Marathi builds the everyday present: जातो (jāto) and जाते (jāte).
 Both mean "I go." Neither is more correct than the other. Which one you may say is decided by something the English sentence never mentions.
 
+The word, taken apart.
+जाणे (jāṇe) is inherited from Sanskrit yāti, "goes" (CDIAL 10452).
+
 Sounds you'll need: जा, णे.
 ज is ja, and the upright stroke after it is the long ā — together जा jā. णे you met last lesson: retroflex ण with the -e stroke. Two syllables, jā-ṇe, with the tongue curled back for that second one.
 
@@ -97,10 +100,10 @@ You met yeto in Chapter 4 as a farewell — Marathi takes its leave by saying "I
 Sounds you'll need: ये, णे.
 य is ya, a soft English y as in yes. Add the -e stroke above and you have ये ye — the same stroke you have been putting on णे and on the last syllable of आहे. Two syllables: ye-ṇe.
 
-The word, taken apart — one root, two directions.
+The word, taken apart — one prefix, two directions.
 Sanskrit had a verb of travelling, yā-, whose present was याति yāti "goes, travels." Middle Indo-Aryan turned that initial y- into a j-, giving Prakrit jāi — and that is Marathi जाणे (jāṇe).
-Now put a prefix on it. Sanskrit आ- ā- means "toward, hither," and आयाति āyāti is "travels toward here" — that is, comes. Worn down through the same centuries, āyāti is Marathi येणे (yeṇe).
-So going and coming are not two verbs in this family. They are one verb of travelling, and the only difference is a prefix meaning "this way." English keeps a faint echo of the same trick in go against in-coming, but it needs two separate roots to do what Sanskrit did with one.
+Sanskrit had a second verb of going, eti, on the root i. Put a prefix on it: आ- ā- means "toward, hither," and ā- with eti is aiti, "comes near" — that is, comes. CDIAL lists Marathi येणे (yeṇe) under aiti (CDIAL 2534).
+So coming is going with a prefix meaning "this way." जाणे (jāṇe) and येणे (yeṇe) grew from two different verbs of going, but येणे (yeṇe) still carries the prefix that turned one direction into the other.
 
 Guided Practice.
 [pause 1 second]
@@ -108,12 +111,12 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "I come" in your own gender — "mī yeto" or "mī yete"]
 [pause 8 seconds for the answer]
-[your turn — say: the derivation — "yāti … āyāti … yeṇe"]
+[your turn — say: the derivation — "ā- + eti … aiti … yeṇe"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the stem of yeṇe? (ये-, ye-.) Which Sanskrit root do jāṇe and yeṇe share? (yā-, to travel.) What single piece turns going into coming? (The prefix आ- ā-, "toward here.") Next: an infinitive that is also a noun, and the gender Hindi does not have.
+What is the stem of yeṇe? (ये-, ye-.) Which Sanskrit verb does CDIAL list yeṇe under? (aiti, "comes near".) What single piece turns going into coming? (The prefix आ- ā-, "toward here.") Next: an infinitive that is also a noun, and the gender Hindi does not have.
 
 
 Lesson 4 of 6.

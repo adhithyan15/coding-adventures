@@ -14,7 +14,8 @@ romanization: "sīṛhī"
 concept_tag: HI-NOUN-STAIRS
 prerequisites: [HI-C58-window, HI-C56-shop, HI-C57-fragrance]
 sounds: []
-roots: []
+roots: [indo-aryan-shridhi]
+etymology_hook: "sīṛhī ← *śrīḍhi 'resting-place, ladder', a reconstructed form; a tadbhava (CDIAL 12709)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C58-window]
 सीढ़ी is traced to a Sanskrit word for a flight of steps, but the exact form behind it is disputed and the sources differ on which one it was.
 
 The word does not distinguish a staircase from a ladder. Both are सीढ़ी, because what the word names is the going up, not the thing's construction.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सीढ़ी** (*sīṛhī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*śrīḍhi*, "resting-place, ladder", a form CDIAL reconstructs from its descendants (CDIAL 12709).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

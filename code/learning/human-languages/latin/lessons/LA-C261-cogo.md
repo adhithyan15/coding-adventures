@@ -13,7 +13,8 @@ gloss: "to force; to collect"
 concept_tag: LA-VERB-COGO
 prerequisites: [LA-C261-gigno, LA-C261-iubeo]
 sounds: []
-roots: []
+roots: [cogere-latin, agere-latin]
+etymology_hook: "cōgō 'to force, to collect' — co- 'together' + agō 'to drive'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C261-iubeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C261-ACT261-03]; assesses=[] -->
 
 **cōgō, cōgere** — "to force; to collect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cōgō** is contracted from *co-*, "together", and *agō*, "to drive" (Lewis & Short): to drive together, to compel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

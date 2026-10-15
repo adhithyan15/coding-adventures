@@ -14,7 +14,8 @@ romanization: "śākhā"
 concept_tag: SA-THINGS111-SAKHA
 prerequisites: [SA-C111-vatya, SA-C111-niharah]
 sounds: []
-roots: []
+roots: [sanskrit-shakha]
+etymology_hook: "śākhā 'branch' is inherited from Indo-European (EtymDB); Lithuanian šakà and Persian shākh 'branch' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C111-niharah]
 <!-- hl-knowledge: introduces=[SA-LEX-C111-THINGS111-03]; assesses=[] -->
 
 **शाखा** — *śākhā* — "a branch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śākhā* "a branch" is inherited from Indo-European (EtymDB). Its cousins include Lithuanian *šakà* "branch" and Persian *shākh* "branch, horn" (EtymDB), and Pali kept it as *sākhā* (CDIAL 12376).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

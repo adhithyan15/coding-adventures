@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 252,
-  "sourceHash": "fnv1a64:edce5fea95eaffbc",
+  "sourceHash": "fnv1a64:9ea3279c14ff3f07",
   "lessonIds": [
     "TE-C252-ugadi",
     "TE-C252-dipavali",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch252.txt",
   "json": "telugu/narration/ch252.json",
-  "textHash": "fnv1a64:0a35d40d3acf6cda",
-  "jsonHash": "fnv1a64:9d59bc50d6965930",
+  "textHash": "fnv1a64:b1acab49ddee055d",
+  "jsonHash": "fnv1a64:826d4362527d85fe",
   "findings": []
 }

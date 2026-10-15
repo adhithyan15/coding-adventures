@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for soap, then the Gujarati for a towel.
 You'll want to know: ગાદલું.
 ગાદલું (gādlũ) — "a mattress".
 
+The word, taken apart.
+ગાદલું (gādlũ) belongs with gādī, "pad, raised seat", which CDIAL lists under a reconstructed garda, "seat" (CDIAL 4053). CDIAL thinks the word probably came from Dravidian, after T. Burrow, and does not list ગાદલું (gādlũ) itself.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a towel, then the Gujarati for a mattre
 
 You'll want to know: ચાદર.
 ચાદર (cādar) — "a bedsheet".
+
+The word, taken apart.
+ચાદર (cādar) is a loan, usually traced to Persian chādar, "sheet, veil".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a mattress, then the Gujarati for a bed
 You'll want to know: ધાબળો.
 ધાબળો (dhābaḷo) — "a blanket".
 
+The word, taken apart.
+The origin of ધાબળો (dhābaḷo) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a bedsheet, then the Gujarati for a bla
 You'll want to know: પગથિયું.
 પગથિયું (pagthiyũ) — "a step, a stair".
 
+The word, taken apart.
+પગથિયું (pagthiyũ) begins with pag, "foot", which CDIAL lists under Sanskrit padga, "afoot" (CDIAL 7766). CDIAL has no entry for the whole word, so the rest of its history is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a blanket, then the Gujarati for a step
 
 You'll want to know: ચૂલો.
 ચૂલો (cūlo) — "a stove".
+
+The word, taken apart.
+ચૂલો (cūlo) is a tadbhava of Sanskrit cullī, "fireplace" (CDIAL 4879). CDIAL reports that the Sanskrit word itself came from Dravidian.
 
 What you've built.
 One more word for this chapter.

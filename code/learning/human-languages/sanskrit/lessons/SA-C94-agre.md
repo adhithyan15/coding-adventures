@@ -14,7 +14,8 @@ romanization: "agre"
 concept_tag: SA-LOC94-AGRE
 prerequisites: [SA-C94-upari, SA-C94-adhah]
 sounds: []
-roots: []
+roots: [sanskrit-agra]
+etymology_hook: "agre, 'at the front', locative of agra 'front, tip', which MW refers to √aṅg; Hindi āge (CDIAL 68)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C94-adhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C94-LOC94-04]; assesses=[] -->
 
 **अग्रे** — *agre* — "in front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*agre* is the locative, "at the front", of *agra* "front, tip, top" (MW). MW refers *agra* to the root √aṅg, following the grammarians. The word lives on as Hindi *āge* "ahead, before" (CDIAL 68).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

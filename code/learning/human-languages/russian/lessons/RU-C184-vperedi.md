@@ -14,7 +14,8 @@ romanization: "vperedí"
 concept_tag: RU-MESTO184-VPEREDI
 prerequisites: [RU-C183-shosse, RU-C183-port]
 sounds: []
-roots: []
+roots: [slavic-perdu]
+etymology_hook: "впереди is в 'in' + переди, from Old Russian передь 'the front part'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C183-port]
 <!-- hl-knowledge: introduces=[RU-LEX-C184-MESTO184-01]; assesses=[] -->
 
 **впереди** (*vperedí*) — "in front, ahead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**впереди** is *в*, "in", with *переди*, from Old Russian *передь*, "the front part" (Vasmer): in front.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

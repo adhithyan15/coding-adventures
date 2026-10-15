@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 187,
-  "sourceHash": "fnv1a64:3fb35bfad0581160",
+  "sourceHash": "fnv1a64:68bfdaafcba8541d",
   "lessonIds": [
     "MR-C187-vijar",
     "MR-C187-moje",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch187.txt",
   "json": "marathi/narration/ch187.json",
-  "textHash": "fnv1a64:7d785689e9f608d4",
-  "jsonHash": "fnv1a64:082dd4f77b5ae6ea",
+  "textHash": "fnv1a64:e2aa7f5f17c182a5",
+  "jsonHash": "fnv1a64:0a40e3a967fd5f52",
   "findings": []
 }

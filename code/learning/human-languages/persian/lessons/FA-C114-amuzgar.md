@@ -14,7 +14,8 @@ romanization: "âmuzgâr"
 concept_tag: FA-THINGS114-AMUZGAR
 prerequisites: [FA-C114-kelas, FA-C114-emtehan]
 sounds: []
-roots: []
+roots: [persian-amukhtan]
+etymology_hook: "âmuzgâr ← Middle Persian hammōzgār (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C114-emtehan]
 <!-- hl-knowledge: introduces=[FA-LEX-C114-THINGS114-05]; assesses=[] -->
 
 **آموزگار** — *âmuzgâr* — "a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âmuzgâr* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *hammōzgār*, "teacher" (EtymDB). It belongs with *âmukhtan*, "to learn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

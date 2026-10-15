@@ -14,7 +14,8 @@ romanization: "nâkhongir"
 concept_tag: FA-CHIZ213-NAKHONGIR
 prerequisites: [FA-C212-kuze, FA-C212-estekan]
 sounds: []
-roots: []
+roots: [persian-nakhun]
+etymology_hook: "nâkhongir: Persian nâkhon 'nail' + gir 'taking' (gereftan); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C212-estekan]
 <!-- hl-knowledge: introduces=[FA-LEX-C213-CHIZ213-01]; assesses=[] -->
 
 **ناخنگیر** — *nâkhongir* — "nail clippers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nâkhongir* is *nâkhon*, "nail", with *-gir*, "taking" (from *gereftan*, "to take"): the nail-taker. Both are native; *nâkhon* is usually traced to Middle Persian *nāxun*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

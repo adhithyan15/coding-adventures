@@ -11,7 +11,8 @@ romanization: "viśrānti"
 concept_tag: TE-WELLBEING-REST
 prerequisites: [TE-C84-tiredness, TE-C84-thirst]
 sounds: []
-roots: []
+roots: [sanskrit-vishranti]
+etymology_hook: "viśrānti ← Sanskrit viśrānti 'rest', a tatsama; CDIAL 11955 lists viśrānta 'rested'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C84-thirst]
 
 **విశ్రాంతి తీసుకోండి** — "please take some rest", what you say to someone with a fever or a
 long day behind them. The polite ending **-అండి** is the one you already put on *raṇḍi*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**విశ్రాంతి** (*viśrānti*) is Sanskrit *viśrānti*, "rest, repose", taken over whole as a learned loan, a tatsama. CDIAL 11955 lists the related *viśrānta*, "rested".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

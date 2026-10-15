@@ -47,7 +47,7 @@ reviews_of: [TA-C247-anil]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**புழு** (*puḻu*) is native Dravidian. DEDR 4312 lists Malayalam *puḻu*, "worm, maggot" and Kannada *puḻu*.
+**புழு** (*puḻu*) is native Dravidian. DEDR 4312 lists Malayalam *puḻu*, "worm, maggot" and Kannada *puḻu*. The entry compares Sanskrit *pīlu*, "worm" (CDIAL 8240).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

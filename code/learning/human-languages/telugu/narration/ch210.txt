@@ -12,6 +12,9 @@ Before the new one: say the Telugu for medical treatment, then the Telugu for th
 You'll want to know: అనుమానం.
 అనుమానం — anumānaṁ — "doubt, suspicion".
 
+The word, taken apart.
+అనుమానం (anumānaṁ) is Sanskrit anumāna, "inference, thought", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 328). The sense "doubt, suspicion" is the one Telugu gives it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for the forehead, then the Telugu for doubt.
 
 You'll want to know: తృప్తి.
 తృప్తి — tṛpti — "contentment, satisfaction".
+
+The word, taken apart.
+తృప్తి (tṛpti) is Sanskrit tṛpti, "satisfaction", taken over whole as a learned loan, a tatsama (CDIAL 5931).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for doubt, then the Telugu for contentment.
 You'll want to know: నిరాశ.
 నిరాశ — nirāśa — "disappointment".
 
+The word, taken apart.
+నిరాశ (nirāśa) is Sanskrit nirāśa, "hopeless", taken over whole as a learned loan, a tatsama (CDIAL 7278). Telugu uses it as a noun, "disappointment".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for contentment, then the Telugu for disappoi
 You'll want to know: విసుగు.
 విసుగు — visugu — "boredom, weariness of something".
 
+The word, taken apart.
+విసుగు (visugu) is native Dravidian. DEDR 5386 lists visugu, "to be weary, disgusted; weariness", with Tamil vicukku, "displeasure".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for disappointment, then the Telugu for bored
 
 You'll want to know: బెంగ.
 బెంగ — beṅga — "pining, homesickness".
+
+The word, taken apart.
+The origin of బెంగ (beṅga) is uncertain. DEDR and CDIAL list no word of this shape meaning "pining, longing".
 
 What you've built.
 One more word for this chapter.

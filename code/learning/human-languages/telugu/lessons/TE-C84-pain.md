@@ -11,7 +11,8 @@ romanization: "noppi"
 concept_tag: TE-WELLBEING-PAIN
 prerequisites: [TE-C63-health, TE-C84-fever]
 sounds: []
-roots: []
+roots: [dravidian-noo-pain]
+etymology_hook: "noppi: native Dravidian, one word with Tamil nō and Kannada nō (DEDR 3793)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C84-fever]
 Put a body part in front of it and you have the complaint: **తల నొప్పి** (*tala noppi*), a
 headache, and **కడుపు నొప్పి** (*kaḍupu noppi*), a stomach ache. Both body words are ones you
 already own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నొప్పి** (*noppi*) is native Dravidian, one word with Tamil *nō* and Kannada *nō* (DEDR 3793). DEDR lists Telugu *noppi*, "pain, ache".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

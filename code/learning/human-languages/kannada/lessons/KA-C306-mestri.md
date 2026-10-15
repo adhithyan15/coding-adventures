@@ -14,7 +14,8 @@ romanization: "mēstri"
 concept_tag: KA-KELASA306-MESTRI
 prerequisites: [KA-C306-moci, KA-C306-kumbara]
 sounds: []
-roots: []
+roots: [portuguese-mestre]
+etymology_hook: "mēstri: usually traced to Portuguese mestre 'master'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C306-kumbara]
 <!-- hl-knowledge: introduces=[KA-LEX-C306-KELASA306-03]; assesses=[] -->
 
 **ಮೇಸ್ತ್ರಿ** — *mēstri* — "a mason, a site foreman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೇಸ್ತ್ರಿ** (*mēstri*) is usually traced to Portuguese *mestre*, "master"; DEDR and CDIAL do not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

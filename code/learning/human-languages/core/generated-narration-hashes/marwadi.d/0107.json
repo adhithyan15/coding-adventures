@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 107,
-  "sourceHash": "fnv1a64:6f8ccd7e16d93545",
+  "sourceHash": "fnv1a64:dfff89493c5c7240",
   "lessonIds": [
     "MW-C107-bunno",
     "MW-C107-rangno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch107.txt",
   "json": "marwadi/narration/ch107.json",
-  "textHash": "fnv1a64:71324adfdcd518e9",
-  "jsonHash": "fnv1a64:1dd262013a52a52a",
+  "textHash": "fnv1a64:d87031ea3f1c5282",
+  "jsonHash": "fnv1a64:71a67fbb01a9ee4d",
   "findings": []
 }

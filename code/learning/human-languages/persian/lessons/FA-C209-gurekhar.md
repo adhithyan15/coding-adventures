@@ -14,7 +14,8 @@ romanization: "gurekhar"
 concept_tag: FA-CHIZ209-GUREKHAR
 prerequisites: [FA-C209-bolbol, FA-C209-tamsah]
 sounds: []
-roots: []
+roots: [persian-khar]
+etymology_hook: "gurekhar: Persian gur 'wild ass' + khar 'donkey'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C209-tamsah]
 <!-- hl-knowledge: introduces=[FA-LEX-C209-CHIZ209-03]; assesses=[] -->
 
 **گورخر** — *gurekhar* — "a zebra".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gurekhar* is *gur*, "wild ass, onager", with *khar*, "donkey": the striped wild donkey. Both are native Persian; *khar* is usually traced to Middle Persian *xar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

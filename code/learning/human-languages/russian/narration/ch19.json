@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Why, Because, When",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:63bbab1f5a996a87",
+  "sourceHash": "fnv1a64:c9ed052318f2076e",
   "lessons": [
     {
       "id": "RU-C19-pochemu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5caeeca701035f09",
+      "sourceHash": "fnv1a64:51482c35545bc077",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the question family you opened in the last chapter has produced its third member: как, что, and now почему (pachemú). All three are the same ancient stem wearing different endings, and there are more still to come."
+              "text": "So the question family you opened in the last chapter has produced its third member: как, что, and now почему (pachemú). All three are the same ancient stem wearing different endings, and there are more still to come. Vasmer traces что to Proto-Slavic čĭ, \"what\", (zapyatáya) with a pointing to on the end."
             },
             {
               "kind": "speech",
@@ -193,7 +193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3109e62d04d040ee",
+      "sourceHash": "fnv1a64:c2d933381d23afea",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
             },
             {
               "kind": "speech",
-              "text": "Russian answers why by taking the same word, swapping the question-stem for the pointing-stem, and adding что to hang the reason on. почему (pachemú) asks; по тому points at the reason; что carries the sentence that names it."
+              "text": "Russian answers why by taking the same word, swapping the question-stem for the pointing-stem, and adding что to hang the reason on. почему (pachemú) asks; по тому points at the reason; что carries the sentence that names it. Both stems are inherited from Proto-Slavic: tŭ, \"that\", (zapyatáya) the stem of то, and čĭ-, (zapyatáya) the stem of что, \"what\"."
             }
           ]
         },
@@ -363,7 +363,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:af3a1d76fea785fe",
+      "sourceHash": "fnv1a64:3308e569bfa15562",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -479,7 +479,7 @@
             },
             {
               "kind": "speech",
-              "text": "Learning one question word in Russian is nearly learning the set."
+              "text": "Learning one question word in Russian is nearly learning the set. Vasmer reconstructs an older koda and sets it beside Lithuanian kadà and Sanskrit kadā, both \"when\"."
             }
           ]
         },

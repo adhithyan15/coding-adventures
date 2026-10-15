@@ -14,7 +14,8 @@ romanization: "vstavát"
 concept_tag: RU-VERB-TO-GET-UP
 prerequisites: [RU-C132-to-get-dressed, RU-C132-to-wash]
 sounds: []
-roots: []
+roots: [pie-steh2]
+etymology_hook: "вставать is вс- 'up' + ставать, from стать 'to stand'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C132-to-wash]
 <!-- hl-knowledge: introduces=[RU-LEX-C132-ACT132-03]; assesses=[] -->
 
 **вставать** (*vstavát*) — "to get up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вставать** is *вс-*, "up", with *-ставать*, from *стать*, "to stand", a cousin of Latin *stāre*, "to stand" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "akhbār"
 concept_tag: HI-THG190-AKHBAR
 prerequisites: [HI-C190-madad, HI-C190-khabar]
 sounds: []
-roots: []
+roots: [arabic-akhbar]
+etymology_hook: "akhbār ← Arabic akhbār 'reports, news', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C190-khabar]
 <!-- hl-knowledge: introduces=[HI-LEX-C190-THG190-03]; assesses=[] -->
 
 **अख़बार** — *akhbār* — "a newspaper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अख़बार** (*akhbār*) is a loan from Arabic *akhbār*, "reports, news", which reached Hindi through Persian. Its Arabic root is *kh-b-r* (Lane). It is the plural of *khabar*, "news"; Hindi uses it for the newspaper that carries them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

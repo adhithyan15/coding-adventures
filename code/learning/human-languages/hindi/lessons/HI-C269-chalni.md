@@ -14,7 +14,8 @@ romanization: "chalnī"
 concept_tag: HI-THG269-CHALNI
 prerequisites: [HI-C269-karahi, HI-C269-belan]
 sounds: []
-roots: []
+roots: [sanskrit-calana]
+etymology_hook: "chalnī: CDIAL lists cālnī 'sieve' under Sanskrit cālanī 'strainer, sieve' (CDIAL 4771)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C269-belan]
 <!-- hl-knowledge: introduces=[HI-LEX-C269-THG269-05]; assesses=[] -->
 
 **छलनी** — *chalnī* — "a sieve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छलनी** (*chalnī*) belongs with Hindi *cālnī*, "sieve", which CDIAL lists under Sanskrit *cālanī*, "strainer, sieve" (CDIAL 4771).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

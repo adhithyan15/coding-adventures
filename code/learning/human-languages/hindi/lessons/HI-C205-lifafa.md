@@ -14,7 +14,8 @@ romanization: "lifāfā"
 concept_tag: HI-THG205-LIFAFA
 prerequisites: [HI-C204-phon, HI-C205-patra]
 sounds: []
-roots: []
+roots: [arabic-lifafa]
+etymology_hook: "lifāfā ← Arabic lifāfa 'a wrapper', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C205-patra]
 <!-- hl-knowledge: introduces=[HI-LEX-C205-THG205-02]; assesses=[] -->
 
 **लिफ़ाफ़ा** — *lifāfā* — "an envelope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लिफ़ाफ़ा** (*lifāfā*) is a loan from Arabic *lifāfa*, "a wrapper", which reached Hindi through Persian. Its Arabic root is *l-f-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

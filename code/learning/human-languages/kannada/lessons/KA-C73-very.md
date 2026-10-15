@@ -11,7 +11,8 @@ romanization: "tumbā"
 concept_tag: KA-ADV-VERY
 prerequisites: [KA-C72-prefer, KA-C42-adjective-system, KA-C58-more, KA-C57-neck, KA-C07-aaru, KA-C07-aidu, KA-C07-naalku, KA-C70-because, KA-C71-another]
 sounds: []
-roots: []
+roots: [dravidian-tumbu-fill]
+etymology_hook: "tumbā: usually explained as from tumbu 'to become full' (DEDR 3331): 'fully'"
 duration:
   max_seconds: 210
 requires:
@@ -51,6 +52,11 @@ way every Kannada adjective does.
 
 It also works on its own as an answer, meaning "a lot", and it is the everyday
 way to say thank you warmly: ತುಂಬಾ ಧನ್ಯವಾದ.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತುಂಬಾ** (*tumbā*) is native Dravidian, usually explained as a form of *tumbu*, "to become full", which DEDR 3331 lists, along with Irula *thumba*, "much". "Fully" became "very". DEDR does not list *tumbā* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

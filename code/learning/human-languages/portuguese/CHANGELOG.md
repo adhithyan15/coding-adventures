@@ -1,5 +1,11 @@
 # Changelog
 
+## Fixed — every taken-apart block now says where its word comes from
+
+Five Portuguese word lessons had a "taken apart" block that split the word into parts and never said where it came from (human-language-data `hasEmptyEtymologyBlock`, HL24 §9.4). Each block now says it, from EtymDB 2.1 (Fourrier & Sagot 2020, CC BY-SA 4.0), read locally; no source text is copied. Empty etymology blocks 5 → 0.
+
+- **New origin sentences (5).** PT-C01-bom-dia (*bonus*, *diēs*), PT-C27-quarto (*quartus*, from *quattuor*), PT-C28-setimo (*septimus*, from *septem*), PT-C167-carrinho (*carro* ← Latin *carrus*, itself borrowed from Gaulish) and PT-C218-pequeno-almoco (both words through Old Portuguese; *almoço* from *almorço*, and *pequeno* of uncertain origin before that).
+
 ## Added — every word lesson says where its word comes from
 
 HL24 §9 asks every lesson that introduces a word to say where it comes from, from a cited source, or to say plainly that the origin is uncertain. All 1,153 Portuguese lessons that lacked an `etymology_hook`, visible etymology, or both now have both (human-language-data: Portuguese word lessons without a hook 1142 → 0, without visible etymology 1141 → 0).

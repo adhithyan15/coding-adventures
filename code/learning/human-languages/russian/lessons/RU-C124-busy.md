@@ -14,7 +14,8 @@ romanization: "zányatyy"
 concept_tag: RU-QUAL124-BUSY
 prerequisites: [RU-C124-grey, RU-C124-orange]
 sounds: []
-roots: []
+roots: [pie-hem]
+etymology_hook: "занятый is 'taken up': за- + нять, from an old verb 'to take'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C124-orange]
 <!-- hl-knowledge: introduces=[RU-LEX-C124-QUAL124-05]; assesses=[] -->
 
 **занятый** (*zányatyy*) — "busy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**занятый** is "taken up": *за-* with *-нятый*, from *-нять*, the old Slavic verb *\*jęti*, "to take", as in *взять*, "to take", and *понимать*, "to understand" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

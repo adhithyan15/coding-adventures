@@ -1,0 +1,11 @@
+{
+  "id": "SA-C267-complete-school-plan",
+  "pathSegment": "SA-PATH-267-SCHOOL267",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-267-SCHOOL267",
+      "order": 3
+    }
+  ]
+}

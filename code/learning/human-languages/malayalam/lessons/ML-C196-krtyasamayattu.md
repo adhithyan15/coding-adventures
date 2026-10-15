@@ -14,7 +14,8 @@ romanization: "kṛtyasamayattŭ"
 concept_tag: ML-SAMAYAM196-KRTYASAMAYATTU
 prerequisites: [ML-C196-ippolum, ML-C196-otuvil]
 sounds: []
-roots: []
+roots: [sanskrit-krtya, sanskrit-samaya]
+etymology_hook: "kṛtyasamayattŭ: Sanskrit kṛtya 'proper' (CDIAL 3428) + samaya 'time' (CDIAL 13185) + the place ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C196-otuvil]
 <!-- hl-knowledge: introduces=[ML-LEX-C196-SAMAYAM196-04]; assesses=[] -->
 
 **കൃത്യസമയത്ത്** — *kṛtyasamayattŭ* — "on time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൃത്യസമയത്ത്** (*kṛtyasamayattŭ*) is built from Sanskrit *kṛtya*, "proper to be done" (CDIAL 3428), and *samaya*, "time" (CDIAL 13185), with the Malayalam place ending: "at the proper time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

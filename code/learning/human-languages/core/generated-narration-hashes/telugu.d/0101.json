@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 101,
-  "sourceHash": "fnv1a64:465753beac510426",
+  "sourceHash": "fnv1a64:441e827c5e8183d0",
   "lessonIds": [
     "TE-C101-paina",
     "TE-C101-kinda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch101.txt",
   "json": "telugu/narration/ch101.json",
-  "textHash": "fnv1a64:47821409fd10d57e",
-  "jsonHash": "fnv1a64:a2d4f634aaba4df3",
+  "textHash": "fnv1a64:dbc77fffaf1bc43b",
+  "jsonHash": "fnv1a64:070412182e7bd690",
   "findings": []
 }

@@ -197,7 +197,7 @@ You'll want to know: விரும்பு.
 An ordinary verb with an ordinary subject: நான் விரும்புகிறேன் (nāṉ virumbugiṟēṉ), "I want." Weak; its noun is விருப்பம் (viruppam), a wish. Not a synonym: பிடிக்கும் is taste, which you had no say in; விரும்பு is choice.
 
 The word, taken apart - a catch, and a Kannada h.
-The grasp-verb is old and shared: Malayalam പിടിക്കുക (piṭikkuka) and Telugu పట్టు (paṭṭu) both mean "catch, hold." Kannada's is ಹಿಡಿ (hiḍi) — not a different word: Old Kannada wrote piḍi, and the p becomes h shift behind pattu / hattu and pāl / hālu turned it into hiḍi. A third instance of a rule you have already met.
+The grasp-verb is native and shared (DEDR 4148): Malayalam പിടിക്കുക (piṭikkuka) and Telugu పట్టు (paṭṭu) both mean "catch, hold." Kannada's is ಹಿಡಿ (hiḍi) — not a different word: Old Kannada wrote piḍi, and the p becomes h shift behind pattu / hattu and pāl / hālu turned it into hiḍi. A third instance of a rule you know.
 The wider point: Spanish says me gusta, Italian mi piace, Hindi mujhe pasand hai — each putting the liker in the dative and the liked thing in the subject, exactly as enakkut tamiḻ piḍikkum does, and none of them related to Tamil. Two unrelated families reached the same design independently.
 
 Guided Practice.

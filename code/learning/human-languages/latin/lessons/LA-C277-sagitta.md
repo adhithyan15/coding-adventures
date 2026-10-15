@@ -13,7 +13,8 @@ gloss: "an arrow"
 concept_tag: LA-RES277-SAGITTA
 prerequisites: [LA-C277-hasta, LA-C277-arcus]
 sounds: []
-roots: []
+roots: [sagitta-latin]
+etymology_hook: "sagitta 'arrow' — origin unknown; perhaps a Mediterranean loan"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C277-arcus]
 <!-- hl-knowledge: introduces=[LA-LEX-C277-RES277-04]; assesses=[] -->
 
 **sagitta, sagittae** — "an arrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sagitta** has no sure origin; it may be a loan from a lost Mediterranean language, perhaps through Etruscan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

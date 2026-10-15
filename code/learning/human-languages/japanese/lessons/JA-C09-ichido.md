@@ -11,8 +11,8 @@ gloss: one time; once
 concept_tag: JA-REPEAT-ONCE
 prerequisites: [JA-W09-mo]
 sounds: [mora, dakuten]
-roots: []
-etymology_hook: Ichi means one and do counts an occurrence, so ichido is transparently one time even before its kanji are taught.
+roots: [middle-chinese-jit, middle-chinese-duh]
+etymology_hook: "ichido: Sino-Japanese 一 'one' + 度 'degree', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 170
 requires:
@@ -50,6 +50,11 @@ occurrence. All four visible marks are already yours: **い + ち + と + ゛**.
 Now join it to the previous word:
 
 > **もういちど** — *mō ichido* — one more time
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いちど** (*ichido*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ichi*, "one" (Middle Chinese *'jit*) and *do*, "degree, a time" (*duH*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ICHIDO, JA-LEX-MOU] -->

@@ -13,7 +13,8 @@ gloss: "weak"
 concept_tag: LA-QUAL152-INFIRMUS
 prerequisites: [LA-C151-formosus, LA-C152-validus]
 sounds: []
-roots: []
+roots: [infirmus, firmus-latin]
+etymology_hook: "īnfirmus 'weak' — in- 'not' + firmus 'firm'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C152-validus]
 <!-- hl-knowledge: introduces=[LA-LEX-C152-QUAL152-02]; assesses=[] -->
 
 **īnfirmus, īnfirma, īnfirmum** — "weak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**īnfirmus** is *in-*, "not", with *firmus*, "firm, strong" (Lewis & Short). *firmus* is usually traced to Proto-Indo-European *\*dher-*, "to hold, to support" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

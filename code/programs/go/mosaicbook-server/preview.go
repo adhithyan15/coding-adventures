@@ -1,7 +1,7 @@
 // preview.go — /preview/{backend}/{component_id}/{story_name} handler
 //
-// The preview endpoint is the heart of MosaicBook: it compiles a .mosaic file
-// to a given backend and returns either a self-contained HTML page or a Paint
+// The preview endpoint is the heart of MosaicBook: it compiles a component
+// (three-file .mil/.mll/.msl, or a legacy .mosaic) to a given backend and returns either a self-contained HTML page or a Paint
 // PNG suitable for display inside an <iframe> in the browser shell.
 //
 // # Backend wrapping strategies

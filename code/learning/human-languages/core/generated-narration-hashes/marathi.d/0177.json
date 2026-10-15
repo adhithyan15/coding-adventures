@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 177,
-  "sourceHash": "fnv1a64:7641173334f53278",
+  "sourceHash": "fnv1a64:b57e22f2514dc0e8",
   "lessonIds": [
     "MR-C177-premal",
     "MR-C177-dayalu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch177.txt",
   "json": "marathi/narration/ch177.json",
-  "textHash": "fnv1a64:f7fd87e6535be19e",
-  "jsonHash": "fnv1a64:62a6722d62ed368e",
+  "textHash": "fnv1a64:d351531224cdf1f6",
+  "jsonHash": "fnv1a64:075cd244ece7a31e",
   "findings": []
 }

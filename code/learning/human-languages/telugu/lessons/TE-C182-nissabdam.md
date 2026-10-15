@@ -14,7 +14,8 @@ romanization: "niśśabdaṁ"
 concept_tag: TE-GUNAM182-NISSABDAM
 prerequisites: [TE-C181-adbhutamaina, TE-C181-mamulu]
 sounds: []
-roots: []
+roots: [sanskrit-shabda]
+etymology_hook: "niśśabdaṁ: Sanskrit niḥśabda 'soundless', from śabda 'sound' (CDIAL 12298)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C181-mamulu]
 <!-- hl-knowledge: introduces=[TE-LEX-C182-GUNAM182-01]; assesses=[] -->
 
 **నిశ్శబ్దం** — *niśśabdaṁ* — "silence; quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిశ్శబ్దం** (*niśśabdaṁ*) is Sanskrit *niḥśabda*, "soundless", from *śabda*, "sound, noise" (CDIAL 12298), with the Telugu ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

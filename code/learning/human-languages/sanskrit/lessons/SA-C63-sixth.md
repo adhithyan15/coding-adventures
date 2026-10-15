@@ -14,7 +14,8 @@ romanization: "ṣaṣṭhaḥ"
 concept_tag: SA-ORDINAL-SIXTH
 prerequisites: [SA-R62-the-ending, SA-C62-tenth, SA-C62-seventh, SA-C56-apathat, SA-C43-humility, SA-C19-six]
 sounds: []
-roots: []
+roots: [sanskrit-shashtha]
+etymology_hook: "ṣaṣṭha 'sixth' ← ṣaṣ 'six' + the ending -tha; it lives on as Hindi chaṭṭhā (CDIAL 12808)"
 duration:
   max_seconds: 225
 requires:

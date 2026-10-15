@@ -14,7 +14,8 @@ romanization: "yārādarū"
 concept_tag: KA-ILLA154-YARADARU
 prerequisites: [KA-C154-endigu, KA-C154-elliyu]
 sounds: []
-roots: []
+roots: [yaa-dravidian, tamil-aaku-become]
+etymology_hook: "yārādarū: native yāru 'who' (DEDR 5151) + ādarū 'even if it is', from āgu (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C154-elliyu]
 <!-- hl-knowledge: introduces=[KA-LEX-C154-ILLA154-04]; assesses=[] -->
 
 **ಯಾರಾದರೂ** — *yārādarū* — "anyone, someone". A yes-or-no question changes the last vowel of the sentence's final word to **-ಆ** (*-ā*): **ಇದ್ದಾರೆ** becomes **ಯಾರಾದರೂ ಇದ್ದಾರಾ?** — *yārādarū iddārā?* — "Is anyone there?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಯಾರಾದರೂ** (*yārādarū*) is native Dravidian: *yāru*, "who" (DEDR 5151), and *ādarū*, "even if it is", from *āgu*, "to become" (DEDR 333): "whoever it may be". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

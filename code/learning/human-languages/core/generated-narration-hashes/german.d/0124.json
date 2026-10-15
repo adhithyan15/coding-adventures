@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 124,
-  "sourceHash": "fnv1a64:a619384b709b7b9d",
+  "sourceHash": "fnv1a64:17a6e233b01b0779",
   "lessonIds": [
     "GE-C124-joghurt",
     "GE-C124-krankenschwester",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch124.txt",
   "json": "german/narration/ch124.json",
-  "textHash": "fnv1a64:af56f02a00ec4c77",
-  "jsonHash": "fnv1a64:b3b9d29b1e8854f8",
+  "textHash": "fnv1a64:abbe6a1e92973869",
+  "jsonHash": "fnv1a64:a835741b08f946f0",
   "findings": []
 }

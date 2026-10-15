@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 89,
-  "sourceHash": "fnv1a64:a784ecb44048a471",
+  "sourceHash": "fnv1a64:7a007650ed6b3678",
   "lessonIds": [
     "BN-C89-songit",
     "BN-C89-khobor",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch89.txt",
   "json": "bengali/narration/ch89.json",
-  "textHash": "fnv1a64:1df3f3304d75b005",
-  "jsonHash": "fnv1a64:e193126efe8d90af",
+  "textHash": "fnv1a64:e4d83569f272ee17",
+  "jsonHash": "fnv1a64:e3a6bc15c0284a39",
   "findings": []
 }

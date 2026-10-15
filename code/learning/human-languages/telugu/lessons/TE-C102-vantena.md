@@ -14,7 +14,8 @@ romanization: "vantena"
 concept_tag: TE-LOC102-VANTENA
 prerequisites: [TE-C102-vidhi, TE-C102-roddu]
 sounds: []
-roots: []
+roots: [telugu-vantena-bridge]
+etymology_hook: "vantena: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C102-roddu]
 <!-- hl-knowledge: introduces=[TE-LEX-C102-LOC102-04]; assesses=[] -->
 
 **వంతెన** — *vantena* — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **వంతెన** (*vantena*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

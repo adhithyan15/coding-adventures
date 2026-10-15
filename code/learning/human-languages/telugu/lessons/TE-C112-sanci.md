@@ -14,7 +14,8 @@ romanization: "sañci"
 concept_tag: TE-THINGS112-SANCI
 prerequisites: [TE-C111-kallajodu, TE-C111-gadiyaram]
 sounds: []
-roots: []
+roots: [telugu-sanci-bag]
+etymology_hook: "sañci: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C111-gadiyaram]
 <!-- hl-knowledge: introduces=[TE-LEX-C112-THINGS112-01]; assesses=[] -->
 
 **సంచి** — *sañci* — "a bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **సంచి** (*sañci*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

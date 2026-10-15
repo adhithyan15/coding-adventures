@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for Phagan, then the Gujarati for Chaitra.
 You'll want to know: વૈશાખ.
 વૈશાખ (vaiśākh) — "Vaishakh, a Gujarati month".
 
+The word, taken apart.
+વૈશાખ (vaiśākh) is Sanskrit vaiśākha, "the month April-May", taken over whole as a learned loan, a tatsama (CDIAL 12149).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for Chaitra, then the Gujarati for Vaishakh
 
 You'll want to know: જેઠ.
 જેઠ (jeṭh) — "Jeth, a Gujarati month".
+
+The word, taken apart.
+જેઠ (jeṭh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jyaiṣṭha, "the month May-June" (CDIAL 5293). It is named after jyeṣṭhā, a lunar mansion.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for Vaishakh, then the Gujarati for Jeth.
 You'll want to know: શ્રાવણ.
 શ્રાવણ (śrāvaṇ) — "Shravan, a Gujarati month".
 
+The word, taken apart.
+શ્રાવણ (śrāvaṇ) is Sanskrit śrāvaṇa, "the twentieth or twenty-third asterism", taken over whole as a learned loan, a tatsama (CDIAL 12699). CDIAL lists the inherited Gujarati form as sāvaṇ, "the fourth month".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for Jeth, then the Gujarati for Shravan.
 You'll want to know: ભાદરવો.
 ભાદરવો (bhādarvo) — "Bhadarvo, a Gujarati month".
 
+The word, taken apart.
+ભાદરવો (bhādarvo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhādrapada, "the fifth month, August-September" (CDIAL 9447).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for Shravan, then the Gujarati for Bhadarvo
 
 You'll want to know: આસો.
 આસો (āso) — "Aso, the month of Diwali".
+
+The word, taken apart.
+આસો (āso) is a tadbhava of Sanskrit aśvayuja, "the month Āśvina, September-October" (CDIAL 925). CDIAL compares aśvayuj, "harnessing horses", also the name of a constellation.
 
 What you've built.
 One more word for this chapter.

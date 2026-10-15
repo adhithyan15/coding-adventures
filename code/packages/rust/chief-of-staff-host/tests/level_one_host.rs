@@ -11,7 +11,7 @@ use chief_of_staff_channel_endpoints::{
 #[cfg(unix)]
 use chief_of_staff_channel_store::ChannelStore;
 #[cfg(unix)]
-use chief_of_staff_daemon::compose_host_data_plane;
+use chief_of_staff_daemon::{compose_channel_brokers, compose_host_data_plane, ChiefDaemonError};
 #[cfg(unix)]
 use chief_of_staff_daemon_config::parse_config;
 use chief_of_staff_host_control_protocol::{
@@ -81,6 +81,28 @@ use tcp_runtime::{ConnectionId, TcpConnectionInfo};
 
 const TEST_KEY_ID: &str = "level-one-host-test";
 const TEST_SEED: [u8; 32] = [73; 32];
+/// The per-agent channel broker (D18S P2.6d), built in this crate.
+#[cfg(unix)]
+const BROKER: &str = env!("CARGO_BIN_EXE_chief-of-staff-host-test-broker");
+/// On macOS, the shim that confines it (D18S P2.7b), pinned the same way.
+#[cfg(target_os = "macos")]
+const SHIM: &str = env!("CARGO_BIN_EXE_chief-of-staff-host-test-seatbelt-shim");
+
+/// The `[hosts.broker]` lines that pin the Seatbelt shim: required on
+/// macOS, and absent elsewhere.
+#[cfg(unix)]
+fn seatbelt_shim_lines() -> String {
+    #[cfg(target_os = "macos")]
+    {
+        let digest: String = coding_adventures_sha256::sha256(&fs::read(SHIM).unwrap())
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect();
+        format!("seatbelt_shim = \"{SHIM}\"\nseatbelt_shim_sha256 = \"{digest}\"\n")
+    }
+    #[cfg(not(target_os = "macos"))]
+    String::new()
+}
 const SKILL: &str = "---\nagent: weather-reporter\ndescription: Reports a forecast for a requested city.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Reporter\n\nReport a brief forecast for the requested city.\n\n## Capabilities needed\n- none\n\n## Tools needed\n- none\n\n## Tool capabilities needed\n- none\n";
 
 fn uuid_v7(last: u8) -> [u8; 16] {
@@ -163,6 +185,9 @@ impl TestHome {
 
         let keys = self.0.join("keys");
         fs::create_dir_all(&keys).unwrap();
+        // Owner-only: the broker launcher refuses a key directory others
+        // can enter (D18S P2.6d-3).
+        fs::set_permissions(&keys, fs::Permissions::from_mode(0o700)).unwrap();
         let path = keys.join(name);
         fs::write(&path, bytes).unwrap();
         fs::set_permissions(path, fs::Permissions::from_mode(0o600)).unwrap();
@@ -724,6 +749,15 @@ fn production_composition_runs_tool_turn_through_d23_and_home_assistant_readback
     fs::create_dir_all(home.0.join("keys")).unwrap();
     fs::write(home.0.join("keys/dev.pub"), generate_keypair(&TEST_SEED).0).unwrap();
 
+    // The agent's channels go through its own broker (D18S P2.6d-2c): this
+    // crate's test broker binary, pinned by its digest.
+    let broker = BROKER;
+    let broker_digest: String = coding_adventures_sha256::sha256(&fs::read(BROKER).unwrap())
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect();
+    let shim = seatbelt_shim_lines();
+
     let config = parse_config(&format!(
         r#"
 [orchestrator]
@@ -743,6 +777,10 @@ executable = "~/bin/chief-of-staff-host"
 bootstrap_timeout = 3000
 graceful_stop_timeout = 3000
 
+[hosts.broker]
+executable = "{broker}"
+sha256 = "{broker_digest}"
+{shim}
 [vault]
 storage_path = "~/vault"
 default_lease_ttl = 30
@@ -766,9 +804,20 @@ ollama_models = [
     ))
     .unwrap();
     let clock: Arc<dyn MonotonicClock> = Arc::new(TestClock::default());
-    let dispatcher =
-        compose_host_data_plane(&config, &home.0, Arc::clone(&backend), Arc::clone(&clock))
-            .unwrap();
+    let dispatcher = compose_host_data_plane(&config, &home.0, Arc::clone(&backend)).unwrap();
+    let brokers =
+        match compose_channel_brokers(&config, &home.0, Arc::clone(&backend), Arc::clone(&clock)) {
+            Ok(brokers) => brokers.expect("a broker for the channel keys"),
+            // No verified broker launch here yet: the daemon would not start,
+            // so there is no turn to run (D18S P2.6d-2c). Linux and macOS
+            // (P2.7b) both have one.
+            Err(ChiefDaemonError::BrokerUnsupported)
+                if !cfg!(any(target_os = "linux", target_os = "macos")) =>
+            {
+                return
+            }
+            Err(error) => panic!("broker composition failed: {error}"),
+        };
     let launch_bindings = Arc::new(DurableHostLaunchBindings::new(Arc::clone(&backend)));
     let program = HostProgram::new(
         env!("CARGO_BIN_EXE_chief-of-staff-host"),
@@ -786,7 +835,9 @@ ollama_models = [
         clock,
         Box::new(TestSessions(0)),
     )
-    .with_data_plane_dispatcher(dispatcher);
+    .with_data_plane_dispatcher(dispatcher)
+    .with_channel_brokers(brokers)
+    .refusing_unbrokered_channels();
     let mut sink =
         DurableReceiver::open(backend.as_ref(), output_channel, report_sink, sink_receiver)
             .unwrap();
@@ -817,6 +868,10 @@ ollama_models = [
         report.payload,
         b"The central smart-home inventory is available."
     );
+    // The channels were the broker's: one ran for this agent.
+    assert!(supervisor
+        .broker_process_id(registration.host_name())
+        .is_some());
     assert_eq!(report.content_type, LEVEL_ONE_RESPONSE_CONTENT_TYPE);
 
     while ChannelStore::new(backend.as_ref(), input_channel)

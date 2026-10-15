@@ -14,7 +14,8 @@ romanization: "meye"
 concept_tag: BN-HEALTH45-MEYE
 prerequisites: [BN-C45-baba, BN-C45-chhele]
 sounds: []
-roots: []
+roots: [sanskrit-matr]
+etymology_hook: "meye 'girl': CDIAL lists it under Sanskrit mātṛ 'mother', beside mā 'mother' (CDIAL 10016)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C45-chhele]
 <!-- hl-knowledge: introduces=[BN-LEX-C45-HEALTH45-05]; assesses=[] -->
 
 **মেয়ে** — *meye* — "a daughter; a girl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **মেয়ে** (*meye*), "girl", under Sanskrit *mātṛ*, "mother", the same entry that gives Bengali *mā*, "mother" (CDIAL 10016).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

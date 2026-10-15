@@ -14,7 +14,8 @@ romanization: "hidoi"
 concept_tag: JA-QUAL125-HIDOI
 prerequisites: [JA-C124-omoshiroi, JA-C125-sugoi]
 sounds: []
-roots: []
+roots: [japanese-hidoi]
+etymology_hook: "hidoi: native Japanese, inherited, not borrowed; usually kana, kanji 酷い as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C125-sugoi]
 <!-- hl-knowledge: introduces=[JA-LEX-C125-QUAL125-02]; assesses=[] -->
 
 **ひどい** — *hidoi* — "terrible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひどい** (*hidoi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

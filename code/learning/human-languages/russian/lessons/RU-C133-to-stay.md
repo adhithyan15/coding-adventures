@@ -14,7 +14,8 @@ romanization: "ostavátsya"
 concept_tag: RU-VERB-TO-STAY
 prerequisites: [RU-C133-to-go-up, RU-C133-to-go-down]
 sounds: []
-roots: []
+roots: [pie-steh2]
+etymology_hook: "оставаться is о- + ставать, from стать 'to stand', + -ся: to remain standing"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C133-to-go-down]
 <!-- hl-knowledge: introduces=[RU-LEX-C133-ACT133-03]; assesses=[] -->
 
 **оставаться** (*ostavátsya*) — "to stay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**оставаться** is *о-* with *-ставать*, from *стать*, "to stand", and *-ся*: to remain where you stand.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

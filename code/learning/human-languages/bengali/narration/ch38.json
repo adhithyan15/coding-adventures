@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Which One in the Line",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2983440919a0516e",
+  "sourceHash": "fnv1a64:1fba282ec533747a",
   "lessons": [
     {
       "id": "BN-C27-ditiyo",
@@ -436,7 +436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4d02cf4671ed0e8",
+      "sourceHash": "fnv1a64:942e2b7ac9aefc8f",
       "notice": null,
       "blocks": [
         {
@@ -518,7 +518,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Samsad's Bengali-English Dictionary gives চতুর্থ (choturthô) its own headword and romanizes it caturtha — the Sanskrit word carried over with nothing altered. Same layer as the last two, different ending:"
+              "text": "Samsad's Bengali-English Dictionary gives চতুর্থ (choturthô) its own headword and romanizes it caturtha: Sanskrit caturtha, \"fourth\", unaltered, a tatsama; the inherited form is cauth, \"a quarter\" (CDIAL 4600). Same layer as the last two, different ending:"
             },
             {
               "kind": "table",

@@ -14,7 +14,8 @@ romanization: "khormâ"
 concept_tag: FA-THINGS100-KHORMA
 prerequisites: [FA-C100-zardalu, FA-C100-gilas]
 sounds: []
-roots: []
+roots: [persian-khorma]
+etymology_hook: "khormâ: inherited, usually traced to Middle Persian xurmāg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C100-gilas]
 <!-- hl-knowledge: introduces=[FA-LEX-C100-THINGS100-03]; assesses=[] -->
 
 **خرما** — *khormâ* — "a date (the fruit)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khormâ* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *xurmāg*, "date".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

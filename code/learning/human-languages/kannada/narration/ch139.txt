@@ -12,6 +12,9 @@ Before the new one: say the Kannada for socks, then the Kannada for a coat.
 You'll want to know: ಕಮಲ.
 ಕಮಲ — kamala — "a lotus".
 
+The word, taken apart.
+ಕಮಲ (kamala) is Sanskrit kamala, "lotus", taken over whole as a learned loan, a tatsama (CDIAL 2764). CDIAL, following Mayrhofer, takes the Sanskrit word itself to be a loan from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a coat, then the Kannada for a lotus.
 
 You'll want to know: ಗೋಧಿ.
 ಗೋಧಿ — gōdhi — "wheat".
+
+The word, taken apart.
+ಗೋಧಿ (gōdhi) is usually traced to Sanskrit godhūma, "wheat": a tadbhava, a loan worn down in speech.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a lotus, then the Kannada for wheat.
 You'll want to know: ದೋಣಿ.
 ದೋಣಿ — dōṇi — "a boat".
 
+The word, taken apart.
+ದೋಣಿ (dōṇi) comes from Sanskrit droṇī, "wooden trough" (CDIAL 6641), through Prakrit dōṇī: a tadbhava. A hollowed log carried water and people alike. CDIAL suggests the sense "boat" may have mixed with a separate non-Aryan word, ḍōṅga.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for wheat, then the Kannada for a boat.
 You'll want to know: ಕಣ್ಣೀರು.
 ಕಣ್ಣೀರು — kaṇṇīru — "tears".
 
+The word, taken apart.
+ಕಣ್ಣೀರು (kaṇṇīru) is native Dravidian, "eye-water": kaṇ, "eye" (DEDR 1159), and nīru, "water" (DEDR 3690). DEDR 1159 lists the compound itself as Kannada kaṇ ṇīr. DEDR 3690 compares Sanskrit nīra.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a boat, then the Kannada for tears.
 
 You'll want to know: ಮೀಸೆ.
 ಮೀಸೆ — mīse — "a moustache".
+
+The word, taken apart.
+ಮೀಸೆ (mīse) is native Dravidian, one word with Tamil mīcai and Telugu mīsamu (DEDR 4879).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "médlennyy"
 concept_tag: RU-TEMP-SLOW
 prerequisites: [RU-C66-warm, RU-C66-fast]
 sounds: []
-roots: []
+roots: [slavic-muditi]
+etymology_hook: "медленный ← Old Russian mĭdĭlĭnŭ, related to медлить 'to delay' and the old verb *muditi 'to linger'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C66-fast]
 <!-- hl-knowledge: introduces=[RU-LEX-C66-TEMP-05]; assesses=[] -->
 
 **медленный** (*médlennyy*) — "slow". The adjective beside **медленно**, slowly.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**медленный** ← Old Russian *mĭdĭlĭnŭ*, Proto-Slavic *\*mŭdĭlĭnŭ* — inherited, with *медлить*, "to delay". Vasmer connects it with the Slavic verb *\*muditi*, "to linger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

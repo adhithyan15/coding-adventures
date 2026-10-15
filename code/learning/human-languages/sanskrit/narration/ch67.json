@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "Tired, Hungry, Thirsty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c63b763a6276257d",
+  "sourceHash": "fnv1a64:171190a2a29acad1",
   "lessons": [
     {
       "id": "SA-C67-sleep",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c3897618d73d1e4",
+      "sourceHash": "fnv1a64:ec5bb494e32deafb",
       "notice": null,
       "blocks": [
         {
@@ -67,6 +67,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nidrā is built from ni, \"down\", and the root √drā, \"to sleep\", which MW compares with Latin dormiō. It lives on as Hindi nīd, \"sleep\" (CDIAL 7200)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -77,7 +88,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -126,7 +137,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -157,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2667e939b831cc5",
+      "sourceHash": "fnv1a64:cc1ea04629c494ec",
       "notice": null,
       "blocks": [
         {
@@ -190,6 +201,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kṣudhā is the later form of Vedic kṣudh, \"hunger\", built on the root √kṣudh, \"to be hungry\" (MW, CDIAL 3716)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -200,7 +222,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -249,7 +271,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -280,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72889bfd4d76a05f",
+      "sourceHash": "fnv1a64:b5dd2c9424919399",
       "notice": null,
       "blocks": [
         {
@@ -313,6 +335,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pipāsā is built on the desire form of the root √pā, \"to drink\": thirst is \"wanting to drink\" (MW, CDIAL 8199). It lives on as Hindi pyās, \"thirst\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -323,7 +356,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -372,7 +405,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -403,7 +436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60ac807454da3629",
+      "sourceHash": "fnv1a64:ffcabadc02fae3ef",
       "notice": null,
       "blocks": [
         {
@@ -436,6 +469,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Viśrāma is built from vi and the root √śram, \"to toil, be weary\": rest is the release from weariness (MW, CDIAL 11956)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -446,7 +490,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -495,7 +539,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -526,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:818244509c71894e",
+      "sourceHash": "fnv1a64:839771d7c541611a",
       "notice": null,
       "blocks": [
         {
@@ -559,6 +603,21 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sukha first described a chariot running easily. MW reports the old reading su."
+            },
+            {
+              "kind": "speech",
+              "text": "kha, \"having a good axle-hole\", and also suggests a Prakrit form of su-stha, \"standing well\"; the question is not settled (CDIAL 13451)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -569,7 +628,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -618,7 +677,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "sahasā"
 concept_tag: SA-REPLY-SAHASA
 prerequisites: [SA-C42-sometimes, SA-C40-sugar, SA-C41-pot]
 sounds: []
-roots: []
+roots: [sanskrit-sahas]
+etymology_hook: "sahasā 'suddenly', the instrumental of sahas 'force', from the root √sah 'prevail' (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C42-sometimes]
 Underneath it is *sahas*, "force, a sudden strength", put into the shape that means *by means of*: by force, and so at a rush. कृपया, the please you already say, is made the very same way out of *kṛpā*.
 
 It carries a shade of judgement with it — a thing done **सहसा** is a thing done without thinking first.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Sahasā* is the instrumental case of *sahas*, "force, might", built on the root
+√sah, "to prevail" (MW): "by force", and so "at a rush".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

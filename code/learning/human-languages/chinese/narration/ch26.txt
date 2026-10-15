@@ -86,6 +86,9 @@ Keep 吗 and 呢 (ne) apart by what comes before them:
 They cannot be swapped. 你吗 is not a question and 你是学生呢 is not the question you meant.
 呢 (ne) is the second of Mandarin's particles this book has taught, and the third toneless word after 吗 and 的. A Mandarin sentence's grammar lives in words like these — small, unstressed, unchanging, and placed rather than inflected. That is what the reader is learning each time one arrives.
 
+The word, taken apart.
+呢 (ne) borrowed its character for the sound; where the particle itself comes from is not settled.
+
 Guided Practice.
 [your turn — say: 我是学生你呢]
 [pause 8 seconds for the answer]
@@ -176,6 +179,9 @@ Until this line, this book had no backchannel at all. You could greet, ask, coun
 — 你是中国人吗 — 对 (duì).
 Two syllables, and a whole exchange finished.
 Careful with one thing. 对 (duì) agrees with a statement. It is not a general yes: asked a question with a verb in it, a Mandarin speaker answers by repeating the verb — 是 for a 是 question, 有 for a 有 question. 对 (duì) is for agreeing that what was said is so.
+
+The word, taken apart.
+对 (duì) is inherited from Middle Chinese twojH, glossed "to answer; to match" (Guangyun); "correct" is the later sense.
 
 Guided Practice.
 [your turn — say: 对 (duì) 不对 对不对]

@@ -14,7 +14,8 @@ romanization: "manzur"
 concept_tag: FA-CHERA160-MANZUR
 prerequisites: [FA-C159-makhsusan, FA-C160-angize]
 sounds: []
-roots: []
+roots: [arabic-nazar]
+etymology_hook: "manzur ← Arabic manẓūr 'looked at, kept in view', root n-ẓ-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C160-angize]
 <!-- hl-knowledge: introduces=[FA-LEX-C160-CHERA160-02]; assesses=[] -->
 
 **منظور** — *manzur* — "a meaning, a purpose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*manzur* is borrowed from Arabic *manẓūr*, "looked at, kept in view". Its Arabic root is *n-ẓ-r* (Lane). Persian uses it for what one has in view: a meaning or a purpose.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

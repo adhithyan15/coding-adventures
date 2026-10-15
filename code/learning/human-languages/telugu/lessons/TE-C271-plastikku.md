@@ -14,7 +14,8 @@ romanization: "plāsṭikku"
 concept_tag: TE-VASTUVU271-PLASTIKKU
 prerequisites: [TE-C271-sunnam, TE-C271-penku]
 sounds: []
-roots: []
+roots: [english-plastic]
+etymology_hook: "plāsṭikku ← English plastic"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C271-penku]
 <!-- hl-knowledge: introduces=[TE-LEX-C271-VASTUVU271-03]; assesses=[] -->
 
 **ప్లాస్టిక్కు** — *plāsṭikku* — "plastic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ప్లాస్టిక్కు** (*plāsṭikku*) is a loan from English *plastic*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

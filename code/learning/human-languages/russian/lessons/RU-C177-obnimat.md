@@ -14,7 +14,8 @@ romanization: "obnimát"
 concept_tag: RU-VERB-OBNIMAT
 prerequisites: [RU-C176-otdykhat, RU-C176-ustavat]
 sounds: []
-roots: []
+roots: [pie-hem]
+etymology_hook: "обнимать is об- 'around' + нимать 'to take': to take someone in your arms"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C176-ustavat]
 <!-- hl-knowledge: introduces=[RU-LEX-C177-ACT177-01]; assesses=[] -->
 
 **обнимать** (*obnimát*) — "to hug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**обнимать** is *об-*, "around", with *-нимать*, from the old verb *\*jęti*, "to take": to take someone around.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

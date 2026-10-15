@@ -14,7 +14,8 @@ romanization: "pāṭh"
 concept_tag: HI-THG197-PATH
 prerequisites: [HI-C197-kaksa, HI-C197-pariksa]
 sounds: []
-roots: []
+roots: [sanskrit-patha-reading]
+etymology_hook: "pāṭh ← Sanskrit pāṭha 'text of a book; study', a tatsama (CDIAL 8035)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C197-pariksa]
 <!-- hl-knowledge: introduces=[HI-LEX-C197-THG197-03]; assesses=[] -->
 
 **पाठ** — *pāṭh* — "a lesson".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पाठ** (*pāṭh*) is Sanskrit *pāṭha*, "text of a book; study", taken over whole as a learned loan, a tatsama (CDIAL 8035).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-DISCUTIR
 prerequisites: [ES-C466-comportamiento, ES-C442-reunion, ES-C466-director]
 sounds: [stress-final, r-tap]
 roots: [discutere-latin]
+etymology_hook: "discutir ← Latin discutere: dis- 'apart' + quatere 'to shake' — English concussion"
 duration:
   max_seconds: 275
 requires:

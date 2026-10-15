@@ -13,7 +13,8 @@ gloss: "long since"
 concept_tag: LA-TEMP208-IAMDUDUM
 prerequisites: [LA-C208-illico, LA-C208-quondam]
 sounds: []
-roots: []
+roots: [iamdudum-latin, iam-latin]
+etymology_hook: "iamdūdum 'long since' — iam 'already' + dūdum 'a while ago'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C208-quondam]
 <!-- hl-knowledge: introduces=[LA-LEX-C208-TEMP208-05]; assesses=[] -->
 
 **iamdūdum** — "long since".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iamdūdum** is *iam*, "already", with *dūdum*, "a while ago" (Lewis & Short): already long ago.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

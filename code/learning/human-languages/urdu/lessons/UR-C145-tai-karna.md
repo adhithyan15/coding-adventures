@@ -14,7 +14,8 @@ romanization: "tai karnā"
 concept_tag: UR-VERB-TAI-KARNA
 prerequisites: [UR-C145-jald-hi, UR-C145-program]
 sounds: []
-roots: []
+roots: [arabic-tayy, kr-do]
+etymology_hook: "tai ← Arabic ṭayy 'folding up', through Persian (Lane, root ṭ-w-y); karnā 'to do' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C145-program]
 <!-- hl-knowledge: introduces=[UR-LEX-C145-MUST145-05]; assesses=[] -->
 
 **طے کرنا** — *tai karnā* — "to decide, to settle". **ہم نے طے کیا کہ ...** — *ham ne tai kiyā ki* — "We decided that ..." The past of **کرنا** is **کیا**.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طے کرنا** (*tai karnā*) joins *tai*, "settled", and *karnā*, "to do". *tai* is Arabic *ṭayy*, "a folding up; a covering of distance", which reached Urdu through Persian (Lane, root *ṭ-w-y*); a matter that is folded up is settled. *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

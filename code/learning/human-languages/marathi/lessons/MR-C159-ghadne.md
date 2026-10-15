@@ -14,7 +14,8 @@ romanization: "ghaḍṇe"
 concept_tag: MR-VERB-GHADNE
 prerequisites: [MR-C159-adhic, MR-C159-bhutkal]
 sounds: []
-roots: []
+roots: [sanskrit-ghatate]
+etymology_hook: "ghaḍṇe ← Sanskrit ghaṭate 'is busy with; happens', a tadbhava (CDIAL 4407)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C159-bhutkal]
 <!-- hl-knowledge: introduces=[MR-LEX-C159-PAS159-05]; assesses=[] -->
 
 **घडणे** — *ghaḍṇe* — "to happen". **काय घडले?** — *kāy ghaḍle* — "What happened?" Its past is **घडले**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घडणे** (*ghaḍṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghaṭate*, "is busy with; happens" (CDIAL 4407).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

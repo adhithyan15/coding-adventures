@@ -14,7 +14,8 @@ romanization: "maslūq"
 concept_tag: AR-SIFA209-MASLUQ
 prerequisites: [AR-C208-tariqa, AR-C209-mashwi]
 sounds: []
-roots: []
+roots: [s-l-q]
+etymology_hook: "maslūq: built on the root s-l-q, 'to boil' (Lane); maslūq is the passive participle, 'boiled'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C209-mashwi]
 <!-- hl-knowledge: introduces=[AR-LEX-C209-SIFA209-02]; assesses=[] -->
 
 **مسلوق** — *maslūq* — "boiled".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسلوق** (*maslūq*) is built on the native Arabic root *s-l-q*, "to boil" (Lane). *Maslūq* is the passive participle, "boiled".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

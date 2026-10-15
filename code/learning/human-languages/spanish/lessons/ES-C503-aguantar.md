@@ -11,6 +11,7 @@ concept_tag: ES-VERB-AGUANTAR
 prerequisites: [ES-C502-traducir, ES-C503-adelgazar]
 sounds: []
 roots: []
+etymology_hook: "aguantar ← Italian agguantare 'to grip', built on guanto 'glove': to hold on tight"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C503-adelgazar]
 > *I cannot stand the heat.*
 
 *Aguanta un momento* — hold on a moment.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aguantar** ← Italian *agguantare*, "to grip, to hold fast" (EtymDB 2.1), built on *guanto*, "a glove".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

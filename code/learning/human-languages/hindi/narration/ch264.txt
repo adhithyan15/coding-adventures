@@ -12,6 +12,9 @@ Before the new one: say the Hindi for an anklet, then the Hindi for a flute.
 You'll want to know: सितार.
 सितार — sitār — "a sitar".
 
+The word, taken apart.
+सितार (sitār) is a loan, usually traced to Persian sitār, "three strings". It is built from sih, "three", and tār, "string".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a flute, then the Hindi for a sitar.
 
 You'll want to know: तबला.
 तबला — tablā — "a tabla".
+
+The word, taken apart.
+तबला (tablā) is a loan from Arabic ṭabl, "a drum", which reached Hindi through Persian. Its Arabic root is ṭ-b-l (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a sitar, then the Hindi for a tabla.
 You'll want to know: घंटी.
 घंटी — ghaṇṭī — "a bell".
 
+The word, taken apart.
+घंटी (ghaṇṭī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghaṇṭikā, "small bell" (CDIAL 4421). It is built on ghaṇṭā, "bell".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a tabla, then the Hindi for a bell.
 You'll want to know: खिलौना.
 खिलौना — khilaunā — "a toy".
 
+The word, taken apart.
+खिलौना (khilaunā) is built on khel-, "play", with the ending -aunā: a thing to play with. CDIAL lists the verb under a reconstructed khel-, "play" (CDIAL 3918).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a bell, then the Hindi for a toy.
 
 You'll want to know: गुड़िया.
 गुड़िया — guṛiyā — "a doll".
+
+The word, taken apart.
+गुड़िया (guṛiyā) is a tadbhava, a word inherited and reshaped by sound change. It comes from guḍḍa, "doll, effigy", a form CDIAL reconstructs from its descendants (CDIAL 4189).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "chehrā"
 concept_tag: MR-BODY71-CHEHRA
 prerequisites: [MR-C71-bot, MR-C71-man]
 sounds: []
-roots: []
+roots: [persian-chihra]
+etymology_hook: "chehrā: usually traced to Persian chihra 'face, countenance'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C71-man]
 <!-- hl-knowledge: introduces=[MR-LEX-C71-BODY71-05]; assesses=[] -->
 
 **चेहरा** — *chehrā* — "the face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चेहरा** (*chehrā*) is a loan, usually traced to Persian *chihra*, "face, countenance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

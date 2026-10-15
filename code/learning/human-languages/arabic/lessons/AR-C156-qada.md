@@ -14,7 +14,8 @@ romanization: "qaḍā"
 concept_tag: AR-VERB-QADA
 prerequisites: [AR-C156-al-madi, AR-C156-dhata-marra]
 sounds: []
-roots: []
+roots: [q-ḍ-y]
+etymology_hook: "qaḍā: built on the root q-ḍ-y, 'to decide' (Lane); Lane's qaḍā is to accomplish, to finish, hence to spend time"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C156-dhata-marra]
 <!-- hl-knowledge: introduces=[AR-LEX-C156-MADI156-05]; assesses=[] -->
 
 **قضى** — *qaḍā* — "to spend (time)". Said of time: **قضيت العطلة في القرية** — *qaḍaytu al-ʿuṭla fī al-qarya* — "I spent the holiday in the village."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قضى** (*qaḍā*) is built on the native Arabic root *q-ḍ-y*, "to decide; to accomplish" (Lane). Lane's *qaḍā* is to accomplish, to finish, hence to spend time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "maṅgaḷvār"
 concept_tag: MW-TIME91-MANGALVAR
 prerequisites: [MW-C91-pachhai, MW-C91-somvar]
 sounds: []
-roots: []
+roots: [sanskrit-mangala, sanskrit-vara-day]
+etymology_hook: "maṅgaḷvār: Sanskrit maṅgala 'the planet Mars' + vāra 'day of the week' (CDIAL 9706, 11547), with Marwadi ḷ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C91-somvar]
 <!-- hl-knowledge: introduces=[MW-LEX-C91-TIME91-03]; assesses=[] -->
 
 **मंगळवार** — *maṅgaḷvār* — "Tuesday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मंगळवार** (*maṅgaḷvār*) is a Sanskrit compound: *maṅgala*, "the planet Mars" (CDIAL 9706), and *vāra*, "day of the week" (CDIAL 11547). Marwadi says the *l* curled back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

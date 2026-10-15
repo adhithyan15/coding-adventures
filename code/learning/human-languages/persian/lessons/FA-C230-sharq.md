@@ -14,7 +14,8 @@ romanization: "sharq"
 concept_tag: FA-MAKAN230-SHARQ
 prerequisites: [FA-C230-shomal, FA-C230-jonub]
 sounds: []
-roots: []
+roots: [arabic-sarq]
+etymology_hook: "sharq ← Arabic šarq 'east, sunrise', root š-r-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C230-jonub]
 <!-- hl-knowledge: introduces=[FA-LEX-C230-MAKAN230-03]; assesses=[] -->
 
 **شرق** — *sharq* — "east".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sharq* is borrowed from Arabic *šarq*, "east, sunrise". Its Arabic root is *š-r-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

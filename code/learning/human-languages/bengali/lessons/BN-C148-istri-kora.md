@@ -14,7 +14,8 @@ romanization: "istri kôrā"
 concept_tag: BN-VERB-ISTRI-KORA
 prerequisites: [BN-C148-ranna-kora, BN-C148-selai-kora]
 sounds: []
-roots: []
+roots: [portuguese-estirar, sanskrit-karoti]
+etymology_hook: "istri kôrā: istri 'an iron', usually traced to Portuguese estirar 'to stretch out', + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C148-selai-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C148-ACT148-03]; assesses=[] -->
 
 **ইস্ত্রি করা** — *istri kôrā* — "to iron".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইস্ত্রি করা** (*istri kôrā*) is *istri*, "an iron", usually traced to Portuguese *estirar*, "to stretch out", + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

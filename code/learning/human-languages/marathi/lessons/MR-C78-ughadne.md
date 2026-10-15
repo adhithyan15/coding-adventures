@@ -14,7 +14,8 @@ romanization: "ughaḍṇe"
 concept_tag: MR-VERB-UGHADNE
 prerequisites: [MR-C78-khelne, MR-C78-vikne]
 sounds: []
-roots: []
+roots: [indo-aryan-udghatati]
+etymology_hook: "ughaḍṇe ← *udghaṭati 'is open', a reconstructed form; a tadbhava (CDIAL 1968)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C78-vikne]
 <!-- hl-knowledge: introduces=[MR-LEX-C78-VERBS78-04]; assesses=[] -->
 
 **उघडणे** — *ughaḍṇe* — "to open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**उघडणे** (*ughaḍṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*udghaṭati*, "is open", a form CDIAL reconstructs from its descendants (CDIAL 1968).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

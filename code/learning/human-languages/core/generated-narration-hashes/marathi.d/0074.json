@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 74,
-  "sourceHash": "fnv1a64:0450c5e779657c04",
+  "sourceHash": "fnv1a64:bdea16f60327921f",
   "lessonIds": [
     "MR-C74-duhkhi",
     "MR-C74-vadil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch74.txt",
   "json": "marathi/narration/ch74.json",
-  "textHash": "fnv1a64:55c8f4bf20fc2343",
-  "jsonHash": "fnv1a64:92c21d5f06526250",
+  "textHash": "fnv1a64:5102723e51f91413",
+  "jsonHash": "fnv1a64:f5bb5f34912b9885",
   "findings": []
 }

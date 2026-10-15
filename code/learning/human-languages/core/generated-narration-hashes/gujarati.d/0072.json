@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 72,
-  "sourceHash": "fnv1a64:ef8ac67fab1ffea3",
+  "sourceHash": "fnv1a64:b968334fede482c4",
   "lessonIds": [
     "GU-C72-big",
     "GU-C72-small",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch72.txt",
   "json": "gujarati/narration/ch72.json",
-  "textHash": "fnv1a64:01ddc10e78edc7b1",
-  "jsonHash": "fnv1a64:5c435da9b4a17e17",
+  "textHash": "fnv1a64:760db0de96793f78",
+  "jsonHash": "fnv1a64:51dcb725dfb6d0dd",
   "findings": []
 }

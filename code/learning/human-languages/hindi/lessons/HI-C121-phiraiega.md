@@ -14,7 +14,8 @@ romanization: "phir āiegā"
 concept_tag: HI-CARE-COME-AGAIN
 prerequisites: [HI-C121-sambhalkar, HI-C121-shubhyatra]
 sounds: []
-roots: []
+roots: [indo-aryan-phirati, sanskrit-apayati]
+etymology_hook: "phir ← *phirati 'turns' (CDIAL 9078); āiegā, from ānā 'to come' (CDIAL 1200)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C121-shubhyatra]
 **फिर आइएगा** (*phir āiegā*) — "do come again".
 
 **फिर** is "again", and **आइएगा** is an extra-polite **आइए**, a request for later rather than now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**फिर आइएगा** (*phir āiegā*) is *phir*, "again", and *āiegā*, the polite future of **आना**, "to come". CDIAL lists *phir* under a reconstructed *\*phirati*, "turns", whose old form became an adverb (CDIAL 9078).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

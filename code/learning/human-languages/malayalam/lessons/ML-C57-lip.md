@@ -11,7 +11,8 @@ romanization: "cuṇṭŭ"
 concept_tag: ML-NOUN-LIP
 prerequisites: [ML-C57-back, ML-C55-homeland]
 sounds: []
-roots: []
+roots: [dravidian-cundu-lip]
+etymology_hook: "cuṇṭŭ: native Dravidian, one word with Tamil cuṇṭu and Kannada cuṇḍu (DEDR 2664)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *cuṇṭu*. It is the lip of a mouth and also the bea
 The same word reaches the spout of a jug, so a Malayalam pot has lips much as an English one does. That figure was arrived at twice over, on two sides of the world, from the same obvious resemblance.
 
 The ണ്ട cluster in the middle is the retroflex *ṇ* running straight into a *ṭ*, made with the tongue curled back, and it is worth slowing down for.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചുണ്ട്** (*cuṇṭŭ*) is native Dravidian, one word with Tamil *cuṇṭu* and Kannada *cuṇḍu* (DEDR 2664).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

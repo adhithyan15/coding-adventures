@@ -14,7 +14,8 @@ romanization: "tayyalkkāran"
 concept_tag: ML-JOLI222-TAYYALKKARAN
 prerequisites: [ML-C222-vyakaranam, ML-C222-barbar]
 sounds: []
-roots: []
+roots: [dravidian-tai-sew]
+etymology_hook: "tayyalkkāran: native Dravidian, tayyal 'sewing' (DEDR 3473) + -kkāran 'one who does'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C222-barbar]
 <!-- hl-knowledge: introduces=[ML-LEX-C222-JOLI222-05]; assesses=[] -->
 
 **തയ്യൽക്കാരൻ** — *tayyalkkāran* — "a tailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തയ്യൽക്കാരൻ** (*tayyalkkāran*) is native Dravidian: *tayyal*, "sewing" (DEDR 3473, with Tamil *tai*, "to sew"), with *-kkāran*, the ending for a person who does something.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

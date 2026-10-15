@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 215,
-  "sourceHash": "fnv1a64:ee99567a52851dd5",
+  "sourceHash": "fnv1a64:dfb7987ae9c9e22f",
   "lessonIds": [
     "SA-C215-calah",
     "SA-C215-mandah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch215.txt",
   "json": "sanskrit/narration/ch215.json",
-  "textHash": "fnv1a64:ecf6a89b457099aa",
-  "jsonHash": "fnv1a64:831690256cbb239d",
+  "textHash": "fnv1a64:96f3bdf6308029a1",
+  "jsonHash": "fnv1a64:8afd6e053354d7a3",
   "findings": []
 }

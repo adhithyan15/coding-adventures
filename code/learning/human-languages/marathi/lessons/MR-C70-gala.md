@@ -14,7 +14,8 @@ romanization: "gaḷā"
 concept_tag: MR-BODY70-GALA
 prerequisites: [MR-C70-kes, MR-C70-dat]
 sounds: []
-roots: []
+roots: [sanskrit-gala]
+etymology_hook: "gaḷā ← Sanskrit gala 'throat, neck', a tadbhava (CDIAL 4070)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C70-dat]
 <!-- hl-knowledge: introduces=[MR-LEX-C70-BODY70-05]; assesses=[] -->
 
 **गळा** — *gaḷā* — "the throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गळा** (*gaḷā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *gala*, "throat, neck" (CDIAL 4070).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

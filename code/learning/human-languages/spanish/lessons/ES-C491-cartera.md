@@ -10,7 +10,8 @@ gloss: "the wallet"
 concept_tag: ES-REF-CARTERA
 prerequisites: [ES-C491-oferta, ES-C491-cajero]
 sounds: []
-roots: []
+roots: [charta-latin]
+etymology_hook: "cartera — carta 'paper' + -era: a case for papers; carta is Latin charta — English chart"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C491-cajero]
 > Me robaron la cartera en el metro.
 >
 > *My wallet was stolen on the underground.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cartera** is *carta*, "a letter, a paper", with *-era*: a case for papers. *Carta* is Latin *charta*, a leaf of papyrus, from Greek *chartēs*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

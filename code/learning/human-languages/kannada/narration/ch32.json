@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:664eef881dd96fe3",
+  "sourceHash": "fnv1a64:e2d7a4dd87a85d24",
   "lessons": [
     {
       "id": "KA-C32-iru",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:001353899f930b86",
+      "sourceHash": "fnv1a64:d76ad41fba2e2c32",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +218,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Tamil's word for \"go\" is போ / போகு (pō / pōgu). Kannada's is hōgu, and that h is not a different root. Around a thousand years ago Kannada softened every old word-initial p- to h- — and Kannada is the only one of the four literary Dravidian languages that did it."
+              "text": "Tamil's word for \"go\" is போ / போகு (pō / pōgu). Kannada's is hōgu: the same native Dravidian root (DEDR 4572). Around a thousand years ago Kannada softened every old word-initial p- to h- — and Kannada is the only one of the four literary Dravidian languages that did it."
             },
             {
               "kind": "speech",
@@ -344,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31a6d55274c98175",
+      "sourceHash": "fnv1a64:61396236add01bfe",
       "notice": null,
       "blocks": [
         {
@@ -389,6 +389,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾ (bā / baru) is native Dravidian, one word with Tamil varu, vā and Malayalam varuka (DEDR 5270). DEDR gives Kannada bar, bā: the old v- has become b-."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: two shapes, one verb",
           "segments": [
@@ -437,7 +448,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -495,7 +506,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

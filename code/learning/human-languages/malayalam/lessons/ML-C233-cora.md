@@ -14,7 +14,8 @@ romanization: "cōra"
 concept_tag: ML-AROGYAM233-CORA
 prerequisites: [ML-C232-nivarttuka, ML-C233-kanankal]
 sounds: []
-roots: []
+roots: [dravidian-cor-flow]
+etymology_hook: "cōra: native Dravidian; DEDR 2883 lists Malayalam cōra 'blood' under the verb 'to flow, ooze'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C233-kanankal]
 <!-- hl-knowledge: introduces=[ML-LEX-C233-AROGYAM233-02]; assesses=[] -->
 
 **ചോര** — *cōra* — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചോര** (*cōra*) is native Dravidian: DEDR 2883 lists it, "blood", under the verb "to flow, ooze", with Tamil *cōr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

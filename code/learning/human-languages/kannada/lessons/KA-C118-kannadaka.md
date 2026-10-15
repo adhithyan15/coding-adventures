@@ -14,7 +14,8 @@ romanization: "kannaḍaka"
 concept_tag: KA-THINGS118-KANNADAKA
 prerequisites: [KA-C117-sabunu, KA-C117-tavel]
 sounds: []
-roots: []
+roots: [dravidian-kannadi-mirror]
+etymology_hook: "kannaḍaka: native Dravidian, one word with Tamil kaṇṇāṭi (DEDR 1182)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C117-tavel]
 <!-- hl-knowledge: introduces=[KA-LEX-C118-THINGS118-01]; assesses=[] -->
 
 **ಕನ್ನಡಕ** — *kannaḍaka* — "glasses, spectacles".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕನ್ನಡಕ** (*kannaḍaka*) is native Dravidian, one word with Tamil *kaṇṇāṭi* (DEDR 1182). DEDR lists *kanaḍaka*, "pair of spectacles", beside *kannaḍi*, "mirror, lens". The entry explains the Tamil word as *kaṇ*, "eye", with *āṭi*, "mirror".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

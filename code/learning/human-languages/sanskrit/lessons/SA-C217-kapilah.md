@@ -14,7 +14,8 @@ romanization: "kapilaḥ"
 concept_tag: SA-QUAL217-KAPILAH
 prerequisites: [SA-C217-raktah, SA-C217-arunah]
 sounds: []
-roots: []
+roots: [sanskrit-kapila]
+etymology_hook: "kapila 'tawny, brown', 'monkey-coloured': MW connects it with kapi 'monkey' (CDIAL 2750)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C217-arunah]
 <!-- hl-knowledge: introduces=[SA-LEX-C217-QUAL217-03]; assesses=[] -->
 
 **कपिलः** — *kapilaḥ* — "tawny, brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kapila* is a Rigvedic colour word, "brown, tawny, reddish" (CDIAL 2750). MW says it is more probably connected with *kapi*, "monkey": monkey-coloured. Gujarati *koḷũ*, "reddish brown", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

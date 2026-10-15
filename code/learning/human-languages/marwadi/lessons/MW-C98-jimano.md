@@ -14,7 +14,8 @@ romanization: "jīmaṇo"
 concept_tag: MW-LOC98-JIMANO
 prerequisites: [MW-C97-sami, MW-C97-davo]
 sounds: []
-roots: []
+roots: [sanskrit-jemana]
+etymology_hook: "jīmaṇo ← Sanskrit jemana 'eating', a tadbhava (CDIAL 5268, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C97-davo]
 <!-- hl-knowledge: introduces=[MW-LEX-C98-LOC98-01]; assesses=[] -->
 
 **जीमणो** — *jīmaṇo* — "right (the side)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जीमणो** (*jīmaṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jemana*, "eating". CDIAL lists Old Marwari *jīmaṇa* under it (CDIAL 5268). The Old Marwari row means "food, meal", and Old Gujarati *jimaṇaüṃ* means "to the righthand side": the right is the eating hand.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ gloss: "my name is…"
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [PA-C02-mera, PA-C02-naam, PA-C02-hai]
 sounds: []
-roots: []
+roots: [ma-first-person, naaman-sanskrit, sanskrit-asti]
+etymology_hook: "merā ← the first-person base ma- (CDIAL 9691); nāṁ ← nāman 'name' (CDIAL 7067); hai, usually traced to asti"
 duration:
   max_seconds: 170
 requires:
@@ -43,6 +44,11 @@ reviews_of: [PA-C02-mera, PA-C02-naam, PA-C02-hai]
 
 **ਮੇਰਾ** (my) + **ਨਾਂ** (name) + your name + **ਹੈ** (is) = **merā nāṁ … hai**,
 "my name is…" *Merā nāṁ Arun hai.* → "My name is Arun."
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮੇਰਾ ਨਾਂ ... ਹੈ** (*merā nāṁ ... hai*) is built from inherited words: *merā*, "my", which CDIAL lists under the Sanskrit first-person base *ma-* (CDIAL 9691); *nāṁ*, "name", from Sanskrit *nāman* (CDIAL 7067); and *hai*, "is", usually traced to Sanskrit *asti*, "is".
 
 ## Grammar Lens: the verb goes last
 <!-- hl-knowledge: introduces=[]; assesses=[PA-GRAMMAR-VERB-LAST-02, PA-PHRASE-MY-NAME-02] -->

@@ -11,7 +11,8 @@ romanization: "gābari"
 concept_tag: KA-MOOD-ALARM
 prerequisites: [KA-C98-enthusiasm, KA-C98-shyness]
 sounds: []
-roots: []
+roots: [hindustani-ghabra]
+etymology_hook: "gābari ← Hindustani ghabrā 'agitation, panic'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C98-shyness]
 **ಗಾಬರಿ** (*gābari*) — "alarm, panic, fright".
 
 **ಗಾಬರಿ ಆಗಬೇಡಿ** (*gābari āgabēḍi*) — "don't panic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಾಬರಿ** (*gābari*) came from Hindustani *ghabrā-*, "to be agitated, to panic". Its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

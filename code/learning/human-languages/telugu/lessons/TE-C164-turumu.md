@@ -14,7 +14,8 @@ romanization: "turumu"
 concept_tag: TE-VERB-TURUMU
 prerequisites: [TE-C163-potipadu, TE-C163-tannu]
 sounds: []
-roots: []
+roots: [dravidian-turi-bore]
+etymology_hook: "turumu: native Dravidian; DEDR 3339 lists tuṟumu 'to scrape (a coconut)' with Kannada turi 'to grate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C163-tannu]
 <!-- hl-knowledge: introduces=[TE-LEX-C164-KRIYA164-01]; assesses=[] -->
 
 **తురుము** — *turumu* — "to grate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తురుము** (*turumu*) is native Dravidian. DEDR 3339 gives it as *tuṟumu*, "to scrape, as a coconut", with Kannada *turi*, "to grate, scrape out", and Tamil *turuvu*, "to scrape out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

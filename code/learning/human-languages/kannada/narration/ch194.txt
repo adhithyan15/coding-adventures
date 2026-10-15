@@ -12,6 +12,9 @@ Before the new one: say the Kannada for a square, then the Kannada for a triangl
 You'll want to know: ಸಂಬಳ.
 ಸಂಬಳ — sambaḷa — "a salary".
 
+The word, taken apart.
+Where ಸಂಬಳ (sambaḷa) comes from is not settled: DEDR does not record it. It may be Sanskrit śambala, "provisions for a journey" (CDIAL 12315), but CDIAL does not list the Kannada word.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a triangle, then the Kannada for a salar
 
 You'll want to know: ಗ್ರಾಹಕ.
 ಗ್ರಾಹಕ — grāhaka — "a customer".
+
+The word, taken apart.
+ಗ್ರಾಹಕ (grāhaka) is Sanskrit grāhaka, "one who takes, a taker", taken over whole: the customer is the one who takes the goods.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a salary, then the Kannada for a custome
 You'll want to know: ದರ್ಜಿ.
 ದರ್ಜಿ — darji — "a tailor".
 
+The word, taken apart.
+ದರ್ಜಿ (darji) is a loan from Persian darzī, "tailor", from darz, "seam", which came through Hindustani.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a customer, then the Kannada for a tailo
 You'll want to know: ಮನೆಗೆಲಸ.
 ಮನೆಗೆಲಸ — manegelasa — "housework".
 
+The word, taken apart.
+ಮನೆಗೆಲಸ (manegelasa) is native Dravidian: mane, "house" (DEDR 4776), and kelasa, "work" (DEDR 1970), with the k- softened to g- inside the compound.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for a tailor, then the Kannada for housework
 
 You'll want to know: ಮೇಲಧಿಕಾರಿ.
 ಮೇಲಧಿಕಾರಿ — mēladhikāri — "a boss, a superior".
+
+The word, taken apart.
+ಮೇಲಧಿಕಾರಿ (mēladhikāri) is native mēl, "above" (DEDR 5086), and adhikāri, "an official", from Sanskrit adhikārin, "one in charge": "the official above".
 
 What you've built.
 One more word for this chapter.

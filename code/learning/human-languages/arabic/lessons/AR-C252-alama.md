@@ -14,7 +14,8 @@ romanization: "ʿalāma"
 concept_tag: AR-AMAL252-ALAMA
 prerequisites: [AR-C251-zamil, AR-C251-sharika]
 sounds: []
-roots: []
+roots: [ʿ-l-m]
+etymology_hook: "ʿalāma: built on the root ʿ-l-m, 'to know' (Lane); ʿalāma is a mark, a sign"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C251-sharika]
 <!-- hl-knowledge: introduces=[AR-LEX-C252-AMAL252-01]; assesses=[] -->
 
 **علامة** — *ʿalāma* — "a mark, a grade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**علامة** (*ʿalāma*) is built on the native Arabic root *ʿ-l-m*, "to know; a mark" (Lane). *ʿAlāma* is a mark, a sign.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

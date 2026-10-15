@@ -14,7 +14,8 @@ romanization: "rogī"
 concept_tag: HI-THG273-ROGI
 prerequisites: [HI-C273-pulis, HI-C273-davakhana]
 sounds: []
-roots: []
+roots: [sanskrit-rogin]
+etymology_hook: "rogī ← Sanskrit rogin 'sick', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C273-davakhana]
 <!-- hl-knowledge: introduces=[HI-LEX-C273-THG273-03]; assesses=[] -->
 
 **रोगी** — *rogī* — "a patient, a sick person".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रोगी** (*rogī*) is Sanskrit *rogin*, "sick", taken over whole as a learned loan, a tatsama. Hindi took its nominative, *rogī*. It is built on *roga*, "disease".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

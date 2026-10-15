@@ -14,7 +14,8 @@ romanization: "khajūr"
 concept_tag: UR-THINGS116-KHAJUR
 prerequisites: [UR-C116-amrud, UR-C116-nashpati]
 sounds: []
-roots: []
+roots: [sanskrit-kharjura]
+etymology_hook: "khajūr ← Sanskrit kharjūra 'the date-palm', a tadbhava (CDIAL 3828)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C116-nashpati]
 <!-- hl-knowledge: introduces=[UR-LEX-C116-THINGS116-05]; assesses=[] -->
 
 **کھجور** — *khajūr* — "a date (the fruit)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھجور** (*khajūr*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kharjūra*, "the date-palm" (CDIAL 3828).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

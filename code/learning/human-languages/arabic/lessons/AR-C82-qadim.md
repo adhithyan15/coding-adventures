@@ -14,7 +14,8 @@ romanization: "qadīm"
 concept_tag: AR-ADJ82-QADIM
 prerequisites: [AR-C81-saghir, AR-C82-jadid]
 sounds: []
-roots: []
+roots: [q-d-m]
+etymology_hook: "qadīm: built on the root q-d-m, 'to go before' (Lane); qadīm is what came before: 'old'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C82-jadid]
 <!-- hl-knowledge: introduces=[AR-LEX-C82-ADJ82-02]; assesses=[] -->
 
 **قديم** — *qadīm* — "old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قديم** (*qadīm*) is built on the native Arabic root *q-d-m*, "to go before; to be old" (Lane). *Qadīm* is what came before: "old".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

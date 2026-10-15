@@ -12,7 +12,7 @@ concept_tag: COURTESY-PLEASE
 prerequisites: [AR-C01-shukran]
 sounds: [dad-emphatic, arabic-rtl, gendered-ending]
 roots: [fadl]
-etymology_hook: "من فضلك min faḍlik is literally 'from your grace' — faḍl 'grace, bounty', the same courtesy Hindi's kṛpayā invokes"
+etymology_hook: "min faḍlik: min 'from' + faḍl 'bounty, favour', root f-ḍ-l (Lane), + -ik 'your': 'from your bounty'"
 duration:
   max_seconds: 240
 requires:
@@ -72,6 +72,11 @@ Just as common, especially getting someone's attention:
 > **لو سمحت** — *law samaḥt* — literally "**if you permit**" (*law* "if" +
 > *samaḥt* "you permitted"). Same politeness, a different image — permission
 > rather than grace.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**من فضلك** (*min faḍlik*) is built from *min*, "from", an inherited preposition, and *faḍlik*, "your favour": *faḍl*, "excess, bounty", on the native root *f-ḍ-l* (Lane), with *-ik*, "your".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C06-MIN-FADLIK-02] -->

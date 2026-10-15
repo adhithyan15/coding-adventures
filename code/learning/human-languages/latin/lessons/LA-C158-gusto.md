@@ -13,7 +13,8 @@ gloss: "to taste"
 concept_tag: LA-VERB-GUSTO
 prerequisites: [LA-C158-vigilo, LA-C158-ceno]
 sounds: []
-roots: []
+roots: [gustare-latin, gustus]
+etymology_hook: "gustō 'to taste' — built on gustus 'a tasting', from PIE *gews-; English choose is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C158-ceno]
 <!-- hl-knowledge: introduces=[LA-LEX-C158-ACT158-05]; assesses=[] -->
 
 **gustō, gustāre** — "to taste".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**gustō** is built on *gustus*, "a tasting" (Lewis & Short), usually traced to Proto-Indo-European *\*gews-*, "to taste, to choose" (EtymDB 2.1). English *choose* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

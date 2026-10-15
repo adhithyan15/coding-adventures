@@ -14,7 +14,8 @@ romanization: "khiḍauṇā"
 concept_tag: PA-THINGS118-KHIDAUNA
 prerequisites: [PA-C118-sirhana, PA-C118-guddi]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khiḍauṇā: built on khiḍ- 'play', as in khiḍāuṇā, listed under *kheḍḍ 'play' (CDIAL 3918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C118-guddi]
 <!-- hl-knowledge: introduces=[PA-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **ਖਿਡੌਣਾ** — *khiḍauṇā* — "a toy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖਿਡੌਣਾ** (*khiḍauṇā*) is built on *khiḍ-*, "play", the stem of *khiḍāuṇā*, "to make play", which CDIAL lists under a reconstructed *\*kheḍḍ*, "play" (CDIAL 3918).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

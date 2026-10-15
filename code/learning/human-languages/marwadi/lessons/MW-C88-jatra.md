@@ -14,7 +14,8 @@ romanization: "jātrā"
 concept_tag: MW-WORLD88-JATRA
 prerequisites: [MW-C88-rang, MW-C88-git]
 sounds: []
-roots: []
+roots: [sanskrit-yatra]
+etymology_hook: "jātrā ← Sanskrit yātrā 'journey', a semi-tatsama (CDIAL 10456)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C88-git]
 <!-- hl-knowledge: introduces=[MW-LEX-C88-WORLD88-03]; assesses=[] -->
 
 **जातरा** — *jātrā* — "a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जातरा** (*jātrā*) is a semi-tatsama: Sanskrit *yātrā*, "journey", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 10456). It is built on the root *yā*, "to go"; Marwadi says the *y* as *j* and splits the *tr* with a vowel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāryālayaṁ"
 concept_tag: TE-LOC104-KARYALAYAM
 prerequisites: [TE-C103-santa, TE-C104-tiram]
 sounds: []
-roots: []
+roots: [sanskrit-karya, sanskrit-alaya]
+etymology_hook: "kāryālayaṁ ← Sanskrit kārya 'business' (CDIAL 3078) + ālaya 'house' (CDIAL 1366)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C104-tiram]
 <!-- hl-knowledge: introduces=[TE-LEX-C104-LOC104-02]; assesses=[] -->
 
 **కార్యాలయం** — *kāryālayaṁ* — "an office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కార్యాలయం** (*kāryālayaṁ*) is Sanskrit *kārya*, "business, work" (CDIAL 3078), and *ālaya*, "house" (CDIAL 1366): "the house of business".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

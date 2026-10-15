@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a monkey, then the Gujarati for a snake
 You'll want to know: તારો.
 તારો (tāro) — "a star". Out at રાત.
 
+The word, taken apart.
+તારો (tāro) is a tadbhava. CDIAL lists it under tāraka, "belonging to the stars", a form beside Sanskrit tārā, "fixed star" (CDIAL 5798).
+
 What you've built.
 One more word for things that shine, fly and swim.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a snake, then the Gujarati for a star.
 
 You'll want to know: પોપટ.
 પોપટ (popaṭ) — "a parrot".
+
+The word, taken apart.
+The origin of પોપટ (popaṭ) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 What you've built.
 One more word for things that shine, fly and swim.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for a star, then the Gujarati for a parrot.
 You'll want to know: મોર.
 મોર (mor) — "a peacock".
 
+The word, taken apart.
+મોર (mor) is a tadbhava. CDIAL lists it under mora, a form beside Sanskrit mayūra, "peacock" (CDIAL 9865). It reports that some scholars take the Sanskrit word from Dravidian, others from Austroasiatic, and H. W. Bailey from Iranian.
+
 What you've built.
 One more word for things that shine, fly and swim.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for a parrot, then the Gujarati for a peaco
 You'll want to know: ચકલી.
 ચકલી (caklī) — "a sparrow".
 
+The word, taken apart.
+The origin of ચકલી (caklī) is not settled. CDIAL, searched by form and by meaning, has no entry for it; it lists other Gujarati bird words, such as ciḍiyũ, "bird", under Sanskrit caṭaka, "sparrow" (CDIAL 4571).
+
 What you've built.
 One more word for things that shine, fly and swim.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for a peacock, then the Gujarati for a spar
 
 You'll want to know: માછલી.
 માછલી (māchlī) — "a fish". It lives in the દરિયો or a તળાવ.
+
+The word, taken apart.
+માછલી (māchlī) is a tadbhava of Sanskrit matsya, "fish", lengthened with an -l- suffix (CDIAL 9758).
 
 What you've built.
 One more word for things that shine, fly and swim.

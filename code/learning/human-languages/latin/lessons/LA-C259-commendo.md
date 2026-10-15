@@ -13,7 +13,8 @@ gloss: "to recommend, to entrust"
 concept_tag: LA-VERB-COMMENDO
 prerequisites: [LA-C258-metuo, LA-C259-oro]
 sounds: []
-roots: []
+roots: [commendare-latin, mandare-latin]
+etymology_hook: "commendō 'to entrust' — con- + mandō 'to entrust'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C259-oro]
 <!-- hl-knowledge: introduces=[LA-LEX-C259-ACT259-02]; assesses=[] -->
 
 **commendō, commendāre** — "to recommend, to entrust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**commendō** is *mandō*, "to entrust" (Lewis & Short), with *con-*, "thoroughly", its a weakened to e.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

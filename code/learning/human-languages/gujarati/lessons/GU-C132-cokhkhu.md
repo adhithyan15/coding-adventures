@@ -14,7 +14,8 @@ romanization: "cokhkhũ"
 concept_tag: GU-QUAL132-COKHKHU
 prerequisites: [GU-C131-bhinu, GU-C131-suku]
 sounds: []
-roots: []
+roots: [sanskrit-coksha]
+etymology_hook: "cokhkhũ: with cokh 'clean' ← Sanskrit cokṣa 'pure, clean' (CDIAL 4918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C131-suku]
 <!-- hl-knowledge: introduces=[GU-LEX-C132-QUAL132-01]; assesses=[] -->
 
 **ચોખ્ખું** (*cokhkhũ*) — "clean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ચોખ્ખું** (*cokhkhũ*) belongs with Gujarati *cokh*, "clean", which CDIAL lists under Sanskrit *cokṣa*, "pure, clean" (CDIAL 4918).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

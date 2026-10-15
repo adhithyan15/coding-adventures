@@ -12,6 +12,9 @@ Before the new one: say the Latin for mute, then the Latin for lame.
 You'll want to know: cella, cellae.
 cella, cellae — "a storeroom, a small room".
 
+The word, taken apart.
+cella is inherited, usually traced to Proto-Indo-European kelneh2, "a small room" (EtymDB 2.1), from a root for hiding seen in cēlō, "to hide" (Lewis & Short). English cell comes from it, and English hall is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for lame, then the Latin for a storeroom.
 
 You'll want to know: tablīnum, tablīnī.
 tablīnum, tablīnī — "a study (room)".
+
+The word, taken apart.
+tablīnum is built on tabula, "a writing tablet, records" (EtymDB 2.1): the room where the family's records were kept.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a storeroom, then the Latin for a study.
 You'll want to know: peristylium, peristyliī.
 peristylium, peristyliī — "a colonnaded garden".
 
+The word, taken apart.
+peristylium was borrowed from Greek peristylion, "a place ringed with columns" (Lewis & Short), from peri, "around", and stylos, "a column".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a study, then the Latin for a colonnaded g
 You'll want to know: impluvium, impluviī.
 impluvium, impluviī — "a rain basin".
 
+The word, taken apart.
+impluvium is built on impluō, "to rain into" (Lewis & Short), from in, "into", and pluit, "it rains": the basin the rain falls into.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a colonnaded garden, then the Latin for a 
 
 You'll want to know: fundāmentum, fundāmentī.
 fundāmentum, fundāmentī — "a foundation".
+
+The word, taken apart.
+fundāmentum is built on fundō, "to lay the bottom, to found", from fundus, "bottom" (EtymDB 2.1), with -mentum, an ending for a thing. fundus is usually traced to Proto-Indo-European bhudhmen, "bottom" (EtymDB 2.1); English bottom is a cousin.
 
 What you've built.
 One more word for this chapter.

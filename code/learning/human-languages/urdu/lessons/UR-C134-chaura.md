@@ -14,7 +14,8 @@ romanization: "chauṛā"
 concept_tag: UR-QUAL134-CHAURA
 prerequisites: [UR-C134-gila, UR-C134-sukha]
 sounds: []
-roots: []
+roots: [indo-aryan-ca-uda]
+etymology_hook: "chauṛā ← *ca-uḍa 'wide, open', a reconstructed form; a tadbhava (CDIAL 4534)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C134-sukha]
 <!-- hl-knowledge: introduces=[UR-LEX-C134-QUAL134-03]; assesses=[] -->
 
 **چوڑا** — *chauṛā* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چوڑا** (*chauṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ca-uḍa*, "wide, open", a form CDIAL reconstructs from its descendants (CDIAL 4534). CDIAL suggests, with a "possibly", that it was built on *cau-*, "four".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

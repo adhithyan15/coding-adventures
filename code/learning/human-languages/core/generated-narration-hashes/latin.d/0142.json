@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 142,
-  "sourceHash": "fnv1a64:361f3ac54ea00559",
+  "sourceHash": "fnv1a64:d6c3fd8696f118c4",
   "lessonIds": [
     "LA-C142-furca",
     "LA-C142-aratrum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch142.txt",
   "json": "latin/narration/ch142.json",
-  "textHash": "fnv1a64:10587bfd2dec0e9d",
-  "jsonHash": "fnv1a64:8384a30d048fdd9d",
+  "textHash": "fnv1a64:44a2bda79b4ea662",
+  "jsonHash": "fnv1a64:ce8eecc01a5c5627",
   "findings": []
 }

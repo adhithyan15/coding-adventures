@@ -11,7 +11,8 @@ romanization: "haudā"
 concept_tag: KA-RESP-IS-IT-SO
 prerequisites: [KA-C87-nothing, KA-C87-ohno]
 sounds: []
-roots: []
+roots: [tamil-aaku-become]
+etymology_hook: "haudā: haudu 'yes, it is so' (usually from āgu, DEDR 333) + the question ending -ā"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C87-ohno]
 
 **ಹೌದಾ?** (*haudā?*) — "is that so?", "really?". It is **ಹೌದು** (*haudu*), "yes",
 with the question ending **‑ಆ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೌದಾ** (*haudā*) is *haudu*, "yes, it is so", with *-ā*, the ending that makes a question. *Haudu* is usually explained as a form of *āgu*, "to become" (DEDR 333). DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

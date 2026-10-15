@@ -4,7 +4,7 @@
   "chapter": 125,
   "title": "Idli, Dosa, Vada, Upma, Finger millet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e5e0c5dfad586b9d",
+  "sourceHash": "fnv1a64:ad73a646f304db56",
   "lessons": [
     {
       "id": "KA-C125-idli",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2bcc8e26196f363c",
+      "sourceHash": "fnv1a64:1ade585a5b213f21",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇಡ್ಲಿ (iḍli) is native Dravidian, one word with Tamil iṭṭali and Malayalam iṭṭali (DEDR 455). DEDR lists iḍḍali, iḍḍalige, a steamed cake of rice flour and black gram. DEDR 455 compares Sanskrit iṇḍarī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:178812604c638afd",
+      "sourceHash": "fnv1a64:ce96fee3317c208e",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದೋಸೆ (dōse) is native Dravidian, one word with Tamil tōcai and Telugu dōse (DEDR 3542). DEDR lists dōse itself, \"a spongy cake of rice flour\". DEDR 3542 compares Sanskrit dhosaka."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa55ac84568feb8e",
+      "sourceHash": "fnv1a64:8ffea98125468281",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಡೆ (vaḍe) comes from Sanskrit vaṭaka, \"round cake of pulse fried in oil\", reshaped to Kannada sounds: a tadbhava (CDIAL 11213). Prakrit vaḍaga shows the softened middle."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81b7838a620fd354",
+      "sourceHash": "fnv1a64:bf86895b02a42cd0",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉಪ್ಪಿಟ್ಟು (uppiṭṭu) is native Dravidian: uppu, \"salt\" (DEDR 2674), and hiṭṭu, \"flour\", whose older form piṭṭu, \"flour, food\", DEDR 3084 cites: salted flour."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac560f82b3d58801",
+      "sourceHash": "fnv1a64:2f7438bfc4e6815a",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಾಗಿ (rāgi) is native Dravidian, one word with Tamil irāki and Telugu rāgi (DEDR 812). DEDR 812 compares Sanskrit rāgā, a lexicon word for the same grain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "tíkhiy"
 concept_tag: RU-QUAL125-QUIET
 prerequisites: [RU-C125-open, RU-C125-closed]
 sounds: []
-roots: []
+roots: [slavic-tikhu]
+etymology_hook: "тихий ← Proto-Slavic *tixŭ, with тешить 'to comfort'; Vasmer thinks Lithuanian teisùs 'fair' probably kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C125-closed]
 <!-- hl-knowledge: introduces=[RU-LEX-C125-QUAL125-04]; assesses=[] -->
 
 **тихий** (*tíkhiy*) — "quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тихий** ← Proto-Slavic *\*tixŭ* — inherited, with *тешить*, "to comfort" (Vasmer). Vasmer thinks it is probably related to Lithuanian *teisùs*, "fair, righteous", and *tiesà*, "truth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

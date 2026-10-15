@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for easy to do, then the Sanskrit for hard 
 You'll want to know: बलवान्.
 बलवान् — balavān — "mighty, strong".
 
+The word, taken apart.
+balavān is the nominative of balavat, built on bala, "power, strength" (CDIAL 9161), with -vat, "having" (MW). EtymDB sets bala beside Greek beltiōn, "better", and Latin dēbilis, "weak". Bala lives on as Hindi bal, "strength".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for hard to do, then the Sanskrit for might
 
 You'll want to know: रुग्णः.
 रुग्णः — rugṇaḥ — "sick".
+
+The word, taken apart.
+rugṇa is the past participle of the root √ruj, "to break, shatter" (MW): "broken", and then "diseased, sick" (CDIAL 10760). The sick person is one who is broken.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for mighty, then the Sanskrit for sick.
 You'll want to know: स्वस्थः.
 स्वस्थः — svasthaḥ — "healthy".
 
+The word, taken apart.
+svastha is a compound of sva, "self", and stha, "standing" (MW; CDIAL 13917): "being in one's own natural state", and so "well, healthy". It is the base of svāsthya, "health", which you have already met.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for sick, then the Sanskrit for healthy.
 You'll want to know: सुखी.
 सुखी — sukhī — "happy".
 
+The word, taken apart.
+sukhī is the nominative of sukhin, "having happiness", built on sukha, "pleasant, happiness" (MW). The usual account, which MW reports, takes sukha from su "good" and kha "axle-hole": a chariot that runs easily (CDIAL 13451).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for healthy, then the Sanskrit for happy.
 
 You'll want to know: दुःखी.
 दुःखी — duḥkhī — "unhappy".
+
+The word, taken apart.
+duḥkhī is the nominative of duḥkhin, "pained, afflicted", built on duḥkha, "pain, sorrow" (MW). CDIAL 6375 says duḥkha was formed after sukha, as its opposite. It lives on as Hindi dukh, "sorrow".
 
 What you've built.
 One more word for this chapter.

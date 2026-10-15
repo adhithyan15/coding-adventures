@@ -14,7 +14,8 @@ romanization: "bembalisu"
 concept_tag: KA-VERB-BEMBALISU
 prerequisites: [KA-C167-uduru, KA-C167-sudharisu]
 sounds: []
-roots: []
+roots: [dravidian-ven-back]
+etymology_hook: "bembalisu: native, usually explained as from ben 'the back' (DEDR 5488): to back someone up"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C167-sudharisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C167-KRIYE167-03]; assesses=[] -->
 
 **ಬೆಂಬಲಿಸು** — *bembalisu* — "to support, to back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಂಬಲಿಸು** (*bembalisu*) is native Dravidian, usually explained as built on *ben*, "the back" (DEDR 5488), which lists *bembaḻi*, "following": to support is to stand at someone's back. DEDR does not list *bembala* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

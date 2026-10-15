@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 82,
-  "sourceHash": "fnv1a64:571deda498a7039a",
+  "sourceHash": "fnv1a64:973d1b7f30d4b493",
   "lessonIds": [
     "ML-C82-chettaa",
     "ML-C82-chechi-address",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch82.txt",
   "json": "malayalam/narration/ch82.json",
-  "textHash": "fnv1a64:70a9db311adf33a9",
-  "jsonHash": "fnv1a64:e713fec744115895",
+  "textHash": "fnv1a64:d9d305dbfaeb407a",
+  "jsonHash": "fnv1a64:3f80edf9779e8667",
   "findings": []
 }

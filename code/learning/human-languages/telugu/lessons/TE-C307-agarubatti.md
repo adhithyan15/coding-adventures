@@ -14,7 +14,8 @@ romanization: "agarubatti"
 concept_tag: TE-VASTUVU307-AGARUBATTI
 prerequisites: [TE-C307-miksi, TE-C307-antlu]
 sounds: []
-roots: []
+roots: [sanskrit-agaru, sanskrit-varti]
+etymology_hook: "agarubatti: Sanskrit agaru 'aloe-wood' (CDIAL 49) + batti 'wick' ← varti (CDIAL 11359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C307-antlu]
 <!-- hl-knowledge: introduces=[TE-LEX-C307-VASTUVU307-04]; assesses=[] -->
 
 **అగరుబత్తి** — *agarubatti* — "an incense stick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అగరుబత్తి** (*agarubatti*) is Sanskrit *agaru*, "fragrant aloe-wood" (CDIAL 49), and *batti*, "stick, wick", from Sanskrit *varti*, "wick" (CDIAL 11359). CDIAL takes *agaru* from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

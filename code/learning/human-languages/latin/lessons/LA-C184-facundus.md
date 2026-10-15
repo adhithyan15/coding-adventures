@@ -13,7 +13,8 @@ gloss: "eloquent"
 concept_tag: LA-QUAL184-FACUNDUS
 prerequisites: [LA-C184-prodigus, LA-C184-modestus]
 sounds: []
-roots: []
+roots: [facundus-latin, fari-latin]
+etymology_hook: "fācundus 'eloquent' — built on fārī 'to speak'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C184-modestus]
 <!-- hl-knowledge: introduces=[LA-LEX-C184-QUAL184-03]; assesses=[] -->
 
 **fācundus, fācunda, fācundum** — "eloquent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fācundus** is built on *fārī*, "to speak" (Lewis & Short), with *-cundus*, an ending for a lasting disposition: given to speaking well.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

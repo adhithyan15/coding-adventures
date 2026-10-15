@@ -11,6 +11,7 @@ concept_tag: ES-VERB-ACERCAR
 prerequisites: [ES-C449-taladro, ES-C443-acercarse, ES-C340-cerca]
 sounds: [soft-c, r-tap, stress-final]
 roots: [circa-latin]
+etymology_hook: "acercar — a- + cerca 'near' + -ar; cerca is Latin circa 'around' — English circa"
 duration:
   max_seconds: 275
 requires:

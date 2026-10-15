@@ -14,7 +14,8 @@ romanization: "bhejnā"
 concept_tag: UR-VERB-BHEJNA
 prerequisites: [UR-C51-chahna, UR-C51-lana]
 sounds: []
-roots: []
+roots: [indo-aryan-bhejj]
+etymology_hook: "bhejnā ← *bhejj 'send', a reconstructed form; a tadbhava (CDIAL 9603)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C51-lana]
 <!-- hl-knowledge: introduces=[UR-LEX-C51-VERBS51-04]; assesses=[] -->
 
 **بھیجنا** — *bhejnā* — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھیجنا** (*bhejnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhejj*, "send", a form CDIAL reconstructs from its descendants (CDIAL 9603). CDIAL rejects a derivation from *visarjayati*, "sends off", and offers two possible sources, neither certain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

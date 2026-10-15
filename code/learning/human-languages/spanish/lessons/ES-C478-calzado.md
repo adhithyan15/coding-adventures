@@ -10,7 +10,8 @@ gloss: "the footwear"
 concept_tag: ES-REF-CALZADO
 prerequisites: [ES-C477-trescientos, ES-C478-equipaje]
 sounds: []
-roots: []
+roots: [calceus-latin]
+etymology_hook: "calzado — from calzar 'to shoe', Latin calceare, built on calceus 'a shoe'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C478-equipaje]
 > *Wear comfortable footwear.*
 
 A notice word for shoes in general; one shoe is *un zapato*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**calzado** is the participle of *calzar*, "to put on shoes", from Latin *calceare* (EtymDB 2.1), built on *calceus*, "a shoe" — inherited: the Latin *-ce-* became *-z-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

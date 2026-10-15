@@ -14,7 +14,8 @@ romanization: "komod"
 concept_tag: FA-HOME46-KOMOD
 prerequisites: [FA-C46-divar, FA-C46-takht]
 sounds: []
-roots: []
+roots: [french-commode]
+etymology_hook: "komod ← French commode 'chest of drawers'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C46-takht]
 <!-- hl-knowledge: introduces=[FA-LEX-C46-HOME46-03]; assesses=[] -->
 
 **کمد** — *komod* — "a cupboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*komod* is borrowed from French *commode*, "chest of drawers" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

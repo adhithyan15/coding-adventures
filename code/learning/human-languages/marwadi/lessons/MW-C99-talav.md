@@ -14,7 +14,8 @@ romanization: "taḷāv"
 concept_tag: MW-LOC99-TALAV
 prerequisites: [MW-C99-baro, MW-C99-bavri]
 sounds: []
-roots: []
+roots: [sanskrit-tadaga]
+etymology_hook: "taḷāv ← Sanskrit taḍāga 'pool', a tadbhava (CDIAL 5635, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C99-bavri]
 <!-- hl-knowledge: introduces=[MW-LEX-C99-LOC99-05]; assesses=[] -->
 
 **तळाव** — *taḷāv* — "a pond, a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तळाव** (*taḷāv*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *taḍāga*, "pool". CDIAL lists Old Marwari *talāvo* under it (CDIAL 5635).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Excuse Me, and Say It Again",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:42ec0d40f08d26a3",
+  "sourceHash": "fnv1a64:59a0e6a3fe9da8bb",
   "lessons": [
     {
       "id": "RU-C21-izvinite",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44ab6c097f95f386",
+      "sourceHash": "fnv1a64:6544e3321b4d3f16",
       "notice": null,
       "blocks": [
         {
@@ -117,7 +117,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the word literally asks the other person to take you out of the blame — which is a real picture, still visible in the Russian, and one English threw away when excuse stopped meaning anything at all on its own."
+              "text": "So the word literally asks the other person to take you out of the blame — which is a real picture, still visible in the Russian, and one English threw away when excuse stopped meaning anything at all on its own. вина is inherited; Vasmer relates it to Latvian vaina, \"guilt\"."
             }
           ]
         },
@@ -193,7 +193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e71807b9dee6441",
+      "sourceHash": "fnv1a64:b5e89ddf2159257c",
       "notice": null,
       "blocks": [
         {
@@ -295,15 +295,15 @@
             },
             {
               "kind": "speech",
-              "text": "Use простите (prastítye) for a trodden foot and you sound as though you had wrecked their week. Use извините (izvinítye) after a genuine wrong and you sound as though it did not matter."
+              "text": "Use простите (prastítye) for a trodden foot and you sound as though you had wrecked their week."
             },
             {
               "kind": "speech",
-              "text": "This is the same pair-with-a-rule that здравствуйте and привет form for greetings — Russian keeps a formal and a casual option side by side and expects you to choose. The difference here is that the choice is about the size of the offence rather than about who you are talking to."
+              "text": "This is the same pair-with-a-rule that здравствуйте and привет form for greetings — Russian keeps two options side by side. The difference here is that the choice is about the size of the offence rather than about who you are talking to."
             },
             {
               "kind": "speech",
-              "text": "The etymology carries the same weight: простите (prastítye) is built on простой, simple, straight — to forgive is to make something straight again."
+              "text": "The etymology carries the same weight: простите (prastítye) is built on простой, Proto-Slavic prostŭ, \"simple, free\": to forgive is to set someone free, and Czech prostiti still means \"to free\" (Vasmer)."
             }
           ]
         },
@@ -379,7 +379,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9338e2e77f5f18f",
+      "sourceHash": "fnv1a64:8156c7aaaabfb185",
       "notice": null,
       "blocks": [
         {
@@ -455,7 +455,7 @@
             },
             {
               "kind": "speech",
-              "text": "Until now the book could report a failure and do nothing about it. Я не понимаю said something had gone wrong; it did not ask anybody to change anything. This word does."
+              "text": "Until now the book could only report a failure. This word asks for a fix."
             },
             {
               "kind": "speech",
@@ -463,7 +463,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three words you own, in the order a Russian says them: the opening, the request, the politeness. That is a complete repair turn."
+              "text": "That is a complete repair turn."
             }
           ]
         },
@@ -474,7 +474,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Three words in two lessons now end in -ите: извините (izvinítye), простите (prastítye), повторите (paftarítye). That is not a coincidence and it is worth naming."
+              "text": "Three words in two lessons now end in -ите: извините (izvinítye), простите (prastítye), повторите (paftarítye). That is worth naming."
             },
             {
               "kind": "speech",
@@ -482,11 +482,11 @@
             },
             {
               "kind": "speech",
-              "text": "So the two apologies were never nouns. They were commands all along, and seeing the ending makes them a set instead of three things to memorise."
+              "text": "So the two apologies were never nouns: they were commands all along."
             },
             {
               "kind": "speech",
-              "text": "The word itself is по- plus втор-, second — the same втор- in вторник, Tuesday, the second day. To repeat is to do a thing a second time."
+              "text": "The word itself is по- plus втор-, second — the same втор- in вторник, Tuesday, the second day. To repeat is to do a thing a second time. второй goes back to Proto-Slavic vŭtorŭ, whose deeper origin Vasmer calls uncertain."
             }
           ]
         },
@@ -562,7 +562,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22934401fe53508c",
+      "sourceHash": "fnv1a64:255584b06b9cc5df",
       "notice": null,
       "blocks": [
         {
@@ -611,11 +611,11 @@
             },
             {
               "kind": "speech",
-              "text": "Stress the first syllable, and let the two unstressed о and е at the end soften: MYÉD-len-na."
+              "text": "Stress the first syllable, and let the two unstressed о and е at the end soften: MYÉD-len-na. It is the adverb of the Russian word for \"slow\", Proto-Slavic mŭdĭlĭnŭ, with медлить, \"to delay\" (Vasmer)."
             },
             {
               "kind": "speech",
-              "text": "Its shape is worth a moment. Russian makes an adverb by putting -о on the end of a describing word, and that is the whole rule — no ending to agree with anything, nothing to change. It is the simplest piece of grammar in this chapter and one of the most productive in the language."
+              "text": "Its shape is worth a moment. Russian makes an adverb by putting -о on the end of a describing word, and that is the whole rule — no ending to agree with anything, nothing to change. It is one of the most productive rules in the language."
             }
           ]
         },
@@ -714,7 +714,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f70bd2a770adaeaa",
+      "sourceHash": "fnv1a64:d096029f97a2dbbd",
       "notice": null,
       "blocks": [
         {
@@ -786,6 +786,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "помогите (pamagítye) is помогать, \"to help\", with -ите: по- with the root of мочь, \"to be able\", Proto-Slavic mogti, which Vasmer relates to Gothic magan, \"to be able\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -825,7 +836,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

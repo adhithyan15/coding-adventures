@@ -14,7 +14,8 @@ romanization: "beṅga"
 concept_tag: TE-AROGYAM210-BENGA
 prerequisites: [TE-C210-nirasa, TE-C210-visugu]
 sounds: []
-roots: []
+roots: [telugu-benga-pining]
+etymology_hook: "beṅga: origin uncertain; DEDR and CDIAL list no word of this shape in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C210-visugu]
 <!-- hl-knowledge: introduces=[TE-LEX-C210-AROGYAM210-05]; assesses=[] -->
 
 **బెంగ** — *beṅga* — "pining, homesickness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **బెంగ** (*beṅga*) is uncertain. DEDR and CDIAL list no word of this shape meaning "pining, longing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

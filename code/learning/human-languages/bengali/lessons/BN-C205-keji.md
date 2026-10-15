@@ -14,7 +14,8 @@ romanization: "keji"
 concept_tag: BN-JINIS205-KEJI
 prerequisites: [BN-C205-signl, BN-C205-mp]
 sounds: []
-roots: []
+roots: [english-kilogram]
+etymology_hook: "keji: English kg, the short form of kilogram, read letter by letter"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C205-mp]
 <!-- hl-knowledge: introduces=[BN-LEX-C205-JINIS205-04]; assesses=[] -->
 
 **কেজি** — *keji* — "a kilo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কেজি** (*keji*) is a loan from English *kg*, the short form of *kilogram*, read out letter by letter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

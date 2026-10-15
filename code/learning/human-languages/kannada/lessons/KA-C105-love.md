@@ -11,7 +11,8 @@ romanization: "prīti"
 concept_tag: KA-WISH-LOVE
 prerequisites: [KA-C105-festival, KA-C105-hospitality]
 sounds: []
-roots: []
+roots: [sanskrit-priti]
+etymology_hook: "prīti ← Sanskrit prīti 'pleasure; love', a tatsama (CDIAL 8982)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [KA-C105-hospitality]
 <!-- hl-knowledge: introduces=[KA-LEX-C105-WISHES-04]; assesses=[] -->
 
 **ಪ್ರೀತಿ** (*prīti*) — "love, affection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪ್ರೀತಿ** (*prīti*) is Sanskrit *prīti*, "pleasure; love", taken over whole as a learned loan, a tatsama (CDIAL 8982).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

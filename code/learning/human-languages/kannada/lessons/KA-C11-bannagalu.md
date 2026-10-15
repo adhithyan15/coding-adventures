@@ -11,7 +11,7 @@ romanization: "kappu biḷi kempu nīli"
 concept_tag: KA-COLOUR-BASIC
 prerequisites: [KA-C10-vaara, KA-C07-ombattu, KA-C07-hattu]
 sounds: [kannada-anusvara, kannada-virama-geminate]
-roots: [dravidian-native-colors, sanskrit-nila]
+roots: [dravidian-native-colors, sanskrit-nila, dravidian-kar-black, dravidian-vel-white, dravidian-cem-red]
 etymology_hook: "ಕಪ್ಪು/ಬಿಳಿ/ಕೆಂಪು (black/white/red) are native Dravidian, unlike Kannada's fully-Sanskritic day-names — but ನೀಲಿ (blue) is Sanskrit, same root as Tamil/Hindi/Malayalam"
 reviews_of: [KA-C10-vaara]
 duration:
@@ -44,6 +44,11 @@ charge, except for one familiar exception.
 - **ಕಪ್ಪು** (*kappu*) = "**black**" — native Dravidian.
 - **ಬಿಳಿ** (*biḷi*) = "**white**" — native Dravidian.
 - **ಕೆಂಪು** (*kempu*) = "**red**" — native Dravidian.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಪ್ಪು** (*kappu*) is native Dravidian (DEDR 1395, with Tamil *kaṟuppu*), **ಬಿಳಿ** (*biḷi*) is native too (DEDR 5496, with Tamil *veḷ*), and so is **ಕೆಂಪು** (*kempu*) (DEDR 1931, with Telugu *kempu*). **ನೀಲಿ** (*nīli*) comes from Sanskrit *nīla*, "dark blue" (CDIAL 7563). DEDR 1395 compares Sanskrit *karparī*.
 
 ## You'll want to know: The familiar borrowed blue
 <!-- hl-knowledge: introduces=[KA-LEX-C11-BANNAGALU-02]; assesses=[] -->

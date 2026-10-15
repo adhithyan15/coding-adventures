@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Two Thoughts, One Sentence",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:134ce422f3162bf4",
+  "sourceHash": "fnv1a64:521ffd90e006a17b",
   "lessons": [
     {
       "id": "GE-C35-oder",
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3a68a62469313f4",
+      "sourceHash": "fnv1a64:4f133b438f24c658",
       "notice": null,
       "blocks": [
         {
@@ -400,6 +400,10 @@
             {
               "kind": "speech",
               "text": "English has no separate word here and never did. It says but both times and lets the tone do the work. German marks the difference, and it marks it a second time with doch in answers, so the pattern is one you have already met."
+            },
+            {
+              "kind": "speech",
+              "text": "The word from Old High German suntar, \"apart\" (EtymDB 2.1), the same family as English sunder."
             }
           ]
         },
@@ -497,7 +501,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:863f05063a342d2e",
+      "sourceHash": "fnv1a64:a5f140175dbd6616",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -554,7 +558,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can still hear the join. \"It rained, then I stayed home\" and \"It rained, so I stayed home\" are nearly the same sentence, and a reason is very often a before wearing different clothes."
+              "text": "You can still hear the join. \"It rained, then I stayed home\" and \"It rained, so I stayed home\" are nearly the same sentence, and a reason is very often a before wearing different clothes. Dann from Old High German danne from Proto-Germanic þan, \"then\" (EtymDB 2.1), and denn split off from it."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 98,
-  "sourceHash": "fnv1a64:f8297af34cd0b86c",
+  "sourceHash": "fnv1a64:0794c2088558b3a1",
   "lessonIds": [
     "MR-C98-surya",
     "MR-C98-chandra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch98.txt",
   "json": "marathi/narration/ch98.json",
-  "textHash": "fnv1a64:5a6be01cd9051f1e",
-  "jsonHash": "fnv1a64:cef77ba643369501",
+  "textHash": "fnv1a64:28f5f0ddf0a162cc",
+  "jsonHash": "fnv1a64:410aadadfdcd2ef9",
   "findings": []
 }

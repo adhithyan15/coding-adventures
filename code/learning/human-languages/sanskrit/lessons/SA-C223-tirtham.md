@@ -14,7 +14,8 @@ romanization: "tīrtham"
 concept_tag: SA-THG223-TIRTHAM
 prerequisites: [SA-C223-yatrikah, SA-C223-margadarsakah]
 sounds: []
-roots: []
+roots: [sanskrit-tirtha]
+etymology_hook: "tīrtha 'ford, place of pilgrimage' ← root √tṝ 'cross over' (MW; CDIAL 5846)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C223-margadarsakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C223-THG223-03]; assesses=[] -->
 
 **तीर्थम्** — *tīrtham* — "a holy ford, a place of pilgrimage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tīrtha* is built on the root √tṝ, "to cross over" (MW): a ford is where you cross a river (CDIAL 5846). Holy bathing places on rivers became places of pilgrimage. √tṝ is also the root of *vitarati*, "hands out", which you have already met.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

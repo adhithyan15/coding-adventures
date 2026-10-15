@@ -14,7 +14,8 @@ romanization: "naṣṭa karṇe"
 concept_tag: MR-VERB-NASTA-KARNE
 prerequisites: [MR-C226-dhoka-patkarne, MR-C226-sodavne]
 sounds: []
-roots: []
+roots: [sanskrit-nashta, sanskrit-karoti]
+etymology_hook: "naṣṭa: Sanskrit naṣṭa 'lost, destroyed', a tatsama; karṇe ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C226-sodavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C227-ACT227-01]; assesses=[] -->
 
 **नष्ट करणे** — *naṣṭa karṇe* — "to destroy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नष्ट** is Sanskrit *naṣṭa*, "lost, destroyed", a tatsama. **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

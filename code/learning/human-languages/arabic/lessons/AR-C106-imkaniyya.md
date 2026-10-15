@@ -14,7 +14,8 @@ romanization: "imkāniyya"
 concept_tag: AR-CAN106-IMKANIYYA
 prerequisites: [AR-C105-hawla, AR-C105-inda]
 sounds: []
-roots: []
+roots: [m-k-n]
+etymology_hook: "imkāniyya: built on the root m-k-n, 'to have power, to be firm in place' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C105-inda]
 <!-- hl-knowledge: introduces=[AR-LEX-C106-CAN106-01]; assesses=[] -->
 
 **إمكانية** — *imkāniyya* — "a possibility".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إمكانية** (*imkāniyya*) is built on the native Arabic root *m-k-n*, "to have power, to be firm in place" (Lane). *Imkāniyya* is a modern abstract noun from *imkān*, "possibility", the verbal noun of Form IV *amkana*, "to be possible".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

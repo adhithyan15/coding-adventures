@@ -14,7 +14,8 @@ romanization: "kapolaḥ"
 concept_tag: SA-THINGS116-KAPOLAH
 prerequisites: [SA-C115-kukkutah, SA-C116-sarasah]
 sounds: []
-roots: []
+roots: [sanskrit-kapola]
+etymology_hook: "kapola 'cheek' is probably borrowed from Austroasiatic, possibly Dravidian (CDIAL 2755, after EWA)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C116-sarasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C116-THINGS116-02]; assesses=[] -->
 
 **कपोलः** — *kapolaḥ* — "a cheek".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kapola* "the cheek" is probably borrowed from Austroasiatic, or possibly from Dravidian, as CDIAL 2755 reports after EWA; DEDR 1337 sets it, with a query mark, beside a Dravidian word for the cheek. Pali kept it as *kapola* (CDIAL 2755).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

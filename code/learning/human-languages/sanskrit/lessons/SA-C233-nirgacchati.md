@@ -14,7 +14,8 @@ romanization: "nirgacchati"
 concept_tag: SA-VERB-NIRGACCHATI
 prerequisites: [SA-C233-pratiksate, SA-C233-anugacchati]
 sounds: []
-roots: []
+roots: [gam-go]
+etymology_hook: "nirgacchati ← nis 'out' + gacchati 'goes', from √gam 'go' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C233-anugacchati]
 <!-- hl-knowledge: introduces=[SA-LEX-C233-ACT233-05]; assesses=[] -->
 
 **निर्गच्छति** — *nirgacchati* — "goes out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nirgacchati* is built on *nis*, "out", and *gacchati*, "goes", from the root √gam (MW): "goes out, comes forth". The *s* of *nis* becomes *r* before *g*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

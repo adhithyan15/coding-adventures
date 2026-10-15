@@ -14,7 +14,8 @@ romanization: "ráznyy"
 concept_tag: RU-KACH218-RAZNYY
 prerequisites: [RU-C217-svezhiy, RU-C217-sovremennyy]
 sounds: []
-roots: []
+roots: [slavic-roznu]
+etymology_hook: "разный is the Church Slavonic shape of native розный, as in рознь 'discord'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C217-sovremennyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C218-KACH218-01]; assesses=[] -->
 
 **разный** (*ráznyy*) — "different, various".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**разный** is the Church Slavonic form, Vasmer says, in place of native *розный*, as in *рознь*, "discord", and *порознь*, "apart".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

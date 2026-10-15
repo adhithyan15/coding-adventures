@@ -4,7 +4,7 @@
   "chapter": 167,
   "title": "Trolley, Basket, List, Brand, Quality",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ba8b05b54e35f050",
+  "sourceHash": "fnv1a64:82dacfc042e1cbcd",
   "lessons": [
     {
       "id": "PT-C167-carrinho",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c3e40ec51a8efbb",
+      "sourceHash": "fnv1a64:ef8f975290335ffd",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "carrinho is carro, \"cart\", with -inho, \"little\"."
+              "text": "carrinho is carro, \"cart\", with -inho, \"little\". Carro is inherited from Latin carrus, \"wagon\", which Latin itself borrowed from Gaulish (EtymDB 2.1)."
             }
           ]
         },

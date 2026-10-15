@@ -1,0 +1,11 @@
+{
+  "id": "SA-C268-vittakosah",
+  "pathSegment": "SA-PATH-268-SERVICE268",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-268-SERVICE268",
+      "order": 1
+    }
+  ]
+}

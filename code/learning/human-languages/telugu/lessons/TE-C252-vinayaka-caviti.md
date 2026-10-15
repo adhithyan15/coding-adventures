@@ -14,7 +14,8 @@ romanization: "vināyaka caviti"
 concept_tag: TE-SAMAYAM252-VINAYAKA-CAVITI
 prerequisites: [TE-C252-dipavali, TE-C252-dasara]
 sounds: []
-roots: []
+roots: [sanskrit-vinayaka, sanskrit-caturthi]
+etymology_hook: "vināyaka caviti: Sanskrit vināyaka 'leader' (CDIAL 11776) + caviti ← caturthī 'fourth' (CDIAL 4600)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C252-dasara]
 <!-- hl-knowledge: introduces=[TE-LEX-C252-SAMAYAM252-04]; assesses=[] -->
 
 **వినాయక చవితి** — *vināyaka caviti* — "Vinayaka Chavithi, Ganesha's festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వినాయక చవితి** (*vināyaka caviti*) is Sanskrit *vināyaka*, "leader, guide" (CDIAL 11776), a name of Ganesha, and *caviti*, "the fourth day", from Sanskrit *caturthī*, "fourth" (CDIAL 4600).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

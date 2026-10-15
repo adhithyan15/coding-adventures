@@ -215,6 +215,7 @@ Assemble it: "how" + "do you call yourself" = the polite question that gets the 
 The phrase, taken apart — by assembling it.
 comment (how) + vous appelez-vous ("do you call yourself").
 comment vous appelez-vous? = literally "how do you call yourself?" = the polite "what's your name?"
+Comment from Latin quōmodo, "in what manner", vous from Latin vōs, and appeler from Latin appellāre, "to call" (EtymDB 2.1).
 
 Grammar Lens: asking by inversion.
 A statement — vous vous appelez ("you call yourself") — becomes a question by flipping the verb and the pronoun, joined with a hyphen:

@@ -14,7 +14,8 @@ romanization: "billu"
 concept_tag: TE-PANI273-BILLU
 prerequisites: [TE-C272-rekka, TE-C273-vaddi]
 sounds: []
-roots: []
+roots: [english-bill]
+etymology_hook: "billu ← English bill"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C273-vaddi]
 <!-- hl-knowledge: introduces=[TE-LEX-C273-PANI273-02]; assesses=[] -->
 
 **బిల్లు** — *billu* — "a bill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బిల్లు** (*billu*) is a loan from English *bill*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Mum, Son, Daughter, Grandfather, Grandmother",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b09e9154da5217cb",
+  "sourceHash": "fnv1a64:e1e72f5a501585c7",
   "lessons": [
     {
       "id": "UR-C43-ammi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd2aa36dc66d80dc",
+      "sourceHash": "fnv1a64:39f2cfc3cc536763",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "امی (ammī) is the fond form of ammā, \"mother\", which CDIAL lists under Sanskrit ambā, \"mother\" (CDIAL 574). CDIAL lists ammā, not ammī."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ab8412a5965fa4b",
+      "sourceHash": "fnv1a64:244b738d33d9f8e7",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بیٹا (beṭā) is a tadbhava, a word inherited and reshaped by sound change. It comes from beṭṭa, \"boy\", a form CDIAL reconstructs from its descendants (CDIAL 9238). CDIAL lists it in an entry headed biḍḍa, \"defective\", beside Prakrit biṭṭa, \"boy\"; no Sanskrit source is agreed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:718daa4454106022",
+      "sourceHash": "fnv1a64:9f7337b5d042d71c",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بیٹی (beṭī) is the feminine of beṭā, \"son\". CDIAL lists both under a reconstructed beṭṭa, in an entry headed biḍḍa, \"defective\", beside Prakrit biṭṭa, \"boy\" (CDIAL 9238). No Sanskrit source is agreed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d9ce43dc4e016dd",
+      "sourceHash": "fnv1a64:329bca173cc7918c",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دادا (dādā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, \"father or other elderly relative\", a form CDIAL reconstructs from its descendants (CDIAL 6261)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8758f034faf9f88",
+      "sourceHash": "fnv1a64:048820afe0b5fb65",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دادی (dādī) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, \"father or other elderly relative\", a form CDIAL reconstructs from its descendants (CDIAL 6261). dādī is the feminine of dādā, \"grandfather\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

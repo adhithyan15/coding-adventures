@@ -14,7 +14,8 @@ romanization: "mahat"
 concept_tag: SA-ADJ-BIG
 prerequisites: [SA-R13-second-pass-five-parts-three-kinds-of-ancestry]
 sounds: []
-roots: []
+roots: [sanskrit-maha]
+etymology_hook: "mahat 'great' ← the root √mah 'be great'; MW compares Greek megas, Latin magnus, English much"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,13 @@ That is all an adjective does in this language.
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mahat* began as a participle of the root √mah, "to be great" (MW). It is
+inherited: MW sets it beside Greek *megas*, Latin *magnus* and English
+*much*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-01] -->

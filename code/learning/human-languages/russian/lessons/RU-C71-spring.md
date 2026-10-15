@@ -14,7 +14,8 @@ romanization: "vesná"
 concept_tag: RU-SEASONS-SPRING
 prerequisites: [RU-C71-sunday, RU-C71-winter]
 sounds: []
-roots: []
+roots: [pie-wesr]
+etymology_hook: "весна ← Proto-Slavic *vesna; Latin ver 'spring' and Lithuanian vasarà 'summer' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C71-winter]
 <!-- hl-knowledge: introduces=[RU-LEX-C71-SEASONS-03]; assesses=[] -->
 
 **весна** (*vesná*) — "spring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**весна** ← Proto-Slavic *\*vesna* — inherited. Vasmer lists Lithuanian *vasarà*, "summer", Greek *éar*, Latin *vēr* and Old Norse *vár*, all "spring", and Sanskrit *vasantá-*, "spring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

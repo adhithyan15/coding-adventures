@@ -14,7 +14,8 @@ romanization: "samosā"
 concept_tag: HI-THINGS142-SAMOSA
 prerequisites: [HI-C141-mirc, HI-C141-ata]
 sounds: []
-roots: []
+roots: [persian-sanbosa]
+etymology_hook: "samosā: usually traced to Persian sanbosa 'a fried pastry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C141-ata]
 <!-- hl-knowledge: introduces=[HI-LEX-C142-THINGS142-01]; assesses=[] -->
 
 **समोसा** — *samosā* — "a samosa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**समोसा** (*samosā*) is a loan, usually traced to Persian *sanbosa*, "a fried pastry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

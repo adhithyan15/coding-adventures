@@ -14,7 +14,8 @@ romanization: "hoquq"
 concept_tag: FA-KAR176-HOQUQ
 prerequisites: [FA-C176-karkhane, FA-C176-jalase]
 sounds: []
-roots: []
+roots: [arabic-haqq]
+etymology_hook: "hoquq ← Arabic ḥuqūq 'rights, dues', root ḥ-q-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C176-jalase]
 <!-- hl-knowledge: introduces=[FA-LEX-C176-KAR176-05]; assesses=[] -->
 
 **حقوق** — *hoquq* — "a salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hoquq* is borrowed from Arabic *ḥuqūq*, "rights, dues". Its Arabic root is *ḥ-q-q* (Lane). It is the plural of *ḥaqq*; Persian uses "dues" for a salary.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

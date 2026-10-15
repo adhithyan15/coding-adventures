@@ -11,7 +11,8 @@ romanization: "pāta"
 concept_tag: TE-ADJ-OLD
 prerequisites: [TE-C42-new]
 sounds: []
-roots: []
+roots: [dravidian-pazha-old]
+etymology_hook: "pāta: native Dravidian, one word with Tamil paḻa and Kannada paḻe (DEDR 3999)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **కొత్త** *kotta* a moment ago. Put them side by side and noth
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పాత** (*pāta*) is native Dravidian, one word with Tamil *paḻa* and Kannada *paḻe* (DEDR 3999). DEDR lists Telugu *pāta*, "old, worn out".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C42-ADJ-05] -->

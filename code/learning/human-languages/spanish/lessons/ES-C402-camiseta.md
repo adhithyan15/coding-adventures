@@ -49,6 +49,8 @@ cuesta?*)
 The build is visible: **camisa** plus **-eta**, a suffix that can make something
 smaller. The lighter, smaller shirt became the ordinary T-shirt. Keep the two
 shop labels distinct: **camisa** for a shirt, **camiseta** for a T-shirt.
+*Camisa* ← Late Latin *camisia*, "shirt", which EtymDB 2.1 traces further back to
+Germanic.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COSTAR, ES-LEX-CAMISA, ES-LEX-CAMISETA] -->

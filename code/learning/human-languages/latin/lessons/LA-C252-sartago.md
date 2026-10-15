@@ -13,7 +13,8 @@ gloss: "a frying pan"
 concept_tag: LA-RES252-SARTAGO
 prerequisites: [LA-C251-scutum, LA-C252-ampulla]
 sounds: []
-roots: []
+roots: [sartago-latin]
+etymology_hook: "sartāgō 'frying pan' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C252-ampulla]
 <!-- hl-knowledge: introduces=[LA-LEX-C252-RES252-02]; assesses=[] -->
 
 **sartāgō, sartāginis** — "a frying pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sartāgō** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

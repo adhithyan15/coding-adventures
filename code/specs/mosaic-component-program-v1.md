@@ -93,6 +93,20 @@ components on empty fixtures, and passed a story of eight identical buttons.
 
 ### Four gaps that block the method
 
+> **Status, 2026-10-13 (MB-12):** gap 1 is closed, and gap 2 is partly
+> closed:
+>
+> - Three-file components have had stories since #14436. 61 `.stories.json`
+>   files now exist under `code/packages/`.
+> - `.github/workflows/mosaicbook.yml` gates every story with
+>   `mosaicbook-server --check` (#14688).
+> - MosaicBook now also renders Paint PNGs (#15055).
+> - MosaicBook shows a drop panel for the five native backends (UI19 §13).
+>   They are still not rendered.
+>
+> The analysis below is kept as it was written, because it explains the
+> order the work took.
+
 1. **MosaicBook cannot story the components this repo actually has, and is not
    in CI.** Two problems, and the first is the deeper one.
 

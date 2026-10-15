@@ -14,7 +14,8 @@ romanization: "vetuku"
 concept_tag: TE-VERB-VETUKU
 prerequisites: [TE-C144-pagalagottu, TE-C144-pampu]
 sounds: []
-roots: []
+roots: [dravidian-vedaku-search]
+etymology_hook: "vetuku: native Dravidian, one word with Kannada bedaku (DEDR 5483)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C144-pampu]
 <!-- hl-knowledge: introduces=[TE-LEX-C144-ACT144-05]; assesses=[] -->
 
 **వెతుకు** — *vetuku* — "to look for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెతుకు** (*vetuku*) is native Dravidian, one word with Kannada *bedaku* (DEDR 5483). DEDR lists Telugu *vetuku*, "to search, look for".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

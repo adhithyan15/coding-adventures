@@ -14,7 +14,8 @@ romanization: "sobhâne"
 concept_tag: FA-FOOD43-SOBHANE
 prerequisites: [FA-C43-mast, FA-C43-piyaz]
 sounds: []
-roots: []
+roots: [arabic-subh]
+etymology_hook: "sobhâne: sobh ← Arabic ṣubḥ 'morning', root ṣ-b-ḥ (Lane), + Persian -âne"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C43-piyaz]
 <!-- hl-knowledge: introduces=[FA-LEX-C43-FOOD43-04]; assesses=[] -->
 
 **صبحانه** — *sobhâne* — "breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sobhâne* is *sobh*, "morning", with the Persian ending *-âne*, "belonging to": the morning meal. *sobh* is borrowed from Arabic *ṣubḥ*, "morning" (root *ṣ-b-ḥ*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

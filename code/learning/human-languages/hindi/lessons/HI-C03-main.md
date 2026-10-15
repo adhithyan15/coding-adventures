@@ -15,6 +15,7 @@ concept_tag: PRONOUN-I
 prerequisites: [HI-C02-meraa]
 sounds: [anusvara, matra-ai]
 roots: [ma-first-person]
+etymology_hook: "maiṁ ← Sanskrit mayā 'by me', from the first-person base ma- (CDIAL 9691)"
 duration:
   max_seconds: 180
 requires:

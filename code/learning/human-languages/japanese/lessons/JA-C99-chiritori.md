@@ -14,7 +14,8 @@ romanization: "chiritori"
 concept_tag: JA-THINGS99-CHIRITORI
 prerequisites: [JA-C99-fukuro, JA-C99-tawashi]
 sounds: []
-roots: []
+roots: [japanese-chiri, japanese-toru]
+etymology_hook: "chiritori: native chiri 'dust' + tori 'taking' (toru)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C99-tawashi]
 <!-- hl-knowledge: introduces=[JA-LEX-C99-THINGS99-05]; assesses=[] -->
 
 **ちりとり** — *chiritori* — "a dustpan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ちりとり** (*chiritori*) is a native compound, inherited rather than borrowed: *chiri*, "dust", and *tori*, "taking", from *toru*, "to take" (JMdict).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

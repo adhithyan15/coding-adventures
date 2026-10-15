@@ -14,7 +14,8 @@ romanization: "khāraṭ"
 concept_tag: MR-QUAL149-KHARAT
 prerequisites: [MR-C148-komat, MR-C148-suka]
 sounds: []
-roots: []
+roots: [sanskrit-kshara]
+etymology_hook: "khāraṭ: built on khār, which CDIAL lists as 'alkali' under Sanskrit kṣāra 'corrosive' (CDIAL 3674)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C148-suka]
 <!-- hl-knowledge: introduces=[MR-LEX-C149-QUAL149-01]; assesses=[] -->
 
 **खारट** — *khāraṭ* — "salty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खारट** (*khāraṭ*) is built on Marathi *khār*, which CDIAL lists, as "alkali", under Sanskrit *kṣāra*, "corrosive" (CDIAL 3674).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cavaykkuka"
 concept_tag: ML-VERB-CAVAYKKUKA
 prerequisites: [ML-C266-totuka, ML-C266-katikkuka]
 sounds: []
-roots: []
+roots: [dravidian-cappu-chew]
+etymology_hook: "cavaykkuka: native Dravidian, one word with Tamil cappu (DEDR 2334)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C266-katikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C266-KRIYA266-03]; assesses=[] -->
 
 **ചവയ്ക്കുക** — *cavaykkuka* — "to chew".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചവയ്ക്കുക** (*cavaykkuka*) is native Dravidian, one word with Tamil *cappu* (DEDR 2334).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chat"
 concept_tag: HI-NOUN-ROOF
 prerequisites: [HI-C58-wall, HI-C56-village, HI-C57-feast]
 sounds: []
-roots: []
+roots: [indo-aryan-chatti]
+etymology_hook: "chat ← *chatti 'covering', on chad- 'to cover', the root of chattra 'parasol' (CDIAL 4971)"
 duration:
   max_seconds: 210
 requires:
@@ -43,14 +44,14 @@ reviews_of: [HI-C58-wall]
 
 **छत** (*chat*) — "a roof".
 
-From Sanskrit छत्र (*chatra*), which meant a parasol — the thing held over a person's head. The word came down off the handle and settled onto the building.
+From a reconstructed *\*chatti*, 'covering' (CDIAL 4971), on Sanskrit *chad-*, 'to cover' — the root of छत्र (*chatra*), a parasol held over a person's head. Roof and parasol are both coverings.
 
 A flat छत in North India is a place people go, not only a lid: it is where washing dries and where the evening is sat out. The word covers the surface and the use at once.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The second of five, and a parasol that turned into a roof.
+The second of five, and a covering that became a roof.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C56-ROAD-02, HI-LEX-C57-GIFT-02] -->

@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for yesterday, then the Gujarati for time.
 You'll want to know: કલાક.
 કલાક (kalāk) — "an hour".
 
+The word, taken apart.
+The origin of કલાક (kalāk) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for hours, minutes and holidays.
 
@@ -70,6 +73,9 @@ Before the new one: say the Gujarati for an hour, then the Gujarati for a minute
 You'll want to know: રજા.
 રજા (rajā) — "a holiday, leave".
 
+The word, taken apart.
+રજા (rajā) is a loan, usually traced through Persian razā, "consent, leave", to Arabic riḍā, "contentment, approval". Its Arabic root is r-ḍ-w (Lane).
+
 What you've built.
 One more word for hours, minutes and holidays.
 
@@ -99,6 +105,9 @@ Before the new one: say the Gujarati for a minute, then the Gujarati for a holid
 You'll want to know: તહેવાર.
 તહેવાર (tahevār) — "a festival".
 
+The word, taken apart.
+તહેવાર (tahevār) is a tadbhava, a word inherited and reshaped by sound change. It comes from tithivāra, "a festival", a form CDIAL reconstructs from its descendants (CDIAL 5811). It is tithi, "lunar day", and vāra, "day, turn".
+
 What you've built.
 One more word for hours, minutes and holidays.
 
@@ -127,6 +136,9 @@ Before the new one: say the Gujarati for a holiday, then the Gujarati for a fest
 
 You'll want to know: હોળી.
 હોળી (hoḷī) — "Holi, the festival of colours". A તહેવાર (tahevār) of spring.
+
+The word, taken apart.
+હોળી (hoḷī) is a tadbhava of Sanskrit holā, "spring festival", also written holī (CDIAL 14182).
 
 What you've built.
 One more word for hours, minutes and holidays.

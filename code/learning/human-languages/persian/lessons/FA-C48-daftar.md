@@ -14,7 +14,8 @@ romanization: "daftar"
 concept_tag: FA-HOME48-DAFTAR
 prerequisites: [FA-C48-hammam, FA-C48-livan]
 sounds: []
-roots: []
+roots: [arabic-daftar]
+etymology_hook: "daftar ← Arabic daftar 'register' ← Greek diphthera 'parchment' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C48-livan]
 <!-- hl-knowledge: introduces=[FA-LEX-C48-HOME48-05]; assesses=[] -->
 
 **دفتر** — *daftar* — "a notebook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*daftar* is borrowed from Arabic *daftar*, "register, notebook", which goes back to Greek *diphthera*, "prepared hide, parchment" (EtymDB): early notebooks were made of skins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

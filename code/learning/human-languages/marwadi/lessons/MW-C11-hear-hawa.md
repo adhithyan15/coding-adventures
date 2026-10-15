@@ -11,8 +11,8 @@ gloss: wind
 concept_tag: MW-WEATHER-WIND
 prerequisites: [MW-R10-script-close]
 sounds: [voiced-h, voiced-v, long-aa]
-roots: []
-etymology_hook: The first weather word arrives by ear and needs no new sign.
+roots: [arabic-hawa]
+etymology_hook: "havā ← Arabic hawāʾ 'air', through Persian (Lane, root h-w-y)"
 duration:
   max_seconds: 140
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-C10-travel-five, MW-C10-ghar, MW-C09-patni, MW-C10-bajar, MW-C05
 
 Listen once, then say the two light beats. Keep the meaning in your ear; the
 spelling waits for the next lesson even though every sign is already familiar.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*havā* is a loan from Arabic *hawāʾ*, "air", which reached Marwadi through Persian. Its Arabic root is *h-w-y* (Lane).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAWA-01] -->

@@ -62,7 +62,9 @@ calendar (nakshatra-named and zodiac-named, respectively) — while
 **Kannada** and **Telugu** instead share the **same pan-Indian Sanskritic
 lunisolar calendar** as Hindi's Vikram Samvat. Telugu's New Year, **Ugadi**,
 falls on the very same day as Kannada's — *Chaitra Śuddha Pādyami*, the
-first day of Chaitra's bright fortnight.
+first day of Chaitra's bright fortnight. The month names themselves are
+Sanskrit: *Caitraṁ* is *caitra*, the month whose full moon stands in the
+asterism Citrā (CDIAL 4915), and the others are named the same way.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C15-NEELLU-BIYYAM-01, TE-ETYMON-C15-NEELLU-BIYYAM-02, TE-LEX-C16-NELALU-01, TE-ETYMON-C16-NELALU-02] -->

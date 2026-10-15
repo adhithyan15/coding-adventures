@@ -12,6 +12,9 @@ Before the new one: say the Telugu for to shiver, then the Telugu for to move.
 You'll want to know: చర్చించు.
 చర్చించు — carciñcu — "to discuss".
 
+The word, taken apart.
+చర్చించు (carciñcu) is Sanskrit carcā, which CDIAL 4695 glosses "repetition", made into a verb with the Telugu ending -iñcu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for to move, then the Telugu for to discuss.
 
 You'll want to know: సంప్రదించు.
 సంప్రదించు — sampradiñcu — "to contact, to consult".
+
+The word, taken apart.
+సంప్రదించు (sampradiñcu) has the Telugu verb ending -iñcu on a stem that looks Sanskrit, but neither DEDR nor CDIAL lists it, so its source is uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for to discuss, then the Telugu for to contac
 You'll want to know: తనిఖీ చేయు.
 తనిఖీ చేయు — tanikhī cēyu — "to check, to inspect".
 
+The word, taken apart.
+The origin of tanikhī, "inspection", the first word of తనిఖీ చేయు (tanikhī cēyu), is uncertain; DEDR and CDIAL do not list it. Cēyu, "to do", is native (DEDR 1957).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for to contact, then the Telugu for to check.
 You'll want to know: నమోదు చేయు.
 నమోదు చేయు — namōdu cēyu — "to register, to record".
 
+The word, taken apart.
+The origin of namōdu, "record", the first word of నమోదు చేయు (namōdu cēyu), is uncertain; DEDR and CDIAL do not list it. Cēyu, "to do", is native (DEDR 1957).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for to check, then the Telugu for to register
 
 You'll want to know: సాధన చేయు.
 సాధన చేయు — sādhana cēyu — "to practise".
+
+The word, taken apart.
+సాధన చేయు (sādhana cēyu) pairs Sanskrit sādhana, "furthering, completion" (CDIAL 13334), with native cēyu, "to do" (DEDR 1957).
 
 What you've built.
 One more word for this chapter.

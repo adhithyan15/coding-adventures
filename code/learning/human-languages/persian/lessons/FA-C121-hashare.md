@@ -14,7 +14,8 @@ romanization: "hashare"
 concept_tag: FA-THINGS121-HASHARE
 prerequisites: [FA-C121-susk, FA-C121-kerm]
 sounds: []
-roots: []
+roots: [arabic-hasara]
+etymology_hook: "hashare ← Arabic ḥašara 'insect, small creature', root ḥ-š-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C121-kerm]
 <!-- hl-knowledge: introduces=[FA-LEX-C121-THINGS121-04]; assesses=[] -->
 
 **حشره** — *hashare* — "an insect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hashare* is borrowed from Arabic *ḥašara*, "insect, small creature". Its Arabic root is *ḥ-š-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

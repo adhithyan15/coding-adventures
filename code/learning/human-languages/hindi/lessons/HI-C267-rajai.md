@@ -15,6 +15,7 @@ concept_tag: HI-THG267-RAJAI
 prerequisites: [HI-C266-phavra, HI-C266-gadda]
 sounds: []
 roots: []
+etymology_hook: "rajāī: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C266-gadda]
 <!-- hl-knowledge: introduces=[HI-LEX-C267-THG267-01]; assesses=[] -->
 
 **रजाई** — *rajāī* — "a quilt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **रजाई** (*rajāī*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

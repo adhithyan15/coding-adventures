@@ -14,7 +14,8 @@ romanization: "kapāḷ"
 concept_tag: GU-THINGS124-KAPAL
 prerequisites: [GU-C124-marghi, GU-C124-gal]
 sounds: []
-roots: []
+roots: [sanskrit-kapala]
+etymology_hook: "kapāḷ ← Sanskrit kapāla 'skull', through *kappāla (CDIAL 2744)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C124-gal]
 <!-- hl-knowledge: introduces=[GU-LEX-C124-THINGS124-05]; assesses=[] -->
 
 **કપાળ** (*kapāḷ*) — "a forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કપાળ** (*kapāḷ*) is a tadbhava. CDIAL lists it under *\*kappāla*, a variant of Sanskrit *kapāla*, "skull, cranium" (CDIAL 2744). CDIAL takes the Sanskrit word as Indo-European but thinks the variant forms suggest some Austroasiatic influence.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

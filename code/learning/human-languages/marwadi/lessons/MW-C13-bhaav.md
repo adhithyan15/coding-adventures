@@ -11,8 +11,8 @@ gloss: price, written entirely with familiar signs
 concept_tag: MW-SHOPPING-PRICE-WRITTEN
 prerequisites: [MW-C13-hear-bhaav]
 sounds: [aspirated-bh, long-aa, voiced-v]
-roots: []
-etymology_hook: Familiar भ, ा, and व turn the heard price word into writing.
+roots: [sanskrit-bhava]
+etymology_hook: "bhāv 'price' ← Sanskrit bhāva 'being, state'; CDIAL lists Gujarati bhāv 'market rate' (CDIAL 9475)"
 duration:
   max_seconds: 155
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C13-hear-bhaav, MW-C13-vastu, MW-C13-dukan, MW-C08-baap, MW-C11-
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01] -->
 
 > **भा** + **व** → **भाव** — *bhāv* — price
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भाव** (*bhāv*) goes back to Sanskrit *bhāva*, "being, thing, state", and keeps the Sanskrit shape. CDIAL lists Gujarati and Marathi *bhāv*, "market rate", under it (CDIAL 9475), with the worn Hindi form *bhāu*, "price"; it gives no Marwari form there.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BHAAV-01] -->

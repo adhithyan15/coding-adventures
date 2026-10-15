@@ -14,7 +14,8 @@ romanization: "bālyaṁ"
 concept_tag: TE-SAMAYAM290-BALYAM
 prerequisites: [TE-C290-dasabdam, TE-C290-satabdam]
 sounds: []
-roots: []
+roots: [sanskrit-balya]
+etymology_hook: "bālyaṁ ← Sanskrit bālya 'childhood', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C290-satabdam]
 <!-- hl-knowledge: introduces=[TE-LEX-C290-SAMAYAM290-05]; assesses=[] -->
 
 **బాల్యం** — *bālyaṁ* — "childhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బాల్యం** (*bālyaṁ*) is Sanskrit *bālya*, "childhood", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

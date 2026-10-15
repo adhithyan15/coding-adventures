@@ -14,7 +14,8 @@ romanization: "thāmā"
 concept_tag: BN-VERB-THAMA
 prerequisites: [BN-C52-dhora, BN-C52-kata]
 sounds: []
-roots: []
+roots: [sanskrit-stambhate]
+etymology_hook: "thāmā ← Sanskrit stambhate 'supports, arrests', a tadbhava (CDIAL 13683)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C52-kata]
 <!-- hl-knowledge: introduces=[BN-LEX-C52-VERBS52-03]; assesses=[] -->
 
 **থামা** — *thāmā* — "to stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**থামা** (*thāmā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *stambhate*, "supports, arrests" (CDIAL 13683).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

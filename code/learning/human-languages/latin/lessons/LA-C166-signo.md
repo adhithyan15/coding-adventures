@@ -13,7 +13,8 @@ gloss: "to mark, to seal"
 concept_tag: LA-VERB-SIGNO
 prerequisites: [LA-C165-clamo, LA-C166-probo]
 sounds: []
-roots: []
+roots: [signare-latin, signum-latin]
+etymology_hook: "signō 'to mark' — the verb made from signum 'a sign, a mark'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C166-probo]
 <!-- hl-knowledge: introduces=[LA-LEX-C166-ACT166-02]; assesses=[] -->
 
 **signō, signāre** — "to mark, to seal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**signō** is the verb made from *signum*, "a sign, a mark" (Lewis & Short): to put a mark on. English *sign* comes from both.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

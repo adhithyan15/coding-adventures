@@ -14,7 +14,8 @@ romanization: "vyāyāmaṁ ceyyuka"
 concept_tag: ML-VERB-VYAYAMAM-CEYYUKA
 prerequisites: [ML-C184-otiyuka, ML-C184-bhedamakuka]
 sounds: []
-roots: []
+roots: [sanskrit-vyayama, cey-do-dravidian]
+etymology_hook: "vyāyāmaṁ ceyyuka: Sanskrit vyāyāma 'exertion' (CDIAL 12209) + native ceyyuka 'do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C184-bhedamakuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C184-KRIYA184-03]; assesses=[] -->
 
 **വ്യായാമം ചെയ്യുക** — *vyāyāmaṁ ceyyuka* — "to exercise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വ്യായാമം ചെയ്യുക** (*vyāyāmaṁ ceyyuka*) joins Sanskrit *vyāyāma*, "exertion" (CDIAL 12209), to native *ceyyuka*, "to do" (DEDR 1957, with Tamil *cey*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for clever, then the Punjabi for lazy.
 You'll want to know: ਬਹਾਦਰ.
 ਬਹਾਦਰ — bahādar — "brave".
 
+The word, taken apart.
+ਬਹਾਦਰ (bahādar) is a loan, usually traced to Persian bahādur, "brave, a hero". Persian itself took the word from a Turkic or Mongol word for "hero".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for lazy, then the Punjabi for brave.
 
 You'll want to know: ਸ਼ਾਂਤ.
 ਸ਼ਾਂਤ — shā̃t — "calm, quiet".
+
+The word, taken apart.
+ਸ਼ਾਂਤ (shā̃t) (shāṁt) is Sanskrit śānta, "abated; calm", taken over whole as a learned loan, a tatsama (CDIAL 12390).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for brave, then the Punjabi for calm.
 You'll want to know: ਭੁੱਖਾ.
 ਭੁੱਖਾ — bhukkhā — "hungry".
 
+The word, taken apart.
+ਭੁੱਖਾ (bhukkhā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bubhukṣaka, "hungry", a form CDIAL reconstructs from its descendants (CDIAL 9284). It is built on Sanskrit bubhukṣā, "hunger".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for calm, then the Punjabi for hungry.
 You'll want to know: ਪਿਆਸਾ.
 ਪਿਆਸਾ — piāsā — "thirsty".
 
+The word, taken apart.
+ਪਿਆਸਾ (piāsā) came into Punjabi from Hindi: CDIAL lists Hindi piyāsā, "thirsty", under pipāsaka, a form it sets beside Sanskrit pipāsita, "thirsty", and marks Punjabi peāsā as taken from it (CDIAL 8200).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for hungry, then the Punjabi for thirsty.
 
 You'll want to know: ਤਾਜ਼ਾ.
 ਤਾਜ਼ਾ — tāzā — "fresh".
+
+The word, taken apart.
+ਤਾਜ਼ਾ (tāzā) is a loan, usually traced to Persian tāza, "fresh".
 
 What you've built.
 One more word for this chapter.

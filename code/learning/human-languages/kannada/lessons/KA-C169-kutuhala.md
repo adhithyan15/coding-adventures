@@ -14,7 +14,8 @@ romanization: "kutūhala"
 concept_tag: KA-AROGYA169-KUTUHALA
 prerequisites: [KA-C169-asuye, KA-C169-ontitana]
 sounds: []
-roots: []
+roots: [sanskrit-kutuhala]
+etymology_hook: "kutūhala ← Sanskrit kutūhala 'curiosity', a tatsama (CDIAL 3274)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C169-ontitana]
 <!-- hl-knowledge: introduces=[KA-LEX-C169-AROGYA169-04]; assesses=[] -->
 
 **ಕುತೂಹಲ** — *kutūhala* — "curiosity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕುತೂಹಲ** (*kutūhala*) is Sanskrit *kutūhala*, "curiosity", taken over whole as a learned loan, a tatsama (CDIAL 3274).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

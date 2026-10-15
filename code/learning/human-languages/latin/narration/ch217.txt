@@ -12,6 +12,9 @@ Before the new one: say the Latin for worn out, then the Latin for wakeful.
 You'll want to know: tēgula, tēgulae.
 tēgula, tēgulae — "a roof tile".
 
+The word, taken apart.
+tēgula is built on tegō, "to cover" (EtymDB 2.1), with -ula, an ending for a tool: the thing that covers. English tile was borrowed from it early.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for wakeful, then the Latin for a roof tile.
 
 You'll want to know: fornāx, fornācis.
 fornāx, fornācis — "a furnace, a kiln".
+
+The word, taken apart.
+fornāx belongs with fornus, furnus, "an oven" (Lewis & Short), usually traced to Proto-Indo-European gwher-, "warm"; English warm is a cousin.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a roof tile, then the Latin for a furnace.
 You'll want to know: lectīca, lectīcae.
 lectīca, lectīcae — "a litter (carried chair)".
 
+The word, taken apart.
+lectīca is built on lectus, "a bed, a couch" (EtymDB 2.1): a couch carried on poles.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a furnace, then the Latin for a litter.
 You'll want to know: vehiculum, vehiculī.
 vehiculum, vehiculī — "a vehicle".
 
+The word, taken apart.
+vehiculum is built on vehō, "to carry" (Lewis & Short), with -culum, an ending for a means: a means of carrying.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a litter, then the Latin for a vehicle.
 
 You'll want to know: currus, currūs.
 currus, currūs — "a chariot".
+
+The word, taken apart.
+currus is built on currō, "to run" (Lewis & Short), usually traced to Proto-Indo-European kers-, "to run" (EtymDB 2.1). English car comes from a Celtic cousin of the same root, through Latin carrus, "a wagon".
 
 What you've built.
 One more word for this chapter.

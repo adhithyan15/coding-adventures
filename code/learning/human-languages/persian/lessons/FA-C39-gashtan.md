@@ -14,7 +14,8 @@ romanization: "gashtan"
 concept_tag: FA-VERB-GASHTAN
 prerequisites: [FA-C38-shemordan, FA-C39-boridan]
 sounds: []
-roots: []
+roots: [persian-gashtan]
+etymology_hook: "gashtan: inherited, usually traced to Middle Persian gaštan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C39-boridan]
 <!-- hl-knowledge: introduces=[FA-LEX-C39-VERBS39-02]; assesses=[] -->
 
 **گشتن** — *gashtan* — "to look for; to wander".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gashtan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *gaštan*, "to turn, to wander".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

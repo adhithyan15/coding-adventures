@@ -14,7 +14,8 @@ romanization: "chikamichi"
 concept_tag: JA-LOC80-CHIKAMICHI
 prerequisites: [JA-C80-shingou, JA-C80-hougaku]
 sounds: []
-roots: []
+roots: [japanese-chikai, japanese-michi]
+etymology_hook: "chikamichi: native chika 'near' + michi 'road' (近道)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C80-hougaku]
 <!-- hl-knowledge: introduces=[JA-LEX-C80-LOC80-04]; assesses=[] -->
 
 **ちかみち** — *chikamichi* — "a shortcut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ちかみち** (*chikamichi*) is a native compound, inherited rather than borrowed: *chika*, "near", from *chikai*, and *michi*, "road", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

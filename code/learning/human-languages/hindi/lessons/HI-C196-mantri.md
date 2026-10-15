@@ -14,7 +14,8 @@ romanization: "mantrī"
 concept_tag: HI-THG196-MANTRI
 prerequisites: [HI-C195-khilari, HI-C195-neta]
 sounds: []
-roots: []
+roots: [sanskrit-mantrin]
+etymology_hook: "mantrī ← Sanskrit mantrin 'wise; counsellor', a tatsama (CDIAL 9838)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C195-neta]
 <!-- hl-knowledge: introduces=[HI-LEX-C196-THG196-01]; assesses=[] -->
 
 **मंत्री** — *mantrī* — "a minister".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मंत्री** (*mantrī*) is Sanskrit *mantrin*, "wise; counsellor", taken over whole as a learned loan, a tatsama (CDIAL 9838). Hindi took its nominative, *mantrī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

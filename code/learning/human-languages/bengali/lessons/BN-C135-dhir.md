@@ -14,7 +14,8 @@ romanization: "dhīr"
 concept_tag: BN-QUAL135-DHIR
 prerequisites: [BN-C135-bhora, BN-C135-druto]
 sounds: []
-roots: []
+roots: [sanskrit-dhira]
+etymology_hook: "dhīr ← Sanskrit dhīra 'steady, resolute', inherited (CDIAL 6817)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C135-druto]
 <!-- hl-knowledge: introduces=[BN-LEX-C135-QUAL135-05]; assesses=[] -->
 
 **ধীর** — *dhīr* — "slow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধীর** (*dhīr*) is inherited from Sanskrit *dhīra*, "steady, resolute", and has come down with almost no change (CDIAL 6817).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

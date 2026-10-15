@@ -14,7 +14,8 @@ romanization: "śart"
 concept_tag: HI-THG207-SART
 prerequisites: [HI-C206-jhuth, HI-C206-vada]
 sounds: []
-roots: []
+roots: [arabic-shart]
+etymology_hook: "śart ← Arabic sharṭ 'a condition', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C206-vada]
 <!-- hl-knowledge: introduces=[HI-LEX-C207-THG207-01]; assesses=[] -->
 
 **शर्त** — *śart* — "a condition, a bet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शर्त** (*śart*) is a loan from Arabic *sharṭ*, "a condition", which reached Hindi through Persian. Its Arabic root is *sh-r-ṭ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "toḍu"
 concept_tag: KA-VERB-TODU
 prerequisites: [KA-C149-ili2, KA-C149-seru]
 sounds: []
-roots: []
+roots: [dravidian-totu-wear]
+etymology_hook: "toḍu: native Dravidian, one word with Tamil toṭu and Telugu toḍgu (DEDR 3482)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C149-seru]
 <!-- hl-knowledge: introduces=[KA-LEX-C149-ACT149-03]; assesses=[] -->
 
 **ತೊಡು** — *toḍu* — "to wear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೊಡು** (*toḍu*) is native Dravidian, one word with Tamil *toṭu* and Telugu *toḍgu* (DEDR 3482). DEDR lists *tuḍu*, *toḍu*, "to put on, as clothes or ornaments". DEDR 3482 compares Sanskrit *toḍaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tuṭaykkuka"
 concept_tag: ML-VERB-TUTAYKKUKA
 prerequisites: [ML-C264-orunnuka, ML-C264-tekkuka]
 sounds: []
-roots: []
+roots: [dravidian-tudai-wipe]
+etymology_hook: "tuṭaykkuka: native Dravidian, one word with Tamil tuṭai and Kannada toḍe (DEDR 3301)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C264-tekkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C264-KRIYA264-03]; assesses=[] -->
 
 **തുടയ്ക്കുക** — *tuṭaykkuka* — "to wipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുടയ്ക്കുക** (*tuṭaykkuka*) is native Dravidian, one word with Tamil *tuṭai*, Kannada *toḍe* and Telugu *tuḍ(u)cu* (DEDR 3301).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

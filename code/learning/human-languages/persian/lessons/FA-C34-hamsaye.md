@@ -14,7 +14,8 @@ romanization: "hamsâye"
 concept_tag: FA-FAMILY34-HAMSAYE
 prerequisites: [FA-C33-bachche, FA-C33-khanevade]
 sounds: []
-roots: []
+roots: [persian-ham, persian-saya]
+etymology_hook: "hamsâye: Persian ham- 'same' + sâye 'shade' (Middle Persian sāyag); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C33-khanevade]
 <!-- hl-knowledge: introduces=[FA-LEX-C34-FAMILY34-01]; assesses=[] -->
 
 **همسایه** — *hamsâye* — "a neighbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hamsâye* is built from *ham-*, "same, together", and *sâye*, "shade": the people who share your shade. Both parts are native Persian; *sâye* is usually traced to Middle Persian *sāyag*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

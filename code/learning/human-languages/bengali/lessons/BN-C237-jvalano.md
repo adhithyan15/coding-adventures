@@ -14,7 +14,8 @@ romanization: "jvālāno"
 concept_tag: BN-VERB-JVALANO
 prerequisites: [BN-C236-sangbadik, BN-C237-nebhano]
 sounds: []
-roots: []
+roots: [sanskrit-jvalayati]
+etymology_hook: "jvālāno ← Sanskrit jvālayati 'sets on fire', a tadbhava (CDIAL 5314)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C237-nebhano]
 <!-- hl-knowledge: introduces=[BN-LEX-C237-ACT237-02]; assesses=[] -->
 
 **জ্বালানো** — *jvālāno* — "to light".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জ্বালানো** (*jvālāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jvālayati*, "sets on fire" (CDIAL 5314). CDIAL lists Bengali *jālā*, "to kindle"; the spelling *jv-* follows Sanskrit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

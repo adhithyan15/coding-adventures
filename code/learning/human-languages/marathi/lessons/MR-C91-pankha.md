@@ -14,7 +14,8 @@ romanization: "paṅkhā"
 concept_tag: MR-HOME91-PANKHA
 prerequisites: [MR-C91-arsa, MR-C91-diva]
 sounds: []
-roots: []
+roots: [sanskrit-paksha]
+etymology_hook: "paṅkhā ← Sanskrit pakṣa 'wing, feather', pakṣaka 'fan'; a tadbhava (CDIAL 7627)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C91-diva]
 <!-- hl-knowledge: introduces=[MR-LEX-C91-HOME91-04]; assesses=[] -->
 
 **पंखा** — *paṅkhā* — "a fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पंखा** (*paṅkhā*) is a tadbhava of Sanskrit *pakṣa*, "wing, feather", whose form *pakṣaka* also meant "fan" (CDIAL 7627). CDIAL lists Marathi *pākh*, "wing", and suggests, with a query, that the nasal comes from a crossing with Sanskrit *puṅkha*, "the feathered end of an arrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

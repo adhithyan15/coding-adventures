@@ -12,6 +12,9 @@ Before the new one: say the Urdu for honey, then the Urdu for grapes.
 You'll want to know: نارنگی.
 نارنگی — nārangī — "an orange".
 
+The word, taken apart.
+نارنگی (nārangī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nāraṅga, "orange tree" (CDIAL 7073).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for grapes, then the Urdu for an orange.
 
 You'll want to know: لیموں.
 لیموں — lemū̃ — "a lemon".
+
+The word, taken apart.
+لیموں (lemū̃) belongs with Hindi nīmbū, "lime", which CDIAL lists under Sanskrit nimbū, "the lime", a word it takes from an Austroasiatic language (CDIAL 7247). CDIAL lists lemū, "lemon", there too, and puts its e down to a different source of the loan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for an orange, then the Urdu for a lemon.
 You'll want to know: ناشتہ.
 ناشتہ — nāshtā — "breakfast".
 
+The word, taken apart.
+ناشتہ (nāshtā) is a loan, usually traced to Persian nāshtā, "not having eaten". The meal is named for the fast it ends.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a lemon, then the Urdu for breakfast.
 You'll want to know: کافی.
 کافی — kāfī — "coffee".
 
+The word, taken apart.
+کافی (kāfī) is a loan from English coffee. English took the word, through other European languages and Turkish, from Arabic qahwa. It only looks like kāfī, "enough", which is a different Arabic word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for breakfast, then the Urdu for coffee.
 
 You'll want to know: گھر.
 گھر — ghar — "a house, home".
+
+The word, taken apart.
+گھر (ghar) is inherited from ghara, "house". It is usually taken as a popular form of Sanskrit gṛha, "house", but CDIAL calls that link phonetically difficult (CDIAL 4428).
 
 What you've built.
 One more word for this chapter.

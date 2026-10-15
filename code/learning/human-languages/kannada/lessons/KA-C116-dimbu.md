@@ -14,7 +14,8 @@ romanization: "dimbu"
 concept_tag: KA-THINGS116-DIMBU
 prerequisites: [KA-C115-yakendare, KA-C115-mamca]
 sounds: []
-roots: []
+roots: [kannada-dimbu-pillow]
+etymology_hook: "dimbu: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C115-mamca]
 <!-- hl-knowledge: introduces=[KA-LEX-C116-THINGS116-01]; assesses=[] -->
 
 **ದಿಂಬು** — *dimbu* — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ದಿಂಬು** (*dimbu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

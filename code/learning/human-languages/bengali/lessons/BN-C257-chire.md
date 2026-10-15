@@ -14,7 +14,8 @@ romanization: "chĩṛe"
 concept_tag: BN-JINIS257-CHIRE
 prerequisites: [BN-C257-ponir, BN-C257-aiskrim]
 sounds: []
-roots: []
+roots: [sanskrit-cipita]
+etymology_hook: "chĩṛe ← Sanskrit cipiṭa 'flat; flattened rice', a tadbhava (CDIAL 4818)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C257-aiskrim]
 <!-- hl-knowledge: introduces=[BN-LEX-C257-JINIS257-04]; assesses=[] -->
 
 **চিঁড়ে** — *chĩṛe* — "chira (flattened rice)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চিঁড়ে** (*chĩṛe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cipiṭa*, "flat; flattened rice" (CDIAL 4818). CDIAL lists Bengali *cĩṛā*, "parched and flattened rice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

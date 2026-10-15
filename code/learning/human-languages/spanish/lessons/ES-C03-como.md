@@ -11,6 +11,7 @@ concept_tag: QUESTION-HOW
 prerequisites: [ES-C02-practice]
 sounds: [accent-mark, soft-c]
 roots: [quomodo]
+etymology_hook: "cómo ← Latin quo modo 'in what manner', worn smooth into one word — English mode"
 duration:
   max_seconds: 210
 requires:
@@ -42,7 +43,7 @@ that you already own a dozen English versions of.
 **cómo** — "how." Root: Latin **quo modo** — not a word but a **two-word
 phrase**, "in what **manner**."
 
-**The two halves, and their English cousins:**
+**The two halves, and their English relatives:**
 
 - *modo* ("manner, measure") → English **mode**, **modal**, **model**,
   **moderate**, **modify**, com**mod**ity.

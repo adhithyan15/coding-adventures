@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 39,
-  "sourceHash": "fnv1a64:0b281df0a85b9cc6",
+  "sourceHash": "fnv1a64:2344280138305030",
   "lessonIds": [
     "FA-C39-boridan",
     "FA-C39-gashtan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch39.txt",
   "json": "persian/narration/ch39.json",
-  "textHash": "fnv1a64:c4f179512233d9f4",
-  "jsonHash": "fnv1a64:773aa940628979d6",
+  "textHash": "fnv1a64:7ff600dbf50fb774",
+  "jsonHash": "fnv1a64:41f4becda6da7b23",
   "findings": []
 }

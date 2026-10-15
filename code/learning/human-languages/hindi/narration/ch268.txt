@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a drain, then the Hindi for a tank.
 You'll want to know: कूड़ा.
 कूड़ा — kūṛā — "rubbish".
 
+The word, taken apart.
+कूड़ा (kūṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kūṭa, "heap, multitude" (CDIAL 3392). CDIAL takes the Sanskrit word, probably, from Dravidian; it glosses the Hindi "dustheap".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a tank, then the Hindi for rubbish.
 
 You'll want to know: कूड़ेदान.
 कूड़ेदान — kūṛedān — "a dustbin".
+
+The word, taken apart.
+कूड़ेदान (kūṛedān) is kūṛā, "rubbish", from Sanskrit kūṭa, "heap", which CDIAL takes as probably from Dravidian (CDIAL 3392), with the Persian ending -dān, "holder".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for rubbish, then the Hindi for a dustbin.
 You'll want to know: धुआँ.
 धुआँ — dhuā̃ — "smoke".
 
+The word, taken apart.
+धुआँ (dhuā̃) (dhuāṁ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhūma, "smoke, vapour" (CDIAL 6849).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a dustbin, then the Hindi for smoke.
 You'll want to know: आग.
 आग — āg — "fire".
 
+The word, taken apart.
+आग (āg) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from agni, "fire" (CDIAL 55).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for smoke, then the Hindi for fire.
 
 You'll want to know: राख.
 राख — rākh — "ash".
+
+The word, taken apart.
+राख (rākh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rakṣā, "ashes" (CDIAL 10552). The Sanskrit word is known only from the old word-lists.
 
 What you've built.
 One more word for this chapter.

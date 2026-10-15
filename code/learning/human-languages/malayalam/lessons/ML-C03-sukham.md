@@ -12,6 +12,7 @@ concept_tag: WORD-WELL
 prerequisites: [ML-C03-sukhamaano, ML-C02-aanu]
 sounds: [kha-aspirate]
 roots: [sukha-sanskrit]
+etymology_hook: "sukhaṁ ← Sanskrit sukha 'comfort, happiness', a tatsama (CDIAL 13451)"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +52,8 @@ that is Greek *eu-* (as in *euphoria*). Malayalam,
 Tamil's closest sister, took far more Sanskrit into everyday speech than Tamil
 did — and *sukhaṁ* is a perfect case: for "well," where Tamil answers with native
 *nalam*, Malayalam reaches for Sanskrit *sukhaṁ*.
+
+Sanskrit *sukha*, "comfort, happiness", is CDIAL 13451.
 
 ## The exchange — the reply
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SUKHAM-01] -->

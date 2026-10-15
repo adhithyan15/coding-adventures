@@ -14,7 +14,8 @@ romanization: "hājaru"
 concept_tag: TE-PANI313-HAJARU
 prerequisites: [TE-C313-balapam, TE-C313-sira]
 sounds: []
-roots: []
+roots: [arabic-hazir]
+etymology_hook: "hājaru ← Arabic ḥāḍir 'present', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C313-sira]
 <!-- hl-knowledge: introduces=[TE-LEX-C313-PANI313-05]; assesses=[] -->
 
 **హాజరు** — *hājaru* — "attendance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**హాజరు** (*hājaru*) is a loan from Arabic *ḥāḍir*, "present, in attendance", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

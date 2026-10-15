@@ -9,6 +9,7 @@
 // supposed to make impossible.
 
 import {
+  existsSync,
   lstatSync,
   mkdirSync,
   mkdtempSync,
@@ -50,16 +51,12 @@ import {
   unshardDocument,
 } from "../src/doc-shard-cli.js";
 import { LEGACY_DOC_SHARD_SHA256 } from "../src/doc-shard-legacy.js";
-import {
-  assertSafeDocShardDigestOwnerNames,
-  docShardDigestOwnerName,
-  readDocShardDigestOwners,
-} from "./doc-shard-digest-owners.js";
 
 const PLAN: DocShardPlan = { path: "x/DOC.md", headingLevel: 2, newestFirst: true };
 const OLDEST_FIRST: DocShardPlan = { ...PLAN, newestFirst: false };
 const DUCTUS_CHANGELOG = "code/packages/typescript/script-ductus/CHANGELOG.md";
 const HINDI_CHANGELOG = "code/learning/human-languages/hindi/CHANGELOG.md";
+const JAPANESE_CHANGELOG = "code/learning/human-languages/japanese/CHANGELOG.md";
 const MALAYALAM_CHANGELOG = "code/learning/human-languages/malayalam/CHANGELOG.md";
 const HINDI_PLAN: DocShardPlan = {
   path: HINDI_CHANGELOG,
@@ -77,6 +74,12 @@ const MALAYALAM_PLAN: DocShardPlan = {
 const MALAYALAM_FORWARD_FRAGMENT =
   "00580-CHANGELOG-ENTRIES-NOW-HAVE-STABLE-OWNERS-15670-6061dc1b.md";
 const MALAYALAM_MIGRATION_MAX_RANK = 570;
+const JAPANESE_PLAN: DocShardPlan = {
+  path: JAPANESE_CHANGELOG,
+  headingLevel: 2,
+  newestFirst: true,
+};
+const JAPANESE_MIGRATION_MAX_RANK = 290;
 
 /**
  * The fewest entries for which sharding a document buys anything.
@@ -97,11 +100,6 @@ const DUCTUS_PLAN: DocShardPlan = {
 const DUCTUS_FORWARD_FRAGMENT =
   "01625-CHANGED-SHARD-NATIVE-SCRIPT-INVENTORIES-9fa3a043.md";
 const DUCTUS_MIGRATION_MAX_RANK = 1_630;
-const DOC_SHARD_DIGEST_DIR = join(
-  defaultRepoRoot(),
-  "code/packages/typescript/human-language-data/tests/doc-shard-digests",
-);
-
 describe("concurrency-safe backlog ids", () => {
   it("keeps the sequence readable while deriving identity from the NFC subject", () => {
     expect(backlogIdForSubject(412, "A new finding")).toMatch(/^HL-C412-[0-9a-f]{8}$/);
@@ -234,6 +232,64 @@ describe("Malayalam changelog ownership", () => {
     expect(splitDocument(rendered, 2).sections).toHaveLength(57);
     expect(createHash("sha256").update(rendered).digest("hex")).toBe(
       "6edf7f921c2734a989cc8c57d58afb99ef839cc29ca8237fc6c7f1e0ce1e7960",
+    );
+  });
+});
+
+describe("Japanese changelog ownership", () => {
+  it("registers the changelog as a fixed newest-first level-2 shard plan", () => {
+    expect(DOC_SHARD_PLANS.find((plan) => plan.path === JAPANESE_CHANGELOG)).toEqual(
+      JAPANESE_PLAN,
+    );
+  });
+
+  it("keeps the generated monolith absent from a clean checkout", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), JAPANESE_CHANGELOG);
+    let cause: unknown;
+    try {
+      lstatSync(monolith);
+    } catch (error) {
+      cause = error;
+    }
+    expect(isAbsentErrno((cause as NodeJS.ErrnoException | undefined)?.code)).toBe(true);
+  });
+
+  it("preserves the pre-migration Japanese history byte-for-byte", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), JAPANESE_CHANGELOG);
+    const shards = readDocShards(monolith, JAPANESE_PLAN);
+    expect(shards).not.toBeNull();
+
+    const historical = new Map(
+      [...shards!].filter(
+        ([name]) =>
+          name === DOC_META_SHARD || Number(name.slice(0, 5)) <= JAPANESE_MIGRATION_MAX_RANK,
+      ),
+    );
+    const rendered = joinDocShards(historical, JAPANESE_PLAN);
+
+    expect(Buffer.byteLength(rendered)).toBe(98_382);
+    expect(splitDocument(rendered, 2).sections).toHaveLength(29);
+    expect(createHash("sha256").update(rendered).digest("hex")).toBe(
+      "dead175636ff61c85b2d095c409b2c3eb660e2abeccbe0dfdcf214b72527099a",
+    );
+  });
+
+  it("gives parallel same-rank Japanese entries distinct owners without changing metadata", () => {
+    const headingA = "## Added — Japanese agent A lesson";
+    const headingB = "## Added — Japanese agent B lesson";
+    const nameA = docShardFilename(300, docSlug(headingA), headingDigest(headingA));
+    const nameB = docShardFilename(300, docSlug(headingB), headingDigest(headingB));
+    const metadata = "# Changelog — Japanese track\n\nPreamble.\n\n";
+    const shards = new Map([
+      [DOC_META_SHARD, metadata],
+      [nameA, `${headingA}\n\nA.\n\n`],
+      [nameB, `${headingB}\n\nB.\n\n`],
+    ]);
+
+    expect(nameA).not.toBe(nameB);
+    expect(shards.get(DOC_META_SHARD)).toBe(metadata);
+    expect(joinDocShards(shards, JAPANESE_PLAN)).toBe(
+      `${metadata}${headingB}\n\nB.\n\n${headingA}\n\nA.\n\n`,
     );
   });
 });
@@ -445,46 +501,25 @@ describe("the Indian planning-document migration", () => {
   const plans = DOC_SHARD_PLANS.filter((plan) =>
     /^code\/learning\/human-languages\/[^/]+\/(?:roadmap|session-map)\.md$/.test(plan.path)
   );
-  const owners = readDocShardDigestOwners(DOC_SHARD_DIGEST_DIR);
 
-  it("gives every planned roadmap and session map exactly one direct digest owner", () => {
-    expect([...owners.keys()].sort()).toEqual(plans.map((plan) => plan.path).sort());
-    expect(new Set([...owners.values()].map((owner) => docShardDigestOwnerName(owner.path))).size)
-      .toBe(plans.length);
+  it("gives every planned roadmap and session map one unique plan", () => {
+    expect(new Set(plans.map((plan) => plan.path)).size).toBe(plans.length);
+  });
+
+  it("does not reintroduce mutable whole-document digest snapshots", () => {
+    expect(existsSync(join(
+      defaultRepoRoot(),
+      "code/packages/typescript/human-language-data/tests/doc-shard-digests",
+    ))).toBe(false);
   });
 
   for (const plan of plans) {
-    it(`${plan.path} reconstructs the exact pre-migration bytes`, () => {
-      const rendered = unshardDocContents(defaultRepoRoot(), plan);
-      expect(createHash("sha256").update(rendered, "utf8").digest("hex"))
-        .toBe(owners.get(plan.path)?.sha256);
+    it(`${plan.path} reconstructs deterministically from its direct shards`, () => {
+      const first = unshardDocContents(defaultRepoRoot(), plan);
+      expect(first.length).toBeGreaterThan(0);
+      expect(unshardDocContents(defaultRepoRoot(), plan)).toBe(first);
     });
   }
-
-  it("fails closed on unsafe, duplicate, case-colliding, and symlink owners", () => {
-    const fixture = mkdtempSync(join(tmpdir(), "doc-digest-owners-"));
-    const writeOwner = (name: string, path: string) => writeFileSync(
-      join(fixture, name),
-      `${JSON.stringify({ version: 1, path, sha256: "0".repeat(64) }, null, 2)}\n`,
-    );
-    try {
-      expect(() => assertSafeDocShardDigestOwnerNames(["unsafe.json"])).toThrow(/unsafe/);
-      expect(() => assertSafeDocShardDigestOwnerNames([
-        "bengali--roadmap.json",
-        "Bengali--roadmap.json",
-      ])).toThrow(/case-colliding/);
-
-      writeOwner("bengali--roadmap.json", "code/learning/human-languages/bengali/roadmap.md");
-      writeOwner("gujarati--roadmap.json", "code/learning/human-languages/bengali/roadmap.md");
-      expect(() => readDocShardDigestOwners(fixture)).toThrow(/duplicate/);
-      rmSync(join(fixture, "gujarati--roadmap.json"));
-
-      symlinkSync(join(fixture, "bengali--roadmap.json"), join(fixture, "gujarati--roadmap.json"));
-      expect(() => readDocShardDigestOwners(fixture)).toThrow(/regular file/);
-    } finally {
-      rmSync(fixture, { recursive: true, force: true });
-    }
-  });
 });
 
 describe("isDocSharded — absent versus UNKNOWN", () => {

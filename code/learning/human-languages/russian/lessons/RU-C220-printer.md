@@ -14,7 +14,8 @@ romanization: "prínter"
 concept_tag: RU-VESHCH220-PRINTER
 prerequisites: [RU-C220-ekran, RU-C220-klaviatura]
 sounds: []
-roots: []
+roots: [english-printer]
+etymology_hook: "принтер ← English printer, from print"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C220-klaviatura]
 <!-- hl-knowledge: introduces=[RU-LEX-C220-VESHCH220-04]; assesses=[] -->
 
 **принтер** (*prínter*) — "a printer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**принтер** comes from English *printer*, from *print*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

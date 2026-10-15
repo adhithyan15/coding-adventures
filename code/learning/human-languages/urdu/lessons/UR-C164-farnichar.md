@@ -14,7 +14,8 @@ romanization: "farnīchar"
 concept_tag: UR-CHIZ164-FARNICHAR
 prerequisites: [UR-C164-saman, UR-C164-chiz]
 sounds: []
-roots: []
+roots: [english-furniture]
+etymology_hook: "farnīchar ← English furniture"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C164-chiz]
 <!-- hl-knowledge: introduces=[UR-LEX-C164-CHIZ164-03]; assesses=[] -->
 
 **فرنیچر** — *farnīchar* — "furniture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فرنیچر** (*farnīchar*) is a loan from English *furniture*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

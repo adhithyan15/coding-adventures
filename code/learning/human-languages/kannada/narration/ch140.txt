@@ -12,6 +12,9 @@ Before the new one: say the Kannada for tears, then the Kannada for a moustache.
 You'll want to know: ಗಡ್ಡ.
 ಗಡ್ಡ — gaḍḍa — "a beard".
 
+The word, taken apart.
+ಗಡ್ಡ (gaḍḍa) is native Dravidian, one word with Telugu gaḍḍamu (DEDR 1156). DEDR notes that Tamil keṭṭam, "beard", is a loan from Telugu.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for a moustache, then the Kannada for a bear
 
 You'll want to know: ಪಾದ.
 ಪಾದ — pāda — "a foot".
+
+The word, taken apart.
+ಪಾದ (pāda) is Sanskrit pāda, "foot", taken over whole as a learned loan, a tatsama (CDIAL 8056).
 
 What you've built.
 One more word for this chapter.
@@ -72,6 +78,9 @@ An adjective goes before the noun and does not change: ದೊಡ್ಡ ಮರ, �
 You'll want to know: ಉದ್ದ.
 ಉದ್ದ — udda — "long, tall".
 
+The word, taken apart.
+ಉದ್ದ (udda) is native Dravidian (DEDR 621). DEDR lists Kannada udda, uddu, "height, length, depth".
+
 What you've built.
 One more word for this chapter.
 
@@ -101,6 +110,9 @@ Before the new one: say the Kannada for a foot, then the Kannada for long.
 You'll want to know: ಗಿಡ್ಡ.
 ಗಿಡ್ಡ — giḍḍa — "short".
 
+The word, taken apart.
+ಗಿಡ್ಡ (giḍḍa) is native Dravidian, one word with Telugu giḍḍa (DEDR 1670). DEDR lists giḍḍa, "dwarf", with giḍḍu, "shortness".
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Kannada for long, then the Kannada for short.
 
 You'll want to know: ಭಾರ.
 ಭಾರ — bhāra — "heavy".
+
+The word, taken apart.
+ಭಾರ (bhāra) is Sanskrit bhāra, "burden, weight", taken over whole as a learned loan, a tatsama (CDIAL 9459).
 
 What you've built.
 One more word for this chapter.

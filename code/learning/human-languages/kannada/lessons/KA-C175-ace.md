@@ -14,7 +14,8 @@ romanization: "āce"
 concept_tag: KA-STHALA175-ACE
 prerequisites: [KA-C175-kamba, KA-C175-pakka]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "āce: native Dravidian, on the far-pointing base a- (DEDR 1), which lists āce itself"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C175-pakka]
 <!-- hl-knowledge: introduces=[KA-LEX-C175-STHALA175-04]; assesses=[] -->
 
 **ಆಚೆ** — *āce* — "on the other side, over there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಚೆ** (*āce*) is native Dravidian, built on the far-pointing base *a-*, "that". DEDR 1 lists *āce* itself, "on that side, afterwards".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

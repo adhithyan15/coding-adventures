@@ -14,7 +14,8 @@ romanization: "fotoapparát"
 concept_tag: RU-THINGS99-CAMERA
 prerequisites: [RU-C99-scissors, RU-C99-alarm-clock]
 sounds: []
-roots: []
+roots: [photos-greek, apparere-latin]
+etymology_hook: "фотоаппарат is фото-, Greek phōs 'light', + аппарат, Latin apparatus 'equipment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C99-alarm-clock]
 <!-- hl-knowledge: introduces=[RU-LEX-C99-THINGS99-04]; assesses=[] -->
 
 **фотоаппарат** (*fotoapparát*) — "a camera".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**фотоаппарат** is *фото-*, from Greek *phōs*, *phōtós*, "light", with *аппарат*, "a device", from Latin *apparātus*, "equipment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

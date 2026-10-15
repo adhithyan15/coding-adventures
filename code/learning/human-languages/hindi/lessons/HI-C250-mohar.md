@@ -14,7 +14,8 @@ romanization: "mohar"
 concept_tag: HI-THG250-MOHAR
 prerequisites: [HI-C250-fail, HI-C250-tijori]
 sounds: []
-roots: []
+roots: [persian-muhr]
+etymology_hook: "mohar: usually traced to Persian muhr 'seal, stamp'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C250-tijori]
 <!-- hl-knowledge: introduces=[HI-LEX-C250-THG250-03]; assesses=[] -->
 
 **मोहर** — *mohar* — "a stamp, a seal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोहर** (*mohar*) is a loan, usually traced to Persian *muhr*, "seal, stamp".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

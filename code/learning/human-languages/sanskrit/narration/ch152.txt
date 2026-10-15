@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for jealousy, then the Sanskrit for pride.
 You'll want to know: कालः.
 कालः — kālaḥ — "a period, time".
 
+The word, taken apart.
+kāla "time" is old, in the Atharvaveda, and MW derives it from the root √kal "calculate, count". CDIAL 3084 keeps it apart from kāla "black" (CDIAL 3083), and it lives on as Hindi kāl "time, fate" (CDIAL 3084).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for pride, then the Sanskrit for a period.
 
 You'll want to know: वारः.
 वारः — vāraḥ — "a turn, a day of the week".
+
+The word, taken apart.
+vāra comes from the root √vṛ "cover, enclose" (MW): "anything enclosed in space or time", so an appointed place, a person's turn, and the day of the week (CDIAL 11547). It lives on as Marathi and Gujarati vār "day of the week" (CDIAL 11547).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a period, then the Sanskrit for a turn.
 You'll want to know: तिथिः.
 तिथिः — tithiḥ — "a lunar day, a date".
 
+The word, taken apart.
+tithi "a lunar day", a thirtieth of the moon's month, is a word of the ritual manuals (CDIAL 5810). Neither MW nor CDIAL gives a derivation, so its origin is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a turn, then the Sanskrit for a lunar d
 You'll want to know: दिनांकः.
 दिनांकः — dināṅkaḥ — "a calendar date".
 
+The word, taken apart.
+dināṅka is built from dina "day", which MW compares with Latin nundinae "market day", and aṅka "mark, number" (MW): "the day's number". The pairing for a calendar date is modern.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a lunar day, then the Sanskrit for a ca
 
 You'll want to know: शताब्दी.
 शताब्दी — śatābdī — "a century".
+
+The word, taken apart.
+śatābdī is built from śata "hundred" and abda "year" (MW): "a period of a hundred years". MW sets śata beside Latin centum and English hundred; using it for a century is modern.
 
 What you've built.
 One more word for this chapter.

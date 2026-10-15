@@ -14,7 +14,8 @@ romanization: "bordan"
 concept_tag: FA-VERB-BORDAN
 prerequisites: [FA-C39-pushidan, FA-C39-bargashtan]
 sounds: []
-roots: []
+roots: [persian-bordan]
+etymology_hook: "bordan: inherited, usually traced to Middle Persian burdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C39-bargashtan]
 <!-- hl-knowledge: introduces=[FA-LEX-C39-VERBS39-05]; assesses=[] -->
 
 **بردن** — *bordan* — "to take away; to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bordan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *burdan*, "to carry". EtymDB takes it back to the Indo-European root *\*bʰer-*, "to carry", the root of English *bear*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

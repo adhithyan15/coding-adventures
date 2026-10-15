@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 234,
-  "sourceHash": "fnv1a64:4ac07043a43f1cac",
+  "sourceHash": "fnv1a64:5adc05d1af28306a",
   "lessonIds": [
     "TE-C234-kuppa",
     "TE-C234-eruvu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch234.txt",
   "json": "telugu/narration/ch234.json",
-  "textHash": "fnv1a64:87009f26beed04af",
-  "jsonHash": "fnv1a64:8ca4b8272e2f8946",
+  "textHash": "fnv1a64:5fca8ad98867923b",
+  "jsonHash": "fnv1a64:11d46641024d5a55",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a rainbow, then the Punjabi for a rabbit
 You'll want to know: ਹਿਰਨ.
 ਹਿਰਨ — hiran — "a deer".
 
+The word, taken apart.
+ਹਿਰਨ (hiran) is inherited from Sanskrit hariṇa, "deer", built on hari, "yellow". CDIAL lists Punjabi harn and Hindi hiran under it (CDIAL 13982).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a rabbit, then the Punjabi for a deer.
 
 You'll want to know: ਰਿੱਛ.
 ਰਿੱਛ — ricch — "a bear".
+
+The word, taken apart.
+ਰਿੱਛ (ricch) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ṛkṣa, "bear" (CDIAL 2445).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a deer, then the Punjabi for a bear.
 You'll want to know: ਗਿੱਦੜ.
 ਗਿੱਦੜ — giddaṛ — "a jackal".
 
+The word, taken apart.
+ਗਿੱਦੜ (giddaṛ) is a tadbhava, a word inherited and reshaped by sound change. It comes from gidda, "jackal, fox", a form CDIAL reconstructs from its descendants (CDIAL 4158). CDIAL lists Punjabi giddaṛ, with an added -ṛ.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a bear, then the Punjabi for a jackal.
 You'll want to know: ਬਘਿਆੜ.
 ਬਘਿਆੜ — baghiāṛ — "a wolf".
 
+The word, taken apart.
+Where ਬਘਿਆੜ (baghiāṛ) comes from is not settled: CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a jackal, then the Punjabi for a wolf.
 
 You'll want to know: ਕਬੂਤਰ.
 ਕਬੂਤਰ — kabūtar — "a pigeon".
+
+The word, taken apart.
+ਕਬੂਤਰ (kabūtar) is a loan, usually traced to Persian kabūtar, "pigeon".
 
 What you've built.
 One more word for this chapter.

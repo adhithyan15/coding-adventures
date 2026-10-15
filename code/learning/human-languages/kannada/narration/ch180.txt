@@ -12,6 +12,9 @@ Before the new one: say the Kannada for bland, then the Kannada for expensive.
 You'll want to know: ಉಚಿತ.
 ಉಚಿತ — ucita — "free of charge".
 
+The word, taken apart.
+ಉಚಿತ (ucita) is Sanskrit ucita, "fitting, customary". The sense "free of charge" grew in Kannada, from what is given as is fitting.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for expensive, then the Kannada for free of 
 
 You'll want to know: ಸರ್ಕಾರಿ.
 ಸರ್ಕಾರಿ — sarkāri — "government, governmental".
+
+The word, taken apart.
+ಸರ್ಕಾರಿ (sarkāri) is sarkār, "government", a Persian word, "head of affairs", which came through Hindustani, with -i, "of": "of the government".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for free of charge, then the Kannada for gov
 You'll want to know: ಖಾಸಗಿ.
 ಖಾಸಗಿ — khāsagi — "private".
 
+The word, taken apart.
+ಖಾಸಗಿ (khāsagi) is a loan from Persian xāṣagī, "private, personal", which goes back to Arabic xāṣṣ, "special, one's own".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for government, then the Kannada for private
 You'll want to know: ಸ್ಥಳೀಯ.
 ಸ್ಥಳೀಯ — sthaḷīya — "local".
 
+The word, taken apart.
+ಸ್ಥಳೀಯ (sthaḷīya) is Sanskrit sthala, "ground, place" (CDIAL 13744), with -īya, "belonging to": "of the place".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for private, then the Kannada for local.
 
 You'll want to know: ಕಡ್ಡಾಯ.
 ಕಡ್ಡಾಯ — kaḍḍāya — "compulsory".
+
+The word, taken apart.
+ಕಡ್ಡಾಯ (kaḍḍāya) is native Dravidian, one word with Tamil kaṭṭāyam and Telugu kaḍḍāyamu (DEDR 1157). DEDR lists kaḍḍāya itself, "force, compulsion".
 
 What you've built.
 One more word for this chapter.

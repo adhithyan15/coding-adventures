@@ -13,6 +13,9 @@ You'll want to know: బాగున్నారా?
 బాగున్నారా? (bāgunnārā?) — "are you well?".
 It is the answer you already give, బాగున్నాను, turned into a question: the respectful ending -ారు and the question mark -ఆ you know from అవునా?
 
+The word, taken apart.
+Both pieces are native Dravidian: bāgu, "good" (DEDR 5332), and uṇḍu, "to be" (DEDR 697).
+
 What you've built.
 The greeting most people open with, built from your own answer.
 
@@ -42,6 +45,9 @@ Before the new one: say the Telugu for let's go, then the Telugu for are you wel
 You'll want to know: చాలా రోజులైంది.
 చాలా రోజులైంది (cālā rōjulaindi) — "it has been a long time", literally "many days have become".
 చాలా and రోజు are both yours already; -లు makes the days plural.
+
+The word, taken apart.
+చాలా రోజులైంది (cālā rōjulaindi) is native cāla, "much" (DEDR 2470), rōjulu, "days", from Persian rōz, "day", and ayindi, "it became", from agu, "to become" (DEDR 333).
 
 What you've built.
 The greeting for someone you have not seen in a while.
@@ -73,6 +79,9 @@ You'll want to know: ఏంటి సంగతి?
 ఏంటి సంగతి? (ēṇṭi saṅgati?) — "what's new?", literally "what's the matter?", but warm.
 ఏంటి is the everyday spoken form of ఏమిటి. Use it with friends, not with a stranger.
 
+The word, taken apart.
+ఏంటి సంగతి? (ēṇṭi saṅgati?) is ēṇṭi, the spoken form of native ēmiṭi, "what" (DEDR 5151), and Sanskrit saṅgati, "meeting, connection, matter".
+
 What you've built.
 A friendly opener, and the spoken shape of a word you learned formally.
 
@@ -103,6 +112,9 @@ You'll want to know: ఎక్కడికి?
 ఎక్కడికి? (ekkaḍiki?) — "where to?".
 It is ఎక్కడ, "where", with the -కి "to" ending. Asked of a neighbour on the street it is a greeting, not a demand; ఇంటికి, "home", is a full answer.
 
+The word, taken apart.
+ఎక్కడికి? (ekkaḍiki?) is native Dravidian: ekkaḍa, "where", which DEDR 5151 lists, with the ending -ki, "to".
+
 What you've built.
 A street greeting, and its answer from the last chapter.
 
@@ -132,6 +144,9 @@ Before the new one: say the Telugu for what's new, then the Telugu for where to.
 You'll want to know: భోంచేశారా?
 భోంచేశారా? (bhōñcēśārā?) — "have you eaten?".
 It is భోజనం చేశారా?, "have you done the meal?", worn short in speech. Asked around a mealtime it is a greeting and a kindness; ఆ, అయింది — "yes, done" — is enough of an answer.
+
+The word, taken apart.
+Bhōñ- is Sanskrit bhojana, "food" (CDIAL 9630), worn down; cēyu, "to do", is native (DEDR 1957).
 
 What you've built.
 Five greetings people actually use, one of them about food.

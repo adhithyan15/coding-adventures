@@ -14,7 +14,8 @@ romanization: "kishmish"
 concept_tag: FA-THINGS118-KISHMISH
 prerequisites: [FA-C118-jadde, FA-C118-parking]
 sounds: []
-roots: []
+roots: [persian-kishmish]
+etymology_hook: "kishmish: a Persian word other languages took over; its older origin is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C118-parking]
 <!-- hl-knowledge: introduces=[FA-LEX-C118-THINGS118-03]; assesses=[] -->
 
 **کشمش** — *kishmish* — "raisins".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kishmish* is a Persian word for small raisins that other languages took over, Bengali *kishmish* among them. No source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for sugar, then the Urdu for salt.
 You'll want to know: مرچ.
 مرچ — mirch — "chilli, pepper".
 
+The word, taken apart.
+مرچ (mirch) is a tadbhava, a word inherited and reshaped by sound change. It comes from maricca, "peppercorn", a form CDIAL reconstructs from its descendants (CDIAL 9875). It is a variant CDIAL reconstructs beside Sanskrit marīca, "peppercorn", which it takes from an Austroasiatic language. When the chilli came to India, it took the name of black pepper.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for salt, then the Urdu for chilli.
 
 You'll want to know: مکھن.
 مکھن — makkhan — "butter".
+
+The word, taken apart.
+مکھن (makkhan) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mrakṣaṇa, "rubbing in; ointment, oil" (CDIAL 10378). Butter was first "the thing rubbed in".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for chilli, then the Urdu for butter.
 You'll want to know: پنیر.
 پنیر — panīr — "cheese".
 
+The word, taken apart.
+پنیر (panīr) is a loan, usually traced to Persian panīr, "cheese".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for butter, then the Urdu for cheese.
 You'll want to know: شہد.
 شہد — shahd — "honey".
 
+The word, taken apart.
+شہد (shahd) is a loan from Arabic shahd, "honey", which reached Urdu through Persian. Its Arabic root is sh-h-d (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for cheese, then the Urdu for honey.
 
 You'll want to know: انگور.
 انگور — angūr — "grapes".
+
+The word, taken apart.
+انگور (angūr) is a loan, usually traced to Persian angūr, "grape".
 
 What you've built.
 One more word for this chapter.

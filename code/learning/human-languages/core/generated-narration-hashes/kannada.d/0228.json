@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 228,
-  "sourceHash": "fnv1a64:67ec2c7ceb5010b0",
+  "sourceHash": "fnv1a64:0d7f9dd39b06868c",
   "lessonIds": [
     "KA-C228-phutbal",
     "KA-C228-caduranga",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch228.txt",
   "json": "kannada/narration/ch228.json",
-  "textHash": "fnv1a64:fafe8629166d349a",
-  "jsonHash": "fnv1a64:f58b445d09698a01",
+  "textHash": "fnv1a64:55a62d7fe4eb9d42",
+  "jsonHash": "fnv1a64:be3a20658a53b226",
   "findings": []
 }

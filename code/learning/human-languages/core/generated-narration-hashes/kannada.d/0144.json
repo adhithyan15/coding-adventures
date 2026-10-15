@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 144,
-  "sourceHash": "fnv1a64:b548145af8f2ac77",
+  "sourceHash": "fnv1a64:359c5cca49e2b45b",
   "lessonIds": [
     "KA-C144-apayakari",
     "KA-C144-sullu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch144.txt",
   "json": "kannada/narration/ch144.json",
-  "textHash": "fnv1a64:80f35458ab905d60",
-  "jsonHash": "fnv1a64:e5d04ecafc45624e",
+  "textHash": "fnv1a64:459c445796e67fc8",
+  "jsonHash": "fnv1a64:4724c95684293c0c",
   "findings": []
 }

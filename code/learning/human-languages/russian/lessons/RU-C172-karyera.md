@@ -14,7 +14,8 @@ romanization: "karyéra"
 concept_tag: RU-RABOTA172-KARYERA
 prerequisites: [RU-C171-stroitel, RU-C172-rezyume]
 sounds: []
-roots: []
+roots: [carrus-latin]
+etymology_hook: "карьера ← French carrière 'a racecourse, a career', from Latin carrus 'a wagon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C172-rezyume]
 <!-- hl-knowledge: introduces=[RU-LEX-C172-RABOTA172-02]; assesses=[] -->
 
 **карьера** (*karyéra*) — "a career".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**карьера** comes from French *carrière*, "a racecourse, a career", which goes back to Latin *carrus*, "a wagon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

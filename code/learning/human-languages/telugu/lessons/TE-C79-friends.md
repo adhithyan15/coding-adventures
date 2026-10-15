@@ -11,7 +11,8 @@ romanization: "snēhituḍi"
 concept_tag: TE-CASE-GENITIVE
 prerequisites: [TE-C78-isthere, TE-C32-cuudu]
 sounds: []
-roots: []
+roots: [sanskrit-sneha]
+etymology_hook: "snēhituḍi: snēhituḍu 'friend', Sanskrit snehita, from sneha 'love' (CDIAL 13802), + the Telugu possessive"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C78-isthere]
 నా and నీ let you own things as *I* and *you*. Nothing let a named person own anything.
 
 A Telugu noun becomes an owner by changing its own ending: స్నేహితుడు → స్నేహితుడి. **స్నేహితుడి పేరు** — "the friend's name".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**స్నేహితుడి** (*snēhituḍi*) is the possessive of *snēhituḍu*, "friend", from Sanskrit *snehita*, "loved; a friend", which is built on *sneha*, "affection, love" (CDIAL 13802); the endings are Telugu.
 
 ## Grammar Lens: the noun changes shape before it does a job
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C79-WHO-01]; assesses=[] -->

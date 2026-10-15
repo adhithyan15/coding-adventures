@@ -47,7 +47,7 @@ reviews_of: [TA-C185-minnancal]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**மாமனார்** (*māmaṉār*) is native Dravidian. DEDR 4813 lists Telugu *māma*, "father-in-law". The entry glosses *māmaṉ* "maternal uncle, father-in-law"; *-ār* is respectful.
+**மாமனார்** (*māmaṉār*) is native Dravidian. DEDR 4813 lists Telugu *māma*, "father-in-law". The entry glosses *māmaṉ* "maternal uncle, father-in-law", and compares Sanskrit *māma*, "maternal uncle"; *-ār* is respectful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

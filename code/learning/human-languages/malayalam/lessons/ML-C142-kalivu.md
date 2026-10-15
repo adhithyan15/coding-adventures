@@ -14,7 +14,8 @@ romanization: "kaḻivŭ"
 concept_tag: ML-CAN142-KALIVU
 prerequisites: [ML-C141-eid, ML-C141-utsavam, ML-C20-kalavastha]
 sounds: []
-roots: []
+roots: [dravidian-kazhi-able]
+etymology_hook: "kaḻivŭ: native Dravidian, the noun of the verb 'to be able'; Tamil kaḻi (DEDR 1357)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C141-utsavam]
 <!-- hl-knowledge: introduces=[ML-LEX-C142-CAN142-01]; assesses=[] -->
 
 **കഴിവ്** — *kaḻivŭ* — "ability, skill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കഴിവ്** (*kaḻivŭ*) is native Dravidian, the noun of the verb "to be able"; DEDR 1357 lists the root with Tamil *kaḻi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

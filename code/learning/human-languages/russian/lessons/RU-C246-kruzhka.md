@@ -14,7 +14,8 @@ romanization: "krúzhka"
 concept_tag: RU-VESHCH246-KRUZHKA
 prerequisites: [RU-C246-miska, RU-C246-blyudtse]
 sounds: []
-roots: []
+roots: [greek-krossos]
+etymology_hook: "кружка perhaps came through Polish kruż or from German krûse, traced to Greek krōssos 'a jar'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C246-blyudtse]
 <!-- hl-knowledge: introduces=[RU-LEX-C246-VESHCH246-05]; assesses=[] -->
 
 **кружка** (*krúzhka*) — "a mug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кружка** — from the 1400s; it perhaps came through Polish *kruż*, "a jug", or straight from Middle High German *krûse*, which is traced to Greek *krōssós*, "a water jar" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

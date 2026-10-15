@@ -1,8 +1,51 @@
 # UI19 — MosaicBook: Cross-Backend Component Viewer
 
-**Status:** Specification  
+**Status:** Implemented: Phase 1, Paint previews, the CI story check and the
+§13 drop panel. §0 records what was built. Where a later section disagrees
+with §0, §0 is right; those sections keep the original design for history and
+for the phases not yet built (render daemons, native window embedding).
 **Scope:** Local development tool — a Storybook-equivalent that renders Mosaic
 components across every compiler backend side-by-side.
+
+---
+
+## 0. As built (updated 2026-10-13, MB-12)
+
+The server is `code/programs/go/mosaicbook-server` (Go). Its README is the
+user guide. In brief:
+
+- **Components** are three-file sources: `Foo.mil` + `Foo.mll` +
+  `Foo.light.msl` (or `Foo.dark.msl`), with stories in `Foo.stories.json`
+  (#14436). The single-file `.mosaic` form is still read, but nothing in the
+  repo uses it.
+- **Backends.** `html`, `webcomponent` and `react` render in iframes (Tier 1).
+  `paint` renders a PNG through the repo's Paint VM (`mosaic-emit-paint`,
+  #15055), served as `image/png`, and replaces the planned Cairo and Skia
+  backends (Tier 2). The five native backends (`xaml`, `swiftui`, `qt`,
+  `flutter`, `compose`) are analysis-only: they show the §13 drop panel,
+  with no render daemon yet (Tier 3).
+- **Live reload** is Server-Sent Events, not a WebSocket. The browser opens
+  `GET /events` and receives `{"type":"reload","component_id":"all"}`. The
+  server polls `--root` every second for `.mil`, `.mll`, `.msl`,
+  `.stories.json` and `.mosaic` changes.
+- **Fixture validation.** Each story's fixture is checked against the slot
+  declarations that `mosaic-compile --interface Foo.mil --describe` reports:
+  slot names, types, list element types and one-of members.
+- **`--check`** compiles every story of every component on `html`,
+  `webcomponent`, `react` and `paint`, with `--strict-fixtures`, and exits.
+  It fails on:
+  - a component with no `.stories.json`, or one with no stories;
+  - an invalid fixture;
+  - an unexpected compile error;
+  - a recorded degradation that no longer happens.
+
+  Expected failures are listed, each with its issue, in
+  `code/packages/mosaic/mosaicbook-degradations.json`, passed by
+  `--check-degradations`. This file is separate from the per-backend
+  `mosaic-degradations.json` that §13 reads.
+- **CI.** `.github/workflows/mosaicbook.yml` ("MosaicBook stories", #14688)
+  runs `go test` and `--check` over `code/packages/mosaic` on every change to
+  Mosaic packages, the `mosaic-*` crates or the server.
 
 ---
 
@@ -170,9 +213,9 @@ type declared in the Mosaic source:
 
 ## 5. MosaicBook Server
 
-The server is a single-binary local dev server implemented in Go (building on
-the existing `build-tool` infrastructure) or Rust. It exposes an HTTP + WebSocket
-API and serves the browser shell as static assets.
+The server is a single-binary local dev server implemented in Go, at
+`code/programs/go/mosaicbook-server`. It exposes an HTTP API plus a
+Server-Sent Events stream, and serves the browser shell as static assets.
 
 ### 5.1 Directory structure
 
@@ -267,16 +310,19 @@ Response:
 }
 ```
 
-#### `WebSocket /ws`
+#### `GET /events` (Server-Sent Events)
 
-Clients connect and receive push notifications:
+Clients open an `EventSource` on `/events` and receive push notifications as
+`text/event-stream`. As built, only `reload` is sent, for every component at
+once:
 
 ```json
-{ "type": "reload",    "component_id": "src/TaskBoard" }
-{ "type": "error",     "component_id": "src/TaskBoard", "message": "parse error at line 4" }
-{ "type": "daemon_up", "backend": "qt",    "version": "Qt 6.11.0" }
-{ "type": "daemon_down","backend": "qt" }
+{ "type": "reload", "component_id": "all" }
 ```
+
+The original design used a WebSocket at `/ws` and also planned `error`,
+`daemon_up` and `daemon_down` messages for the render daemons (§7). Those
+would be new SSE event types if the daemons are built.
 
 ---
 

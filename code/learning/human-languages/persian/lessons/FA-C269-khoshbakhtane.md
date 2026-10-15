@@ -14,7 +14,8 @@ romanization: "khoshbakhtâne"
 concept_tag: FA-CHERA269-KHOSHBAKHTANE
 prerequisites: [FA-C269-kamelan, FA-C269-daqiqan]
 sounds: []
-roots: []
+roots: [khush-persian, persian-bakht]
+etymology_hook: "khoshbakhtâne: Persian khosh 'good' + bakht 'luck' + -âne; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C269-daqiqan]
 <!-- hl-knowledge: introduces=[FA-LEX-C269-CHERA269-05]; assesses=[] -->
 
 **خوشبختانه** — *khoshbakhtâne* — "fortunately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khoshbakhtâne* is *khosh*, "good", with *bakht*, "luck", and the ending *-âne*: by good luck. All are native; *bakht* is usually traced to Middle Persian *baxt*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

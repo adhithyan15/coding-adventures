@@ -14,7 +14,8 @@ romanization: "bhaviṣyattu"
 concept_tag: TE-BHAVISHYAT155-BHAVISHYATTU
 prerequisites: [TE-C155-vacce, TE-C155-ikapai]
 sounds: []
-roots: []
+roots: [sanskrit-bhavishyat]
+etymology_hook: "bhaviṣyattu ← Sanskrit bhaviṣyat 'that which will be', with Telugu's added -u"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C155-ikapai]
 <!-- hl-knowledge: introduces=[TE-LEX-C155-BHAVISHYAT155-03]; assesses=[] -->
 
 **భవిష్యత్తు** — *bhaviṣyattu* — "the future". **భవిష్యత్తులో నేను ఉపాధ్యాయుడిని అవుతాను** — *bhaviṣyattulō nēnu upādhyāyuḍini avutānu* — "In the future I will become a teacher."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**భవిష్యత్తు** (*bhaviṣyattu*) is Sanskrit *bhaviṣyat*, "that which will be", with Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "luʿba"
 concept_tag: AR-THINGS126-LUBA
 prerequisites: [AR-C126-sajjada, AR-C126-dumya]
 sounds: []
-roots: []
+roots: [l-ʿ-b]
+etymology_hook: "luʿba: built on the root l-ʿ-b, 'to play' (Lane); luʿba is a plaything, a game"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C126-dumya]
 <!-- hl-knowledge: introduces=[AR-LEX-C126-THINGS126-04]; assesses=[] -->
 
 **لعبة** — *luʿba* — "a toy, a game".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لعبة** (*luʿba*) is built on the native Arabic root *l-ʿ-b*, "to play" (Lane). *Luʿba* is a plaything, a game.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

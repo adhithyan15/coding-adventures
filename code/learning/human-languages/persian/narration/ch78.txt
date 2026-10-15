@@ -12,6 +12,9 @@ Before the new one: say the Persian for a colour, then the Persian for a song.
 You'll want to know: سفر.
 سفر — safar — "a journey".
 
+The word, taken apart.
+safar is borrowed from Arabic safar, "journey". Its Arabic root is s-f-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a song, then the Persian for a journey.
 
 You'll want to know: موسیقی.
 موسیقی — musighi — "music".
+
+The word, taken apart.
+musighi is borrowed from Arabic mūsīqā, "music", which goes back to Greek mousikē, "the art of the Muses" (EtymDB). English music comes from the same Greek word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a journey, then the Persian for music.
 You'll want to know: خبر.
 خبر — khabar — "news".
 
+The word, taken apart.
+khabar is borrowed from Arabic ḫabar, "news, report". Its Arabic root is ḫ-b-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for music, then the Persian for news.
 You'll want to know: کشور.
 کشور — keshvar — "a country".
 
+The word, taken apart.
+keshvar is a native Persian word, inherited rather than borrowed: it continues Middle Persian kišwar, "region of the world" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for news, then the Persian for a country.
 
 You'll want to know: داستان.
 داستان — dâstân — "a story".
+
+The word, taken apart.
+dâstân is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian dāstān, "story".
 
 What you've built.
 One more word for this chapter.

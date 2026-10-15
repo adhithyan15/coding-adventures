@@ -14,7 +14,8 @@ romanization: "aḍḍī"
 concept_tag: PA-THINGS136-ADDI
 prerequisites: [PA-C136-nahu, PA-C136-dimag]
 sounds: []
-roots: []
+roots: [indo-aryan-addi]
+etymology_hook: "aḍḍī ← *aḍḍi 'heel', which CDIAL, after Bloch, takes from Dravidian (CDIAL 191)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C136-dimag]
 <!-- hl-knowledge: introduces=[PA-LEX-C136-THINGS136-04]; assesses=[] -->
 
 **ਅੱਡੀ** — *aḍḍī* — "a heel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਅੱਡੀ** (*aḍḍī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*aḍḍi*, "heel", a form CDIAL reconstructs from its descendants (CDIAL 191). CDIAL, following Bloch, takes it from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

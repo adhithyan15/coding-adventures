@@ -13,7 +13,8 @@ gloss: "a desire, eagerness"
 concept_tag: LA-WANT112-CUPIDITAS
 prerequisites: [LA-C111-desidero, LA-C111-voluntas]
 sounds: []
-roots: []
+roots: [cupiditas-latin, cupidus-latin, cupere-latin]
+etymology_hook: "cupiditās 'desire' — built on cupidus 'eager', from cupiō 'to desire'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C111-voluntas]
 <!-- hl-knowledge: introduces=[LA-LEX-C112-WANT112-01]; assesses=[] -->
 
 **cupiditās, cupiditātis** — "a desire, eagerness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cupiditās** is built on *cupidus*, "eager, desirous" (Lewis & Short), from *cupiō*, "to desire", with *-itās*, an ending for a quality.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

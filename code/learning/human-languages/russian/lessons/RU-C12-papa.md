@@ -11,8 +11,8 @@ concept_tag: RU-FAMILY-PAPA
 romanization: pápa
 prerequisites: [RU-C12-mama]
 sounds: []
-roots: []
-etymology_hook: "папа is мама's babbling twin, built from p instead of m — but it also breaks the noun-gender ending rule outright: any noun naming a male person is masculine, no matter what letter it ends in, the same exception кофе tested from the other side"
+roots: [french-papa]
+etymology_hook: "папа is a nursery word like Greek páppa; Vasmer thinks Russian probably took it from French papa, as German did"
 duration:
   max_seconds: 250
 requires:
@@ -49,6 +49,11 @@ outright, and tells you exactly when that is allowed to happen.
 Stress on the first syllable, *PÁ-pa* — the same rhythm as *máma*, the
 *m* simply swapped for **п**. Same babbling story, same easy vowel, one
 consonant apart.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**папа** is a nursery word, like Greek *páppa* and Latin *pāpa*, "father". Vasmer thinks Russian probably took it from French *papa*, as German did; the old noble *папа*, stressed on its last syllable, is surely French.
 
 ## Grammar Lens: when biology beats the ending
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-NATURAL-GENDER-OVERRIDE]; assesses=[RU-GRAMMAR-NOUN-GENDER-ENDING] -->

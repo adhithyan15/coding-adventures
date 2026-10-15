@@ -14,7 +14,8 @@ romanization: "udda"
 concept_tag: KA-THINGS140-UDDA
 prerequisites: [KA-C140-gadda, KA-C140-pada, KA-C42-adjective-system]
 sounds: []
-roots: []
+roots: [dravidian-udda-length]
+etymology_hook: "udda: native Dravidian (DEDR 621)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [KA-C140-pada]
 <!-- hl-knowledge: introduces=[KA-LEX-C140-THINGS140-03]; assesses=[] -->
 
 **ಉದ್ದ** — *udda* — "long, tall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉದ್ದ** (*udda*) is native Dravidian (DEDR 621). DEDR lists Kannada *udda*, *uddu*, "height, length, depth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

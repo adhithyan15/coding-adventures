@@ -11,9 +11,10 @@ gloss: saying a word twice to mean more of it — Marathi's cheapest intensifier
 concept_tag: MR-GRAMMAR-ADJ-REDUPLICATION
 prerequisites: [MR-C53-jara, MR-C48-possession, MR-C31-dusra]
 sounds: []
-roots: []
+roots: [persian-khub]
+etymology_hook: "khūp: usually traced to Persian khūb 'good, fine'; CDIAL has no entry for it"
 duration:
-  max_seconds: 220
+  max_seconds: 229
 requires:
   knowledge: [MR-LEX-JARA, MR-LEX-KHUP, MR-LEX-MOTHA, MR-LEX-KATHIN, MR-GRAMMAR-POSSESSION, MR-LEX-DUSRA, MR-JOIN-EK-DUSRA, MR-LEX-DHANYAVAD-01, MR-LEX-LAHAAN]
 introduces:
@@ -61,6 +62,11 @@ memorise.
 
 It is worth keeping because it is free. Any adjective you learn from here on
 arrives with its own intensifier already attached.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खूप** is usually traced to Persian *khūb*, "good, fine".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-ADJ-REDUPLICATION, MR-LEX-KHUP, MR-LEX-JARA, MR-LEX-KATHIN, MR-GRAMMAR-POSSESSION, MR-LEX-DUSRA, MR-JOIN-EK-DUSRA] -->

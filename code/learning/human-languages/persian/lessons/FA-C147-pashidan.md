@@ -14,7 +14,8 @@ romanization: "pâshidan"
 concept_tag: FA-VERB-PASHIDAN
 prerequisites: [FA-C147-kubidan, FA-C147-malidan]
 sounds: []
-roots: []
+roots: [persian-pashidan]
+etymology_hook: "pâshidan: inherited, usually traced to Middle Persian pāšīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C147-malidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C147-KONESH147-05]; assesses=[] -->
 
 **پاشیدن** — *pâshidan* — "to sprinkle, to splash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâshidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *pāšīdan*, "to sprinkle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

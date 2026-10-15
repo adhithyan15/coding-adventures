@@ -14,7 +14,8 @@ romanization: "ekrán"
 concept_tag: RU-VESHCH220-EKRAN
 prerequisites: [RU-C219-dukhovka, RU-C220-planshet]
 sounds: []
-roots: []
+roots: [french-ecran]
+etymology_hook: "экран ← French écran 'a screen', traced to Middle High German schranc 'a barrier'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C220-planshet]
 <!-- hl-knowledge: introduces=[RU-LEX-C220-VESHCH220-02]; assesses=[] -->
 
 **экран** (*ekrán*) — "a screen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**экран** comes from French *écran*, "a screen", which is traced to a form close to Middle High German *schranc*, "a barrier" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

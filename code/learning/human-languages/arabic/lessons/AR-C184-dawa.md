@@ -14,7 +14,8 @@ romanization: "daʿwa"
 concept_tag: AR-SHAY184-DAWA
 prerequisites: [AR-C183-wathiqa, AR-C184-mahrajan]
 sounds: []
-roots: []
+roots: [d-ʿ-w]
+etymology_hook: "daʿwa: built on the root d-ʿ-w, 'to call' (Lane); daʿwa is a call, an invitation"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C184-mahrajan]
 <!-- hl-knowledge: introduces=[AR-LEX-C184-SHAY184-02]; assesses=[] -->
 
 **دعوة** — *daʿwa* — "an invitation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دعوة** (*daʿwa*) is built on the native Arabic root *d-ʿ-w*, "to call" (Lane). *Daʿwa* is a call, an invitation.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

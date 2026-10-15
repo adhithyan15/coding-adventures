@@ -14,7 +14,8 @@ romanization: "ṭīn"
 concept_tag: AR-MAKAN205-TIN
 prerequisites: [AR-C205-tabia, AR-C205-turab]
 sounds: []
-roots: []
+roots: [ṭ-y-n]
+etymology_hook: "ṭīn: an old native noun listed by Lane under ṭ-y-n, beside a verb meaning 'to plaster with clay'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C205-turab]
 <!-- hl-knowledge: introduces=[AR-LEX-C205-MAKAN205-03]; assesses=[] -->
 
 **طين** — *ṭīn* — "mud, clay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طين** (*ṭīn*), "clay, mud", is an old native noun, listed under the root *ṭ-y-n* (Lane) beside a verb meaning "to plaster with clay".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

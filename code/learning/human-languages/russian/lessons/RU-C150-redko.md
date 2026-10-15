@@ -14,7 +14,8 @@ romanization: "rédko"
 concept_tag: RU-VREMYA150-REDKO
 prerequisites: [RU-C149-rassvet, RU-C149-zakat]
 sounds: []
-roots: []
+roots: [slavic-redu-rare]
+etymology_hook: "редко is the adverb of редкий 'rare, sparse'; Lithuanian rẽtas 'rare' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C149-zakat]
 <!-- hl-knowledge: introduces=[RU-LEX-C150-VREMYA150-01]; assesses=[] -->
 
 **редко** (*rédko*) — "rarely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**редко** is *редкий*, "sparse, rare", made into an adverb. Vasmer relates *редкий* to Lithuanian *rẽtas*, "sparse, rare", and Latin *rēte*, "a net": a net is all gaps.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

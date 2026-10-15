@@ -11,6 +11,7 @@ concept_tag: METER-AND-VERSE
 prerequisites: [ES-C276-mas]
 sounds: [vowel-a, vowel-e]
 roots: [assonare]
+etymology_hook: "asonancia ← Latin assonare 'to sound towards': ad + sonare — English sound, unison"
 duration:
   max_seconds: 240
 requires:

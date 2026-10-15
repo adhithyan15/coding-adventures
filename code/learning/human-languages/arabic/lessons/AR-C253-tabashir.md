@@ -14,7 +14,8 @@ romanization: "ṭabāshīr"
 concept_tag: AR-AMAL253-TABASHIR
 prerequisites: [AR-C253-mistara, AR-C253-mibrah]
 sounds: []
-roots: []
+roots: [persian-tabashir]
+etymology_hook: "ṭabāshīr: usually traced to Persian tabāshīr, a chalky bamboo substance"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C253-mibrah]
 <!-- hl-knowledge: introduces=[AR-LEX-C253-AMAL253-04]; assesses=[] -->
 
 **طباشير** — *ṭabāshīr* — "chalk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طباشير** (*ṭabāshīr*) is usually traced to Persian *tabāshīr*, a chalky substance from bamboo; it has no entry in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

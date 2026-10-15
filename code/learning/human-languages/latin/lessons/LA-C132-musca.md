@@ -13,7 +13,8 @@ gloss: "a fly"
 concept_tag: LA-THINGS132-MUSCA
 prerequisites: [LA-C132-anser, LA-C132-apis]
 sounds: []
-roots: []
+roots: [musca-latin]
+etymology_hook: "musca 'fly' — inherited, usually traced to PIE *mus- 'fly'; English midge is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C132-apis]
 <!-- hl-knowledge: introduces=[LA-LEX-C132-THINGS132-03]; assesses=[] -->
 
 **musca, muscae** — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**musca** is inherited, usually traced to Proto-Indo-European *\*mus-*, "fly, gnat" (EtymDB 2.1); Greek *myia*, "fly", and English *midge* are cousins (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

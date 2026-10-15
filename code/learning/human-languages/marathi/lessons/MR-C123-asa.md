@@ -14,7 +14,8 @@ romanization: "āśā"
 concept_tag: MR-WANT123-ASA
 prerequisites: [MR-C122-iccha, MR-C123-garaj]
 sounds: []
-roots: []
+roots: [sanskrit-asha]
+etymology_hook: "āśā: Sanskrit āśā 'wish, expectation', a tatsama; the inherited Marathi form is ās 'hope' (CDIAL 1456)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C123-garaj]
 <!-- hl-knowledge: introduces=[MR-LEX-C123-WANT123-02]; assesses=[] -->
 
 **आशा** — *āśā* — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आशा** (*āśā*) is Sanskrit *āśā*, "wish, expectation", taken over whole, a tatsama. CDIAL lists the inherited Marathi form as *ās*, "hope" (CDIAL 1456).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

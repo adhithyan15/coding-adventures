@@ -14,7 +14,8 @@ romanization: "miksi"
 concept_tag: BN-JINIS206-MIKSI
 prerequisites: [BN-C206-silindar, BN-C206-kukar]
 sounds: []
-roots: []
+roots: [english-mixer]
+etymology_hook: "miksi: from English mixer, in the Indian English shape mixie"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C206-kukar]
 <!-- hl-knowledge: introduces=[BN-LEX-C206-JINIS206-03]; assesses=[] -->
 
 **মিক্সি** — *miksi* — "a blender".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মিক্সি** (*miksi*) comes from English *mixer*, in the Indian English shape *mixie*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

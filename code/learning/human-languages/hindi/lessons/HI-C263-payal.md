@@ -14,7 +14,8 @@ romanization: "pāyal"
 concept_tag: HI-THG263-PAYAL
 prerequisites: [HI-C263-bindi, HI-C263-curi]
 sounds: []
-roots: []
+roots: [indo-aryan-padala]
+etymology_hook: "pāyal ← *pādala 'belonging to the feet' (CDIAL 8066), glossed there 'sure-footed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C263-curi]
 <!-- hl-knowledge: introduces=[HI-LEX-C263-THG263-04]; assesses=[] -->
 
 **पायल** — *pāyal* — "an anklet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पायल** (*pāyal*) goes back to a reconstructed *\*pādala*, "belonging to the feet", built on *pāda*, "foot" (CDIAL 8066), though CDIAL glosses the Hindi word only as "sure-footed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

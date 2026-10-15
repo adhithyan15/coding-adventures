@@ -14,7 +14,8 @@ romanization: "bacat karṇe"
 concept_tag: MR-VERB-BACAT-KARNE
 prerequisites: [MR-C192-mulakhat, MR-C193-kharc-karne]
 sounds: []
-roots: []
+roots: [sanskrit-vancati]
+etymology_hook: "bacat: from bac- 'escape, be saved', under Sanskrit vañcati; CDIAL marks b- as from Hindi (CDIAL 11208)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C193-kharc-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C193-ACT193-02]; assesses=[] -->
 
 **बचत करणे** — *bacat karṇe* — "to put money by, to save".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बचत**, "savings", is built on the verb stem *bac-*, "to escape, be saved", which CDIAL lists under Sanskrit *vañcati*, a verb whose forms meant "escapes from", and marks the *b-* forms as taken from Hindi (CDIAL 11208). **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

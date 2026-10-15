@@ -11,8 +11,8 @@ gloss: middle-school student
 concept_tag: ZH-SCHOOL-MIDDLE-STUDENT
 prerequisites: [ZH-R15-school-map-1]
 sounds: [tone-1, tone-2, tone-neutral]
-roots: []
-etymology_hook: Middle school plus student overlaps at 学, following a pattern already used twice.
+roots: [middle-chinese-trjuwng, middle-chinese-haewk, middle-chinese-srjaeng]
+etymology_hook: "zhōngxuésheng: built from Middle Chinese trjuwng, haewk and srjaeng, 'middle', 'learning', 'life'"
 duration:
   max_seconds: 125
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-R15-school-map-1, ZH-C13-xuesheng]
 
 Say three beats: level *zhōng*, rising *xué*, light *sheng*. The shared *xué*
 is spoken only once.
+
+*Zhōngxuésheng* is built from Middle Chinese *trjuwng*, *haewk* and *srjaeng*:
+middle, learning, life.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONGXUESHENG-01] -->

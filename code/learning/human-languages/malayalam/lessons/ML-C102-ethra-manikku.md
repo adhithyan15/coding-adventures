@@ -11,10 +11,10 @@ romanization: "etra maṇikkŭ"
 concept_tag: ML-TIME-WHAT-TIME
 prerequisites: [ML-C34-codikkuka, ML-C81-dooram, ML-C91-ethra-rupa, ML-C102-manikku, ML-C102-azhcha]
 sounds: [gemination-kk]
-roots: [dravidian-dative-ku]
-etymology_hook: "etra maNi has been askable since the asking verb; the ending is the whole difference between what time is it and at what time"
+roots: [dravidian-dative-ku, sanskrit-mani-gem-bell]
+etymology_hook: "etra maṇikkŭ: native etra 'how much' (DEDR 5151) + maṇi 'bell, hour' (DEDR 4672) + the dative -kkŭ"
 duration:
-  max_seconds: 265
+  max_seconds: 298
 requires:
   knowledge: [ML-LEX-C81-HOW-MUCH-01, ML-LEX-C81-DISTANCE-03, ML-LEX-C91-MONEY-03, ML-CONCEPT-C34-CODIKKUKA-01, ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-CONCEPT-C102-BARE-DAY-01]
 introduces:
@@ -52,6 +52,8 @@ one ending away from it.**
 The first asks somebody to **name** the hour. The second asks **at which** hour
 a thing will happen. That is the whole distance between them, and it is the same
 **ക്ക്** you put on the hour at the start of this chapter.
+
+*maṇi*, "bell, hour", is listed as Dravidian (DEDR 4672), perhaps from Sanskrit *maṇi*, "jewel"; *etra* is native (DEDR 5151).
 
 ## Grammar Lens: which word wears the ending
 <!-- hl-knowledge: introduces=[]; assesses=[ML-PHRASE-C102-WHAT-TIME-01, ML-LEX-C81-DISTANCE-03, ML-LEX-C91-MONEY-03] -->

@@ -14,7 +14,8 @@ romanization: "nóvyy"
 concept_tag: RU-COLOUR2-NEW
 prerequisites: [RU-C64-good, RU-C64-bad]
 sounds: []
-roots: []
+roots: [pie-newos]
+etymology_hook: "новый ← Proto-Slavic *novŭ; Latin novus, Greek neos and English new are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C64-bad]
 <!-- hl-knowledge: introduces=[RU-LEX-C64-COLOUR2-05]; assesses=[] -->
 
 **новый** (*nóvyy*) — "new".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**новый** ← Proto-Slavic *\*novŭ* — inherited from PIE *\*néwos*, "new". Vasmer lists Sanskrit *náva-*, Greek *néos*, Latin *novus* and Gothic *niujis*: English *new* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

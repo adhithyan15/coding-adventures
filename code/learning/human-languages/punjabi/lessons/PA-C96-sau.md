@@ -14,7 +14,8 @@ romanization: "sau"
 concept_tag: PA-NUMBERS96-SAU
 prerequisites: [PA-C96-tih, PA-C96-panjah]
 sounds: []
-roots: []
+roots: [sanskrit-shata]
+etymology_hook: "sau ← Sanskrit śata 'hundred', a tadbhava (CDIAL 12278)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C96-panjah]
 <!-- hl-knowledge: introduces=[PA-LEX-C96-NUMBERS96-05]; assesses=[] -->
 
 **ਸੌ** — *sau* — "a hundred".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸੌ** (*sau*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śata*, "hundred" (CDIAL 12278).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

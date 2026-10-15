@@ -14,7 +14,8 @@ romanization: "tekân dâdan"
 concept_tag: FA-VERB-TEKAN-DADAN
 prerequisites: [FA-C181-nafas-keshidan, FA-C181-morattab-kardan]
 sounds: []
-roots: []
+roots: [pie-deh3]
+etymology_hook: "tekân dâdan: Persian tekân 'shake' (older form not settled) + dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C181-morattab-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C181-KONESH181-03]; assesses=[] -->
 
 **تکان دادن** — *tekân dâdan* — "to shake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tekân dâdan* pairs *tekân*, "a shake", with *dâdan*, "to give". *tekân* is native Persian, but its older form is not settled. *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

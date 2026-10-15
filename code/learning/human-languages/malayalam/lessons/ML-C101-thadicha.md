@@ -11,7 +11,8 @@ romanization: "taṭicca"
 concept_tag: ML-STOUT
 prerequisites: [ML-C101-melinja, ML-C42-adjective-system]
 sounds: []
-roots: []
+roots: [dravidian-tadi-stick]
+etymology_hook: "taṭicca: native Dravidian, from the verb 'to grow stout'; Tamil taṭa 'large' (DEDR 3020)"
 duration:
   max_seconds: 250
 requires:
@@ -59,6 +60,8 @@ Three shapes, one ending, one behaviour:
 Every one of them closes on **-a**, stands in front of the noun, and does not
 change. **The shape in front of the -a varies and never matters** — as **നല്ല**
 and **പഴയ** were already showing you before this chapter began.
+
+**Where the word comes from.** It is native Dravidian, a form of the verb "to swell, grow stout": DEDR 3020 lists it with Tamil *taṭa*, "large", and Kannada *daṭṭa*, "thick".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-STOUT-01, ML-LEX-C101-THIN-01, ML-CONCEPT-C36-KUTTI-01] -->

@@ -14,7 +14,8 @@ romanization: "bālkanī"
 concept_tag: UR-JAGAH219-BALKANI
 prerequisites: [UR-C219-zina, UR-C219-angan]
 sounds: []
-roots: []
+roots: [english-balcony]
+etymology_hook: "bālkanī ← English balcony"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C219-angan]
 <!-- hl-knowledge: introduces=[UR-LEX-C219-JAGAH219-05]; assesses=[] -->
 
 **بالکنی** — *bālkanī* — "a balcony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بالکنی** (*bālkanī*) is a loan from English *balcony*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 96,
-  "sourceHash": "fnv1a64:768c91e714900bed",
+  "sourceHash": "fnv1a64:a357e6d5d5e356f6",
   "lessonIds": [
     "AR-C96-hizam",
     "AR-C96-sitta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch96.txt",
   "json": "arabic/narration/ch96.json",
-  "textHash": "fnv1a64:072768b627dbccbf",
-  "jsonHash": "fnv1a64:fa24543abc7b69d2",
+  "textHash": "fnv1a64:f6c48fdf7ca92d03",
+  "jsonHash": "fnv1a64:4b27548ab00f28dd",
   "findings": []
 }

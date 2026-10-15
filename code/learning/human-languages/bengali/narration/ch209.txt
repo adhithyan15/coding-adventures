@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a secretary (government official), then 
 You'll want to know: ধার নেওয়া.
 ধার নেওয়া — dhār neoyā — "to borrow".
 
+The phrase, taken apart.
+ধার নেওয়া (dhār neoyā) is dhār, "a loan", from Sanskrit uddhāra, "loan" (CDIAL 2018), + neoyā, "to take", from Sanskrit nayati, "leads, carries off" (CDIAL 6966).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a manager, then the Bengali for to borro
 
 You'll want to know: ধার দেওয়া.
 ধার দেওয়া — dhār deoyā — "to lend".
+
+The phrase, taken apart.
+ধার দেওয়া (dhār deoyā) is dhār, "a loan", from Sanskrit uddhāra, "loan" (CDIAL 2018), + deoyā, "to give", from Sanskrit dadāti, "gives" (CDIAL 6141).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to borrow, then the Bengali for to lend.
 You'll want to know: জমানো.
 জমানো — jômāno — "to save up".
 
+The word, taken apart.
+জমানো (jômāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yamyate, "is fixed" (CDIAL 10428). CDIAL lists Bengali jamā, "to collect", and its causing form jamāna.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to lend, then the Bengali for to save up
 You'll want to know: খরচ করা.
 খরচ করা — khôrôch kôrā — "to spend".
 
+The phrase, taken apart.
+খরচ করা (khôrôch kôrā) is khôrôch, "expense", from Arabic kharj, "expenditure", which reached Bengali through Persian (Lane), + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to save up, then the Bengali for to spen
 
 You'll want to know: ওজন করা.
 ওজন করা — ojôn kôrā — "to weigh".
+
+The phrase, taken apart.
+ওজন করা (ojôn kôrā) is ojôn, "weight", from Arabic wazn, "weight", which reached Bengali through Persian (Lane), + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.

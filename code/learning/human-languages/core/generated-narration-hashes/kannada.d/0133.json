@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 133,
-  "sourceHash": "fnv1a64:b3c9bd0ea20bd4cf",
+  "sourceHash": "fnv1a64:df59ed89d2bcddef",
   "lessonIds": [
     "KA-C133-kappe",
     "KA-C133-batukoli",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch133.txt",
   "json": "kannada/narration/ch133.json",
-  "textHash": "fnv1a64:6fac80dc7660b18f",
-  "jsonHash": "fnv1a64:0f4a6a30ba7fb2f5",
+  "textHash": "fnv1a64:cae1c1c80ca964da",
+  "jsonHash": "fnv1a64:8bcc234397a4b251",
   "findings": []
 }

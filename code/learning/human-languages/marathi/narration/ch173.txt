@@ -12,6 +12,9 @@ Before the new one: say the Marathi for over there, then the Marathi for in the 
 You'll want to know: तरीही.
 तरीही — tarīhī — "even so".
 
+The word, taken apart.
+तरीही (tarīhī) is tarī, which CDIAL lists, as "then", under Sanskrit tarhi, "then" (CDIAL 5730), with hī, "even".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for in the middle, then the Marathi for even
 
 You'll want to know: जरी.
 जरी — jarī — "although".
+
+The word, taken apart.
+जरी (jarī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yarhi, "when" (CDIAL 10429). CDIAL glosses the Marathi word "if".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for even so, then the Marathi for although.
 You'll want to know: असूनही.
 असूनही — asūnhī — "despite, even though".
 
+The word, taken apart.
+असूनही (asūnhī) is asūn, "being", from the verb asṇẽ, "to be", with hī, "even". CDIAL lists asṇẽ under Sanskrit āste, "sits, exists, remains" (CDIAL 1480), or perhaps ākṣeti, "abides" (CDIAL 1031).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for although, then the Marathi for despite.
 You'll want to know: दुर्दैवाने.
 दुर्दैवाने — durdaivāne — "unfortunately".
 
+The word, taken apart.
+दुर्दैवाने (durdaivāne) is Sanskrit durdaiva, "ill luck": dur-, "bad", and daiva, "fate", with the ending -ने, "by".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for despite, then the Marathi for unfortunat
 
 You'll want to know: सुदैवाने.
 सुदैवाने — sudaivāne — "luckily".
+
+The word, taken apart.
+सुदैवाने (sudaivāne) is Sanskrit sudaiva, "good luck": su-, "good", and daiva, "fate", with the ending -ने, "by".
 
 What you've built.
 One more word for this chapter.

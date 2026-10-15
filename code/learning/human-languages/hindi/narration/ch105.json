@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "Speaking to Somebody",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:41808b4cf6206d4d",
+  "sourceHash": "fnv1a64:418a1179c8ca6ce4",
   "lessons": [
     {
       "id": "HI-C97-naam-ji",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b905012b749a001d",
+      "sourceHash": "fnv1a64:3d5ac3b76832ebfa",
       "notice": null,
       "blocks": [
         {
@@ -56,6 +56,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मीरा जी (Mīrā jī) puts the respectful jī after a name. CDIAL traces jī, \"a word of assent or respect\", to Sanskrit jīva, \"long live!\", the command form of jīvati, \"lives\" (CDIAL 5240)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the word you already had, in a new position",
           "segments": [
@@ -87,7 +98,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -136,7 +147,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -167,7 +178,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c2ec94a28ecb5f0",
+      "sourceHash": "fnv1a64:3ec62192a6a0cc0f",
       "notice": null,
       "blocks": [
         {
@@ -204,6 +215,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रिय (priya) is Sanskrit priya, \"beloved\", taken over whole as a learned loan, a tatsama (CDIAL 8974). CDIAL lists the inherited forms of the same word, such as piyā, \"beloved\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the opposite side of the name",
           "segments": [
@@ -230,7 +252,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -270,7 +292,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -13,7 +13,8 @@ gloss: "to lend"
 concept_tag: LA-VERB-COMMODO
 prerequisites: [LA-C168-possideo, LA-C168-praeparo]
 sounds: []
-roots: []
+roots: [commodare-latin, commodus-latin, modus-latin]
+etymology_hook: "commodō 'to lend' — built on commodus 'convenient': con- + modus 'measure'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C168-praeparo]
 <!-- hl-knowledge: introduces=[LA-LEX-C168-ACT168-04]; assesses=[] -->
 
 **commodō, commodāre** — "to lend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**commodō** is built on *commodus*, "fitting, convenient" (Lewis & Short), itself *con-*, "with", and *modus*, "a measure": to make something available, to lend.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

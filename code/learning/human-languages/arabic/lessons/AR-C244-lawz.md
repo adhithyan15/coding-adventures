@@ -14,7 +14,8 @@ romanization: "lawz"
 concept_tag: AR-SHAY244-LAWZ
 prerequisites: [AR-C244-kummathra, AR-C244-ananas]
 sounds: []
-roots: []
+roots: [l-w-z]
+etymology_hook: "lawz: built on the root l-w-z, 'the almond' (Lane); Lane's lawz is the almond"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C244-ananas]
 <!-- hl-knowledge: introduces=[AR-LEX-C244-SHAY244-05]; assesses=[] -->
 
 **لوز** — *lawz* — "almonds".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لوز** (*lawz*) is built on the native Arabic root *l-w-z*, "the almond" (Lane). Lane's *lawz* is the almond; Hebrew *luz* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

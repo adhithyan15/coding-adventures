@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 312,
-  "sourceHash": "fnv1a64:d9673566b1603f48",
+  "sourceHash": "fnv1a64:bff62f86d7a10cf8",
   "lessonIds": [
     "ML-C312-rogam",
     "ML-C312-rogi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch312.txt",
   "json": "malayalam/narration/ch312.json",
-  "textHash": "fnv1a64:cd3279579f820b31",
-  "jsonHash": "fnv1a64:9029c54acbde764f",
+  "textHash": "fnv1a64:dfd7d4a4766dccea",
+  "jsonHash": "fnv1a64:d37b47654607f38b",
   "findings": []
 }

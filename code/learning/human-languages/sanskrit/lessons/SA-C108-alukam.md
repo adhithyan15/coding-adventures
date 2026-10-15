@@ -14,7 +14,8 @@ romanization: "ālukam"
 concept_tag: SA-THINGS108-ALUKAM
 prerequisites: [SA-C107-lasunam, SA-C108-palanduh]
 sounds: []
-roots: []
+roots: [sanskrit-alu]
+etymology_hook: "āluka ← ālu 'an edible root' (CDIAL 1388); 'potato' is a modern use; its origin is uncertain; Hindi ālū"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C108-palanduh]
 <!-- hl-knowledge: introduces=[SA-LEX-C108-THINGS108-02]; assesses=[] -->
 
 **आलुकम्** — *ālukam* — "a potato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āluka* is *ālu* with the suffix *-ka*, an old word-list name for an edible root, the elephant-foot yam (CDIAL 1388). The potato reached India from the Americas only in modern times, and the languages moved the old name onto it: Hindi *ālū* "potato" (CDIAL 1388). MW gives no source for *ālu*, so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

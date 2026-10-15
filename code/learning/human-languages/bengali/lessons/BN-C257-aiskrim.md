@@ -14,7 +14,8 @@ romanization: "āiskrim"
 concept_tag: BN-JINIS257-AISKRIM
 prerequisites: [BN-C257-chhana, BN-C257-ponir]
 sounds: []
-roots: []
+roots: [english-ice-cream]
+etymology_hook: "āiskrim ← English ice cream"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C257-ponir]
 <!-- hl-knowledge: introduces=[BN-LEX-C257-JINIS257-03]; assesses=[] -->
 
 **আইসক্রিম** — *āiskrim* — "ice cream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আইসক্রিম** (*āiskrim*) is a loan from English *ice cream*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

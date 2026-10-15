@@ -14,7 +14,8 @@ romanization: "gaḍiyāra"
 concept_tag: KA-THINGS118-GADIYARA
 prerequisites: [KA-C117-tavel, KA-C118-kannadaka, KA-S149-digit-zero, KA-S141-digit-two, KA-S143-digit-four, KA-S144-digit-five, KA-S145-digit-six, KA-S146-digit-seven, KA-S147-digit-eight, KA-S148-digit-nine]
 sounds: []
-roots: []
+roots: [hindustani-ghariyal]
+etymology_hook: "gaḍiyāra ← Hindustani ghaṛiyāl 'gong, clock', from Sanskrit ghaṭikā 'water-clock'"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [KA-C118-kannadaka]
 <!-- hl-knowledge: introduces=[KA-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **ಗಡಿಯಾರ** — *gaḍiyāra* — "a clock, a watch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಡಿಯಾರ** (*gaḍiyāra*) came from Hindustani *ghaṛiyāl*, "a gong, a clock". That goes back to Sanskrit *ghaṭikā* (CDIAL 4406), the small pot that marked time as a water-clock.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

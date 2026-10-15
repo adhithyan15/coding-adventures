@@ -11,6 +11,7 @@ concept_tag: ES-VERB-TARDAR
 prerequisites: [ES-C437-equivocarse, ES-C431-retraso]
 sounds: []
 roots: [tardus]
+etymology_hook: "tardar ← Latin tardare 'to delay', from tardus 'slow' — kin to tarde; English tardy"
 duration:
   max_seconds: 240
 requires:
@@ -43,6 +44,11 @@ and did not teach it. Say it if you remember; here it is either way.
 *Tardo una hora* — it takes me an hour. *¿Cuánto tarda?* — how long does it
 take?
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tardar** ← Latin *tardare*, "to slow down, to delay" (Lewis & Short), from *tardus*, "slow" — the *tardus* behind *la tarde*. *El retraso* is another family, built on *tras*, "behind", Latin *trans*.
+
 ## Grammar Lens: the delay and the duration
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C437-PLAN-04, ES-LEX-C431-PEDIDO-03] -->
 
@@ -58,9 +64,6 @@ A journey that **tarda** two hours is not late — two hours is what the journey
 costs. A train with **retraso** has broken a promise. English blurs both into
 *late* and *takes*, and a reader who maps one to one will misread a station
 announcement.
-
-Both come from **tardus**, slow, so the shared root is real and the split is
-recent.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C437-PLAN-04, ES-LEX-C431-PEDIDO-03] -->

@@ -14,7 +14,8 @@ romanization: "marṇe"
 concept_tag: MR-VERB-MARNE2
 prerequisites: [MR-C194-manai-karne, MR-C194-raksan-karne]
 sounds: []
-roots: []
+roots: [sanskrit-marate]
+etymology_hook: "marṇe ← Sanskrit marate 'will die', which CDIAL thinks NIA may continue directly (CDIAL 9871)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C194-raksan-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C194-ACT194-05]; assesses=[] -->
 
 **मरणे** — *marṇe* — "to die".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मरणे** (*marṇe*) comes from Sanskrit *marate*, "will die" (CDIAL 9871). CDIAL thinks it possible, even probable, that the later *mar-* verbs continue this Vedic *mar-* directly, helped by forms such as *mariṣyati*, "will die".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

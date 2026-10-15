@@ -14,7 +14,8 @@ romanization: "hôki"
 concept_tag: BN-JINIS197-HOKI
 prerequisites: [BN-C196-chatni, BN-C197-phutbol]
 sounds: []
-roots: []
+roots: [english-hockey]
+etymology_hook: "hôki ← English hockey"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C197-phutbol]
 <!-- hl-knowledge: introduces=[BN-LEX-C197-JINIS197-02]; assesses=[] -->
 
 **হকি** — *hôki* — "hockey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হকি** (*hôki*) is a loan from English *hockey*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

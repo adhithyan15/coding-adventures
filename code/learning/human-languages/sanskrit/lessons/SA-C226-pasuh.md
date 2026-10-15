@@ -14,7 +14,8 @@ romanization: "paśuḥ"
 concept_tag: SA-THG226-PASUH
 prerequisites: [SA-C226-grahah, SA-C226-dhumaketuh]
 sounds: []
-roots: []
+roots: [sanskrit-pashu]
+etymology_hook: "paśu 'domestic animal', inherited: MW compares Latin pecu 'cattle' and English fee (CDIAL 7984)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C226-dhumaketuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C226-THG226-03]; assesses=[] -->
 
 **पशुः** — *paśuḥ* — "an animal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paśu* is a Rigvedic word for a domestic or sacrificial animal (CDIAL 7984). It is inherited from Indo-European: MW compares Latin *pecu*, "cattle", and English *fee*, from the time when wealth was counted in livestock. Hindi *pasū* means "animal".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

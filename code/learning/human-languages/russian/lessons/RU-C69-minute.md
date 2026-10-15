@@ -14,7 +14,8 @@ romanization: "minúta"
 concept_tag: RU-TIME2-MINUTE
 prerequisites: [RU-C69-yesterday, RU-C69-hour]
 sounds: []
-roots: []
+roots: [minutus-latin]
+etymology_hook: "минута came through German Minute or French minute from Latin pars minuta prima, 'the first small part'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C69-hour]
 <!-- hl-knowledge: introduces=[RU-LEX-C69-TIME2-04]; assesses=[] -->
 
 **минута** (*minúta*) — "a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**минута** — first *минюта*, in the 1600s; it came through German *Minute* or French *minute* from Latin *(pars) minūta prīma*, "the first small part" of an hour, as *секунда*, "a second", is the second (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

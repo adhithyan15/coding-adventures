@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 193,
-  "sourceHash": "fnv1a64:25d60977259e617a",
+  "sourceHash": "fnv1a64:13d1a911d08ac1b8",
   "lessonIds": [
     "FR-C193-drap",
     "FR-C193-tiroir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch193.txt",
   "json": "french/narration/ch193.json",
-  "textHash": "fnv1a64:f339ae987fdab246",
-  "jsonHash": "fnv1a64:3bf7f25e0b2666d5",
+  "textHash": "fnv1a64:b4ffb828b18eeee8",
+  "jsonHash": "fnv1a64:d1bcaa13595b90f1",
   "findings": []
 }

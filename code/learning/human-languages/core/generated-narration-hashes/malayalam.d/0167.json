@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 167,
-  "sourceHash": "fnv1a64:922d3a62cd48dcb4",
+  "sourceHash": "fnv1a64:c3ca34faba714f76",
   "lessonIds": [
     "ML-C167-nanavulla",
     "ML-C167-unanniya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch167.txt",
   "json": "malayalam/narration/ch167.json",
-  "textHash": "fnv1a64:d80544e8e8b42ee0",
-  "jsonHash": "fnv1a64:b01e76b70750ce1a",
+  "textHash": "fnv1a64:a6e12dd9547dede5",
+  "jsonHash": "fnv1a64:48fe46297ac9b0b7",
   "findings": []
 }

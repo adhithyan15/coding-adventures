@@ -14,7 +14,8 @@ romanization: "mū̃g"
 concept_tag: MW-THINGS133-MUG
 prerequisites: [MW-C132-gehu, MW-C133-chana]
 sounds: []
-roots: []
+roots: [sanskrit-mudga]
+etymology_hook: "mū̃g ← Sanskrit mudga 'the bean Phaseolus mungo', a tadbhava (CDIAL 10198, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C133-chana]
 <!-- hl-knowledge: introduces=[MW-LEX-C133-THINGS133-02]; assesses=[] -->
 
 **मूंग** — *mū̃g* — "mung beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मूंग** (*mū̃g*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mudga*, "the bean Phaseolus mungo". CDIAL gives no Marwari form in this entry (CDIAL 10198); the match is through Hindi *mū̃g*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

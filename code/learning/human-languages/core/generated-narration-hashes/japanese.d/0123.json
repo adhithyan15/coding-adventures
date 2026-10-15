@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 123,
-  "sourceHash": "fnv1a64:6506829b404f82b1",
+  "sourceHash": "fnv1a64:40eb40ce14b5f982",
   "lessonIds": [
     "JA-C123-otonashii",
     "JA-C123-natsukashii",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch123.txt",
   "json": "japanese/narration/ch123.json",
-  "textHash": "fnv1a64:2c6472c40cae4eaf",
-  "jsonHash": "fnv1a64:f6e4f74b9f2d713a",
+  "textHash": "fnv1a64:67c592cd532b6a7d",
+  "jsonHash": "fnv1a64:724a01ac01a0ef31",
   "findings": []
 }

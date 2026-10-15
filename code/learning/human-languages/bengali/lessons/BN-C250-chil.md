@@ -14,7 +14,8 @@ romanization: "chil"
 concept_tag: BN-JINIS250-CHIL
 prerequisites: [BN-C250-jebra, BN-C250-makorsa]
 sounds: []
-roots: []
+roots: [sanskrit-cilli]
+etymology_hook: "chil ← Sanskrit cilli 'a bird of prey; kite', a tadbhava (CDIAL 4829)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C250-makorsa]
 <!-- hl-knowledge: introduces=[BN-LEX-C250-JINIS250-05]; assesses=[] -->
 
 **চিল** — *chil* — "a kite (bird)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চিল** (*chil*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cilli*, "a bird of prey; kite" (CDIAL 4829). CDIAL lists Bengali *cil*, "kite".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

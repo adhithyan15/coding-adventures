@@ -14,7 +14,8 @@ romanization: "pish"
 concept_tag: FA-ZAMAN153-PISH
 prerequisites: [FA-C152-pas-az, FA-C153-nime-shab]
 sounds: []
-roots: []
+roots: [persian-pesh]
+etymology_hook: "pish: inherited, usually traced to Middle Persian pēš"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C153-nime-shab]
 <!-- hl-knowledge: introduces=[FA-LEX-C153-ZAMAN153-02]; assesses=[] -->
 
 **پیش** — *pish* — "ago".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pish* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *pēš*, "before, front".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

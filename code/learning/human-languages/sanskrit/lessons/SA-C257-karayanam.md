@@ -14,7 +14,8 @@ romanization: "kārayānam"
 concept_tag: SA-TRV257-KARAYANAM
 prerequisites: [SA-C257-simantah, SA-C257-lokayanam]
 sounds: []
-roots: []
+roots: [sanskrit-yana]
+etymology_hook: "kārayāna, modern: yāna 'vehicle' (√yā 'go'); the kāra- part is not settled, though it echoes car"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C257-lokayanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C257-TRV257-03]; assesses=[] -->
 
 **कारयानम्** — *kārayānam* — "a car".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kārayāna* is a modern coinage, not in MW. Its second part is *yāna*, "vehicle", from the root √yā, "to go" (CDIAL 10459). Its first part is not settled: it echoes English *car*, but no dictionary we follow explains it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

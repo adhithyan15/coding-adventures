@@ -11,8 +11,8 @@ gloss: "if — the word that makes a sentence conditional"
 concept_tag: GU-JOIN-JO
 prerequisites: [GU-C34-tethi, GU-C32-pan]
 sounds: []
-roots: []
-etymology_hook: "જો opens the condition and stands first, where English also puts if."
+roots: [sanskrit-yatah]
+etymology_hook: "jo 'if' ← Sanskrit yataḥ 'whence; where, because', a tadbhava (CDIAL 10401)"
 duration:
   max_seconds: 230
 requires:
@@ -54,6 +54,8 @@ together. This one takes something that **might not be**.
 That is unusual for this book: most of the small words you have met — **માટે**,
 **પણ** in its *also* sense, the postpositions — come **after** what they apply
 to. **જો** comes first, and that alone tells your ear a condition is starting.
+
+CDIAL lists **જો** (*jo*), with Old Gujarati *jaü*, "if", under Sanskrit *yataḥ*, "whence; where, because" (CDIAL 10401).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-JOIN-JO-01] -->

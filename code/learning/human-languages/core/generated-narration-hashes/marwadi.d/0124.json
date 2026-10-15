@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 124,
-  "sourceHash": "fnv1a64:02e6826308785722",
+  "sourceHash": "fnv1a64:eaa931b66370cb8f",
   "lessonIds": [
     "MW-C124-kagsi",
     "MW-C124-saban",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch124.txt",
   "json": "marwadi/narration/ch124.json",
-  "textHash": "fnv1a64:2cb52193e04ee896",
-  "jsonHash": "fnv1a64:d25aee6b82c16e6a",
+  "textHash": "fnv1a64:c6aa57a74b5affa7",
+  "jsonHash": "fnv1a64:d6522c65af66b72f",
   "findings": []
 }

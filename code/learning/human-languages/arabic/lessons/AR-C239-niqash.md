@@ -14,7 +14,8 @@ romanization: "niqāsh"
 concept_tag: AR-SABAB239-NIQASH
 prerequisites: [AR-C239-hazz, AR-C239-ittifaq]
 sounds: []
-roots: []
+roots: [n-q-sh]
+etymology_hook: "niqāsh: built on the root n-q-sh, 'to engrave' (Lane); niqāsh is the verbal noun of Form III, 'debate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C239-ittifaq]
 <!-- hl-knowledge: introduces=[AR-LEX-C239-SABAB239-03]; assesses=[] -->
 
 **نقاش** — *niqāsh* — "a discussion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نقاش** (*niqāsh*) is built on the native Arabic root *n-q-sh*, "to engrave; to question closely" (Lane). *Niqāsh* is the verbal noun of Form III, "debate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cintā"
 concept_tag: HI-FEEL-WORRY
 prerequisites: [HI-C108-udas, HI-C108-pareshan]
 sounds: []
-roots: []
+roots: [sanskrit-cinta]
+etymology_hook: "cintā ← Sanskrit cintā 'thought, care', a tatsama (CDIAL 4816)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C108-pareshan]
 **चिंता** (*cintā*) — "worry". It is feminine.
 
 **चिंता मत कीजिए** — "don't worry", with the **मत** that forbids.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चिंता** (*cintā*) is Sanskrit *cintā*, "thought, care", taken over whole as a learned loan, a tatsama (CDIAL 4816).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

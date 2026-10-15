@@ -14,7 +14,8 @@ romanization: "bahut"
 concept_tag: HI-WORD-VERY
 prerequisites: [HI-C71-also, HI-C69-go]
 sounds: []
-roots: []
+roots: [sanskrit-bahutva]
+etymology_hook: "bahut ← Sanskrit bahutva 'abundance', built on bahu 'much'; a tadbhava (CDIAL 9190)"
 duration:
   max_seconds: 240
 requires:

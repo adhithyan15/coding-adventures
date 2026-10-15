@@ -14,7 +14,8 @@ romanization: "badulu"
 concept_tag: TE-KARANAM177-BADULU
 prerequisites: [TE-C176-lekunda, TE-C177-okavela]
 sounds: []
-roots: []
+roots: [arabic-badal]
+etymology_hook: "badulu ← Arabic badal 'exchange, substitute', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C177-okavela]
 <!-- hl-knowledge: introduces=[TE-LEX-C177-KARANAM177-02]; assesses=[] -->
 
 **బదులు** — *badulu* — "instead of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బదులు** (*badulu*) is a loan from Arabic *badal*, "exchange, substitute", which came through Persian and Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

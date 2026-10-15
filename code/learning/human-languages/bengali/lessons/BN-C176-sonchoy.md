@@ -14,7 +14,8 @@ romanization: "sôñchôy"
 concept_tag: BN-KAJ176-SONCHOY
 prerequisites: [BN-C176-bil, BN-C176-khoroch]
 sounds: []
-roots: []
+roots: [sanskrit-sancaya]
+etymology_hook: "sôñchôy ← Sanskrit sañcaya 'collection, store', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C176-khoroch]
 <!-- hl-knowledge: introduces=[BN-LEX-C176-KAJ176-05]; assesses=[] -->
 
 **সঞ্চয়** — *sôñchôy* — "savings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সঞ্চয়** (*sôñchôy*) is Sanskrit *sañcaya*, "collection, store", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

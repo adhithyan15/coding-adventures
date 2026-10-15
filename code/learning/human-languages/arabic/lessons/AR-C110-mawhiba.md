@@ -14,7 +14,8 @@ romanization: "mawhiba"
 concept_tag: AR-CAN110-MAWHIBA
 prerequisites: [AR-C110-khasira, AR-C110-hafiza]
 sounds: []
-roots: []
+roots: [w-h-b]
+etymology_hook: "mawhiba: built on the root w-h-b, 'to give' (Lane); Lane's mawhiba is a gift"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C110-hafiza]
 <!-- hl-knowledge: introduces=[AR-LEX-C110-CAN110-05]; assesses=[] -->
 
 **موهبة** — *mawhiba* — "a talent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موهبة** (*mawhiba*) is built on the native Arabic root *w-h-b*, "to give" (Lane). Lane's *mawhiba* is a gift; a talent is a gift of nature.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

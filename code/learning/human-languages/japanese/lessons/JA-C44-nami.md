@@ -14,7 +14,8 @@ romanization: "nami"
 concept_tag: JA-NATURE44-NAMI
 prerequisites: [JA-C43-taiyou, JA-C44-shima]
 sounds: []
-roots: []
+roots: [japanese-nami]
+etymology_hook: "nami: native Japanese, inherited, not borrowed; kanji 波 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C44-shima]
 <!-- hl-knowledge: introduces=[JA-LEX-C44-NATURE44-02]; assesses=[] -->
 
 **なみ** — *nami* — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なみ** (*nami*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

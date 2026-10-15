@@ -14,7 +14,8 @@ romanization: "otona"
 concept_tag: JA-FAMILY25-OTONA
 prerequisites: [JA-C24-musume, JA-C25-tomodachi]
 sounds: []
-roots: []
+roots: [japanese-otona]
+etymology_hook: "otona: native; its kanji 大人 'big person' are read as a whole for their meaning"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C25-tomodachi]
 <!-- hl-knowledge: introduces=[JA-LEX-C25-FAMILY25-02]; assesses=[] -->
 
 **おとな** — *otona* — "an adult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おとな** (*otona*) is a native word, inherited rather than borrowed. JMdict writes it with the characters for "big" and "person", read as a whole for their meaning; the same characters read *dainin* are Sino-Japanese.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

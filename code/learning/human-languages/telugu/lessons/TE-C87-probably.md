@@ -11,7 +11,8 @@ romanization: "bahuśā"
 concept_tag: TE-RESPOND-PROBABLY
 prerequisites: [TE-C87-mistake, TE-C87-exactly]
 sounds: []
-roots: []
+roots: [sanskrit-bahu]
+etymology_hook: "bahuśā ← Sanskrit bahuśaḥ 'many times', from bahu 'much' (CDIAL 9187)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C87-exactly]
 
 **బహుశా రేపు** — "probably tomorrow". Compare **ఏమో**: *ēmō* shrugs, "who knows", while
 *bahuśā* makes a guess.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బహుశా** (*bahuśā*) is Sanskrit *bahuśaḥ*, "many times, often", from *bahu*, "much, many" (CDIAL 9187), taken over as a learned loan with its ending worn down.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

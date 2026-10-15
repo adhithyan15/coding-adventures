@@ -14,7 +14,8 @@ romanization: "ikkālattŭ"
 concept_tag: ML-SAMAYAM277-IKKALATTU
 prerequisites: [ML-C277-muhurttam, ML-C277-varsikam]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, sanskrit-kaala-time]
+etymology_hook: "ikkālattŭ: native i- 'this' (DEDR 410) + Sanskrit kāla 'time' (CDIAL 3084) + the place ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C277-varsikam]
 <!-- hl-knowledge: introduces=[ML-LEX-C277-SAMAYAM277-03]; assesses=[] -->
 
 **ഇക്കാലത്ത്** — *ikkālattŭ* — "nowadays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇക്കാലത്ത്** (*ikkālattŭ*) is "in this time": the near-pointing base (DEDR 410), Sanskrit *kāla*, "time" (CDIAL 3084), and the Malayalam place ending.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāpāḍu"
 concept_tag: TE-VERB-KAPADU
 prerequisites: [TE-C147-gelucu, TE-C147-dacu]
 sounds: []
-roots: []
+roots: [dravidian-kaa-guard]
+etymology_hook: "kāpāḍu: native Dravidian; DEDR 1416 lists kāpāḍu 'to protect, save' under kācu 'to guard'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C147-dacu]
 <!-- hl-knowledge: introduces=[TE-LEX-C148-ACT148-01]; assesses=[] -->
 
 **కాపాడు** — *kāpāḍu* — "to protect, to save".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కాపాడు** (*kāpāḍu*) is native Dravidian. DEDR 1416 lists *kāpāḍu*, "to protect, save", under *kācu*, "to guard", with Tamil *kā*, "to guard". DEDR compares Prakrit *kāhila*, "cowherd".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

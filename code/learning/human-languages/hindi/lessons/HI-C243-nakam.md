@@ -14,7 +14,8 @@ romanization: "nākām"
 concept_tag: HI-QUAL243-NAKAM
 prerequisites: [HI-C242-bekar, HI-C242-kamyab]
 sounds: []
-roots: []
+roots: [persian-nakam]
+etymology_hook: "nākām: usually traced to Persian nākām 'unsuccessful'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C242-kamyab]
 <!-- hl-knowledge: introduces=[HI-LEX-C243-QUAL243-01]; assesses=[] -->
 
 **नाकाम** — *nākām* — "unsuccessful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नाकाम** (*nākām*) is a loan, usually traced to Persian *nākām*, "unsuccessful". It is built from *nā-*, "not", and *kām*, "desire".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

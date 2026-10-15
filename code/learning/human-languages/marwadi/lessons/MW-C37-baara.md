@@ -11,7 +11,8 @@ gloss: twelve, on the page — four signs, all of them old
 concept_tag: MW-NUMBER-TWELVE-WRITTEN
 prerequisites: [MW-C37-hear-baara]
 sounds: [long-aa]
-roots: []
+roots: [sanskrit-dvadasha]
+etymology_hook: "bārā ← Sanskrit dvādaśa 'twelve', a tadbhava (CDIAL 6658, Old Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -49,6 +50,11 @@ Two pieces, no new sign, and both halves take the same **ा**. **ब** came in 
 
 Written beside **दो**, the point the ear made is visible: twelve and two share
 one letter and nothing else.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बारा** (*bārā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dvādaśa*, "twelve". CDIAL lists Old Marwari *bārā* under it (CDIAL 6658). It is *dva*, "two", and *daśa*, "ten".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BAARA-01, MW-SCRIPT-IGYAARA-01] -->

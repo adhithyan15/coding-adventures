@@ -14,7 +14,8 @@ romanization: "adhikārī"
 concept_tag: MR-VASTU274-ADHIKARI
 prerequisites: [MR-C274-samarambh, MR-C274-puja]
 sounds: []
-roots: []
+roots: [sanskrit-adhikarin]
+etymology_hook: "adhikārī: Sanskrit adhikārin 'entitled; official', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C274-puja]
 <!-- hl-knowledge: introduces=[MR-LEX-C274-VASTU274-05]; assesses=[] -->
 
 **अधिकारी** — *adhikārī* — "an officer, an official".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अधिकारी** (*adhikārī*) is Sanskrit *adhikārin*, "entitled, having authority", a tatsama built on *adhikāra*, "authority". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

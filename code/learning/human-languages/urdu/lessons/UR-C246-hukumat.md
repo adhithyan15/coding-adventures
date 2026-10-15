@@ -14,7 +14,8 @@ romanization: "hukūmat"
 concept_tag: UR-JAGAH246-HUKUMAT
 prerequisites: [UR-C246-age, UR-C246-sarhad]
 sounds: []
-roots: []
+roots: [arabic-hukuma]
+etymology_hook: "hukūmat ← Arabic ḥukūma 'rule, government', through Persian (Lane, root ḥ-k-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C246-sarhad]
 <!-- hl-knowledge: introduces=[UR-LEX-C246-JAGAH246-05]; assesses=[] -->
 
 **حکومت** — *hukūmat* — "a government".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حکومت** (*hukūmat*) is a loan from Arabic *ḥukūma*, "rule, government", which reached Urdu through Persian. Its Arabic root is *ḥ-k-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

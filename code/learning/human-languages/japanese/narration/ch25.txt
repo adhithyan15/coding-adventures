@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a son, then the Japanese for a daughter
 You'll want to know: ともだち.
 ともだち — tomodachi — "a friend".
 
+The word, taken apart.
+ともだち (tomodachi) is a native compound, inherited rather than borrowed: tomo, "companion", with -dachi, the plural ending -tachi voiced, so it was once a plural, "companions" (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a daughter, then the Japanese for a fri
 
 You'll want to know: おとな.
 おとな — otona — "an adult".
+
+The word, taken apart.
+おとな (otona) is a native word, inherited rather than borrowed. JMdict writes it with the characters for "big" and "person", read as a whole for their meaning; the same characters read dainin are Sino-Japanese.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a friend, then the Japanese for an adul
 You'll want to know: おとこ.
 おとこ — otoko — "a man".
 
+The word, taken apart.
+おとこ (otoko) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for an adult, then the Japanese for a man.
 You'll want to know: おんな.
 おんな — onna — "a woman".
 
+The word, taken apart.
+おんな (onna) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a man, then the Japanese for a woman.
 
 You'll want to know: せんせい.
 せんせい — sensei — "a teacher".
+
+The word, taken apart.
+せんせい (sensei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, "first, before" (Middle Chinese sen) and sei, "life, birth" (srjaeng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Read literally, it is "born before".
 
 What you've built.
 One more word for this chapter.

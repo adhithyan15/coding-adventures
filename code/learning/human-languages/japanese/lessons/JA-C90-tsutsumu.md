@@ -14,7 +14,8 @@ romanization: "tsutsumu"
 concept_tag: JA-VERB-TSUTSUMU
 prerequisites: [JA-C90-itadaku, JA-C90-kayou]
 sounds: []
-roots: []
+roots: [japanese-tsutsumu]
+etymology_hook: "tsutsumu: native Japanese, inherited, not borrowed; kanji 包む attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C90-kayou]
 <!-- hl-knowledge: introduces=[JA-LEX-C90-ACT90-05]; assesses=[] -->
 
 **つつむ** — *tsutsumu* — "to wrap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つつむ** (*tsutsumu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

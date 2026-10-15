@@ -13,7 +13,8 @@ gloss: "in vain"
 concept_tag: LA-CAUSA211-FRUSTRA
 prerequisites: [LA-C211-vix, LA-C211-sponte]
 sounds: []
-roots: []
+roots: [frustra-latin, fraus-latin]
+etymology_hook: "frūstrā 'in vain' — usually linked with fraus 'deceit, harm'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C211-sponte]
 <!-- hl-knowledge: introduces=[LA-LEX-C211-CAUSA211-04]; assesses=[] -->
 
 **frūstrā** — "in vain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**frūstrā** is usually linked with *fraus*, "deceit, harm" (Lewis & Short): to one's harm, so in vain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

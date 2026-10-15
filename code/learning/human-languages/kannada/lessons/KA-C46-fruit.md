@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-FRUIT
 prerequisites: [KA-C45-wife, KA-C43-stand]
 sounds: []
 roots: []
+etymology_hook: "haṇṇu: native Dravidian, older Kannada paṇṇu 'ripe fruit' (DEDR 4004); Tamil paḻam, Telugu paṇḍu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C45-wife]
 Behind it there is a verb: ಹಣ್ಣಾಗು, to ripen. The fruit is named for what happened to it — the ripened thing — and Kannada saw no need to invent a second noun for the object itself.
 
 Proto-Dravidian **\*paḻ**, 'to ripen, to grow old', is the source, and the sound law this book keeps returning to is at work in the very first letter. Tamil kept பழம் (*paḻam*); Telugu has పండు (*paṇḍu*); Kannada turned that *p-* into *h-* and arrived at ಹಣ್ಣು. It is the same law that made milk ಹಾಲು here and left it *pāl* next door.
+
+DEDR 4004 lists the older Kannada *paṇṇu*, "ripe fruit", with Tamil *paḻu*, "to ripen", and Telugu *paṇḍu*. DEDR 4004 compares Sanskrit *phala*, "fruit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "maut"
 concept_tag: HI-THG221-MAUT
 prerequisites: [HI-C220-burhapa, HI-C220-jivan]
 sounds: []
-roots: []
+roots: [arabic-mawt]
+etymology_hook: "maut ← Arabic mawt 'death', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C220-jivan]
 <!-- hl-knowledge: introduces=[HI-LEX-C221-THG221-01]; assesses=[] -->
 
 **मौत** — *maut* — "death".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मौत** (*maut*) is a loan from Arabic *mawt*, "death", which reached Hindi through Persian. Its Arabic root is *m-w-t* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

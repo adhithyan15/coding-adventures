@@ -14,7 +14,8 @@ romanization: "āg"
 concept_tag: MW-NATURE69-AG
 prerequisites: [MW-C69-chad, MW-C69-samandar]
 sounds: []
-roots: []
+roots: [sanskrit-agni]
+etymology_hook: "āg ← Sanskrit agni 'fire', a tadbhava (CDIAL 55, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C69-samandar]
 <!-- hl-knowledge: introduces=[MW-LEX-C69-NATURE69-05]; assesses=[] -->
 
 **आग** — *āg* — "fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आग** (*āg*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *agni*, "fire". CDIAL lists Old Marwari *āgi* under it (CDIAL 55). Latin *ignis*, "fire", is the same ancient word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

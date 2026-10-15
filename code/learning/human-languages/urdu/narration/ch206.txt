@@ -12,6 +12,9 @@ Before the new one: say the Urdu for progress, then the Urdu for success.
 You'll want to know: دھول.
 دھول — dhūl — "dust".
 
+The word, taken apart.
+دھول (dhūl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhūli, "dust, powder" (CDIAL 6835). It is a form CDIAL gives beside a reconstructed dhūḍi.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for success, then the Urdu for dust.
 
 You'll want to know: دھواں.
 دھواں — dhuāṅ — "smoke".
+
+The word, taken apart.
+دھواں (dhuāṅ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dhūma, "smoke, vapour" (CDIAL 6849).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for dust, then the Urdu for smoke.
 You'll want to know: راکھ.
 راکھ — rākh — "ash".
 
+The word, taken apart.
+راکھ (rākh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rakṣā, "ashes" (CDIAL 10552). The Sanskrit word is known only from the old word-lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for smoke, then the Urdu for ash.
 You'll want to know: چاندنی.
 چاندنی — chāṅdnī — "moonlight".
 
+The word, taken apart.
+چاندنی (chāṅdnī) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāndraṇa, "moonlight", a form CDIAL reconstructs from its descendants (CDIAL 4745). It is built on candra, "moon".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for ash, then the Urdu for moonlight.
 
 You'll want to know: طوفان.
 طوفان — tūfān — "a tempest, a storm".
+
+The word, taken apart.
+طوفان (tūfān) is a loan from Arabic ṭūfān, "a flood, a deluge", which reached Urdu through Persian. Its Arabic root is ṭ-w-f (Lane).
 
 What you've built.
 One more word for this chapter.

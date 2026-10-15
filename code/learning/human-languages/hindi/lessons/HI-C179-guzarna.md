@@ -14,7 +14,8 @@ romanization: "guzarnā"
 concept_tag: HI-VERB-GUZARNA
 prerequisites: [HI-C179-hatana, HI-C179-hatna]
 sounds: []
-roots: []
+roots: [persian-guzar]
+etymology_hook: "guzarnā: usually traced to Persian guzar 'a passing, a crossing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C179-hatna]
 <!-- hl-knowledge: introduces=[HI-LEX-C179-ACT179-05]; assesses=[] -->
 
 **गुज़रना** — *guzarnā* — "to pass by, to pass through".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गुज़रना** (*guzarnā*) is a loan, usually traced to Persian *guzar*, "a passing, a crossing". Hindi made a verb of it with *-nā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

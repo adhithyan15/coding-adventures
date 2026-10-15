@@ -11,7 +11,8 @@ romanization: "orupāṭŭ"
 concept_tag: ML-WORD-A-LOT
 prerequisites: [ML-C79-valare, ML-C15-vellam-ari]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "orupāṭŭ: native oru 'one' (DEDR 990) + a noun of state or measure; the second part's history is uncertain"
 duration:
   max_seconds: 240
 requires:
@@ -62,6 +63,11 @@ worth having: **it also measures an amount of stuff.**
 **ഒരുപാട് വെള്ളം** is a lot of water. English needs an extra word there — *a lot
 OF water* — and Malayalam needs nothing, because the word already sits in front
 of what it measures and that is the whole relationship.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒരുപാട്** (*orupāṭŭ*) begins with native *oru*, "one" (DEDR 990). The second part, *pāṭŭ*, is a noun of state or measure whose history is uncertain; the whole means "one big lot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C79-DEGREE-02, ML-CONCEPT-C15-VELLAM-ARI-01] -->

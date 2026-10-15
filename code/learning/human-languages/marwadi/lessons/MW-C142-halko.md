@@ -14,7 +14,8 @@ romanization: "haḷko"
 concept_tag: MW-QUAL142-HALKO
 prerequisites: [MW-C141-chauro, MW-C141-gairo]
 sounds: []
-roots: []
+roots: [sanskrit-laghu]
+etymology_hook: "haḷko ← Sanskrit laghu 'light', a tadbhava (CDIAL 10896, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C141-gairo]
 <!-- hl-knowledge: introduces=[MW-LEX-C142-QUAL142-01]; assesses=[] -->
 
 **हळको** — *haḷko* — "light (not heavy)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हळको** (*haḷko*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laghu*, "light". CDIAL gives no Marwari form in this entry (CDIAL 10896); the match is through Hindi *halkā*. Its first sounds are swapped. CDIAL treats Hindi *halkā* as the source of the same word in Gujarati and Marathi; Marwadi says the *l* curled back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

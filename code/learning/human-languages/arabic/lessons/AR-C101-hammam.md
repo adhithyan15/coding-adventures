@@ -14,7 +14,8 @@ romanization: "ḥammām"
 concept_tag: AR-LOC101-HAMMAM
 prerequisites: [AR-C101-zuqaq, AR-C101-mabna]
 sounds: []
-roots: []
+roots: [ḥ-m-m]
+etymology_hook: "ḥammām: built on the root ḥ-m-m, 'to be hot, to heat' (Lane); ḥammām is a hot bath"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C101-mabna]
 <!-- hl-knowledge: introduces=[AR-LEX-C101-LOC101-04]; assesses=[] -->
 
 **حمام** — *ḥammām* — "a bathroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حمام** (*ḥammām*) is built on the native Arabic root *ḥ-m-m*, "to be hot, to heat" (Lane). *Ḥammām* is a hot bath; English *hammam* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

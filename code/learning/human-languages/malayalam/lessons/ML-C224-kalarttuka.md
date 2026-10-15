@@ -14,7 +14,8 @@ romanization: "kalarttuka"
 concept_tag: ML-VERB-KALARTTUKA
 prerequisites: [ML-C223-uruka, ML-C223-marruka]
 sounds: []
-roots: []
+roots: [dravidian-kala-mix]
+etymology_hook: "kalarttuka: native Dravidian, 'make mixed', from the verb to mingle; Tamil kala (DEDR 1299)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C223-marruka]
 <!-- hl-knowledge: introduces=[ML-LEX-C224-KRIYA224-01]; assesses=[] -->
 
 **കലർത്തുക** — *kalarttuka* — "to mix".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കലർത്തുക** (*kalarttuka*) is native Dravidian, the causative of the verb "to be mixed"; DEDR 1299 lists the root with Tamil *kala*, Kannada *kali* and Telugu *kalayu*. DEDR 1299 compares Sanskrit *kalka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

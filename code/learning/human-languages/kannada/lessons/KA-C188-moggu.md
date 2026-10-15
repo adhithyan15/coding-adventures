@@ -14,7 +14,8 @@ romanization: "moggu"
 concept_tag: KA-VASTU188-MOGGU
 prerequisites: [KA-C188-gudu, KA-C188-balli]
 sounds: []
-roots: []
+roots: [dravidian-mugi-close]
+etymology_hook: "moggu: native Dravidian, one word with Telugu mogga 'a bud' (DEDR 4893)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C188-balli]
 <!-- hl-knowledge: introduces=[KA-LEX-C188-VASTU188-03]; assesses=[] -->
 
 **ಮೊಗ್ಗು** — *moggu* — "a bud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊಗ್ಗು** (*moggu*) is native Dravidian, one word with Telugu *mogga*, "a bud" (DEDR 4893). DEDR lists *moggu*, *mogge*, "a bud", under *mugi*, "to close (as a flower)". DEDR 4893 compares Sanskrit *mukula*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

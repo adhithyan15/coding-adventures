@@ -14,7 +14,8 @@ romanization: "arudaina"
 concept_tag: TE-GUNAM260-ARUDAINA
 prerequisites: [TE-C260-nunupaina, TE-C260-veccani]
 sounds: []
-roots: []
+roots: [dravidian-aru-rare, tamil-aaku-become]
+etymology_hook: "arudaina: native arudu 'rare' (DEDR 221) + aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C260-veccani]
 <!-- hl-knowledge: introduces=[TE-LEX-C260-GUNAM260-03]; assesses=[] -->
 
 **అరుదైన** — *arudaina* — "rare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అరుదైన** (*arudaina*) is native Dravidian: *arudu*, "rare", one word with Tamil *aru*, "rare" (DEDR 221), with *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

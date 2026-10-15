@@ -46,7 +46,7 @@ reviews_of: [GE-C228-entscheidung]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Erinnerung** is *erinnern*, "to remind", + *-ung*: what is brought back inside the mind.
+**Erinnerung** is *erinnern*, "to remind", + *-ung*: what is brought back inside the mind. *Erinnern* is built on *inner*, "inside", which EtymDB 2.1 traces to Old High German *innar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

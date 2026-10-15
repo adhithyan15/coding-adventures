@@ -14,7 +14,8 @@ romanization: "railu"
 concept_tag: KA-LOC111-RAILU
 prerequisites: [KA-C110-tiruvu, KA-C111-hotel]
 sounds: []
-roots: []
+roots: [english-rail]
+etymology_hook: "railu ← English rail"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C111-hotel]
 <!-- hl-knowledge: introduces=[KA-LEX-C111-LOC111-02]; assesses=[] -->
 
 **ರೈಲು** — *railu* — "a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರೈಲು** (*railu*) is a loan from English *rail*. Kannada adds *-u* after the final consonant.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

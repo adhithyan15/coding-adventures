@@ -14,7 +14,8 @@ romanization: "bakrī"
 concept_tag: MW-ANIMALS71-BAKRI
 prerequisites: [MW-C70-gay, MW-C70-bhais]
 sounds: []
-roots: []
+roots: [sanskrit-barkara]
+etymology_hook: "bakrī ← Sanskrit barkara 'kid, lamb; goat', a tadbhava (CDIAL 9153, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C70-bhais]
 <!-- hl-knowledge: introduces=[MW-LEX-C71-ANIMALS71-01]; assesses=[] -->
 
 **बकरी** — *bakrī* — "a goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बकरी** (*bakrī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *barkara*, "kid, lamb; goat". CDIAL gives no Marwari form in this entry (CDIAL 9153); the match is through Hindi *bakrī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

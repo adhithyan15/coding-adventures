@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 189,
-  "sourceHash": "fnv1a64:9550dbfb837953be",
+  "sourceHash": "fnv1a64:de3ff19ab8e77930",
   "lessonIds": [
     "LA-C189-cognatus",
     "LA-C189-avunculus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch189.txt",
   "json": "latin/narration/ch189.json",
-  "textHash": "fnv1a64:fb546b9c696d6095",
-  "jsonHash": "fnv1a64:e1c3d9e10f428852",
+  "textHash": "fnv1a64:17625f8c4bffd678",
+  "jsonHash": "fnv1a64:e70c5b9ce8e30ee9",
   "findings": []
 }

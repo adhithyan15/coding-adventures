@@ -11,7 +11,8 @@ gloss: to work (lit. "work-do")
 concept_tag: GU-VERB-KARVU
 prerequisites: [GU-C05-bolvun]
 sounds: [long-aa, u-nasal]
-roots: [kr-do, karya-work]
+roots: [kr-do, karya-work, sanskrit-karman]
+etymology_hook: "kām ← Sanskrit karman 'act, work' (CDIAL 2892); karvũ ← Sanskrit karoti 'does', root kṛ (CDIAL 2814)"
 duration:
   max_seconds: 240
 requires:
@@ -48,7 +49,7 @@ do"): **ક** (*ka*) + **ર** (*ra*) + **વું** (*vũ*).
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C05-BOLVUN-01, GU-CONCEPT-C05-KAAMKARVUN-01] -->
 
-**કરવું** (*karvũ*, "to do, to make") is from Sanskrit **√કૃ** (*√kṛ*, "to do"),
+**કરવું** (*karvũ*, "to do, to make") is from Sanskrit **√કૃ** (*√kṛ*, "to do"; CDIAL 2814),
 from PIE **\*kʷer-** — one of Sanskrit's most productive roots, met in *namaskār*
 ("the **making** of a bow") and *karma* ("a thing **done**"). And **કામ** (*kām*,
 "work") is itself from Sanskrit *karma* — so "work-do" is, at root, "*kṛ*-thing
@@ -59,6 +60,8 @@ from PIE **\*kʷer-** — one of Sanskrit's most productive roots, met in *namas
 
 So *hũ kām karũ chhũ* = "I work." Learn *karvũ* and a whole grammar of "do-verbs"
 opens up — the same one behind Hindi's *kām karnā* and Bengali's *kāj karā*.
+
+CDIAL lists *kām* under Sanskrit *karman*, "act, work" (CDIAL 2892).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C05-BOLVUN-01, GU-CONCEPT-C05-KAAMKARVUN-01] -->

@@ -12,6 +12,7 @@ concept_tag: PRONOUN-I
 prerequisites: [KA-C02-nanna, KA-C02-niinu-niivu]
 sounds: [long-aa]
 roots: [naan-dravidian]
+etymology_hook: "nānu: native Dravidian, one word with Tamil nāṉ and Telugu nēnu (DEDR 5160)"
 duration:
   max_seconds: 240
 requires:
@@ -49,6 +50,8 @@ Hindi's *maiṁ*, cousin of English *me*) **not** related to the European "I/me"
 family. Its possessive is the **ನನ್ನ** (*nanna*, "my") you already met: *nānu*
 "I," *nanna* "my." Kannada borrows Sanskrit words freely for higher vocabulary,
 but its bedrock pronouns stayed Dravidian.
+
+DEDR 5160 lists Kannada *nān* and *ān* with Tamil *yāṉ*, *nāṉ* and Telugu *nēnu*.
 
 ## Grammar Lens: "I" you can drop
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C03-NAANU-03]; assesses=[] -->

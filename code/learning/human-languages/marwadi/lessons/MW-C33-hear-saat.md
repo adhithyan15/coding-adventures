@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-SEVEN
 prerequisites: [MW-C33-chha]
 sounds: [voiceless-s, long-aa, dental-t]
 roots: [sanskrit-sapta]
-etymology_hook: The respect particle sa of raam-raam saa is the first syllable of seven.
+etymology_hook: "sāt ← Sanskrit sapta 'seven', a tadbhava (CDIAL 13139, Marwari row)"
 duration:
   max_seconds: 160
 requires:
@@ -51,6 +51,11 @@ the ear since page one; only its job here is new.
 
 Seven closes on the dental *t* of *tīn*, not the retroflex one. Front of the
 mouth at both ends.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sāt* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sapta*, "seven". CDIAL lists Marwari *sāt* under it (CDIAL 13139). English *seven* is the same ancient word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SAAT-01] -->

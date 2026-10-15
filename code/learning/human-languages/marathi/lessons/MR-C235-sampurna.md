@@ -14,7 +14,8 @@ romanization: "sampūrṇa"
 concept_tag: MR-GUN235-SAMPURNA
 prerequisites: [MR-C235-ascaryakarak, MR-C235-kantalvana]
 sounds: []
-roots: []
+roots: [sanskrit-purna]
+etymology_hook: "sampūrṇa: Sanskrit sampūrṇa 'quite full, complete', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C235-kantalvana]
 <!-- hl-knowledge: introduces=[MR-LEX-C235-GUN235-05]; assesses=[] -->
 
 **संपूर्ण** — *sampūrṇa* — "whole, complete".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संपूर्ण** (*sampūrṇa*) is Sanskrit *sampūrṇa*, "quite full, complete", a tatsama: *sam*, "together", and *pūrṇa*, "full".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

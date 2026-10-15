@@ -14,7 +14,8 @@ romanization: "jūno"
 concept_tag: MW-ADJ73-JUNO
 prerequisites: [MW-C72-chhoto, MW-C73-nuvo]
 sounds: []
-roots: []
+roots: [sanskrit-jurna]
+etymology_hook: "jūno ← Sanskrit jūrṇa 'old, decayed', a tadbhava (CDIAL 5260, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C73-nuvo]
 <!-- hl-knowledge: introduces=[MW-LEX-C73-ADJ73-02]; assesses=[] -->
 
 **जूनो** — *jūno* — "old".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जूनो** (*jūno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jūrṇa*, "old, decayed". CDIAL gives no Marwari form in this entry (CDIAL 5260); the match is through Hindi *jūnā* and Gujarati *jūnũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

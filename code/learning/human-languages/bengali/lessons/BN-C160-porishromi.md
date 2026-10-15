@@ -14,7 +14,8 @@ romanization: "pôrishrômī"
 concept_tag: BN-GUN160-PORISHROMI
 prerequisites: [BN-C159-nahole, BN-C160-buddhiman]
 sounds: []
-roots: []
+roots: [sanskrit-parishrama]
+etymology_hook: "pôrishrômī: Sanskrit pariśrama 'exertion', a tatsama, + -ī 'having'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C160-buddhiman]
 <!-- hl-knowledge: introduces=[BN-LEX-C160-GUN160-02]; assesses=[] -->
 
 **পরিশ্রমী** — *pôrishrômī* — "hardworking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পরিশ্রমী** (*pôrishrômī*) is Sanskrit *pariśrama*, "exertion, toil", taken over whole, + the ending *-ī*, "having": "having toil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ājī"
 concept_tag: MR-FAMILY75-AJI
 prerequisites: [MR-C74-mulgi, MR-C75-ajoba]
 sounds: []
-roots: []
+roots: [sanskrit-aryaka]
+etymology_hook: "ājī: CDIAL lists it with ājā 'grandfather' under Sanskrit āryaka 'respectable man, grandfather' (CDIAL 1348)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C75-ajoba]
 <!-- hl-knowledge: introduces=[MR-LEX-C75-FAMILY75-02]; assesses=[] -->
 
 **आजी** — *ājī* — "a grandmother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **आजी** (*ājī*) beside *ājā*, "grandfather", under Sanskrit *āryaka*, "respectable man, grandfather" (CDIAL 1348).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

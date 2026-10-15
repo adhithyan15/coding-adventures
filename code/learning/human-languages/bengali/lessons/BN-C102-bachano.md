@@ -14,7 +14,8 @@ romanization: "bā̃chāno"
 concept_tag: BN-VERB-BACHANO
 prerequisites: [BN-C102-sorano, BN-C102-jagano]
 sounds: []
-roots: []
+roots: [sanskrit-vancati]
+etymology_hook: "bāṁchāno ← Sanskrit vañcati 'moves, escapes from', a tadbhava (CDIAL 11208)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C102-jagano]
 <!-- hl-knowledge: introduces=[BN-LEX-C102-ACT102-05]; assesses=[] -->
 
 **বাঁচানো** — *bā̃chāno* — "to save".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাঁচানো** (*bāṁchāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vañcati*, "moves, escapes from" (CDIAL 11208). *Bāṁchāno* is the causing form of *bāṁcā*, "to escape", which CDIAL lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

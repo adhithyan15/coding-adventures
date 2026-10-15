@@ -12,7 +12,7 @@ concept_tag: MR-BODY-HEART
 prerequisites: [MR-C12-naak]
 sounds: [vocalic-r]
 roots: [sanskrit-hrdaya, pie-kerd-heart]
-etymology_hook: "हृदय continues Sanskrit हृदय hṛdaya, from Indo-European *ḱērd- \"heart\" — the same root as English heart, Latin cor/cordis (behind cordial), and Greek kardia (behind cardiac), one of the most secure cognate sets in the whole Indo-European family and, unlike this chapter's other words, a word that shows almost no drift at all"
+etymology_hook: "हृदय is Sanskrit hṛdaya, from PIE *ḱērd- 'heart': English heart, Latin cor, Greek kardia"
 duration:
   max_seconds: 290
 requires:

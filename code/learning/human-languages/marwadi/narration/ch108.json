@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "To wake someone, To save, To get down, To swim, To jump",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:371bc92a6f03a6e8",
+  "sourceHash": "fnv1a64:4ab533e12edb7683",
   "lessons": [
     {
       "id": "MW-C108-jagavno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18811358e4d85860",
+      "sourceHash": "fnv1a64:dc7e0c80abb3eda8",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जगावणो (jagāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāgrati, \"are awake\". CDIAL lists Marwari jāgṇo under it (CDIAL 5175). It is the causing form, \"make awake\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7e6df8fac3caea4",
+      "sourceHash": "fnv1a64:47bf920d3b25e389",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बचावणो (bachāvṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vañcati, \"moves crookedly; escapes from\". CDIAL lists Old Marwari vacaï under it (CDIAL 11208). It is the causing form of \"to escape\": \"make escape\", so \"save\"; the Old Marwari row means \"is saved\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e01d852c347b5c2e",
+      "sourceHash": "fnv1a64:0211bfc64f980bc1",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उतरणो (utarṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uttarati, \"passes over; descends\". CDIAL lists Old Marwari utaraï under it (CDIAL 1770). It is built on ud, \"up, out\", and tar, \"to cross\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a286e0e79ae652f",
+      "sourceHash": "fnv1a64:7d05bc6e997d46dc",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तैरणो (tairṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tirate, \"crosses over\". CDIAL gives no Marwari form in this entry (CDIAL 5821); the match is through Hindi tairnā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbe034592d4f4fc3",
+      "sourceHash": "fnv1a64:96db4256af2cd910",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कूदणो (kūdṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kūrdati, \"leaps, jumps\". CDIAL lists Old Marwari kūdaï under it (CDIAL 3412). CDIAL thinks the Sanskrit verb itself probably came from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

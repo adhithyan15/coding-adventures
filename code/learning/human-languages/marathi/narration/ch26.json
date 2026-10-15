@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Give, Bring, Put",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d94e672daf39bc0c",
+  "sourceHash": "fnv1a64:a573fef9310f1308",
   "lessons": [
     {
       "id": "MR-C22-dene",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:310912b5459a6a33",
+      "sourceHash": "fnv1a64:cfb3e05d1d76ea9c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fca430acae9386e9",
+      "sourceHash": "fnv1a64:43b11a6cf949079a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -320,7 +320,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1df2beae85161dcc",
+      "sourceHash": "fnv1a64:81801f8190f7072d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -475,7 +475,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7c46c4525588510a",
+      "sourceHash": "fnv1a64:d9ea5da9e97a2510",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -541,7 +541,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ठेवणे (ṭhevṇe) comes through Prakrit ṭhavei from Sanskrit sthāpayati, \"causes to stand.\" Prakrit had no taste for the sth- cluster and traded it for a single retroflex ठ, which is why the Marathi word looks nothing like its Sanskrit parent — a worn-down word, the tadbhava kind, beside the taken-up-whole kind you met with मित्र."
+              "text": "CDIAL files ठेवणे (ṭhevṇe) under Sanskrit sthēya, \"to be stationed\" (CDIAL 13777). Marathi has ṭheṇe, \"to stand still,\" and CDIAL reads ठेवणे (ṭhevṇe) as a causative formed on it: \"to make it stay.\" Prakrit had no taste for the sth- cluster and wore it down to a single consonant, in Marathi the retroflex ठ, which is why the word looks nothing like its Sanskrit parent — a worn-down word, the tadbhava kind, beside the taken-up-whole kind you met with मित्र."
             },
             {
               "kind": "speech",

@@ -14,7 +14,8 @@ romanization: "paṛosī"
 concept_tag: UR-FAMILY45-PAROSI
 prerequisites: [UR-C45-larki, UR-C45-admi]
 sounds: []
-roots: []
+roots: [sanskrit-prativesha]
+etymology_hook: "paṛosī ← *prativeśiya 'neighbour', a variant of Sanskrit prativeśya (CDIAL 8599)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C45-admi]
 <!-- hl-knowledge: introduces=[UR-LEX-C45-FAMILY45-04]; assesses=[] -->
 
 **پڑوسی** — *paṛosī* — "a neighbour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پڑوسی** (*paṛosī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*prativeśiya*, "neighbour", a form CDIAL reconstructs from its descendants (CDIAL 8599). It is a variant CDIAL reconstructs beside Sanskrit *prativeśya*, "neighbour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

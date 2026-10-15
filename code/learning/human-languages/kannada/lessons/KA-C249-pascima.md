@@ -14,7 +14,8 @@ romanization: "paścima"
 concept_tag: KA-STHALA249-PASCIMA
 prerequisites: [KA-C248-onduvare, KA-C249-purva]
 sounds: []
-roots: []
+roots: [sanskrit-pashcima]
+etymology_hook: "paścima ← Sanskrit paścima 'later, hinder, western', a tatsama (CDIAL 8007)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C249-purva]
 <!-- hl-knowledge: introduces=[KA-LEX-C249-STHALA249-02]; assesses=[] -->
 
 **ಪಶ್ಚಿಮ** — *paścima* — "west".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಶ್ಚಿಮ** (*paścima*) is Sanskrit *paścima*, "later, hinder, western", taken over whole as a learned loan, a tatsama (CDIAL 8007). What is behind is the west.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

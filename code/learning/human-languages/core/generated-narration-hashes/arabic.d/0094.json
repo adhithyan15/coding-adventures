@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 94,
-  "sourceHash": "fnv1a64:f939de2b2724dfa3",
+  "sourceHash": "fnv1a64:1bb5736c78774bae",
   "lessonIds": [
     "AR-C94-malabis",
     "AR-C94-qamis",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch94.txt",
   "json": "arabic/narration/ch94.json",
-  "textHash": "fnv1a64:de264b0169b4e965",
-  "jsonHash": "fnv1a64:5da2234e68559162",
+  "textHash": "fnv1a64:0857bdee114c5b81",
+  "jsonHash": "fnv1a64:de87b3bf13c2da27",
   "findings": []
 }

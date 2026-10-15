@@ -14,7 +14,8 @@ romanization: "vazn kardan"
 concept_tag: FA-VERB-VAZN-KARDAN
 prerequisites: [FA-C255-dad-zadan, FA-C255-mesvak-zadan]
 sounds: []
-roots: []
+roots: [arabic-wazn]
+etymology_hook: "vazn ← Arabic wazn 'weight', root w-z-n (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C255-mesvak-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C255-KONESH255-03]; assesses=[] -->
 
 **وزن کردن** — *vazn kardan* — "to weigh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vazn kardan* pairs *vazn*, borrowed from Arabic *wazn*, "weight" (root *w-z-n*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: lentils
 concept_tag: MW-FOOD-LENTILS
 prerequisites: [MW-R17-script-close]
 sounds: [dental-d, long-aa, dental-l]
-roots: []
-etymology_hook: The first food word arrives by ear, and every sign it will need is already in the hand.
+roots: [sanskrit-dala]
+etymology_hook: "dāl ← Sanskrit dāla 'split peas' (CDIAL 6309, Hindi row)"
 duration:
   max_seconds: 145
 requires:
@@ -47,6 +47,11 @@ reviews_of: [MW-R17-script-close, MW-C17-hear-ghodo, MW-C10-hear-bajar]
 Two beats, and the second one is long. Hear it twice, picture a bowl of
 cooked lentils, and say it once. The spelling stays covered until the sound
 and the meaning are comfortable.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dāl* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dāla*, "kind of grain, split peas". CDIAL gives no Marwari form in this entry (CDIAL 6309); the match is through Hindi *dāl*. CDIAL asks whether it is the same word as *dāla*, "splitting".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DAAL-01] -->

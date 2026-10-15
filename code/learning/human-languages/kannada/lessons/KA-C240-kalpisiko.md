@@ -14,7 +14,8 @@ romanization: "kalpisiko"
 concept_tag: KA-VERB-KALPISIKO
 prerequisites: [KA-C240-mulugu, KA-C240-vadisu]
 sounds: []
-roots: []
+roots: [sanskrit-kalpana, dravidian-kol-take]
+etymology_hook: "kalpisiko: Sanskrit kalpanā 'forming, imagining' + -isu + ko 'take' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C240-vadisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C240-KRIYE240-05]; assesses=[] -->
 
 **ಕಲ್ಪಿಸಿಕೊ** — *kalpisiko* — "to imagine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಲ್ಪಿಸಿಕೊ** (*kalpisiko*) is Sanskrit *kalpanā*, "arranging, making" (CDIAL 2943), made into a verb with *-isu*, and *ko*, "take" (DEDR 2151): "to form for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

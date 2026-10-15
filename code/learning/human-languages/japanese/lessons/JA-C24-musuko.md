@@ -14,7 +14,8 @@ romanization: "musuko"
 concept_tag: JA-HEALTH24-MUSUKO
 prerequisites: [JA-C24-ojiisan, JA-C24-ojisan]
 sounds: []
-roots: []
+roots: [japanese-musuko]
+etymology_hook: "musuko: native; usually explained as musu 'grow, be born' + ko 'child'; kanji read for meaning"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C24-ojisan]
 <!-- hl-knowledge: introduces=[JA-LEX-C24-HEALTH24-04]; assesses=[] -->
 
 **むすこ** — *musuko* — "a son".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**むすこ** (*musuko*) is a native word, inherited rather than borrowed. It is usually explained as *musu*, "to be born, to grow", with *ko*, "child"; JMdict's kanji, "breath; son" and "child", are read as a whole for their meaning.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

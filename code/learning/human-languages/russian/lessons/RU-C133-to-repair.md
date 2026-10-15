@@ -14,7 +14,8 @@ romanization: "chinít"
 concept_tag: RU-VERB-TO-REPAIR
 prerequisites: [RU-C133-to-stay, RU-C133-to-rent]
 sounds: []
-roots: []
+roots: [slavic-chinu]
+etymology_hook: "чинить is from чин 'order, rank': to put in order; Greek poieō 'I make' is a cousin of чин"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C133-to-rent]
 <!-- hl-knowledge: introduces=[RU-LEX-C133-ACT133-05]; assesses=[] -->
 
 **чинить** (*chinít*) — "to repair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**чинить** comes from *чин*, "order, rank" (Vasmer): to repair is to put back in order. Vasmer relates *чин* to Sanskrit *cinóti*, "arranges, piles", and Greek *poiéō*, "I make".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

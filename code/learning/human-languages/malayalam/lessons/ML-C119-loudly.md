@@ -11,7 +11,8 @@ romanization: "uṟakke"
 concept_tag: ML-REP-LOUDLY
 prerequisites: [ML-C119-slowly, ML-C119-oncemore]
 sounds: []
-roots: []
+roots: [dravidian-urai-firm]
+etymology_hook: "uṟakke: native Dravidian; DEDR 721 lists it as 'strongly, firmly, aloud', from the verb 'to be firm'"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C119-oncemore]
 
 **ഉറക്കെ** (*uṟakke*) — "loudly, aloud". **കുറച്ച് ഉറക്കെ** — "a little louder", with
 **കുറച്ച്**, "a little".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉറക്കെ** (*uṟakke*) is native Dravidian: DEDR 721 lists Malayalam *uṟakkē*, "strongly, firmly, aloud", under the verb "to be firm", with Tamil *uṟai*, "to become firm", and Telugu *oṟapu*, "firmness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

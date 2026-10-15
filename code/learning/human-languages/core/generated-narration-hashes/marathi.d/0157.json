@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 157,
-  "sourceHash": "fnv1a64:f7399203eb293d7e",
+  "sourceHash": "fnv1a64:b0ee96db90dee4fa",
   "lessonIds": [
     "MR-C157-cakhne",
     "MR-C157-perne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch157.txt",
   "json": "marathi/narration/ch157.json",
-  "textHash": "fnv1a64:350dda7414a85aa7",
-  "jsonHash": "fnv1a64:a53dd45021f54294",
+  "textHash": "fnv1a64:3c75c5479f3c1894",
+  "jsonHash": "fnv1a64:a71b8dca3fae2e15",
   "findings": []
 }

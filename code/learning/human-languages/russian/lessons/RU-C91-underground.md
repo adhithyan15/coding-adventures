@@ -14,7 +14,8 @@ romanization: "metró"
 concept_tag: RU-LOC91-UNDERGROUND
 prerequisites: [RU-C90-east, RU-C91-west]
 sounds: []
-roots: []
+roots: [french-metropolitain]
+etymology_hook: "метро ← French métro, short for (chemin de fer) métropolitain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C91-west]
 <!-- hl-knowledge: introduces=[RU-LEX-C91-LOC91-02]; assesses=[] -->
 
 **метро** (*metró*) — "the underground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**метро** comes from French *métro*, cut short from *métropolitain*, "of the capital" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hoṭh"
 concept_tag: GU-BODY2-LIP
 prerequisites: [GU-C47-throat, GU-C47-shoulder]
 sounds: []
-roots: []
+roots: [sanskrit-oshtha]
+etymology_hook: "hoṭh ← Sanskrit oṣṭha 'lip'; the h- may come from *adhaoṣṭha 'lower lip' (CDIAL 2563, 245a)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C47-shoulder]
 <!-- hl-knowledge: introduces=[GU-LEX-C47-BODY2-04]; assesses=[] -->
 
 **હોઠ** (*hoṭh*) — "a lip, the lips".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હોઠ** (*hoṭh*) is a tadbhava of Sanskrit *oṣṭha*, "lip" (CDIAL 2563). Its *h-* may come from a compound *\*adhaoṣṭha*, "lower lip", which K. R. Norman suggested and CDIAL records (CDIAL 245a).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

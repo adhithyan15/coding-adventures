@@ -14,7 +14,8 @@ romanization: "vaṇṭagadi"
 concept_tag: TE-VASTUVU183-VANTAGADI
 prerequisites: [TE-C182-sada, TE-C182-adanapu]
 sounds: []
-roots: []
+roots: [dravidian-vandu-cook]
+etymology_hook: "vaṇṭagadi: native vaṇṭa 'cooking' (DEDR 5329) + gadi 'room', of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C182-adanapu]
 <!-- hl-knowledge: introduces=[TE-LEX-C183-VASTUVU183-01]; assesses=[] -->
 
 **వంటగది** — *vaṇṭagadi* — "a kitchen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వంటగది** (*vaṇṭagadi*) is native *vaṇṭa*, "cooking", from *vaṇḍu*, "to cook" (DEDR 5329), and *gadi*, "room", whose origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

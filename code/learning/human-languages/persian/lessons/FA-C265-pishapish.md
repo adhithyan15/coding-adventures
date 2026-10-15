@@ -14,7 +14,8 @@ romanization: "pishâpish"
 concept_tag: FA-ZAMAN265-PISHAPISH
 prerequisites: [FA-C264-javani, FA-C264-pas-farda]
 sounds: []
-roots: []
+roots: [persian-pesh]
+etymology_hook: "pishâpish: Persian pish 'before', doubled; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C264-pas-farda]
 <!-- hl-knowledge: introduces=[FA-LEX-C265-ZAMAN265-01]; assesses=[] -->
 
 **پیشاپیش** — *pishâpish* — "in advance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pishâpish* is *pish*, "before", doubled with a linking *â*: well before. *pish* is native, usually traced to Middle Persian *pēš*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

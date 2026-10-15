@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:19edc442085dfff2",
+  "sourceHash": "fnv1a64:2c90e20f6f2651df",
   "lessons": [
     {
       "id": "LA-C12-medius-dies-nox",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6253cf25d708850c",
+      "sourceHash": "fnv1a64:89923b29a7c30644",
       "notice": null,
       "blocks": [
         {
@@ -79,6 +79,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "medius diēs joins two inherited words: diēs \"day\", met with the weekday names, and medius \"middle\", usually traced to Proto-Indo-European medhyos, \"middle\" (EtymDB 2.1), a cousin of English mid."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -118,7 +129,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

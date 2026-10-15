@@ -14,7 +14,8 @@ romanization: "girjāghar"
 concept_tag: HI-THG187-GIRJAGHAR
 prerequisites: [HI-C186-ummid, HI-C186-yad]
 sounds: []
-roots: []
+roots: [portuguese-igreja, sanskrit-ghara]
+etymology_hook: "girjā usually traced to Portuguese igreja 'church'; ghar ← ghara 'house' (CDIAL 4428)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C186-yad]
 <!-- hl-knowledge: introduces=[HI-LEX-C187-THG187-01]; assesses=[] -->
 
 **गिरजाघर** — *girjāghar* — "a church".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गिरजाघर** (*girjāghar*) is *girjā*, "church", usually traced to Portuguese *igreja*, with *ghar*, "house", from *ghara* (CDIAL 4428).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

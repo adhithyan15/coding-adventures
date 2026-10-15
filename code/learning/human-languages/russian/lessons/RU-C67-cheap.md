@@ -14,7 +14,8 @@ romanization: "deshyóvyy"
 concept_tag: RU-WORTH-CHEAP
 prerequisites: [RU-C67-hard, RU-C67-expensive]
 sounds: []
-roots: []
+roots: [slavic-desiti]
+etymology_hook: "дешёвый: Vasmer thinks it most likely comes from Old Russian десить 'to find, to meet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C67-expensive]
 <!-- hl-knowledge: introduces=[RU-LEX-C67-WORTH-04]; assesses=[] -->
 
 **дешёвый** (*deshyóvyy*) — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дешёвый** ← Old Russian *deševŭ*; Vasmer thinks it most likely comes from *десить*, "to find, to come upon": cheap is what is easily come by. He rejects a Turkic source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

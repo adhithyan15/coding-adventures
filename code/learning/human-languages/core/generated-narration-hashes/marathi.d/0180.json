@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 180,
-  "sourceHash": "fnv1a64:cbbcf922eb4e862b",
+  "sourceHash": "fnv1a64:69fdd452a0da82ef",
   "lessonIds": [
     "MR-C180-lekhak",
     "MR-C180-citrakar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch180.txt",
   "json": "marathi/narration/ch180.json",
-  "textHash": "fnv1a64:8110d89088c4859d",
-  "jsonHash": "fnv1a64:c16f6e08db149bc2",
+  "textHash": "fnv1a64:afcc7c292ab50c8b",
+  "jsonHash": "fnv1a64:2eeb526de0a0cec3",
   "findings": []
 }

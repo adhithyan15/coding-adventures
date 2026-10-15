@@ -12,6 +12,9 @@ Before the new one: say the Kannada for the new moon day, then the Kannada for a
 You'll want to know: ಕಟ್ಟಡ.
 ಕಟ್ಟಡ — kaṭṭaḍa — "a building".
 
+The word, taken apart.
+ಕಟ್ಟಡ (kaṭṭaḍa) is native Dravidian, from kaṭṭu, "to bind, build", which DEDR 1147 lists: a building is "what is built"; the entry also has Tamil kaṭṭu, Telugu kaṭṭu and Malayalam keṭṭuka.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for an interval, then the Kannada for a buil
 
 You'll want to know: ಮಹಡಿ.
 ಮಹಡಿ — mahaḍi — "a floor, a storey".
+
+The word, taken apart.
+Where ಮಹಡಿ (mahaḍi) comes from is uncertain. It looks like māḍi, "an upstairs house", which DEDR 4796 lists, but DEDR does not give mahaḍi. DEDR 4796 compares Sanskrit mālikā and meṭa.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for a building, then the Kannada for a floor
 You'll want to know: ಪ್ರವೇಶ.
 ಪ್ರವೇಶ — pravēśa — "an entrance, entry".
 
+The word, taken apart.
+ಪ್ರವೇಶ (pravēśa) is Sanskrit pravēśa, "entrance", taken over whole as a learned loan, a tatsama (CDIAL 8809).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for a floor, then the Kannada for an entranc
 You'll want to know: ವೇದಿಕೆ.
 ವೇದಿಕೆ — vēdike — "a platform, a stage".
 
+The word, taken apart.
+ವೇದಿಕೆ (vēdike) is Sanskrit vēdikā, "a bench, a platform" (CDIAL 12107), from vēdi, the raised ground of a sacrifice, with the Kannada -e for final -ā.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for an entrance, then the Kannada for a plat
 
 You'll want to know: ವಿದೇಶ.
 ವಿದೇಶ — vidēśa — "abroad, a foreign country".
+
+The word, taken apart.
+ವಿದೇಶ (vidēśa) is Sanskrit vi-, "apart, away", with dēśa, "region, country" (CDIAL 6547): "a country away from home".
 
 What you've built.
 One more word for this chapter.

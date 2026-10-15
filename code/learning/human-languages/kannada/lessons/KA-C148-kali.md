@@ -14,7 +14,8 @@ romanization: "kali"
 concept_tag: KA-VERB-KALI
 prerequisites: [KA-C148-kalisu, KA-C148-huduku]
 sounds: []
-roots: []
+roots: [dravidian-kal-learn]
+etymology_hook: "kali: native Dravidian, one word with Tamil kal and Malayalam kalkka (DEDR 1297)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C148-huduku]
 <!-- hl-knowledge: introduces=[KA-LEX-C148-ACT148-03]; assesses=[] -->
 
 **ಕಲಿ** — *kali* — "to learn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಲಿ** (*kali*) is native Dravidian, one word with Tamil *kal* and Malayalam *kalkka* (DEDR 1297). DEDR lists *kal*, *kali*, "to learn". DEDR 1297 compares Sanskrit *kalā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

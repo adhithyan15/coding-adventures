@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for rupees, then the Gujarati for a coin.
 You'll want to know: ચોખા.
 ચોખા (cokhā) — "rice (uncooked)". Cooked, it is ભાત.
 
+The word, taken apart.
+ચોખા (cokhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from cokṣa, "pure, clean" (CDIAL 4918). CDIAL lists Gujarati cokhā, "rice", under it.
+
 What you've built.
 One more word for in the pantry.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a coin, then the Gujarati for rice.
 
 You'll want to know: લોટ.
 લોટ (loṭ) — "flour". What a રોટલી is made from.
+
+The word, taken apart.
+The origin of લોટ (loṭ) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 What you've built.
 One more word for in the pantry.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for rice, then the Gujarati for flour.
 You'll want to know: ઘી.
 ઘી (ghī) — "ghee, clarified butter".
 
+The word, taken apart.
+ઘી (ghī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghṛta, "fluid grease, clarified butter or ghee" (CDIAL 4501).
+
 What you've built.
 One more word for in the pantry.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for flour, then the Gujarati for ghee.
 You'll want to know: દહીં.
 દહીં (dahī̃) — "yogurt, curd". Made from દૂધ.
 
+The word, taken apart.
+દહીં (dahī̃) (dahīṁ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadhi, "thick sour milk" (CDIAL 6146).
+
 What you've built.
 One more word for in the pantry.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for ghee, then the Gujarati for yogurt.
 
 You'll want to know: છાશ.
 છાશ (chāś) — "buttermilk".
+
+The word, taken apart.
+The origin of છાશ (chāś) is not fully settled. It matches chāśī, the second of two forms CDIAL reconstructs for "buttermilk", though CDIAL lists no Gujarati word under it (CDIAL 5012).
 
 What you've built.
 One more word for in the pantry.

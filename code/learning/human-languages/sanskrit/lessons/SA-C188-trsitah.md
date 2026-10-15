@@ -14,7 +14,8 @@ romanization: "tṛṣitaḥ"
 concept_tag: SA-QUAL188-TRSITAH
 prerequisites: [SA-C187-satyavadi, SA-C187-patuh]
 sounds: []
-roots: []
+roots: [sanskrit-trshita]
+etymology_hook: "tṛṣita ← root √tṛṣ 'be thirsty'; MW compares Gothic thaursus 'dry', kin to English thirst"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C187-patuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C188-QUAL188-01]; assesses=[] -->
 
 **तृषितः** — *tṛṣitaḥ* — "thirsty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tṛṣita* is the past participle of the root √tṛṣ, "to be thirsty" (MW). The root is inherited from Indo-European: MW compares Gothic *thaursus*, "dry", and English *thirst* is usually traced to the same source. CDIAL 5937 gives Gujarati *tarśyũ*, "thirsty", as a descendant.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

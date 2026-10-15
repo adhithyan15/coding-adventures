@@ -14,7 +14,8 @@ romanization: "sārvajanik"
 concept_tag: MR-GUN206-SARVAJANIK
 prerequisites: [MR-C205-sijlela, MR-C205-piklela]
 sounds: []
-roots: []
+roots: [sanskrit-sarva, sanskrit-jana]
+etymology_hook: "sārvajanik: Sanskrit sārvajanika 'relating to all people', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C205-piklela]
 <!-- hl-knowledge: introduces=[MR-LEX-C206-GUN206-01]; assesses=[] -->
 
 **सार्वजनिक** — *sārvajanik* — "public".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सार्वजनिक** (*sārvajanik*) is Sanskrit *sārvajanika*, "relating to all people", a tatsama built on *sarva*, "all", and *jana*, "people".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

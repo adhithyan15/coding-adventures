@@ -14,7 +14,8 @@ romanization: "lasūṇ"
 concept_tag: MR-THINGS137-LASUN
 prerequisites: [MR-C137-ladu, MR-C137-kakdi]
 sounds: []
-roots: []
+roots: [sanskrit-lashuna]
+etymology_hook: "lasūṇ ← Sanskrit laśuna 'garlic', a tadbhava (CDIAL 10990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C137-kakdi]
 <!-- hl-knowledge: introduces=[MR-LEX-C137-THINGS137-04]; assesses=[] -->
 
 **लसूण** — *lasūṇ* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लसूण** (*lasūṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laśuna*, "garlic" (CDIAL 10990).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

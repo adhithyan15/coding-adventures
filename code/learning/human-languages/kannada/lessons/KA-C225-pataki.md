@@ -14,7 +14,8 @@ romanization: "paṭāki"
 concept_tag: KA-VASTU225-PATAKI
 prerequisites: [KA-C225-suryakanti, KA-C225-kabbu]
 sounds: []
-roots: []
+roots: [hindustani-pataka]
+etymology_hook: "paṭāki ← Hindustani paṭākā 'firecracker'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C225-kabbu]
 <!-- hl-knowledge: introduces=[KA-LEX-C225-VASTU225-05]; assesses=[] -->
 
 **ಪಟಾಕಿ** — *paṭāki* — "a firecracker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪಟಾಕಿ** (*paṭāki*) came from Hindustani *paṭākā*, "a firecracker", a word that imitates the bang.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "injin"
 concept_tag: BN-JINIS174-INJIN
 prerequisites: [BN-C173-lichu, BN-C174-plag]
 sounds: []
-roots: []
+roots: [english-engine]
+etymology_hook: "injin ← English engine"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C174-plag]
 <!-- hl-knowledge: introduces=[BN-LEX-C174-JINIS174-02]; assesses=[] -->
 
 **ইঞ্জিন** — *injin* — "an engine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইঞ্জিন** (*injin*) is a loan from English *engine*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

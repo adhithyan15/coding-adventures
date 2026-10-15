@@ -10,7 +10,8 @@ gloss: "to greet, to say hello"
 concept_tag: ES-VERB-SALUDAR
 prerequisites: [ES-C488-enamorarse, ES-C488-despedirse]
 sounds: []
-roots: []
+roots: [salus-latin]
+etymology_hook: "saludar ← Latin salutare 'to greet, to wish health', from salus — kin to salud; English salute"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C488-despedirse]
 > *Say hello to your mother from me.*
 
 The verb behind *el saludo*, the greeting.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saludar** ← Latin *salutare*, "to greet, to wish good health" (EtymDB 2.1), from *salus*, *salutis*, "health" — inherited: the *-t-* became *-d-*. The *salud* you raise a glass to is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

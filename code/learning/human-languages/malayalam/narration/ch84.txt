@@ -22,6 +22,9 @@ So this costs you no new grammar either. The owner-ending is the one from the ge
 Put a thing in front and you have a sentence's worth:
 പുസ്തകം കസേരയുടെ മുകളിൽ (mukaḷil) — the book is on top of the chair.
 
+The word, taken apart.
+മുകളിൽ (mukaḷil) is native Dravidian: mukaḷ, "top, summit" (DEDR 4888, with Tamil mukaṭu), with the place ending -il. DEDR 4888 compares Sanskrit mukuṭa.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: mukaḷil]
@@ -52,6 +55,9 @@ It is the opposite of the word before it, and it takes exactly the same shape ar
 കസേരയുടെ മുകളിൽ (mukaḷil), on top of the chair.
 കസേരയുടെ താഴെ (tāḻe), under the chair.
 The owner-ending does not change and the order does not change. Only the place-word swaps, which is the whole point of learning the pattern before the words: each new one after this costs a word and nothing else.
+
+The word, taken apart.
+താഴെ (tāḻe) is native Dravidian, from the verb "to sink, come low"; DEDR 3178 lists the root with Tamil tāḻ and Kannada tāḻ.
 
 Guided Practice.
 [pause 1 second]
@@ -87,6 +93,9 @@ Both go where the other two went, after a noun carrying the owner-ending, and th
 പിന്നിൽ, behind.
 കസേരയുടെ മുന്നിൽ — in front of the chair. കസേരയുടെ പിന്നിൽ — behind the chair.
 The two new ones are a near-pair on the page as well as in meaning: munnil and pinnil differ in their first sound and agree in everything after it. Say them one after the other until the opening is what you hear, because that opening is the only thing carrying the difference.
+
+The word, taken apart.
+മുന്നിൽ പിന്നിൽ (munnil pinnil) are native Dravidian: mun, "front, before" (DEDR 5020, with Tamil muṉ and Kannada mun), and pin, "back, after" (DEDR 4205, with Tamil piṉ), each with the place ending -il.
 
 Guided Practice.
 [pause 1 second]

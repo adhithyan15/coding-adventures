@@ -11,7 +11,8 @@ romanization: "athavā"
 concept_tag: KA-CONJ-OR
 prerequisites: [KA-C67-and, KA-S134-letter-ma, KA-C51-respect, KA-C51-favour, KA-C49-perhaps, KA-C49-certainly, KA-C65-hesitancy]
 sounds: []
-roots: []
+roots: [sanskrit-athava]
+etymology_hook: "athavā ← Sanskrit athavā 'or', atha 'then' + vā 'or' (CDIAL 231)"
 duration:
   max_seconds: 210
 requires:
@@ -51,6 +52,8 @@ until this word there was no way to put a choice to anybody.
 and it is at home in speech as well as on the page. Quick speech will also just
 name the two options with a rise between them, or slip ಇಲ್ಲ in the gap; ಅಥವಾ is
 the one that makes the choice unmistakable.
+
+CDIAL 231 lists Sanskrit *athavā*, "or".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

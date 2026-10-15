@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 193,
-  "sourceHash": "fnv1a64:4870080ee3abff3e",
+  "sourceHash": "fnv1a64:b565f2a45461d96d",
   "lessonIds": [
     "KA-C193-rattu",
     "KA-C193-akara",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch193.txt",
   "json": "kannada/narration/ch193.json",
-  "textHash": "fnv1a64:938dacde5abd58c6",
-  "jsonHash": "fnv1a64:4f76b71ad791323e",
+  "textHash": "fnv1a64:8e8ae931092c367c",
+  "jsonHash": "fnv1a64:ab36f6a8c61ccb71",
   "findings": []
 }

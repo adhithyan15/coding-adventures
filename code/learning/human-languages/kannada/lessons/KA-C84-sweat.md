@@ -11,7 +11,8 @@ romanization: "bevaru"
 concept_tag: KA-BODY-SWEAT
 prerequisites: [KA-C84-thirst, KA-C84-weariness]
 sounds: []
-roots: []
+roots: [dravidian-veyar-sweat]
+etymology_hook: "bevaru: native Dravidian, one word with Tamil veyar (DEDR 5486)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C84-weariness]
 **ಬೆವರು** (*bevaru*) — "sweat", and also "to sweat".
 
 On a hot day in the **ಬಿಸಿಲು** (*bisilu*), "sunshine", this is the word you need.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆವರು** (*bevaru*) is native Dravidian, one word with Tamil *veyar* (DEDR 5486). DEDR gives Kannada *bemar(u)*, *bevaru*: the old *v-* has become *b-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

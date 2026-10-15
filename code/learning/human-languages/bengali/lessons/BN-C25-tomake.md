@@ -11,8 +11,8 @@ gloss: you, as the one it happens to — the second object pronoun, and the last
 concept_tag: BN-LEX-TOMAKE
 prerequisites: [BN-C25-amake, BN-C02-tumi-apni, BN-C13-doya-kore, BN-C23-she]
 sounds: []
-roots: []
-etymology_hook: "English keeps I/me and he/him as separate words a child must learn one at a time. Bengali builds every object pronoun the same way out of a stem and one ending, so once the first is learned the rest are free."
+roots: [sanskrit-yushmad]
+etymology_hook: "tomāke: tomā-, from tumi ← yuṣmad 'you' (CDIAL 10511), + -ke, whose origin is not settled"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +55,11 @@ list:
 | **সে** | **তার** | **তাকে** |
 
 Three stems, three endings, nine words, nothing irregular.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The stem *tomā-* goes back, with **তুমি**, to Sanskrit *yuṣmad-*, "you" (CDIAL 10511); where **-কে** comes from is not settled.
 
 ## Grammar Lens: what English makes you memorise and Bengali does not
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C25-TOMAKE-01, BN-LEX-C25-AMAKE-01, BN-GRAMMAR-C23-TAR-01, BN-LEX-C13-DOYAKORE-01] -->

@@ -14,7 +14,8 @@ romanization: "juḷe"
 concept_tag: MR-VASTU264-JULE
 prerequisites: [MR-C263-kavita, MR-C264-vrddha]
 sounds: []
-roots: []
+roots: [sanskrit-yugala]
+etymology_hook: "juḷe ← Sanskrit yugala 'pair, couple', a tadbhava (CDIAL 10489)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C264-vrddha]
 <!-- hl-knowledge: introduces=[MR-LEX-C264-VASTU264-02]; assesses=[] -->
 
 **जुळे** — *juḷe* — "twins".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जुळे** (*juḷe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yugala*, "pair, couple" (CDIAL 10489). It is built on *yuga*, "yoke". CDIAL glosses the Marathi word "one of twins".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

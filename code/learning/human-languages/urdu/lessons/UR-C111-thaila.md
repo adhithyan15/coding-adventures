@@ -14,7 +14,8 @@ romanization: "thailā"
 concept_tag: UR-THINGS111-THAILA
 prerequisites: [UR-C111-batua, UR-C111-chhatri]
 sounds: []
-roots: []
+roots: [sanskrit-sthavi]
+etymology_hook: "thailā ← Sanskrit sthavi 'sack, bag', a tadbhava (CDIAL 13746)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C111-chhatri]
 <!-- hl-knowledge: introduces=[UR-LEX-C111-THINGS111-03]; assesses=[] -->
 
 **تھیلا** — *thailā* — "a bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تھیلا** (*thailā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sthavi*, "sack, bag" (CDIAL 13746). The *-l-* is an added suffix; the Sanskrit word is known only from the old word-lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

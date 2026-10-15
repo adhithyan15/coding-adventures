@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Me, and Two Ways to Part",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:07c183ef4f573938",
+  "sourceHash": "fnv1a64:61d7672f9facf827",
   "lessons": [
     {
       "id": "PA-C35-mainu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a82e3d480aa05a58",
+      "sourceHash": "fnv1a64:e9a6c707dacc2cb6",
       "notice": null,
       "blocks": [
         {
@@ -74,6 +74,10 @@
             {
               "kind": "speech",
               "text": "On the page it needs two marks not yet traced — one below a letter, one above. Both are taught in this chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "Maiṁ goes back to the Sanskrit first-person base ma- (CDIAL 9691). Where nūṁ comes from is not settled: CDIAL has no entry for it."
             }
           ]
         },
@@ -391,7 +395,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:024638ac6a29a2f9",
+      "sourceHash": "fnv1a64:e1d67a7a54e6c68a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -464,6 +468,10 @@
             {
               "kind": "speech",
               "text": "English does the same with all right then and right you are. A word for agreement, spoken at the end, becomes a way out."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists caṅgā under Sanskrit caṅga, \"of good understanding\" (CDIAL 4564)."
             }
           ]
         },

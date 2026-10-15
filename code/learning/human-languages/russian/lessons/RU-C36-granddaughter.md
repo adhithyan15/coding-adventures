@@ -14,7 +14,8 @@ romanization: "vnúchka"
 concept_tag: RU-FAMILY2-GRANDDAUGHTER
 prerequisites: [RU-C36-aunt, RU-C36-grandson]
 sounds: []
-roots: []
+roots: [slavic-vunuku]
+etymology_hook: "внучка is внук 'grandson' + the feminine -ка"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C36-grandson]
 <!-- hl-knowledge: introduces=[RU-LEX-C36-FAMILY2-05]; assesses=[] -->
 
 **внучка** (*vnúchka*) — "a granddaughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**внучка** is *внук*, "grandson", with *-ка*, which makes the female word; *к* turns to *ч* before it, as in *рука*, "hand", and *ручка*, "a little hand; a pen". Vasmer traces *внук* to Proto-Slavic *\*vŭnukŭ* and tentatively links it with an old nursery word for an elder, kept in Latin *anus*, "old woman".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

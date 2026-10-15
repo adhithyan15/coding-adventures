@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:7364674b4b6f1fb3",
+  "sourceHash": "fnv1a64:4147f6e492c01669",
   "lessons": [
     {
       "id": "BN-C07-howa",
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65a711d49cd63c80",
+      "sourceHash": "fnv1a64:92e85378dd6b02b8",
       "notice": null,
       "blocks": [
         {
@@ -373,7 +373,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The আ- in front is Sanskrit's ā-, \"hither, toward\" — the very prefix that turns going into coming. Hindi's ānā is that ā- welded onto yā-, the go-verb of the last lesson: \"go, but this way.\" Bengali shows the same prefix on a different stem, and the honest position on that stem is that its history is unsettled; this book will not invent one for it."
+              "text": "The আ- in front is Sanskrit's ā-, \"hither, toward\" — the very prefix that turns going into coming. Bengali puts it on a stem whose history is not settled: CDIAL lists আসা (āsā) under Sanskrit āsadati, \"approaches\" (CDIAL 1483), while Chatterji derived it from āviśati, \"enters\" (CDIAL 1437)."
             }
           ]
         },
@@ -466,7 +466,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does the আ- on this verb mean, and where else have you met it? (Hither, toward — it is the ā- inside Hindi's ānā.) How many forms of \"I come\" does a Bengali speaker need? (One — āmi āsi, whoever is talking.) Is that true of the nouns too? (Yes — Bengali has no grammatical gender anywhere.) Next: a verb that swallows more than food."
+              "text": "What does the আ- on this verb mean? (Hither, toward — the prefix that turns going into coming.) How many forms of \"I come\" does a Bengali speaker need? (One — āmi āsi, whoever is talking.) Is that true of the nouns too? (Yes — Bengali has no grammatical gender anywhere.) Next: a verb that swallows more than food."
             }
           ]
         }

@@ -11,7 +11,8 @@ gloss: fourteen, on the page — the au-mark from the weather chapter
 concept_tag: MW-NUMBER-FOURTEEN-WRITTEN
 prerequisites: [MW-C37-hear-chauda]
 sounds: [au-diphthong]
-roots: []
+roots: [sanskrit-chaturdasha]
+etymology_hook: "caudā ← Sanskrit caturdaśa 'fourteen', a tadbhava (CDIAL 4605, Hindi and Gujarati rows)"
 duration:
   max_seconds: 175
 requires:
@@ -47,6 +48,11 @@ reviews_of: [MW-C37-hear-chauda, MW-C37-baara, MW-W09-cha, MW-W12-au-matra, MW-C
 
 The **ौ** is the mark **मौसम** taught, and **द** has been in the hand since
 *do*. Nothing here is new; what is new is the pairing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चौदा** (*caudā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *caturdaśa*, "fourteen". CDIAL gives no Marwari form in this entry (CDIAL 4605); the match is through Hindi *caudah* and Gujarati *cauda*. It is *catur*, "four", and *daśa*, "ten".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHAUDA-01, MW-SCRIPT-TERA-01, MW-SCRIPT-BAARA-01] -->

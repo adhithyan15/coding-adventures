@@ -14,7 +14,8 @@ romanization: "nozh"
 concept_tag: RU-TABLE-KNIFE
 prerequisites: [RU-C51-plate, RU-C51-spoon]
 sounds: []
-roots: []
+roots: [slavic-nozi]
+etymology_hook: "нож ← Proto-Slavic *nožĭ; Vasmer ties it to вонзить 'to thrust in' and Greek nyssō 'I prick'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C51-spoon]
 <!-- hl-knowledge: introduces=[RU-LEX-C51-TABLE-04]; assesses=[] -->
 
 **нож** (*nozh*) — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**нож** ← Proto-Slavic *\*nožĭ* — inherited. Vasmer will not separate it from *вонзить*, "to thrust in", and *заноза*, "a splinter", and reports the usual link with Greek *nýssō*, "I prick": the knife as the thing that pierces.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

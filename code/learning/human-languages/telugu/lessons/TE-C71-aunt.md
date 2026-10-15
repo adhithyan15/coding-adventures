@@ -11,7 +11,8 @@ romanization: "atta"
 concept_tag: TE-NOUN-AUNT
 prerequisites: [TE-C71-uncle]
 sounds: []
-roots: []
+roots: [dravidian-attai-aunt]
+etymology_hook: "atta: Dravidian, one word with Tamil attai (DEDR 142); CDIAL 222 takes Sanskrit attā from Dravidian"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C71-uncle]
 The same reasoning folds them together. She is the woman a child calls అత్త while growing up and the woman they answer to after marrying, and one word covers both lives.
 
 It is inherited and it is among the oldest words in the family. The neighbouring languages all keep something very close to it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అత్త** (*atta*) is a Dravidian word, one with Tamil *attai*, "father's sister, mother-in-law", and Kannada *atte*, "mother-in-law" (DEDR 142). DEDR compares Sanskrit *attā*, "mother, elder sister", which CDIAL 222 itself takes from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

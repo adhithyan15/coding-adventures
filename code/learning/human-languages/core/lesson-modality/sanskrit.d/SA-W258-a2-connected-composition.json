@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-W258-a2-connected-composition",
+    "language": "sanskrit",
+    "chapter": 258,
+    "sequence": 15470,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ce9fe389930b66c7",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

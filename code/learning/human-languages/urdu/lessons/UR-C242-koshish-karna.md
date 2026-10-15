@@ -14,7 +14,8 @@ romanization: "koshish karnā"
 concept_tag: UR-VERB-KOSHISH-KARNA
 prerequisites: [UR-C242-shikayat-karna, UR-C242-muqabala-karna]
 sounds: []
-roots: []
+roots: [persian-koshish, kr-do]
+etymology_hook: "koshish 'effort' usually traced to Persian kōshish; karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C242-muqabala-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C242-ACT242-03]; assesses=[] -->
 
 **کوشش کرنا** — *koshish karnā* — "to try".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کوشش کرنا** (*koshish karnā*) joins *koshish*, "effort", usually traced to Persian *kōshish*, and *karnā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

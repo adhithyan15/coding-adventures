@@ -56,7 +56,8 @@ means "please" — and three other things besides, all from one idea.
 **bitte** is the asking-form of **bitten**, "to ask, to request, to pray." When
 you say *bitte* you are, at root, **making a request** — "I ask this of you."
 
-That verb is a close cousin of two English words:
+That verb, inherited from Proto-Germanic *\*bidjaną* (EtymDB 2.1), is a cousin of two
+English words:
 
 - **bid** — as in "I *bid* you welcome," "do as you are *bidden*": to ask or
   command.
@@ -65,7 +66,7 @@ That verb is a close cousin of two English words:
   prayer slid onto the little ball it was counted on. A rosary **bead** is a
   frozen request — exactly what *bitte* still is.
 
-That single idea, *I ask*, is what lets one word cover so much ground:
+That single idea, *I ask*, lets one word cover so much ground:
 
 | You say *bitte* when… | It means | Why it is all "I ask" |
 |---|---|---|

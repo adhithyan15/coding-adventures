@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 262,
-  "sourceHash": "fnv1a64:3828eb151678c3b4",
+  "sourceHash": "fnv1a64:54ea70ffde033355",
   "lessonIds": [
     "MR-C262-tapman",
     "MR-C262-masi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch262.txt",
   "json": "marathi/narration/ch262.json",
-  "textHash": "fnv1a64:17dad7fb9a54ec56",
-  "jsonHash": "fnv1a64:c14dbd9ee5cd0f8b",
+  "textHash": "fnv1a64:133ff5a96a7da3a6",
+  "jsonHash": "fnv1a64:eb03144f86fe3f39",
   "findings": []
 }

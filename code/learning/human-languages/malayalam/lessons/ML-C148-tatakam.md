@@ -14,7 +14,8 @@ romanization: "taṭākaṁ"
 concept_tag: ML-THINGS148-TATAKAM
 prerequisites: [ML-C148-pati, ML-C148-kinaru]
 sounds: []
-roots: []
+roots: [sanskrit-tataka]
+etymology_hook: "taṭākaṁ ← Sanskrit taṭāka 'pond, tank', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C148-kinaru]
 <!-- hl-knowledge: introduces=[ML-LEX-C148-THINGS148-03]; assesses=[] -->
 
 **തടാകം** — *taṭākaṁ* — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തടാകം** (*taṭākaṁ*) ← Sanskrit *taṭāka*, "pond, tank", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

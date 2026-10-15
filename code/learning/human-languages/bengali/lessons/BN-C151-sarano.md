@@ -14,7 +14,8 @@ romanization: "sārāno"
 concept_tag: BN-VERB-SARANO
 prerequisites: [BN-C151-bondho-kora, BN-C151-gora]
 sounds: []
-roots: []
+roots: [sanskrit-sarayati]
+etymology_hook: "sārāno ← Sanskrit sārayati 'makes move, removes', a tadbhava (CDIAL 13358)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C151-gora]
 <!-- hl-knowledge: introduces=[BN-LEX-C151-ACT151-03]; assesses=[] -->
 
 **সারানো** — *sārāno* — "to repair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সারানো** (*sārāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sārayati*, "makes move, removes" (CDIAL 13358). CDIAL lists Bengali *sārā*, "to repair, finish"; *sārāno* is its causing form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

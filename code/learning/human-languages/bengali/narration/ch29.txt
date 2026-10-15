@@ -49,6 +49,9 @@ You'll want to know: একমত.
 আমি একমত নই — āmi ekmôt nôi — I do not agree.
 The word is two words: এক, "one", which chapter twelve counted, and মত, "opinion". Of one mind. English builds the same picture out of Latin when it says unanimous — ūnus animus, one spirit.
 
+The word, taken apart.
+Ek goes back to Sanskrit ēka, "one" (CDIAL 2462), and môt is Sanskrit mata, "opinion", taken over whole as a tatsama.
+
 Grammar Lens: agreeing needs no verb, and disagreeing needs no new word.
 আমি একমত (ekmôt) has no verb in it, like আমি ভালো before it — so it is denied the same way, with নই. The whole of agreement and disagreement in Bengali is now two words the reader already owns arranged in two orders.
 Put কিন্তু (kintu) in front and you have the shape every conversation turns on: আমি একমত (ekmôt), কিন্তু (kintu) … — I agree, but …

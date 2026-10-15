@@ -47,7 +47,7 @@ reviews_of: [TA-C191-vatikkaiyalar]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**காசாளர்** (*kācāḷar*) is native Dravidian. DEDR 1431 lists Malayalam *kāśu*, "money" and Kannada *kāsu*, "coin". It is *kācu*, "coin, money", with *-āḷar*, "the one who handles".
+**காசாளர்** (*kācāḷar*) is native Dravidian. DEDR 1431 lists Malayalam *kāśu*, "money" and Kannada *kāsu*, "coin". It is *kācu*, "coin, money", with *-āḷar*, "the one who handles". DEDR compares *kācu*, with a query, to Sanskrit *karṣa*, a weight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

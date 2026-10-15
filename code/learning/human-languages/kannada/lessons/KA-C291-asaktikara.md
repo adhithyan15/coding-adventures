@@ -14,7 +14,8 @@ romanization: "āsaktikara"
 concept_tag: KA-GUNA291-ASAKTIKARA
 prerequisites: [KA-C291-vicitra, KA-C291-adbhuta]
 sounds: []
-roots: []
+roots: [sanskrit-asakta, sanskrit-kara-hand]
+etymology_hook: "āsaktikara ← Sanskrit āsakti 'attachment' (CDIAL 1477) + kara 'causing' (CDIAL 2779)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C291-adbhuta]
 <!-- hl-knowledge: introduces=[KA-LEX-C291-GUNA291-05]; assesses=[] -->
 
 **ಆಸಕ್ತಿಕರ** — *āsaktikara* — "interesting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಸಕ್ತಿಕರ** (*āsaktikara*) is Sanskrit *āsakti*, "attachment, interest", from *āsakta*, "attached" (CDIAL 1477), and *kara*, "causing" (CDIAL 2779): "causing interest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

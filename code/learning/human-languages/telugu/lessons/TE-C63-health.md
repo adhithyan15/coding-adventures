@@ -11,7 +11,8 @@ romanization: "ārōgyaṁ"
 concept_tag: TE-NOUN-HEALTH
 prerequisites: [TE-C63-disease]
 sounds: []
-roots: []
+roots: [sanskrit-arogya]
+etymology_hook: "ārōgyaṁ ← Sanskrit ārogya 'health', a tatsama (CDIAL 1330)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C63-disease]
 That is a real difference in outlook and worth a moment. English health is something to be built up. ఆరోగ్యం is a subtraction.
 
 మీ ఆరోగ్యం ఎలా ఉంది? is what a house asks an *atithi* who has been ill. It is more particular than మీరు ఎలా ఉన్నారు?, and it expects a real answer.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆరోగ్యం** (*ārōgyaṁ*) is Sanskrit *ārogya*, "health", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 1330).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

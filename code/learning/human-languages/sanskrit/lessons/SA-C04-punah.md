@@ -14,7 +14,8 @@ romanization: "punaḥ"
 concept_tag: SA-WORD-PUNAH
 prerequisites: [SA-C04-gacchami]
 sounds: [inherent-a, visarga]
-roots: [punar-again]
+roots: [punar-again, punar]
+etymology_hook: "punar 'back, again' (MW): origin not settled; it lives on as Gujarati and Marathi paṇ (CDIAL 8273)"
 reviews_of: []
 duration:
   max_seconds: 180
@@ -55,6 +56,10 @@ combining form is *punar-*, as in *punar-janma*, "rebirth" — "birth again"). I
 has no tidy single English cognate, but its work is one English shares: it turns a
 parting into "see you **again**." Add it to *darśana* ("seeing") and you get the
 graceful Sanskrit farewell of the next lesson.
+
+Its deeper origin is not settled: MW gives no outside cousin for it. It
+lives on as Hindi *pun* "again" and as Gujarati and Marathi *paṇ* "but,
+also" (CDIAL 8273).
 
 ## Guided Practice
 

@@ -14,7 +14,8 @@ romanization: "saṁskṛti"
 concept_tag: TE-KARANAM257-SAMSKRTI
 prerequisites: [TE-C257-sneham, TE-C257-godava]
 sounds: []
-roots: []
+roots: [sanskrit-samskrti]
+etymology_hook: "saṁskṛti ← Sanskrit saṁskṛti 'preparation', a tatsama (CDIAL 13040)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C257-godava]
 <!-- hl-knowledge: introduces=[TE-LEX-C257-KARANAM257-05]; assesses=[] -->
 
 **సంస్కృతి** — *saṁskṛti* — "culture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సంస్కృతి** (*saṁskṛti*) is Sanskrit *saṁskṛti*, "preparation", taken over whole as a learned loan, a tatsama (CDIAL 13040). The sense "culture" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

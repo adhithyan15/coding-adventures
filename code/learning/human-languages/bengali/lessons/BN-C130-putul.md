@@ -14,7 +14,8 @@ romanization: "putul"
 concept_tag: BN-THINGS130-PUTUL
 prerequisites: [BN-C130-kham, BN-C130-daktikit]
 sounds: []
-roots: []
+roots: [indo-aryan-putrala]
+etymology_hook: "putul ← *putrala 'puppet, pupil of eye', a reconstructed form; a tadbhava (CDIAL 8269)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C130-daktikit]
 <!-- hl-knowledge: introduces=[BN-LEX-C130-THINGS130-05]; assesses=[] -->
 
 **পুতুল** — *putul* — "a doll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পুতুল** (*putul*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*putrala*, "puppet, pupil of eye", a form CDIAL reconstructs from its descendants (CDIAL 8269). Late Sanskrit has *puttalikā*, "puppet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

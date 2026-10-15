@@ -14,7 +14,8 @@ romanization: "mṛttikā"
 concept_tag: SA-EARTH-MRTTIKA
 prerequisites: [SA-C38-sand, SA-C36-rightly, SA-C37-blessing]
 sounds: []
-roots: []
+roots: [sanskrit-mrttika]
+etymology_hook: "mṛttikā 'earth, clay' ← mṛd 'clay, soil' (CDIAL 10286); it lives on as Hindi miṭṭī"
 duration:
   max_seconds: 210
 requires:
@@ -44,9 +45,15 @@ reviews_of: [SA-C38-sand]
 
 **मृत्तिका** is soil — damp, workable, the stuff a potter digs and a wall is plastered with.
 
-It stands on *mṛd*, and Latin *mordēre*, "to bite", is its cousin: the sense underneath both is pressing something soft until it gives. English took *mordant* from that Latin side.
+It stands on *mṛd*, "clay, soil", and EtymDB sets that word beside Old English *molde*, which survives as English *mould*, the loose earth of a garden bed.
 
 Eastward it wore down into Hindi *miṭṭī*, still the ordinary word for the ground you dig.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mṛttikā* is built on *mṛd*, "clay, soil" (MW, CDIAL 10286), and it lives on
+as Hindi *miṭṭī* and Bengali *māṭi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

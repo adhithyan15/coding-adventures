@@ -14,7 +14,8 @@ romanization: "sāphôlyô"
 concept_tag: BN-JINIS200-SAPHOLYO
 prerequisites: [BN-C200-ain, BN-C200-kortobyo]
 sounds: []
-roots: []
+roots: [sanskrit-saphalya]
+etymology_hook: "sāphôlyô ← Sanskrit sāphalya 'fruitfulness, success', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C200-kortobyo]
 <!-- hl-knowledge: introduces=[BN-LEX-C200-JINIS200-05]; assesses=[] -->
 
 **সাফল্য** — *sāphôlyô* — "success".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সাফল্য** (*sāphôlyô*) is Sanskrit *sāphalya*, "fruitfulness, success", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

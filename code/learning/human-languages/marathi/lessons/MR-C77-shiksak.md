@@ -14,7 +14,8 @@ romanization: "shikṣak"
 concept_tag: MR-FAMILY77-SHIKSAK
 prerequisites: [MR-C77-shejari, MR-C77-pahuna]
 sounds: []
-roots: []
+roots: [sanskrit-shikshaka]
+etymology_hook: "shikṣak ← Sanskrit śikṣaka 'one who teaches', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C77-pahuna]
 <!-- hl-knowledge: introduces=[MR-LEX-C77-FAMILY77-03]; assesses=[] -->
 
 **शिक्षक** — *shikṣak* — "a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिक्षक** (*shikṣak*) is Sanskrit *śikṣaka*, "one who teaches", taken over whole as a learned loan, a tatsama. It is built on *śikṣā*, "learning, study".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

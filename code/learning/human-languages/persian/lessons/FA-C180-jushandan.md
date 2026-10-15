@@ -14,7 +14,8 @@ romanization: "jushândan"
 concept_tag: FA-VERB-JUSHANDAN
 prerequisites: [FA-C180-makhlut-kardan, FA-C180-ham-zadan]
 sounds: []
-roots: []
+roots: [persian-josh]
+etymology_hook: "jushândan: causative of Persian jushidan 'to boil' (Middle Persian jōšīdan)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C180-ham-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C180-KONESH180-03]; assesses=[] -->
 
 **جوشاندن** — *jushândan* — "to boil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jushândan* is the causative of *jushidan*, "to boil": to make boil. The verb is native, usually traced to Middle Persian *jōšīdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

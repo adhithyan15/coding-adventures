@@ -50,6 +50,11 @@ which is exactly the letter **ಳ** you have already been reading.
 That trade happened across the whole vocabulary, not only in "seven". A Tamil
 word with **ḻ** will usually turn up in Kannada with **ಳ**.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಏಳು** (*ēḷu*) is native Dravidian, one word with Tamil *ēḻu* and Telugu *ēḍu* (DEDR 910). The entry gives the older Kannada spelling *ēḻu*.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-EELU-01, KA-SCRIPT-RECOG-113] -->
 

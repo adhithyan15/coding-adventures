@@ -14,7 +14,8 @@ romanization: "gaṇṭu"
 concept_tag: KA-VASTU229-GANTU
 prerequisites: [KA-C229-totti, KA-C229-tottilu]
 sounds: []
-roots: []
+roots: [dravidian-gantu-knot]
+etymology_hook: "gaṇṭu: native Dravidian, one word with Telugu gaṇṭu (DEDR 1946)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C229-tottilu]
 <!-- hl-knowledge: introduces=[KA-LEX-C229-VASTU229-04]; assesses=[] -->
 
 **ಗಂಟು** — *gaṇṭu* — "a knot; a bundle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗಂಟು** (*gaṇṭu*) is native Dravidian, one word with Telugu *gaṇṭu* (DEDR 1946). DEDR lists *gaṇṭu*, "knot of cord, joint". DEDR 1946 compares Sanskrit *gaṇḍa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

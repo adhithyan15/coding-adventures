@@ -15,6 +15,9 @@ You'll want to know: గేదె.
 The word is inherited, and the animal is so ordinary that arriving at a village house often means being met by one before anybody comes out to say నమస్కారం.
 A గేదె (gēde) standing in a చెరువు with only its nose above the water is the picture the word carries. That is where it spends the hottest part of the day.
 
+The word, taken apart.
+గేదె (gēde) is native Dravidian. DEDR 2000 lists gēde, "a she-buffalo", with Konda geyda and Kuwi gedde; it has no Tamil or Kannada match.
+
 What you've built.
 The first animal.
 
@@ -47,6 +50,9 @@ You'll want to know: మేక.
 మేక (mēka) is the goat: small, loud, and kept by households that cannot keep a గేదె (gēde). Where the buffalo wants water and grazing, the మేక (mēka) wants almost nothing and will eat what is left.
 The word is inherited and it is old. Its shape sits close to the Tamil and Kannada words for the same animal, which is what happens to the names of animals people have kept for a very long time.
 A మేక (mēka) will strip a bush bare and move on, which is why a గ్రామం keeps them at its edge rather than in its lanes.
+
+The word, taken apart.
+మేక (mēka) is native Dravidian, one word with Kannada mēke, "she-goat" (DEDR 5087). DEDR compares Sanskrit meka, "goat", a word known only from lexicons.
 
 What you've built.
 Two: one for milk, one for anything.
@@ -81,6 +87,9 @@ You'll want to know: కోడి.
 It is inherited and it is everywhere in the family, close in shape to the Tamil, Kannada and Malayalam words for the same bird — one of those words that travelled with the animal and has not moved since.
 The కోడి (kōḍi) is also the village clock. It wakes a house before ఉదయం is properly under way, which is why nobody there has ever needed a గంట.
 
+The word, taken apart.
+కోడి (kōḍi) is native Dravidian, one word with Tamil kōḻi, Kannada kōḻi and Malayalam kōḻi (DEDR 2248).
+
 What you've built.
 Three.
 
@@ -114,6 +123,9 @@ You'll want to know: చీమ.
 The word is inherited. Telugu has a stock comparison about a చీమ (cīma) carrying many times its own weight, and it is the ordinary way to praise somebody small who works hard.
 A line of చీమలు across a floor usually ends at a పండు somebody left out.
 
+The word, taken apart.
+చీమ (cīma) is native Dravidian. DEDR 2623 lists cīma, "ant", with Konda and Kuwi sīma; it has no Tamil or Kannada match.
+
 What you've built.
 Four: the biggest and the smallest so far.
 
@@ -146,6 +158,7 @@ You'll want to know: పక్షి.
 పక్షి (pakṣi) is the general one: any bird at all, the కోడి (kōḍi) included. It came in from Sanskrit, and beside it Telugu keeps its own పిట్ట for the small ones about a garden.
 That is a split this book has met before — an inherited word doing the everyday work and a borrowed one carrying the wider idea, the same shape as నిప్పు beside అగ్ని. Once you start expecting it, half the vocabulary sorts itself.
 Five animals now, from the గేదె (gēde) at the gate to the చీమ (cīma) under it, and a నమస్కారం for whoever keeps them.
+CDIAL 7636 lists Sanskrit pakṣin, "winged; bird".
 
 What you've built.
 Five: గేదె (gēde), మేక (mēka), కోడి (kōḍi), చీమ (cīma), పక్షి (pakṣi). Enough to greet a house and name what lives in it.

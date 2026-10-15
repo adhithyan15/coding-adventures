@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Good Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5b725e5c1b914f39",
+  "sourceHash": "fnv1a64:52adeb450421f829",
   "lessons": [
     {
       "id": "HI-C33-shubh-dopahar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63464486bcd09a0d",
+      "sourceHash": "fnv1a64:45ffb2a5bf1c9d1a",
       "notice": null,
       "blocks": [
         {
@@ -47,6 +47,10 @@
             {
               "kind": "speech",
               "text": "शुभ दोपहर (shubh dopahar) — \"good afternoon\" — pairs शुभ (\"good\") with दोपहर used in the widened, modern sense from last lesson: \"the afternoon\" generally, not the narrow etymological \"exactly noon.\" Good news for consistency: this greeting confirms दोपहर's widened meaning is the one people actually reach for here — nobody uses शुभ दोपहर to mean \"good [precise instant of] noon.\""
+            },
+            {
+              "kind": "speech",
+              "text": "शुभ is Sanskrit śubha, \"bright, auspicious\", a tatsama (CDIAL 12532)."
             }
           ]
         },

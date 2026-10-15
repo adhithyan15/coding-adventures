@@ -14,7 +14,8 @@ romanization: "beṇṇe"
 concept_tag: KA-VASTU258-BENNE
 prerequisites: [KA-C257-hunasehannu, KA-C258-majjige]
 sounds: []
-roots: []
+roots: [dravidian-vel-white-bright]
+etymology_hook: "beṇṇe: native Dravidian, one word with Tamil veṇṇai, from the root for 'white' (DEDR 5496)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C258-majjige]
 <!-- hl-knowledge: introduces=[KA-LEX-C258-VASTU258-02]; assesses=[] -->
 
 **ಬೆಣ್ಣೆ** — *beṇṇe* — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೆಣ್ಣೆ** (*beṇṇe*) is native Dravidian, one word with Tamil *veṇṇai*, "butter", which DEDR 5496 files under the root for "white, bright"; Telugu has *venna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

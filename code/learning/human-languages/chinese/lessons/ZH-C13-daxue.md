@@ -11,8 +11,8 @@ concept_tag: ZH-SCHOOL-UNIVERSITY
 gloss: university; college, built from known characters
 prerequisites: [ZH-C13-hear-daxue]
 sounds: [tone-4, tone-2]
-roots: []
-etymology_hook: A new school word costs no new character: 大 and 学 are recombined.
+roots: [middle-chinese-dah, middle-chinese-haewk]
+etymology_hook: "dàxué: 'big' + 'learning', from Middle Chinese daH and haewk; a classic's title, now university"
 duration:
   max_seconds: 150
 requires:
@@ -42,6 +42,10 @@ reviews_of: [ZH-C13-hear-daxue, ZH-C13-da, ZH-C13-xue]
 > **大学** — *dàxué* — **university; college**
 
 Now read the pair as one word: fall, then rise.
+
+Both are inherited from Middle Chinese, *daH* and *haewk* (Guangyun, in Baxter's
+transcription). The pair is old, the title of a Confucian classic, the *Great
+Learning*; the sense "university" is modern.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DAXUE-01] -->

@@ -14,7 +14,8 @@ romanization: "nunupaina"
 concept_tag: TE-GUNAM260-NUNUPAINA
 prerequisites: [TE-C259-biji, TE-C259-tappanisari]
 sounds: []
-roots: []
+roots: [dravidian-nun-smooth, tamil-aaku-become]
+etymology_hook: "nunupaina: native nunupu 'smoothness' (DEDR 3700) + aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C259-tappanisari]
 <!-- hl-knowledge: introduces=[TE-LEX-C260-GUNAM260-01]; assesses=[] -->
 
 **నునుపైన** — *nunupaina* — "smooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నునుపైన** (*nunupaina*) is native Dravidian: *nunupu*, "smoothness", one word with Kannada *nuṇupu*, "smoothness" (DEDR 3700), with *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

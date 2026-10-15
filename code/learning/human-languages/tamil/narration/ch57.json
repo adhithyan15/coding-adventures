@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Wind and Fire",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8e2cd8541d81292c",
+  "sourceHash": "fnv1a64:9dea98648b5b51d1",
   "lessons": [
     {
       "id": "TA-C57-wind",
@@ -321,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1a77be0c9f6625d",
+      "sourceHash": "fnv1a64:dc8bd8f694d3c123",
       "notice": null,
       "blocks": [
         {
@@ -367,7 +367,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "சேறு (sēṟu) is native Dravidian. DEDR 2020 lists Malayalam cēṟu and Kannada kesaṟ."
+              "text": "சேறு (sēṟu) is native Dravidian. DEDR 2020 lists Malayalam cēṟu and Kannada kesaṟ. The entry compares Sanskrit kedāra, \"a field under water\" (CDIAL 3463)."
             }
           ]
         },
@@ -623,7 +623,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c472c9b0e64a769",
+      "sourceHash": "fnv1a64:dcf4d35188e8f195",
       "notice": null,
       "blocks": [
         {
@@ -669,7 +669,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கனல் (kaṉal) is native Dravidian. DEDR 1406 lists Malayalam kanal, \"live coals\" and Kannada kanal, \"to glow\"."
+              "text": "கனல் (kaṉal) is native Dravidian. DEDR 1406 lists Malayalam kanal, \"live coals\" and Kannada kanal, \"to glow\". The entry compares Sanskrit kanala, \"shining\"."
             }
           ]
         },

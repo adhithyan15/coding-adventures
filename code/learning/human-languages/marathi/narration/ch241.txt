@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a seat, then the Marathi for a wheel.
 You'll want to know: कुंडी.
 कुंडी — kuṇḍī — "a flowerpot".
 
+The word, taken apart.
+कुंडी (kuṇḍī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kuṇḍa, "bowl, waterpot" (CDIAL 3264). CDIAL glosses the Marathi word "small open-mouthed jar". It takes the Sanskrit word from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a wheel, then the Marathi for a flowerpo
 
 You'll want to know: रोप.
 रोप — rop — "a seedling, a young plant".
+
+The word, taken apart.
+रोप (rop) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ropya, "to be planted" (CDIAL 10849). CDIAL glosses the Marathi word "young plant, sapling".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a flowerpot, then the Marathi for a seed
 You'll want to know: खोड.
 खोड — khoḍ — "a trunk".
 
+The word, taken apart.
+खोड (khoḍ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣoḍa, "post to which an elephant is fastened" (CDIAL 3748). CDIAL thinks the Sanskrit word may be a learned spelling of a word with kh-.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a seedling, then the Marathi for a trunk
 You'll want to know: हिरवळ.
 हिरवळ — hirvaḷ — "a lawn".
 
+The word, taken apart.
+हिरवळ (hirvaḷ) is built on hirvā, "green", which comes from a reconstructed hiru, "yellow, green" (CDIAL 14114).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a trunk, then the Marathi for a lawn.
 
 You'll want to know: पायवाट.
 पायवाट — pāyvāṭ — "a footpath".
+
+The word, taken apart.
+पायवाट (pāyvāṭ) is "foot-path": pāy, "foot", from Sanskrit pāda (CDIAL 8056), and vāṭ, "path", from Sanskrit vartman, "track of a wheel, path" (CDIAL 11366).
 
 What you've built.
 One more word for this chapter.

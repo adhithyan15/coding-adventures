@@ -14,7 +14,8 @@ romanization: "koshelyók"
 concept_tag: RU-THINGS99-PURSE
 prerequisites: [RU-C99-alarm-clock, RU-C99-camera]
 sounds: []
-roots: []
+roots: [slavic-koshi]
+etymology_hook: "кошелёк is кошель 'a bag' + -ёк; кошель is built on кош 'basket', a cousin of Latin qualum 'basket'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C99-camera]
 <!-- hl-knowledge: introduces=[RU-LEX-C99-THINGS99-05]; assesses=[] -->
 
 **кошелёк** (*koshelyók*) — "a purse, a wallet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кошелёк** is *кошель*, "a bag", with the diminutive *-ёк*. *кошель* comes from *кош*, "a basket" (Vasmer), which he relates to Latin *quālum*, "a wicker basket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bā̃dhā"
 concept_tag: BN-VERB-BADHA
 prerequisites: [BN-C151-sarano, BN-C151-jholano]
 sounds: []
-roots: []
+roots: [sanskrit-bandhati]
+etymology_hook: "bāṁdhā ← Sanskrit bandhati 'binds', a tadbhava (CDIAL 9139)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C151-jholano]
 <!-- hl-knowledge: introduces=[BN-LEX-C151-ACT151-05]; assesses=[] -->
 
 **বাঁধা** — *bā̃dhā* — "to tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বাঁধা** (*bāṁdhā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bandhati*, "binds" (CDIAL 9139).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

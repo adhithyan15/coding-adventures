@@ -14,7 +14,8 @@ romanization: "hastākṣar"
 concept_tag: HI-FORM-SIGNATURE
 prerequisites: [HI-C119-shadishuda, HI-C119-janmdin]
 sounds: []
-roots: []
+roots: [hasta-sanskrit, sanskrit-akshara]
+etymology_hook: "hastākṣar: Sanskrit hasta 'hand' + akṣara 'letter', a tatsama compound"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C119-janmdin]
 
 **हाथ** and this word's **हस्त-** are the same old word for hand. **यहाँ हस्ताक्षर कीजिए** — "please
 sign here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हस्ताक्षर** (*hastākṣar*) is a tatsama compound, taken over whole from Sanskrit: *hasta*, "hand", and *akṣara*, "letter, syllable". A signature is "the hand's letters".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

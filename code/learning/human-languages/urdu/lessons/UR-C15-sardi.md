@@ -12,7 +12,7 @@ concept_tag: UR-COLD
 prerequisites: [UR-C15-garmi]
 sounds: [rtl, long-i]
 roots: [middle-persian-sard]
-etymology_hook: sardī is borrowed from Classical Persian sardī, itself sard "cold" plus the same -ī ending that turns garm into garmī. No further Proto-Indo-European root is documented for the Persian base -- a dead end, unlike its opposite garmī, whose root reaches all the way to Greek thermós.
+etymology_hook: "sardī: usually traced to Persian sardī 'cold', built on sard 'cold' with the noun ending -ī"
 duration:
   max_seconds: 290
 requires:
@@ -64,7 +64,7 @@ one-off; the ending is a small, reusable tool, the same kind of thing
 <!-- hl-knowledge: introduces=[UR-ETYMON-SARDI-PERSIAN]; assesses=[UR-LEX-SARDI] -->
 
 **سردی** is borrowed from Classical Persian *sardī*, from *sard*, "cold."
-No further root is documented for that Persian base — a dead end, the
+This book traces that Persian base no further back — a dead end here, the
 same shape as **لال**'s and *bārish*'s, and the mirror image of *garmī*,
 whose root reaches all the way to Greek **thermós**.
 

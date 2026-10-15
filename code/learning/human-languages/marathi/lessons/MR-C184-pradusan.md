@@ -14,7 +14,8 @@ romanization: "pradūṣaṇ"
 concept_tag: MR-VASTU184-PRADUSAN
 prerequisites: [MR-C184-havaman, MR-C184-paryavaran]
 sounds: []
-roots: []
+roots: [sanskrit-pradushana]
+etymology_hook: "pradūṣaṇ: Sanskrit pradūṣaṇa 'spoiling, defiling', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C184-paryavaran]
 <!-- hl-knowledge: introduces=[MR-LEX-C184-VASTU184-05]; assesses=[] -->
 
 **प्रदूषण** — *pradūṣaṇ* — "pollution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रदूषण** (*pradūṣaṇ*) is Sanskrit *pradūṣaṇa*, "spoiling, defiling", a tatsama built on *duṣ*, "to spoil". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

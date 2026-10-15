@@ -14,7 +14,8 @@ romanization: "pesalu"
 concept_tag: TE-VASTUVU262-PESALU
 prerequisites: [TE-C262-upma, TE-C262-tiphinu]
 sounds: []
-roots: []
+roots: [dravidian-payaru-pulse]
+etymology_hook: "pesalu: native Dravidian, one word with Tamil payaṟu and Kannada pesaṟ (DEDR 3941)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C262-tiphinu]
 <!-- hl-knowledge: introduces=[TE-LEX-C262-VASTUVU262-05]; assesses=[] -->
 
 **పెసలు** — *pesalu* — "green gram".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెసలు** (*pesalu*) is native Dravidian, one word with Tamil *payaṟu* and Kannada *pesaṟ* (DEDR 3941). DEDR lists Telugu *pesalu*, "green gram".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

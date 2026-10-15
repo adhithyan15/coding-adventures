@@ -12,6 +12,7 @@ concept_tag: RESPONSE-NO
 prerequisites: [KA-C01-haudu]
 sounds: [independent-vowel-i, lla-conjunct]
 roots: [il]
+etymology_hook: "illa: native Dravidian, one word with Tamil illai and Telugu lē- (DEDR 2559)"
 duration:
   max_seconds: 270
 requires:
@@ -58,6 +59,8 @@ absence" — so, like Tamil *illai*, it is really the statement **"[it] is not,
 [there] is not,"** doing duty as the everyday "no." Its positive twin is
 *ide*, "there is."
 
+DEDR 2559 lists Kannada *illa* with Tamil *illai*, Malayalam *illa* and Telugu *lē-*, *lēdu*.
+
 ## Grammar Lens: Dravidian negates by *being*, not with a "not"-word
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C01-ILLA-02]; assesses=[] -->
 
@@ -79,11 +82,11 @@ Malayalam *illa* — one family, one way of saying a thing is not.
 | **Kannada** | *illa* (ಇಲ್ಲ) | native Dravidian (root *il*) |
 | Tamil | *illai* (இல்லை) | the **same** root |
 | Malayalam | *illa* (ഇല്ല) | the **same** root |
-| Telugu | *lēdu* (లేదు) | native Dravidian, a different root |
+| Telugu | *lēdu* (లేదు) | native Dravidian, the same entry (DEDR 2559) |
 | Hindi | *nahīṁ* (नहीं) | Indo-European |
 
-Three of the four Dravidian languages share *il-*; only Telugu picked a
-different native root. Hindi, from the other family entirely, is unrelated.
+Telugu's *lē-* has lost the *i-*, but DEDR 2559 files it with *il-* all the same.
+Hindi, from the other family entirely, is unrelated.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C01-ILLA-01, KA-GRAMMAR-C01-ILLA-02] -->

@@ -15,6 +15,7 @@ concept_tag: MW-DEF101-USO
 prerequisites: [MW-C101-yo, MW-C101-iso]
 sounds: []
 roots: []
+etymology_hook: "uso 'like that': not in CDIAL, so not settled; it pairs with iso, from īdṛśa (CDIAL 1611)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C101-iso]
 <!-- hl-knowledge: introduces=[MW-LEX-C101-DEF101-03]; assesses=[] -->
 
 **उसो** — *uso* — "like that".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL has no entry for **उसो** (*uso*), so its history is not settled. It pairs with *iso*, "like this", which CDIAL lists under Sanskrit *īdṛśa*, "such" (CDIAL 1611).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chhoṛnā"
 concept_tag: UR-VERB-CHHORNA
 prerequisites: [UR-C53-pahanna, UR-C53-nahana]
 sounds: []
-roots: []
+roots: [sanskrit-kshotayati]
+etymology_hook: "chhoṛnā ← Sanskrit kṣoṭayati 'throws', a tadbhava (CDIAL 3747)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C53-nahana]
 <!-- hl-knowledge: introduces=[UR-LEX-C53-VERBS53-03]; assesses=[] -->
 
 **چھوڑنا** — *chhoṛnā* — "to leave, to let go".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چھوڑنا** (*chhoṛnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣoṭayati*, "throws" (CDIAL 3747). The Sanskrit verb is known only from a list of verb roots.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

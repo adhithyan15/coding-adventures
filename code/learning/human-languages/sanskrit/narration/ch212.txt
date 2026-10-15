@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for tiredness, then the Sanskrit for a bath
 You'll want to know: बुद्धिः.
 बुद्धिः — buddhiḥ — "intelligence".
 
+The word, taken apart.
+buddhi is built on the root √budh, "to wake, notice, understand" (MW), the root of buddha, "the awakened one". MW compares the root with Greek pynthanomai, "I learn". It lives on as Hindi budh, "intelligence" (CDIAL 9277).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a bath, then the Sanskrit for intellige
 
 You'll want to know: मनः.
 मनः — manaḥ — "the mind".
+
+The word, taken apart.
+manas is built on the root √man, "to think" (MW). It is inherited from Indo-European: MW compares Greek menos, "spirit, force", and the root itself with English mean. It lives on as Hindi man, "mind" (CDIAL 9822).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for intelligence, then the Sanskrit for the
 You'll want to know: आत्मा.
 आत्मा — ātmā — "the self, the soul".
 
+The word, taken apart.
+ātmā is the nominative of ātman, which first meant "breath" and then "soul, self" (CDIAL 1135). MW notes it is variously derived, from roots meaning "to breathe", "to move" or "to blow", and compares German Atem, "breath". Hindi āp, the polite "you", comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for the mind, then the Sanskrit for the sel
 You'll want to know: स्वप्नः.
 स्वप्नः — svapnaḥ — "a dream".
 
+The word, taken apart.
+svapna is built on the root √svap, "to sleep" (MW): first "sleep", then "dream" (CDIAL 13904). The root is inherited from Indo-European: MW compares Latin somnus, "sleep", and Greek hypnos. Hindi sapnā, "dream", goes back to it, though CDIAL 13904 does not list the Hindi form.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for the self, then the Sanskrit for a dream
 
 You'll want to know: तृप्तिः.
 तृप्तिः — tṛptiḥ — "satisfaction".
+
+The word, taken apart.
+tṛpti is built on the root √tṛp, "to be satisfied", with the noun suffix -ti (MW). It is a Rigvedic word (CDIAL 5931), and Tamil borrowed it as tirupti.
 
 What you've built.
 One more word for this chapter.

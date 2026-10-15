@@ -14,7 +14,8 @@ romanization: "inaka"
 concept_tag: JA-THINGS68-INAKA
 prerequisites: [JA-C68-oka, JA-C68-tani]
 sounds: []
-roots: []
+roots: [japanese-inaka]
+etymology_hook: "inaka: native; written 田舎 'field house', read as a whole; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C68-tani]
 <!-- hl-knowledge: introduces=[JA-LEX-C68-THINGS68-03]; assesses=[] -->
 
 **いなか** — *inaka* — "the countryside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いなか** (*inaka*) is a native word, inherited rather than borrowed. JMdict writes it with the characters for "rice field" and "house", read as a whole for their meaning. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

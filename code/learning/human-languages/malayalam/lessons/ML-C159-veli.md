@@ -14,7 +14,8 @@ romanization: "vēli"
 concept_tag: ML-THINGS159-VELI
 prerequisites: [ML-C159-currika, ML-C159-ani, ML-C11-nirangal, ML-C11-nirangal]
 sounds: []
-roots: []
+roots: [dravidian-veli-fence]
+etymology_hook: "vēli: native Dravidian, one word with Tamil vēli and Kannada bēli (DEDR 5538)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C159-ani]
 <!-- hl-knowledge: introduces=[ML-LEX-C159-THINGS159-04]; assesses=[] -->
 
 **വേലി** — *vēli* — "a fence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വേലി** (*vēli*) is native Dravidian, one word with Tamil *vēli* and Kannada *bēli* (DEDR 5538).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

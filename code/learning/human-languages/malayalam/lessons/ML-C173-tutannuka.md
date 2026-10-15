@@ -14,7 +14,8 @@ romanization: "tuṭaṅṅuka"
 concept_tag: ML-VERB-TUTANNUKA
 prerequisites: [ML-C173-pathikkuka, ML-C173-pathippikkuka, ML-C99-paaduka]
 sounds: []
-roots: []
+roots: [dravidian-totu-begin]
+etymology_hook: "tuṭaṅṅuka: native Dravidian, one word with Tamil toṭu and Kannada toḍaku (DEDR 3481)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C173-pathippikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C173-ACT173-05]; assesses=[] -->
 
 **തുടങ്ങുക** — *tuṭaṅṅuka* — "to begin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുടങ്ങുക** (*tuṭaṅṅuka*) is native Dravidian, one word with Tamil *toṭu* and Kannada *toḍaku* (DEDR 3481).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "stoyát"
 concept_tag: RU-VERB-STOYAT
 prerequisites: [RU-C40-spat, RU-C40-sidet]
 sounds: []
-roots: []
+roots: [pie-steh2]
+etymology_hook: "стоять ← Proto-Slavic *stojati; Latin stare and English stand are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C40-sidet]
 <!-- hl-knowledge: introduces=[RU-LEX-C40-VERB3-03]; assesses=[] -->
 
 **стоять** (*stoyát*) — "to stand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**стоять** ← Proto-Slavic *\*stojati* — inherited from PIE *\*steh₂-*, "to stand". Vasmer compares Oscan *staít*, "stands", Latin *stāre* and Greek *hístēmi*, "I set up": English *stand* is a cousin too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

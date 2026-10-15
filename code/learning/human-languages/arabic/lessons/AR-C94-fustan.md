@@ -14,7 +14,8 @@ romanization: "fustān"
 concept_tag: AR-CLOTHES94-FUSTAN
 prerequisites: [AR-C94-malabis, AR-C94-qamis]
 sounds: []
-roots: []
+roots: [greek-phoustani]
+etymology_hook: "fustān: usually traced through Turkish fistan to Greek phoustani 'skirt'; not fully settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C94-qamis]
 <!-- hl-knowledge: introduces=[AR-LEX-C94-CLOTHES94-03]; assesses=[] -->
 
 **فستان** — *fustān* — "a dress".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فستان** (*fustān*) is a later loan, usually traced through Turkish *fistan* to Greek *phoustani*, "skirt"; the chain is not fully settled. It has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

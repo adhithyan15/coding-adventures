@@ -29,6 +29,9 @@ Profesor changed to profesora for a woman. Estudiante does not change at all:
 Él es estudiante., Ella es estudiante.
 The article moves instead — el estudiante, la estudiante — but the word itself stays put. Words ending in -ante almost never shift.
 
+The word, taken apart.
+estudiante is built from estudiar, "to study", with -ante, the Latin participle ending -antem: "one studying". Estudiar comes from Latin studium, "zeal, eagerness" (Lewis & Short).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: Soy estudiante]

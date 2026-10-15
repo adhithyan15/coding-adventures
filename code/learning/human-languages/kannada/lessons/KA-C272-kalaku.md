@@ -14,7 +14,8 @@ romanization: "kalaku"
 concept_tag: KA-VERB-KALAKU
 prerequisites: [KA-C272-suri, KA-C272-beresu]
 sounds: []
-roots: []
+roots: [dravidian-kalanku-stir]
+etymology_hook: "kalaku: native Dravidian, one word with Tamil kalaṅku and Malayalam kalaṅṅuka (DEDR 1303)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C272-beresu]
 <!-- hl-knowledge: introduces=[KA-LEX-C272-KRIYE272-04]; assesses=[] -->
 
 **ಕಲಕು** — *kalaku* — "to stir".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಲಕು** (*kalaku*) is native Dravidian, one word with Tamil *kalaṅku* and Malayalam *kalaṅṅuka* (DEDR 1303). DEDR lists *kalaku*, "to agitate, stir up". DEDR 1303 compares Sanskrit *kaluṣa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

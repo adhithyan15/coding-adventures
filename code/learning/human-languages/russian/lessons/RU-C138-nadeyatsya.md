@@ -14,7 +14,8 @@ romanization: "nadéyatsya"
 concept_tag: RU-VERB-NADEYATSYA
 prerequisites: [RU-C138-plan, RU-C138-planirovat]
 sounds: []
-roots: []
+roots: [pie-dheh1-put]
+etymology_hook: "надеяться goes with надежда 'hope', Church Slavonic, from на 'on' + деть 'to put': to rest one's hopes on"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C138-planirovat]
 <!-- hl-knowledge: introduces=[RU-LEX-C138-FUT138-05]; assesses=[] -->
 
 **надеяться** (*nadéyatsya*) — "to hope". **Я надеюсь, что ...** — *ya nadéyus, shto* — "I hope that ..." Like **подниматься**, it keeps its **-ся**, written **-сь** after a vowel: **надеюсь**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**надеяться** goes with *надежда*, "hope", which Vasmer calls Church Slavonic, beside the folk *надёжа*: *на*, "on", with the root of *деть*, "to put", so "to place one's trust on".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

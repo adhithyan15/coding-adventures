@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Hear Thanks, Then Meet Six Signs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:648f0bbff28c9f57",
+  "sourceHash": "fnv1a64:e1e4a150fe89039d",
   "lessons": [
     {
       "id": "MR-C01-dhanyavad",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ae418e2e976f17a",
+      "sourceHash": "fnv1a64:2bb9ac9abeebb85e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Dhanyavād = Sanskrit dhanya (\"worthy\") + vāda (\"a saying\") — \"an utterance of '[you are] worthy.'\" The same Sanskrit word behind Hindi dhanyavād, Kannada dhanyavāda, Telugu dhanyavādamulu. Warmer, more spoken Marathi often says ābhārī āhe (\"[I] am grateful\"), on the root ābhār, \"gratitude.\""
+              "text": "Dhanyavād = Sanskrit dhanya (\"fortunate\") + vāda (\"a saying\") — \"an utterance of '[you are] fortunate.'\" The same Sanskrit word behind Hindi dhanyavād, Kannada dhanyavāda, Telugu dhanyavādamulu. Warmer, more spoken Marathi often says ābhārī āhe (\"[I] am grateful\"), on the root ābhār, \"gratitude.\""
             }
           ]
         },
@@ -105,7 +105,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the two Sanskrit pieces of dhanyavād, and a warmer Marathi alternative? (dhanya \"worthy\" + vāda \"a saying\"; ābhārī āhe.)"
+              "text": "What are the two Sanskrit pieces of dhanyavād, and a warmer Marathi alternative? (dhanya \"fortunate\" + vāda \"a saying\"; ābhārī āhe.)"
             }
           ]
         }
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9b51b0d35b47747",
+      "sourceHash": "fnv1a64:0a124ec48af9b19a",
       "notice": null,
       "blocks": [
         {
@@ -174,6 +174,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुःख (duḥkh) is Sanskrit duḥkha, \"difficulty, pain\", kept with its Sanskrit spelling, a tatsama. CDIAL lists the everyday Marathi form as dukh, \"sorrow, pain\", and notes that duḥkha was formed after sukha, \"ease\" (CDIAL 6375)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -204,7 +215,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -235,7 +246,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:042e572213c3550f",
+      "sourceHash": "fnv1a64:d786e81a97b8e5f8",
       "notice": null,
       "blocks": [
         {
@@ -285,6 +296,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आभाळ (ābhāḷ) is a tadbhava, a word inherited and reshaped by sound change. It comes from abhrakāla, \"cloudy weather\", a form CDIAL reconstructs from Sanskrit abhra, \"cloud\", and kāla, \"time\" (CDIAL 551). CDIAL glosses the Marathi word \"cloudiness\"; today it names the sky."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -315,7 +337,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -346,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ef89e75ab8efc80",
+      "sourceHash": "fnv1a64:3acd03706d1b0ced",
       "notice": null,
       "blocks": [
         {
@@ -396,6 +418,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संत (sant) is usually traced to Sanskrit sant, \"being, good\", the present participle of as, \"to be\". CDIAL lists a Marathi sant only in the sense \"calm\", under śānta (CDIAL 12390)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -426,7 +459,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -457,7 +490,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b78349e61e914522",
+      "sourceHash": "fnv1a64:a4e6dfb7dad18285",
       "notice": null,
       "blocks": [
         {
@@ -507,6 +540,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of बेत (bet) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

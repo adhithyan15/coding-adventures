@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 143,
-  "sourceHash": "fnv1a64:6674640919665aac",
+  "sourceHash": "fnv1a64:05b84d0d04afa390",
   "lessonIds": [
     "SA-C143-pratyagacchati",
     "SA-C143-sete",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch143.txt",
   "json": "sanskrit/narration/ch143.json",
-  "textHash": "fnv1a64:b82b8c1dcef9cbf9",
-  "jsonHash": "fnv1a64:7c5c7255eb76b5e6",
+  "textHash": "fnv1a64:0be435f658129ad0",
+  "jsonHash": "fnv1a64:2f17a178bdd3ac35",
   "findings": []
 }

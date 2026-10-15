@@ -25,6 +25,7 @@ Language: Kannada. "Hello": namaskāra. Source: Sanskrit.
 Language: Hindi. "Hello": namaste. Source: Sanskrit.
 Language: Tamil. "Hello": vaṇakkam. Source: native Dravidian.
 Even Tamil's closest sister took the Sanskrit greeting; Tamil alone kept its own. Hold that beside the next lesson, where the word for "thanks" splits the family the other way round.
+Sanskrit namaskāra, "adoration, homage", is CDIAL 6960.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Writing — let your finger meet one shape.
@@ -247,6 +248,7 @@ Language: Tamil. "Thanks": naṉṟi (நன்றி). Note: the same native ro
 Language: Kannada. "Thanks": dhanyavāda (ಧನ್ಯವಾದ). Note: Sanskrit.
 Language: Telugu. "Thanks": dhanyavādamulu (ధన్యవాదములు). Note: Sanskrit.
 Language: Hindi. "Thanks": dhanyavād / shukriyā. Note: Sanskrit / Perso-Arabic.
+DEDR 3610 lists Malayalam nanni, "goodness", under the root nal with Tamil naṉṟi. DEDR 3610 compares the Sanskrit name Nala.
 
 Why it's said this way.
 Like naṉṟi in Tamil, nandi is a touch formal — among close family it can feel oddly stiff, as if you were thanking a stranger; warmth is usually assumed and shown in tone. The explicit word is for when you want to mark the gratitude. (In casual speech you'll also hear the English thanks.)
@@ -286,6 +288,7 @@ Left to right: അ, തെ = a-the, which gives:
 
 The word, taken apart.
 അതെ (athe) is native Malayalam, and it grows from അത് (atŭ), "that." To say "yes," Malayalam essentially says "that [is so]" — you affirm by pointing at the truth of what was said. Its natural partner is the negative alla, "[it is] not that" — the next lesson.
+That pointing word is Proto-Dravidian: DEDR 1 lists it with Tamil atu and Kannada adu.
 
 Grammar Lens: yes and no as "that is" / "not that".
 Malayalam's yes/no pair are demonstratives in disguise: athe ("that [is so]") and alla ("not that"). Like its sisters, Malayalam also readily answers by echoing the verb of the question (vannu, "[I] came," for "did you come?"). Bank athe as the simple word, but hear the logic underneath — you agree by confirming that is how things are.
@@ -370,6 +373,7 @@ Language: Tamil. "No / isn't": illai (இல்லை). Note: the same root.
 Language: Kannada. "No / isn't": illa (ಇಲ್ಲ). Note: the same root.
 Language: Telugu. "No / isn't": lēdu (లేదు). Note: native, a different root.
 Language: Hindi. "No / isn't": nahīṁ (नहीं). Note: Indo-European (unrelated).
+DEDR 2559 lists Malayalam illa with Tamil illai and Kannada illa.
 
 Grammar Lens: Dravidian negates by being.
 English inserts not / no. Malayalam — like Tamil and Kannada — can instead use a negative verb of existence. So illa is both the plain "no" and, later, a word that can make a whole sentence mean "there is not." Today, only the short answer is yours to use. This is a shared Dravidian inheritance, strongest across the Tamil–Malayalam pair: Tamil illai, Malayalam illa, Kannada illa — one family, one way to say a thing is not. (Recall Telugu was the outlier here, using lēdu.)
@@ -408,7 +412,8 @@ Left to right: ശ, രി = śa-ri, which gives:
 ശരി = śari = "okay / correct."
 
 The word, taken apart.
-ശരി (śari) is the pan-Dravidian "correct, right becomes okay, agreed," the verbal nod of Malayalam. It is the same family word carried by Tamil and Kannada as sari and Telugu as sarē; Malayalam simply spells its opening sound with ശ (ś). Doubled, śari śari, it means "yes yes, fine."
+ശരി (śari) is the south's shared "correct, right becomes okay, agreed," the verbal nod of Malayalam. It is the same family word carried by Tamil and Kannada as sari and Telugu as sarē; Malayalam simply spells its opening sound with ശ (ś). Doubled, śari śari, it means "yes yes, fine."
+Its deeper origin is uncertain. The usual account traces it through Prakrit sarisa, "like", to Sanskrit sadṛśa, "alike, equal" (CDIAL 13120): what is like the thing is right.
 
 Grammar Lens: one word, four scripts.
 sari / sarē / śari is the clearest single proof of how close these four languages are: essentially one word and one meaning, wearing four different scripts. As you learn to read each, catching a shared word change its clothes but not its sense is the fastest way to feel the whole Dravidian family at once — and the reason the four are worth seeing side by side.

@@ -11,7 +11,8 @@ romanization: "habba"
 concept_tag: KA-WISH-FESTIVAL
 prerequisites: [KA-C104-shop, KA-C105-wishes]
 sounds: []
-roots: []
+roots: [sanskrit-parvan]
+etymology_hook: "habba: usually traced to Sanskrit parvan 'joint; a feast-day' (CDIAL 7947), through Prakrit pavva"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C105-wishes]
 **ಹಬ್ಬ** (*habba*) — "festival", the second half of **ಹುಟ್ಟುಹಬ್ಬ**, "birthday".
 
 **ಹಬ್ಬದ ಶುಭಾಶಯಗಳು** (*habbada śubhāśayagaḷu*) — "festival greetings".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಬ್ಬ** (*habba*) is usually traced to Sanskrit *parvan*, "knot, joint" (CDIAL 7947), through Prakrit *pavva*. In Sanskrit the word also named the joints of the lunar month and the feasts held on them. It is a tadbhava: the *p-* became *h-* and *rv* became *bb*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

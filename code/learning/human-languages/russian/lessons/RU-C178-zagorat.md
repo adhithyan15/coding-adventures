@@ -14,7 +14,8 @@ romanization: "zagorát"
 concept_tag: RU-VERB-ZAGORAT
 prerequisites: [RU-C178-prygat, RU-C178-katatsya]
 sounds: []
-roots: []
+roots: [slavic-goreti]
+etymology_hook: "загорать is за- + горать, from гореть 'to burn': to get burnt by the sun"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C178-katatsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C178-ACT178-05]; assesses=[] -->
 
 **загорать** (*zagorát*) — "to sunbathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**загорать** is *за-* with *-горать*, from *гореть*, "to burn": to sunbathe is to get burnt brown.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

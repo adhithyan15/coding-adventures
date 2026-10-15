@@ -14,7 +14,8 @@ romanization: "śijlelā"
 concept_tag: MR-GUN205-SIJLELA
 prerequisites: [MR-C205-adhunik, MR-C205-pracin]
 sounds: []
-roots: []
+roots: [sanskrit-sidhyati]
+etymology_hook: "śijlelā: from śijṇe 'to be cooked', which CDIAL lists under sidhyati 'is well cooked' (CDIAL 13408)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C205-pracin]
 <!-- hl-knowledge: introduces=[MR-LEX-C205-GUN205-04]; assesses=[] -->
 
 **शिजलेला** — *śijlelā* — "cooked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिजलेला** (*śijlelā*) is the "-ed" form of *śijṇẽ*, "to be cooked by boiling", which CDIAL lists under Sanskrit *sidhyati*, "succeeds; is well cooked" (CDIAL 13408), and also, as another possibility, under a reconstructed *\*śrīyate*, "is cooked" (CDIAL 12712).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

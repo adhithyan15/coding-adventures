@@ -14,7 +14,8 @@ romanization: "ṭaraqa"
 concept_tag: AR-VERB-TARAQA
 prerequisites: [AR-C259-daghata, AR-C260-rashsha]
 sounds: []
-roots: []
+roots: [ṭ-r-q]
+etymology_hook: "ṭaraqa: built on the root ṭ-r-q, 'to strike, to knock' (Lane); ṭaraqa is the plain verb, 'he knocked'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C260-rashsha]
 <!-- hl-knowledge: introduces=[AR-LEX-C260-ACT260-02]; assesses=[] -->
 
 **طرق** — *ṭaraqa* — "to knock (on a door)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طرق** (*ṭaraqa*) is built on the native Arabic root *ṭ-r-q*, "to strike, to knock" (Lane). *Ṭaraqa* is the plain verb, "he knocked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

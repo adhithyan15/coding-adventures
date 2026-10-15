@@ -14,7 +14,8 @@ romanization: "chístit"
 concept_tag: RU-VERB-CHISTIT
 prerequisites: [RU-C206-lomat, RU-C206-krasit]
 sounds: []
-roots: []
+roots: [slavic-chistu]
+etymology_hook: "чистить is from чистый 'clean'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C206-krasit]
 <!-- hl-knowledge: introduces=[RU-LEX-C206-ACT206-05]; assesses=[] -->
 
 **чистить** (*chístit*) — "to clean, to peel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**чистить** comes from *чистый*, "clean": to make clean. Vasmer relates *чистый* to Old Prussian *skijstan*, "clean".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

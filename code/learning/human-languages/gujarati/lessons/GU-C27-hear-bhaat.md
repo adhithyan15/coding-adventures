@@ -11,8 +11,8 @@ gloss: rice, heard and said before it is ever shown
 concept_tag: GU-FOOD-RICE-HEARD
 prerequisites: [GU-R26-madad-gamvun-paani-r4]
 sounds: [bha, long-aa]
-roots: []
-etymology_hook: The plate starts with the thing that fills most of it, so every later food word has somewhere to sit.
+roots: [sanskrit-bhakta]
+etymology_hook: "bhāt ← Sanskrit bhakta 'meal, food; boiled rice', a tadbhava (CDIAL 9331)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C10-rotli]
 
 [PAUSE 3s] Say the Gujarati word for the flatbread you met in the water-and-tea chapter. Now listen twice: **bhāt**. It means
 **rice** — cooked rice, the base of the plate, not the raw grain.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ભાત** (*bhāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhakta*, "meal, food; boiled rice" (CDIAL 9331).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-BHAAT-01, GU-LEX-ROTLI] -->

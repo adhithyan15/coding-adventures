@@ -11,7 +11,8 @@ romanization: "uṟaṅṅū"
 concept_tag: ML-VERB-SLEEP
 prerequisites: [ML-C43-run, ML-C41-who]
 sounds: []
-roots: []
+roots: [dravidian-urangu-sleep]
+etymology_hook: "uṟaṅṅū: native Dravidian, one word with Tamil uṟaṅku (DEDR 707)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C43-run]
 **ഉറങ്ങൂ** (*uṟaṅṅū*) — "sleep".
 
 Same softening vowel — said to a child at night rather than as an order.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഉറങ്ങൂ** (*uṟaṅṅū*) is native Dravidian, one word with Tamil *uṟaṅku* (DEDR 707).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

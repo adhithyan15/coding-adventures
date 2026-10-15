@@ -13,7 +13,8 @@ gloss: "to dig"
 concept_tag: LA-VERB-FODIO
 prerequisites: [LA-C261-cogo, LA-C261-lugeo]
 sounds: []
-roots: []
+roots: [fodere-latin]
+etymology_hook: "fodiō 'to dig' — inherited, usually traced to PIE *bhod- 'to dig'; English fossil"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C261-lugeo]
 <!-- hl-knowledge: introduces=[LA-LEX-C261-ACT261-05]; assesses=[] -->
 
 **fodiō, fodere** — "to dig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fodiō** is inherited, usually traced to Proto-Indo-European *\*bhod-*, "to pierce, to dig" (EtymDB 2.1). English *fossil*, "dug up", comes from its participle *fossus*, "dug".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

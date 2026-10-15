@@ -14,7 +14,8 @@ romanization: "ṭhīk"
 concept_tag: GU-COURTESY-OKAY
 prerequisites: [GU-C91-goodwishes, GU-C91-apology]
 sounds: []
-roots: []
+roots: [indo-aryan-thikka]
+etymology_hook: "ṭhīk ← *ṭhīkka 'firm, right', which CDIAL derives, probably, from sthita 'standing' (CDIAL 5503)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C91-apology]
 <!-- hl-knowledge: introduces=[GU-LEX-C91-COURTESY-05]; assesses=[] -->
 
 **ઠીક** (*ṭhīk*) — "okay, fine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઠીક** (*ṭhīk*) comes from *\*ṭhīkka*, "firm, right", a form CDIAL reconstructs and probably derives from Sanskrit *sthita*, "standing" (CDIAL 5503).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

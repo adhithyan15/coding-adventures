@@ -14,7 +14,8 @@ romanization: "nikalnā"
 concept_tag: UR-VERB-NIKALNA
 prerequisites: [UR-C141-lautna, UR-C141-pahunchna]
 sounds: []
-roots: []
+roots: [indo-aryan-nishkalati]
+etymology_hook: "nikalnā ← *niṣkalati 'comes out', a reconstructed form; a tadbhava (CDIAL 7478)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C141-pahunchna]
 <!-- hl-knowledge: introduces=[UR-LEX-C141-ACT141-04]; assesses=[] -->
 
 **نکلنا** — *nikalnā* — "to come out, to leave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نکلنا** (*nikalnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*niṣkalati*, "comes out", a form CDIAL reconstructs from its descendants (CDIAL 7478). CDIAL takes it as formed back from Sanskrit *niṣkālayati*, "drives out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

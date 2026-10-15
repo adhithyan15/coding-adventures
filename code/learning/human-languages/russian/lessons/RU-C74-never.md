@@ -14,7 +14,8 @@ romanization: "nikogdá"
 concept_tag: RU-WHEN-NEVER
 prerequisites: [RU-C74-always, RU-C74-sometimes]
 sounds: []
-roots: []
+roots: [pie-kwo]
+etymology_hook: "никогда is ни 'not even' + когда 'when': 'not at any time'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C74-sometimes]
 <!-- hl-knowledge: introduces=[RU-LEX-C74-WHEN-03]; assesses=[] -->
 
 **никогда** (*nikogdá*) — "never". Built on **когда**, when.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**никогда** is *ни*, "not even", with *когда*, "when": "at no time". Its *к-* is the old question stem of *кто*, "who". Vasmer sets *ни* beside Latin *nī* and Gothic *nei*, "not".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

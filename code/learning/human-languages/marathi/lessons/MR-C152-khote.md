@@ -14,7 +14,8 @@ romanization: "khoṭe"
 concept_tag: MR-QUAL152-KHOTE
 prerequisites: [MR-C152-suraksit, MR-C152-dhokadayak]
 sounds: []
-roots: []
+roots: [indo-aryan-khotta]
+etymology_hook: "khoṭe: a form of khoṭā 'false, alloyed' ← *khōṭṭa 'blemish' (CDIAL 3931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C152-dhokadayak]
 <!-- hl-knowledge: introduces=[MR-LEX-C152-QUAL152-03]; assesses=[] -->
 
 **खोटे** — *khoṭe* — "false, untrue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खोटे** (*khoṭe*) is a form of Marathi *khoṭā*, "false, alloyed", which CDIAL lists under a reconstructed *\*khōṭṭa*, "blemish" (CDIAL 3931).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

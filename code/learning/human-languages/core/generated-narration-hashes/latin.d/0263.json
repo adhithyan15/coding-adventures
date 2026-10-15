@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 263,
-  "sourceHash": "fnv1a64:0d5aeb29ffdd0595",
+  "sourceHash": "fnv1a64:4980d35ea4839744",
   "lessonIds": [
     "LA-C263-postridie",
     "LA-C263-interea",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch263.txt",
   "json": "latin/narration/ch263.json",
-  "textHash": "fnv1a64:37ac1ce2d1238524",
-  "jsonHash": "fnv1a64:261c815408bcfd37",
+  "textHash": "fnv1a64:645da5ff8f580d56",
+  "jsonHash": "fnv1a64:d97bd16c2be6354a",
   "findings": []
 }

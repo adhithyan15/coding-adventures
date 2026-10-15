@@ -14,7 +14,8 @@ romanization: "nikudá"
 concept_tag: RU-NEG136-NIKUDA
 prerequisites: [RU-C136-nichego, RU-C136-nigde]
 sounds: []
-roots: []
+roots: [pie-kwo]
+etymology_hook: "никуда is ни 'not even' + куда 'where to'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C136-nigde]
 <!-- hl-knowledge: introduces=[RU-LEX-C136-NEG136-04]; assesses=[] -->
 
 **никуда** (*nikudá*) — "(to) nowhere". It is **куда** with **ни-**, so it answers "where to?": **Я никуда не иду.** — *ya nikudá ne idú* — "I'm not going anywhere."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**никуда** is *ни*, "not even", with *куда*, "where to": "to no place". Vasmer compares *куда* with Latin *quandō*, "when".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

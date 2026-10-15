@@ -14,7 +14,8 @@ romanization: "kuāṅ"
 concept_tag: UR-THINGS124-KUAN
 prerequisites: [UR-C124-jharna, UR-C124-talab]
 sounds: []
-roots: []
+roots: [sanskrit-kupa]
+etymology_hook: "kuāṅ ← Sanskrit kūpa 'hole, pit, well', a tadbhava (CDIAL 3400)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C124-talab]
 <!-- hl-knowledge: introduces=[UR-LEX-C124-THINGS124-05]; assesses=[] -->
 
 **کنواں** — *kuāṅ* — "a well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کنواں** (*kuāṅ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kūpa*, "hole, pit, well" (CDIAL 3400).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

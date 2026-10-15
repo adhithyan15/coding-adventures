@@ -14,7 +14,8 @@ romanization: "cauṛā"
 concept_tag: PA-QUAL142-CAURA
 prerequisites: [PA-C142-vinga, PA-C142-camkila]
 sounds: []
-roots: []
+roots: [indo-aryan-ca-uda]
+etymology_hook: "cauṛā ← *ca-uḍa 'wide, open', a reconstructed form; a tadbhava (CDIAL 4534)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C142-camkila]
 <!-- hl-knowledge: introduces=[PA-LEX-C142-QUAL142-03]; assesses=[] -->
 
 **ਚੌੜਾ** — *cauṛā* — "wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚੌੜਾ** (*cauṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ca-uḍa*, "wide, open", a form CDIAL reconstructs from its descendants (CDIAL 4534). CDIAL thinks it possibly built on *caü-*, drawn from compounds of Sanskrit *catur*, "four".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

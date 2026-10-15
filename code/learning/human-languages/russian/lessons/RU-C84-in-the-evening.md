@@ -14,7 +14,8 @@ romanization: "vécherom"
 concept_tag: RU-TIME84-IN-THE-EVENING
 prerequisites: [RU-C83-in-the-morning, RU-C84-in-the-daytime]
 sounds: []
-roots: []
+roots: [slavic-vecheru]
+etymology_hook: "вечером is a form of вечер 'evening' meaning 'during the evening'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C84-in-the-daytime]
 <!-- hl-knowledge: introduces=[RU-LEX-C84-TIME84-02]; assesses=[] -->
 
 **вечером** (*vécherom*) — "in the evening".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вечером** is *вечер*, "evening", in the form that says "by, during": "in the evening". *вечер* is a cousin of Lithuanian *vãkaras*, "evening" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

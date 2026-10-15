@@ -14,7 +14,8 @@ romanization: "dorogóy"
 concept_tag: RU-WORTH-EXPENSIVE
 prerequisites: [RU-C67-easy, RU-C67-hard]
 sounds: []
-roots: []
+roots: [slavic-dorgu]
+etymology_hook: "дорогой ← Proto-Slavic *dorgŭ 'dear'; Vasmer thinks Latvian dārgs 'dear' probably a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C67-hard]
 <!-- hl-knowledge: introduces=[RU-LEX-C67-WORTH-03]; assesses=[] -->
 
 **дорогой** (*dorogóy*) — "expensive; dear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дорогой** ← Proto-Slavic *\*dorgŭ* — inherited; Church Slavonic has *драгой*, "dear", as in *драгоценный*, "precious". Vasmer thinks it is probably related to Latvian *dārgs*, "dear, expensive". "Dear" and "expensive" share the word, as in English.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

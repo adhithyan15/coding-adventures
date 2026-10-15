@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 199,
-  "sourceHash": "fnv1a64:998adf4c45176e26",
+  "sourceHash": "fnv1a64:c8d76e24075c220b",
   "lessonIds": [
     "AR-C199-hazza",
     "AR-C199-adda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch199.txt",
   "json": "arabic/narration/ch199.json",
-  "textHash": "fnv1a64:bd1e44542cad3484",
-  "jsonHash": "fnv1a64:2edef3b73cc72802",
+  "textHash": "fnv1a64:209c671d1e256f22",
+  "jsonHash": "fnv1a64:00f264f1e3d75d6a",
   "findings": []
 }

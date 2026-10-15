@@ -14,7 +14,8 @@ romanization: "khūn"
 concept_tag: PA-BODY50-KHUN
 prerequisites: [PA-C50-dhaun, PA-C50-chihra]
 sounds: []
-roots: []
+roots: [persian-khun]
+etymology_hook: "khūn: usually traced to Persian khūn 'blood'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C50-chihra]
 <!-- hl-knowledge: introduces=[PA-LEX-C50-BODY50-05]; assesses=[] -->
 
 **ਖ਼ੂਨ** — *khūn* — "blood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖ਼ੂਨ** (*khūn*) is a loan, usually traced to Persian *khūn*, "blood".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

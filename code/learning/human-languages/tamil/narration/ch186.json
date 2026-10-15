@@ -4,7 +4,7 @@
   "chapter": 186,
   "title": "Father-in-law, Boyfriend, Girlfriend, Romantic love, Friendship",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bcfc6efc16b6302a",
+  "sourceHash": "fnv1a64:91da80c10fe1c2e2",
   "lessons": [
     {
       "id": "TA-C186-mamanar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04382a573d1424c5",
+      "sourceHash": "fnv1a64:b79eb73d73731b6b",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "மாமனார் (māmaṉār) is native Dravidian. DEDR 4813 lists Telugu māma, \"father-in-law\". The entry glosses māmaṉ \"maternal uncle, father-in-law\"; -ār is respectful."
+              "text": "மாமனார் (māmaṉār) is native Dravidian. DEDR 4813 lists Telugu māma, \"father-in-law\". The entry glosses māmaṉ \"maternal uncle, father-in-law\", and compares Sanskrit māma, \"maternal uncle\"; -ār is respectful."
             }
           ]
         },

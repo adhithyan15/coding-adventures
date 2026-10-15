@@ -14,7 +14,8 @@ romanization: "trenirovátsya"
 concept_tag: RU-VERB-TRENIROVATSYA
 prerequisites: [RU-C177-ssoritsya, RU-C177-miritsya]
 sounds: []
-roots: []
+roots: [train-french]
+etymology_hook: "тренироваться is тренировать 'to train' + -ся; from English train, through German"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C177-miritsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C178-ACT178-01]; assesses=[] -->
 
 **тренироваться** (*trenirovátsya*) — "to train, to practise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**тренироваться** is *тренировать*, "to train", with *-ся*, "oneself"; the verb comes from English *train*, through German *trainieren*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

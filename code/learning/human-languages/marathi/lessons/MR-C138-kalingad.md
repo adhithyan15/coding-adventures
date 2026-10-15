@@ -14,7 +14,8 @@ romanization: "kaliṅgaḍ"
 concept_tag: MR-THINGS138-KALINGAD
 prerequisites: [MR-C138-matar, MR-C138-dalimb]
 sounds: []
-roots: []
+roots: [sanskrit-kalinga]
+etymology_hook: "kaliṅgaḍ ← Sanskrit kāliṅga 'watermelon', a tadbhava (CDIAL 3100)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C138-dalimb]
 <!-- hl-knowledge: introduces=[MR-LEX-C138-THINGS138-03]; assesses=[] -->
 
 **कलिंगड** — *kaliṅgaḍ* — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कलिंगड** (*kaliṅgaḍ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kāliṅga*, "watermelon" (CDIAL 3100). CDIAL gives *kāliṅga* as a variant of Sanskrit *kālinda*, "watermelon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

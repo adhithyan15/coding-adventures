@@ -859,9 +859,32 @@ operators lower to the same recursive Railroad IR. Predicate labels preserve
 the pinned transformer's special-node convention, and a pinned syntax corpus
 plus native Metal-to-PNG fixture exercise the backend-neutral path.
 
-This is intentionally partial. Upstream curve geometry, theme/config
-overrides, and exact typography remain unsupported rather than being counted
-as compatible.
+Railroad `padding`, `verticalSeparation`, and `horizontalSeparation` settings
+from Mermaid init directives or YAML front matter survive typed semantic IR.
+Layout applies them to outer bounds, rule and branch separation, and sequential
+element spacing and content boxes before PaintScene lowering; the resolved values remain
+available as backend-neutral scene metadata.
+Explicit Railroad font family and size; terminal, non-terminal, special,
+connection, marker, and rule-name colors; stroke width; and marker visibility
+and radius follow the same typed semantic and layout path. Font size participates
+in element measurement, while PaintScene emits the resolved portable geometry,
+glyph runs, strokes, fills, and marker ellipses without backend-specific CSS.
+Configured `arcRadius` controls branch, bypass, and loopback lane geometry;
+lowering converts their orthogonal corners to portable cubic Bézier path
+commands that approximate Mermaid's circular SVG arcs before native rendering.
+Root `themeVariables` now provide Mermaid-compatible typography and color
+fallbacks for terminals, non-terminals, specials, connections, markers, and
+rule names. Explicit Railroad options retain precedence, and the resolved
+values continue through layout and backend-neutral PaintScene lowering.
+Color and font-family options now follow the pinned Mermaid allowlists before
+entering semantic IR: supported CSS colors and portable family lists survive,
+while unsafe or malformed values fall back to the resolved theme defaults.
+The `compactMode` option is retained as typed semantic configuration and
+PaintScene metadata. Mermaid 11.16.1's pinned Railroad renderer does not branch
+on this value, so native geometry intentionally remains unchanged.
+
+This is intentionally partial. Comment styling and exact typography remain
+unsupported rather than being counted as compatible.
 
 ### Info Full Compatibility
 
@@ -1031,6 +1054,21 @@ Tagged processes recognize `tag-rect`, `tagged-rectangle`, `tag-proc`, and
 Paper tape recognizes `flag` and `paper-tape` aliases.
 Lined documents recognize `lin-doc` and `lined-document` aliases.
 Data stores recognize `datastore` and `data-store` aliases.
+The Flowchart registry's accepted `state`, `choice`, and `note` attribute shapes lower to rounded-state,
+diamond-decision, and folded-corner note geometry respectively; notes include an explicit interior crease.
+The registry's legacy internal ShapeIDs `squareRect`, `roundedRect`, `stateStart`, `stateEnd`,
+`forkJoin`, `inv_trapezoid`, `doublecircle`, and `rect_left_inv_arrow` remain accepted and lower
+through their corresponding shared semantic, layout, and backend-neutral paint shapes.
+The internal `labelRect` ShapeID lowers through label-only semantic geometry and emits no visible
+container fill or stroke.
+The internal `anchor` ShapeID survives as dedicated semantic IR, uses the upstream two-pixel compact
+layout, and lowers to a label-free filled circle in backend-neutral paint.
+The internal `rectWithTitle` ShapeID survives as dedicated semantic IR and lowers to a rounded
+container with a title divider in backend-neutral paint.
+The internal `kanbanItem`, `mindmapCircle`, and `defaultMindmapNode` ShapeIDs remain accepted in
+attribute form and lower through shared rounded-container or circular semantic, layout, and paint geometry.
+The internal `classBox`, `erBox`, and `requirementBox` ShapeIDs remain accepted in attribute form and
+lower through shared titled-container semantic, layout, and backend-neutral paint geometry.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, including open dotted and thick
@@ -1040,14 +1078,31 @@ invisible layout links,
 minimum link lengths with deterministic rank spacing,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline labels on solid,
-thick, and dotted links, titles, and accessibility metadata with named and numeric entity
-decoding. Direct node
+thick, and dotted links, including labeled links with independently selected point, circle, cross,
+or absent markers at either endpoint, titles, and accessibility
+metadata with named and numeric entity
+decoding. Root `themeVariables` from init directives or front matter preserve `mainBkg`, `nodeBorder`,
+`lineColor`, `primaryTextColor`, `fontFamily`, and `fontSize` through semantic and layout IR to default
+node, edge, and glyph paint; themed font size also participates in node measurement. `textColor` and
+`edgeLabelBackground` theme labeled handoffs with portable glyph and background paint, while
+`clusterBkg`, `clusterBorder`, and `titleColor` theme ownership lanes, nested groups, and their diagram
+or cluster labels through backend-neutral rectangle and glyph paint. `nodeTextColor`, `arrowheadColor`,
+and `strokeWidth` provide default node glyph, endpoint marker, and node or edge stroke paint while
+preserving direct-style precedence. Direct node
 styles, named/default classes with optional terminal semicolons, and node class
-decorators cover fill, stroke, text color, stroke width, and dash patterns. URL
+decorators cover fill, stroke, text color, stroke width, dash patterns, font family, font size,
+weight, and italic/oblique style. Typography survives semantic IR, informs node width, and lowers
+to backend-neutral glyph runs. Matching SVG `rx` and `ry` node styles survive semantic and layout IR
+and lower to backend-neutral rectangle corner radii; unequal elliptical radii remain unsupported. URL
 clicks, tooltips, standard browser link targets, explicit `call` callback
 actions, and legacy callback aliases survive as scene metadata. Flowchart edge identifiers
 survive semantic IR, layout, and scene metadata; named classes and direct styles for identified
 edges resolve stroke color, width, dash patterns, and label color into backend-neutral paint.
+Edge label font family, size, weight, and italic or oblique style also survive semantic and layout IR
+and lower to backend-neutral glyph runs for both class-based and direct identified-edge styles.
+Positional `linkStyle` directives accept `default` or comma-separated edge indices and resolve
+into the same backend-neutral edge style fields. Their `interpolate` form applies supported curve
+modes by position through semantic and layout IR to portable path instructions.
 Identified edge animation attributes preserve enabled state and slow/fast timing in scene metadata,
 with a deterministic static dash pattern for non-animated paint backends.
 Per-edge `linear` and `basis` curve attributes survive semantic and layout IR; basis routing lowers
@@ -1063,18 +1118,49 @@ two-point routes lower to pixel-equivalent collinear cubic segments while preser
 The `rounded` curve mode lowers direction-aware orthogonal routing to line and quadratic Bézier
 commands, retaining smooth corners and tangent-aware endpoint markers without backend coupling.
 Explicit `swimlane.lineHops` front-matter configuration supports `arc`, `gap`, and `false` modes.
-Straight crossing routes lower the later edge to portable arc or split-subpath paint commands.
+Crossings on linear, rounded, `step`, `stepBefore`, and `stepAfter` routes lower the later edge to
+portable quadratic arc or split-subpath paint commands. As in Mermaid 11.16.1, a rewritten rounded
+route trades its corner smoothing for unambiguous crossing hops; true smoothing curves remain untouched.
 Explicit `swimlane.automaticLaneOrdering` front-matter configuration enables Mermaid's deterministic
 weighted-linear-arrangement heuristic for top-level lanes. Visible inter-lane edges contribute
 undirected weights, source order wins equal-cost ties, and the resolved order survives as scene metadata.
+`swimlane.ignoreCrossLaneEdges` defaults to `true`; setting it to `false` adds cross-lane links
+to deterministic, cycle-safe rank constraints while preserving authored order within each lane. The
+resolved non-default setting survives as scene metadata.
+Shared Flowchart `nodeSpacing`, `rankSpacing`, and `diagramPadding` configuration from front matter or
+init directives survives semantic and layout IR. The values control ownership-lane separation,
+consecutive-rank separation, and outer scene padding respectively, and remain visible in backend-neutral
+scene metadata.
+Shared Flowchart `wrappingWidth` configuration caps measured horizontal process-node width and carries
+that bound into backend-neutral text wrapping and paint lowering.
+Shared Flowchart `padding` configuration expands ordinary process-node geometry and controls its
+backend-neutral label content box without introducing renderer-specific HTML measurement.
+Shared Flowchart `titleTopMargin` configuration reserves layout space above a visible diagram title
+and shifts its backend-neutral glyph paint while leaving untitled diagrams unchanged.
+Shared Flowchart `subGraphTitleMargin.top` and `.bottom` configuration reserves ownership-lane and
+nested-group header space and shifts portable lane or group title glyphs away from their borders.
+Shared Flowchart `curve` configuration accepts the complete supported curve catalog and supplies the
+layout-time default for edges without a direct or class-resolved curve. Per-edge curves retain precedence,
+and the resolved modes lower to backend-neutral line, quadratic, or cubic paint paths.
+When cross-lane ranking is active, `swimlane.optimizeRanksByCrossings` defaults to `true` and performs
+up to four deterministic local-search passes. Feasible rank delays propagate through downstream
+constraints and are retained only when the lane/rank segment crossing count strictly improves; the
+resolved setting survives as scene metadata.
 The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
 for long labels while remaining bounded by their ownership lane. A pinned
 visual subset, including parallel
 handoffs, is rendered through Metal-to-PNG.
+Nested subgraphs remain ordinary child clusters inside their top-level ownership lane. Their lane and
+parent identities survive semantic IR, layout resolves bounds bottom-up around direct nodes and child
+clusters, and paint emits dashed labeled containers behind edge and node geometry. Direct styles and
+named classes on top-level lanes or nested groups preserve portable fill, stroke, dash, corner, label
+color, and typography fields through semantic and layout IR into backend-neutral paint. Flowchart-style
+`:::class` decorators on either subgraph form resolve through the same class pipeline.
+Nodes outside an explicit top-level subgraph are assigned to Mermaid's unlabeled
+`__swimlane_default__` ownership lane, which survives semantic IR, lane layout, and paint lowering.
 
-This is intentionally partial. Nested subgraphs, the complete Flowchart shape
-and link catalog beyond the documented marker forms, the remaining lane layering configuration,
-line hops on non-straight routes, and exact upstream routing or typography remain
+This is intentionally partial. The complete Flowchart shape
+and link catalog beyond the documented marker forms, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

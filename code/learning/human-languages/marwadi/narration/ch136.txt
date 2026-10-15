@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for an aubergine, then the Marwadi for spina
 You'll want to know: मूळो.
 मूळो — mūḷo — "a radish".
 
+The word, taken apart.
+मूळो (mūḷo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mūla, "root; radish". CDIAL lists Old Marwari mūlī under it (CDIAL 10250). CDIAL notes a likely non-Aryan origin for the word; Gujarati has mūḷo, "radish".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for spinach, then the Marwadi for a radish.
 
 You'll want to know: लसण.
 लसण — lasaṇ — "garlic".
+
+The word, taken apart.
+लसण (lasaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laśuna, "garlic". CDIAL gives no Marwari form in this entry (CDIAL 10990); the match is through Gujarati lasaṇ.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a radish, then the Marwadi for garlic.
 You'll want to know: अदरक.
 अदरक — adrak — "ginger".
 
+The word, taken apart.
+अदरक (adrak) goes back to Sanskrit ārdraka, "fresh ginger" (CDIAL 1341). CDIAL lists the fully inherited forms as Hindi ādā and Gujarati ādũ; अदरक (adrak) keeps the r and k those forms lost, and CDIAL does not list it.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for garlic, then the Marwadi for ginger.
 You'll want to know: हळदी.
 हळदी — haḷdī — "turmeric".
 
+The word, taken apart.
+हळदी (haḷdī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from haridrā, "turmeric". CDIAL gives no Marwari form in this entry (CDIAL 13992); the match is through Hindi haldī. Marwadi says the l curled back.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for ginger, then the Marwadi for turmeric.
 
 You'll want to know: जीरो.
 जीरो — jīro — "cumin".
+
+The word, taken apart.
+जीरो (jīro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jīraka, "cummin-seed". CDIAL gives no Marwari form in this entry (CDIAL 5234); the match is through Hindi jīrā and Gujarati jīrũ.
 
 What you've built.
 One more word for this chapter.

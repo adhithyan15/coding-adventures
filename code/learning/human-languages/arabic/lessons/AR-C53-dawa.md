@@ -14,7 +14,8 @@ romanization: "dawāʾ"
 concept_tag: AR-HEALTH53-DAWA
 prerequisites: [AR-C53-marid, AR-C53-alam]
 sounds: []
-roots: []
+roots: [d-w-y]
+etymology_hook: "dawāʾ: built on the root d-w-y, 'disease' (Lane); Lane gives dawan 'disease' and dawāʾ 'a remedy' under one root"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C53-alam]
 <!-- hl-knowledge: introduces=[AR-LEX-C53-HEALTH53-05]; assesses=[] -->
 
 **دواء** — *dawāʾ* — "medicine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دواء** (*dawāʾ*) is built on the native Arabic root *d-w-y*, "disease; a remedy" (Lane). Lane gives *dawan* "disease" and *dawāʾ* "a remedy" under one root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

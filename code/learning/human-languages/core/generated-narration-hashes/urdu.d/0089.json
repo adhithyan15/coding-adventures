@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 89,
-  "sourceHash": "fnv1a64:95673549426c1352",
+  "sourceHash": "fnv1a64:99521e3fad8586bf",
   "lessonIds": [
     "UR-C89-sab",
     "UR-C89-har",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch89.txt",
   "json": "urdu/narration/ch89.json",
-  "textHash": "fnv1a64:af23a84cdf6cf1a1",
-  "jsonHash": "fnv1a64:352eea084feadd0e",
+  "textHash": "fnv1a64:791e665f323da108",
+  "jsonHash": "fnv1a64:1e8bc8acba8e8543",
   "findings": []
 }

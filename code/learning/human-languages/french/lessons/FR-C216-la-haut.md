@@ -46,7 +46,7 @@ reviews_of: [FR-C216-ailleurs]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**là-haut** — *là*, "there", and *haut*, "high".
+**là-haut** — *là*, "there", and *haut*, "high". *Haut* ← Latin *altus*, "high", with an *h* from Frankish (EtymDB 2.1 records the Frankish *hauh*); *là* ← Latin *illāc*, "there".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

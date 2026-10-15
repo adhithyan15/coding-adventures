@@ -14,7 +14,8 @@ romanization: "śer"
 concept_tag: HI-THINGS145-SER
 prerequisites: [HI-C145-barf, HI-C145-hava]
 sounds: []
-roots: []
+roots: [persian-sher]
+etymology_hook: "śer: usually traced to Persian sher 'lion, tiger'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C145-hava]
 <!-- hl-knowledge: introduces=[HI-LEX-C145-THINGS145-05]; assesses=[] -->
 
 **शेर** — *śer* — "a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शेर** (*śer*) is a loan, usually traced to Persian *sher*, "lion, tiger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

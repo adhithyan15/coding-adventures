@@ -14,7 +14,8 @@ romanization: "guruvāsaraḥ"
 concept_tag: SA-WEEK-THURSDAY
 prerequisites: [SA-C85-tuesday, SA-C85-wednesday]
 sounds: []
-roots: []
+roots: [sanskrit-guru, sanskrit-vasara]
+etymology_hook: "guruvāsara ← guru 'heavy, teacher', the name of Jupiter + vāsara 'day' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,13 @@ reviews_of: [SA-C85-wednesday]
 
 **गुरुवासरः** (*guruvāsaraḥ*) — "Thursday", the day of Jupiter, called **गुरुः**, "the
 teacher" — a word you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Guruvāsara* is built from *guru*, "heavy, the teacher", the name given to
+Jupiter, and *vāsara*, "day" (MW). MW records the day as *guruvāra*, with *vāra*,
+"turn", in place of *vāsara*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

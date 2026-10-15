@@ -14,7 +14,8 @@ gloss: "weight"
 concept_tag: BN-ANCHOR-OJON
 prerequisites: [BN-W04-ja]
 sounds: []
-roots: []
+roots: [arabic-wazn]
+etymology_hook: "ojôn ← Arabic wazn 'weight, a weighing', through Persian"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard
 
 Say it: *ojôn*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ও**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ওজন** (*ojôn*) is a loan from Arabic *wazn*, "weight, a weighing", which reached Bengali through Persian. Its Arabic root is *w-z-n* (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-ANCHOR-OJON] -->

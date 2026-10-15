@@ -14,7 +14,8 @@ romanization: "poshāk"
 concept_tag: BN-JINIS164-POSHAK
 prerequisites: [BN-C163-tuthpest, BN-C164-phail]
 sounds: []
-roots: []
+roots: [persian-poshak]
+etymology_hook: "poshāk: usually traced to Persian poshāk 'clothing, dress'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C164-phail]
 <!-- hl-knowledge: introduces=[BN-LEX-C164-JINIS164-02]; assesses=[] -->
 
 **পোশাক** — *poshāk* — "clothes, an outfit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পোশাক** (*poshāk*) is a loan, usually traced to Persian *poshāk*, "clothing, dress".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

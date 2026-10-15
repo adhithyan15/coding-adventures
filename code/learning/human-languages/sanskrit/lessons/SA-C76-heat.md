@@ -14,7 +14,8 @@ romanization: "uṣṇam"
 concept_tag: SA-WEATHER-HEAT
 prerequisites: [SA-C76-rain, SA-C76-cold]
 sounds: []
-roots: []
+roots: [sanskrit-ushna]
+etymology_hook: "uṣṇa 'hot', filed by MW under the root √uṣ 'burn' (CDIAL 2389)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C76-cold]
 <!-- hl-knowledge: introduces=[SA-LEX-C76-WEATHER-03]; assesses=[] -->
 
 **उष्णम्** (*uṣṇam*) — "heat", "hot". **उष्णम् अस्ति** — "it is hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Uṣṇa* is a Rigvedic word for "hot", which MW files under the root √uṣ, "to burn"
+(CDIAL 2389).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rasama"
 concept_tag: AR-VERB-RASAMA
 prerequisites: [AR-C228-shahada, AR-C228-istamaa]
 sounds: []
-roots: []
+roots: [r-s-m]
+etymology_hook: "rasama: built on the root r-s-m, 'a trace, a mark' (Lane); rasama is to trace, to draw"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C228-istamaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C228-ACT228-03]; assesses=[] -->
 
 **رسم** — *rasama* — "to draw, to paint".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رسم** (*rasama*) is built on the native Arabic root *r-s-m*, "a trace, a mark" (Lane). *Rasama* is to trace, to draw.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

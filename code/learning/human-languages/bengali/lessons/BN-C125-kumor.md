@@ -14,7 +14,8 @@ romanization: "kumor"
 concept_tag: BN-THINGS125-KUMOR
 prerequisites: [BN-C125-jele, BN-C125-kamar]
 sounds: []
-roots: []
+roots: [sanskrit-kumbhakara]
+etymology_hook: "kumor ← Sanskrit kumbhakāra 'potter', a tadbhava (CDIAL 3310)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C125-kamar]
 <!-- hl-knowledge: introduces=[BN-LEX-C125-THINGS125-04]; assesses=[] -->
 
 **কুমোর** — *kumor* — "a potter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কুমোর** (*kumor*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kumbhakāra*, "potter" (CDIAL 3310). CDIAL writes the Bengali form *kumār*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

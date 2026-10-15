@@ -14,7 +14,8 @@ romanization: "qanât"
 concept_tag: FA-MAKAN156-QANAT
 prerequisites: [FA-C156-kolbe, FA-C156-asiyab]
 sounds: []
-roots: []
+roots: [arabic-qanat]
+etymology_hook: "qanât ← Arabic qanāt 'channel, conduit', root q-n-w (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C156-asiyab]
 <!-- hl-knowledge: introduces=[FA-LEX-C156-MAKAN156-04]; assesses=[] -->
 
 **قنات** — *qanât* — "an underground water channel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qanât* is borrowed from Arabic *qanāt*, "channel, conduit". Its Arabic root is *q-n-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "eṇisu"
 concept_tag: KA-VERB-ENISU
 prerequisites: [KA-C149-todu, KA-C149-kare, KA-C75-on-a-sign, KA-C75-ninth, KA-C75-tenth, KA-C75-eleventh, KA-C75-eleventh, KA-C75-short-form]
 sounds: []
-roots: []
+roots: [dravidian-en-count]
+etymology_hook: "eṇisu: native Dravidian; DEDR 793 lists eṇisu 'to count'; Tamil eṇ"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [KA-C149-kare]
 <!-- hl-knowledge: introduces=[KA-LEX-C149-ACT149-05]; assesses=[] -->
 
 **ಎಣಿಸು** — *eṇisu* — "to count".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಎಣಿಸು** (*eṇisu*) is native Dravidian, of the root for "to count, think", and DEDR 793 lists *eṇisu*, "to count", itself; the entry also has Tamil *eṇ*, Telugu *ennu* and Malayalam *eṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

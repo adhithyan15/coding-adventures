@@ -14,7 +14,8 @@ romanization: "doko ni mo"
 concept_tag: JA-NEG139-DOKONIMO
 prerequisites: [JA-C139-daremo, JA-C139-desuka, JA-C137-shinpai, JA-C131-toshokan]
 sounds: []
-roots: []
+roots: [japanese-do-which, japanese-ko-place, japanese-mo]
+etymology_hook: "doko ni mo: native doko 'where' + ni 'at' + mo 'even'"
 duration:
   max_seconds: 200
 requires:
@@ -58,6 +59,11 @@ Now you can ask and answer:
 > **あした はたらきますか。** — "Are you working tomorrow?"
 > **いいえ、はたらきません。どこにも いきません。** — "No, I'm not. I'm not
 > going anywhere."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**どこにも** (*doko ni mo*) is native: *doko*, "where", the particle *ni*, "at", and *mo*, "even, also" (JMdict). It is inherited rather than borrowed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C139-DOKONIMO, JA-LEX-C139-DESUKA, JA-LEX-C139-CHIGAIMASU, JA-LEX-C139-JANAI, JA-LEX-C139-NANIMO, JA-LEX-C139-DAREMO] -->

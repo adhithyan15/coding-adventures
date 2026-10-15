@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Four Forms Before Your Name",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6df5bb9edbe3b332",
+  "sourceHash": "fnv1a64:3d88a3df6aec1c1a",
   "lessons": [
     {
       "id": "GU-C04-athaanun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1941c3ea33712d29",
+      "sourceHash": "fnv1a64:c7f08f7acd893d58",
       "notice": null,
       "blocks": [
         {
@@ -88,6 +88,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL lists અથાણું (athāṇũ) under Sanskrit āsthāpana, \"strengthening remedy\", a word built on sthā, \"to stand\" (CDIAL 1515). Hindi athān, \"pickles\", stands in the same entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -118,7 +129,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -149,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81563c50e0364e80",
+      "sourceHash": "fnv1a64:6fd0cbfffb995d06",
       "notice": null,
       "blocks": [
         {
@@ -218,6 +229,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દિવાળી (divāḷī) is a tadbhava of Sanskrit dīpāvali, \"row of lamps\": dīpa, \"lamp\", and āvali, \"row\" (CDIAL 6358)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -248,7 +270,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

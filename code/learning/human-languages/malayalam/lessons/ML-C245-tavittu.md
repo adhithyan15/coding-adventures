@@ -14,7 +14,8 @@ romanization: "taviṭṭŭ"
 concept_tag: ML-GUNAM245-TAVITTU
 prerequisites: [ML-C244-potu, ML-C245-niram]
 sounds: []
-roots: []
+roots: [dravidian-tavidu-bran]
+etymology_hook: "taviṭṭŭ: native Dravidian, the colour of bran; Tamil taviṭu (DEDR 3111)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C245-niram]
 <!-- hl-knowledge: introduces=[ML-LEX-C245-GUNAM245-02]; assesses=[] -->
 
 **തവിട്ട്** — *taviṭṭŭ* — "brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തവിട്ട്** (*taviṭṭŭ*) is native Dravidian, from *taviṭu*, "bran": brown is the colour of rice bran; DEDR 3111 lists the root with Tamil *taviṭu*, Kannada *tavuḍu* and Telugu *tavuḍu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

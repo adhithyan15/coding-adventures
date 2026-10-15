@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Rows Closed",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b1833e6e9757bb75",
+  "sourceHash": "fnv1a64:2dad13b160b88771",
   "lessons": [
     {
       "id": "MR-C64-dhol",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49d400610bc567af",
+      "sourceHash": "fnv1a64:cf8921e313ba1d12",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढोल (ḍhol) is inherited from Sanskrit ḍhola, \"large drum\", and has come down with almost no change (CDIAL 5608)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -280,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d2e5bb9fb2543cc",
+      "sourceHash": "fnv1a64:34c204fa2cee597d",
       "notice": null,
       "blocks": [
         {
@@ -330,6 +341,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फणस (phaṇas) comes from phanasa, a variant CDIAL sets beside Sanskrit panasa, \"the breadfruit or jackfruit tree\" (CDIAL 7781). CDIAL takes the word as probably from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -360,7 +382,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

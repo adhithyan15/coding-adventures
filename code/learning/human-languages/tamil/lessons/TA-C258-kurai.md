@@ -47,7 +47,7 @@ reviews_of: [TA-C258-pari]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**குரை** (*kurai*) is native Dravidian. DEDR 1796 lists Malayalam *kura*, "barking".
+**குரை** (*kurai*) is native Dravidian. DEDR 1796 lists Malayalam *kura*, "barking", and compares Sanskrit *kurkura*, "dog" (CDIAL 3329).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

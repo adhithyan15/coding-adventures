@@ -14,7 +14,8 @@ romanization: "ponchhnā"
 concept_tag: UR-VERB-PONCHHNA
 prerequisites: [UR-C241-ugana, UR-C241-jharu-lagana]
 sounds: []
-roots: []
+roots: [sanskrit-pronchati]
+etymology_hook: "ponchhnā ← Sanskrit proñchati 'wipes off', a tadbhava (CDIAL 9011)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C241-jharu-lagana]
 <!-- hl-knowledge: introduces=[UR-LEX-C241-ACT241-05]; assesses=[] -->
 
 **پونچھنا** — *ponchhnā* — "to wipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پونچھنا** (*ponchhnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *proñchati*, "wipes off" (CDIAL 9011).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

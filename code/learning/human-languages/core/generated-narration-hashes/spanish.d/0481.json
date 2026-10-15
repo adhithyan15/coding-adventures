@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 481,
-  "sourceHash": "fnv1a64:9172a335fb16f13e",
+  "sourceHash": "fnv1a64:217a887b373c2cf1",
   "lessonIds": [
     "ES-C481-resolver",
     "ES-C481-recuperar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch481.txt",
   "json": "spanish/narration/ch481.json",
-  "textHash": "fnv1a64:b0eee348d77de218",
-  "jsonHash": "fnv1a64:7c19d2bcc3dc77af",
+  "textHash": "fnv1a64:016fe777d564ea41",
+  "jsonHash": "fnv1a64:be6cbc2c12825af7",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "paune"
 concept_tag: UR-TIME93-PAUNE
 prerequisites: [UR-C92-sarhe, UR-C92-sava]
 sounds: []
-roots: []
+roots: [indo-aryan-paduna]
+etymology_hook: "paune ← *padūna 'less by a quarter', a reconstructed form; a tadbhava (CDIAL 7765)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C92-sava]
 <!-- hl-knowledge: introduces=[UR-LEX-C93-TIME93-01]; assesses=[] -->
 
 **پونے** — *paune* — "a quarter to (less a quarter)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پونے** (*paune*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*padūna*, "less by a quarter", a form CDIAL reconstructs from its descendants (CDIAL 7765).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

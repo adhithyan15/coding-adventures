@@ -10,7 +10,8 @@ gloss: "to complain"
 concept_tag: ES-VERB-QUEJARSE
 prerequisites: [ES-C480-interrumpir, ES-C480-prometer]
 sounds: []
-roots: []
+roots: [quassare-latin]
+etymology_hook: "quejarse ← spoken Latin *quassiare, from quassare 'to shake, to batter' — English quash"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C480-prometer]
 > *The neighbours complain about the noise.*
 
 It goes with *de*: *quejarse de algo*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quejarse** comes from spoken Latin *\*quassiare*, built on *quassare*, "to shake, to toss violently" (Lewis & Short) — inherited: the *-ssi-* became *j*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

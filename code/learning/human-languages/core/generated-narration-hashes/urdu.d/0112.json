@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 112,
-  "sourceHash": "fnv1a64:47283f1e916b9515",
+  "sourceHash": "fnv1a64:861585b9b8cb7fb5",
   "lessonIds": [
     "UR-C112-machis",
     "UR-C112-khilauna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch112.txt",
   "json": "urdu/narration/ch112.json",
-  "textHash": "fnv1a64:764c478746ccc6d7",
-  "jsonHash": "fnv1a64:6a62d3aff729026f",
+  "textHash": "fnv1a64:a3cb0d47018595bb",
+  "jsonHash": "fnv1a64:24acaf287ed71c7f",
   "findings": []
 }

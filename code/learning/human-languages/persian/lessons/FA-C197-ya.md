@@ -14,7 +14,8 @@ romanization: "yâ"
 concept_tag: FA-CHERA197-YA
 prerequisites: [FA-C197-ba-in-hal, FA-C197-agarche]
 sounds: []
-roots: []
+roots: [persian-ya]
+etymology_hook: "yâ: inherited, usually traced to Middle Persian ayāb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C197-agarche]
 <!-- hl-knowledge: introduces=[FA-LEX-C197-CHERA197-05]; assesses=[] -->
 
 **یا** — *yâ* — "or".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yâ* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *ayāb*, "or".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

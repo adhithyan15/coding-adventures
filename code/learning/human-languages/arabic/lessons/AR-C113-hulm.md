@@ -14,7 +14,8 @@ romanization: "ḥulm"
 concept_tag: AR-WANT113-HULM
 prerequisites: [AR-C113-kariha, AR-C113-raghba, AR-C14-ashhur, AR-C14-ashhur]
 sounds: []
-roots: []
+roots: [ḥ-l-m]
+etymology_hook: "ḥulm: built on the root ḥ-l-m, 'to dream' (Lane); ḥulm is a dream"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C113-raghba]
 <!-- hl-knowledge: introduces=[AR-LEX-C113-WANT113-04]; assesses=[] -->
 
 **حلم** — *ḥulm* — "a dream".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حلم** (*ḥulm*) is built on the native Arabic root *ḥ-l-m*, "to dream" (Lane). *Ḥulm* is a dream.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

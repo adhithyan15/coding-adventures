@@ -15,6 +15,7 @@ concept_tag: MR-ADJ108-TAPKIRI
 prerequisites: [MR-C108-kala, MR-C108-pandhra]
 sounds: []
 roots: []
+etymology_hook: "tapkirī: tapkīr 'snuff' + -ī, 'snuff-coloured'; the origin of tapkīr is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C108-pandhra]
 <!-- hl-knowledge: introduces=[MR-LEX-C108-ADJ108-03]; assesses=[] -->
 
 **तपकिरी** — *tapkirī* — "brown".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तपकिरी** (*tapkirī*) is *tapkīr*, "snuff", with the ending *-ī*: "snuff-coloured". The origin of *tapkīr* is not settled; CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

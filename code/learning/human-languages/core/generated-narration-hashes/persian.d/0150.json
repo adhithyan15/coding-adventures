@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 150,
-  "sourceHash": "fnv1a64:28ef66bd04e1c8ee",
+  "sourceHash": "fnv1a64:5d2475f6d774693a",
   "lessonIds": [
     "FA-C150-badan",
     "FA-C150-pashne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch150.txt",
   "json": "persian/narration/ch150.json",
-  "textHash": "fnv1a64:4c08340d57eac351",
-  "jsonHash": "fnv1a64:53d742aed08de3c1",
+  "textHash": "fnv1a64:ffe5a1488cb97d2a",
+  "jsonHash": "fnv1a64:4eb865d3f7dbe9e1",
   "findings": []
 }

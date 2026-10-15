@@ -13,7 +13,8 @@ gloss: "to enter"
 concept_tag: LA-VERB-INTRO
 prerequisites: [LA-C77-invenio, LA-C78-vivo]
 sounds: []
-roots: []
+roots: [intrare-latin, intra-latin]
+etymology_hook: "intrō 'to enter' — built on intrā 'inside': to go inside; English enter"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C78-vivo]
 <!-- hl-knowledge: introduces=[LA-LEX-C78-VERBA4-02]; assesses=[] -->
 
 **intrō, intrāre** — "to enter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**intrō** is built on *intrā*, "inside, within" (EtymDB 2.1): to go inside. English *enter* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

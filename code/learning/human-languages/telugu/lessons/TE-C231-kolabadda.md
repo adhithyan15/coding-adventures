@@ -14,7 +14,8 @@ romanization: "kolabadda"
 concept_tag: TE-VASTUVU231-KOLABADDA
 prerequisites: [TE-C231-niccena, TE-C231-jiguru]
 sounds: []
-roots: []
+roots: [dravidian-kola-measure, dravidian-badda-strip]
+etymology_hook: "kolabadda: native kola 'measurement' (DEDR 1827) + badda 'strip' (DEDR 3962)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C231-jiguru]
 <!-- hl-knowledge: introduces=[TE-LEX-C231-VASTUVU231-05]; assesses=[] -->
 
 **కొలబద్ద** — *kolabadda* — "a ruler, a measuring stick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొలబద్ద** (*kolabadda*) is native Dravidian: *kola*, "measurement" (DEDR 1827), and *badda*, "a thin strip, piece" (DEDR 3962): "measuring strip".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "eigyōchū"
 concept_tag: JA-READ142-EIGYOUCHUU
 prerequisites: [JA-C142-uketsuke, JA-C141-tsumori, JA-C138-nemasu, JA-W133-ki]
 sounds: []
-roots: []
+roots: [middle-chinese-yweng, middle-chinese-ngjaep, middle-chinese-trjuwng]
+etymology_hook: "eigyōchū: Sino-Japanese 営 'manage' + 業 'business' + 中 'middle', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -57,6 +58,11 @@ not reached yet; the reading is the same.
 [YOU READ: the door sign and act on it]
 
 The door says **えいぎょうちゅう**, so you can go in.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**えいぎょうちゅう** (*eigyōchū*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ei*, "manage" (Middle Chinese *yweng*), *gyō*, "business, trade" (*ngjaep*) and *chū*, "middle, during" (*trjuwng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C142-EIGYOUCHUU, JA-LEX-C142-UKETSUKE] -->

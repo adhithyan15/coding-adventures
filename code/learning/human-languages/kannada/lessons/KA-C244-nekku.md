@@ -14,7 +14,8 @@ romanization: "nekku"
 concept_tag: KA-VERB-NEKKU
 prerequisites: [KA-C244-sarisu, KA-C244-kuggu]
 sounds: []
-roots: []
+roots: [dravidian-nakku-lick]
+etymology_hook: "nekku: native Dravidian, one word with Tamil nakku (DEDR 3570)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C244-kuggu]
 <!-- hl-knowledge: introduces=[KA-LEX-C244-KRIYE244-03]; assesses=[] -->
 
 **ನೆಕ್ಕು** — *nekku* — "to lick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೆಕ್ಕು** (*nekku*) is native Dravidian, one word with Tamil *nakku* (DEDR 3570). DEDR lists *nakku*, *nekku*, "to lick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

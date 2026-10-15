@@ -14,7 +14,8 @@ romanization: "rayón"
 concept_tag: RU-MESTO151-RAYON
 prerequisites: [RU-C151-tsentr, RU-C151-okraina]
 sounds: []
-roots: []
+roots: [radius-latin]
+etymology_hook: "район ← French rayon 'a ray, a sector', from Latin radius 'a spoke, a ray'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C151-okraina]
 <!-- hl-knowledge: introduces=[RU-LEX-C151-MESTO151-04]; assesses=[] -->
 
 **район** (*rayón*) — "a district".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**район** comes from French *rayon*, "a ray, a sector", from Latin *radius*, "a spoke, a ray" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

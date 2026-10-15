@@ -14,7 +14,8 @@ romanization: "udyāna"
 concept_tag: KA-LOC109-UDYANA
 prerequisites: [KA-C108-raste, KA-C109-setuve]
 sounds: []
-roots: []
+roots: [sanskrit-udyana]
+etymology_hook: "udyāna ← Sanskrit udyāna 'going out; park, garden', a tatsama (CDIAL 2052)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C109-setuve]
 <!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-02]; assesses=[] -->
 
 **ಉದ್ಯಾನ** — *udyāna* — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉದ್ಯಾನ** (*udyāna*) is Sanskrit *udyāna*, "going out; park, garden", taken over whole as a learned loan, a tatsama (CDIAL 2052).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

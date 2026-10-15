@@ -14,7 +14,8 @@ romanization: "varzesh kardan"
 concept_tag: FA-VERB-VARZESH-KARDAN
 prerequisites: [FA-C218-sorfe-kardan, FA-C218-esterahat-kardan]
 sounds: []
-roots: []
+roots: [persian-varzidan, pie-kwer]
+etymology_hook: "varzesh kardan: Persian varzesh 'exercise' (varzidan) + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C218-esterahat-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C218-KONESH218-04]; assesses=[] -->
 
 **ورزش کردن** — *varzesh kardan* — "to exercise, to do sport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*varzesh kardan* pairs *varzesh*, "exercise", with *kardan*. *varzesh* is built on *varzidan*, "to practise", a native verb usually traced to Middle Persian *warzīdan*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

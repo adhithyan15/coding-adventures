@@ -11,8 +11,8 @@ gloss: item or thing, written with familiar signs and short u
 concept_tag: MW-SHOPPING-ITEM-WRITTEN
 prerequisites: [MW-C13-hear-vastu]
 sounds: [voiced-v, voiceless-s, short-u]
-roots: []
-etymology_hook: The new short-u mark returns after a familiar conjunct.
+roots: [sanskrit-vastu]
+etymology_hook: "vastu ← Sanskrit vastu 'existing thing, affair', a tatsama (CDIAL 11449)"
 duration:
   max_seconds: 170
 requires:
@@ -45,6 +45,11 @@ Then say mother. [YOU WRITE: short **ु** and the familiar vowel-off mark **्
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01] -->
 
 > **वस्** + **तु** → **वस्तु** — *vastu* — item
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वस्तु** (*vastu*) is Sanskrit *vastu*, "existing thing, affair", taken over whole as a learned loan, a tatsama (CDIAL 11449).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-VASTU-01] -->

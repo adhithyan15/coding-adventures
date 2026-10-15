@@ -1,0 +1,6 @@
+### Changed — root-slug split baseline 77 to 76 and Arabic root ledger pin
+
+An etymology-hygiene pass over the Marathi, Gujarati, Bengali, Punjabi, Urdu, Persian, Arabic and Marwadi tracks gave each etymon one root slug. One change resolves a known split, so two pins fall.
+
+- **`core/root-slug-split-baseline.json` 77 → 76 entries.** The `s-l-m|` entry (`s-l-m` against `semitic-s-l-m`) is pruned: the six Arabic lessons on `semitic-s-l-m` now use `s-l-m`. `tests/root-slug-splits.test.ts` pins 76, with a comment naming the pair. No new split entry was added; the other slug fixes gave a second etymon a distinct slug (`persian-dar-holder`, `persian-dar-door`, `persian-dar-in`, `arabic-dawa-claim`, `sanskrit-kala-black`, `sanskrit-para-bank`, `indo-aryan-chatti-chest`, `sanskrit-vastu-site`) or merged two different-looking spellings the split check does not pair (`indo-aryan-main` → `ma-first-person`, `indo-aryan-bolla` → `bol-speak`, `arabic-hfz` → `arabic-h-f-z`, `arabic-atraf` → `arabic-taraf`).
+- **Arabic root ledger pin** (`tests/corpus/arabic/pins-arabic-root-ledger-2ffc83f1.case.ts`): roots 942 → 941 and underspent 914 → 913. The merged root's payoffs, 2 and 5, become one entry of 8, so the payoff distribution loses a `"2"` and the `"5"` and gains an `"8"`. The comment says why.

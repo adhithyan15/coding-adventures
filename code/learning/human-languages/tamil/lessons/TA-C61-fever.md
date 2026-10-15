@@ -12,7 +12,7 @@ concept_tag: TA-NOUN-FEVER
 prerequisites: [TA-C61-sleep, TA-C59-jaggery, TA-C60-broom]
 sounds: []
 roots: [dravidian-kaay-heat]
-etymology_hook: "காய்ச்சல் — native, from kāy 'to grow hot' (DEDR 1458); Malayalam kāyuka 'to be feverish'"
+etymology_hook: "காய்ச்சல் — native, from kāy 'to grow hot' (DEDR 1458, which compares Sanskrit kandu 'oven'); Malayalam kāyuka"
 duration:
   max_seconds: 210
 requires:

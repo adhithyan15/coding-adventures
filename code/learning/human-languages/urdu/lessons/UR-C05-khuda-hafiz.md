@@ -12,7 +12,7 @@ concept_tag: FAREWELL
 prerequisites: [UR-C05-hafiz]
 sounds: [rtl, kh, long-a, short-vowels-unwritten]
 roots: [persian-khoda, arabic-h-f-z]
-etymology_hook: The farewell joins Persian-borrowed khudā with Arabic-rooted hāfiz; standard Urdu teaching writes the two words with a space, while Persian normally joins its local spelling.
+etymology_hook: "khudā hāfiz: Persian khudā 'God' + Arabic ḥāfiẓ 'guardian' (Lane, root ḥ-f-ẓ)"
 duration:
   max_seconds: 220
 requires:
@@ -49,6 +49,11 @@ Urdu keeps a visible space between the two words.
 [YOU READ: **خدا** first, then **حافظ**, and preserve that space in the complete spelling **خدا حافظ**]
 
 Say the whole expression smoothly.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خدا حافظ** (*khudā hāfiz*) is "God is the guardian". *khudā* is usually traced to Persian *khudā*, "God", from Middle Persian *xwadāy*, "lord"; *hāfiz* is Arabic *ḥāfiẓ*, "guardian", which reached Urdu through Persian (Lane, root *ḥ-f-ẓ*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED] -->

@@ -14,7 +14,8 @@ romanization: "sini"
 concept_tag: FA-THINGS111-SINI
 prerequisites: [FA-C110-televiziyon, FA-C110-parch]
 sounds: []
-roots: []
+roots: [arabic-sini]
+etymology_hook: "sini ← Arabic ṣīnī 'Chinese' (EtymDB): first a Chinese tray"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C110-parch]
 <!-- hl-knowledge: introduces=[FA-LEX-C111-THINGS111-01]; assesses=[] -->
 
 **سینی** — *sini* — "a tray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sini* is borrowed from Arabic *ṣīnī*, "Chinese" (EtymDB): trays of Chinese porcelain are usually said to have given the word its sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

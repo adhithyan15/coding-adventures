@@ -14,7 +14,8 @@ romanization: "shiṭranj"
 concept_tag: AR-SHAY186-SHITRANJ
 prerequisites: [AR-C185-hashara, AR-C186-hiwaya]
 sounds: []
-roots: []
+roots: [sanskrit-caturanga]
+etymology_hook: "shiṭranj: Persian, arabicized (Lane), from Sanskrit caturaṅga; the 'hundred stratagems' story is folk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C186-hiwaya]
 <!-- hl-knowledge: introduces=[AR-LEX-C186-SHAY186-02]; assesses=[] -->
 
 **شطرنج** — *shiṭranj* — "chess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شطرنج** (*shiṭranj*) is a loan: Lane's sources call it a Persian word, arabicized, and quote a story that it means *ṣad rang*, "a hundred stratagems". That is a folk etymology: Persian *chatrang* goes back to Sanskrit *caturaṅga*, "four-limbed", the four arms of an army.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

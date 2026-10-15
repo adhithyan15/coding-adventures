@@ -14,7 +14,8 @@ romanization: "tarāzū"
 concept_tag: HI-THG251-TARAZU
 prerequisites: [HI-C250-khudra, HI-C251-thok]
 sounds: []
-roots: []
+roots: [persian-tarazu]
+etymology_hook: "tarāzū: usually traced to Persian tarāzū 'scales'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C251-thok]
 <!-- hl-knowledge: introduces=[HI-LEX-C251-THG251-02]; assesses=[] -->
 
 **तराज़ू** — *tarāzū* — "scales".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तराज़ू** (*tarāzū*) is a loan, usually traced to Persian *tarāzū*, "scales".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

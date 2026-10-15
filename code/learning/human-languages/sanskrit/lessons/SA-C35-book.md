@@ -14,7 +14,8 @@ romanization: "pustakam"
 concept_tag: SA-HOUSE-PUSTAKA
 prerequisites: [SA-C35-salt, SA-C33-town, SA-C34-blood]
 sounds: []
-roots: []
+roots: [sanskrit-pustaka]
+etymology_hook: "pustaka 'book' is borrowed from Iranian, cf. Persian pōst 'skin' (CDIAL 8413); Hindi pothī shares the source"
 duration:
   max_seconds: 210
 requires:
@@ -43,7 +44,7 @@ reviews_of: [SA-C35-salt]
 
 **पुस्तकम्** (*pustakam*) — "a book".
 
-**पुस्तकम्** is a traveller. It came into Sanskrit from Persian *post*, "hide, skin" — what a book was written on before paper — and then India handed it back out again.
+**पुस्तकम्** is a traveller. It came into Sanskrit from an Iranian word related to Persian *pōst*, "hide, skin" — what a book was written on before paper (CDIAL 8413) — and then India handed it back out again.
 
 Hindi *pustak*, Bengali *pustak*, Kannada *pustaka*, Telugu *pustakam* and Tamil *puttakam* are all this word. Most of what you have learned here was inherited; this one was borrowed, and you can tell, because its relatives live outside the language rather than inside it.
 

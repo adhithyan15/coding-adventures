@@ -13,7 +13,8 @@ gloss: "meanwhile"
 concept_tag: LA-TEMP263-INTEREA
 prerequisites: [LA-C262-taedium, LA-C263-postridie]
 sounds: []
-roots: []
+roots: [interea-latin, inter-latin]
+etymology_hook: "intereā 'meanwhile' — inter 'during' + eā 'that'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C263-postridie]
 <!-- hl-knowledge: introduces=[LA-LEX-C263-TEMP263-02]; assesses=[] -->
 
 **intereā** — "meanwhile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**intereā** is *inter*, "between, during", with *eā*, "that" (Lewis & Short): during that time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kúkhnya"
 concept_tag: RU-HOME1-KITCHEN
 prerequisites: [RU-C48-house, RU-C48-room]
 sounds: []
-roots: []
+roots: [coquina-latin]
+etymology_hook: "кухня came through Polish kuchnia and Czech from Old High German kuchina, from Latin coquina"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C48-room]
 <!-- hl-knowledge: introduces=[RU-LEX-C48-HOME1-03]; assesses=[] -->
 
 **кухня** (*kúkhnya*) — "a kitchen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**кухня** came, from 1717, through Polish *kuchnia* and Czech *kuchyně* from Old High German *kuchina*, from Latin *coquīna*, "kitchen"; before that Russians said *поварня* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

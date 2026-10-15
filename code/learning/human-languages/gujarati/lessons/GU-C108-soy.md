@@ -14,7 +14,8 @@ romanization: "soy"
 concept_tag: GU-THINGS108-SOY
 prerequisites: [GU-C108-chari, GU-C108-katar]
 sounds: []
-roots: []
+roots: [sanskrit-suci]
+etymology_hook: "soy ← Sanskrit sūcī 'needle', a tadbhava (CDIAL 13551)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C108-katar]
 <!-- hl-knowledge: introduces=[GU-LEX-C108-THINGS108-04]; assesses=[] -->
 
 **સોય** (*soy*) — "a needle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સોય** (*soy*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sūcī*, "needle" (CDIAL 13551).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

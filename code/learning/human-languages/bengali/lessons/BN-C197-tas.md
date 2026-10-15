@@ -15,6 +15,7 @@ concept_tag: BN-JINIS197-TAS
 prerequisites: [BN-C197-tenis, BN-C197-daba]
 sounds: []
 roots: []
+etymology_hook: "tās 'playing cards': origin not settled; CDIAL lists tāsā 'to shuffle (cards)' (CDIAL 6014)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C197-daba]
 <!-- hl-knowledge: introduces=[BN-LEX-C197-JINIS197-05]; assesses=[] -->
 
 **তাস** — *tās* — "playing cards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **তাস** (*tās*) is not settled. CDIAL does not list the noun, though it lists a Bengali verb *tāsā*, "to brush, dust, shuffle (cards)", under Sanskrit *trāsayati*, "makes tremble" (CDIAL 6014).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

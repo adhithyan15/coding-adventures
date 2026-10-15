@@ -14,7 +14,8 @@ romanization: "dhyāyati"
 concept_tag: SA-VERB-DHYAYATI
 prerequisites: [SA-C143-aste, SA-C143-bibheti]
 sounds: []
-roots: []
+roots: [sanskrit-dhyayati, sanskrit-dhyana]
+etymology_hook: "dhyāyati ← √dhyai 'think of, meditate' (MW); dhyāna 'meditation' is kin; Pali jhāna (CDIAL 6889)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C143-bibheti]
 <!-- hl-knowledge: introduces=[SA-LEX-C143-ACT143-05]; assesses=[] -->
 
 **ध्यायति** — *dhyāyati* — "meditates, thinks of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhyāyati* comes from the root √dhyai "think of, contemplate, meditate" (MW). *dhyāna* "meditation" comes from the same root (MW), and Pali kept it as *jhāna* "contemplation" (CDIAL 6889).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

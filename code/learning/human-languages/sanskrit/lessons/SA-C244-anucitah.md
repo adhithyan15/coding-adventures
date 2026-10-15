@@ -14,7 +14,8 @@ romanization: "anucitaḥ"
 concept_tag: SA-QUAL244-ANUCITAH
 prerequisites: [SA-C243-duhkhi, SA-C244-ucitah]
 sounds: []
-roots: []
+roots: [sanskrit-ucita]
+etymology_hook: "anucita = an- 'not' + ucita 'proper', from √uc 'be suitable' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C244-ucitah]
 <!-- hl-knowledge: introduces=[SA-LEX-C244-QUAL244-02]; assesses=[] -->
 
 **अनुचितः** — *anucitaḥ* — "improper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*anucita* is *an-*, "not", with *ucita*, "proper, fitting", from the root √uc (MW): "improper, wrong". MW keeps it apart from a different *anucita*, "set in rows", from *anu-* and √ci.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

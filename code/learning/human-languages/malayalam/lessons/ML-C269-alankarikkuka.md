@@ -14,7 +14,8 @@ romanization: "alaṅkarikkuka"
 concept_tag: ML-VERB-ALANKARIKKUKA
 prerequisites: [ML-C269-asvasippikkuka, ML-C269-prartthikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-alankara]
+etymology_hook: "alaṅkarikkuka ← Sanskrit alaṁkāra 'ornament' + the verb ending"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C269-prartthikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C269-KRIYA269-03]; assesses=[] -->
 
 **അലങ്കരിക്കുക** — *alaṅkarikkuka* — "to decorate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അലങ്കരിക്കുക** (*alaṅkarikkuka*) is built on Sanskrit *alaṁkāra*, "ornament", literally "making sufficient", with the ending that makes a Malayalam verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

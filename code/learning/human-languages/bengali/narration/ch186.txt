@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a blister, then the Bengali for a bandag
 You'll want to know: পাঁজর.
 পাঁজর — pā̃jôr — "a rib".
 
+The word, taken apart.
+পাঁজর (pā̃jôr) (pāṁjôr) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pañjara, "cage; skeleton, ribs" (CDIAL 7685). CDIAL lists Bengali pāṁjar, "the ribs, a rib".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a bandage, then the Bengali for a rib.
 
 You'll want to know: নাভি.
 নাভি — nābhi — "a navel".
+
+The word, taken apart.
+নাভি (nābhi) is Sanskrit nābhi, "navel", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a rib, then the Bengali for a navel.
 You'll want to know: তালু.
 তালু — tālu — "a palm; the palate".
 
+The word, taken apart.
+তালু (tālu) is inherited from Sanskrit tālu, "palate", and has come down with almost no change (CDIAL 5803). CDIAL lists Bengali tālu as "palate, top of the head"; it does not list the sense "palm".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a navel, then the Bengali for a palm; th
 You'll want to know: মগজ.
 মগজ — môgôj — "the brain".
 
+The word, taken apart.
+মগজ (môgôj) is a loan, usually traced to Persian maghz, "brain, marrow".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a palm; the palate, then the Bengali for
 
 You'll want to know: পেশি.
 পেশি — peshi — "a muscle".
+
+The word, taken apart.
+পেশি (peshi) is Sanskrit peśī, "muscle", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

@@ -13,7 +13,8 @@ gloss: "a calf"
 concept_tag: LA-RES224-VITULUS
 prerequisites: [LA-C224-caper, LA-C224-agnus]
 sounds: []
-roots: []
+roots: [vitulus-latin]
+etymology_hook: "vitulus 'calf' — usually traced to PIE *wetelo- 'yearling', from *wet- 'year'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C224-agnus]
 <!-- hl-knowledge: introduces=[LA-LEX-C224-RES224-05]; assesses=[] -->
 
 **vitulus, vitulī** — "a calf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vitulus** is usually traced to Proto-Indo-European *\*wetelo-*, "yearling", from *\*wet-*, "year" (EtymDB 2.1): a calf as a one-year-old. The name *Italia*, "Italy", is often explained as "land of calves" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṭṭil"
 concept_tag: ML-WANT146-KATTIL
 prerequisites: [ML-C146-avasyam, ML-C146-tirumanam, ML-C26-raavile]
 sounds: []
-roots: []
+roots: [dravidian-kattil-cot]
+etymology_hook: "kaṭṭil: native Dravidian, one word with Tamil kaṭṭil and Telugu kaṭli (DEDR 1145)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C146-tirumanam]
 <!-- hl-knowledge: introduces=[ML-LEX-C146-WANT146-03]; assesses=[] -->
 
 **കട്ടിൽ** — *kaṭṭil* — "a bed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കട്ടിൽ** (*kaṭṭil*) is native Dravidian, one word with Tamil *kaṭṭil* and Telugu *kaṭli* (DEDR 1145). DEDR 1145 compares Sanskrit *khaṭvā*, "cot" (CDIAL 3781).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

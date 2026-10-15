@@ -12,6 +12,9 @@ Before the new one: say the Latin for a grandmother, then the Latin for a family
 You'll want to know: marītus, marītī.
 marītus, marītī — "a husband". English marital.
 
+The word, taken apart.
+marītus is probably inherited, from a Proto-Indo-European word for a young man of an age to marry, meryo-, "young man" (EtymDB 2.1). English marry comes from its family through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a family, then the Latin for a husband.
 
 You'll want to know: uxor, uxōris.
 uxor, uxōris — "a wife".
+
+The word, taken apart.
+uxor, "wife", has no sure origin; Lewis & Short call it doubtful, and no later proposal has won agreement. English uxorious, "doting on one's wife", comes from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a husband, then the Latin for a wife.
 You'll want to know: līberī, līberōrum.
 līberī, līberōrum — "children". Only in the plural.
 
+The word, taken apart.
+līberī, "children", is the plural of līber, "free" (EtymDB 2.1): the free-born members of a household, as against its slaves. līber is usually traced to Proto-Indo-European h1lewdheros, "free" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a wife, then the Latin for children.
 You'll want to know: īnfāns, īnfantis.
 īnfāns, īnfantis — "a baby, an infant". Literally "not speaking".
 
+The word, taken apart.
+īnfāns is built from in-, "not", and for, "I speak" (Lewis & Short): a baby is one who cannot yet speak. Its second part is fāns, "speaking". English infant comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for children, then the Latin for a baby.
 
 You'll want to know: patruus, patruī.
 patruus, patruī — "an uncle (father's brother)". Built on pater.
+
+The word, taken apart.
+patruus is built on pater, "father" (Lewis & Short): the uncle on the father's side. pater is usually traced to Proto-Indo-European ph2ter, "father" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

@@ -11,8 +11,8 @@ gloss: sun, heard and said before it is ever shown
 concept_tag: GU-SKY-SUN-HEARD
 prerequisites: [GU-R28-house-five-r1]
 sounds: [sa, long-uu, rolled-r, voiced-j]
-roots: []
-etymology_hook: The chapter steps outdoors, and the first thing outside is the one that decides which part of the day it is.
+roots: [sanskrit-surya]
+etymology_hook: "sūraj: usually traced to Sanskrit sūrya 'sun' (CDIAL 13574 lists no Gujarati form)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C25-savaar, GU-C24-hear-raat]
 
 [PAUSE 3s] Say the Gujarati words for morning and for night. Now listen twice: **sūraj**. It means
 **sun** — the thing whose position decides whether it is *savār*, *bapor*, or *sānj*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સૂરજ** (*sūraj*) is usually traced to Sanskrit *sūrya*, "sun". CDIAL's entry for the word lists no Gujarati form (CDIAL 13574).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-SOORAJ-01, GU-LEX-SAVAAR-01, GU-LEX-RAAT-01] -->

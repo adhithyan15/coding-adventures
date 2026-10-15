@@ -14,7 +14,8 @@ romanization: "hatti"
 concept_tag: KA-VASTU295-HATTI
 prerequisites: [KA-C294-duddu, KA-C294-cillare]
 sounds: []
-roots: []
+roots: [dravidian-parutti-cotton]
+etymology_hook: "hatti: native Dravidian, one word with Tamil parutti and Telugu patti (DEDR 3976)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C294-cillare]
 <!-- hl-knowledge: introduces=[KA-LEX-C295-VASTU295-01]; assesses=[] -->
 
 **ಹತ್ತಿ** — *hatti* — "cotton".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹತ್ತಿ** (*hatti*) is native Dravidian, one word with Tamil *parutti*, Telugu *patti* and Malayalam *parutti* (DEDR 3976). DEDR lists older *parti*, *patti*, "cotton": the *p-* has become *h-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "jalubu"
 concept_tag: TE-DOCTOR-COLD
 prerequisites: [TE-C91-whereto, TE-C91-eaten]
 sounds: []
-roots: []
+roots: [dravidian-cali-catarrh]
+etymology_hook: "jalubu: native Dravidian, one word with Tamil caḷi 'catarrh' (DEDR 2409)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C91-eaten]
 
 **నాకు జలుబు చేసింది** — "I have caught a cold", literally "a cold has done to me". Telugu
 keeps this apart from **చలి**, the cold of the weather.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జలుబు** (*jalubu*) is native Dravidian, one word with Tamil *caḷi*, "catarrh, mucus" (DEDR 2409).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

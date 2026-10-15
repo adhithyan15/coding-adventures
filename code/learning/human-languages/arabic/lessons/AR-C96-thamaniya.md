@@ -14,7 +14,8 @@ romanization: "thamāniya"
 concept_tag: AR-CLOTHES96-THAMANIYA
 prerequisites: [AR-C96-sitta, AR-C96-saba]
 sounds: []
-roots: []
+roots: [th-m-n]
+etymology_hook: "thamāniya: built on the root th-m-n, 'eight' (Lane); Hebrew shmone, 'eight', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C96-saba]
 <!-- hl-knowledge: introduces=[AR-LEX-C96-CLOTHES96-04]; assesses=[] -->
 
 **ثمانية** — *thamāniya* — "eight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثمانية** (*thamāniya*) is built on the native Arabic root *th-m-n*, "eight" (Lane). Hebrew *shmone*, "eight", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

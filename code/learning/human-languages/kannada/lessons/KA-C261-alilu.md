@@ -14,7 +14,8 @@ romanization: "aḷilu"
 concept_tag: KA-VASTU261-ALILU
 prerequisites: [KA-C261-sakuprani, KA-C261-karu]
 sounds: []
-roots: []
+roots: [dravidian-anil-squirrel]
+etymology_hook: "aḷilu: native Dravidian, one word with Tamil aṇil and Malayalam aṇil (DEDR 2315)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C261-karu]
 <!-- hl-knowledge: introduces=[KA-LEX-C261-VASTU261-03]; assesses=[] -->
 
 **ಅಳಿಲು** — *aḷilu* — "a squirrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಳಿಲು** (*aḷilu*) is native Dravidian, one word with Tamil *aṇil* and Malayalam *aṇil* (DEDR 2315). DEDR lists *aḷil*, "squirrel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kūḍa"
 concept_tag: KA-WORD-ALSO
 prerequisites: [KA-C64-after, KA-C62-needle]
 sounds: []
-roots: []
+roots: [dravidian-kuudu-join]
+etymology_hook: "kūḍa: native Dravidian, from kūḍu 'to join'; DEDR 1882 lists kūḍa 'along with'; Tamil kūṭu"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [KA-C64-after]
 The same shape carries the idea of coming together, which is where the adding sense comes from — two things joined, and the second one mentioned.
 
 Take care with the middle letter. ಕೂಡ and ಕೂದಲು from the body chapter open alike and then part company, and in a rough spelling they can look closer than they are.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೂಡ** (*kūḍa*) is native Dravidian, from *kūḍu*, "to join, come together", and DEDR 1882 lists *kūḍa*, "along with", itself; the entry also has Tamil *kūṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

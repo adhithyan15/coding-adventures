@@ -14,7 +14,8 @@ romanization: "āścarya"
 concept_tag: KA-AROGYA282-ASCARYA
 prerequisites: [KA-C282-ottada, KA-C282-dadi]
 sounds: []
-roots: []
+roots: [sanskrit-ashcarya]
+etymology_hook: "āścarya ← Sanskrit āścarya 'wonderful', a tatsama (CDIAL 1464)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C282-dadi]
 <!-- hl-knowledge: introduces=[KA-LEX-C282-AROGYA282-05]; assesses=[] -->
 
 **ಆಶ್ಚರ್ಯ** — *āścarya* — "surprise, wonder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಶ್ಚರ್ಯ** (*āścarya*) is Sanskrit *āścarya*, "wonderful", taken over whole as a learned loan, a tatsama (CDIAL 1464).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tôrkô kôrā"
 concept_tag: BN-VERB-TORKO-KORA
 prerequisites: [BN-C149-deri-kora, BN-C150-sondeh-kora]
 sounds: []
-roots: []
+roots: [sanskrit-tarka, sanskrit-karoti]
+etymology_hook: "tôrkô kôrā: tôrkô 'argument', Sanskrit tarka (CDIAL 5714), + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C150-sondeh-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C150-ACT150-02]; assesses=[] -->
 
 **তর্ক করা** — *tôrkô kôrā* — "to argue".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**তর্ক করা** (*tôrkô kôrā*) is *tôrkô*, "argument", Sanskrit *tarka*, "inquiry, reasoning", taken over whole (CDIAL 5714), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

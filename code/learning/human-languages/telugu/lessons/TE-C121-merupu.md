@@ -14,7 +14,8 @@ romanization: "merupu"
 concept_tag: TE-THINGS121-MERUPU
 prerequisites: [TE-C120-matti, TE-C121-urumu]
 sounds: []
-roots: []
+roots: [dravidian-meruku-glitter]
+etymology_hook: "merupu: native Dravidian; DEDR 5074 lists meṟapu 'lightning flash' with Tamil meruku 'glitter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C121-urumu]
 <!-- hl-knowledge: introduces=[TE-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **మెరుపు** — *merupu* — "lightning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మెరుపు** (*merupu*) is native Dravidian. DEDR 5074 lists *meṟapu*, "shining, lightning flash", with Tamil *meruku* and Kannada *merugu*, "lustre".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

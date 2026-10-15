@@ -14,7 +14,8 @@ romanization: "yat"
 concept_tag: SA-WHY241-YAT
 prerequisites: [SA-C241-yena, SA-C241-tena]
 sounds: []
-roots: []
+roots: [sanskrit-ya-relative]
+etymology_hook: "yat 'that, which' is the neuter of the relative stem ya- (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C241-tena]
 <!-- hl-knowledge: introduces=[SA-LEX-C241-WHY241-04]; assesses=[] -->
 
 **यत्** — *yat* — "that (introducing a clause)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yat* is the neuter form of the relative pronoun stem *ya-*, "which, what" (MW). Used at the head of a clause it means "that", the way English *that* introduces "he said that ...". Hindi *jo*, "who, which", comes from the same stem (CDIAL 10391).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

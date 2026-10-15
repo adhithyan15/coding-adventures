@@ -14,7 +14,8 @@ romanization: "praśaṁsati"
 concept_tag: SA-VERB-PRASAMSATI
 prerequisites: [SA-C205-ksamate, SA-C205-nindati]
 sounds: []
-roots: []
+roots: [sanskrit-prashamsa]
+etymology_hook: "praśaṃsati ← pra- + √śaṃs 'recite, praise'; MW compares Latin cēnsēre and carmen 'song'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C205-nindati]
 <!-- hl-knowledge: introduces=[SA-LEX-C205-ACT205-03]; assesses=[] -->
 
 **प्रशंसति** — *praśaṁsati* — "praises".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*praśaṃsati* is built on *pra-*, "forth", and the root √śaṃs, "to recite, praise" (MW). The root is inherited from Indo-European: MW compares Latin *cēnsēre*, "to assess", and *carmen*, "song". Its noun *praśaṃsā*, "praise", went into Bengali.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

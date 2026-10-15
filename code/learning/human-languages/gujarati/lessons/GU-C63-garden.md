@@ -14,7 +14,8 @@ romanization: "bagīco"
 concept_tag: GU-HOUSE-GARDEN
 prerequisites: [GU-C63-wall, GU-C63-courtyard]
 sounds: []
-roots: []
+roots: [persian-baghcha]
+etymology_hook: "bagīco: usually traced to Persian bāghcha 'small garden'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C63-courtyard]
 <!-- hl-knowledge: introduces=[GU-LEX-C63-HOUSE-04]; assesses=[] -->
 
 **બગીચો** (*bagīco*) — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**બગીચો** (*bagīco*) is a loan, usually traced to Persian *bāghcha*, "small garden".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

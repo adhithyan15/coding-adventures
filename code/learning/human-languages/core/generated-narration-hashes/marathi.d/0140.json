@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 140,
-  "sourceHash": "fnv1a64:9fec21499143b0f1",
+  "sourceHash": "fnv1a64:64015850e6c0d223",
   "lessonIds": [
     "MR-C140-mul",
     "MR-C140-bi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch140.txt",
   "json": "marathi/narration/ch140.json",
-  "textHash": "fnv1a64:56c7bead2b947b9f",
-  "jsonHash": "fnv1a64:ccc1beb1377f0bb7",
+  "textHash": "fnv1a64:4a40b735a56c6729",
+  "jsonHash": "fnv1a64:ee992199a56fc7b7",
   "findings": []
 }

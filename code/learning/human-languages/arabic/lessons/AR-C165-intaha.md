@@ -14,7 +14,8 @@ romanization: "intahā"
 concept_tag: AR-VERB-INTAHA
 prerequisites: [AR-C165-hadhafa, AR-C165-badaa]
 sounds: []
-roots: []
+roots: [n-h-y]
+etymology_hook: "intahā: built on the root n-h-y, 'to reach an end' (Lane); intahā is Form VIII, 'to come to an end'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C165-badaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C165-ACT165-03]; assesses=[] -->
 
 **انتهى** — *intahā* — "to end, to finish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انتهى** (*intahā*) is built on the native Arabic root *n-h-y*, "to reach an end; to forbid" (Lane). *Intahā* is Form VIII, "to come to an end".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to knock, then the Marathi for to compar
 You'll want to know: फिरायला जाणे.
 फिरायला जाणे — phirāylā jāṇe — "to go for a walk".
 
+The word, taken apart.
+फिरायला is "for wandering", from फिरणे, "to wander, turn", which CDIAL lists under a reconstructed phirati, "moves, wanders" (CDIAL 9078). जाणे comes from Sanskrit yāti, "goes" (CDIAL 10452).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to compare, then the Marathi for to go f
 
 You'll want to know: घडी करणे.
 घडी करणे — ghaḍī karṇe — "to fold".
+
+The word, taken apart.
+The origin of घडी, "a fold", is not settled. CDIAL has no entry for it in this sense; its Marathi ghaḍī is a different word, "water-clock" (CDIAL 4406). करणे is "to do".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to go for a walk, then the Marathi for t
 You'll want to know: तयारी करणे.
 तयारी करणे — tayārī karṇe — "to prepare".
 
+The word, taken apart.
+तयारी is built on tayār, "ready", a loan usually traced through Persian to Arabic ṭayyār, "flying, swift". करणे is "to do".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to fold, then the Marathi for to prepare
 You'll want to know: ओळख करून देणे.
 ओळख करून देणे — oḷakh karūn deṇe — "to introduce".
 
+The word, taken apart.
+ओळख, "acquaintance", CDIAL lists under Sanskrit upalakṣa, "distinguishing", from lakṣ, "to mark" (CDIAL 2224). करून देणे is "to do for someone": देणे comes from Sanskrit dadāti, "gives" (CDIAL 6141).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to prepare, then the Marathi for to intr
 
 You'll want to know: उसने देणे.
 उसने देणे — usne deṇe — "to lend".
+
+The word, taken apart.
+The origin of उसने, "on loan", is not settled: neither CDIAL nor DEDR has an entry for it. देणे comes from Sanskrit dadāti, "gives" (CDIAL 6141).
 
 What you've built.
 One more word for this chapter.

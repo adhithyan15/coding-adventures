@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 65,
-  "sourceHash": "fnv1a64:6b2b7a5442c5ae7d",
+  "sourceHash": "fnv1a64:d88adff62c6ec462",
   "lessonIds": [
     "JA-C65-koi",
     "JA-C65-semi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch65.txt",
   "json": "japanese/narration/ch65.json",
-  "textHash": "fnv1a64:7d8aadaadcf632ea",
-  "jsonHash": "fnv1a64:b0959be636f3964f",
+  "textHash": "fnv1a64:989003b6e858ddf5",
+  "jsonHash": "fnv1a64:07467bfac64acdc2",
   "findings": []
 }

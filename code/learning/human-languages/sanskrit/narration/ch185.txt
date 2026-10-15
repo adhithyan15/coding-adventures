@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for loudly, then the Sanskrit for softly.
 You'll want to know: कियत्.
 कियत् — kiyat — "how much?".
 
+The word, taken apart.
+kiyat is built on ki-, the stem that asks a question (MW), the way iyat means "so much". That interrogative stem is inherited from Indo-European, and Latin quis, "who", is usually traced to the same source.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for softly, then the Sanskrit for how much?
 
 You'll want to know: कीदृशः.
 कीदृशः — kīdṛśaḥ — "of what kind?".
+
+The word, taken apart.
+kīdṛśa is built on the question stem kī- and -dṛśa, "looking like", from the root √dṛś, "to see" (MW): "of what appearance". It lives on as Hindi kaisā, with ka- in place of kī-, and Gujarati śũ, "what" (CDIAL 3197).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for how much?, then the Sanskrit for of wha
 You'll want to know: हि.
 हि — hi — "for, indeed".
 
+The word, taken apart.
+hi is an old particle, already in the Vedas, that never stands first in its sentence (MW). MW compares it with the particles ha and gha; where it came from before that is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for of what kind?, then the Sanskrit for fo
 You'll want to know: नूनम्.
 नूनम् — nūnam — "surely".
 
+The word, taken apart.
+nūnam is built on nu, "now" (CDIAL 7576): in the Rigveda it means "now", and later "surely" (MW). The base is inherited from Indo-European; MW compares Greek nyn, Latin nunc and English now.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for for, then the Sanskrit for surely.
 
 You'll want to know: अवश्यम्.
 अवश्यम् — avaśyam — "certainly, necessarily".
+
+The word, taken apart.
+avaśyam is built on a-, "not", and vaśa, "will, control" (MW): what is not under anyone's control is inevitable, so "necessarily, certainly". MW sets it beside āvaśyaka, "necessary".
 
 What you've built.
 One more word for this chapter.

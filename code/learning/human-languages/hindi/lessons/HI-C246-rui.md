@@ -14,7 +14,8 @@ romanization: "rūī"
 concept_tag: HI-THG246-RUI
 prerequisites: [HI-C246-kagaz, HI-C246-plastik]
 sounds: []
-roots: []
+roots: [indo-aryan-rua]
+etymology_hook: "rūī ← *rūa 'cotton', a reconstructed form; a tadbhava (CDIAL 10798)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C246-plastik]
 <!-- hl-knowledge: introduces=[HI-LEX-C246-THG246-05]; assesses=[] -->
 
 **रुई** — *rūī* — "cotton wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रुई** (*rūī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*rūa*, "cotton", a form CDIAL reconstructs from its descendants (CDIAL 10798).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

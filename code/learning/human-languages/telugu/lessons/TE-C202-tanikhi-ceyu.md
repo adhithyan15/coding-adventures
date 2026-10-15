@@ -14,7 +14,8 @@ romanization: "tanikhī cēyu"
 concept_tag: TE-VERB-TANIKHI-CEYU
 prerequisites: [TE-C202-carcincu, TE-C202-sampradincu]
 sounds: []
-roots: []
+roots: [telugu-tanikhi-inspection, sey-do-dravidian]
+etymology_hook: "tanikhī cēyu: tanikhī, of uncertain origin, + native cēyu 'to do' (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C202-sampradincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C202-KRIYA202-03]; assesses=[] -->
 
 **తనిఖీ చేయు** — *tanikhī cēyu* — "to check, to inspect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *tanikhī*, "inspection", the first word of **తనిఖీ చేయు** (*tanikhī cēyu*), is uncertain; DEDR and CDIAL do not list it. *Cēyu*, "to do", is native (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

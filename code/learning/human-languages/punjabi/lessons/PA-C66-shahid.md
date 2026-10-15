@@ -14,7 +14,8 @@ romanization: "shahid"
 concept_tag: PA-FOOD66-SHAHID
 prerequisites: [PA-C65-makkhan, PA-C66-panir]
 sounds: []
-roots: []
+roots: [arabic-shahd]
+etymology_hook: "shahid ← Arabic shahd 'honey', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C66-panir]
 <!-- hl-knowledge: introduces=[PA-LEX-C66-FOOD66-02]; assesses=[] -->
 
 **ਸ਼ਹਿਦ** — *shahid* — "honey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸ਼ਹਿਦ** (*shahid*) is a loan from Arabic *shahd*, "honey", which reached Punjabi through Persian. Its Arabic root is *sh-h-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

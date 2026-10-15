@@ -14,7 +14,8 @@ romanization: "nari"
 concept_tag: KA-THINGS130-NARI
 prerequisites: [KA-C130-mola, KA-C130-jinke]
 sounds: []
-roots: []
+roots: [dravidian-nari-jackal]
+etymology_hook: "nari: native Dravidian, one word with Tamil nari and Telugu nakka (DEDR 3606)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C130-jinke]
 <!-- hl-knowledge: introduces=[KA-LEX-C130-THINGS130-05]; assesses=[] -->
 
 **ನರಿ** — *nari* — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನರಿ** (*nari*) is native Dravidian, one word with Tamil *nari* and Telugu *nakka* (DEDR 3606).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

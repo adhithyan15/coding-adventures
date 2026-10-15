@@ -14,7 +14,8 @@ romanization: "māṣaḥ"
 concept_tag: SA-THG190-MASAH
 prerequisites: [SA-C189-katah, SA-C189-astaranam]
 sounds: []
-roots: []
+roots: [sanskrit-masha]
+etymology_hook: "māṣa 'bean, black gram', a Rigvedic word (CDIAL 10097); MW gives no derivation, so its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C189-astaranam]
 <!-- hl-knowledge: introduces=[SA-LEX-C190-THG190-01]; assesses=[] -->
 
 **माषः** — *māṣaḥ* — "black gram".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*māṣa* is already in the Rigveda as "bean" (CDIAL 10097), and later names black gram in particular (MW). MW gives no derivation for it, so its origin is uncertain. The same word also named a small weight of gold.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

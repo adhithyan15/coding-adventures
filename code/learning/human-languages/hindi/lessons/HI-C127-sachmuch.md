@@ -14,7 +14,8 @@ romanization: "sacmuc"
 concept_tag: HI-NOTATALL-TRULY
 prerequisites: [HI-C127-malumnahin, HI-C127-bilkulnahin]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "sacmuc: sac 'true' (CDIAL 13112) doubled with a rhyming muc; CDIAL does not list the pair"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C127-bilkulnahin]
 **सचमुच** (*sacmuc*) — "truly, really".
 
 It opens on the **सच** you know. **सचमुच?** — "really?", a stronger **सच में?**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सचमुच** (*sacmuc*) is *sac*, "true", from Sanskrit *satya* (CDIAL 13112), followed by a rhyming *muc*. CDIAL does not list the pair, and *muc* has no clear source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

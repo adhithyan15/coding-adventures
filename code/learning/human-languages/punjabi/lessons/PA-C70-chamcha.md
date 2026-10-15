@@ -14,7 +14,8 @@ romanization: "chamchā"
 concept_tag: PA-HOME70-CHAMCHA
 prerequisites: [PA-C69-chabi, PA-C69-thali]
 sounds: []
-roots: []
+roots: [persian-chamcha]
+etymology_hook: "chamchā: usually traced to Persian chamcha 'spoon, ladle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C69-thali]
 <!-- hl-knowledge: introduces=[PA-LEX-C70-HOME70-01]; assesses=[] -->
 
 **ਚਮਚਾ** — *chamchā* — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚਮਚਾ** (*chamchā*) is a loan, usually traced to Persian *chamcha*, "spoon, ladle". Persian itself took the word from Turkic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

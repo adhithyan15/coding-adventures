@@ -11,7 +11,8 @@ romanization: "bēraṁ"
 concept_tag: TE-NOUN-BARGAIN
 prerequisites: [TE-C72-weight]
 sounds: []
-roots: []
+roots: [telugu-beeram-bargain]
+etymology_hook: "bēraṁ: origin uncertain; DEDR and CDIAL do not record it"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C72-weight]
 It is expected in an open market crowd and out of place in a fixed-price అంగడి, and telling those two apart is most of what a newcomer gets wrong.
 
 However the బేరం ends, it ends with ధన్యవాదములు, and in a small అంగడి it ends with both sides fairly sure they did well out of it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **బేరం** (*bēraṁ*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "javān"
 concept_tag: PA-QUAL147-JAVAN
 prerequisites: [PA-C147-amir, PA-C147-garib]
 sounds: []
-roots: []
+roots: [indo-aryan-yuvana, persian-javan]
+etymology_hook: "javān: CDIAL lists Punjabi javāṇ 'a youth' under *yuvāna 'young' (10510); Hindi javān is usually traced to Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C147-garib]
 <!-- hl-knowledge: introduces=[PA-LEX-C147-QUAL147-03]; assesses=[] -->
 
 **ਜਵਾਨ** — *javān* — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Punjabi *javāṇ* and *juāṇ*, "a youth", under *\*yuvāna*, "young", built on Sanskrit *yuvan* (CDIAL 10510), with the *y-* to *j-* change of *jāṇā*. In the same entry it marks Sindhi *juānu*, with a plain *n*, as taken from Persian *javān*, the Sanskrit word's cousin, and Hindi *javān* is usually traced to Persian too. The word taught here also has a plain *n*, so how much Persian shaped it is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

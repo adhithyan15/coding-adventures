@@ -14,7 +14,8 @@ romanization: "jātre"
 concept_tag: KA-VASTU189-JATRE
 prerequisites: [KA-C188-tulasi, KA-C189-gumpu]
 sounds: []
-roots: []
+roots: [sanskrit-yatra]
+etymology_hook: "jātre ← Sanskrit yātrā 'journey; festival', reshaped as a tadbhava (CDIAL 10456)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C189-gumpu]
 <!-- hl-knowledge: introduces=[KA-LEX-C189-VASTU189-02]; assesses=[] -->
 
 **ಜಾತ್ರೆ** — *jātre* — "a village fair, a temple fair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜಾತ್ರೆ** (*jātre*) comes from Sanskrit *yātrā*, "journey; festival", reshaped to Kannada sounds: a tadbhava (CDIAL 10456). The *y-* became *j-*, as in Prakrit *jattā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

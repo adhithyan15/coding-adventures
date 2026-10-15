@@ -11,8 +11,8 @@ gloss: my name is ...
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [UR-C01-nahin]
 sounds: [rtl, long-vowels, hai-diphthong]
-roots: [indo-aryan-main, indo-european-name]
-etymology_hook: Mera and hai expose Urdu's Indo-Aryan grammar, while nām belongs to the ancient Indo-European name family.
+roots: [ma-first-person, indo-european-name]
+etymology_hook: "nām goes back to Sanskrit nāman 'name', kin to English name; CDIAL lists merā under the base ma- (9691)"
 duration:
   max_seconds: 240
 requires:
@@ -52,9 +52,7 @@ reliable Urdu sentence for your own name.
 - your name goes in the open slot
 - **ہے** *hai* = is
 
-The word **nām** is an old Indo-Aryan relative of Sanskrit *nāman* and distant
-English *name*. **merā** and **hai** show Urdu's inherited grammatical core,
-shared closely with Hindi even though the two languages use different scripts.
+The word **nām** goes back to Sanskrit *nāman*, "name", and is a distant cousin of English *name*. CDIAL lists **merā** under the Sanskrit first-person base *ma-* (CDIAL 9691), and **hai** is usually traced to Sanskrit *asti*, "is". Both show Urdu's inherited grammatical core, shared closely with Hindi even though the two languages use different scripts.
 
 Nearly every shape here is one you have already met. **میرا** opens with **م**,
 the letter that ends *salām*, then reuses **ی**, **ر** and **ا**. **نام** is

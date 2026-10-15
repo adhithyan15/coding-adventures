@@ -11,8 +11,8 @@ gloss: morning, heard before it is shown as a reading target
 concept_tag: GU-TIME-MORNING-HEARD
 prerequisites: [GU-R23-shaalaa-rasto-r2]
 sounds: [sa, long-aa, rolled-r]
-roots: []
-etymology_hook: The first part of the day arrives by ear alone, so the meaning is secure before any spelling is asked for.
+roots: [indo-aryan-savara]
+etymology_hook: "savār ← *savāra 'in good time', a reconstructed form; a tadbhava (CDIAL 13290)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: []
 
 [PAUSE 2s] Listen twice: **savār**. It means **morning**. Hold the sound and the
 meaning together; the Gujarati spelling waits for a later lesson in this chapter.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**સવાર** (*savār*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*savāra*, "in good time", a form CDIAL reconstructs from its descendants (CDIAL 13290). CDIAL builds it from *sa-*, "with", and *vāra*, "time, turn".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-SAVAAR-01] -->

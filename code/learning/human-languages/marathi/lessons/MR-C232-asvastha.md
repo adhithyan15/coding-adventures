@@ -14,7 +14,8 @@ romanization: "asvastha"
 concept_tag: MR-GUN232-ASVASTHA
 prerequisites: [MR-C232-matsari, MR-C232-abhimani]
 sounds: []
-roots: []
+roots: [sanskrit-asvastha]
+etymology_hook: "asvastha: Sanskrit asvastha 'unwell', a- 'not' + svastha 'well' (CDIAL 13917); a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C232-abhimani]
 <!-- hl-knowledge: introduces=[MR-LEX-C232-GUN232-03]; assesses=[] -->
 
 **अस्वस्थ** — *asvastha* — "uneasy, restless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अस्वस्थ** (*asvastha*) is Sanskrit *asvastha*, "not at ease", a tatsama: *a-*, "not", and *svastha*, "well, healthy" (CDIAL 13917).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

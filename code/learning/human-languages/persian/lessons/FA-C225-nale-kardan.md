@@ -14,7 +14,8 @@ romanization: "nâle kardan"
 concept_tag: FA-VERB-NALE-KARDAN
 prerequisites: [FA-C224-pust-kandan, FA-C225-hefz-kardan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "nâle kardan: Persian nâle 'moan' (Middle Persian nālag) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C225-hefz-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C225-KONESH225-02]; assesses=[] -->
 
 **ناله کردن** — *nâle kardan* — "to moan, to groan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nâle kardan* pairs *nâle*, "moan", with *kardan*. *nâle* is native, usually traced to Middle Persian *nālag*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

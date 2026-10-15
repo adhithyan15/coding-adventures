@@ -14,7 +14,8 @@ romanization: "pāramparyaṁ"
 concept_tag: ML-VASTU326-PARAMPARYAM
 prerequisites: [ML-C326-dipavali, ML-C326-puja]
 sounds: []
-roots: []
+roots: [sanskrit-parampara]
+etymology_hook: "pāramparyaṁ ← Sanskrit pāramparya 'succession, tradition', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C326-puja]
 <!-- hl-knowledge: introduces=[ML-LEX-C326-VASTU326-04]; assesses=[] -->
 
 **പാരമ്പര്യം** — *pāramparyaṁ* — "tradition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പാരമ്പര്യം** (*pāramparyaṁ*) ← Sanskrit *pāramparya*, "succession, tradition", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*. It is built on *paramparā*, "an unbroken series".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

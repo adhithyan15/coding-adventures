@@ -14,7 +14,8 @@ romanization: "kā̃ṭā"
 concept_tag: HI-THG252-KATA
 prerequisites: [HI-C252-dali, HI-C252-kali]
 sounds: []
-roots: []
+roots: [sanskrit-kantaka]
+etymology_hook: "kāṁṭā ← Sanskrit kaṇṭaka 'thorn', a tadbhava (CDIAL 2668)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C252-kali]
 <!-- hl-knowledge: introduces=[HI-LEX-C252-THG252-04]; assesses=[] -->
 
 **काँटा** — *kā̃ṭā* — "a thorn, a fork".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काँटा** (*kāṁṭā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṇṭaka*, "thorn" (CDIAL 2668).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

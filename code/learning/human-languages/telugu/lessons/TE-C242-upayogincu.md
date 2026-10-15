@@ -14,7 +14,8 @@ romanization: "upayōgiñcu"
 concept_tag: TE-VERB-UPAYOGINCU
 prerequisites: [TE-C241-vanti-cesuko, TE-C242-teccu]
 sounds: []
-roots: []
+roots: [sanskrit-upayoga]
+etymology_hook: "upayōgiñcu: Sanskrit upayōga 'use' + the Telugu verb ending -iñcu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C242-teccu]
 <!-- hl-knowledge: introduces=[TE-LEX-C242-KRIYA242-02]; assesses=[] -->
 
 **ఉపయోగించు** — *upayōgiñcu* — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉపయోగించు** (*upayōgiñcu*) is Sanskrit *upayōga*, "use, application", made into a verb with the Telugu ending *-iñcu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

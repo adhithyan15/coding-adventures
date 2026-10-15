@@ -14,7 +14,8 @@ romanization: "pakkā"
 concept_tag: UR-QUAL136-PAKKA
 prerequisites: [UR-C136-taza, UR-C136-kachcha]
 sounds: []
-roots: []
+roots: [sanskrit-pakva]
+etymology_hook: "pakkā ← Sanskrit pakva 'cooked, ripe'; CDIAL marks the Hindi form as taken from Punjabi (CDIAL 7621)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C136-kachcha]
 <!-- hl-knowledge: introduces=[UR-LEX-C136-QUAL136-04]; assesses=[] -->
 
 **پکا** — *pakkā* — "ripe, firm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پکا** (*pakkā*) goes back to Sanskrit *pakva*, "cooked, ripe" (CDIAL 7621). CDIAL marks the Hindi form as taken over from Punjabi; "firm, sure" grew out of "ripe, mature".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

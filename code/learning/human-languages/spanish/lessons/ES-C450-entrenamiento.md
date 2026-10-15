@@ -11,6 +11,7 @@ concept_tag: ES-GROUND-ENTRENAMIENTO
 prerequisites: [ES-C450-cesped, ES-C400-tren, ES-C36-correr]
 sounds: [diphthong-ie, nasal-n, stress-penultimate]
 roots: [train-french]
+etymology_hook: "entrenamiento — from entrenar, French entraîner 'to drag along' — kin to tren"
 duration:
   max_seconds: 280
 requires:
@@ -70,7 +71,7 @@ can rely on is the gender, and that is worth having.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C450-SUELO-05, ES-LEX-TREN] -->
 
-French **entraîner**, to drag along — and inside it the same *traîner* that
+Borrowed from French **entraîner**, to drag along — and inside it the same *traîner* that
 gave Spanish **el tren**.
 
 Hold the two together. A **tren** is the set of carriages *dragged* behind the

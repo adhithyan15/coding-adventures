@@ -50,7 +50,7 @@ Now check against **௧ ௨ ௩ ௪ ௫ ௬ ௭ ௮ ௯ ௰**.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-NUMBERS-1-5-FAMILY-01, TA-GRAMMAR-NUMBERS-6-10-03, TA-ETYMON-NUMBERS-6-10-FAMILY-01, TA-ETYMON-NUMBERS-6-10-FAMILY-02] -->
 
 - Which forms are inherited rather than borrowed? (**The Tamil number words.**)
-- Which word means one short of ten? (**ஒன்பது**, *onpatu*, nine.)
+- Which word is usually read as one short of ten? (**ஒன்பது**, *onpatu*, nine.)
 - Which Kannada shift links Tamil *pattu* to Kannada *hattu*? (***p* to *h*.**)
 
 ## Writing — independent dictation

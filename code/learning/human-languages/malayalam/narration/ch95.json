@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "Open, Closed, In, Out",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8bcce799dee96735",
+  "sourceHash": "fnv1a64:d25578694e8afed7",
   "lessons": [
     {
       "id": "ML-C95-thurakkuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:368f05e1b26d2e1f",
+      "sourceHash": "fnv1a64:b7130c9d4e12527d",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തുറക്കുക (tuṟakkuka) is native Dravidian, one word with Tamil tiṟa, Kannada teṟa and Telugu teṟa (DEDR 3259)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -92,7 +103,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63046938a171620f",
+      "sourceHash": "fnv1a64:e18dea97a95a7179",
       "notice": null,
       "blocks": [
         {
@@ -231,6 +242,10 @@
             {
               "kind": "speech",
               "text": "This is the form that goes on a sign, and it is the form you say at a door with your hands full."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the word comes from. It is native Dravidian, one word with Tamil aṭai, \"to shut\", and Kannada aḍe (DEDR 83)."
             }
           ]
         },
@@ -315,7 +330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de30fff3ca419cef",
+      "sourceHash": "fnv1a64:52649b0335b1b443",
       "notice": null,
       "blocks": [
         {
@@ -375,6 +390,10 @@
             {
               "kind": "speech",
               "text": "The chapter before this had a pair the other way round: ഇന്ന് and ഇന്നലെ shared their opening and parted at the tail. Here the tail matches and the fronts part. Both pairs are easy for the same reason — one end holds still while you listen to the other."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the words come from. Both are native Dravidian: akam, \"inside, home\" (DEDR 7, with Tamil akam), and puṟam, \"the outside\" (DEDR 4333, with Tamil puṟam), each with the place ending."
             }
           ]
         },

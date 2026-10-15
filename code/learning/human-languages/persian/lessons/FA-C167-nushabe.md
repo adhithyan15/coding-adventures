@@ -14,7 +14,8 @@ romanization: "nushâbe"
 concept_tag: FA-CHIZ167-NUSHABE
 prerequisites: [FA-C167-shokolat, FA-C167-biskuit]
 sounds: []
-roots: []
+roots: [persian-ab, persian-nosh]
+etymology_hook: "nushâbe: modern Persian coinage from nush 'drink' + âb 'water'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C167-biskuit]
 <!-- hl-knowledge: introduces=[FA-LEX-C167-CHIZ167-04]; assesses=[] -->
 
 **نوشابه** — *nushâbe* — "a soft drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nushâbe* is *nush*, "sweet drink", with *âbe*, from *âb*, "water": a modern Persian coinage. *âb* is inherited (Middle Persian *āb*, EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "póvar"
 concept_tag: RU-THINGS107-COOK
 prerequisites: [RU-C107-pepper, RU-C107-nurse]
 sounds: []
-roots: []
+roots: [slavic-variti]
+etymology_hook: "повар is по- + вар, from варить 'to boil': the one who boils the food"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C107-nurse]
 <!-- hl-knowledge: introduces=[RU-LEX-C107-THINGS107-05]; assesses=[] -->
 
 **повар** (*póvar*) — "a cook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**повар** is *по-* with *вар*, from *варить*, "to boil, to cook": the one who cooks.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

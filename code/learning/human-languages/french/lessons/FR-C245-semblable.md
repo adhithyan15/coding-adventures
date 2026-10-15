@@ -46,7 +46,7 @@ reviews_of: [FR-C244-rugueux-rugueuse]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**semblable** — *sembler* with *-able*: seeming alike.
+**semblable** — *sembler* with *-able*: seeming alike. *Sembler* ← Late Latin *similāre*, from *similis*, "like" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

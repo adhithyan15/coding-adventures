@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 161,
-  "sourceHash": "fnv1a64:80f4d54ce93a2dad",
+  "sourceHash": "fnv1a64:5fc98beed860a1a7",
   "lessonIds": [
     "LA-C161-nihil",
     "LA-C161-nemo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch161.txt",
   "json": "latin/narration/ch161.json",
-  "textHash": "fnv1a64:38933231445da1c7",
-  "jsonHash": "fnv1a64:58f3d79d0a00817a",
+  "textHash": "fnv1a64:4553f50314a7c5a3",
+  "jsonHash": "fnv1a64:4c500e94ea7b0bad",
   "findings": []
 }

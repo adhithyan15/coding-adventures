@@ -11,6 +11,7 @@ concept_tag: ES-VERB-DOLER
 prerequisites: [ES-C442-sintesis-gestion, ES-C286-dolor, ES-C24-cabeza, ES-C35-gustar, ES-C36-dormir]
 sounds: [diphthong-ue, stress-final]
 roots: [dolere-latin]
+etymology_hook: "doler ← Latin dolere 'to hurt' — kin to dolor; English condolence, doleful"
 duration:
   max_seconds: 280
 requires:

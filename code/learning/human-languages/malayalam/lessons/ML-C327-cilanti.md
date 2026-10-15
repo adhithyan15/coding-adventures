@@ -14,7 +14,8 @@ romanization: "cilanti"
 concept_tag: ML-VASTU327-CILANTI
 prerequisites: [ML-C327-palli, ML-C327-tenicca]
 sounds: []
-roots: []
+roots: [dravidian-cilanti-spider]
+etymology_hook: "cilanti: native Dravidian; DEDR 2562 lists Tamil cilanti 'spider' and Malayalam cilanni"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C327-tenicca]
 <!-- hl-knowledge: introduces=[ML-LEX-C327-VASTU327-05]; assesses=[] -->
 
 **ചിലന്തി** — *cilanti* — "a spider".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചിലന്തി** (*cilanti*) is native Dravidian: DEDR 2562 lists Malayalam *cilanni* with Tamil *cilanti*, "spider". DEDR 2562 compares Sanskrit *śalaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

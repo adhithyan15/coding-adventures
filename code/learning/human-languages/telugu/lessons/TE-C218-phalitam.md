@@ -14,7 +14,8 @@ romanization: "phalitaṁ"
 concept_tag: TE-KARANAM218-PHALITAM
 prerequisites: [TE-C217-acaram, TE-C217-alavatu]
 sounds: []
-roots: []
+roots: [sanskrit-phalita]
+etymology_hook: "phalitaṁ ← Sanskrit phalita 'bearing fruit', a tatsama (CDIAL 9060a)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C217-alavatu]
 <!-- hl-knowledge: introduces=[TE-LEX-C218-KARANAM218-01]; assesses=[] -->
 
 **ఫలితం** — *phalitaṁ* — "a result".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఫలితం** (*phalitaṁ*) is Sanskrit *phalita*, "bearing fruit", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 9060a). The sense "result" is the one Telugu gives it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

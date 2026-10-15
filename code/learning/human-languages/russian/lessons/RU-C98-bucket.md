@@ -14,7 +14,8 @@ romanization: "vedró"
 concept_tag: RU-THINGS98-BUCKET
 prerequisites: [RU-C97-saucepan, RU-C98-frying-pan]
 sounds: []
-roots: []
+roots: [pie-wodr]
+etymology_hook: "ведро ← Proto-Slavic *vědro; Vasmer relates it to вода 'water' and Greek hydria 'water jar'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C98-frying-pan]
 <!-- hl-knowledge: introduces=[RU-LEX-C98-THINGS98-02]; assesses=[] -->
 
 **ведро** (*vedró*) — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ведро** ← Proto-Slavic *\*vědro* — inherited. Vasmer relates it to *вода*, "water", German *Wasser* and Greek *hydría*, "a water jar": the bucket as the water vessel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

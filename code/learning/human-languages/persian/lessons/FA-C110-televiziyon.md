@@ -14,7 +14,8 @@ romanization: "televiziyon"
 concept_tag: FA-THINGS110-TELEVIZIYON
 prerequisites: [FA-C110-telefon, FA-C110-kampyuter]
 sounds: []
-roots: []
+roots: [french-television]
+etymology_hook: "televiziyon ← French télévision 'television'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C110-kampyuter]
 <!-- hl-knowledge: introduces=[FA-LEX-C110-THINGS110-04]; assesses=[] -->
 
 **تلویزیون** — *televiziyon* — "a television".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*televiziyon* is borrowed from French *télévision*, "television" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

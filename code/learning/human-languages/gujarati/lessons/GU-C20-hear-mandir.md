@@ -11,8 +11,8 @@ gloss: temple, heard before reading
 concept_tag: GU-PLACE-TEMPLE-HEARD
 prerequisites: [GU-C20-ghar]
 sounds: [short-a, nasal-consonant, short-i]
-roots: []
-etymology_hook: A third place joins the listening map without a new printed burden.
+roots: [sanskrit-mandira]
+etymology_hook: "mandir ← Sanskrit mandira 'dwelling, camp, town, temple', a tatsama (CDIAL 9852)"
 duration:
   max_seconds: 120
 requires:
@@ -38,6 +38,11 @@ reviews_of: [GU-C20-hear-bajar, GU-C20-hear-ghar]
 <!-- hl-knowledge: introduces=[GU-LEX-MANDIR-01]; assesses=[GU-LEX-BAJAR-01, GU-LEX-GHAR-01] -->
 
 Recall market and home. Now listen twice: **mandir** means **temple**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મંદિર** (*mandir*) is Sanskrit *mandira*, "dwelling, camp, town, temple", taken over whole as a learned loan, a tatsama (CDIAL 9852).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-MANDIR-01, GU-LEX-BAJAR-01, GU-LEX-GHAR-01] -->

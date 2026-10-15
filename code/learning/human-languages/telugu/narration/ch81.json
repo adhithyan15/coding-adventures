@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Counting in Order",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bf21901be859a69b",
+  "sourceHash": "fnv1a64:00e8cc08eb822124",
   "lessons": [
     {
       "id": "TE-C81-first",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bded1786942f5bb0",
+      "sourceHash": "fnv1a64:b0c3b4acebcccaf5",
       "notice": null,
       "blocks": [
         {
@@ -123,7 +123,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is worth noticing because ఒకటి was already the maverick of the cardinals: Tamil says oṉṟu, Kannada ondu, Malayalam onnu, and Telugu alone says okaṭi. Now the number one turns out to be doubly on its own — the sisters do not share its cardinal, and Telugu does not build its ordinal on it either."
+              "text": "That is worth noticing because ఒకటి already looked least like its cousins: Tamil says oṉṟu, Kannada ondu, Malayalam onnu, and Telugu okaṭi, though DEDR 990 files all four in one entry. Now the number one turns out to be odd in a second way: Telugu does not build its ordinal on it."
             },
             {
               "kind": "speech",
@@ -203,7 +203,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfa93ebfc62c0bdf",
+      "sourceHash": "fnv1a64:d1da61aafd2521d5",
       "notice": null,
       "blocks": [
         {
@@ -294,6 +294,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రెండవ (reṇḍava) is native Dravidian (DEDR 474), from reṇḍu, \"two\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: cardinal, minus its last vowel, plus -వ",
           "segments": [
@@ -316,7 +327,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -356,7 +367,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -387,7 +398,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bcc0883c62b45ff5",
+      "sourceHash": "fnv1a64:6d0febcad5092a7d",
       "notice": null,
       "blocks": [
         {
@@ -486,6 +497,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మూడవ (mūḍava) is native Dravidian: mūḍu, \"three\", one word with Tamil mūṉṟu (DEDR 5052), with the ordinal ending -va."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -525,7 +547,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -556,7 +578,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa95fcfb32499607",
+      "sourceHash": "fnv1a64:a526f8f951ca3dda",
       "notice": null,
       "blocks": [
         {
@@ -655,6 +677,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నాలుగవ (nālugava) is native Dravidian: nālugu, \"four\", one word with Tamil nālku (DEDR 3655), with the ordinal ending -va."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -694,7 +727,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -725,7 +758,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43b4483c286f0e5e",
+      "sourceHash": "fnv1a64:ca0e6dd1a31863b2",
       "notice": null,
       "blocks": [
         {
@@ -824,6 +857,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఐదవ (aidava) is native Dravidian: aidu, \"five\", one word with Tamil aintu (DEDR 2826), with the ordinal ending -va."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -863,7 +907,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

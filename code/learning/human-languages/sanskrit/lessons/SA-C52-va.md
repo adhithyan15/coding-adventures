@@ -14,7 +14,8 @@ romanization: "vā"
 concept_tag: SA-JOIN-VA
 prerequisites: [SA-C52-ca, SA-C10-kshiram, SA-C51-uncle]
 sounds: []
-roots: []
+roots: [sanskrit-va-or]
+etymology_hook: "vā 'or' is inherited: MW compares Latin -ve 'or', also an enclitic that cannot open a sentence (CDIAL 11466)"
 duration:
   max_seconds: 240
 requires:
@@ -59,6 +60,12 @@ whole phrase without moving anything else:
 That is worth pausing on. In English *and* and *or* are two different words in
 the same middle position. In Sanskrit they are two different words in the same
 **final** position, and the sentence around them does not shift at all.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vā* is inherited too: MW compares Latin *-ve*, "or", which is also an enclitic
+and never opens a sentence (CDIAL 11466).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

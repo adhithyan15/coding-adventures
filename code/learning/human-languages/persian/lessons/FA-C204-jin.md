@@ -14,7 +14,8 @@ romanization: "jin"
 concept_tag: FA-CHIZ204-JIN
 prerequisites: [FA-C204-manto, FA-C204-rusari]
 sounds: []
-roots: []
+roots: [english-jeans]
+etymology_hook: "jin: a loan, usually traced to English jeans 'jeans'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C204-rusari]
 <!-- hl-knowledge: introduces=[FA-LEX-C204-CHIZ204-04]; assesses=[] -->
 
 **جین** — *jin* — "jeans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jin* is a loan, usually traced to English *jeans*, "jeans".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṣaḥn"
 concept_tag: AR-HOME71-SAHN
 prerequisites: [AR-C71-misbah, AR-C71-miftah]
 sounds: []
-roots: []
+roots: [ṣ-ḥ-n]
+etymology_hook: "ṣaḥn: built on the root ṣ-ḥ-n, 'a large bowl' (Lane); Lane gives a large bowl, and also the open court of a house"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C71-miftah]
 <!-- hl-knowledge: introduces=[AR-LEX-C71-HOME71-04]; assesses=[] -->
 
 **صحن** — *ṣaḥn* — "a plate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صحن** (*ṣaḥn*) is built on the native Arabic root *ṣ-ḥ-n*, "a large bowl; an open court" (Lane). Lane gives a large bowl, and also the open court of a house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

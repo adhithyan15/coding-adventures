@@ -14,7 +14,8 @@ romanization: "kīlaḥ"
 concept_tag: SA-THINGS100-KILAH
 prerequisites: [SA-C99-yavanika, SA-C99-talakam]
 sounds: []
-roots: []
+roots: [sanskrit-kila]
+etymology_hook: "kīla 'stake, peg' has no settled origin; CDIAL 3202 weighs IE and non-Aryan accounts; Hindi kīl 'nail'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C99-talakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C100-THINGS100-01]; assesses=[] -->
 
 **कीलः** — *kīlaḥ* — "a nail (to hammer)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kīla* "a stake, a peg, a pin" has no settled origin: CDIAL 3202 notes an Indo-European account (EWA) but also a proposal of non-Aryan origin, since forms with *kh-* stand beside it. It lives on as Hindi *kīl* "nail" (CDIAL 3202).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a bedroom"
 concept_tag: LA-DOMUS1-CUBICULUM
 prerequisites: [LA-C82-lectus, LA-C82-fenestra]
 sounds: []
-roots: []
+roots: [cubiculum-latin, cubare-latin]
+etymology_hook: "cubiculum 'bedroom' — built on cubō 'to lie down': a room to lie in; English cubicle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C82-fenestra]
 <!-- hl-knowledge: introduces=[LA-LEX-C82-DOMUS1-05]; assesses=[] -->
 
 **cubiculum, cubiculī** — "a bedroom". English *cubicle*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cubiculum** is built on *cubō*, "to lie down" (Lewis & Short), with *-culum*, an ending for a place or tool: a room to lie down in.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

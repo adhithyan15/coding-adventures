@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Undicesimo, Prima e Dopo",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d58eb46beaa05f4b",
+  "sourceHash": "fnv1a64:9840ecda45f8518d",
   "lessons": [
     {
       "id": "IT-C28-undicesimo",
@@ -225,7 +225,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55f7691f0d5ff8ba",
+      "sourceHash": "fnv1a64:8022d085c196118e",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
             },
             {
               "kind": "speech",
-              "text": "Latin froze it in an old case form — prīmā, \"at the first\", where \"the first time\" was understood and never said — and the frozen phrase became a plain word meaning \"before\". So Italian's ordinary word for before is, underneath, the ordinal for first."
+              "text": "It comes from Latin, which froze it in an old case form — prīmā, \"at the first\", where \"the first time\" was understood and never said — and the frozen phrase became a plain word meaning \"before\". So Italian's ordinary word for before is, underneath, the ordinal for first."
             },
             {
               "kind": "speech",

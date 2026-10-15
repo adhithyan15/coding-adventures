@@ -14,7 +14,8 @@ romanization: "serdítsya"
 concept_tag: RU-VERB-SERDITSYA
 prerequisites: [RU-C235-molchat, RU-C235-ulybatsya]
 sounds: []
-roots: []
+roots: [pie-kerd]
+etymology_hook: "сердиться is from сердце 'heart': the heart as the seat of anger"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C235-ulybatsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C235-ACT235-05]; assesses=[] -->
 
 **сердиться** (*serdítsya*) — "to be angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сердиться** goes with *сердце*, "heart", the seat of anger (Vasmer); Lithuanian *širdaĩ*, "a quarrel", is built on *širdìs*, "heart", in the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

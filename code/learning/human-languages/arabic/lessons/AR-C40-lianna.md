@@ -11,8 +11,8 @@ gloss: because — the answer to the question the lesson before taught, and the 
 concept_tag: CONNECTIVE-BECAUSE
 prerequisites: [AR-C40-limadha, AR-C37-la-afham, AR-C31-kataba]
 sounds: [alif-hamza]
-roots: []
-etymology_hook: "لأن is لـ ('for') plus أنّ ('that') — the same preposition that opens لماذا, with a complementiser instead of a question word behind it, so 'why' and 'because' in Arabic are one particle apart and both are visibly built rather than borrowed"
+roots: [li-anna]
+etymology_hook: "li-anna: built from li- 'for' + anna 'that': 'for that', both inherited particles"
 duration:
   max_seconds: 245
 requires:
@@ -67,6 +67,11 @@ of you.
 Both stand at the head of the clause they govern, and both come **after** the
 claim they attach to. Put them in one sentence and you have the shape of an
 argument.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لأن** (*li-anna*) is built from *li-*, "for", and *anna*, "that": "for that", hence "because". Both are inherited particles, not built on three-letter roots.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C40-LIANNA-01, AR-LEX-C40-LIMADHA-01, AR-LEX-C38-LAKIN-01, AR-CONCEPT-C33-SHAY-01] -->

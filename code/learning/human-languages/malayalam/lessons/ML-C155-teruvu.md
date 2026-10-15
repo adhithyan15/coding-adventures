@@ -14,7 +14,8 @@ romanization: "teruvŭ"
 concept_tag: ML-THINGS155-TERUVU
 prerequisites: [ML-C155-kavil, ML-C155-tati]
 sounds: []
-roots: []
+roots: [dravidian-teru-street]
+etymology_hook: "teruvŭ: native Dravidian, one word with Tamil teru and Telugu teruvu (DEDR 3422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C155-tati]
 <!-- hl-knowledge: introduces=[ML-LEX-C155-THINGS155-03]; assesses=[] -->
 
 **തെരുവ്** — *teruvŭ* — "a street".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തെരുവ്** (*teruvŭ*) is native Dravidian, one word with Tamil *teru* and Telugu *teruvu* (DEDR 3422).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

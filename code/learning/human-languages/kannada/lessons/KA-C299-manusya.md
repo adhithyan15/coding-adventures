@@ -14,7 +14,8 @@ romanization: "manuṣya"
 concept_tag: KA-VASTU299-MANUSYA
 prerequisites: [KA-C299-muduki, KA-C299-jana]
 sounds: []
-roots: []
+roots: [sanskrit-manushya]
+etymology_hook: "manuṣya ← Sanskrit manuṣya 'human being', a tatsama (CDIAL 9828)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C299-jana]
 <!-- hl-knowledge: introduces=[KA-LEX-C299-VASTU299-03]; assesses=[] -->
 
 **ಮನುಷ್ಯ** — *manuṣya* — "a human being".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮನುಷ್ಯ** (*manuṣya*) is Sanskrit *manuṣya*, "human being", taken over whole as a learned loan, a tatsama (CDIAL 9828).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

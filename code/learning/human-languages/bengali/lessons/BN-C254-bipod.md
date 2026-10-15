@@ -14,7 +14,8 @@ romanization: "bipôd"
 concept_tag: BN-JINIS254-BIPOD
 prerequisites: [BN-C254-nirbachon, BN-C254-subidha]
 sounds: []
-roots: []
+roots: [sanskrit-vipad]
+etymology_hook: "bipôd ← Sanskrit vipad 'calamity', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C254-subidha]
 <!-- hl-knowledge: introduces=[BN-LEX-C254-JINIS254-03]; assesses=[] -->
 
 **বিপদ** — *bipôd* — "danger, trouble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিপদ** (*bipôd*) is Sanskrit *vipad*, "calamity", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

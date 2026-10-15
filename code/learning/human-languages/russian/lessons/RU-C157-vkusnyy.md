@@ -14,7 +14,8 @@ romanization: "vkúsnyy"
 concept_tag: RU-KACH157-VKUSNYY
 prerequisites: [RU-C157-sladkiy, RU-C157-kislyy]
 sounds: []
-roots: []
+roots: [slavic-kusiti]
+etymology_hook: "вкусный is вкус 'taste' + -ный; вкус goes with кусить 'to bite' and Gothic kausjan 'to taste'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C157-kislyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C157-KACH157-04]; assesses=[] -->
 
 **вкусный** (*vkúsnyy*) — "tasty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вкусный** is *вкус*, "taste", with *-ный*. *вкус* comes from *кусить*, "to bite, to try", which Vasmer relates to Gothic *kausjan*, "to taste"; its sense "taste in art" copies French *goût*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

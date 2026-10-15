@@ -14,7 +14,8 @@ romanization: "saṛak"
 concept_tag: MW-PLACE82-SARAK
 prerequisites: [MW-C82-athai, MW-C82-bathai]
 sounds: []
-roots: []
+roots: [sanskrit-srti]
+etymology_hook: "saṛak: CDIAL first gives Sanskrit sṛti 'road, path' (13577), then in its addenda śaṭati 'goes' (12269)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C82-bathai]
 <!-- hl-knowledge: introduces=[MW-LEX-C82-PLACE82-03]; assesses=[] -->
 
 **सड़क** — *saṛak* — "a road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL gives two accounts of **सड़क** (*saṛak*). It first lists the Hindi word under Sanskrit *sṛti*, "road, path" (CDIAL 13577), then in its addenda under *śaṭati*, "goes" (CDIAL 12269), so the source is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

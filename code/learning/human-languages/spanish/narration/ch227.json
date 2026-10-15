@@ -4,7 +4,7 @@
   "chapter": 227,
   "title": "Bastante --- An Ending You Can Already Read",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ccbeb2ce79e676e2",
+  "sourceHash": "fnv1a64:f3d003eb6db1353a",
   "lessons": [
     {
       "id": "ES-C60-bastante",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b097097667c06bc",
+      "sourceHash": "fnv1a64:598622296ecc9d60",
       "notice": null,
       "blocks": [
         {
@@ -70,7 +70,7 @@
             },
             {
               "kind": "speech",
-              "text": "So bastante does not mean a lot. It means enough — and from there, quite, fairly. It is the amount that suffices, not the amount that impresses."
+              "text": "So bastante does not mean a lot. It means enough — and from there, quite, fairly. It is the amount that suffices, not the amount that impresses. Bastar itself is of uncertain origin; EtymDB 2.1 records none."
             },
             {
               "kind": "speech",

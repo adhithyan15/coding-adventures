@@ -14,7 +14,8 @@ romanization: "khissũ"
 concept_tag: GU-THINGS113-KHISSU
 prerequisites: [GU-C112-svetar, GU-C112-kot]
 sounds: []
-roots: []
+roots: [persian-kisa]
+etymology_hook: "khissũ: usually traced to Persian kīsa 'purse, pouch'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C112-kot]
 <!-- hl-knowledge: introduces=[GU-LEX-C113-THINGS113-01]; assesses=[] -->
 
 **ખિસ્સું** (*khissũ*) — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ખિસ્સું** (*khissũ*) is a loan, usually traced to Persian *kīsa*, "purse, pouch".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

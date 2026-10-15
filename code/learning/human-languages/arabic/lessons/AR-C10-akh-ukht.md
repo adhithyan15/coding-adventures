@@ -12,7 +12,7 @@ concept_tag: AR-FAMILY-SIBLINGS
 prerequisites: [AR-C10-ab-umm]
 sounds: [hamza-variants, feminine-ta-marbuta]
 roots: [semitic-akh]
-etymology_hook: "أخ akh 'brother' and أخت ukht 'sister' share one root, cousin of Hebrew ach/achot — sister is simply brother plus the feminine -t ending"
+etymology_hook: "akh, ukht: one old Semitic noun, cousin of Hebrew aḥ and aḥot; ukht adds the feminine -t"
 duration:
   max_seconds: 240
 requires:

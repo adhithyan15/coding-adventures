@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a potato, then the Hindi for an onion.
 You'll want to know: लहसुन.
 लहसुन — lahsun — "garlic".
 
+The word, taken apart.
+लहसुन (lahsun) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laśuna, "garlic" (CDIAL 10990).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for an onion, then the Hindi for garlic.
 
 You'll want to know: अदरक.
 अदरक — adrak — "ginger".
+
+The word, taken apart.
+अदरक (adrak) goes back to Sanskrit ārdraka, "fresh ginger" (CDIAL 1341). CDIAL lists the inherited Hindi form as ādā; adrak keeps more of the Sanskrit shape, so it was probably taken over later and lightly reshaped, a semi-tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for garlic, then the Hindi for ginger.
 You'll want to know: टमाटर.
 टमाटर — ṭamāṭar — "a tomato".
 
+The word, taken apart.
+टमाटर (ṭamāṭar) is a loan from English tomato.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for ginger, then the Hindi for a tomato.
 You'll want to know: गाजर.
 गाजर — gājar — "a carrot".
 
+The word, taken apart.
+गाजर (gājar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gārjara, "carrot" (CDIAL 4140). The Sanskrit word is known only from the old word-lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a tomato, then the Hindi for a carrot.
 
 You'll want to know: गोभी.
 गोभी — gobhī — "a cauliflower".
+
+The word, taken apart.
+गोभी (gobhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gojihvikā, "a kind of plant" (CDIAL 4270). The Sanskrit name means "cow's tongue"; CDIAL glosses the Hindi word "cabbage".
 
 What you've built.
 One more word for this chapter.

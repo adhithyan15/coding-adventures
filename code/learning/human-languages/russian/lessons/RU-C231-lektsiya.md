@@ -14,7 +14,8 @@ romanization: "léktsiya"
 concept_tag: RU-RABOTA231-LEKTSIYA
 prerequisites: [RU-C231-kopeyka, RU-C231-rubl]
 sounds: []
-roots: []
+roots: [lectio-latin]
+etymology_hook: "лекция came through Polish lekcja from Latin lectio 'a reading'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C231-rubl]
 <!-- hl-knowledge: introduces=[RU-LEX-C231-RABOTA231-03]; assesses=[] -->
 
 **лекция** (*léktsiya*) — "a lecture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лекция** — from Peter the Great's time; it came through Polish *lekcja* from Latin *lēctiō*, "a reading", from *legō*, "I read" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

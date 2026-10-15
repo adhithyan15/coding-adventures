@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 224,
-  "sourceHash": "fnv1a64:f1249eaf657eb646",
+  "sourceHash": "fnv1a64:a18532b368713ea5",
   "lessonIds": [
     "TA-C224-minavar",
     "TA-C224-kuyavar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch224.txt",
   "json": "tamil/narration/ch224.json",
-  "textHash": "fnv1a64:9ec6a542cb832dd6",
-  "jsonHash": "fnv1a64:eb2116420800eff1",
+  "textHash": "fnv1a64:b642fefbb0e0d3b7",
+  "jsonHash": "fnv1a64:e1f65832d9400b41",
   "findings": []
 }

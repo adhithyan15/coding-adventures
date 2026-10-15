@@ -14,7 +14,8 @@ romanization: "tarabēti"
 concept_tag: KA-KELASA304-TARABETI
 prerequisites: [KA-C304-patha, KA-C304-parikse]
 sounds: []
-roots: []
+roots: [arabic-tarbiya]
+etymology_hook: "tarabēti ← Hindustani tarbiyat 'training', from Arabic tarbiya"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C304-parikse]
 <!-- hl-knowledge: introduces=[KA-LEX-C304-KELASA304-03]; assesses=[] -->
 
 **ತರಬೇತಿ** — *tarabēti* — "training".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತರಬೇತಿ** (*tarabēti*) is Hindustani *tarbiyat*, "training, upbringing", from Arabic *tarbiya*, through Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

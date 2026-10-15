@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 202,
-  "sourceHash": "fnv1a64:7913ae1b64ca8269",
+  "sourceHash": "fnv1a64:05d0457476571940",
   "lessonIds": [
     "RU-C202-elektrik",
     "RU-C202-santekhnik",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch202.txt",
   "json": "russian/narration/ch202.json",
-  "textHash": "fnv1a64:e5beabe1c0fc47cd",
-  "jsonHash": "fnv1a64:00fc4503eb48df4d",
+  "textHash": "fnv1a64:689ab32663d899ab",
+  "jsonHash": "fnv1a64:54bfea3fa7a5af11",
   "findings": []
 }

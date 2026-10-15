@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 197,
-  "sourceHash": "fnv1a64:f1fefea6cf126be9",
+  "sourceHash": "fnv1a64:5f212504b49ecb55",
   "lessonIds": [
     "MR-C197-savay-hone",
     "MR-C197-ghai-karne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch197.txt",
   "json": "marathi/narration/ch197.json",
-  "textHash": "fnv1a64:3e18757201e707aa",
-  "jsonHash": "fnv1a64:95284afcaff7c231",
+  "textHash": "fnv1a64:ec370a151d3403fe",
+  "jsonHash": "fnv1a64:ea692242c33c7aba",
   "findings": []
 }

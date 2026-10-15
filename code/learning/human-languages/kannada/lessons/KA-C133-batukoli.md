@@ -14,7 +14,8 @@ romanization: "bātukōḷi"
 concept_tag: KA-THINGS133-BATUKOLI
 prerequisites: [KA-C132-jeda, KA-C133-kappe]
 sounds: []
-roots: []
+roots: [persian-bat, dravidian-kozhi-fowl]
+etymology_hook: "bātukōḷi: bātu 'duck' ← Hindustani baṭ + native kōḷi 'fowl' (DEDR 2248)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C133-kappe]
 <!-- hl-knowledge: introduces=[KA-LEX-C133-THINGS133-02]; assesses=[] -->
 
 **ಬಾತುಕೋಳಿ** — *bātukōḷi* — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾತುಕೋಳಿ** (*bātukōḷi*) is *bātu*, "duck", a loan through Hindustani *baṭ*, and *kōḷi*, "fowl", native Dravidian (DEDR 2248, with Tamil *kōḻi*). A duck is "a duck-fowl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

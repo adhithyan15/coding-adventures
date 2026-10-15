@@ -14,7 +14,8 @@ romanization: "rakṣaṇ karṇe"
 concept_tag: MR-VERB-RAKSAN-KARNE
 prerequisites: [MR-C194-carca-karne, MR-C194-manai-karne]
 sounds: []
-roots: []
+roots: [sanskrit-rakshana]
+etymology_hook: "rakṣaṇ: Sanskrit rakṣaṇa 'guarding', a tatsama; inherited Marathi rākhaṇ (CDIAL 10546)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C194-manai-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C194-ACT194-04]; assesses=[] -->
 
 **रक्षण करणे** — *rakṣaṇ karṇe* — "to protect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रक्षण** is Sanskrit *rakṣaṇa*, "guarding, tending", a tatsama; CDIAL lists the inherited Marathi form as *rākhaṇ*, "preserving" (CDIAL 10546). **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

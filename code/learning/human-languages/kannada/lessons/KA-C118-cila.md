@@ -14,7 +14,8 @@ romanization: "cīla"
 concept_tag: KA-THINGS118-CILA
 prerequisites: [KA-C118-kannadaka, KA-C118-gadiyara]
 sounds: []
-roots: []
+roots: [dravidian-ciila-bag]
+etymology_hook: "cīla: native Dravidian (DEDR 2632)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C118-gadiyara]
 <!-- hl-knowledge: introduces=[KA-LEX-C118-THINGS118-03]; assesses=[] -->
 
 **ಚೀಲ** — *cīla* — "a bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಚೀಲ** (*cīla*) is native Dravidian (DEDR 2632). DEDR lists Kannada *cīra*, *cīla*, *cīlu*, "bag, sack".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: me, to me — the "I" you already say, with the postposition of the last 
 concept_tag: PRONOUN-ME
 prerequisites: [PA-W09-aara]
 sounds: [dulavan-ai, bindi-nasal]
-roots: [ma-first-person, sanskrit-lagna-nu]
-etymology_hook: ਮੈਨੂੰ is ਮੈਂ, "I", carrying ਨੂੰ, the postposition that marks the person an action is directed at; the two are written as one word because the pronoun changes shape before a postposition rather than standing beside it. The liking lesson used the finished form to say what pleases a speaker; this session takes it apart, which is why the phrase could be used long before the pieces could be named.
+roots: [ma-first-person]
+etymology_hook: "maiṁ ← base ma- (CDIAL 9691) + nūṁ, whose origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 280
 requires:
@@ -68,6 +68,8 @@ time this book says something happens **to** someone.
 
 On the page it needs two marks not yet traced — one below a letter, one above.
 Both are taught in this chapter.
+
+*Maiṁ* goes back to the Sanskrit first-person base *ma-* (CDIAL 9691). Where *nūṁ* comes from is not settled: CDIAL has no entry for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-MAINU, PA-LEX-MAIN-03, PA-LEX-PASAND] -->

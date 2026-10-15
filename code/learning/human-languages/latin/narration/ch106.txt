@@ -12,6 +12,9 @@ Before the new one: say the Latin for much, then the Latin for too little.
 You'll want to know: trīgintā.
 trīgintā — "thirty".
 
+The word, taken apart.
+trīgintā is inherited, usually traced to Proto-Indo-European trid-komt, "three tens" (EtymDB 2.1); Greek triakonta, "thirty", is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for too little, then the Latin for thirty.
 
 You'll want to know: quadrāgintā.
 quadrāgintā — "forty".
+
+The word, taken apart.
+quadrāgintā is inherited, usually traced to Proto-Indo-European kwetwr-dkomt, "four tens" (EtymDB 2.1); its first part is the word behind quattuor, "four" (Lewis & Short).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for thirty, then the Latin for forty.
 You'll want to know: quīnquāgintā.
 quīnquāgintā — "fifty".
 
+The word, taken apart.
+quīnquāgintā is inherited, usually traced to Proto-Indo-European penkwe-dkomt, "five tens" (EtymDB 2.1), built on the word behind quīnque, "five".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for forty, then the Latin for fifty.
 You'll want to know: centum.
 centum — "a hundred". English century and cent.
 
+The word, taken apart.
+centum is inherited, usually traced to Proto-Indo-European kmtom, "hundred" (EtymDB 2.1); Greek hekaton, "hundred", and English hundred are cousins (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for fifty, then the Latin for a hundred.
 
 You'll want to know: mīlle.
 mīlle — "a thousand". English mile: a thousand paces.
+
+The word, taken apart.
+mīlle is probably inherited, from a Proto-Indo-European sm-gheslo-, "one thousand" (EtymDB 2.1), whose first part meant "one".
 
 What you've built.
 One more word for this chapter.

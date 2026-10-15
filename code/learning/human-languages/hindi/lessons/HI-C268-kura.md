@@ -14,7 +14,8 @@ romanization: "kūṛā"
 concept_tag: HI-THG268-KURA
 prerequisites: [HI-C267-nali, HI-C267-tanki]
 sounds: []
-roots: []
+roots: [sanskrit-kuta]
+etymology_hook: "kūṛā ← Sanskrit kūṭa 'heap, multitude', a tadbhava (CDIAL 3392)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C267-tanki]
 <!-- hl-knowledge: introduces=[HI-LEX-C268-THG268-01]; assesses=[] -->
 
 **कूड़ा** — *kūṛā* — "rubbish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कूड़ा** (*kūṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kūṭa*, "heap, multitude" (CDIAL 3392). CDIAL takes the Sanskrit word, probably, from Dravidian; it glosses the Hindi "dustheap".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

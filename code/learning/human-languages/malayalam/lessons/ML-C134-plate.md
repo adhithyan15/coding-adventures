@@ -11,7 +11,8 @@ romanization: "plēṟṟŭ"
 concept_tag: ML-TABLE-PLATE
 prerequisites: [ML-C134-cup, ML-C134-spoon]
 sounds: []
-roots: []
+roots: [english-plate]
+etymology_hook: "plēṟṟŭ ← English plate"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C134-spoon]
 <!-- hl-knowledge: introduces=[ML-LEX-C134-TABLE-05]; assesses=[] -->
 
 **പ്ലേറ്റ്** (*plēṟṟŭ*) — "a plate", from English.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്ലേറ്റ്** (*plēṟṟŭ*) ← English *plate*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

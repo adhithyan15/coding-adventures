@@ -13,7 +13,8 @@ gloss: "pleasant"
 concept_tag: LA-QUAL145-IUCUNDUS
 prerequisites: [LA-C145-mitis, LA-C145-ferox]
 sounds: []
-roots: []
+roots: [iucundus-latin, iuvare-latin]
+etymology_hook: "iūcundus 'pleasant' — usually derived from iuvō 'to delight'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C145-ferox]
 <!-- hl-knowledge: introduces=[LA-LEX-C145-QUAL145-05]; assesses=[] -->
 
 **iūcundus, iūcunda, iūcundum** — "pleasant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iūcundus** is usually derived from *iuvō*, "to help, to delight"; the link with *iocus*, "a joke", that Lewis & Short give is a later popular one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

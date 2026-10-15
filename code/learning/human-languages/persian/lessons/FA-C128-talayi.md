@@ -14,7 +14,8 @@ romanization: "talâyi"
 concept_tag: FA-QUAL128-TALAYI
 prerequisites: [FA-C127-banafsh, FA-C127-khakestari]
 sounds: []
-roots: []
+roots: [arabic-tila]
+etymology_hook: "talâyi: talâ ← Arabic ṭilāʾ 'coating, gilding' (root ṭ-l-y, Lane) + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C127-khakestari]
 <!-- hl-knowledge: introduces=[FA-LEX-C128-QUAL128-01]; assesses=[] -->
 
 **طلایی** — *talâyi* — "golden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*talâyi* is *talâ*, "gold", with the colour ending *-i*. *talâ* is borrowed from Arabic *ṭilāʾ*, "coating, gilding" (root *ṭ-l-y*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

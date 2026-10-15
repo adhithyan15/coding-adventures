@@ -14,7 +14,8 @@ romanization: "jiguru"
 concept_tag: TE-VASTUVU231-JIGURU
 prerequisites: [TE-C231-patakaru, TE-C231-niccena]
 sounds: []
-roots: []
+roots: [dravidian-jigatu-sticky]
+etymology_hook: "jiguru: native Dravidian; DEDR 2488 lists jiguru 'gum' with Kannada jigi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C231-niccena]
 <!-- hl-knowledge: introduces=[TE-LEX-C231-VASTUVU231-04]; assesses=[] -->
 
 **జిగురు** — *jiguru* — "glue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జిగురు** (*jiguru*) is native Dravidian. DEDR 2488 lists *jiguru*, "gum, birdlime", with Kannada *jigi*, "gum, stickiness". DEDR compares Sanskrit *cikka*, "bird-lime" (CDIAL 4780), which CDIAL reports as taken from Dravidian, or else from Munda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

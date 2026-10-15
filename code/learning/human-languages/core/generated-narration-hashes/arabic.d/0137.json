@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 137,
-  "sourceHash": "fnv1a64:d9d21a0e6ed9e3b8",
+  "sourceHash": "fnv1a64:6c68b6e6dca87386",
   "lessonIds": [
     "AR-C137-ankabut",
     "AR-C137-dik",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch137.txt",
   "json": "arabic/narration/ch137.json",
-  "textHash": "fnv1a64:5e78aeeb5d02872f",
-  "jsonHash": "fnv1a64:807596d3750810a5",
+  "textHash": "fnv1a64:b682c8262eda94d8",
+  "jsonHash": "fnv1a64:74746db86cd4edcd",
   "findings": []
 }

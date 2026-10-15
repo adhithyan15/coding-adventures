@@ -14,7 +14,8 @@ romanization: "paṭakāru"
 concept_tag: TE-VASTUVU231-PATAKARU
 prerequisites: [TE-C230-natudu, TE-C231-phyanu]
 sounds: []
-roots: []
+roots: [dravidian-patakaru-tongs]
+etymology_hook: "paṭakāru: Dravidian; DEDR 3864 lists paṭakāru 'tongs' with Kannada paṭakāru"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C231-phyanu]
 <!-- hl-knowledge: introduces=[TE-LEX-C231-VASTUVU231-02]; assesses=[] -->
 
 **పటకారు** — *paṭakāru* — "pliers, tongs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పటకారు** (*paṭakāru*) is listed in DEDR 3864, "pair of tongs, pincers", with Kannada *paṭakāru*, "tongs".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "muttaśśi"
 concept_tag: ML-NOUN-GRANDMOTHER
 prerequisites: [ML-C45-grandfather]
 sounds: []
-roots: []
+roots: [dravidian-mutu-old, dravidian-accan-father]
+etymology_hook: "muttaśśi: native mutt- 'old' (DEDR 4954) + acci 'mother', probably Prakrit ajja (DEDR 50, CDIAL 1347)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C45-grandfather]
 **മുത്തശ്ശി** (*muttaśśi*) — "grandmother".
 
 The same *mutta-* opens it, so half the word is already yours. The second half is not as transparent as the grandfather word's: *-aśśi* is an old term of address for an elder woman rather than the everyday *amma* you already know, and dictionaries stop short of a confident breakdown. Better to flag that than to pretend the two halves match.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുത്തശ്ശി** (*muttaśśi*) is "the old mother": the native word for "old" (DEDR 4954, with Tamil *mutu*) joined to *acci*, "mother", which DEDR 50 lists with Kannada *acci* but takes as probably Indo-Aryan, Prakrit *ajja*, Sanskrit *ārya*, "noble" (CDIAL 1347).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

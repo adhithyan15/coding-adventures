@@ -14,7 +14,8 @@ romanization: "abhiprāyaṁ"
 concept_tag: TE-PANI197-ABHIPRAYAM
 prerequisites: [TE-C197-samasya, TE-C197-pariskaram]
 sounds: []
-roots: []
+roots: [sanskrit-abhipraya]
+etymology_hook: "abhiprāyaṁ ← Sanskrit abhiprāya 'aim, opinion', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C197-pariskaram]
 <!-- hl-knowledge: introduces=[TE-LEX-C197-PANI197-05]; assesses=[] -->
 
 **అభిప్రాయం** — *abhiprāyaṁ* — "an opinion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అభిప్రాయం** (*abhiprāyaṁ*) is Sanskrit *abhiprāya*, "aim, intention, opinion", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

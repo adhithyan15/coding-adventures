@@ -14,7 +14,8 @@ romanization: "rūpāḷo"
 concept_tag: MW-QUAL144-RUPALO
 prerequisites: [MW-C143-tikho, MW-C144-sundar]
 sounds: []
-roots: []
+roots: [sanskrit-rupa]
+etymology_hook: "rūpāḷo: rūp 'beauty' + -āḷo, on Sanskrit rūpa 'form, beauty' (CDIAL 10803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C144-sundar]
 <!-- hl-knowledge: introduces=[MW-LEX-C144-QUAL144-02]; assesses=[] -->
 
 **रूपाळो** — *rūpāḷo* — "good-looking".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रूपाळो** (*rūpāḷo*) is built with the suffix *-āḷo* on *rūp*, "beauty", from Sanskrit *rūpa*, "form, beauty". CDIAL lists Hindi *rūṛā*, "beautiful", under it (CDIAL 10803) but not **रूपाळो** (*rūpāḷo*) itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

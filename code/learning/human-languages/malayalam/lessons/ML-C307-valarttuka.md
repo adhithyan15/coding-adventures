@@ -14,7 +14,8 @@ romanization: "vaḷarttuka"
 concept_tag: ML-VERB-VALARTTUKA
 prerequisites: [ML-C306-marrivaykkuka, ML-C306-tonnuka]
 sounds: []
-roots: []
+roots: [dravidian-valar-grow]
+etymology_hook: "vaḷarttuka: native Dravidian, 'make grow', the causative of vaḷaruka (DEDR 5304)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C306-tonnuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C307-KRIYA307-01]; assesses=[] -->
 
 **വളർത്തുക** — *vaḷarttuka* — "to raise, to rear (children, pets)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വളർത്തുക** (*vaḷarttuka*) is native Dravidian, the causative of the verb "to grow": "make grow"; DEDR 5304 lists the root with Tamil *vaḷ* and Kannada *baḷe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

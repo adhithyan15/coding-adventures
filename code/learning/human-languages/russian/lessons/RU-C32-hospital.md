@@ -14,7 +14,8 @@ romanization: "bolnítsa"
 concept_tag: RU-HEALTH1-HOSPITAL
 prerequisites: [RU-C32-medicine, RU-C32-doctor]
 sounds: []
-roots: []
+roots: [slavic-boli]
+etymology_hook: "больница is больной 'sick' + -ница, a suffix for places, on the root of боль 'pain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C32-doctor]
 <!-- hl-knowledge: introduces=[RU-LEX-C32-HEALTH1-05]; assesses=[] -->
 
 **больница** (*bolnítsa*) — "a hospital". Built on **боль** as well.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**больница** is *больной*, "sick; a patient", with *-ница*, a suffix that names places: a place for the sick. The root is that of *боль*, "pain". Vasmer relates *боль* to Old English *bealu*, "harm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

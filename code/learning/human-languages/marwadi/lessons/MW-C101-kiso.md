@@ -14,7 +14,8 @@ romanization: "kiso"
 concept_tag: MW-DEF101-KISO
 prerequisites: [MW-C101-iso, MW-C101-uso]
 sounds: []
-roots: []
+roots: [sanskrit-kidrsha]
+etymology_hook: "kiso ← Sanskrit kīdṛśa 'of what kind', a tadbhava (CDIAL 3197, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C101-uso]
 <!-- hl-knowledge: introduces=[MW-LEX-C101-DEF101-04]; assesses=[] -->
 
 **किसो** — *kiso* — "which, what kind of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किसो** (*kiso*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kīdṛśa*, "of what kind". CDIAL lists Old Marwari *kiso* under it (CDIAL 3197).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

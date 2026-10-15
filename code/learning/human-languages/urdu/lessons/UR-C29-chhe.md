@@ -12,7 +12,7 @@ concept_tag: UR-NUMBER-SIX
 prerequisites: [UR-C28-practice]
 sounds: [rtl, do-chashmi-he]
 roots: [sanskrit-shash, proto-indo-european-sweks]
-etymology_hook: "chhe continues Sanskrit shash from Proto-Indo-European *sweks -- English six, Latin sex -- and it is written with the plain ch of chaar plus the do-chashmi he that adds the breath."
+etymology_hook: "chhe ← Sanskrit ṣaṣ 'six', through a variant *kṣaṭ (CDIAL 12803); from PIE *swéḱs, like English six"
 duration:
   max_seconds: 265
 requires:
@@ -53,7 +53,7 @@ the same thing in both; the lungs do not.
 ## The word, taken apart — six, sex, ṣaṣ
 <!-- hl-knowledge: introduces=[UR-ETYMON-CHHE-SIX-PIE]; assesses=[UR-LEX-CHHE] -->
 
-**چھ** continues Sanskrit *ṣaṣ*, from Indo-European \**sweks*,
+**چھ** continues Sanskrit *ṣaṣ*, through a variant *\*kṣaṭ* that CDIAL reconstructs for the *ch-* forms (CDIAL 12803), from Indo-European \**sweks*,
 "six." English **six**, Latin **sex** and Greek **héx** are the same word.
 
 ## Guided Practice

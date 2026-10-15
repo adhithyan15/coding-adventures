@@ -14,7 +14,8 @@ romanization: "chātī"
 concept_tag: GU-THINGS125-CHATI
 prerequisites: [GU-C125-much, GU-C125-gardan]
 sounds: []
-roots: []
+roots: [indo-aryan-chatti-chest]
+etymology_hook: "chātī ← *chātti 'chest, breast', a reconstructed form; a tadbhava (CDIAL 5014)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C125-gardan]
 <!-- hl-knowledge: introduces=[GU-LEX-C125-THINGS125-05]; assesses=[] -->
 
 **છાતી** (*chātī*) — "a chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**છાતી** (*chātī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chātti*, "chest, breast", a form CDIAL reconstructs from its descendants (CDIAL 5014).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

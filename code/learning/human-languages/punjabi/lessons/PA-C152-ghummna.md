@@ -14,7 +14,8 @@ romanization: "ghummṇā"
 concept_tag: PA-VERB-GHUMMNA
 prerequisites: [PA-C151-bijna, PA-C152-bhajjna]
 sounds: []
-roots: []
+roots: [indo-aryan-ghummati]
+etymology_hook: "ghummṇā ← *ghummati 'revolves', a reconstructed form; a tadbhava (CDIAL 4485)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C152-bhajjna]
 <!-- hl-knowledge: introduces=[PA-LEX-C152-ACT152-02]; assesses=[] -->
 
 **ਘੁੰਮਣਾ** — *ghummṇā* — "to wander, to go around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਘੁੰਮਣਾ** (*ghummṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ghummati*, "revolves", a form CDIAL reconstructs from its descendants (CDIAL 4485).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

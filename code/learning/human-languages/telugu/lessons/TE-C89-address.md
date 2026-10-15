@@ -11,7 +11,8 @@ romanization: "cirunāmā"
 concept_tag: TE-ABOUT-ADDRESS
 prerequisites: [TE-C89-english, TE-C89-wedding]
 sounds: []
-roots: []
+roots: [persian-sarnama]
+etymology_hook: "cirunāmā: usually traced to Persian sar-nāma 'heading, address', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C89-wedding]
 
 **మీ చిరునామా ఏమిటి?** — "what is your address?". The same frame as the name and the job:
 **మీ ... ఏమిటి?**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చిరునామా** (*cirunāmā*) is usually traced to Persian *sar-nāma*, "heading, address of a letter", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

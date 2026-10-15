@@ -14,7 +14,8 @@ romanization: "abhimānaṁ"
 concept_tag: ML-AROGYAM193-ABHIMANAM
 prerequisites: [ML-C193-asuya, ML-C193-nanam]
 sounds: []
-roots: []
+roots: [sanskrit-abhimana]
+etymology_hook: "abhimānaṁ ← Sanskrit abhimāna 'pride', a tatsama (CDIAL 524)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C193-nanam]
 <!-- hl-knowledge: introduces=[ML-LEX-C193-AROGYAM193-04]; assesses=[] -->
 
 **അഭിമാനം** — *abhimānaṁ* — "pride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അഭിമാനം** (*abhimānaṁ*) ← Sanskrit *abhimāna*, "pride", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 524).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "olāṇḍṇe"
 concept_tag: MR-VERB-OLANDNE
 prerequisites: [MR-C164-jahir-karne, MR-C164-talya-vajavne]
 sounds: []
-roots: []
+roots: [indo-aryan-avalandayati]
+etymology_hook: "olāṇḍṇe ← *avalaṇḍayati 'crosses', a reconstructed form; a tadbhava (CDIAL 825)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C164-talya-vajavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C164-ACT164-03]; assesses=[] -->
 
 **ओलांडणे** — *olāṇḍṇe* — "to cross".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ओलांडणे** (*olāṇḍṇe*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*avalaṇḍayati*, "crosses", a form CDIAL reconstructs from its descendants (CDIAL 825).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

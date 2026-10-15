@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Well, Mud, Dust, Thunder, Rainbow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7c6527f049f39e64",
+  "sourceHash": "fnv1a64:aaee04d13bfdde11",
   "lessons": [
     {
       "id": "BN-C113-kuyo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8a7bf72f13b4c90",
+      "sourceHash": "fnv1a64:deaed1fe6971eda0",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কুয়ো (kuyo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kūpa, \"hole, pit, well\" (CDIAL 3400). CDIAL writes the Bengali form kuyā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e33fbc713691f32",
+      "sourceHash": "fnv1a64:3536bd2a9e99de24",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাদা (kādā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karda, \"mud, swamp\" (CDIAL 2867). CDIAL thinks this family of words probably of non-Aryan origin."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49f89c137866e8ee",
+      "sourceHash": "fnv1a64:3565f0092f07d220",
       "notice": null,
       "blocks": [
         {
@@ -313,6 +335,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধুলো (dhulo) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhūḍi, \"dust, powder\", a form CDIAL reconstructs from its descendants (CDIAL 6835). Sanskrit has dhūli; CDIAL writes the Bengali forms dhul and dhulā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -323,7 +356,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -372,7 +405,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -403,7 +436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26b8a844c3f5d069",
+      "sourceHash": "fnv1a64:5d9175c3f65cfa1c",
       "notice": null,
       "blocks": [
         {
@@ -436,6 +469,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বজ্র (bôjrô) is Sanskrit vajra, \"thunderbolt\", taken over whole as a learned loan, a tatsama (CDIAL 11204). The word inherited from it is bāj, which CDIAL lists."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -446,7 +490,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -495,7 +539,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -526,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86dffe56c454c1cb",
+      "sourceHash": "fnv1a64:983ae2ed52a7a862",
       "notice": null,
       "blocks": [
         {
@@ -559,6 +603,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রংধনু (rôngdhônu) is rông, \"colour\", which matches Sanskrit raṅga and Persian rang (CDIAL 10560), + dhônu, \"bow\", Sanskrit dhanus: a bow of colours."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -569,7 +624,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -618,7 +673,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

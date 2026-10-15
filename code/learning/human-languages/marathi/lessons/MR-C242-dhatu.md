@@ -14,7 +14,8 @@ romanization: "dhātū"
 concept_tag: MR-VASTU242-DHATU
 prerequisites: [MR-C241-payvat, MR-C242-camde]
 sounds: []
-roots: []
+roots: [sanskrit-dhatu]
+etymology_hook: "dhātū ← Sanskrit dhātu 'substance, element; metal', a tatsama (CDIAL 6773)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C242-camde]
 <!-- hl-knowledge: introduces=[MR-LEX-C242-VASTU242-02]; assesses=[] -->
 
 **धातू** — *dhātū* — "metal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धातू** (*dhātū*) is Sanskrit *dhātu*, "substance, element; metal", taken over whole as a learned loan, a tatsama (CDIAL 6773).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "darjī"
 concept_tag: GU-THINGS130-DARJI
 prerequisites: [GU-C130-nokri, GU-C130-pagar]
 sounds: []
-roots: []
+roots: [persian-darzi]
+etymology_hook: "darjī: usually traced to Persian darzī 'tailor'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C130-pagar]
 <!-- hl-knowledge: introduces=[GU-LEX-C130-THINGS130-05]; assesses=[] -->
 
 **દરજી** (*darjī*) — "a tailor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**દરજી** (*darjī*) is a loan, usually traced to Persian *darzī*, "tailor".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

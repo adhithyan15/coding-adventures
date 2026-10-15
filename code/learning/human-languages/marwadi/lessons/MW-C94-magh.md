@@ -14,7 +14,8 @@ romanization: "māgh"
 concept_tag: MW-TIME94-MAGH
 prerequisites: [MW-C93-migsar, MW-C94-pos]
 sounds: []
-roots: []
+roots: [sanskrit-magha]
+etymology_hook: "māgh ← Sanskrit māgha 'the month January-February', kept in its Sanskrit shape (CDIAL 9993)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C94-pos]
 <!-- hl-knowledge: introduces=[MW-LEX-C94-TIME94-02]; assesses=[] -->
 
 **माघ** — *māgh* — "Magh (January-February)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माघ** (*māgh*) is Sanskrit *māgha*, "the month January-February", kept in its Sanskrit shape, the mark of a learned word, a tatsama. The inherited forms CDIAL lists under it, such as Gujarati and Punjabi *māh*, lost the *g* (CDIAL 9993).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

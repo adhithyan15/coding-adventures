@@ -14,7 +14,8 @@ romanization: "mukhaṁ"
 concept_tag: TE-THINGS126-MUKHAM
 prerequisites: [TE-C126-gadida, TE-C126-onte]
 sounds: []
-roots: []
+roots: [sanskrit-mukha]
+etymology_hook: "mukhaṁ ← Sanskrit mukha 'mouth, face', a tatsama (CDIAL 10158)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C126-onte]
 <!-- hl-knowledge: introduces=[TE-LEX-C126-THINGS126-05]; assesses=[] -->
 
 **ముఖం** — *mukhaṁ* — "the face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ముఖం** (*mukhaṁ*) is Sanskrit *mukha*, "mouth, face", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 10158).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

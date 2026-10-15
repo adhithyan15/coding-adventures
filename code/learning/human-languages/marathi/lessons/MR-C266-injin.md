@@ -14,7 +14,8 @@ romanization: "iñjin"
 concept_tag: MR-VASTU266-INJIN
 prerequisites: [MR-C265-salla, MR-C265-vacan]
 sounds: []
-roots: []
+roots: [english-engine]
+etymology_hook: "iñjin ← English engine"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C265-vacan]
 <!-- hl-knowledge: introduces=[MR-LEX-C266-VASTU266-01]; assesses=[] -->
 
 **इंजिन** — *iñjin* — "an engine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इंजिन** (*iñjin*) is a loan from English *engine*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

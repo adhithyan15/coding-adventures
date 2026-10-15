@@ -14,7 +14,8 @@ romanization: "ahaṅkār"
 concept_tag: HI-THG258-AHANKAR
 prerequisites: [HI-C257-samman, HI-C257-garv]
 sounds: []
-roots: []
+roots: [sanskrit-ahankara]
+etymology_hook: "ahaṅkār ← Sanskrit ahaṅkāra 'self-regard, egotism', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C257-garv]
 <!-- hl-knowledge: introduces=[HI-LEX-C258-THG258-01]; assesses=[] -->
 
 **अहंकार** — *ahaṅkār* — "arrogance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अहंकार** (*ahaṅkār*) is Sanskrit *ahaṅkāra*, "self-regard, egotism", taken over whole as a learned loan, a tatsama. It is built from *aham*, "I", and *kāra*, "making".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vaḷṇe"
 concept_tag: MR-VERB-VALNE
 prerequisites: [MR-C252-dhumrapan-karne, MR-C252-sobat-jane]
 sounds: []
-roots: []
+roots: [sanskrit-valati]
+etymology_hook: "vaḷṇe ← Sanskrit valati 'turns', a tadbhava (CDIAL 11405)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C252-sobat-jane]
 <!-- hl-knowledge: introduces=[MR-LEX-C253-ACT253-01]; assesses=[] -->
 
 **वळणे** — *vaḷṇe* — "to turn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**वळणे** (*vaḷṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *valati*, "turns" (CDIAL 11405). CDIAL glosses the Marathi verb "to turn, turn round, bend".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

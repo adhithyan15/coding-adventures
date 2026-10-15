@@ -14,7 +14,8 @@ romanization: "wāḍiḥ"
 concept_tag: AR-SIFA178-WADIH
 prerequisites: [AR-C178-khass, AR-C178-mustajil]
 sounds: []
-roots: []
+roots: [w-ḍ-ḥ]
+etymology_hook: "wāḍiḥ: built on the root w-ḍ-ḥ, 'to be clear, to be plain' (Lane); wāḍiḥ is the active participle, 'clear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C178-mustajil]
 <!-- hl-knowledge: introduces=[AR-LEX-C178-SIFA178-04]; assesses=[] -->
 
 **واضح** — *wāḍiḥ* — "clear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**واضح** (*wāḍiḥ*) is built on the native Arabic root *w-ḍ-ḥ*, "to be clear, to be plain" (Lane). *Wāḍiḥ* is the active participle, "clear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a pond, then the Urdu for a well.
 You'll want to know: آندھی.
 آندھی — āṅdhī — "a storm".
 
+The word, taken apart.
+آندھی (āṅdhī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from andhikā, "night" (CDIAL 390). It is built on andha, "blind, dark"; CDIAL glosses the Hindi word "duststorm".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a well, then the Urdu for a storm.
 
 You'll want to know: زمین.
 زمین — zamīn — "the ground, land".
+
+The word, taken apart.
+زمین (zamīn) is a loan, usually traced to Persian zamīn, "earth, ground".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a storm, then the Urdu for the ground.
 You'll want to know: ساحل.
 ساحل — sāhil — "a coast, a beach".
 
+The word, taken apart.
+ساحل (sāhil) is a loan from Arabic sāḥil, "shore, coast", which reached Urdu through Persian. Its Arabic root is s-ḥ-l (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for the ground, then the Urdu for a coast.
 You'll want to know: جزیرہ.
 جزیرہ — jazīrā — "an island".
 
+The word, taken apart.
+جزیرہ (jazīrā) is a loan from Arabic jazīra, "island", which reached Urdu through Persian. Its Arabic root is j-z-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a coast, then the Urdu for an island.
 
 You'll want to know: چڑیا.
 چڑیا — chiṛyā — "a sparrow, a little bird".
+
+The word, taken apart.
+چڑیا (chiṛyā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caṭaka, "sparrow" (CDIAL 4571), through a variant ciṭaka. CDIAL calls the word imitative of the bird's call, with similar words in Dravidian and Munda.
 
 What you've built.
 One more word for this chapter.

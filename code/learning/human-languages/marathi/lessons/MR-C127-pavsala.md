@@ -14,7 +14,8 @@ romanization: "pāvsāḷā"
 concept_tag: MR-TIME127-PAVSALA
 prerequisites: [MR-C126-unhala, MR-C127-hivala]
 sounds: []
-roots: []
+roots: [indo-aryan-pravrshakala]
+etymology_hook: "pāvsāḷā ← *prāvṛṣakāla 'the rainy season', a reconstructed form; a tadbhava (CDIAL 8965)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C127-hivala]
 <!-- hl-knowledge: introduces=[MR-LEX-C127-TIME127-02]; assesses=[] -->
 
 **पावसाळा** — *pāvsāḷā* — "the monsoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पावसाळा** (*pāvsāḷā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*prāvṛṣakāla*, "the rainy season", a form CDIAL reconstructs from its descendants (CDIAL 8965). It is *prāvṛṣ*, "the rains", and *kāla*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bâyad"
 concept_tag: FA-CHERA198-BAYAD
 prerequisites: [FA-C197-agarche, FA-C197-ya]
 sounds: []
-roots: []
+roots: [persian-bayad]
+etymology_hook: "bâyad: inherited, usually traced to Middle Persian abāyēd"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C197-ya]
 <!-- hl-knowledge: introduces=[FA-LEX-C198-CHERA198-01]; assesses=[] -->
 
 **باید** — *bâyad* — "must, should".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâyad* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *abāyēd*, "it is necessary".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

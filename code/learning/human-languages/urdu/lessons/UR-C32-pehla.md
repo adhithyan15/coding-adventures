@@ -11,8 +11,8 @@ gloss: "first — which one, not how many, and a word not built from ek"
 concept_tag: UR-ORDINAL-FIRST
 prerequisites: [UR-C31-practice]
 sounds: [rtl]
-roots: [sanskrit-prathama]
-etymology_hook: "pehla is not built from ek, exactly as English first is not built from one; it descends separately from a Prakrit form of Sanskrit prathama."
+roots: [sanskrit-prathama, indo-aryan-prathila]
+etymology_hook: "pehlā ← *prathilla, a form beside *prathila 'first', built on Sanskrit prathama (CDIAL 8652)"
 duration:
   max_seconds: 265
 requires:
@@ -50,7 +50,7 @@ Twelve numbers do not give you one of them.
 ## The word, taken apart — not built from one
 <!-- hl-knowledge: introduces=[UR-ETYMON-PEHLA-FIRST]; assesses=[UR-LEX-PEHLA, UR-LEX-EK] -->
 
-**پہلا** does NOT come from **ایک**. It descends through Prakrit from Sanskrit *prathama*, "first, foremost," a separate word.
+**پہلا** does NOT come from **ایک**. It descends from *\*prathilla*, a form CDIAL reconstructs beside *\*prathila*, "first", built on Sanskrit *prathama*, "first, foremost" (CDIAL 8652): a separate word.
 
 English does the same thing: **first** is not built from *one*, and **second**
 is not built from *two*, while **third**, **fourth** and **fifth** fall into

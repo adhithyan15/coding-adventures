@@ -14,7 +14,8 @@ romanization: "jagat"
 concept_tag: SA-THG251-JAGAT
 prerequisites: [SA-C250-avasah, SA-C251-prthivi]
 sounds: []
-roots: []
+roots: [sanskrit-jagat, gam-go]
+etymology_hook: "jagat 'moving, living', a reduplicated form of √gam 'go'; then 'the world' (MW; CDIAL 5078)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C251-prthivi]
 <!-- hl-knowledge: introduces=[SA-LEX-C251-THG251-02]; assesses=[] -->
 
 **जगत्** — *jagat* — "the universe, the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jagat* is a reduplicated form of the root √gam, "to go" (MW): "moving, living". In the Rigveda it means "men and animals", and in the Śatapatha Brāhmaṇa "the world" (CDIAL 5078): the world as everything that moves.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "katachi"
 concept_tag: JA-WORLD62-KATACHI
 prerequisites: [JA-C62-oto, JA-C62-iro]
 sounds: []
-roots: []
+roots: [japanese-katachi]
+etymology_hook: "katachi: native Japanese, inherited, not borrowed; kanji 形 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C62-iro]
 <!-- hl-knowledge: introduces=[JA-LEX-C62-WORLD62-05]; assesses=[] -->
 
 **かたち** — *katachi* — "a shape".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かたち** (*katachi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a ditch"
 concept_tag: LA-RES280-FOSSA
 prerequisites: [LA-C280-columna, LA-C280-moenia]
 sounds: []
-roots: []
+roots: [fossa-latin, fodere-latin]
+etymology_hook: "fossa 'ditch' — from fodiō 'to dig': dug earth"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C280-moenia]
 <!-- hl-knowledge: introduces=[LA-LEX-C280-RES280-04]; assesses=[] -->
 
 **fossa, fossae** — "a ditch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fossa** is the feminine past participle of *fodiō*, "to dig" (Lewis & Short), with *terra*, "earth", understood: dug earth, a ditch.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

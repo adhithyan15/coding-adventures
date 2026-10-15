@@ -14,7 +14,8 @@ romanization: "snachála"
 concept_tag: RU-VREMYA150-SNACHALA
 prerequisites: [RU-C150-redko, RU-C150-kazhdyy]
 sounds: []
-roots: []
+roots: [slavic-chenti]
+etymology_hook: "сначала is с 'from' + начала, a form of начало 'the beginning'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C150-kazhdyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C150-VREMYA150-03]; assesses=[] -->
 
 **сначала** (*snachála*) — "at first".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сначала** is *с*, "from", with *начала*, a form of *начало*, "the beginning": "from the start". *Начало* comes from *начать*, "to begin", which Vasmer puts in one family with *конец*, "end".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

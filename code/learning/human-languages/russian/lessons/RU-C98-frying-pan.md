@@ -14,7 +14,8 @@ romanization: "skovorodá"
 concept_tag: RU-THINGS98-FRYING-PAN
 prerequisites: [RU-C97-wardrobe, RU-C97-saucepan]
 sounds: []
-roots: []
+roots: [slavic-skovorda]
+etymology_hook: "сковорода ← Proto-Slavic *skovorda; its further origin is unclear, Vasmer says"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C97-saucepan]
 <!-- hl-knowledge: introduces=[RU-LEX-C98-THINGS98-01]; assesses=[] -->
 
 **сковорода** (*skovorodá*) — "a frying pan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сковорода** ← Proto-Slavic *\*skovorda* — inherited, with Church Slavonic *сковрада*. Vasmer calls its further origin unclear; a comparison with Old High German *scart-îsan*, "a frying pan", has been made, and Szemerényi derived it from an Iranian word for "bowl".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

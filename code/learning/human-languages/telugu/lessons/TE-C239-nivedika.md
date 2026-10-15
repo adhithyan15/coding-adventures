@@ -14,7 +14,8 @@ romanization: "nivēdika"
 concept_tag: TE-PANI239-NIVEDIKA
 prerequisites: [TE-C238-vijnanasastram, TE-C238-bhautikasastram]
 sounds: []
-roots: []
+roots: [sanskrit-nivedana]
+etymology_hook: "nivēdika: built on Sanskrit nivēdana 'making known', a learned word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C238-bhautikasastram]
 <!-- hl-knowledge: introduces=[TE-LEX-C239-PANI239-01]; assesses=[] -->
 
 **నివేదిక** — *nivēdika* — "a report".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నివేదిక** (*nivēdika*) is a learned word built on Sanskrit *nivēdana*, "making known, report".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

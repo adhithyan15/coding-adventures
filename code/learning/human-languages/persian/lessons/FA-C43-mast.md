@@ -14,7 +14,8 @@ romanization: "mâst"
 concept_tag: FA-FOOD43-MAST
 prerequisites: [FA-C42-porteghal, FA-C43-limu]
 sounds: []
-roots: []
+roots: [persian-mast]
+etymology_hook: "mâst: inherited, usually traced to Middle Persian mast"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C43-limu]
 <!-- hl-knowledge: introduces=[FA-LEX-C43-FOOD43-02]; assesses=[] -->
 
 **ماست** — *mâst* — "yoghurt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mâst* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *mast*, "yoghurt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "purānā"
 concept_tag: HI-ADJ-OLD
 prerequisites: [HI-C41-new, HI-C40-where]
 sounds: []
-roots: []
+roots: [sanskrit-purana]
+etymology_hook: "purānā ← Sanskrit purāṇa 'ancient', a tadbhava (CDIAL 8283)"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,11 @@ You met **नया** *nayā* a moment ago. Put them side by side and nothing ab
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पुराना** (*purānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *purāṇa*, "ancient" (CDIAL 8283).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-05, HI-LEX-C40-DEIXIS-06] -->

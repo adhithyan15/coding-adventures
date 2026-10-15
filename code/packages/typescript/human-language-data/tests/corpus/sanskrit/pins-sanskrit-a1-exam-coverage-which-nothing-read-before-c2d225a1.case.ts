@@ -35,24 +35,47 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // to claim they would; that point is relative position (left, right, above,
   // below, in front, behind) and it is blocked on six direction words nobody
   // teaches. The note was corrected in the same commit.
-  expect(coverage.covered).toBe(142);
-  expect(coverage.unmapped).toBe(22);
+  // 142 -> 143: SA-A1-SP-02 was stale measurement debt, not missing
+  // curriculum. Chapters 93-94 already introduce all six relative-position
+  // exponents and chapter 99 retrieves them together.
+  // 143 -> 144: chapter 259 teaches asmākam and yuṣmākam separately, then
+  // retrieves the one-versus-several possessor contrast in known noun frames.
+  // 144 -> 145: chapters 260-262 teach the independent first- and second-person
+  // accusatives one number at a time, then retrieve the six-way choice.
+  // 145 -> 146: chapters 263-264 bridge from known third-person future
+  // recognition to three first-person singular plans, then require two rounds
+  // of model-free near-term retrieval before SA-A1-F-10 closes.
+  // 146 -> 147: chapter 265 reuses the already-owned meal, restaurant, food,
+  // drink, courtesy, recipient, and giving atoms, adds only dadātu and the
+  // complete polite-order frame, then retrieves the request twice without a
+  // visible Sanskrit model before SA-A1-M-02 closes.
+  // 147 -> 149: chapter 266 composes the already-owned market vocabulary with
+  // one first-person buyer form and one price turn, then independently
+  // retrieves the exchange twice before SA-A1-EV-02 and SA-A1-M-09 close.
+  // 149 -> 150: chapter 267 composes already-owned school vocabulary with
+  // one school-plan frame, then independently retrieves the plan twice before
+  // SA-A1-M-03 closes.
+  // 150 -> 151: chapter 268 adds one sourced financial-bank word, joins it to
+  // three already-owned service referents and the known location question,
+  // then retrieves the bounded exchange twice before SA-A1-M-08 closes.
+  expect(coverage.covered).toBe(151);
+  expect(coverage.unmapped).toBe(13);
   expect(coverage.partial).toBe(0);
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
   // from the Spanish A1 point set and drops what Sanskrit has not got, so its
-  // denominator is the smallest of the twenty-five. 86% of 164 is not
+  // denominator is the smallest of the twenty-five. 92% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 142/164 points covered (87%)",
+    "sanskrit A1 (partial inventory): 151/164 points covered (92%)",
   );
-  // Where the 23 gaps actually are, named rather than counted. Two columns hold
-  // 13 of them, and they are the two an editorially derived A1 inventory is
+  // Where the 13 gaps actually are, named rather than counted. Two columns hold
+  // 9 of them, and they are the two an editorially derived A1 inventory is
   // bound to strain on: the revival vocabulary a classical corpus never had,
   // and the orthography beyond the characters the script ladder teaches.
   expect(coverage.byCategory[
     "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]!).toEqual({ enumerated: 15, covered: 5 });
+  ]!).toEqual({ enumerated: 15, covered: 9 });
   expect(coverage.byCategory["Lipi — the script and its orthography"]!).toEqual({
     enumerated: 10,
     covered: 7,
@@ -61,6 +84,18 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // what a reader of a classical text needs first.
   expect(coverage.byCategory["Samuccaya — coordination"]!).toEqual({ enumerated: 5, covered: 5 });
   expect(coverage.byCategory["Vibhakti — the case system"]!).toEqual({ enumerated: 5, covered: 5 });
+  // The spatial column is now closed on existing lessons, rather than left
+  // artificially open by a null probe and paid twice with redundant teaching.
+  expect(coverage.byCategory["Spatial notions"]!).toEqual({ enumerated: 4, covered: 4 });
+  expect(coverage.byCategory["Ṣaṣṭhī — possession"]!).toEqual({ enumerated: 3, covered: 3 });
+  expect(coverage.byCategory["Sarvanāma — the pronoun"]!).toEqual({
+    enumerated: 8,
+    covered: 7,
+  });
+  expect(coverage.byCategory["Likes, wishes and feelings"]!).toEqual({
+    enumerated: 2,
+    covered: 2,
+  });
   // And the column the ordinal tranche finished: number and quantity, 4/5 -> 5/5.
   expect(coverage.byCategory["Saṅkhyā — number and quantity"]!).toEqual({ enumerated: 5, covered: 5 });
   // The ordinal point, named rather than left to the aggregate, so a nulled
@@ -91,4 +126,24 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
       [],
     );
   }
+
+  const relativePosition = loadExamInventory("sanskrit", "A1").points.find(
+    (point) => point.id === "SA-A1-SP-02",
+  );
+  expect(relativePosition).toMatchObject({
+    label: "relative position: left, right, above, below, in front, behind",
+    probe: [
+      "SA-LEX-C93-TIME93-03",
+      "SA-LEX-C93-TIME93-04",
+      "SA-LEX-C94-LOC94-02",
+      "SA-LEX-C94-LOC94-03",
+      "SA-LEX-C94-LOC94-04",
+      "SA-LEX-C94-LOC94-05",
+    ],
+  });
+  expect(coverage.points.find((point) => point.id === "SA-A1-SP-02")).toMatchObject({
+    covered: true,
+    missingAtoms: [],
+    unmapped: false,
+  });
 }, 120_000);

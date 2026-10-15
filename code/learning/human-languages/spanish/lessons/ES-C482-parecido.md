@@ -10,7 +10,8 @@ gloss: "similar, alike"
 concept_tag: ES-REF-PARECIDO
 prerequisites: [ES-C481-vigilar, ES-C482-concreto]
 sounds: []
-roots: []
+roots: [apparere-latin]
+etymology_hook: "parecido — participle of parecer 'to seem', from spoken Latin *parescere, built on parere 'to appear'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C482-concreto]
 > *Your bag is similar to mine.*
 
 It goes with *a*: *parecido a*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**parecido** is the participle of *parecer*, "to seem, to look like", from spoken Latin *\*parescere*, built on *parere*, "to appear" (Lewis & Short). Things that are *parecidos* look like each other.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-ORTH-RAYA
 prerequisites: [ES-C424-dos-puntos]
 sounds: []
 roots: []
+etymology_hook: "raya — usually traced to Latin radius 'a rod, a ray' — English ray"
 duration:
   max_seconds: 240
 requires:
@@ -51,6 +52,8 @@ named:
 
 Three turns, two speakers, no *he said* and no quotation marks. The reader
 tracks who is talking by alternation alone.
+
+*Raya* is usually traced to Latin *radius*, "a rod, a ray".
 
 ## Grammar Lens: what replaces the quotation marks
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C424-04] -->

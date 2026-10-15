@@ -14,7 +14,8 @@ romanization: "bhēṭi māḍu"
 concept_tag: KA-VERB-BHETI-MADU
 prerequisites: [KA-C161-antisu, KA-C161-tilisu]
 sounds: []
-roots: []
+roots: [hindustani-bhent, maadu-do-dravidian]
+etymology_hook: "bhēṭi māḍu: bhēṭi 'meeting' ← Hindustani bheṇṭ + native māḍu 'to do' (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C161-tilisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C161-KRIYE161-03]; assesses=[] -->
 
 **ಭೇಟಿ ಮಾಡು** — *bhēṭi māḍu* — "to meet (someone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭೇಟಿ ಮಾಡು** (*bhēṭi māḍu*) is *bhēṭi*, "a meeting, a visit", from Hindustani *bheṇṭ*, "meeting", and native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

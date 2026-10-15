@@ -14,7 +14,8 @@ romanization: "dáta"
 concept_tag: RU-TIME85-DATE
 prerequisites: [RU-C85-second, RU-C85-weekend, RU-C26-practice]
 sounds: []
-roots: []
+roots: [datum-latin]
+etymology_hook: "дата ← Latin data 'given', the word that opened dated letters: data Romae, 'given at Rome'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [RU-C85-weekend]
 <!-- hl-knowledge: introduces=[RU-LEX-C85-TIME85-03]; assesses=[] -->
 
 **дата** (*dáta*) — "a date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дата** comes from Latin *data*, "given", the word that began the dating line of letters, as in *data Rōmae*, "given at Rome"; German *Datum* has the same source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

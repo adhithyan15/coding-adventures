@@ -48,7 +48,7 @@ Malayalam എല്ല് (*ellŭ*) and Telugu ఎముక (*emuka*) sit either
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**எலும்பு** (*elumbu*) is native Dravidian. DEDR 839 lists Malayalam *elumpu*, Kannada *elubu* and Telugu *emuka*.
+**எலும்பு** (*elumbu*) is native Dravidian. DEDR 839 lists Malayalam *elumpu*, Kannada *elubu* and Telugu *emuka*. The entry compares Sanskrit *eḍūka*, "a monument holding bones".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

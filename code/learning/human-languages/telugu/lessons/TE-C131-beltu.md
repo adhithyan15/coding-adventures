@@ -14,7 +14,8 @@ romanization: "beltu"
 concept_tag: TE-THINGS131-BELTU
 prerequisites: [TE-C131-langa, TE-C131-jebu]
 sounds: []
-roots: []
+roots: [english-belt]
+etymology_hook: "beltu ← English belt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C131-jebu]
 <!-- hl-knowledge: introduces=[TE-LEX-C131-THINGS131-05]; assesses=[] -->
 
 **బెల్టు** — *beltu* — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బెల్టు** (*beltu*) is a loan from English *belt*, with Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

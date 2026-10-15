@@ -14,7 +14,8 @@ romanization: "tamago"
 concept_tag: JA-FOOD32-TAMAGO
 prerequisites: [JA-C32-sakana, JA-C32-niku]
 sounds: []
-roots: []
+roots: [japanese-tama, japanese-ko-child]
+etymology_hook: "tamago: native; usually taken apart as tama 'ball' + ko 'child' (also written 玉子)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C32-niku]
 <!-- hl-knowledge: introduces=[JA-LEX-C32-FOOD32-03]; assesses=[] -->
 
 **たまご** — *tamago* — "an egg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たまご** (*tamago*) is a native word, inherited rather than borrowed. JMdict also writes it with characters for "ball" and "child", which matches the usual account: *tama*, "ball", with *ko*, "child", voiced to *go*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

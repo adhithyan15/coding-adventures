@@ -14,7 +14,8 @@ romanization: "nānbāī"
 concept_tag: UR-KAM263-NANBAI
 prerequisites: [UR-C262-sainsdan, UR-C262-adakar]
 sounds: []
-roots: []
+roots: [persian-nan]
+etymology_hook: "nānbāī: usually traced to Persian nānbā 'baker', built on nān 'bread'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C262-adakar]
 <!-- hl-knowledge: introduces=[UR-LEX-C263-KAM263-01]; assesses=[] -->
 
 **نانبائی** — *nānbāī* — "a baker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نانبائی** (*nānbāī*) is usually traced to Persian *nānbā*, "baker", built on *nān*, "bread".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

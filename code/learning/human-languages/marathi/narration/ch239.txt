@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a tourist, then the Marathi for an adult
 You'll want to know: निकाल.
 निकाल — nikāl — "a result".
 
+The word, taken apart.
+निकाल (nikāl) is a tadbhava, a word inherited and reshaped by sound change. It comes from niṣkāla, "exit, expulsion", a form CDIAL reconstructs from its descendants (CDIAL 7483). CDIAL glosses the Marathi word "passage", and suggests, with a query, a source form niṣkālya-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for an adult, then the Marathi for a result.
 
 You'll want to know: फरक.
 फरक — pharak — "a difference".
+
+The word, taken apart.
+फरक (pharak) is a loan from Arabic farq, "separation, difference", which reached Marathi through Persian. Its Arabic root is f-r-q (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a result, then the Marathi for a differe
 You'll want to know: उदाहरण.
 उदाहरण — udāharaṇ — "an example".
 
+The word, taken apart.
+उदाहरण (udāharaṇ) is Sanskrit udāharaṇa, "example, illustration", a tatsama built on hṛ, "to bring". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a difference, then the Marathi for an ex
 You'll want to know: सत्य.
 सत्य — satya — "the truth".
 
+The word, taken apart.
+सत्य (satya) is Sanskrit satya, "true; truth", taken over whole as a learned loan, a tatsama (CDIAL 13112). CDIAL lists the inherited Marathi form as sāc, "true".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for an example, then the Marathi for the tru
 
 You'll want to know: नियम.
 नियम — niyam — "a rule".
+
+The word, taken apart.
+नियम (niyam) is Sanskrit niyama, "restraint; fixed law", taken over whole as a learned loan, a tatsama (CDIAL 7250).
 
 What you've built.
 One more word for this chapter.

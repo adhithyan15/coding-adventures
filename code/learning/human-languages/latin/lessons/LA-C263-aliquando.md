@@ -13,7 +13,8 @@ gloss: "at some time, once"
 concept_tag: LA-TEMP263-ALIQUANDO
 prerequisites: [LA-C263-postridie, LA-C263-interea]
 sounds: []
-roots: []
+roots: [aliquando-latin, quando-latin, alius-latin]
+etymology_hook: "aliquandō 'at some time' — ali- 'some' + quandō 'when'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C263-interea]
 <!-- hl-knowledge: introduces=[LA-LEX-C263-TEMP263-03]; assesses=[] -->
 
 **aliquandō** — "at some time, once".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aliquandō** is built on *quandō*, "when" (EtymDB 2.1), with *ali-*, "some, other", the stem of alius, as in *aliquis*, "someone": at some time or other.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

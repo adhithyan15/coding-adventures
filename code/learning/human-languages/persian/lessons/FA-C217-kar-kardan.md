@@ -14,7 +14,8 @@ romanization: "kâr kardan"
 concept_tag: FA-VERB-KAR-KARDAN
 prerequisites: [FA-C216-khayyat, FA-C217-harf-zadan]
 sounds: []
-roots: []
+roots: [persian-kar, pie-kwer]
+etymology_hook: "kâr kardan: Persian kâr 'work' (EtymDB) + kardan 'to do'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C217-harf-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C217-KONESH217-02]; assesses=[] -->
 
 **کار کردن** — *kâr kardan* — "to work".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kâr kardan* is "to do work": *kâr*, "work", is inherited (Middle Persian *kār*, EtymDB), and so is *kardan*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

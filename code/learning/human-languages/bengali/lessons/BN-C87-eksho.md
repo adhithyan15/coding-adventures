@@ -14,7 +14,8 @@ romanization: "ekshô"
 concept_tag: BN-NUMBERS87-EKSHO
 prerequisites: [BN-C87-chollish, BN-C87-ponchash]
 sounds: []
-roots: []
+roots: [sanskrit-eka, sanskrit-shata]
+etymology_hook: "ekshô: ek 'one' ← ēka (CDIAL 2462) + shô 'hundred', listed by CDIAL as sa under śata (CDIAL 12278)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C87-ponchash]
 <!-- hl-knowledge: introduces=[BN-LEX-C87-NUMBERS87-05]; assesses=[] -->
 
 **একশো** — *ekshô* — "a hundred".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**একশো** (*ekshô*) is *ek*, "one", from Sanskrit *ēka* (CDIAL 2462), + *shô*, "hundred", which CDIAL lists as Bengali *sa* under Sanskrit *śata*, "hundred" (CDIAL 12278).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

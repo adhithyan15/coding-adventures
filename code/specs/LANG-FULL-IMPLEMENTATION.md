@@ -1440,8 +1440,25 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Unaliased local runtime-real snapshots may cross a procedure-call selector
   through unary signs, additive or multiplicative composition, and powers with
-  finite static operands; standard-function transforms, globals, captured
-  locals, and other real-name branches remain conservative. Additive composition,
+  finite static operands and pure supported standard-function transforms.
+  The exact bounded `entier(sign(...))` transform also crosses that selector;
+  finite specialisation may carry the same unaliased local-rooted proof through
+  a real name formal. Unary signs may wrap that exact name actual while
+  preserving the proof, and additive composition may include finite static
+  terms; that additive form may in turn be multiplied or divided by finite
+  static terms, then used as the sole dynamic base of a power chain with finite
+  static exponents. Up to six supported built-in numeric standard functions,
+  including integer-valued `sign`, may wrap that powered exact name actual.
+  One additional built-in `entier` may wrap a supported bounded transform rooted
+  in `sign(...)`, including the exact `entier(sign(...))` root; broader runtime
+  `entier` operands remain conservative.
+  The bounded sign-rooted transform may include up to six exact additive
+  offset units, either as one exact `6` term or a checked sum of exact `1`, `2`,
+  `3`, `4`, and `5` terms. The cap is
+  preserved through parentheses and supported standard-function wrappers and
+  applied independently to each runtime conditional path. Larger and dynamic
+  offsets remain conservative.
+  Globals, captured locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The
   real-valued standard functions `abs`, `sqrt`, `sin`, `cos`, `ln`, `exp`, and

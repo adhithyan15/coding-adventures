@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to hide, then the Bengali for to win.
 You'll want to know: বদলানো.
 বদলানো — bôdlāno — "to change".
 
+The word, taken apart.
+বদলানো (bôdlāno) is a loan from Arabic badal, "a substitute, an exchange", which reached Bengali through Persian. Its Arabic root is b-d-l (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to win, then the Bengali for to change.
 
 You'll want to know: ডাকা.
 ডাকা — ḍākā — "to call".
+
+The word, taken apart.
+ডাকা (ḍākā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ḍakk, "shout", a form CDIAL reconstructs from its descendants (CDIAL 5516).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to change, then the Bengali for to call.
 You'll want to know: পাওয়া.
 পাওয়া — pāowā — "to get, to find".
 
+The word, taken apart.
+পাওয়া (pāowā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prāpayati, "causes to be obtained, obtains" (CDIAL 8943).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to call, then the Bengali for to get.
 You'll want to know: মাংস.
 মাংস — māngsho — "meat".
 
+The word, taken apart.
+মাংস (māngsho) is Sanskrit māṁsa, "flesh", taken over whole as a learned loan, a tatsama (CDIAL 9982). The word inherited from it is mās, which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to get, then the Bengali for meat.
 
 You'll want to know: মাছ.
 মাছ — māchh — "a fish".
+
+The word, taken apart.
+মাছ (māchh) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from matsya, "fish" (CDIAL 9758).
 
 What you've built.
 One more word for this chapter.

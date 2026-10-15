@@ -14,7 +14,8 @@ romanization: "dañcu"
 concept_tag: TE-VERB-DANCU
 prerequisites: [TE-C198-yunipharam, TE-C198-sibbandi]
 sounds: []
-roots: []
+roots: [dravidian-adi-beat]
+etymology_hook: "dañcu: native Dravidian; DEDR 77 lists dancu 'to pound in a mortar' with Tamil aṭu 'to pound'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C198-sibbandi]
 <!-- hl-knowledge: introduces=[TE-LEX-C199-KRIYA199-01]; assesses=[] -->
 
 **దంచు** — *dañcu* — "to pound (in a mortar)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దంచు** (*dañcu*) is native Dravidian. DEDR 77 lists *dañcu*, "to pound, clean grain in a mortar", with Tamil *aṭu*, "to pound (as rice)".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

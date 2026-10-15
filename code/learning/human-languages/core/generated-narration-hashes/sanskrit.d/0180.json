@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 180,
-  "sourceHash": "fnv1a64:0f46566fa42e8c43",
+  "sourceHash": "fnv1a64:c4f897c4f9516407",
   "lessonIds": [
     "SA-C180-vyadhah",
     "SA-C180-caurah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch180.txt",
   "json": "sanskrit/narration/ch180.json",
-  "textHash": "fnv1a64:21e0f57102a4fa81",
-  "jsonHash": "fnv1a64:b42eabdc31e734a2",
+  "textHash": "fnv1a64:032c8a9093e785b8",
+  "jsonHash": "fnv1a64:24366490b71961d9",
   "findings": []
 }

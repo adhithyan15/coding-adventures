@@ -12,6 +12,9 @@ Before the new one: say the Bengali for below, then the Bengali for in front.
 You'll want to know: পিছনে.
 পিছনে — pichhône — "behind".
 
+The word, taken apart.
+পিছনে (pichhône) is a form of pichhôn, "the back". CDIAL lists Bengali pichā, "the rear", under paśca, "hinder part", crossed with Sanskrit pṛṣṭha, "back" (CDIAL 7990).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for in front, then the Bengali for behind.
 
 You'll want to know: দোকান.
 দোকান — dokān — "a shop".
+
+The word, taken apart.
+দোকান (dokān) is a loan from Arabic dukkān, "shop", which reached Bengali through Persian. Its Arabic root is d-k-n (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for behind, then the Bengali for a shop.
 You'll want to know: রাস্তা.
 রাস্তা — rāstā — "a road".
 
+The word, taken apart.
+রাস্তা (rāstā) is a loan, usually traced to Persian rāsta, "a road, a street".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a shop, then the Bengali for a road.
 You'll want to know: গলি.
 গলি — gôli — "a lane".
 
+The word, taken apart.
+গলি (gôli) is a tadbhava, a word inherited and reshaped by sound change. It comes from galī, "defile, lane", a form CDIAL reconstructs from its descendants (CDIAL 4085).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a road, then the Bengali for a lane.
 
 You'll want to know: স্টেশন.
 স্টেশন — sṭeshôn — "a station".
+
+The word, taken apart.
+স্টেশন (sṭeshôn) is a loan from English station.
 
 What you've built.
 One more word for this chapter.

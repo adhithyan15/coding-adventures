@@ -14,7 +14,8 @@ romanization: "prithibi"
 concept_tag: BN-NUMBERS88-PRITHIBI
 prerequisites: [BN-C87-eksho, BN-C88-hajar]
 sounds: []
-roots: []
+roots: [sanskrit-prthivi]
+etymology_hook: "prithibi ← Sanskrit pṛthivī 'the earth, the broad one', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C88-hajar]
 <!-- hl-knowledge: introduces=[BN-LEX-C88-NUMBERS88-02]; assesses=[] -->
 
 **পৃথিবী** — *prithibi* — "the world".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পৃথিবী** (*prithibi*) is Sanskrit *pṛthivī*, "the earth, the broad one", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

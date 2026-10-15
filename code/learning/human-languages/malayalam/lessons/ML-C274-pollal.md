@@ -14,7 +14,8 @@ romanization: "poḷḷal"
 concept_tag: ML-AROGYAM274-POLLAL
 prerequisites: [ML-C274-ulukku, ML-C274-otivu]
 sounds: []
-roots: []
+roots: [dravidian-pollu-blister]
+etymology_hook: "poḷḷal: native Dravidian, one word with Tamil poḷḷu (DEDR 4563)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C274-otivu]
 <!-- hl-knowledge: introduces=[ML-LEX-C274-AROGYAM274-04]; assesses=[] -->
 
 **പൊള്ളൽ** — *poḷḷal* — "a burn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൊള്ളൽ** (*poḷḷal*) is native Dravidian, one word with Tamil *poḷḷu* (DEDR 4563). Its sense is a blistering, as from a burn.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

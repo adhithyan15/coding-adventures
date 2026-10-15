@@ -14,7 +14,8 @@ romanization: "shônibār"
 concept_tag: BN-TIME92-SHONIBAR
 prerequisites: [BN-C91-brihospotibar, BN-C91-shukrobar]
 sounds: []
-roots: []
+roots: [vara-sanskrit]
+etymology_hook: "shônibār ← Sanskrit śanivāra 'Saturday', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C91-shukrobar]
 <!-- hl-knowledge: introduces=[BN-LEX-C92-TIME92-01]; assesses=[] -->
 
 **শনিবার** — *shônibār* — "Saturday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শনিবার** (*shônibār*) is Sanskrit *śanivāra*, "Saturday", taken over whole as a learned loan, a tatsama. It is *śani*, "Saturn", + *vāra*, "day of the week".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

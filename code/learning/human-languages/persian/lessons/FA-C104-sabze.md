@@ -14,7 +14,8 @@ romanization: "sabze"
 concept_tag: FA-THINGS104-SABZE
 prerequisites: [FA-C103-rishe, FA-C104-dane]
 sounds: []
-roots: []
+roots: [sabz-persian]
+etymology_hook: "sabze: Persian sabz 'green' (Middle Persian sabz) + -e"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C104-dane]
 <!-- hl-knowledge: introduces=[FA-LEX-C104-THINGS104-02]; assesses=[] -->
 
 **سبزه** — *sabze* — "grass, greenery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sabze* is *sabz*, "green", with the noun ending *-e*: "greenery". *sabz* is native, usually traced to Middle Persian *sabz*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

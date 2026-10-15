@@ -13,7 +13,8 @@ gloss: "to exchange"
 concept_tag: LA-VERB-PERMUTO
 prerequisites: [LA-C259-spiro, LA-C259-desisto]
 sounds: []
-roots: []
+roots: [permutare-latin, mutare-latin]
+etymology_hook: "permūtō 'to exchange' — per + mūtō 'to change'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C259-desisto]
 <!-- hl-knowledge: introduces=[LA-LEX-C259-ACT259-05]; assesses=[] -->
 
 **permūtō, permūtāre** — "to exchange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**permūtō** is *per*, "thoroughly", with *mūtō*, "to change" (EtymDB 2.1): to change completely, to exchange.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

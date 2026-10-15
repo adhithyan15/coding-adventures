@@ -14,7 +14,8 @@ romanization: "pracchādayati"
 concept_tag: SA-VERB-PRACCHADAYATI
 prerequisites: [SA-C176-sodhayati, SA-C176-purayati]
 sounds: []
-roots: []
+roots: [sanskrit-chadayati]
+etymology_hook: "pracchādayati ← pra- + chādayati 'covers', causative of √chad 'cover' (MW); Hindi chānā 'to thatch' (CDIAL 5018)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C176-purayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C177-ACT177-01]; assesses=[] -->
 
 **प्रच्छादयति** — *pracchādayati* — "conceals, covers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pracchādayati* is *pra-* with *chādayati*, "covers, veils", built on the root √chad, "to cover" (MW). The simple verb lives on as Hindi *chānā*, "to thatch, spread over" (CDIAL 5018).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

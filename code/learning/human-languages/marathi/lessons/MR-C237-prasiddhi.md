@@ -14,7 +14,8 @@ romanization: "prasiddhī"
 concept_tag: MR-VASTU237-PRASIDDHI
 prerequisites: [MR-C237-parampara, MR-C237-boli]
 sounds: []
-roots: []
+roots: [sanskrit-prasiddha]
+etymology_hook: "prasiddhī: Sanskrit prasiddhi 'success, celebrity', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C237-boli]
 <!-- hl-knowledge: introduces=[MR-LEX-C237-VASTU237-03]; assesses=[] -->
 
 **प्रसिद्धी** — *prasiddhī* — "publicity, fame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रसिद्धी** (*prasiddhī*) is Sanskrit *prasiddhi*, "success, celebrity", a tatsama built on *pra*, "forth", and *siddha*, "accomplished".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

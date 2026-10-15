@@ -14,7 +14,8 @@ romanization: "hezâr"
 concept_tag: FA-NUMBERS77-HEZAR
 prerequisites: [FA-C76-chehel, FA-C77-panjah]
 sounds: []
-roots: []
+roots: [persian-hazar]
+etymology_hook: "hezâr: inherited, usually traced to Middle Persian hazār"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C77-panjah]
 <!-- hl-knowledge: introduces=[FA-LEX-C77-NUMBERS77-02]; assesses=[] -->
 
 **هزار** — *hezâr* — "a thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hezâr* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *hazār*, "thousand". EtymDB takes it back to Proto-Iranian *\*hazahram*, "thousand"; Sanskrit *sahasra*, "thousand", is the same Indo-Iranian word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

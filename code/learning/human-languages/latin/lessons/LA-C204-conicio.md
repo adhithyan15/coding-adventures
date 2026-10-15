@@ -13,7 +13,8 @@ gloss: "to throw together; to guess"
 concept_tag: LA-VERB-CONICIO
 prerequisites: [LA-C204-doleo, LA-C204-orno]
 sounds: []
-roots: []
+roots: [conicere-latin, iacere-latin]
+etymology_hook: "coniciō 'to throw together, to guess' — con- + iaciō 'to throw'; English conjecture"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C204-orno]
 <!-- hl-knowledge: introduces=[LA-LEX-C204-ACT204-04]; assesses=[] -->
 
 **coniciō, conicere** — "to throw together; to guess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coniciō** is *con-*, "together", with *iaciō*, "to throw" (EtymDB 2.1): to throw together, then to put facts together, to guess. English *conjecture* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

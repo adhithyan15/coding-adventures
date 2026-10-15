@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Day, Week, Month, Year, Evening",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2e47eb1eb4e06463",
+  "sourceHash": "fnv1a64:b233c6926d5897bb",
   "lessons": [
     {
       "id": "RU-C68-day",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a03041b043bfbc62",
+      "sourceHash": "fnv1a64:db6f30bbb3aee300",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "день (den) from Proto-Slavic dĭnĭ — inherited. Vasmer lists Sanskrit dínam, Lithuanian dienà and Latin diēs, all \"day\", from the PIE root dyew-, \"to shine\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9de099482991d6ab",
+      "sourceHash": "fnv1a64:19b8fd24e555afad",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "неделя (nedélya) is не, \"not\", with дело, \"work\": first \"the day of no work\", Sunday, and then the week that runs from it (Vasmer). Vasmer thinks it most likely copies Latin fēria, \"holiday\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d03d07bfd23a7db",
+      "sourceHash": "fnv1a64:86dcae2196f4b74b",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "месяц (mésyats) from Proto-Slavic měsęcĭ, \"moon; month\" — inherited. Vasmer lists Sanskrit mās-, Greek mḗn and Latin mēnsis, \"month\", and Lithuanian mėnuo, \"moon\": English moon and month are cousins. A month is one round of the moon."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6098d7e76824216",
+      "sourceHash": "fnv1a64:b5c840464a17b464",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "год (god) from Proto-Slavic godŭ, \"a fitting time, a season\" — inherited; Old Russian godŭ meant \"time, term\" (Vasmer). Vasmer relates it to Latvian gadīgs, \"capable\", and Old High German gigat, \"fitting\"; the same root is in годиться, \"to be fit\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c9462715765a882",
+      "sourceHash": "fnv1a64:0c34438cf82e3d75",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вечер (vécher) from Proto-Slavic večerŭ — inherited, a cousin of Lithuanian vãkaras, \"evening\" (Vasmer). Vasmer thinks Greek hespéra and Latin vespera, \"evening\", probably belong here too, with a changed first sound."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

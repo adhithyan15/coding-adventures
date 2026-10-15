@@ -14,7 +14,8 @@ romanization: "jhīṅgā"
 concept_tag: UR-CHIZ235-JHINGA
 prerequisites: [UR-C235-khatmal, UR-C235-kekra]
 sounds: []
-roots: []
+roots: [indo-aryan-jhinga]
+etymology_hook: "jhīṅgā ← *jhiṅga 'prawn', a reconstructed form; a tadbhava (CDIAL 5385)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C235-kekra]
 <!-- hl-knowledge: introduces=[UR-LEX-C235-CHIZ235-05]; assesses=[] -->
 
 **جھینگا** — *jhīṅgā* — "a prawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جھینگا** (*jhīṅgā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhiṅga*, "prawn", a form CDIAL reconstructs from its descendants (CDIAL 5385).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

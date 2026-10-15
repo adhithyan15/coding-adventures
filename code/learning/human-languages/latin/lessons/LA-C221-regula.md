@@ -13,7 +13,8 @@ gloss: "a rule, a ruler"
 concept_tag: LA-RES221-REGULA
 prerequisites: [LA-C220-adulescens, LA-C220-vidua]
 sounds: []
-roots: []
+roots: [regula-latin, regere-latin]
+etymology_hook: "rēgula 'rule, ruler' — built on regō 'to keep straight'; English rule"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C220-vidua]
 <!-- hl-knowledge: introduces=[LA-LEX-C221-RES221-01]; assesses=[] -->
 
 **rēgula, rēgulae** — "a rule, a ruler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**rēgula** is built on *regō*, "to keep straight, to rule" (Lewis & Short), with *-ula*, an ending for a tool: a straight stick, a ruler. English *rule* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

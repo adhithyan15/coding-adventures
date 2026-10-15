@@ -14,7 +14,8 @@ romanization: "dēvasthāna"
 concept_tag: KA-LOC109-DEVASTHANA
 prerequisites: [KA-C109-setuve, KA-C109-udyana]
 sounds: []
-roots: []
+roots: [sanskrit-deva, sanskrit-sthana]
+etymology_hook: "dēvasthāna ← Sanskrit deva 'god' (CDIAL 6523) + sthāna 'place' (CDIAL 13753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C109-udyana]
 <!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-03]; assesses=[] -->
 
 **ದೇವಸ್ಥಾನ** — *dēvasthāna* — "a temple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದೇವಸ್ಥಾನ** (*dēvasthāna*) is Sanskrit *deva*, "god" (CDIAL 6523), and *sthāna*, "place" (CDIAL 13753): "the god's place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

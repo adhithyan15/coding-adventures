@@ -14,7 +14,8 @@ romanization: "thāmāno"
 concept_tag: BN-VERB-THAMANO
 prerequisites: [BN-C237-nebhano, BN-C237-jvalano]
 sounds: []
-roots: []
+roots: [sanskrit-stambhate]
+etymology_hook: "thāmāno ← Sanskrit stambhate 'supports, arrests', a tadbhava (CDIAL 13683)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C237-jvalano]
 <!-- hl-knowledge: introduces=[BN-LEX-C237-ACT237-03]; assesses=[] -->
 
 **থামানো** — *thāmāno* — "to bring to a halt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**থামানো** (*thāmāno*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *stambhate*, "supports, arrests" (CDIAL 13683). CDIAL lists Bengali *thāmā*, "to stop"; *thāmāno* is its causing form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

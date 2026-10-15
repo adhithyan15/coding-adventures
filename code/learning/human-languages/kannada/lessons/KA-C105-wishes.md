@@ -11,7 +11,8 @@ romanization: "śubhāśayagaḷu"
 concept_tag: KA-WISH-WISHES
 prerequisites: [KA-C104-driver, KA-C104-shop]
 sounds: []
-roots: []
+roots: [sanskrit-shubha, sanskrit-ashaya]
+etymology_hook: "śubhāśayagaḷu: Sanskrit śubha 'auspicious, good' (CDIAL 12532) + āśaya 'intention' + plural -gaḷu"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C104-shop]
 
 **ಶುಭಾಶಯಗಳು** (*śubhāśayagaḷu*) — "best wishes", **ಶುಭ** (*śubha*), "good", with
 **ಆಶಯ** (*āśaya*), "wish", in the plural.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಶುಭಾಶಯಗಳು** (*śubhāśayagaḷu*) is Sanskrit *śubha*, "auspicious, good" (CDIAL 12532), and *āśaya*, "intention, wish", with Kannada's plural *-gaḷu*: good wishes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

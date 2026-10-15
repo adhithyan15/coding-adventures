@@ -14,7 +14,8 @@ romanization: "jantu"
 concept_tag: ML-VASTU291-JANTU
 prerequisites: [ML-C290-puram, ML-C291-valli]
 sounds: []
-roots: []
+roots: [sanskrit-jantu]
+etymology_hook: "jantu ← Sanskrit jantu 'offspring, creature', a tatsama (CDIAL 5110)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C291-valli]
 <!-- hl-knowledge: introduces=[ML-LEX-C291-VASTU291-02]; assesses=[] -->
 
 **ജന്തു** — *jantu* — "an animal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ജന്തു** (*jantu*) ← Sanskrit *jantu*, "offspring, creature", taken over whole as a tatsama (CDIAL 5110). It is built on the root *jan*, "to be born".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

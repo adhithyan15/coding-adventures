@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a grandmother, then the Punjabi for a hu
 You'll want to know: ਪਤਨੀ.
 ਪਤਨੀ — patnī — "a wife".
 
+The word, taken apart.
+ਪਤਨੀ (patnī) is Sanskrit patnī, "mistress, wife", taken over whole as a learned loan, a tatsama (CDIAL 7742).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a husband, then the Punjabi for a wife.
 
 You'll want to know: ਬੱਚਾ.
 ਬੱਚਾ — bachchā — "a child".
+
+The word, taken apart.
+CDIAL lists ਬੱਚਾ (bachchā) under Sanskrit apatya, "offspring", through Prakrit avacca (CDIAL 424), and its addenda set the word beside Persian bachcha, "young (of humans or animals)" (CDIAL 14226). Many take it from Persian instead, so its origin is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a wife, then the Punjabi for a child.
 You'll want to know: ਮੁੰਡਾ.
 ਮੁੰਡਾ — muṇḍā — "a boy".
 
+The word, taken apart.
+CDIAL lists ਮੁੰਡਾ (muṇḍā), "boy", under Sanskrit muṇḍa, "shaved, bald", which it takes, probably, from Dravidian; it calls a Munda source less likely (CDIAL 10191).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for a child, then the Punjabi for a boy.
 You'll want to know: ਕੁੜੀ.
 ਕੁੜੀ — kuṛī — "a girl".
 
+The word, taken apart.
+CDIAL lists ਕੁੜੀ (kuṛī), "girl, daughter", under a reconstructed kuḍa, "boy, son", with kuḍī, "girl, daughter". It takes the word, probably, from Munda, comparing Santali kuṛi, "girl"; or else from Dravidian (CDIAL 3245).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for a boy, then the Punjabi for a girl.
 
 You'll want to know: ਆਦਮੀ.
 ਆਦਮੀ — ādmī — "a man".
+
+The word, taken apart.
+ਆਦਮੀ (ādmī) is a loan from Arabic ādamī, "human, of Adam", which reached Punjabi through Persian. Its Arabic root is ʾ-d-m (Lane). It is Ādam, "Adam", with the Arabic ending -ī, "belonging to".
 
 What you've built.
 One more word for this chapter.

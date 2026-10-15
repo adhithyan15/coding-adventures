@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 196,
-  "sourceHash": "fnv1a64:bbc71a1684b94a3a",
+  "sourceHash": "fnv1a64:b3eb9b1c44e8c937",
   "lessonIds": [
     "ML-C196-ituvare",
     "ML-C196-ippolum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch196.txt",
   "json": "malayalam/narration/ch196.json",
-  "textHash": "fnv1a64:3388bcf3b0ac88d2",
-  "jsonHash": "fnv1a64:3f4cd7fe620c2501",
+  "textHash": "fnv1a64:1e9a7f860f8ca078",
+  "jsonHash": "fnv1a64:5bd88d0668fa3d04",
   "findings": []
 }

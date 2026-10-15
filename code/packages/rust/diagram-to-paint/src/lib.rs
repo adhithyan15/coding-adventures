@@ -34,7 +34,8 @@ use diagram_ir::{
     ChartTextAnchor, ChartTextBaseline, DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
     LayoutedChartDiagram, LayoutedChartItem,
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
-    LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
+    LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram,
+    LayoutedSwimlaneEdge, LayoutedRailroadDiagram,
     LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardCard, LayoutedBoardDiagram, LayoutedPacketDiagram,
@@ -838,7 +839,11 @@ where
     let mut instructions = Vec::new();
     let mut text_children = Vec::new();
     for (index, lane) in diagram.lanes.iter().enumerate() {
-        let fill = if index % 2 == 0 { "#f8fafc" } else { "#eef6f8" };
+        let fallback_fill = if index % 2 == 0 { "#f8fafc" } else { "#eef6f8" };
+        let fill = lane.style.fill.as_deref()
+            .or(diagram.theme.cluster_background.as_deref()).unwrap_or(fallback_fill);
+        let stroke = lane.style.stroke.as_deref()
+            .or(diagram.theme.cluster_border.as_deref()).unwrap_or("#78909c");
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x: lane.x,
@@ -846,35 +851,75 @@ where
             width: lane.width,
             height: lane.height,
             fill: Some(fill.into()),
-            stroke: Some("#78909c".into()),
-            stroke_width: Some(1.5),
-            corner_radius: Some(8.0),
-            stroke_dash: None,
+            stroke: Some(stroke.into()),
+            stroke_width: Some(lane.style.stroke_width.unwrap_or(1.5)),
+            corner_radius: Some(lane.style.corner_radius.unwrap_or(8.0)),
+            stroke_dash: lane.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }));
+        let mut title_font = options.title_font.clone();
+        if let Some(size) = diagram.theme.font_size { title_font.size = size; }
+        if let Some(family) = &diagram.theme.font_family { title_font.family.clone_from(family); }
+        if let Some(size) = lane.style.font_size { title_font.size = size; }
+        if let Some(weight) = lane.style.font_weight { title_font.weight = weight; }
+        if let Some(italic) = lane.style.font_italic { title_font.italic = italic; }
+        if let Some(family) = &lane.style.font_family { title_font.family.clone_from(family); }
         text_children.push(text_node(
             &lane.label,
             lane.x + 8.0,
-            lane.y + 7.0,
+            lane.y + 7.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0),
             lane.width - 16.0,
             26.0,
-            options.title_font.clone(),
-            Color {
+            title_font,
+            lane.style.text_color.as_deref().or(diagram.theme.title_color.as_deref())
+                .and_then(parse_css_color).unwrap_or(Color {
                 r: 38,
                 g: 50,
                 b: 56,
                 a: 255,
-            },
+            }),
+        ));
+    }
+    for group in &diagram.groups {
+        let stroke = group.style.stroke.as_deref()
+            .or(diagram.theme.cluster_border.as_deref()).unwrap_or("#90a4ae");
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(), x: group.x, y: group.y, width: group.width, height: group.height,
+            fill: group.style.fill.clone().or_else(|| diagram.theme.cluster_background.clone()),
+            stroke: Some(stroke.into()), stroke_width: Some(group.style.stroke_width.unwrap_or(1.25)),
+            corner_radius: Some(group.style.corner_radius.unwrap_or(6.0)),
+            stroke_dash: group.style.stroke_dash.clone().or_else(|| Some(vec![6.0, 4.0])), stroke_dash_offset: None,
+        }));
+        let mut label_font = options.label_font.clone();
+        if let Some(size) = diagram.theme.font_size { label_font.size = size; }
+        if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
+        if let Some(size) = group.style.font_size { label_font.size = size; }
+        if let Some(weight) = group.style.font_weight { label_font.weight = weight; }
+        if let Some(italic) = group.style.font_italic { label_font.italic = italic; }
+        if let Some(family) = &group.style.font_family { label_font.family.clone_from(family); }
+        text_children.push(text_node(
+            &group.label,
+            group.x + 8.0,
+            group.y + 4.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0),
+            group.width - 16.0,
+            22.0,
+            label_font, group.style.text_color.as_deref().or(diagram.theme.title_color.as_deref())
+                .and_then(parse_css_color)
+                .unwrap_or(Color { r: 69, g: 90, b: 100, a: 255 }),
         ));
     }
     for (edge_index, edge) in diagram.edges.iter().enumerate() {
         if edge.kind == SwimlaneEdgeKind::Invisible {
             continue;
         }
-        let stroke = edge.style.stroke.as_deref().unwrap_or("#455a64");
+        let stroke = edge.style.stroke.as_deref().unwrap_or(&diagram.theme.line_color);
         let stroke_width = edge.style.stroke_width.unwrap_or_else(|| {
-            if edge.kind == SwimlaneEdgeKind::Thick { 3.5 } else { 1.8 }
+            if edge.kind == SwimlaneEdgeKind::Thick { 3.5 }
+            else { diagram.theme.stroke_width.unwrap_or(1.8) }
         });
+        let marker_stroke = if edge.style.stroke.is_some() { stroke } else {
+            diagram.theme.arrowhead_color.as_deref().unwrap_or(stroke)
+        };
         let mut path = line_path(
             &[edge.from.clone(), edge.to.clone()],
             stroke,
@@ -963,17 +1008,33 @@ where
         } else {
             (edge.to.clone(), edge.from.clone())
         };
-        if let Some(line_hops) = diagram.line_hops.filter(|_| {
-            matches!(edge.curve, None | Some(SwimlaneEdgeCurve::Linear))
-        }) {
-            let mut crossings = diagram.edges[..edge_index].iter().filter(|other| {
-                other.kind != SwimlaneEdgeKind::Invisible
-                    && matches!(other.curve, None | Some(SwimlaneEdgeCurve::Linear))
-            }).filter_map(|other| swimlane_line_crossing(
-                &edge.from, &edge.to, &other.from, &other.to,
-            )).collect::<Vec<_>>();
-            crossings.sort_by(|left, right| left.0.total_cmp(&right.0));
-            apply_swimlane_line_hops(&mut path, &edge.from, &edge.to, &crossings, line_hops);
+        if let (Some(line_hops), Some(points)) = (
+            diagram.line_hops,
+            swimlane_line_hop_points(&diagram.direction, edge),
+        ) {
+            let mut crossings = Vec::new();
+            for other in &diagram.edges[..edge_index] {
+                if other.kind == SwimlaneEdgeKind::Invisible {
+                    continue;
+                }
+                let Some(other_points) = swimlane_line_hop_points(&diagram.direction, other) else {
+                    continue;
+                };
+                for (segment_index, segment) in points.windows(2).enumerate() {
+                    let segment_length = (segment[1].x - segment[0].x).hypot(segment[1].y - segment[0].y);
+                    for other_segment in other_points.windows(2) {
+                        if let Some((t, point)) = swimlane_line_crossing(
+                            &segment[0], &segment[1], &other_segment[0], &other_segment[1],
+                        ) {
+                            if t * segment_length > 6.0 && (1.0 - t) * segment_length > 6.0 {
+                                crossings.push((segment_index, t, point));
+                            }
+                        }
+                    }
+                }
+            }
+            crossings.sort_by(|left, right| left.0.cmp(&right.0).then_with(|| left.1.total_cmp(&right.1)));
+            apply_swimlane_line_hops(&mut path, &points, &crossings, line_hops);
         }
         if let Some(stroke_dash) = &edge.style.stroke_dash {
             path.stroke_dash = Some(stroke_dash.clone());
@@ -984,29 +1045,59 @@ where
         }
         instructions.push(PaintInstruction::Path(path));
         instructions.extend(swimlane_endpoint_marker(
-            edge.start_marker, &start_previous, &edge.from, stroke, stroke_width,
+            edge.start_marker, &start_previous, &edge.from, marker_stroke, stroke_width,
         ));
         instructions.extend(swimlane_endpoint_marker(
-            edge.end_marker, &end_previous, &edge.to, stroke, stroke_width,
+            edge.end_marker, &end_previous, &edge.to, marker_stroke, stroke_width,
         ));
         if let Some(label) = &edge.label {
+            let label_x = (edge.from.x + edge.to.x) / 2.0 - 52.0;
+            let label_y = (edge.from.y + edge.to.y) / 2.0 - 25.0;
+            if let Some(background) = &diagram.theme.edge_label_background {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: label_x,
+                    y: label_y,
+                    width: 104.0,
+                    height: 22.0,
+                    fill: Some(background.clone()),
+                    stroke: None,
+                    stroke_width: None,
+                    corner_radius: Some(2.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+            }
+            let mut label_font = options.label_font.clone();
+            if let Some(size) = diagram.theme.font_size { label_font.size = size; }
+            if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
+            if let Some(size) = edge.style.font_size {
+                label_font.size = size;
+            }
+            if let Some(weight) = edge.style.font_weight {
+                label_font.weight = weight;
+            }
+            if let Some(italic) = edge.style.font_italic {
+                label_font.italic = italic;
+            }
+            if let Some(family) = &edge.style.font_family {
+                label_font.family.clone_from(family);
+            }
             text_children.push(text_node(
                 label,
-                (edge.from.x + edge.to.x) / 2.0 - 52.0,
-                (edge.from.y + edge.to.y) / 2.0 - 25.0,
+                label_x,
+                label_y,
                 104.0,
                 22.0,
-                options.label_font.clone(),
-                edge.style.text_color.as_deref().map(css_to_color).unwrap_or(Color {
-                    r: 55, g: 71, b: 79, a: 255,
-                }),
+                label_font,
+                css_to_color(edge.style.text_color.as_deref().unwrap_or(&diagram.theme.text_color)),
             ));
         }
     }
     for node in &diagram.nodes {
-        let fill = node.style.fill.clone().unwrap_or_else(|| "#ffffff".into());
-        let stroke = node.style.stroke.clone().unwrap_or_else(|| "#1565c0".into());
-        let stroke_width = node.style.stroke_width.unwrap_or(2.0);
+        let fill = node.style.fill.clone().unwrap_or_else(|| diagram.theme.main_background.clone());
+        let stroke = node.style.stroke.clone().unwrap_or_else(|| diagram.theme.node_border.clone());
+        let stroke_width = node.style.stroke_width.or(diagram.theme.stroke_width).unwrap_or(2.0);
         let stroke_dash = node.style.stroke_dash.clone();
         let shape = match node.shape {
             DiagramShape::TextBlock => PaintInstruction::Rect(PaintRect {
@@ -1038,6 +1129,18 @@ where
                 stroke: Some(stroke.clone()),
                 stroke_width: Some(stroke_width),
                 stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
+            DiagramShape::Anchor => PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: node.x + 1.0,
+                cy: node.y + 1.0,
+                rx: 1.0,
+                ry: 1.0,
+                fill: Some("#000000".into()),
+                stroke: None,
+                stroke_width: None,
+                stroke_dash: None,
                 stroke_dash_offset: None,
             }),
             DiagramShape::ForkJoin => PaintInstruction::Rect(PaintRect {
@@ -1185,6 +1288,14 @@ where
                 stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::TitledRect => PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: titled_rect_path_commands(node.x, node.y, node.width, node.height),
+                fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
             DiagramShape::WindowPane => PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
                 commands: window_pane_path_commands(node.x, node.y, node.width, node.height),
@@ -1193,6 +1304,38 @@ where
                 stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::Note => {
+                let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
+                let outline = PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(), commands: vec![
+                        PathCommand::MoveTo { x: node.x, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width - fold, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + fold },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x, y: node.y + node.height },
+                        PathCommand::Close,
+                    ],
+                    fill: Some(fill.clone()), fill_rule: None, stroke: Some(stroke.clone()),
+                    stroke_width: Some(stroke_width), stroke_cap: None,
+                    stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                    stroke_dash_offset: None,
+                });
+                let crease = PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(), commands: vec![
+                        PathCommand::MoveTo { x: node.x + node.width - fold, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width - fold, y: node.y + fold },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + fold },
+                    ],
+                    fill: None, fill_rule: None, stroke: Some(stroke.clone()),
+                    stroke_width: Some(stroke_width), stroke_cap: None,
+                    stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(),
+                    stroke_dash_offset: None,
+                });
+                PaintInstruction::Group(PaintGroup {
+                    base: PaintBase::default(), children: vec![outline, crease],
+                    transform: None, opacity: None,
+                })
+            }
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
             | DiagramShape::ParallelogramLeft | DiagramShape::Trapezoid
             | DiagramShape::InvertedTrapezoid | DiagramShape::Asymmetric => {
@@ -1294,11 +1437,11 @@ where
                 fill: Some(fill.clone()),
                 stroke: Some(stroke.clone()),
                 stroke_width: Some(stroke_width),
-                corner_radius: Some(match node.shape {
+                corner_radius: Some(node.style.corner_radius.unwrap_or(match node.shape {
                     DiagramShape::Rect | DiagramShape::Subroutine => 2.0,
                     DiagramShape::Cylinder => 12.0,
                     _ => 18.0,
-                }),
+                })),
                 stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
@@ -1367,11 +1510,28 @@ where
         }
         if !matches!(node.shape,
             DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::ForkJoin
-            | DiagramShape::LightningBolt | DiagramShape::FilledCircle | DiagramShape::Summary
+            | DiagramShape::LightningBolt | DiagramShape::FilledCircle | DiagramShape::Anchor
+            | DiagramShape::Summary
         ) {
-            let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
-                r: 13, g: 71, b: 161, a: 255,
-            });
+            let text_color = node.style.text_color.as_deref()
+                .or(diagram.theme.node_text_color.as_deref())
+                .unwrap_or(&diagram.theme.primary_text_color);
+            let text_color = parse_css_color(text_color).unwrap_or(Color { r: 13, g: 71, b: 161, a: 255 });
+            let mut label_font = options.label_font.clone();
+            if let Some(size) = diagram.theme.font_size { label_font.size = size; }
+            if let Some(family) = &diagram.theme.font_family { label_font.family.clone_from(family); }
+            if let Some(size) = node.style.font_size {
+                label_font.size = size;
+            }
+            if let Some(weight) = node.style.font_weight {
+                label_font.weight = weight;
+            }
+            if let Some(italic) = node.style.font_italic {
+                label_font.italic = italic;
+            }
+            if let Some(family) = &node.style.font_family {
+                label_font.family.clone_from(family);
+            }
             let (label_x, label_y, label_width, label_height) = match node.shape {
                 DiagramShape::CurlyBraceLeft => (node.x + 22.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
                 DiagramShape::CurlyBraceRight => (node.x + 8.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
@@ -1387,6 +1547,7 @@ where
                 DiagramShape::LinedCylinder => (node.x + 8.0, node.y + 20.0, node.width - 16.0, node.height - 24.0),
                 DiagramShape::Display => (node.x + 22.0, node.y + 10.0, node.width - 42.0, node.height - 16.0),
                 DiagramShape::DividedRect => (node.x + 8.0, node.y + 16.0, node.width - 16.0, node.height - 22.0),
+                DiagramShape::TitledRect => (node.x + 8.0, node.y + 2.0, node.width - 16.0, node.height * 0.32 - 4.0),
                 DiagramShape::WindowPane => (node.x + 18.0, node.y + 16.0, node.width - 26.0, node.height - 22.0),
                 DiagramShape::ManualInput => (
                     node.x + 8.0,
@@ -1394,7 +1555,15 @@ where
                     node.width - 16.0,
                     node.height * 2.0 / 3.0 - 8.0,
                 ),
-                _ => (node.x + 8.0, node.y + 10.0, node.width - 16.0, node.height - 16.0),
+                _ => diagram.flowchart_config.padding.map_or(
+                    (node.x + 8.0, node.y + 10.0, node.width - 16.0, node.height - 16.0),
+                    |padding| (
+                        node.x + padding,
+                        node.y + padding,
+                        (node.width - padding * 2.0).max(1.0),
+                        (node.height - padding * 2.0).max(1.0),
+                    ),
+                ),
             };
             text_children.push(text_node(
                 &node.label,
@@ -1402,25 +1571,28 @@ where
                 label_y,
                 label_width,
                 label_height,
-                options.label_font.clone(),
+                label_font,
                 text_color,
             ));
         }
     }
     if let Some(title) = &diagram.title {
+        let mut title_font = options.title_font.clone();
+        if let Some(size) = diagram.theme.font_size { title_font.size = size; }
+        if let Some(family) = &diagram.theme.font_family { title_font.family.clone_from(family); }
         text_children.push(text_node(
             title,
             10.0,
-            5.0,
+            5.0 + diagram.flowchart_config.title_top_margin.unwrap_or(0.0),
             diagram.width - 20.0,
             30.0,
-            options.title_font.clone(),
-            Color {
+            title_font,
+            diagram.theme.title_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 15,
                 g: 23,
                 b: 42,
                 a: 255,
-            },
+            }),
         ));
     }
     let text_scene = layout_to_paint(
@@ -1457,6 +1629,38 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    metadata.insert("swimlane.theme.mainBkg".into(), diagram.theme.main_background.clone());
+    metadata.insert("swimlane.theme.nodeBorder".into(), diagram.theme.node_border.clone());
+    metadata.insert("swimlane.theme.lineColor".into(), diagram.theme.line_color.clone());
+    metadata.insert("swimlane.theme.primaryTextColor".into(), diagram.theme.primary_text_color.clone());
+    metadata.insert("swimlane.theme.textColor".into(), diagram.theme.text_color.clone());
+    if let Some(background) = &diagram.theme.edge_label_background {
+        metadata.insert("swimlane.theme.edgeLabelBackground".into(), background.clone());
+    }
+    if let Some(background) = &diagram.theme.cluster_background {
+        metadata.insert("swimlane.theme.clusterBkg".into(), background.clone());
+    }
+    if let Some(border) = &diagram.theme.cluster_border {
+        metadata.insert("swimlane.theme.clusterBorder".into(), border.clone());
+    }
+    if let Some(color) = &diagram.theme.title_color {
+        metadata.insert("swimlane.theme.titleColor".into(), color.clone());
+    }
+    if let Some(color) = &diagram.theme.node_text_color {
+        metadata.insert("swimlane.theme.nodeTextColor".into(), color.clone());
+    }
+    if let Some(color) = &diagram.theme.arrowhead_color {
+        metadata.insert("swimlane.theme.arrowheadColor".into(), color.clone());
+    }
+    if let Some(width) = diagram.theme.stroke_width {
+        metadata.insert("swimlane.theme.strokeWidth".into(), width.to_string());
+    }
+    if let Some(family) = &diagram.theme.font_family {
+        metadata.insert("swimlane.theme.fontFamily".into(), family.clone());
+    }
+    if let Some(size) = diagram.theme.font_size {
+        metadata.insert("swimlane.theme.fontSize".into(), size.to_string());
+    }
     if let Some(line_hops) = diagram.line_hops {
         metadata.insert("swimlane.lineHops".into(), match line_hops {
             SwimlaneLineHops::Arc => "arc",
@@ -1467,6 +1671,45 @@ where
         metadata.insert("swimlane.automaticLaneOrdering".into(), "true".into());
         metadata.insert("swimlane.laneOrder".into(), diagram.lanes.iter()
             .map(|lane| lane.id.as_str()).collect::<Vec<_>>().join(","));
+    }
+    if !diagram.ignore_cross_lane_edges {
+        metadata.insert("swimlane.ignoreCrossLaneEdges".into(), "false".into());
+        metadata.insert("swimlane.optimizeRanksByCrossings".into(),
+            diagram.optimize_ranks_by_crossings.to_string());
+    }
+    if let Some(spacing) = diagram.flowchart_config.node_spacing {
+        metadata.insert("swimlane.flowchart.nodeSpacing".into(), spacing.to_string());
+    }
+    if let Some(spacing) = diagram.flowchart_config.rank_spacing {
+        metadata.insert("swimlane.flowchart.rankSpacing".into(), spacing.to_string());
+    }
+    if let Some(padding) = diagram.flowchart_config.diagram_padding {
+        metadata.insert("swimlane.flowchart.diagramPadding".into(), padding.to_string());
+    }
+    if let Some(curve) = diagram.flowchart_config.curve {
+        metadata.insert("swimlane.flowchart.curve".into(), swimlane_curve_name(curve).into());
+    }
+    if let Some(width) = diagram.flowchart_config.wrapping_width {
+        metadata.insert("swimlane.flowchart.wrappingWidth".into(), width.to_string());
+    }
+    if let Some(padding) = diagram.flowchart_config.padding {
+        metadata.insert("swimlane.flowchart.padding".into(), padding.to_string());
+    }
+    if let Some(margin) = diagram.flowchart_config.title_top_margin {
+        metadata.insert("swimlane.flowchart.titleTopMargin".into(), margin.to_string());
+    }
+    if let Some(margin) = diagram.flowchart_config.subgraph_title_margin_top {
+        metadata.insert("swimlane.flowchart.subGraphTitleMargin.top".into(), margin.to_string());
+    }
+    if let Some(margin) = diagram.flowchart_config.subgraph_title_margin_bottom {
+        metadata.insert("swimlane.flowchart.subGraphTitleMargin.bottom".into(), margin.to_string());
+    }
+    for (index, group) in diagram.groups.iter().enumerate() {
+        metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());
+        metadata.insert(format!("swimlane.group.{index}.lane"), group.lane_id.clone());
+        if let Some(parent_id) = &group.parent_id {
+            metadata.insert(format!("swimlane.group.{index}.parent"), parent_id.clone());
+        }
     }
     for (index, edge) in diagram.edges.iter().enumerate() {
         if let Some(id) = &edge.id {
@@ -1485,21 +1728,7 @@ where
             }.into());
         }
         if let Some(curve) = edge.curve {
-            metadata.insert(format!("swimlane.edge.{index}.curve"), match curve {
-                SwimlaneEdgeCurve::Linear => "linear",
-                SwimlaneEdgeCurve::Basis => "basis",
-                SwimlaneEdgeCurve::BumpX => "bumpX",
-                SwimlaneEdgeCurve::BumpY => "bumpY",
-                SwimlaneEdgeCurve::Cardinal => "cardinal",
-                SwimlaneEdgeCurve::CatmullRom => "catmullRom",
-                SwimlaneEdgeCurve::MonotoneX => "monotoneX",
-                SwimlaneEdgeCurve::MonotoneY => "monotoneY",
-                SwimlaneEdgeCurve::Natural => "natural",
-                SwimlaneEdgeCurve::Rounded => "rounded",
-                SwimlaneEdgeCurve::Step => "step",
-                SwimlaneEdgeCurve::StepBefore => "stepBefore",
-                SwimlaneEdgeCurve::StepAfter => "stepAfter",
-            }.into());
+            metadata.insert(format!("swimlane.edge.{index}.curve"), swimlane_curve_name(curve).into());
         }
     }
     for link in &diagram.links {
@@ -1544,6 +1773,24 @@ where
         instructions,
         id: None,
         metadata: (!metadata.is_empty()).then_some(metadata),
+    }
+}
+
+fn swimlane_curve_name(curve: SwimlaneEdgeCurve) -> &'static str {
+    match curve {
+        SwimlaneEdgeCurve::Linear => "linear",
+        SwimlaneEdgeCurve::Basis => "basis",
+        SwimlaneEdgeCurve::BumpX => "bumpX",
+        SwimlaneEdgeCurve::BumpY => "bumpY",
+        SwimlaneEdgeCurve::Cardinal => "cardinal",
+        SwimlaneEdgeCurve::CatmullRom => "catmullRom",
+        SwimlaneEdgeCurve::MonotoneX => "monotoneX",
+        SwimlaneEdgeCurve::MonotoneY => "monotoneY",
+        SwimlaneEdgeCurve::Natural => "natural",
+        SwimlaneEdgeCurve::Rounded => "rounded",
+        SwimlaneEdgeCurve::Step => "step",
+        SwimlaneEdgeCurve::StepBefore => "stepBefore",
+        SwimlaneEdgeCurve::StepAfter => "stepAfter",
     }
 }
 
@@ -1598,38 +1845,71 @@ fn swimlane_line_crossing(
     Some((t, Point { x: from.x + dx * t, y: from.y + dy * t }))
 }
 
+fn swimlane_line_hop_points(
+    direction: &DiagramDirection, edge: &LayoutedSwimlaneEdge,
+) -> Option<Vec<Point>> {
+    let horizontal = matches!(direction, DiagramDirection::Lr | DiagramDirection::Rl);
+    let mut points = vec![edge.from.clone()];
+    match edge.curve {
+        None | Some(SwimlaneEdgeCurve::Linear) => {}
+        Some(SwimlaneEdgeCurve::Rounded | SwimlaneEdgeCurve::Step) if horizontal => {
+            let middle = (edge.from.x + edge.to.x) / 2.0;
+            points.extend([Point { x: middle, y: edge.from.y }, Point { x: middle, y: edge.to.y }]);
+        }
+        Some(SwimlaneEdgeCurve::Rounded | SwimlaneEdgeCurve::Step) => {
+            let middle = (edge.from.y + edge.to.y) / 2.0;
+            points.extend([Point { x: edge.from.x, y: middle }, Point { x: edge.to.x, y: middle }]);
+        }
+        Some(SwimlaneEdgeCurve::StepBefore) => points.push(if horizontal {
+            Point { x: edge.from.x, y: edge.to.y }
+        } else {
+            Point { x: edge.to.x, y: edge.from.y }
+        }),
+        Some(SwimlaneEdgeCurve::StepAfter) => points.push(if horizontal {
+            Point { x: edge.to.x, y: edge.from.y }
+        } else {
+            Point { x: edge.from.x, y: edge.to.y }
+        }),
+        _ => return None,
+    }
+    points.push(edge.to.clone());
+    Some(points)
+}
+
 fn apply_swimlane_line_hops(
-    path: &mut PaintPath, from: &Point, to: &Point, crossings: &[(f64, Point)],
+    path: &mut PaintPath, points: &[Point], crossings: &[(usize, f64, Point)],
     line_hops: SwimlaneLineHops,
 ) {
     if crossings.is_empty() {
         return;
     }
-    let dx = to.x - from.x;
-    let dy = to.y - from.y;
-    let length = dx.hypot(dy);
-    if length <= f64::EPSILON {
-        return;
-    }
     let radius = 6.0;
-    let unit_x = dx / length;
-    let unit_y = dy / length;
-    path.commands = vec![PathCommand::MoveTo { x: from.x, y: from.y }];
-    for (_, crossing) in crossings {
-        let before = Point { x: crossing.x - unit_x * radius, y: crossing.y - unit_y * radius };
-        let after = Point { x: crossing.x + unit_x * radius, y: crossing.y + unit_y * radius };
-        path.commands.push(PathCommand::LineTo { x: before.x, y: before.y });
-        match line_hops {
-            SwimlaneLineHops::Arc => path.commands.push(PathCommand::QuadTo {
-                cx: crossing.x - unit_y * radius * 2.0,
-                cy: crossing.y + unit_x * radius * 2.0,
-                x: after.x,
-                y: after.y,
-            }),
-            SwimlaneLineHops::Gap => path.commands.push(PathCommand::MoveTo { x: after.x, y: after.y }),
+    path.commands = vec![PathCommand::MoveTo { x: points[0].x, y: points[0].y }];
+    for (segment_index, segment) in points.windows(2).enumerate() {
+        let dx = segment[1].x - segment[0].x;
+        let dy = segment[1].y - segment[0].y;
+        let length = dx.hypot(dy);
+        if length <= f64::EPSILON {
+            continue;
         }
+        let unit_x = dx / length;
+        let unit_y = dy / length;
+        for (_, _, crossing) in crossings.iter().filter(|crossing| crossing.0 == segment_index) {
+            let before = Point { x: crossing.x - unit_x * radius, y: crossing.y - unit_y * radius };
+            let after = Point { x: crossing.x + unit_x * radius, y: crossing.y + unit_y * radius };
+            path.commands.push(PathCommand::LineTo { x: before.x, y: before.y });
+            match line_hops {
+                SwimlaneLineHops::Arc => path.commands.push(PathCommand::QuadTo {
+                    cx: crossing.x - unit_y * radius * 2.0,
+                    cy: crossing.y + unit_x * radius * 2.0,
+                    x: after.x,
+                    y: after.y,
+                }),
+                SwimlaneLineHops::Gap => path.commands.push(PathCommand::MoveTo { x: after.x, y: after.y }),
+            }
+        }
+        path.commands.push(PathCommand::LineTo { x: segment[1].x, y: segment[1].y });
     }
-    path.commands.push(PathCommand::LineTo { x: to.x, y: to.y });
 }
 
 fn rounded_swimlane_path(points: &[Point], radius: f64) -> (Vec<PathCommand>, Point, Point) {
@@ -1676,31 +1956,102 @@ fn rounded_swimlane_path(points: &[Point], radius: f64) -> (Vec<PathCommand>, Po
     });
     (commands, start_previous, end_previous)
 }
+
+fn rounded_railroad_path(points: &[Point], radius: f64) -> Vec<PathCommand> {
+    const QUARTER_CIRCLE_KAPPA: f64 = 0.552_284_749_830_793_6;
+
+    let mut commands = vec![PathCommand::MoveTo { x: points[0].x, y: points[0].y }];
+    for index in 1..points.len() - 1 {
+        let previous = &points[index - 1];
+        let corner = &points[index];
+        let next = &points[index + 1];
+        let incoming_x = corner.x - previous.x;
+        let incoming_y = corner.y - previous.y;
+        let outgoing_x = next.x - corner.x;
+        let outgoing_y = next.y - corner.y;
+        let incoming_length = incoming_x.hypot(incoming_y);
+        let outgoing_length = outgoing_x.hypot(outgoing_y);
+        if incoming_length <= f64::EPSILON || outgoing_length <= f64::EPSILON {
+            continue;
+        }
+        let incoming_unit_x = incoming_x / incoming_length;
+        let incoming_unit_y = incoming_y / incoming_length;
+        let outgoing_unit_x = outgoing_x / outgoing_length;
+        let outgoing_unit_y = outgoing_y / outgoing_length;
+        let cross = incoming_unit_x * outgoing_unit_y - incoming_unit_y * outgoing_unit_x;
+        if cross.abs() <= f64::EPSILON {
+            commands.push(PathCommand::LineTo { x: corner.x, y: corner.y });
+            continue;
+        }
+        let cut = radius.min(incoming_length / 2.0).min(outgoing_length / 2.0);
+        let before = Point {
+            x: corner.x - incoming_unit_x * cut,
+            y: corner.y - incoming_unit_y * cut,
+        };
+        let after = Point {
+            x: corner.x + outgoing_unit_x * cut,
+            y: corner.y + outgoing_unit_y * cut,
+        };
+        commands.push(PathCommand::LineTo { x: before.x, y: before.y });
+        commands.push(PathCommand::CubicTo {
+            cx1: before.x + incoming_unit_x * cut * QUARTER_CIRCLE_KAPPA,
+            cy1: before.y + incoming_unit_y * cut * QUARTER_CIRCLE_KAPPA,
+            cx2: after.x - outgoing_unit_x * cut * QUARTER_CIRCLE_KAPPA,
+            cy2: after.y - outgoing_unit_y * cut * QUARTER_CIRCLE_KAPPA,
+            x: after.x,
+            y: after.y,
+        });
+    }
+    commands.push(PathCommand::LineTo {
+        x: points[points.len() - 1].x,
+        y: points[points.len() - 1].y,
+    });
+    commands
+}
 /// Lower Railroad rules into backend-neutral paths, markers, boxes, and glyphs.
 pub fn diagram_to_paint_railroad<S, M, R>(diagram: &LayoutedRailroadDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
     let mut instructions = Vec::new(); let mut text_children = Vec::new();
-    if let Some(title) = &diagram.title { text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0,
+    let mut railroad_font = options.label_font.clone();
+    railroad_font.family = diagram.config.font_family.clone();
+    railroad_font.size = diagram.config.font_size;
+    if let Some(title) = &diagram.title { text_children.push(text_node(title, diagram.config.padding, 5.0, diagram.width - diagram.config.padding * 2.0, 30.0,
         options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 })); }
     for rule in &diagram.rules {
         let center = rule.y + rule.height / 2.0;
-        text_children.push(text_node_no_wrap(&rule.name, 10.0, center - 14.0, 92.0, 28.0,
-            options.label_font.clone(), Color { r: 30, g: 64, b: 175, a: 255 }));
-        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: 110.0, cy: center,
-            rx: 5.0, ry: 5.0, fill: Some("#111827".into()), stroke: None, stroke_width: None, stroke_dash: None, stroke_dash_offset: None }));
+        text_children.push(text_node_no_wrap(&rule.name, diagram.config.padding, center - 14.0, 92.0, 28.0,
+            railroad_font.clone(), css_to_color(&diagram.config.rule_name_color)));
         let end_x = rule.paths.iter().flat_map(|path| path.points.iter().map(|point| point.x)).fold(140.0, f64::max);
-        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: end_x + 6.0, cy: center,
-            rx: 5.0, ry: 5.0, fill: Some("#111827".into()), stroke: None, stroke_width: None, stroke_dash: None, stroke_dash_offset: None }));
-        for path in &rule.paths { let mut paint = line_path(&path.points, "#334155", 1.8);
+        if diagram.config.show_markers {
+            for cx in [diagram.config.padding + 100.0, end_x + 6.0] {
+                instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx, cy: center,
+                    rx: diagram.config.marker_radius, ry: diagram.config.marker_radius,
+                    fill: Some(diagram.config.marker_fill.clone()), stroke: None, stroke_width: None,
+                    stroke_dash: None, stroke_dash_offset: None }));
+            }
+        }
+        for path in &rule.paths { let mut paint = line_path(&path.points, &diagram.config.line_color, diagram.config.stroke_width);
+            if diagram.config.arc_radius > 0.0 && path.points.len() > 2 {
+                paint.commands = rounded_railroad_path(&path.points, diagram.config.arc_radius);
+            }
             if path.loopback { paint.stroke_dash = Some(vec![4.0, 3.0]); } instructions.push(PaintInstruction::Path(paint)); }
         for element in &rule.elements {
-            let (fill, stroke, radius) = match element.kind { RailroadElementKind::Terminal => ("#fef3c7", "#92400e", 14.0),
-                RailroadElementKind::NonTerminal => ("#ffffff", "#334155", 2.0), RailroadElementKind::Special => ("#f3e8ff", "#7e22ce", 7.0) };
+            let (fill, stroke, text_color, radius) = match element.kind {
+                RailroadElementKind::Terminal => (&diagram.config.terminal_fill, &diagram.config.terminal_stroke,
+                    &diagram.config.terminal_text_color, 14.0),
+                RailroadElementKind::NonTerminal => (&diagram.config.non_terminal_fill, &diagram.config.non_terminal_stroke,
+                    &diagram.config.non_terminal_text_color, 2.0),
+                RailroadElementKind::Special => (&diagram.config.special_fill, &diagram.config.special_stroke,
+                    &diagram.config.non_terminal_text_color, 7.0),
+            };
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: element.x, y: element.y,
-                width: element.width, height: element.height, fill: Some(fill.into()), stroke: Some(stroke.into()),
-                stroke_width: Some(1.7), corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None }));
-            text_children.push(text_node_no_wrap(&element.label, element.x + 10.0, element.y + 7.0,
-                element.width - 20.0, 24.0, options.label_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+                width: element.width, height: element.height, fill: Some(fill.clone()), stroke: Some(stroke.clone()),
+                stroke_width: Some(diagram.config.stroke_width), corner_radius: Some(radius),
+                stroke_dash: (element.kind == RailroadElementKind::Special).then(|| vec![5.0, 3.0]), stroke_dash_offset: None }));
+            text_children.push(text_node_no_wrap(&element.label, element.x + diagram.config.padding,
+                element.y + (element.height - 24.0) / 2.0,
+                (element.width - diagram.config.padding * 2.0).max(1.0), 24.0,
+                railroad_font.clone(), css_to_color(text_color)));
         }
     }
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
@@ -1710,9 +2061,21 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     instructions.extend(text_scene.instructions); let mut metadata = HashMap::new();
     if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
     if let Some(description) = &diagram.accessibility_description { metadata.insert("accessibility.description".into(), description.clone()); }
+    metadata.insert("railroad.compactMode".into(), diagram.config.compact_mode.to_string());
+    metadata.insert("railroad.padding".into(), diagram.config.padding.to_string());
+    metadata.insert("railroad.verticalSeparation".into(), diagram.config.vertical_separation.to_string());
+    metadata.insert("railroad.horizontalSeparation".into(), diagram.config.horizontal_separation.to_string());
+    metadata.insert("railroad.arcRadius".into(), diagram.config.arc_radius.to_string());
+    metadata.insert("railroad.fontSize".into(), diagram.config.font_size.to_string());
+    metadata.insert("railroad.fontFamily".into(), diagram.config.font_family.clone());
+    metadata.insert("railroad.lineColor".into(), diagram.config.line_color.clone());
+    metadata.insert("railroad.strokeWidth".into(), diagram.config.stroke_width.to_string());
+    metadata.insert("railroad.markerFill".into(), diagram.config.marker_fill.clone());
+    metadata.insert("railroad.showMarkers".into(), diagram.config.show_markers.to_string());
+    metadata.insert("railroad.markerRadius".into(), diagram.config.marker_radius.to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
-        instructions, id: None, metadata: (!metadata.is_empty()).then_some(metadata) }
+        instructions, id: None, metadata: Some(metadata) }
 }
 
 /// Lower Venn circle geometry into backend-neutral ellipses and glyph runs.
@@ -2298,6 +2661,18 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
         DiagramShape::SmallCircle | DiagramShape::FilledCircle => {
             node_ellipse_instruction(node, 0.0, Some(node.style.stroke.clone()))
         }
+        DiagramShape::Anchor => PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx: node.x + 1.0,
+            cy: node.y + 1.0,
+            rx: 1.0,
+            ry: 1.0,
+            fill: Some("#000000".into()),
+            stroke: None,
+            stroke_width: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }),
         DiagramShape::FramedCircle => {
             let inner_inset = node.width.min(node.height) * 9.0 / 28.0;
             PaintInstruction::Group(PaintGroup {
@@ -2444,6 +2819,14 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
         DiagramShape::DividedRect => PaintInstruction::Path(PaintPath {
             base: PaintBase::default(),
             commands: divided_rect_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()), fill_rule: None,
+            stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
+        }),
+        DiagramShape::TitledRect => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: titled_rect_path_commands(node.x, node.y, node.width, node.height),
             fill: Some(node.style.fill.clone()), fill_rule: None,
             stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
             stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
@@ -2606,9 +2989,8 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
         DiagramShape::BlockArrow(directions) => block_arrow_instruction(node, directions),
         DiagramShape::Note => {
             let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
-            PaintInstruction::Path(PaintPath {
-                base: PaintBase::default(),
-                commands: vec![
+            let outline = PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(), commands: vec![
                     PathCommand::MoveTo {
                         x: node.x,
                         y: node.y,
@@ -2639,6 +3021,20 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
                 stroke_join: Some(StrokeJoin::Round),
                 stroke_dash: node.style.stroke_dash.clone(),
                 stroke_dash_offset: None,
+            });
+            let crease = PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(), commands: vec![
+                    PathCommand::MoveTo { x: node.x + node.width - fold, y: node.y },
+                    PathCommand::LineTo { x: node.x + node.width - fold, y: node.y + fold },
+                    PathCommand::LineTo { x: node.x + node.width, y: node.y + fold },
+                ],
+                fill: None, fill_rule: None, stroke: Some(node.style.stroke.clone()),
+                stroke_width: Some(node.style.stroke_width), stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round), stroke_dash: node.style.stroke_dash.clone(),
+                stroke_dash_offset: None,
+            });
+            PaintInstruction::Group(PaintGroup {
+                base: PaintBase::default(), children: vec![outline, crease], transform: None, opacity: None,
             })
         }
         DiagramShape::Rect | DiagramShape::Bar => PaintInstruction::Rect(PaintRect {
@@ -3218,6 +3614,25 @@ fn divided_rect_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<Pa
         PathCommand::LineTo { x: x + width, y },
         PathCommand::LineTo { x: x + width, y: y + height },
         PathCommand::LineTo { x, y: y + height },
+        PathCommand::Close,
+        PathCommand::MoveTo { x, y: divider_y },
+        PathCommand::LineTo { x: x + width, y: divider_y },
+    ]
+}
+
+fn titled_rect_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let radius = 6.0_f64.min(width / 4.0).min(height / 4.0);
+    let divider_y = y + height * 0.32;
+    vec![
+        PathCommand::MoveTo { x: x + radius, y },
+        PathCommand::LineTo { x: x + width - radius, y },
+        PathCommand::QuadTo { cx: x + width, cy: y, x: x + width, y: y + radius },
+        PathCommand::LineTo { x: x + width, y: y + height - radius },
+        PathCommand::QuadTo { cx: x + width, cy: y + height, x: x + width - radius, y: y + height },
+        PathCommand::LineTo { x: x + radius, y: y + height },
+        PathCommand::QuadTo { cx: x, cy: y + height, x, y: y + height - radius },
+        PathCommand::LineTo { x, y: y + radius },
+        PathCommand::QuadTo { cx: x, cy: y, x: x + radius, y },
         PathCommand::Close,
         PathCommand::MoveTo { x, y: divider_y },
         PathCommand::LineTo { x: x + width, y: divider_y },
@@ -8841,6 +9256,48 @@ mod tests {
         ShapingError,
     };
 
+    #[test]
+    fn railroad_corners_lower_to_portable_circular_cubics() {
+        let commands = rounded_railroad_path(&[
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+            Point { x: 10.0, y: 10.0 },
+        ], 4.0);
+
+        assert!(matches!(commands[1], PathCommand::LineTo { x: 6.0, y: 0.0 }));
+        assert!(matches!(commands[2], PathCommand::CubicTo { x: 10.0, y: 4.0, .. }));
+        assert!(commands.iter().all(|command| !matches!(command, PathCommand::QuadTo { .. })));
+        if let PathCommand::CubicTo { cx1, cy1, cx2, cy2, .. } = commands[2] {
+            assert!((cx1 - 8.209_138_999_323_175).abs() < 1e-9);
+            assert_eq!(cy1, 0.0);
+            assert_eq!(cx2, 10.0);
+            assert!((cy2 - 1.790_861_000_676_825_7).abs() < 1e-9);
+        }
+    }
+
+    #[test]
+    fn swimlane_line_hops_accept_every_orthogonal_friendly_curve() {
+        let edge = |curve| LayoutedSwimlaneEdge {
+            id: None, from: Point { x: 10.0, y: 20.0 }, to: Point { x: 110.0, y: 120.0 },
+            label: None, kind: SwimlaneEdgeKind::Directed, start_marker: EdgeMarker::None,
+            end_marker: EdgeMarker::Point, min_length: 1, classes: Vec::new(),
+            style: Default::default(), animate: false, animation: None, curve,
+        };
+        for (curve, expected_points) in [
+            (None, 2),
+            (Some(SwimlaneEdgeCurve::Linear), 2),
+            (Some(SwimlaneEdgeCurve::Rounded), 4),
+            (Some(SwimlaneEdgeCurve::Step), 4),
+            (Some(SwimlaneEdgeCurve::StepBefore), 3),
+            (Some(SwimlaneEdgeCurve::StepAfter), 3),
+        ] {
+            assert_eq!(swimlane_line_hop_points(&DiagramDirection::Lr, &edge(curve)).unwrap().len(), expected_points);
+        }
+        assert!(swimlane_line_hop_points(
+            &DiagramDirection::Lr, &edge(Some(SwimlaneEdgeCurve::Basis)),
+        ).is_none());
+    }
+
     // ── Minimal fake text backend ─────────────────────────────────────────
 
     #[derive(Clone)]
@@ -9805,7 +10262,8 @@ mod tests {
         let scene = diagram_to_paint(&layout, &opts);
 
         assert!(scene.instructions.iter().any(|instruction| {
-            matches!(instruction, PaintInstruction::Path(path) if path.commands.len() == 6)
+            matches!(instruction, PaintInstruction::Group(group)
+                if group.children.iter().filter(|child| matches!(child, PaintInstruction::Path(_))).count() == 2)
         }));
         assert!(scene.instructions.iter().any(|instruction| {
             matches!(instruction, PaintInstruction::Path(path) if path.stroke_dash.is_some())

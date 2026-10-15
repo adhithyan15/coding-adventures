@@ -14,7 +14,8 @@ romanization: "vāṇī"
 concept_tag: SA-SOUND-VANI
 prerequisites: [SA-C50-question, SA-C48-goat, SA-C49-only]
 sounds: []
-roots: []
+roots: [sanskrit-vani]
+etymology_hook: "vāṇī 'voice, sound' is Rigvedic; CDIAL 11490 compares a root for sounding, but the source is not settled"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C50-question]
 It rests on a piece meaning "to sound". Beside शब्दः, which is any sound at all, **वाणी** is the sound a person makes on purpose.
 
 Capitalised, *Vāṇī* is a name of the goddess of speech, so the word carries a good deal more weight in poetry than its plain sense suggests. Feminine, ending in *-ī*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vāṇī* is already in the Rigveda (MW). CDIAL 11490 compares the grammarians' root
+*vaṇ*, "to sound", and possibly *varṇa*, but its source is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 138,
-  "sourceHash": "fnv1a64:6e6ab8e3c85f9cea",
+  "sourceHash": "fnv1a64:ba20bceacb0c9cde",
   "lessonIds": [
     "BN-C138-byasto",
     "BN-C138-chalak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch138.txt",
   "json": "bengali/narration/ch138.json",
-  "textHash": "fnv1a64:72d34bc68531f8dd",
-  "jsonHash": "fnv1a64:0fa62ce8b81279ee",
+  "textHash": "fnv1a64:b819691830c2f0f1",
+  "jsonHash": "fnv1a64:b7d0be9aa81202e4",
   "findings": []
 }

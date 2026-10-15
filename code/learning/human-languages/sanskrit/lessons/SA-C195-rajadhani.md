@@ -14,7 +14,8 @@ romanization: "rājadhānī"
 concept_tag: SA-THG195-RAJADHANI
 prerequisites: [SA-C194-melakah, SA-C195-pattanam]
 sounds: []
-roots: []
+roots: [sanskrit-rajan, sanskrit-dhani]
+etymology_hook: "rājadhānī = rāja 'king' + dhānī 'seat, receptacle', from √dhā 'put, place' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C195-pattanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C195-THG195-02]; assesses=[] -->
 
 **राजधानी** — *rājadhānī* — "a capital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rājadhānī* is a compound of *rāja-*, "king", and *dhānī*, "receptacle, seat", built on the root √dhā, "to put, place" (MW): the place where the king is set. MW lists it as a royal residence, and modern languages use it for a capital city.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

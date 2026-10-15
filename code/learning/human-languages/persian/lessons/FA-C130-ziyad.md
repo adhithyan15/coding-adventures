@@ -14,7 +14,8 @@ romanization: "ziyâd"
 concept_tag: FA-QUAL130-ZIYAD
 prerequisites: [FA-C130-riz, FA-C130-kam]
 sounds: []
-roots: []
+roots: [arabic-ziyada]
+etymology_hook: "ziyâd ← Arabic ziyāda 'increase', root z-y-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C130-kam]
 <!-- hl-knowledge: introduces=[FA-LEX-C130-QUAL130-05]; assesses=[] -->
 
 **زیاد** — *ziyâd* — "much, many".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ziyâd* is borrowed from Arabic *ziyāda*, "increase". Its Arabic root is *z-y-d* (Lane). Persian uses it as "much, many" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

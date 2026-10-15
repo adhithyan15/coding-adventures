@@ -14,7 +14,8 @@ romanization: "gitâr"
 concept_tag: FA-CHIZ172-GITAR
 prerequisites: [FA-C171-gonjeshk, FA-C172-durbin]
 sounds: []
-roots: []
+roots: [french-guitare]
+etymology_hook: "gitâr: a loan, usually traced to French guitare 'guitar'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C172-durbin]
 <!-- hl-knowledge: introduces=[FA-LEX-C172-CHIZ172-02]; assesses=[] -->
 
 **گیتار** — *gitâr* — "a guitar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gitâr* is a loan, usually traced to French *guitare*, "guitar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

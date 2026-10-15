@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 176,
-  "sourceHash": "fnv1a64:cd2e90900afcc6ac",
+  "sourceHash": "fnv1a64:f91561f3cd94a71e",
   "lessonIds": [
     "TE-C176-lekapote",
     "TE-C176-ayina",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch176.txt",
   "json": "telugu/narration/ch176.json",
-  "textHash": "fnv1a64:e095ec779925b67f",
-  "jsonHash": "fnv1a64:d74a75deb0b5dcbe",
+  "textHash": "fnv1a64:6da25b7bab9677f2",
+  "jsonHash": "fnv1a64:c1eb323a5ca909e4",
   "findings": []
 }

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for pink, then the Marathi for young.
 You'll want to know: म्हातारा.
 म्हातारा — mhātārā — "old (people)".
 
+The word, taken apart.
+म्हातारा (mhātārā) is a tadbhava of Sanskrit mahattara, "greater", which also meant "chief, village eldest" (CDIAL 9932). CDIAL lists Marathi mahātārā, "old".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for young, then the Marathi for old.
 
 You'll want to know: आठवडा.
 आठवडा — āṭhavḍā — "a week".
+
+The word, taken apart.
+आठवडा (āṭhavḍā) comes from aṣṭavāra, "period of eight days": aṣṭa, "eight", and vāra, "turn, day" (CDIAL 940). CDIAL notes that the Marathi form was crossed with compounds of vāṭa.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for old, then the Marathi for a week.
 You'll want to know: महिना.
 महिना — mahinā — "a month".
 
+The word, taken apart.
+महिना (mahinā) is a loan, usually traced to Persian māhīna, "monthly", built on māh, "moon, month".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a week, then the Marathi for a month.
 You'll want to know: वर्ष.
 वर्ष — varṣa — "a year".
 
+The word, taken apart.
+वर्ष (varṣa) is Sanskrit varṣa, "rain; year", taken over whole as a learned loan, a tatsama (CDIAL 11392). It meant "rain" in the Rigveda and "year" later.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a month, then the Marathi for a year.
 
 You'll want to know: तास.
 तास — tās — "an hour".
+
+The word, taken apart.
+तास (tās) is usually traced to Persian tās, "a metal bowl". In Marathi it also names a gong, and the gong struck at each hour is taken to have given the hour its name. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

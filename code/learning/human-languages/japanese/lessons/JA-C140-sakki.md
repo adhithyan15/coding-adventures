@@ -14,7 +14,8 @@ romanization: "sakki"
 concept_tag: JA-PAST140-SAKKI
 prerequisites: [JA-C140-kyonen, JA-C139-daremo, JA-C137-kippu, JA-C132-soko]
 sounds: []
-roots: []
+roots: [japanese-saki]
+etymology_hook: "sakki: native; usually saki 'earlier' with a doubled k (both 先)"
 duration:
   max_seconds: 200
 requires:
@@ -51,6 +52,11 @@ today, not long before now. The small **っ** holds the beat before *ki*.
 
 > **さっき おきました。** — *sakki okimashita* — "I got up a little while
 > ago."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さっき** (*sakki*) is native, usually explained as *saki*, "earlier, ahead", with the *k* doubled; JMdict writes both with the same character. It is inherited rather than borrowed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C140-SAKKI, JA-LEX-C140-KYONEN] -->

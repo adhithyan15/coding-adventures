@@ -14,7 +14,8 @@ romanization: "aruṇd"
 concept_tag: MR-THINGS147-ARUND
 prerequisites: [MR-C147-had, MR-C147-rund]
 sounds: []
-roots: []
+roots: [sanskrit-aruddha]
+etymology_hook: "aruṇd ← Sanskrit āruddha 'blocked', a tadbhava (CDIAL 1324)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C147-rund]
 <!-- hl-knowledge: introduces=[MR-LEX-C147-THINGS147-04]; assesses=[] -->
 
 **अरुंद** — *aruṇd* — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अरुंद** (*aruṇd*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *āruddha*, "blocked" (CDIAL 1324). It is the past participle of *rudh*, "to block". CDIAL glosses the Marathi word "narrow, strait".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

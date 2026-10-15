@@ -14,7 +14,8 @@ romanization: "eda"
 concept_tag: JA-NUMBERS60-EDA
 prerequisites: [JA-C60-nasu, JA-C60-uta]
 sounds: []
-roots: []
+roots: [japanese-eda]
+etymology_hook: "eda: native Japanese, inherited, not borrowed; kanji 枝 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C60-uta]
 <!-- hl-knowledge: introduces=[JA-LEX-C60-NUMBERS60-05]; assesses=[] -->
 
 **えだ** — *eda* — "a branch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**えだ** (*eda*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

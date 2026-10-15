@@ -11,8 +11,8 @@ gloss: my younger brother
 concept_tag: JA-FAMILY-YOUNGER-BROTHER
 prerequisites: [JA-C13-ane]
 sounds: [mora]
-roots: []
-etymology_hook: Four owned signs carry five morae because う holds the preceding o.
+roots: [japanese-otouto]
+etymology_hook: "otōto: native; usually explained as oto 'younger' + hito 'person'; kanji 弟 attached later"
 duration:
   max_seconds: 165
 requires:
@@ -43,6 +43,11 @@ Retrieve **あね** once from its meaning.
 
 Hear *o-to-o-to*: o | to | o | to, with the long o
 occupying two beats.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おとうと** (*otōto*) is a native word, inherited rather than borrowed. It is usually explained as *oto*, "younger", with *hito*, "person", worn down; the kanji is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTOUTO, JA-SCRIPT-O-01, JA-SCRIPT-TO-01, JA-SCRIPT-U-01] -->

@@ -14,7 +14,8 @@ romanization: "dahe"
 concept_tag: FA-ZAMAN265-DAHE
 prerequisites: [FA-C265-pishapish, FA-C265-hamzaman]
 sounds: []
-roots: []
+roots: [proto-indo-european-dekm]
+etymology_hook: "dahe: Persian dah 'ten' (inherited) + -e"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C265-hamzaman]
 <!-- hl-knowledge: introduces=[FA-LEX-C265-ZAMAN265-03]; assesses=[] -->
 
 **دهه** — *dahe* — "a decade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dahe* is *dah*, "ten", with the ending *-e*: a set of ten years. *dah* is inherited, from Middle Persian *dah*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

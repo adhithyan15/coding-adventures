@@ -14,7 +14,8 @@ romanization: "chāḷṇī"
 concept_tag: MW-THINGS120-CHALNI
 prerequisites: [MW-C119-buhari, MW-C120-supro]
 sounds: []
-roots: []
+roots: [sanskrit-calana]
+etymology_hook: "chāḷṇī ← Sanskrit cālanī 'strainer, sieve', a tadbhava (CDIAL 4771, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C120-supro]
 <!-- hl-knowledge: introduces=[MW-LEX-C120-THINGS120-02]; assesses=[] -->
 
 **चाळणी** — *chāḷṇī* — "a sieve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चाळणी** (*chāḷṇī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cālanī*, "strainer, sieve". CDIAL gives no Marwari form in this entry (CDIAL 4771); the match is through Hindi *cālnī* and Gujarati *cāḷṇī*. It is built on the root *cal*, "to move".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

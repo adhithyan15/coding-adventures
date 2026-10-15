@@ -14,7 +14,8 @@ romanization: "bhāgavahisu"
 concept_tag: KA-VERB-BHAGAVAHISU
 prerequisites: [KA-C162-nakalu-madu, KA-C162-eccarisu]
 sounds: []
-roots: []
+roots: [sanskrit-bhaga, sanskrit-vah]
+etymology_hook: "bhāgavahisu: Sanskrit bhāga 'portion' (CDIAL 9430) + vahisu 'to bear', from Sanskrit vah"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C162-eccarisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C162-KRIYE162-04]; assesses=[] -->
 
 **ಭಾಗವಹಿಸು** — *bhāgavahisu* — "to take part".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭಾಗವಹಿಸು** (*bhāgavahisu*) is *bhāga*, "a portion, a share", from Sanskrit *bhāga* (CDIAL 9430), and *vahisu*, "to bear", from the Sanskrit verb *vah*, "to carry": "to carry a share".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

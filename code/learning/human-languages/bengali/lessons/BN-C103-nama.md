@@ -14,7 +14,8 @@ romanization: "nāmā"
 concept_tag: BN-VERB-NAMA
 prerequisites: [BN-C102-jagano, BN-C102-bachano]
 sounds: []
-roots: []
+roots: [sanskrit-namra]
+etymology_hook: "nāmā ← Sanskrit namra 'bent, submissive', a tadbhava (CDIAL 6964)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C102-bachano]
 <!-- hl-knowledge: introduces=[BN-LEX-C103-ACT103-01]; assesses=[] -->
 
 **নামা** — *nāmā* — "to get down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**নামা** (*nāmā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *namra*, "bent, submissive" (CDIAL 6964). CDIAL lists Bengali *nāmā*, "to descend", under it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

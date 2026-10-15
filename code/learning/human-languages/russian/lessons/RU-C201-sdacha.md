@@ -14,7 +14,8 @@ romanization: "sdácha"
 concept_tag: RU-RABOTA201-SDACHA
 prerequisites: [RU-C200-slyozy, RU-C200-ulybka]
 sounds: []
-roots: []
+roots: [pie-deh3-give]
+etymology_hook: "сдача is from сдать 'to hand back', с- + дать 'to give': what is given back"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C200-ulybka]
 <!-- hl-knowledge: introduces=[RU-LEX-C201-RABOTA201-01]; assesses=[] -->
 
 **сдача** (*sdácha*) — "change (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сдача** comes from *сдать*, "to hand over", *с-* with *дать*, "to give": change is the money handed back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

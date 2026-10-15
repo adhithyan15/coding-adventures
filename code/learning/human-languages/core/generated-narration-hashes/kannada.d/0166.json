@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 166,
-  "sourceHash": "fnv1a64:6ffec9a5b75b56c6",
+  "sourceHash": "fnv1a64:3769f99850b223da",
   "lessonIds": [
     "KA-C166-ulu",
     "KA-C166-cimukisu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch166.txt",
   "json": "kannada/narration/ch166.json",
-  "textHash": "fnv1a64:04fcfbe5b9125814",
-  "jsonHash": "fnv1a64:d729acd007683f65",
+  "textHash": "fnv1a64:29a23071b0181319",
+  "jsonHash": "fnv1a64:d37a2406f732d1d0",
   "findings": []
 }

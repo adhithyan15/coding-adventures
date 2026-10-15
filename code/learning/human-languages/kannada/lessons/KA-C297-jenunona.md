@@ -14,7 +14,8 @@ romanization: "jēnunoṇa"
 concept_tag: KA-VASTU297-JENUNONA
 prerequisites: [KA-C296-helmet, KA-C296-sabdakosa]
 sounds: []
-roots: []
+roots: [dravidian-teen-honey, dravidian-nonam-fly]
+etymology_hook: "jēnunoṇa: native jēnu 'honey' (DEDR 3268) + noṇa 'fly' (DEDR 3715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C296-sabdakosa]
 <!-- hl-knowledge: introduces=[KA-LEX-C297-VASTU297-01]; assesses=[] -->
 
 **ಜೇನುನೊಣ** — *jēnunoṇa* — "a bee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಜೇನುನೊಣ** (*jēnunoṇa*) is native Dravidian: *jēnu*, "honey", one word with Tamil *tēṉ* (DEDR 3268), and *noṇa*, "a fly" (DEDR 3715): "the honey fly". DEDR 3268 compares, with a query, Prakrit *tiṇisa*, "honeycomb".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

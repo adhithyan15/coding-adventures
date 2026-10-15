@@ -14,7 +14,8 @@ romanization: "bachchā"
 concept_tag: PA-FAMILY55-BACHCHA
 prerequisites: [PA-C54-pati, PA-C55-patni]
 sounds: []
-roots: []
+roots: [sanskrit-apatya, persian-bacca]
+etymology_hook: "bachchā: CDIAL lists it under apatya 'offspring' (424) and sets it beside Persian bachcha (14226); not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C55-patni]
 <!-- hl-knowledge: introduces=[PA-LEX-C55-FAMILY55-02]; assesses=[] -->
 
 **ਬੱਚਾ** — *bachchā* — "a child".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ਬੱਚਾ** (*bachchā*) under Sanskrit *apatya*, "offspring", through Prakrit *avacca* (CDIAL 424), and its addenda set the word beside Persian *bachcha*, "young (of humans or animals)" (CDIAL 14226). Many take it from Persian instead, so its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

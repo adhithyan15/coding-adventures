@@ -13,7 +13,8 @@ gloss: "recently"
 concept_tag: LA-PAS162-NUPER
 prerequisites: [LA-C161-uter, LA-C161-neque]
 sounds: []
-roots: []
+roots: [nuper-latin, novus-latin]
+etymology_hook: "nūper 'recently' — usually explained as novum 'new' + -per: newly"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C161-neque]
 <!-- hl-knowledge: introduces=[LA-LEX-C162-PAS162-01]; assesses=[] -->
 
 **nūper** — "recently". Latin's past tense, the perfect, has its own endings: **vīdī** — "I saw", **vēnī** — "I came". **Nūper librum lēgī.** — "I recently read a book."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nūper** is usually explained as *novum*, "new", with *-per*, "through", the ending of *semper*, "always" (Lewis & Short): newly, of late.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

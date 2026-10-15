@@ -4,7 +4,7 @@
   "chapter": 438,
   "title": "El Cuerpo Y El Descanso",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:22f191b008c5ec6d",
+  "sourceHash": "fnv1a64:67351443dfb21cec",
   "lessons": [
     {
       "id": "ES-C438-polideportivo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52501637a7fbc2a1",
+      "sourceHash": "fnv1a64:f779b91546ce416a",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93db700d632be1d5",
+      "sourceHash": "fnv1a64:a20ce5e82b0157f9",
       "notice": null,
       "blocks": [
         {
@@ -205,7 +205,7 @@
             },
             {
               "kind": "speech",
-              "text": "documentar gave documentación; natar gives natación. Same machine."
+              "text": "Latin had the noun ready-made, natatio, \"a swimming\" (Lewis & Short), and Spanish took it from books. The same natare, worn down in speech, is nadar, \"to swim\": the t became d."
             }
           ]
         },
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:245cc1aa07487830",
+      "sourceHash": "fnv1a64:442f86d09e73446c",
       "notice": null,
       "blocks": [
         {
@@ -481,7 +481,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17fa98542137db7c",
+      "sourceHash": "fnv1a64:a91a0cb963683e68",
       "notice": null,
       "blocks": [
         {
@@ -639,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46d8b6908b470050",
+      "sourceHash": "fnv1a64:3f1a55ecb7bca34d",
       "notice": null,
       "blocks": [
         {

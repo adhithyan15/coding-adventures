@@ -11,8 +11,8 @@ gloss: rickshaw
 concept_tag: MW-TRANSPORT-RICKSHAW-WRITTEN
 prerequisites: [MW-W17-sha]
 sounds: [short-i, consonant-cluster, long-aa]
-roots: []
-etymology_hook: Familiar रि and क् join new शा in one careful assembly.
+roots: [english-rickshaw]
+etymology_hook: "rikśā ← English rickshaw"
 duration:
   max_seconds: 175
 requires:
@@ -43,6 +43,11 @@ reviews_of: [MW-C17-hear-riksha, MW-W17-sha]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RIKSHA-01, MW-SCRIPT-RIKSHA-01] -->
 
 > **रि** + **क्** + **शा** → **रिक्शा** — *rikśā* — rickshaw
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रिक्शा** (*rikśā*) is a loan from English *rickshaw*. English took the word from Japanese *jinrikisha*, "man-powered vehicle".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RIKSHA-01] -->

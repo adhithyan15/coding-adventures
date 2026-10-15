@@ -14,7 +14,8 @@ romanization: "volná"
 concept_tag: RU-THINGS115-WAVE
 prerequisites: [RU-C115-hill, RU-C115-rock]
 sounds: []
-roots: []
+roots: [slavic-vilna]
+etymology_hook: "волна ← Proto-Slavic *vĭlna; Lithuanian vilnìs 'wave' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C115-rock]
 <!-- hl-knowledge: introduces=[RU-LEX-C115-THINGS115-05]; assesses=[] -->
 
 **волна** (*volná*) — "a wave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**волна** ← Proto-Slavic *\*vĭlna* — inherited, a cousin of Lithuanian *vilnìs*, "wave", Old High German *wella*, "wave", and Sanskrit *ūrmí-*, "wave" (Vasmer). It is a separate word from *волна*, "wool".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

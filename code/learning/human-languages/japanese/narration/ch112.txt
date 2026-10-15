@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a road, a highway, then the Japanese fo
 You'll want to know: のうか.
 のうか — nouka — "a farmhouse".
 
+The word, taken apart.
+のうか (nouka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nō, "agriculture" (Middle Chinese nowng) and ka, "house, family" (kae) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a pavement, then the Japanese for a far
 
 You'll want to know: だいく.
 だいく — daiku — "a carpenter".
+
+The word, taken apart.
+だいく (daiku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dai, "big, great" (Middle Chinese dajH) and ku, "labor, work" (kuwng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a farmhouse, then the Japanese for a ca
 You'll want to know: かしゅ.
 かしゅ — kashu — "a singer".
 
+The word, taken apart.
+かしゅ (kashu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, "song" (Middle Chinese ka) and shu, "hand; person" (syuwX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a carpenter, then the Japanese for a si
 You'll want to know: しごと.
 しごと — shigoto — "work, a job".
 
+The word, taken apart.
+しごと (shigoto) is native: shi, the stem of suru, "to do", and koto, "matter", voiced to goto: a matter of doing (JMdict, KANJIDIC2). It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a singer, then the Japanese for work.
 
 You'll want to know: やすみ.
 やすみ — yasumi — "a holiday, a break".
+
+The word, taken apart.
+やすみ (yasumi) is native: the noun made from yasumu, "to rest", by its stem (JMdict). It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.

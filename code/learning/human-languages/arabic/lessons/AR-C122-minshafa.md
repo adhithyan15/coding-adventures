@@ -14,7 +14,8 @@ romanization: "minshafa"
 concept_tag: AR-THINGS122-MINSHAFA
 prerequisites: [AR-C122-musht, AR-C122-sabun]
 sounds: []
-roots: []
+roots: [n-sh-f]
+etymology_hook: "minshafa: built on the root n-sh-f, 'to dry, to wipe dry' (Lane); minshafa is an instrument noun, 'a thing for drying'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C122-sabun]
 <!-- hl-knowledge: introduces=[AR-LEX-C122-THINGS122-04]; assesses=[] -->
 
 **منشفة** — *minshafa* — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منشفة** (*minshafa*) is built on the native Arabic root *n-sh-f*, "to dry, to wipe dry" (Lane). *Minshafa* is an instrument noun, "a thing for drying".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a butterfly, then the Hindi for a fly.
 You'll want to know: मच्छर.
 मच्छर — macchar — "a mosquito".
 
+The word, taken apart.
+मच्छर (macchar) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from matsara, "mosquito, fly" (CDIAL 9757). The Sanskrit word is known only from the old word-lists; CDIAL suggests it was named for its humming.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a fly, then the Hindi for a mosquito.
 
 You'll want to know: चींटी.
 चींटी — cīṇṭī — "an ant".
+
+The word, taken apart.
+The origin of चींटी (cīṇṭī) is uncertain. CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a mosquito, then the Hindi for an ant.
 You'll want to know: मेंढक.
 मेंढक — meṇḍhak — "a frog".
 
+The word, taken apart.
+मेंढक (meṇḍhak) is usually traced to Sanskrit maṇḍūka, "frog" (CDIAL 9746). CDIAL does not list the Hindi form, and notes that words for "frog" took many irregular shapes, partly through taboo.
+
 What you've built.
 One more word for this chapter.
 
@@ -98,6 +107,9 @@ Before the new one: say the Hindi for an ant, then the Hindi for a frog.
 
 You'll want to know: कछुआ.
 कछुआ — kachuā — "a tortoise".
+
+The word, taken apart.
+कछुआ (kachuā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kacchapa, "turtle, tortoise" (CDIAL 2619).
 
 What you've built.
 One more word for this chapter.
@@ -129,6 +141,9 @@ Say तीन, चार and पाँच, then the path behind the first: trī�
 
 You'll want to know: चूहा.
 चूहा — cūhā — "a mouse".
+
+The word, taken apart.
+चूहा (cūhā) is a tadbhava, a word inherited and reshaped by sound change. It comes from cūha, "rat, mouse", a form CDIAL reconstructs from its descendants (CDIAL 4899).
 
 What you've built.
 One more word for this chapter.

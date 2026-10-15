@@ -14,7 +14,8 @@ romanization: "sútki"
 concept_tag: RU-VREMYA149-SUTKI
 prerequisites: [RU-C149-polchasa, RU-C149-chetvert]
 sounds: []
-roots: []
+roots: [slavic-tukati]
+etymology_hook: "сутки is су- 'together' + *tŭka, from тыкать 'to poke': where day and night meet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C149-chetvert]
 <!-- hl-knowledge: introduces=[RU-LEX-C149-VREMYA149-03]; assesses=[] -->
 
 **сутки** (*sútki*) — "a day and a night, 24 hours".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сутки** is *су-*, "together", with *\*tŭka*, from *тыкать*, "to poke, to butt": "the joining of day and night" (Vasmer). Dialects use *сутки* for the corners of a hut.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

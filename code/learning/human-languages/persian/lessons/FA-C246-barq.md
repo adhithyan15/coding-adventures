@@ -14,7 +14,8 @@ romanization: "barq"
 concept_tag: FA-CHIZ246-BARQ
 prerequisites: [FA-C246-keshow, FA-C246-panke]
 sounds: []
-roots: []
+roots: [arabic-barq]
+etymology_hook: "barq ← Arabic barq 'lightning', root b-r-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C246-panke]
 <!-- hl-knowledge: introduces=[FA-LEX-C246-CHIZ246-05]; assesses=[] -->
 
 **برق** — *barq* — "electricity".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*barq* is borrowed from Arabic *barq*, "lightning". Its Arabic root is *b-r-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "akhbār"
 concept_tag: AR-WORLD99-AKHBAR
 prerequisites: [AR-C98-hubb, AR-C99-musiqa]
 sounds: []
-roots: []
+roots: [kh-b-r]
+etymology_hook: "akhbār: built on the root kh-b-r, 'to know, to have experience of' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C99-musiqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C99-WORLD99-02]; assesses=[] -->
 
 **أخبار** — *akhbār* — "news".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أخبار** (*akhbār*) is built on the native Arabic root *kh-b-r*, "to know, to have experience of" (Lane). *Akhbār* is the plural of *khabar*, "a piece of news".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

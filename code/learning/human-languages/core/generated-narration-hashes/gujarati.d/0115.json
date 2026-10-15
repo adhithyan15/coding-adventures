@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 115,
-  "sourceHash": "fnv1a64:e986d439cfc43f0a",
+  "sourceHash": "fnv1a64:7248de897bf1cbf8",
   "lessonIds": [
     "GU-C115-gajar",
     "GU-C115-lasan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch115.txt",
   "json": "gujarati/narration/ch115.json",
-  "textHash": "fnv1a64:a29e888856e3f6b8",
-  "jsonHash": "fnv1a64:7af7a3e70d06fe6f",
+  "textHash": "fnv1a64:4d2838ca5bffa9f9",
+  "jsonHash": "fnv1a64:50c187563f36add3",
   "findings": []
 }

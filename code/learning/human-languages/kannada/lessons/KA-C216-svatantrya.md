@@ -14,7 +14,8 @@ romanization: "svātantrya"
 concept_tag: KA-KARANA216-SVATANTRYA
 prerequisites: [KA-C215-samskrti, KA-C216-yasassu]
 sounds: []
-roots: []
+roots: [sanskrit-svatantrya]
+etymology_hook: "svātantrya ← Sanskrit svātantrya 'independence', from svatantra 'self-ruling'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C216-yasassu]
 <!-- hl-knowledge: introduces=[KA-LEX-C216-KARANA216-02]; assesses=[] -->
 
 **ಸ್ವಾತಂತ್ರ್ಯ** — *svātantrya* — "freedom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸ್ವಾತಂತ್ರ್ಯ** (*svātantrya*) is Sanskrit *svātantrya*, "independence", from *svatantra*, "self-ruling": *sva*, "self", and *tantra*, "rule". A tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

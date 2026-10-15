@@ -12,7 +12,7 @@ concept_tag: MR-FOOD-MILK
 prerequisites: [MR-C10-chaha]
 sounds: [matra-oo]
 roots: [sanskrit-dugdha, pie-dheugh-fit]
-etymology_hook: "दूध continues Maharastri Prakrit duddha, from Sanskrit दुग्ध dugdha, \"milked, milk,\" from Indo-European *dʰewgʰ- \"to be fit, to be of use, to produce\" — the same root that gave English doughty, \"able, capable\""
+etymology_hook: "दूध ← Prakrit duddha ← Sanskrit dugdha 'milk', PIE *dʰewgʰ- 'to be of use', the root of English doughty"
 duration:
   max_seconds: 250
 requires:

@@ -14,7 +14,8 @@ romanization: "maʿan"
 concept_tag: AR-SABAB268-MAAN
 prerequisites: [AR-C267-salah, AR-C267-alaqa]
 sounds: []
-roots: []
+roots: [semitic-imma]
+etymology_hook: "maʿan: maʿa 'with' + the adverb ending -an; an old particle in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C267-alaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C268-SABAB268-01]; assesses=[] -->
 
 **معا** — *maʿan* — "together".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**معا** (*maʿan*) is *maʿa*, "with", with the adverb ending *-an*: "together". Lane lists *maʿa* as an old particle; Hebrew *ʿim*, "with", is usually compared.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

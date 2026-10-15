@@ -14,7 +14,8 @@ romanization: "gobbara"
 concept_tag: KA-VASTU267-GOBBARA
 prerequisites: [KA-C266-karpura, KA-C266-tamra]
 sounds: []
-roots: []
+roots: [sanskrit-govara-cowdung]
+etymology_hook: "gobbara: probably a tadbhava of Sanskrit gōvara 'powdered cowdung' (CDIAL 4316)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C266-tamra]
 <!-- hl-knowledge: introduces=[KA-LEX-C267-VASTU267-01]; assesses=[] -->
 
 **ಗೊಬ್ಬರ** — *gobbara* — "manure, fertiliser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗೊಬ್ಬರ** (*gobbara*) is probably a tadbhava of Sanskrit *gōvara*, "powdered cowdung" (CDIAL 4316): it is close to Prakrit *govvara* and Hindi *gobar*, though CDIAL does not list the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

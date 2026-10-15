@@ -14,7 +14,8 @@ romanization: "kṣetram"
 concept_tag: SA-PLACE-FIELD
 prerequisites: [SA-C84-temple, SA-C84-hospital]
 sounds: []
-roots: []
+roots: [sanskrit-kshetra]
+etymology_hook: "kṣetra 'land, field' ← the root √kṣi 'dwell' (MW); it lives on as Hindi khet 'field' (CDIAL 3735)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C84-hospital]
 <!-- hl-knowledge: introduces=[SA-LEX-C84-PLACES-03]; assesses=[] -->
 
 **क्षेत्रम्** (*kṣetram*) — "a field" of a **ग्रामः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kṣetra* is built on the root √kṣi, "to dwell, possess": land held and lived on
+(MW). It is Rigvedic, and lives on as Hindi *khet*, "field" (CDIAL 3735).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

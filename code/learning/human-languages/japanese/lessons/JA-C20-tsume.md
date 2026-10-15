@@ -14,7 +14,8 @@ romanization: "tsume"
 concept_tag: JA-BODY20-TSUME
 prerequisites: [JA-C18-hitori-futari, JA-C18-hon]
 sounds: []
-roots: []
+roots: [japanese-tsume]
+etymology_hook: "tsume: native Japanese, inherited, not borrowed; kanji 爪 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C18-hon]
 <!-- hl-knowledge: introduces=[JA-LEX-C20-BODY20-01]; assesses=[] -->
 
 **つめ** — *tsume* — "a nail (finger or toe)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つめ** (*tsume*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: child
 concept_tag: MW-FAMILY-CHILD
 prerequisites: [MW-C09-patni]
 sounds: [voiced-b, short-a, geminate-ch, long-aa]
-roots: []
-etymology_hook: The inclusive child label arrives by ear before its doubled consonant is written.
+roots: [persian-bacca]
+etymology_hook: "bachchā: usually traced to Persian bačča 'child'"
 duration:
   max_seconds: 140
 requires:
@@ -47,6 +47,11 @@ familiar greeting exchange. [YOU WRITE: **दादा**]
 
 Hear the held middle consonant. The label does not specify a child's gender;
 writing waits until the new consonant has a separate, small step.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bachchā* is a loan, usually traced to Persian *bačča*, "child". CDIAL lists a native cousin under Sanskrit *vatsa*, "calf, child": Hindi *bāchā*, "calf" (CDIAL 11239).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BACHCHA-01] -->

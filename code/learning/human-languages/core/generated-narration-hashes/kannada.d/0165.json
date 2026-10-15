@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 165,
-  "sourceHash": "fnv1a64:e197cf2debb92353",
+  "sourceHash": "fnv1a64:58006e66ae860e19",
   "lessonIds": [
     "KA-C165-kadi",
     "KA-C165-nenapisikollu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch165.txt",
   "json": "kannada/narration/ch165.json",
-  "textHash": "fnv1a64:0cad32b655f6cadf",
-  "jsonHash": "fnv1a64:10b8413cd28b6b5b",
+  "textHash": "fnv1a64:75aec029e54d4840",
+  "jsonHash": "fnv1a64:5514a29a3e788f0a",
   "findings": []
 }

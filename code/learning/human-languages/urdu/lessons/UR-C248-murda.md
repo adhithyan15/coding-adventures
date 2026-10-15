@@ -14,7 +14,8 @@ romanization: "murdā"
 concept_tag: UR-SIFAT248-MURDA
 prerequisites: [UR-C248-jhuta, UR-C248-zinda]
 sounds: []
-roots: []
+roots: [persian-murda]
+etymology_hook: "murdā: usually traced to Persian murda 'dead'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C248-zinda]
 <!-- hl-knowledge: introduces=[UR-LEX-C248-SIFAT248-03]; assesses=[] -->
 
 **مردہ** — *murdā* — "dead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مردہ** (*murdā*) is a loan, usually traced to Persian *murda*, "dead".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Stone, Sand, Shore, Island, Field",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f10ff6bec87fae2b",
+  "sourceHash": "fnv1a64:552510df06d10218",
   "lessons": [
     {
       "id": "RU-C57-stone",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ce0cb5806aaaea7",
+      "sourceHash": "fnv1a64:6942c8768af3c223",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "камень (kámen) from Proto-Slavic kamy, with the stem kamen- — inherited. Vasmer relates it to Old Norse hamarr, \"hammer\", so English hammer is a cousin, beside Lithuanian akmuõ and Greek ákmōn, \"anvil\", from a related form."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dea71f74b2cb1267",
+      "sourceHash": "fnv1a64:64781e869c1c6f19",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "песок (pesók) from Proto-Slavic pěsŭkŭ — inherited, a cousin of Sanskrit pāṃsú-, \"dust, sand\", and Avestan pąsnu- (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8e075d45be6433a",
+      "sourceHash": "fnv1a64:25d5b32a768a9fd5",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "берег (béreg) from Proto-Slavic bergŭ. Vasmer relates it to Old High German berg, \"mountain\", Avestan barəzah-, \"height\", and Sanskrit bṛhant-, \"high\": a bank is the raised edge. Inherited, that root should have given Slavic з, not г, so Berneker and others take the word from Germanic, and Kiparsky from another Indo-European language; Vasmer, judging by its tone and meaning, doubts a loan."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b7acd86cdee9f26",
+      "sourceHash": "fnv1a64:21cd1319f892162a",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "остров (óstrov) from Proto-Slavic ostrovŭ, \"what the current flows around\": о-, \"around\", with the root of струя, \"a stream\" (Vasmer). The root is in Sanskrit srávati, \"flows\", and Greek rhóos, \"a current\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00c0f04c3abfcb53",
+      "sourceHash": "fnv1a64:fdca274e822cc570",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "поле (póle) from Proto-Slavic polje — inherited, related to Old Russian polŭ, \"open, empty\" (Vasmer): a field is open land. Vasmer compares Latin palam, \"openly\", and the -falen of Westphalia."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

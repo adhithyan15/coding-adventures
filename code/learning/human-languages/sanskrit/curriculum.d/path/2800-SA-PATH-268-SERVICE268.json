@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-268-SERVICE268",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "SA-EXT-268-SERVICE268"
+  ],
+  "after": []
+}

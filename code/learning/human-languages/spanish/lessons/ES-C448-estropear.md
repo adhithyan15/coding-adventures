@@ -11,6 +11,7 @@ concept_tag: ES-STATE-ESTROPEAR
 prerequisites: [ES-C448-duro, ES-C447-torpe, ES-C381-romper]
 sounds: [st-no-e, r-tap, stress-final]
 roots: [turpis-latin]
+etymology_hook: "estropear ← Italian stroppiare 'to maim', traced to Latin turpis — kin to torpe"
 duration:
   max_seconds: 280
 requires:

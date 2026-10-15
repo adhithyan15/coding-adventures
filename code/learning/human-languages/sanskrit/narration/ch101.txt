@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a needle, then the Sanskrit for thread.
 You'll want to know: कंकतिका.
 कंकतिका — kaṅkatikā — "a comb".
 
+The word, taken apart.
+kaṅkatikā is kaṅkata "comb", already in the Atharvaveda (MW), with the small-thing suffix -ikā. CDIAL 2598 calls kaṅkata of doubtful Indo-European origin, and it lives on as Hindi kaṅghī "comb" (CDIAL 2598).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for thread, then the Sanskrit for a comb.
 
 You'll want to know: फेनकम्.
 फेनकम् — phenakam — "soap".
+
+The word, taken apart.
+phenaka is built on phena "foam" with the suffix -ka: "the foaming thing". MW sets phena beside English foam, an inherited Indo-European word; using phenaka for soap is modern, since MW gives it other senses.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a comb, then the Sanskrit for soap.
 You'll want to know: प्रोञ्छनम्.
 प्रोञ्छनम् — proñchanam — "a towel".
 
+The word, taken apart.
+proñchana "wiping" is formed from proñchati "wipes off", which MW splits as pra + √uñch. CDIAL 9011 finds that link doubtful and suggests the verb is a Sanskritized Prakrit word, perhaps from Dravidian; Hindi pochnā "to wipe" comes from it. Using proñchana for a towel is modern.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for soap, then the Sanskrit for a towel.
 You'll want to know: उपनेत्रम्.
 उपनेत्रम् — upanetram — "glasses, spectacles".
 
+The word, taken apart.
+upanetra is built from upa "near, additional" and netra "eye"; MW explains netra as "the guiding organ", from the root √nī "lead". The pairing for spectacles is modern.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a towel, then the Sanskrit for glasses.
 
 You'll want to know: स्यूतः.
 स्यूतः — syūtaḥ — "a bag".
+
+The word, taken apart.
+syūta is the past participle of √siv "sew": "something sewn", and MW records it as "a sack, a coarse canvas bag". The root is inherited from Indo-European (EtymDB) and is the same root as English sew.
 
 What you've built.
 One more word for this chapter.

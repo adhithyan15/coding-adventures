@@ -11,7 +11,8 @@ romanization: "aṭaykkuka"
 concept_tag: ML-VERB-CLOSE
 prerequisites: [ML-C95-thurakkuka, ML-C44-listen]
 sounds: []
-roots: []
+roots: [dravidian-atai-shut]
+etymology_hook: "aṭaykkuka: native Dravidian, one word with Tamil aṭai 'to shut' and Kannada aḍe (DEDR 83)"
 duration:
   max_seconds: 260
 requires:
@@ -62,6 +63,8 @@ into something you can ask for, and it did not care which verb you handed it.
 
 This is the form that goes on a sign, and it is the form you say at a door with
 your hands full.
+
+**Where the word comes from.** It is native Dravidian, one word with Tamil *aṭai*, "to shut", and Kannada *aḍe* (DEDR 83).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C95-CLOSE-01, ML-LEX-C95-OPEN-01, ML-LEX-C52-WELCOME-01] -->

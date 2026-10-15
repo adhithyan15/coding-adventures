@@ -14,7 +14,8 @@ romanization: "paṭṭī"
 concept_tag: HI-THG256-PATTI
 prerequisites: [HI-C256-ulti, HI-C256-ghav]
 sounds: []
-roots: []
+roots: [sanskrit-patta]
+etymology_hook: "paṭṭī ← Sanskrit paṭṭa 'cloth; bandage', probably non-Aryan; a tadbhava (CDIAL 7700)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C256-ghav]
 <!-- hl-knowledge: introduces=[HI-LEX-C256-THG256-03]; assesses=[] -->
 
 **पट्टी** — *paṭṭī* — "a bandage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पट्टी** (*paṭṭī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *paṭṭa*, "cloth; bandage, fillet" (CDIAL 7700). CDIAL thinks the word probably came from a non-Aryan source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

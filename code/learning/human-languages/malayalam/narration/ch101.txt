@@ -20,6 +20,7 @@ word: ചെറിയ. romanized: ceṟiya.
 word: കുറിയ. romanized: kuṟiya.
 Same റ, same -ിയ ending, same job in the sentence: in front of the noun, unchanged, exactly as the adjective chapter said.
 What differs is the meaning, not the shape. ചെറിയ is small — little, not much of it. കുറിയ (kuṟiya) is short — not long, and of a person, not tall. A child can be ചെറിയ and a child can be കുറിയ (kuṟiya), and those say two different things about the child.
+Where the word comes from. It is native Dravidian, from kuṟu, "short, little", which DEDR 1851 lists with Tamil kuṟu and Kannada kuṟu.
 
 Guided Practice.
 [pause 1 second]
@@ -54,6 +55,7 @@ That changes nothing about how it is used — it still stands before the noun an
 [a table of 2 rows, read aloud]
 കുറിയ കുട്ടി, kuṟiya kuṭṭi.
 മെലിഞ്ഞ കുട്ടി, meliñña kuṭṭi.
+Where the word comes from. It is native Dravidian, a form of the verb "to grow thin": DEDR 5078 lists it with Tamil mel, "soft, tender", and Kannada mel(u).
 
 Guided Practice.
 [pause 1 second]
@@ -88,6 +90,7 @@ adjective: കുറിയ (kuṟiya). ends: -ിയ.
 adjective: മെലിഞ്ഞ (meliñña). ends: -ഞ്ഞ.
 adjective: തടിച്ച (taṭicca). ends: -ച്ച.
 Every one of them closes on -a, stands in front of the noun, and does not change. The shape in front of the -a varies and never matters — as നല്ല and പഴയ were already showing you before this chapter began.
+Where the word comes from. It is native Dravidian, a form of the verb "to swell, grow stout": DEDR 3020 lists it with Tamil taṭa, "large", and Kannada daṭṭa, "thick".
 
 Guided Practice.
 [pause 1 second]
@@ -121,6 +124,7 @@ There is no single word for tall in this book, and this is how you say it anyway
 That frame is not new. The chapter that gave you ഉണ്ട് used it to say that someone has a thing, and the chapter on എനിക്ക് gave you the person the having happens to. All this chapter does is put a new noun into it.
 And the ം does here what it does before ആണ് — it takes the full letter മ so it can carry what follows: ഉയരം (uyaraṁ) + ഉണ്ട് becomes ഉയരമുണ്ട്.
 Do not read that as a rule about every ending. The chapter on easy and hard told you the ം does different things for different endings, and this chapter's own title proves it: ഉയരം (uyaraṁ) + ഉം is ഉയരവും, with a വ.
+Where the word comes from. It is native Dravidian, a noun from the verb "to rise, be high": DEDR 646 lists it with Tamil uyar.
 
 Guided Practice.
 [pause 1 second]

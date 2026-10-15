@@ -14,7 +14,8 @@ romanization: "mithāl"
 concept_tag: AR-SABAB208-MITHAL
 prerequisites: [AR-C207-kama, AR-C208-mana]
 sounds: []
-roots: []
+roots: [m-th-l]
+etymology_hook: "mithāl: built on the root m-th-l, 'to be like' (Lane); mithāl is a likeness, a pattern, hence 'an example'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C208-mana]
 <!-- hl-knowledge: introduces=[AR-LEX-C208-SABAB208-02]; assesses=[] -->
 
 **مثال** — *mithāl* — "an example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مثال** (*mithāl*) is built on the native Arabic root *m-th-l*, "to be like" (Lane). *Mithāl* is a likeness, a pattern, hence "an example".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

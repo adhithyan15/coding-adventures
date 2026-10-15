@@ -14,7 +14,8 @@ romanization: "nrávitsya"
 concept_tag: RU-VERB-NRAVITSYA
 prerequisites: [RU-C143-ukhodit, RU-C144-boyatsya]
 sounds: []
-roots: []
+roots: [slavic-noru]
+etymology_hook: "нравиться is from нрав 'temper, liking', Church Slavonic beside native норов"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C144-boyatsya]
 <!-- hl-knowledge: introduces=[RU-LEX-C144-ACT144-02]; assesses=[] -->
 
 **нравиться** (*nrávitsya*) — "to please, to be liked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**нравиться** comes from *нрав*, "temper, disposition", the Church Slavonic shape, Vasmer says, beside native *норов*, "stubborn temper": to please is to suit someone's liking.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

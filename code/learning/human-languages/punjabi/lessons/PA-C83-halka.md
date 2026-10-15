@@ -14,7 +14,8 @@ romanization: "halkā"
 concept_tag: PA-ADJ83-HALKA
 prerequisites: [PA-C82-mota, PA-C83-patla]
 sounds: []
-roots: []
+roots: [sanskrit-laghu]
+etymology_hook: "halkā ← Sanskrit laghu 'light', a tadbhava (CDIAL 10896)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C83-patla]
 <!-- hl-knowledge: introduces=[PA-LEX-C83-ADJ83-02]; assesses=[] -->
 
 **ਹਲਕਾ** — *halkā* — "light (in weight)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਲਕਾ** (*halkā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laghu*, "light" (CDIAL 10896). Its sounds have been swapped, and a *-k-* added.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

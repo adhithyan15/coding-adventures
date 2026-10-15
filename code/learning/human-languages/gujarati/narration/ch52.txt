@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for grandmother, then the Gujarati for a ch
 You'll want to know: કાકા.
 કાકા (kākā) — "uncle (father's brother)".
 
+The word, taken apart.
+કાકા (kākā) goes back to kākka, "senior male relative", a form CDIAL reconstructs and takes from Dravidian, comparing Kannada kakka, "uncle" (CDIAL 2998).
+
 What you've built.
 One more word for uncles, aunts and a husband.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a child, then the Gujarati for uncle.
 
 You'll want to know: કાકી.
 કાકી (kākī) — "aunt (father's brother's wife)".
+
+The word, taken apart.
+કાકી (kākī) is the feminine of kākā, "uncle". CDIAL lists both under kākka, "senior male relative", which it takes from Dravidian (CDIAL 2998).
 
 What you've built.
 One more word for uncles, aunts and a husband.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for uncle, then the Gujarati for aunt.
 You'll want to know: મામા.
 મામા (māmā) — "uncle (mother's brother)". Gujarati names the side of the family.
 
+The word, taken apart.
+મામા (māmā) is a tadbhava of Sanskrit māma, "uncle" (CDIAL 10055). CDIAL calls it a nursery word and notes similar words in Dravidian.
+
 What you've built.
 One more word for uncles, aunts and a husband.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for aunt, then the Gujarati for uncle.
 You'll want to know: મામી.
 મામી (māmī) — "aunt (mother's brother's wife)".
 
+The word, taken apart.
+મામી (māmī) is the feminine of māmā. CDIAL lists both under Sanskrit māma, "uncle", a nursery word with similar words in Dravidian (CDIAL 10055).
+
 What you've built.
 One more word for uncles, aunts and a husband.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for uncle, then the Gujarati for aunt.
 
 You'll want to know: પતિ.
 પતિ (pati) — "a husband".
+
+The word, taken apart.
+પતિ (pati) is Sanskrit pati, "master, husband", taken over whole as a learned loan, a tatsama (CDIAL 7727).
 
 What you've built.
 One more word for uncles, aunts and a husband.

@@ -12,6 +12,9 @@ Before the new one: say the Russian for that, then the Russian for such.
 You'll want to know: полдень.
 полдень (pólden) — "midday".
 
+The word, taken apart.
+полдень (pólden) is пол-, "half", with день, "day": the middle of the day. Vasmer relates день to Lithuanian dienà, "day", and thinks пол- probably kin to Albanian palë, "side".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Russian for such, then the Russian for midday.
 
 You'll want to know: полночь.
 полночь (pólnoch) — "midnight".
+
+The word, taken apart.
+полночь (pólnoch) is пол-, "half", with ночь, "night". ночь from Proto-Slavic noťĭ, a cousin of Lithuanian naktìs, Latin nox and English night (Vasmer).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Russian for midday, then the Russian for midnight.
 You'll want to know: рано.
 рано (ráno) — "early".
 
+The word, taken apart.
+рано (ráno) from Proto-Slavic rano, "early" — inherited, but Vasmer calls it hard to explain: some link it with Lithuanian rýtas, "morning", others with Greek órthros, "dawn".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Russian for midnight, then the Russian for early.
 You'll want to know: поздно.
 поздно (pózdno) — "late".
 
+The word, taken apart.
+поздно (pózdno) is the adverb of поздний, "late", Proto-Slavic pozdŭ — inherited, from the PIE pos, "after, behind", which Vasmer also finds in Lithuanian pàs, "at", and Latin post, "after".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Russian for early, then the Russian for late.
 
 You'll want to know: утром.
 утром (útrom) — "in the morning".
+
+The word, taken apart.
+утром (útrom) is утро, "morning", in the form that says "by, during": "in the morning". утро from Proto-Slavic jutro; Vasmer calls its origin difficult, with links to уже, "already", or to Latin iugum, "yoke", as "the time of yoking".
 
 What you've built.
 One more word for this chapter.

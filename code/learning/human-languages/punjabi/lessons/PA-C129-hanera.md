@@ -14,7 +14,8 @@ romanization: "hanerā"
 concept_tag: PA-THINGS129-HANERA
 prerequisites: [PA-C128-dharti, PA-C128-canni]
 sounds: []
-roots: []
+roots: [sanskrit-andhakara]
+etymology_hook: "hanerā: CDIAL lists Punjabi anherā, nherā under *andhīkāra, beside Sanskrit andhakāra 'darkness' (CDIAL 386)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C128-canni]
 <!-- hl-knowledge: introduces=[PA-LEX-C129-THINGS129-01]; assesses=[] -->
 
 **ਹਨੇਰਾ** — *hanerā* — "darkness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਨੇਰਾ** (*hanerā*) is inherited. CDIAL lists the Punjabi forms *anherā* and *nherā*, "dark; darkness", under *\*andhīkāra*, a form beside Sanskrit *andhakāra*, "darkness" (CDIAL 386).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

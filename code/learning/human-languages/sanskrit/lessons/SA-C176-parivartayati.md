@@ -14,7 +14,8 @@ romanization: "parivartayati"
 concept_tag: SA-VERB-PARIVARTAYATI
 prerequisites: [SA-C175-sahate, SA-C175-yatate]
 sounds: []
-roots: []
+roots: [sanskrit-parivartate]
+etymology_hook: "parivartayati ← pari 'around' + causative of √vṛt 'turn' (MW): 'makes turn round'; √vṛt is Latin vertere's kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C175-yatate]
 <!-- hl-knowledge: introduces=[SA-LEX-C176-ACT176-01]; assesses=[] -->
 
 **परिवर्तयति** — *parivartayati* — "changes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*parivartayati* is built on *pari* "around" and the root √vṛt, "to turn" (MW), with the causative ending *-aya-*: it means "makes something turn round", and so "changes". MW compares √vṛt with Latin *vertere*, "to turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

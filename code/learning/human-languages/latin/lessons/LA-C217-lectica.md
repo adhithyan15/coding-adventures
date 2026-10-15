@@ -13,7 +13,8 @@ gloss: "a litter (carried chair)"
 concept_tag: LA-RES217-LECTICA
 prerequisites: [LA-C217-tegula, LA-C217-fornax]
 sounds: []
-roots: []
+roots: [lectica-latin, lectus-latin]
+etymology_hook: "lectīca 'litter' — built on lectus 'couch'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C217-fornax]
 <!-- hl-knowledge: introduces=[LA-LEX-C217-RES217-03]; assesses=[] -->
 
 **lectīca, lectīcae** — "a litter (carried chair)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lectīca** is built on *lectus*, "a bed, a couch" (EtymDB 2.1): a couch carried on poles.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

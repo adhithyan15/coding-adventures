@@ -14,7 +14,8 @@ romanization: "kalpanā karṇe"
 concept_tag: MR-VERB-KALPANA-KARNE
 prerequisites: [MR-C253-valne, MR-C253-anand-ghene]
 sounds: []
-roots: []
+roots: [sanskrit-kalpana, sanskrit-karoti]
+etymology_hook: "kalpanā: Sanskrit kalpanā 'arranging, making', a tatsama (CDIAL 2943); karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C253-anand-ghene]
 <!-- hl-knowledge: introduces=[MR-LEX-C253-ACT253-03]; assesses=[] -->
 
 **कल्पना करणे** — *kalpanā karṇe* — "to imagine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कल्पना** is Sanskrit *kalpanā*, "arranging, making; fancy", a tatsama (CDIAL 2943). **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rikāme karṇe"
 concept_tag: MR-VERB-RIKAME-KARNE
 prerequisites: [MR-C162-abhar-manne, MR-C163-thand-karne]
 sounds: []
-roots: []
+roots: [indo-aryan-riknakarman, sanskrit-karoti]
+etymology_hook: "rikāmā ← *rikṇakarman 'doing empty work' (CDIAL 10728); karṇe ← karoti 'does' (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C163-thand-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C163-ACT163-02]; assesses=[] -->
 
 **रिकामे करणे** — *rikāme karṇe* — "to empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रिकामा** goes back to a reconstructed *\*rikṇakarman*, "doing empty work" (CDIAL 10728), and **करणे** to Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

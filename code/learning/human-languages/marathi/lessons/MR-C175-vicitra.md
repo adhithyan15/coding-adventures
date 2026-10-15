@@ -14,7 +14,8 @@ romanization: "vicitra"
 concept_tag: MR-GUN175-VICITRA
 prerequisites: [MR-C174-apriya, MR-C174-utsahi]
 sounds: []
-roots: []
+roots: [sanskrit-citra]
+etymology_hook: "vicitra: Sanskrit vicitra 'variegated, strange', on citra 'bright' (CDIAL 4803); a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C174-utsahi]
 <!-- hl-knowledge: introduces=[MR-LEX-C175-GUN175-01]; assesses=[] -->
 
 **विचित्र** — *vicitra* — "strange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विचित्र** (*vicitra*) is Sanskrit *vicitra*, "variegated, wonderful, strange", a tatsama built on *citra*, "bright, variegated" (CDIAL 4803).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

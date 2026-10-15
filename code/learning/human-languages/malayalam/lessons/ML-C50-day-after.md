@@ -11,7 +11,8 @@ romanization: "maṟṟannāḷ"
 concept_tag: ML-WORD-DAY-AFTER-TOMORROW
 prerequisites: [ML-C50-now, ML-C48-student]
 sounds: []
-roots: []
+roots: [dravidian-maru-other, naal-day-dravidian]
+etymology_hook: "maṟṟannāḷ: native Dravidian, 'the other day' — a word for 'other' + nāḷ 'day' (DEDR 4766, 3656)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Three pieces, and the last of them this book has already taught: നാൾ, the 
 Malayalam does not stop there. There is a word for the day after that one as well, and speakers use it without ceremony, where an English speaker would give up and name a date.
 
 Kannada builds its own with the same idea and different parts, ನಾಡಿದ್ದು (*nāḍiddu*), and its day-word is the cousin of ours.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മറ്റന്നാൾ** (*maṟṟannāḷ*) is native Dravidian, built from a word for "other" (DEDR 4766, with Tamil *maṟṟu*), a short pointing piece, and *nāḷ*, "day" (DEDR 3656, with Tamil *nāḷ*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

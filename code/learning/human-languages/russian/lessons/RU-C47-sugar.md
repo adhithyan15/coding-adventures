@@ -14,7 +14,8 @@ romanization: "sákhar"
 concept_tag: RU-PANTRY-SUGAR
 prerequisites: [RU-C46-porridge, RU-C46-pie]
 sounds: []
-roots: []
+roots: [sanskrit-sarkara]
+etymology_hook: "сахар ← Greek sakcharon, from Pali sakkharā, Sanskrit śarkarā 'gravel, sugar'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C46-pie]
 <!-- hl-knowledge: introduces=[RU-LEX-C47-PANTRY-01]; assesses=[] -->
 
 **сахар** (*sákhar*) — "sugar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**сахар** ← Greek *sákcharon*, from Pali *sakkharā*, Sanskrit *śarkarā*, "gravel, grit, sugar" (Vasmer). The same Sanskrit word, through Arabic, gave English *sugar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

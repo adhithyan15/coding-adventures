@@ -14,7 +14,8 @@ romanization: "vilkkuka"
 concept_tag: ML-VERB-VILKKUKA
 prerequisites: [ML-C174-marakkuka, ML-C175-snehikkuka, ML-W108-quotation, ML-W108-quotation]
 sounds: []
-roots: []
+roots: [dravidian-vil-sell]
+etymology_hook: "vilkkuka: native Dravidian, one word with Tamil vil and Kannada bil (DEDR 5421)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C175-snehikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C175-ACT175-02]; assesses=[] -->
 
 **വിൽക്കുക** — *vilkkuka* — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിൽക്കുക** (*vilkkuka*) is native Dravidian, one word with Tamil *vil* and Kannada *bil* (DEDR 5421).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

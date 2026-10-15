@@ -14,7 +14,8 @@ romanization: "mutarjim"
 concept_tag: AR-AMAL189-MUTARJIM
 prerequisites: [AR-C189-suhufi, AR-C189-amil]
 sounds: []
-roots: []
+roots: [t-r-j-m]
+etymology_hook: "mutarjim: from tarjama (Lane), whose tarjumān is usually traced to Aramaic targmānā; cf. dragoman"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C189-amil]
 <!-- hl-knowledge: introduces=[AR-LEX-C189-AMAL189-04]; assesses=[] -->
 
 **مترجم** — *mutarjim* — "a translator".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مترجم** (*mutarjim*) is the participle of *tarjama*, "to translate", which Lane gives with *tarjumān*, "interpreter". *Tarjumān* is usually traced to Aramaic *targmānā*; English *dragoman* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

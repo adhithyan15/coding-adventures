@@ -11,8 +11,8 @@ gloss: "how many, how much — the last of the question family"
 concept_tag: GU-Q-KETLA
 prerequisites: [GU-C37-kyaare, GU-C37-kon]
 sounds: []
-roots: []
-etymology_hook: "The same ક-, now asking about quantity — and it is the question a market needs."
+roots: [indo-aryan-kiyatta]
+etymology_hook: "keṭlā ← *kiyatta 'how great?', a reconstructed form CDIAL lists with Gujarati keṭlī (CDIAL 3167)"
 duration:
   max_seconds: 250
 requires:
@@ -54,6 +54,8 @@ and **પૈસા** — market, shop and money — and could not ask the price 
 Four questions, one stem:
 
 > **કોણ** who · **ક્યાં** where · **ક્યારે** when · **કેટલા** how many
+
+CDIAL lists Gujarati *keṭlī* and *keṭlāk*, "how much", under a reconstructed *\*kiyatta*, "how great" (CDIAL 3167).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-Q-KETLA-01, GU-Q-KON-01, GU-Q-KYAAN-01, GU-Q-KYAARE-01] -->

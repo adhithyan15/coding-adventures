@@ -14,7 +14,8 @@ romanization: "mâdarbozorg"
 concept_tag: FA-HEALTH32-MADARBOZORG
 prerequisites: [FA-C32-pezeshk, FA-C32-pedarbozorg]
 sounds: []
-roots: []
+roots: [persian-madar, persian-buzurg]
+etymology_hook: "mâdarbozorg: Persian mâdar 'mother' + bozorg 'great', both inherited from Middle Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C32-pedarbozorg]
 <!-- hl-knowledge: introduces=[FA-LEX-C32-HEALTH32-04]; assesses=[] -->
 
 **مادربزرگ** — *mâdarbozorg* — "a grandmother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mâdarbozorg* is built from two inherited Persian words: *mâdar*, "mother" (Middle Persian *mādar*), and *bozorg*, "big, great" (Middle Persian *wuzurg*, EtymDB). The "great mother" is the grandmother.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

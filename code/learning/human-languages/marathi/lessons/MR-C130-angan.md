@@ -14,7 +14,8 @@ romanization: "aṅgaṇ"
 concept_tag: MR-LOC130-ANGAN
 prerequisites: [MR-C129-imarat, MR-C129-nhanighar]
 sounds: []
-roots: []
+roots: [sanskrit-angana]
+etymology_hook: "aṅgaṇ: Sanskrit aṅgaṇa 'courtyard'; CDIAL lists the inherited Marathi āṅgṇẽ (CDIAL 118)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C129-nhanighar]
 <!-- hl-knowledge: introduces=[MR-LEX-C130-LOC130-01]; assesses=[] -->
 
 **अंगण** — *aṅgaṇ* — "a courtyard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अंगण** (*aṅgaṇ*) is Sanskrit *aṅgaṇa*, "courtyard", lightly reshaped. CDIAL lists the inherited Marathi form as *āṅgṇẽ* (CDIAL 118).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

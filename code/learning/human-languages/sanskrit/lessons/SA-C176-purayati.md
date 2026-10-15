@@ -14,7 +14,8 @@ romanization: "pūrayati"
 concept_tag: SA-VERB-PURAYATI
 prerequisites: [SA-C176-amantrayati, SA-C176-sodhayati]
 sounds: []
-roots: []
+roots: [sanskrit-purayati]
+etymology_hook: "pūrayati ← causative of √pṝ 'fill'; inherited, MW compares Latin plēnus and English full (CDIAL 8335)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C176-sodhayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C176-ACT176-05]; assesses=[] -->
 
 **पूरयति** — *pūrayati* — "fills".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pūrayati* is built on the root √pṝ, "to fill" (MW), and is listed in CDIAL 8335. The root is inherited from Indo-European: MW compares Latin *plēnus* and English *full*. CDIAL gives Punjabi *pūrnā*, "to fill", as one of its descendants.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ gloss: "a palm leaf"
 concept_tag: ML-ANCHOR-OLA
 prerequisites: [ML-S131-chillu-nn]
 sounds: []
-roots: []
+roots: [dravidian-olai-palm-leaf]
+etymology_hook: "ōla: native Dravidian, one word with Tamil ōlai and Kannada ōle (DEDR 1070)"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *ōla*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **ഓ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഓല** (*ōla*) is native Dravidian, one word with Tamil *ōlai*, Kannada *ōle* and Tulu *ōle* (DEDR 1070). The palm leaf was the page: Kerala's old books were written on it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-OLA] -->

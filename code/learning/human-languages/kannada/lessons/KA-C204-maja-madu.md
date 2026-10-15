@@ -14,7 +14,8 @@ romanization: "majā māḍu"
 concept_tag: KA-VERB-MAJA-MADU
 prerequisites: [KA-C204-jodisu, KA-C204-ale]
 sounds: []
-roots: []
+roots: [maza-persian, maadu-do-dravidian]
+etymology_hook: "majā māḍu: majā 'fun' ← Persian maza 'taste, relish' through Hindustani + native māḍu (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C204-ale]
 <!-- hl-knowledge: introduces=[KA-LEX-C204-KRIYE204-04]; assesses=[] -->
 
 **ಮಜಾ ಮಾಡು** — *majā māḍu* — "to have fun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಜಾ ಮಾಡು** (*majā māḍu*) is *majā*, "fun, enjoyment", from Persian *maza*, "taste, relish", which came through Hindustani, and native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

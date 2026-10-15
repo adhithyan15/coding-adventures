@@ -14,7 +14,8 @@ romanization: "vingā"
 concept_tag: PA-QUAL142-VINGA
 prerequisites: [PA-C141-gol, PA-C141-siddha]
 sounds: []
-roots: []
+roots: [indo-aryan-vivanka]
+etymology_hook: "vingā ← *vivaṅka 'very bent', a reconstructed form; a tadbhava (CDIAL 11914)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C141-siddha]
 <!-- hl-knowledge: introduces=[PA-LEX-C142-QUAL142-01]; assesses=[] -->
 
 **ਵਿੰਗਾ** — *vingā* — "crooked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਵਿੰਗਾ** (*vingā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vivaṅka*, "very bent", a form CDIAL reconstructs from its descendants (CDIAL 11914). It is built on Sanskrit *vaṅka*, "bent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

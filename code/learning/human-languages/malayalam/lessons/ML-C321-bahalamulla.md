@@ -14,7 +14,8 @@ romanization: "bahaḷamuḷḷa"
 concept_tag: ML-GUNAM321-BAHALAMULLA
 prerequisites: [ML-C321-sugandhamulla, ML-C321-narunna]
 sounds: []
-roots: []
+roots: [malayalam-bahalam, dravidian-ul-be]
+etymology_hook: "bahaḷamuḷḷa: bahaḷam 'noise', of uncertain origin, + native uḷḷa (DEDR 697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C321-narunna]
 <!-- hl-knowledge: introduces=[ML-LEX-C321-GUNAM321-04]; assesses=[] -->
 
 **ബഹളമുള്ള** — *bahaḷamuḷḷa* — "noisy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ബഹളമുള്ള** (*bahaḷamuḷḷa*) is "having noise": *bahaḷaṁ*, "uproar", a word of uncertain origin, with native *-uḷḷa*, "that has" (DEDR 697).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

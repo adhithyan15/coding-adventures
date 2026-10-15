@@ -14,7 +14,8 @@ romanization: "tame"
 concept_tag: JA-WHY98-TAME
 prerequisites: [JA-C98-doushite, JA-C98-riyuu]
 sounds: []
-roots: []
+roots: [japanese-tame]
+etymology_hook: "tame: native Japanese, inherited, not borrowed; usually kana, kanji 為 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C98-riyuu]
 <!-- hl-knowledge: introduces=[JA-LEX-C98-WHY98-03]; assesses=[] -->
 
 **ため** — *tame* — "for the sake of; because of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ため** (*tame*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

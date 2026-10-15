@@ -14,7 +14,8 @@ romanization: "ṣawwara"
 concept_tag: AR-VERB-SAWWARA
 prerequisites: [AR-C228-rasama, AR-C228-ghanna]
 sounds: []
-roots: []
+roots: [ṣ-w-r]
+etymology_hook: "ṣawwara: built on the root ṣ-w-r, 'to form, to fashion' (Lane); ṣawwara is Form II, 'to make an image'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C228-ghanna]
 <!-- hl-knowledge: introduces=[AR-LEX-C228-ACT228-05]; assesses=[] -->
 
 **صور** — *ṣawwara* — "to photograph, to film".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صور** (*ṣawwara*) is built on the native Arabic root *ṣ-w-r*, "to form, to fashion" (Lane). *Ṣawwara* is Form II, "to make an image".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

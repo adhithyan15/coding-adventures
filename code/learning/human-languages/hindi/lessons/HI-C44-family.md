@@ -14,7 +14,8 @@ romanization: "parivār"
 concept_tag: HI-NOUN-FAMILY
 prerequisites: [HI-C44-daughter, HI-C42-stand]
 sounds: []
-roots: []
+roots: [sanskrit-parivara]
+etymology_hook: "parivār ← Sanskrit parivāra 'surroundings; followers', a tatsama (CDIAL 7876)"
 duration:
   max_seconds: 210
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C44-daughter]
 **परिवार** (*parivār*) — "family".
 
 Sanskrit, and it comes apart in the hand: *pari-*, 'around', on the root *vṛ*, 'to cover, to enclose'. Your family, in this word, is what surrounds you. The same root gives आवरण (*āvaraṇ*), 'a covering' — one root, two very different everyday words.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**परिवार** (*parivār*) is Sanskrit *parivāra*, "surroundings; followers", taken over whole as a learned loan, a tatsama (CDIAL 7876). Hindi narrowed it to the people around you: the family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

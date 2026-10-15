@@ -11,8 +11,8 @@ gloss: clothes or cloth
 concept_tag: MW-SHOPPING-CLOTHES
 prerequisites: [MW-R14-shopping-close]
 sounds: [retroflex-flap, long-aa]
-roots: []
-etymology_hook: One more shop noun arrives by ear before its dotted consonant appears.
+roots: [sanskrit-karpata]
+etymology_hook: "kapṛā ← Sanskrit karpaṭa 'rag', which CDIAL takes from Austroasiatic (CDIAL 2871, Marwari row)"
 duration:
   max_seconds: 145
 requires:
@@ -46,6 +46,11 @@ reviews_of: [MW-R14-shopping-close]
 
 Listen for the quick curled sound in the middle. Say the word once from a
 clothes cue. Keep the written form covered for now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kapṛā* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karpaṭa*, "patched garment, rag". CDIAL lists Marwari *kapṛo* under it (CDIAL 2871). CDIAL takes the Sanskrit word itself from an Austroasiatic language.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KAPDA-01] -->

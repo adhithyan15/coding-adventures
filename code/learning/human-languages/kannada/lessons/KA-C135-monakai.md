@@ -14,7 +14,8 @@ romanization: "moṇakai"
 concept_tag: KA-THINGS135-MONAKAI
 prerequisites: [KA-C135-kenne, KA-C135-monakalu]
 sounds: []
-roots: []
+roots: [dravidian-muzham-joint, dravidian-kai-hand]
+etymology_hook: "moṇakai: native moṇa 'joint' + kai 'hand'; DEDR 4990 lists moḻa key 'elbow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C135-monakalu]
 <!-- hl-knowledge: introduces=[KA-LEX-C135-THINGS135-04]; assesses=[] -->
 
 **ಮೊಣಕೈ** — *moṇakai* — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೊಣಕೈ** (*moṇakai*) is native Dravidian. DEDR 4990 lists *moḻa key*, "elbow", from *moḻa*, *moṇa*, "joint", and *kai*, "hand" (DEDR 2023).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

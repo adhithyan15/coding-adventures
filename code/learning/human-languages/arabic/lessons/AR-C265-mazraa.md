@@ -14,7 +14,8 @@ romanization: "mazraʿa"
 concept_tag: AR-MAKAN265-MAZRAA
 prerequisites: [AR-C265-sinima, AR-C265-nadi]
 sounds: []
-roots: []
+roots: [z-r-ʿ]
+etymology_hook: "mazraʿa: built on the root z-r-ʿ, 'to sow' (Lane); mazraʿa is the ma- place noun, 'a place of sowing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C265-nadi]
 <!-- hl-knowledge: introduces=[AR-LEX-C265-MAKAN265-04]; assesses=[] -->
 
 **مزرعة** — *mazraʿa* — "a farm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مزرعة** (*mazraʿa*) is built on the native Arabic root *z-r-ʿ*, "to sow" (Lane). *Mazraʿa* is the *ma-* place noun, "a place of sowing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

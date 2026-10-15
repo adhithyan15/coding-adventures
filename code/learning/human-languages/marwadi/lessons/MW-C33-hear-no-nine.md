@@ -11,8 +11,8 @@ gloss: nine — two sounds, and it rhymes with the two you learned first
 concept_tag: MW-NUMBER-NINE
 prerequisites: [MW-C33-aath]
 sounds: [dental-n, long-o]
-roots: [sanskrit-nava]
-etymology_hook: Nine and two are the only numbers in this run built from a single consonant and a single vowel.
+roots: [sanskrit-nava-nine]
+etymology_hook: "no ← Sanskrit nava 'nine', a tadbhava (CDIAL 6984, Old Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -51,6 +51,11 @@ only numbers in this run that short.
 This is not the English word **no**. Marwadi has not yet given this book any
 word for refusing at all, which is a real gap and not a spelling accident: a
 learner who mishears *no* as a refusal will walk away from a fair price.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*no* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *nava*, "nine". CDIAL lists Old Marwari *nova* under it (CDIAL 6984). English *nine* is the same ancient word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NO-NINE-01, MW-LEX-DO-TWO-01] -->

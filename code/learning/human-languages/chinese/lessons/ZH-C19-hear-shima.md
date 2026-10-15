@@ -10,8 +10,8 @@ romanization: shì ma
 gloss: is that so, heard as the two-syllable way of checking what you were just told
 prerequisites: [ZH-R19-ma-two-r1]
 sounds: [tone-4, tone-neutral]
-roots: []
-etymology_hook: The verb to be, asked back at the speaker, is how Mandarin says really.
+roots: [middle-chinese-dzyex]
+etymology_hook: "shì ma: shì, from Middle Chinese dzyeX, + the question particle ma"
 duration:
   max_seconds: 120
 requires:
@@ -50,6 +50,9 @@ which you learned yesterday.
 
 Say it with the voice going **down** on *shì* and staying light on *ma*. Said
 flat it checks a fact; said with the fall exaggerated it registers surprise.
+
+*Shì ma* is built from *shì*, from Middle Chinese *dzyeX*, and the question
+particle *ma*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHIMA-01, ZH-LEX-SHI] -->

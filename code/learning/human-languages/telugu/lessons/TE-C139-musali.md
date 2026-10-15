@@ -14,7 +14,8 @@ romanization: "musali"
 concept_tag: TE-QUAL139-MUSALI
 prerequisites: [TE-C139-podi, TE-C139-peda, TE-C45-grandfather, TE-C45-grandmother]
 sounds: []
-roots: []
+roots: [telugu-musali-old]
+etymology_hook: "musali: origin uncertain; neither DEDR nor CDIAL records it"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C139-peda]
 <!-- hl-knowledge: introduces=[TE-LEX-C139-QUAL139-04]; assesses=[] -->
 
 **ముసలి** — *musali* — "old (of people)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ముసలి** (*musali*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bāndhṇe"
 concept_tag: MR-VERB-BANDHNE
 prerequisites: [MR-C154-modne, MR-C155-jodne]
 sounds: []
-roots: []
+roots: [sanskrit-bandhati]
+etymology_hook: "bāndhṇe ← Sanskrit bandhati 'binds', a tadbhava (CDIAL 9139)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C155-jodne]
 <!-- hl-knowledge: introduces=[MR-LEX-C155-ACT155-02]; assesses=[] -->
 
 **बांधणे** — *bāndhṇe* — "to tie, to build".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बांधणे** (*bāndhṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bandhati*, "binds" (CDIAL 9139).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

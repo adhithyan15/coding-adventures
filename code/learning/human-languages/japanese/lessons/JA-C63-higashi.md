@@ -14,7 +14,8 @@ romanization: "higashi"
 concept_tag: JA-WORLD63-HIGASHI
 prerequisites: [JA-C63-matsuri, JA-C63-nishi]
 sounds: []
-roots: []
+roots: [japanese-higashi]
+etymology_hook: "higashi: native Japanese, inherited, not borrowed; kanji 東 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C63-nishi]
 <!-- hl-knowledge: introduces=[JA-LEX-C63-WORLD63-04]; assesses=[] -->
 
 **ひがし** — *higashi* — "east".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひがし** (*higashi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "khofâsh"
 concept_tag: FA-THINGS122-KHOFASH
 prerequisites: [FA-C122-kuse, FA-C122-sanjab]
 sounds: []
-roots: []
+roots: [arabic-huffas]
+etymology_hook: "khofâsh ← Arabic ḫuffāš 'bat', root ḫ-f-š (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C122-sanjab]
 <!-- hl-knowledge: introduces=[FA-LEX-C122-THINGS122-05]; assesses=[] -->
 
 **خفاش** — *khofâsh* — "a bat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khofâsh* is borrowed from Arabic *ḫuffāš*, "bat". Its Arabic root is *ḫ-f-š* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "zhurnalíst"
 concept_tag: RU-RABOTA256-ZHURNALIST
 prerequisites: [RU-C255-razgovor, RU-C256-professor]
 sounds: []
-roots: []
+roots: [diurnum]
+etymology_hook: "журналист is журнал 'a journal' + -ист"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C256-professor]
 <!-- hl-knowledge: introduces=[RU-LEX-C256-RABOTA256-02]; assesses=[] -->
 
 **журналист** (*zhurnalíst*) — "a journalist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**журналист** is *журнал*, "a journal", with *-ист*. *журнал* comes from French *journal*, Medieval Latin *diurnālis*, "daily" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

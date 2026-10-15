@@ -12,6 +12,9 @@ Before the new one: say the Hindi for practice, then the Hindi for a mark.
 You'll want to know: शब्द.
 शब्द — śabd — "a word".
 
+The word, taken apart.
+शब्द (śabd) is Sanskrit śabda, "sound, word", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a mark, then the Hindi for a word.
 
 You'll want to know: वाक्य.
 वाक्य — vākya — "a sentence".
+
+The word, taken apart.
+वाक्य (vākya) is Sanskrit vākya, "speech, sentence", taken over whole as a learned loan, a tatsama. It is built on vac-, "to speak".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a word, then the Hindi for a sentence.
 You'll want to know: अर्थ.
 अर्थ — arth — "a meaning".
 
+The word, taken apart.
+अर्थ (arth) is Sanskrit artha, "aim; thing, wealth; meaning", taken over whole as a learned loan, a tatsama (CDIAL 638). CDIAL lists the inherited form as āth, "wealth".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a sentence, then the Hindi for a meaning.
 You'll want to know: ज्ञान.
 ज्ञान — jñān — "knowledge".
 
+The word, taken apart.
+ज्ञान (jñān) is Sanskrit jñāna, "knowledge", taken over whole as a learned loan, a tatsama (CDIAL 5281). CDIAL lists the inherited form as jān, "knowledge".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a meaning, then the Hindi for knowledge.
 
 You'll want to know: विज्ञान.
 विज्ञान — vijñān — "science".
+
+The word, taken apart.
+विज्ञान (vijñān) is Sanskrit vijñāna, "discernment, understanding", taken over whole as a learned loan, a tatsama. It is jñāna, "knowledge", with vi-, "apart": knowledge that tells things apart.
 
 What you've built.
 One more word for this chapter.

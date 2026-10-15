@@ -14,7 +14,8 @@ romanization: "hār"
 concept_tag: HI-THG224-HAR
 prerequisites: [HI-C224-balla, HI-C224-jit]
 sounds: []
-roots: []
+roots: [sanskrit-harayati]
+etymology_hook: "hār ← Sanskrit hārayati 'loses', a tadbhava (CDIAL 14061)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C224-jit]
 <!-- hl-knowledge: introduces=[HI-LEX-C224-THG224-03]; assesses=[] -->
 
 **हार** — *hār* — "a defeat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हार** (*hār*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hārayati*, "loses" (CDIAL 14061). *hār* is the noun of *hārnā*, "to lose".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

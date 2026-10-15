@@ -14,7 +14,8 @@ romanization: "sṭeshan"
 concept_tag: MR-TOWN113-STESHAN
 prerequisites: [MR-C113-rasta, MR-C113-galli]
 sounds: []
-roots: []
+roots: [english-station]
+etymology_hook: "sṭeshan ← English station"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C113-galli]
 <!-- hl-knowledge: introduces=[MR-LEX-C113-TOWN113-04]; assesses=[] -->
 
 **स्टेशन** — *sṭeshan* — "a station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्टेशन** (*sṭeshan*) is a loan from English *station*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

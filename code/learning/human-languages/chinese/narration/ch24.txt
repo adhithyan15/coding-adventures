@@ -81,6 +81,9 @@ And now the exception that every Mandarin course states early, because it is the
 有 (yǒu) is the one verb 不 cannot negate.
 不 has negated everything in this book so far — 不好, 不是, 不谢 — and it cannot negate this. The negative of 有 is méi yǒu, said with a different negator altogether, whose character this book has not yet taught. Hold the rule now and the writing later: 不有 is never Mandarin.
 
+The word, taken apart.
+有 yǒu is inherited from Middle Chinese hjuwX, "to have; to exist" (Guangyun, in Baxter's transcription); both of its jobs are old ones.
+
 Guided Practice.
 [your turn — say: hǎo, wǔ, yǒu — three dips]
 [pause 8 seconds for the answer]
@@ -167,6 +170,9 @@ Sounds you'll need.
 But in the middle of a count it usually goes light and toneless: sān ge rén, not sān gè rén. It behaves the way 吗 and 的 do — a small word leaning on its neighbours.
 And one sandhi you already own comes back here. 一 is first tone alone, and before a fourth-tone syllable it rises: 一个 is yí ge, not yī ge. That is the same tone change the hundred lesson taught on 一百.
 Mandarin has dozens of measure words, each tied to a shape or a kind of thing, and 个 (gè) is the general-purpose one. Use 个 (gè) when you do not know which is right, and you will be understood every time.
+
+The word, taken apart.
+个 (gè) is inherited from Middle Chinese kaH, "a single piece".
 
 Guided Practice.
 [your turn — say: sān ge rén — 三个人]

@@ -14,7 +14,8 @@ romanization: "beḍūk"
 concept_tag: MR-THINGS142-BEDUK
 prerequisites: [MR-C142-kabutar, MR-C142-ghubad]
 sounds: []
-roots: []
+roots: [indo-aryan-bidda]
+etymology_hook: "beḍūk: CDIAL lists it in its 'defective' word group *biḍḍa, as perhaps from *bēḍḍa (CDIAL 9238)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C142-ghubad]
 <!-- hl-knowledge: introduces=[MR-LEX-C142-THINGS142-05]; assesses=[] -->
 
 **बेडूक** — *beḍūk* — "a frog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **बेडूक** (*beḍūk*), "frog", in its "defective" word group headed *\*biḍḍa*, as perhaps from the variant *\*bēḍḍa* (CDIAL 9238). Its origin is not otherwise settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

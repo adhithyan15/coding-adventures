@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a week, then the Bengali for a month.
 You'll want to know: বছর.
 বছর — bôchhôr — "a year".
 
+The word, taken apart.
+বছর (bôchhôr) goes back to Sanskrit vatsara, "year" (CDIAL 11242). CDIAL asks whether the Bengali form was borrowed from Sanskrit rather than inherited.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a month, then the Bengali for a year.
 
 You'll want to know: মিনিট.
 মিনিট — miniṭ — "a minute".
+
+The word, taken apart.
+মিনিট (miniṭ) is a loan from English minute.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a year, then the Bengali for a minute.
 You'll want to know: আজ.
 আজ — āj — "today".
 
+The word, taken apart.
+আজ (āj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from adya, "today" (CDIAL 242).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a minute, then the Bengali for today.
 You'll want to know: এখন.
 এখন — ekhôn — "now".
 
+The word, taken apart.
+এখন (ekhôn) is the near head e- on -khôn, from Sanskrit kṣaṇa, "moment": CDIAL lists takhan, "then", under Sanskrit tatkṣaṇa, "that very moment", with the same ending on the other pronoun stems (CDIAL 5640).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for today, then the Bengali for now.
 
 You'll want to know: সবসময়.
 সবসময় — sôbsômôy — "always".
+
+The word, taken apart.
+সবসময় (sôbsômôy) is sab, "all", from Sanskrit sarva, "all" (CDIAL 13276), + sômôy, "time", Sanskrit samaya taken over whole.
 
 What you've built.
 One more word for this chapter.

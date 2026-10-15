@@ -11,7 +11,8 @@ romanization: "taṭi"
 concept_tag: ML-NOUN-TRUNK
 prerequisites: [ML-C54-branch, ML-C52-kolam]
 sounds: []
-roots: []
+roots: [dravidian-tadi-stick]
+etymology_hook: "taṭi: native Dravidian; DEDR 3030 lists it as 'stick, staff' with Tamil taṭi and Kannada taḍi"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, and it does three jobs on one shape: the trunk of a standing tree, th
 The third sense is ordinary Malayalam and not unkind. To say somebody has തടി is to say they are solidly made, and Kerala says it about a person the way English might say *sturdy*.
 
 Beside it sits തടിയൻ (*taṭiyan*), a heavy-set man, carrying that same he-word tail you met on the sun and the moon.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തടി** (*taṭi*) is native Dravidian. DEDR 3030 lists it in the sense "stick, staff", with Tamil *taṭi* and Kannada *taḍi*; its sense of bulk, "stout, robust", sits in DEDR 3020 with Tamil *taṭa*, "large".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mahãgā"
 concept_tag: HI-ADJ-EXPENSIVE
 prerequisites: [HI-C72-price, HI-C70-song, HI-C71-also]
 sounds: []
-roots: []
+roots: [sanskrit-mahargha]
+etymology_hook: "mahãgā ← Sanskrit mahārgha 'high-priced', a tadbhava (CDIAL 9954)"
 duration:
   max_seconds: 240
 requires:
@@ -58,6 +59,11 @@ to work the agreement yet. Hear it, and notice the **-आ** ending it shares wit
 those two.
 
 **बहुत महँगा** puts last chapter's word to work on this one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**महँगा** (*mahãgā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mahārgha*, "high-priced" (CDIAL 9954). It is built from *mahā*, "great", and *argha*, "price".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

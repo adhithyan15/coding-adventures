@@ -14,7 +14,8 @@ romanization: "yasumi"
 concept_tag: JA-THINGS112-YASUMI
 prerequisites: [JA-C112-kashu, JA-C112-shigoto]
 sounds: []
-roots: []
+roots: [japanese-yasumu]
+etymology_hook: "yasumi: native, the noun from yasumu 'to rest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C112-shigoto]
 <!-- hl-knowledge: introduces=[JA-LEX-C112-THINGS112-05]; assesses=[] -->
 
 **やすみ** — *yasumi* — "a holiday, a break".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**やすみ** (*yasumi*) is native: the noun made from *yasumu*, "to rest", by its stem (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

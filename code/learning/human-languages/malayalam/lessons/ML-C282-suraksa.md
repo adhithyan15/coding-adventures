@@ -14,7 +14,8 @@ romanization: "surakṣa"
 concept_tag: ML-KARANAM282-SURAKSA
 prerequisites: [ML-C282-pradhanyam, ML-C282-sambhavam]
 sounds: []
-roots: []
+roots: [sanskrit-suraksha]
+etymology_hook: "surakṣa ← Sanskrit surakṣā 'good protection', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C282-sambhavam]
 <!-- hl-knowledge: introduces=[ML-LEX-C282-KARANAM282-03]; assesses=[] -->
 
 **സുരക്ഷ** — *surakṣa* — "safety".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സുരക്ഷ** (*surakṣa*) ← Sanskrit *surakṣā*, "good protection", taken over whole as a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

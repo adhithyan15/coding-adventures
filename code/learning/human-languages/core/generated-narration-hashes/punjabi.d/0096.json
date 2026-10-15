@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 96,
-  "sourceHash": "fnv1a64:72f3f8af2bc1d981",
+  "sourceHash": "fnv1a64:5e29740d2e775060",
   "lessonIds": [
     "PA-C96-baram",
     "PA-C96-vih",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "punjabi/narration/ch96.txt",
   "json": "punjabi/narration/ch96.json",
-  "textHash": "fnv1a64:471d69958ce09f30",
-  "jsonHash": "fnv1a64:e21a7b605f9305d5",
+  "textHash": "fnv1a64:8441d8fa4adc61ed",
+  "jsonHash": "fnv1a64:5e84e829d7c6a53d",
   "findings": []
 }

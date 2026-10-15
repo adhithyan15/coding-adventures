@@ -14,7 +14,8 @@ romanization: "shiroi"
 concept_tag: JA-ADJ52-SHIROI
 prerequisites: [JA-C51-aoi, JA-C51-akai]
 sounds: []
-roots: []
+roots: [japanese-shiroi]
+etymology_hook: "shiroi: native, the adjective from shiro 'white'; inherited, not borrowed; kanji 白い as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C51-akai]
 <!-- hl-knowledge: introduces=[JA-LEX-C52-ADJ52-01]; assesses=[] -->
 
 **しろい** — *shiroi* — "white".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しろい** (*shiroi*) is native: the adjective made from the colour word *shiro*, "white", with the ending *-i*; JMdict lists both. It is inherited rather than borrowed from Chinese, and the older origin of *shiro* is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "barf"
 concept_tag: HI-THINGS145-BARF
 prerequisites: [HI-C145-adhi, HI-C145-kohra, HI-C14-ritu, HI-C14-ritu]
 sounds: []
-roots: []
+roots: [persian-barf]
+etymology_hook: "barf: usually traced to Persian barf 'snow, ice'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C145-kohra]
 <!-- hl-knowledge: introduces=[HI-LEX-C145-THINGS145-03]; assesses=[] -->
 
 **बर्फ़** — *barf* — "snow, ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बर्फ़** (*barf*) is a loan, usually traced to Persian *barf*, "snow, ice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

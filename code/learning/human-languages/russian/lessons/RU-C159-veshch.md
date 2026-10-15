@@ -14,7 +14,8 @@ romanization: "veshch"
 concept_tag: RU-VESHCH159-VESHCH
 prerequisites: [RU-C158-sytyy, RU-C158-znakomyy]
 sounds: []
-roots: []
+roots: [slavic-veshti]
+etymology_hook: "вещь is Church Slavonic, from *vektĭ; Gothic waihts 'a thing' and English wight are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C158-znakomyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C159-VESHCH159-01]; assesses=[] -->
 
 **вещь** (*veshch*) — "a thing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вещь** — taken from Church Slavonic, says Vasmer, as the *-щ-* shows. He relates it to Gothic *waíhts*, "a thing", and Old High German *wiht*, "a being, a thing": English *wight* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

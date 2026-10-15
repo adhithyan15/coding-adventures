@@ -14,7 +14,8 @@ romanization: "vaṇik"
 concept_tag: SA-PLACE-MERCHANT
 prerequisites: [SA-C84-field, SA-C84-farmer]
 sounds: []
-roots: []
+roots: [sanskrit-vanij]
+etymology_hook: "vaṇij 'trader' is Rigvedic, of unclear origin (MW); Hindi banij 'trade' comes from vaṇijyā (CDIAL 11233)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C84-farmer]
 <!-- hl-knowledge: introduces=[SA-LEX-C84-PLACES-05]; assesses=[] -->
 
 **वणिक्** (*vaṇik*) — "a merchant", who keeps the **आपणः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vaṇij* is already in the Rigveda, but its origin is unclear: MW gives no root
+(CDIAL 11230). Its abstract *vaṇijyā*, "trade", lives on as Hindi *banij*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

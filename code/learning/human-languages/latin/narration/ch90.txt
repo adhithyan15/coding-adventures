@@ -12,6 +12,9 @@ Before the new one: say the Latin for a plain, then the Latin for a shore.
 You'll want to know: equus, equī.
 equus, equī — "a horse". English equestrian.
 
+The word, taken apart.
+equus is inherited. Old Latin wrote equos, and it is usually traced to Proto-Indo-European h1ekwos, "horse" (EtymDB 2.1); Greek hippos, "horse", is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a shore, then the Latin for a horse.
 
 You'll want to know: bōs, bovis.
 bōs, bovis — "an ox, a cow". English bovine.
+
+The word, taken apart.
+bōs is usually traced to Proto-Indo-European gwows, "cow" (EtymDB 2.1), but its b suggests it reached Latin from a neighbouring Italic language such as Oscan or Umbrian: Latin's own sound changes turned that gw into v. English cow is a cousin.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a horse, then the Latin for an ox.
 You'll want to know: ovis, ovis.
 ovis, ovis — "a sheep".
 
+The word, taken apart.
+ovis is inherited, usually traced to Proto-Indo-European h2owis, "sheep" (EtymDB 2.1). English ewe is a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for an ox, then the Latin for a sheep.
 You'll want to know: capra, caprae.
 capra, caprae — "a goat".
 
+The word, taken apart.
+capra is the feminine of caper, "a he-goat" (Lewis & Short), which is usually traced to Proto-Indo-European kapros, "buck, he-goat" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a sheep, then the Latin for a goat.
 
 You'll want to know: porcus, porcī.
 porcus, porcī — "a pig". English pork.
+
+The word, taken apart.
+porcus is inherited, usually traced to Proto-Indo-European porkos, "young pig" (EtymDB 2.1). English farrow, "a litter of pigs", is a cousin.
 
 What you've built.
 One more word for this chapter.

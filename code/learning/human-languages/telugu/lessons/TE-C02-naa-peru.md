@@ -12,6 +12,7 @@ concept_tag: INTRO-MY-NAME-IS
 prerequisites: [TE-C02-naa, TE-C02-peru]
 sounds: []
 roots: []
+etymology_hook: "nā pēru: two native Dravidian words, nā 'my' (DEDR 5160) and pēru 'name' (DEDR 4410)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,8 @@ for "is."
 > **నా పేరు …** = "my name …" → **"my name is…"**
 
 *Nā pēru Arun.* → "My name is Arun."
+
+Both words are native Dravidian: *nā* (DEDR 5160) and *pēru* (DEDR 4410).
 
 ## Grammar Lens: the zero copula
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C02-NAA-PERU-03]; assesses=[] -->

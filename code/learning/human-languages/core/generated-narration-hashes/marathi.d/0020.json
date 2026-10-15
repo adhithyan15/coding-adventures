@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 20,
-  "sourceHash": "fnv1a64:5087d2a7f57be397",
+  "sourceHash": "fnv1a64:1dc193c9e8ffe1d0",
   "lessonIds": [
     "MR-C13-hrudaya"
   ],
@@ -10,6 +10,6 @@
   "text": "marathi/narration/ch20.txt",
   "json": "marathi/narration/ch20.json",
   "textHash": "fnv1a64:a4704f16be6335ae",
-  "jsonHash": "fnv1a64:c6e026b0eadf3924",
+  "jsonHash": "fnv1a64:386b62818ab10a43",
   "findings": []
 }

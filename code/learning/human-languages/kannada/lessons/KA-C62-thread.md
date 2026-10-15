@@ -11,7 +11,8 @@ romanization: "nūlu"
 concept_tag: KA-NOUN-THREAD
 prerequisites: [KA-C61-sugar, KA-C60-cow]
 sounds: []
-roots: []
+roots: [dravidian-nuul-thread]
+etymology_hook: "nūlu: native Dravidian, one word with Tamil nūl (DEDR 3726)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C61-sugar]
 ನೂಲು is inherited, and it is the stuff ಬಟ್ಟೆ is made of. Everything worn in the cloth chapter began here.
 
 The same shape does double duty: ನೂಲು is the thread and it is equally the spinning of it, so one word covers the material and the making. Kannada does that often, and you will start to expect it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನೂಲು** (*nūlu*) is native Dravidian, one word with Tamil *nūl* (DEDR 3726).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

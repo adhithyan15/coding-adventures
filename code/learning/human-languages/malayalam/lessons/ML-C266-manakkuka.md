@@ -14,7 +14,8 @@ romanization: "maṇakkuka"
 concept_tag: ML-VERB-MANAKKUKA
 prerequisites: [ML-C266-cavaykkuka, ML-C266-vilunnuka]
 sounds: []
-roots: []
+roots: [dravidian-manam-smell]
+etymology_hook: "maṇakkuka: native Dravidian, one word with Tamil maṇa (DEDR 4668)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C266-vilunnuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C266-KRIYA266-05]; assesses=[] -->
 
 **മണക്കുക** — *maṇakkuka* — "to smell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മണക്കുക** (*maṇakkuka*) is native Dravidian, one word with Tamil *maṇa* (DEDR 4668).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

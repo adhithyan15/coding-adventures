@@ -14,7 +14,8 @@ romanization: "pārpatra"
 concept_tag: MR-VASTU236-PARPATRA
 prerequisites: [MR-C235-sampurna, MR-C236-phalat]
 sounds: []
-roots: []
+roots: [sanskrit-para-bank, sanskrit-patra]
+etymology_hook: "pārpatra: Sanskrit pāra 'the far side' + pattra 'leaf, document' (CDIAL 7733); a modern coinage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C236-phalat]
 <!-- hl-knowledge: introduces=[MR-LEX-C236-VASTU236-02]; assesses=[] -->
 
 **पारपत्र** — *pārpatra* — "a passport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पारपत्र** (*pārpatra*) is a modern coinage of Sanskrit parts: *pāra*, "the far side", and *pattra*, "leaf, document" (CDIAL 7733).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

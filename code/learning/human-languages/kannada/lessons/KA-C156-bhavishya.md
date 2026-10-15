@@ -14,7 +14,8 @@ romanization: "bhaviṣya"
 concept_tag: KA-MUNDE156-BHAVISHYA
 prerequisites: [KA-C156-mundina, KA-C156-innu-munde]
 sounds: []
-roots: []
+roots: [sanskrit-bhavishya]
+etymology_hook: "bhaviṣya ← Sanskrit bhaviṣya 'what is to be'; CDIAL 9421 lists the related bhaviṣyant 'future'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C156-innu-munde]
 <!-- hl-knowledge: introduces=[KA-LEX-C156-MUNDE156-03]; assesses=[] -->
 
 **ಭವಿಷ್ಯ** — *bhaviṣya* — "the future". **ಭವಿಷ್ಯದಲ್ಲಿ ನಾನು ಶಿಕ್ಷಕನಾಗುತ್ತೇನೆ** — *bhaviṣyadalli nānu śikṣakanāguttēne* — "In the future I will become a teacher."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಭವಿಷ್ಯ** (*bhaviṣya*) is Sanskrit *bhaviṣya*, "what is to be", taken over whole as a learned loan, a tatsama. CDIAL 9421 lists the related *bhaviṣyant*, "future, future time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

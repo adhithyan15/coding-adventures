@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 171,
-  "sourceHash": "fnv1a64:a2a761190eb78f6e",
+  "sourceHash": "fnv1a64:3462c8bfc65a6795",
   "lessonIds": [
     "HI-C171-dikhana",
     "HI-C171-dikhna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch171.txt",
   "json": "hindi/narration/ch171.json",
-  "textHash": "fnv1a64:3c78fbb9648b1277",
-  "jsonHash": "fnv1a64:8f29fe7183e0589a",
+  "textHash": "fnv1a64:4fb555421ee54e8c",
+  "jsonHash": "fnv1a64:54bf34da375e2000",
   "findings": []
 }

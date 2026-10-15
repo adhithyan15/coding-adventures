@@ -14,7 +14,8 @@ romanization: "oktyábr"
 concept_tag: RU-VREMYA212-OKTYABR
 prerequisites: [RU-C212-avgust, RU-C212-sentyabr]
 sounds: []
-roots: []
+roots: [latin-october]
+etymology_hook: "октябрь came through Byzantine Greek oktōbrios from Latin october 'the eighth (month)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C212-sentyabr]
 <!-- hl-knowledge: introduces=[RU-LEX-C212-VREMYA212-05]; assesses=[] -->
 
 **октябрь** (*oktyábr*) — "October".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**октябрь** — Old Russian *октябрь*; it came through Byzantine Greek *oktṓbrios* from Latin *octōber*, "the eighth month" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

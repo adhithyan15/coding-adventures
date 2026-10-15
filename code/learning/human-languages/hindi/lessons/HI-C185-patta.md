@@ -14,7 +14,8 @@ romanization: "pattā"
 concept_tag: HI-THG185-PATTA
 prerequisites: [HI-C185-garmi, HI-C185-tufan]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "pattā ← Sanskrit pattra 'wing-feather; leaf', a tadbhava (CDIAL 7733)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C185-tufan]
 <!-- hl-knowledge: introduces=[HI-LEX-C185-THG185-05]; assesses=[] -->
 
 **पत्ता** — *pattā* — "a leaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पत्ता** (*pattā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pattra*, "wing-feather; leaf" (CDIAL 7733).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

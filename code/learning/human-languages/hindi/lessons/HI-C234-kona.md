@@ -14,7 +14,8 @@ romanization: "konā"
 concept_tag: HI-LOC234-KONA
 prerequisites: [HI-C234-ulta, HI-C234-bic]
 sounds: []
-roots: []
+roots: [sanskrit-kona]
+etymology_hook: "konā ← Sanskrit koṇa 'corner', which CDIAL takes from Dravidian; a tadbhava (CDIAL 3504)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C234-bic]
 <!-- hl-knowledge: introduces=[HI-LEX-C234-LOC234-05]; assesses=[] -->
 
 **कोना** — *konā* — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोना** (*konā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *koṇa*, "corner, angle" (CDIAL 3504). CDIAL, after Burrow, takes the Sanskrit word from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

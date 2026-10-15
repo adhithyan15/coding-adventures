@@ -14,7 +14,8 @@ romanization: "ras malāī"
 concept_tag: UR-CHIZ175-RAS-MALAI
 prerequisites: [UR-C174-rajma, UR-C174-anjir]
 sounds: []
-roots: []
+roots: [sanskrit-rasa]
+etymology_hook: "ras ← Sanskrit rasa 'juice' (CDIAL 10650); malāī 'cream': origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C174-anjir]
 <!-- hl-knowledge: introduces=[UR-LEX-C175-CHIZ175-01]; assesses=[] -->
 
 **رس ملائی** — *ras malāī* — "rasmalai".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رس ملائی** (*ras malāī*) is "cream in syrup". *ras*, "juice, syrup", comes from Sanskrit *rasa*, "juice" (CDIAL 10650). The origin of *malāī*, "cream", is not settled; CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

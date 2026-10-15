@@ -14,7 +14,8 @@ romanization: "kāp"
 concept_tag: BN-THINGS133-KAP
 prerequisites: [BN-C133-porda, BN-C133-phuldani]
 sounds: []
-roots: []
+roots: [english-cup]
+etymology_hook: "kāp ← English cup"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C133-phuldani]
 <!-- hl-knowledge: introduces=[BN-LEX-C133-THINGS133-05]; assesses=[] -->
 
 **কাপ** — *kāp* — "a cup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কাপ** (*kāp*) is a loan from English *cup*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

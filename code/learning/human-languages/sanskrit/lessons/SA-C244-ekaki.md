@@ -14,7 +14,8 @@ romanization: "ekākī"
 concept_tag: SA-QUAL244-EKAKI
 prerequisites: [SA-C244-avasyakah, SA-C244-anyah]
 sounds: []
-roots: []
+roots: [sanskrit-eka]
+etymology_hook: "ekākin ← eka 'one' + -ākin: 'alone'; MW compares Greek oios and Gothic ains (CDIAL 2462)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C244-anyah]
 <!-- hl-knowledge: introduces=[SA-LEX-C244-QUAL244-05]; assesses=[] -->
 
 **एकाकी** — *ekākī* — "alone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ekākī* is the nominative of *ekākin*, built on *eka*, "one" (MW): "being one", alone. MW compares *eka* with Greek *oios*, "alone", and Gothic *ains*, "one", and *eka* lives on as Hindi *ek* (CDIAL 2462).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

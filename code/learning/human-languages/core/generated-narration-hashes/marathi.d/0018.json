@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 18,
-  "sourceHash": "fnv1a64:12c61c7f678b3d7c",
+  "sourceHash": "fnv1a64:37ac64aac3994089",
   "lessonIds": [
     "MR-C11-mitra",
     "MR-R11-mitra-r1",
@@ -15,6 +15,6 @@
   "text": "marathi/narration/ch18.txt",
   "json": "marathi/narration/ch18.json",
   "textHash": "fnv1a64:7b5afe588d47da8f",
-  "jsonHash": "fnv1a64:c97389c127ebe424",
+  "jsonHash": "fnv1a64:4401c2a5c59606c5",
   "findings": []
 }

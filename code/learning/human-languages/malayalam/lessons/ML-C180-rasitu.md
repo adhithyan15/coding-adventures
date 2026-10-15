@@ -14,7 +14,8 @@ romanization: "rasītŭ"
 concept_tag: ML-VAYANA180-RASITU
 prerequisites: [ML-C180-vataka, ML-C180-parasyam]
 sounds: []
-roots: []
+roots: [persian-rasid]
+etymology_hook: "rasītŭ ← Persian rasīd 'arrived; a receipt', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C180-parasyam]
 <!-- hl-knowledge: introduces=[ML-LEX-C180-VAYANA180-05]; assesses=[] -->
 
 **രസീത്** — *rasītŭ* — "a receipt". Ask for it when you pay: **രസീത് തരുമോ?** — *rasītŭ tarumō?* — "Could you give me the receipt?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**രസീത്** (*rasītŭ*) ← Persian *rasīd*, "arrived; an acknowledgement of receipt", which came in through Hindustani with Mughal and British administration.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

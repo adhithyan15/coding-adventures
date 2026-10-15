@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 405,
-  "sourceHash": "fnv1a64:3a12debc4520b4a8",
+  "sourceHash": "fnv1a64:b28b304c9e6703c3",
   "lessonIds": [
     "ES-C405-fotografia",
     "ES-C405-foto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch405.txt",
   "json": "spanish/narration/ch405.json",
-  "textHash": "fnv1a64:389bfa62927acbd3",
-  "jsonHash": "fnv1a64:7e759ba08d757f1f",
+  "textHash": "fnv1a64:abd59cbffa93b4c4",
+  "jsonHash": "fnv1a64:1250042382f2affc",
   "findings": []
 }

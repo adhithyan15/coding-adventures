@@ -15,6 +15,7 @@ concept_tag: MR-VASTU220-TAC
 prerequisites: [MR-C219-dukandar, MR-C219-grahak]
 sounds: []
 roots: []
+etymology_hook: "ṭāc 'heel': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C219-grahak]
 <!-- hl-knowledge: introduces=[MR-LEX-C220-VASTU220-01]; assesses=[] -->
 
 **टाच** — *ṭāc* — "a heel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **टाच** (*ṭāc*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

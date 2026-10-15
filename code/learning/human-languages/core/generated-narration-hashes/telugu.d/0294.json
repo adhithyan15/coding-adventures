@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 294,
-  "sourceHash": "fnv1a64:3f004e744aed8d41",
+  "sourceHash": "fnv1a64:f745e44b2bc5ba00",
   "lessonIds": [
     "TE-C294-salaha",
     "TE-C294-paiga",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch294.txt",
   "json": "telugu/narration/ch294.json",
-  "textHash": "fnv1a64:ec4c3ed5ea2191f9",
-  "jsonHash": "fnv1a64:e1bf782e50837d23",
+  "textHash": "fnv1a64:5d397747dd9d2e9e",
+  "jsonHash": "fnv1a64:60b65db4a48fab18",
   "findings": []
 }

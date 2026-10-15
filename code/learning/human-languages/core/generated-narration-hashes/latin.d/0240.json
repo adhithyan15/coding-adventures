@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 240,
-  "sourceHash": "fnv1a64:f27371014f560c40",
+  "sourceHash": "fnv1a64:14250b38bbdf4af8",
   "lessonIds": [
     "LA-C240-asper",
     "LA-C240-profundus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch240.txt",
   "json": "latin/narration/ch240.json",
-  "textHash": "fnv1a64:eef96803ac093da9",
-  "jsonHash": "fnv1a64:1dd36fbe8afb3dbb",
+  "textHash": "fnv1a64:686b6c3a2c946a72",
+  "jsonHash": "fnv1a64:5f14c03870b1ac3a",
   "findings": []
 }

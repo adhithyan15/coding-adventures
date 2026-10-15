@@ -13,7 +13,8 @@ gloss: "moderate, restrained"
 concept_tag: LA-QUAL184-MODESTUS
 prerequisites: [LA-C183-summus, LA-C184-prodigus]
 sounds: []
-roots: []
+roots: [modestus-latin, modus-latin]
+etymology_hook: "modestus 'moderate' — built on modus 'measure': keeping to measure"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C184-prodigus]
 <!-- hl-knowledge: introduces=[LA-LEX-C184-QUAL184-02]; assesses=[] -->
 
 **modestus, modesta, modestum** — "moderate, restrained".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**modestus** is built on *modus*, "measure" (Lewis & Short): keeping to measure. *modus* is usually traced to Proto-Indo-European *\*med-*, "to measure" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

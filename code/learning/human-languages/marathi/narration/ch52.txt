@@ -19,6 +19,9 @@ The sentence to keep is the one about the language itself:
 मराठी सोपी आहे. — marāṭhī sopī āhe. — Marathi is easy.
 मराठी is feminine, so the adjective ends in -ी. Say it out loud; you have earned it, and it is true more often than a beginner expects.
 
+The word, taken apart.
+सोपा (sopā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sukalpa, "easy to correct" (CDIAL 13446). It is built with su-, "well, easily". CDIAL prefers this source to a suvalpaka-.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: sopā, sopī, sopaṁ]

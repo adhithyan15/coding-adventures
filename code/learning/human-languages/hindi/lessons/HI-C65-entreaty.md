@@ -14,7 +14,8 @@ romanization: "vintī"
 concept_tag: HI-NOUN-ENTREATY
 prerequisites: [HI-C65-kindness, HI-C63-thirst, HI-C64-quickly]
 sounds: []
-roots: []
+roots: [sanskrit-vijnapti]
+etymology_hook: "vintī ← Sanskrit vijñapti 'a request to a superior', a tadbhava (CDIAL 11706)"
 duration:
   max_seconds: 210
 requires:

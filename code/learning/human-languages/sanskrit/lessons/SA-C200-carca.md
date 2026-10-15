@@ -14,7 +14,8 @@ romanization: "carcā"
 concept_tag: SA-SCH200-CARCA
 prerequisites: [SA-C200-sravanam, SA-C200-bhasanam]
 sounds: []
-roots: []
+roots: [sanskrit-carca]
+etymology_hook: "carcā 'repetition of a word', then 'discussion', from √carc 'repeat, talk over' (MW; CDIAL 4695)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C200-bhasanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C200-SCH200-04]; assesses=[] -->
 
 **चर्चा** — *carcā* — "a discussion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*carcā* first meant the repeating of a word in Vedic recitation (CDIAL 4695). It goes with the verb *carcayati*, which MW glosses "to repeat a word" and "to talk over, discuss". MW gives no older source for the root, and Telugu and Malayalam borrowed the noun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

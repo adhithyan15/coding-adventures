@@ -14,7 +14,8 @@ romanization: "list"
 concept_tag: RU-NATURE1-LEAF
 prerequisites: [RU-C55-tree, RU-C55-flower]
 sounds: []
-roots: []
+roots: [slavic-listu]
+etymology_hook: "лист ← Proto-Slavic *listŭ; Lithuanian laiškas 'leaf' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C55-flower]
 <!-- hl-knowledge: introduces=[RU-LEX-C55-NATURE1-03]; assesses=[] -->
 
 **лист** (*list*) — "a leaf; a sheet of paper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лист** ← Proto-Slavic *\*listŭ* — inherited, related to Lithuanian *laĩškas*, "leaf", and Latvian *laiska*, "a leaf of flax" (Vasmer). Paper took the same word, as in English *a leaf of a book*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

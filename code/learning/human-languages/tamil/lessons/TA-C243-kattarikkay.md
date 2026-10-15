@@ -47,7 +47,7 @@ reviews_of: [TA-C243-urulaikkilanku]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**கத்தரிக்காய்** (*kattarikkāy*) is *kattari*, the name of the plant, and native *kāy*, "unripe fruit, vegetable" (DEDR 1459). The origin of *kattari* is uncertain; DEDR has no entry for it.
+**கத்தரிக்காய்** (*kattarikkāy*) is *kattari*, the name of the plant, and native *kāy*, "unripe fruit, vegetable" (DEDR 1459, which compares Indo-Aryan *\*kacca*, "raw"). The origin of *kattari* is uncertain; DEDR has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

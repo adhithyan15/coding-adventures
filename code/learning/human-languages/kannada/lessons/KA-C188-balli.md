@@ -14,7 +14,8 @@ romanization: "baḷḷi"
 concept_tag: KA-VASTU188-BALLI
 prerequisites: [KA-C187-kattale, KA-C188-gudu]
 sounds: []
-roots: []
+roots: [dravidian-valli-creeper]
+etymology_hook: "baḷḷi: native Dravidian, one word with Tamil vaḷḷi and Telugu valli (DEDR 5316)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C188-gudu]
 <!-- hl-knowledge: introduces=[KA-LEX-C188-VASTU188-02]; assesses=[] -->
 
 **ಬಳ್ಳಿ** — *baḷḷi* — "a creeper, a vine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಳ್ಳಿ** (*baḷḷi*) is native Dravidian, one word with Tamil *vaḷḷi* and Telugu *valli* (DEDR 5316). DEDR lists *baḷḷi* itself: the old *v-* has become *b-*. DEDR 5316 compares Sanskrit *vallī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

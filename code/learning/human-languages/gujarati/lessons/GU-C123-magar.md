@@ -14,7 +14,8 @@ romanization: "magar"
 concept_tag: GU-THINGS123-MAGAR
 prerequisites: [GU-C122-batak, GU-C123-kacbo]
 sounds: []
-roots: []
+roots: [sanskrit-makara]
+etymology_hook: "magar ← Sanskrit makara 'crocodile'; its g matches Prakrit magara (CDIAL 9692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C123-kacbo]
 <!-- hl-knowledge: introduces=[GU-LEX-C123-THINGS123-02]; assesses=[] -->
 
 **મગર** (*magar*) — "a crocodile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**મગર** (*magar*) goes back to Sanskrit *makara*, "crocodile". CDIAL lists Prakrit *magara*, with the same *g*, beside *mayara*, but no Gujarati form (CDIAL 9692).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

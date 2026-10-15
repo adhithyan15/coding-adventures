@@ -13,7 +13,8 @@ gloss: "cooked"
 concept_tag: LA-QUAL181-COCTUS
 prerequisites: [LA-C181-recens, LA-C181-crudus]
 sounds: []
-roots: []
+roots: [coctus-latin, coquere-latin]
+etymology_hook: "coctus 'cooked' — the participle of coquō 'to cook'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C181-crudus]
 <!-- hl-knowledge: introduces=[LA-LEX-C181-QUAL181-04]; assesses=[] -->
 
 **coctus, cocta, coctum** — "cooked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**coctus** is the past participle of *coquō*, "to cook" (Lewis & Short): cooked.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

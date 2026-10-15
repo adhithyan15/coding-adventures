@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a flute, then the Japanese for a drum.
 You'll want to know: うちわ.
 うちわ — uchiwa — "a hand fan".
 
+The word, taken apart.
+うちわ (uchiwa) is a native word, inherited rather than borrowed. JMdict writes it with characters for "circle" and "fan", read as a whole, and marks it as usually written in kana. Its older origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a drum, then the Japanese for a hand fa
 
 You'll want to know: せんす.
 せんす — sensu — "a folding fan".
+
+The word, taken apart.
+せんす (sensu) is Sino-Japanese, borrowed from Chinese: sen, "fan" (Middle Chinese syenH), and su, a noun ending written with the character for "child"; su is a later Chinese reading of that character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a hand fan, then the Japanese for a fol
 You'll want to know: すみ.
 すみ — sumi — "charcoal; a corner".
 
+The word, taken apart.
+すみ (sumi) is two native words that sound alike: sumi, "charcoal", and sumi, "corner", each with its own kanji (JMdict). Both are inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a folding fan, then the Japanese for ch
 You'll want to know: いど.
 いど — ido — "a well".
 
+The word, taken apart.
+いど (ido) is a native compound, inherited rather than borrowed: i, "well", and to, "door, opening", voiced to do, both kun'yomi of its kanji (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for charcoal; a corner, then the Japanese f
 
 You'll want to know: はま.
 はま — hama — "a beach".
+
+The word, taken apart.
+はま (hama) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

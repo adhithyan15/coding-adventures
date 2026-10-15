@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 252,
-  "sourceHash": "fnv1a64:0693c8fdc782020f",
+  "sourceHash": "fnv1a64:7ae0bfbadcfcdce2",
   "lessonIds": [
     "RU-C252-khokkey",
     "RU-C252-tennis",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch252.txt",
   "json": "russian/narration/ch252.json",
-  "textHash": "fnv1a64:868757215225cb93",
-  "jsonHash": "fnv1a64:251f6a64c6fc0435",
+  "textHash": "fnv1a64:03f022d2bcdd2768",
+  "jsonHash": "fnv1a64:0c6c97caff90aa81",
   "findings": []
 }

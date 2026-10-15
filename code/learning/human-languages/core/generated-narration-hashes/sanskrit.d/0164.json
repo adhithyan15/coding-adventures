@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 164,
-  "sourceHash": "fnv1a64:08bfe4a75401cee1",
+  "sourceHash": "fnv1a64:c396a8ed0bb6a914",
   "lessonIds": [
     "SA-C164-pranganam",
     "SA-C164-vatika",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch164.txt",
   "json": "sanskrit/narration/ch164.json",
-  "textHash": "fnv1a64:08ee7c3d308805fa",
-  "jsonHash": "fnv1a64:1f97fd7948ecf09b",
+  "textHash": "fnv1a64:2f13b02125fa6754",
+  "jsonHash": "fnv1a64:cad404da5e77b88a",
   "findings": []
 }

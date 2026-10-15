@@ -14,7 +14,8 @@ romanization: "gotóvit"
 concept_tag: RU-VERB-GOTOVIT
 prerequisites: [RU-C38-plakat, RU-C39-myt]
 sounds: []
-roots: []
+roots: [slavic-gotovu]
+etymology_hook: "готовить is готовый 'ready' made a verb: to make ready, and so to cook"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C39-myt]
 <!-- hl-knowledge: introduces=[RU-LEX-C39-VERB2-02]; assesses=[] -->
 
 **готовить** (*gotóvit*) — "to cook, to prepare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**готовить** is *готовый*, "ready", made into a verb: "to make ready", and so "to cook". *готовый* goes back to Proto-Slavic *\*gotovŭ*; Vasmer relates it to Albanian *gatuanj*, "I cook", and rejects a loan from Gothic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

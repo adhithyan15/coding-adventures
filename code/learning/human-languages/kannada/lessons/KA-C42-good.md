@@ -11,7 +11,8 @@ romanization: "oḷḷeya"
 concept_tag: KA-ADJ-GOOD
 prerequisites: [KA-C42-small, KA-C40-oota]
 sounds: []
-roots: []
+roots: [dravidian-ol-good]
+etymology_hook: "oḷḷeya: native Dravidian, from oḷḷe 'goodness' (DEDR 1017); Tamil oḷi 'excellence'"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,11 @@ You met **ಚಿಕ್ಕ** *cikka* a moment ago. Put them side by side and noth
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಳ್ಳೆಯ** (*oḷḷeya*) is native Dravidian, the adjective of *oḷḷe*, "goodness", which DEDR 1017 lists with Tamil *oḷi*, "excellence".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-03, KA-LEX-C40-OOTA-01, KA-ETYMON-C40-OOTA-02] -->

@@ -14,7 +14,8 @@ romanization: "vaḍḍiñcu"
 concept_tag: TE-VERB-VADDINCU
 prerequisites: [TE-C200-encuko, TE-C200-prayatnincu]
 sounds: []
-roots: []
+roots: [telugu-vaddincu-serve]
+etymology_hook: "vaḍḍiñcu: origin uncertain; perhaps Sanskrit vardhayati 'divides' (CDIAL 11381)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C200-prayatnincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C200-KRIYA200-04]; assesses=[] -->
 
 **వడ్డించు** — *vaḍḍiñcu* — "to serve (food)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **వడ్డించు** (*vaḍḍiñcu*) is uncertain. It may come from Sanskrit *vardhayati*, "cuts, divides", whose Oriya and Marathi descendants mean "to serve out food" (CDIAL 11381), but no source says so.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

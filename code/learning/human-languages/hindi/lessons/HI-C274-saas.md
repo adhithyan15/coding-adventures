@@ -14,7 +14,8 @@ romanization: "sā̃s"
 concept_tag: HI-THG274-SAAS
 prerequisites: [HI-C273-bimari, HI-C274-dharkan]
 sounds: []
-roots: []
+roots: [sanskrit-shvasa]
+etymology_hook: "sāṁs ← Sanskrit śvāsa 'breath, breathing', a tadbhava (CDIAL 12769)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C274-dharkan]
 <!-- hl-knowledge: introduces=[HI-LEX-C274-THG274-02]; assesses=[] -->
 
 **साँस** — *sā̃s* — "breath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साँस** (*sāṁs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śvāsa*, "breath, breathing" (CDIAL 12769).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

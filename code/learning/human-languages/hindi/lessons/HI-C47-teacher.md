@@ -14,7 +14,8 @@ romanization: "śikṣak"
 concept_tag: HI-NOUN-TEACHER
 prerequisites: [HI-C46-throat, HI-C45-fruit, HI-C46-hair]
 sounds: []
-roots: []
+roots: [sanskrit-shikshaka]
+etymology_hook: "śikṣak ← Sanskrit śikṣaka 'one who teaches', a tatsama"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C46-throat]
 Sanskrit, and it comes apart cleanly in the hand: the root *śikṣ-*, 'to learn, to be taught', with the agent ending *-aka* — the one who brings the learning about. The same root gives *śikṣā*, education, and *śikṣit*, educated.
 
 Everyday speech reaches for *ustād* or *guru* depending on what is being taught and by whom, but शिक्षक is the word on the school form, and the feminine *śikṣikā* is built from it by the ending alone.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शिक्षक** (*śikṣak*) is Sanskrit *śikṣaka*, "one who teaches", taken over whole as a learned loan, a tatsama. It is built on *śikṣā*, "learning, study", which also came down into everyday Hindi as *sīkh*, "advice" (CDIAL 12432).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

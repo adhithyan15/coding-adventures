@@ -14,7 +14,8 @@ romanization: "abbū"
 concept_tag: UR-HEALTH42-ABBU
 prerequisites: [UR-C42-udas, UR-C42-bap]
 sounds: []
-roots: []
+roots: [arabic-ab]
+etymology_hook: "abbū: usually traced to Arabic abū, a form of ab 'father' (Lane, root ʾ-b-w)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C42-bap]
 <!-- hl-knowledge: introduces=[UR-LEX-C42-HEALTH42-05]; assesses=[] -->
 
 **ابو** — *abbū* — "dad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ابو** (*abbū*) is usually traced to Arabic *abū*, a form of *ab*, "father". Its Arabic root is *ʾ-b-w* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

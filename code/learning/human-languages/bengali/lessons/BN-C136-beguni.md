@@ -14,7 +14,8 @@ romanization: "beguni"
 concept_tag: BN-QUAL136-BEGUNI
 prerequisites: [BN-C136-soru, BN-C136-gol]
 sounds: []
-roots: []
+roots: [sanskrit-vatingana]
+etymology_hook: "beguni: begun 'aubergine' ← vātiṅgaṇa (CDIAL 11503) + -i; CDIAL lists bāguniyā 'purple'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C136-gol]
 <!-- hl-knowledge: introduces=[BN-LEX-C136-QUAL136-05]; assesses=[] -->
 
 **বেগুনি** — *beguni* — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বেগুনি** (*beguni*) is *begun*, "aubergine", with the ending *-i*: "aubergine-coloured". CDIAL lists Bengali *bāguniyā*, "purple", as derived from the word for the aubergine, Sanskrit *vātiṅgaṇa* (CDIAL 11503).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

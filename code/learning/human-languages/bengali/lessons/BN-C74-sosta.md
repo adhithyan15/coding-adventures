@@ -15,6 +15,7 @@ concept_tag: BN-ADJ74-SOSTA
 prerequisites: [BN-C73-sohoj, BN-C74-dami]
 sounds: []
 roots: []
+etymology_hook: "sôstā: origin not settled; CDIAL has no entry for it, searched by form and by the gloss 'cheap'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C74-dami]
 <!-- hl-knowledge: introduces=[BN-LEX-C74-ADJ74-02]; assesses=[] -->
 
 **সস্তা** — *sôstā* — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **সস্তা** (*sôstā*) is not settled. CDIAL has no entry for it, and a search of its word lists by form and by the gloss "cheap" turns up nothing of this shape; the same word in Hindi, *sastā*, is untraced there too.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

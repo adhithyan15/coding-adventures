@@ -14,7 +14,8 @@ romanization: "svétlyy"
 concept_tag: RU-KACH244-SVETLYY
 prerequisites: [RU-C244-yarkiy, RU-C244-tyomnyy]
 sounds: []
-roots: []
+roots: [slavic-svetu]
+etymology_hook: "светлый ← Proto-Slavic *světĭlŭ, from свет 'light'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C244-tyomnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C244-KACH244-05]; assesses=[] -->
 
 **светлый** (*svétlyy*) — "light, bright (of a colour or room)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**светлый** ← Proto-Slavic *\*světĭlŭ*, from *свет*, "light" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

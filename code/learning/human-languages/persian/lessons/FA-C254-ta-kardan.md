@@ -14,7 +14,8 @@ romanization: "tâ kardan"
 concept_tag: FA-VERB-TA-KARDAN
 prerequisites: [FA-C254-amade-kardan, FA-C254-otu-kardan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "tâ kardan: Persian tâ 'fold' + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C254-otu-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C254-KONESH254-04]; assesses=[] -->
 
 **تا کردن** — *tâ kardan* — "to fold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tâ kardan* pairs *tâ*, "fold, layer", a native word, with *kardan*: to make a fold. (It is not *tâ*, "until", which looks the same.) *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

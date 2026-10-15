@@ -14,7 +14,8 @@ romanization: "dom"
 concept_tag: RU-HOME1-HOUSE
 prerequisites: [RU-C47-mushroom, RU-C47-glass]
 sounds: []
-roots: []
+roots: [pie-domos]
+etymology_hook: "дом ← Proto-Slavic *domŭ; Latin domus and Sanskrit dama 'house' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C47-glass]
 <!-- hl-knowledge: introduces=[RU-LEX-C48-HOME1-01]; assesses=[] -->
 
 **дом** (*dom*) — "a house, home".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**дом** ← Proto-Slavic *\*domŭ* — inherited. Vasmer lists Sanskrit *dámas*, Greek *dómos* and Latin *domus*, all "house", from PIE *\*dem-*, "to build".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

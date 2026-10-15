@@ -14,7 +14,8 @@ romanization: "civara"
 concept_tag: TE-SAMAYAM253-CIVARA
 prerequisites: [TE-C252-vinayaka-caviti, TE-C252-batukamma]
 sounds: []
-roots: []
+roots: [dravidian-civara-end]
+etymology_hook: "civara: native Dravidian, one word with Tamil cimai (DEDR 2544)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C252-batukamma]
 <!-- hl-knowledge: introduces=[TE-LEX-C253-SAMAYAM253-01]; assesses=[] -->
 
 **చివర** — *civara* — "the end".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చివర** (*civara*) is native Dravidian, one word with Tamil *cimai* (DEDR 2544). DEDR lists Telugu *civara*, "end, tip".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

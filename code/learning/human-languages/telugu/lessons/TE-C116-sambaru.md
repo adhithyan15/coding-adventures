@@ -14,7 +14,8 @@ romanization: "sāmbāru"
 concept_tag: TE-THINGS116-SAMBARU
 prerequisites: [TE-C115-kura, TE-C115-pappu]
 sounds: []
-roots: []
+roots: [telugu-saambaaru-sambar]
+etymology_hook: "sāmbāru: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C115-pappu]
 <!-- hl-knowledge: introduces=[TE-LEX-C116-THINGS116-01]; assesses=[] -->
 
 **సాంబారు** — *sāmbāru* — "sambar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **సాంబారు** (*sāmbāru*) is uncertain. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

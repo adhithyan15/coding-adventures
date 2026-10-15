@@ -14,7 +14,8 @@ romanization: "matab"
 concept_tag: FA-MAKAN154-MATAB
 prerequisites: [FA-C154-qassabi, FA-C154-kafe]
 sounds: []
-roots: []
+roots: [arabic-matabb]
+etymology_hook: "matab ← Arabic maṭabb 'place of medical treatment', root ṭ-b-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C154-kafe]
 <!-- hl-knowledge: introduces=[FA-LEX-C154-MAKAN154-05]; assesses=[] -->
 
 **مطب** — *matab* — "a doctor's surgery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*matab* is borrowed from Arabic *maṭabb*, "place of medical treatment". Its Arabic root is *ṭ-b-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 115,
   "title": "Thunderstorm, Ice, Hill, Rock, Wave",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a2c51ec61e0abec3",
+  "sourceHash": "fnv1a64:20edd59503e52302",
   "lessons": [
     {
       "id": "RU-C115-thunderstorm",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57ccee2450a50b13",
+      "sourceHash": "fnv1a64:6791e6323e760b4c",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "гроза (grozá) from Proto-Slavic groza, \"terror, dread\" — inherited; грозить, \"to threaten\", is its verb. Vasmer relates it to Lithuanian gražóti, \"to threaten\", and perhaps Greek gorgós, \"fearsome\", as in the Gorgon."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a26e2baf4c7b877",
+      "sourceHash": "fnv1a64:bf44fb0662ef02b2",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "лёд (lyod) from Proto-Slavic ledŭ — inherited, a cousin of Lithuanian ledùs and Latvian ledus, \"ice\" (Vasmer). A link with Greek líthos, \"stone\", he finds doubtful."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80c341a38b8c7f38",
+      "sourceHash": "fnv1a64:dbc83a0dc6c25984",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "холм (kholm) from Proto-Slavic xŭlmŭ, borrowed from early Germanic hulma-, as in Old English holm, \"a height\", and Old Norse holmr, \"an islet\" (Vasmer). He rejects attempts to make it native."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3856ee5b7d088dba",
+      "sourceHash": "fnv1a64:14a4b19e4bad8b73",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "скала (skalá) from Proto-Slavic skala — inherited, from a root \"to split\", as in осколок, \"a splinter\", and щель, \"a crack\" (Vasmer). Vasmer relates it to Lithuanian skélti, \"to split\", and Old Norse skilja, \"to separate\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:650d4c0a91018095",
+      "sourceHash": "fnv1a64:a1d2737a958e1a61",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "волна (volná) from Proto-Slavic vĭlna — inherited, a cousin of Lithuanian vilnìs, \"wave\", Old High German wella, \"wave\", and Sanskrit ūrmí-, \"wave\" (Vasmer). It is a separate word from волна (volná), \"wool\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

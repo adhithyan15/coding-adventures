@@ -14,7 +14,8 @@ romanization: "visa"
 concept_tag: ML-VASTU324-VISA
 prerequisites: [ML-C324-sarttiphikkarru, ML-C324-pasporttu]
 sounds: []
-roots: []
+roots: [english-visa]
+etymology_hook: "visa ← English visa, from Latin charta visa 'paper that has been seen'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C324-pasporttu]
 <!-- hl-knowledge: introduces=[ML-LEX-C324-VASTU324-04]; assesses=[] -->
 
 **വിസ** — *visa* — "a visa".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിസ** (*visa*) ← English *visa*, from Latin *charta visa*, "a paper that has been seen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

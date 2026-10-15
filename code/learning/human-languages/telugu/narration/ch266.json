@@ -4,7 +4,7 @@
   "chapter": 266,
   "title": "Jasmine flower, Neem, Banyan tree, Holy basil, Bud",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:c1d0334c4fe7d9bc",
+  "sourceHash": "fnv1a64:c0f9f56489b713db",
   "lessons": [
     {
       "id": "TE-C266-mallepuvvu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91fddd7a23340f24",
+      "sourceHash": "fnv1a64:1af8432eaac6f329",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మల్లెపువ్వు (mallepuvvu) is malle, \"jasmine\", which matches Sanskrit mallikā, \"jasmine\" (CDIAL 9913), and native puvvu, \"flower\" (DEDR 4345). CDIAL compares the Dravidian jasmine words with the Sanskrit one; DEDR compares, with a query, Sanskrit puṣpa, \"flower\", with puvvu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:548b2187dac53e40",
+      "sourceHash": "fnv1a64:4515c934a0a20b1d",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వేప (vēpa) is native Dravidian, one word with Tamil vēmpu and Kannada bēvu (DEDR 5531). DEDR lists Telugu vēpa, \"neem\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2420828070cd0e2c",
+      "sourceHash": "fnv1a64:99709e2ecf3461ed",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మర్రి (marri) is Dravidian. DEDR 4773 lists maṟṟi, \"banyan tree\", with Kolami marri, \"banyan\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fe304526b59dfe5",
+      "sourceHash": "fnv1a64:c20b81f64f4fc416",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తులసి (tulasi) is the name DEDR 3357 lists with Tamil tuḷaci and Kannada toḷasi, \"sacred basil\". DEDR compares Sanskrit tulasī (CDIAL 5885) and notes that some of these forms were borrowed back from Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9e6d0d7f1327dfc",
+      "sourceHash": "fnv1a64:5ffd89c426dce7a4",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మొగ్గ (mogga) is native Dravidian. DEDR 4893 lists mogga, \"a bud\", with Tamil mukiḻ, \"to bud\". DEDR compares Sanskrit mukula, \"bud\" (CDIAL 10146), which CDIAL takes from Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

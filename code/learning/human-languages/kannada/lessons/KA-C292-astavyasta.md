@@ -14,7 +14,8 @@ romanization: "astavyasta"
 concept_tag: KA-GUNA292-ASTAVYASTA
 prerequisites: [KA-C292-garigari, KA-C292-accukattada]
 sounds: []
-roots: []
+roots: [sanskrit-astavyasta]
+etymology_hook: "astavyasta ← Sanskrit astavyasta 'tossed hither and thither', a tatsama (CDIAL 976a)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C292-accukattada]
 <!-- hl-knowledge: introduces=[KA-LEX-C292-GUNA292-04]; assesses=[] -->
 
 **ಅಸ್ತವ್ಯಸ್ತ** — *astavyasta* — "messy, in disarray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಸ್ತವ್ಯಸ್ತ** (*astavyasta*) is Sanskrit *astavyasta*, "tossed hither and thither", taken over whole as a learned loan, a tatsama (CDIAL 976a).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

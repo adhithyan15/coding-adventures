@@ -13,7 +13,8 @@ gloss: "today's"
 concept_tag: LA-QUAL215-HODIERNUS
 prerequisites: [LA-C214-rarus, LA-C214-creber]
 sounds: []
-roots: []
+roots: [hodiernus-latin, hodie-latin]
+etymology_hook: "hodiernus 'today's' — built on hodiē 'today'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C214-creber]
 <!-- hl-knowledge: introduces=[LA-LEX-C215-QUAL215-01]; assesses=[] -->
 
 **hodiernus, hodierna, hodiernum** — "today's".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hodiernus** is built on *hodiē*, "today" (Lewis & Short), with *-ernus*, an ending for time: of today.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

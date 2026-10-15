@@ -14,7 +14,8 @@ romanization: "ʿamila"
 concept_tag: AR-VERB-AMILA
 prerequisites: [AR-C63-dakhala, AR-C64-kharaja]
 sounds: []
-roots: []
+roots: [ʿ-m-l]
+etymology_hook: "ʿamila: built on the root ʿ-m-l, 'to work, to do' (Lane); ʿamila is the plain verb, 'he worked'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C64-kharaja]
 <!-- hl-knowledge: introduces=[AR-LEX-C64-VERBS64-02]; assesses=[] -->
 
 **عمل** — *ʿamila* — "to work (he worked)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عمل** (*ʿamila*) is built on the native Arabic root *ʿ-m-l*, "to work, to do" (Lane). *ʿAmila* is the plain verb, "he worked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

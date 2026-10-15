@@ -11,8 +11,8 @@ gloss: hand, heard before reading
 concept_tag: GU-BODY-HAND-HEARD
 prerequisites: [GU-C20-places-three]
 sounds: [long-aa, aspirated-th]
-roots: []
-etymology_hook: One body word enters through sound and meaning before print.
+roots: [hasta-sanskrit]
+etymology_hook: "hāth ← Sanskrit hasta 'hand', a tadbhava (CDIAL 14024)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C20-places-three]
 
 Say home. Now listen twice: **hāth** means **hand**. Keep its long vowel and
 final puff distinct from *ghar*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હાથ** (*hāth*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hasta*, "hand" (CDIAL 14024).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-HAATH-01] -->

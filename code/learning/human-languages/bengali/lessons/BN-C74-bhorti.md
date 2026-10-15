@@ -14,7 +14,8 @@ romanization: "bhôrti"
 concept_tag: BN-ADJ74-BHORTI
 prerequisites: [BN-C74-sosta, BN-C74-nichu]
 sounds: []
-roots: []
+roots: [sanskrit-bharati]
+etymology_hook: "bhôrti: built on bhar- 'fill' ← Sanskrit bharati 'bears, fills' (CDIAL 9397); CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C74-nichu]
 <!-- hl-knowledge: introduces=[BN-LEX-C74-ADJ74-04]; assesses=[] -->
 
 **ভর্তি** — *bhôrti* — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ভর্তি** (*bhôrti*) is built on the stem *bhar-*, "fill": CDIAL lists Bengali *bharā*, "to load", under Sanskrit *bharati*, "bears, fills" (CDIAL 9397), but has no entry for **ভর্তি** (*bhôrti*) itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāraṇam"
 concept_tag: SA-LOC97-KARANAM
 prerequisites: [SA-C97-bhojanalayah, SA-C97-sthanakam]
 sounds: []
-roots: []
+roots: [sanskrit-karana]
+etymology_hook: "kāraṇa 'cause' ← √kṛ 'do, make' (CDIAL 3057); Hindi and Gujarati kāraṇ keep it whole"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C97-sthanakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C97-LOC97-04]; assesses=[] -->
 
 **कारणम्** — *kāraṇam* — "a reason".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kāraṇa* "cause, reason" comes from the root √kṛ "do, make" (CDIAL 3057): a cause is what brings a thing about. Hindi, Gujarati and Punjabi *kāraṇ* keep it almost unchanged (CDIAL 3057).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ reviews_of: [TA-C216-varaipatam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**மணமகள்** (*maṇamakaḷ*) is native: *maṇam*, "marriage" (DEDR 4667), and *makaḷ*, "daughter, woman" (DEDR 4616).
+**மணமகள்** (*maṇamakaḷ*) is native: *maṇam*, "marriage" (DEDR 4667), and *makaḷ*, "daughter, woman" (DEDR 4616, which compares Sanskrit *mālikā*, "daughter").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

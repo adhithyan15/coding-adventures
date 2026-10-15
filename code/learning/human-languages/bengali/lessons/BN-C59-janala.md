@@ -14,7 +14,8 @@ romanization: "jānālā"
 concept_tag: BN-FOOD59-JANALA
 prerequisites: [BN-C59-sobji, BN-C59-bari]
 sounds: []
-roots: []
+roots: [portuguese-janela]
+etymology_hook: "jānālā ← Portuguese janela 'window'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C59-bari]
 <!-- hl-knowledge: introduces=[BN-LEX-C59-FOOD59-05]; assesses=[] -->
 
 **জানালা** — *jānālā* — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জানালা** (*jānālā*) is a loan from Portuguese *janela*, "window".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

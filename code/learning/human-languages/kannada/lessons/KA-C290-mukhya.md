@@ -14,7 +14,8 @@ romanization: "mukhya"
 concept_tag: KA-GUNA290-MUKHYA
 prerequisites: [KA-C290-kasta, KA-C290-sulabha]
 sounds: []
-roots: []
+roots: [sanskrit-mukhya]
+etymology_hook: "mukhya ← Sanskrit mukhya 'chief', a tatsama (CDIAL 10174)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C290-sulabha]
 <!-- hl-knowledge: introduces=[KA-LEX-C290-GUNA290-05]; assesses=[] -->
 
 **ಮುಖ್ಯ** — *mukhya* — "important".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಖ್ಯ** (*mukhya*) is Sanskrit *mukhya*, "chief", taken over whole as a learned loan, a tatsama (CDIAL 10174).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

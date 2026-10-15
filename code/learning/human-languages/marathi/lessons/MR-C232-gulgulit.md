@@ -15,6 +15,7 @@ concept_tag: MR-GUN232-GULGULIT
 prerequisites: [MR-C232-abhimani, MR-C232-asvastha]
 sounds: []
 roots: []
+etymology_hook: "guḷguḷīt 'smooth': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C232-asvastha]
 <!-- hl-knowledge: introduces=[MR-LEX-C232-GUN232-04]; assesses=[] -->
 
 **गुळगुळीत** — *guḷguḷīt* — "smooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **गुळगुळीत** (*guḷguḷīt*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

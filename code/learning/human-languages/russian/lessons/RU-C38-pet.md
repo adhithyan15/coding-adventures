@@ -14,7 +14,8 @@ romanization: "pet"
 concept_tag: RU-VERB-PET
 prerequisites: [RU-C37-work, RU-C38-rabotat]
 sounds: []
-roots: []
+roots: [slavic-peti]
+etymology_hook: "петь ← Proto-Slavic *pěti; the deeper origin is unclear, though Trubachev ties it to пить 'to drink'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C38-rabotat]
 <!-- hl-knowledge: introduces=[RU-LEX-C38-VERB1-02]; assesses=[] -->
 
 **петь** (*pet*) — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**петь** ← Proto-Slavic *\*pěti*, with *\*pojǫ*, "I sing" — inherited. The deeper origin is unclear: Vasmer finds the proposed links unreliable, and Trubachev, in a note to Vasmer, explains it from *пить*, "to drink", since *пою* means both "I sing" and "I give to drink".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḥimār"
 concept_tag: AR-ANIMALS81-HIMAR
 prerequisites: [AR-C80-dubb, AR-C81-jamal]
 sounds: []
-roots: []
+roots: [hamar-red]
+etymology_hook: "ḥimār: built on the root ḥ-m-r, 'an ass' (Lane); Hebrew ḥamor, 'donkey', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C81-jamal]
 <!-- hl-knowledge: introduces=[AR-LEX-C81-ANIMALS81-02]; assesses=[] -->
 
 **حمار** — *ḥimār* — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حمار** (*ḥimār*) is built on the native Arabic root *ḥ-m-r*, "an ass; to be red" (Lane). Hebrew *ḥamor*, "donkey", is its cousin; Lane lists it under the same letters as *aḥmar*, "red".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -10,7 +10,8 @@ gloss: "to congratulate, to wish a happy birthday"
 concept_tag: ES-VERB-FELICITAR
 prerequisites: [ES-C506-envolver, ES-C506-juguete]
 sounds: []
-roots: []
+roots: [felix]
+etymology_hook: "felicitar ← Late Latin felicitare 'to make happy', from felix — kin to feliz 'happy'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C506-juguete]
 > *I am calling to wish you a happy birthday.*
 
 *¡Felicidades!* — congratulations, happy birthday.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**felicitar** ← Late Latin *felicitare*, "to make happy" (EtymDB 2.1), from *felix*, "happy" — the *felix* inside *feliz*. A learned word: the *-t-* between vowels stayed *t*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

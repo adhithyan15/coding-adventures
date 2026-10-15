@@ -14,7 +14,8 @@ romanization: "jāvaī"
 concept_tag: MR-VASTU264-JAVAI
 prerequisites: [MR-C264-sasu, MR-C264-sasre]
 sounds: []
-roots: []
+roots: [sanskrit-jamatr]
+etymology_hook: "jāvaī ← Sanskrit jāmātṛ 'daughter's husband', a tadbhava (CDIAL 5198)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C264-sasre]
 <!-- hl-knowledge: introduces=[MR-LEX-C264-VASTU264-05]; assesses=[] -->
 
 **जावई** — *jāvaī* — "a son-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जावई** (*jāvaī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jāmātṛ*, "daughter's husband" (CDIAL 5198).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

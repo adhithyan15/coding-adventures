@@ -14,7 +14,8 @@ romanization: "vicāraṁ"
 concept_tag: ML-KARANAM318-VICARAM
 prerequisites: [ML-C318-parajayam, ML-C318-telivu]
 sounds: []
-roots: []
+roots: [sanskrit-vicara-deliberation]
+etymology_hook: "vicāraṁ ← Sanskrit vicāra 'mode of action; pondering', a tatsama (CDIAL 11683)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C318-telivu]
 <!-- hl-knowledge: introduces=[ML-LEX-C318-KARANAM318-03]; assesses=[] -->
 
 **വിചാരം** — *vicāraṁ* — "a thought".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിചാരം** (*vicāraṁ*) ← Sanskrit *vicāra*, "mode of action; pondering", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 11683).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

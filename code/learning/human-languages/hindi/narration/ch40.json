@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:c2d7acc7454d3f20",
+  "sourceHash": "fnv1a64:b8aeb904dcdbfa35",
   "lessons": [
     {
       "id": "HI-C40-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91c3aa44044d7736",
+      "sourceHash": "fnv1a64:e8bf58f6aa6ccd9d",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यह (yah) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from eṣa, \"this\" (CDIAL 2530)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -108,7 +119,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -139,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed3ff9bf70bef742",
+      "sourceHash": "fnv1a64:205a2f552a965b0e",
       "notice": null,
       "blocks": [
         {
@@ -180,6 +191,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वह (vah) is inherited. CDIAL lists it under Sanskrit asau, \"that\", and notes that the other forms of that word, built on a stem amu-, gave the later words for \"that\" (CDIAL 972)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -219,7 +241,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -250,7 +272,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aeabe21da610b54a",
+      "sourceHash": "fnv1a64:f62a9b4a439560f5",
       "notice": null,
       "blocks": [
         {
@@ -291,6 +313,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यहाँ (yahā̃) (yahāṁ) is inherited. CDIAL sets it beside Sanskrit iha, \"here\", as a form ultimately connected with it rather than its direct descendant (CDIAL 1605)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -330,7 +363,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -361,7 +394,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d09cf25ad1122432",
+      "sourceHash": "fnv1a64:bbded85fdcf2232a",
       "notice": null,
       "blocks": [
         {
@@ -402,6 +435,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वहाँ (vahā̃) (vahāṁ) pairs the stem of वह (vah), \"that\", with the same place ending -hāṁ that यहाँ (yahā̃), \"here\", has. CDIAL has no entry for it, so its older history is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -441,7 +485,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -472,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6c7e1ad37aa560f",
+      "sourceHash": "fnv1a64:1a0bf95311fea2d9",
       "notice": null,
       "blocks": [
         {
@@ -513,6 +557,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कौन (kaun) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaḥ punar, literally \"who, then\", which CDIAL glosses \"who\" (CDIAL 2575)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -561,7 +616,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -592,7 +647,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7b0b98637ab6e72",
+      "sourceHash": "fnv1a64:fcf17d3c56c72c47",
       "notice": null,
       "blocks": [
         {
@@ -633,6 +688,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कहाँ (kahā̃) (kahāṁ) pairs the question stem k- of क्या and कौन (kaun) with the place ending -hāṁ of यहाँ (yahā̃), \"here\", and वहाँ (vahā̃), \"there\". CDIAL has no entry for it, so its older history is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -663,7 +729,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

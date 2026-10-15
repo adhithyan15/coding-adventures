@@ -11,6 +11,7 @@ concept_tag: ES-VERB-FALLAR
 prerequisites: [ES-C464-dentista, ES-C324-falso, ES-C448-estropear]
 sounds: [ll-y, stress-final]
 roots: [fallere-latin]
+etymology_hook: "fallar ← Latin fallere 'to trip up, to deceive' — kin to falso; English fail, fault"
 duration:
   max_seconds: 280
 requires:

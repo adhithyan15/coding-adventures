@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 100,
-  "sourceHash": "fnv1a64:6ac49c3a62c44052",
+  "sourceHash": "fnv1a64:c95893560c38dc8c",
   "lessonIds": [
     "GU-C100-kaik",
     "GU-C100-kasu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "gujarati/narration/ch100.txt",
   "json": "gujarati/narration/ch100.json",
-  "textHash": "fnv1a64:bb48495ab5655bee",
-  "jsonHash": "fnv1a64:fbe9d86a65cc851f",
+  "textHash": "fnv1a64:67b86ec2a2a39367",
+  "jsonHash": "fnv1a64:d7582de9c2f63079",
   "findings": []
 }

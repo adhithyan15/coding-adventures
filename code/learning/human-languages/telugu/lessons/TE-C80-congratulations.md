@@ -11,7 +11,8 @@ romanization: "śubhākāṅkṣalu"
 concept_tag: TE-WISH-CONGRATULATE
 prerequisites: [TE-C80-comein, TE-C41-here]
 sounds: []
-roots: []
+roots: [sanskrit-shubha-beautiful]
+etymology_hook: "śubhākāṅkṣalu: Sanskrit śubha 'auspicious' (CDIAL 12532) + ākāṅkṣā 'wish' + Telugu plural -lu"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C80-comein]
 You have been building it for six chapters without knowing. **శుభ** is the *auspicious* of శుభోదయం and శుభ రాత్రి; **ఆకాంక్ష** is a wish; **-లు** is the plural ending you met in your very first lesson.
 
 **జన్మదిన శుభాకాంక్షలు** is "happy birthday". Said alone it covers a wedding, an examination passed, a new house — anything worth marking.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**శుభాకాంక్షలు** (*śubhākāṅkṣalu*) is Sanskrit *śubha*, "auspicious, good" (CDIAL 12532), and *ākāṅkṣā*, "wish, longing", with the Telugu plural ending *-lu*: "good wishes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vasāmi"
 concept_tag: SA-VERB-VAS
 prerequisites: [SA-C05-vadami, SA-C05-aham-samskritam-vadami]
 sounds: [inherent-a, long-aa]
-roots: [vas-dwell]
+roots: [vas-dwell, sanskrit-vasati]
+etymology_hook: "vasāmi ← the root √vas 'dwell', usually traced to the root behind English was and were"
 reviews_of: [SA-C05-vadami, SA-C05-aham-samskritam-vadami]
 duration:
   max_seconds: 210
@@ -57,8 +58,7 @@ carrying the ending.
 dwell, to stay, to abide"), from Proto-Indo-European **\*wes-** ("to dwell, to
 be") — the ancestor of English **was** and **were** (the past of "to be" began as
 "to dwell/remain"). So Sanskrit's "I dwell" and English's "was" are, at the root,
-one word. From *vas* come *vāsa* ("a dwelling"), *nivāsa* ("a residence"), and
-names like *Vārāṇasī*. "I live in the city" is *ahaṁ nagare
+one word. From *vas* come *vāsa* ("a dwelling") and *nivāsa* ("a residence"). "I live in the city" is *ahaṁ nagare
 vasāmi*.
 
 ## Grammar Lens: "in" is a case-ending
@@ -67,7 +67,7 @@ vasāmi*.
 
 *nagare* ("in the city") = *nagara* ("city") in the **locative** case
 (*-e*, "in / at"). Sanskrit has no separate word for "in" — it is folded into the
-noun's ending, the ancestor of the postpositions Hindi and Bengali use. This is
+noun's ending, where Hindi puts a separate word after the noun (*meṃ*, "in"). This is
 your second case, after Chapter 4's dative.
 
 ## Guided Practice

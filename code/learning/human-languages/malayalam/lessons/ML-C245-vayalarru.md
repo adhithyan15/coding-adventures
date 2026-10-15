@@ -14,7 +14,8 @@ romanization: "vayalaṟṟŭ"
 concept_tag: ML-GUNAM245-VAYALARRU
 prerequisites: [ML-C245-caraniram, ML-C245-pinku]
 sounds: []
-roots: []
+roots: [english-violet]
+etymology_hook: "vayalaṟṟŭ ← English violet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C245-pinku]
 <!-- hl-knowledge: introduces=[ML-LEX-C245-GUNAM245-05]; assesses=[] -->
 
 **വയലറ്റ്** — *vayalaṟṟŭ* — "violet, purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വയലറ്റ്** (*vayalaṟṟŭ*) ← English *violet*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 228,
-  "sourceHash": "fnv1a64:4b433065e1a41acb",
+  "sourceHash": "fnv1a64:ce84917770a9cba9",
   "lessonIds": [
     "AR-C228-shahada",
     "AR-C228-istamaa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch228.txt",
   "json": "arabic/narration/ch228.json",
-  "textHash": "fnv1a64:9706a48361c58d3a",
-  "jsonHash": "fnv1a64:f99928d1276df6bc",
+  "textHash": "fnv1a64:a4a3b32e2648822e",
+  "jsonHash": "fnv1a64:e387e32e7dbc051c",
   "findings": []
 }

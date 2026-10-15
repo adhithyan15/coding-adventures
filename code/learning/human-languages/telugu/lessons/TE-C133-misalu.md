@@ -14,7 +14,8 @@ romanization: "mīsālu"
 concept_tag: TE-THINGS133-MISALU
 prerequisites: [TE-C132-tamarapuvvu, TE-C133-guddalu]
 sounds: []
-roots: []
+roots: [dravidian-miicai-moustache]
+etymology_hook: "mīsālu: native Dravidian, one word with Tamil mīcai (DEDR 4879)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C133-guddalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C133-THINGS133-02]; assesses=[] -->
 
 **మీసాలు** — *mīsālu* — "a moustache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మీసాలు** (*mīsālu*) is native Dravidian, one word with Tamil *mīcai* (DEDR 4879). DEDR lists Telugu *mīsamu*, plural *mīsalu*, "moustache".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

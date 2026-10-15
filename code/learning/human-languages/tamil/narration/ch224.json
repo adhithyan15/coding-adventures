@@ -4,7 +4,7 @@
   "chapter": 224,
   "title": "Fisherman, Potter, Barber, Mason, Scientist",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f1249eaf657eb646",
+  "sourceHash": "fnv1a64:a18532b368713ea5",
   "lessons": [
     {
       "id": "TA-C224-minavar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc9596c5aa574201",
+      "sourceHash": "fnv1a64:7125793b9282609d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "மீனவர் (mīṉavar) is native Dravidian (DEDR 4885). It is mīṉ, \"fish\", with the respectful -avar: \"fish people\"."
+              "text": "மீனவர் (mīṉavar) is native Dravidian (DEDR 4885). It is mīṉ, \"fish\", with the respectful -avar: \"fish people\". DEDR compares Sanskrit mīna, \"fish\"."
             }
           ]
         },

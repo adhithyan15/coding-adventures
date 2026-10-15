@@ -13,7 +13,8 @@ gloss: "to found; to hide away"
 concept_tag: LA-VERB-CONDO
 prerequisites: [LA-C171-fallo, LA-C171-tolero]
 sounds: []
-roots: []
+roots: [condere-latin]
+etymology_hook: "condō 'to found, to hide' — con- 'together' + -dō 'to put'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C171-tolero]
 <!-- hl-knowledge: introduces=[LA-LEX-C171-ACT171-03]; assesses=[] -->
 
 **condō, condere** — "to found; to hide away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**condō** is *con-*, "together", with *-dō*, "to put" (Lewis & Short): to put together, to found, or to put away. This *-dō* is usually traced to Proto-Indo-European *\*dheh1-*, "to put, to place" (EtymDB 2.1), and merged in form with *dō*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

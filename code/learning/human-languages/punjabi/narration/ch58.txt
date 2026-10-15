@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for to play, then the Punjabi for to buy.
 You'll want to know: ਵੇਚਣਾ.
 ਵੇਚਣਾ — vechṇā — "to sell".
 
+The word, taken apart.
+ਵੇਚਣਾ (vechṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from vetyayati, "makes a price", a form CDIAL reconstructs from its descendants (CDIAL 12100).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for to buy, then the Punjabi for to sell.
 
 You'll want to know: ਦੇਣਾ.
 ਦੇਣਾ — deṇā — "to give".
+
+The word, taken apart.
+ਦੇਣਾ (deṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dadāti, "gives" (CDIAL 6141).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for to sell, then the Punjabi for to give.
 You'll want to know: ਰੱਖਣਾ.
 ਰੱਖਣਾ — rakkhṇā — "to put, to keep".
 
+The word, taken apart.
+ਰੱਖਣਾ (rakkhṇā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rakṣati, "guards" (CDIAL 10547). Punjabi turned "guard" into "keep, put".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for to give, then the Punjabi for to put.
 You'll want to know: ਖੋਲ੍ਹਣਾ.
 ਖੋਲ੍ਹਣਾ — kholhṇā — "to open".
 
+The word, taken apart.
+ਖੋਲ੍ਹਣਾ (kholhṇā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kholl, "to open", a form CDIAL reconstructs from its descendants (CDIAL 3945).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for to put, then the Punjabi for to open.
 
 You'll want to know: ਪਕਾਉਣਾ.
 ਪਕਾਉਣਾ — pakāuṇā — "to cook".
+
+The word, taken apart.
+ਪਕਾਉਣਾ (pakāuṇā) is the causing form of pakkṇā, "to ripen". CDIAL lists both under Sanskrit pakva, "cooked, ripe" (CDIAL 7621).
 
 What you've built.
 One more word for this chapter.

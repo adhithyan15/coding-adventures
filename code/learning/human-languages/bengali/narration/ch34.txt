@@ -16,6 +16,9 @@ You'll want to know: সে.
 Thirty-three chapters, and every sentence this book can build has been about আমি or তুমি. Somebody is either speaking or being spoken to. Nobody has ever been talked about.
 সে is the word that changes that, and it does two things at once that English needs two words for. It is he and it is she, and Bengali will not tell you which. Sex is not marked on a Bengali pronoun at all — not here, not anywhere.
 
+The word, taken apart.
+সে (she) is Sanskrit sa, "he, that": CDIAL lists the Bengali word under it (CDIAL 12815).
+
 Grammar Lens: the third row of a table you already half know.
 [a table of 3 rows, read aloud]
 person: I. plain: আমি. careful: —.
@@ -58,6 +61,9 @@ person: you. plain: তুমি. careful: আপনি.
 person: he, she. plain: সে. careful: তিনি (tini).
 Two rungs in the second person, two rungs in the third, and the choice is made the same way both times: age, standing, and how well you know them.
 
+The word, taken apart.
+CDIAL lists Bengali tā and tāhā, "him, her", under Sanskrit ta-, "that" (CDIAL 5612). তিনি (tini) is built on the same t-; CDIAL does not take its ending apart, so that part is not settled.
+
 Grammar Lens: the cost of getting it wrong.
 This is not a nicety a learner can put off. Bengali offers no neutral pronoun to hide behind: every time you mention a third person you have to pick a rung, and picking the low one about somebody's elder is a real discourtesy — the kind you would then be apologising for with dukkhito.
 The safe habit while you are learning: তিনি (tini) for anybody older than you or unknown to you, সে (she) for children and for friends your own age. Over-politeness is heard as slightly formal. Under-politeness is heard as rude.
@@ -95,6 +101,9 @@ Three jobs, one syllable, and they are told apart by position:
 where it sits: between two things. what it is: also, and.
 where it sits: in front of a noun, as ওই. what it is: that.
 where it sits: standing alone as a subject. what it is: him, her.
+
+The word, taken apart.
+CDIAL lists Middle Bengali oū and ohā, "that", under Sanskrit asau, "that" (CDIAL 972), the old far pointer behind ও (o).
 
 Grammar Lens: near, there, and away.
 Bengali's third person is not one word but a small set sorted by how far away the person is, exactly the way its pointing words are:
@@ -138,6 +147,9 @@ person: you. pronoun: তুমি. possessive: তোমার.
 person: he, she. pronoun: সে. possessive: তার (tār).
 An -র on the end, every time. That is not a coincidence to be memorised: it is a case ending, the same kind of stuck-on piece as the classifier, and it is the second of several you will meet.
 The careful form follows the same rule from তিনি (tini): তাঁর — tā̃r — with the moon-dot you learned in chapter five sitting over the vowel.
+
+The word, taken apart.
+CDIAL lists Bengali tā and tāhā under Sanskrit ta-, "that" (CDIAL 5612); তার (tār) is that stem with the possessive -র.
 
 Grammar Lens: order does not change.
 A possessive takes the front slot, in front of everything, and the noun keeps its own ending at the back exactly as before:

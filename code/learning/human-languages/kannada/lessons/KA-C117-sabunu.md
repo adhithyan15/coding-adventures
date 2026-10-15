@@ -14,7 +14,8 @@ romanization: "sābūnu"
 concept_tag: KA-THINGS117-SABUNU
 prerequisites: [KA-C117-kattari, KA-C117-bacanige]
 sounds: []
-roots: []
+roots: [arabic-sabun]
+etymology_hook: "sābūnu ← Arabic ṣābūn 'soap', through Persian and Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C117-bacanige]
 <!-- hl-knowledge: introduces=[KA-LEX-C117-THINGS117-04]; assesses=[] -->
 
 **ಸಾಬೂನು** — *sābūnu* — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಬೂನು** (*sābūnu*) is a loan from Arabic *ṣābūn*, "soap", which came through Persian and Hindustani. Kannada adds *-u* at the end.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

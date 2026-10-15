@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for jasmine, then the Sanskrit for holy bas
 You'll want to know: कीटः.
 कीटः — kīṭaḥ — "an insect".
 
+The word, taken apart.
+kīṭa is an insect or worm, already in the Śatapatha Brāhmaṇa (CDIAL 3193). MW gives no derivation, so its origin is uncertain. It lives on as Hindi kīṛā, "insect, worm".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for holy basil, then the Sanskrit for an in
 
 You'll want to know: लूता.
 लूता — lūtā — "a spider".
+
+The word, taken apart.
+lūtā is a spider in Manu (CDIAL 11093). Neither MW nor CDIAL derives it, so its origin is uncertain. It also named a skin disease said to come from spiders, and Hindi lūtā keeps that sense.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for an insect, then the Sanskrit for a spid
 You'll want to know: वृश्चिकः.
 वृश्चिकः — vṛścikaḥ — "a scorpion".
 
+The word, taken apart.
+vṛścika is a Rigvedic word for the scorpion (CDIAL 12081), probably built on the root √vraśc, "to cut, tear", though CDIAL marks that with a question mark. It is also the sign Scorpio, and Hindi bīchā comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a spider, then the Sanskrit for a scorp
 You'll want to know: गोधा.
 गोधा — godhā — "a lizard".
 
+The word, taken apart.
+godhā is a big lizard, the monitor, in the Vājasaneyi Saṃhitā. CDIAL 4286 thinks it probably came from Dravidian and was reshaped by folk etymology to look like go, "cow", and it points to Mayrhofer for an Indo-European account, so the question is not settled. It lives on as Hindi goh, "iguana".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a scorpion, then the Sanskrit for a liz
 
 You'll want to know: नक्रः.
 नक्रः — nakraḥ — "a crocodile".
+
+The word, taken apart.
+nakra is a crocodile or alligator, and also the sign Scorpio (MW). MW reports a grammarians' analysis into na and kra, but gives no sure derivation, so its origin is uncertain.
 
 What you've built.
 One more word for this chapter.

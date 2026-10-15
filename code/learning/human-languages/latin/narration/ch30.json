@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:78ed0862bacc54d8",
+  "sourceHash": "fnv1a64:4e2bbaf21a6750fa",
   "lessons": [
     {
       "id": "LA-C30-bonam-noctem",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a1699f47b14ad16",
+      "sourceHash": "fnv1a64:e407c258bb878513",
       "notice": null,
       "blocks": [
         {
@@ -63,6 +63,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bonam noctem builds on bonus \"good\", which Old Latin wrote duenos (EtymDB 2.1). It is usually traced to Proto-Italic dwenos, \"good\", and perhaps to a root for \"to show favour\" (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

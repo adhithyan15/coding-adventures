@@ -11,7 +11,8 @@ romanization: "ārava"
 concept_tag: TE-ORDINAL-SIXTH
 prerequisites: [TE-C81-fifth, TE-C81-first, TE-C80-may, TE-C70-mouse, TE-C72-money, TE-C33-artham-cesuko, TE-S130-letter-tha]
 sounds: [long-aa]
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "ārava: native āṟu 'six' (DEDR 2485), one word with Tamil āṟu, + the ordinal ending -va"
 duration:
   max_seconds: 220
 requires:
@@ -57,6 +58,8 @@ The numbers six to ten were the ones the first numbers lesson called Telugu's
 wandering half, the place where it drifts furthest from Tamil and Kannada. The
 ordinal ending does not care. Whatever shape the cardinal arrived in, **-వ** goes
 on it.
+
+DEDR 2485 lists Telugu *āṟu*, "six", with Tamil *āṟu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C82-ORDINAL-01] -->

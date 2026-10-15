@@ -13,7 +13,8 @@ gloss: "free of charge"
 concept_tag: LA-QUAL181-GRATUITUS
 prerequisites: [LA-C180-hilaris, LA-C180-verecundus]
 sounds: []
-roots: []
+roots: [gratuitus-latin, gratia-latin]
+etymology_hook: "grātuītus 'free of charge' — built on grātia 'favour': done as a favour"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C180-verecundus]
 <!-- hl-knowledge: introduces=[LA-LEX-C181-QUAL181-01]; assesses=[] -->
 
 **grātuītus, grātuīta, grātuītum** — "free of charge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**grātuītus** is built on *grātia*, "favour" (Lewis & Short): done as a favour, without pay. English *gratuitous* and *gratis* belong to the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

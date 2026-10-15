@@ -12,7 +12,7 @@ concept_tag: FA-C04-KHUBAM
 prerequisites: [FA-C04-khub]
 sounds: [rtl, long-u, short-vowels-unwritten]
 roots: [inherited-persian-khub, persian-personal-copula-am]
-etymology_hook: Persian attaches the ancient first-person copula -am directly to khub, so the two written words “khubam, mamnun” already carry “I am well, thank you.”
+etymology_hook: "khub ← Middle Persian xūb (EtymDB), + inherited -am 'I am'; mamnun ← Arabic mamnūn (Lane)"
 duration:
   max_seconds: 230
 requires:
@@ -55,6 +55,11 @@ The attached ending **-am** means “I am” here. Persian Online notes that
 **خوبم** by itself already means “I am fine”; the separate pronoun **man** is
 unnecessary. Learn only this useful first-person ending today. The rest of the
 copula set can arrive one form at a time later.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khubam* is *khub*, "good, well", which continues Middle Persian *xūb* (EtymDB), with the inherited ending *-am*, "I am". *mamnun* is borrowed from Arabic *mamnūn*, "favoured, obliged" (root *m-n-n*, Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHUBAM-REPLY, FA-GRAMMAR-PERSONAL-COPULA-AM, FA-SCRIPT-KHUBAM] -->

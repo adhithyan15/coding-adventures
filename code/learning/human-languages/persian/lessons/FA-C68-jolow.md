@@ -14,7 +14,8 @@ romanization: "jolow"
 concept_tag: FA-PLACE68-JOLOW
 prerequisites: [FA-C68-bala, FA-C68-payin]
 sounds: []
-roots: []
+roots: [turkic-jilaw]
+etymology_hook: "jolow: a loan, usually traced to Turkic jilaw 'rein'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C68-payin]
 <!-- hl-knowledge: introduces=[FA-LEX-C68-PLACE68-05]; assesses=[] -->
 
 **جلو** — *jolow* — "in front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jolow* is a loan, usually traced to Turkic *jilaw*, "rein".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

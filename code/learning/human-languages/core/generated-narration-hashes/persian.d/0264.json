@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 264,
-  "sourceHash": "fnv1a64:6ed6d4e41b0d1178",
+  "sourceHash": "fnv1a64:ae078fbf9b39d4ec",
   "lessonIds": [
     "FA-C264-salgard",
     "FA-C264-jashnvare",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch264.txt",
   "json": "persian/narration/ch264.json",
-  "textHash": "fnv1a64:05804438ff4224d8",
-  "jsonHash": "fnv1a64:95ca2ce6d78e24f0",
+  "textHash": "fnv1a64:ce6898f6f2d8d556",
+  "jsonHash": "fnv1a64:dd3f992d83bd6617",
   "findings": []
 }

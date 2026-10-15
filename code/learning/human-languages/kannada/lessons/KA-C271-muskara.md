@@ -14,7 +14,8 @@ romanization: "muṣkara"
 concept_tag: KA-KELASA271-MUSKARA
 prerequisites: [KA-C271-pincani, KA-C271-danda]
 sounds: []
-roots: []
+roots: [dravidian-muruku-pride]
+etymology_hook: "muṣkara: native Dravidian; DEDR 5011 lists muṣkara 'stubbornness, obstinacy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C271-danda]
 <!-- hl-knowledge: introduces=[KA-LEX-C271-KELASA271-03]; assesses=[] -->
 
 **ಮುಷ್ಕರ** — *muṣkara* — "a strike (by workers)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಷ್ಕರ** (*muṣkara*) is native Dravidian, DEDR 5011 lists *muṣkara*, "stubbornness, obstinacy", beside *muṟuku*, "pride": a strike is a stubborn refusal to work; the entry also has Tamil *muṟukku*, Telugu *muriyu* and Malayalam *muṟukuka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

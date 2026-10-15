@@ -14,7 +14,8 @@ romanization: "passazhír"
 concept_tag: RU-VESHCH198-PASSAZHIR
 prerequisites: [RU-C197-gitara, RU-C197-pianino]
 sounds: []
-roots: []
+roots: [passus]
+etymology_hook: "пассажир came through German Passagier or Dutch passagier from French passager 'passing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C197-pianino]
 <!-- hl-knowledge: introduces=[RU-LEX-C198-VESHCH198-01]; assesses=[] -->
 
 **пассажир** (*passazhír*) — "a passenger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**пассажир** — first *пасажера*, in 1706; it came through German *Passagier* or Dutch *passagier* from French *passager*, Italian *passaggiere*, "one passing through" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

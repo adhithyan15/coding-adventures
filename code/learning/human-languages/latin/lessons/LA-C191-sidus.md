@@ -13,7 +13,8 @@ gloss: "a constellation, a star"
 concept_tag: LA-RES191-SIDUS
 prerequisites: [LA-C191-carbo, LA-C191-scopulus]
 sounds: []
-roots: []
+roots: [sidus-latin]
+etymology_hook: "sīdus 'star' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C191-scopulus]
 <!-- hl-knowledge: introduces=[LA-LEX-C191-RES191-03]; assesses=[] -->
 
 **sīdus, sīderis** — "a constellation, a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sīdus** has no sure origin; no proposal is generally accepted. *cōnsīderō*, "to examine", and *dēsīderō*, "to miss", are often linked with it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

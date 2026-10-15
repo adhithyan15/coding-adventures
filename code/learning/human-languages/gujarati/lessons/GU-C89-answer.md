@@ -14,7 +14,8 @@ romanization: "javāb"
 concept_tag: GU-SCHOOL-ANSWER
 prerequisites: [GU-C89-student, GU-C89-question]
 sounds: []
-roots: []
+roots: [arabic-jawab]
+etymology_hook: "javāb ← Arabic jawāb 'an answer', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C89-question]
 <!-- hl-knowledge: introduces=[GU-LEX-C89-SCHOOL-03]; assesses=[] -->
 
 **જવાબ** (*javāb*) — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**જવાબ** (*javāb*) is a loan from Arabic *jawāb*, "an answer", which reached Gujarati through Persian. Its Arabic root is *j-w-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: MW-PLACE82-BATHAI
 prerequisites: [MW-C81-niche, MW-C82-athai]
 sounds: []
 roots: []
+etymology_hook: "baṭhai 'there': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C82-athai]
 <!-- hl-knowledge: introduces=[MW-LEX-C82-PLACE82-02]; assesses=[] -->
 
 **बठै** — *baṭhai* — "there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **बठै** (*baṭhai*) is not settled. CDIAL, searched by form and by meaning, has no entry for it; it pairs with *aṭhai*, "here", whose history is not settled either.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

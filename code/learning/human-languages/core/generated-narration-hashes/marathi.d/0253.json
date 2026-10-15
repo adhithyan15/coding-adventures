@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 253,
-  "sourceHash": "fnv1a64:ecd012d37297d283",
+  "sourceHash": "fnv1a64:6da80bd0d7345852",
   "lessonIds": [
     "MR-C253-valne",
     "MR-C253-anand-ghene",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch253.txt",
   "json": "marathi/narration/ch253.json",
-  "textHash": "fnv1a64:7d0098f2b39889db",
-  "jsonHash": "fnv1a64:c9460823bda19da8",
+  "textHash": "fnv1a64:6bdfcd7502288f39",
+  "jsonHash": "fnv1a64:34b656321577b42b",
   "findings": []
 }

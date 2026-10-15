@@ -14,7 +14,8 @@ romanization: "asbâbkeshi kardan"
 concept_tag: FA-VERB-ASBABKESHI-KARDAN
 prerequisites: [FA-C261-tekye-dadan, FA-C261-deraz-keshidan]
 sounds: []
-roots: []
+roots: [arabic-sabab, pie-kwer]
+etymology_hook: "asbâb ← Arabic asbāb 'means' (root s-b-b, Lane) + Persian kesh + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C261-deraz-keshidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C261-KONESH261-05]; assesses=[] -->
 
 **اسباب کشی کردن** — *asbâbkeshi kardan* — "to move house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*asbâbkeshi kardan* pairs *asbâbkeshi*, "carrying belongings", with *kardan*. *asbâb* is borrowed from Arabic *asbāb*, "means, belongings", the plural of *sabab* (root *s-b-b*, Lane); *kesh* is native. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

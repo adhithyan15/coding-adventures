@@ -14,7 +14,8 @@ romanization: "śuddhaḥ"
 concept_tag: SA-THINGS125-SUDDHAH
 prerequisites: [SA-C125-hrasvah, SA-C125-mrduh]
 sounds: []
-roots: []
+roots: [sanskrit-shuddha]
+etymology_hook: "śuddha 'cleansed, pure' is the past participle of √śudh 'purify' (MW; CDIAL 12520); Hindi sūdhā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C125-mrduh]
 <!-- hl-knowledge: introduces=[SA-LEX-C125-THINGS125-04]; assesses=[] -->
 
 **शुद्धः** — *śuddhaḥ* — "clean, pure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śuddha* is the past participle of the root √śudh "purify, become pure" (MW; CDIAL 12520): "cleansed", so "clean, pure". It lives on as Hindi *sūdhā* "clean, pure, true" (CDIAL 12520).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,6 +13,9 @@ You'll want to know: ಕ್ಷಮೆ.
 ಕ್ಷಮೆ (kṣame) — "pardon, forgiveness". You know its verb from ಕ್ಷಮಿಸಿ (kṣamisi), "excuse me".
 ಕ್ಷಮೆ ಇರಲಿ (kṣame irali) — "please forgive me".
 
+The word, taken apart.
+ಕ್ಷಮೆ (kṣame) is Sanskrit kṣamā, "patience", taken over whole as a learned loan, a tatsama, with Kannada's -e for the Sanskrit -ā (CDIAL 3659). Patience with someone became pardon.
+
 What you've built.
 The noun behind excuse me.
 
@@ -42,6 +45,9 @@ Before the new one: say the Kannada for are you well, then the Kannada for pardo
 You'll want to know: ಪರಿಚಯ.
 ಪರಿಚಯ (paricaya) — "an introduction, acquaintance".
 ನಿಮ್ಮ ಪರಿಚಯ ಸಂತೋಷ (nimma paricaya santōṣa) — "pleased to meet you", literally "your acquaintance is a joy".
+
+The word, taken apart.
+ಪರಿಚಯ (paricaya) is Sanskrit paricaya, "acquaintance", taken over whole as a learned loan, a tatsama (CDIAL 7807).
 
 What you've built.
 A formal pleased to meet you.
@@ -73,6 +79,9 @@ You'll want to know: ಆಭಾರಿ.
 ಆಭಾರಿ (ābhāri) — "grateful, obliged".
 ನಾನು ನಿಮಗೆ ಆಭಾರಿ (nānu nimage ābhāri) — "I am grateful to you", a deeper thanks than ಧನ್ಯವಾದ.
 
+The word, taken apart.
+ಆಭಾರಿ (ābhāri) is from Sanskrit ābhāra, "a burden", with the ending of one who has it: the grateful person carries the weight of a kindness.
+
 What you've built.
 A thank-you with more weight.
 
@@ -102,6 +111,9 @@ Before the new one: say the Kannada for an introduction, then the Kannada for gr
 You'll want to know: ಮರೆಯಬೇಡಿ.
 ಮರೆಯಬೇಡಿ (mareyabēḍi) — "please don't forget", from ಮರೆ (mare), "to forget", with the polite ‑ಬೇಡಿ of ಚಿಂತೆ ಮಾಡಬೇಡಿ.
 
+The word, taken apart.
+ಮರೆಯಬೇಡಿ (mareyabēḍi) is native Dravidian: mare, "to forget", (DEDR 4760, with Telugu maṟacu), and bēḍi, the polite "do not", from bēḍa, "not wanted" (DEDR 5528).
+
 What you've built.
 A kind reminder at parting.
 
@@ -130,6 +142,9 @@ Before the new one: say the Kannada for grateful, then the Kannada for don't for
 
 You'll want to know: ದಯೆ.
 ದಯೆ (daye) — "kindness, compassion". It is the daya inside ದಯವಿಟ್ಟು, "please", the word the book took apart early on.
+
+The word, taken apart.
+ದಯೆ (daye) is Sanskrit dayā, "sympathy", taken over whole as a learned loan, a tatsama, with Kannada's -e for the Sanskrit -ā (CDIAL 6185).
 
 What you've built.
 The kindness hidden inside please.

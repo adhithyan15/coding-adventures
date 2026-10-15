@@ -14,7 +14,8 @@ romanization: "muhadhdhab"
 concept_tag: AR-SIFA241-MUHADHDHAB
 prerequisites: [AR-C240-munasib, AR-C240-mumtaz]
 sounds: []
-roots: []
+roots: [h-dh-b]
+etymology_hook: "muhadhdhab: built on the root h-dh-b, 'to prune, to refine' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C240-mumtaz]
 <!-- hl-knowledge: introduces=[AR-LEX-C241-SIFA241-01]; assesses=[] -->
 
 **مهذب** — *muhadhdhab* — "polite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مهذب** (*muhadhdhab*) is built on the native Arabic root *h-dh-b*, "to prune, to refine" (Lane). *Muhadhdhab* is the Form II passive participle, "refined", hence "polite".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

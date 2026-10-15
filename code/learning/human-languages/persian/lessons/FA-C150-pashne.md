@@ -14,7 +14,8 @@ romanization: "pâshne"
 concept_tag: FA-SALAMAT150-PASHNE
 prerequisites: [FA-C149-entezar-dashtan, FA-C150-badan]
 sounds: []
-roots: []
+roots: [persian-pashne]
+etymology_hook: "pâshne: inherited, usually traced to Middle Persian pāšnag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C150-badan]
 <!-- hl-knowledge: introduces=[FA-LEX-C150-SALAMAT150-02]; assesses=[] -->
 
 **پاشنه** — *pâshne* — "a heel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâshne* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *pāšnag*, "heel". EtymDB takes it back to an Indo-Iranian word for "heel", the word behind Sanskrit *pārṣṇi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

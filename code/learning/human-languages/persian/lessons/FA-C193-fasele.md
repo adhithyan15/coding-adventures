@@ -14,7 +14,8 @@ romanization: "fâsele"
 concept_tag: FA-MAKAN193-FASELE
 prerequisites: [FA-C193-hayat, FA-C193-ja]
 sounds: []
-roots: []
+roots: [arabic-fasila]
+etymology_hook: "fâsele ← Arabic fāṣila 'separating space, interval', root f-ṣ-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C193-ja]
 <!-- hl-knowledge: introduces=[FA-LEX-C193-MAKAN193-05]; assesses=[] -->
 
 **فاصله** — *fâsele* — "a distance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*fâsele* is borrowed from Arabic *fāṣila*, "separating space, interval". Its Arabic root is *f-ṣ-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

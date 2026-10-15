@@ -14,7 +14,8 @@ romanization: "masaḥa"
 concept_tag: AR-VERB-MASAHA
 prerequisites: [AR-C229-saqa, AR-C229-ajana]
 sounds: []
-roots: []
+roots: [m-s-ḥ]
+etymology_hook: "masaḥa: built on the root m-s-ḥ, 'to wipe' (Lane); masaḥa is the plain verb, 'he wiped'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C229-ajana]
 <!-- hl-knowledge: introduces=[AR-LEX-C229-ACT229-05]; assesses=[] -->
 
 **مسح** — *masaḥa* — "to wipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسح** (*masaḥa*) is built on the native Arabic root *m-s-ḥ*, "to wipe" (Lane). *Masaḥa* is the plain verb, "he wiped".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

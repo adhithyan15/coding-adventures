@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a beak, then the Sanskrit for a vulture
 You'll want to know: इतिहासः.
 इतिहासः — itihāsaḥ — "history".
 
+The word, taken apart.
+itihāsa is built from a phrase frozen into a word: iti, "thus", ha, "indeed", and āsa, "it was" (MW). History is "so indeed it was", the telling of past events.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a vulture, then the Sanskrit for histor
 
 You'll want to know: भूगोलः.
 भूगोलः — bhūgolaḥ — "geography".
+
+The word, taken apart.
+bhūgola is a compound of bhū, "earth", and gola, "ball" (MW): the "earth-ball", the globe. Its use for geography as a subject is modern. Gola lives on as Hindi gol, "round" (CDIAL 4321).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for history, then the Sanskrit for geograph
 You'll want to know: संगीतम्.
 संगीतम् — saṅgītam — "music".
 
+The word, taken apart.
+saṅgīta is built on sam, "together", and the root √gai, "to sing" (MW): "sung together", a chorus or concert (CDIAL 12849), and so music in general. Gāyaka, "singer", comes from the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for geography, then the Sanskrit for music.
 You'll want to know: नृत्यम्.
 नृत्यम् — nṛtyam — "dance".
 
+The word, taken apart.
+nṛtya is built on the root √nṛt, "to dance" (MW), the root of nṛtyati, "dances". It lives on as Hindi nāc, "dancing" (CDIAL 7582), which EtymDB gives as the source of English nautch.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for music, then the Sanskrit for dance.
 
 You'll want to know: चित्रकला.
 चित्रकला — citrakalā — "painting".
+
+The word, taken apart.
+citrakalā is a compound of citra, "picture", and kalā, "practical art". MW calls kalā of doubtful etymology, and CDIAL 2927 takes it in this sense from Dravidian. MW does not list the compound, so the pairing for painting is modern.
 
 What you've built.
 One more word for this chapter.

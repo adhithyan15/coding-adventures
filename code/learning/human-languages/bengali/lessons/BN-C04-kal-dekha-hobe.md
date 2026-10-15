@@ -11,7 +11,8 @@ gloss: see you tomorrow (and the কাল puzzle)
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [BN-C04-dekha-hobe]
 sounds: [long-aa]
-roots: [sanskrit-kaala-time]
+roots: [sanskrit-kalya]
+etymology_hook: "kāl 'tomorrow, yesterday' ← Sanskrit kalya 'dawn, at dawn' (CDIAL 3104), not kāla 'time' (CDIAL 3084)"
 duration:
   max_seconds: 240
 requires:
@@ -46,8 +47,7 @@ word.
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C04-DEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01] -->
 
 **কাল** (*kāl*) means **both "tomorrow" and "yesterday"** — the day on either side
-of today — from Sanskrit **কাল** (*kāla*, "time"). (It is the very same *kāla*
-behind Hindi's *kal* and Punjabi's *akāl* "timeless.") Bengali trusts the verb's
+of today — from Sanskrit *kalya*, "dawn; at dawn, tomorrow" (CDIAL 3104), the word behind Hindi's *kal* too. The look-alike **কাল**, "time", is a different Sanskrit word, *kāla* (CDIAL 3084). Bengali trusts the verb's
 tense to tell which: *kāl dækhā hôbe* (future → "**tomorrow**"), *kāl dækhā hôyechhilo*
 (past → "**yesterday**"). So **কাল দেখা হবে** = "tomorrow, a seeing will happen" =
 "see you tomorrow."
@@ -58,7 +58,7 @@ tense to tell which: *kāl dækhā hôbe* (future → "**tomorrow**"), *kāl dæ
 [PAUSE 1s]
 - [YOU SAY: "kāl dækhā hôbe"]
 - [YOU SAY: the puzzle — *kāl* means both **tomorrow** and **yesterday**]
-- [YOU SAY: the root and its cousins (*kāla* "time"; Hindi *kal*, Punjabi *akāl*)]
+- [YOU SAY: the root and its cousin (*kalya*, "dawn"; Hindi *kal*)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C04-DEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01] -->

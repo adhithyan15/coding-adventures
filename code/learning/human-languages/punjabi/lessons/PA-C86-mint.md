@@ -14,7 +14,8 @@ romanization: "minṭ"
 concept_tag: PA-TIME86-MINT
 prerequisites: [PA-C86-sal, PA-C86-ghanta]
 sounds: []
-roots: []
+roots: [english-minute]
+etymology_hook: "minṭ ← English minute"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C86-ghanta]
 <!-- hl-knowledge: introduces=[PA-LEX-C86-TIME86-04]; assesses=[] -->
 
 **ਮਿੰਟ** — *minṭ* — "a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਮਿੰਟ** (*minṭ*) is a loan from English *minute*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

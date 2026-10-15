@@ -14,7 +14,8 @@ romanization: "chhānā"
 concept_tag: BN-JINIS257-CHHANA
 prerequisites: [BN-C256-shilpo, BN-C256-sahityo]
 sounds: []
-roots: []
+roots: [sanskrit-styana]
+etymology_hook: "chhānā ← Sanskrit styāna 'coagulated', a tadbhava (CDIAL 13731)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C256-sahityo]
 <!-- hl-knowledge: introduces=[BN-LEX-C257-JINIS257-01]; assesses=[] -->
 
 **ছানা** — *chhānā* — "chhana (fresh cheese)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছানা** (*chhānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *styāna*, "coagulated" (CDIAL 13731). CDIAL lists Bengali *chānā*, "a kind of soft cheese".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pandar"
 concept_tag: GU-NUM1-FIFTEEN
 prerequisites: [GU-C81-twelve, GU-C81-thirteen]
 sounds: []
-roots: []
+roots: [sanskrit-panchadasha]
+etymology_hook: "pandar ← Sanskrit pañcadaśa 'fifteen', a tadbhava (CDIAL 7662)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C81-thirteen]
 <!-- hl-knowledge: introduces=[GU-LEX-C81-NUM1-04]; assesses=[] -->
 
 **પંદર** (*pandar*) — "fifteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**પંદર** (*pandar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañcadaśa*, "fifteen" (CDIAL 7662). It is *pañca*, "five", and *daśa*, "ten".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

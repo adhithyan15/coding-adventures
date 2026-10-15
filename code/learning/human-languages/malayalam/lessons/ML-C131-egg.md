@@ -11,7 +11,8 @@ romanization: "muṭṭa"
 concept_tag: ML-KITCHEN-EGG
 prerequisites: [ML-C131-fish, ML-C131-meat]
 sounds: []
-roots: []
+roots: [dravidian-muttai-egg]
+etymology_hook: "muṭṭa: native Dravidian, one word with Tamil muṭṭai and Kannada moṭṭe (DEDR 4939)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C131-meat]
 <!-- hl-knowledge: introduces=[ML-LEX-C131-KITCHEN-03]; assesses=[] -->
 
 **മുട്ട** (*muṭṭa*) — "an egg", the thing a **കോഴി** gives you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുട്ട** (*muṭṭa*) is native Dravidian, one word with Tamil *muṭṭai* and Kannada *moṭṭe* (DEDR 4939).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

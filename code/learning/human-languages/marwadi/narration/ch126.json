@@ -4,7 +4,7 @@
   "chapter": 126,
   "title": "Coal, Dung cake, Sack, Rope, Peg",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1aa647366edecba1",
+  "sourceHash": "fnv1a64:1d908791f6a803fb",
   "lessons": [
     {
       "id": "MW-C126-koylo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf72c8e67a0eb74c",
+      "sourceHash": "fnv1a64:454c714f86a80dab",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोयलो (koylo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kokila, \"lighted coal, charcoal\". CDIAL lists Marwari koilo under it (CDIAL 3484). CDIAL takes the Sanskrit word from Middle Indo-Aryan kōila, itself from Proto-Munda."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -161,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea7cc4fa669ca229",
+      "sourceHash": "fnv1a64:67a98de2eafc3368",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +205,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छाणो (chhāṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from chakana, \"dung\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4952); the match is through Gujarati chāṇ. CDIAL sets it beside śakana, \"dung\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -253,7 +275,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7cdd216c0d32246",
+      "sourceHash": "fnv1a64:f5b7cded501bb721",
       "notice": null,
       "blocks": [
         {
@@ -336,6 +358,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बोरो (boro) is a tadbhava, a word inherited and reshaped by sound change. It comes from bora, \"sacking, sack\", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9320); the match is through Hindi borā. CDIAL thinks it first meant cloth of goat's hair, and asks whether it goes back to Sanskrit bakura, a goatskin bag."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -346,7 +379,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -395,7 +428,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -445,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43dd8a1056b7b381",
+      "sourceHash": "fnv1a64:925cbf6ae03afeac",
       "notice": null,
       "blocks": [
         {
@@ -478,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रस्सी (rassī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from raśmi, \"rope, bridle, ray of light\". CDIAL gives no Marwari form in this entry (CDIAL 10648); the match is through Hindi rassī and Gujarati rasī. CDIAL marks the doubled ss forms as taken from Punjabi."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -488,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -537,7 +581,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -587,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63f490d35c6dd535",
+      "sourceHash": "fnv1a64:aa4a11a15c37c529",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खूंटी (khū̃ṭī) is a tadbhava, a word inherited and reshaped by sound change. It comes from khuṭṭa, \"peg, post\", a form CDIAL reconstructs from its descendants. CDIAL lists Marwari khuṭī under it (CDIAL 3893)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -679,7 +734,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -619,6 +619,16 @@ Use it politely.
     );
   });
 
+  it("links separate assessment papers without exposing arbitrary relative paths", () => {
+    expect(renderInlineMarkdown("[learner paper](../mocks/a1/writing-paper-1.md)", undefined, "urdu")).toBe(
+      "\\href{https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/urdu/mocks/a1/writing-paper-1.md}{learner paper}",
+    );
+    expect(renderInlineMarkdown("[draft](../mocks/a1/../../draft.md)", undefined, "urdu")).toBe(
+      "draft",
+    );
+    expect(renderInlineMarkdown("[note](../data/note.md)", undefined, "urdu")).toBe("note");
+  });
+
   it("fails closed for empty destinations and unsupported protocols", () => {
     expect(() => renderInlineMarkdown("[mail](mailto:hello@example.test)")).toThrow(
       /unsupported Markdown link protocol 'mailto:'/,

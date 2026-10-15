@@ -10,9 +10,9 @@ gloss: to the — one of only two places where Spanish forces two words into one
 concept_tag: ES-CONTRACTION-AL
 prerequisites: [ES-C60-repaso-grado]
 sounds: []
-roots: []
+roots: [ad-latin, ille]
 teaches_cells: []
-etymology_hook: "a + el has been squeezed into al for as long as Spanish has been written, and the reason is the same one that shortens mucho to muy — a word leaning on the next one gives ground"
+etymology_hook: "al — a 'to' (Latin ad) + el 'the' (Latin ille), squeezed into one word"
 duration:
   max_seconds: 265
 requires:
@@ -49,6 +49,11 @@ your mouth wants to do.
 [PAUSE 2s] This is not an option and not a shortcut for speaking fast. It is
 how the language is **written**. *A el café* is not a more careful version of
 *al café*; it is simply wrong.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**al** is two Latin words: *a* is *ad*, "to, towards", and *el* is *ille*, "that one".
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-CONTRACTION-OBLIGATORY]; assesses=[ES-GRAMMAR-APOCOPE-PATTERN] -->

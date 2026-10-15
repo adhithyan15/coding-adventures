@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for slowly, then the Punjabi for fast.
 You'll want to know: ਸੌਖਾ.
 ਸੌਖਾ — saukhā — "easy".
 
+The word, taken apart.
+Where ਸੌਖਾ (saukhā) comes from is not settled. CDIAL has no entry for it, though it lists Punjabi suhelā, "easy", under Sanskrit sukha, "easy, pleasant" (CDIAL 13451).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for fast, then the Punjabi for easy.
 
 You'll want to know: ਮਹਿੰਗਾ.
 ਮਹਿੰਗਾ — mahiṅgā — "expensive".
+
+The word, taken apart.
+ਮਹਿੰਗਾ (mahiṅgā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mahārgha, "high-priced" (CDIAL 9954). CDIAL lists Punjabi maĩhgā.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for easy, then the Punjabi for expensive.
 You'll want to know: ਸਸਤਾ.
 ਸਸਤਾ — sastā — "cheap".
 
+The word, taken apart.
+Where ਸਸਤਾ (sastā) comes from is not settled: CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for expensive, then the Punjabi for cheap.
 You'll want to know: ਉੱਚਾ.
 ਉੱਚਾ — uchchā — "high".
 
+The word, taken apart.
+ਉੱਚਾ (uchchā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ucca, "tall, lofty" (CDIAL 1634).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for cheap, then the Punjabi for high.
 
 You'll want to know: ਨੀਵਾਂ.
 ਨੀਵਾਂ — nīvāṁ — "low".
+
+The word, taken apart.
+ਨੀਵਾਂ (nīvāṁ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nīpa, "situated low, deep" (CDIAL 7548).
 
 What you've built.
 One more word for this chapter.

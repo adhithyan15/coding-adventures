@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 162,
-  "sourceHash": "fnv1a64:5e6cb46a7686d50d",
+  "sourceHash": "fnv1a64:32719423e4c7a1df",
   "lessonIds": [
     "AR-C162-tabaa",
     "AR-C162-nasakha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch162.txt",
   "json": "arabic/narration/ch162.json",
-  "textHash": "fnv1a64:e2abfe4cd9b22e35",
-  "jsonHash": "fnv1a64:f8edb9bfbd259615",
+  "textHash": "fnv1a64:cec4fbb9fbea24d5",
+  "jsonHash": "fnv1a64:e63a6c5ea709c822",
   "findings": []
 }

@@ -11,7 +11,8 @@ romanization: "marumakan"
 concept_tag: ML-KIN-NEPHEW
 prerequisites: [ML-C125-neighbours, ML-C125-uncle]
 sounds: []
-roots: []
+roots: [proto-dravidian-makan-son]
+etymology_hook: "marumakan: native Dravidian, one word with Tamil marukaṉ (DEDR 4715)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C125-uncle]
 
 **മരുമകൻ** (*marumakan*) — "a nephew", and also "a son-in-law". It contains **മകൻ**
 (*makan*), "son".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മരുമകൻ** (*marumakan*) is native Dravidian, one word with Tamil *marukaṉ* (DEDR 4715). DEDR 4715 lists Malayalam *marumakan* itself, "sister's son, son-in-law".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

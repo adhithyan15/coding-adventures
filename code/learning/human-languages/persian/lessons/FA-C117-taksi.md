@@ -14,7 +14,8 @@ romanization: "tâksi"
 concept_tag: FA-THINGS117-TAKSI
 prerequisites: [FA-C116-kudak, FA-C117-nave]
 sounds: []
-roots: []
+roots: [french-taxi]
+etymology_hook: "tâksi ← French taxi 'taxi'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C117-nave]
 <!-- hl-knowledge: introduces=[FA-LEX-C117-THINGS117-02]; assesses=[] -->
 
 **تاکسی** — *tâksi* — "a taxi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tâksi* is borrowed from French *taxi*, "taxi" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

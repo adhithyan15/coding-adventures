@@ -14,7 +14,8 @@ romanization: "hingsā"
 concept_tag: BN-JINIS203-HINGSA
 prerequisites: [BN-C203-mejaj, BN-C203-gorbo]
 sounds: []
-roots: []
+roots: [sanskrit-himsa]
+etymology_hook: "hingsā ← Sanskrit hiṁsā 'injury, harm', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C203-gorbo]
 <!-- hl-knowledge: introduces=[BN-LEX-C203-JINIS203-04]; assesses=[] -->
 
 **হিংসা** — *hingsā* — "envy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**হিংসা** (*hingsā*) is Sanskrit *hiṁsā*, "injury, harm", taken over whole as a learned loan, a tatsama. In Bengali it has come to mean "envy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ubbu"
 concept_tag: TE-VERB-UBBU
 prerequisites: [TE-C278-nadupu, TE-C279-koluko]
 sounds: []
-roots: []
+roots: [dravidian-ubbu-swell]
+etymology_hook: "ubbu: native Dravidian; DEDR 666 lists ubbu 'to swell' with Kannada ubbu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C279-koluko]
 <!-- hl-knowledge: introduces=[TE-LEX-C279-KRIYA279-02]; assesses=[] -->
 
 **ఉబ్బు** — *ubbu* — "to swell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఉబ్బు** (*ubbu*) is native Dravidian. DEDR 666 lists *ubbu*, "to swell, be puffed up", with Kannada *ubbu*, "to swell", and Tamil *uppu*, "to puff up". DEDR compares Pali *ubbilla*, "elation".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

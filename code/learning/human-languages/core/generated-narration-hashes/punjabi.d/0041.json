@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 41,
-  "sourceHash": "fnv1a64:b97b3e5d3fe55569",
+  "sourceHash": "fnv1a64:3fa314270ad3e29e",
   "lessonIds": [
     "PA-C41-je",
     "PA-C41-je-tan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "punjabi/narration/ch41.txt",
   "json": "punjabi/narration/ch41.json",
-  "textHash": "fnv1a64:a1f8f2698cb1a819",
-  "jsonHash": "fnv1a64:4b28c6024ec926db",
+  "textHash": "fnv1a64:c131d1c29acd0be7",
+  "jsonHash": "fnv1a64:7ff15e1b64920513",
   "findings": []
 }

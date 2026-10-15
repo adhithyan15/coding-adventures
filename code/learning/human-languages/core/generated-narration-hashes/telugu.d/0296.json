@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 296,
-  "sourceHash": "fnv1a64:96986323b0211127",
+  "sourceHash": "fnv1a64:7cd3eb6537254eac",
   "lessonIds": [
     "TE-C296-kathinamaina",
     "TE-C296-pratyeka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch296.txt",
   "json": "telugu/narration/ch296.json",
-  "textHash": "fnv1a64:13a9d7164c33e998",
-  "jsonHash": "fnv1a64:c531d4be7a01699e",
+  "textHash": "fnv1a64:66aad71bd23f01fd",
+  "jsonHash": "fnv1a64:8b6880e143fec2a6",
   "findings": []
 }

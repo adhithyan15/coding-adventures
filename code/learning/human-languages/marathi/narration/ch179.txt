@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a bell, then the Marathi for a compartme
 You'll want to know: न्यायालय.
 न्यायालय — nyāyālay — "a court".
 
+The word, taken apart.
+न्यायालय (nyāyālay) is a compound of Sanskrit parts, a tatsama: nyāya, "rule, justice", and ālaya, "abode".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a compartment, then the Marathi for a co
 
 You'll want to know: न्यायाधीश.
 न्यायाधीश — nyāyādhīś — "a judge".
+
+The word, taken apart.
+न्यायाधीश (nyāyādhīś) is a compound of Sanskrit parts, a tatsama: nyāya, "justice", and adhīśa, "lord, master".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a court, then the Marathi for a judge.
 You'll want to know: महापौर.
 महापौर — mahāpaur — "a mayor".
 
+The word, taken apart.
+महापौर (mahāpaur) is a modern compound of Sanskrit parts: mahā, "great", and paura, "citizen" (CDIAL 8419).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a judge, then the Marathi for a mayor.
 You'll want to know: निवडणूक.
 निवडणूक — nivaḍṇūk — "an election".
 
+The word, taken apart.
+निवडणूक (nivaḍṇūk) is built on Marathi nivaḍṇẽ, "to choose, pick", which CDIAL lists under a reconstructed nirvarayati, "chooses" (CDIAL 7393).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a mayor, then the Marathi for an electio
 
 You'll want to know: राजकारण.
 राजकारण — rājkāraṇ — "politics".
+
+The word, taken apart.
+राजकारण (rājkāraṇ) is a modern compound of Sanskrit parts: rāja, "king, state", and kāraṇa, "cause, affair" (CDIAL 3057).
 
 What you've built.
 One more word for this chapter.

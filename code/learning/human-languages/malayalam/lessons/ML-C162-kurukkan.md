@@ -14,7 +14,8 @@ romanization: "kuṟukkan"
 concept_tag: ML-THINGS162-KURUKKAN
 prerequisites: [ML-C161-tamara, ML-C162-karati, ML-C20-kalavastha]
 sounds: []
-roots: []
+roots: [dravidian-kuru-short]
+etymology_hook: "kuṟukkan: native Dravidian, built on kuṟu 'short, little'; DEDR 1851 enters it as 'jackal'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C162-karati]
 <!-- hl-knowledge: introduces=[ML-LEX-C162-THINGS162-02]; assesses=[] -->
 
 **കുറുക്കൻ** — *kuṟukkan* — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുറുക്കൻ** (*kuṟukkan*) is native Dravidian, built on *kuṟu*, "short, little": DEDR 1851 enters Malayalam *kuṟukkan*, "jackal", under the root it shares with Tamil *kuṟu*, "short".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

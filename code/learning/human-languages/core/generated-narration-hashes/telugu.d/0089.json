@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 89,
-  "sourceHash": "fnv1a64:17a69fbe0a16f536",
+  "sourceHash": "fnv1a64:cf99faaedfacb6bf",
   "lessonIds": [
     "TE-C89-job",
     "TE-C89-language",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch89.txt",
   "json": "telugu/narration/ch89.json",
-  "textHash": "fnv1a64:5a40881aaa413b05",
-  "jsonHash": "fnv1a64:574d0438d68e521f",
+  "textHash": "fnv1a64:2602a6379805fa4c",
+  "jsonHash": "fnv1a64:808c6da7da5ae48f",
   "findings": []
 }

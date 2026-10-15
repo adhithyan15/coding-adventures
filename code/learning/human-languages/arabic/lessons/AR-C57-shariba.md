@@ -14,7 +14,8 @@ romanization: "shariba"
 concept_tag: AR-VERB-SHARIBA
 prerequisites: [AR-C56-dayf, AR-C57-muallim]
 sounds: []
-roots: []
+roots: [sh-r-b]
+etymology_hook: "shariba: built on the root sh-r-b, 'to drink' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C57-muallim]
 <!-- hl-knowledge: introduces=[AR-LEX-C57-FAMILY57-02]; assesses=[] -->
 
 **شرب** — *shariba* — "to drink (he drank)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شرب** (*shariba*) is built on the native Arabic root *sh-r-b*, "to drink" (Lane). English *syrup* and *sherbet* both go back to words on this root, through Latin and through Turkish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

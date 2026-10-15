@@ -14,7 +14,8 @@ romanization: "pōgoṭṭukō"
 concept_tag: TE-VERB-POGOTTUKO
 prerequisites: [TE-C159-baguceyu, TE-C159-pareyu]
 sounds: []
-roots: []
+roots: [proto-dravidian-poo-go]
+etymology_hook: "pōgoṭṭukō: native pō 'to go' (DEDR 4572) + -goṭṭu + reflexive kō (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C159-pareyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C159-KRIYA159-05]; assesses=[] -->
 
 **పోగొట్టుకో** — *pōgoṭṭukō* — "to lose (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పోగొట్టుకో** (*pōgoṭṭukō*) is built on native *pō*, "to go" (DEDR 4572), with the reflexive *-kō*, "for oneself" (DEDR 2151): "to let something go from oneself". DEDR does not list the middle *-goṭṭu* in this use.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a vegetable dish, then the Marathi for p
 You'll want to know: पोहे.
 पोहे — pohe — "flattened rice".
 
+The word, taken apart.
+पोहे (pohe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pṛthuka, "flattened rice or grain" (CDIAL 8359). It is built on pṛthu, "broad, flat".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for plain dal, then the Marathi for flattene
 
 You'll want to know: लाडू.
 लाडू — lāḍū — "a ladoo, a sweet ball".
+
+The word, taken apart.
+लाडू (lāḍū) is a tadbhava of Sanskrit laḍḍu, "a kind of sweetmeat" (CDIAL 10926). CDIAL takes it as probably the same word as laḍḍu, "lump", and notes Kuiper's link with Munda words for "lump".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for flattened rice, then the Marathi for a l
 You'll want to know: काकडी.
 काकडी — kākḍī — "a cucumber".
 
+The word, taken apart.
+काकडी (kākḍī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karkaṭī, "Cucumis utilissimus, a cucumber" (CDIAL 2817).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a ladoo, then the Marathi for a cucumber
 You'll want to know: लसूण.
 लसूण — lasūṇ — "garlic".
 
+The word, taken apart.
+लसूण (lasūṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laśuna, "garlic" (CDIAL 10990).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a cucumber, then the Marathi for garlic.
 
 You'll want to know: आले.
 आले — āle — "ginger".
+
+The word, taken apart.
+आले (āle) is a tadbhava, a word inherited and reshaped by sound change. It comes from āllaka, "fresh ginger", a form CDIAL reconstructs from its descendants (CDIAL 1341). CDIAL builds it from Sanskrit ārdraka, "fresh ginger".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "futoi"
 concept_tag: JA-ADJ52-FUTOI
 prerequisites: [JA-C52-kuroi, JA-C52-midori]
 sounds: []
-roots: []
+roots: [japanese-futoi]
+etymology_hook: "futoi: native Japanese, inherited, not borrowed; kanji 太い attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C52-midori]
 <!-- hl-knowledge: introduces=[JA-LEX-C52-ADJ52-04]; assesses=[] -->
 
 **ふとい** — *futoi* — "thick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふとい** (*futoi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

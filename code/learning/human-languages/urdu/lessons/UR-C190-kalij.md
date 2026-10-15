@@ -14,7 +14,8 @@ romanization: "kālij"
 concept_tag: UR-JAGAH190-KALIJ
 prerequisites: [UR-C190-chirya-ghar, UR-C190-yunivarsiti]
 sounds: []
-roots: []
+roots: [english-college]
+etymology_hook: "kālij ← English college"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C190-yunivarsiti]
 <!-- hl-knowledge: introduces=[UR-LEX-C190-JAGAH190-04]; assesses=[] -->
 
 **کالج** — *kālij* — "a college".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کالج** (*kālij*) is a loan from English *college*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

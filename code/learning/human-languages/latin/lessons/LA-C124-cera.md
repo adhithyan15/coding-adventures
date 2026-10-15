@@ -13,7 +13,8 @@ gloss: "wax; a wax tablet"
 concept_tag: LA-THINGS124-CERA
 prerequisites: [LA-C124-atramentum, LA-C124-calamus]
 sounds: []
-roots: []
+roots: [cera-latin]
+etymology_hook: "cēra 'wax' — usually taken as a loan from Greek kēros 'wax'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C124-calamus]
 <!-- hl-knowledge: introduces=[LA-LEX-C124-THINGS124-04]; assesses=[] -->
 
 **cēra, cērae** — "wax; a wax tablet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cēra** is usually taken as a loan from Greek *kēros*, "wax" (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

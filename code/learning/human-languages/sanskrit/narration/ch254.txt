@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a lizard, then the Sanskrit for a croco
 You'll want to know: चक्रवाकः.
 चक्रवाकः — cakravākaḥ — "a ruddy goose".
 
+The word, taken apart.
+cakravāka is the ruddy goose, already in the Rigveda (CDIAL 4551). MW lists it as a compound of cakra, "wheel", but does not explain the second part or the name. Poets made the pair a symbol of lovers parted at night, and Hindi cakwā continues it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a crocodile, then the Sanskrit for a ru
 
 You'll want to know: श्येनः.
 श्येनः — śyenaḥ — "a hawk".
+
+The word, taken apart.
+śyena is a hawk or eagle, the bird that brings the Soma down in the Rigveda (MW). MW gives it no derivation, so its origin is uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a ruddy goose, then the Sanskrit for a 
 You'll want to know: प्रातराशः.
 प्रातराशः — prātarāśaḥ — "breakfast".
 
+The word, taken apart.
+prātarāśa is a compound of prātar, "early in the morning", and āśa, "eating, food", from the root √aś, "to eat" (MW): the morning meal. MW compares prātar with Greek prōi and German früh, "early".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a hawk, then the Sanskrit for breakfast
 You'll want to know: रात्रिभोजनम्.
 रात्रिभोजनम् — rātribhojanam — "dinner".
 
+The word, taken apart.
+rātribhojana is a compound of rātri, "night", and bhojana, "eating, food", from the root √bhuj, "to enjoy, eat" (CDIAL 9630). MW lists the compound as "eating at night"; its use for the evening meal is the modern one.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for breakfast, then the Sanskrit for dinner
 
 You'll want to know: पक्वान्नम्.
 पक्वान्नम् — pakvānnam — "cooked food".
+
+The word, taken apart.
+pakvānna is a compound of pakva, "cooked, ripe", from the root √pac, "to cook", and anna, "food" (MW). Pakva lives on as Hindi pakkā, "cooked, ripe, real" (CDIAL 7621), and anna is the food word you have already met.
 
 What you've built.
 One more word for this chapter.

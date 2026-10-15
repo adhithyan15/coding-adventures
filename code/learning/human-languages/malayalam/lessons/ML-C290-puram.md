@@ -14,7 +14,8 @@ romanization: "pūraṁ"
 concept_tag: ML-VASTU290-PURAM
 prerequisites: [ML-C290-pulikali, ML-C290-centa]
 sounds: []
-roots: []
+roots: [sanskrit-purva]
+etymology_hook: "pūraṁ: usually explained as the lunar asterism Pūram, Sanskrit pūrvaphalgunī, on whose day the festival falls"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C290-centa]
 <!-- hl-knowledge: introduces=[ML-LEX-C290-VASTU290-05]; assesses=[] -->
 
 **പൂരം** — *pūraṁ* — "a pooram, a temple festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൂരം** (*pūraṁ*) is usually explained as the name of the lunar asterism *pūram*, Sanskrit *pūrvaphalgunī*, on whose day the great temple festivals fall.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

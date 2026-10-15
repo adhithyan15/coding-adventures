@@ -11,7 +11,8 @@ romanization: "bhaṁgi"
 concept_tag: ML-BEAUTY
 prerequisites: [ML-C97-sundaram, ML-C36-kutti, ML-C70-um]
 sounds: []
-roots: []
+roots: [sanskrit-bhangi]
+etymology_hook: "bhaṁgi ← Sanskrit bhaṅgi 'a bend, a curve' (CDIAL 9357): a graceful line became beauty"
 duration:
   max_seconds: 260
 requires:
@@ -69,6 +70,8 @@ that** about **അരിയും**.
 
 What is new is only where it happens. **ഇത് എന്റെ കുട്ടിയാണ്** — *this is my
 child* — has the same **യ**, for the same reason.
+
+**Where the word comes from.** It is Sanskrit *bhaṅgi*, "a bend, a curve" (CDIAL 9357): a graceful line became beauty.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTY-01, ML-LEX-C97-BEAUTIFUL-01] -->

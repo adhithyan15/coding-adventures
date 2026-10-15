@@ -4,7 +4,7 @@
   "chapter": 174,
   "title": "Steals, Eats up, Strikes, Keeps, Hurts",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f8deeb773572941d",
+  "sourceHash": "fnv1a64:1bb4fc3513d26a10",
   "lessons": [
     {
       "id": "SA-C174-corayati",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48f5d21bd6615e11",
+      "sourceHash": "fnv1a64:1791f4cf35560bff",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "corayati \"steals\" is built on cora \"a thief\" (CDIAL 4933), with the verb-making ending -aya-. It lives on as Hindi cornā \"to steal\" (CDIAL 4933), and cora as Hindi cor \"thief\" (CDIAL 4931)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f67007a118339878",
+      "sourceHash": "fnv1a64:e7898cabd15d1b80",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bhakṣayati comes from the root √bhakṣ \"eat, devour\" (CDIAL 9342), which MW thinks probably a secondary form of √bhaj \"share, partake\". It lives on as Punjabi bhakkhṇā \"to devour\" (CDIAL 9342)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67f464d086540595",
+      "sourceHash": "fnv1a64:ada70ff7819c380b",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tāḍayati comes from the root √taḍ \"beat, strike\" (CDIAL 5752), found from the Nirukta on. It lives on as Punjabi tāṛnā \"to slap\" and Bengali tāṛāna \"to drive away\" (CDIAL 5752)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98a7e16856ecbce0",
+      "sourceHash": "fnv1a64:f67972a3bfb173cb",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pālayati \"guards, protects, keeps\" is, according to CDIAL 8129 after EWA, an l-form of pārayati \"brings across\", which people later linked with √pā \"protect\". It lives on as Hindi pālnā \"to rear, to keep\" (CDIAL 8129)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e1fde928aa0815b",
+      "sourceHash": "fnv1a64:3ab52ea8fd24dbfa",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pīḍayati first meant \"presses, squeezes\", and then \"hurts, troubles\" (CDIAL 8226). It is inherited from Indo-European, cousin of Greek piezō \"press\" (EtymDB), and MW explains it as pi-√sad \"sit upon\"; pīḍā \"pain\" is its noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

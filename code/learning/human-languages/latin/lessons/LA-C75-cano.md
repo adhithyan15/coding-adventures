@@ -13,7 +13,8 @@ gloss: "to sing"
 concept_tag: LA-VERB-CANO
 prerequisites: [LA-C74-ager, LA-C75-laboro]
 sounds: []
-roots: []
+roots: [canere-latin]
+etymology_hook: "canō 'to sing' — inherited, usually traced to PIE *keh2n- 'to sing'; English chant"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C75-laboro]
 <!-- hl-knowledge: introduces=[LA-LEX-C75-VERBA1-02]; assesses=[] -->
 
 **canō, canere** — "to sing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**canō** is inherited, usually traced to Proto-Indo-European *\*keh2n-*, "to sing" (EtymDB 2.1). English *hen*, the "singing" bird, is a distant cousin, and English *chant* comes from *canō* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

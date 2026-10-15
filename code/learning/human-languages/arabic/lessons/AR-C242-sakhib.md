@@ -14,7 +14,8 @@ romanization: "ṣākhib"
 concept_tag: AR-SIFA242-SAKHIB
 prerequisites: [AR-C241-mudhik, AR-C241-jadd]
 sounds: []
-roots: []
+roots: [ṣ-kh-b]
+etymology_hook: "ṣākhib: built on the root ṣ-kh-b, 'to clamour' (Lane); ṣākhib is the active participle, 'clamorous'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C241-jadd]
 <!-- hl-knowledge: introduces=[AR-LEX-C242-SIFA242-01]; assesses=[] -->
 
 **صاخب** — *ṣākhib* — "noisy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صاخب** (*ṣākhib*) is built on the native Arabic root *ṣ-kh-b*, "to clamour" (Lane). *Ṣākhib* is the active participle, "clamorous".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

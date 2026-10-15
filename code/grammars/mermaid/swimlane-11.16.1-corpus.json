@@ -7,6 +7,10 @@
       "source": "swimlane-beta LR\nsubgraph Customer\n  request[Request service]\n  receive[Receive update]\nend\nsubgraph Support\n  triage[Triage request]\n  answer[Send answer]\nend\nrequest --> triage --> answer --> receive"
     },
     {
+      "name": "default-lane-for-loose-nodes",
+      "source": "swimlane-beta LR\nsubgraph OwnedLane\n  owned[Owned node]\nend\nloose[Loose node] --> owned"
+    },
+    {
       "name": "shapes-labels-and-accessibility",
       "source": "swimlane-beta TB\ntitle Approval flow\naccTitle: Accessible approval flow\naccDescr: A request crosses two teams.\nsubgraph intake [Intake team]\n  start([Start])\n  review{Ready?}\nend\nsubgraph done [Completion]\n  finish((Done))\nend\nstart --> review\nreview -->|Yes| finish"
     },
@@ -191,8 +195,36 @@
       "source": "swimlane-beta LR\ntitle Request &amp; Delivery\naccTitle: Accessible&#32;handoff\naccDescr: Intake &lt; Support\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nrequest --> done"
     },
     {
+      "name": "theme-variables",
+      "source": "%%{init: {\"themeVariables\": {\"mainBkg\": \"#ffe1ef\", \"nodeBorder\": \"#225577\", \"lineColor\": \"#118844\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  themed[Themed node]\n  next[Next node]\nend\nthemed --> next"
+    },
+    {
+      "name": "theme-typography-variables",
+      "source": "%%{init: {\"themeVariables\": {\"primaryTextColor\": \"#7c2d12\", \"fontFamily\": \"Helvetica Neue\", \"fontSize\": \"19px\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  themed[Themed typography]\n  next[Next node]\nend\nthemed --> next"
+    },
+    {
+      "name": "theme-edge-label-variables",
+      "source": "%%{init: {\"themeVariables\": {\"textColor\": \"#172554\", \"edgeLabelBackground\": \"#dbeafe\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  request[Request]\n  done[Done]\nend\nrequest -->|themed handoff| done"
+    },
+    {
+      "name": "theme-cluster-variables",
+      "source": "%%{init: {\"themeVariables\": {\"clusterBkg\": \"#fef3c7\", \"clusterBorder\": \"#b45309\", \"titleColor\": \"#7c2d12\"}}}%%\nswimlane-beta LR\ntitle Themed workflow\nsubgraph Review[Review lane]\n  subgraph Approval[Approval phase]\n    request[Request]\n    done[Done]\n  end\nend\nrequest --> done"
+    },
+    {
+      "name": "theme-node-edge-variables",
+      "source": "%%{init: {\"themeVariables\": {\"nodeTextColor\": \"#14532d\", \"arrowheadColor\": \"#dc2626\", \"strokeWidth\": \"4px\"}}}%%\nswimlane-beta LR\nsubgraph ThemeLane\n  request[Request]\n  done[Done]\nend\nrequest --> done"
+    },
+    {
       "name": "inline-node-styles",
       "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nstyle done fill:#dcfce7,stroke:#166534,color:#14532d\nrequest --> done"
+    },
+    {
+      "name": "node-typography-styles",
+      "source": "swimlane-beta LR\nsubgraph Review\n  emphasized[Typographic approval step]\n  direct[Typographic delivery step]\nend\nclassDef emphasis font-size:22px,font-weight:bold,font-style:italic,font-family:\"Helvetica Neue\",color:#7c2d12\nclass emphasized emphasis\nstyle direct font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d\nemphasized --> direct"
+    },
+    {
+      "name": "node-corner-radius-styles",
+      "source": "swimlane-beta LR\nsubgraph Review\n  rounded[Class rounded]\n  compact[Direct compact]\nend\nclassDef soft fill:#fef3c7,stroke:#b45309,rx:16px,ry:16px\nclass rounded soft\nstyle compact fill:#dcfce7,stroke:#166534,rx:4px,ry:4px\nrounded --> compact"
     },
     {
       "name": "named-node-classes",
@@ -239,12 +271,40 @@
       "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\nend\ndraft -- submit ---> review\nreview == approve ===> approve\napprove -. release ...-> publish"
     },
     {
+      "name": "labeled-bidirectional-links",
+      "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\nend\ndraft <-- submit --> review\nreview <== approve ==> approve\napprove <-. release .-> publish"
+    },
+    {
+      "name": "labeled-circle-cross-links",
+      "source": "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o-- solid circle --o b\nb x-- solid cross --x c\nc o== thick circle ==o d\nd x== thick cross ==x e\ne o-. dotted circle .-o f\nf x-. dotted cross .-x g"
+    },
+    {
+      "name": "labeled-mixed-endpoint-markers",
+      "source": "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o-- circle to cross --x b\nb x== cross to circle ==o c\nc <-. point to cross .-x d\nd o-. circle to point .-> e\ne -- none to circle --o f\nf <== point to cross ==x g"
+    },
+    {
+      "name": "labeled-open-links",
+      "source": "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na -- solid open --- b\nb o-- circle open --- c\nc x== cross open === d\nd <== point open === e\ne -. dotted open .- f\nf o-. dotted circle open .- g"
+    },
+    {
       "name": "edge-identifiers",
       "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done"
     },
     {
       "name": "edge-class-styles",
       "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@--> review release@==> done\nclassDef urgent stroke:#dc2626,stroke-width:4px,stroke-dasharray:8 3,color:#991b1b\nclass submit urgent\nstyle release stroke:#059669,stroke-width:5px,stroke-dasharray:2 2,color:#065f46"
+    },
+    {
+      "name": "edge-label-typography-styles",
+      "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@-- submit --> review release@-- release --> done\nclassDef urgent font-size:22px,font-weight:bold,font-style:italic,font-family:\"Helvetica Neue\",color:#7c2d12\nclass submit urgent\nstyle release font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d"
+    },
+    {
+      "name": "positional-link-styles",
+      "source": "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na --> b\nb --> c\nc --> d\nlinkStyle default stroke:#64748b,stroke-width:2px\nlinkStyle 0, 2 stroke:#dc2626,stroke-width:5px,stroke-dasharray:7 3,color:#991b1b;"
+    },
+    {
+      "name": "positional-link-curves",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond --> third\nlinkStyle default interpolate basis\nlinkStyle 1 interpolate stepBefore;"
     },
     {
       "name": "edge-animation-config",
@@ -285,6 +345,86 @@
     {
       "name": "automatic-lane-ordering",
       "source": "---\nconfig:\n  swimlane:\n    automaticLaneOrdering: true\n---\nswimlane-beta LR\nsubgraph laneA[Lane A]\n  a[A]\nend\nsubgraph laneB[Lane B]\n  b[B]\nend\nsubgraph laneC[Lane C]\n  c[C]\nend\nsubgraph laneD[Lane D]\n  d[D]\nend\na --> d\na --> d\na --> d\na --> d"
+    },
+    {
+      "name": "line-hops-step",
+      "source": "---\nconfig:\n  swimlane:\n    lineHops: arc\n---\nswimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review[\"\"]\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond stepped@--> third\nstepped@{ curve: step }"
+    },
+    {
+      "name": "line-hops-rounded",
+      "source": "---\nconfig:\n  swimlane:\n    lineHops: gap\n---\nswimlane-beta LR\nsubgraph Intake\n  first[First]\n  second[Second]\nend\nsubgraph Review[\"\"]\n  third[Third]\n  fourth[Fourth]\nend\nfirst --> fourth\nsecond rounded@--> third\nrounded@{ curve: rounded }"
+    },
+    {
+      "name": "nested-subgraphs",
+      "source": "swimlane-beta LR\nsubgraph Engineering\n  subgraph Platform[Platform]\n    plan[Plan]\n    subgraph Runtime[Runtime]\n      build[Build]\n    end\n  end\n  deploy[Deploy]\nend\nsubgraph Operations\n  observe[Observe]\nend\nplan --> build --> deploy --> observe"
+    },
+    {
+      "name": "styled-subgraphs",
+      "source": "swimlane-beta LR\nsubgraph Review[Review lane]\n  subgraph Approval[Approval phase]\n    request[Request]\n    approve[Approve]\n  end\nend\nclassDef phase fill:#fef3c7,stroke:#b45309,stroke-width:3px,stroke-dasharray:5 3,color:#7c2d12,font-size:17px,font-weight:bold,rx:12px,ry:12px\nclass Approval phase\nstyle Review fill:#ecfdf5,stroke:#047857,stroke-width:2px,color:#064e3b,font-size:20px,rx:14px,ry:14px\nrequest --> approve"
+    },
+    {
+      "name": "subgraph-class-decorators",
+      "source": "swimlane-beta LR\nsubgraph Review[Review lane]:::laneStyle\n  subgraph Approval[Approval phase]:::phaseStyle\n    request[Request]\n    approve[Approve]\n  end\nend\nclassDef laneStyle fill:#eff6ff,stroke:#1d4ed8,stroke-width:2px,color:#172554,rx:14px,ry:14px\nclassDef phaseStyle fill:#fef3c7,stroke:#b45309,stroke-width:3px,stroke-dasharray:5 3,color:#7c2d12,font-size:17px,font-weight:bold,rx:12px,ry:12px\nrequest --> approve"
+    },
+    {
+      "name": "state-choice-note-shapes",
+      "source": "swimlane-beta LR\nsubgraph Workflow\n  pending@{ shape: state, label: \"Pending\" }\n  branch@{ shape: choice, label: \"Choose\" }\nend\nsubgraph Records\n  memo@{ shape: note, label: \"Decision note\" }\nend\npending --> branch --> memo"
+    },
+    {
+      "name": "label-rect-shape",
+      "source": "swimlane-beta LR\nsubgraph Labels\n  before[Before]\n  caption@{ shape: labelRect, label: \"Context only\" }\n  after[After]\nend\nbefore --> caption --> after"
+    },
+    {
+      "name": "anchor-shape",
+      "source": "swimlane-beta LR\nsubgraph Routing\n  before[Before]\n  pin@{ shape: anchor }\n  after[After]\nend\nbefore --> pin --> after"
+    },
+    {
+      "name": "rect-with-title-shape",
+      "source": "swimlane-beta LR\nsubgraph State\n  before[Before]\n  item@{ shape: rectWithTitle, label: \"Details\" }\n  after[After]\nend\nbefore --> item --> after"
+    },
+    {
+      "name": "internal-container-shapes",
+      "source": "swimlane-beta LR\nsubgraph Internal\n  card@{ shape: kanbanItem, label: \"Card\" }\n  topic@{ shape: mindmapCircle, label: \"Topic\" }\n  branch@{ shape: defaultMindmapNode, label: \"Branch\" }\nend\ncard --> topic --> branch"
+    },
+    {
+      "name": "internal-compartment-shapes",
+      "source": "swimlane-beta LR\nsubgraph Internal\n  classifier@{ shape: classBox, label: \"Class\" }\n  entity@{ shape: erBox, label: \"Entity\" }\n  requirement@{ shape: requirementBox, label: \"Requirement\" }\nend\nclassifier --> entity --> requirement"
+    },
+    {
+      "name": "legacy-internal-shape-aliases",
+      "source": "swimlane-beta LR\nsubgraph Legacy\n  process@{ shape: squareRect, label: \"Process\" }\n  event@{ shape: roundedRect, label: \"Event\" }\n  start@{ shape: stateStart }\n  stop@{ shape: stateEnd }\n  branch@{ shape: forkJoin }\n  manual@{ shape: inv_trapezoid, label: \"Manual\" }\n  final@{ shape: doublecircle, label: \"Final\" }\n  odd@{ shape: rect_left_inv_arrow, label: \"Odd\" }\nend\nstart --> process --> event --> branch --> manual --> final --> stop\nbranch --> odd --> final"
+    },
+    {
+      "name": "flowchart-curve-config",
+      "source": "---\nconfig:\n  flowchart:\n    curve: stepAfter\n---\nswimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Review\n  review[Review]\n  done[Done]\nend\nrequest --> review\nreview override@--> done\noverride@{ curve: linear }"
+    },
+    {
+      "name": "flowchart-spacing-config",
+      "source": "---\nconfig:\n  flowchart:\n    nodeSpacing: 96\n    rankSpacing: 28\n    diagramPadding: 32\n---\nswimlane-beta LR\nsubgraph Intake\n  receive[Receive]\n  validate[Validate]\nend\nsubgraph Delivery\n  build[Build]\n  ship[Ship]\nend\nreceive --> validate\nbuild --> ship"
+    },
+    {
+      "name": "flowchart-wrapping-width",
+      "source": "---\nconfig:\n  flowchart:\n    wrappingWidth: 180\n---\nswimlane-beta LR\nsubgraph Review\n  request[Review a substantially longer customer request label]\n  done[Done]\nend\nrequest --> done"
+    },
+    {
+      "name": "flowchart-node-padding",
+      "source": "---\nconfig:\n  flowchart:\n    padding: 24\n---\nswimlane-beta LR\nsubgraph Review\n  request[Review]\n  done[Done]\nend\nrequest --> done"
+    },
+    {
+      "name": "flowchart-title-top-margin",
+      "source": "---\nconfig:\n  flowchart:\n    titleTopMargin: 26\n---\nswimlane-beta LR\ntitle Approval flow\nsubgraph Review\n  request[Review]\n  done[Done]\nend\nrequest --> done"
+    },
+    {
+      "name": "flowchart-subgraph-title-margins",
+      "source": "---\nconfig:\n  flowchart:\n    subGraphTitleMargin:\n      top: 12\n      bottom: 18\n---\nswimlane-beta LR\nsubgraph Review\n  request[Review]\n  done[Done]\nend\nrequest --> done"
+    },
+    {
+      "name": "cross-lane-rank-constraints",
+      "source": "---\nconfig:\n  swimlane:\n    ignoreCrossLaneEdges: false\n---\nswimlane-beta LR\nsubgraph Intake\n  receive[Receive]\n  validate[Validate]\nend\nsubgraph Delivery\n  build[Build]\n  ship[Ship]\nend\nreceive --> validate\nbuild --> ship\nvalidate --> build"
+    },
+    {
+      "name": "rank-crossing-optimization",
+      "source": "---\nconfig:\n  swimlane:\n    ignoreCrossLaneEdges: false\n    optimizeRanksByCrossings: true\n---\nswimlane-beta LR\nsubgraph laneA[Lane A]\n  a[A]\nend\nsubgraph laneB[Lane B]\n  b[B]\nend\nsubgraph laneC[Lane C]\n  c[C]\nend\nsubgraph laneD[Lane D]\n  d[D]\nend\na --> d\nc --> b"
     }
   ]
 }

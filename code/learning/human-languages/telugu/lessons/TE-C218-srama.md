@@ -14,7 +14,8 @@ romanization: "śrama"
 concept_tag: TE-KARANAM218-SRAMA
 prerequisites: [TE-C218-udaharana, TE-C218-teda]
 sounds: []
-roots: []
+roots: [sanskrit-shrama]
+etymology_hook: "śrama ← Sanskrit śrama 'labour; fatigue', a tatsama (CDIAL 12682)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C218-teda]
 <!-- hl-knowledge: introduces=[TE-LEX-C218-KARANAM218-05]; assesses=[] -->
 
 **శ్రమ** — *śrama* — "effort, toil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**శ్రమ** (*śrama*) is Sanskrit *śrama*, "labour; fatigue", taken over whole as a learned loan, a tatsama (CDIAL 12682).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

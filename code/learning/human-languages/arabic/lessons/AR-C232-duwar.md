@@ -14,7 +14,8 @@ romanization: "duwār"
 concept_tag: AR-SIHHA232-DUWAR
 prerequisites: [AR-C231-saydaliyya, AR-C231-mumarrid]
 sounds: []
-roots: []
+roots: [d-w-r]
+etymology_hook: "duwār: built on the root d-w-r, 'to turn round' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C231-mumarrid]
 <!-- hl-knowledge: introduces=[AR-LEX-C232-SIHHA232-01]; assesses=[] -->
 
 **دوار** — *duwār* — "dizziness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دوار** (*duwār*) is built on the native Arabic root *d-w-r*, "to turn round" (Lane). *Duwār* has the *fuʿāl* shape of illness words: the head turning round.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

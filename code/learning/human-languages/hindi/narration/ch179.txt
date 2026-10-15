@@ -12,6 +12,9 @@ Before the new one: say the Hindi for to be afraid, then the Hindi for to shout.
 You'll want to know: थकना.
 थकना — thaknā — "to get tired".
 
+The word, taken apart.
+थकना (thaknā) is a tadbhava, a word inherited and reshaped by sound change. It comes from sthakk, "stop, halt", a form CDIAL reconstructs from its descendants (CDIAL 13737). CDIAL calls a link with sthā-, "to stand", probable but not clear.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for to shout, then the Hindi for to get tired.
 
 You'll want to know: सहना.
 सहना — sahnā — "to bear, to put up with".
+
+The word, taken apart.
+सहना (sahnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sahate, "conquers; bears, suffers" (CDIAL 13304).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for to get tired, then the Hindi for to bear.
 You'll want to know: हटाना.
 हटाना — haṭānā — "to remove".
 
+The word, taken apart.
+हटाना (haṭānā) is the causing form of haṭnā, "to move aside": to remove is to make something move aside. CDIAL lists haṭnā under a reconstructed haṭṭ, "move" (CDIAL 13943).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for to bear, then the Hindi for to remove.
 You'll want to know: हटना.
 हटना — haṭnā — "to move aside".
 
+The word, taken apart.
+हटना (haṭnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from haṭṭ, "move", a form CDIAL reconstructs from its descendants (CDIAL 13943).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for to remove, then the Hindi for to move asid
 
 You'll want to know: गुज़रना.
 गुज़रना — guzarnā — "to pass by, to pass through".
+
+The word, taken apart.
+गुज़रना (guzarnā) is a loan, usually traced to Persian guzar, "a passing, a crossing". Hindi made a verb of it with -nā.
 
 What you've built.
 One more word for this chapter.

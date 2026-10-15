@@ -13,7 +13,8 @@ gloss: "to jump"
 concept_tag: LA-VERB-SALIO
 prerequisites: [LA-C165-accendo, LA-C165-exstinguo]
 sounds: []
-roots: []
+roots: [salire-latin]
+etymology_hook: "saliō 'to jump' — inherited, usually traced to PIE *sel- 'to spring'; Greek hallomai is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C165-exstinguo]
 <!-- hl-knowledge: introduces=[LA-LEX-C165-ACT165-03]; assesses=[] -->
 
 **saliō, salīre** — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**saliō** is inherited, usually traced to Proto-Indo-European *\*sel-*, "to spring, to leap" (EtymDB 2.1); Greek *hallomai*, "to leap", is a cousin. It is a different word from *saliō*, "to salt", built on *sāl*, "salt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

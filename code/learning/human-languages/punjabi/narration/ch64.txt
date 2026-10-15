@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a fish, then the Punjabi for rice.
 You'll want to know: ਦਾਲ.
 ਦਾਲ — dāl — "lentils".
 
+The word, taken apart.
+ਦਾਲ (dāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dāla, "kind of grain, split peas" (CDIAL 6309). CDIAL asks whether it is the same word as dāla, "splitting".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for rice, then the Punjabi for lentils.
 
 You'll want to know: ਫਲ.
 ਫਲ — phal — "fruit".
+
+The word, taken apart.
+ਫਲ (phal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from phala, "fruit" (CDIAL 9051). CDIAL compares Dravidian words such as Tamil paṛam, "ripe fruit".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for lentils, then the Punjabi for fruit.
 You'll want to know: ਸੇਬ.
 ਸੇਬ — seb — "an apple".
 
+The word, taken apart.
+ਸੇਬ (seb) is a loan, usually traced to Persian sēb, "apple".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for fruit, then the Punjabi for an apple.
 You'll want to know: ਕੇਲਾ.
 ਕੇਲਾ — kelā — "a banana".
 
+The word, taken apart.
+ਕੇਲਾ (kelā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kadala, "banana plant" (CDIAL 2712). CDIAL takes the Sanskrit word itself from Austroasiatic.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for an apple, then the Punjabi for a banana.
 
 You'll want to know: ਆਲੂ.
 ਆਲੂ — ālū — "a potato".
+
+The word, taken apart.
+ਆਲੂ (ālū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ālu, "an edible root" (CDIAL 1388). The old name of a root crop passed to the potato.
 
 What you've built.
 One more word for this chapter.

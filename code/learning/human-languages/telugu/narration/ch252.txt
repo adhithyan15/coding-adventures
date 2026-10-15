@@ -12,6 +12,9 @@ Before the new one: say the Telugu for an injection, then the Telugu for a vacci
 You'll want to know: ఉగాది.
 ఉగాది — ugādi — "Ugadi, the Telugu New Year".
 
+The word, taken apart.
+ఉగాది (ugādi) is Sanskrit yugādi, "the beginning of an age": yuga, "yoke; age" (CDIAL 10482), and ādi, "beginning" (CDIAL 1152).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for a vaccination, then the Telugu for Ugadi.
 
 You'll want to know: దీపావళి.
 దీపావళి — dīpāvaḷi — "Diwali, the festival of lamps".
+
+The word, taken apart.
+దీపావళి (dīpāvaḷi) is Sanskrit: dīpa, "lamp" (CDIAL 6348), and āvali, "row, line" (CDIAL 1423): "a row of lamps". CDIAL doubts any tie between this "row" word and a look-alike, unless both were borrowed separately from non-Aryan sources.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for Ugadi, then the Telugu for Diwali.
 You'll want to know: దసరా.
 దసరా — dasarā — "Dasara".
 
+The word, taken apart.
+దసరా (dasarā) comes from Sanskrit daśaharā, the name of the festival.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for Diwali, then the Telugu for Dasara.
 You'll want to know: వినాయక చవితి.
 వినాయక చవితి — vināyaka caviti — "Vinayaka Chavithi, Ganesha's festival".
 
+The word, taken apart.
+వినాయక చవితి (vināyaka caviti) is Sanskrit vināyaka, "leader, guide" (CDIAL 11776), a name of Ganesha, and caviti, "the fourth day", from Sanskrit caturthī, "fourth" (CDIAL 4600).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for Dasara, then the Telugu for Vinayaka Chav
 
 You'll want to know: బతుకమ్మ.
 బతుకమ్మ — batukamma — "Bathukamma, the Telangana flower festival".
+
+The word, taken apart.
+బతుకమ్మ (batukamma) is native Dravidian: batuku, "life", one word with Tamil vāḻ, "to live" (DEDR 5372), and amma, "mother" (DEDR 183), which DEDR compares with Sanskrit ambā, "mother" (CDIAL 574).
 
 What you've built.
 One more word for this chapter.

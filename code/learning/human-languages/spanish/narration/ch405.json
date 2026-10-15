@@ -4,7 +4,7 @@
   "chapter": 405,
   "title": "Photography, Photos and Permission",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3a12debc4520b4a8",
+  "sourceHash": "fnv1a64:b28b304c9e6703c3",
   "lessons": [
     {
       "id": "ES-C405-fotografia",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4a93fd671e401dd",
+      "sourceHash": "fnv1a64:89777c38a8165b4f",
       "notice": null,
       "blocks": [
         {
@@ -168,7 +168,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "la foto is the everyday short form of la fotografía. It ends in -o, but it remains feminine because the full word is feminine: la foto, never el foto for an ordinary photograph."
+              "text": "la foto is the everyday short form of la fotografía. It ends in -o, but it remains feminine because the full word is feminine: la foto, never el foto for an ordinary photograph. Fotografía is a learned word built from two Greek roots, \"light\" and \"writing\"."
             },
             {
               "kind": "speech",

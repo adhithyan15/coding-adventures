@@ -14,7 +14,8 @@ romanization: "icchā"
 concept_tag: MR-CAN122-ICCHA
 prerequisites: [MR-C122-takad, MR-C122-hava]
 sounds: []
-roots: []
+roots: [sanskrit-iccha]
+etymology_hook: "icchā ← Sanskrit icchā 'wish', a tatsama (CDIAL 1557)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C122-hava]
 <!-- hl-knowledge: introduces=[MR-LEX-C122-CAN122-05]; assesses=[] -->
 
 **इच्छा** — *icchā* — "a wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इच्छा** (*icchā*) is Sanskrit *icchā*, "wish", taken over whole as a learned loan, a tatsama (CDIAL 1557). It is built on *iṣ*, "to wish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

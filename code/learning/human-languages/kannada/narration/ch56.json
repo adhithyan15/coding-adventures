@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "In the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b59440f37db849bc",
+  "sourceHash": "fnv1a64:7428c02ac1b127e1",
   "lessons": [
     {
       "id": "KA-C56-mat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1191151c21819848",
+      "sourceHash": "fnv1a64:f9e146eb357b536f",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಚಾಪೆ (cāpe) is native Dravidian, one word with Tamil cāppai (DEDR 2452)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63ff9b46f35c5062",
+      "sourceHash": "fnv1a64:951931a44af7a945",
       "notice": null,
       "blocks": [
         {
@@ -199,6 +210,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬುಟ್ಟಿ (buṭṭi) is native Dravidian, one word with Tamil puṭṭil (DEDR 4263). DEDR lists Kannada puṭṭi, buṭṭi, \"basket\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -209,7 +231,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -258,7 +280,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -289,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab6d7795cb5f57c2",
+      "sourceHash": "fnv1a64:c05c5183757fcf13",
       "notice": null,
       "blocks": [
         {
@@ -424,7 +446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cdacfb52573925e",
+      "sourceHash": "fnv1a64:f9349e53f154713e",
       "notice": null,
       "blocks": [
         {
@@ -464,6 +486,10 @@
             {
               "kind": "speech",
               "text": "Kannada carries the whole set. ಪಾತ್ರೆ (pātre) in the kitchen is the vessel; ಪಾತ್ರ on the stage is the role. One Sanskrit word, and the ending tells you which of its lives is being lived."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 8055 lists Sanskrit pātra, \"drinking vessel, dish\"."
             }
           ]
         },
@@ -559,7 +585,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c51376be4915ce91",
+      "sourceHash": "fnv1a64:5a18a3f49bfa4aa8",
       "notice": null,
       "blocks": [
         {
@@ -604,6 +630,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪೆಟ್ಟಿಗೆ (peṭṭige) is native Dravidian, one word with Tamil peṭṭi and Telugu peṭṭe (DEDR 4388). DEDR lists Kannada peṭṭi, peṭṭige. DEDR 4388 compares Sanskrit peṭaka."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -614,7 +651,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -663,7 +700,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -13,6 +13,9 @@ You'll want to know: ಅಜ್ಜ.
 ಅಜ್ಜ (ajja) — "grandfather".
 A native Dravidian word of the short, doubled shape that small children's mouths reach for first, and it carries respect well past the family: an unrelated old man can be ajja too. The -a closing it is the masculine ending.
 
+The word, taken apart.
+DEDR 50 lists Kannada ajja, "grandfather", and ajji, "grandmother", with Tamil accaṉ, "father", but notes that the whole group is probably a loan from Indo-Aryan: Prakrit ajja, from Sanskrit ārya, "noble, honoured" (CDIAL 1347). So ಅಜ್ಜ (ajja) is most likely an old loan, not a native Dravidian word.
+
 What you've built.
 The first of four words for the generation above you and the one beside you. Three follow, and each reuses the ones before.
 
@@ -41,6 +44,9 @@ You'll want to know: ಅಜ್ಜಿ.
 ಅಜ್ಜಿ (ajji) — "grandmother".
 The same stem as the last word, with the ending swapped: -i where ajja had -a. The son-and-daughter pair built ಮಗಳು out of ಮಗ by that same trick, one stem carrying two endings, and this pair is tidier still — only the final vowel moves.
 
+The word, taken apart.
+DEDR 50 lists Kannada ajji, "grandmother", beside ajja, "grandfather", and notes that the group is probably a loan from Indo-Aryan: Prakrit ajja, from Sanskrit ārya, "noble, honoured" (CDIAL 1347). So ಅಜ್ಜಿ (ajji) is most likely an old loan, not a native Dravidian word.
+
 What you've built.
 Two of the four, and a pattern you have now seen twice in this book.
 
@@ -68,6 +74,7 @@ Before the new one: what did ajji mean?
 You'll want to know: ಗಂಡ.
 ಗಂಡ (gaṇḍa) — "husband".
 The everyday word, and a native one. Its own stem also gives ಗಂಡು (gaṇḍu), 'male', so what it names is a man of the house rather than anything about the wedding. Formal Kannada keeps the Sanskrit pati alongside it for writing and ceremony.
+DEDR 1173 lists Kannada gaṇḍu, "male", and gaṇḍa, "husband", with Tamil kaṇṭaṉ, "warrior, husband". DEDR 1173 compares Sanskrit gaṇḍa, "hero".
 
 What you've built.
 Three of the four. The last one is built the same way, from the other half of the pair.
@@ -98,6 +105,9 @@ Before the new one: what did gaṇḍa mean?
 You'll want to know: ಹೆಂಡತಿ.
 ಹೆಂಡತಿ (heṇḍati) — "wife".
 Built on ಹೆಣ್ಣು (heṇṇu), 'female', with a -ti ending. And heṇṇu carries the sound change you already met in ಹೋಗು: where its sisters keep an old p-, Kannada has h-. So Tamil peṇ, 'woman', and this heṇ- are one word wearing two faces.
+
+The word, taken apart.
+ಹೆಂಡತಿ (heṇḍati) is native Dravidian. DEDR 4395 lists the older Kannada form peṇḍati, "wife", with peṇ, "female, woman", and Tamil peṇ: the p- has become h-. DEDR 4395 compares Sanskrit paṇḍa, "weakling".
 
 What you've built.
 That closes the run: grandfather, grandmother, husband, wife.

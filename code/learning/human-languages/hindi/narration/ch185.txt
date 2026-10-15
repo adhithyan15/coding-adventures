@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a mirror, then the Hindi for rain.
 You'll want to know: धूप.
 धूप — dhūp — "sunshine".
 
+The word, taken apart.
+धूप (dhūp) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhuppā, "sunshine", a form CDIAL reconstructs from its descendants (CDIAL 6825).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for rain, then the Hindi for sunshine.
 
 You'll want to know: ठंड.
 ठंड — ṭhaṇḍ — "cold, the cold".
+
+The word, taken apart.
+ठंड (ṭhaṇḍ) comes from a reconstructed ṭhaṇḍha, "cold", which CDIAL lists under Sanskrit stabdha, "stiff, solidified" (CDIAL 13676). DEDR compares Dravidian words for "cool", such as Tamil taṇ (DEDR 3045).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for sunshine, then the Hindi for cold.
 You'll want to know: गर्मी.
 गर्मी — garmī — "heat, summer".
 
+The word, taken apart.
+गर्मी (garmī) is a loan, usually traced to Persian garmī, "heat". It is built on garm, "warm".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for cold, then the Hindi for heat.
 You'll want to know: तूफ़ान.
 तूफ़ान — tūfān — "a storm".
 
+The word, taken apart.
+तूफ़ान (tūfān) is a loan from Arabic ṭūfān, "a flood, a deluge", which reached Hindi through Persian. Its Arabic root is ṭ-w-f (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for heat, then the Hindi for a storm.
 
 You'll want to know: पत्ता.
 पत्ता — pattā — "a leaf".
+
+The word, taken apart.
+पत्ता (pattā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pattra, "wing-feather; leaf" (CDIAL 7733).
 
 What you've built.
 One more word for this chapter.

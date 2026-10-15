@@ -15,6 +15,7 @@ concept_tag: UR-THINGS118-QAHVA
 prerequisites: [UR-C118-biskut, UR-C118-chaklet]
 sounds: []
 roots: []
+etymology_hook: "qahvā: a loan from Arabic qahwa 'coffee', through Persian; English coffee comes from the same word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C118-chaklet]
 <!-- hl-knowledge: introduces=[UR-LEX-C118-THINGS118-03]; assesses=[] -->
 
 **قہوہ** — *qahvā* — "green tea, coffee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قہوہ** (*qahvā*) is a loan from Arabic *qahwa*, "coffee", which reached Urdu through Persian. English *coffee* comes from the same Arabic word, through Turkish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "lasaṇ"
 concept_tag: MW-THINGS136-LASAN
 prerequisites: [MW-C135-palak, MW-C136-mulo]
 sounds: []
-roots: []
+roots: [sanskrit-lashuna]
+etymology_hook: "lasaṇ ← Sanskrit laśuna 'garlic', a tadbhava (CDIAL 10990, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C136-mulo]
 <!-- hl-knowledge: introduces=[MW-LEX-C136-THINGS136-02]; assesses=[] -->
 
 **लसण** — *lasaṇ* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लसण** (*lasaṇ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laśuna*, "garlic". CDIAL gives no Marwari form in this entry (CDIAL 10990); the match is through Gujarati *lasaṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

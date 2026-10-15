@@ -11,6 +11,7 @@ concept_tag: ES-REF-ALQUILER
 prerequisites: [ES-C476-aburrido, ES-C477-ahorro]
 sounds: []
 roots: []
+etymology_hook: "alquiler ← Arabic al-kirāʾ 'the hire, the rent', with the Arabic article al- kept"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C477-ahorro]
 > *The rent goes up in January.*
 
 *Se alquila* on a sign means for rent.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**alquiler** ← Hispanic Arabic *alkirí*, from Arabic *al-kirāʾ*, "the hire, the rent" — the Arabic article *al-* is still on the front.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

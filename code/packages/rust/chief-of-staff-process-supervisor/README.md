@@ -57,7 +57,12 @@ Channel endpoint and LLM service implementations remain injected behind
 
 `with_channel_brokers(ChannelBrokers)` gives every agent with bound channels
 its own broker process. It is opt-in; without it, channel requests go to the
-dispatcher as before.
+dispatcher or the manual adapter API.
+
+`refusing_unbrokered_channels()` (P2.6d-2c) makes a host bound to any
+channel fail to launch, with `ChannelsNeedBroker`, unless brokers are
+configured. The orchestrator always sets it, because the daemon serves no
+channel operation itself.
 
 ```text
 start(host)
@@ -69,6 +74,10 @@ start(host)
 host ends   ─▶ broker killed, reaped, relay stopped
 broker ends ─▶ host ended (inspect returns ProcessSupervisorError::Broker once)
 ```
+
+Non-channel requests (completions, tool calls) go to the host's own
+dispatch worker in the same way (P2.6d-4), so one slow request never holds
+the supervisor's thread, which every host shares.
 
 The broker's relay thread answers the host itself, through the shared
 `HostLink`. That way a channel operation does not wait for the next refresh.

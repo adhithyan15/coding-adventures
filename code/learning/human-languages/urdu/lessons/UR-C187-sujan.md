@@ -14,7 +14,8 @@ romanization: "sūjan"
 concept_tag: UR-SEHAT187-SUJAN
 prerequisites: [UR-C186-jigar, UR-C186-phephra]
 sounds: []
-roots: []
+roots: [sanskrit-shuyate]
+etymology_hook: "sūjan: the noun of sūjnā 'to swell', from Sanskrit śūyate 'is swollen' (CDIAL 12568)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C186-phephra]
 <!-- hl-knowledge: introduces=[UR-LEX-C187-SEHAT187-01]; assesses=[] -->
 
 **سوجن** — *sūjan* — "a swelling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سوجن** (*sūjan*) is the noun of *sūjnā*, "to swell", which CDIAL lists under Sanskrit *śūyate*, "is swollen" (CDIAL 12568).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

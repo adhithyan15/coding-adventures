@@ -14,7 +14,8 @@ romanization: "nikuya"
 concept_tag: JA-THINGS119-NIKUYA
 prerequisites: [JA-C119-yaoya, JA-C119-tokoya]
 sounds: []
-roots: []
+roots: [middle-chinese-nyuwk, japanese-ya-house]
+etymology_hook: "nikuya: Sino-Japanese niku 肉 'meat' + native ya 'shop'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C119-tokoya]
 <!-- hl-knowledge: introduces=[JA-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **にくや** — *nikuya* — "a butcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**にくや** (*nikuya*) mixes the two layers: *niku*, "meat", the on'yomi of its first character, borrowed from Chinese (Middle Chinese *nyuwk*), and native *ya*, "house, shop" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaḷavṇe"
 concept_tag: MR-VERB-KALAVNE
 prerequisites: [MR-C253-anand-ghene, MR-C253-kalpana-karne]
 sounds: []
-roots: []
+roots: [sanskrit-kalayati]
+etymology_hook: "kaḷavṇe: the 'make' form of kaḷṇe 'to be understood' ← kalayati 'counts, thinks', from Dravidian (CDIAL 2918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C253-kalpana-karne]
 <!-- hl-knowledge: introduces=[MR-LEX-C253-ACT253-04]; assesses=[] -->
 
 **कळवणे** — *kaḷavṇe* — "to inform, to let know".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कळवणे** (*kaḷavṇe*) is the "make" form of *kaḷṇẽ*, "to be clear to, be understood", which comes from Sanskrit *kalayati*, "counts, thinks" (CDIAL 2918). CDIAL takes the Sanskrit verb from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

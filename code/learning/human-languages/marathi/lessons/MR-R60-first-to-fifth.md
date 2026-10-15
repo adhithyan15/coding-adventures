@@ -61,8 +61,8 @@ memorised. That is the worst ratio you will ever see in this set, and it is
 worth saying out loud, because the next chapter reverses it completely: five
 more ordinals, and every single one of them built.
 
-The break sits between **चौथा** and **पाचवा**. Everything before it is a word
-Marathi received. Everything after it is a word Marathi makes.
+The break sits between **चौथा** and **पाचवा**. Everything before it has to be
+memorised. Everything after it follows a rule.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PACHVA, MR-GRAMMAR-ORDINAL-VA, MR-GRAMMAR-ORDINAL-SET] -->

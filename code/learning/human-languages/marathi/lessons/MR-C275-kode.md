@@ -14,7 +14,8 @@ romanization: "koḍe"
 concept_tag: MR-VASTU275-KODE
 prerequisites: [MR-C274-puja, MR-C274-adhikari]
 sounds: []
-roots: []
+roots: [sanskrit-kuha-cheat]
+etymology_hook: "koḍe: as kohḍẽ 'puzzle, riddle', listed under kuha 'cheat' (CDIAL 3385)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C274-adhikari]
 <!-- hl-knowledge: introduces=[MR-LEX-C275-VASTU275-01]; assesses=[] -->
 
 **कोडे** — *koḍe* — "a puzzle, a riddle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कोडे** (*koḍe*) matches Marathi *kohḍẽ*, "puzzle, riddle", which CDIAL lists under Sanskrit *kuha*, "cheat" (CDIAL 3385).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vepārī"
 concept_tag: GU-LIFE-MERCHANT
 prerequisites: [GU-C90-age, GU-C90-field]
 sounds: []
-roots: []
+roots: [sanskrit-vyapara]
+etymology_hook: "vepārī: on vepār 'trade' ← Sanskrit vyāpāra 'occupation, business' (CDIAL 12205)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C90-field]
 <!-- hl-knowledge: introduces=[GU-LEX-C90-LIFE-05]; assesses=[] -->
 
 **વેપારી** (*vepārī*) — "a merchant, a trader".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વેપારી** (*vepārī*) is built on *vepār*, "trade", which goes back to Sanskrit *vyāpāra*, "occupation, business" (CDIAL 12205). CDIAL lists no Gujarati form there.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

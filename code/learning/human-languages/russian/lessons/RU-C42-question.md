@@ -14,7 +14,8 @@ romanization: "voprós"
 concept_tag: RU-VERB5-QUESTION
 prerequisites: [RU-C42-zakryvat, RU-C42-pit]
 sounds: []
-roots: []
+roots: [pie-prek]
+etymology_hook: "вопрос is во- 'in, at' + прос, the root of просить 'to ask'; German fragen 'to ask' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C42-pit]
 <!-- hl-knowledge: introduces=[RU-LEX-C42-VERB5-04]; assesses=[] -->
 
 **вопрос** (*voprós*) — "a question".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вопрос** is *во-*, "in, toward", with *-прос*, the root of *просить*, "to ask, to request". Vasmer relates *просить* to Lithuanian *prašýti*, "to ask", Latin *precor*, "I pray", and German *fragen*, "to ask", from PIE *\*preḱ-*, "to ask".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

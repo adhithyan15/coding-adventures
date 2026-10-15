@@ -4,7 +4,7 @@
   "chapter": 160,
   "title": "Deep, Low, Unknown, Dangerous, Safe",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b91cce65ef7d7fdb",
+  "sourceHash": "fnv1a64:12b11cea27440ad2",
   "lessons": [
     {
       "id": "FR-C160-profond-profonde",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32b2c9de442ea298",
+      "sourceHash": "fnv1a64:c329bd514cdc6216",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "inconnu — in-, \"not\", and connu, the past participle of connaître: not known."
+              "text": "inconnu — in-, \"not\", and connu, the past participle of connaître: not known. Connaître from Latin cognōscere, \"to get to know\" (EtymDB 2.1)."
             }
           ]
         },

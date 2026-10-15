@@ -12,6 +12,9 @@ Before the new one: say the Bengali for stale, then the Bengali for raw.
 You'll want to know: পাকা.
 পাকা — pākā — "ripe".
 
+The word, taken apart.
+পাকা (pākā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pakva, "cooked, ripe" (CDIAL 7621).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for raw, then the Bengali for ripe.
 
 You'll want to know: মজার.
 মজার — môjār — "funny".
+
+The word, taken apart.
+মজার (môjār) is môjā, "fun", with the ending -r. Môjā is usually traced to Persian maza, "taste, relish".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for ripe, then the Bengali for funny.
 You'll want to know: আরামদায়ক.
 আরামদায়ক — ārāmdāyôk — "comfortable".
 
+The word, taken apart.
+আরামদায়ক (ārāmdāyôk) is ārām, "rest, ease", usually traced to Persian ārām, + dāyôk, "giving", Sanskrit dāyaka.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for funny, then the Bengali for comfortable.
 You'll want to know: বিপজ্জনক.
 বিপজ্জনক — bipôjjônôk — "dangerous".
 
+The word, taken apart.
+বিপজ্জনক (bipôjjônôk) is Sanskrit vipad, "misfortune", + janaka, "producing", put together by Sanskrit sound rules and taken over whole.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for comfortable, then the Bengali for danger
 
 You'll want to know: নিরাপদ.
 নিরাপদ — nirāpôd — "safe".
+
+The word, taken apart.
+নিরাপদ (nirāpôd) is Sanskrit nirāpad, "free from danger", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

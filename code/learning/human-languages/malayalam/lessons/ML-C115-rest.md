@@ -11,7 +11,8 @@ romanization: "viśramaṁ"
 concept_tag: ML-UNWELL-REST
 prerequisites: [ML-C115-cold, ML-C115-headache]
 sounds: []
-roots: []
+roots: [sanskrit-vishrama]
+etymology_hook: "viśramaṁ ← Sanskrit viśrama 'rest', a tatsama (CDIAL 11947)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C115-headache]
 **വിശ്രമം** (*viśramaṁ*) — "rest".
 
 **വിശ്രമിക്കൂ** (*viśramikkū*) — "please rest", what you tell a friend who is unwell.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിശ്രമം** (*viśramaṁ*) ← Sanskrit *viśrama*, "rest", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 11947). Its root is *śram*, "to toil": rest is the stop after toil.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,9 +11,10 @@ gloss: who — the asking word for a person, and the third member of a family yo
 concept_tag: MR-QUESTION-KON
 prerequisites: [MR-C02-aahe, MR-C02-kaay, MR-C11-mitra, MR-A1F01-naav, MR-A1F01-bhasha, MR-C31-naa-tag]
 sounds: [matra-o, retroflex-na]
-roots: [ka-interrogative]
+roots: [ka-interrogative, sanskrit-kah-punar]
+etymology_hook: "koṇ ← Sanskrit kaḥ punar 'who, then?', which CDIAL glosses 'who?'; a tadbhava (CDIAL 2575)"
 duration:
-  max_seconds: 210
+  max_seconds: 221
 requires:
   knowledge: [MR-LEX-KAAY, MR-LEX-MITRA, MR-LEX-AAHE-COPULA]
 introduces:
@@ -52,9 +53,9 @@ thing. Nothing you own yet asks about a **person**.
 stem. **काय**, **कसा**, **कोण** — the **क-** family. Meet a new word starting
 with **क** in a question and you can guess its job before you know its meaning.
 
-**कोण** comes down from Sanskrit **कः** (*kaḥ*, "who"), by way of the older
+**कोण** comes down from Sanskrit *kaḥ punar*, "who" (CDIAL 2575), by way of the older
 Marathi **कवण**. English **who** and Latin **quis** grew from the same
-Indo-European stem, which is why the family feels oddly familiar.
+Indo-European stem.
 
 Aim it at somebody you have already named: **मीरा कोण आहे?** — *Mīrā koṇ
 āhe?* — **who is Mira?**

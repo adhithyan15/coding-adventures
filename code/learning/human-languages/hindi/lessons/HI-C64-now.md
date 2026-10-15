@@ -14,7 +14,8 @@ romanization: "ab"
 concept_tag: HI-ADV-NOW
 prerequisites: [HI-C63-pain, HI-C62-rope, HI-C63-hunger]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva]
+etymology_hook: "ab: CDIAL lists it under Sanskrit evam eva 'exactly so', crossed with the pronoun stem a- (CDIAL 2528)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C63-pain]
 The dictionaries do not agree on where अब came from, and this book will say so rather than invent a chain. What it does is clear enough, and that is worth more here than a pedigree.
 
 अब draws a line: everything before it was one way, and from here on things are another. That is what separates it from अभी, which you already own — अभी is this very second, अब is from this second onward. *ab* and *abhī* look alike and do different work.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अब** (*ab*) is inherited. CDIAL lists it under Sanskrit *evam eva*, "exactly so", crossed with the pronoun stem *a-*, "this", and lists *kab*, "when", *tab*, "then", and *jab*, "when", beside it, each crossed with its own pronoun stem (CDIAL 2528).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

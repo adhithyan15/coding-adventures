@@ -12,7 +12,7 @@ concept_tag: UR-NUMBER-HUNDRED
 prerequisites: [UR-C30-bees]
 sounds: [rtl, hai-diphthong]
 roots: [sanskrit-shata, proto-indo-european-kmtom]
-etymology_hook: "sau continues Sanskrit shata from Proto-Indo-European *kmtom -- Latin centum, English hundred -- and it is spelled with the s of saat and the vav of nau."
+etymology_hook: "sau ← Sanskrit śata 'hundred' (CDIAL 12278), from PIE *ḱm̥tóm, like Latin centum"
 duration:
   max_seconds: 275
 requires:
@@ -53,7 +53,7 @@ so drill them as a pair.
 ## The word, taken apart — centum, hundred, sau
 <!-- hl-knowledge: introduces=[UR-ETYMON-SAU-HUNDRED-PIE]; assesses=[UR-LEX-SAU] -->
 
-**سو** continues Sanskrit *śata*, from Indo-European \**kmtom*,
+**سو** continues Sanskrit *śata* (CDIAL 12278), from Indo-European \**kmtom*,
 "hundred." Latin **centum**, Greek **hekatón** and English **hundred** are the
 same word. Anybody who has read a **per cent** has met its cousin.
 

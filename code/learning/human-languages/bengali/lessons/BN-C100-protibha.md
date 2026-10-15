@@ -14,7 +14,8 @@ romanization: "prôtibhā"
 concept_tag: BN-CAN100-PROTIBHA
 prerequisites: [BN-C99-gyan, BN-C100-sahos]
 sounds: []
-roots: []
+roots: [sanskrit-pratibha]
+etymology_hook: "prôtibhā ← Sanskrit pratibhā 'light; genius', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C100-sahos]
 <!-- hl-knowledge: introduces=[BN-LEX-C100-CAN100-02]; assesses=[] -->
 
 **প্রতিভা** — *prôtibhā* — "talent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্রতিভা** (*prôtibhā*) is Sanskrit *pratibhā*, "light; genius", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

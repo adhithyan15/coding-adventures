@@ -13,7 +13,8 @@ gloss: "easy"
 concept_tag: LA-FACILIS-FACILIS
 prerequisites: [LA-C96-clarus, LA-C96-obscurus]
 sounds: []
-roots: []
+roots: [facilis-latin, facere-latin]
+etymology_hook: "facilis 'easy' — built on faciō 'to do': doable, so easy"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C96-obscurus]
 <!-- hl-knowledge: introduces=[LA-LEX-C97-FACILIS-01]; assesses=[] -->
 
 **facilis, facile** — "easy". English *facile*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**facilis** is built on *faciō*, "to do, to make" (Lewis & Short), with *-ilis*, an ending for "able to be": doable, so easy. *faciō* is usually traced to Proto-Indo-European *\*dheh1-*, "to put, to place" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

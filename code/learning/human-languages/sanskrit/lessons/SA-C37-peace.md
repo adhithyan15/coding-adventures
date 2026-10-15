@@ -14,7 +14,8 @@ romanization: "śāntiḥ"
 concept_tag: SA-COURTESY-SHANTI
 prerequisites: [SA-C36-rightly, SA-C35-milk, SA-C36-also]
 sounds: []
-roots: []
+roots: [sanskrit-shanti]
+etymology_hook: "śānti 'rest, peace' ← the root √śam 'grow calm, come to rest' (MW; CDIAL 12391)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C36-rightly]
 **शान्तिः** is peace of a particular kind: not the absence of war so much as the settling of something that had been disturbed. It comes from *śam*, "to grow calm, to come to rest".
 
 A great many Sanskrit texts close on it, said three times over, once for each of the troubles a person can meet. You already have **स्वस्ति** for a wish of wellbeing; **शान्तिः** is the quieter one, and the one you would say last.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śānti* is built on the root √śam, "to grow calm, come to rest", with the noun
+suffix *-ti* (MW, CDIAL 12391).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

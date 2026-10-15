@@ -14,7 +14,8 @@ romanization: "dhartī"
 concept_tag: PA-THINGS128-DHARTI
 prerequisites: [PA-C128-bijli, PA-C128-tufan]
 sounds: []
-roots: []
+roots: [sanskrit-dharitri]
+etymology_hook: "dhartī ← Sanskrit dharitrī 'female carrier; the earth', a tadbhava (CDIAL 6750)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C128-tufan]
 <!-- hl-knowledge: introduces=[PA-LEX-C128-THINGS128-04]; assesses=[] -->
 
 **ਧਰਤੀ** — *dhartī* — "the earth, the ground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਧਰਤੀ** (*dhartī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dharitrī*, "female carrier; the earth" (CDIAL 6750).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

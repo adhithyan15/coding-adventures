@@ -4,7 +4,7 @@
   "chapter": 229,
   "title": "To praise, To scold, To dream, To separate, To throw",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7d32f1d8e54781c7",
+  "sourceHash": "fnv1a64:5ae7b7a3b17acc52",
   "lessons": [
     {
       "id": "TA-C229-parattu",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97cd1bc8b55076a1",
+      "sourceHash": "fnv1a64:2e4e360b6b6cbb3b",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "வீசு (vīcu) is native Dravidian. DEDR 5450 lists Malayalam vīcuka, \"to fan, cast\"."
+              "text": "வீசு (vīcu) is native Dravidian. DEDR 5450 lists Malayalam vīcuka, \"to fan, cast\", and compares Sanskrit vīj-, \"to fan\" (CDIAL 12043)."
             }
           ]
         },

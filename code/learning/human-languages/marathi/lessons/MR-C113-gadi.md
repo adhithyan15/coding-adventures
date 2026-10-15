@@ -14,7 +14,8 @@ romanization: "gāḍī"
 concept_tag: MR-TOWN113-GADI
 prerequisites: [MR-C113-galli, MR-C113-steshan]
 sounds: []
-roots: []
+roots: [indo-aryan-gadda]
+etymology_hook: "gāḍī ← *gāḍḍa 'cart', which CDIAL tentatively links to Sanskrit garta 'chariot seat' (CDIAL 4116)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C113-steshan]
 <!-- hl-knowledge: introduces=[MR-LEX-C113-TOWN113-05]; assesses=[] -->
 
 **गाडी** — *gāḍī* — "a car; a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गाडी** (*gāḍī*) comes from a reconstructed *\*gāḍḍa*, "cart" (CDIAL 4116). CDIAL suggests, despite the long vowel, that it may be the same word as its *\*garda*, "seat", comparing Sanskrit *garta*, "chariot seat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

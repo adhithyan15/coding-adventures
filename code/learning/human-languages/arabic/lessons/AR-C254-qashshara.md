@@ -14,7 +14,8 @@ romanization: "qashshara"
 concept_tag: AR-VERB-QASHSHARA
 prerequisites: [AR-C254-ghala, AR-C254-khalata]
 sounds: []
-roots: []
+roots: [q-sh-r]
+etymology_hook: "qashshara: built on the root q-sh-r, 'bark, peel' (Lane); qashshara is Form II, 'to strip the peel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C254-khalata]
 <!-- hl-knowledge: introduces=[AR-LEX-C254-ACT254-05]; assesses=[] -->
 
 **قشر** — *qashshara* — "to peel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قشر** (*qashshara*) is built on the native Arabic root *q-sh-r*, "bark, peel" (Lane). *Qashshara* is Form II, "to strip the peel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

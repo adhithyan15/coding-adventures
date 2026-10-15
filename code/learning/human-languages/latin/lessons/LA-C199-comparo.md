@@ -13,7 +13,8 @@ gloss: "to compare; to get ready"
 concept_tag: LA-VERB-COMPARO
 prerequisites: [LA-C198-nubo, LA-C198-quiesco]
 sounds: []
-roots: []
+roots: [latin-comparare, par, parare-latin]
+etymology_hook: "comparō 'to compare; to get ready' — two verbs: from compar 'equal', and com- + parō"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C198-quiesco]
 <!-- hl-knowledge: introduces=[LA-LEX-C199-ACT199-01]; assesses=[] -->
 
 **comparō, comparāre** — "to compare; to get ready".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**comparō** is two verbs in one form. "To compare" is built on *compar*, "matched, equal" (Lewis & Short), from *com-*, "together", and *pār*, "equal"; "to get ready" is *com-* with *parō*, "to prepare".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

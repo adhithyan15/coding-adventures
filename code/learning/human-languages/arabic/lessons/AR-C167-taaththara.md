@@ -14,7 +14,8 @@ romanization: "taʿaththara"
 concept_tag: AR-VERB-TAATHTHARA
 prerequisites: [AR-C166-dahana, AR-C166-khabbaa]
 sounds: []
-roots: []
+roots: [ʿ-th-r]
+etymology_hook: "taʿaththara: built on the root ʿ-th-r, 'to stumble' (Lane); taʿaththara is Form V, 'to stumble'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C166-khabbaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C167-ACT167-01]; assesses=[] -->
 
 **تعثر** — *taʿaththara* — "to trip, to stumble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تعثر** (*taʿaththara*) is built on the native Arabic root *ʿ-th-r*, "to stumble" (Lane). *Taʿaththara* is Form V, "to stumble".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

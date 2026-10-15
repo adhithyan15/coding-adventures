@@ -14,7 +14,8 @@ romanization: "nimīlayati"
 concept_tag: SA-VERB-NIMILAYATI
 prerequisites: [SA-C206-snati, SA-C206-khelati]
 sounds: []
-roots: []
+roots: [sanskrit-milati-close]
+etymology_hook: "nimīlayati ← ni- 'down' + causative of √mīl 'close the eyes' (MW; CDIAL 10143)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C206-khelati]
 <!-- hl-knowledge: introduces=[SA-LEX-C206-ACT206-04]; assesses=[] -->
 
 **निमीलयति** — *nimīlayati* — "shuts (the eyes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nimīlayati* is built on *ni-*, "down", and the causative of the root √mīl, "to close the eyes" (MW; CDIAL 10143). The Rigveda already has *sam mīlya*, "with closed eyes". MW gives the root no older source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

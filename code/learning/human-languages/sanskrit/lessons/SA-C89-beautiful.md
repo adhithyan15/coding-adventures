@@ -14,7 +14,8 @@ romanization: "sundaraḥ"
 concept_tag: SA-DESCRIBE-BEAUTIFUL
 prerequisites: [SA-C88-son, SA-C88-daughter]
 sounds: []
-roots: []
+roots: [sanskrit-sundara]
+etymology_hook: "sundara 'beautiful': MW suggests su-nara; CDIAL 13474 asks whether it is a Prakrit form of sūnara 'excellent'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C88-daughter]
 <!-- hl-knowledge: introduces=[SA-LEX-C89-DESCRIBE-01]; assesses=[] -->
 
 **सुन्दरः** (*sundaraḥ*) — "beautiful". **सुन्दरः मयूरः** — "a beautiful peacock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of *sundara* is not settled. MW suggests *su-nara*, and CDIAL 13474
+asks whether it is a Middle Indo-Aryan form of Rigvedic *sūnara*, "excellent",
+with an inserted *d*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

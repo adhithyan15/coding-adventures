@@ -14,7 +14,8 @@ romanization: "hoṭel"
 concept_tag: GU-THINGS128-HOTEL
 prerequisites: [GU-C128-kaceri, GU-C128-karkhanu]
 sounds: []
-roots: []
+roots: [english-hotel]
+etymology_hook: "hoṭel ← English hotel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C128-karkhanu]
 <!-- hl-knowledge: introduces=[GU-LEX-C128-THINGS128-03]; assesses=[] -->
 
 **હોટેલ** (*hoṭel*) — "a hotel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હોટેલ** (*hoṭel*) is a loan from English *hotel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 164,
   "title": "A Notice, an Inscription, a Price, For Sale, Goods",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:6ff9454f63407ffd",
+  "sourceHash": "fnv1a64:837a445dfc21838c",
   "lessons": [
     {
       "id": "LA-C164-titulus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8303c07f6d9b2681",
+      "sourceHash": "fnv1a64:f0ef9f7c221dd8e8",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "titulus has no sure origin; no proposal is generally accepted."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66bfa5ed55c07d7a",
+      "sourceHash": "fnv1a64:5872d50a0b61d017",
       "notice": null,
       "blocks": [
         {
@@ -188,6 +199,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnscrīptiō is built on īnscrībō, \"to write on\" (Lewis & Short), with -tiō, an ending for an act or its result. scrībō, \"to write\", is probably related to Greek skariphos, \"a scratch, a sketch\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -198,7 +220,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -247,7 +269,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -278,7 +300,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:893043c1b4f8b04a",
+      "sourceHash": "fnv1a64:4c75a1c9eabbe0f5",
       "notice": null,
       "blocks": [
         {
@@ -311,6 +333,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pretium is probably inherited, from a form built on Proto-Indo-European per-, \"back, in return\" (EtymDB 2.1): what one gives in return."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -321,7 +354,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -370,7 +403,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -401,7 +434,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d494580be4aeee66",
+      "sourceHash": "fnv1a64:03bddaf7a320b49d",
       "notice": null,
       "blocks": [
         {
@@ -447,6 +480,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vēnālis is built on vēnum, \"sale\" (EtymDB 2.1), with -ālis, \"belonging to\": for sale. vēnum is usually traced to Proto-Indo-European wesno-, \"price\"; English venal, \"bribable\", comes from vēnālis."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -457,7 +501,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -506,7 +550,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -537,7 +581,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e198063c7fc6fb8",
+      "sourceHash": "fnv1a64:5dde712cee294eb9",
       "notice": null,
       "blocks": [
         {
@@ -578,6 +622,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "merx has no sure origin. Lewis & Short tie it to mereō, \"to earn\"; others think it may be a loan, perhaps from Etruscan. English market comes from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -588,7 +643,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -637,7 +692,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

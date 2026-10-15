@@ -14,7 +14,8 @@ romanization: "nijī"
 concept_tag: HI-QUAL241-NIJI
 prerequisites: [HI-C240-desi, HI-C241-sarkari]
 sounds: []
-roots: []
+roots: [sanskrit-nija]
+etymology_hook: "nijī: Sanskrit nija 'own', a tatsama, + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C241-sarkari]
 <!-- hl-knowledge: introduces=[HI-LEX-C241-QUAL241-02]; assesses=[] -->
 
 **निजी** — *nijī* — "private".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**निजी** (*nijī*) is Sanskrit *nija*, "one's own", taken over whole as a tatsama, with the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: GREETING-GOODNIGHT
 prerequisites: [ES-C02-buenas-tardes, ES-C02-noche]
 sounds: [diphthong-ue, soft-c]
 roots: [bonus, nox]
+etymology_hook: "buenas noches — buena 'good' + noches 'nights', from Latin nox: 'good nights'"
 duration:
   max_seconds: 180
 requires:
@@ -50,6 +51,8 @@ one quirk the others don't: it works both coming and going.
 adjective is **buenas**. No new rule; you're now just *fluent* in the
 agreement you learned two lessons ago: masculine *días* → *buenos*, feminine
 *tardes*/*noches* → *buenas*.
+
+*Buena* is Latin *bona*, and *noche* is Latin *noctem*, "night".
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: MR-QUESTION-KADHI
 prerequisites: [MR-C04-udya-bhetu, MR-C32-nako, MR-C36-jevha, MR-C36-lyaavar, MR-C37-kon, MR-C38-kuthe]
 sounds: [matra-ii]
 roots: [ka-interrogative]
+etymology_hook: "kadhī: usually traced to Sanskrit kadā 'when', on the question stem ka-; CDIAL has no entry for it"
 duration:
   max_seconds: 210
 requires:
@@ -52,7 +53,7 @@ and with **-ल्यावर**. Both of them ANSWER a question you cannot yet 
 > **उद्या.**
 > — *udyā.* — **tomorrow.**
 
-**कधी** is Sanskrit **कदा** (*kadā*, "when"), and it is the fourth **क-** word in
+**कधी** is usually traced to Sanskrit **कदा** (*kadā*, "when"), and it is the fourth **क-** word in
 four lessons. The family is now large enough to be a rule rather than a
 coincidence: **काय**, **कोण**, **किती**, **कुठे**, **कधी**.
 

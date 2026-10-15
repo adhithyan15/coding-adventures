@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 150,
-  "sourceHash": "fnv1a64:240daf0780973b80",
+  "sourceHash": "fnv1a64:f66c57d4dda92eb5",
   "lessonIds": [
     "KA-C150-tole",
     "KA-C150-oresu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch150.txt",
   "json": "kannada/narration/ch150.json",
-  "textHash": "fnv1a64:c91360873efe2d8e",
-  "jsonHash": "fnv1a64:ac16963dfadba08a",
+  "textHash": "fnv1a64:9c12e6a03c1bf7e2",
+  "jsonHash": "fnv1a64:955cfee2dfb6d1c2",
   "findings": []
 }

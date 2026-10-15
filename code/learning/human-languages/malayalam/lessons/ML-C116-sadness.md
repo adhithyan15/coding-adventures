@@ -11,7 +11,8 @@ romanization: "saṅkaṭaṁ"
 concept_tag: ML-FEEL-SAD
 prerequisites: [ML-C115-dizzy, ML-C115-notwell]
 sounds: []
-roots: []
+roots: [sanskrit-sankata]
+etymology_hook: "saṅkaṭaṁ ← Sanskrit saṅkaṭa 'narrow; a strait, distress', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C115-notwell]
 <!-- hl-knowledge: introduces=[ML-LEX-C116-FEELINGS-01]; assesses=[] -->
 
 **സങ്കടം** (*saṅkaṭaṁ*) — "sadness, sorrow". **എനിക്ക് സങ്കടമുണ്ട്** — "I am sad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സങ്കടം** (*saṅkaṭaṁ*) ← Sanskrit *saṅkaṭa*, "narrow; a strait, distress", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*. A tight place became a sorrow.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

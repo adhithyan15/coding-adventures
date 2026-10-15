@@ -14,7 +14,8 @@ romanization: "darad"
 concept_tag: MW-HEALTH47-DARAD
 prerequisites: [MW-C47-tav, MW-C47-bimar]
 sounds: []
-roots: []
+roots: [persian-dard]
+etymology_hook: "darad: usually traced to Persian dard 'pain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C47-bimar]
 <!-- hl-knowledge: introduces=[MW-LEX-C47-HEALTH47-03]; assesses=[] -->
 
 **दरद** — *darad* — "pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दरद** (*darad*) is a loan, usually traced to Persian *dard*, "pain". Marwadi puts a vowel between the last two sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

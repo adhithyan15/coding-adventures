@@ -14,7 +14,8 @@ romanization: "añcu"
 concept_tag: KA-STHALA214-ANCU
 prerequisites: [KA-C213-kridangana, KA-C213-vastusangrahalaya]
 sounds: []
-roots: []
+roots: [dravidian-ancu-edge]
+etymology_hook: "añcu: native Dravidian, one word with Telugu ancu 'border, edge' (DEDR 57)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C213-vastusangrahalaya]
 <!-- hl-knowledge: introduces=[KA-LEX-C214-STHALA214-01]; assesses=[] -->
 
 **ಅಂಚು** — *añcu* — "an edge; the border of a sari".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂಚು** (*añcu*) is native Dravidian, one word with Telugu *ancu*, "border, edge" (DEDR 57); Tamil *aṉsu* is a loan from Telugu. DEDR lists *añcu* itself, "edge, border, selvage". DEDR 57 compares Sanskrit *añcala*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

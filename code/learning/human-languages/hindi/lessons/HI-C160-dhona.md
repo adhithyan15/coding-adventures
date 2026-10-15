@@ -14,7 +14,8 @@ romanization: "dhonā"
 concept_tag: HI-VERB-DHONA
 prerequisites: [HI-C160-lana, HI-C160-kholna]
 sounds: []
-roots: []
+roots: [indo-aryan-dhauvati]
+etymology_hook: "dhonā ← *dhauvati 'washes', a reconstructed form; a tadbhava (CDIAL 6886)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C160-kholna]
 <!-- hl-knowledge: introduces=[HI-LEX-C160-ACT160-04]; assesses=[] -->
 
 **धोना** — *dhonā* — "to wash".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धोना** (*dhonā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhauvati*, "washes", a form CDIAL reconstructs from its descendants (CDIAL 6886). CDIAL notes that this form replaced Sanskrit *dhāvati*, "washes".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

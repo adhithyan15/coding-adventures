@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a ribbon, then the Bengali for the weath
 You'll want to know: নেতা.
 নেতা — netā — "a leader".
 
+The word, taken apart.
+নেতা (netā) is Sanskrit netā, "leader", taken over whole as a learned loan, a tatsama. It is the naming form of netṛ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for the weather, then the Bengali for a lead
 
 You'll want to know: মন্ত্রী.
 মন্ত্রী — môntrī — "a minister".
+
+The word, taken apart.
+মন্ত্রী (môntrī) is Sanskrit mantrin, "wise; counsellor", taken over whole as a learned loan, a tatsama (CDIAL 9838).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a leader, then the Bengali for a ministe
 You'll want to know: রাজকুমার.
 রাজকুমার — rājkumār — "a prince".
 
+The word, taken apart.
+রাজকুমার (rājkumār) is Sanskrit rājakumāra, "king's son, prince", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a minister, then the Bengali for a princ
 You'll want to know: সমাজ.
 সমাজ — sômāj — "society".
 
+The word, taken apart.
+সমাজ (sômāj) is Sanskrit samāja, "festive gathering", taken over whole as a learned loan, a tatsama (CDIAL 13207).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a prince, then the Bengali for society.
 
 You'll want to know: ধর্ম.
 ধর্ম — dhôrmô — "religion".
+
+The word, taken apart.
+ধর্ম (dhôrmô) is Sanskrit dharma, "what is established; law, duty", taken over whole as a learned loan, a tatsama (CDIAL 6753). CDIAL lists Old Bengali dhāma, "religious conduct", the inherited form.
 
 What you've built.
 One more word for this chapter.

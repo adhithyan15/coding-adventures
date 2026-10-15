@@ -14,7 +14,8 @@ romanization: "vastusaṅgrahālaya"
 concept_tag: KA-STHALA213-VASTUSANGRAHALAYA
 prerequisites: [KA-C213-jim, KA-C213-kridangana]
 sounds: []
-roots: []
+roots: [sanskrit-vastu, sanskrit-sangraha, sanskrit-alaya]
+etymology_hook: "vastusaṅgrahālaya ← Sanskrit vastu 'thing' + saṅgraha 'collection' + ālaya 'house' (CDIAL 11449, 12852, 1366)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C213-kridangana]
 <!-- hl-knowledge: introduces=[KA-LEX-C213-STHALA213-05]; assesses=[] -->
 
 **ವಸ್ತುಸಂಗ್ರಹಾಲಯ** — *vastusaṅgrahālaya* — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಸ್ತುಸಂಗ್ರಹಾಲಯ** (*vastusaṅgrahālaya*) is three Sanskrit words: *vastu*, "thing" (CDIAL 11449), *saṅgraha*, "collection" (CDIAL 12852), and *ālaya*, "house" (CDIAL 1366): "a house for a collection of things".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

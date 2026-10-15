@@ -14,7 +14,8 @@ romanization: "bhõtā"
 concept_tag: BN-QUAL140-BHOTA
 prerequisites: [BN-C139-baka, BN-C140-dharalo]
 sounds: []
-roots: []
+roots: [indo-aryan-bhutta]
+etymology_hook: "bhõtā: CDIAL lists it under a group of forms for 'defective' headed *bhutta (CDIAL 9532)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C140-dharalo]
 <!-- hl-knowledge: introduces=[BN-LEX-C140-QUAL140-02]; assesses=[] -->
 
 **ভোঁতা** — *bhõtā* — "blunt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ভোঁতা** (*bhõtā*), "blunt", under a group of forms for "defective" headed *\*bhutta*, which it reconstructs (CDIAL 9532).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

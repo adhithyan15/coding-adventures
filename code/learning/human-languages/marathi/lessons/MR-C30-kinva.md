@@ -11,10 +11,10 @@ gloss: or — the word that offers a choice, and the word every multiple-choice 
 concept_tag: MR-JOIN-KINVA
 prerequisites: [MR-C30-aani]
 sounds: [matra-i, anusvara, va-wa, matra-aa]
-roots: []
-etymology_hook: "किंवा is Sanskrit किम् वा (kim vā) taken up whole — literally 'what or', where किम् is the same interrogative stem as Marathi काय and वा is the inherited Indo-European alternative particle behind Latin -ve in sive"
+roots: [sanskrit-kim]
+etymology_hook: "kiṁvā ← Sanskrit kiṁ vā 'or whether': kim 'what' + vā 'or' (CDIAL 3164)"
 duration:
-  max_seconds: 200
+  max_seconds: 212
 requires:
   knowledge: [MR-JOIN-AANI, MR-LEX-CHAHA, MR-LEX-PAANI]
 introduces:
@@ -56,6 +56,11 @@ Taken apart, **किंवा** is two Sanskrit words carried over whole: **क
 an ancient particle meaning "or." That **वा** is genuinely old: Latin kept it as
 the **-ve** in *sīve*, "or if." Marathi's word for choosing is, underneath,
 "**what-or**."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**किंवा** is Sanskrit *kiṁ vā*, "or whether", kept whole; CDIAL lists it under *kim*, "what" (CDIAL 3164).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-JOIN-KINVA, MR-JOIN-AANI] -->

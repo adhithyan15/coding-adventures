@@ -14,7 +14,8 @@ romanization: "kūtro"
 concept_tag: GU-ANIMALS1-DOG
 prerequisites: [GU-C67-buffalo, GU-C67-goat]
 sounds: []
-roots: []
+roots: [indo-aryan-kuttira]
+etymology_hook: "kūtro ← *kuttira 'dog', a reconstructed form; a tadbhava (CDIAL 3277)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C67-goat]
 <!-- hl-knowledge: introduces=[GU-LEX-C67-ANIMALS1-04]; assesses=[] -->
 
 **કૂતરો** (*kūtro*) — "a dog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કૂતરો** (*kūtro*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kuttira*, "dog", a form CDIAL reconstructs from its descendants (CDIAL 3277).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

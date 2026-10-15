@@ -11,7 +11,8 @@ romanization: "gontu"
 concept_tag: TE-NOUN-VOICE
 prerequisites: [TE-C68-sound]
 sounds: []
-roots: []
+roots: [dravidian-kuttige-neck]
+etymology_hook: "gontu: native Dravidian; DEDR 1718 lists gontu 'throat, voice' with Kannada kuttige 'throat'"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C68-sound]
 Somebody loud has a big గొంతు and somebody who sings well has a sweet one. A person who speaks up for people who cannot is said to have lent them their గొంతు.
 
 Losing it is ordinary. After a night of దగ్గు a villager will say the గొంతు has gone, and mean the throat and the sound at once.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గొంతు** (*gontu*) is native Dravidian. DEDR 1718 lists *gontu*, "throat, voice", with *kuttuka*, "throat", beside Kannada *kuttige*, "throat, neck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

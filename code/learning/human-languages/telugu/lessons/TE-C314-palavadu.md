@@ -14,7 +14,8 @@ romanization: "pālavāḍu"
 concept_tag: TE-PANI314-PALAVADU
 prerequisites: [TE-C314-mekanikku, TE-C314-kapaladaru]
 sounds: []
-roots: []
+roots: [dravidian-paal-milk, dravidian-a-distal-deictic]
+etymology_hook: "pālavāḍu: native pālu 'milk' (DEDR 4096) + vāḍu 'man' (DEDR 1)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C314-kapaladaru]
 <!-- hl-knowledge: introduces=[TE-LEX-C314-PANI314-05]; assesses=[] -->
 
 **పాలవాడు** — *pālavāḍu* — "a milkman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పాలవాడు** (*pālavāḍu*) is native Dravidian: *pālu*, "milk", one word with Tamil *pāl* (DEDR 4096), and *vāḍu*, "that man" (DEDR 1). DEDR compares, with a query, Sanskrit *pālana*, "milk of a cow newly calved", a lexicon word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

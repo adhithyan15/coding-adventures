@@ -14,7 +14,8 @@ romanization: "paṟampŭ"
 concept_tag: ML-STHALAM280-PARAMPU
 prerequisites: [ML-C279-marubhumi, ML-C280-pradesam]
 sounds: []
-roots: []
+roots: [dravidian-parampu-plot]
+etymology_hook: "paṟampŭ: native Dravidian, one word with Tamil paṟampu and Kannada padavu (DEDR 4026)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C280-pradesam]
 <!-- hl-knowledge: introduces=[ML-LEX-C280-STHALAM280-02]; assesses=[] -->
 
 **പറമ്പ്** — *paṟampŭ* — "the land around a house, a plot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പറമ്പ്** (*paṟampŭ*) is native Dravidian, one word with Tamil *paṟampu* and Kannada *padavu* (DEDR 4026). DEDR's sense is higher, dry ground, as against the wet rice fields.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "aṭʿama"
 concept_tag: AR-VERB-ATAMA
 prerequisites: [AR-C229-masaha, AR-C230-nabaha]
 sounds: []
-roots: []
+roots: [t-a-m]
+etymology_hook: "aṭʿama: built on the root ṭ-ʿ-m, 'to eat, to taste' (Lane); aṭʿama is Form IV, 'to make eat', to feed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C230-nabaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C230-ACT230-02]; assesses=[] -->
 
 **أطعم** — *aṭʿama* — "to feed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أطعم** (*aṭʿama*) is built on the native Arabic root *ṭ-ʿ-m*, "to eat, to taste" (Lane). *Aṭʿama* is Form IV, "to make eat", to feed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

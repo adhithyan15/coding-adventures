@@ -46,7 +46,7 @@ reviews_of: [FR-C166-architecte]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**dentiste** — *dent*, "tooth", with *-iste*, "one who works with".
+**dentiste** — *dent*, "tooth", with *-iste*, "one who works with". *Dent* ← Latin *dentem*, "tooth" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

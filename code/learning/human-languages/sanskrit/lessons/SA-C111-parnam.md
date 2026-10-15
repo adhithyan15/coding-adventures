@@ -14,7 +14,8 @@ romanization: "parṇam"
 concept_tag: SA-THINGS111-PARNAM
 prerequisites: [SA-C111-niharah, SA-C111-sakha]
 sounds: []
-roots: []
+roots: [sanskrit-parna]
+etymology_hook: "parṇa 'feather', then 'leaf' (MW); inherited from Indo-European, cousin of English fern (EtymDB); Hindi pān"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C111-sakha]
 <!-- hl-knowledge: introduces=[SA-LEX-C111-THINGS111-04]; assesses=[] -->
 
 **पर्णम्** — *parṇam* — "a leaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*parṇa* first meant "a feather, a wing", and then "a leaf", the plumage of a tree (MW). It is inherited from Indo-European, and English *fern* is a cousin (EtymDB). It lives on as Hindi *pān* "leaf, betel leaf" (CDIAL 7918).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

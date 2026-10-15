@@ -13,7 +13,8 @@ gloss: "to entrust, to order"
 concept_tag: LA-VERB-MANDO
 prerequisites: [LA-C234-colligo, LA-C234-evanesco]
 sounds: []
-roots: []
+roots: [mandare-latin, latin-manus, dare-latin]
+etymology_hook: "mandō 'to entrust' — usually explained as manus 'hand' + dō 'to put'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C234-evanesco]
 <!-- hl-knowledge: introduces=[LA-LEX-C234-ACT234-04]; assesses=[] -->
 
 **mandō, mandāre** — "to entrust, to order".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mandō** is usually explained as *manus*, "hand", with *dō*, "to put" (Lewis & Short): to put into someone's hand. It is a different word from *mandō*, "to chew".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -46,7 +46,7 @@ reviews_of: [FR-C224-scientifique]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**chercheur** — *chercher*, "to look for", with *-eur*: one who searches.
+**chercheur** — *chercher*, "to look for", with *-eur*: one who searches. *Chercher* ← Old French *cerchier*, from Late Latin *circāre*, "to go around" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

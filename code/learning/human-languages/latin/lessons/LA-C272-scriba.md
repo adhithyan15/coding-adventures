@@ -13,7 +13,8 @@ gloss: "a clerk"
 concept_tag: LA-RES272-SCRIBA
 prerequisites: [LA-C272-argentarius, LA-C272-legatus]
 sounds: []
-roots: []
+roots: [scriba-latin, scribere-latin]
+etymology_hook: "scrība 'clerk' — built on scrībō 'to write'; English scribe"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C272-legatus]
 <!-- hl-knowledge: introduces=[LA-LEX-C272-RES272-05]; assesses=[] -->
 
 **scrība, scrībae** — "a clerk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**scrība** is built on *scrībō*, "to write" (Lewis & Short): one who writes. English *scribe* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

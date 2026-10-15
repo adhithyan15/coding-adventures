@@ -13,7 +13,8 @@ gloss: "ice"
 concept_tag: LA-THINGS130-GLACIES
 prerequisites: [LA-C129-ripa, LA-C130-unda]
 sounds: []
-roots: []
+roots: [glacies-latin]
+etymology_hook: "glaciēs 'ice' — kin to gelū 'frost', from PIE *gel- 'cold'; English cold is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C130-unda]
 <!-- hl-knowledge: introduces=[LA-LEX-C130-THINGS130-02]; assesses=[] -->
 
 **glaciēs, glaciēī** — "ice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**glaciēs** is related to *gelū*, "frost", and both are usually traced to Proto-Indo-European *\*gel-*, "cold, to freeze" (EtymDB 2.1). English *cold* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

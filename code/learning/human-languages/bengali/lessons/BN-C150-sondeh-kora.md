@@ -14,7 +14,8 @@ romanization: "sôndeh kôrā"
 concept_tag: BN-VERB-SONDEH-KORA
 prerequisites: [BN-C149-taratari-kora, BN-C149-deri-kora]
 sounds: []
-roots: []
+roots: [sanskrit-samdeha, sanskrit-karoti]
+etymology_hook: "sôndeh kôrā: sôndeh 'doubt', Sanskrit saṁdeha, + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C149-deri-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C150-ACT150-01]; assesses=[] -->
 
 **সন্দেহ করা** — *sôndeh kôrā* — "to doubt".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সন্দেহ করা** (*sôndeh kôrā*) is *sôndeh*, "doubt", Sanskrit *saṁdeha* taken over whole, + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

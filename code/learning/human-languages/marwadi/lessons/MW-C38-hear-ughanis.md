@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-NINETEEN
 prerequisites: [MW-W38-u]
 sounds: [retroflex-n, long-ii]
 roots: [sanskrit-unavimshati]
-etymology_hook: Sanskrit unavimshati, one-less-twenty; Marwari counts down to a round number rather than up from a small one.
+etymology_hook: "ughaṇīs ~ Hindi unīs ← Sanskrit ūnaviṃśati 'twenty less one' (CDIAL 2411); its gh is unexplained"
 duration:
   max_seconds: 200
 requires:
@@ -59,6 +59,11 @@ taught *bīs*. The language counts down here, so the book did too.
 
 Turner records the same habit further up: *ekuṇcālīs*, one short of forty, for
 thirty-nine.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Hindi *unīs*, "nineteen", under Sanskrit *ūnaviṃśati*, "nineteen", literally "twenty less one" (CDIAL 2411). It gives no Marwari form there, and the *gh* of *ughaṇīs* is not explained by that entry, so that part of its history is not settled.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-UGHANIS-01, MW-LEX-BEES-01] -->

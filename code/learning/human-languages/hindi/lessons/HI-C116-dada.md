@@ -14,7 +14,8 @@ romanization: "dādā"
 concept_tag: HI-GRAND-DADA
 prerequisites: [HI-C115-shauqse, HI-C115-jinahin]
 sounds: []
-roots: []
+roots: [indo-aryan-dadda]
+etymology_hook: "dādā ← *dādda 'father or other elderly relative', a reconstructed form; a tadbhava (CDIAL 6261)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C115-jinahin]
 
 English has one word for both grandfathers; Hindi has two, and says which side of the family
 you mean. **मेरे दादा** — "my grandfather", with the respectful plural **मेरे**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दादा** (*dādā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dādda*, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

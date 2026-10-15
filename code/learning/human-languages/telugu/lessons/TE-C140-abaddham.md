@@ -14,7 +14,8 @@ romanization: "abaddhaṁ"
 concept_tag: TE-QUAL140-ABADDHAM
 prerequisites: [TE-C139-prasiddha, TE-C140-suraksitam]
 sounds: []
-roots: []
+roots: [sanskrit-abaddha]
+etymology_hook: "abaddhaṁ ← Sanskrit abaddha 'unconnected, meaningless', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C140-suraksitam]
 <!-- hl-knowledge: introduces=[TE-LEX-C140-QUAL140-02]; assesses=[] -->
 
 **అబద్ధం** — *abaddhaṁ* — "a lie; untrue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అబద్ధం** (*abaddhaṁ*) is Sanskrit *abaddha*, "unconnected, meaningless", taken over whole as a learned loan, a tatsama. Telugu uses it for a lie.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

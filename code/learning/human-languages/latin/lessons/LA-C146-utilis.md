@@ -13,7 +13,8 @@ gloss: "useful"
 concept_tag: LA-QUAL146-UTILIS
 prerequisites: [LA-C145-iucundus, LA-C146-molestus]
 sounds: []
-roots: []
+roots: [utilis-latin, uti-latin]
+etymology_hook: "ūtilis 'useful' — built on ūtor 'to use': usable"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C146-molestus]
 <!-- hl-knowledge: introduces=[LA-LEX-C146-QUAL146-02]; assesses=[] -->
 
 **ūtilis, ūtile** — "useful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ūtilis** is built on *ūtor*, "to use" (Lewis & Short), with *-ilis*, an ending for "fit for": usable.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

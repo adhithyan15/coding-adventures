@@ -13,7 +13,8 @@ gloss: "as, like"
 concept_tag: LA-CAUSA265-VELUT
 prerequisites: [LA-C264-deorsum, LA-C265-sicut]
 sounds: []
-roots: []
+roots: [velut-latin, ut-latin]
+etymology_hook: "velut 'as, like' — vel 'even' + ut 'as'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C265-sicut]
 <!-- hl-knowledge: introduces=[LA-LEX-C265-CAUSA265-02]; assesses=[] -->
 
 **velut** — "as, like".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**velut** is *vel*, "or, even", with *ut*, "as" (Lewis & Short): even as, like.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chārj cēyu"
 concept_tag: TE-VERB-CHARJ-CEYU
 prerequisites: [TE-C282-pancu, TE-C282-sandarsincu]
 sounds: []
-roots: []
+roots: [english-charge, sey-do-dravidian]
+etymology_hook: "chārj cēyu: English charge + native cēyu (DEDR 1957)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C282-sandarsincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C283-KRIYA283-01]; assesses=[] -->
 
 **ఛార్జ్ చేయు** — *chārj cēyu* — "to charge (a battery)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఛార్జ్ చేయు** (*chārj cēyu*) pairs *chārj*, a loan from English *charge*, with native *cēyu*, "to do" (DEDR 1957).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

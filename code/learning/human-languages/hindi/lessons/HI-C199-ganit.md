@@ -14,7 +14,8 @@ romanization: "gaṇit"
 concept_tag: HI-THG199-GANIT
 prerequisites: [HI-C198-vijnan, HI-C199-itihas]
 sounds: []
-roots: []
+roots: [sanskrit-ganita]
+etymology_hook: "gaṇit ← Sanskrit gaṇita 'counted', a tatsama (CDIAL 3996)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C199-itihas]
 <!-- hl-knowledge: introduces=[HI-LEX-C199-THG199-02]; assesses=[] -->
 
 **गणित** — *gaṇit* — "mathematics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गणित** (*gaṇit*) is Sanskrit *gaṇita*, "counted", taken over whole as a learned loan, a tatsama (CDIAL 3996). Counting became the name for mathematics.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hairān"
 concept_tag: UR-SIFAT221-HAIRAN
 prerequisites: [UR-C220-halanki, UR-C221-naraz]
 sounds: []
-roots: []
+roots: [arabic-hayran]
+etymology_hook: "hairān ← Arabic ḥayrān 'perplexed, bewildered', through Persian (Lane, root ḥ-y-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C221-naraz]
 <!-- hl-knowledge: introduces=[UR-LEX-C221-SIFAT221-02]; assesses=[] -->
 
 **حیران** — *hairān* — "surprised, amazed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حیران** (*hairān*) is a loan from Arabic *ḥayrān*, "perplexed, bewildered", which reached Urdu through Persian. Its Arabic root is *ḥ-y-r* (Lane). It is built on the same root as *ḥairat*, "surprise".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

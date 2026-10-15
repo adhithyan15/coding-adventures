@@ -13,7 +13,8 @@ gloss: "dear; costly"
 concept_tag: LA-FACILIS-CARUS
 prerequisites: [LA-C97-facilis, LA-C97-difficilis]
 sounds: []
-roots: []
+roots: [carus-latin]
+etymology_hook: "cārus 'dear' — inherited, usually traced to PIE *keh2ros 'dear, loved'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C97-difficilis]
 <!-- hl-knowledge: introduces=[LA-LEX-C97-FACILIS-03]; assesses=[] -->
 
 **cārus, cāra, cārum** — "dear; costly". English *charity*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cārus** is inherited, usually traced to Proto-Indo-European *\*keh2ros*, "dear, loved", from *\*keh2-*, "to desire, to wish" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

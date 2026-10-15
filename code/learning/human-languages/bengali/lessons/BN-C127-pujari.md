@@ -14,7 +14,8 @@ romanization: "pujāri"
 concept_tag: BN-THINGS127-PUJARI
 prerequisites: [BN-C127-raja, BN-C127-rani]
 sounds: []
-roots: []
+roots: [sanskrit-puja]
+etymology_hook: "pujāri: pujā 'worship', Sanskrit pūjā, + -āri 'one who does it'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C127-rani]
 <!-- hl-knowledge: introduces=[BN-LEX-C127-THINGS127-03]; assesses=[] -->
 
 **পুজারি** — *pujāri* — "a priest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পুজারি** (*pujāri*) is *pujā*, "worship", Sanskrit *pūjā*, + *-āri*, "one who does it".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -19,6 +19,9 @@ quantity: 5. said: añcŭ.
 Say onnŭ. Count up aloud, one word to each beat: raṇṭŭ, mūnnŭ, nālŭ, añcŭ.
 [repeat that twice]
 
+The word, taken apart.
+All five are native Dravidian, and Tamil keeps the same five: onnŭ with Tamil oṉṟu (DEDR 990), raṇṭŭ with Tamil iraṇṭu (DEDR 474), mūnnŭ with Tamil mūṉṟu (DEDR 5052), nālŭ with Tamil nālu (DEDR 3655) and añcŭ with Tamil añcu (DEDR 2826).
+
 Why it's said this way.
 Malayalam and Tamil were once one language, and the family resemblance is still audible. Malayalam onnŭ sits beside Tamil onru; raṇṭŭ beside irandu; mūnnŭ beside moonru; and nālŭ beside naanku. You do not need to learn the Tamil forms. Listen only for the shared bones.
 
@@ -196,7 +199,7 @@ Why it's said this way — seven keeps a rare sound.
 The middle sound of ēḻŭ is the curled zh heard in the name Tamil in its native form. Malayalam and Tamil kept it; Kannada and Telugu hardened it. Practise only the sound now: e-zhu. The written letter waits for a later micro-lesson.
 
 The word, taken apart — nine is one short of ten.
-Ompathu grew from an old word for one plus pattŭ, ten: one short of ten. Before p, the older n becomes m. Say on-pattŭ slowly, then let it settle into ombatŭ.
+Ompathu is usually read as an old word for one plus pattŭ, ten: one short of ten. It is native Dravidian (DEDR 1025), but how it was built is uncertain: DEDR sets it beside both "one" and an older word for nine. Before p, the older n becomes m. Say on-pattŭ slowly, then let it settle into ombatŭ.
 
 Guided Practice.
 [your turn — say: āṟŭ, ēḻŭ, eṭṭŭ, ombatŭ, pattŭ]
@@ -368,7 +371,7 @@ Now check against ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to fiv
 
 Why it's said this way — meaning and history.
 Which word preserves the rare zh? (ഏഴ്, ēḻŭ, seven.)
-Which word means one short of ten? (ഒമ്പത്, ombatŭ, nine.)
+Which word is usually read as one short of ten? (ഒമ്പത്, ombatŭ, nine.)
 Which first-five word shifted furthest from older aintu? (അഞ്ച്, añcŭ.)
 
 Writing — independent dictation.

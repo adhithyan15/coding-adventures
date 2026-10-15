@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 56,
-  "sourceHash": "fnv1a64:8e2489c83c33830e",
+  "sourceHash": "fnv1a64:f48c838284476094",
   "lessonIds": [
     "LA-C56-sextus",
     "LA-C56-septimus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch56.txt",
   "json": "latin/narration/ch56.json",
-  "textHash": "fnv1a64:64d61059ab87486b",
-  "jsonHash": "fnv1a64:c27629d4026c2cd6",
+  "textHash": "fnv1a64:25da15c214988d36",
+  "jsonHash": "fnv1a64:8c5808493fa5a440",
   "findings": []
 }

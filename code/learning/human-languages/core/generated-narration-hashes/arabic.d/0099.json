@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 99,
-  "sourceHash": "fnv1a64:58ad51258a563228",
+  "sourceHash": "fnv1a64:50ab781d1729de17",
   "lessonIds": [
     "AR-C99-musiqa",
     "AR-C99-akhbar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch99.txt",
   "json": "arabic/narration/ch99.json",
-  "textHash": "fnv1a64:350809a4c168e737",
-  "jsonHash": "fnv1a64:3871a3994a1fdbed",
+  "textHash": "fnv1a64:4d45bfac758d788b",
+  "jsonHash": "fnv1a64:ded7276019bac52f",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "lajjate"
 concept_tag: SA-VERB-LAJJATE
 prerequisites: [SA-C177-sangrhnati, SA-C177-visvasiti]
 sounds: []
-roots: []
+roots: [sanskrit-lajjate]
+etymology_hook: "lajjate ← root √lajj 'be ashamed' (MW), deeper origin uncertain; Hindi lājnā 'to blush' (CDIAL 10909)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C177-visvasiti]
 <!-- hl-knowledge: introduces=[SA-LEX-C177-ACT177-05]; assesses=[] -->
 
 **लज्जते** — *lajjate* — "is ashamed, is shy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lajjate* is the present of the root √lajj, "to be ashamed, blush" (MW). MW gives the root no older source, so its origin is uncertain. It lives on as Hindi *lājnā*, "to blush, be ashamed" (CDIAL 10909).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

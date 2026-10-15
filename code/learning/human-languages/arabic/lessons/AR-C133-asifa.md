@@ -14,7 +14,8 @@ romanization: "ʿāṣifa"
 concept_tag: AR-THINGS133-ASIFA
 prerequisites: [AR-C133-barq, AR-C133-rad]
 sounds: []
-roots: []
+roots: [ʿ-ṣ-f]
+etymology_hook: "ʿāṣifa: built on the root ʿ-ṣ-f, 'to blow violently' (Lane); ʿāṣifa is the feminine active participle, 'a violent wind'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C133-rad]
 <!-- hl-knowledge: introduces=[AR-LEX-C133-THINGS133-05]; assesses=[] -->
 
 **عاصفة** — *ʿāṣifa* — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عاصفة** (*ʿāṣifa*) is built on the native Arabic root *ʿ-ṣ-f*, "to blow violently" (Lane). *ʿĀṣifa* is the feminine active participle, "a violent wind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

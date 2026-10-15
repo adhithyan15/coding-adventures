@@ -14,7 +14,8 @@ romanization: "vyast"
 concept_tag: HI-QUAL214-VYAST
 prerequisites: [HI-C213-narm, HI-C214-cikana]
 sounds: []
-roots: []
+roots: [sanskrit-vyasta]
+etymology_hook: "vyast ← Sanskrit vyasta 'scattered, distracted', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C214-cikana]
 <!-- hl-knowledge: introduces=[HI-LEX-C214-QUAL214-02]; assesses=[] -->
 
 **व्यस्त** — *vyast* — "busy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**व्यस्त** (*vyast*) is Sanskrit *vyasta*, "scattered, distracted", taken over whole as a learned loan, a tatsama. Hindi uses it for "busy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:57acd2523d37dd16",
+  "sourceHash": "fnv1a64:9c56275313089d94",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3bf96e78dad9d9da",
+      "sourceHash": "fnv1a64:3c9e06808586b632",
       "notice": null,
       "blocks": [
         {
@@ -449,7 +449,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ஆம் (ām) is the plain “yes.” Doubled for emphasis it becomes āmām, “yes, indeed.”"
+              "text": "ஆம் (ām) is the plain “yes.” Doubled for emphasis it becomes āmām, “yes, indeed.” It is native Dravidian, worn down from ākum, “it will be” (DEDR 333)."
             }
           ]
         },
@@ -684,7 +684,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:619f107885a0994d",
+      "sourceHash": "fnv1a64:c229a0b975889db1",
       "notice": null,
       "blocks": [
         {
@@ -745,7 +745,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Naṉṟi grows from the root nal, “good” — so it literally means “goodness.” To thank, in Tamil, is to name the good someone did you."
+              "text": "Naṉṟi grows from the root nal (DEDR 3610), “good” — so it literally means “goodness.” To thank, in Tamil, is naming the good done to you."
             }
           ]
         },
@@ -1119,7 +1119,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c7f719eed34da49",
+      "sourceHash": "fnv1a64:78158f1bc17a51cf",
       "notice": null,
       "blocks": [
         {
@@ -1169,7 +1169,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "In ஆம் / இல்லை / சரி (ām / illai / sari), ām is worn down from ākum, \"it will be\", a form of the native verb \"to become\" (DEDR 333), and illai is native \"not being\" (DEDR 2559); Malayalam has ām and illa. The origin of sari is uncertain, and its own lesson gives the usual guess."
+              "text": "In ஆம் / இல்லை / சரி (ām / illai / sari), ām is worn down from ākum, \"it will be\", a form of the native verb \"to become\" (DEDR 333), and illai is native \"not being\" (DEDR 2559). DEDR compares Sanskrit ām, \"yes\". The origin of sari is uncertain, and its own lesson gives the usual guess."
             }
           ]
         },

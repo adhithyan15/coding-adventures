@@ -14,7 +14,8 @@ romanization: "hēgādarū"
 concept_tag: KA-KARANA289-HEGADARU
 prerequisites: [KA-C288-illade, KA-C288-hegu]
 sounds: []
-roots: []
+roots: [yaa-dravidian, tamil-aaku-become]
+etymology_hook: "hēgādarū: native hēge 'how' (DEDR 5151) + ādarū 'even if it becomes' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C288-hegu]
 <!-- hl-knowledge: introduces=[KA-LEX-C289-KARANA289-01]; assesses=[] -->
 
 **ಹೇಗಾದರೂ** — *hēgādarū* — "somehow, one way or another".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೇಗಾದರೂ** (*hēgādarū*) is native Dravidian: *hēge*, "how" (DEDR 5151), and *ādarū*, "even if it becomes", from *āgu*, "to become" (DEDR 333): "however it may turn out". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

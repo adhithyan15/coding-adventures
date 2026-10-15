@@ -11,8 +11,8 @@ gloss: paternal grandfather
 concept_tag: MW-FAMILY-PATERNAL-GRANDFATHER
 prerequisites: [MW-C08-family-four]
 sounds: [dental-d, long-aa]
-roots: []
-etymology_hook: A repeated two-beat word arrives by ear before one new consonant.
+roots: [indo-aryan-dadda]
+etymology_hook: "dādā ← *dādda 'father or other elderly relative', reconstructed (CDIAL 6261, Hindi row)"
 duration:
   max_seconds: 150
 requires:
@@ -48,6 +48,11 @@ name. [YOU WRITE: familiar **ठ** once]
 Hear the same long beat twice: *dā-dā*. Say it once. This chapter follows the
 source's *dādā* form; other documented Marwari materials also record *dādo*.
 That variation is real and is not an error to erase. Writing waits one step.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dādā* goes back to *\*dādda*, "father or elderly relative", a form CDIAL reconstructs. It gives no Marwari form; the match is through Hindi *dādā* (CDIAL 6261).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DADA-01, MW-LEX-BHAI-01, MW-LEX-BAHAN-01] -->

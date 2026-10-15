@@ -14,7 +14,8 @@ gloss: "a grain"
 concept_tag: GU-ANCHOR-KAN
 prerequisites: [GU-C03-chhip]
 sounds: []
-roots: []
+roots: [sanskrit-kana]
+etymology_hook: "kaṇ ← Sanskrit kaṇa 'a grain of corn', inherited (CDIAL 2661)"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +44,11 @@ variety: standard
 **કણ** — *kaṇ* — "a grain".
 
 Say it: *kaṇ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ક** and **ણ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**કણ** (*kaṇ*) is inherited from Sanskrit *kaṇa*, "a grain of corn", and has come down with almost no change (CDIAL 2661).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-KAN] -->

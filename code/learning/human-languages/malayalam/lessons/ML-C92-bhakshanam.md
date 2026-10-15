@@ -11,7 +11,8 @@ romanization: "bhakṣaṇaṁ"
 concept_tag: ML-NOUN-FOOD
 prerequisites: [ML-R91-shopping-recall, ML-C40-oon, ML-C15-vellam-ari]
 sounds: []
-roots: []
+roots: [sanskrit-bhakshana]
+etymology_hook: "bhakṣaṇaṁ ← Sanskrit bhakṣaṇa 'eating, food', a tatsama"
 duration:
   max_seconds: 250
 requires:
@@ -58,6 +59,11 @@ to order lunch and unable to say the word *food*.**
 
 It ends in **ം**, so you already know what a **case ending** will do to it —
 the **ം** gives way to **-ത്ത-**, as it did on **കേരളം** and **പുസ്തകം**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭക്ഷണം** (*bhakṣaṇaṁ*) ← Sanskrit *bhakṣaṇa*, "eating, food", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ*. It is built on the root *bhakṣ*, "to eat, to partake".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C92-FOOD-01, ML-CONCEPT-C40-OON-01, ML-CONCEPT-C32-TINNUKA-01] -->

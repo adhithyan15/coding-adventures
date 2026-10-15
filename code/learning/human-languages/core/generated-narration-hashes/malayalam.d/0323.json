@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 323,
-  "sourceHash": "fnv1a64:15b97eea1c7316c6",
+  "sourceHash": "fnv1a64:8015d9fbcbc14a97",
   "lessonIds": [
     "ML-C323-tannimattan",
     "ML-C323-cira",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch323.txt",
   "json": "malayalam/narration/ch323.json",
-  "textHash": "fnv1a64:a1d05d8e674da673",
-  "jsonHash": "fnv1a64:6eed3487ca9f73fc",
+  "textHash": "fnv1a64:d3cb3df21c07014f",
+  "jsonHash": "fnv1a64:4a1f1f3476a73cae",
   "findings": []
 }

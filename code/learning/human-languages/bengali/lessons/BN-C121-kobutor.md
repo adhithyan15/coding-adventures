@@ -14,7 +14,8 @@ romanization: "kôbutôr"
 concept_tag: BN-THINGS121-KOBUTOR
 prerequisites: [BN-C121-pyacha, BN-C121-tiya, BN-C05-practice]
 sounds: []
-roots: []
+roots: [persian-kabutar]
+etymology_hook: "kôbutôr: usually traced to Persian kabūtar 'pigeon'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [BN-C121-tiya]
 <!-- hl-knowledge: introduces=[BN-LEX-C121-THINGS121-03]; assesses=[] -->
 
 **কবুতর** — *kôbutôr* — "a pigeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কবুতর** (*kôbutôr*) is a loan, usually traced to Persian *kabūtar*, "pigeon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

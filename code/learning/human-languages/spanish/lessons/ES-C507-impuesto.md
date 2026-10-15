@@ -10,7 +10,8 @@ gloss: "the tax"
 concept_tag: ES-REF-IMPUESTO
 prerequisites: [ES-C506-abrazar, ES-C507-votar]
 sounds: []
-roots: []
+roots: [ponere-latin]
+etymology_hook: "impuesto — participle of imponer 'to impose', Latin imponere 'to place upon' — English impose"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C507-votar]
 > El precio incluye los impuestos.
 >
 > *The price includes taxes.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**impuesto** is the participle of *imponer*, "to impose", Latin *imponere*, "to place upon": a tax is what is laid on you. *Puesto*, "put", is the inherited participle of *poner*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

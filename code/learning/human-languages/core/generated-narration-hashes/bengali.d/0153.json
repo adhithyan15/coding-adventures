@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 153,
-  "sourceHash": "fnv1a64:767d8a6a1f04a4ea",
+  "sourceHash": "fnv1a64:cb89b2c4735dc513",
   "lessonIds": [
     "BN-C153-alochona-kora",
     "BN-C153-proshongsa-kora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch153.txt",
   "json": "bengali/narration/ch153.json",
-  "textHash": "fnv1a64:cd4ef9bc67a7c235",
-  "jsonHash": "fnv1a64:27398dd7f2b4f13c",
+  "textHash": "fnv1a64:ab37f5448dcfae22",
+  "jsonHash": "fnv1a64:731c2d59e90d6e0b",
   "findings": []
 }

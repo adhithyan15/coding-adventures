@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 268,
-  "sourceHash": "fnv1a64:9d81a8e78f4a4790",
+  "sourceHash": "fnv1a64:f5e60e67442fb436",
   "lessonIds": [
     "LA-C268-alter",
     "LA-C268-idoneus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch268.txt",
   "json": "latin/narration/ch268.json",
-  "textHash": "fnv1a64:c6b996353f13b9e9",
-  "jsonHash": "fnv1a64:8b1a16ea682fe6ca",
+  "textHash": "fnv1a64:45551baf97a95273",
+  "jsonHash": "fnv1a64:00609b9279474ba8",
   "findings": []
 }

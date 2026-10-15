@@ -14,7 +14,8 @@ romanization: "mṛdaṅgaḥ"
 concept_tag: SA-THG161-MRDANGAH
 prerequisites: [SA-C161-sankhah, SA-C161-venuh]
 sounds: []
-roots: []
+roots: [sanskrit-mrdanga]
+etymology_hook: "mṛdaṅga 'drum', which MW explains as mṛdam + ga, 'going while beaten'; CDIAL 10289 compares mardala"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C161-venuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C161-THG161-03]; assesses=[] -->
 
 **मृदंगः** — *mṛdaṅgaḥ* — "a mridanga drum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW explains *mṛdaṅga* "a drum" as probably *mṛdam* + *-ga*, "going about while being beaten", from the root √mṛd "press, beat". CDIAL 10289 compares *mardala*, another drum, so the formation is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

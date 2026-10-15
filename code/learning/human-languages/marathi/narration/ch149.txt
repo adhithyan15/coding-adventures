@@ -12,6 +12,9 @@ Before the new one: say the Marathi for lukewarm, then the Marathi for dry.
 You'll want to know: खारट.
 खारट — khāraṭ — "salty".
 
+The word, taken apart.
+खारट (khāraṭ) is built on Marathi khār, which CDIAL lists, as "alkali", under Sanskrit kṣāra, "corrosive" (CDIAL 3674).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for dry, then the Marathi for salty.
 
 You'll want to know: आंबट.
 आंबट — āmbaṭ — "sour".
+
+The word, taken apart.
+आंबट (āmbaṭ) is inherited. CDIAL lists Marathi āṁbaṭ, "sour", under Sanskrit amla, "sour, acid", with a query on how the word was formed (CDIAL 579).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for salty, then the Marathi for sour.
 You'll want to know: कडू.
 कडू — kaḍū — "bitter".
 
+The word, taken apart.
+कडू (kaḍū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṭu, "pungent, bitter" (CDIAL 2641).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for sour, then the Marathi for bitter.
 You'll want to know: तिखट.
 तिखट — tikhaṭ — "spicy".
 
+The word, taken apart.
+तिखट (tikhaṭ) is built on Marathi tīkh, "pungent", which CDIAL lists under Sanskrit tīkṣṇa, "sharp; hot, pungent" (CDIAL 5839).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for bitter, then the Marathi for spicy.
 
 You'll want to know: ताजा.
 ताजा — tājā — "fresh".
+
+The word, taken apart.
+ताजा (tājā) is a loan, usually traced to Persian tāza, "fresh". Marathi writes the z as ज.
 
 What you've built.
 One more word for this chapter.

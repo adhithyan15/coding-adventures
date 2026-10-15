@@ -14,7 +14,8 @@ romanization: "māṭī"
 concept_tag: GU-WATER-SOIL
 prerequisites: [GU-C65-well, GU-C65-sand]
 sounds: []
-roots: []
+roots: [sanskrit-mrttika]
+etymology_hook: "māṭī ← Sanskrit mṛttikā 'earth, clay', a tadbhava (CDIAL 10286)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C65-sand]
 <!-- hl-knowledge: introduces=[GU-LEX-C65-WATER-05]; assesses=[] -->
 
 **માટી** (*māṭī*) — "soil, earth, clay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**માટી** (*māṭī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mṛttikā*, "earth, clay" (CDIAL 10286).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 179,
-  "sourceHash": "fnv1a64:c642942a34ee3b97",
+  "sourceHash": "fnv1a64:041d5ab97aed4d47",
   "lessonIds": [
     "HI-C179-thakna",
     "HI-C179-sahna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch179.txt",
   "json": "hindi/narration/ch179.json",
-  "textHash": "fnv1a64:ce134e612bf7129b",
-  "jsonHash": "fnv1a64:030e55ac44c8d80c",
+  "textHash": "fnv1a64:7a9b01aa2a3f82f8",
+  "jsonHash": "fnv1a64:f5bb9c75e4344511",
   "findings": []
 }

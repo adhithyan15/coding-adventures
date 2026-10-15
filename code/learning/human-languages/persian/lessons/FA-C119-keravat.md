@@ -14,7 +14,8 @@ romanization: "kerâvât"
 concept_tag: FA-THINGS119-KERAVAT
 prerequisites: [FA-C119-sekke, FA-C119-dastband]
 sounds: []
-roots: []
+roots: [french-cravate]
+etymology_hook: "kerâvât ← French cravate 'cravat, tie'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C119-dastband]
 <!-- hl-knowledge: introduces=[FA-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **کراوات** — *kerâvât* — "a tie".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kerâvât* is borrowed from French *cravate*, "cravat, tie" (EtymDB). The French named the neckcloth after the Croatian soldiers who wore it (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kāmanabillu"
 concept_tag: KA-VASTU187-KAMANABILLU
 prerequisites: [KA-C186-dakhale, KA-C187-sankhye]
 sounds: []
-roots: []
+roots: [sanskrit-kama, dravidian-vil-bow]
+etymology_hook: "kāmanabillu: Kāmana 'of Kāma', the god of love (CDIAL 3042), + native billu 'bow' (DEDR 5422)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C187-sankhye]
 <!-- hl-knowledge: introduces=[KA-LEX-C187-VASTU187-02]; assesses=[] -->
 
 **ಕಾಮನಬಿಲ್ಲು** — *kāmanabillu* — "a rainbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಾಮನಬಿಲ್ಲು** (*kāmanabillu*) is "Kāma's bow": *kāmana*, "of Kāma", the god of love, from Sanskrit *kāma*, "love" (CDIAL 3042), and native *billu*, "bow" (DEDR 5422, with Tamil *vil*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

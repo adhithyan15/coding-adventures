@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 185,
-  "sourceHash": "fnv1a64:5d5d07565edfe93b",
+  "sourceHash": "fnv1a64:f78796325d848487",
   "lessonIds": [
     "ML-C185-rajivaykkuka",
     "ML-C185-ariyikkuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch185.txt",
   "json": "malayalam/narration/ch185.json",
-  "textHash": "fnv1a64:4e8dd39f7dfdfb38",
-  "jsonHash": "fnv1a64:3af255cb561b8f23",
+  "textHash": "fnv1a64:816438b07890bf11",
+  "jsonHash": "fnv1a64:f7b609cf4e820842",
   "findings": []
 }

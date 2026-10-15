@@ -14,7 +14,8 @@ romanization: "tiṭṭu"
 concept_tag: TE-VERB-TITTU
 prerequisites: [TE-C202-namodu-ceyu, TE-C202-sadhana-ceyu]
 sounds: []
-roots: []
+roots: [dravidian-tittu-revile]
+etymology_hook: "tiṭṭu: native Dravidian, one word with Tamil tiṭṭu and Kannada tiṭṭu (DEDR 3220)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C202-sadhana-ceyu]
 <!-- hl-knowledge: introduces=[TE-LEX-C203-KRIYA203-01]; assesses=[] -->
 
 **తిట్టు** — *tiṭṭu* — "to scold, to curse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తిట్టు** (*tiṭṭu*) is native Dravidian, one word with Tamil *tiṭṭu* and Kannada *tiṭṭu* (DEDR 3220). DEDR lists Telugu *tiṭṭu*, "to curse, scold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

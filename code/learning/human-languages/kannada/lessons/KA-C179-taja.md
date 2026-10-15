@@ -14,7 +14,8 @@ romanization: "tājā"
 concept_tag: KA-GUNA179-TAJA
 prerequisites: [KA-C178-yavudakku, KA-C178-andahage]
 sounds: []
-roots: []
+roots: [persian-taza]
+etymology_hook: "tājā ← Persian tāza 'fresh', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C178-andahage]
 <!-- hl-knowledge: introduces=[KA-LEX-C179-GUNA179-01]; assesses=[] -->
 
 **ತಾಜಾ** — *tājā* — "fresh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಾಜಾ** (*tājā*) is a loan from Persian *tāza*, "fresh", which came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

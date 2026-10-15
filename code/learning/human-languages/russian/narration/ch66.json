@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Hot, Cold, Warm, Fast, Slow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f33aa79facbae0ab",
+  "sourceHash": "fnv1a64:e0c4b2458c086a33",
   "lessons": [
     {
       "id": "RU-C66-hot",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0bf34b5997669f2",
+      "sourceHash": "fnv1a64:2283b1c9b09de102",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "горячий (goryáchiy) is built on гореть, \"to burn\", which Vasmer relates to Lithuanian garėti, \"to flare up\", Sanskrit háras, \"heat\", and Greek thérmos, \"warm\", from PIE gʷʰer-, \"hot\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b76037691abb4be4",
+      "sourceHash": "fnv1a64:1e70d12f0fd9e444",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "холодный (kholódnyy) is холод, \"cold\", with -ный. холод from Proto-Slavic xoldŭ; Vasmer thinks it is probably a variant of the root of Gothic kalds, \"cold\", and Latin gelidus, \"icy\", so English cold would be a cousin. Church Slavonic has хлад, \"coolness\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a9aead93eb18c62",
+      "sourceHash": "fnv1a64:d31e1a5d600ba8a1",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "тёплый (tyóplyy) from Proto-Slavic teplŭ — inherited. Vasmer relates it to Sanskrit tápati, \"heats\", and Persian tāftan, \"to burn\"; Latin tepidus, \"lukewarm\", comes from the same PIE root tep-, \"to be warm\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:263fc911b187217a",
+      "sourceHash": "fnv1a64:3e9e28dc272b0d29",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "быстрый (býstryy) from Proto-Slavic bystrŭ — inherited; Serbo-Croatian бистар means \"clear\". Vasmer compares Old Norse bysja, \"to gush out\", and Norwegian buse, \"to rush forward\", but other links are proposed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05855a886ee2f0d2",
+      "sourceHash": "fnv1a64:b25feeee64709fa7",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "медленный (médlennyy) from Old Russian mĭdĭlĭnŭ, Proto-Slavic mŭdĭlĭnŭ — inherited, with медлить, \"to delay\". Vasmer connects it with the Slavic verb muditi, \"to linger\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

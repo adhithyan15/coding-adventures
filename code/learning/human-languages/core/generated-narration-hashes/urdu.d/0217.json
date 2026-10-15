@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 217,
-  "sourceHash": "fnv1a64:ebf2f3f994837832",
+  "sourceHash": "fnv1a64:6e55bfd0338b61c4",
   "lessonIds": [
     "UR-C217-darhi",
     "UR-C217-munchh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch217.txt",
   "json": "urdu/narration/ch217.json",
-  "textHash": "fnv1a64:f38998aa053c77c2",
-  "jsonHash": "fnv1a64:a9b7a5547189c15e",
+  "textHash": "fnv1a64:c78b4f305d0d4afc",
+  "jsonHash": "fnv1a64:a8293ac9481d22a5",
   "findings": []
 }

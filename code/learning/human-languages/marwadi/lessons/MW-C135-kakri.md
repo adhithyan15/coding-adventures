@@ -14,7 +14,8 @@ romanization: "kākṛī"
 concept_tag: MW-THINGS135-KAKRI
 prerequisites: [MW-C134-bhujiya, MW-C135-matiro]
 sounds: []
-roots: []
+roots: [sanskrit-karkati]
+etymology_hook: "kākṛī ← Sanskrit karkaṭī 'Cucumis utilissimus', a tadbhava (CDIAL 2817, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C135-matiro]
 <!-- hl-knowledge: introduces=[MW-LEX-C135-THINGS135-02]; assesses=[] -->
 
 **काकड़ी** — *kākṛī* — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**काकड़ी** (*kākṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karkaṭī*, "Cucumis utilissimus". CDIAL gives no Marwari form in this entry (CDIAL 2817); the match is through Hindi *kakṛī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

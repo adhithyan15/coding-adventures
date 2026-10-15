@@ -18,6 +18,9 @@ You'll want to know: the five, in a headless script.
 5. Gujarati: પાંચ. said: pā̃ch.
 Notice the script: Gujarati is Devanagari without the top line. Same letters, same system — the shirorekhā simply isn't drawn. If you've done the Hindi writing track you can feel the relationship immediately.
 
+The word, taken apart.
+All five are inherited Sanskrit numerals (CDIAL 2462, 6648, 5994, 4655, 7655). Ek continues a doubled ekka-, which CDIAL explains either as emphatic or as a later loan from Sanskrit; be goes back to dva, "two", traṇ to the neuter trīṇi, cār to catvāraḥ, and pāṁc to pañca.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "ek, be, traṇ, chār, pā̃ch"]

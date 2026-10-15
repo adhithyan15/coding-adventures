@@ -14,7 +14,8 @@ romanization: "itnā"
 concept_tag: UR-DEF88-ITNA
 prerequisites: [UR-C88-aisa, UR-C88-vaisa]
 sounds: []
-roots: []
+roots: [sanskrit-iyattaka]
+etymology_hook: "itnā: CDIAL lists it under Sanskrit iyattaka, built on iyant 'so much' (CDIAL 1589)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C88-vaisa]
 <!-- hl-knowledge: introduces=[UR-LEX-C88-DEF88-05]; assesses=[] -->
 
 **اتنا** — *itnā* — "this much, so much".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اتنا** (*itnā*) is inherited. CDIAL lists it under Sanskrit *iyattaka*, glossed "so little", a form built on *iyant*, "so much" (CDIAL 1589).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

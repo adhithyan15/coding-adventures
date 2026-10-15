@@ -14,7 +14,8 @@ romanization: "qors"
 concept_tag: FA-SALAMAT150-QORS
 prerequisites: [FA-C150-galu, FA-C150-zakhm]
 sounds: []
-roots: []
+roots: [arabic-qurs]
+etymology_hook: "qors ← Arabic qurṣ 'disc, round flat cake', root q-r-ṣ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C150-zakhm]
 <!-- hl-knowledge: introduces=[FA-LEX-C150-SALAMAT150-05]; assesses=[] -->
 
 **قرص** — *qors* — "a pill, a tablet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qors* is borrowed from Arabic *qurṣ*, "disc, round flat cake". Its Arabic root is *q-r-ṣ* (Lane). Persian uses it for a round tablet.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

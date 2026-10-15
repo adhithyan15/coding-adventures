@@ -11,7 +11,7 @@ To ask someone's name or how they are, you need this word first. Cómo — "how"
 
 The word, taken apart.
 cómo — "how." Root: Latin quo modo — not a word but a two-word phrase, "in what manner."
-The two halves, and their English cousins:
+The two halves, and their English relatives:
 modo ("manner, measure") becomes English mode, modal, model, moderate, modify, commodity.
 quo ("in what") is the Latin question-stem qu-, the seed of nearly every Spanish question word.
 How the phrase became one word — the wearing-down. Spanish did not borrow cómo ready-made; it eroded out of quo modo over centuries of everyday speech. The final -do fell off and the middle collapsed:
@@ -167,6 +167,7 @@ Literally: "How do you call yourself?" Spanish asks how, not what, for a name �
 The informal version, for a friend, swaps the reflexive and drops the formal pronoun: ¿Cómo te llamas? (te llamas, from tú). Same question, two registers — exactly the tú/usted choice from earlier, now live in a real sentence:
 To a stranger, an elder, a customer becomes ¿Cómo se llama usted?
 To a friend, a child, a peer becomes ¿Cómo te llamas?
+Cómo is Latin quo modo, "in what manner", and llama is Latin clamat, "calls out".
 
 How to answer.
 You already have the answer from the me llamo lesson: Me llamo ___.
@@ -197,9 +198,9 @@ Sounds you'll need.
 soft-c — the ch is the ch of church: MOO-cho.
 
 The word, taken apart.
-mucho — "much, a lot." Root: Latin multus ("much, many"). The English cousins keep the original -lt-:
+mucho — "much, a lot." Root: Latin multus ("much, many"). The English borrowings keep the original -lt-:
 multiple, multitude, multiply, multi-purpose, multimedia.
-The sound-change, again: Latin multum becomes Spanish mucho. The Latin -lt- softened into Spanish -ch- — the very same move as noctem becomes noche (-ct- becomes -ch-, as in the noche lesson). Spanish has a habit of melting these consonant clusters into ch. So a Spanish -ch- word very often points back to a Latin -ct- or -lt- root — and the English cousin usually preserves it (nocturnal, multiple).
+The sound-change, again: Latin multum becomes Spanish mucho. The Latin -lt- softened into Spanish -ch- — the very same move as noctem becomes noche (-ct- becomes -ch-, as in the noche lesson). Spanish has a habit of melting these consonant clusters into ch. So a Spanish -ch- word very often points back to a Latin -ct- or -lt- root — and the English borrowing usually preserves it (nocturnal, multiple).
 
 Guided Practice.
 [pause 1 second]
@@ -226,7 +227,7 @@ You'll want to know first.
 mucho — "much," about to modify gusto.
 
 The word, taken apart.
-el gusto (masculine) — "taste; pleasure, liking." Root: Latin gustus ("a tasting, a taste"). The English cousins:
+el gusto (masculine) — "taste; pleasure, liking." Root: Latin gustus ("a tasting, a taste"). The English relatives:
 gustatory — to do with the sense of taste.
 disgust — dis- ("not, opposite") + gust: literally "distaste."
 gusto — borrowed whole into English, meaning zest, relish, enjoyment.
@@ -245,7 +246,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does mucho gusto literally mean? ("Much pleasure.") Is el gusto masculine or feminine? (Masculine.) And the English cousin of gusto built from dis-? (Disgust — "distaste.")
+What does mucho gusto literally mean? ("Much pleasure.") Is el gusto masculine or feminine? (Masculine.) And the English relative of gusto built from dis-? (Disgust — "distaste.")
 
 
 Lesson 8 of 8.

@@ -14,7 +14,8 @@ romanization: "kuyāshā"
 concept_tag: BN-THINGS114-KUYASHA
 prerequisites: [BN-C113-bojro, BN-C113-rongdhonu]
 sounds: []
-roots: []
+roots: [indo-aryan-kuha]
+etymology_hook: "kuyāshā: apparently with kohāṛā 'mist, fog', which CDIAL lists under *kuha 'fog, mist' (CDIAL 3386)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C113-rongdhonu]
 <!-- hl-knowledge: introduces=[BN-LEX-C114-THINGS114-01]; assesses=[] -->
 
 **কুয়াশা** — *kuyāshā* — "fog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কুয়াশা** (*kuyāshā*) appears to belong with Bengali *kohāṛā*, "mist, fog", which CDIAL lists under *\*kuha*, "fog, mist", a form it reconstructs beside lexical Sanskrit *kuhēḍī* (CDIAL 3386). CDIAL does not list **কুয়াশা** (*kuyāshā*) itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

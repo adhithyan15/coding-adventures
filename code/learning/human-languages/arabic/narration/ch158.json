@@ -4,7 +4,7 @@
   "chapter": 158,
   "title": "A Timetable, a Sign, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:67210b8c091a0eb4",
+  "sourceHash": "fnv1a64:420743e6669615c9",
   "lessons": [
     {
       "id": "AR-C158-jadwal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85bec06f5dad4040",
+      "sourceHash": "fnv1a64:4886a689240460e2",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جدول (jadwal) is a noun filed under the root j-d-l, \"to twist firmly\" (Lane). Lane's jadwal is a small stream or irrigation channel, and its verb means to rule a book with lines."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -75,7 +86,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -124,7 +135,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -155,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8319bb2d374068b",
+      "sourceHash": "fnv1a64:e564ca3da14e443e",
       "notice": null,
       "blocks": [
         {
@@ -201,6 +212,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لافتة (lāfita) is built on the native Arabic root l-f-t, \"to turn (the face)\" (Lane). Lāfita is the feminine active participle, \"one that turns (the eye)\"; the placard is a modern sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -211,7 +233,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -260,7 +282,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -291,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:824840fba14788d4",
+      "sourceHash": "fnv1a64:9bbbda395f17836c",
       "notice": null,
       "blocks": [
         {
@@ -324,6 +346,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إيجار (ījār) is built on the native Arabic root ʾ-j-r, \"to reward; to hire\" (Lane). The word ījār is the verbal noun of Form IV, \"letting for hire\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -334,7 +367,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -383,7 +416,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -414,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf352594751d0c79",
+      "sourceHash": "fnv1a64:6213d29d4f47677b",
       "notice": null,
       "blocks": [
         {
@@ -460,6 +493,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إعلان (iʿlān) is built on the native Arabic root ʿ-l-n, \"to be public, to be open\" (Lane). Iʿlān is the verbal noun of Form IV, \"making public\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -470,7 +514,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -519,7 +563,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -550,7 +594,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f091e653c64d7df",
+      "sourceHash": "fnv1a64:e6f728ff180011ad",
       "notice": null,
       "blocks": [
         {
@@ -583,6 +627,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إيصال (īṣāl) is built on the native Arabic root w-ṣ-l, \"to arrive, to join\" (Lane). The word īṣāl is the verbal noun of Form IV, \"delivering\"; the receipt is a modern sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -593,7 +648,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -642,7 +697,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

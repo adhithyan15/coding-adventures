@@ -14,7 +14,8 @@ romanization: "intalō"
 concept_tag: TE-SAMAYAM172-INTALO
 prerequisites: [TE-C172-yavvanam, TE-C172-vrddhapyam]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic]
+etymology_hook: "intalō: native inta 'so much; this time' (DEDR 410) + -lō 'in'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C172-vrddhapyam]
 <!-- hl-knowledge: introduces=[TE-LEX-C172-SAMAYAM172-03]; assesses=[] -->
 
 **ఇంతలో** — *intalō* — "meanwhile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంతలో** (*intalō*) is native Dravidian: *inta*, "so much; this time", built on the near-pointing base *i-* (DEDR 410), with the ending *-lō*, "in".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

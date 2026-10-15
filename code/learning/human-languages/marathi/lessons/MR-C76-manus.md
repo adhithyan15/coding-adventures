@@ -14,7 +14,8 @@ romanization: "māṇūs"
 concept_tag: MR-FAMILY76-MANUS
 prerequisites: [MR-C76-bayko, MR-C76-bal]
 sounds: []
-roots: []
+roots: [sanskrit-manusha]
+etymology_hook: "māṇūs ← Sanskrit mānuṣa 'human; man', a tadbhava (CDIAL 10049)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C76-bal]
 <!-- hl-knowledge: introduces=[MR-LEX-C76-FAMILY76-04]; assesses=[] -->
 
 **माणूस** — *māṇūs* — "a person, a man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माणूस** (*māṇūs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mānuṣa*, "human; man" (CDIAL 10049). It is built on *manu*, "man".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

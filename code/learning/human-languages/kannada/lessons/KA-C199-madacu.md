@@ -14,7 +14,8 @@ romanization: "maḍacu"
 concept_tag: KA-VERB-MADACU
 prerequisites: [KA-C199-nungu, KA-C199-hasu]
 sounds: []
-roots: []
+roots: [dravidian-matakku-fold]
+etymology_hook: "maḍacu: native Dravidian, one word with Tamil maṭaṅku (DEDR 4645)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C199-hasu]
 <!-- hl-knowledge: introduces=[KA-LEX-C199-KRIYE199-03]; assesses=[] -->
 
 **ಮಡಚು** — *maḍacu* — "to fold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮಡಚು** (*maḍacu*) is native Dravidian, one word with Tamil *maṭaṅku* (DEDR 4645). DEDR lists *maḍate*, "folding", and *maḍapu*, "a fold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

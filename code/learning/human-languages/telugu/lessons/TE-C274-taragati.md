@@ -14,7 +14,8 @@ romanization: "taragati"
 concept_tag: TE-PANI274-TARAGATI
 prerequisites: [TE-C273-sarukulu, TE-C273-konugolu]
 sounds: []
-roots: []
+roots: [telugu-taragati-class]
+etymology_hook: "taragati: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'class'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C273-konugolu]
 <!-- hl-knowledge: introduces=[TE-LEX-C274-PANI274-01]; assesses=[] -->
 
 **తరగతి** — *taragati* — "a class, a grade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **తరగతి** (*taragati*) is uncertain. DEDR and CDIAL list no word of this shape meaning "class, grade".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

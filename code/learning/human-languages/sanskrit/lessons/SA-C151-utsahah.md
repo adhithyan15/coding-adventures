@@ -14,7 +14,8 @@ romanization: "utsāhaḥ"
 concept_tag: SA-WEL151-UTSAHAH
 prerequisites: [SA-C150-vamanam, SA-C150-udarapida]
 sounds: []
-roots: []
+roots: [sanskrit-utsaha]
+etymology_hook: "utsāha ← ud-√sah 'be able, endure' (MW; CDIAL 1882): 'power', then 'energy, enthusiasm'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C150-udarapida]
 <!-- hl-knowledge: introduces=[SA-LEX-C151-WEL151-01]; assesses=[] -->
 
 **उत्साहः** — *utsāhaḥ* — "enthusiasm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*utsāha* comes from *ud-√sah* "be equal to, be able", the root √sah "bear, prevail" with *ud* "up" (MW; CDIAL 1882): first "power, firmness", then "energy, zeal".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

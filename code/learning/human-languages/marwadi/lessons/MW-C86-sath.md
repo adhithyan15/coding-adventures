@@ -14,7 +14,8 @@ romanization: "sāṭh"
 concept_tag: MW-NUMBERS86-SATH
 prerequisites: [MW-C86-chalis, MW-C86-pachas]
 sounds: []
-roots: []
+roots: [sanskrit-shashti]
+etymology_hook: "sāṭh ← Sanskrit ṣaṣṭi 'sixty', a tadbhava (CDIAL 12804, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C86-pachas]
 <!-- hl-knowledge: introduces=[MW-LEX-C86-NUMBERS86-04]; assesses=[] -->
 
 **साठ** — *sāṭh* — "sixty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साठ** (*sāṭh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ṣaṣṭi*, "sixty". CDIAL gives no Marwari form in this entry (CDIAL 12804); the match is through Hindi *sāṭh* and Gujarati *sāṭhi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

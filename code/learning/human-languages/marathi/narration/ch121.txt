@@ -14,6 +14,9 @@ Say something you can already do: मी मराठी बोलतो, with n
 You'll want to know: शकणे.
 शकणे — śakṇe — "to be able to, can".
 
+The word, taken apart.
+शकणे (śakṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śaknoti, "is able" (CDIAL 12252). CDIAL lists the Marathi verb as sakṇẽ; शकणे keeps the Sanskrit ś in its spelling.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marathi for a story, then the Marathi for to be able
 
 You'll want to know: जमणे.
 जमणे — jamṇe — "to manage to, to come off".
+
+The word, taken apart.
+जमणे (jamṇe) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yamyate, "is fixed" (CDIAL 10428). CDIAL glosses the Marathi verb "to collect, coagulate, freeze".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Many skills are a noun plus करणे: say काम करणे, to work.
 You'll want to know: कौशल्य.
 कौशल्य — kauśalya — "a skill".
 
+The word, taken apart.
+कौशल्य (kauśalya) is Sanskrit kauśalya, "skill", a tatsama built on kuśala, "competent, clever" (CDIAL 3365).
+
 What you've built.
 One more word for this chapter.
 
@@ -103,6 +112,9 @@ Before the new one: say the Marathi for to manage to, then the Marathi for a ski
 You'll want to know: क्षमता.
 क्षमता — kṣamatā — "ability, capacity".
 
+The word, taken apart.
+क्षमता (kṣamatā) is a tatsama: Sanskrit kṣama, "able, fit", with the noun ending -tā, "-ness". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -131,6 +143,9 @@ Before the new one: say the Marathi for a skill, then the Marathi for ability.
 
 You'll want to know: अधिकार.
 अधिकार — adhikār — "a right, authority".
+
+The word, taken apart.
+अधिकार (adhikār) is Sanskrit adhikāra, "authority, a right", taken over whole, a tatsama. It is built on kṛ, "to do", with adhi, "over". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.

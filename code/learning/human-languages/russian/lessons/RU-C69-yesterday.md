@@ -14,7 +14,8 @@ romanization: "vcherá"
 concept_tag: RU-TIME2-YESTERDAY
 prerequisites: [RU-C68-evening, RU-C69-today]
 sounds: []
-roots: []
+roots: [slavic-vecheru]
+etymology_hook: "вчера is from вечер 'evening', an old 'in the evening': yesterday as the last evening"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C69-today]
 <!-- hl-knowledge: introduces=[RU-LEX-C69-TIME2-02]; assesses=[] -->
 
 **вчера** (*vcherá*) — "yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**вчера** comes from *вечер*, "evening": an old case form meaning "in the evening", as *вечером*, "in the evening", does today (Vasmer). Yesterday was "last evening".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

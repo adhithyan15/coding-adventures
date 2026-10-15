@@ -14,7 +14,8 @@ romanization: "śarīraṁ"
 concept_tag: ML-AROGYAM192-SARIRAM
 prerequisites: [ML-C191-cuntuka, ML-C192-mukham]
 sounds: []
-roots: []
+roots: [sanskrit-sharira]
+etymology_hook: "śarīraṁ ← Sanskrit śarīra 'body', a tatsama (CDIAL 12335)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C192-mukham]
 <!-- hl-knowledge: introduces=[ML-LEX-C192-AROGYAM192-02]; assesses=[] -->
 
 **ശരീരം** — *śarīraṁ* — "the body".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ശരീരം** (*śarīraṁ*) ← Sanskrit *śarīra*, "body", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 12335).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

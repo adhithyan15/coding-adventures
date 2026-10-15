@@ -14,7 +14,8 @@ romanization: "muzayyaf"
 concept_tag: AR-SIFA243-MUZAYYAF
 prerequisites: [AR-C243-mukhif, AR-C243-mustamal]
 sounds: []
-roots: []
+roots: [z-y-f]
+etymology_hook: "muzayyaf: built on the root z-y-f, 'to be counterfeit' (Lane); muzayyaf is the Form II passive participle, 'made false'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C243-mustamal]
 <!-- hl-knowledge: introduces=[AR-LEX-C243-SIFA243-05]; assesses=[] -->
 
 **مزيف** — *muzayyaf* — "fake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مزيف** (*muzayyaf*) is built on the native Arabic root *z-y-f*, "to be counterfeit" (Lane). *Muzayyaf* is the Form II passive participle, "made false".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

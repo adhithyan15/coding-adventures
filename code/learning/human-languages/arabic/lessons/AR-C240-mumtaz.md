@@ -14,7 +14,8 @@ romanization: "mumtāz"
 concept_tag: AR-SIFA240-MUMTAZ
 prerequisites: [AR-C240-asli, AR-C240-munasib]
 sounds: []
-roots: []
+roots: [m-y-z]
+etymology_hook: "mumtāz: built on the root m-y-z, 'to distinguish, to set apart' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C240-munasib]
 <!-- hl-knowledge: introduces=[AR-LEX-C240-SIFA240-05]; assesses=[] -->
 
 **ممتاز** — *mumtāz* — "excellent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ممتاز** (*mumtāz*) is built on the native Arabic root *m-y-z*, "to distinguish, to set apart" (Lane). *Mumtāz* is the Form VIII participle, "set apart", hence "excellent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

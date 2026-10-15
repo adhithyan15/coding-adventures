@@ -14,7 +14,8 @@ romanization: "jatrā"
 concept_tag: MR-VASTU248-JATRA
 prerequisites: [MR-C248-san, MR-C248-miravnuk]
 sounds: []
-roots: []
+roots: [sanskrit-yatra]
+etymology_hook: "jatrā: Sanskrit yātrā 'journey; festival' (CDIAL 10456), with j- for y-"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C248-miravnuk]
 <!-- hl-knowledge: introduces=[MR-LEX-C248-VASTU248-03]; assesses=[] -->
 
 **जत्रा** — *jatrā* — "a village fair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जत्रा** (*jatrā*) is Sanskrit *yātrā*, "journey; festival" (CDIAL 10456), with Marathi **ज** for the *y*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

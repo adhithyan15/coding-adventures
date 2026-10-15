@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 207,
-  "sourceHash": "fnv1a64:6b97a38b6375aac6",
+  "sourceHash": "fnv1a64:8e01bc055b73a15b",
   "lessonIds": [
     "MR-C207-dhit",
     "MR-C207-savadh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch207.txt",
   "json": "marathi/narration/ch207.json",
-  "textHash": "fnv1a64:911e588eb950df3d",
-  "jsonHash": "fnv1a64:9ed9de102ae4eb30",
+  "textHash": "fnv1a64:460b5f6dbfcde9c7",
+  "jsonHash": "fnv1a64:06e4e74a63e324d4",
   "findings": []
 }

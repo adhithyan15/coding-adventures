@@ -14,7 +14,8 @@ romanization: "rahasyaṁ"
 concept_tag: TE-KARANAM257-RAHASYAM
 prerequisites: [TE-C256-kortu, TE-C257-vagdanam]
 sounds: []
-roots: []
+roots: [sanskrit-rahasya]
+etymology_hook: "rahasyaṁ ← Sanskrit rahasya 'private, secret', a tatsama (CDIAL 10669)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C257-vagdanam]
 <!-- hl-knowledge: introduces=[TE-LEX-C257-KARANAM257-02]; assesses=[] -->
 
 **రహస్యం** — *rahasyaṁ* — "a secret".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రహస్యం** (*rahasyaṁ*) is Sanskrit *rahasya*, "private, secret", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 10669).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

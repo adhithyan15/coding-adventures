@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for glasses, then the Sanskrit for a bag.
 You'll want to know: स्थाली.
 स्थाली — sthālī — "a plate, a pot".
 
+The word, taken apart.
+sthālī "an earthen dish, a cooking pot" is already in the Atharvaveda, and MW gives no derivation for it, so its origin is uncertain. It lives on as Hindi thālī and Marathi thāḷī, the plate a whole meal is served on (CDIAL 13766).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a bag, then the Sanskrit for a plate.
 
 You'll want to know: चषकः.
 चषकः — caṣakaḥ — "a cup".
+
+The word, taken apart.
+caṣaka "a cup, a wine-glass" belongs to classical poetry (MW). CDIAL 4726a, after EWA, takes it as borrowed from Iranian, while EtymDB links it with a root √caṣ "eat", so its origin is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a plate, then the Sanskrit for a cup.
 You'll want to know: चमसः.
 चमसः — camasaḥ — "a spoon".
 
+The word, taken apart.
+camasa comes from the root √cam "sip, drink" (MW). In the Rigveda it is the wooden cup or ladle the Soma was drunk from; "spoon" is its everyday sense today.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a cup, then the Sanskrit for a spoon.
 You'll want to know: चुल्ली.
 चुल्ली — cullī — "a stove".
 
+The word, taken apart.
+cullī "a fireplace, a hearth" is often taken to be borrowed from Dravidian: CDIAL 4879 says so after EWA, and DEDR 2709 sets it beside Dravidian words for a furnace or kiln. It lives on as Hindi cūlhā "stove" (CDIAL 4879).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a spoon, then the Sanskrit for a stove.
 
 You'll want to know: वर्तिका.
 वर्तिका — vartikā — "a candle, a wick".
+
+The word, taken apart.
+vartikā is varti "wick" with the suffix -kā, from the root √vṛt "turn, roll" (CDIAL 11359): a wick is a rolled strip. It lives on as Hindi battī "wick, lamp" (CDIAL 11359); using it for a candle is modern.
 
 What you've built.
 One more word for this chapter.

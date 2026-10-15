@@ -14,7 +14,8 @@ romanization: "sīnimā"
 concept_tag: AR-MAKAN265-SINIMA
 prerequisites: [AR-C264-asr, AR-C265-masrah]
 sounds: []
-roots: []
+roots: [french-cinema]
+etymology_hook: "sīnimā: from French cinéma (EtymDB), from Greek kinēma 'movement'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C265-masrah]
 <!-- hl-knowledge: introduces=[AR-LEX-C265-MAKAN265-02]; assesses=[] -->
 
 **سينما** — *sīnimā* — "a cinema".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سينما** (*sīnimā*) is a modern loan from French *cinéma* (EtymDB), from Greek *kinēma*, "movement"; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for pink, then the Malayalam for violet.
 You'll want to know: പരമ്പരാഗത.
 പരമ്പരാഗത — paramparāgata — "traditional".
 
+The word, taken apart.
+പരമ്പരാഗത (paramparāgata) from Sanskrit paramparāgata, "come down in succession", taken over whole as a tatsama. Its parts are paramparā, "an unbroken line", and āgata, "come".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for violet, then the Malayalam for traditi
 
 You'll want to know: ജനപ്രിയമായ.
 ജനപ്രിയമായ — janapriyamāya — "popular".
+
+The word, taken apart.
+ജനപ്രിയമായ (janapriyamāya) is Sanskrit jana, "people", and priya, "dear" (CDIAL 8974), with native āya, "having become" (DEDR 333): "dear to the people". DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for traditional, then the Malayalam for po
 You'll want to know: ആവേശകരമായ.
 ആവേശകരമായ — āvēśakaramāya — "exciting".
 
+The word, taken apart.
+ആവേശകരമായ (āvēśakaramāya) is Sanskrit āvēśa, "possession, excitement", and -kara, "making", with native āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for popular, then the Malayalam for exciti
 You'll want to know: ഉറപ്പുള്ള.
 ഉറപ്പുള്ള — uṟappuḷḷa — "firm, sturdy".
 
+The word, taken apart.
+ഉറപ്പുള്ള (uṟappuḷḷa) is native Dravidian, "having firmness": uṟappu, "firmness, support" (DEDR 721), with -uḷḷa, "that has" (DEDR 697).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for exciting, then the Malayalam for firm.
 
 You'll want to know: കേടായ.
 കേടായ — kēṭāya — "broken, spoiled".
+
+The word, taken apart.
+കേടായ (kēṭāya) is native Dravidian: kēṭu, "destruction, damage" (DEDR 1942, with Tamil keṭu), and āya, "having become" (DEDR 333). DEDR 333 compares Sanskrit ām.
 
 What you've built.
 One more word for this chapter.

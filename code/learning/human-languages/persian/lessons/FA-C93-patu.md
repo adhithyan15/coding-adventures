@@ -15,6 +15,7 @@ concept_tag: FA-WHY93-PATU
 prerequisites: [FA-C93-banabarin, FA-C93-balesh]
 sounds: []
 roots: []
+etymology_hook: "patu: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C93-balesh]
 <!-- hl-knowledge: introduces=[FA-LEX-C93-WHY93-03]; assesses=[] -->
 
 **پتو** — *patu* — "a blanket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*patu* is the everyday word for a blanket, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

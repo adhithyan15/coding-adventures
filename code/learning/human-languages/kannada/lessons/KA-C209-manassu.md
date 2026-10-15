@@ -14,7 +14,8 @@ romanization: "manassu"
 concept_tag: KA-AROGYA209-MANASSU
 prerequisites: [KA-C208-kayile, KA-C208-rogi]
 sounds: []
-roots: []
+roots: [sanskrit-manas]
+etymology_hook: "manassu ← Sanskrit manas 'mind', a tatsama (CDIAL 9822)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C208-rogi]
 <!-- hl-knowledge: introduces=[KA-LEX-C209-AROGYA209-01]; assesses=[] -->
 
 **ಮನಸ್ಸು** — *manassu* — "the mind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮನಸ್ಸು** (*manassu*) is Sanskrit *manas*, "mind", taken over whole as a learned loan, a tatsama, with Kannada's added *-u* (CDIAL 9822). The final *-s* is doubled before Kannada's *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ gloss: "a swan"
 concept_tag: TE-ANCHOR-HAMSA
 prerequisites: [TE-S111-letter-sa]
 sounds: []
-roots: []
+roots: [sanskrit-hamsa]
+etymology_hook: "haṃsa ← Sanskrit haṃsa 'goose' (CDIAL 13937), a tatsama; Telugu uses it for the swan"
 duration:
   max_seconds: 120
 requires:
@@ -44,6 +45,11 @@ variety: standard-colloquial
 
 Say it: *haṃsa*. [YOU LOOK: at its shape as you say it.] The next lesson takes one
 piece of it, **హ**, and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**హంస** (*haṃsa*) is Sanskrit *haṃsa*, taken over whole as a learned loan, a tatsama (CDIAL 13937). CDIAL glosses the Sanskrit word "goose"; Telugu uses it for the swan.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-ANCHOR-HAMSA] -->

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for narrow, then the Urdu for deep.
 You'll want to know: مشہور.
 مشہور — mashhūr — "famous".
 
+The word, taken apart.
+مشہور (mashhūr) is a loan from Arabic mashhūr, "well known", which reached Urdu through Persian. Its Arabic root is sh-h-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for deep, then the Urdu for famous.
 
 You'll want to know: بہادر.
 بہادر — bahādur — "brave".
+
+The word, taken apart.
+بہادر (bahādur) is usually traced, through Persian, to a Turkic or Mongol word for "hero".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for famous, then the Urdu for brave.
 You'll want to know: ہوشیار.
 ہوشیار — hoshiyār — "clever".
 
+The word, taken apart.
+ہوشیار (hoshiyār) is a loan, usually traced to Persian hoshyār, "alert, wise". It is built on hosh, "the senses, one's wits".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for brave, then the Urdu for clever.
 You'll want to know: تھکا.
 تھکا — thakā — "tired".
 
+The word, taken apart.
+تھکا (thakā) is the past form of thaknā, "to get tired". CDIAL lists thaknā under a reconstructed sthakk, "stop, halt", and calls its link with sthā-, "to stand", probable but not clear (CDIAL 13737).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for clever, then the Urdu for tired.
 
 You'll want to know: بھوکا.
 بھوکا — bhūkā — "hungry".
+
+The word, taken apart.
+بھوکا (bhūkā) is a tadbhava, a word inherited and reshaped by sound change. It comes from bubhukṣaka, "hungry", a form CDIAL reconstructs from its descendants (CDIAL 9284). It is built on the Sanskrit "wish to eat", bubhukṣā.
 
 What you've built.
 One more word for this chapter.

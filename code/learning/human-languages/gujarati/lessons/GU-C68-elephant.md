@@ -14,7 +14,8 @@ romanization: "hāthī"
 concept_tag: GU-ANIMALS2-ELEPHANT
 prerequisites: [GU-C68-tiger, GU-C68-lion]
 sounds: []
-roots: []
+roots: [sanskrit-hastin]
+etymology_hook: "hāthī ← Sanskrit hastin 'having hands; elephant', a tadbhava (CDIAL 14039)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C68-lion]
 <!-- hl-knowledge: introduces=[GU-LEX-C68-ANIMALS2-03]; assesses=[] -->
 
 **હાથી** (*hāthī*) — "an elephant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**હાથી** (*hāthī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hastin*, "having hands; elephant" (CDIAL 14039).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tanoshimi"
 concept_tag: JA-LIKE94-TANOSHIMI
 prerequisites: [JA-C94-konomi, JA-C94-shumi]
 sounds: []
-roots: []
+roots: [japanese-tanoshimu]
+etymology_hook: "tanoshimi: native, the noun from tanoshimu 'to enjoy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C94-shumi]
 <!-- hl-knowledge: introduces=[JA-LEX-C94-LIKE94-04]; assesses=[] -->
 
 **たのしみ** — *tanoshimi* — "something to look forward to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たのしみ** (*tanoshimi*) is native: the noun made from *tanoshimu*, "to enjoy", by its stem, beside *tanoshii*, "fun" (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

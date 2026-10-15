@@ -14,7 +14,8 @@ romanization: "Bhārat"
 concept_tag: HI-NAME-INDIA
 prerequisites: [HI-C68-country, HI-C74-question-rise, HI-C74-na-tag, HI-C66-well, HI-A1F01-name-no-model]
 sounds: []
-roots: []
+roots: [sanskrit-bharata]
+etymology_hook: "Bhārat ← Sanskrit bhārata 'belonging to Bharata', a tatsama"
 duration:
   max_seconds: 240
 requires:

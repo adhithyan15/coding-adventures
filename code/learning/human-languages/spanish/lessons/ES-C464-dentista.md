@@ -11,6 +11,7 @@ concept_tag: ES-MISS-DENTISTA
 prerequisites: [ES-C464-recordar, ES-C314-diente, ES-C394-medico]
 sounds: [nasal-n, s-t-cluster, stress-penultimate]
 roots: [dentem-latin]
+etymology_hook: "dentista — Latin dens, dentem 'tooth' + -ista — kin to diente; English dentist"
 duration:
   max_seconds: 275
 requires:

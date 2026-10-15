@@ -14,7 +14,8 @@ romanization: "āhistā"
 concept_tag: UR-ADJ71-AHISTA
 prerequisites: [UR-C70-lamba, UR-C71-garm]
 sounds: []
-roots: []
+roots: [persian-ahista]
+etymology_hook: "āhistā: usually traced to Persian āhista 'slow, gentle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C71-garm]
 <!-- hl-knowledge: introduces=[UR-LEX-C71-ADJ71-02]; assesses=[] -->
 
 **آہستہ** — *āhistā* — "slowly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آہستہ** (*āhistā*) is a loan, usually traced to Persian *āhista*, "slow, gentle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

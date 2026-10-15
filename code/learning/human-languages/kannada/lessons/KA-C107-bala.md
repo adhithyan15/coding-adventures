@@ -14,7 +14,8 @@ romanization: "bala"
 concept_tag: KA-LOC107-BALA
 prerequisites: [KA-C106-phone, KA-C106-seeyou]
 sounds: []
-roots: []
+roots: [dravidian-val-strong]
+etymology_hook: "bala: native Dravidian; DEDR 5276 lists bala 'right' under bal 'strong'; Tamil val"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C106-seeyou]
 <!-- hl-knowledge: introduces=[KA-LEX-C107-LOC107-01]; assesses=[] -->
 
 **ಬಲ** — *bala* — "right (not left)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಲ** (*bala*) is native Dravidian, of the root *bal*, "to grow strong", and DEDR 5276 lists *bala*, "right", and *bala key*, "right hand", under it: the right hand is the strong one; the entry also has Tamil *val*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

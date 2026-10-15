@@ -14,7 +14,8 @@ romanization: "munshī"
 concept_tag: UR-KAM179-MUNSHI
 prerequisites: [UR-C179-dai, UR-C179-khazanchi]
 sounds: []
-roots: []
+roots: [arabic-munshi]
+etymology_hook: "munshī ← Arabic munshiʾ 'one who composes, a writer', through Persian (Lane, root n-sh-ʾ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C179-khazanchi]
 <!-- hl-knowledge: introduces=[UR-LEX-C179-KAM179-03]; assesses=[] -->
 
 **منشی** — *munshī* — "a clerk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منشی** (*munshī*) is a loan from Arabic *munshiʾ*, "one who composes, a writer", which reached Urdu through Persian. Its Arabic root is *n-sh-ʾ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

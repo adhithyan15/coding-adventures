@@ -15,6 +15,7 @@ concept_tag: MR-VASTU245-MALA2
 prerequisites: [MR-C244-sengdane, MR-C244-kaju]
 sounds: []
 roots: []
+etymology_hook: "maḷā 'farm plot': origin not settled; CDIAL has no entry for it in this sense"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C244-kaju]
 <!-- hl-knowledge: introduces=[MR-LEX-C245-VASTU245-01]; assesses=[] -->
 
 **मळा** — *maḷā* — "a farm plot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मळा** (*maḷā*), "a farm plot", is not settled. CDIAL has no entry for it in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

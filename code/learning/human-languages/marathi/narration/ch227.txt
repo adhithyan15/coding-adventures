@@ -12,6 +12,9 @@ Before the new one: say the Marathi for to take a risk, then the Marathi for to 
 You'll want to know: नष्ट करणे.
 नष्ट करणे — naṣṭa karṇe — "to destroy".
 
+The word, taken apart.
+नष्ट is Sanskrit naṣṭa, "lost, destroyed", a tatsama. करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for to solve, then the Marathi for to destro
 
 You'll want to know: अतिशयोक्ती करणे.
 अतिशयोक्ती करणे — atiśayoktī karṇe — "to exaggerate".
+
+The word, taken apart.
+अतिशयोक्ती is Sanskrit atiśayokti, "overstatement", a tatsama: atiśaya, "excess", and ukti, "speech". करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for to destroy, then the Marathi for to exag
 You'll want to know: साजरा करणे.
 साजरा करणे — sājrā karṇe — "to celebrate".
 
+The word, taken apart.
+The origin of साजरा, "celebrated", is not settled: CDIAL has no entry for it in this sense. करणे comes from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for to exaggerate, then the Marathi for to c
 You'll want to know: तरंगणे.
 तरंगणे — taraṅgṇe — "to float".
 
+The word, taken apart.
+तरंगणे (taraṅgṇe) is a verb made from Sanskrit taraṅga, "wave" (CDIAL 5699): to float is to ride the waves.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for to celebrate, then the Marathi for to fl
 
 You'll want to know: पाठलाग करणे.
 पाठलाग करणे — pāṭhlāg karṇe — "to chase".
+
+The word, taken apart.
+पाठलाग is "back-touching": pāṭh, "back", from Sanskrit pṛṣṭi, "back" (CDIAL 8370), and lāg, as in lāgṇẽ, "to touch", from Sanskrit lagyati, "adheres to" (CDIAL 10895). करणे is "to do".
 
 What you've built.
 One more word for this chapter.

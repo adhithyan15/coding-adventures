@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 115,
-  "sourceHash": "fnv1a64:cbc51d41fe0c0993",
+  "sourceHash": "fnv1a64:1b56451ed030f9b3",
   "lessonIds": [
     "LA-C115-huc",
     "LA-C115-illuc",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch115.txt",
   "json": "latin/narration/ch115.json",
-  "textHash": "fnv1a64:6157befdb3bf957c",
-  "jsonHash": "fnv1a64:c34a4a0943a6d39a",
+  "textHash": "fnv1a64:054e1b0e683b83ae",
+  "jsonHash": "fnv1a64:fdb32342e0ba8849",
   "findings": []
 }

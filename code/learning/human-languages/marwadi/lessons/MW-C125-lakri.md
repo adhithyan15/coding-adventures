@@ -14,7 +14,8 @@ romanization: "lakṛī"
 concept_tag: MW-THINGS125-LAKRI
 prerequisites: [MW-C125-mombatti, MW-C125-machis]
 sounds: []
-roots: []
+roots: [sanskrit-lakuta]
+etymology_hook: "lakṛī ← Sanskrit lakuṭa 'club', a tadbhava (CDIAL 10875, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C125-machis]
 <!-- hl-knowledge: introduces=[MW-LEX-C125-THINGS125-05]; assesses=[] -->
 
 **लकड़ी** — *lakṛī* — "wood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लकड़ी** (*lakṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lakuṭa*, "club". CDIAL gives no Marwari form in this entry (CDIAL 10875); the match is through Hindi *lakṛī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

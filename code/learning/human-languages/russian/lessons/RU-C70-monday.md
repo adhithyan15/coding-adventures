@@ -14,7 +14,8 @@ romanization: "ponedélnik"
 concept_tag: RU-WEEK1-MONDAY
 prerequisites: [RU-C69-minute, RU-C69-time]
 sounds: []
-roots: []
+roots: [slavic-dela]
+etymology_hook: "понедельник is по- 'after' + неделя, once 'Sunday': the day after Sunday"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C69-time]
 <!-- hl-knowledge: introduces=[RU-LEX-C70-WEEK1-01]; assesses=[] -->
 
 **понедельник** (*ponedélnik*) — "Monday". "After the week-day": **неделя** once meant Sunday.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**понедельник** is *по-*, "after", with *неделя*, which once meant "Sunday", and *-ник*: "the day after Sunday" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

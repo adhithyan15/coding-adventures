@@ -14,7 +14,8 @@ romanization: "naqśā"
 concept_tag: HI-THG181-NAQSA
 prerequisites: [HI-C180-yatra, HI-C180-saman]
 sounds: []
-roots: []
+roots: [arabic-naqsh]
+etymology_hook: "naqśā ← Arabic naqsh 'a painting, an engraving', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C180-saman]
 <!-- hl-knowledge: introduces=[HI-LEX-C181-THG181-01]; assesses=[] -->
 
 **नक़्शा** — *naqśā* — "a map".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**नक़्शा** (*naqśā*) is a loan from Arabic *naqsh*, "a painting, an engraving", which reached Hindi through Persian. Its Arabic root is *n-q-sh* (Lane). Hindi *naqśā* came through Persian *naqsha*, "a drawing, a plan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

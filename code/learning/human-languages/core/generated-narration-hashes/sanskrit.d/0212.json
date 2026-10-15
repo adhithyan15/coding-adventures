@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 212,
-  "sourceHash": "fnv1a64:b23e6ae56575e3a3",
+  "sourceHash": "fnv1a64:d3a0831352e935cc",
   "lessonIds": [
     "SA-C212-buddhih",
     "SA-C212-manah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch212.txt",
   "json": "sanskrit/narration/ch212.json",
-  "textHash": "fnv1a64:ce78485ddaece727",
-  "jsonHash": "fnv1a64:a96f8dfbfd9fb0e4",
+  "textHash": "fnv1a64:2ace0f1bfcf35b77",
+  "jsonHash": "fnv1a64:b6e653f9db3a30c8",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "jughrāfiyā"
 concept_tag: AR-AMAL190-JUGHRAFIYA
 prerequisites: [AR-C190-mudarrib, AR-C190-riyadiyyat]
 sounds: []
-roots: []
+roots: [greek-geographia]
+etymology_hook: "jughrāfiyā: from Greek geōgraphia 'description of the earth' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C190-riyadiyyat]
 <!-- hl-knowledge: introduces=[AR-LEX-C190-AMAL190-05]; assesses=[] -->
 
 **جغرافيا** — *jughrāfiyā* — "geography".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جغرافيا** (*jughrāfiyā*) is a loan from Greek *geōgraphia*, "description of the earth" (EtymDB); it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

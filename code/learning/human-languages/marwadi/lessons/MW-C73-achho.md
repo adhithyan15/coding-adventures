@@ -14,7 +14,8 @@ romanization: "āchho"
 concept_tag: MW-ADJ73-ACHHO
 prerequisites: [MW-C73-nuvo, MW-C73-juno]
 sounds: []
-roots: []
+roots: [sanskrit-accha-clear]
+etymology_hook: "āchho ← Sanskrit accha 'clear, transparent', a tadbhava (CDIAL 142, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C73-juno]
 <!-- hl-knowledge: introduces=[MW-LEX-C73-ADJ73-03]; assesses=[] -->
 
 **आछो** — *āchho* — "good".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आछो** (*āchho*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *accha*, "clear, transparent". CDIAL lists Old Marwari *āchyo* under it (CDIAL 142). CDIAL calls the further history of the Sanskrit word unclear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jôy"
 concept_tag: BN-JINIS260-JOY
 prerequisites: [BN-C260-shasti, BN-C260-protijogita]
 sounds: []
-roots: []
+roots: [sanskrit-jaya]
+etymology_hook: "jôy ← Sanskrit jaya 'victory', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C260-protijogita]
 <!-- hl-knowledge: introduces=[BN-LEX-C260-JINIS260-05]; assesses=[] -->
 
 **জয়** — *jôy* — "victory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জয়** (*jôy*) is Sanskrit *jaya*, "victory", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

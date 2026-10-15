@@ -11,7 +11,8 @@ romanization: "kāttirikkū"
 concept_tag: ML-REP-WAIT
 prerequisites: [ML-C119-loudly, ML-C119-meaning]
 sounds: []
-roots: []
+roots: [dravidian-ka-guard, dravidian-iru-be]
+etymology_hook: "kāttirikkū: native Dravidian, 'sit waiting': kā 'watch, wait' (DEDR 1416) + iru 'sit, be' (DEDR 480)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C119-meaning]
 
 **കാത്തിരിക്കൂ** (*kāttirikkū*) — "please wait". The ending **‑ഊ** (*-ū*) makes a polite
 request, as in **പറയൂ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാത്തിരിക്കൂ** (*kāttirikkū*) is native Dravidian, "sit watching": a form of the verb "to guard, watch, wait" (DEDR 1416, with Tamil *kā*) joined to the verb "to sit, to be" (DEDR 480, with Tamil *iru*), in its request form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

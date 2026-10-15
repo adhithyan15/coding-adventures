@@ -14,7 +14,8 @@ romanization: "priyappeṭṭa"
 concept_tag: ML-GUNAM320-PRIYAPPETTA
 prerequisites: [ML-C320-prasastamaya, ML-C320-sadharana]
 sounds: []
-roots: []
+roots: [sanskrit-priya, dravidian-padu-happen]
+etymology_hook: "priyappeṭṭa: Sanskrit priya 'dear' (CDIAL 8974) + native peṭṭa (DEDR 3853)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C320-sadharana]
 <!-- hl-knowledge: introduces=[ML-LEX-C320-GUNAM320-03]; assesses=[] -->
 
 **പ്രിയപ്പെട്ട** — *priyappeṭṭa* — "dear, favourite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്രിയപ്പെട്ട** (*priyappeṭṭa*) joins Sanskrit *priya*, "beloved" (CDIAL 8974), to native *peṭṭa*, a form of the verb "to fall into, become" (DEDR 3853).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

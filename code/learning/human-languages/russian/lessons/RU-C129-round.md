@@ -14,7 +14,8 @@ romanization: "krúglyy"
 concept_tag: RU-QUAL129-ROUND
 prerequisites: [RU-C129-soft, RU-C129-hard]
 sounds: []
-roots: []
+roots: [slavic-krogu]
+etymology_hook: "круглый is built on круг 'a circle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C129-hard]
 <!-- hl-knowledge: introduces=[RU-LEX-C129-QUAL129-03]; assesses=[] -->
 
 **круглый** (*krúglyy*) — "round".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**круглый** is built on *круг*, "a circle, a ring" (Vasmer), with the adjective ending *-лый*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

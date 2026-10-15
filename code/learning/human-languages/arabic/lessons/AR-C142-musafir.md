@@ -14,7 +14,8 @@ romanization: "musāfir"
 concept_tag: AR-THINGS142-MUSAFIR
 prerequisites: [AR-C142-darraja, AR-C142-safina]
 sounds: []
-roots: []
+roots: [s-f-r]
+etymology_hook: "musāfir: built on the root s-f-r, 'to travel' (Lane); musāfir is the Form III participle, 'one who travels'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C142-safina]
 <!-- hl-knowledge: introduces=[AR-LEX-C142-THINGS142-03]; assesses=[] -->
 
 **مسافر** — *musāfir* — "a traveller".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسافر** (*musāfir*) is built on the native Arabic root *s-f-r*, "to travel; to uncover" (Lane). *Musāfir* is the Form III participle, "one who travels".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

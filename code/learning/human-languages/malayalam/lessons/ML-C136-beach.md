@@ -11,7 +11,8 @@ romanization: "kaṭappuṟaṁ"
 concept_tag: ML-WATER-BEACH
 prerequisites: [ML-C135-village, ML-C136-sea]
 sounds: []
-roots: []
+roots: [dravidian-katal-sea, dravidian-puram-outside]
+etymology_hook: "kaṭappuṟaṁ: native Dravidian, kaṭal 'sea' (DEDR 1118) + puṟam 'the side, outside' (DEDR 4333)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C136-sea]
 <!-- hl-knowledge: introduces=[ML-LEX-C136-WATER-02]; assesses=[] -->
 
 **കടപ്പുറം** (*kaṭappuṟaṁ*) — "the beach", the edge of the **കടൽ**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കടപ്പുറം** (*kaṭappuṟaṁ*) is native Dravidian: *kaṭal*, "sea" (DEDR 1118, with Tamil *kaṭal*), with *puṟam*, "the outer side" (DEDR 4333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

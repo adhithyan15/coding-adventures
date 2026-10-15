@@ -14,7 +14,8 @@ romanization: "plāg"
 concept_tag: BN-JINIS174-PLAG
 prerequisites: [BN-C173-jam, BN-C173-lichu]
 sounds: []
-roots: []
+roots: [english-plug]
+etymology_hook: "plāg ← English plug"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C173-lichu]
 <!-- hl-knowledge: introduces=[BN-LEX-C174-JINIS174-01]; assesses=[] -->
 
 **প্লাগ** — *plāg* — "a plug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**প্লাগ** (*plāg*) is a loan from English *plug*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

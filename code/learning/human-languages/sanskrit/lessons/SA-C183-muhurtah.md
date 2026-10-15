@@ -14,7 +14,8 @@ romanization: "muhūrtaḥ"
 concept_tag: SA-TIME183-MUHURTAH
 prerequisites: [SA-C182-smrtih, SA-C183-yugam]
 sounds: []
-roots: []
+roots: [sanskrit-muhurta]
+etymology_hook: "muhūrta 'a moment; the 48-minute division of the day', which MW files with muhur 'suddenly' (CDIAL 10229)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C183-yugam]
 <!-- hl-knowledge: introduces=[SA-LEX-C183-TIME183-02]; assesses=[] -->
 
 **मुहूर्तः** — *muhūrtaḥ* — "an auspicious hour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*muhūrta* meant "a moment" in the Rigveda (CDIAL 10229) and later a fixed thirtieth of a day, 48 minutes (MW). MW files it beside *muhur*, "suddenly, in a moment"; its deeper origin is not settled. An auspicious hour is a well-chosen *muhūrta*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

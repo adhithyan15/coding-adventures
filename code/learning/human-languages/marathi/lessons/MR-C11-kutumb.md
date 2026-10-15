@@ -12,7 +12,7 @@ concept_tag: MR-PEOPLE-FAMILY
 prerequisites: [MR-R11-mitra-r1]
 sounds: [matra-u, retroflex-ta]
 roots: [sanskrit-kutumba]
-etymology_hook: "कुटुंब is a learned borrowing from Sanskrit कुटुम्ब kuṭumba, \"household, family\" — a word whose own origin before Sanskrit is debated, with a Dravidian source proposed but not settled, so this lesson states the dispute rather than picking a side"
+etymology_hook: "कुटुंब is Sanskrit kuṭumba 'household', a tatsama; a Dravidian source is proposed but not settled"
 duration:
   max_seconds: 250
 requires:

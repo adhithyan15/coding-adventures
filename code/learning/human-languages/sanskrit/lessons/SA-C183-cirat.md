@@ -14,7 +14,8 @@ romanization: "cirāt"
 concept_tag: SA-TIME183-CIRAT
 prerequisites: [SA-C183-hora, SA-C183-ciram]
 sounds: []
-roots: []
+roots: [sanskrit-cira]
+etymology_hook: "cirāt 'after a long time' is the ablative of cira 'long-lasting', of uncertain origin (MW; CDIAL 4824)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C183-ciram]
 <!-- hl-knowledge: introduces=[SA-LEX-C183-TIME183-05]; assesses=[] -->
 
 **चिरात्** — *cirāt* — "after a long time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cirāt* is the ablative of *cira*, "long-lasting": "from a long time", so "at last" (MW). *Cira* itself is of uncertain origin, and CDIAL 4824 traces it back to the Rigveda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

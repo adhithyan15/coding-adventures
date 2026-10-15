@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 70,
-  "sourceHash": "fnv1a64:11003d307dc58d46",
+  "sourceHash": "fnv1a64:9a736e3ba9fadfee",
   "lessonIds": [
     "BN-C70-singho",
     "BN-C70-hati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch70.txt",
   "json": "bengali/narration/ch70.json",
-  "textHash": "fnv1a64:f42d51aa380b8ac6",
-  "jsonHash": "fnv1a64:9634cfa4c0e65964",
+  "textHash": "fnv1a64:ff492983dce35baf",
+  "jsonHash": "fnv1a64:4727a6fd69afa176",
   "findings": []
 }

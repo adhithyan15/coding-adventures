@@ -11,7 +11,8 @@ romanization: "emuka"
 concept_tag: TE-NOUN-BONE
 prerequisites: [TE-C57-nail]
 sounds: []
-roots: []
+roots: [dravidian-elumbu-bone]
+etymology_hook: "emuka: native Dravidian, one word with Tamil elumpu and Kannada elubu, 'bone' (DEDR 839)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C57-nail]
 It carries the same weight English gives it: ఎముకలు విరిగేలా, "until the bones break", is how you describe work that took everything a body had. The bone stands for the last thing left when the rest is gone.
 
 That closes the body words. మెడ, వీపు, పెదవి, గోరు and ఎముక join కాలు, పన్ను, వేలు and the rest, and between them you can tell a doctor where it hurts.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎముక** (*emuka*) is native Dravidian, one word with Tamil *elumpu* and Kannada *elubu*, "bone" (DEDR 839). DEDR compares Sanskrit *eḍūka*, "a monument holding bones".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "panjāh"
 concept_tag: PA-NUMBERS96-PANJAH
 prerequisites: [PA-C96-vih, PA-C96-tih]
 sounds: []
-roots: []
+roots: [sanskrit-pancashat]
+etymology_hook: "panjāh ← Sanskrit pañcāśat 'fifty', a tadbhava (CDIAL 7682)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C96-tih]
 <!-- hl-knowledge: introduces=[PA-LEX-C96-NUMBERS96-04]; assesses=[] -->
 
 **ਪੰਜਾਹ** — *panjāh* — "fifty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੰਜਾਹ** (*panjāh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañcāśat*, "fifty" (CDIAL 7682).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

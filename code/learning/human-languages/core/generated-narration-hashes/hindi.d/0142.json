@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 142,
-  "sourceHash": "fnv1a64:cdd5e225ab507b6a",
+  "sourceHash": "fnv1a64:3924a948aa76f9d1",
   "lessonIds": [
     "HI-C142-samosa",
     "HI-C142-lassi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch142.txt",
   "json": "hindi/narration/ch142.json",
-  "textHash": "fnv1a64:98ad186fb5425b99",
-  "jsonHash": "fnv1a64:d997032d8a89fdce",
+  "textHash": "fnv1a64:98d4877ab7602a36",
+  "jsonHash": "fnv1a64:b991ff52169b39d0",
   "findings": []
 }

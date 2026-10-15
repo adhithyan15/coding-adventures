@@ -15,6 +15,7 @@ concept_tag: MW-THINGS137-PAPITO
 prerequisites: [MW-C136-jiro, MW-C137-masalo]
 sounds: []
 roots: []
+etymology_hook: "papīto: origin uncertain, usually linked with papaya, a Caribbean word spread by Iberian sailors; not in CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C137-masalo]
 <!-- hl-knowledge: introduces=[MW-LEX-C137-THINGS137-02]; assesses=[] -->
 
 **पपीतो** — *papīto* — "a papaya".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **पपीतो** (*papīto*) is not settled. It is usually linked with *papaya*, a Caribbean word that Spanish and Portuguese sailors spread; CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

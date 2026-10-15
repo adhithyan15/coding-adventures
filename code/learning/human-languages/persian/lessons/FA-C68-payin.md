@@ -14,7 +14,8 @@ romanization: "pâyin"
 concept_tag: FA-PLACE68-PAYIN
 prerequisites: [FA-C68-birun, FA-C68-bala]
 sounds: []
-roots: []
+roots: [persian-payin]
+etymology_hook: "pâyin ← Middle Persian pāyēn (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C68-bala]
 <!-- hl-knowledge: introduces=[FA-LEX-C68-PLACE68-04]; assesses=[] -->
 
 **پایین** — *pâyin* — "down, below".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâyin* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *pāyēn*, "lower" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

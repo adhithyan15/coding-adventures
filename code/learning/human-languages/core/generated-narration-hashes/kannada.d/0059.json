@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 59,
-  "sourceHash": "fnv1a64:c8bd30eb43792ed8",
+  "sourceHash": "fnv1a64:4bfe37a06554bfc8",
   "lessonIds": [
     "KA-C59-wind",
     "KA-C59-mist",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch59.txt",
   "json": "kannada/narration/ch59.json",
-  "textHash": "fnv1a64:d88610583406be30",
-  "jsonHash": "fnv1a64:307d99a56d9abc91",
+  "textHash": "fnv1a64:6ce98d058dd08cef",
+  "jsonHash": "fnv1a64:eac2d48e1903c845",
   "findings": []
 }

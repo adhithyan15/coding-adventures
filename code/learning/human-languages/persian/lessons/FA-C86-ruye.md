@@ -14,7 +14,8 @@ romanization: "ruye"
 concept_tag: FA-LOC86-RUYE
 prerequisites: [FA-C85-vasat, FA-C85-zir]
 sounds: []
-roots: []
+roots: [persian-ru]
+etymology_hook: "ruye: Persian ru 'face' (Middle Persian rōy) + linking -ye"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C85-zir]
 <!-- hl-knowledge: introduces=[FA-LEX-C86-LOC86-01]; assesses=[] -->
 
 **روی** — *ruye* — "on, on top of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ruye* is *ru*, "face, surface", with the linking vowel *-ye*: "on the face of". *ru* is native, usually traced to Middle Persian *rōy*, "face". (EtymDB also lists *rōy*, "brass", a different word that looks alike.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

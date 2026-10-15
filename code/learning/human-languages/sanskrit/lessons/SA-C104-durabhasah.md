@@ -14,7 +14,8 @@ romanization: "dūrabhāṣaḥ"
 concept_tag: SA-THINGS104-DURABHASAH
 prerequisites: [SA-C104-usnisam, SA-C104-kancukah]
 sounds: []
-roots: []
+roots: [sanskrit-dura, sanskrit-bhasha]
+etymology_hook: "dūrabhāṣa ← dūra 'far' + bhāṣa 'speech' (√bhāṣ 'speak'): a modern coinage, like Greek-built tele-phone"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C104-kancukah]
 <!-- hl-knowledge: introduces=[SA-LEX-C104-THINGS104-05]; assesses=[] -->
 
 **दूरभाषः** — *dūrabhāṣaḥ* — "a telephone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dūrabhāṣa* is built from *dūra* "far" and *bhāṣa* "speech", from the root √bhāṣ "speak" (MW): "far-speech". It is a modern coinage, made the way English *telephone* was made from Greek *tele* "far" + *phōnē* "voice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

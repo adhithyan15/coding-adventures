@@ -14,7 +14,8 @@ romanization: "apaghāta"
 concept_tag: KA-AROGYA282-APAGHATA
 prerequisites: [KA-C281-phelagu, KA-C281-sikkihakikollu]
 sounds: []
-roots: []
+roots: [sanskrit-apaghata]
+etymology_hook: "apaghāta ← Sanskrit apaghāta 'a blow, a striking away'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C281-sikkihakikollu]
 <!-- hl-knowledge: introduces=[KA-LEX-C282-AROGYA282-01]; assesses=[] -->
 
 **ಅಪಘಾತ** — *apaghāta* — "an accident".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಪಘಾತ** (*apaghāta*) is Sanskrit *apaghāta*, "a blow, a striking away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

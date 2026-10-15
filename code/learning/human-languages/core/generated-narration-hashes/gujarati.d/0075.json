@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 75,
-  "sourceHash": "fnv1a64:17453eac059cb93d",
+  "sourceHash": "fnv1a64:a11395e4540d5b9d",
   "lessonIds": [
     "GU-C75-ahead",
     "GU-C75-behind",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch75.txt",
   "json": "gujarati/narration/ch75.json",
-  "textHash": "fnv1a64:bc7437545e8bcb4d",
-  "jsonHash": "fnv1a64:d3f8aa33b5f451e2",
+  "textHash": "fnv1a64:3375297afa508fa3",
+  "jsonHash": "fnv1a64:fee61e01f270c19d",
   "findings": []
 }

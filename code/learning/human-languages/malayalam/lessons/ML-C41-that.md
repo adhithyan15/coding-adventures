@@ -11,7 +11,8 @@ romanization: "atŭ"
 concept_tag: ML-DEIXIS-THAT
 prerequisites: [ML-C41-this, ML-C37-vaay]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "atŭ: native Dravidian, a far-pointing base + a 'thing' ending; Tamil atu and Kannada adu (DEDR 1)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner is **ഇത്** *itŭ*, which you have just met. The two of them
 differ by one sound at the front — **a-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അത്** (*atŭ*) is native Dravidian: the old far-pointing base with an ending meaning "thing". DEDR 1 lists Malayalam *atu* with Tamil *atu*, Kannada *adu* and Telugu *adi*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-02, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02] -->

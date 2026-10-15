@@ -14,7 +14,8 @@ romanization: "tuṭaruka"
 concept_tag: ML-VERB-TUTARUKA
 prerequisites: [ML-C271-paniyuka, ML-C271-ketakuka]
 sounds: []
-roots: []
+roots: [dravidian-todu-touch]
+etymology_hook: "tuṭaruka: native Dravidian, one word with Tamil toṭu (DEDR 3480)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C271-ketakuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C271-KRIYA271-05]; assesses=[] -->
 
 **തുടരുക** — *tuṭaruka* — "to continue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തുടരുക** (*tuṭaruka*) is native Dravidian, one word with Tamil *toṭu* (DEDR 3480). Its root is "to be linked, to continue".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

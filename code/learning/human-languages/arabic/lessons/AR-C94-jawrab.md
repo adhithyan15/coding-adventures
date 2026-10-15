@@ -14,7 +14,8 @@ romanization: "jawrab"
 concept_tag: AR-CLOTHES94-JAWRAB
 prerequisites: [AR-C94-fustan, AR-C94-sirwal]
 sounds: []
-roots: []
+roots: [persian-gurab]
+etymology_hook: "jawrab: arabicized from Persian gūrab (Lane); its plural marks it as foreign"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C94-sirwal]
 <!-- hl-knowledge: introduces=[AR-LEX-C94-CLOTHES94-05]; assesses=[] -->
 
 **جورب** — *jawrab* — "a sock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جورب** (*jawrab*) is a loan: Lane records it as arabicized from Persian *gūrab*, and notes that its plural *jawāriba* marks it as foreign.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

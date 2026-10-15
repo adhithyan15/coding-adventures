@@ -14,7 +14,8 @@ romanization: "thā"
 concept_tag: VERB-PAST
 prerequisites: [HI-C87-par, HI-C03-main, HI-C40-that, HI-S126-letter-tha]
 sounds: []
-roots: []
+roots: [sanskrit-sthita]
+etymology_hook: "thā ← Sanskrit sthita 'standing, settled', used as a past tense of 'to be' (CDIAL 13768)"
 duration:
   max_seconds: 240
 requires:

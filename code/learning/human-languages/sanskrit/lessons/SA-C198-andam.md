@@ -14,7 +14,8 @@ romanization: "aṇḍam"
 concept_tag: SA-THG198-ANDAM
 prerequisites: [SA-C198-gandakah, SA-C198-nidam]
 sounds: []
-roots: []
+roots: [sanskrit-anda]
+etymology_hook: "aṇḍa 'egg', often taken as of Munda origin (CDIAL 1111); Hindi aṇḍā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C198-nidam]
 <!-- hl-knowledge: introduces=[SA-LEX-C198-THG198-05]; assesses=[] -->
 
 **अण्डम्** — *aṇḍam* — "an egg".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aṇḍa* is usually traced to a Munda source: CDIAL 1111 reports that Mayrhofer, following Kuiper, takes it from Munda. It lives on as Hindi *aṇḍā*, "egg".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

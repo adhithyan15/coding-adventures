@@ -14,7 +14,8 @@ romanization: "ṣaʿida"
 concept_tag: AR-VERB-SAIDA
 prerequisites: [AR-C158-isal, AR-C159-istayqaza]
 sounds: []
-roots: []
+roots: [ṣ-ʿ-d]
+etymology_hook: "ṣaʿida: built on the root ṣ-ʿ-d, 'to go up' (Lane); ṣaʿida is the plain verb, 'he went up'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C159-istayqaza]
 <!-- hl-knowledge: introduces=[AR-LEX-C159-ACT159-02]; assesses=[] -->
 
 **صعد** — *ṣaʿida* — "to go up, to climb".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صعد** (*ṣaʿida*) is built on the native Arabic root *ṣ-ʿ-d*, "to go up" (Lane). *Ṣaʿida* is the plain verb, "he went up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "kṣamāpaṇa"
 concept_tag: TE-POLITE-APOLOGY
 prerequisites: [TE-C93-body, TE-C94-pardon]
 sounds: []
-roots: []
+roots: [kshama-sanskrit]
+etymology_hook: "kṣamāpaṇa ← Sanskrit kṣamāpaṇa 'asking pardon', from kṣamā 'patience' (CDIAL 3659)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C94-pardon]
 
 **క్షమాపణ చెప్పండి** — "say sorry". It comes from the same root as **క్షమించండి**: to forgive,
 and to ask forgiveness.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**క్షమాపణ** (*kṣamāpaṇa*) is Sanskrit *kṣamāpaṇa*, "asking pardon", built on *kṣamā*, "patience" (CDIAL 3659), taken over as a learned loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

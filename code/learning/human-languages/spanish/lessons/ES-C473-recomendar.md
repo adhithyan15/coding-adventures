@@ -11,6 +11,7 @@ concept_tag: ES-VERB-RECOMENDAR
 prerequisites: [ES-C473-aconsejar, ES-C34-pensar, ES-C321-consejo]
 sounds: [diphthong-ie, nasal-n, stress-final]
 roots: [mandare-latin]
+etymology_hook: "recomendar ← Latin re- + commendare 'to entrust', from mandare — English commend"
 duration:
   max_seconds: 275
 requires:
@@ -75,7 +76,7 @@ will be understood in either sentence, and a careful speaker picks.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C473-CONSEJO-02] -->
 
-**re-** plus **commendare**: **com-**, wholly, plus **mandare**, to **entrust**
+Latin **re-** plus **commendare** (EtymDB 2.1): **com-**, wholly, plus **mandare**, to **entrust**
 — to put a thing into somebody's hand.
 
 So recommending is not praising. It is **handing over**: you put the thing in

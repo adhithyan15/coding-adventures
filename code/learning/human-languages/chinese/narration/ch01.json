@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Nǐ Hǎo — Hello, Character by Character",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:db861d6636ee6dff",
+  "sourceHash": "fnv1a64:046f1168d06e0971",
   "lessons": [
     {
       "id": "ZH-C01-tones",
@@ -350,7 +350,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4896e4de8dc2dd1b",
+      "sourceHash": "fnv1a64:fc5b6a9ca7ff4c97",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -435,6 +435,10 @@
             {
               "kind": "speech",
               "text": "Component glosses are hooks, not translations. 好 (hǎo) does not \"mean\" woman-child. It means good."
+            },
+            {
+              "kind": "speech",
+              "text": "The word itself is inherited from Middle Chinese xawX, \"good\" (Guangyun, in Baxter's transcription). The picture belongs to the writing, not to the word."
             }
           ]
         },
@@ -521,7 +525,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33e6c06570cdddcc",
+      "sourceHash": "fnv1a64:43ab5a9c265173d4",
       "notice": null,
       "blocks": [
         {
@@ -604,6 +608,17 @@
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "你好 (nǐ hǎo) is a Chinese compound of two inherited words: hǎo, \"good\", from Middle Chinese xawX, and nǐ, \"you\", usually traced to the older second-person word nyeX (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -637,7 +652,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -825,7 +840,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c8bd26e8b670b97",
+      "sourceHash": "fnv1a64:b43971ce77740eeb",
       "notice": null,
       "blocks": [
         {
@@ -877,6 +892,10 @@
             {
               "kind": "speech",
               "text": "You are not asked to produce hào yet. Recognising it is the point: when a familiar character turns up wearing an unfamiliar tone, the tone is telling you this is a different word."
+            },
+            {
+              "kind": "speech",
+              "text": "Both readings are inherited from Middle Chinese: the Guangyun lists xawX, \"good\", and xawH, \"to be fond of\" (in Baxter's transcription). Making a related word by moving it into the departing tone, the H of these spellings, is a well-known pattern of Middle Chinese."
             }
           ]
         },

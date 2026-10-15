@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 255,
-  "sourceHash": "fnv1a64:d7910d46f7bef2c0",
+  "sourceHash": "fnv1a64:9b4498ddf91b1165",
   "lessonIds": [
     "SA-C255-siksa",
     "SA-C255-jnanam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch255.txt",
   "json": "sanskrit/narration/ch255.json",
-  "textHash": "fnv1a64:d2e3462c3480f243",
-  "jsonHash": "fnv1a64:14243b8b965fdf9c",
+  "textHash": "fnv1a64:c92ac6cb181a078a",
+  "jsonHash": "fnv1a64:36c10aadcdc49248",
   "findings": []
 }

@@ -14,7 +14,8 @@ gloss: "dust"
 concept_tag: GU-ANCHOR-DHOOL
 prerequisites: [GU-R06-first-four-r1]
 sounds: []
-roots: []
+roots: [sanskrit-dhuli]
+etymology_hook: "dhūḷ ← Sanskrit dhūli 'dust, powder', a tadbhava (CDIAL 6835)"
 duration:
   max_seconds: 120
 requires:
@@ -45,6 +46,11 @@ variety: standard
 **ધૂળ** — *dhūḷ* — "dust".
 
 Say it: *dhūḷ*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ૂ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ધૂળ** (*dhūḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dhūli*, "dust, powder" (CDIAL 6835).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-DHOOL] -->

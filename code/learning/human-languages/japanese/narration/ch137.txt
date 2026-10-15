@@ -17,6 +17,9 @@ You'll want to know: いっぱい.
 いっぱい — ippai — "full", as a cup is full, or as you are after a big meal. It also means "a lot": a lot of people, a lot of work.
 Four beats: i–p–pa–i. い, the small っ that holds a beat, and the last い you already write. The third sign is は with the small circle at its upper right, and that circle makes a p: ha becomes pa. The next lesson writes it.
 
+The word, taken apart.
+いっぱい (ippai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, "one" (Middle Chinese 'jit) and hai, "cup" (pwoj) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). Ichi and hai join as ippai: one cupful.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: ippai]
@@ -88,6 +91,9 @@ You'll want to know: しんぱい.
 しんぱい — shinpai — "worry": the feeling, or being worried about someone. It is the word in Don't worry.
 The new sign is spent at once. し and ん, then ぱ and い: four beats, shi–n–pa–i. After ん the p comes out clearly, the lips closed first. You write every sign in it now.
 
+The word, taken apart.
+しんぱい (shinpai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, "heart, mind" (Middle Chinese sim) and hai, "distribute" (phwojH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: shinpai]
@@ -119,6 +125,9 @@ Four recalls before the new word.
 You'll want to know: えんぴつ.
 えんぴつ — enpitsu — "a pencil", the one you may be writing with now.
 Four beats: e–n–pi–tsu. え, ん and つ you already write. The third sign is ひ with the small circle, so hi becomes pi. The next lesson writes it.
+
+The word, taken apart.
+えんぴつ (enpitsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are en, "lead" (Middle Chinese ywen) and hitsu, "writing brush" (pit) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 Guided Practice.
 [pause 1 second]
@@ -189,6 +198,9 @@ You'll want to know: いっぴき.
 いっぴき — ippiki — "one small animal": one cat, one dog, one fish. Japanese counts animals with a word of their own, the way it counts long thin things with いっぽん.
 The new sign is spent at once. い, a small っ, ぴ and き: four beats, i–p–pi–ki. The small っ holds a beat before the p, as it does in いっぱい (ippai). You write every sign in it now.
 
+The word, taken apart.
+いっぴき (ippiki) mixes the two layers: ichi, "one", borrowed from Chinese (Middle Chinese 'jit), and hiki, a counter for animals that KANJIDIC2 lists as a kun'yomi; they join as ippiki (JMdict, KANJIDIC2).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: ippiki]
@@ -220,6 +232,9 @@ Four recalls before the new word.
 You'll want to know: きっぷ.
 きっぷ — kippu — "a ticket", above all the one you buy for a train.
 Three beats: ki–p–pu. き and the small っ you already write. The last sign is ふ with the small circle, so fu becomes pu. The next lesson writes it.
+
+The word, taken apart.
+きっぷ (kippu) mixes the two layers: native kiri, "cutting", from kiru, "to cut", and fu, "tally, token", the on'yomi of its second character, borrowed from Chinese (Middle Chinese bju); they join as kippu (JMdict, KANJIDIC2).
 
 Guided Practice.
 [pause 1 second]
@@ -292,6 +307,9 @@ You'll want to know: てんぷら.
 てんぷら — tenpura — "tempura": fish, prawns or vegetables, dipped in a light batter and fried. English borrowed the word from Japanese.
 The new sign is spent at once. て and ん, then ぷ and ら: four beats, te–n–pu–ra. After ん the p comes out clearly, as in しんぱい (shinpai). You write every sign in it now.
 
+The word, taken apart.
+てんぷら (tenpura) is a loanword, usually traced to Portuguese. JMdict names two candidates, tempero, "seasoning", and têmporas, the Ember Days of fasting; which one is the source is not settled.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: tenpura]
@@ -323,6 +341,9 @@ Four recalls before the new word.
 You'll want to know: ぺらぺら.
 ぺらぺら — perapera — "fluent, fluently": it says that someone speaks a language with ease. It is one of the many doubled words Japanese uses for a sound or a manner: pera, and pera again.
 Four beats: pe–ra–pe–ra. ら you already write. The other sign, twice, is へ with the small circle, so he becomes pe. The next lesson writes it.
+
+The word, taken apart.
+ぺらぺら (perapera) is a native mimetic word, one that pictures a manner in sound; JMdict marks it as mimetic, and it has no kanji. It is inherited, not borrowed.
 
 Guided Practice.
 [pause 1 second]

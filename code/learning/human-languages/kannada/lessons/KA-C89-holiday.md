@@ -11,7 +11,8 @@ romanization: "raje"
 concept_tag: KA-LEAVE-HOLIDAY
 prerequisites: [KA-C89-late, KA-C89-letsgo]
 sounds: []
-roots: []
+roots: [arabic-rukhsat]
+etymology_hook: "raje ← Hindustani rajā 'leave', from Arabic riḍā 'consent, permission'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C89-letsgo]
 **ರಜೆ** (*raje*) — "a holiday, time off".
 
 **ನಾಳೆ ರಜೆ** (*nāḷe raje*) — "tomorrow is a holiday", with **ನಾಳೆ**, "tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರಜೆ** (*raje*) came through Hindustani *rajā*, "leave, permission", from Arabic *riḍā*, "consent". Leave from work is what you are given permission for.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

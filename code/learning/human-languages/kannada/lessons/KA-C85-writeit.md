@@ -11,7 +11,8 @@ romanization: "baredu koḍi"
 concept_tag: KA-REP-WRITE
 prerequisites: [KA-C85-loudly, KA-C85-meaning]
 sounds: []
-roots: []
+roots: [dravidian-varai-write, dravidian-kodu-give]
+etymology_hook: "baredu koḍi: native baredu 'having written' (DEDR 5263) + koḍi 'please give' (DEDR 2053)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C85-meaning]
 **ಕೊಡು**, "give".
 
 When a word will not stay in the ear, ask for it on paper.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬರೆದು ಕೊಡಿ** (*baredu koḍi*) is native Dravidian: *baredu*, "having written", from *bare*, "to write" (DEDR 5263), and *koḍi*, the polite form of *koḍu*, "to give" (DEDR 2053). You ask someone to "write and give". DEDR 5263 compares, with a query, Prakrit *rajju*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

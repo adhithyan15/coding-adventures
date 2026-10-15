@@ -11,8 +11,8 @@ romanization: nǐ hǎo ma
 gloss: how are you, written from three characters already yours
 prerequisites: [ZH-C19-hear-nihaoma]
 sounds: [tone-3, tone-neutral]
-roots: []
-etymology_hook: Three known characters, no new shape, and the book's first question on the page.
+roots: [middle-chinese-xawx]
+etymology_hook: "nǐ hǎo ma: nǐ hǎo + ma; hǎo is Middle Chinese xawX, and ma is usually traced to mju 'not have'"
 duration:
   max_seconds: 150
 requires:
@@ -51,6 +51,10 @@ have already written.
 That is the whole of what 吗 buys you. The book has been able to write 你好 since
 its first page and has never once been able to ask anything. One character, six
 strokes, and the greeting turns into a question.
+
+Chinese built it from 你好 and 吗: *hǎo* is inherited from Middle Chinese *xawX*
+(Guangyun, in Baxter's transcription), and 吗 is usually traced, with some doubt,
+to *mju*, "not have".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-NIHAOMA-01, ZH-GRAMMAR-MA-QUESTION-01] -->

@@ -12,6 +12,7 @@ concept_tag: GREETING-FORMAL
 prerequisites: []
 sounds: []
 roots: [satya, sri, akala]
+etymology_hook: "sat srī akāl: sat 'truth', from Sanskrit satya, a learned form beside inherited sacc (CDIAL 13112); akāl 'timeless'"
 duration:
   max_seconds: 180
 requires:

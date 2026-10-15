@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 29,
-  "sourceHash": "fnv1a64:ae996fb94c7a2ca9",
+  "sourceHash": "fnv1a64:2c01b401a8b3a862",
   "lessonIds": [
     "RU-C29-head",
     "RU-C29-hand",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch29.txt",
   "json": "russian/narration/ch29.json",
-  "textHash": "fnv1a64:9cbed80ef5db33e3",
-  "jsonHash": "fnv1a64:0ce477116d04d8a3",
+  "textHash": "fnv1a64:8ecfb65f3ff6f29c",
+  "jsonHash": "fnv1a64:199d1566a5ed7165",
   "findings": []
 }

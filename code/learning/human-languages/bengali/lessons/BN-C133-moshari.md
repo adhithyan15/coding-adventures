@@ -14,7 +14,8 @@ romanization: "môshāri"
 concept_tag: BN-THINGS133-MOSHARI
 prerequisites: [BN-C132-khat, BN-C132-toshok]
 sounds: []
-roots: []
+roots: [sanskrit-mashakahari]
+etymology_hook: "môshāri ← Sanskrit maśakaharī 'bed curtain', a tadbhava (CDIAL 9918)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C132-toshok]
 <!-- hl-knowledge: introduces=[BN-LEX-C133-THINGS133-01]; assesses=[] -->
 
 **মশারি** — *môshāri* — "a mosquito net".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মশারি** (*môshāri*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *maśakaharī*, "bed curtain" (CDIAL 9918). It is *maśaka*, "mosquito", + *hara*, "taking away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

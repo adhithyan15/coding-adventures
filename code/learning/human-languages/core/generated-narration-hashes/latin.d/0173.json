@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 173,
-  "sourceHash": "fnv1a64:8cdacddc739103b0",
+  "sourceHash": "fnv1a64:e0799e24b4d8f7ea",
   "lessonIds": [
     "LA-C173-valetudo",
     "LA-C173-cerebrum",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch173.txt",
   "json": "latin/narration/ch173.json",
-  "textHash": "fnv1a64:918b566b9bad3979",
-  "jsonHash": "fnv1a64:6b05a28cd3d59db5",
+  "textHash": "fnv1a64:0e92e3b12c507a88",
+  "jsonHash": "fnv1a64:636e7c4e2cbcf92c",
   "findings": []
 }

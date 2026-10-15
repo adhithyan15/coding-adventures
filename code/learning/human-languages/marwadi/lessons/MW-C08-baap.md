@@ -11,8 +11,8 @@ gloss: father
 concept_tag: MW-FAMILY-FATHER
 prerequisites: [MW-W08-ba]
 sounds: [voiced-b, long-aa, unaspirated-p]
-roots: []
-etymology_hook: New ब joins familiar ा and प; the hand adds only one new shape.
+roots: [indo-aryan-bappa]
+etymology_hook: "bāp ← *bāppa 'father', a nursery word, reconstructed (CDIAL 9209)"
 duration:
   max_seconds: 165
 requires:
@@ -50,6 +50,11 @@ Then give the earlier see-you-later four-skill response once.
 
 Only the first sign is newly learned.
 [YOU READ: the whole word without romanization]
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बाप** (*bāp*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bāppa*, "father", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 9209); the match is through Hindi *bāp* and Gujarati *bāp*. CDIAL counts it among the nursery words.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAAP-01, MW-SCRIPT-BAAP-01] -->

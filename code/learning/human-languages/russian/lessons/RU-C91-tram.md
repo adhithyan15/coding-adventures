@@ -14,7 +14,8 @@ romanization: "tramváy"
 concept_tag: RU-LOC91-TRAM
 prerequisites: [RU-C91-west, RU-C91-underground]
 sounds: []
-roots: []
+roots: [english-tramway]
+etymology_hook: "трамвай ← English tramway, through French or straight: tram 'a rail, a beam' + way"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C91-underground]
 <!-- hl-knowledge: introduces=[RU-LEX-C91-LOC91-03]; assesses=[] -->
 
 **трамвай** (*tramváy*) — "a tram".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**трамвай** came through French *tramway* or straight from English *tramway*: *tram*, "a beam, a rail", with *way* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

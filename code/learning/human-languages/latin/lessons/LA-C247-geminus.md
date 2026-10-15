@@ -13,7 +13,8 @@ gloss: "a twin"
 concept_tag: LA-RES247-GEMINUS
 prerequisites: [LA-C246-pictor, LA-C246-musica]
 sounds: []
-roots: []
+roots: [geminus-latin]
+etymology_hook: "geminus 'twin' — origin uncertain; English Gemini is its plural"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C246-musica]
 <!-- hl-knowledge: introduces=[LA-LEX-C247-RES247-01]; assesses=[] -->
 
 **geminus, geminī** — "a twin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**geminus** has no sure origin; Lewis & Short's link with *gignō*, "to beget", is uncertain. English *Gemini*, "the Twins", is its plural.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

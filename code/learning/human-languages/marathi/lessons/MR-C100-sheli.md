@@ -14,7 +14,8 @@ romanization: "sheḷī"
 concept_tag: MR-ANIMALS100-SHELI
 prerequisites: [MR-C100-ghoda, MR-C100-gay]
 sounds: []
-roots: []
+roots: [sanskrit-chagala]
+etymology_hook: "sheḷī ← Sanskrit chagala 'goat', a tadbhava (CDIAL 4963)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C100-gay]
 <!-- hl-knowledge: introduces=[MR-LEX-C100-ANIMALS100-03]; assesses=[] -->
 
 **शेळी** — *sheḷī* — "a goat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शेळी** (*sheḷī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chagala*, "goat" (CDIAL 4963).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

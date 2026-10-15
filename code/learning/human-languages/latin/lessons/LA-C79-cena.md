@@ -13,7 +13,8 @@ gloss: "dinner, the main meal"
 concept_tag: LA-CIBUS1-CENA
 prerequisites: [LA-C78-gaudeo, LA-C79-cibus]
 sounds: []
-roots: []
+roots: [cena-latin]
+etymology_hook: "cēna 'dinner' — older caesna, usually traced to PIE *(s)ker- 'to cut': the meal as one's portion"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C79-cibus]
 <!-- hl-knowledge: introduces=[LA-LEX-C79-CIBUS1-02]; assesses=[] -->
 
 **cēna, cēnae** — "dinner, the main meal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cēna** is inherited. An older spelling was *caesna* (Lewis & Short), and it is usually traced through Proto-Italic *\*kertsnā*, "a portion", to Proto-Indo-European *\*(s)ker-*, "to cut" (EtymDB 2.1): the meal as one's share.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

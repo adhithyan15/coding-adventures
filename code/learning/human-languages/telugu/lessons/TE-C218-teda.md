@@ -14,7 +14,8 @@ romanization: "tēḍā"
 concept_tag: TE-KARANAM218-TEDA
 prerequisites: [TE-C218-laksyam, TE-C218-udaharana]
 sounds: []
-roots: []
+roots: [telugu-teda-difference]
+etymology_hook: "tēḍā: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'difference'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C218-udaharana]
 <!-- hl-knowledge: introduces=[TE-LEX-C218-KARANAM218-04]; assesses=[] -->
 
 **తేడా** — *tēḍā* — "a difference".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **తేడా** (*tēḍā*) is uncertain. DEDR and CDIAL list no word of this shape meaning "difference". DEDR 3411 *treḍḍu*, "ladle", is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

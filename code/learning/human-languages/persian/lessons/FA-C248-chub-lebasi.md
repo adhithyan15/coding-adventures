@@ -14,7 +14,8 @@ romanization: "chub-lebâsi"
 concept_tag: FA-CHIZ248-CHUB-LEBASI
 prerequisites: [FA-C247-samavar, FA-C247-sim]
 sounds: []
-roots: []
+roots: [persian-chob, arabic-libas]
+etymology_hook: "chub-lebâsi: Persian chub 'wood' + lebâs ← Arabic libās 'clothing' (Lane) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C247-sim]
 <!-- hl-knowledge: introduces=[FA-LEX-C248-CHIZ248-01]; assesses=[] -->
 
 **چوب لباسی** — *chub-lebâsi* — "a coat hanger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chub-lebâsi* is *chub*, "wood, stick" (native, usually traced to Middle Persian *čōb*), with *lebâsi*, "for clothes". *lebâs* is borrowed from Arabic *libās*, "clothing" (root *l-b-s*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

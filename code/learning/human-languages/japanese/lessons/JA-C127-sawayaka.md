@@ -14,7 +14,8 @@ romanization: "sawayaka"
 concept_tag: JA-QUAL127-SAWAYAKA
 prerequisites: [JA-C127-ooi, JA-C127-sukunai]
 sounds: []
-roots: []
+roots: [japanese-sawayaka]
+etymology_hook: "sawayaka: native Japanese, inherited, not borrowed; usually kana, kanji 爽やか as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C127-sukunai]
 <!-- hl-knowledge: introduces=[JA-LEX-C127-QUAL127-03]; assesses=[] -->
 
 **さわやか** — *sawayaka* — "refreshing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さわやか** (*sawayaka*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

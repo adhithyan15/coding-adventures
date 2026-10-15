@@ -14,7 +14,8 @@ romanization: "bahâr"
 concept_tag: FA-TIME80-BAHAR
 prerequisites: [FA-C79-dishab, FA-C79-zaman]
 sounds: []
-roots: []
+roots: [persian-bahar]
+etymology_hook: "bahâr ← Middle Persian wahār (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C79-zaman]
 <!-- hl-knowledge: introduces=[FA-LEX-C80-TIME80-01]; assesses=[] -->
 
 **بهار** — *bahâr* — "spring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bahâr* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *wahār*, "spring" (EtymDB). EtymDB takes it back to the Indo-European word for spring behind Latin *ver*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

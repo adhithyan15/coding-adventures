@@ -11,8 +11,8 @@ gloss: one
 concept_tag: ZH-NUMBER-ONE
 prerequisites: [ZH-W03-yi]
 sounds: [tone-1, tone-lexical]
-roots: []
-etymology_hook: 一 is one stroke and means one — the only corner of the language where counting the strokes counts the thing.
+roots: [middle-chinese-jit]
+etymology_hook: "yī 'one': inherited, from Middle Chinese 'jit; the one-stroke character is the writing, not the word's origin"
 duration:
   max_seconds: 240
 requires:
@@ -60,6 +60,13 @@ One honest note, so it does not surprise you later. **一 does not always keep
 this tone.** In front of certain syllables it shifts to *yí* or *yì* — the same
 kind of change that turned 你好 into *ní hǎo*. Counting is exactly where it
 stays *yī*, so counting is where this book leaves it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**一** *yī* is inherited from Middle Chinese *'jit*, "one" (Guangyun, in Baxter's
+transcription). The single stroke is the history of the character; the word is
+the inherited one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-YI, ZH-METHOD-STROKE-COUNT, ZH-TONE-LEXICAL] -->

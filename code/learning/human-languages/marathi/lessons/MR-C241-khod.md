@@ -14,7 +14,8 @@ romanization: "khoḍ"
 concept_tag: MR-VASTU241-KHOD
 prerequisites: [MR-C241-kundi, MR-C241-rop]
 sounds: []
-roots: []
+roots: [sanskrit-kshoda]
+etymology_hook: "khoḍ ← Sanskrit kṣoḍa 'post to which an elephant is fastened', a tadbhava (CDIAL 3748)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C241-rop]
 <!-- hl-knowledge: introduces=[MR-LEX-C241-VASTU241-03]; assesses=[] -->
 
 **खोड** — *khoḍ* — "a trunk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खोड** (*khoḍ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣoḍa*, "post to which an elephant is fastened" (CDIAL 3748). CDIAL thinks the Sanskrit word may be a learned spelling of a word with *kh-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

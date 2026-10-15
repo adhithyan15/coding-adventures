@@ -14,7 +14,8 @@ romanization: "nighaṇṭuvu"
 concept_tag: TE-VASTUVU301-NIGHANTUVU
 prerequisites: [TE-C300-gundi, TE-C300-cetirumalu]
 sounds: []
-roots: []
+roots: [sanskrit-nighantu]
+etymology_hook: "nighaṇṭuvu ← Sanskrit nighaṇṭu 'glossary', with -vu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C300-cetirumalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C301-VASTUVU301-01]; assesses=[] -->
 
 **నిఘంటువు** — *nighaṇṭuvu* — "a dictionary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నిఘంటువు** (*nighaṇṭuvu*) is Sanskrit *nighaṇṭu*, "glossary, word list", with the Telugu ending *-vu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

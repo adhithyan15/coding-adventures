@@ -14,7 +14,8 @@ romanization: "nōndāyisu"
 concept_tag: KA-VERB-NONDAYISU
 prerequisites: [KA-C201-mudrisu, KA-C202-duru-kodu]
 sounds: []
-roots: []
+roots: [kannada-nondayisu]
+etymology_hook: "nōndāyisu: origin uncertain; not recorded in DEDR or CDIAL"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C202-duru-kodu]
 <!-- hl-knowledge: introduces=[KA-LEX-C202-KRIYE202-02]; assesses=[] -->
 
 **ನೋಂದಾಯಿಸು** — *nōndāyisu* — "to register".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ನೋಂದಾಯಿಸು** (*nōndāyisu*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: WORD-NAME
 prerequisites: [HI-C01-namaste]
 sounds: [matra-aa]
 roots: [naaman]
+etymology_hook: "nām ← Sanskrit nāman 'name', the same ancient word as English name"
 duration:
   max_seconds: 240
 requires:

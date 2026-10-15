@@ -14,7 +14,8 @@ romanization: "tīs"
 concept_tag: MR-CLOTHES117-TIS
 prerequisites: [MR-C117-but, MR-C117-chappal]
 sounds: []
-roots: []
+roots: [sanskrit-trimshat]
+etymology_hook: "tīs ← Sanskrit triṁśat 'thirty', a tadbhava (CDIAL 6015)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C117-chappal]
 <!-- hl-knowledge: introduces=[MR-LEX-C117-CLOTHES117-05]; assesses=[] -->
 
 **तीस** — *tīs* — "thirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तीस** (*tīs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *triṁśat*, "thirty" (CDIAL 6015).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

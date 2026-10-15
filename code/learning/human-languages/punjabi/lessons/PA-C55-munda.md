@@ -14,7 +14,8 @@ romanization: "muṇḍā"
 concept_tag: PA-FAMILY55-MUNDA
 prerequisites: [PA-C55-patni, PA-C55-bachcha]
 sounds: []
-roots: []
+roots: [sanskrit-munda]
+etymology_hook: "muṇḍā: listed under Sanskrit muṇḍa 'shaved, bald', probably of Dravidian origin (CDIAL 10191)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C55-bachcha]
 <!-- hl-knowledge: introduces=[PA-LEX-C55-FAMILY55-03]; assesses=[] -->
 
 **ਮੁੰਡਾ** — *muṇḍā* — "a boy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ਮੁੰਡਾ** (*muṇḍā*), "boy", under Sanskrit *muṇḍa*, "shaved, bald", which it takes, probably, from Dravidian; it calls a Munda source less likely (CDIAL 10191).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

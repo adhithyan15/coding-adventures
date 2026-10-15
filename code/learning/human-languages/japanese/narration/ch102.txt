@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a heated table, then the Japanese for h
 You'll want to know: せんたくもの.
 せんたくもの — sentakumono — "the laundry".
 
+The word, taken apart.
+せんたくもの (sentakumono) mixes the two layers: sentaku, "washing", Sino-Japanese sen, "wash", and taku, "rinse" (Middle Chinese draewk), borrowed from Chinese, with native mono, "thing" (JMdict; Unihan, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for heating, then the Japanese for the laun
 
 You'll want to know: せんざい.
 せんざい — senzai — "detergent".
+
+The word, taken apart.
+せんざい (senzai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, "wash" and zai, "medicinal preparation" (Middle Chinese dzejH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for the laundry, then the Japanese for dete
 You'll want to know: ゆのみ.
 ゆのみ — yunomi — "a teacup".
 
+The word, taken apart.
+ゆのみ (yunomi) is a native compound, inherited rather than borrowed: yu, "hot water", and nomi, "drinking", from nomu, "to drink" (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for detergent, then the Japanese for a teac
 You'll want to know: かま.
 かま — kama — "a rice pot".
 
+The word, taken apart.
+かま (kama) is counted a native Japanese word, but its origin is not settled: a link with the Korean word for a pot has been suggested, and whether the two share an ancestor or one was borrowed from the other is open. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a teacup, then the Japanese for a rice 
 
 You'll want to know: まないた.
 まないた — manaita — "a chopping board".
+
+The word, taken apart.
+まないた (manaita) is a native compound, inherited rather than borrowed: ita, "board", with mana, usually explained as an old word for fish as food; one JMdict spelling writes it with "true" and "fish" (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

@@ -14,6 +14,9 @@ Say six to ten again — ṣaṭ, sapta, aṣṭa, nava, daśa — and hear thei
 You'll want to know: एकादश.
 एकादश (ekādaśa) — "eleven": एक, "one", with दश, "ten". One and ten.
 
+The word, taken apart.
+Ekādaśa is built from eka, "one", and daśa, "ten", both inherited numerals (MW). It lives on as Hindi igārah, "eleven" (CDIAL 2485).
+
 What you've built.
 One plus ten.
 
@@ -42,6 +45,9 @@ Before the new one: say the Sanskrit for a moment, then the Sanskrit for eleven.
 
 You'll want to know: द्वादश.
 द्वादश (dvādaśa) — "twelve": द्वा-, "two", with दश. The twelve months of a संवत्सरः.
+
+The word, taken apart.
+Dvādaśa is built from dvā, the old form of "two", and daśa, "ten" (MW). It lives on as Hindi bārah, "twelve" (CDIAL 6658).
 
 What you've built.
 Two plus ten.
@@ -72,6 +78,9 @@ Before the new one: say the Sanskrit for eleven, then the Sanskrit for twelve.
 You'll want to know: विंशतिः.
 विंशतिः (viṃśatiḥ) — "twenty", a new word, not built from दश.
 
+The word, taken apart.
+MW takes viṃśati as probably "two decades", and it is inherited: MW compares Latin vīgintī and Greek eikosi. It lives on as Hindi bīs, "twenty" (CDIAL 11616).
+
 What you've built.
 A fresh word for two tens.
 
@@ -101,6 +110,9 @@ Before the new one: say the Sanskrit for twelve, then the Sanskrit for twenty.
 You'll want to know: शतम्.
 शतम् (śatam) — "a hundred". The English word hundred is its distant cousin.
 
+The word, taken apart.
+Śata is inherited: MW compares Latin centum, Greek hekaton and the hund- of English hundred. It lives on as Hindi sau, "hundred" (CDIAL 12278).
+
 What you've built.
 Ten tens.
 
@@ -129,6 +141,9 @@ Before the new one: say the Sanskrit for twenty, then the Sanskrit for a hundred
 
 You'll want to know: सहस्रम्.
 सहस्रम् (sahasram) — "a thousand", ten शतम् (śatam).
+
+The word, taken apart.
+MW suggests sahasra is sa- "one" with hasra, the cousin of Greek khilioi, "thousand", and compares Persian hazār (CDIAL 13307). The Persian word is a sister of the Sanskrit one, not borrowed from it.
 
 What you've built.
 Ten hundreds.

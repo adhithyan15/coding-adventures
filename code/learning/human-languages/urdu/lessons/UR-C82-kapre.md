@@ -14,7 +14,8 @@ romanization: "kapṛe"
 concept_tag: UR-CLOTHES82-KAPRE
 prerequisites: [UR-C81-kashti, UR-C81-saikil]
 sounds: []
-roots: []
+roots: [sanskrit-karpata]
+etymology_hook: "kapṛe ← Sanskrit karpaṭa 'rag', which CDIAL takes from Austroasiatic (CDIAL 2871)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C81-saikil]
 <!-- hl-knowledge: introduces=[UR-LEX-C82-CLOTHES82-01]; assesses=[] -->
 
 **کپڑے** — *kapṛe* — "clothes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کپڑے** (*kapṛe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karpaṭa*, "patched garment, rag" (CDIAL 2871). *kapṛe*, "clothes", is the plural of *kapṛā*, "cloth". CDIAL takes the Sanskrit word from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

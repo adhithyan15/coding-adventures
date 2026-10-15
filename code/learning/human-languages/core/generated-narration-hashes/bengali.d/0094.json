@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 94,
-  "sourceHash": "fnv1a64:f22988c9bd3e7b27",
+  "sourceHash": "fnv1a64:12884f7377e31015",
   "lessonIds": [
     "BN-C94-dinkal",
     "BN-C94-rattir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch94.txt",
   "json": "bengali/narration/ch94.json",
-  "textHash": "fnv1a64:eb12b2479599c71f",
-  "jsonHash": "fnv1a64:29bdd2e5fd12b586",
+  "textHash": "fnv1a64:cbb7410de9b6ae23",
+  "jsonHash": "fnv1a64:02ed7e89cf4cc47a",
   "findings": []
 }

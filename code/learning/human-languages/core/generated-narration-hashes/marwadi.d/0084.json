@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 84,
-  "sourceHash": "fnv1a64:8a35865261366f4f",
+  "sourceHash": "fnv1a64:c0f227a7e36f7ec5",
   "lessonIds": [
     "MW-C84-gav",
     "MW-C84-sahar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch84.txt",
   "json": "marwadi/narration/ch84.json",
-  "textHash": "fnv1a64:3f29d48c44d07321",
-  "jsonHash": "fnv1a64:d8565ec04d9b7d90",
+  "textHash": "fnv1a64:6c0726969ae7df29",
+  "jsonHash": "fnv1a64:a08871b0f38eda55",
   "findings": []
 }

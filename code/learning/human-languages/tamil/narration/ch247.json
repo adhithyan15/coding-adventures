@@ -4,7 +4,7 @@
   "chapter": 247,
   "title": "Sparrow, Eagle, Puppy, Squirrel, Worm",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:049471a620aed65d",
+  "sourceHash": "fnv1a64:a098466701cde91b",
   "lessons": [
     {
       "id": "TA-C247-kuruvi",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9dd6ad7c90a0e405",
+      "sourceHash": "fnv1a64:6490d240ee921bd1",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "புழு (puḻu) is native Dravidian. DEDR 4312 lists Malayalam puḻu, \"worm, maggot\" and Kannada puḻu."
+              "text": "புழு (puḻu) is native Dravidian. DEDR 4312 lists Malayalam puḻu, \"worm, maggot\" and Kannada puḻu. The entry compares Sanskrit pīlu, \"worm\" (CDIAL 8240)."
             }
           ]
         },

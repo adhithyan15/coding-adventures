@@ -4,7 +4,7 @@
   "chapter": 127,
   "title": "Curtain, Lock, Handkerchief, Bracelet, Earring",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f5b998604fc8d215",
+  "sourceHash": "fnv1a64:f0564131b7c4d0a4",
   "lessons": [
     {
       "id": "AR-C127-sitara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fbac0ac708c6d37",
+      "sourceHash": "fnv1a64:a7a0ccb73f2574ca",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ستارة (sitāra) is built on the native Arabic root s-t-r, \"to veil, to cover\" (Lane). Sitāra is a thing that covers."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -132,9 +143,9 @@
     {
       "id": "AR-C127-qifl",
       "sequence": 5560,
-      "title": "قفل (qifl) — a lock",
+      "title": "قفل (qufl) — a lock",
       "headword": "قفل",
-      "romanization": "qifl",
+      "romanization": "qufl",
       "gloss": "a lock",
       "script": "arabic",
       "modality": "voice",
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66abe0e520c964e2",
+      "sourceHash": "fnv1a64:9f583b0fc4c65d3f",
       "notice": null,
       "blocks": [
         {
@@ -188,12 +199,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "قفل — qifl — \"a lock\"."
+              "text": "قفل — qufl — \"a lock\"."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قفل (qufl) is built on the native Arabic root q-f-l. Lane does not list qufl itself, but under q-f-l he gives aqfala l-bāba, \"he locked the door\", and qāfila, \"a company returning from a journey\", that is, \"a caravan\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -204,7 +226,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -217,43 +239,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "qifl",
+              "instruction": "qufl",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *qifl*]"
+              "source": "[YOU SAY: *qufl*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "qifl, once more",
+              "instruction": "qufl, once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *qifl*, once more]"
+              "source": "[YOU SAY: *qufl*, once more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "say qifl",
+              "instruction": "say qufl",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: say *qifl*]"
+              "source": "[YOU SAY: say *qufl*]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Arabic for a fridge, then the Arabic for a curtain, then say qifl again",
+              "instruction": "say the Arabic for a fridge, then the Arabic for a curtain, then say qufl again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Arabic for a fridge, then the Arabic for a curtain, then say *qifl* again]"
+              "source": "[YOU RECALL: say the Arabic for a fridge, then the Arabic for a curtain, then say *qufl* again]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does قفل (qifl) mean? (\"A lock\".) Say it once more."
+              "text": "What does قفل (qufl) mean? (\"A lock\".) Say it once more."
             }
           ]
         }
@@ -284,7 +306,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb2e2765339c788f",
+      "sourceHash": "fnv1a64:0c7fc663cdd5b1b3",
       "notice": null,
       "blocks": [
         {
@@ -317,6 +339,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منديل (mindīl) is usually traced to Greek mandilion, \"towel, napkin\" (EtymDB), from Latin mantēle; Arabic grammarians placed it under n-d-l."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -327,7 +360,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -376,7 +409,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -407,7 +440,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74accca679aa107d",
+      "sourceHash": "fnv1a64:cd375aa3ab363ead",
       "notice": null,
       "blocks": [
         {
@@ -440,6 +473,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سوار (siwār) is listed by Lane under s-w-r, and his sources call it arabicized from Persian dastwār, \"bracelet\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -450,7 +494,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -499,7 +543,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -530,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d02893f96e86869",
+      "sourceHash": "fnv1a64:bb6608c6b7addf7b",
       "notice": null,
       "blocks": [
         {
@@ -563,6 +607,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قرط (qurṭ) is built on the native Arabic root q-r-ṭ, \"an earring\" (Lane). Qurṭ is an earring."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -573,7 +628,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -622,7 +677,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

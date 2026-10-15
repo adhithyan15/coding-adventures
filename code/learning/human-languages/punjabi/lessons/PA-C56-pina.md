@@ -14,7 +14,8 @@ romanization: "pīṇā"
 concept_tag: PA-VERB-PINA
 prerequisites: [PA-C55-admi, PA-C56-mahiman]
 sounds: []
-roots: []
+roots: [sanskrit-pibati]
+etymology_hook: "pīṇā ← Sanskrit pibati 'drinks', a tadbhava (CDIAL 8209)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C56-mahiman]
 <!-- hl-knowledge: introduces=[PA-LEX-C56-FAMILY56-02]; assesses=[] -->
 
 **ਪੀਣਾ** — *pīṇā* — "to drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੀਣਾ** (*pīṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pibati*, "drinks" (CDIAL 8209).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

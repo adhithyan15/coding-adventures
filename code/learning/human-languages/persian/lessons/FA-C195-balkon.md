@@ -14,7 +14,8 @@ romanization: "bâlkon"
 concept_tag: FA-MAKAN195-BALKON
 prerequisites: [FA-C195-aparteman, FA-C195-bam]
 sounds: []
-roots: []
+roots: [french-balcon]
+etymology_hook: "bâlkon ← French balcon 'balcony'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C195-bam]
 <!-- hl-knowledge: introduces=[FA-LEX-C195-MAKAN195-03]; assesses=[] -->
 
 **بالکن** — *bâlkon* — "a balcony".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâlkon* is borrowed from French *balcon*, "balcony" (EtymDB). The French word came from Italian *balcone* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

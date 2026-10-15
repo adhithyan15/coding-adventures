@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Nihongo, Built in Small Blocks",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cdd70426b23f4af1",
+  "sourceHash": "fnv1a64:37af57c813af958e",
   "lessons": [
     {
       "id": "JA-W05-nichi-kanji",
@@ -986,7 +986,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:217e59b91901920a",
+      "sourceHash": "fnv1a64:4748c8669041cf52",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1059,7 +1059,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here the cousin web finally works — just not toward English. The on-readings nichi, hon, go are borrowings of Middle Chinese, so 日本語 (nihongo) has genuine relatives: Mandarin writes the same three characters and says Rìběnyǔ; Korean borrowed the same compound as ilbon-eo. Same characters, related imported sounds, one meaning, three languages."
+              "text": "Here the cousin web finally works — though not toward English. The on-readings nichi, hon, go are borrowings of Middle Chinese, so 日本語 (nihongo) has genuine relatives: Mandarin writes the same three characters and says Rìběnyǔ; Korean borrowed the same compound as ilbon-eo. Same characters, related imported sounds, one meaning, three languages."
             },
             {
               "kind": "speech",

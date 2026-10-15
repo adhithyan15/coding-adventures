@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "How Are You",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:573769b84d845426",
+  "sourceHash": "fnv1a64:6f6ead8179d650ad",
   "lessons": [
     {
       "id": "ES-C04-estar",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3221927714a958ba",
+      "sourceHash": "fnv1a64:8210e4c61c894209",
       "notice": null,
       "blocks": [
         {
@@ -233,6 +233,17 @@
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "estás and está are forms of estar, Latin stare, \"to stand\": Latin stas and stat, \"you stand\" and \"it stands\", with the e- Spanish puts before st-."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -272,7 +283,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -303,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:982fefe7578c1419",
+      "sourceHash": "fnv1a64:196b79e69af13cfb",
       "notice": null,
       "blocks": [
         {
@@ -343,6 +354,10 @@
             {
               "kind": "speech",
               "text": "usted = the formal \"you\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cómo from Latin quōmodo and estar from Latin stāre, \"to stand\", both inherited (EtymDB 2.1); usted is vuestra merced, \"your grace\", worn down."
             },
             {
               "kind": "speech",

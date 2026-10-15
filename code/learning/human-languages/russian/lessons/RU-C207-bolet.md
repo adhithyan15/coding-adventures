@@ -14,7 +14,8 @@ romanization: "bolét"
 concept_tag: RU-VERB-BOLET
 prerequisites: [RU-C206-krasit, RU-C206-chistit]
 sounds: []
-roots: []
+roots: [slavic-boli]
+etymology_hook: "болеть ← Proto-Slavic *bolěti, with боль 'pain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C206-chistit]
 <!-- hl-knowledge: introduces=[RU-LEX-C207-ACT207-01]; assesses=[] -->
 
 **болеть** (*bolét*) — "to be ill; to ache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**болеть** ← Proto-Slavic *\*bolěti*, with *боль*, "pain" — inherited (Vasmer). Vasmer sets it beside Old English *bealu*, "evil", a link Berneker rejected.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

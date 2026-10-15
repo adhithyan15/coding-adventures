@@ -14,7 +14,8 @@ romanization: "sabz"
 concept_tag: FA-ADJ63-SABZ
 prerequisites: [FA-C63-mohem, FA-C63-ziba]
 sounds: []
-roots: []
+roots: [sabz-persian]
+etymology_hook: "sabz: inherited, usually traced to Middle Persian sabz"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C63-ziba]
 <!-- hl-knowledge: introduces=[FA-LEX-C63-ADJ63-03]; assesses=[] -->
 
 **سبز** — *sabz* — "green".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sabz* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sabz*, "green".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

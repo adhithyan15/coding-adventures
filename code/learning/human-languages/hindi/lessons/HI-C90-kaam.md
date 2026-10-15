@@ -14,7 +14,8 @@ romanization: "kām"
 concept_tag: HI-THING-WORK
 prerequisites: [HI-C90-uthna, HI-C05-karna]
 sounds: []
-roots: []
+roots: [sanskrit-karman]
+etymology_hook: "kām ← Sanskrit karman 'act, work', a tadbhava (CDIAL 2892)"
 duration:
   max_seconds: 240
 requires:

@@ -15,6 +15,7 @@ concept_tag: HI-THG258-DHIRAJ
 prerequisites: [HI-C257-garv, HI-C258-ahankar]
 sounds: []
 roots: []
+etymology_hook: "dhīraj: usually traced to Sanskrit dhairya 'firmness, patience', reshaped; CDIAL does not list it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C258-ahankar]
 <!-- hl-knowledge: introduces=[HI-LEX-C258-THG258-02]; assesses=[] -->
 
 **धीरज** — *dhīraj* — "patience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**धीरज** (*dhīraj*) is usually traced to Sanskrit *dhairya*, "firmness, patience", reshaped in Hindi, but CDIAL does not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ratnam"
 concept_tag: SA-THINGS121-RATNAM
 prerequisites: [SA-C121-vina, SA-C121-pattah]
 sounds: []
-roots: []
+roots: [sanskrit-ratna]
+etymology_hook: "ratna 'gift', then 'jewel': MW derives it from √rā 'give', CDIAL 10600 from √raṇ 'rejoice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C121-pattah]
 <!-- hl-knowledge: introduces=[SA-LEX-C121-THINGS121-04]; assesses=[] -->
 
 **रत्नम्** — *ratnam* — "a jewel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ratna* first meant "a gift, wealth" in the Rigveda and later "a jewel" (MW). MW derives it from the root √rā "give", while CDIAL 10600 refers it to √raṇ "rejoice", so its root is not settled. Pali kept it as *ratana* "jewel" (CDIAL 10600).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

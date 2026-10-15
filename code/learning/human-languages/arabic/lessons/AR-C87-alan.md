@@ -14,7 +14,8 @@ romanization: "al-ān"
 concept_tag: AR-TIME87-ALAN
 prerequisites: [AR-C87-ams, AR-C87-ghadan]
 sounds: []
-roots: []
+roots: [ʾ-y-n]
+etymology_hook: "al-ān: Lane lists it under ʾ-y-n as a noun of present time, its al- never dropped"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C87-ghadan]
 <!-- hl-knowledge: introduces=[AR-LEX-C87-TIME87-03]; assesses=[] -->
 
 **الآن** — *al-ān* — "now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**الآن** (*al-ān*) is listed by Lane under *ʾ-y-n* (some put it under *ʾ-w-n*) as a noun of the present time whose *al-* is never removed. It is built on *ān*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mashā"
 concept_tag: AR-VERB-MASHA
 prerequisites: [AR-C57-nama, AR-C58-qama]
 sounds: []
-roots: []
+roots: [m-sh-y]
+etymology_hook: "mashā: built on the root m-sh-y, 'to walk' (Lane); mashā is the plain verb, 'he walked'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C58-qama]
 <!-- hl-knowledge: introduces=[AR-LEX-C58-VERBS58-02]; assesses=[] -->
 
 **مشى** — *mashā* — "to walk (he walked)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مشى** (*mashā*) is built on the native Arabic root *m-sh-y*, "to walk" (Lane). *Mashā* is the plain verb, "he walked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

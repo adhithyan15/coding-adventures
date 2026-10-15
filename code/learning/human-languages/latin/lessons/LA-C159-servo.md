@@ -13,7 +13,8 @@ gloss: "to keep, to save"
 concept_tag: LA-VERB-SERVO
 prerequisites: [LA-C159-pendeo, LA-C159-taceo]
 sounds: []
-roots: []
+roots: [servare-latin]
+etymology_hook: "servō 'to keep, to save' — usually traced to PIE *ser- 'to watch over'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C159-taceo]
 <!-- hl-knowledge: introduces=[LA-LEX-C159-ACT159-04]; assesses=[] -->
 
 **servō, servāre** — "to keep, to save".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**servō** is inherited, usually traced to Proto-Indo-European *\*ser-*, "to watch over, to protect" (EtymDB 2.1). It is probably not the same word as *servus*, "a slave".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

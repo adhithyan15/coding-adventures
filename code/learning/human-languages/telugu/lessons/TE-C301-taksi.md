@@ -14,7 +14,8 @@ romanization: "ṭāksī"
 concept_tag: TE-VASTUVU301-TAKSI
 prerequisites: [TE-C301-bandi, TE-C301-ato]
 sounds: []
-roots: []
+roots: [english-taxi]
+etymology_hook: "ṭāksī ← English taxi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C301-ato]
 <!-- hl-knowledge: introduces=[TE-LEX-C301-VASTUVU301-04]; assesses=[] -->
 
 **టాక్సీ** — *ṭāksī* — "a taxi".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**టాక్సీ** (*ṭāksī*) is a loan from English *taxi*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

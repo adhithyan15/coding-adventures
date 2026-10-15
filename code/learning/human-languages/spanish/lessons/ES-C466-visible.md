@@ -11,6 +11,7 @@ concept_tag: ES-ASK-VISIBLE
 prerequisites: [ES-C466-director, ES-C423-sociable, ES-C332-aviso]
 sounds: [stress-penultimate, v-b]
 roots: [videre-latin]
+etymology_hook: "visible — built on vis-, a stem of Latin videre 'to see' — English vision, visible"
 duration:
   max_seconds: 275
 requires:

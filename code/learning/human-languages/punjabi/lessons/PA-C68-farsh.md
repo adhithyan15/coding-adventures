@@ -14,7 +14,8 @@ romanization: "farsh"
 concept_tag: PA-HOME68-FARSH
 prerequisites: [PA-C68-chhatt, PA-C68-almari]
 sounds: []
-roots: []
+roots: [arabic-farsh]
+etymology_hook: "farsh ← Arabic farsh 'anything spread, a carpet', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C68-almari]
 <!-- hl-knowledge: introduces=[PA-LEX-C68-HOME68-05]; assesses=[] -->
 
 **ਫ਼ਰਸ਼** — *farsh* — "the floor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਫ਼ਰਸ਼** (*farsh*) is a loan from Arabic *farsh*, "anything spread, a carpet", which reached Punjabi through Persian. Its Arabic root is *f-r-sh* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

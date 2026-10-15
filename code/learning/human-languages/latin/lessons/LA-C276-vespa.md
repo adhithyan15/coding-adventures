@@ -13,7 +13,8 @@ gloss: "a wasp"
 concept_tag: LA-RES276-VESPA
 prerequisites: [LA-C275-fumus, LA-C275-cinis]
 sounds: []
-roots: []
+roots: [vespa-latin]
+etymology_hook: "vespa 'wasp' — usually traced to PIE *wobhseh2 'wasp'; English wasp is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C275-cinis]
 <!-- hl-knowledge: introduces=[LA-LEX-C276-RES276-01]; assesses=[] -->
 
 **vespa, vespae** — "a wasp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vespa** is inherited, usually traced to Proto-Indo-European *\*wobhseh2*, "wasp", from *\*webh-*, "to weave" (EtymDB 2.1): the insect that weaves its nest. English *wasp* is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

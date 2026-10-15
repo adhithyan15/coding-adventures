@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 243,
-  "sourceHash": "fnv1a64:803618c71cceeed5",
+  "sourceHash": "fnv1a64:569732f3a63c88fc",
   "lessonIds": [
     "AR-C243-fatir",
     "AR-C243-muzij",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch243.txt",
   "json": "arabic/narration/ch243.json",
-  "textHash": "fnv1a64:f80cc1cf66769975",
-  "jsonHash": "fnv1a64:ceefd1e13de128cf",
+  "textHash": "fnv1a64:62b4f9c47f0f62e2",
+  "jsonHash": "fnv1a64:b6c621d1825a7ca0",
   "findings": []
 }

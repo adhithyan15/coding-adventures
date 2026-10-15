@@ -14,7 +14,8 @@ romanization: "pereyezzhát"
 concept_tag: RU-VERB-PEREYEZZHAT
 prerequisites: [RU-C237-stuchat, RU-C237-remontirovat]
 sounds: []
-roots: []
+roots: [slavic-jechati]
+etymology_hook: "переезжать is пере- 'across' + езжать, from ездить 'to ride, to travel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C237-remontirovat]
 <!-- hl-knowledge: introduces=[RU-LEX-C237-ACT237-04]; assesses=[] -->
 
 **переезжать** (*pereyezzhát*) — "to move (house)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**переезжать** is *пере-*, "across", with *-езжать*, from *ездить*, "to travel": to move from one home to another.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bakā"
 concept_tag: AR-VERB-BAKA
 prerequisites: [AR-C60-ghasala, AR-C60-dahika]
 sounds: []
-roots: []
+roots: [b-k-y]
+etymology_hook: "bakā: built on the root b-k-y, 'to weep' (Lane); Hebrew bakha, 'to weep', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C60-dahika]
 <!-- hl-knowledge: introduces=[AR-LEX-C60-VERBS60-04]; assesses=[] -->
 
 **بكى** — *bakā* — "to cry (he cried)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بكى** (*bakā*) is built on the native Arabic root *b-k-y*, "to weep" (Lane). Hebrew *bakha*, "to weep", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

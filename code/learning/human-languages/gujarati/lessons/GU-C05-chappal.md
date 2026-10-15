@@ -15,6 +15,7 @@ concept_tag: GU-ANCHOR-CHAPPAL
 prerequisites: [GU-R04-first-four-r1]
 sounds: []
 roots: []
+etymology_hook: "cappal: not in CDIAL; DEDR 1963 compares Hindi cappal, with a Cf., to Dravidian 'sandal' words such as Telugu ceppu"
 duration:
   max_seconds: 120
 requires:
@@ -45,6 +46,11 @@ variety: standard
 **ચપ્પલ** — *cappal* — "sandals".
 
 Say it: *cappal*. [YOU LOOK: at its shape as you say it.] The lessons that follow take pieces of it, **ચ** and **લ**, and write each one on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL has no entry for **ચપ્પલ** (*cappal*). DEDR compares Hindi *cappal*, with a "Cf.", to the Dravidian words for a sandal, such as Telugu *ceppu* (DEDR 1963).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-CHAPPAL] -->

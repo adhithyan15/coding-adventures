@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for laughter, then the Malayalam for worry
 You'll want to know: ദാഹം.
 ദാഹം (dāhaṁ) — "thirst". എനിക്ക് ദാഹമുണ്ട് — "I am thirsty", built like എനിക്ക് വിശപ്പുണ്ട്, "I am hungry".
 
+The word, taken apart.
+ദാഹം (dāhaṁ) from Sanskrit dāha, "burning", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 6321). Thirst is named as a burning, from the root dah, "to burn".
+
 What you've built.
 Hunger's partner.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for worry, then the Malayalam for thirst.
 
 You'll want to know: വിയർപ്പ്.
 വിയർപ്പ് (viyarppŭ) — "sweat". The ർ is the chillu r you learned to write.
+
+The word, taken apart.
+വിയർപ്പ് (viyarppŭ) is native Dravidian, one word with Tamil veyar and Kannada bemar(u) (DEDR 5486).
 
 What you've built.
 What a hot day does to the body.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for thirst, then the Malayalam for sweat.
 You'll want to know: ഗുളിക.
 ഗുളിക (guḷika) — "a tablet, a pill". ഒരു ഗുളിക — "one tablet".
 
+The word, taken apart.
+ഗുളിക (guḷika) from Sanskrit guḍikā, "a little ball, a pill", taken over whole as a tatsama.
+
 What you've built.
 What the doctor gives.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for sweat, then the Malayalam for a tablet
 You'll want to know: ഛർദ്ദി.
 ഛർദ്ദി (chardi) — "vomiting". It opens with ഛ, the letter you wrote from അച്ഛൻ.
 
+The word, taken apart.
+ഛർദ്ദി (chardi) from Sanskrit chardi, "vomiting", taken over whole as a tatsama (CDIAL 4999).
+
 What you've built.
 A word for the doctor.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a tablet, then the Malayalam for vomit
 
 You'll want to know: മുറിവ്.
 മുറിവ് (muṟivŭ) — "a wound, a cut". മുറിവുണ്ട് — "there is a cut".
+
+The word, taken apart.
+മുറിവ് (muṟivŭ) is native Dravidian, a noun from the verb "to break, be cut"; DEDR 5008 lists the root with Tamil muṟi, Kannada muṟi and Telugu muṟiyu.
 
 What you've built.
 What the hospital treats.

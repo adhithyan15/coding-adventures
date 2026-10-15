@@ -14,7 +14,8 @@ romanization: "kaḷisu"
 concept_tag: KA-VERB-KALISU
 prerequisites: [KA-C147-kattarisu, KA-C147-ode]
 sounds: []
-roots: []
+roots: [dravidian-kazhi-pass]
+etymology_hook: "kaḷisu: native Dravidian; DEDR 1356 lists kaḷe, kaḷi 'to send forth, spend (time)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C147-ode]
 <!-- hl-knowledge: introduces=[KA-LEX-C148-ACT148-01]; assesses=[] -->
 
 **ಕಳಿಸು** — *kaḷisu* — "to send".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಳಿಸು** (*kaḷisu*) is native Dravidian, the verb that DEDR 1356 lists as Kannada *kaḷe*, *kaḷi*, "to send forth, abandon, spend (time)", with *-isu*, the ending that makes a verb "cause to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for to swim, then the Marwadi for to jump.
 You'll want to know: पड़णो.
 पड़णो — paṛṇo — "to fall".
 
+The word, taken apart.
+पड़णो (paṛṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from patati, "flies; falls". CDIAL lists Old Marwari paḍaï under it (CDIAL 7722).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for to jump, then the Marwadi for to fall.
 
 You'll want to know: थकणो.
 थकणो — thakṇo — "to get tired".
+
+The word, taken apart.
+थकणो (thakṇo) is a tadbhava, a word inherited and reshaped by sound change. It comes from sthakk, "stop, halt", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 13737); the match is through Hindi thaknā and Gujarati thākvũ. CDIAL thinks a link with sthā, "stand", probable but not clear.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for to fall, then the Marwadi for to get tir
 You'll want to know: जीतणो.
 जीतणो — jītṇo — "to win".
 
+The word, taken apart.
+जीतणो (jītṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jita, "won, conquered". CDIAL gives no Marwari form in this entry (CDIAL 5224); the match is through Hindi jītnā and Gujarati jītvũ.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for to get tired, then the Marwadi for to wi
 You'll want to know: हारणो.
 हारणो — hārṇo — "to lose (a game)".
 
+The word, taken apart.
+हारणो (hārṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hārayati, "loses". CDIAL gives no Marwari form in this entry (CDIAL 14061); the match is through Hindi hārnā and Gujarati hārvũ.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for to win, then the Marwadi for to lose.
 
 You'll want to know: मारणो.
 मारणो — mārṇo — "to hit".
+
+The word, taken apart.
+मारणो (mārṇo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārayati, "kills". CDIAL lists Old Marwari māraï under it (CDIAL 10066).
 
 What you've built.
 One more word for this chapter.

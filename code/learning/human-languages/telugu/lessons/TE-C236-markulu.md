@@ -14,7 +14,8 @@ romanization: "mārkulu"
 concept_tag: TE-PANI236-MARKULU
 prerequisites: [TE-C236-kampeni, TE-C236-prabhutvam]
 sounds: []
-roots: []
+roots: [english-marks]
+etymology_hook: "mārkulu ← English marks"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C236-prabhutvam]
 <!-- hl-knowledge: introduces=[TE-LEX-C236-PANI236-05]; assesses=[] -->
 
 **మార్కులు** — *mārkulu* — "marks, grades".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మార్కులు** (*mārkulu*) is a loan from English *marks*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

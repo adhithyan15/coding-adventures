@@ -14,7 +14,8 @@ romanization: "jab tak"
 concept_tag: UR-VAQT189-JAB-TAK
 prerequisites: [UR-C188-julai, UR-C188-agast]
 sounds: []
-roots: []
+roots: [sanskrit-evam-eva, sanskrit-tavatka]
+etymology_hook: "jab: listed by CDIAL under evam eva (2528); tak ← Sanskrit tāvatka (CDIAL 5805)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C188-agast]
 <!-- hl-knowledge: introduces=[UR-LEX-C189-VAQT189-01]; assesses=[] -->
 
 **جب تک** — *jab tak* — "until; as long as".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جب تک** (*jab tak*) is "when, up to". CDIAL lists *jab*, "when", under Sanskrit *evam eva*, "exactly so", crossed with the relative stem *ya-* (CDIAL 2528), and *tak*, "till", under Sanskrit *tāvatka*, built on *tāvant*, "so much" (CDIAL 5805).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

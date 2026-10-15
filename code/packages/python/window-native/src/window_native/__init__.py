@@ -4,9 +4,11 @@ window_native -- Native window bridge for Python.
 
 from __future__ import annotations
 
+import contextlib
 import math
 from dataclasses import dataclass
 from enum import Enum, IntEnum
+from typing import Self
 
 from window_native.window_native import (  # type: ignore[import]
     WindowError,
@@ -68,17 +70,18 @@ class Window:
     def __init__(self, handle: int) -> None:
         self._handle = handle
 
-    def __enter__(self) -> "Window":
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, exc_type, exc, tb) -> None:
         self.close()
 
     def __del__(self) -> None:
-        try:
+        # A finalizer must never raise: during interpreter shutdown the
+        # native module may already be torn down, and an exception here
+        # would only print a noisy "Exception ignored in __del__" line.
+        with contextlib.suppress(Exception):
             self.close()
-        except Exception:
-            pass
 
     def _require_open(self) -> int:
         if self._handle == 0:

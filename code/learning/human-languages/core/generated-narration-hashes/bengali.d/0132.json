@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 132,
-  "sourceHash": "fnv1a64:5fc3ee7c8c28ebfd",
+  "sourceHash": "fnv1a64:eadc0dc7816ee176",
   "lessonIds": [
     "BN-C132-phon",
     "BN-C132-rediyo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch132.txt",
   "json": "bengali/narration/ch132.json",
-  "textHash": "fnv1a64:c58f7fd7a0eb8bbb",
-  "jsonHash": "fnv1a64:3d8247af10bf1296",
+  "textHash": "fnv1a64:296f2be9842b6559",
+  "jsonHash": "fnv1a64:c270be9a086ceb93",
   "findings": []
 }

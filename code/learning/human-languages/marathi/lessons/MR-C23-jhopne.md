@@ -12,7 +12,7 @@ concept_tag: VERB-SLEEP
 prerequisites: [MR-C23-vatne]
 sounds: [matra-o, retroflex-na]
 roots: [sanskrit-svapiti-sleep, pie-swep-sleep]
-etymology_hook: "झोपणे is built on native झोप jhop, \"sleep,\" with no securely established Sanskrit ancestor; Hindi's सोना sonā continues Sanskrit स्वपिति svapiti from Indo-European *swep-, the root behind Latin sopor and English soporific — so this is the second everyday word where Marathi replaced the inherited one"
+etymology_hook: "झोपणे rests on native झोप 'sleep', with no secure Sanskrit ancestor; Hindi sonā continues svapiti"
 duration:
   max_seconds: 260
 requires:

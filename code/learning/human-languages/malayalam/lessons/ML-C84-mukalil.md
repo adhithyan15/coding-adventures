@@ -11,7 +11,8 @@ romanization: "mukaḷil"
 concept_tag: ML-PLACE-ABOVE
 prerequisites: [ML-R83-from-recall, ML-C78-ude, ML-C52-chair, ML-C46-book]
 sounds: []
-roots: []
+roots: [dravidian-mukal-top]
+etymology_hook: "mukaḷil: native Dravidian, mukaḷ 'top' + the place ending -il; Tamil mukaṭu (DEDR 4888)"
 duration:
   max_seconds: 270
 requires:
@@ -67,6 +68,11 @@ did there.
 Put a thing in front and you have a sentence's worth:
 
 **പുസ്തകം കസേരയുടെ മുകളിൽ** — the book is on top of the chair.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മുകളിൽ** (*mukaḷil*) is native Dravidian: *mukaḷ*, "top, summit" (DEDR 4888, with Tamil *mukaṭu*), with the place ending *-il*. DEDR 4888 compares Sanskrit *mukuṭa*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C84-PLACE-01, ML-GRAMMAR-C84-POSTPOSITION-01, ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-LEX-C46-ASK-05] -->

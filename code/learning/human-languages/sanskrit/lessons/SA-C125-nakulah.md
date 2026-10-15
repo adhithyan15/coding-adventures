@@ -14,7 +14,8 @@ romanization: "nakulaḥ"
 concept_tag: SA-THINGS125-NAKULAH
 prerequisites: [SA-C124-kokilah, SA-C124-catakah]
 sounds: []
-roots: []
+roots: [sanskrit-nakula]
+etymology_hook: "nakula 'mongoose' (AV) is probably not na + kula, says MW; origin uncertain; Hindi neul (CDIAL 6908)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C124-catakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C125-THINGS125-01]; assesses=[] -->
 
 **नकुलः** — *nakulaḥ* — "a mongoose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nakula* "a mongoose" is old, in the Atharvaveda. Pāṇini's grammar splits it as *na* + *kula*, but MW thinks that probably wrong, so its origin is uncertain. It lives on as Hindi *neul* and *naulā* "mongoose" (CDIAL 6908).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

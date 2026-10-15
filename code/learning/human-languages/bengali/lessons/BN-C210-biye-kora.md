@@ -14,7 +14,8 @@ romanization: "biye kôrā"
 concept_tag: BN-VERB-BIYE-KORA
 prerequisites: [BN-C210-phon-kora, BN-C210-dkha-kora]
 sounds: []
-roots: []
+roots: [sanskrit-vivaha, sanskrit-karoti]
+etymology_hook: "biye kôrā: biye 'wedding' ← vivāha (CDIAL 11920) + kôrā ← karoti (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C210-dkha-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C210-ACT210-04]; assesses=[] -->
 
 **বিয়ে করা** — *biye kôrā* — "to marry".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বিয়ে করা** (*biye kôrā*) is *biye*, "a wedding", from Sanskrit *vivāha*, "marriage" (CDIAL 11920), + *kôrā*, "to do", from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

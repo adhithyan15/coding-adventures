@@ -14,7 +14,8 @@ romanization: "śrāntaḥ"
 concept_tag: SA-QUAL157-SRANTAH
 prerequisites: [SA-C157-bhitah, SA-C157-cakitah]
 sounds: []
-roots: []
+roots: [sanskrit-shrama]
+etymology_hook: "śrānta 'tired' is the past participle of √śram 'toil, grow tired' (CDIAL 12692); śrāmyati is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C157-cakitah]
 <!-- hl-knowledge: introduces=[SA-LEX-C157-QUAL157-04]; assesses=[] -->
 
 **श्रान्तः** — *śrāntaḥ* — "tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śrānta* is the past participle of the root √śram "toil, grow tired" (CDIAL 12692): "wearied, tired", already in the Rigveda. *śrāmyati* "gets tired" is the present of the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

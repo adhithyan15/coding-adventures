@@ -14,7 +14,8 @@ romanization: "gēṟṟŭ"
 concept_tag: ML-THINGS159-GERRU
 prerequisites: [ML-C159-ani, ML-C159-veli]
 sounds: []
-roots: []
+roots: [english-gate]
+etymology_hook: "gēṟṟŭ ← English gate"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C159-veli]
 <!-- hl-knowledge: introduces=[ML-LEX-C159-THINGS159-05]; assesses=[] -->
 
 **ഗേറ്റ്** — *gēṟṟŭ* — "a gate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഗേറ്റ്** (*gēṟṟŭ*) ← English *gate*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

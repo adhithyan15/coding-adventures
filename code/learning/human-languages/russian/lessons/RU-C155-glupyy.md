@@ -14,7 +14,8 @@ romanization: "glúpyy"
 concept_tag: RU-KACH155-GLUPYY
 prerequisites: [RU-C155-milyy, RU-C155-umnyy]
 sounds: []
-roots: []
+roots: [slavic-glupu]
+etymology_hook: "глупый ← Proto-Slavic *glupŭ; Vasmer thinks Old Norse glópr 'a fool' probably a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C155-umnyy]
 <!-- hl-knowledge: introduces=[RU-LEX-C155-KACH155-03]; assesses=[] -->
 
 **глупый** (*glúpyy*) — "silly, stupid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**глупый** ← Proto-Slavic *\*glupŭ* — inherited. Vasmer thinks it is probably related to Old Norse *glópr*, "an idiot", and perhaps to *глухой*, "deaf", and finds a Germanic loan unlikely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

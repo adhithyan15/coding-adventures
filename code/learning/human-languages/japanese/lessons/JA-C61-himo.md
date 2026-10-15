@@ -14,7 +14,8 @@ romanization: "himo"
 concept_tag: JA-WORLD61-HIMO
 prerequisites: [JA-C61-hari, JA-C61-kushi]
 sounds: []
-roots: []
+roots: [japanese-himo]
+etymology_hook: "himo: native Japanese, inherited, not borrowed; usually kana, kanji 紐 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C61-kushi]
 <!-- hl-knowledge: introduces=[JA-LEX-C61-WORLD61-04]; assesses=[] -->
 
 **ひも** — *himo* — "a string".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひも** (*himo*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

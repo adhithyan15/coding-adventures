@@ -14,7 +14,8 @@ romanization: "kay"
 concept_tag: AR-SABAB174-KAY
 prerequisites: [AR-C174-li-dhalika, AR-C174-idhan]
 sounds: []
-roots: []
+roots: [kay-so-that]
+etymology_hook: "kay: an old particle of purpose with no three-letter root; deeper origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C174-idhan]
 <!-- hl-knowledge: introduces=[AR-LEX-C174-SABAB174-05]; assesses=[] -->
 
 **كي** — *kay* — "so that, in order to".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كي** (*kay*) is an old particle of purpose, "so that". It is not built on a three-letter root, and its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "oḻukuka"
 concept_tag: ML-VERB-OLUKUKA
 prerequisites: [ML-C232-mukkuka, ML-C232-munnuka]
 sounds: []
-roots: []
+roots: [dravidian-ozhuku-flow]
+etymology_hook: "oḻukuka: native Dravidian, one word with Tamil oḻuku and Kannada oḻku (DEDR 1010)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C232-munnuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C232-KRIYA232-04]; assesses=[] -->
 
 **ഒഴുകുക** — *oḻukuka* — "to flow, to float".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒഴുകുക** (*oḻukuka*) is native Dravidian, one word with Tamil *oḻuku* and Kannada *oḻku* (DEDR 1010).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

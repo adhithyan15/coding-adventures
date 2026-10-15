@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 122,
-  "sourceHash": "fnv1a64:03b6e7887197277d",
+  "sourceHash": "fnv1a64:19f2d57fdef6431f",
   "lessonIds": [
     "MW-C122-dabbo",
     "MW-C122-peti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch122.txt",
   "json": "marwadi/narration/ch122.json",
-  "textHash": "fnv1a64:22ce857e1d9bb576",
-  "jsonHash": "fnv1a64:2d55ff0197777971",
+  "textHash": "fnv1a64:bf92de61691c7a68",
+  "jsonHash": "fnv1a64:7b2360f028bd6b72",
   "findings": []
 }

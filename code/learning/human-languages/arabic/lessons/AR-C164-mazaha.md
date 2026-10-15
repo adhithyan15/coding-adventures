@@ -14,7 +14,8 @@ romanization: "mazaḥa"
 concept_tag: AR-VERB-MAZAHA
 prerequisites: [AR-C164-sarakha, AR-C164-salla]
 sounds: []
-roots: []
+roots: [m-z-ḥ]
+etymology_hook: "mazaḥa: built on the root m-z-ḥ, 'to joke' (Lane); mazaḥa is the plain verb, 'he joked'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C164-salla]
 <!-- hl-knowledge: introduces=[AR-LEX-C164-ACT164-03]; assesses=[] -->
 
 **مزح** — *mazaḥa* — "to joke".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مزح** (*mazaḥa*) is built on the native Arabic root *m-z-ḥ*, "to joke" (Lane). *Mazaḥa* is the plain verb, "he joked".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

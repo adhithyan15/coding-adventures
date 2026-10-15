@@ -11,6 +11,7 @@ concept_tag: ES-VERB-APROVECHAR
 prerequisites: [ES-C483-acudir, ES-C484-utilizar]
 sounds: []
 roots: []
+etymology_hook: "aprovechar — built on provecho 'benefit', Latin profectus 'progress': -ct- became -ch-"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C484-utilizar]
 > *Make the most of the good weather.*
 
 *¡Que aproveche!* — enjoy your meal.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**aprovechar** is built on *provecho*, "benefit", from Latin *profectus*, "progress, profit" — inherited: the *-ct-* became *-ch-*, as *noctem* became *noche*. To make the most of something is to take its profit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

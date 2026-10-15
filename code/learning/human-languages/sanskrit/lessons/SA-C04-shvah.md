@@ -15,6 +15,7 @@ concept_tag: FAREWELL-TOMORROW
 prerequisites: [SA-C04-punar-darshanaya]
 sounds: [shva-conjunct, visarga]
 roots: [shvas-tomorrow]
+etymology_hook: "śvas 'tomorrow' is already in the Rigveda (MW); Hindi kal is from kalya 'dawn' instead (CDIAL 3104)"
 reviews_of: [SA-C04-punar-darshanaya]
 duration:
   max_seconds: 210
@@ -51,9 +52,10 @@ soft breathed *-ḥ*.
 
 <!-- hl-knowledge: introduces=[SA-ETYMON-SHVAH-TOMORROW]; assesses=[] -->
 
-*śvaḥ* ("tomorrow") is from Proto-Indo-European **\*ḱes-** ("tomorrow /
-morning"). Where the modern Indian languages muddle "tomorrow" and "yesterday"
-into one word (Hindi *kal*, Bengali *kāl*, from *kāla* "time"), classical Sanskrit
+*śvaḥ* ("tomorrow") is already in the Rigveda (MW); its deeper origin is not
+settled, though EtymDB sets Latin *crās* "tomorrow" beside it. Where the modern Indian languages muddle "tomorrow" and "yesterday"
+into one word (Hindi *kal*, Bengali *kāl*, from *kalya* "dawn, tomorrow", itself built on
+*kāla* "time", CDIAL 3104), classical Sanskrit
 kept them **separate and precise**: *śvaḥ* is "tomorrow" and *hyaḥ* is
 "yesterday" — two distinct words. "See you tomorrow" is *śvaḥ punar-darśanam*
 ("tomorrow, a seeing-again") or *śvaḥ drakṣyāmi* ("tomorrow
@@ -63,7 +65,7 @@ I shall see [you]").
 
 <!-- hl-knowledge: introduces=[SA-GRAMMAR-ONE-WORD-ONE-DAY]; assesses=[] -->
 
-That the daughters blurred *śvaḥ* / *hyaḥ* into a single *kal* is a small window
+That the daughters let a single *kal* (from *kalya*) cover both days is a small window
 into language change: the modern tongues traded precision for economy, letting
 tense carry the load. Sanskrit, the older layer, still keeps the two days apart.
 

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 68,
-  "sourceHash": "fnv1a64:cfb911099d6d8071",
+  "sourceHash": "fnv1a64:d5e18e044b8f2dd7",
   "lessonIds": [
     "AR-C68-burtuqal",
     "AR-C68-laymun",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch68.txt",
   "json": "arabic/narration/ch68.json",
-  "textHash": "fnv1a64:cf16708ea7b626e5",
-  "jsonHash": "fnv1a64:7263a7849813fd40",
+  "textHash": "fnv1a64:5a32d61f14ca1854",
+  "jsonHash": "fnv1a64:b330e80cacc89195",
   "findings": []
 }

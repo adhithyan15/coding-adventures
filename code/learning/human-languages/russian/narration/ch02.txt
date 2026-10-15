@@ -112,25 +112,24 @@ Lesson 4 of 11.
 
 Warm-up.
 [pause 2 seconds]
-Many languages say "my name is" with a word for my and a word for name. Russian says something quite different, and it is worth taking apart slowly.
+Many languages say "my name is" with a word for my and a word for name. Russian says something quite different.
 
 The exchange.
 Menyá zovút Anna. — "My name is Anna."
-Now the literal reading:
 меня — menya — me, the object form. зовут — zovut — they call.
 So: "[they] call me Anna."
 There is no word for "my" and no word for "name" in the sentence. Russian reports what people call you, not what you possess.
 
 Grammar Lens: the invisible "they".
-Zovút is the they form of zvat', "to call." But there is no они ("they") anywhere — and there isn't meant to be. Russian uses a bare plural verb to mean "people in general," the way English says "they say it'll rain" without anyone in mind.
-English has the same trick and doesn't notice it:
+Zovút is the they form of zvat', "to call," inherited from Proto-Slavic zŭvati, a cousin of Sanskrit hávate, "calls" (Vasmer). But there is no они ("they") anywhere — and there isn't meant to be. Russian uses a bare plural verb to mean "people in general," the way English says "they say it'll rain" without anyone in mind.
+English does the same:
 They call me Anna. — Who are they? Nobody. Everybody.
 
 Grammar Lens: меня is not я.
 This is the important part, and this book's first taste of case.
 You learned я (ya) for "I" last lesson. But here it is меня — because I is now the object of the calling, not the one doing it. Russian changes the shape of the word to mark that job:
 я (ya) is I, the one acting; меня is me, the one acted on.
-English does this with about six pairs — I/me, he/him, she/her, we/us, they/them, who/whom, plus the archaic thou/thee. Russian does it with every noun and pronoun in the language. That system is called case, and it is the main thing standing between you and Russian.
+English does this with about six pairs — I/me, he/him, she/her, we/us, they/them, who/whom. Russian does it with every noun and pronoun in the language. That system is called case, and it is the main thing standing between you and Russian.
 You do not need to learn it yet. You need to notice that меня is a different shape of я (ya), and that the shape carries the meaning.
 
 Guided Practice.

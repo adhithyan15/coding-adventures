@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 143,
-  "sourceHash": "fnv1a64:bd66d67a8ab944f1",
+  "sourceHash": "fnv1a64:694b7f5f46d87a53",
   "lessonIds": [
     "FA-C143-qurt-dadan",
     "FA-C143-faramush-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch143.txt",
   "json": "persian/narration/ch143.json",
-  "textHash": "fnv1a64:719421b96b2dd0e9",
-  "jsonHash": "fnv1a64:c6456d8ed83ad5bd",
+  "textHash": "fnv1a64:80df5c40bb7039fb",
+  "jsonHash": "fnv1a64:e900f5596454abaa",
   "findings": []
 }

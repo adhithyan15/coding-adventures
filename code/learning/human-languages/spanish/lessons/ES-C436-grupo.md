@@ -11,6 +11,7 @@ concept_tag: ES-REF-GRUPO
 prerequisites: [ES-C436-companero, ES-C358-clase]
 sounds: []
 roots: []
+etymology_hook: "grupo ← Italian gruppo, a short plain word that came in whole"
 duration:
   max_seconds: 225
 requires:
@@ -46,7 +47,7 @@ Tuesday group.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C436-GENTE-02, ES-LEX-C436-GENTE-01] -->
 
-This one does not come apart. It arrived whole, by way of Italian, and there is
+This one does not come apart. It arrived whole, borrowed from Italian *gruppo*, and there is
 no Spanish piece inside it to recognise.
 
 That is the second thing this run has taught you about long-versus-short words:

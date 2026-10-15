@@ -14,7 +14,8 @@ romanization: "dappa"
 concept_tag: KA-GUNA217-DAPPA
 prerequisites: [KA-C217-bigi, KA-C217-sadila]
 sounds: []
-roots: []
+roots: [dravidian-dappa-thick]
+etymology_hook: "dappa: native Dravidian, one word with Telugu dappamu (DEDR 3070)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C217-sadila]
 <!-- hl-knowledge: introduces=[KA-LEX-C217-GUNA217-05]; assesses=[] -->
 
 **ದಪ್ಪ** — *dappa* — "thick, fat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದಪ್ಪ** (*dappa*) is native Dravidian, one word with Telugu *dappamu* (DEDR 3070). DEDR lists *dappa* itself, "thickness, stoutness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

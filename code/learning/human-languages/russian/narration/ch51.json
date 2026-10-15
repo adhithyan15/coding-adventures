@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Cup, Plate, Spoon, Knife, Fork",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d40c4e1e0beeefe7",
+  "sourceHash": "fnv1a64:d8830d6514c54174",
   "lessons": [
     {
       "id": "RU-C51-cup",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59b4ef77d9105b08",
+      "sourceHash": "fnv1a64:8acebf46726840cb",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "чашка (cháshka) is чаша, \"a bowl, a goblet\", with -ка, \"little\". чаша from Proto-Slavic čaša, which Vasmer thinks is probably related to Old Prussian kiosi, \"a goblet\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7ddb2f85b78454b",
+      "sourceHash": "fnv1a64:5b41826a1f3a8c95",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "тарелка (tarélka) — older тарель, recorded from 1509; Vasmer thinks it apparently came through Polish talerz and Czech talíř from Middle High German talier, from Italian tagliere, \"a trencher\", from tagliare, \"to cut\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16fc0b420ea457a8",
+      "sourceHash": "fnv1a64:f1b5566c1feca507",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ложка (lózhka) from Old Russian lŭžĭka, beside lŭžica, from Proto-Slavic lŭžĭka — inherited. Vasmer thinks it is probably related to Albanian lugë, \"spoon\", and perhaps to a root \"to break, to split\", since Swedish sked, \"spoon\", goes with a verb \"to split\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:787f700872d92c2a",
+      "sourceHash": "fnv1a64:1ac1244d7c7e5936",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "нож (nozh) from Proto-Slavic nožĭ — inherited. Vasmer will not separate it from вонзить, \"to thrust in\", and заноза, \"a splinter\", and reports the usual link with Greek nýssō, \"I prick\": the knife as the thing that pierces."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e33e062f24d57636",
+      "sourceHash": "fnv1a64:d76a01ff0da84606",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вилка (vílka) is вилы, \"a pitchfork\", with -ка, \"little\": a little pitchfork. вилы from Proto-Slavic vidla, first \"something bent\", from the root of вить, \"to twist\" (Vasmer)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

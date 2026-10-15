@@ -14,7 +14,8 @@ romanization: "vartṇā"
 concept_tag: PA-VERB-VARTNA
 prerequisites: [PA-C149-carhna, PA-C149-bulauna]
 sounds: []
-roots: []
+roots: [sanskrit-vartate]
+etymology_hook: "vartṇā: usually linked with Sanskrit vartate 'turns, moves; takes place'; CDIAL lists no Punjabi form of it (11352)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C149-bulauna]
 <!-- hl-knowledge: introduces=[PA-LEX-C149-ACT149-04]; assesses=[] -->
 
 **ਵਰਤਣਾ** — *vartṇā* — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਵਰਤਣਾ** (*vartṇā*) is usually linked with Sanskrit *vartate*, "turns, moves; takes place", but CDIAL lists no Punjabi form of that verb (CDIAL 11352), so its history is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

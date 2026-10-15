@@ -15,6 +15,7 @@ concept_tag: MR-AAROGYA170-KANTALA
 prerequisites: [MR-C170-laj, MR-C170-matsar]
 sounds: []
 roots: []
+etymology_hook: "kaṇṭāḷā 'boredom': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C170-matsar]
 <!-- hl-knowledge: introduces=[MR-LEX-C170-AAROGYA170-03]; assesses=[] -->
 
 **कंटाळा** — *kaṇṭāḷā* — "boredom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **कंटाळा** (*kaṇṭāḷā*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it in this sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

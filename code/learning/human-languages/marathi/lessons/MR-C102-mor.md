@@ -14,7 +14,8 @@ romanization: "mor"
 concept_tag: MR-ANIMALS102-MOR
 prerequisites: [MR-C101-makad, MR-C102-sap]
 sounds: []
-roots: []
+roots: [sanskrit-mayura]
+etymology_hook: "mor ← Sanskrit mayūra 'peacock' (CDIAL 9865), traced by some to Dravidian or Austroasiatic, by Bailey to Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C102-sap]
 <!-- hl-knowledge: introduces=[MR-LEX-C102-ANIMALS102-02]; assesses=[] -->
 
 **मोर** — *mor* — "a peacock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मोर** (*mor*) comes from *\*mōra*, a form CDIAL sets beside Sanskrit *mayūra*, "peacock" (CDIAL 9865). The source of the Sanskrit word is debated: Bloch traced it to Dravidian, Przyluski to Austroasiatic, and Bailey to an old Indo-Iranian colour word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 72,
-  "sourceHash": "fnv1a64:b053b75e849b4bd1",
+  "sourceHash": "fnv1a64:0e1768cd0b186c79",
   "lessonIds": [
     "MW-C72-badro",
     "MW-C72-sap",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch72.txt",
   "json": "marwadi/narration/ch72.json",
-  "textHash": "fnv1a64:e525fd2c1d9bff87",
-  "jsonHash": "fnv1a64:abe47ca39e711331",
+  "textHash": "fnv1a64:b74d4effe12ba370",
+  "jsonHash": "fnv1a64:3dcd2b8ed88902ec",
   "findings": []
 }

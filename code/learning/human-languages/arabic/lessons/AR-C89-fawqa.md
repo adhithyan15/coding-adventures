@@ -14,7 +14,8 @@ romanization: "fawqa"
 concept_tag: AR-PLACE89-FAWQA
 prerequisites: [AR-C88-dakhil, AR-C89-kharij]
 sounds: []
-roots: []
+roots: [f-w-q]
+etymology_hook: "fawqa: built on the root f-w-q, 'to surpass, to be above' (Lane); fawqa is 'above'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C89-kharij]
 <!-- hl-knowledge: introduces=[AR-LEX-C89-PLACE89-02]; assesses=[] -->
 
 **فوق** — *fawqa* — "above".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فوق** (*fawqa*) is built on the native Arabic root *f-w-q*, "to surpass, to be above" (Lane). *Fawqa* is "above".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

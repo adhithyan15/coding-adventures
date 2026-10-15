@@ -1213,6 +1213,39 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_swimlane_labeled_dotted_endpoint_markers() {
+        let tokens = try_tokenize_mermaid_swimlane(
+            "swimlane-beta LR\na o-. circle .-o b\nb x-. cross .-x c\nc -. open .- d\n",
+        ).expect("labeled dotted endpoint markers should tokenize");
+
+        assert_eq!(tokens.iter().filter(|token|
+            custom_name(token) == Some("DOTTED_LABEL_EDGE_LINE")
+        ).count(), 3);
+    }
+
+    #[test]
+    fn tokenizes_swimlane_positional_link_styles() {
+        let tokens = try_tokenize_mermaid_swimlane(
+            "swimlane-beta LR\na --> b\nlinkStyle default stroke:#64748b\nlinkStyle 0, 2 stroke:#dc2626;\n",
+        ).expect("positional link styles should tokenize");
+
+        assert_eq!(tokens.iter().filter(|token|
+            custom_name(token) == Some("LINK_STYLE_LINE")
+        ).count(), 2);
+    }
+
+    #[test]
+    fn tokenizes_swimlane_positional_link_curves() {
+        let tokens = try_tokenize_mermaid_swimlane(
+            "swimlane-beta LR\na --> b\nlinkStyle default interpolate basis\nlinkStyle 0, 2 interpolate stepBefore;\n",
+        ).expect("positional link curves should tokenize");
+
+        assert_eq!(tokens.iter().filter(|token|
+            custom_name(token) == Some("LINK_STYLE_LINE")
+        ).count(), 2);
+    }
+
+    #[test]
     fn comments_are_skipped() {
         let tokens =
             tokenize_mermaid("%% heading comment\nflowchart TD\n%% edge comment\nA --- B\n");

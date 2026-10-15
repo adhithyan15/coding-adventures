@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to prevent, then the Kannada for to prep
 You'll want to know: ಚುಚ್ಚು.
 ಚುಚ್ಚು — cuccu — "to prick, to pierce".
 
+The word, taken apart.
+ಚುಚ್ಚು (cuccu) is native Dravidian (DEDR 2778). DEDR lists cuccu, "to make enter, put on a spit".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to prepare, then the Kannada for to pric
 
 You'll want to know: ಉಗುಳು.
 ಉಗುಳು — uguḷu — "to spit".
+
+The word, taken apart.
+ಉಗುಳು (uguḷu) is native Dravidian, one word with Tamil umi (DEDR 636). DEDR lists older uguḻ, "to spit out".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to prick, then the Kannada for to spit.
 You'll want to know: ಆಕಳಿಸು.
 ಆಕಳಿಸು — ākaḷisu — "to yawn".
 
+The word, taken apart.
+ಆಕಳಿಸು (ākaḷisu) is native Dravidian, one word with Tamil āvi, Telugu āvalincu and Malayalam āvi (DEDR 392). DEDR lists ākaḷisu, "to yawn, gape".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to spit, then the Kannada for to yawn.
 You'll want to know: ಬಗೆಹರಿಸು.
 ಬಗೆಹರಿಸು — bageharisu — "to solve, to sort out".
 
+The word, taken apart.
+ಬಗೆಹರಿಸು (bageharisu) is native Dravidian: bage, "thought, concern" (DEDR 5205), and harisu, "to make go away", from hari, "to run, flow, go away" (DEDR 3963). Reading the whole as "to make a worry go away" is likely, but no source spells it out.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to yawn, then the Kannada for to solve.
 
 You'll want to know: ಅಗೆ.
 ಅಗೆ — age — "to dig".
+
+The word, taken apart.
+ಅಗೆ (age) is native Dravidian, one word with Tamil akaḻ (DEDR 11). DEDR lists agi, age, "to dig, burrow".
 
 What you've built.
 One more word for this chapter.

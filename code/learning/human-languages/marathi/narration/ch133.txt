@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a thread, then the Marathi for a comb.
 You'll want to know: साबण.
 साबण — sābaṇ — "soap".
 
+The word, taken apart.
+साबण (sābaṇ) is a loan from Arabic ṣābūn, "soap", which reached Marathi through Persian. Its Arabic root is ṣ-b-n (Lane). Latin sāpō lies further back.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a comb, then the Marathi for soap.
 
 You'll want to know: पेटी.
 पेटी — peṭī — "a box".
+
+The word, taken apart.
+पेटी (peṭī) comes from pēṭṭa, one of the forms CDIAL reconstructs beside Sanskrit piṭaka, "basket, box" (CDIAL 8164). CDIAL calls the word non-Aryan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for soap, then the Marathi for a box.
 You'll want to know: पिशवी.
 पिशवी — piśvī — "a bag".
 
+The word, taken apart.
+The origin of पिशवी (piśvī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a box, then the Marathi for a bag.
 You'll want to know: टोपली.
 टोपली — ṭoplī — "a basket".
 
+The word, taken apart.
+टोपली (ṭoplī) is inherited. CDIAL lists Marathi ṭoplā, "basket", with an added -l-, under a reconstructed ṭōppa, "basket-work", and asks whether that is the same word as the ṭōppa behind टोपी (CDIAL 5482).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a bag, then the Marathi for a basket.
 
 You'll want to know: मेणबत्ती.
 मेणबत्ती — meṇbattī — "a candle".
+
+The word, taken apart.
+मेणबत्ती (meṇbattī) is "wax-lamp": meṇ, "beeswax", from Sanskrit madana, "beeswax" (CDIAL 9778), and battī, "wick, lamp", the Hindi form of a word CDIAL lists under Sanskrit varti, "wick"; Marathi's own form is vāt (CDIAL 11359).
 
 What you've built.
 One more word for this chapter.

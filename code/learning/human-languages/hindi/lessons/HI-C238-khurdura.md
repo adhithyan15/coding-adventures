@@ -15,6 +15,7 @@ concept_tag: HI-QUAL238-KHURDURA
 prerequisites: [HI-C238-rukha, HI-C238-cipcipa]
 sounds: []
 roots: []
+etymology_hook: "khurdurā: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C238-cipcipa]
 <!-- hl-knowledge: introduces=[HI-LEX-C238-QUAL238-05]; assesses=[] -->
 
 **खुरदुरा** — *khurdurā* — "rough (to the touch)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **खुरदुरा** (*khurdurā*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

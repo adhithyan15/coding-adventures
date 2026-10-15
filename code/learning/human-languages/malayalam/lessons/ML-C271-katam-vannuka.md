@@ -14,7 +14,8 @@ romanization: "kaṭaṁ vāṅṅuka"
 concept_tag: ML-VERB-KATAM-VANNUKA
 prerequisites: [ML-C270-tarkkikkuka, ML-C270-sraddhikkuka]
 sounds: []
-roots: []
+roots: [dravidian-katam-debt, dravidian-vangu-take]
+etymology_hook: "kaṭaṁ vāṅṅuka: native Dravidian, 'take a debt': kaṭam (DEDR 1113) + vāṅṅuka (DEDR 5336)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C270-sraddhikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C271-KRIYA271-01]; assesses=[] -->
 
 **കടം വാങ്ങുക** — *kaṭaṁ vāṅṅuka* — "to borrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കടം വാങ്ങുക** (*kaṭaṁ vāṅṅuka*) is native Dravidian, "take a debt": *kaṭam*, "debt, obligation" (DEDR 1113, with Tamil *kaṭam*), and *vāṅṅuka*, "to take, receive" (DEDR 5336).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

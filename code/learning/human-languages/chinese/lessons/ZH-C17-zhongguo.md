@@ -11,8 +11,8 @@ romanization: zhōngguó
 gloss: China
 prerequisites: [ZH-W17-guo-delayed]
 sounds: [tone-1, tone-2]
-roots: []
-etymology_hook: Middle or China plus country makes 中国, China.
+roots: [middle-chinese-trjuwng, middle-chinese-kwok]
+etymology_hook: "zhōngguó: 'middle' + 'state', from Middle Chinese trjuwng and kwok; first 'the central states'"
 duration:
   max_seconds: 155
 requires:
@@ -44,6 +44,10 @@ reviews_of: [ZH-C17-hear-zhongguo, ZH-W17-guo-delayed, ZH-C15-zhong, ZH-C12-hear
 > **中国**
 
 The shared 中 is followed by 国, country: *zhōngguó*, **China**.
+
+Both are inherited from Middle Chinese, *trjuwng* and *kwok* (Guangyun, in
+Baxter's transcription). The pair is very old and first meant the central
+states, the realm at the middle; it became the country's name much later.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGGUO-01] -->

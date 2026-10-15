@@ -14,7 +14,8 @@ romanization: "dhārālo"
 concept_tag: BN-QUAL140-DHARALO
 prerequisites: [BN-C139-soja, BN-C139-baka]
 sounds: []
-roots: []
+roots: [sanskrit-dhara-edge]
+etymology_hook: "dhārālo: dhār 'edge' ← dhārā 'sharp edge' (CDIAL 6793) + -ālo"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C139-baka]
 <!-- hl-knowledge: introduces=[BN-LEX-C140-QUAL140-01]; assesses=[] -->
 
 **ধারালো** — *dhārālo* — "sharp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ধারালো** (*dhārālo*) is *dhār*, "edge", from Sanskrit *dhārā*, "sharp edge, blade" (CDIAL 6793), with the ending *-ālo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

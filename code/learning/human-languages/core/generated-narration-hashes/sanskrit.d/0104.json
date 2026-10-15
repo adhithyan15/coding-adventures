@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 104,
-  "sourceHash": "fnv1a64:c26665c241e55798",
+  "sourceHash": "fnv1a64:771020faadf0025e",
   "lessonIds": [
     "SA-C104-satika",
     "SA-C104-padatranam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch104.txt",
   "json": "sanskrit/narration/ch104.json",
-  "textHash": "fnv1a64:5c48d2eaa5103fa1",
-  "jsonHash": "fnv1a64:307e0d8059eec1b6",
+  "textHash": "fnv1a64:ff1af83f4062177f",
+  "jsonHash": "fnv1a64:e0add583e86e1c1f",
   "findings": []
 }

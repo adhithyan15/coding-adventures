@@ -13,7 +13,8 @@ gloss: "care, worry"
 concept_tag: LA-AEGER-CURA
 prerequisites: [LA-C68-fames, LA-C68-sitis]
 sounds: []
-roots: []
+roots: [cura-latin]
+etymology_hook: "cūra 'care' — origin uncertain; one proposal: PIE *kweys- 'to heed'; English cure and curious"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C68-sitis]
 <!-- hl-knowledge: introduces=[LA-LEX-C68-AEGER-05]; assesses=[] -->
 
 **cūra, cūrae** — "care, worry". English *cure* and *curator*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cūra** has no sure origin. EtymDB 2.1 records a proposal that traces it to Proto-Indo-European *\*kweys-*, "to heed", but it is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

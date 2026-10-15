@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "More Animals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:008efaff5cc88ce4",
+  "sourceHash": "fnv1a64:074a9eb0abd477c3",
   "lessons": [
     {
       "id": "SA-C48-lion",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:799a325ec0894dc5",
+      "sourceHash": "fnv1a64:aaa6192645d40163",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW takes siṃha as probably \"the powerful one\", from the root √sah, \"to prevail\", but no cousin outside India is agreed, so its origin is not settled (CDIAL 13384)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84cde5d1e624929e",
+      "sourceHash": "fnv1a64:331dc4a53cfc2a9f",
       "notice": null,
       "blocks": [
         {
@@ -307,7 +318,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bfc450f607b7a1d",
+      "sourceHash": "fnv1a64:88717262421295e5",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +363,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chāga is already in the Rigveda. MW tentatively compares a Greek verb for limping, but no cousin is agreed, so its origin is not settled. The related chagala, \"goat\", has many modern descendants (CDIAL 4963)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +384,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +442,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +473,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d61c1e90c3708d8e",
+      "sourceHash": "fnv1a64:84e4b7c15e29432f",
       "notice": null,
       "blocks": [
         {
@@ -486,7 +508,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two words you own are sitting inside it: वनम्, the forest, and नरः, the man. Sanskrit's own commentators read वानरः (vānaraḥ) as the forest-man, and that reading has held for two thousand years, whatever later scholars have made of it."
+              "text": "Two words you own seem to sit inside it: वनम्, the forest, and नरः, the man. Some have read वानरः (vānaraḥ) as the forest-man, vana + nara; MW prefers an old word for forest, vanar-, so the forest is in it either way."
             },
             {
               "kind": "speech",
@@ -496,6 +518,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW and CDIAL 11515 derive vānara from vanar-, an old word for forest: the forest animal. The reading vana-nara, \"forest man\", is one MW reports from others. It lives on as Hindi bandar."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +539,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +597,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +628,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c41f677981de668",
+      "sourceHash": "fnv1a64:8b3cbbaa091b9856",
       "notice": null,
       "blocks": [
         {

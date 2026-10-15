@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a tree trunk, then the Urdu for mud.
 You'll want to know: مکئی.
 مکئی — makaī — "maize".
 
+The word, taken apart.
+CDIAL lists مکئی (makaī), as Hindi makāī, "maize", under Sanskrit markaka, a bird-name known only from the old word-lists, without explaining the link (CDIAL 9879).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for mud, then the Urdu for maize.
 
 You'll want to know: گندم.
 گندم — gandum — "wheat".
+
+The word, taken apart.
+گندم (gandum) is a loan, usually traced to Persian gandum, "wheat".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for maize, then the Urdu for wheat.
 You'll want to know: چنے.
 چنے — chane — "chickpeas".
 
+The word, taken apart.
+چنے (chane) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from caṇa, "chickpea" (CDIAL 4579). chane is the plural of chanā.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for wheat, then the Urdu for chickpeas.
 You'll want to know: راجما.
 راجما — rājmā — "kidney beans".
 
+The word, taken apart.
+راجما (rājmā) is often linked with Sanskrit rājamāṣa, "a kind of bean", built from rājan, "king", and māṣa, "bean". CDIAL records that word, but lists no Hindi form under it (CDIAL 10684).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for chickpeas, then the Urdu for kidney beans.
 
 You'll want to know: انجیر.
 انجیر — anjīr — "a fig".
+
+The word, taken apart.
+انجیر (anjīr) is usually traced to Persian anjīr, "fig". CDIAL lists Hindi añjīr under Sanskrit añjīra, "fig tree", and marks that word as itself taken from Persian (CDIAL 174).
 
 What you've built.
 One more word for this chapter.

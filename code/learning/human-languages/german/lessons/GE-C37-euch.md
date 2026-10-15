@@ -54,7 +54,7 @@ one.
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-EUCH-01, GE-LEX-IHR-01, GE-LEX-DU-SIE-02, GE-LEX-UNS-01] -->
 
 English had this word. Old English **ēow** was the done-to shape of **ġē**
-("ye"), and *ēow* is exactly what German's *euch* is.
+("ye"), and *ēow* is the same word as German *euch*.
 
 Then English did something strange. It let *ēow* — the **object** form — take
 over the subject job as well, so *ye* died out and **you** became the only word

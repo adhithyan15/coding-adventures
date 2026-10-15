@@ -14,7 +14,8 @@ romanization: "kottimīra"
 concept_tag: TE-VASTUVU299-KOTTIMIRA
 prerequisites: [TE-C299-sanagalu, TE-C299-avalu]
 sounds: []
-roots: []
+roots: [telugu-kottimira-coriander]
+etymology_hook: "kottimīra: probably the northern kothmīr, from Sanskrit kustumbarī 'coriander' (CDIAL 3380)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C299-avalu]
 <!-- hl-knowledge: introduces=[TE-LEX-C299-VASTUVU299-03]; assesses=[] -->
 
 **కొత్తిమీర** — *kottimīra* — "coriander leaves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కొత్తిమీర** (*kottimīra*) probably comes from the northern coriander word, Hindi *kothmīr*, Oriya *kothimiri*, which CDIAL 3380 traces to Sanskrit *kustumbarī*, "coriander"; CDIAL calls that word non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

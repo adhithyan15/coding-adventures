@@ -14,7 +14,8 @@ romanization: "belṭ"
 concept_tag: BN-JINIS195-BELT
 prerequisites: [BN-C195-jket, BN-C195-renkot]
 sounds: []
-roots: []
+roots: [english-belt]
+etymology_hook: "belṭ ← English belt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C195-renkot]
 <!-- hl-knowledge: introduces=[BN-LEX-C195-JINIS195-03]; assesses=[] -->
 
 **বেল্ট** — *belṭ* — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বেল্ট** (*belṭ*) is a loan from English *belt*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

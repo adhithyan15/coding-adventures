@@ -14,7 +14,8 @@ romanization: "delfin"
 concept_tag: FA-THINGS122-DELFIN
 prerequisites: [FA-C121-zarafe, FA-C122-nahang]
 sounds: []
-roots: []
+roots: [greek-delphin]
+etymology_hook: "delfin ← Greek delphin 'dolphin' (EtymDB), probably via a European language"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C122-nahang]
 <!-- hl-knowledge: introduces=[FA-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **دلفین** — *delfin* — "a dolphin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*delfin* goes back to Greek *delphin*, "dolphin" (EtymDB), the word behind English *dolphin*; it probably reached Persian through a European language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

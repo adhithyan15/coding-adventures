@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 19,
-  "sourceHash": "fnv1a64:fd01428da1034c4a",
+  "sourceHash": "fnv1a64:7ce2810fb042f578",
   "lessonIds": [
     "MR-C12-dola",
     "MR-C12-kaan",
@@ -13,6 +13,6 @@
   "text": "marathi/narration/ch19.txt",
   "json": "marathi/narration/ch19.json",
   "textHash": "fnv1a64:3df0b2b828ad2687",
-  "jsonHash": "fnv1a64:cd89106a615f95e5",
+  "jsonHash": "fnv1a64:fe670ee7d48f142b",
   "findings": []
 }

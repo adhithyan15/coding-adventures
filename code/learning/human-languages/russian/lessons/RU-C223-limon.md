@@ -14,7 +14,8 @@ romanization: "limón"
 concept_tag: RU-VESHCH223-LIMON
 prerequisites: [RU-C223-fasol, RU-C223-apelsin]
 sounds: []
-roots: []
+roots: [arabic-limun]
+etymology_hook: "лимон came through Modern Greek limoni or from Italian limone"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C223-apelsin]
 <!-- hl-knowledge: introduces=[RU-LEX-C223-VESHCH223-03]; assesses=[] -->
 
 **лимон** (*limón*) — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**лимон** — recorded from the 1500s; it came through Modern Greek *limóni* or straight from Italian *limone* (Vasmer). The source is Arabic and Persian *līmūn*, a word from India (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ef5e0d7fb75b0bb9",
+  "sourceHash": "fnv1a64:b86d568429dec966",
   "lessons": [
     {
       "id": "TA-C31-matiya-vanakkam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0fc68ea0a96a97e",
+      "sourceHash": "fnv1a64:2dfc7d9ecf7ceff1",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Use மதிய வணக்கம் (matiya vaṇakkam) when that afternoon slot fits the people and setting around you. Treat \"noon to 4\" as a useful learning window, not as a universal clock rule."
+              "text": "Use மதிய வணக்கம் (matiya vaṇakkam) when that afternoon slot fits the people and setting around you. Treat \"noon to 4\" as a useful learning window, not as a universal clock rule. The two words come from different places: matiya from Sanskrit madhya, \"middle\" (CDIAL 9804), and vaṇakkam, native, from the verb \"to bow\" (DEDR 5236)."
             }
           ]
         },

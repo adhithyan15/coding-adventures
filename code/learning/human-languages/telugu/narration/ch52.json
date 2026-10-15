@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:380144d03d6dd456",
+  "sourceHash": "fnv1a64:18437c7643af54d0",
   "lessons": [
     {
       "id": "TE-C52-door",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0818fea1f472bbb3",
+      "sourceHash": "fnv1a64:0b2244481cf50626",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తలుపు (talupu) is native Dravidian. DEDR 3123 lists talupu, \"door\", in an entry with Tamil taḷ, \"to hinder, obstruct\", and Kannada taḷ, \"impediment\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18b81d3ca6cf6e89",
+      "sourceHash": "fnv1a64:fb654c2baccc4b25",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cb14aa08b9f7ad7",
+      "sourceHash": "fnv1a64:1dc41c5cc2c0c47a",
       "notice": null,
       "blocks": [
         {
@@ -344,6 +355,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of ముగ్గు (muggu) is uncertain. DEDR lists no word of this shape in this sense, and CDIAL has nothing for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -354,7 +376,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -412,7 +434,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -443,7 +465,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93c283e687698f9a",
+      "sourceHash": "fnv1a64:2f3357b94f5be7a1",
       "notice": null,
       "blocks": [
         {
@@ -483,6 +505,10 @@
             {
               "kind": "speech",
               "text": "The plural stem is పూల-, which is about to matter."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR 4345 lists Telugu pū, pūvu and puvvu, \"flower\", with Tamil pū and Kannada pūvu. DEDR compares, with a query, Sanskrit puṣpa, \"flower\" (CDIAL 8303)."
             }
           ]
         },
@@ -587,7 +613,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c45770ff153287b",
+      "sourceHash": "fnv1a64:5351ef1d707e77de",
       "notice": null,
       "blocks": [
         {
@@ -618,11 +644,11 @@
             },
             {
               "kind": "speech",
-              "text": "పూల, flowers, and దండ — the same దండ that gave you దండం, the salutation, one chapter back. Sanskrit daṇḍa is a staff, and by extension a row. A పూలదండ (pūladaṇḍa) is a row of flowers, strung."
+              "text": "పూల, flowers, and దండ, a garland. It looks like the దండ of దండం, the salutation, one chapter back, but this one is Dravidian: DEDR 3060 lists it with Kannada daṇḍe, \"garland, wreath\". A పూలదండ (pūladaṇḍa) is a garland of flowers, strung."
             },
             {
               "kind": "speech",
-              "text": "So the greeting and the garland are one word used twice. You say దండం with your hands; you put పూలదండ (pūladaṇḍa) round a neck. Both of them come from a straight line."
+              "text": "So the greeting and the garland only sound alike. You say దండం with your hands; you put పూలదండ (pūladaṇḍa) round a neck."
             },
             {
               "kind": "speech",

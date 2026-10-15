@@ -14,7 +14,8 @@ romanization: "śatruḥ"
 concept_tag: SA-PPL208-SATRUH
 prerequisites: [SA-C208-bandhuh, SA-C208-sakha]
 sounds: []
-roots: []
+roots: [sanskrit-shatru]
+etymology_hook: "śatru 'enemy', said to come from √śad 'overthrow'; MW compares Greek kotos 'grudge' and English hate"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C208-sakha]
 <!-- hl-knowledge: introduces=[SA-LEX-C208-PPL208-04]; assesses=[] -->
 
 **शत्रुः** — *śatruḥ* — "an enemy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śatru* is a Rigvedic word for "enemy" (CDIAL 12286). MW reports that it is said to come from √śad, "the overthrower", and compares Greek *kotos*, "grudge", and English *hate*; the derivation is only reported, not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

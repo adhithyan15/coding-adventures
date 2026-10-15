@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a colour, then the Marathi for a journey
 You'll want to know: सुट्टी.
 सुट्टी — suṭṭī — "a holiday".
 
+The word, taken apart.
+सुट्टी (suṭṭī) is inherited. CDIAL lists Marathi suṭī, "remission", under a reconstructed kṣuṭyate, "is released" (CDIAL 3707). A holiday is a release.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a journey, then the Marathi for a holida
 
 You'll want to know: संगीत.
 संगीत — saṅgīt — "music".
+
+The word, taken apart.
+संगीत (saṅgīt) is Sanskrit saṁgīta, "chorus, concert", taken over whole as a learned loan, a tatsama (CDIAL 12849). It is built on gai, "to sing".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a holiday, then the Marathi for music.
 You'll want to know: बातमी.
 बातमी — bātmī — "news".
 
+The word, taken apart.
+The origin of बातमी (bātmī) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for music, then the Marathi for news.
 You'll want to know: देश.
 देश — desh — "a country".
 
+The word, taken apart.
+देश (desh) is Sanskrit deśa, "region, country", taken over whole, a tatsama. CDIAL lists the inherited Marathi form as des, "country" (CDIAL 6547).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for news, then the Marathi for a country.
 
 You'll want to know: गोष्ट.
 गोष्ट — goṣṭa — "a story".
+
+The word, taken apart.
+गोष्ट (goṣṭa) is a learned form of Sanskrit goṣṭhī, "assembly, meeting place". CDIAL lists the inherited Marathi word as goṭh, "conversation, tale" (CDIAL 4339).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "ẓalām"
 concept_tag: AR-THINGS134-ZALAM
 prerequisites: [AR-C134-daw, AR-C134-zill]
 sounds: []
-roots: []
+roots: [ẓ-l-m]
+etymology_hook: "ẓalām: built on the root ẓ-l-m, 'darkness' (Lane); the word ẓalām is the noun, 'darkness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C134-zill]
 <!-- hl-knowledge: introduces=[AR-LEX-C134-THINGS134-03]; assesses=[] -->
 
 **ظلام** — *ẓalām* — "darkness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ظلام** (*ẓalām*) is built on the native Arabic root *ẓ-l-m*, "darkness; to do wrong" (Lane). The word *ẓalām* is the noun, "darkness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

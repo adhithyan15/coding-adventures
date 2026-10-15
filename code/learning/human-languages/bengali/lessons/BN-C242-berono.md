@@ -15,6 +15,7 @@ concept_tag: BN-VERB-BERONO
 prerequisites: [BN-C241-janano, BN-C241-golpo-kora]
 sounds: []
 roots: []
+etymology_hook: "berono: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C241-golpo-kora]
 <!-- hl-knowledge: introduces=[BN-LEX-C242-ACT242-01]; assesses=[] -->
 
 **বেরোনো** — *berono* — "to go out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **বেরোনো** (*berono*) is not settled: CDIAL has no entry for it, and a search by form and by the glosses "go out" and "come out" finds only words of other shapes, such as Bengali *nikalā*, "to come out" (CDIAL 7478).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

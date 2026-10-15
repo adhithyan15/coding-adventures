@@ -14,7 +14,8 @@ romanization: "ojâgh"
 concept_tag: FA-THINGS95-OJAGH
 prerequisites: [FA-C95-dig, FA-C95-mahitabe]
 sounds: []
-roots: []
+roots: [turkic-ocaq]
+etymology_hook: "ojâgh: a loan, usually traced to Turkic ocaq 'hearth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C95-mahitabe]
 <!-- hl-knowledge: introduces=[FA-LEX-C95-THINGS95-05]; assesses=[] -->
 
 **اجاق** — *ojâgh* — "a stove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ojâgh* is a loan, usually traced to Turkic *ocaq*, "hearth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for clothing, then the Sanskrit for a garme
 You'll want to know: क्रयः.
 क्रयः — krayaḥ — "a purchase".
 
+The word, taken apart.
+kraya is built on the root √krī, "to buy", whose present is krīṇāti (MW; CDIAL 3581). MW compares Greek priamai, "I buy". The verb lives on as Bengali kinā, "to buy" (CDIAL 3594), though most modern languages replaced it with other verbs.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a garment, then the Sanskrit for a purc
 
 You'll want to know: विक्रयः.
 विक्रयः — vikrayaḥ — "a sale".
+
+The word, taken apart.
+vikraya is built on vi- and the root √krī, "to buy" (MW): vi- turns buying into selling. CDIAL 11638 lists Hindi bikrī, "sale", under it, possibly by way of a learned form.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a purchase, then the Sanskrit for a sal
 You'll want to know: वस्तु.
 वस्तु — vastu — "an object, a thing".
 
+The word, taken apart.
+vastu is built on the root √vas, "to dwell, abide" (MW), the root of vasāmi, "I live", one of your first verbs. It first meant "the seat or place of something", then "a really existing thing" (CDIAL 11449).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a sale, then the Sanskrit for an object
 You'll want to know: पदार्थः.
 पदार्थः — padārthaḥ — "an item, a thing".
 
+The word, taken apart.
+padārtha is built from pada, "word", and artha, "meaning" (MW). It first meant "the meaning of a word", then the thing the word stands for, and so "an item, a thing".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for an object, then the Sanskrit for an ite
 
 You'll want to know: उपकरणम्.
 उपकरणम् — upakaraṇam — "a tool, an instrument".
+
+The word, taken apart.
+upakaraṇa is built on upa-, "towards", and the root √kṛ, "to do" (MW). It means both "doing someone a service" and "an implement", the thing that does the work for you (CDIAL 2138).
 
 What you've built.
 One more word for this chapter.

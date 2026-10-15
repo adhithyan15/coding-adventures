@@ -14,7 +14,8 @@ romanization: "junbichū"
 concept_tag: JA-READ142-JUNBICHUU
 prerequisites: [JA-C142-eigyouchuu, JA-C141-deshou, JA-C139-desuka, JA-C133-kinou]
 sounds: []
-roots: []
+roots: [middle-chinese-tsywinx, middle-chinese-bijh, middle-chinese-trjuwng]
+etymology_hook: "junbichū: Sino-Japanese 準 'standard' + 備 'prepare' + 中 'middle', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -59,6 +60,11 @@ later.
 
 > **いまは じゅんびちゅうです。** — *ima wa junbichū desu* — "We are getting
 > ready now; not open yet."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**じゅんびちゅう** (*junbichū*) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *jun*, "standard" (Middle Chinese *tsywinX*), *bi*, "prepare" (*bijH*) and *chū*, "middle, during" (*trjuwng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C142-JUNBICHUU, JA-LEX-C142-EIGYOUCHUU] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marathi for the waist, then the Marathi for the ches
 You'll want to know: त्वचा.
 त्वचा — tvacā — "the skin".
 
+The word, taken apart.
+त्वचा (tvacā) is Sanskrit tvacā, "skin", taken over whole as a learned loan, a tatsama (CDIAL 6087).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for the chest, then the Marathi for the skin
 
 You'll want to know: हाड.
 हाड — hāḍ — "a bone".
+
+The word, taken apart.
+हाड (hāḍ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from haḍḍa, "bone" (CDIAL 13952). CDIAL calls a link with Sanskrit asthi, "bone", very doubtful.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for the skin, then the Marathi for a bone.
 You'll want to know: रुंद.
 रुंद — ruṇd — "wide".
 
+The word, taken apart.
+रुंद (ruṇd) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from rundra, "rich in" (CDIAL 10781). CDIAL glosses the Marathi word "broad, wide".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a bone, then the Marathi for wide.
 You'll want to know: अरुंद.
 अरुंद — aruṇd — "narrow".
 
+The word, taken apart.
+अरुंद (aruṇd) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from āruddha, "blocked" (CDIAL 1324). It is the past participle of rudh, "to block". CDIAL glosses the Marathi word "narrow, strait".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for wide, then the Marathi for narrow.
 
 You'll want to know: पातळ.
 पातळ — pātaḷ — "thin".
+
+The word, taken apart.
+पातळ (pātaḷ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pattrala, "leafy; leaf-like, thin" (CDIAL 7736). It is built on pattra, "leaf".
 
 What you've built.
 One more word for this chapter.

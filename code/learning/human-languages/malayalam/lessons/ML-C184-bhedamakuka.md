@@ -14,7 +14,8 @@ romanization: "bhēdamākuka"
 concept_tag: ML-VERB-BHEDAMAKUKA
 prerequisites: [ML-C183-nastappetuka, ML-C184-otiyuka]
 sounds: []
-roots: []
+roots: [sanskrit-bheda, aaka-dravidian]
+etymology_hook: "bhēdamākuka: Sanskrit bhēda 'difference' (CDIAL 9610) + native ākuka 'become' (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C184-otiyuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C184-KRIYA184-02]; assesses=[] -->
 
 **ഭേദമാകുക** — *bhēdamākuka* — "to get better, to recover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭേദമാകുക** (*bhēdamākuka*) joins Sanskrit *bhēda*, "division, difference" (CDIAL 9610), to native *ākuka*, "to become" (DEDR 333): to get better is "to become different". DEDR 333 compares Sanskrit *ām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

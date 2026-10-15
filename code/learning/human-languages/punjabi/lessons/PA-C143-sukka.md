@@ -14,7 +14,8 @@ romanization: "sukkā"
 concept_tag: PA-QUAL143-SUKKA
 prerequisites: [PA-C142-bhira, PA-C142-gilla, PA-C45-pehla-paath]
 sounds: []
-roots: []
+roots: [sanskrit-shushka]
+etymology_hook: "sukkā ← Sanskrit śuṣka 'dried', a tadbhava (CDIAL 12548)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [PA-C142-gilla]
 <!-- hl-knowledge: introduces=[PA-LEX-C143-QUAL143-01]; assesses=[] -->
 
 **ਸੁੱਕਾ** — *sukkā* — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸੁੱਕਾ** (*sukkā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *śuṣka*, "dried" (CDIAL 12548).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

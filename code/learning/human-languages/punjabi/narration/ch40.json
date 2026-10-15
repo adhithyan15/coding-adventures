@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "That, and Why",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:af1727f41c8f028b",
+  "sourceHash": "fnv1a64:0d2af20c4c92bae8",
   "lessons": [
     {
       "id": "PA-C40-ki",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3224f744f5a19643",
+      "sourceHash": "fnv1a64:f70d79bc47b0ab23",
       "notice": null,
       "blocks": [
         {
@@ -89,6 +89,10 @@
             {
               "kind": "speech",
               "text": "English does the same with that, and like English, Punjabi often drops it in speech. Learn it in place first."
+            },
+            {
+              "kind": "speech",
+              "text": "Ki is usually traced to Persian ki, \"that\", the word Hindi and Urdu use in the same place."
             }
           ]
         },
@@ -164,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f4a36b1ef060be0",
+      "sourceHash": "fnv1a64:076be84b584914c8",
       "notice": null,
       "blocks": [
         {
@@ -222,6 +226,10 @@
             {
               "kind": "speech",
               "text": "Everything you can already say can now be said as an opinion rather than as a fact. That is a large change for one small word, and it is the difference between reporting the world and having a view about it."
+            },
+            {
+              "kind": "speech",
+              "text": "The frame mixes two sources: soch- comes from socṇā, \"to think\", which CDIAL lists under Sanskrit śocyate, \"is made to feel pain\" (CDIAL 12621), while ki is usually traced to Persian ki, \"that\"."
             }
           ]
         },
@@ -408,7 +416,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc695f755d3bc617",
+      "sourceHash": "fnv1a64:7011d53a9028e901",
       "notice": null,
       "blocks": [
         {
@@ -462,6 +470,10 @@
             {
               "kind": "speech",
               "text": "That is not a small omission. Why is the question that asks for a reason, and the next lesson is the word that answers it."
+            },
+            {
+              "kind": "speech",
+              "text": "Like every word in the family, it is built on the old question stem ka-, which CDIAL lists under Sanskrit kim, \"what, why\" (CDIAL 3164); it has no entry for kyoṁ itself."
             }
           ]
         },
@@ -537,7 +549,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d99ba64b3cd9bc59",
+      "sourceHash": "fnv1a64:9b44bb32d8326384",
       "notice": null,
       "blocks": [
         {
@@ -599,6 +611,10 @@
             {
               "kind": "speech",
               "text": "Note the ਕਿ (ki) at the end is the short sihari one — the that you learned, not the what. Reading the word slowly is its own revision of the pair."
+            },
+            {
+              "kind": "speech",
+              "text": "Its two halves come from two sources: kyoṁ is built on the inherited question stem ka-, while ki is usually traced to Persian ki, \"that\"."
             }
           ]
         },

@@ -14,7 +14,8 @@ romanization: "ikhtalafa"
 concept_tag: AR-VERB-IKHTALAFA
 prerequisites: [AR-C258-kadhaba, AR-C258-sharaka]
 sounds: []
-roots: []
+roots: [kh-l-f]
+etymology_hook: "ikhtalafa: built on the root kh-l-f, 'to come after, to differ' (Lane); ikhtalafa is Form VIII, 'to differ'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C258-sharaka]
 <!-- hl-knowledge: introduces=[AR-LEX-C258-ACT258-05]; assesses=[] -->
 
 **اختلف** — *ikhtalafa* — "to disagree, to differ".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اختلف** (*ikhtalafa*) is built on the native Arabic root *kh-l-f*, "to come after, to differ" (Lane). *Ikhtalafa* is Form VIII, "to differ".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

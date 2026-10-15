@@ -14,7 +14,8 @@ romanization: "veṇuvanam"
 concept_tag: SA-THG197-VENUVANAM
 prerequisites: [SA-C196-sarit, SA-C196-guha]
 sounds: []
-roots: []
+roots: [sanskrit-venu, sanskrit-vana]
+etymology_hook: "veṇuvana = veṇu 'bamboo' (CDIAL 12096) + vana 'forest'; vana lives on as Hindi ban (CDIAL 11258)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C196-guha]
 <!-- hl-knowledge: introduces=[SA-LEX-C197-THG197-01]; assesses=[] -->
 
 **वेणुवनम्** — *veṇuvanam* — "a bamboo grove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*veṇuvana* is a compound of *veṇu*, "bamboo, reed" (CDIAL 12096), and *vana*, "forest" (MW). *Vana* lives on as Hindi *ban*, "forest" (CDIAL 11258).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

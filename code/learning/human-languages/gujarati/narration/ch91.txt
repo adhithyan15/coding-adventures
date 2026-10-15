@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a field, then the Gujarati for a mercha
 You'll want to know: સ્વાગત.
 સ્વાગત (svāgat) — "welcome".
 
+The word, taken apart.
+સ્વાગત (svāgat) is Sanskrit svāgata, "welcome", taken over whole as a learned loan, a tatsama (CDIAL 13920). CDIAL lists Old Gujarati sāiu, "welcome", as the inherited form.
+
 What you've built.
 One more word for welcome, congratulations, sorry.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a merchant, then the Gujarati for welco
 
 You'll want to know: અભિનંદન.
 અભિનંદન (abhinandan) — "congratulations".
+
+The word, taken apart.
+અભિનંદન (abhinandan) is Sanskrit abhinandana, "rejoicing at, greeting", taken over whole as a learned loan, a tatsama. It is built on nand, "to rejoice".
 
 What you've built.
 One more word for welcome, congratulations, sorry.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for welcome, then the Gujarati for congratu
 You'll want to know: શુભેચ્છા.
 શુભેચ્છા (śubhecchā) — "good wishes".
 
+The word, taken apart.
+શુભેચ્છા (śubhecchā) is a Sanskrit compound, a tatsama: śubha, "bright, auspicious, good" (CDIAL 12532), and icchā, "wish" (CDIAL 1557).
+
 What you've built.
 One more word for welcome, congratulations, sorry.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for congratulations, then the Gujarati for 
 You'll want to know: માફી.
 માફી (māphī) — "an apology, pardon". The noun behind માફ કરો.
 
+The word, taken apart.
+માફી (māphī) is built on māph, "pardoned", usually traced through Persian to Arabic muʿāf, "excused", from the root ʿ-f-w, "to pardon" (Lane). Gujarati adds the ending -ī.
+
 What you've built.
 One more word for welcome, congratulations, sorry.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for good wishes, then the Gujarati for an a
 
 You'll want to know: ઠીક.
 ઠીક (ṭhīk) — "okay, fine".
+
+The word, taken apart.
+ઠીક (ṭhīk) comes from ṭhīkka, "firm, right", a form CDIAL reconstructs and probably derives from Sanskrit sthita, "standing" (CDIAL 5503).
 
 What you've built.
 One more word for welcome, congratulations, sorry.

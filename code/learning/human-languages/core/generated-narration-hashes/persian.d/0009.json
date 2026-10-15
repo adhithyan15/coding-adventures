@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 9,
-  "sourceHash": "fnv1a64:f5f036ac39ebc45b",
+  "sourceHash": "fnv1a64:1cd07a0fbbaf5938",
   "lessonIds": [
     "FA-C09-ab",
     "FA-C09-nan",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "persian/narration/ch09.txt",
   "json": "persian/narration/ch09.json",
-  "textHash": "fnv1a64:ae3667b5549faad3",
-  "jsonHash": "fnv1a64:13b9933b09aa04ca",
+  "textHash": "fnv1a64:cfad512838a71572",
+  "jsonHash": "fnv1a64:d9760c4df35fcca1",
   "findings": []
 }

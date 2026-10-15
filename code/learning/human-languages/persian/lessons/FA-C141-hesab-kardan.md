@@ -14,7 +14,8 @@ romanization: "hesâb kardan"
 concept_tag: FA-VERB-HESAB-KARDAN
 prerequisites: [FA-C141-peyda-kardan, FA-C141-pas-dadan]
 sounds: []
-roots: []
+roots: [arabic-hisab]
+etymology_hook: "hesâb ← Arabic ḥisāb 'account, reckoning', root ḥ-s-b (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C141-pas-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C141-KONESH141-04]; assesses=[] -->
 
 **حساب کردن** — *hesâb kardan* — "to settle the bill; to calculate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hesâb kardan* pairs *hesâb*, borrowed from Arabic *ḥisāb*, "account, reckoning" (root *ḥ-s-b*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

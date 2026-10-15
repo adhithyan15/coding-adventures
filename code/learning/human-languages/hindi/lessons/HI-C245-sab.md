@@ -14,7 +14,8 @@ romanization: "sab"
 concept_tag: HI-THG245-SAB
 prerequisites: [HI-C244-dono, HI-C245-har]
 sounds: []
-roots: []
+roots: [sanskrit-sarva]
+etymology_hook: "sab ← Sanskrit sarva 'all, whole', a tadbhava (CDIAL 13276)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C245-har]
 <!-- hl-knowledge: introduces=[HI-LEX-C245-THG245-02]; assesses=[] -->
 
 **सब** — *sab* — "all, everyone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सब** (*sab*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sarva*, "all, whole" (CDIAL 13276).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

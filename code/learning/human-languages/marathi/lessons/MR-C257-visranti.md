@@ -14,7 +14,8 @@ romanization: "viśrāntī"
 concept_tag: MR-AAROGYA257-VISRANTI
 prerequisites: [MR-C256-barik-hone, MR-C256-khau-ghalne]
 sounds: []
-roots: []
+roots: [sanskrit-vishranti]
+etymology_hook: "viśrāntī: Sanskrit viśrānti 'rest', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C256-khau-ghalne]
 <!-- hl-knowledge: introduces=[MR-LEX-C257-AAROGYA257-01]; assesses=[] -->
 
 **विश्रांती** — *viśrāntī* — "rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**विश्रांती** (*viśrāntī*) is Sanskrit *viśrānti*, "rest, repose", a tatsama built on *śram*, "to tire". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

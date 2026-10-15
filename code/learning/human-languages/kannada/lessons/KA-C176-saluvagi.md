@@ -14,7 +14,8 @@ romanization: "saluvāgi"
 concept_tag: KA-KARANA176-SALUVAGI
 prerequisites: [KA-C175-ace, KA-C175-ice]
 sounds: []
-roots: []
+roots: [kannada-saluva]
+etymology_hook: "saluvāgi: saluva 'for' + -āgi; saluva is unrecorded, perhaps from sal 'to be given, be due' (DEDR 2781)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C175-ice]
 <!-- hl-knowledge: introduces=[KA-LEX-C176-KARANA176-01]; assesses=[] -->
 
 **ಸಲುವಾಗಿ** — *saluvāgi* — "for the sake of, for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಲುವಾಗಿ** (*saluvāgi*) is *saluva*, "for, on behalf of", with the adverb ending *-āgi*. The origin of *saluva* is uncertain; neither DEDR nor CDIAL records it. It may belong with *sal*, "to pass, be given, be due", which DEDR 2781 lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: NUANCE-MODALITY
 prerequisites: [ES-C274-tener-gracia]
 sounds: [vowel-a, vowel-e]
 roots: [debere]
+etymology_hook: "deber ← Latin debere 'to owe' — English debt, debit, due"
 duration:
   max_seconds: 240
 requires:

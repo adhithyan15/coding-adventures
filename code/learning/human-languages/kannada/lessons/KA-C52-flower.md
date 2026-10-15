@@ -12,6 +12,7 @@ concept_tag: KA-NOUN-FLOWER
 prerequisites: [KA-C52-rangoli, KA-C50-set-out]
 sounds: []
 roots: []
+etymology_hook: "hūvu: native Dravidian, older Kannada pū (DEDR 4345); Tamil pū; DEDR compares, with a query, Sanskrit puṣpa"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C52-rangoli]
 Proto-Dravidian **\*pū**, one syllable, and one syllable is what it stayed nearly everywhere: Tamil பூ, Malayalam പൂവ്, Telugu పువ్వు.
 
 Kannada's ಹೂವು shows the law at its very clearest. There is almost nothing else in the word — no root to hide behind, no ending to distract you — only the one sound, *p* across the family and *h* here.
+
+DEDR 4345 lists the older Kannada *pūvu* with Tamil *pū*. DEDR 4345 compares, with a query, Sanskrit *puṣpa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

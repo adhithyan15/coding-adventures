@@ -14,7 +14,8 @@ romanization: "dantavaidya"
 concept_tag: MR-VASTU210-DANTAVAIDYA
 prerequisites: [MR-C209-sainya, MR-C209-sainik]
 sounds: []
-roots: []
+roots: [danta-sanskrit, sanskrit-vaidya]
+etymology_hook: "dantavaidya: Sanskrit danta 'tooth' (CDIAL 6152) + vaidya 'physician' (CDIAL 12140)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C209-sainik]
 <!-- hl-knowledge: introduces=[MR-LEX-C210-VASTU210-01]; assesses=[] -->
 
 **दंतवैद्य** — *dantavaidya* — "a dentist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दंतवैद्य** (*dantavaidya*) is a modern compound of Sanskrit parts: *danta*, "tooth" (CDIAL 6152), and *vaidya*, "physician" (CDIAL 12140).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

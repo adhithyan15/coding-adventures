@@ -14,7 +14,8 @@ romanization: "śaṅkhaḥ"
 concept_tag: SA-THG161-SANKHAH
 prerequisites: [SA-C160-asanam, SA-C160-kalasi]
 sounds: []
-roots: []
+roots: [sanskrit-shankha]
+etymology_hook: "śaṅkha 'conch-shell' (AV) is inherited, cousin of Greek konchē 'shell' (MW; EtymDB); Hindi saṅkh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C160-kalasi]
 <!-- hl-knowledge: introduces=[SA-LEX-C161-THG161-01]; assesses=[] -->
 
 **शंखः** — *śaṅkhaḥ* — "a conch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śaṅkha* "a conch-shell" is old, in the Atharvaveda, and is inherited from Indo-European: MW sets it beside Greek *konchē* and Latin *concha* "shell", and EtymDB agrees. It lives on as Hindi *saṅkh* "conch" (CDIAL 12263).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

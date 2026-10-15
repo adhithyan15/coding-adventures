@@ -11,7 +11,8 @@ romanization: "ompathāṁ"
 concept_tag: ML-ORDINAL-NINTH
 prerequisites: [ML-C68-eighth, ML-C67-fourth, ML-C64-only, ML-C52-flower, ML-C07-numbers-6-10]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "ompathāṁ: native Dravidian, 'nine' + -āṁ; Tamil oṉpatu, ompatu (DEDR 1025)"
 duration:
   max_seconds: 210
 requires:
@@ -45,11 +46,16 @@ reviews_of: [ML-C68-eighth, ML-C67-fourth, ML-C64-only, ML-C52-flower]
 **ഒമ്പതാം** (*ompathāṁ*) — "**ninth**".
 
 **ഒമ്പത്** was already a built word when you learned it: an old word for **one**
-plus *pathŭ*, **ten** — one short of ten, with the *n* turning to *m* before the
+plus *pathŭ*, **ten** — usually read as one short of ten, with the *n* turning to *m* before the
 *p*. The ordinal ending goes on top of that, and none of the machinery
 underneath reacts to it.
 
 **ഒമ്പതാം ദിവസം** (*ompathāṁ divasaṁ*), the ninth day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഒമ്പതാം** (*ompathāṁ*) is native Dravidian: "nine" (DEDR 1025, with Tamil *oṉpatu*, *ompatu* and Kannada *ombattu*) with the ordinal ending *-āṁ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-04, ML-LEX-C68-ORDINAL-03] -->

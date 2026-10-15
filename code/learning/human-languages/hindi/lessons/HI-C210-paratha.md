@@ -15,6 +15,7 @@ concept_tag: HI-THG210-PARATHA
 prerequisites: [HI-C209-batti, HI-C209-roti]
 sounds: []
 roots: []
+etymology_hook: "parāṭhā: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C209-roti]
 <!-- hl-knowledge: introduces=[HI-LEX-C210-THG210-01]; assesses=[] -->
 
 **पराठा** — *parāṭhā* — "a paratha".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **पराठा** (*parāṭhā*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

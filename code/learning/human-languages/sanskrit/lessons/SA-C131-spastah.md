@@ -14,7 +14,8 @@ romanization: "spaṣṭaḥ"
 concept_tag: SA-QUAL131-SPASTAH
 prerequisites: [SA-C131-dhusarah, SA-C131-patalah]
 sounds: []
-roots: []
+roots: [sanskrit-spashta]
+etymology_hook: "spaṣṭa 'clearly seen' ← √spaś 'see', which MW sets beside Latin specio and English spy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C131-patalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C131-QUAL131-04]; assesses=[] -->
 
 **स्पष्टः** — *spaṣṭaḥ* — "clear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*spaṣṭa* "clearly perceived, distinct" belongs to the root √spaś "see, spy" (MW), inherited from Indo-European (EtymDB). MW sets √spaś beside Greek *skeptomai*, Latin *specio* and English *spy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

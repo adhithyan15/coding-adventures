@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for the liver, then the Malayalam for a ki
 You'll want to know: കുട്ടിക്കാലം.
 കുട്ടിക്കാലം — kuṭṭikkālaṁ — "childhood".
 
+The word, taken apart.
+കുട്ടിക്കാലം (kuṭṭikkālaṁ) joins native kuṭṭi, "child" (DEDR 1670), to Sanskrit kāla, "time" (CDIAL 3084): "child-time".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a kidney, then the Malayalam for child
 
 You'll want to know: അത്തം.
 അത്തം — attaṁ — "Atham, the day the Onam season begins".
+
+The word, taken apart.
+അത്തം (attaṁ) is a tadbhava of Sanskrit hasta, "hand" (CDIAL 14024), the name of the lunar asterism on whose day the Onam season begins.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for childhood, then the Malayalam for Atha
 You'll want to know: തിരുവോണം.
 തിരുവോണം — tiruvōṇaṁ — "Thiruvonam, the main day of Onam".
 
+The word, taken apart.
+തിരുവോണം (tiruvōṇaṁ) is the honorific tiru, "holy, auspicious", usually traced to Sanskrit śrī (CDIAL 12708), joined to ōṇaṁ, itself usually traced to the asterism śravaṇa.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for Atham, then the Malayalam for Thiruvon
 You'll want to know: സന്ധ്യ.
 സന്ധ്യ — sandhya — "dusk, twilight".
 
+The word, taken apart.
+സന്ധ്യ (sandhya) from Sanskrit saṁdhyā, "twilight", taken over whole as a tatsama (CDIAL 12918). It first meant the joining of day and night.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for Thiruvonam, then the Malayalam for dus
 
 You'll want to know: നിമിഷം.
 നിമിഷം — nimiṣaṁ — "a moment".
+
+The word, taken apart.
+നിമിഷം (nimiṣaṁ) from Sanskrit nimiṣa, "a wink, the twinkling of an eye", taken over whole as a tatsama, with Malayalam's noun ending -ṁ.
 
 What you've built.
 One more word for this chapter.

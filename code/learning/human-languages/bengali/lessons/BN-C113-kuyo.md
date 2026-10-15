@@ -14,7 +14,8 @@ romanization: "kuyo"
 concept_tag: BN-THINGS113-KUYO
 prerequisites: [BN-C112-baranda, BN-C112-bagan]
 sounds: []
-roots: []
+roots: [sanskrit-kupa]
+etymology_hook: "kuyo ← Sanskrit kūpa 'hole, pit, well', a tadbhava (CDIAL 3400)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C112-bagan]
 <!-- hl-knowledge: introduces=[BN-LEX-C113-THINGS113-01]; assesses=[] -->
 
 **কুয়ো** — *kuyo* — "a well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কুয়ো** (*kuyo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kūpa*, "hole, pit, well" (CDIAL 3400). CDIAL writes the Bengali form *kuyā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

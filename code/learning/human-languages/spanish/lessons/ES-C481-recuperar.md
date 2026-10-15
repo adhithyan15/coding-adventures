@@ -10,7 +10,8 @@ gloss: "to get back, to recover"
 concept_tag: ES-VERB-RECUPERAR
 prerequisites: [ES-C480-quejarse, ES-C481-resolver]
 sounds: []
-roots: []
+roots: [recuperare-latin]
+etymology_hook: "recuperar ← Latin recuperare 'to get back' — learned twin of recobrar and cobrar"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C481-resolver]
 > *I want to get my money back.*
 
 *Recuperarse* is to get better after an illness.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**recuperar** ← Latin *recuperare*, "to get back" (EtymDB 2.1) — a learned borrowing. Worn down in speech, the same verb gave *recobrar*, "to recover", and its shortening *cobrar*, which you met as "to charge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

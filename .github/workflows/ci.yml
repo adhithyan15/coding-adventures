@@ -613,6 +613,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_human_language_hot_files.py'
           python3 code/scripts/geometry2d_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_geometry2d_conformance.py'
           python3 code/scripts/bezier2d_flattening_conformance.py
@@ -5218,7 +5219,11 @@ jobs:
           if [ "${{ steps.setup-ocaml.outcome }}" = "success" ]; then
             job_flags=(-jobs 1)
           fi
-          $BT "${job_flags[@]}" -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -language all
+          # -prune-leaf-targets: each standalone Cargo package builds its whole
+          # dependency tree into its own target/, and keeping them all filled
+          # the runner disk part-way through a shard (X-7). A leaf's target/
+          # goes once its build has reported.
+          $BT "${job_flags[@]}" -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -prune-leaf-targets -language all
 
   # ── Job 16: CI gate ────────────────────────────────────────────
   #

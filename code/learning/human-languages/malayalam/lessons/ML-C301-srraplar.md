@@ -14,7 +14,8 @@ romanization: "sṟṟāplar"
 concept_tag: ML-JOLI301-SRRAPLAR
 prerequisites: [ML-C301-nikuti, ML-C301-pila]
 sounds: []
-roots: []
+roots: [english-stapler]
+etymology_hook: "sṟṟāplar ← English stapler"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C301-pila]
 <!-- hl-knowledge: introduces=[ML-LEX-C301-JOLI301-04]; assesses=[] -->
 
 **സ്റ്റാപ്ലർ** — *sṟṟāplar* — "a stapler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്റ്റാപ്ലർ** (*sṟṟāplar*) ← English *stapler*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

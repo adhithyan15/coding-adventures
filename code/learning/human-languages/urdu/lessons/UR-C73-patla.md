@@ -14,7 +14,8 @@ romanization: "patlā"
 concept_tag: UR-ADJ73-PATLA
 prerequisites: [UR-C72-mitha, UR-C73-mota]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "patlā ← Sanskrit pattrala 'leafy', and so 'leaf-like, thin', from pattra 'leaf' (CDIAL 7736)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C73-mota]
 <!-- hl-knowledge: introduces=[UR-LEX-C73-ADJ73-02]; assesses=[] -->
 
 **پتلا** — *patlā* — "thin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پتلا** (*patlā*) goes back to Sanskrit *pattrala*, "leafy", which CDIAL takes to have meant "leaf-like, thin" (CDIAL 7736). It is built on *pattra*, "leaf": a thin thing is as flat as a leaf.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

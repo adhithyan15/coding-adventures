@@ -14,7 +14,8 @@ romanization: "kōru"
 concept_tag: TE-VERB-KORU
 prerequisites: [TE-C107-uddesam, TE-C107-pranalika]
 sounds: []
-roots: []
+roots: [dravidian-kooru-desire]
+etymology_hook: "kōru: native Dravidian, one word with Tamil kōru and Kannada kōru (DEDR 2232)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C107-pranalika]
 <!-- hl-knowledge: introduces=[TE-LEX-C108-WANT108-01]; assesses=[] -->
 
 **కోరు** — *kōru* — "to wish for, to ask for".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కోరు** (*kōru*) is native Dravidian, one word with Tamil *kōru* and Kannada *kōru* (DEDR 2232). DEDR lists Telugu *kōru*, "to desire, request".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

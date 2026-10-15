@@ -14,7 +14,8 @@ romanization: "izmeryát"
 concept_tag: RU-VERB-IZMERYAT
 prerequisites: [RU-C235-serditsya, RU-C236-schitat]
 sounds: []
-roots: []
+roots: [slavic-mera]
+etymology_hook: "измерять is из- + мерять, from мера 'a measure'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C236-schitat]
 <!-- hl-knowledge: introduces=[RU-LEX-C236-ACT236-02]; assesses=[] -->
 
 **измерять** (*izmeryát*) — "to measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**измерять** is *из-*, "out, through", with *мерять*, from *мера*, "a measure", which Vasmer relates to Latin *mētior*, "I measure".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

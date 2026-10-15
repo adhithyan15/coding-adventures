@@ -14,7 +14,8 @@ romanization: "spiná"
 concept_tag: RU-BODY3-BACK
 prerequisites: [RU-C30-shoulder, RU-C30-knee]
 sounds: []
-roots: []
+roots: [spina-latin]
+etymology_hook: "спина: perhaps Latin spina 'spine' through Polish, or a native cousin of it; Vasmer leaves both open"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C30-knee]
 <!-- hl-knowledge: introduces=[RU-LEX-C31-BODY3-01]; assesses=[] -->
 
 **спина** (*spiná*) — "the back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**спина** — origin disputed. One view takes it from Latin *spīna*, "thorn, backbone", through Old Polish *spina*, "backbone"; Vasmer also allows a native word, a cousin of the Latin one and of Latvian *spina*, "a switch". It is first recorded in the 1600s (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

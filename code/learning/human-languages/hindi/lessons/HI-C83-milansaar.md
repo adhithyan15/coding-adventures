@@ -14,7 +14,8 @@ romanization: "milansār"
 concept_tag: HI-ADJ-SOCIABLE
 prerequisites: [HI-C83-sharmeela]
 sounds: []
-roots: []
+roots: [mil-meet]
+etymology_hook: "milansār: milan 'meeting', from milnā 'to meet' (CDIAL 10133), + the ending -sār"
 duration:
   max_seconds: 240
 requires:

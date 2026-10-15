@@ -11,7 +11,8 @@ romanization: "vila paṇaṁ"
 concept_tag: ML-PRICE-MONEY
 prerequisites: [ML-C91-kada]
 sounds: []
-roots: []
+roots: [dravidian-vil-sell, sanskrit-pana]
+etymology_hook: "vila: native Dravidian, Tamil vil 'sell' (DEDR 5421); paṇaṁ ← Sanskrit paṇa 'a coin' (CDIAL 7715)"
 duration:
   max_seconds: 250
 requires:
@@ -61,6 +62,11 @@ behave.
 Every piece of that is old but one. **പുസ്തകം** changed shape before its ending,
 took the owner-ending, and **വില** followed it — the arrangement the place-words
 chapter established, carrying a new word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വില പണം** (*vila paṇaṁ*): *vila*, "price", is native Dravidian, from the verb "to sell" (DEDR 5421, with Tamil *vil* and Kannada *bil*). *paṇaṁ*, "money", is Sanskrit *paṇa*, "a coin" (CDIAL 7715), which CDIAL itself thinks came into Sanskrit from Austroasiatic.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C91-MONEY-01, ML-LEX-C91-MONEY-02, ML-LEX-C46-ASK-05] -->

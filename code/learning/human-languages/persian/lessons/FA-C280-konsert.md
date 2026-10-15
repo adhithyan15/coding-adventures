@@ -14,7 +14,8 @@ romanization: "konsert"
 concept_tag: FA-CHIZ280-KONSERT
 prerequisites: [FA-C280-shatranj, FA-C280-kuhnavardi]
 sounds: []
-roots: []
+roots: [french-concert]
+etymology_hook: "konsert ← French concert 'concert'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C280-kuhnavardi]
 <!-- hl-knowledge: introduces=[FA-LEX-C280-CHIZ280-03]; assesses=[] -->
 
 **کنسرت** — *konsert* — "a concert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*konsert* is borrowed from French *concert*, "concert" (EtymDB). The French word came from Italian *concerto* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

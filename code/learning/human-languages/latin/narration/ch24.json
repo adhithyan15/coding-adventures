@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "See You Soon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e89c159571502851",
+  "sourceHash": "fnv1a64:e8a3d4e4c17dde50",
   "lessons": [
     {
       "id": "LA-C24-propediem-te-videbo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16473620c5a067b7",
+      "sourceHash": "fnv1a64:3adc4b8ec1eadf05",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Propediem breaks down as prope (\"near\") + diem (accusative of diēs, \"day\") — literally \"near the day,\" meaning \"very soon, shortly.\" That's the same diēs from your days-of-week lessons (diēs Lūnae, diēs Veneris) — a familiar root showing up in a brand-new job."
+              "text": "Propediem is built from prope (\"near\") + diem (accusative of diēs, \"day\") — literally \"near the day,\" meaning \"very soon, shortly.\" That's the same diēs from your days-of-week lessons (diēs Lūnae, diēs Veneris) — a familiar root showing up in a brand-new job."
             }
           ]
         },

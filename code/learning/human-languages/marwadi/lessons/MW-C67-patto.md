@@ -14,7 +14,8 @@ romanization: "patto"
 concept_tag: MW-SCHOOL67-PATTO
 prerequisites: [MW-C67-chitthi, MW-C67-rukh]
 sounds: []
-roots: []
+roots: [sanskrit-patra]
+etymology_hook: "patto ← Sanskrit pattra 'wing-feather; leaf', a tadbhava (CDIAL 7733, Hindi row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C67-rukh]
 <!-- hl-knowledge: introduces=[MW-LEX-C67-SCHOOL67-04]; assesses=[] -->
 
 **पत्तो** — *patto* — "a leaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पत्तो** (*patto*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pattra*, "wing-feather; leaf". CDIAL gives no Marwari form in this entry (CDIAL 7733); the match is through Hindi *pattā*. It is built on the root *pat*, "to fly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

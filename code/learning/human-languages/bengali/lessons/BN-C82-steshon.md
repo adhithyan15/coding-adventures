@@ -14,7 +14,8 @@ romanization: "sṭeshôn"
 concept_tag: BN-PLACE82-STESHON
 prerequisites: [BN-C82-rasta, BN-C82-goli]
 sounds: []
-roots: []
+roots: [english-station]
+etymology_hook: "sṭeshôn ← English station"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C82-goli]
 <!-- hl-knowledge: introduces=[BN-LEX-C82-PLACE82-05]; assesses=[] -->
 
 **স্টেশন** — *sṭeshôn* — "a station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্টেশন** (*sṭeshôn*) is a loan from English *station*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

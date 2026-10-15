@@ -59,7 +59,7 @@ The extra **-e** is not a new ending. It is *eine*'s **-e**, unmoved. Put the
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**keine** is a form of *kein*, which grew out of Old High German *nihein*, "not one": a negative fused onto the word for "one", later worn down to *kein*.
+**keine** is a form of *kein*, which grew from Old High German *nihein*, "not one": a negative fused onto the word for "one", later worn down to *kein*.
 
 ## Grammar Lens: one word cancels the whole family
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-KEINE-01, GE-LEX-KEIN-01, GE-LEX-DER-DIE-DAS-02, GE-LEX-MILCH-02, GE-ETYMON-MILCH-04] -->

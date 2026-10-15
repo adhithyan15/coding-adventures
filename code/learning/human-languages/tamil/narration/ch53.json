@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "The Land",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1ca7c995065171d6",
+  "sourceHash": "fnv1a64:4fec34608a03e5e0",
   "lessons": [
     {
       "id": "TA-C53-river",
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:647991423af7f481",
+      "sourceHash": "fnv1a64:21e452f00169f614",
       "notice": null,
       "blocks": [
         {

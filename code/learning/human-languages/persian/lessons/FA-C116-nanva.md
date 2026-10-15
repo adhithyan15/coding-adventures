@@ -14,7 +14,8 @@ romanization: "nânvâ"
 concept_tag: FA-THINGS116-NANVA
 prerequisites: [FA-C116-ranande, FA-C116-furushande]
 sounds: []
-roots: []
+roots: [persian-nan]
+etymology_hook: "nânvâ: built on Persian nân 'bread' (Middle Persian nān, EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C116-furushande]
 <!-- hl-knowledge: introduces=[FA-LEX-C116-THINGS116-04]; assesses=[] -->
 
 **نانوا** — *nânvâ* — "a baker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nânvâ* is built on *nân*, "bread", an inherited word: EtymDB traces it to Middle Persian *nān*. The ending *-vâ* marks the one who deals in it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

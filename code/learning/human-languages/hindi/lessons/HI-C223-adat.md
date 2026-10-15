@@ -14,7 +14,8 @@ romanization: "ādat"
 concept_tag: HI-THG223-ADAT
 prerequisites: [HI-C222-samasya, HI-C222-upay]
 sounds: []
-roots: []
+roots: [arabic-ada]
+etymology_hook: "ādat ← Arabic ʿāda 'custom, habit', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C222-upay]
 <!-- hl-knowledge: introduces=[HI-LEX-C223-THG223-01]; assesses=[] -->
 
 **आदत** — *ādat* — "a habit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आदत** (*ādat*) is a loan from Arabic *ʿāda*, "custom, habit", which reached Hindi through Persian. Its Arabic root is *ʿ-w-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

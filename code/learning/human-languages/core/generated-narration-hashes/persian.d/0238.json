@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 238,
-  "sourceHash": "fnv1a64:f7adf720558ad2d3",
+  "sourceHash": "fnv1a64:b4ef9d03bcea6709",
   "lessonIds": [
     "FA-C238-tord",
     "FA-C238-abdar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch238.txt",
   "json": "persian/narration/ch238.json",
-  "textHash": "fnv1a64:6cbda430957e4a42",
-  "jsonHash": "fnv1a64:cf4dcce41efa95f2",
+  "textHash": "fnv1a64:26de3296ac7d49de",
+  "jsonHash": "fnv1a64:2d271f2e4c6be4ba",
   "findings": []
 }

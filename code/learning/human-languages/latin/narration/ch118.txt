@@ -12,6 +12,9 @@ Before the new one: say the Latin for an eating-house, then the Latin for an inn
 You'll want to know: pavīmentum, pavīmentī.
 pavīmentum, pavīmentī — "a floor".
 
+The word, taken apart.
+pavīmentum is built on paviō, "to beat, to tread down" (Lewis & Short), with -mentum, an ending for a thing: a floor of beaten earth or stone. English pavement comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for an inn, then the Latin for a floor.
 
 You'll want to know: puteus, puteī.
 puteus, puteī — "a well".
+
+The word, taken apart.
+puteus has no sure origin. EtymDB 2.1 tentatively links it to a Proto-Indo-European root pewH-, "to strike, to hew", as a hole cut into the ground, but the link is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a floor, then the Latin for a well.
 You'll want to know: pistrīnum, pistrīnī.
 pistrīnum, pistrīnī — "a bakery, a mill".
 
+The word, taken apart.
+pistrīnum is built on pistor, "a miller, a baker" (Lewis & Short), from pīnsō, "to pound, to crush": grain was pounded before it was ground.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a well, then the Latin for a bakery.
 You'll want to know: officīna, officīnae.
 officīna, officīnae — "a workshop".
 
+The word, taken apart.
+officīna is contracted from opificīna, "a workshop" (Lewis & Short), built on opifex, "a workman", from opus, "work", and faciō, "to make".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a bakery, then the Latin for a workshop.
 
 You'll want to know: sepulcrum, sepulcrī.
 sepulcrum, sepulcrī — "a tomb".
+
+The word, taken apart.
+sepulcrum is built on sepeliō, "to bury" (Lewis & Short), with -crum, an ending for a place or tool, as in fulcrum, "a support". English sepulchre comes from it.
 
 What you've built.
 One more word for this chapter.

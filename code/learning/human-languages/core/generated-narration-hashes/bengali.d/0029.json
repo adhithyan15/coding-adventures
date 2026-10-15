@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 29,
-  "sourceHash": "fnv1a64:ffd3f0803f6651e5",
+  "sourceHash": "fnv1a64:00559a7a52385dce",
   "lessonIds": [
     "BN-C18-kintu",
     "BN-C18-ekmot",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "bengali/narration/ch29.txt",
   "json": "bengali/narration/ch29.json",
-  "textHash": "fnv1a64:448efe9141582265",
-  "jsonHash": "fnv1a64:95bd906f834b8482",
+  "textHash": "fnv1a64:1de232ef032d3730",
+  "jsonHash": "fnv1a64:c1902b890560bc32",
   "findings": []
 }

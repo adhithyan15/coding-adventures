@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for thirsty, then the Punjabi for fresh.
 You'll want to know: ਬੇਹਾ.
 ਬੇਹਾ — behā — "stale".
 
+The word, taken apart.
+ਬੇਹਾ (behā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vāsita, "infused, scented" (CDIAL 11604). CDIAL lists Punjabi behā, "stale".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for fresh, then the Punjabi for stale.
 
 You'll want to know: ਪੱਕਾ.
 ਪੱਕਾ — pakkā — "ripe, firm".
+
+The word, taken apart.
+ਪੱਕਾ (pakkā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pakva, "cooked, ripe" (CDIAL 7621). CDIAL says Hindi pakkā was taken from Punjabi.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for stale, then the Punjabi for ripe.
 You'll want to know: ਕੱਚਾ.
 ਕੱਚਾ — kaccā — "raw, unripe".
 
+The word, taken apart.
+ਕੱਚਾ (kaccā) is a tadbhava, a word inherited and reshaped by sound change. It comes from kacca, "raw, unripe", a form CDIAL reconstructs from its descendants (CDIAL 2613). CDIAL says Hindi and Marathi kaccā were taken from Punjabi.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for ripe, then the Punjabi for raw.
 You'll want to know: ਸੱਚਾ.
 ਸੱਚਾ — saccā — "true".
 
+The word, taken apart.
+ਸੱਚਾ (saccā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from satya, "true" (CDIAL 13112).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for raw, then the Punjabi for true.
 
 You'll want to know: ਝੂਠਾ.
 ਝੂਠਾ — jhūṭhā — "false, lying".
+
+The word, taken apart.
+ਝੂਠਾ (jhūṭhā) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhūṭṭha, "false", a form CDIAL reconstructs from its descendants (CDIAL 5407).
 
 What you've built.
 One more word for this chapter.

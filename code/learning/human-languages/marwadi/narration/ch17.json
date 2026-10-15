@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Weather, Heat, and Cold: Three New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:89f553284a6515d9",
+  "sourceHash": "fnv1a64:b42e48d66e260a35",
   "lessons": [
     {
       "id": "MW-C12-hear-mausam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:541b89c18025abaa",
+      "sourceHash": "fnv1a64:3b7fddc9772a08da",
       "notice": null,
       "blocks": [
         {
@@ -65,6 +65,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mausam is a loan from Arabic mawsim, \"season, festival time\", which reached Marwadi through Persian. Its Arabic root is w-s-m (Lane). The sense \"weather\" grew from \"season\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -211,7 +222,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb2a4b3d0de4abda",
+      "sourceHash": "fnv1a64:38be0ebcc28cca10",
       "notice": null,
       "blocks": [
         {
@@ -253,6 +264,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मौसम (mausam) is a loan from Arabic mawsim, \"season, festival time\", which reached Marwadi through Persian. Its Arabic root is w-s-m (Lane). The sense \"weather\" grew from \"season\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -277,7 +299,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -322,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d594da5d8f4a8713",
+      "sourceHash": "fnv1a64:42cf3dd2f364eeb5",
       "notice": null,
       "blocks": [
         {
@@ -381,6 +403,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "garmī is a loan, usually traced to Persian garmī, \"heat\". It is built on Persian garm, \"warm, hot\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -532,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d810445d2f90efb5",
+      "sourceHash": "fnv1a64:5c541896e9632948",
       "notice": null,
       "blocks": [
         {
@@ -574,6 +607,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गर्मी (garmī) is a loan, usually traced to Persian garmī, \"heat\". It is built on Persian garm, \"warm, hot\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -598,7 +642,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -749,7 +793,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20f20dbead3ffc42",
+      "sourceHash": "fnv1a64:9d8e2c415d3caf1d",
       "notice": null,
       "blocks": [
         {
@@ -808,6 +852,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ṭhaṇḍī is built on ṭhaṇḍ, \"cold\". CDIAL lists Hindi ṭhaṇḍā and ṭhaṇḍh, \"cold\", under a reconstructed ṭhaṇḍha, which it sets under Sanskrit stabdha, \"stiff, solidified\", tracing the sense from \"firm\" through \"sluggish\" to \"cold\" (CDIAL 13676); it gives no Marwari form. DEDR compares Dravidian words for \"cool\", such as Tamil taṇ (DEDR 3045)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -960,7 +1015,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a25a281c707a018",
+      "sourceHash": "fnv1a64:e0050aaa289dd212",
       "notice": null,
       "blocks": [
         {
@@ -1002,6 +1057,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठंडी (ṭhaṇḍī) is built on ṭhaṇḍ, \"cold\". CDIAL lists Hindi ṭhaṇḍā and ṭhaṇḍh, \"cold\", under a reconstructed ṭhaṇḍha, which it sets under Sanskrit stabdha, \"stiff, solidified\", tracing the sense from \"firm\" through \"sluggish\" to \"cold\" (CDIAL 13676); it gives no Marwari form. DEDR compares Dravidian words for \"cool\", such as Tamil taṇ (DEDR 3045)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1026,7 +1092,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

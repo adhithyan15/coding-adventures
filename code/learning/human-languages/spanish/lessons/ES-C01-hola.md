@@ -11,6 +11,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [silent-h, vowel-o, vowel-a, inverted-marks]
 roots: []
+etymology_hook: "hola — origin not settled: an old hailing call; not related to English hello"
 duration:
   max_seconds: 180
 requires:

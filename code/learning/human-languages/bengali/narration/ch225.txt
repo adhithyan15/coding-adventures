@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a fox, then the Bengali for a wolf.
 You'll want to know: দল.
 দল — dôl — "a team, a group".
 
+The word, taken apart.
+দল (dôl) is inherited from Sanskrit dala, "party, band", and has come down with almost no change (CDIAL 6215). CDIAL lists Bengali dal, "company", and reports Burrow's view that the word is Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a wolf, then the Bengali for a team.
 
 You'll want to know: খেলোয়াড়.
 খেলোয়াড় — kheloyāṛ — "a player".
+
+The word, taken apart.
+খেলোয়াড় (kheloyāṛ) is khelā, "play", which CDIAL lists under khēll, "play", one of a group of forms it reconstructs (CDIAL 3918), + an ending meaning "one who".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a team, then the Bengali for a player.
 You'll want to know: সিনেমা.
 সিনেমা — sinemā — "a film; a cinema".
 
+The word, taken apart.
+সিনেমা (sinemā) is a loan from English cinema.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a player, then the Bengali for a film; a
 You'll want to know: নাটক.
 নাটক — nāṭôk — "a play".
 
+The word, taken apart.
+নাটক (nāṭôk) is Sanskrit nāṭaka, "a play, drama", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a film; a cinema, then the Bengali for a
 
 You'll want to know: কবিতা.
 কবিতা — kôbitā — "a poem".
+
+The word, taken apart.
+কবিতা (kôbitā) is Sanskrit kavitā, "poetry", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

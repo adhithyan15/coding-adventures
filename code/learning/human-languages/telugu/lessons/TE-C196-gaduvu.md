@@ -14,7 +14,8 @@ romanization: "gaḍuvu"
 concept_tag: TE-PANI196-GADUVU
 prerequisites: [TE-C196-phiju, TE-C196-jarimana]
 sounds: []
-roots: []
+roots: [dravidian-kada-cross]
+etymology_hook: "gaḍuvu: native Dravidian; DEDR 1109 lists gaḍuvu 'appointed time' under gaḍucu 'to pass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C196-jarimana]
 <!-- hl-knowledge: introduces=[TE-LEX-C196-PANI196-03]; assesses=[] -->
 
 **గడువు** — *gaḍuvu* — "a deadline, a time limit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**గడువు** (*gaḍuvu*) is native Dravidian. DEDR 1109 lists *gaḍuvu*, "limit of time, appointed time", under *gaḍucu*, "to pass, elapse", one word with Tamil *kaṭa*, "to pass".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

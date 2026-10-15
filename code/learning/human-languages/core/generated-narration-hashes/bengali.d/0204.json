@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 204,
-  "sourceHash": "fnv1a64:ebb8839e19cc37ca",
+  "sourceHash": "fnv1a64:a2ff578aa54202c1",
   "lessonIds": [
     "BN-C204-ata",
     "BN-C204-bedana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch204.txt",
   "json": "bengali/narration/ch204.json",
-  "textHash": "fnv1a64:374a6f92db83de3e",
-  "jsonHash": "fnv1a64:d0eb11c46e88c57a",
+  "textHash": "fnv1a64:eb9ce468e367d01c",
+  "jsonHash": "fnv1a64:700c89d72c03a87a",
   "findings": []
 }

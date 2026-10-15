@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Sound and Voice",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5cebaf88e6a85cce",
+  "sourceHash": "fnv1a64:d79edf12e6ccd8d9",
   "lessons": [
     {
       "id": "TE-C68-sound",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5e605bf89f5de28",
+      "sourceHash": "fnv1a64:28a0ac5821f18c5f",
       "notice": null,
       "blocks": [
         {
@@ -59,6 +59,10 @@
             {
               "kind": "speech",
               "text": "A room with no శబ్దం (śabdaṁ) in it is not called quiet in Telugu so much as empty, and people say exactly that about a house whose children have grown up and gone."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 12298 lists Sanskrit śabda, \"articulate sound, noise\"."
             }
           ]
         },
@@ -163,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3ca9cff5777be8b",
+      "sourceHash": "fnv1a64:8a5fda5f627d470d",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +212,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గొంతు (gontu) is native Dravidian. DEDR 1718 lists gontu, \"throat, voice\", with kuttuka, \"throat\", beside Kannada kuttige, \"throat, neck\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +233,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +291,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +322,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:353ede53465efb06",
+      "sourceHash": "fnv1a64:f676ee972691e91e",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +367,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పాట (pāṭa) is native Dravidian, one word with Tamil pāṭu and Kannada pāḍu (DEDR 4065). DEDR lists Telugu pāḍu, \"to sing\", and pāṭa, \"song\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +388,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +446,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +477,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ced1c72d428440f1",
+      "sourceHash": "fnv1a64:c8e6dae36c587307",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +522,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అరుపు (arupu) is native Dravidian. DEDR 319 lists aṟacu, \"to cry out, shout\", and aṟapu, \"a cry, shout\", with Kannada aṟacu, \"to cry out\", and Tamil aṟai, \"to speak, sound\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +543,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +601,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +632,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd42d87362af30eb",
+      "sourceHash": "fnv1a64:2388c792c3160eb9",
       "notice": null,
       "blocks": [
         {

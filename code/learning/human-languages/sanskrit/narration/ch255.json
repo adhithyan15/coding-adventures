@@ -4,7 +4,7 @@
   "chapter": 255,
   "title": "Education, Knowledge, Practice, Homework, Answer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d7910d46f7bef2c0",
+  "sourceHash": "fnv1a64:9b4498ddf91b1165",
   "lessons": [
     {
       "id": "SA-C255-siksa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b6857226cb65aed",
+      "sourceHash": "fnv1a64:574a8d0f43084f89",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "śikṣā is built on śikṣ, \"to learn\", which MW calls the desiderative of √śak, \"to be able\": learning is wanting to be able. MW's first sense is \"desire of being able\", then \"learning, study\". The verb śikṣate lives on as Hindi sīkhnā, \"to learn\" (CDIAL 12430)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3faa953c277235d1",
+      "sourceHash": "fnv1a64:927f769861572bc5",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jñāna is built on the root √jñā, \"to know\" (MW), the root of jānāti, \"knows\": \"knowing, knowledge\" (CDIAL 5281). Hindi uses it as jñān, said gyān."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6fa9fb657b925ff0",
+      "sourceHash": "fnv1a64:58d1b1b69a1cb67c",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "abhyāsa is built on abhi, \"towards\", and the root √as, \"to throw\" (MW): \"throwing towards, adding\", and then \"repetition\" and \"practice\". Practice is doing a thing again and again; Hindi took the word as abhyās."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8cb5d1232e86a2d",
+      "sourceHash": "fnv1a64:7717db27f9680443",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gṛhakārya is a compound of gṛha, \"house\", and kārya, \"what is to be done\", from the root √kṛ (MW; CDIAL 3078). MW glosses it \"a domestic affair\"; its use for school homework is modern. Kārya lives on as Hindi kāj, \"work\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b340230de79c756",
+      "sourceHash": "fnv1a64:5392a04f6e5c7d76",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "uttara is the comparative of ud, \"up\": \"higher\", and also \"following, later\" (MW). The answer is the later word: CDIAL 1767 explains uttaram as uttaram vākyam, \"the following speech\". The same word means \"north\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

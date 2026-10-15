@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "One small step into school",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:16f88c94a7ef0c49",
+  "sourceHash": "fnv1a64:e45a96068afb7432",
   "lessons": [
     {
       "id": "ZH-C14-hear-xiao",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8dcb78501231c42",
+      "sourceHash": "fnv1a64:62d79c8edc4f5fc5",
       "notice": null,
       "blocks": [
         {
@@ -51,6 +51,10 @@
             {
               "kind": "speech",
               "text": "Keep the voice low through the third tone: xiǎo. Work only with sound and meaning. Its three-stroke character comes next."
+            },
+            {
+              "kind": "speech",
+              "text": "Xiǎo is inherited from Middle Chinese sjewX, \"small\"."
             }
           ]
         },
@@ -203,7 +207,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b59d9c398d8e361e",
+      "sourceHash": "fnv1a64:32f976737821e49b",
       "notice": null,
       "blocks": [
         {
@@ -249,6 +253,10 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: the character without pinyin, then say it with a low third tone]"
+            },
+            {
+              "kind": "speech",
+              "text": "小 (xiǎo) is inherited from Middle Chinese sjewX, \"small\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },
@@ -313,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55a823b46b97d7b2",
+      "sourceHash": "fnv1a64:4ca60a4c56bd08e3",
       "notice": null,
       "blocks": [
         {
@@ -345,6 +353,10 @@
             {
               "kind": "speech",
               "text": "Keep xiǎo low, then let xué rise. No new character is hiding in this word."
+            },
+            {
+              "kind": "speech",
+              "text": "Xiǎoxué is built from Middle Chinese sjewX, \"small\", and haewk, \"learning\"."
             }
           ]
         },
@@ -395,7 +407,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:5577901e994bbb7c",
+      "sourceHash": "fnv1a64:d491abdf44dbed66",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -439,6 +451,10 @@
             {
               "kind": "speech",
               "text": "Read the pair as one word without pinyin: low, then rising."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Middle Chinese, sjewX and haewk (Guangyun, in Baxter's transcription). Older texts use the pair for a child's first schooling; \"primary school\" is the modern sense."
             }
           ]
         },
@@ -498,7 +514,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5aff74ae374bf3e7",
+      "sourceHash": "fnv1a64:c92263f3cec442be",
       "notice": null,
       "blocks": [
         {
@@ -530,6 +546,10 @@
             {
               "kind": "speech",
               "text": "Say three beats: low xiǎo, rising xué, light sheng. 学 appears only once where the two familiar words overlap."
+            },
+            {
+              "kind": "speech",
+              "text": "Xiǎoxuésheng is built from Middle Chinese sjewX, haewk and srjaeng: small, learning, life."
             }
           ]
         },
@@ -581,7 +601,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ed5dfa619025fd19",
+      "sourceHash": "fnv1a64:d51d5e63084c56c8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -626,6 +646,10 @@
             {
               "kind": "speech",
               "text": "Track three characters and three beats. Read it once without pinyin."
+            },
+            {
+              "kind": "speech",
+              "text": "All three pieces are inherited from Middle Chinese, sjewX, haewk and srjaeng (Guangyun, in Baxter's transcription), and Chinese joined them as primary school plus student."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 473,
   "title": "El consejo a otras bibliotecas",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2f125c2ebfbe0c31",
+  "sourceHash": "fnv1a64:a0efa2007056ff61",
   "lessons": [
     {
       "id": "ES-C473-aconsejar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7330e6a2c056ce0c",
+      "sourceHash": "fnv1a64:e123717ee00bb4ba",
       "notice": null,
       "blocks": [
         {
@@ -101,15 +101,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "El consejo already traced it: Latin consilium, a deliberation — from con-, together, and a root about calling or taking counsel."
+              "text": "El consejo already traced it: Latin consilium, a deliberation, a considering together."
             },
             {
               "kind": "speech",
-              "text": "So advising is, underneath, a sitting together: the word does not mean telling somebody what to do. English keeps the same sense in counsel and council, which are the same Latin word split into two spellings, one for the advice and one for the people giving it."
+              "text": "So advising is, underneath, deliberating together: the word does not mean telling somebody what to do. English keeps consilium in counsel; council, the body that meets, is a look-alike from a different Latin word, concilium, a calling-together."
             },
             {
               "kind": "speech",
-              "text": "That is a distinction English had to invent twice. Spanish does it with one noun and one verb."
+              "text": "Spanish does the advising with one noun and one verb: el consejo and aconsejar."
             }
           ]
         },
@@ -166,7 +166,7 @@
             },
             {
               "kind": "speech",
-              "text": "To advise? (Aconsejar.) Built from? (El consejo, with a- on the front.) What does consilium mean underneath? (A sitting together.)"
+              "text": "To advise? (Aconsejar.) Built from? (El consejo, with a- on the front.) What does consilium mean underneath? (A considering together.)"
             }
           ]
         }
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d21e991668d3e4b4",
+      "sourceHash": "fnv1a64:4fdf877ac0379a86",
       "notice": null,
       "blocks": [
         {
@@ -280,7 +280,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "re- plus commendare: com-, wholly, plus mandare, to entrust — to put a thing into somebody's hand."
+              "text": "Latin re- plus commendare (EtymDB 2.1): com-, wholly, plus mandare, to entrust — to put a thing into somebody's hand."
             },
             {
               "kind": "speech",
@@ -364,7 +364,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2a01176c9ee65c5",
+      "sourceHash": "fnv1a64:50cc2649afd40ae0",
       "notice": null,
       "blocks": [
         {

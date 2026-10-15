@@ -14,7 +14,8 @@ romanization: "mātī"
 concept_tag: MR-THINGS140-MATI
 prerequisites: [MR-C140-mul, MR-C140-bi]
 sounds: []
-roots: []
+roots: [sanskrit-mrttika]
+etymology_hook: "mātī ← Sanskrit mṛttikā 'earth, clay', a tadbhava (CDIAL 10286)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C140-bi]
 <!-- hl-knowledge: introduces=[MR-LEX-C140-THINGS140-03]; assesses=[] -->
 
 **माती** — *mātī* — "soil, earth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**माती** (*mātī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mṛttikā*, "earth, clay" (CDIAL 10286).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

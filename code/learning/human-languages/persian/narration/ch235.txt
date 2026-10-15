@@ -12,6 +12,9 @@ Before the new one: say the Persian for life, then the Persian for a part.
 You'll want to know: تیز.
 تیز — tiz — "sharp".
 
+The word, taken apart.
+tiz is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian tēz, "sharp". EtymDB takes it back to the Indo-European root (s)teyg-, "to be sharp, to prick", the root usually also given for English stick.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a part, then the Persian for sharp.
 
 You'll want to know: موجود.
 موجود — mojud — "available, in stock".
+
+The word, taken apart.
+mojud is borrowed from Arabic mawjūd, "found, existing". Its Arabic root is w-j-d (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for sharp, then the Persian for available.
 You'll want to know: کافی.
 کافی — kâfi — "enough".
 
+The word, taken apart.
+kâfi is borrowed from Arabic kāfī, "sufficient". Its Arabic root is k-f-y (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for available, then the Persian for enough.
 You'll want to know: مجانی.
 مجانی — majâni — "free of charge".
 
+The word, taken apart.
+majâni is borrowed from Arabic majjānī, "free, without payment". Its Arabic root is m-j-n (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for enough, then the Persian for free of cha
 
 You'll want to know: بیکار.
 بیکار — bikâr — "unemployed".
+
+The word, taken apart.
+bikâr is bi-, "without", with kâr, "work": without work. Both are native Persian; kâr continues Middle Persian kār (EtymDB). (EtymDB also lists Arabic bikr, "virgin", a different word.)
 
 What you've built.
 One more word for this chapter.

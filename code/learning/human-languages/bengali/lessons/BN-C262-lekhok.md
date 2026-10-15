@@ -14,7 +14,8 @@ romanization: "lekhôk"
 concept_tag: BN-KAJ262-LEKHOK
 prerequisites: [BN-C261-daroyan, BN-C261-senabahini]
 sounds: []
-roots: []
+roots: [sanskrit-lekhaka]
+etymology_hook: "lekhôk ← Sanskrit lekhaka 'scribe', a tatsama (CDIAL 11102)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C261-senabahini]
 <!-- hl-knowledge: introduces=[BN-LEX-C262-KAJ262-01]; assesses=[] -->
 
 **লেখক** — *lekhôk* — "a writer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**লেখক** (*lekhôk*) is Sanskrit *lekhaka*, "scribe", taken over whole as a learned loan, a tatsama (CDIAL 11102).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

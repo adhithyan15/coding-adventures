@@ -4,7 +4,7 @@
   "chapter": 121,
   "title": "Earring, Steel bracelet, Jaggery, Chickpeas, Mung beans",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b811cea72f931ac9",
+  "sourceHash": "fnv1a64:d1885489e4475483",
   "lessons": [
     {
       "id": "PA-C121-vali",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67aa12e181f05e05",
+      "sourceHash": "fnv1a64:0e84c319bf7d7b9e",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਾਲੀ (vālī) is inherited. CDIAL lists it under Sanskrit vālaka, \"bracelet\", whose feminine vālikā the old word-lists give as \"ear ornament\" (CDIAL 11573)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eaefb41e8883e52d",
+      "sourceHash": "fnv1a64:c4d46dabe1c4be16",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੜਾ (kaṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṭaka, \"twist of straw; bracelet\" (CDIAL 2629). CDIAL notes that, outside Gujarati, the word grew into \"ring, bracelet, chain\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7809f082b0fe35c7",
+      "sourceHash": "fnv1a64:38f7affdf0a98167",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੁੜ (guṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from guḍa, \"boiled sugarcane juice, molasses\" (CDIAL 4182). CDIAL asks whether it is the same word as guḍa, \"ball\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ca38c40dbdc4fd8",
+      "sourceHash": "fnv1a64:2460b596a4ff77fc",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where ਛੋਲੇ (chole) comes from is not settled: CDIAL has no entry for it. The Punjabi word CDIAL does list for the chickpea is caṇā, from Sanskrit caṇa (CDIAL 4579)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1522b3212f13d6cd",
+      "sourceHash": "fnv1a64:166dd058417c2220",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੂੰਗੀ (mū̃gī) (mūṁgī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mudga, \"the bean Phaseolus mungo\" (CDIAL 10198)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

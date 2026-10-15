@@ -14,7 +14,8 @@ romanization: "disambar"
 concept_tag: UR-VAQT218-DISAMBAR
 prerequisites: [UR-C218-aktubar, UR-C218-navambar]
 sounds: []
-roots: []
+roots: [english-december]
+etymology_hook: "disambar ← English December"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C218-navambar]
 <!-- hl-knowledge: introduces=[UR-LEX-C218-VAQT218-04]; assesses=[] -->
 
 **دسمبر** — *disambar* — "December".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دسمبر** (*disambar*) is a loan from English *December*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

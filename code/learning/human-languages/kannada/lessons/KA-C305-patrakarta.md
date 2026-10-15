@@ -14,7 +14,8 @@ romanization: "patrakarta"
 concept_tag: KA-KELASA305-PATRAKARTA
 prerequisites: [KA-C305-gayaka, KA-C305-nata]
 sounds: []
-roots: []
+roots: [sanskrit-patra, sanskrit-kartr]
+etymology_hook: "patrakarta ← Sanskrit patra 'leaf, letter' (CDIAL 7733) + kartṛ 'maker'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C305-nata]
 <!-- hl-knowledge: introduces=[KA-LEX-C305-KELASA305-05]; assesses=[] -->
 
 **ಪತ್ರಕರ್ತ** — *patrakarta* — "a journalist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪತ್ರಕರ್ತ** (*patrakarta*) is Sanskrit *patra*, "leaf, letter" (CDIAL 7733), and *kartṛ*, "maker": "a maker of papers".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

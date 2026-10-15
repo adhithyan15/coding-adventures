@@ -14,7 +14,8 @@ romanization: "toṭṭikku"
 concept_tag: KA-VERB-TOTTIKKU
 prerequisites: [KA-C166-ulu, KA-C166-cimukisu]
 sounds: []
-roots: []
+roots: [kannada-totti-drip]
+etymology_hook: "toṭṭikku: probably native toṭṭu 'a drop' (DEDR 2835) + ikku 'to put' (DEDR 492)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C166-cimukisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C166-KRIYE166-03]; assesses=[] -->
 
 **ತೊಟ್ಟಿಕ್ಕು** — *toṭṭikku* — "to drip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೊಟ್ಟಿಕ್ಕು** (*toṭṭikku*) is probably native Dravidian: *toṭṭu*, "to drip; a drop", which DEDR 2835 lists with Tamil *coṭṭu*, "to fall in drops", and *ikku*, "to put" (DEDR 492). DEDR does not list *toṭṭikku* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

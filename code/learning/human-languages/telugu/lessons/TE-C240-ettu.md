@@ -14,7 +14,8 @@ romanization: "ettu"
 concept_tag: TE-VERB-ETTU
 prerequisites: [TE-C239-pinchanu, TE-C239-oppandam]
 sounds: []
-roots: []
+roots: [dravidian-ettu-lift]
+etymology_hook: "ettu: native Dravidian; DEDR 796 lists ettu 'to lift up' with Kannada ettu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C239-oppandam]
 <!-- hl-knowledge: introduces=[TE-LEX-C240-KRIYA240-01]; assesses=[] -->
 
 **ఎత్తు** — *ettu* — "to lift".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎత్తు** (*ettu*) is native Dravidian. DEDR 796 lists *ettu*, "to lift up, raise", with Kannada *ettu*, "to lift".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

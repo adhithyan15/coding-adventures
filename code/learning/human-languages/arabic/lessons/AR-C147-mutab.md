@@ -14,7 +14,8 @@ romanization: "mutʿab"
 concept_tag: AR-QUAL147-MUTAB
 prerequisites: [AR-C146-mughlaq, AR-C147-mashghul, AR-C16-al-saa, AR-C16-al-saa]
 sounds: []
-roots: []
+roots: [t-ʿ-b]
+etymology_hook: "mutʿab: built on the root t-ʿ-b, 'to be tired' (Lane); mutʿab is the Form IV passive participle, 'tired out'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C147-mashghul]
 <!-- hl-knowledge: introduces=[AR-LEX-C147-QUAL147-02]; assesses=[] -->
 
 **متعب** — *mutʿab* — "tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**متعب** (*mutʿab*) is built on the native Arabic root *t-ʿ-b*, "to be tired" (Lane). *Mutʿab* is the Form IV passive participle, "tired out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to fry, then the Bengali for to mix.
 You'll want to know: ছোড়া.
 ছোড়া — chhõṛā — "to throw".
 
+The word, taken apart.
+ছোড়া (chhõṛā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kṣoṭayati, "throws" (CDIAL 3747).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to mix, then the Bengali for to throw.
 
 You'll want to know: টেপা.
 টেপা — ṭepā — "to press".
+
+The word, taken apart.
+The origin of টেপা (ṭepā) is not settled. CDIAL has no entry for it; the nearest form it gives is Bengali ṭipā, "to pinch", under ṭipp (CDIAL 5464), and it does not join the two.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to throw, then the Bengali for to press.
 You'll want to know: আঁকা.
 আঁকা — ā̃kā — "to draw".
 
+The word, taken apart.
+আঁকা (ā̃kā) (āṁkā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṅkayati, "marks, brands" (CDIAL 104).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to press, then the Bengali for to draw.
 You'll want to know: ফেরা.
 ফেরা — pherā — "to return".
 
+The word, taken apart.
+ফেরা (pherā) is a tadbhava, a word inherited and reshaped by sound change. It comes from pherayati, "makes move, turns", a form CDIAL reconstructs from its descendants (CDIAL 9078). CDIAL lists Bengali pherā, "to turn".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to draw, then the Bengali for to return.
 
 You'll want to know: চালানো.
 চালানো — chālāno — "to drive, to run (a machine)".
+
+The word, taken apart.
+চালানো (chālāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from calyati, "goes", a form CDIAL reconstructs from its descendants (CDIAL 4721). Chālāno is the causing form of a verb CDIAL lists as Bengali cālā, "to be moved".
 
 What you've built.
 One more word for this chapter.

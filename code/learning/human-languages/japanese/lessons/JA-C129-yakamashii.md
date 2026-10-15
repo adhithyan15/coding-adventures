@@ -14,7 +14,8 @@ romanization: "yakamashii"
 concept_tag: JA-QUAL129-YAKAMASHII
 prerequisites: [JA-C129-kawaii, JA-C129-shitsukoi]
 sounds: []
-roots: []
+roots: [japanese-yakamashii]
+etymology_hook: "yakamashii: native Japanese, inherited, not borrowed; usually kana, kanji 喧しい as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C129-shitsukoi]
 <!-- hl-knowledge: introduces=[JA-LEX-C129-QUAL129-03]; assesses=[] -->
 
 **やかましい** — *yakamashii* — "noisy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**やかましい** (*yakamashii*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

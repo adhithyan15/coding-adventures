@@ -13,6 +13,9 @@ You'll want to know.
 ചിങ്ങം, കന്നി, തുലാം, വൃശ്ചികം, ധനു, മകരം, കുംഭം, മീനം, മേടം, ഇടവം, മിഥുനം, കർക്കടകം (Chiṅṅam, Kanni, Tulām, Vṛścikam, Dhanu, Makaram, Kumbham, Mīnam, Mēḍam, Iḍavam, Mithunam, Karkiḍakam).
 This is the Kollam Era calendar (also called the Malayalam calendar), Kerala's own solar civil calendar — genuinely separate from the Gregorian, the pan-Indian Hindu lunisolar calendar, and Tamil's solar calendar.
 
+The word, taken apart.
+Each month is named for the zodiac sign the sun stands in, and each sign-name is Sanskrit, some taken whole and some reshaped: ciṅṅaṁ from siṁha, "lion" (CDIAL 13384); kanni from kanyā, "maiden" (CDIAL 2737); tulāṁ from tulā, "balance" (CDIAL 5886); vṛścikaṁ from vṛścika, "scorpion" (CDIAL 12081); dhanu from dhanus, "bow" (CDIAL 6726); makaraṁ from makara, "sea-monster" (CDIAL 9692); kuṁbhaṁ from kumbha, "pot" (CDIAL 3308); mīnaṁ from mīna, "fish" (CDIAL 10140a, which traces the Sanskrit word itself to Dravidian, Tamil mīṉ, DEDR 4885); mēṭaṁ from mēṣa, "ram" (CDIAL 10334); iṭavaṁ from vṛṣabha, "bull" (CDIAL 12085); mithunaṁ from mithuna, "pair"; karkkaṭakaṁ from karkaṭaka, "crab" (CDIAL 2816).
+
 Why it's said this way.
 Both Tamil's and Malayalam's calendars are solar, and both are independent of the Hindu lunisolar system — but they name their months differently. Tamil ties each month to a nakshatra (a lunar-mansion star cluster). Malayalam instead names each month directly for the zodiac sign (rāśi) the sun is passing through: ചിങ്ങം (Chiṅṅam) = Leo, കന്നി (Kanni) = Virgo, തുലാം (Tulām) = Libra, and so on straight through the zodiac. Same underlying idea — track the sun's yearly path against the stars — but two Dravidian languages chose two different sets of star-markers to name it by.
 ചിങ്ങം 1 (the 1st of Chiṅṅam) marks the Malayalam New Year and the start of the Onam festival season — Kerala's own solar calendar, running its own independent year.

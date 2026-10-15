@@ -14,7 +14,8 @@ romanization: "panchhī"
 concept_tag: PA-ANIMALS78-PANCHHI
 prerequisites: [PA-C77-bakkri, PA-C77-bhed]
 sounds: []
-roots: []
+roots: [sanskrit-pakshin]
+etymology_hook: "panchhī ← Sanskrit pakṣin 'winged; bird'; CDIAL lists the Punjabi form paṅkhī (CDIAL 7636)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C77-bhed]
 <!-- hl-knowledge: introduces=[PA-LEX-C78-ANIMALS78-01]; assesses=[] -->
 
 **ਪੰਛੀ** — *panchhī* — "a bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਪੰਛੀ** (*panchhī*) goes back to Sanskrit *pakṣin*, "winged; bird". CDIAL lists the Punjabi form *paṅkhī* under it (CDIAL 7636); *panchhī* is the same word with *chh* for the *kṣ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

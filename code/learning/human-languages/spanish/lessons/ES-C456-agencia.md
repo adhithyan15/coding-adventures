@@ -11,6 +11,7 @@ concept_tag: ES-BILL-AGENCIA
 prerequisites: [ES-C456-coste, ES-C349-agenda, ES-C346-oficina]
 sounds: [g-soft, soft-c, stress-penultimate]
 roots: [agere-latin]
+etymology_hook: "agencia ← Latin agere 'to do, to drive' — kin to agenda; English agency, agent"
 duration:
   max_seconds: 275
 requires:

@@ -14,7 +14,8 @@ romanization: "nādir"
 concept_tag: AR-SIFA211-NADIR
 prerequisites: [AR-C211-mukhtalif, AR-C211-mushabih]
 sounds: []
-roots: []
+roots: [n-d-r]
+etymology_hook: "nādir: built on the root n-d-r, 'to be rare, to drop out' (Lane); nādir is the active participle, 'rare'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C211-mushabih]
 <!-- hl-knowledge: introduces=[AR-LEX-C211-SIFA211-04]; assesses=[] -->
 
 **نادر** — *nādir* — "rare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نادر** (*nādir*) is built on the native Arabic root *n-d-r*, "to be rare, to drop out" (Lane). *Nādir* is the active participle, "rare".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

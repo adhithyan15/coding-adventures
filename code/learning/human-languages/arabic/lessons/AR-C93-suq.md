@@ -14,7 +14,8 @@ romanization: "sūq"
 concept_tag: AR-TOWN93-SUQ
 prerequisites: [AR-C92-maktab, AR-C93-shurta]
 sounds: []
-roots: []
+roots: [s-w-q]
+etymology_hook: "sūq: built on the root s-w-q, 'to drive (cattle)' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C93-shurta]
 <!-- hl-knowledge: introduces=[AR-LEX-C93-TOWN93-02]; assesses=[] -->
 
 **سوق** — *sūq* — "a market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سوق** (*sūq*) is built on the native Arabic root *s-w-q*, "to drive (cattle)" (Lane). Lane quotes the explanation that a market is named because people drive their goods to it; English *souk* comes from *sūq*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

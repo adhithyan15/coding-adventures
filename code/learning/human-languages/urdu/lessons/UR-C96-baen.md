@@ -14,7 +14,8 @@ romanization: "bāeṅ"
 concept_tag: UR-TIME96-BAEN
 prerequisites: [UR-C96-kidhar, UR-C96-daen]
 sounds: []
-roots: []
+roots: [sanskrit-vama]
+etymology_hook: "bāeṅ: a form of bāyāṅ 'left' ← Sanskrit vāma 'lefthand' (CDIAL 11533)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C96-daen]
 <!-- hl-knowledge: introduces=[UR-LEX-C96-TIME96-05]; assesses=[] -->
 
 **بائیں** — *bāeṅ* — "to the left".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بائیں** (*bāeṅ*) is a form of *bāyāṅ*, "left", which comes from Sanskrit *vāma*, "lefthand" (CDIAL 11533).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

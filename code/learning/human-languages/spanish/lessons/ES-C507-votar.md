@@ -10,7 +10,8 @@ gloss: "to vote"
 concept_tag: ES-VERB-VOTAR
 prerequisites: [ES-C506-felicitar, ES-C506-abrazar]
 sounds: []
-roots: []
+roots: [votum-latin]
+etymology_hook: "votar — from voto, Latin votum 'a vow' — its worn-down plural vota became boda 'wedding'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ES-C506-abrazar]
 > Mañana votamos en el colegio del barrio.
 >
 > *Tomorrow we vote at the local school.*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**votar** is built on *voto*, "a vote, a vow", from Latin *votum*, "a vow" — a learned word. Worn down in speech, its plural *vota* became *boda*, "a wedding".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

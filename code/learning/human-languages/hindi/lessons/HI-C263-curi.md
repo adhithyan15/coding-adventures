@@ -14,7 +14,8 @@ romanization: "cūṛī"
 concept_tag: HI-THG263-CURI
 prerequisites: [HI-C263-jhumka, HI-C263-bindi]
 sounds: []
-roots: []
+roots: [sanskrit-cuda]
+etymology_hook: "cūṛī ← Sanskrit cūḍa 'bracelet', a tadbhava (CDIAL 4884)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C263-bindi]
 <!-- hl-knowledge: introduces=[HI-LEX-C263-THG263-03]; assesses=[] -->
 
 **चूड़ी** — *cūṛī* — "a bangle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**चूड़ी** (*cūṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *cūḍa*, "bracelet" (CDIAL 4884). The Sanskrit word is known only from the old word-lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,7 +11,8 @@ romanization: "adi"
 concept_tag: TE-DEIXIS-THAT
 prerequisites: [TE-C41-this]
 sounds: []
-roots: []
+roots: [dravidian-a-distal-deictic]
+etymology_hook: "adi: native Dravidian, one word with Tamil atu and Kannada adu (DEDR 1)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner is **ఇది** *idi*, which you have just met. The two of them
 differ by one sound at the front — **a-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**అది** (*adi*) is native Dravidian, one word with Tamil *atu* and Kannada *adu* (DEDR 1). It is built on the far-pointing base *a-*, "that".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C41-DEIXIS-02] -->

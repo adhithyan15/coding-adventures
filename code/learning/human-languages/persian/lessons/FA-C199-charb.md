@@ -14,7 +14,8 @@ romanization: "charb"
 concept_tag: FA-SEFAT199-CHARB
 prerequisites: [FA-C198-movaffaqiyat, FA-C199-alude]
 sounds: []
-roots: []
+roots: [persian-charb]
+etymology_hook: "charb ← Middle Persian čarb (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C199-alude]
 <!-- hl-knowledge: introduces=[FA-LEX-C199-SEFAT199-02]; assesses=[] -->
 
 **چرب** — *charb* — "greasy, fatty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*charb* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *čarb*, "fatty" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

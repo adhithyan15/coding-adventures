@@ -14,7 +14,8 @@ romanization: "gandũ"
 concept_tag: GU-QUAL132-GANDU
 prerequisites: [GU-C131-suku, GU-C132-cokhkhu]
 sounds: []
-roots: []
+roots: [persian-ganda]
+etymology_hook: "gandũ: usually traced to Persian ganda 'stinking, foul'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C132-cokhkhu]
 <!-- hl-knowledge: introduces=[GU-LEX-C132-QUAL132-02]; assesses=[] -->
 
 **ગંદું** (*gandũ*) — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગંદું** (*gandũ*) is a loan, usually traced to Persian *ganda*, "stinking, foul".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "next to, close by"
 concept_tag: LA-LOC119-IUXTA
 prerequisites: [LA-C119-miliarium, LA-C119-circa]
 sounds: []
-roots: []
+roots: [iuxta-latin, iungere-latin]
+etymology_hook: "iūxtā 'next to' — an old superlative on the root of iungō 'to join': most closely joined"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C119-circa]
 <!-- hl-knowledge: introduces=[LA-LEX-C119-LOC119-04]; assesses=[] -->
 
 **iūxtā** — "next to, close by".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**iūxtā** is an old superlative adverb built on the root of *iungō*, "to join" (Lewis & Short): "most closely joined", so right next to.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

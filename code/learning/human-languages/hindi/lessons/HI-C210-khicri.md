@@ -14,7 +14,8 @@ romanization: "khicṛī"
 concept_tag: HI-THG210-KHICRI
 prerequisites: [HI-C209-roti, HI-C210-paratha]
 sounds: []
-roots: []
+roots: [sanskrit-khicca]
+etymology_hook: "khicṛī ← Sanskrit khiccā 'dish of rice and peas', a tadbhava (CDIAL 3880)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C210-paratha]
 <!-- hl-knowledge: introduces=[HI-LEX-C210-THG210-02]; assesses=[] -->
 
 **खिचड़ी** — *khicṛī* — "khichri (rice and lentils)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खिचड़ी** (*khicṛī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *khiccā*, "dish of rice and peas" (CDIAL 3880). CDIAL notes an added *-ḍ-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

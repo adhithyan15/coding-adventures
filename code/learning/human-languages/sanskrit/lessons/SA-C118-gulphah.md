@@ -14,7 +14,8 @@ romanization: "gulphaḥ"
 concept_tag: SA-THINGS118-GULPHAH
 prerequisites: [SA-C117-bhruh, SA-C117-tvak]
 sounds: []
-roots: []
+roots: [sanskrit-gulpha]
+etymology_hook: "gulpha 'ankle' (AV) is perhaps borrowed from Dravidian, after Burrow (CDIAL 4216); Marathi gophā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C117-tvak]
 <!-- hl-knowledge: introduces=[SA-LEX-C118-THINGS118-01]; assesses=[] -->
 
 **गुल्फः** — *gulphaḥ* — "an ankle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gulpha* "the ankle", also *kulpha* in the Rigveda, is perhaps borrowed from Dravidian: CDIAL 4216, after Burrow, takes the wavering *k-* and *g-* as a sign of that and compares a Dravidian word for "hoof". It lives on as Marathi *gophā* "ankle" (CDIAL 4216).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

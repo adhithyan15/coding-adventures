@@ -11,7 +11,8 @@ romanization: "vilāsaṁ"
 concept_tag: ML-YOU-ADDRESS
 prerequisites: [ML-C125-uncle, ML-C125-nephew]
 sounds: []
-roots: []
+roots: [sanskrit-vilasa]
+etymology_hook: "vilāsaṁ: Sanskrit vilāsa 'play, display' (CDIAL 11900) in form; how it came to mean an address is not clear"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C125-nephew]
 <!-- hl-knowledge: introduces=[ML-LEX-C126-ABOUTYOU-01]; assesses=[] -->
 
 **വിലാസം** (*vilāsaṁ*) — "address". **നിങ്ങളുടെ വിലാസം എന്താണ്?** — "what is your address?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വിലാസം** (*vilāsaṁ*) has the form of Sanskrit *vilāsa*, "play, display" (CDIAL 11900). How that word came to mean a postal address is not clear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

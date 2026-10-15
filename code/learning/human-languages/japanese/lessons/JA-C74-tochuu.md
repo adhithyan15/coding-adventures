@@ -14,7 +14,8 @@ romanization: "tochuu"
 concept_tag: JA-TIME74-TOCHUU
 prerequisites: [JA-C74-shuumatsu, JA-C74-owari]
 sounds: []
-roots: []
+roots: [middle-chinese-du-road, middle-chinese-trjuwng]
+etymology_hook: "tochuu: Sino-Japanese 途 'road' + 中 'middle', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C74-owari]
 <!-- hl-knowledge: introduces=[JA-LEX-C74-TIME74-04]; assesses=[] -->
 
 **とちゅう** — *tochuu* — "on the way, midway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**とちゅう** (*tochuu*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *to*, "road, way" (Middle Chinese *du*) and *chū*, "middle" (*trjuwng*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

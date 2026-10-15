@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to argue, then the Kannada for to imagin
 You'll want to know: ಟೀಕಿಸು.
 ಟೀಕಿಸು — ṭīkisu — "to criticise".
 
+The word, taken apart.
+ಟೀಕಿಸು (ṭīkisu) is Sanskrit ṭīkā, "a commentary", made into a Kannada verb with -isu: to criticise is to comment.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to imagine, then the Kannada for to crit
 
 You'll want to know: ಹಂಚಿಕೊಳ್ಳು.
 ಹಂಚಿಕೊಳ್ಳು — hañcikoḷḷu — "to share".
+
+The word, taken apart.
+ಹಂಚಿಕೊಳ್ಳು (hañcikoḷḷu) is native Dravidian: hañci, from hañcu, "to distribute, share", which DEDR 3936 lists as older Kannada pañcu, and koḷḷu, "to take" (DEDR 2151): "to share among ourselves".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to criticise, then the Kannada for to sh
 You'll want to know: ದ್ವೇಷಿಸು.
 ದ್ವೇಷಿಸು — dvēṣisu — "to hate".
 
+The word, taken apart.
+ದ್ವೇಷಿಸು (dvēṣisu) is Sanskrit dveṣa, "hatred" (CDIAL 6696), made into a Kannada verb with -isu.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to share, then the Kannada for to hate.
 You'll want to know: ಕಂಡುಹಿಡಿ.
 ಕಂಡುಹಿಡಿ — kaṇḍuhiḍi — "to find out, to discover".
 
+The word, taken apart.
+ಕಂಡುಹಿಡಿ (kaṇḍuhiḍi) is native Dravidian: kaṇḍu, "having seen", from kāṇ, "to see" (DEDR 1443), and hiḍi, "to catch, seize" (DEDR 4148): "to see and catch".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to hate, then the Kannada for to find ou
 
 You'll want to know: ಸಾಲ ಪಡೆ.
 ಸಾಲ ಪಡೆ — sāla paḍe — "to borrow (money)".
+
+The word, taken apart.
+ಸಾಲ ಪಡೆ (sāla paḍe) is native Dravidian: sāla, "debt", which DEDR 2472 lists, and paḍe, "to get, obtain" (DEDR 3853): "to get a debt".
 
 What you've built.
 One more word for this chapter.

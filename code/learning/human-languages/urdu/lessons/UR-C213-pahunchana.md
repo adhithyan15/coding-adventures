@@ -14,7 +14,8 @@ romanization: "pahuṅchānā"
 concept_tag: UR-VERB-PAHUNCHANA
 prerequisites: [UR-C212-ubalna, UR-C212-chakhna]
 sounds: []
-roots: []
+roots: [sanskrit-prabhuta]
+etymology_hook: "pahuṅchānā: the causing form of pahuṅchnā 'to arrive' ← Sanskrit prabhūta (CDIAL 8716)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C212-chakhna]
 <!-- hl-knowledge: introduces=[UR-LEX-C213-ACT213-01]; assesses=[] -->
 
 **پہنچانا** — *pahuṅchānā* — "to deliver, to take (somewhere)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پہنچانا** (*pahuṅchānā*) is the causing form of *pahuṅchnā*, "to arrive": to deliver is to make something arrive. CDIAL lists *pahuṅchnā* under Sanskrit *prabhūta*, "much, great", which Prakrit made into a verb, "is strong, reaches" (CDIAL 8716).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

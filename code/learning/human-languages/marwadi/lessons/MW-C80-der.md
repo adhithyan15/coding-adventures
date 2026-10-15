@@ -14,7 +14,8 @@ romanization: "der"
 concept_tag: MW-TIME80-DER
 prerequisites: [MW-C80-kadi, MW-C80-jaldi]
 sounds: []
-roots: []
+roots: [persian-der]
+etymology_hook: "der: usually traced to Persian dēr 'late; a long time'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C80-jaldi]
 <!-- hl-knowledge: introduces=[MW-LEX-C80-TIME80-04]; assesses=[] -->
 
 **देर** — *der* — "a delay; late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**देर** (*der*) is a loan, usually traced to Persian *dēr*, "late; a long time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

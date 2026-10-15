@@ -14,7 +14,8 @@ romanization: "maghaṣ"
 concept_tag: AR-SIHHA201-MAGHAS
 prerequisites: [AR-C201-kadma, AR-C201-harq]
 sounds: []
-roots: []
+roots: [m-gh-ṣ]
+etymology_hook: "maghaṣ: built on the root m-gh-ṣ, 'colic' (Lane); Lane's maghṣ is a griping pain in the belly"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C201-harq]
 <!-- hl-knowledge: introduces=[AR-LEX-C201-SIHHA201-05]; assesses=[] -->
 
 **مغص** — *maghaṣ* — "a stomach cramp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مغص** (*maghaṣ*) is built on the native Arabic root *m-gh-ṣ*, "colic" (Lane). Lane's *maghṣ* is a griping pain in the belly.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

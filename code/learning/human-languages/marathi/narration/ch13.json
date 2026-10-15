@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Numbers One to Five",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:1e58c6df42395c70",
+  "sourceHash": "fnv1a64:8b9eb85f065ef009",
   "lessons": [
     {
       "id": "MR-R09-script-a-r3",
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c278587aeb5a077",
+      "sourceHash": "fnv1a64:6f806c6f547b4280",
       "notice": null,
       "blocks": [
         {

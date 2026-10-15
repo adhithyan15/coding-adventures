@@ -195,6 +195,10 @@ rather than letting them read as silent gaps.
     modifiers and reconciles only their ten non-inset CSS companions, reducing
     its fresh inventory from 83 to 63. Standalone, inset, and unsupported
     shadows or elevation values remain reported drawing-effect debt.
+    #17394 lowers TaskApp's complete seven-way XAML
+    weekday percentages to proportional Grid stars and its wrapping repeated
+    day cells to `UniformGridLayout`, reducing XAML from 38 to 29. Partial,
+    mixed, invalid, and unsupported wrapping shapes remain explicit debt.
     #17224 then preserves all 15 supported fixed Flutter `border-radius`
     declarations and paints eight coupled rounded-text backgrounds, reducing
     Flutter's fresh inventory from 144 to 121. Relative and otherwise unsafe
@@ -233,6 +237,17 @@ rather than letting them read as silent gaps.
 
 ### Native fidelity release checkpoint
 
+**Completed in #17483 — #17481: SwiftUI drag-body spacing reports.** Both
+`HostDraggable` and `HostDropTarget` already construct a vertical stack with
+authored spacing. Recognize those constructors in the gap reporter, requiring
+every occurrence of a shared part to consume the property. Unsupported values
+and reuse on non-spacing primitives must remain reported. Verify generated
+TaskApp before retiring its four gap allowances. Fresh package-expanded
+generation measures 59 style drops and no gap drops, down from 63; native
+runtime generation and Swift compilation passed in the macOS release CI lane.
+Drag callbacks and native
+behavior are unchanged; this is reporting reconciliation.
+
 11. **P1 [#17262](https://github.com/adhithyan15/coding-adventures/issues/17262)
     — publish `task-app-v0.5.2`.** Roll the compatible native-fidelity fixes
     accumulated after v0.5.1 into an immutable patch release. Keep the verified
@@ -252,6 +267,18 @@ rather than letting them read as silent gaps.
     Keep the verified downloadable artifact matrix unchanged: Static HTML, Web
     Components, and Paint remain CI-only, while signing, notarization, and
     installers remain tracked by #13977.
+
+**Published checkpoint — [#17469](https://github.com/adhithyan15/coding-adventures/issues/17469):
+`task-app-v0.5.5`.** Published from #17470 and audited: immutable tag and
+manifest match the source commit, all twelve checksum entries match GitHub
+asset digests, and the existing artifact coverage and limitations are retained.
+
+**Next release checkpoint — P1 [#17491](https://github.com/adhithyan15/coding-adventures/issues/17491):
+publish `task-app-v0.5.6`.** Roll forward the compatible SwiftUI drag-body
+gap reporting correction (#17483). This corrects diagnostics and tightens the
+style regression gate; emitted drag behavior is unchanged. Validate the existing
+release matrix, publish from main, and audit the immutable assets. Static HTML,
+Web Components, and Paint remain CI-only; signing and installers remain #13977.
 
 ### Tier C — reach, stated honestly
 

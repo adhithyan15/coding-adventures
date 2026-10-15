@@ -12,6 +12,9 @@ Before the new one: say the Bengali for money; taka, then the Bengali for a ques
 You'll want to know: শব্দ.
 শব্দ — shôbdo — "a word".
 
+The word, taken apart.
+শব্দ (shôbdo) is Sanskrit śabda, "articulate sound, noise", taken over whole as a learned loan, a tatsama (CDIAL 12298). The word inherited from it is Old Bengali sāda, "sound, echo", which CDIAL lists.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a question, then the Bengali for a word.
 
 You'll want to know: ছবি.
 ছবি — chhôbi — "a picture".
+
+The word, taken apart.
+ছবি (chhôbi) is Sanskrit chavi, "skin, colour, beauty", taken over whole as a learned loan, a tatsama. In Bengali it has come to mean "picture".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a word, then the Bengali for a picture.
 You'll want to know: গাছ.
 গাছ — gāchh — "a tree".
 
+The word, taken apart.
+গাছ (gāchh) is a tadbhava, a word inherited and reshaped by sound change. It comes from gakṣa, "tree", a form CDIAL reconstructs from its descendants (CDIAL 3949). Lexicons give a Sanskrit gaccha, "tree".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a picture, then the Bengali for a tree.
 You'll want to know: ফুল.
 ফুল — phul — "a flower".
 
+The word, taken apart.
+ফুল (phul) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from phulla, "expanded, blown (of flowers)" (CDIAL 9092).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a tree, then the Bengali for a flower.
 
 You'll want to know: পাতা.
 পাতা — pātā — "a leaf".
+
+The word, taken apart.
+পাতা (pātā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pattra, "wing-feather; leaf" (CDIAL 7733).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "eṛī"
 concept_tag: UR-SEHAT186-ERI
 prerequisites: [UR-C185-zakhm, UR-C185-chot]
 sounds: []
-roots: []
+roots: [indo-aryan-addi]
+etymology_hook: "eṛī ← *ēḍḍi, beside *aḍḍi 'heel' (CDIAL 191); Bloch traced it to Dravidian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C185-chot]
 <!-- hl-knowledge: introduces=[UR-LEX-C186-SEHAT186-01]; assesses=[] -->
 
 **ایڑی** — *eṛī* — "a heel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ایڑی** (*eṛī*) comes from a reconstructed *\*ēḍḍi*, a form CDIAL gives beside *\*aḍḍi*, "heel" (CDIAL 191). CDIAL records Bloch's view that the word came from Dravidian, comparing Tamil *aḍi*, "foot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

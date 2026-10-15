@@ -13,7 +13,8 @@ gloss: "industrious, active"
 concept_tag: LA-QUAL241-INDUSTRIUS
 prerequisites: [LA-C240-necessarius, LA-C240-inutilis]
 sounds: []
-roots: []
+roots: [industrius-latin, struere-latin]
+etymology_hook: "industrius 'industrious' — usually explained as indu- 'within' + struō 'to build'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C240-inutilis]
 <!-- hl-knowledge: introduces=[LA-LEX-C241-QUAL241-01]; assesses=[] -->
 
 **industrius, industria, industrium** — "industrious, active".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**industrius** is usually explained as *indu-*, "within", the old form of in, with the root of *struō*, "to build" (Lewis & Short): building from within, so active.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

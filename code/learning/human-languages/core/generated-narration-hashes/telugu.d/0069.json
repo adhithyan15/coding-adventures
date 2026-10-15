@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 69,
-  "sourceHash": "fnv1a64:8fd410b01568f2f1",
+  "sourceHash": "fnv1a64:70fc25927524d912",
   "lessonIds": [
     "TE-C69-axe",
     "TE-C69-saw",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch69.txt",
   "json": "telugu/narration/ch69.json",
-  "textHash": "fnv1a64:9a4aed546a574ae5",
-  "jsonHash": "fnv1a64:67a3b6516a8ad7f0",
+  "textHash": "fnv1a64:a7e373d37b8a02ab",
+  "jsonHash": "fnv1a64:7527fedc6737b12c",
   "findings": []
 }

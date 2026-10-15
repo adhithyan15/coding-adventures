@@ -14,7 +14,8 @@ romanization: "bôchhôr"
 concept_tag: BN-TIME79-BOCHHOR
 prerequisites: [BN-C78-soptaho, BN-C78-mash]
 sounds: []
-roots: []
+roots: [sanskrit-vatsara]
+etymology_hook: "bôchhôr ← Sanskrit vatsara 'year'; CDIAL asks whether the Bengali form was taken from Sanskrit (CDIAL 11242)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C78-mash]
 <!-- hl-knowledge: introduces=[BN-LEX-C79-TIME79-01]; assesses=[] -->
 
 **বছর** — *bôchhôr* — "a year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**বছর** (*bôchhôr*) goes back to Sanskrit *vatsara*, "year" (CDIAL 11242). CDIAL asks whether the Bengali form was borrowed from Sanskrit rather than inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

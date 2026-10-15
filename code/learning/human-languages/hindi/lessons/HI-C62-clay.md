@@ -14,7 +14,8 @@ romanization: "miṭṭī"
 concept_tag: HI-NOUN-CLAY
 prerequisites: [HI-C62-basket, HI-C60-buffalo, HI-C61-griddle]
 sounds: []
-roots: []
+roots: [sanskrit-mrttika]
+etymology_hook: "miṭṭī ← Sanskrit mṛttikā 'earth, clay', a tadbhava (CDIAL 10286)"
 duration:
   max_seconds: 210
 requires:

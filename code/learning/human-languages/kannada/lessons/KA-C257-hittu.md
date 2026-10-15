@@ -14,7 +14,8 @@ romanization: "hiṭṭu"
 concept_tag: KA-VASTU257-HITTU
 prerequisites: [KA-C257-nalli, KA-C257-mettilu]
 sounds: []
-roots: []
+roots: [dravidian-pittu-flour]
+etymology_hook: "hiṭṭu: older piṭṭu 'flour' (DEDR 3084); perhaps from Prakrit piṭṭha, Sanskrit piṣṭa (CDIAL 8218)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C257-mettilu]
 <!-- hl-knowledge: introduces=[KA-LEX-C257-VASTU257-03]; assesses=[] -->
 
 **ಹಿಟ್ಟು** — *hiṭṭu* — "flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹಿಟ್ಟು** (*hiṭṭu*) is older *piṭṭu*, "flour", with the *p-* turned to *h-*: DEDR 3084 gives *piṭṭu*, "flour, food", under Kannada. Where it comes from is not settled. It matches Prakrit *piṭṭha*, "flour", from Sanskrit *piṣṭa*, "ground" (CDIAL 8218), but DEDR does not call it a loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

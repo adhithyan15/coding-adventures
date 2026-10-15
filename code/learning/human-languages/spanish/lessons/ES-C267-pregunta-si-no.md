@@ -11,7 +11,8 @@ romanization: ""
 concept_tag: QUESTION-POLAR
 prerequisites: [ES-C267-no-verbo]
 sounds: []
-roots: []
+roots: [fabulari-latin, hispania-latin]
+etymology_hook: "¿hablas español? — hablar ← Latin fabulari 'to chat'; español built on Latin Hispania"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ read flat.
 You may also put the subject after the verb — *¿Habla usted español?* — and with
 *usted* that is the more usual shape. But it is a preference, not a rule. The
 rising voice is the question.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**hablas español** is built from words you have taken apart: *hablas* is *hablar*, Latin *fabulari*, "to chat", and *español* was built on *Hispania*, the Roman name for the peninsula.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-C267-PREGUNTASINO-01] -->

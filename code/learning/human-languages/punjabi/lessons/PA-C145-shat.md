@@ -14,7 +14,8 @@ romanization: "shā̃t"
 concept_tag: PA-QUAL145-SHAT
 prerequisites: [PA-C144-alsi, PA-C145-bahadar]
 sounds: []
-roots: []
+roots: [sanskrit-shanta]
+etymology_hook: "shāṁt ← Sanskrit śānta 'abated; calm', a tatsama (CDIAL 12390)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C145-bahadar]
 <!-- hl-knowledge: introduces=[PA-LEX-C145-QUAL145-02]; assesses=[] -->
 
 **ਸ਼ਾਂਤ** — *shā̃t* — "calm, quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਸ਼ਾਂਤ** (*shāṁt*) is Sanskrit *śānta*, "abated; calm", taken over whole as a learned loan, a tatsama (CDIAL 12390).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

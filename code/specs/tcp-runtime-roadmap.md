@@ -330,6 +330,10 @@ Status:
   round-robins each accepted socket to a worker reactor via `adopt_stream` /
   `StreamMailbox::adopt_connection`. With the fan-out the macOS shard balance is
   even (`[13% × 8]`).
+  Windows uses the same fan-out: it has no load-balancing `SO_REUSEPORT` at all
+  (its `SO_REUSEADDR` lets a second socket steal the port, which the IOCP
+  provider refuses), so before the IOCP provider gained `adopt_stream` a
+  multi-worker `bind_windows_sharded` failed at bind.
 - **Done** — connection affinity / routing. Each reactor stamps its shard index
   into the low `shard_bits` of every `ConnectionId`
   (`id = (sequence << shard_bits) | shard_index`), so `TcpMailbox` routes an

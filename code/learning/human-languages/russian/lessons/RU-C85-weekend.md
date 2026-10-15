@@ -14,7 +14,8 @@ romanization: "vykhodnýye"
 concept_tag: RU-TIME85-WEEKEND
 prerequisites: [RU-C84-day-before-yesterday, RU-C85-second]
 sounds: []
-roots: []
+roots: [slavic-khoditi]
+etymology_hook: "выходные is выходные дни, 'days for going out', from выход 'way out', from ходить 'to go'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C85-second]
 <!-- hl-knowledge: introduces=[RU-LEX-C85-TIME85-02]; assesses=[] -->
 
 **выходные** (*vykhodnýye*) — "the weekend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**выходные** is short for *выходные дни*, "days for going out", from *выход*, "a way out": *вы-*, "out", with *ход*, "a going", the root of *ходить*, "to walk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

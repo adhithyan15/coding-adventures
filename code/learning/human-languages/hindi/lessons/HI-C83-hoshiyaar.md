@@ -14,7 +14,8 @@ romanization: "hośiyār"
 concept_tag: HI-ADJ-CLEVER
 prerequisites: [HI-C83-buraa, HI-C80-aasaan-mushkil]
 sounds: []
-roots: []
+roots: [persian-hosh]
+etymology_hook: "hośiyār: usually traced to Persian hoshyār 'alert, wise', built on hosh 'the senses'"
 duration:
   max_seconds: 240
 requires:

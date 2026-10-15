@@ -14,7 +14,8 @@ romanization: "pukaḻttuka"
 concept_tag: ML-VERB-PUKALTTUKA
 prerequisites: [ML-C307-abhinayikkuka, ML-C307-pottikkuka]
 sounds: []
-roots: []
+roots: [dravidian-pukazh-praise]
+etymology_hook: "pukaḻttuka: native Dravidian, one word with Tamil pukaḻ and Kannada pogaḻ (DEDR 4235)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C307-pottikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C307-KRIYA307-05]; assesses=[] -->
 
 **പുകഴ്ത്തുക** — *pukaḻttuka* — "to praise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പുകഴ്ത്തുക** (*pukaḻttuka*) is native Dravidian, one word with Tamil *pukaḻ*, Kannada *pogaḻ* and Telugu *pogaḍu* (DEDR 4235).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

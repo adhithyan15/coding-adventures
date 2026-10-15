@@ -14,7 +14,8 @@ romanization: "umai"
 concept_tag: JA-QUAL126-UMAI
 prerequisites: [JA-C126-anshin, JA-C126-futsuu]
 sounds: []
-roots: []
+roots: [japanese-umai]
+etymology_hook: "umai: native; kanji chosen for meaning, 上手い 'skilful' and 美味い 'tasty'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C126-futsuu]
 <!-- hl-knowledge: introduces=[JA-LEX-C126-QUAL126-05]; assesses=[] -->
 
 **うまい** — *umai* — "tasty; skilful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**うまい** (*umai*) is a native word, inherited rather than borrowed, usually written in kana; JMdict gives one kanji spelling for "skilful" and another for "tasty", both chosen for their meaning. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

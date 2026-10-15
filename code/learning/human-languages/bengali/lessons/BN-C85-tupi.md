@@ -14,7 +14,8 @@ romanization: "ṭupi"
 concept_tag: BN-CLOTHES85-TUPI
 prerequisites: [BN-C85-poket, BN-C85-angti]
 sounds: []
-roots: []
+roots: [indo-aryan-toppa]
+etymology_hook: "ṭupi ← *ṭoppa 'hat, covering', a reconstructed form; a tadbhava (CDIAL 5481)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C85-angti]
 <!-- hl-knowledge: introduces=[BN-LEX-C85-CLOTHES85-05]; assesses=[] -->
 
 **টুপি** — *ṭupi* — "a cap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**টুপি** (*ṭupi*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭoppa*, "hat, covering", a form CDIAL reconstructs from its descendants (CDIAL 5481). Late Sanskrit has *ṭōpikā*, "turban".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

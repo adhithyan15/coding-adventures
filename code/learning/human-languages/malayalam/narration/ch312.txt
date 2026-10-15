@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to bear fruit, then the Malayalam for 
 You'll want to know: രോഗം.
 രോഗം — rōgaṁ — "a disease, an illness".
 
+The word, taken apart.
+രോഗം (rōgaṁ) from Sanskrit rōga, "disease", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 10829).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to spread, then the Malayalam for a di
 
 You'll want to know: രോഗി.
 രോഗി — rōgi — "a patient".
+
+The word, taken apart.
+രോഗി (rōgi) from Sanskrit rōgin, "diseased, a sick person", taken over whole as a tatsama.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a disease, then the Malayalam for a pa
 You'll want to know: നഴ്സ്.
 നഴ്സ് — naḻsŭ — "a nurse".
 
+The word, taken apart.
+നഴ്സ് (naḻsŭ) from English nurse.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a patient, then the Malayalam for a nu
 You'll want to know: കുത്തിവയ്പ്പ്.
 കുത്തിവയ്പ്പ് — kuttivayppŭ — "an injection".
 
+The word, taken apart.
+കുത്തിവയ്പ്പ് (kuttivayppŭ) is native Dravidian, "a piercing-in": kutti, from the verb "to pierce, prick" (DEDR 1719, with Tamil kuttu), and vayppu, "a putting", from the verb "to place" (DEDR 5549).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a nurse, then the Malayalam for an inj
 
 You'll want to know: ആംബുലൻസ്.
 ആംബുലൻസ് — āmbulansŭ — "an ambulance".
+
+The word, taken apart.
+ആംബുലൻസ് (āmbulansŭ) from English ambulance, from French hôpital ambulant, "walking hospital".
 
 What you've built.
 One more word for this chapter.

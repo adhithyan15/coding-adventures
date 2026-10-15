@@ -13,6 +13,9 @@ You'll want to know: ಬಾ.
 ಬಾ (bā) — "come".
 One syllable, and a whole sentence. The commonest thing said at a doorway.
 
+The word, taken apart.
+ಬಾ (bā) is native Dravidian, one word with Tamil varu and Malayalam varuka (DEDR 5270). DEDR gives Kannada bar, bā: the old v- has become b-.
+
 What you've built.
 One more everyday action. Three more follow, and each reuses the ones before it.
 
@@ -41,6 +44,9 @@ Before the new one: what did bā mean?
 You'll want to know: ಕುಳಿತುಕೋ.
 ಕುಳಿತುಕೋ (kuḷitukō) — "sit".
 Longer than it looks: the -ko on the end is a reflexive, so it is closer to 'seat yourself' than to a bare order.
+
+The word, taken apart.
+ಕುಳಿತುಕೋ (kuḷitukō) is native Dravidian: the verb for "to squat, sit down", which DEDR 1835 lists as Kannada kuḷir and kuḷḷu (Tamil kuḷir), and kō, "take", the command form of koḷḷu, "to take" (DEDR 2151). The kō turns the action back on the doer: sit yourself down.
 
 What you've built.
 One more everyday action. Three more follow, and each reuses the ones before it.
@@ -71,6 +77,9 @@ You'll want to know: ನಿಲ್ಲು.
 ನಿಲ್ಲು (nillu) — "stand".
 The pair to sitting, and the bare stem again — Kannada asks for nothing extra to make a command.
 
+The word, taken apart.
+ನಿಲ್ಲು (nillu) is native Dravidian, one word with Tamil nil, Telugu nilucu and Malayalam nilkka (DEDR 3675).
+
 What you've built.
 One more everyday action. Three more follow, and each reuses the ones before it.
 
@@ -98,6 +107,9 @@ Before the new one: what did nillu mean?
 You'll want to know: ಕೊಡು.
 ಕೊಡು (koḍu) — "give".
 The everyday 'give'. Politeness is added with a separate word, not by altering this one.
+
+The word, taken apart.
+ಕೊಡು (koḍu) is native Dravidian, one word with Tamil koṭu (DEDR 2053).
 
 What you've built.
 One more everyday action. That closes the run: four everyday actions, each met on its own.

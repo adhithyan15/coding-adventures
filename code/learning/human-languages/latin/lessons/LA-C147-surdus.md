@@ -13,7 +13,8 @@ gloss: "deaf"
 concept_tag: LA-QUAL147-SURDUS
 prerequisites: [LA-C146-sordidus, LA-C146-rectus]
 sounds: []
-roots: []
+roots: [surdus-latin]
+etymology_hook: "surdus 'deaf' — origin unknown"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C146-rectus]
 <!-- hl-knowledge: introduces=[LA-LEX-C147-QUAL147-01]; assesses=[] -->
 
 **surdus, surda, surdum** — "deaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**surdus** has no sure origin; no proposal is generally accepted.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

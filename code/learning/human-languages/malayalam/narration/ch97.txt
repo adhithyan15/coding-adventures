@@ -13,6 +13,9 @@ You'll want to know.
 സുന്ദരം — sundaraṁ — beautiful.
 ഇത് സുന്ദരമാണ്. — itŭ sundaramāṇŭ — "This is beautiful."
 
+The word, taken apart.
+സുന്ദരം (sundaraṁ) from Sanskrit sundara, "beautiful", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 13474).
+
 What you've built.
 Notice what you did there. The word ends in ം, so it welds onto ആണ് the way the last chapter's two words did, and you did it without being told.
 [a table of 3 rows, read aloud]
@@ -55,6 +58,7 @@ Two different things are happening here, and only one of them is new.
 In സുന്ദരമാണ് nothing is added at all. The ം is the sound m, and it stays; only its writing moves, because the bare sign cannot carry a vowel. You were told that last chapter.
 ഭംഗി (bhaṁgi) is the other case, and you have met the reason before. It ends in ഇ, ആണ് begins with a vowel, and Malayalam will not let two vowels sit together — so a letter slides in between them, and after ഇ that letter is യ. The joining chapter said exactly that about അരിയും.
 What is new is only where it happens. ഇത് എന്റെ കുട്ടിയാണ് — this is my child — has the same യ, for the same reason.
+Where the word comes from. It is Sanskrit bhaṅgi, "a bend, a curve" (CDIAL 9357): a graceful line became beauty.
 
 Guided Practice.
 [pause 1 second]

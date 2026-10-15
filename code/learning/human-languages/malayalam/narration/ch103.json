@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "School",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a1bb96589904cd8d",
+  "sourceHash": "fnv1a64:3bcd8a4fe075c0fb",
   "lessons": [
     {
       "id": "ML-C103-pallikkoodam",
@@ -306,7 +306,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09781d48bb71705e",
+      "sourceHash": "fnv1a64:392800a0be3fbc7f",
       "notice": null,
       "blocks": [
         {
@@ -343,6 +343,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാഠം (pāṭhaṁ) from Sanskrit pāṭha, \"recitation, the text of a book, study\" (CDIAL 8035), with Malayalam's noun ending -ṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: you already know what it will do",
           "segments": [
@@ -361,7 +372,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -401,7 +412,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -432,7 +443,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d9b793abd03671e",
+      "sourceHash": "fnv1a64:333a46f309b03617",
       "notice": null,
       "blocks": [
         {
@@ -477,6 +488,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരീക്ഷ (parīkṣa) from Sanskrit parīkṣā, \"examination\" (CDIAL 7904), a tatsama: pari, \"around\", + īkṣ, \"to look\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: this one does not end in -ം",
           "segments": [
@@ -505,7 +527,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -545,7 +567,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -576,7 +598,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee80930b1dd4e3e2",
+      "sourceHash": "fnv1a64:2423bdb0c090b89b",
       "notice": null,
       "blocks": [
         {
@@ -613,6 +635,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മാർക്ക് (mārkkŭ) from English mark, borrowed in the sense \"a score\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: what the borrowing had to change",
           "segments": [
@@ -635,7 +668,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -675,7 +708,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

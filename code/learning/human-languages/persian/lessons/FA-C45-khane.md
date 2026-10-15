@@ -14,7 +14,8 @@ romanization: "khâne"
 concept_tag: FA-HOME45-KHANE
 prerequisites: [FA-C44-panir, FA-C44-shir]
 sounds: []
-roots: []
+roots: [persian-khana]
+etymology_hook: "khâne: inherited, usually traced to Middle Persian xānag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C44-shir]
 <!-- hl-knowledge: introduces=[FA-LEX-C45-HOME45-01]; assesses=[] -->
 
 **خانه** — *khâne* — "a house, home".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâne* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *xānag*, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

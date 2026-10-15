@@ -14,7 +14,8 @@ romanization: "samudra"
 concept_tag: KA-THINGS127-SAMUDRA
 prerequisites: [KA-C126-menasu, KA-C126-jirige]
 sounds: []
-roots: []
+roots: [sanskrit-samudra]
+etymology_hook: "samudra ← Sanskrit samudra 'sea', a tatsama (CDIAL 13236)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C126-jirige]
 <!-- hl-knowledge: introduces=[KA-LEX-C127-THINGS127-01]; assesses=[] -->
 
 **ಸಮುದ್ರ** — *samudra* — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಮುದ್ರ** (*samudra*) is Sanskrit *samudra*, "sea", taken over whole as a learned loan, a tatsama (CDIAL 13236).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

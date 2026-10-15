@@ -14,7 +14,8 @@ romanization: "agar"
 concept_tag: UR-VAJAH159-AGAR
 prerequisites: [UR-C159-is-liye, UR-C159-chunki]
 sounds: []
-roots: []
+roots: [persian-agar]
+etymology_hook: "agar: usually traced to Persian agar 'if'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C159-chunki]
 <!-- hl-knowledge: introduces=[UR-LEX-C159-VAJAH159-03]; assesses=[] -->
 
 **اگر** — *agar* — "if".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اگر** (*agar*) is a loan, usually traced to Persian *agar*, "if".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

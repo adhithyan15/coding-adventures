@@ -13,7 +13,8 @@ gloss: "memory"
 concept_tag: LA-VALE206-MEMORIA
 prerequisites: [LA-C205-unguentum, LA-C206-anima]
 sounds: []
-roots: []
+roots: [memoria-latin, memor-latin]
+etymology_hook: "memoria 'memory' — built on memor 'mindful', from PIE *(s)mer- 'to remember'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C206-anima]
 <!-- hl-knowledge: introduces=[LA-LEX-C206-VALE206-02]; assesses=[] -->
 
 **memoria, memoriae** — "memory".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**memoria** is built on *memor*, "mindful" (Lewis & Short), usually traced to Proto-Indo-European *\*(s)mer-*, "to remember, to be mindful" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

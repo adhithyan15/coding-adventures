@@ -14,7 +14,8 @@ romanization: "puram"
 concept_tag: SA-LAND-PURA
 prerequisites: [SA-C33-mountain, SA-C31-wind, SA-C32-vine, SA-C16-city]
 sounds: []
-roots: []
+roots: [sanskrit-pura-town]
+etymology_hook: "pura 'fortress, town' ← Vedic pur 'stronghold' (CDIAL 8278); MW compares Greek polis"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,12 @@ reviews_of: [SA-C33-mountain]
 You already have **नगरम्** for a city. **पुरम्** is the older word, and it meant a stronghold first: a place with a wall around it.
 
 Its Greek cousin is *polis*, behind *police*, *policy*, *politics* and every *-polis* on a map. Sanskrit's own **-पुरम्** is on the map just as thickly, worn down to *-pur*: *Jaipur*, *Nagpur*, *Kanpur*, and *Singapore*, which began as *Siṁhapura*, the lion town. Neuter **-अम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Pura* goes back to Vedic *pur*, "stronghold" (CDIAL 8278), and MW compares Greek
+*polis*, "city". It lives on in the *-pur* of North Indian place names.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

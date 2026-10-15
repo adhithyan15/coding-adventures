@@ -14,7 +14,8 @@ romanization: "nashīṭ"
 concept_tag: AR-QUAL147-NASHIT
 prerequisites: [AR-C147-mashghul, AR-C147-mutab]
 sounds: []
-roots: []
+roots: [n-sh-ṭ]
+etymology_hook: "nashīṭ: built on the root n-sh-ṭ, 'to be brisk, to be lively' (Lane); nashīṭ is the faʿīl adjective, 'brisk, lively'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C147-mutab]
 <!-- hl-knowledge: introduces=[AR-LEX-C147-QUAL147-03]; assesses=[] -->
 
 **نشيط** — *nashīṭ* — "active, lively".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نشيط** (*nashīṭ*) is built on the native Arabic root *n-sh-ṭ*, "to be brisk, to be lively" (Lane). *Nashīṭ* is the *faʿīl* adjective, "brisk, lively".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

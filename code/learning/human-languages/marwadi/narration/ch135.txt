@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a kachori, then the Marwadi for bhujia.
 You'll want to know: मतीरो.
 मतीरो — matīro — "a watermelon".
 
+The word, taken apart.
+The origin of मतीरो (matīro) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for bhujia, then the Marwadi for a watermelo
 
 You'll want to know: काकड़ी.
 काकड़ी — kākṛī — "a cucumber".
+
+The word, taken apart.
+काकड़ी (kākṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karkaṭī, "Cucumis utilissimus". CDIAL gives no Marwari form in this entry (CDIAL 2817); the match is through Hindi kakṛī.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a watermelon, then the Marwadi for a cuc
 You'll want to know: भींडी.
 भींडी — bhī̃ḍī — "okra".
 
+The word, taken apart.
+भींडी (bhī̃ḍī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhiṇḍā, "okra". CDIAL gives no Marwari form in this entry (CDIAL 9492); the match is through Hindi bhiṇḍī.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a cucumber, then the Marwadi for okra.
 You'll want to know: बैंगण.
 बैंगण — baiṅgaṇ — "an aubergine".
 
+The word, taken apart.
+बैंगण (baiṅgaṇ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vātiṅgaṇa, "the egg-plant". CDIAL gives no Marwari form in this entry (CDIAL 11503); the match is through Hindi baigan. CDIAL thinks it shares an ultimate source with other names for the plant, possibly Dravidian; Persian bādingān was taken from Indo-Aryan.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for okra, then the Marwadi for an aubergine.
 
 You'll want to know: पालक.
 पालक — pālak — "spinach".
+
+The word, taken apart.
+पालक (pālak) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pālakyā, "Beta bengalensis". CDIAL gives no Marwari form in this entry (CDIAL 8126); the match is through Hindi pālak.
 
 What you've built.
 One more word for this chapter.

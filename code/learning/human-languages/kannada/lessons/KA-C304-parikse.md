@@ -14,7 +14,8 @@ romanization: "parīkṣe"
 concept_tag: KA-KELASA304-PARIKSE
 prerequisites: [KA-C303-vasane, KA-C304-patha]
 sounds: []
-roots: []
+roots: [sanskrit-pariksha]
+etymology_hook: "parīkṣe ← Sanskrit parīkṣā 'inspection, test' (CDIAL 7904)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C304-patha]
 <!-- hl-knowledge: introduces=[KA-LEX-C304-KELASA304-02]; assesses=[] -->
 
 **ಪರೀಕ್ಷೆ** — *parīkṣe* — "an exam, a test".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪರೀಕ್ಷೆ** (*parīkṣe*) is Sanskrit *parīkṣā*, "inspection, test" (CDIAL 7904), with the Kannada *-e* for final *-ā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

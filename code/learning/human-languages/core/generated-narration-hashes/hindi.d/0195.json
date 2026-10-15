@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 195,
-  "sourceHash": "fnv1a64:82ad1cc7370be76f",
+  "sourceHash": "fnv1a64:beccfdfd7fe489f3",
   "lessonIds": [
     "HI-C195-kavi",
     "HI-C195-citrakar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch195.txt",
   "json": "hindi/narration/ch195.json",
-  "textHash": "fnv1a64:4ba893f29051006d",
-  "jsonHash": "fnv1a64:c5759976a2904dae",
+  "textHash": "fnv1a64:7518227b9febb90d",
+  "jsonHash": "fnv1a64:1e54f570f497862b",
   "findings": []
 }

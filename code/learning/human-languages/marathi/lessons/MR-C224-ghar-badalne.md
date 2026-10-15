@@ -14,7 +14,8 @@ romanization: "ghar badalṇe"
 concept_tag: MR-VERB-GHAR-BADALNE
 prerequisites: [MR-C224-mhatare-hone, MR-C224-ghatasphot-ghene]
 sounds: []
-roots: []
+roots: [grha-sanskrit, arabic-badal]
+etymology_hook: "badalṇe: built on badal 'exchange' ← Arabic badal, through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C224-ghatasphot-ghene]
 <!-- hl-knowledge: introduces=[MR-LEX-C224-ACT224-03]; assesses=[] -->
 
 **घर बदलणे** — *ghar badalṇe* — "to move house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घर** is "house". **बदलणे**, "to change", is built on *badal*, "exchange", from Arabic *badal*, "a substitute", through Persian (Lane, root *b-d-l*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

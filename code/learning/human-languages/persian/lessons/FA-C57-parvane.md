@@ -14,7 +14,8 @@ romanization: "parvâne"
 concept_tag: FA-ANIMALS57-PARVANE
 prerequisites: [FA-C57-shotor, FA-C57-khar]
 sounds: []
-roots: []
+roots: [persian-parvana]
+etymology_hook: "parvâne ← Middle Persian parwānag 'guide' (EtymDB); the butterfly sense is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C57-khar]
 <!-- hl-knowledge: introduces=[FA-LEX-C57-ANIMALS57-04]; assesses=[] -->
 
 **پروانه** — *parvâne* — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*parvâne* continues Middle Persian *parwānag* (EtymDB), which meant "guide, leader". How the word came to name the butterfly and the moth is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

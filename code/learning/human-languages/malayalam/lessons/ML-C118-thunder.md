@@ -11,7 +11,8 @@ romanization: "iṭiminnal"
 concept_tag: ML-WX-THUNDER
 prerequisites: [ML-C118-sleep, ML-C118-mist]
 sounds: []
-roots: []
+roots: [dravidian-idi-thunder, dravidian-min-flash]
+etymology_hook: "iṭiminnal: native Dravidian, iṭi 'thunder' (DEDR 438) + minnal 'lightning' (DEDR 4876)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C118-mist]
 
 **ഇടിമിന്നൽ** (*iṭiminnal*) — "thunder and lightning": **ഇടി** (*iṭi*), "thunder", and
 **മിന്നൽ** (*minnal*), "lightning". The monsoon brings both.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇടിമിന്നൽ** (*iṭiminnal*) is native Dravidian: *iṭi*, "thunder" (DEDR 438, with Tamil *iṭi*), and *minnal*, "lightning" (DEDR 4876, with Tamil *miṉ*, "flash").
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

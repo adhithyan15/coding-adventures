@@ -14,7 +14,8 @@ romanization: "khibra"
 concept_tag: AR-CAN109-KHIBRA
 prerequisites: [AR-C108-malik, AR-C109-tharwa]
 sounds: []
-roots: []
+roots: [kh-b-r]
+etymology_hook: "khibra: built on the root kh-b-r, 'to know, to have experience of' (Lane); khibra is knowledge gained by experience"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C109-tharwa]
 <!-- hl-knowledge: introduces=[AR-LEX-C109-CAN109-02]; assesses=[] -->
 
 **خبرة** — *khibra* — "experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خبرة** (*khibra*) is built on the native Arabic root *kh-b-r*, "to know, to have experience of" (Lane). *Khibra* is knowledge gained by experience.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

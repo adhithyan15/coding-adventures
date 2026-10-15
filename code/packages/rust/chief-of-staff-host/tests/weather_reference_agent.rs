@@ -40,6 +40,14 @@
 //!   fake transport does skip is TLS: certificate and server-name
 //!   verification are `tls-platform`'s, and its own tests cover them.
 //!
+//! The two channels go through the agent's own broker, as in production
+//! since D18S P2.6d-2c: the daemon holds no channel key, so the broker,
+//! launched confined from a binary pinned by digest, holds this agent's and
+//! answers its receive, publish and acknowledge. Off Linux there is no
+//! verified broker launch yet, so there the test shows the production
+//! composition refusing (S-P3) instead, until P2.7b brings the broker to
+//! macOS.
+//!
 //! #142 asks for "weather in Tokyo". The National Weather Service covers only
 //! the United States, so the reference agent answers for Seattle.
 
@@ -53,7 +61,9 @@ use chief_of_staff_channel_endpoints::{
     MessageId, MessageMetadata, MessageMetadataError, MessageMetadataSource, Originator,
     OriginatorIdentity, Receiver, ReceiverIdentity,
 };
-use chief_of_staff_daemon::compose_host_data_plane_with_fetcher;
+use chief_of_staff_daemon::{
+    compose_channel_brokers, compose_host_data_plane_with_fetcher, ChiefDaemonError,
+};
 use chief_of_staff_daemon_config::parse_config;
 use chief_of_staff_host_control_protocol::{
     ChannelBinding, ChannelBindingAccess, LaunchBindings, LevelOneModelBinding,
@@ -92,6 +102,26 @@ use storage_core::StorageBackend;
 
 /// The reference agent, exactly as checked in.
 const SKILL: &str = include_str!("../reference-agents/weather/SKILL.md");
+/// The per-agent channel broker (D18S P2.6d), built in this crate.
+const BROKER: &str = env!("CARGO_BIN_EXE_chief-of-staff-host-test-broker");
+/// On macOS, the shim that confines it (D18S P2.7b), pinned the same way.
+#[cfg(target_os = "macos")]
+const SHIM: &str = env!("CARGO_BIN_EXE_chief-of-staff-host-test-seatbelt-shim");
+
+/// The `[hosts.broker]` lines that pin the Seatbelt shim: required on
+/// macOS, and absent elsewhere.
+fn seatbelt_shim_lines() -> String {
+    #[cfg(target_os = "macos")]
+    {
+        let digest: String = coding_adventures_sha256::sha256(&fs::read(SHIM).unwrap())
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect();
+        format!("seatbelt_shim = \"{SHIM}\"\nseatbelt_shim_sha256 = \"{digest}\"\n")
+    }
+    #[cfg(not(target_os = "macos"))]
+    String::new()
+}
 const KEY_ID: &str = "weather-reference-dev";
 const KEY_SEED: [u8; 32] = [91; 32];
 const FORECAST_URL: &str = "https://api.weather.gov/gridpoints/SEW/124,67/forecast";
@@ -267,6 +297,9 @@ impl TestHome {
         use std::os::unix::fs::PermissionsExt;
         let keys = self.0.join("keys");
         fs::create_dir_all(&keys).unwrap();
+        // Owner-only: the broker launcher refuses a key directory others
+        // can enter (D18S P2.6d-3).
+        fs::set_permissions(&keys, fs::Permissions::from_mode(0o700)).unwrap();
         let path = keys.join(name);
         fs::write(&path, bytes).unwrap();
         fs::set_permissions(path, fs::Permissions::from_mode(0o600)).unwrap();
@@ -448,6 +481,15 @@ fn the_weather_reference_agent_answers_from_a_real_net_fetch() {
     input.grant_receiver(&worker).unwrap();
     input.publish(b"Seattle", "text/plain").unwrap();
 
+    // The agent's broker: this crate's test broker binary, whose body is the
+    // production broker's, pinned by its digest as the daemon requires.
+    let broker = BROKER;
+    let broker_digest: String = coding_adventures_sha256::sha256(&fs::read(BROKER).unwrap())
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect();
+    let shim = seatbelt_shim_lines();
+
     // The production data plane, with only the network edge supplied.
     let config = parse_config(&format!(
         r#"
@@ -468,6 +510,10 @@ executable = "~/bin/chief-of-staff-host"
 bootstrap_timeout = 3000
 graceful_stop_timeout = 3000
 
+[hosts.broker]
+executable = "{broker}"
+sha256 = "{broker_digest}"
+{shim}
 [vault]
 storage_path = "~/vault"
 default_lease_ttl = 30
@@ -495,10 +541,23 @@ ollama_models = [
         &config,
         &home.0,
         Arc::clone(&backend),
-        Arc::clone(&clock),
         NetFetch::new(PublicResolver, wire.clone()),
     )
     .unwrap();
+    // The brokers, composed exactly as the daemon composes them.
+    let brokers =
+        match compose_channel_brokers(&config, &home.0, Arc::clone(&backend), Arc::clone(&clock)) {
+            Ok(brokers) => brokers.expect("a broker for the channel keys"),
+            // No verified broker launch here yet: the daemon would not start,
+            // so there is no turn to run (D18S P2.6d-2c). Linux and macOS
+            // (P2.7b) both have one.
+            Err(ChiefDaemonError::BrokerUnsupported)
+                if !cfg!(any(target_os = "linux", target_os = "macos")) =>
+            {
+                return
+            }
+            Err(error) => panic!("broker composition failed: {error}"),
+        };
 
     // The supervisor spawns the real host binary from the signed package.
     let program = HostProgram::new(
@@ -515,7 +574,9 @@ ollama_models = [
         clock,
         Box::new(TestSessions(0)),
     )
-    .with_data_plane_dispatcher(dispatcher);
+    .with_data_plane_dispatcher(dispatcher)
+    .with_channel_brokers(brokers)
+    .refusing_unbrokered_channels();
     let mut sink =
         DurableReceiver::open(backend.as_ref(), output_channel, report_sink, sink_receiver)
             .unwrap();
@@ -541,6 +602,10 @@ ollama_models = [
         );
         thread::sleep(Duration::from_millis(10));
     };
+    // The channels were the broker's: one ran for this agent.
+    assert!(supervisor
+        .broker_process_id(registration.host_name())
+        .is_some());
     supervisor.stop(registration.host_name()).unwrap();
     drop(supervisor);
 

@@ -14,7 +14,8 @@ romanization: "kutirkkuka"
 concept_tag: ML-VERB-KUTIRKKUKA
 prerequisites: [ML-C231-parikkuka, ML-C231-karakkuka]
 sounds: []
-roots: []
+roots: [malayalam-kutir]
+etymology_hook: "kutirkkuka 'to soak': of uncertain origin; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C231-karakkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C232-KRIYA232-01]; assesses=[] -->
 
 **കുതിർക്കുക** — *kutirkkuka* — "to soak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുതിർക്കുക** (*kutirkkuka*) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

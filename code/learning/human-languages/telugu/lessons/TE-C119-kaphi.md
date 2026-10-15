@@ -14,7 +14,8 @@ romanization: "kāphī"
 concept_tag: TE-THINGS119-KAPHI
 prerequisites: [TE-C119-dosa, TE-C119-vada]
 sounds: []
-roots: []
+roots: [english-coffee]
+etymology_hook: "kāphī ← English coffee, from Arabic qahwa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C119-vada]
 <!-- hl-knowledge: introduces=[TE-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **కాఫీ** — *kāphī* — "coffee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కాఫీ** (*kāphī*) is a loan from English *coffee*, which goes back, through Turkish and Dutch, to Arabic *qahwa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

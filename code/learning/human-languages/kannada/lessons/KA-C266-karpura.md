@@ -14,7 +14,8 @@ romanization: "karpūra"
 concept_tag: KA-VASTU266-KARPURA
 prerequisites: [KA-C266-rimot, KA-C266-madake]
 sounds: []
-roots: []
+roots: [sanskrit-karpura]
+etymology_hook: "karpūra ← Sanskrit karpūra 'camphor', a tatsama (CDIAL 2880)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C266-madake]
 <!-- hl-knowledge: introduces=[KA-LEX-C266-VASTU266-04]; assesses=[] -->
 
 **ಕರ್ಪೂರ** — *karpūra* — "camphor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕರ್ಪೂರ** (*karpūra*) is Sanskrit *karpūra*, "camphor", taken over whole as a learned loan, a tatsama (CDIAL 2880). CDIAL 2880 says the Sanskrit word itself probably came from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

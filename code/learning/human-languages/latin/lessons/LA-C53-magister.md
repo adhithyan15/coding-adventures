@@ -53,7 +53,7 @@ a word far enough back that saying it is work.
 
 The word is one half of a matched pair and the other half is **minister**. *Magis*
 means "more," *minus* means "less," and both take the same old contrastive suffix
-*-ter*: the **greater** one and the **lesser** one. A Roman *magister* outranks a
+*-ter*: the **greater** one and the **lesser** one (Lewis & Short). A Roman *magister* outranks a
 Roman *minister*, and a modern government minister is still, etymologically, a
 servant.
 

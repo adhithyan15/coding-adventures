@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "Hunger, Sleep and Health",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c73de9c09ae19b1a",
+  "sourceHash": "fnv1a64:cd58dcc5c9e402f3",
   "lessons": [
     {
       "id": "KA-C63-hunger",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2d733fd57ab9c03",
+      "sourceHash": "fnv1a64:5c89b1023bb695e2",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಸಿವು (hasivu) is native Dravidian, one word with Tamil paci (DEDR 3825). DEDR gives the older Kannada pasi, pasivu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:999a4e18ea8a977a",
+      "sourceHash": "fnv1a64:24c4141fa9fbabfc",
       "notice": null,
       "blocks": [
         {
@@ -190,6 +201,10 @@
             {
               "kind": "speech",
               "text": "It takes the same frame ಹಸಿವು (hasivu) took: ನನಗೆ ನಿದ್ದೆ (nidde). Learn one of these sentences and you have the shape for the rest of the chapter, which is why they are grouped."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 7200 lists Sanskrit nidrā, \"sleep\", and Prakrit ṇiddā."
             }
           ]
         },
@@ -285,7 +300,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a29146ae790479a8",
+      "sourceHash": "fnv1a64:c1ba7ec7fa4a38a7",
       "notice": null,
       "blocks": [
         {
@@ -321,6 +336,10 @@
             {
               "kind": "speech",
               "text": "It is the word you hand a ವೈದ್ಯ first. ನನಗೆ ಜ್ವರ (jvara), with the same three pieces as the last two lessons, and you have said the most useful sentence in the chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 5303 lists Sanskrit jvara, \"fever\"."
             }
           ]
         },
@@ -416,7 +435,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5658ee35edf85ee",
+      "sourceHash": "fnv1a64:9b3f10ec74a15553",
       "notice": null,
       "blocks": [
         {
@@ -457,6 +476,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೋವು (nōvu) is native Dravidian, one word with Tamil nō (DEDR 3793). DEDR lists nōvu itself, \"affliction\", under nō, \"to suffer, ache\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -467,7 +497,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -516,7 +546,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -547,7 +577,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbcb53b1826b9071",
+      "sourceHash": "fnv1a64:d4a78545ebede25e",
       "notice": null,
       "blocks": [
         {
@@ -583,6 +613,10 @@
             {
               "kind": "speech",
               "text": "It gives you a better answer than you had. ನೀವು ಹೇಗಿದ್ದೀರಾ? has been answered with ಚೆನ್ನಾಗಿ since the how-are-you chapter, which says you are doing well. ಆರೋಗ್ಯ (ārōgya) says the body itself is sound, and it is the word a ವೈದ್ಯ wants."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL 1330 lists Sanskrit ārogya, \"health\"."
             }
           ]
         },

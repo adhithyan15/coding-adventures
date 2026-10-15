@@ -14,7 +14,8 @@ romanization: "ondūvare"
 concept_tag: KA-KALA248-ONDUVARE
 prerequisites: [KA-C248-gaduvu, KA-C248-muhurta]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, dravidian-arai-half]
+etymology_hook: "ondūvare: native ondu 'one' (DEDR 990) + -ū 'and' + are 'half' (DEDR 229)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C248-muhurta]
 <!-- hl-knowledge: introduces=[KA-LEX-C248-KALA248-05]; assesses=[] -->
 
 **ಒಂದೂವರೆ** — *ondūvare* — "one and a half".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಂದೂವರೆ** (*ondūvare*) is native Dravidian: *ondu*, "one" (DEDR 990), *-ū*, "and", and *are*, "half", which DEDR 229 lists: "one and a half".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

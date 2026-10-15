@@ -14,7 +14,8 @@ romanization: "jhīl"
 concept_tag: UR-NATURE64-JHIL
 prerequisites: [UR-C64-jangal, UR-C64-darya]
 sounds: []
-roots: []
+roots: [indo-aryan-jhilla]
+etymology_hook: "jhīl ← *jhilla 'swamp, lake', a reconstructed form; a tadbhava (CDIAL 5392)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C64-darya]
 <!-- hl-knowledge: introduces=[UR-LEX-C64-NATURE64-05]; assesses=[] -->
 
 **جھیل** — *jhīl* — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جھیل** (*jhīl*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jhilla*, "swamp, lake", a form CDIAL reconstructs from its descendants (CDIAL 5392).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

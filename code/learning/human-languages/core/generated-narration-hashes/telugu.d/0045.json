@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 45,
-  "sourceHash": "fnv1a64:fcc2f0a9f6330377",
+  "sourceHash": "fnv1a64:1649b6e0e3e7f048",
   "lessonIds": [
     "TE-C45-grandfather",
     "TE-C45-grandmother",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "telugu/narration/ch45.txt",
   "json": "telugu/narration/ch45.json",
-  "textHash": "fnv1a64:1c0a32ca5ea7e8df",
-  "jsonHash": "fnv1a64:df5ff051ce3cba57",
+  "textHash": "fnv1a64:4c6d105406d8843f",
+  "jsonHash": "fnv1a64:7c1981237b5867e6",
   "findings": []
 }

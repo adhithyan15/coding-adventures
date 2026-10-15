@@ -14,7 +14,8 @@ romanization: "phyān"
 concept_tag: KA-VASTU220-PHYAN
 prerequisites: [KA-C220-biru, KA-C220-phrij]
 sounds: []
-roots: []
+roots: [english-fan]
+etymology_hook: "phyān ← English fan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C220-phrij]
 <!-- hl-knowledge: introduces=[KA-LEX-C220-VASTU220-04]; assesses=[] -->
 
 **ಫ್ಯಾನ್** — *phyān* — "a fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಫ್ಯಾನ್** (*phyān*) is a loan from English *fan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

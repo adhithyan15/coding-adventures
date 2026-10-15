@@ -14,7 +14,8 @@ romanization: "sahasram"
 concept_tag: SA-NUMBER-THOUSAND
 prerequisites: [SA-C87-twenty, SA-C87-hundred]
 sounds: []
-roots: []
+roots: [sanskrit-sahasra]
+etymology_hook: "sahasra 'thousand', perhaps sa + hasra, cousin of Greek khilioi; MW compares Persian hazār (CDIAL 13307)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C87-hundred]
 <!-- hl-knowledge: introduces=[SA-LEX-C87-NUMBERS-05]; assesses=[] -->
 
 **सहस्रम्** (*sahasram*) — "a thousand", ten **शतम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW suggests *sahasra* is *sa-* "one" with *hasra*, the cousin of Greek *khilioi*,
+"thousand", and compares Persian *hazār* (CDIAL 13307). The Persian word is a
+sister of the Sanskrit one, not borrowed from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

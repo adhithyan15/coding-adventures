@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 270,
-  "sourceHash": "fnv1a64:07127dc207f20046",
+  "sourceHash": "fnv1a64:903b1991dbb22e76",
   "lessonIds": [
     "FA-C270-shekl",
     "FA-C270-howsele",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch270.txt",
   "json": "persian/narration/ch270.json",
-  "textHash": "fnv1a64:6efb1e66619735ed",
-  "jsonHash": "fnv1a64:3f1ef1ffa7fddccc",
+  "textHash": "fnv1a64:e1f36dba0db3b606",
+  "jsonHash": "fnv1a64:88c5e3e7bc0eb895",
   "findings": []
 }

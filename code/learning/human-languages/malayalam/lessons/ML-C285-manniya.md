@@ -14,7 +14,8 @@ romanization: "maṅṅiya"
 concept_tag: ML-GUNAM285-MANNIYA
 prerequisites: [ML-C285-kuttaneyulla, ML-C285-pollayaya]
 sounds: []
-roots: []
+roots: [dravidian-mangu-dim]
+etymology_hook: "maṅṅiya: native Dravidian, 'grown dim'; DEDR 4750"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C285-pollayaya]
 <!-- hl-knowledge: introduces=[ML-LEX-C285-GUNAM285-05]; assesses=[] -->
 
 **മങ്ങിയ** — *maṅṅiya* — "faded, dim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മങ്ങിയ** (*maṅṅiya*) is native Dravidian, a past form of the verb "to grow dim, pale"; DEDR 4750 lists the root with Tamil *maḻu* and Kannada *maḻa*. DEDR 4750 compares Sanskrit *maṅku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

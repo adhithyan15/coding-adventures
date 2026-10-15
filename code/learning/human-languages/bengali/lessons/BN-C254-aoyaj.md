@@ -14,7 +14,8 @@ romanization: "āoyāj"
 concept_tag: BN-JINIS254-AOYAJ
 prerequisites: [BN-C254-bipod, BN-C254-nirapotta]
 sounds: []
-roots: []
+roots: [persian-avaz]
+etymology_hook: "āoyāj: usually traced to Persian āvāz 'voice, sound'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C254-nirapotta]
 <!-- hl-knowledge: introduces=[BN-LEX-C254-JINIS254-05]; assesses=[] -->
 
 **আওয়াজ** — *āoyāj* — "a noise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**আওয়াজ** (*āoyāj*) is a loan, usually traced to Persian *āvāz*, "voice, sound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

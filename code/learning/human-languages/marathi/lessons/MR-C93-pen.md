@@ -14,7 +14,8 @@ romanization: "pen"
 concept_tag: MR-HOME93-PEN
 prerequisites: [MR-C93-pustak, MR-C93-vahi]
 sounds: []
-roots: []
+roots: [english-pen]
+etymology_hook: "pen ← English pen"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C93-vahi]
 <!-- hl-knowledge: introduces=[MR-LEX-C93-HOME93-05]; assesses=[] -->
 
 **पेन** — *pen* — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पेन** (*pen*) is a loan from English *pen*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

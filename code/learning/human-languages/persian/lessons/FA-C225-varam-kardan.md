@@ -14,7 +14,8 @@ romanization: "varam kardan"
 concept_tag: FA-VERB-VARAM-KARDAN
 prerequisites: [FA-C225-khamyaze-keshidan, FA-C225-bala-avardan]
 sounds: []
-roots: []
+roots: [arabic-waram]
+etymology_hook: "varam ← Arabic waram 'swelling', root w-r-m (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C225-bala-avardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C225-KONESH225-05]; assesses=[] -->
 
 **ورم کردن** — *varam kardan* — "to swell up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*varam kardan* pairs *varam*, borrowed from Arabic *waram*, "swelling" (root *w-r-m*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

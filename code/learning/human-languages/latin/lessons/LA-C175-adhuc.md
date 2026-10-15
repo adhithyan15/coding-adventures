@@ -13,7 +13,8 @@ gloss: "still, until now"
 concept_tag: LA-TEMP175-ADHUC
 prerequisites: [LA-C175-tandem, LA-C175-posthac]
 sounds: []
-roots: []
+roots: [adhuc-latin, huc-latin]
+etymology_hook: "adhūc 'still, until now' — ad 'up to' + hūc 'to here'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C175-posthac]
 <!-- hl-knowledge: introduces=[LA-LEX-C175-TEMP175-03]; assesses=[] -->
 
 **adhūc** — "still, until now".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**adhūc** is *ad*, "up to", with *hūc*, "to here" (Lewis & Short): up to this point, first in space, then in time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

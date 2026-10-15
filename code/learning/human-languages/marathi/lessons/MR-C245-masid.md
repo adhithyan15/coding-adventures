@@ -14,7 +14,8 @@ romanization: "maśīd"
 concept_tag: MR-VASTU245-MASID
 prerequisites: [MR-C245-mala2, MR-C245-gotha]
 sounds: []
-roots: []
+roots: [arabic-masjid]
+etymology_hook: "maśīd ← Arabic masjid 'place of prostration, mosque', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C245-gotha]
 <!-- hl-knowledge: introduces=[MR-LEX-C245-VASTU245-03]; assesses=[] -->
 
 **मशीद** — *maśīd* — "a mosque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मशीद** (*maśīd*) is a loan from Arabic *masjid*, "place of prostration, mosque", which reached Marathi through Persian. Its Arabic root is *s-j-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

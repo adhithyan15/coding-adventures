@@ -14,7 +14,8 @@ romanization: "lózhka"
 concept_tag: RU-TABLE-SPOON
 prerequisites: [RU-C51-cup, RU-C51-plate]
 sounds: []
-roots: []
+roots: [slavic-luzhica]
+etymology_hook: "ложка ← Old Russian lŭžĭka; Vasmer thinks it probably goes with Albanian lugë 'spoon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C51-plate]
 <!-- hl-knowledge: introduces=[RU-LEX-C51-TABLE-03]; assesses=[] -->
 
 **ложка** (*lózhka*) — "a spoon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ложка** ← Old Russian *lŭžĭka*, beside *lŭžica*, from Proto-Slavic *\*lŭžĭka* — inherited. Vasmer thinks it is probably related to Albanian *lugë*, "spoon", and perhaps to a root "to break, to split", since Swedish *sked*, "spoon", goes with a verb "to split".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

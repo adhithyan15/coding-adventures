@@ -13,7 +13,8 @@ gloss: "a carpet, a rug"
 concept_tag: LA-THINGS139-TAPETE
 prerequisites: [LA-C139-cathedra, LA-C139-scamnum]
 sounds: []
-roots: []
+roots: [tapete-latin]
+etymology_hook: "tapēte 'carpet' — borrowed from Greek tapēs, tapētos 'carpet'; English tapestry"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C139-scamnum]
 <!-- hl-knowledge: introduces=[LA-LEX-C139-THINGS139-03]; assesses=[] -->
 
 **tapēte, tapētis** — "a carpet, a rug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tapēte** was borrowed from Greek *tapēs*, *tapētos*, "a carpet, a rug" (EtymDB 2.1). English *tapestry* belongs to its family, through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

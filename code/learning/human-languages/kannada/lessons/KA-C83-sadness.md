@@ -11,7 +11,8 @@ romanization: "duḥkha"
 concept_tag: KA-FEEL-SAD
 prerequisites: [KA-C82-headache, KA-C82-rest]
 sounds: []
-roots: []
+roots: [sanskrit-duhkha]
+etymology_hook: "duḥkha ← Sanskrit duḥkha 'difficulty, pain', a tatsama (CDIAL 6375)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C82-rest]
 are the *visarga*: a breath at the end of the syllable, *duḥ-kha*.
 
 It is the opposite of **ಸಂತೋಷ** (*santōṣa*), "happiness", which you met at the start.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದುಃಖ** (*duḥkha*) is Sanskrit *duḥkha*, "difficulty, pain", taken over whole as a learned loan, a tatsama (CDIAL 6375).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

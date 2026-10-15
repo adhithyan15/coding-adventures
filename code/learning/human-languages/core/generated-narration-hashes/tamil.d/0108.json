@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 108,
-  "sourceHash": "fnv1a64:4e23473a5470c313",
+  "sourceHash": "fnv1a64:ddf9ae783a038a76",
   "lessonIds": [
     "TA-C108-eaten",
     "TA-C108-longtime",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch108.txt",
   "json": "tamil/narration/ch108.json",
-  "textHash": "fnv1a64:a7e3c1386320110e",
-  "jsonHash": "fnv1a64:d5ccb83922403c6d",
+  "textHash": "fnv1a64:b36f3d94ee2d226a",
+  "jsonHash": "fnv1a64:399cfa252259649c",
   "findings": []
 }

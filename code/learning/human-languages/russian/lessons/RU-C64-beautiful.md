@@ -14,7 +14,8 @@ romanization: "krasívyy"
 concept_tag: RU-COLOUR2-BEAUTIFUL
 prerequisites: [RU-C63-green, RU-C64-yellow]
 sounds: []
-roots: []
+roots: [slavic-krasa]
+etymology_hook: "красивый is краса 'beauty' + -ивый, 'full of beauty'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C64-yellow]
 <!-- hl-knowledge: introduces=[RU-LEX-C64-COLOUR2-02]; assesses=[] -->
 
 **красивый** (*krasívyy*) — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**красивый** is *краса*, "beauty", with *-ивый*, "full of" (Vasmer); *красный*, "red", once "beautiful", comes from the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

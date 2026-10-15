@@ -13,7 +13,8 @@ gloss: "worn out"
 concept_tag: LA-QUAL216-DEFESSUS
 prerequisites: [LA-C216-barbatus, LA-C216-venustus]
 sounds: []
-roots: []
+roots: [defessus-latin, fatigare-latin]
+etymology_hook: "dēfessus 'worn out' — the participle of dēfetīscor 'to grow weary'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C216-venustus]
 <!-- hl-knowledge: introduces=[LA-LEX-C216-QUAL216-04]; assesses=[] -->
 
 **dēfessus, dēfessa, dēfessum** — "worn out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dēfessus** is the participle of *dēfetīscor*, "to grow weary" (Lewis & Short): *dē-*, "completely", with the verb behind *fessus*, "tired".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

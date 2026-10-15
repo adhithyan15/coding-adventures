@@ -13,6 +13,9 @@ You'll want to know: శుభ + మధ్యాహ్నం.
 శుభ మధ్యాహ్నం (śubha madhyāhnam) means “good afternoon.” The second word originally centres on “midday” or “noon,” but you learned in Chapter 28 that modern use widens it into the stretch between noon and evening.
 Telugu could instead have built the phrase on అపరాహ్నం (aparāhnam), the more classically precise word for later afternoon. It did not. Kannada made the same choice in ಶುಭ ಮಧ್ಯಾಹ್ನ (śubha madhyāhna): both languages chose the everyday “noon, widened” word from two available classical terms.
 
+The phrase, taken apart.
+శుభ (śubha) is Sanskrit śubha, "bright, auspicious, good" (CDIAL 12532), and మధ్యాహ్నం (madhyāhnam) is Sanskrit madhyāhna, "midday" (CDIAL 9818), with the Telugu noun ending -ṁ: both are taken over whole.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "śubha madhyāhnam" — "good afternoon," śubha + madhyāhnam]

@@ -14,7 +14,8 @@ romanization: "jāṅchnā"
 concept_tag: UR-VERB-JANCHNA
 prerequisites: [UR-C181-napna, UR-C181-tolna]
 sounds: []
-roots: []
+roots: [sanskrit-yacyate]
+etymology_hook: "jāṅchnā ← Sanskrit yācyate 'is asked', a tadbhava (CDIAL 10449)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C181-tolna]
 <!-- hl-knowledge: introduces=[UR-LEX-C181-ACT181-05]; assesses=[] -->
 
 **جانچنا** — *jāṅchnā* — "to check, to test".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جانچنا** (*jāṅchnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yācyate*, "is asked" (CDIAL 10449). The sense moved from "begging" to "testing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

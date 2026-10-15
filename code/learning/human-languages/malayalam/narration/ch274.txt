@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for to spin, then the Malayalam for to pin
 You'll want to know: നീര്.
 നീര് — nīrŭ — "a swelling".
 
+The word, taken apart.
+നീര് (nīrŭ) is native Dravidian: DEDR 3690 lists Malayalam nīr, "water, juice, moisture", with Tamil nīr. Malayalam also uses the word for a swelling, fluid gathered under the skin; DEDR 3690 gives only the water senses. DEDR 3690 compares Sanskrit nīra.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for to pinch, then the Malayalam for a swe
 
 You'll want to know: ഉളുക്ക്.
 ഉളുക്ക് — uḷukkŭ — "a sprain".
+
+The word, taken apart.
+ഉളുക്ക് (uḷukkŭ) is native Dravidian, one word with Tamil uḷukku, Kannada ulaku and Telugu iluku (DEDR 2702).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a swelling, then the Malayalam for a s
 You'll want to know: ഒടിവ്.
 ഒടിവ് — oṭivŭ — "a fracture".
 
+The word, taken apart.
+ഒടിവ് (oṭivŭ) is native Dravidian, the noun of the verb "to break"; DEDR 946 lists the root with Tamil oṭi and Kannada oḍi.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a sprain, then the Malayalam for a fra
 You'll want to know: പൊള്ളൽ.
 പൊള്ളൽ — poḷḷal — "a burn".
 
+The word, taken apart.
+പൊള്ളൽ (poḷḷal) is native Dravidian, one word with Tamil poḷḷu (DEDR 4563). Its sense is a blistering, as from a burn.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a fracture, then the Malayalam for a b
 
 You'll want to know: പ്രമേഹം.
 പ്രമേഹം — pramēhaṁ — "diabetes".
+
+The word, taken apart.
+പ്രമേഹം (pramēhaṁ) from Sanskrit pramēha, "urinary disease", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 8731).
 
 What you've built.
 One more word for this chapter.

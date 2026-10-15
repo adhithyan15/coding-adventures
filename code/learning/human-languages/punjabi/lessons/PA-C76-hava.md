@@ -14,7 +14,8 @@ romanization: "havā"
 concept_tag: PA-NATURE76-HAVA
 prerequisites: [PA-C76-baraf, PA-C76-mimh]
 sounds: []
-roots: []
+roots: [persian-hava-air]
+etymology_hook: "havā ← Arabic hawāʾ 'air', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C76-mimh]
 <!-- hl-knowledge: introduces=[PA-LEX-C76-NATURE76-05]; assesses=[] -->
 
 **ਹਵਾ** — *havā* — "wind, air".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹਵਾ** (*havā*) is a loan from Arabic *hawāʾ*, "air", which reached Punjabi through Persian. Its Arabic root is *h-w-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

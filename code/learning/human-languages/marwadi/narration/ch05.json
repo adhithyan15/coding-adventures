@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Mharo Naam: Give One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5e875d096acf930e",
+  "sourceHash": "fnv1a64:3bc05de338447aac",
   "lessons": [
     {
       "id": "MW-C05-hear-mharo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c68ae833cf3e665e",
+      "sourceHash": "fnv1a64:912987e6b098fb8d",
       "notice": null,
       "blocks": [
         {
@@ -69,6 +69,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mhāro is the Marwari \"my\". CDIAL lists no Marwari mhāro; its nearest row is Old Gujarati māharaü, \"my\", under the first-person stem ma- (CDIAL 9691), beside Old Marwari meraü. How the word took its mh- is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -79,7 +90,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -343,7 +354,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e7f16bb31c288e6",
+      "sourceHash": "fnv1a64:a0be56edaf987125",
       "notice": null,
       "blocks": [
         {
@@ -389,6 +400,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "म्हारो (mhāro) is the Marwari \"my\". CDIAL lists no Marwari mhāro; its nearest row is Old Gujarati māharaü, \"my\", under the first-person stem ma- (CDIAL 9691), beside Old Marwari meraü. How the word took its mh- is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -413,7 +435,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -468,7 +490,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd9288ed8642376a",
+      "sourceHash": "fnv1a64:6dd9b6f9bdbd400d",
       "notice": null,
       "blocks": [
         {
@@ -531,6 +553,10 @@
             {
               "kind": "speech",
               "text": "Listen twice, then say it once. Marwadi nām, Sanskrit nāman, and English name are distant members of the same old word family. That history is a memory hook; today's task is only sound and meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Old Marwari had nāva (CDIAL 7067)."
             }
           ]
         },
@@ -699,7 +725,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41fe1a2e6f0c778c",
+      "sourceHash": "fnv1a64:ef653578d5aa619a",
       "notice": null,
       "blocks": [
         {
@@ -754,6 +780,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाम (nām) goes back to Sanskrit nāman, \"name\", the same ancient word as English name. CDIAL lists Gujarati nām under it, and an older Marwari form nāva (CDIAL 7067); nām keeps the Sanskrit shape."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -778,7 +815,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -829,7 +866,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76926560078cf53f",
+      "sourceHash": "fnv1a64:40fe61634d45aedf",
       "notice": null,
       "blocks": [
         {
@@ -884,6 +921,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hai, \"is\", has no Marwari row in CDIAL. Under Sanskrit ākṣēti, \"abides\", it lists Old Hindi āhaï, \"is\", and Old Marwari chai, \"exists\" (CDIAL 1031). Many accounts trace hai instead to Sanskrit asti, \"is\"; the route is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -894,7 +942,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1051,7 +1099,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39def2e141c6bd0c",
+      "sourceHash": "fnv1a64:c20f3ad56da413b8",
       "notice": null,
       "blocks": [
         {
@@ -1088,6 +1136,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "म्हारो नाम राम है (mhāro nām rām hai) joins four words with their own lessons: mhāro, \"my\", whose history is not settled; nām, \"name\", from Sanskrit nāman (CDIAL 7067); the Sanskrit name Rāma; and hai, \"is\", which CDIAL ties to Sanskrit ākṣēti, \"abides\" (CDIAL 1031)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1111,7 +1170,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

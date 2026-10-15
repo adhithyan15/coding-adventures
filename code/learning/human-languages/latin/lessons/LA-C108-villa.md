@@ -13,7 +13,8 @@ gloss: "a farmhouse, a country house"
 concept_tag: LA-VESTIS-VILLA
 prerequisites: [LA-C107-taberna, LA-C108-pons]
 sounds: []
-roots: []
+roots: [villa-latin, vicus-latin]
+etymology_hook: "vīlla 'country house' — probably a diminutive of vīcus 'village'; English village"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C108-pons]
 <!-- hl-knowledge: introduces=[LA-LEX-C108-VESTIS-02]; assesses=[] -->
 
 **vīlla, vīllae** — "a farmhouse, a country house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vīlla** is probably a diminutive formed on *vīcus*, "a village, a homestead" (Lewis & Short). English *village* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

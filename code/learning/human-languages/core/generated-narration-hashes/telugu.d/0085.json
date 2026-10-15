@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 85,
-  "sourceHash": "fnv1a64:2aa9685ef36e8cf3",
+  "sourceHash": "fnv1a64:097835b65468fc8d",
   "lessonIds": [
     "TE-C85-cold",
     "TE-C85-heat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch85.txt",
   "json": "telugu/narration/ch85.json",
-  "textHash": "fnv1a64:c79168d3fde63177",
-  "jsonHash": "fnv1a64:fa67fdbbe2778348",
+  "textHash": "fnv1a64:e0309034de6a29cc",
+  "jsonHash": "fnv1a64:da5ef3c506e78adf",
   "findings": []
 }

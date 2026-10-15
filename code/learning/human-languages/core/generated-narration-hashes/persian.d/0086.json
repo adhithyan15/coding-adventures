@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 86,
-  "sourceHash": "fnv1a64:0d67b7077e003d81",
+  "sourceHash": "fnv1a64:69562a7b787be8dc",
   "lessonIds": [
     "FA-C86-ruye",
     "FA-C86-beyn",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch86.txt",
   "json": "persian/narration/ch86.json",
-  "textHash": "fnv1a64:532482dd92276e71",
-  "jsonHash": "fnv1a64:7628e3eb2711f55c",
+  "textHash": "fnv1a64:9b044ca3c0f36604",
+  "jsonHash": "fnv1a64:353837073da63008",
   "findings": []
 }

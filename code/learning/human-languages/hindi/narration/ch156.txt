@@ -12,6 +12,9 @@ Before the new one: say the Hindi for dirty, then the Hindi for fast.
 You'll want to know: धीमा.
 धीमा — dhīmā — "slow, low".
 
+The word, taken apart.
+धीमा (dhīmā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhīmma, "slow", a form CDIAL reconstructs from its descendants (CDIAL 6814). CDIAL asks whether it is related to ḍhīmma, "lump".
+
 What you've built.
 One more word for this chapter.
 
@@ -43,6 +46,9 @@ Say मुझे चाय पसंद है. पसंद is not a verb, and 
 You'll want to know: खट्टा.
 खट्टा — khaṭṭā — "sour".
 
+The word, taken apart.
+खट्टा (khaṭṭā) goes back to Sanskrit khaṭṭa, "sour", a word known only from the old word-lists (CDIAL 3777). CDIAL marks the Hindi form as taken over from Punjabi, and asks whether khaṭṭa is connected with kaṭu, "bitter".
+
 What you've built.
 One more word for this chapter.
 
@@ -71,6 +77,9 @@ Before the new one: say the Hindi for slow, then the Hindi for sour.
 
 You'll want to know: कड़वा.
 कड़वा — kaṛvā — "bitter".
+
+The word, taken apart.
+कड़वा (kaṛvā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṭuka, "pungent, bitter" (CDIAL 2641). CDIAL lists the Hindi form as kaṛuā.
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Before the new one: say the Hindi for sour, then the Hindi for bitter.
 You'll want to know: नमकीन.
 नमकीन — namkīn — "salty".
 
+The word, taken apart.
+नमकीन (namkīn) is a loan, usually traced to Persian namakīn, "salty". It is built on namak, "salt".
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Hindi for bitter, then the Hindi for salty.
 
 You'll want to know: तीखा.
 तीखा — tīkhā — "spicy".
+
+The word, taken apart.
+तीखा (tīkhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tīkṣṇa, "sharp; hot, pungent" (CDIAL 5839).
 
 What you've built.
 One more word for this chapter.

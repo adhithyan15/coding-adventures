@@ -19,6 +19,7 @@ the -uka infinitive) becomes സംസാരിക്കുക (saṁsārikkuka)
 The word, taken apart.
 സംസാരിക്കുക (saṁsārikkuka, "to speak, to converse") is Sanskrit-derived (from saṃsāra, "flowing together, intercourse") — one more sign of Malayalam's deep Sanskrit layer, alongside its native paṟayuka ("to say"). To say "I speak," Malayalam adds the present ending -ഉന്നു (-unnu) to the stem:
 saṁsārikk- (speak) + -unnu (present) becomes സംസാരിക്കുന്നു (saṁsārikkunnu), "speak / am speaking."
+Sanskrit saṁsāra, "the world, secular life", is CDIAL 13036; speaking is what people do in the world.
 
 Grammar Lens: the verb never changes for person.
 Here is Malayalam's great surprise. In Tamil, Telugu, and Kannada the verb changes ending for who acts (pēsugiṟēṉ "I speak," pēsugiṟāṉ "he speaks"). Malayalam does not. The verb is the same for everyone:
@@ -167,6 +168,7 @@ The letters in this word.
 
 The sentence, taken apart.
 ഞാൻ മലയാളം സംസാരിക്കുന്നു (ñān malayāḷaṁ saṁsārikkunnu) = ഞാൻ (ñān, "I") + മലയാളം (malayāḷaṁ, the object) + സംസാരിക്കുന്നു (saṁsārikkunnu, "speak") — "I Malayalam speak," the verb last. The name മലയാളം (malayāḷaṁ) is native Dravidian: മല (mala, "mountain") + ആളം (āḷaṁ, "place, region") — "the mountain land," named for the Western Ghats along the coast where it is spoken. Its signature retroflex ള (ḷ) sits right in the middle of the word.
+DEDR 4742 lists mala with Tamil malai, Kannada male and Telugu mala. DEDR 4742 compares Sanskrit malaya.
 
 Grammar Lens: the pronoun stays.
 Because saṁsārikkunnu is the same for every person (Chapter 5's big surprise), the pronoun ഞാൻ (ñān) cannot be dropped — it is the only thing marking "I." Where Tamil would happily say just pēsugiṟēṉ, Malayalam must keep the ñān.
@@ -197,6 +199,9 @@ You'll want to know: കൊടി.
 Say it: koṭi.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, ൊ (o), and writes it on its own.
+
+The word, taken apart.
+കൊടി (koṭi) is native Dravidian, one word with Tamil koṭi, Kannada kuḍi and Telugu koḍi (DEDR 2049). The same word means the top or tip of a thing, and a flag flies at the top.
 
 Guided Practice.
 [pause 1 second]
@@ -293,6 +298,9 @@ Say it: tūval.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, ൽ (l), and writes it on its own.
 
+The word, taken apart.
+തൂവൽ (tūval) is native Dravidian, one word with Tamil tūval (DEDR 3393). DEDR 3393 compares Sanskrit tūla.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: tūval]
@@ -355,7 +363,8 @@ The letters in this word.
 താ (tā) + മ (ma) + സി (si) + ക്കുക (kkuka, the -uka infinitive) becomes താമസിക്കുക (tāmasikkuka).
 
 The word, taken apart.
-താമസിക്കുക (tāmasikkuka, "to live, to reside, to stay, to delay") is Sanskrit-derived (from tāmasa / tamas, "dwelling, tarrying"). Malayalam often prefers such Sanskrit-built verbs where Tamil uses a native word (vāḻ). "I live in Kochi" is ഞാൻ കൊച്ചിയിൽ താമസിക്കുന്നു (ñān kocciyil tāmasikkunnu) — again the same -unnu present, the same for every person.
+താമസിക്കുക (tāmasikkuka, "to live, to reside, to stay, to delay") is Sanskrit-derived (from tāmasa, "dark, sluggish", the quality of tamas, "darkness": in Malayalam a slowness became a delay, and a delay became a stay). Malayalam often prefers such Sanskrit-built verbs where Tamil uses a native word (vāḻ). "I live in Kochi" is ഞാൻ കൊച്ചിയിൽ താമസിക്കുന്നു (ñān kocciyil tāmasikkunnu) — again the same -unnu present, the same for every person.
+Sanskrit tāmasa is CDIAL 5775, from tamas, "darkness" (CDIAL 5689).
 
 Grammar Lens: "in" comes after the noun.
 കൊച്ചിയിൽ (kocciyil) = Kochi + -ഇൽ (-il, "in"), glued to the end of the noun. Malayalam uses postpositions (case-suffixes) where English uses prepositions: "Kochi-in I live," the verb last — and the pronoun kept.
@@ -386,6 +395,9 @@ You'll want to know: ഹംസം.
 Say it: haṃsam.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, ഹ (ha), and writes it on its own.
+
+The word, taken apart.
+ഹംസം (haṃsam) from Sanskrit haṁsa, "goose, swan", taken over whole as a tatsama, with Malayalam's noun ending -ṁ (CDIAL 13937).
 
 Guided Practice.
 [pause 1 second]
@@ -453,6 +465,7 @@ The word, taken apart.
 ജോലി ചെയ്യുക (jōli ceyyuka) = "work-do" = "to work" (jōli, "work").
 സഹായിക്കുക (sahāyikkuka) = "to help" (Sanskrit sahāya).
 So "I work" is ഞാൻ ജോലി ചെയ്യുന്നു (ñān jōli ceyyunnu) — same -unnu present, pronoun kept. Ceyyuka and Tamil's sey are, at root, one word — the Dravidian "do" that these languages all lean on.
+DEDR 1957 lists Malayalam ceyka with Tamil cey and Telugu cēyu. jōli, "work", is of uncertain origin; it has no entry in DEDR.
 
 Grammar Lens: noun + ചെയ്യുക = a new verb.
 This "noun + ceyyuka" pattern is the twin of Hindi's "noun + karnā," Tamil's "noun + sey," Telugu's "noun + cēyu," and Kannada's "noun + māḍu." Five languages, two of them from an unrelated family, all landed on the same trick.

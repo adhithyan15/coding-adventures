@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 241,
-  "sourceHash": "fnv1a64:7d2b5c740c86a210",
+  "sourceHash": "fnv1a64:a7e714318424d352",
   "lessonIds": [
     "KA-C241-tikisu",
     "KA-C241-hancikollu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch241.txt",
   "json": "kannada/narration/ch241.json",
-  "textHash": "fnv1a64:20d9f8ec514137fb",
-  "jsonHash": "fnv1a64:4010ba5411bace01",
+  "textHash": "fnv1a64:047657cc079732fd",
+  "jsonHash": "fnv1a64:838ef03aeb18963e",
   "findings": []
 }

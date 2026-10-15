@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Good Morning, and a Rule That Declines to Fire",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:58f8967272263fe8",
+  "sourceHash": "fnv1a64:0cb2f7a4cc383402",
   "lessons": [
     {
       "id": "ZH-W07-zao",
@@ -346,7 +346,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3fe74ccf51b90d2b",
+      "sourceHash": "fnv1a64:9886c26ae8139c34",
       "notice": null,
       "blocks": [
         {
@@ -382,6 +382,10 @@
             {
               "kind": "speech",
               "text": "The parts add up again, though less tidily than 再见 did. 早 (zǎo) is early; 上 (shàng) on its own means up or on top. Early-up, the early part of the day. Take that as a hook rather than a definition: what you need is that the two characters you just wrote make the word for morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves are inherited from Middle Chinese: tsawX, \"early, dawn\", and dzyangH, \"above\" (Guangyun, in Baxter's transcription)."
             }
           ]
         },
@@ -494,7 +498,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:405520fd53f59724",
+      "sourceHash": "fnv1a64:34e88fde2441270e",
       "notice": null,
       "blocks": [
         {
@@ -542,6 +546,10 @@
             {
               "kind": "speech",
               "text": "Put a person or a time in front of 好 and you have a greeting. You have not learned two greetings; you have learned a frame and filled it twice. Every one of the other times of day works the same way, and you will be able to build those greetings the moment you have the words for those times."
+            },
+            {
+              "kind": "speech",
+              "text": "Every piece is inherited from Middle Chinese, tsawX \"early\", dzyangH \"above\" and xawX \"good\" (Guangyun, in Baxter's transcription), and Chinese put the greeting together from them."
             }
           ]
         },

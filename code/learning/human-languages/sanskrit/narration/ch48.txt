@@ -15,6 +15,9 @@ You'll want to know: सिंहः.
 You have been handed this word twice without being told it. Siṁhapura, the lion town, is what Singapore was worn down from; and Narasiṁha, the man-lion, sets it beside नरः, the man you can already say. Here is the word on its own at last.
 Its own parentage is unsettled — no cousin outside the family has been agreed on. How far it travelled is not in doubt: the language and the people of Sri Lanka are called Sinhala after it. Ends in -अः.
 
+The word, taken apart.
+MW takes siṃha as probably "the powerful one", from the root √sah, "to prevail", but no cousin outside India is agreed, so its origin is not settled (CDIAL 13384).
+
 What you've built.
 A word you had already met twice, now yours to say.
 
@@ -81,6 +84,9 @@ You'll want to know: छागः.
 Like सिंहः (siṁhaḥ) and unlike वृकः (vṛkaḥ), it has no agreed cousin outside India: the goat words of Europe and this one do not line up. Two animals out of the same field, and only one of them carried its name across the family.
 That is worth holding on to, because it is what makes वृकः (vṛkaḥ) remarkable rather than ordinary. Ends in -अः.
 
+The word, taken apart.
+Chāga is already in the Rigveda. MW tentatively compares a Greek verb for limping, but no cousin is agreed, so its origin is not settled. The related chagala, "goat", has many modern descendants (CDIAL 4963).
+
 What you've built.
 Three animals, and two different fates for a name.
 
@@ -111,8 +117,11 @@ Before the new word: what did chāgaḥ mean?
 You'll want to know: वानरः.
 वानरः (vānaraḥ) — "a monkey".
 वानरः (vānaraḥ) is a monkey.
-Two words you own are sitting inside it: वनम्, the forest, and नरः, the man. Sanskrit's own commentators read वानरः (vānaraḥ) as the forest-man, and that reading has held for two thousand years, whatever later scholars have made of it.
+Two words you own seem to sit inside it: वनम्, the forest, and नरः, the man. Some have read वानरः (vānaraḥ) as the forest-man, vana + nara; MW prefers an old word for forest, vanar-, so the forest is in it either way.
 So the word costs you one new shape and pays back two old ones. Ends in -अः.
+
+The word, taken apart.
+MW and CDIAL 11515 derive vānara from vanar-, an old word for forest: the forest animal. The reading vana-nara, "forest man", is one MW reports from others. It lives on as Hindi bandar.
 
 What you've built.
 A word built out of two you had already.

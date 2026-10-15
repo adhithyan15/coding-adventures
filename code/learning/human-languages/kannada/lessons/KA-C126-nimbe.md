@@ -14,7 +14,8 @@ romanization: "nimbe"
 concept_tag: KA-THINGS126-NIMBE
 prerequisites: [KA-C125-uppittu, KA-C125-ragi]
 sounds: []
-roots: []
+roots: [sanskrit-nimbu]
+etymology_hook: "nimbe ← Sanskrit nimbū 'the lime', reshaped as a tadbhava (CDIAL 7247)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C125-ragi]
 <!-- hl-knowledge: introduces=[KA-LEX-C126-THINGS126-01]; assesses=[] -->
 
 **ನಿಂಬೆ** — *nimbe* — "a lemon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಿಂಬೆ** (*nimbe*) comes from Sanskrit *nimbū*, "the lime", reshaped to Kannada sounds: a tadbhava (CDIAL 7247). Kannada's *-e* replaced the final *-ū*. CDIAL takes *nimbū* itself from an Austroasiatic language.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

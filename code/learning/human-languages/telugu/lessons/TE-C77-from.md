@@ -11,7 +11,8 @@ romanization: "nunci"
 concept_tag: TE-CASE-ABLATIVE
 prerequisites: [TE-C76-difficult, TE-C35-snehitudu]
 sounds: []
-roots: []
+roots: [dravidian-ul-be]
+etymology_hook: "nunci: usually explained as uṇḍi 'having been', from uṇḍu 'to be' (DEDR 697)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [TE-C76-difficult]
 You already have **-కు**, "to", and **-లో**, "in". నుంచి is the third of the set and the one an introduction needs.
 
 Like them it follows its noun: **గ్రామం నుంచి** — "from the village".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నుంచి** (*nunci*) is usually explained as *uṇḍi*, "having been", a form of *uṇḍu*, "to be" (DEDR 697), worn down to a case word. DEDR does not list the postposition itself.
 
 ## Grammar Lens: the third relation word
 <!-- hl-knowledge: introduces=[TE-GRAMMAR-C77-FROM-01]; assesses=[] -->

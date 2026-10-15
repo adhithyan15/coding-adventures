@@ -14,7 +14,8 @@ romanization: "ajūn"
 concept_tag: MR-VEL171-AJUN
 prerequisites: [MR-C171-mag, MR-C171-sevti]
 sounds: []
-roots: []
+roots: [indo-aryan-adyahnah]
+etymology_hook: "ajūn ← *adyāhnaḥ 'this very day', a reconstructed form; a tadbhava (CDIAL 244)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C171-sevti]
 <!-- hl-knowledge: introduces=[MR-LEX-C171-VEL171-04]; assesses=[] -->
 
 **अजून** — *ajūn* — "still, yet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अजून** (*ajūn*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*adyāhnaḥ*, "this very day", a form CDIAL reconstructs from its descendants (CDIAL 244). It is *adya*, "today", and *ahnaḥ*, "of the day". CDIAL glosses the Marathi word "even now".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

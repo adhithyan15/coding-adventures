@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 172,
-  "sourceHash": "fnv1a64:218ffad809b1bad3",
+  "sourceHash": "fnv1a64:43600430a2e1946c",
   "lessonIds": [
     "UR-C172-hairat",
     "UR-C172-sukun",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch172.txt",
   "json": "urdu/narration/ch172.json",
-  "textHash": "fnv1a64:b9b762852934b2e5",
-  "jsonHash": "fnv1a64:b1d6298e9fe584d0",
+  "textHash": "fnv1a64:aab392a6c445d3f8",
+  "jsonHash": "fnv1a64:f092c48e9a72d9aa",
   "findings": []
 }

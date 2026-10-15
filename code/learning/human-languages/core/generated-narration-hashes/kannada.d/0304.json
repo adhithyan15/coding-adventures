@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 304,
-  "sourceHash": "fnv1a64:96c22f31a53c3b9f",
+  "sourceHash": "fnv1a64:32ef491e6d85e60f",
   "lessonIds": [
     "KA-C304-patha",
     "KA-C304-parikse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch304.txt",
   "json": "kannada/narration/ch304.json",
-  "textHash": "fnv1a64:e3323a404f71623a",
-  "jsonHash": "fnv1a64:c6e454930822ab49",
+  "textHash": "fnv1a64:4609e9bd2fb4220f",
+  "jsonHash": "fnv1a64:25819a7d4dea4e8c",
   "findings": []
 }

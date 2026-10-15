@@ -14,7 +14,8 @@ romanization: "veryóvka"
 concept_tag: RU-THINGS98-ROPE
 prerequisites: [RU-C98-frying-pan, RU-C98-bucket]
 sounds: []
-roots: []
+roots: [slavic-virvi]
+etymology_hook: "верёвка is built on Old Russian вьрвь 'a cord'; Lithuanian virvė 'rope' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C98-bucket]
 <!-- hl-knowledge: introduces=[RU-LEX-C98-THINGS98-03]; assesses=[] -->
 
 **верёвка** (*veryóvka*) — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**верёвка** is built on Old Russian *вьрвь*, "a cord", with *-ка*. Vasmer relates it to Lithuanian *virvė*, "rope", and *vérti*, "to thread", and Greek *erýō*, "I drag".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

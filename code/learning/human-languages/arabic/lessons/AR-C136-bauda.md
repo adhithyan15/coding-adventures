@@ -14,7 +14,8 @@ romanization: "baʿūḍa"
 concept_tag: AR-THINGS136-BAUDA
 prerequisites: [AR-C135-sulahfah, AR-C136-timsah]
 sounds: []
-roots: []
+roots: [b-ʿ-ḍ]
+etymology_hook: "baʿūḍa: built on the root b-ʿ-ḍ, 'gnats' (Lane); baʿūḍa is one gnat, a mosquito"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C136-timsah]
 <!-- hl-knowledge: introduces=[AR-LEX-C136-THINGS136-02]; assesses=[] -->
 
 **بعوضة** — *baʿūḍa* — "a mosquito".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بعوضة** (*baʿūḍa*) is built on the native Arabic root *b-ʿ-ḍ*, "gnats; to cut into parts" (Lane). *Baʿūḍa* is one gnat, a mosquito.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

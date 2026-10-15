@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 27,
-  "sourceHash": "fnv1a64:99ba6bd9e2699476",
+  "sourceHash": "fnv1a64:d75cbb65059d7cd9",
   "lessonIds": [
     "UR-C27-shahr",
     "UR-C27-mulk",
@@ -14,6 +14,6 @@
   "text": "urdu/narration/ch27.txt",
   "json": "urdu/narration/ch27.json",
   "textHash": "fnv1a64:c5eb401de5d4cb4c",
-  "jsonHash": "fnv1a64:00df2a14794bfd6c",
+  "jsonHash": "fnv1a64:20a600eb20ec32e8",
   "findings": []
 }

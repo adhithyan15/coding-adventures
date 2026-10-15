@@ -14,7 +14,8 @@ romanization: "bāthrūm"
 concept_tag: UR-LOC102-BATHRUM
 prerequisites: [UR-C101-darvaza, UR-C102-bavarchikhana]
 sounds: []
-roots: []
+roots: [english-bathroom]
+etymology_hook: "bāthrūm ← English bathroom"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C102-bavarchikhana]
 <!-- hl-knowledge: introduces=[UR-LEX-C102-LOC102-02]; assesses=[] -->
 
 **باتھ روم** — *bāthrūm* — "a bathroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**باتھ روم** (*bāthrūm*) is a loan from English *bathroom*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

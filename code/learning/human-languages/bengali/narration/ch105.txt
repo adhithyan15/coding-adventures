@@ -12,6 +12,9 @@ Before the new one: say the Bengali for closed, then the Bengali for to wipe.
 You'll want to know: ঝাড়া.
 ঝাড়া — jhāṛā — "to dust, to shake out".
 
+The word, taken apart.
+ঝাড়া (jhāṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from jhāṭayati, "shakes down", a form CDIAL reconstructs from its descendants (CDIAL 5328). CDIAL is unsure of its deeper source.
+
 What you've built.
 One more word for this chapter.
 
@@ -41,6 +44,9 @@ Before the new one: say the Bengali for to wipe, then the Bengali for to dust.
 You'll want to know: গোছানো.
 গোছানো — gochhāno — "to tidy up".
 
+The word, taken apart.
+গোছানো (gochhāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from guccha, "bunch of flowers" (CDIAL 4172). CDIAL lists Bengali gochāna, "to arrange", under it, with a query.
+
 What you've built.
 One more word for this chapter.
 
@@ -69,6 +75,9 @@ Before the new one: say the Bengali for to dust, then the Bengali for to tidy up
 
 You'll want to know: সাজানো.
 সাজানো — sājāno — "to decorate, to arrange".
+
+The word, taken apart.
+সাজানো (sājāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sajjayati, "makes ready, equips" (CDIAL 13091). Sājāno is the causing form of sājā, "to make ready, dress"; CDIAL lists both.
 
 What you've built.
 One more word for this chapter.
@@ -101,6 +110,9 @@ Which two Bengali digits lie? (৪ looks like an 8 and means four; ৭ looks lik
 You'll want to know: ভাজা.
 ভাজা — bhājā — "to fry".
 
+The word, taken apart.
+ভাজা (bhājā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhṛjjati, "fries, parches" (CDIAL 9583). CDIAL lists the Bengali verb under the variant bharjayati.
+
 What you've built.
 One more word for this chapter.
 
@@ -129,6 +141,9 @@ Before the new one: say the Bengali for to decorate, then the Bengali for to fry
 
 You'll want to know: মেশানো.
 মেশানো — meshāno — "to mix".
+
+The word, taken apart.
+মেশানো (meshāno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from miśrayati, "mixes" (CDIAL 10137). CDIAL writes the Bengali verb misāna.
 
 What you've built.
 One more word for this chapter.

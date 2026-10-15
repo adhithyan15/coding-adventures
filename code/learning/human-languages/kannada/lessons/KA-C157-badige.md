@@ -14,7 +14,8 @@ romanization: "bāḍige"
 concept_tag: KA-ODU157-BADIGE
 prerequisites: [KA-C157-velapatti, KA-C157-suchane]
 sounds: []
-roots: []
+roots: [hindustani-bhara]
+etymology_hook: "bāḍige: usually traced to Hindustani bhāṛā 'rent, fare'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C157-suchane]
 <!-- hl-knowledge: introduces=[KA-LEX-C157-ODU157-03]; assesses=[] -->
 
 **ಬಾಡಿಗೆ** — *bāḍige* — "rent; for hire". The money for a house: **ಮನೆ ಬಾಡಿಗೆ** — *mane bāḍige* — "the rent for the house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬಾಡಿಗೆ** (*bāḍige*) is usually traced to Hindustani *bhāṛā*, "rent, fare, hire", with the Kannada ending *-ige*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bheṣajam"
 concept_tag: SA-WEL150-BHESAJAM
 prerequisites: [SA-C149-lipikah, SA-C149-nayakah]
 sounds: []
-roots: []
+roots: [sanskrit-bheshaja]
+etymology_hook: "bheṣaja 'remedy' ← bhiṣaj 'healer' (MW), inherited from Indo-Iranian, with an Avestan cousin (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C149-nayakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C150-WEL150-01]; assesses=[] -->
 
 **भेषजम्** — *bheṣajam* — "a remedy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bheṣaja* "healing; a remedy" is formed from *bhiṣaj* "a healer, a physician" (MW), already in the Rigveda. *bhiṣaj* is inherited from Indo-Iranian, with a cousin in Avestan (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

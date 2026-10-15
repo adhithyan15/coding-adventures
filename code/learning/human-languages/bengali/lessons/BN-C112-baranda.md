@@ -14,7 +14,8 @@ romanization: "bārāndā"
 concept_tag: BN-THINGS112-BARANDA
 prerequisites: [BN-C112-tak, BN-C112-deoyal]
 sounds: []
-roots: []
+roots: [sanskrit-varanda]
+etymology_hook: "bārāndā: CDIAL lists bārāṇḍā 'portico', from Hindi, under varaṇḍa, scarcely separable from veranda (CDIAL 11317)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C112-deoyal]
 <!-- hl-knowledge: introduces=[BN-LEX-C112-THINGS112-04]; assesses=[] -->
 
 **বারান্দা** — *bārāndā* — "a veranda".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Bengali *bārāṇḍā*, "portico", as taken from Hindi, under Sanskrit *varaṇḍa*, "heap, mound; wall", which passed into Persian as *barāmda*; it adds that the word can scarcely be separated from *veranda* (CDIAL 11317).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ gloss: that — the far half, and the letter ও doing a second job it has been 
 concept_tag: BN-LEX-OI
 prerequisites: [BN-C21-ei, BN-W04-o-indep, BN-C14-lal, BN-C14-kalo]
 sounds: []
-roots: []
-etymology_hook: "Bengali's deixis is two-way where Spanish and Tamil are three-way: there is here and there, and no separate over-there-away-from-both. One fewer distinction to learn, and one fewer to get wrong."
+roots: [sanskrit-asau]
+etymology_hook: "oi: the far head o-, beside Middle Bengali oū 'that' ← Sanskrit asau 'that' (CDIAL 972)"
 duration:
   max_seconds: 230
 requires:
@@ -47,6 +47,11 @@ Swap the head and you have crossed the room. **এ-** is here; **ও-** is there
 That is the whole system: Bengali has **two** distances, not three. Spanish
 insists on *este*, *ese* and *aquel*; Bengali stops at two and lets context do
 the rest.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Middle Bengali *oū* and *ohā*, "that", under Sanskrit *asau*, "that" (CDIAL 972): the far head **ও-** has a long history, though CDIAL has no entry for **ওই** itself.
 
 ## Grammar Lens: one letter, two jobs
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C21-OI-01, BN-SCRIPT-O-INDEP-01] -->

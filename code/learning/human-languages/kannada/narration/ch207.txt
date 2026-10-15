@@ -12,6 +12,9 @@ Before the new one: say the Kannada for to escape, then the Kannada for to hurry
 You'll want to know: ಮೂಸು.
 ಮೂಸು — mūsu — "to sniff".
 
+The word, taken apart.
+ಮೂಸು (mūsu) is native Dravidian, one word with Tamil muka (DEDR 4886). DEDR lists mūsu itself, "to smell".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for to hurry, then the Kannada for to sniff.
 
 You'll want to know: ನೇತುಹಾಕು.
 ನೇತುಹಾಕು — nētuhāku — "to hang up".
+
+The word, taken apart.
+ನೇತುಹಾಕು (nētuhāku) is nētu, "hanging", from the native nēl, "to be suspended, hang" (DEDR 2912), with hāku, "to put", whose history neither DEDR nor CDIAL gives: "to put hanging".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for to sniff, then the Kannada for to hang u
 You'll want to know: ಕುಟ್ಟು.
 ಕುಟ್ಟು — kuṭṭu — "to pound (in a mortar)".
 
+The word, taken apart.
+ಕುಟ್ಟು (kuṭṭu) is native Dravidian, one word with Tamil kuṭṭu and Malayalam kuṭṭuka (DEDR 1671). DEDR lists kuṭṭu itself, "to beat, pound, bruise". DEDR 1671 compares Sanskrit kuṭṭayati.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for to hang up, then the Kannada for to poun
 You'll want to know: ಪೇರಿಸು.
 ಪೇರಿಸು — pērisu — "to stack, to pile up".
 
+The word, taken apart.
+ಪೇರಿಸು (pērisu) is native Dravidian, from pēru, "to load, pile up", which DEDR 4446 lists as Kannada pēṟu, with -isu; the entry also has Telugu pērcu and Malayalam pēṟu.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for to pound, then the Kannada for to stack.
 
 You'll want to know: ಸಂಗ್ರಹಿಸು.
 ಸಂಗ್ರಹಿಸು — saṅgrahisu — "to collect, to gather".
+
+The word, taken apart.
+ಸಂಗ್ರಹಿಸು (saṅgrahisu) is Sanskrit saṅgraha, "collection, holding together" (CDIAL 12852), made into a Kannada verb with -isu.
 
 What you've built.
 One more word for this chapter.

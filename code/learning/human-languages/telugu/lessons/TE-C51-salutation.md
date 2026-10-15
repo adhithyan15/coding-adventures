@@ -11,7 +11,8 @@ romanization: "daṇḍaṁ"
 concept_tag: TE-NOUN-SALUTATION
 prerequisites: [TE-C51-blessing]
 sounds: []
-roots: []
+roots: [sanskrit-danda]
+etymology_hook: "daṇḍaṁ ← Sanskrit daṇḍa 'stick, staff' (CDIAL 6128); the greeting is usually explained through daṇḍa-praṇāma"
 duration:
   max_seconds: 210
 requires:
@@ -44,7 +45,9 @@ reviews_of: [TE-C51-blessing]
 
 Sanskrit *daṇḍa* is a staff, a stick. The full form of the gesture, *daṇḍa-praṇāma*, is the prostration where the body lies down straight as a staff. Telugu kept the word and let the body straighten most of the way up.
 
-Hold on to దండ; it comes back in the next chapter carrying flowers.
+Hold on to దండ; a word of the same shape comes back in the next chapter carrying flowers.
+
+CDIAL 6128 lists Sanskrit *daṇḍa*, "stick, staff", which it thinks probably non-Aryan; the greeting is usually explained through *daṇḍa-praṇāma*, the full prostration.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

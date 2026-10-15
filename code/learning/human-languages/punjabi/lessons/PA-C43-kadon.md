@@ -11,8 +11,8 @@ gloss: when - the question beside the ਜਦੋਂ that answers it
 concept_tag: PA-Q-KADON
 prerequisites: [PA-C43-kaun, PA-C41-jadon]
 sounds: [hora-o, bindi-nasal]
-roots: []
-etymology_hook: ਕਦੋਂ and ਜਦੋਂ differ by one letter: ਕ asks the question, ਜ answers it.
+roots: [ka-interrogative]
+etymology_hook: "kadoṁ: on the question stem ka-, the partner of jadoṁ; CDIAL has no entry for it"
 duration:
   max_seconds: 250
 requires:
@@ -57,6 +57,8 @@ you almost nothing now.
 
 That pairing runs through the whole language, and you have now seen it three
 times: **ਜੇ … ਤਾਂ**, **ਜੋ … ਉਹ**, and now **ਕਦੋਂ** against **ਜਦੋਂ**.
+
+*Kadoṁ* is built on the old question stem *ka-*, as *jadoṁ* is built on the relative *ya-*. CDIAL has no entry for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-Q-KADON-01, PA-JOIN-JADON-01] -->

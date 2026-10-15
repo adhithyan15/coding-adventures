@@ -14,7 +14,8 @@ romanization: "sthānīya"
 concept_tag: HI-QUAL240-STHANIYA
 prerequisites: [HI-C240-adhunik, HI-C240-pracin]
 sounds: []
-roots: []
+roots: [sanskrit-sthaniya]
+etymology_hook: "sthānīya ← Sanskrit sthānīya 'of a place', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C240-pracin]
 <!-- hl-knowledge: introduces=[HI-LEX-C240-QUAL240-03]; assesses=[] -->
 
 **स्थानीय** — *sthānīya* — "local".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**स्थानीय** (*sthānīya*) is Sanskrit *sthānīya*, "of a place", taken over whole as a learned loan, a tatsama. It is built on *sthāna*, "place" (CDIAL 13753).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

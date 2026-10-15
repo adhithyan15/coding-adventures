@@ -14,7 +14,8 @@ romanization: "paṭhippikkuka"
 concept_tag: ML-VERB-PATHIPPIKKUKA
 prerequisites: [ML-C173-nokkuka, ML-C173-pathikkuka]
 sounds: []
-roots: []
+roots: [sanskrit-path]
+etymology_hook: "paṭhippikkuka: the causative of paṭhikkuka 'to learn', from Sanskrit paṭh 'recite' (CDIAL 7712): 'make learn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C173-pathikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C173-ACT173-04]; assesses=[] -->
 
 **പഠിപ്പിക്കുക** — *paṭhippikkuka* — "to teach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പഠിപ്പിക്കുക** (*paṭhippikkuka*) is the causative of the learning verb, "make learn": its root is Sanskrit *paṭhati*, "recites, reads" (CDIAL 7712).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

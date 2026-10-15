@@ -14,7 +14,8 @@ romanization: "khājgī"
 concept_tag: MR-GUN206-KHAJGI
 prerequisites: [MR-C205-piklela, MR-C206-sarvajanik]
 sounds: []
-roots: []
+roots: [persian-khasagi]
+etymology_hook: "khājgī: usually traced to Persian khāṣagī 'private', from Arabic khāṣṣ 'special'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C206-sarvajanik]
 <!-- hl-knowledge: introduces=[MR-LEX-C206-GUN206-02]; assesses=[] -->
 
 **खाजगी** — *khājgī* — "private".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खाजगी** (*khājgī*) is a loan, usually traced to Persian *khāṣagī*, "private", built on Arabic *khāṣṣ*, "special".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

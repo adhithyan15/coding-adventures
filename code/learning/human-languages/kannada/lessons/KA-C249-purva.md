@@ -14,7 +14,8 @@ romanization: "pūrva"
 concept_tag: KA-STHALA249-PURVA
 prerequisites: [KA-C248-muhurta, KA-C248-onduvare]
 sounds: []
-roots: []
+roots: [sanskrit-purva]
+etymology_hook: "pūrva ← Sanskrit pūrva 'fore, first, eastern', a tatsama (CDIAL 8343)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C248-onduvare]
 <!-- hl-knowledge: introduces=[KA-LEX-C249-STHALA249-01]; assesses=[] -->
 
 **ಪೂರ್ವ** — *pūrva* — "east".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪೂರ್ವ** (*pūrva*) is Sanskrit *pūrva*, "fore, first, eastern", taken over whole as a learned loan, a tatsama (CDIAL 8343). What is in front faces the sunrise.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

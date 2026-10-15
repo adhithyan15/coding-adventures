@@ -14,7 +14,8 @@ romanization: "ṭhigṇo"
 concept_tag: MW-QUAL144-THIGNO
 prerequisites: [MW-C144-javan, MW-C144-dubalo]
 sounds: []
-roots: []
+roots: [indo-aryan-thinga]
+etymology_hook: "ṭhigṇo ← *ṭhiṅga 'defective', reconstructed (CDIAL 5501, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C144-dubalo]
 <!-- hl-knowledge: introduces=[MW-LEX-C144-QUAL144-05]; assesses=[] -->
 
 **ठिगणो** — *ṭhigṇo* — "short (of a person)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ठिगणो** (*ṭhigṇo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ṭhiṅga*, "defective", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5501); the match is through Hindi *ṭhĩgnā* and Gujarati *ṭhĩgṇũ*. CDIAL sets it in a large group of "defective" words; Hindi and Gujarati forms mean "dwarfish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

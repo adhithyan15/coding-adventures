@@ -14,7 +14,8 @@ romanization: "gol"
 concept_tag: FA-SCHOOL51-GOL
 prerequisites: [FA-C51-ruzname, FA-C51-derakht]
 sounds: []
-roots: []
+roots: [persian-gul]
+etymology_hook: "gol ← Middle Persian gul (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C51-derakht]
 <!-- hl-knowledge: introduces=[FA-LEX-C51-SCHOOL51-04]; assesses=[] -->
 
 **گل** — *gol* — "a flower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gol* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *gul*, "rose, flower" (EtymDB). EtymDB takes it back to an Old Iranian word for "rose". (It also lists English *goal*, which is a different word that looks alike.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

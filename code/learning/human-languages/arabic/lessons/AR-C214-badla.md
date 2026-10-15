@@ -14,7 +14,8 @@ romanization: "badla"
 concept_tag: AR-SHAY214-BADLA
 prerequisites: [AR-C213-athath, AR-C213-ghasil]
 sounds: []
-roots: []
+roots: [b-d-l]
+etymology_hook: "badla: built on the root b-d-l, 'to exchange' (Lane); badla is a change of clothes, a suit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C213-ghasil]
 <!-- hl-knowledge: introduces=[AR-LEX-C214-SHAY214-01]; assesses=[] -->
 
 **بدلة** — *badla* — "a suit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بدلة** (*badla*) is built on the native Arabic root *b-d-l*, "to exchange" (Lane). *Badla* is a change of clothes, a suit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

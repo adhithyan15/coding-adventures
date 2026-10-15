@@ -14,7 +14,8 @@ romanization: "dayālu"
 concept_tag: HI-QUAL215-DAYALU
 prerequisites: [HI-C215-murkh, HI-C215-bahadur]
 sounds: []
-roots: []
+roots: [sanskrit-dayalu]
+etymology_hook: "dayālu ← Sanskrit dayālu 'compassionate', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C215-bahadur]
 <!-- hl-knowledge: introduces=[HI-LEX-C215-QUAL215-05]; assesses=[] -->
 
 **दयालु** — *dayālu* — "kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दयालु** (*dayālu*) is Sanskrit *dayālu*, "compassionate", taken over whole as a learned loan, a tatsama. It is built on *dayā*, "pity".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "zakhm"
 concept_tag: FA-SALAMAT150-ZAKHM
 prerequisites: [FA-C150-pashne, FA-C150-galu]
 sounds: []
-roots: []
+roots: [persian-zakhm]
+etymology_hook: "zakhm: inherited, usually traced to Middle Persian zaxm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C150-galu]
 <!-- hl-knowledge: introduces=[FA-LEX-C150-SALAMAT150-04]; assesses=[] -->
 
 **زخم** — *zakhm* — "a wound".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zakhm* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *zaxm*, "wound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

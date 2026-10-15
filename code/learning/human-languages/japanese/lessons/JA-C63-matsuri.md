@@ -14,7 +14,8 @@ romanization: "matsuri"
 concept_tag: JA-WORLD63-MATSURI
 prerequisites: [JA-C62-katachi, JA-C63-yume]
 sounds: []
-roots: []
+roots: [japanese-matsuru]
+etymology_hook: "matsuri: native, the noun from matsuru 'to worship, enshrine'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C63-yume]
 <!-- hl-knowledge: introduces=[JA-LEX-C63-WORLD63-02]; assesses=[] -->
 
 **まつり** — *matsuri* — "a festival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**まつり** (*matsuri*) is native: the noun made from *matsuru*, "to worship, to enshrine", by its stem (JMdict). It is inherited rather than borrowed; its kanji is a kun'yomi attached later.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

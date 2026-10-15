@@ -11,7 +11,8 @@ romanization: "hōgōṇa"
 concept_tag: KA-LEAVE-LETS-GO
 prerequisites: [KA-C89-safely, KA-C89-late]
 sounds: []
-roots: []
+roots: [hoogu-go-dravidian]
+etymology_hook: "hōgōṇa: native hōgu 'to go' (DEDR 4572) + the 'let's' ending -ōṇa"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [KA-C89-late]
 
 **ಹೋಗೋಣ** (*hōgōṇa*) — "let's go". The ending **‑ಓಣ** (*-ōṇa*) means "let's", the
 same one you know from **ಸಿಗೋಣ** (*sigōṇa*), "let's meet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೋಗೋಣ** (*hōgōṇa*) is native Dravidian: *hōgu*, "to go" (DEDR 4572, with Tamil *pō*), with *-ōṇa*, the ending that means "let us".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

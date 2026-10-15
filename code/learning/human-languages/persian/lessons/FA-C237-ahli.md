@@ -14,7 +14,8 @@ romanization: "ahli"
 concept_tag: FA-SEFAT237-AHLI
 prerequisites: [FA-C237-barfi, FA-C237-vahshi]
 sounds: []
-roots: []
+roots: [arabic-ahli]
+etymology_hook: "ahli ← Arabic ahlī 'of the household', root ʾ-h-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C237-vahshi]
 <!-- hl-knowledge: introduces=[FA-LEX-C237-SEFAT237-03]; assesses=[] -->
 
 **اهلی** — *ahli* — "tame, domestic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ahli* is borrowed from Arabic *ahlī*, "of the household". Its Arabic root is *ʾ-h-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

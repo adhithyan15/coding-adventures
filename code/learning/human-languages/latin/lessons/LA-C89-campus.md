@@ -13,7 +13,8 @@ gloss: "a plain, an open field"
 concept_tag: LA-CAELUM-CAMPUS
 prerequisites: [LA-C89-pluvia, LA-C89-nix]
 sounds: []
-roots: []
+roots: [campus-latin]
+etymology_hook: "campus 'plain, field' — origin uncertain; links with PIE *kamp- 'to bend' are not settled"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C89-nix]
 <!-- hl-knowledge: introduces=[LA-LEX-C89-CAELUM-04]; assesses=[] -->
 
 **campus, campī** — "a plain, an open field". English *campus*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**campus** has no sure origin. EtymDB 2.1 tentatively links it to a Proto-Indo-European root *\*kamp-*, "to bend", and Lewis & Short compare Greek *kēpos*, "garden"; neither link is settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

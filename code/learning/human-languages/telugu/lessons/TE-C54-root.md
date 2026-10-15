@@ -11,7 +11,8 @@ romanization: "vēru"
 concept_tag: TE-NOUN-ROOT
 prerequisites: [TE-C54-branch]
 sounds: []
-roots: []
+roots: [dravidian-veer-root]
+etymology_hook: "vēru: native Dravidian, one word with Tamil vēr and Kannada bēru (DEDR 5535)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C54-branch]
 One shape, two jobs, and they are not far apart when you think about what a root does: it is the part that is set aside, buried, kept out of the daylight and out of the reckoning.
 
 Telugu is comfortable letting a word carry a solid thing and an abstract idea at once. You had one working two jobs a moment ago, with చుక్క.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వేరు** (*vēru*) is native Dravidian, one word with Tamil *vēr*, Kannada *bēru* and Malayalam *vēr* (DEDR 5535). The వేరు that means "different" is another word, DEDR 5548.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

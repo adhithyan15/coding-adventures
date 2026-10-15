@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a minister, then the Sanskrit for a gen
 You'll want to know: नापितः.
 नापितः — nāpitaḥ — "a barber".
 
+The word, taken apart.
+nāpita "a barber" is old, in the Śatapatha Brāhmaṇa. CDIAL 13792, after EWA, links it with the root √snā "bathe", through a form snāpitṛ "one who bathes others", which MW also queries. It lives on as Hindi nāū and nāī "barber" (CDIAL 13792).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a general, then the Sanskrit for a barb
 
 You'll want to know: पाचकः.
 पाचकः — pācakaḥ — "a cook".
+
+The word, taken apart.
+pācaka is built from the root √pac "cook, bake" with the agent suffix -aka (MW): "one who cooks". MW sets √pac beside Latin coquo "I cook", the source of English cook and kitchen, and Greek pessō.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a barber, then the Sanskrit for a cook.
 You'll want to know: मालाकारः.
 मालाकारः — mālākāraḥ — "a gardener, a garland-maker".
 
+The word, taken apart.
+mālākāra is built from mālā "garland" and kāra "maker", from the root √kṛ "do, make" (CDIAL 10093): "a garland-maker", and so "a gardener, a florist" (MW). CDIAL 10092 takes mālā itself from Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a cook, then the Sanskrit for a gardene
 You'll want to know: धीवरः.
 धीवरः — dhīvaraḥ — "a fisherman".
 
+The word, taken apart.
+dhīvara "a fisherman" appears from the Mahābhārata on, also as the name of a caste (CDIAL 6819). Neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Hindi dhīmar and Punjabi jhīwar "fisherman" (CDIAL 6819).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a gardener, then the Sanskrit for a fis
 
 You'll want to know: गोपालः.
 गोपालः — gopālaḥ — "a cowherd".
+
+The word, taken apart.
+gopāla is built from go "cow" and pāla "guard, keeper" (CDIAL 4293): "the cow-keeper", already in the Vājasaneyi Saṃhitā. MW sets go beside Greek bous, Latin bos and English cow: one inherited Indo-European word.
 
 What you've built.
 One more word for this chapter.

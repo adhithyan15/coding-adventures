@@ -13,7 +13,8 @@ gloss: "below"
 concept_tag: LA-LOCUS-INFRA
 prerequisites: [LA-C102-procul, LA-C102-supra]
 sounds: []
-roots: []
+roots: [infra-latin, inferus-latin]
+etymology_hook: "īnfrā 'below' — from īnferus 'lower': on the lower side; English inferior"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C102-supra]
 <!-- hl-knowledge: introduces=[LA-LEX-C102-LOCUS-03]; assesses=[] -->
 
 **īnfrā** — "below".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**īnfrā** comes from *īnferus*, "lower" (Lewis & Short), as if "on the lower side". English *inferior* belongs to the same family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

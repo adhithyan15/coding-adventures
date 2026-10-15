@@ -14,7 +14,8 @@ romanization: "khāsagi"
 concept_tag: KA-GUNA180-KHASAGI
 prerequisites: [KA-C180-ucita, KA-C180-sarkari]
 sounds: []
-roots: []
+roots: [persian-khasagi]
+etymology_hook: "khāsagi ← Persian xāṣagī 'private', from Arabic xāṣṣ 'special'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C180-sarkari]
 <!-- hl-knowledge: introduces=[KA-LEX-C180-GUNA180-03]; assesses=[] -->
 
 **ಖಾಸಗಿ** — *khāsagi* — "private".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಖಾಸಗಿ** (*khāsagi*) is a loan from Persian *xāṣagī*, "private, personal", which goes back to Arabic *xāṣṣ*, "special, one's own".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

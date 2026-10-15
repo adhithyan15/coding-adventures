@@ -14,7 +14,8 @@ romanization: "saṅketsthaḷ"
 concept_tag: MR-VASTU237-SANKETSTHAL
 prerequisites: [MR-C237-boli, MR-C237-prasiddhi]
 sounds: []
-roots: []
+roots: [sanskrit-sanketa, sanskrit-sthala]
+etymology_hook: "saṅketsthaḷ: Sanskrit saṅketa 'sign' + sthala 'place' (CDIAL 13744); a modern coinage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C237-prasiddhi]
 <!-- hl-knowledge: introduces=[MR-LEX-C237-VASTU237-04]; assesses=[] -->
 
 **संकेतस्थळ** — *saṅketsthaḷ* — "a website".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**संकेतस्थळ** (*saṅketsthaḷ*) is a modern coinage of Sanskrit parts: *saṅketa*, "sign, appointment", and *sthala*, "ground, place" (CDIAL 13744).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

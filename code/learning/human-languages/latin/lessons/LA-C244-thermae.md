@@ -13,7 +13,8 @@ gloss: "the public baths"
 concept_tag: LA-RES244-THERMAE
 prerequisites: [LA-C244-platea, LA-C244-aquaeductus]
 sounds: []
-roots: []
+roots: [thermae-latin]
+etymology_hook: "thermae 'public baths' — from Greek thermos 'warm': warm waters"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C244-aquaeductus]
 <!-- hl-knowledge: introduces=[LA-LEX-C244-RES244-04]; assesses=[] -->
 
 **thermae, thermārum** — "the public baths".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**thermae** comes from Greek *thermos*, "warm": Lewis & Short gloss *thermae* as warm springs and warm baths.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

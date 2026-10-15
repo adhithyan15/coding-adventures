@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 168,
-  "sourceHash": "fnv1a64:221ffc1c9860d5e9",
+  "sourceHash": "fnv1a64:ec27d566f6e85f8f",
   "lessonIds": [
     "RU-C168-svadba",
     "RU-C168-zhenikh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch168.txt",
   "json": "russian/narration/ch168.json",
-  "textHash": "fnv1a64:345c43952b214f59",
-  "jsonHash": "fnv1a64:27dd851b3f910ee0",
+  "textHash": "fnv1a64:7245d7115911f2df",
+  "jsonHash": "fnv1a64:79d37c498babbea1",
   "findings": []
 }

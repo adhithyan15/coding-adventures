@@ -14,7 +14,8 @@ romanization: "kholódnyy"
 concept_tag: RU-TEMP-COLD
 prerequisites: [RU-C65-short, RU-C66-hot]
 sounds: []
-roots: []
+roots: [slavic-cholodu]
+etymology_hook: "холодный is холод 'cold' + -ный; Vasmer thinks холод probably a cousin of Latin gelidus and English cold"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C66-hot]
 <!-- hl-knowledge: introduces=[RU-LEX-C66-TEMP-02]; assesses=[] -->
 
 **холодный** (*kholódnyy*) — "cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**холодный** is *холод*, "cold", with *-ный*. *холод* ← Proto-Slavic *\*xoldŭ*; Vasmer thinks it is probably a variant of the root of Gothic *kalds*, "cold", and Latin *gelidus*, "icy", so English *cold* would be a cousin. Church Slavonic has *хлад*, "coolness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

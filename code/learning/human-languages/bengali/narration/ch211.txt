@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to marry, then the Bengali for to surviv
 You'll want to know: চেঁচানো.
 চেঁচানো — chẽchāno — "to shout".
 
+The word, taken apart.
+চেঁচানো (chẽchāno) is a tadbhava, a word inherited and reshaped by sound change. It comes from cicc, "scream", a form CDIAL reconstructs from its descendants (CDIAL 4789). CDIAL lists Bengali cẽcāna, "to cry out", and calls the word imitative.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to survive, then the Bengali for to shou
 
 You'll want to know: রাগ করা.
 রাগ করা — rāg kôrā — "to get angry".
+
+The phrase, taken apart.
+রাগ করা (rāg kôrā) is rāg, "anger", Sanskrit rāga, "passion", taken over whole (CDIAL 10674), + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to shout, then the Bengali for to get an
 You'll want to know: লজ্জা পাওয়া.
 লজ্জা পাওয়া — lôjjā pāoyā — "to feel shy".
 
+The phrase, taken apart.
+লজ্জা পাওয়া (lôjjā pāoyā) is lôjjā, "shame", Sanskrit lajjā taken over whole (CDIAL 10910), + pāoyā, "to get", from Sanskrit prāpayati, "causes to reach" (CDIAL 8943): "to get shame".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to get angry, then the Bengali for to fe
 You'll want to know: ঝগড়া করা.
 ঝগড়া করা — jhôgṛā kôrā — "to quarrel".
 
+The phrase, taken apart.
+ঝগড়া করা (jhôgṛā kôrā) is jhôgṛā, "a quarrel", which CDIAL lists under jhagaḍ, "quarrel", a form it reconstructs (CDIAL 5321), + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to feel shy, then the Bengali for to qua
 
 You'll want to know: জড়িয়ে ধরা.
 জড়িয়ে ধরা — jôṛiye dhôrā — "to hug".
+
+The phrase, taken apart.
+জড়িয়ে ধরা (jôṛiye dhôrā) is jôṛiye, "wrapping round", a form of the verb CDIAL lists as Bengali jaṛāna, "to wrap round", under jaḍati, "joins", which it takes from Dravidian (CDIAL 5091), + dhôrā, "to hold", from Sanskrit dharati, "holds" (CDIAL 6747).
 
 What you've built.
 One more word for this chapter.

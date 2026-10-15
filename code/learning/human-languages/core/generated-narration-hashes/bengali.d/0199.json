@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 199,
-  "sourceHash": "fnv1a64:e8b2659fd5e6e10b",
+  "sourceHash": "fnv1a64:5101bf3d07cbc6a0",
   "lessonIds": [
     "BN-C199-nagorik",
     "BN-C199-porjotok",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch199.txt",
   "json": "bengali/narration/ch199.json",
-  "textHash": "fnv1a64:01831baf1877cb30",
-  "jsonHash": "fnv1a64:b37aaa36fb4bb15c",
+  "textHash": "fnv1a64:8c485c8be4a4dd74",
+  "jsonHash": "fnv1a64:96bf7b97437831bf",
   "findings": []
 }

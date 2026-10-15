@@ -14,7 +14,8 @@ romanization: "itihās"
 concept_tag: HI-THG199-ITIHAS
 prerequisites: [HI-C198-jnan, HI-C198-vijnan]
 sounds: []
-roots: []
+roots: [sanskrit-itihasa]
+etymology_hook: "itihās ← Sanskrit itihāsa 'tradition, history', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C198-vijnan]
 <!-- hl-knowledge: introduces=[HI-LEX-C199-THG199-01]; assesses=[] -->
 
 **इतिहास** — *itihās* — "history".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इतिहास** (*itihās*) is Sanskrit *itihāsa*, "tradition, history", taken over whole as a learned loan, a tatsama. It is built from *iti ha āsa*, "so indeed it was".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

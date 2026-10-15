@@ -14,7 +14,8 @@ romanization: "svāsthyô"
 concept_tag: BN-SVASTHYO155-SVASTHYO
 prerequisites: [BN-C155-kidni, BN-C155-byam]
 sounds: []
-roots: []
+roots: [sanskrit-svasthya]
+etymology_hook: "svāsthyô ← Sanskrit svāsthya 'health, well-being', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C155-byam]
 <!-- hl-knowledge: introduces=[BN-LEX-C155-SVASTHYO155-05]; assesses=[] -->
 
 **স্বাস্থ্য** — *svāsthyô* — "health".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**স্বাস্থ্য** (*svāsthyô*) is Sanskrit *svāsthya*, "health, well-being", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

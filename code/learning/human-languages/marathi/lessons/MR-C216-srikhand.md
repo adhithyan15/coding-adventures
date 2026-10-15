@@ -15,6 +15,7 @@ concept_tag: MR-VASTU216-SRIKHAND
 prerequisites: [MR-C215-agaman, MR-C215-prasthan]
 sounds: []
 roots: []
+etymology_hook: "śrīkhaṇḍ: the dish name's origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C215-prasthan]
 <!-- hl-knowledge: introduces=[MR-LEX-C216-VASTU216-01]; assesses=[] -->
 
 **श्रीखंड** — *śrīkhaṇḍ* — "shrikhand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of the dish name **श्रीखंड** (*śrīkhaṇḍ*) is not settled. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

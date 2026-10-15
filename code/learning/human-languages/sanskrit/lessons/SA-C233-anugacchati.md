@@ -14,7 +14,8 @@ romanization: "anugacchati"
 concept_tag: SA-VERB-ANUGACCHATI
 prerequisites: [SA-C233-rohati, SA-C233-pratiksate]
 sounds: []
-roots: []
+roots: [gam-go]
+etymology_hook: "anugacchati ← anu 'after' + gacchati 'goes', from √gam 'go': 'goes after' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C233-pratiksate]
 <!-- hl-knowledge: introduces=[SA-LEX-C233-ACT233-04]; assesses=[] -->
 
 **अनुगच्छति** — *anugacchati* — "follows".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*anugacchati* is built on *anu*, "after", and *gacchati*, "goes", from the root √gam (MW). To follow is to go after; √gam is the root of *gacchāmi*, "I go", which you have already met.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

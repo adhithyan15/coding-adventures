@@ -14,7 +14,8 @@ romanization: "lāparvāh"
 concept_tag: UR-SIFAT195-LAPARVAH
 prerequisites: [UR-C195-zyada, UR-C195-bilkul]
 sounds: []
-roots: []
+roots: [persian-parva]
+etymology_hook: "lāparvāh: Arabic lā 'no' + Persian parvā 'care'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C195-bilkul]
 <!-- hl-knowledge: introduces=[UR-LEX-C195-SIFAT195-05]; assesses=[] -->
 
 **لاپرواہ** — *lāparvāh* — "careless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لاپرواہ** (*lāparvāh*) is "without care". It joins the Arabic *lā*, "no", and Persian *parvā*, "care, concern".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

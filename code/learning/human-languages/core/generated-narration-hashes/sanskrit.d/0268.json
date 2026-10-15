@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:4a1fa2f58090ec44",
+  "lessonIds": [
+    "SA-C268-service-recall",
+    "SA-C268-vittakosah",
+    "SA-C268-post-health-location",
+    "SA-C268-bank-police-location",
+    "SA-C268-service-location-practice",
+    "SA-C268-service-location-retrieval"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch268.txt",
+  "json": "sanskrit/narration/ch268.json",
+  "textHash": "fnv1a64:7979a09d63e8bc11",
+  "jsonHash": "fnv1a64:99d8b235c40fa7d7",
+  "findings": []
+}

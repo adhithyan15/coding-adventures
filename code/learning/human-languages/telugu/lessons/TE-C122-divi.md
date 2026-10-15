@@ -14,7 +14,8 @@ romanization: "dīvi"
 concept_tag: TE-THINGS122-DIVI
 prerequisites: [TE-C121-konda, TE-C122-jalapatam]
 sounds: []
-roots: []
+roots: [sanskrit-dvipa]
+etymology_hook: "dīvi ← Sanskrit dvīpa 'land, island', reshaped as a tadbhava (CDIAL 6691)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C122-jalapatam]
 <!-- hl-knowledge: introduces=[TE-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **దీవి** — *dīvi* — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దీవి** (*dīvi*) comes from Sanskrit *dvīpa*, "land, island", reshaped to Telugu sounds: a tadbhava (CDIAL 6691).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

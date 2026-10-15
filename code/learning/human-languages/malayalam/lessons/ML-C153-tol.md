@@ -14,7 +14,8 @@ romanization: "tōḷ"
 concept_tag: ML-THINGS153-TOL
 prerequisites: [ML-C153-urumpu, ML-C153-kotuku, ML-C31-afternoon-convergence]
 sounds: []
-roots: []
+roots: [dravidian-tol-shoulder]
+etymology_hook: "tōḷ: native Dravidian, one word with Tamil tōḷ and Kannada tōḷ(u) (DEDR 3564)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ML-C153-kotuku]
 <!-- hl-knowledge: introduces=[ML-LEX-C153-THINGS153-05]; assesses=[] -->
 
 **തോൾ** — *tōḷ* — "a shoulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തോൾ** (*tōḷ*) is native Dravidian, one word with Tamil *tōḷ* and Kannada *tōḷ(u)* (DEDR 3564).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

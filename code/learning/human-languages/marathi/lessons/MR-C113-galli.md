@@ -14,7 +14,8 @@ romanization: "gallī"
 concept_tag: MR-TOWN113-GALLI
 prerequisites: [MR-C113-dukan, MR-C113-rasta]
 sounds: []
-roots: []
+roots: [indo-aryan-gali]
+etymology_hook: "gallī: as Hindi galī 'lane', which CDIAL traces to *galī 'defile, lane' (CDIAL 4085)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C113-rasta]
 <!-- hl-knowledge: introduces=[MR-LEX-C113-TOWN113-03]; assesses=[] -->
 
 **गल्ली** — *gallī* — "a lane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**गल्ली** (*gallī*) matches Hindi *galī*, "lane", which CDIAL traces to a reconstructed *\*galī*, "defile, lane" (CDIAL 4085). CDIAL lists no Marathi form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

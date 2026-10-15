@@ -14,7 +14,8 @@ romanization: "sôrkār"
 concept_tag: BN-JAYGA244-SORKAR
 prerequisites: [BN-C243-chibuk, BN-C244-simanto]
 sounds: []
-roots: []
+roots: [persian-sarkar]
+etymology_hook: "sôrkār: usually traced to Persian sarkār 'government; lordship'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C244-simanto]
 <!-- hl-knowledge: introduces=[BN-LEX-C244-JAYGA244-02]; assesses=[] -->
 
 **সরকার** — *sôrkār* — "a government".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সরকার** (*sôrkār*) is a loan, usually traced to Persian *sarkār*, "government; lordship".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

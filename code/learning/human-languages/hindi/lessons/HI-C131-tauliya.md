@@ -14,7 +14,8 @@ romanization: "tauliyā"
 concept_tag: HI-THINGS131-TAULIYA
 prerequisites: [HI-C130-dhaga, HI-C130-kanghi]
 sounds: []
-roots: []
+roots: [portuguese-toalha]
+etymology_hook: "tauliyā: usually traced to Portuguese toalha 'towel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C130-kanghi]
 <!-- hl-knowledge: introduces=[HI-LEX-C131-THINGS131-01]; assesses=[] -->
 
 **तौलिया** — *tauliyā* — "a towel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तौलिया** (*tauliyā*) is usually traced to Portuguese *toalha*, "towel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 232,
-  "sourceHash": "fnv1a64:deb55242e3853b7a",
+  "sourceHash": "fnv1a64:d37d56d8b3fcc729",
   "lessonIds": [
     "SA-C232-vartate",
     "SA-C232-jayate",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch232.txt",
   "json": "sanskrit/narration/ch232.json",
-  "textHash": "fnv1a64:53efecd44bbedc7e",
-  "jsonHash": "fnv1a64:ab8f0e1ce0a4b426",
+  "textHash": "fnv1a64:04dac7defa2f8db1",
+  "jsonHash": "fnv1a64:f4c23c215dfa6522",
   "findings": []
 }

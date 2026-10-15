@@ -14,7 +14,8 @@ romanization: "kutira"
 concept_tag: ML-THINGS151-KUTIRA
 prerequisites: [ML-C150-kurumulaku, ML-C150-veluttulli]
 sounds: []
-roots: []
+roots: [dravidian-kutirai-horse]
+etymology_hook: "kutira: native Dravidian, one word with Tamil kutirai and Kannada kudire (DEDR 1711)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C150-veluttulli]
 <!-- hl-knowledge: introduces=[ML-LEX-C151-THINGS151-01]; assesses=[] -->
 
 **കുതിര** — *kutira* — "a horse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുതിര** (*kutira*) is native Dravidian, one word with Tamil *kutirai*, Kannada *kudire* and Telugu *kudira* (DEDR 1711).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

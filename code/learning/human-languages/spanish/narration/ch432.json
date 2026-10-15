@@ -4,7 +4,7 @@
   "chapter": 432,
   "title": "La Casa Por Dentro",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:66686b2b4dce6fb8",
+  "sourceHash": "fnv1a64:bba12daf1735aa20",
   "lessons": [
     {
       "id": "ES-C432-lavadora",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e14e9a3b88ff6d1",
+      "sourceHash": "fnv1a64:83197d7fac60ddac",
       "notice": null,
       "blocks": [
         {
@@ -80,6 +80,10 @@
             {
               "kind": "speech",
               "text": "Spanish names most household machines this way, so -dora is worth more to you than any single appliance. A machine that does something is usually that something plus this ending, and you can often reach the word without having met it."
+            },
+            {
+              "kind": "speech",
+              "text": "Lavar is Latin lavare, \"to wash\"."
             }
           ]
         },
@@ -155,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6b8136e50698e33",
+      "sourceHash": "fnv1a64:0791ddd786c5adaf",
       "notice": null,
       "blocks": [
         {
@@ -215,6 +219,10 @@
             {
               "kind": "speech",
               "text": "el contador del agua is the phrase you will actually meet, on notices about somebody coming to read it. Note the gender: this one is masculine where the washing machine was feminine, and nothing about the ending decides that — the machine takes whatever gender its own word already had."
+            },
+            {
+              "kind": "speech",
+              "text": "Contar is Latin computare, \"to reckon\"."
             }
           ]
         },
@@ -290,7 +298,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d8187428d2a0b0e",
+      "sourceHash": "fnv1a64:ad35a93a051bc26c",
       "notice": null,
       "blocks": [
         {
@@ -355,6 +363,10 @@
             {
               "kind": "speech",
               "text": "Two endings, two different jobs: -dor gives you who or what does it, -ería gives you where it is kept."
+            },
+            {
+              "kind": "speech",
+              "text": "Estante is an old form of estar, \"standing\": a shelf is what stands against the wall. Estar is Latin stare, \"to stand\"."
             }
           ]
         },
@@ -430,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3612c718207521ec",
+      "sourceHash": "fnv1a64:2114f55c09c12317",
       "notice": null,
       "blocks": [
         {
@@ -494,6 +506,10 @@
             {
               "kind": "speech",
               "text": "If you are keeping count, you have now reached four words in this chapter and three of them you could have guessed from a piece you already had."
+            },
+            {
+              "kind": "speech",
+              "text": "Tubo is Latin tubus, \"a pipe\"."
             }
           ]
         },
@@ -569,7 +585,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3abdd832666977f",
+      "sourceHash": "fnv1a64:b76917fb4c8b8883",
       "notice": null,
       "blocks": [
         {
@@ -615,7 +631,7 @@
             },
             {
               "kind": "speech",
-              "text": "It came into Spanish from Arabic, where the word named a raised, cushioned bench along a wall. Spanish took hundreds of words from Arabic over several centuries, and they tend to arrive whole like this rather than as pieces you can recombine."
+              "text": "It came into Spanish through French sofa, from Arabic ṣuffa, a raised, cushioned bench along a wall. A word taken from another language tends to arrive whole like this rather than as pieces you can recombine."
             },
             {
               "kind": "speech",
@@ -692,7 +708,7 @@
             },
             {
               "kind": "speech",
-              "text": "The sofa? (el sofá.) Could you have built it from a piece you had? (No.) Where did it come from? (Arabic.)"
+              "text": "The sofa? (el sofá.) Could you have built it from a piece you had? (No.) Where did it come from? (Arabic, through French.)"
             }
           ]
         }

@@ -14,7 +14,8 @@ romanization: "gaḍḍī"
 concept_tag: PA-TOWN90-GADDI
 prerequisites: [PA-C90-baink, PA-C90-sateshan]
 sounds: []
-roots: []
+roots: [indo-aryan-gadda]
+etymology_hook: "gaḍḍī ← *gāḍḍa 'cart', a reconstructed form; a tadbhava (CDIAL 4116)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C90-sateshan]
 <!-- hl-knowledge: introduces=[PA-LEX-C90-TOWN90-05]; assesses=[] -->
 
 **ਗੱਡੀ** — *gaḍḍī* — "a car; a train".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੱਡੀ** (*gaḍḍī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*gāḍḍa*, "cart", a form CDIAL reconstructs from its descendants (CDIAL 4116). CDIAL thinks it possibly the same word as *\*garda*, "seat"; Punjabi now uses it for a car or a train.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

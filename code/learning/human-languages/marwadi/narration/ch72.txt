@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a lion, then the Marwadi for an elephant
 You'll want to know: बांदरो.
 बांदरो — bā̃dro — "a monkey".
 
+The word, taken apart.
+बांदरो (bā̃dro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vānara, "monkey". CDIAL lists Marwari bā̃dro under it (CDIAL 11515).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for an elephant, then the Marwadi for a monk
 
 You'll want to know: सांप.
 सांप — sā̃p — "a snake".
+
+The word, taken apart.
+सांप (sā̃p) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sarpa, "snake". CDIAL gives no Marwari form in this entry (CDIAL 13271); the match is through Hindi sā̃p and Gujarati sāp. It is built on the root sṛp, "to creep".
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for a monkey, then the Marwadi for a snake.
 You'll want to know: मोर.
 मोर — mor — "a peacock".
 
+The word, taken apart.
+मोर (mor) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mayūra, "peacock", through a shorter form CDIAL reconstructs, mōra, under which it lists the Old Marwari feminine moraḍī and Hindi and Gujarati mor (CDIAL 9865). CDIAL records proposals that the Sanskrit word came from Dravidian or from Austroasiatic.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a snake, then the Marwadi for a peacock.
 You'll want to know: बड़ो.
 बड़ो — baṛo — "big".
 
+The word, taken apart.
+बड़ो (baṛo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vaḍra, "big". CDIAL lists Marwari baṛo under it (CDIAL 11225). CDIAL thinks a link with Sanskrit vṛddha, "grown", scarcely likely.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a peacock, then the Marwadi for big.
 
 You'll want to know: छोटो.
 छोटो — chhoṭo — "small".
+
+The word, taken apart.
+छोटो (chhoṭo) is a tadbhava, a word inherited and reshaped by sound change. It comes from choṭṭa, "small", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5071); the match is through Hindi choṭā and Gujarati choṭũ.
 
 What you've built.
 One more word for this chapter.

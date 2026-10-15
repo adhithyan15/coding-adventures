@@ -14,7 +14,8 @@ romanization: "jībôntô"
 concept_tag: BN-GUN219-JIBONTO
 prerequisites: [BN-C218-mane, BN-C219-nokol]
 sounds: []
-roots: []
+roots: [sanskrit-jivanta]
+etymology_hook: "jībôntô ← Sanskrit jīvanta 'living', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C219-nokol]
 <!-- hl-knowledge: introduces=[BN-LEX-C219-GUN219-02]; assesses=[] -->
 
 **জীবন্ত** — *jībôntô* — "alive, living".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জীবন্ত** (*jībôntô*) is Sanskrit *jīvanta*, "living", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

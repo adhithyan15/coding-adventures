@@ -14,7 +14,8 @@ romanization: "pūmpāṟṟa"
 concept_tag: ML-THINGS153-PUMPARRA
 prerequisites: [ML-C152-tatta, ML-C153-pravu]
 sounds: []
-roots: []
+roots: [dravidian-pu-flower, dravidian-parra-moth]
+etymology_hook: "pūmpāṟṟa: native Dravidian, 'flower moth': pū (DEDR 4345) + pāṟṟa 'moth' (DEDR 4083)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C153-pravu]
 <!-- hl-knowledge: introduces=[ML-LEX-C153-THINGS153-02]; assesses=[] -->
 
 **പൂമ്പാറ്റ** — *pūmpāṟṟa* — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൂമ്പാറ്റ** (*pūmpāṟṟa*) is native Dravidian, "the flower moth": *pū*, "flower" (DEDR 4345), and *pāṟṟa*, "moth" (DEDR 4083, with Tulu *pāntè*, "butterfly"). DEDR 4345 compares Sanskrit *puṣpa*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

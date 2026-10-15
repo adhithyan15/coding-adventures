@@ -11,8 +11,8 @@ gloss: home; house, heard before reading
 concept_tag: GU-PLACE-HOME-HEARD
 prerequisites: [GU-C20-bajar]
 sounds: [aspirated-gh, rolled-r]
-roots: []
-etymology_hook: One new place contrasts with market by meaning before print.
+roots: [grha-sanskrit]
+etymology_hook: "ghar: usually taken as a popular form of Sanskrit gṛha 'house', a link CDIAL calls phonetically difficult (CDIAL 4428)"
 duration:
   max_seconds: 120
 requires:
@@ -38,6 +38,11 @@ reviews_of: [GU-C20-hear-bajar]
 <!-- hl-knowledge: introduces=[GU-LEX-GHAR-01]; assesses=[GU-LEX-BAJAR-01] -->
 
 Say *bajār* for market. Now listen twice: **ghar** means **home** or **house**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઘર** (*ghar*) is usually taken as a popular form of Sanskrit *gṛha*, "house", which it has largely replaced. CDIAL lists it under Middle Indo-Aryan *ghara*, "house", and calls that derivation phonetically difficult (CDIAL 4428).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-GHAR-01, GU-LEX-BAJAR-01] -->

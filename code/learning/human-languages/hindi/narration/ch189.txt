@@ -12,6 +12,9 @@ Before the new one: say the Hindi for an aunt, then the Hindi for a nephew.
 You'll want to know: चिट्ठी.
 चिट्ठी — ciṭṭhī — "a letter".
 
+The word, taken apart.
+चिट्ठी (ciṭṭhī) is a tadbhava, a word inherited and reshaped by sound change. It comes from ciṣṭa, "message", a form CDIAL reconstructs from its descendants (CDIAL 4832). CDIAL compares Avestan činasti, "makes known".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a nephew, then the Hindi for a letter.
 
 You'll want to know: कहानी.
 कहानी — kahānī — "a story".
+
+The word, taken apart.
+कहानी (kahānī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kathānaka, "a little tale" (CDIAL 2705). It is built on kathā, "story".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a letter, then the Hindi for a story.
 You'll want to know: सवाल.
 सवाल — savāl — "a question".
 
+The word, taken apart.
+सवाल (savāl) is a loan from Arabic suʾāl, "a question", which reached Hindi through Persian. Its Arabic root is s-ʾ-l (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for a story, then the Hindi for a question.
 You'll want to know: जवाब.
 जवाब — javāb — "an answer".
 
+The word, taken apart.
+जवाब (javāb) is a loan from Arabic jawāb, "an answer", which reached Hindi through Persian. Its Arabic root is j-w-b (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a question, then the Hindi for an answer.
 
 You'll want to know: ग़लती.
 ग़लती — ġaltī — "a mistake".
+
+The word, taken apart.
+ग़लती (ġaltī) is ġalat, "wrong", with the ending -ī that makes a noun. ġalat comes from Arabic ghalaṭ, "an error", through Persian; its root is gh-l-ṭ (Lane).
 
 What you've built.
 One more word for this chapter.

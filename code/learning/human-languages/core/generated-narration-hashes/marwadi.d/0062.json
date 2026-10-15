@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 62,
-  "sourceHash": "fnv1a64:146b8dec3a62c917",
+  "sourceHash": "fnv1a64:c63d8371e53575b0",
   "lessonIds": [
     "MW-C62-khirki",
     "MW-C62-kursi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch62.txt",
   "json": "marwadi/narration/ch62.json",
-  "textHash": "fnv1a64:bb3d214850465c37",
-  "jsonHash": "fnv1a64:e6471f1372e2b7f1",
+  "textHash": "fnv1a64:388b0645ad5ae2e0",
+  "jsonHash": "fnv1a64:6e7a37a8876a34e2",
   "findings": []
 }

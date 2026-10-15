@@ -14,7 +14,8 @@ romanization: "varan"
 concept_tag: ML-VASTU211-VARAN
 prerequisites: [ML-C210-taksi, ML-C211-dampatikal]
 sounds: []
-roots: []
+roots: [sanskrit-vara-suitor]
+etymology_hook: "varan ← Sanskrit vara 'suitor, bridegroom', a tatsama (CDIAL 11309)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C211-dampatikal]
 <!-- hl-knowledge: introduces=[ML-LEX-C211-VASTU211-02]; assesses=[] -->
 
 **വരൻ** — *varan* — "a bridegroom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വരൻ** (*varan*) ← Sanskrit *vara*, "suitor, bridegroom", taken over whole as a tatsama, with the masculine ending *-n* (CDIAL 11309).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

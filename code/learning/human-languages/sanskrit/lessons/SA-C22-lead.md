@@ -14,7 +14,8 @@ romanization: "nayati"
 concept_tag: SA-VERB-LEAD
 prerequisites: [SA-C22-hear, SA-C20-child]
 sounds: []
-roots: []
+roots: [sanskrit-nayati]
+etymology_hook: "nayati ← the root √nī 'lead' (MW); Bengali neoyā 'to take' comes from it (CDIAL 6966)"
 duration:
   max_seconds: 210
 requires:
@@ -44,6 +45,12 @@ reviews_of: [SA-C22-hear]
 **नयति** (*nayati*) — "he, she or it leads".
 
 From **√नी** (*nī*), 'to lead'. It is inside *netṛ*, 'leader', and *naya*, 'polity' — the art of leading people, which Sanskrit treats as a subject with a name.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Nayati* is the present of the root √nī, "to lead", already in the Rigveda (MW).
+It lives on as Bengali *neoyā*, "to take" (CDIAL 6966).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kaṛā"
 concept_tag: PA-THINGS121-KARA
 prerequisites: [PA-C120-kangan, PA-C121-vali]
 sounds: []
-roots: []
+roots: [sanskrit-kata]
+etymology_hook: "kaṛā ← Sanskrit kaṭaka 'twist of straw; bracelet', a tadbhava (CDIAL 2629)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C121-vali]
 <!-- hl-knowledge: introduces=[PA-LEX-C121-THINGS121-02]; assesses=[] -->
 
 **ਕੜਾ** — *kaṛā* — "a steel bracelet, a kara".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਕੜਾ** (*kaṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kaṭaka*, "twist of straw; bracelet" (CDIAL 2629). CDIAL notes that, outside Gujarati, the word grew into "ring, bracelet, chain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

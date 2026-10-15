@@ -14,7 +14,8 @@ romanization: "nāṭā"
 concept_tag: HI-ADJ-SHORT-STATURE
 prerequisites: [HI-C82-motaa]
 sounds: []
-roots: []
+roots: [indo-aryan-natta]
+etymology_hook: "nāṭā ← *naṭṭa 'defective', a form CDIAL reconstructs; it glosses the Hindi 'short, dwarfish' (CDIAL 6935)"
 duration:
   max_seconds: 240
 requires:
@@ -62,9 +63,9 @@ is busy:
 size word for a person's age and left the height meaning without an owner, and
 **नाटा** is what filled the hole.
 
-Sanskrit **नत** (*nata*) is behind it, meaning **bent, bowed, stooping** — the
-same root as *namaste*, where the bowing is a greeting. A *nāṭā* person is
-pictured as one closer to the ground.
+CDIAL traces it to a reconstructed *\*naṭṭa*, "defective", one of its groups of
+words for things stunted or lacking, and glosses the Hindi word "short,
+dwarfish" (CDIAL 6935).
 
 A note on using it. **नाटा** is plain rather than polite, and about a person it
 can land as blunt. When you want neutral, Hindi says *qad meṅ choṭā*, "short in
@@ -99,5 +100,5 @@ needing to remember which words agree.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C82-BODY-04, HI-LEX-C41-ADJ-02] -->
 
 [PAUSE 3s] Why can *choṭā* not mean *short* about a person? (About a person it
-means *younger*.) What did the Sanskrit root behind **नाटा** mean? (Bent or
-bowed — the same idea as the bow in *namaste*.)
+means *younger*.) What does CDIAL reconstruct behind **नाटा**? (*\*naṭṭa*,
+"defective": something stunted.)

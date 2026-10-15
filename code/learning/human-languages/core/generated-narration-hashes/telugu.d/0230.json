@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 230,
-  "sourceHash": "fnv1a64:accf46340b34eed6",
+  "sourceHash": "fnv1a64:4bff4b273f2447cf",
   "lessonIds": [
     "TE-C230-kavita",
     "TE-C230-citram",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch230.txt",
   "json": "telugu/narration/ch230.json",
-  "textHash": "fnv1a64:25d442c1a68feac3",
-  "jsonHash": "fnv1a64:4ea2ddb8dc82cfa8",
+  "textHash": "fnv1a64:e396e5540d0526e4",
+  "jsonHash": "fnv1a64:044d9175084f517a",
   "findings": []
 }

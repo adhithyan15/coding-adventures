@@ -12,6 +12,9 @@ Before the new one: say the Persian for an entrance, then the Persian for an exi
 You'll want to know: ورزشگاه.
 ورزشگاه — varzeshgâh — "a stadium".
 
+The word, taken apart.
+varzeshgâh is built from varzesh, "sport, exercise" (from varzidan, "to practise"), and gâh, "place": the place of sport. varzidan is inherited, usually traced to Middle Persian warzīdan.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for an exit, then the Persian for a stadium.
 
 You'll want to know: پایتخت.
 پایتخت — pâytakht — "a capital city".
+
+The word, taken apart.
+pâytakht is pâ, "foot", with takht, "throne": the foot of the throne, the seat of the ruler. Both are inherited; takht continues Middle Persian taxt (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a stadium, then the Persian for a capita
 You'll want to know: مرز.
 مرز — marz — "a border".
 
+The word, taken apart.
+marz is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian marz, "border". EtymDB takes it back to the Indo-European root mereǵ-, "edge, boundary", the root usually also given for English mark.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a capital city, then the Persian for a b
 You'll want to know: صخره.
 صخره — sakhre — "a rock, a cliff".
 
+The word, taken apart.
+sakhre is borrowed from Arabic ṣaḫra, "rock, great stone". Its Arabic root is ṣ-ḫ-r (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a border, then the Persian for a rock.
 
 You'll want to know: اقیانوس.
 اقیانوس — oqyânus — "an ocean".
+
+The word, taken apart.
+oqyânus is borrowed from Arabic ūqiyānūs, which goes back to Greek ōkeanos, the great outer sea (EtymDB). English ocean is the same Greek word.
 
 What you've built.
 One more word for this chapter.

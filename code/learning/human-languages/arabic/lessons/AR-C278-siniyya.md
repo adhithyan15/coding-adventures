@@ -14,7 +14,8 @@ romanization: "ṣīniyya"
 concept_tag: AR-SHAY278-SINIYYA
 prerequisites: [AR-C277-riyada, AR-C278-ghallaya]
 sounds: []
-roots: []
+roots: [sin-china]
+etymology_hook: "ṣīniyya: built from Ṣīn 'China' + -iyya: 'the Chinese (dish)'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C278-ghallaya]
 <!-- hl-knowledge: introduces=[AR-LEX-C278-SHAY278-02]; assesses=[] -->
 
 **صينية** — *ṣīniyya* — "a tray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صينية** (*ṣīniyya*) is built from *Ṣīn*, "China", with the ending *-iyya*: "the Chinese (dish)", once a porcelain tray.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dvenádtsat"
 concept_tag: RU-NUM1-TWELVE
 prerequisites: [RU-C75-quickly, RU-C75-eleven]
 sounds: []
-roots: []
+roots: [pie-dwoh, proto-indo-european-dekm]
+etymology_hook: "двенадцать is две на десять, 'two on ten', worn down"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C75-eleven]
 <!-- hl-knowledge: introduces=[RU-LEX-C75-NUM1-04]; assesses=[] -->
 
 **двенадцать** (*dvenádtsat*) — "twelve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**двенадцать** is *две на десять*, "two on ten", worn down from Old Russian *dŭvěnadesęte* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

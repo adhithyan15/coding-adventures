@@ -14,7 +14,8 @@ romanization: "raqaṣa"
 concept_tag: AR-VERB-RAQASA
 prerequisites: [AR-C60-dahika, AR-C60-baka]
 sounds: []
-roots: []
+roots: [r-q-ṣ]
+etymology_hook: "raqaṣa: built on the root r-q-ṣ, 'to dance, to move with a quick gait' (Lane); raqaṣa is the plain verb, 'he danced'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C60-baka]
 <!-- hl-knowledge: introduces=[AR-LEX-C60-VERBS60-05]; assesses=[] -->
 
 **رقص** — *raqaṣa* — "to dance (he danced)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رقص** (*raqaṣa*) is built on the native Arabic root *r-q-ṣ*, "to dance, to move with a quick gait" (Lane). *Raqaṣa* is the plain verb, "he danced".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Gujarati for a sparrow, then the Gujarati for a fish
 You'll want to know: લાલ.
 લાલ (lāl) — "red".
 
+The word, taken apart.
+લાલ (lāl) is a loan, usually traced to Persian lāl, "red".
+
 What you've built.
 One more word for red, yellow, green.
 
@@ -40,6 +43,9 @@ Before the new one: say the Gujarati for a fish, then the Gujarati for red.
 
 You'll want to know: પીળો.
 પીળો (pīḷo) — "yellow".
+
+The word, taken apart.
+પીળો (pīḷo) is a tadbhava. CDIAL lists Gujarati pīḷũ under the lexical Sanskrit pītala, "yellow", built on pīta, "yellow" (CDIAL 8233).
 
 What you've built.
 One more word for red, yellow, green.
@@ -70,6 +76,9 @@ Before the new one: say the Gujarati for red, then the Gujarati for yellow.
 You'll want to know: લીલો.
 લીલો (līlo) — "green". The colour of a પાન.
 
+The word, taken apart.
+લીલો (līlo) is a tadbhava of Sanskrit nīla, "dark blue, dark green, black" (CDIAL 7563). CDIAL lists it beside nīlũ and nīḷũ; the Gujarati word changed its first n to l.
+
 What you've built.
 One more word for red, yellow, green.
 
@@ -99,6 +108,9 @@ Before the new one: say the Gujarati for yellow, then the Gujarati for green.
 You'll want to know: વાદળી.
 વાદળી (vādaḷī) — "blue". It is built from વાદળ, cloud.
 
+The word, taken apart.
+વાદળી (vādaḷī) is built on vādaḷ, "cloud", which CDIAL lists, with vādḷī, "small cloud", under Sanskrit vārdala, "rainy day, bad weather" (CDIAL 11567).
+
 What you've built.
 One more word for red, yellow, green.
 
@@ -127,6 +139,9 @@ Before the new one: say the Gujarati for green, then the Gujarati for blue.
 
 You'll want to know: કાળો.
 કાળો (kāḷo) — "black".
+
+The word, taken apart.
+કાળો (kāḷo) is a tadbhava of Sanskrit kāla, "black, dark-blue" (CDIAL 3083). CDIAL reports a view that the Sanskrit word itself came from Dravidian.
 
 What you've built.
 One more word for red, yellow, green.

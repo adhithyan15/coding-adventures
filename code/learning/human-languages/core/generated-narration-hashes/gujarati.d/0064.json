@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 64,
-  "sourceHash": "fnv1a64:75cf0bb71353b847",
+  "sourceHash": "fnv1a64:072cd063d818bd2d",
   "lessonIds": [
     "GU-C64-flower",
     "GU-C64-leaf",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch64.txt",
   "json": "gujarati/narration/ch64.json",
-  "textHash": "fnv1a64:ca8587c272cbfe4c",
-  "jsonHash": "fnv1a64:dd5e4e98020de3f2",
+  "textHash": "fnv1a64:f52403c86e82a1ee",
+  "jsonHash": "fnv1a64:da041bb07f68a06e",
   "findings": []
 }

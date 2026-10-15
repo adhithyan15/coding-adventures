@@ -12,6 +12,7 @@ concept_tag: MR-WORD-MARATHI
 prerequisites: [MR-C05-bolne, MR-C03-mi]
 sounds: [retroflex-tha]
 roots: [maharashtra]
+etymology_hook: "marāṭhī ← Sanskrit mahārāṣṭrī 'the language of Mahārāṣṭra', a tadbhava (CDIAL 9952)"
 reviews_of: [MR-C05-bolne, MR-C03-mi]
 duration:
   max_seconds: 240

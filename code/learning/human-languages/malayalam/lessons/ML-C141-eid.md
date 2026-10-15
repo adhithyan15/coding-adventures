@@ -11,7 +11,8 @@ romanization: "perunnāḷ"
 concept_tag: ML-FEST-EID
 prerequisites: [ML-C141-vishu, ML-C141-christmas]
 sounds: []
-roots: []
+roots: [dravidian-peru-great, naal-day-dravidian]
+etymology_hook: "perunnāḷ: native Dravidian, 'the great day': peru 'great' (DEDR 4411) + nāḷ 'day' (DEDR 3656)"
 duration:
   max_seconds: 200
 requires:
@@ -40,6 +41,11 @@ reviews_of: [ML-C141-christmas]
 
 **പെരുന്നാൾ** (*perunnāḷ*) — "Eid", and also a church feast day: "the great day", with
 **നാൾ**, "day", at its end.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പെരുന്നാൾ** (*perunnāḷ*) is native Dravidian, "the great day": *peru*, "great" (DEDR 4411, with Tamil *peru*), with *nāḷ*, "day" (DEDR 3656).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

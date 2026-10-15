@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 29,
-  "sourceHash": "fnv1a64:029c22684c7aa2ed",
+  "sourceHash": "fnv1a64:d8b9a347b25e3758",
   "lessonIds": [
     "FA-C29-khun",
     "FA-C29-zanu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch29.txt",
   "json": "persian/narration/ch29.json",
-  "textHash": "fnv1a64:2d2b28664de98bde",
-  "jsonHash": "fnv1a64:89e7d2f0625e0c19",
+  "textHash": "fnv1a64:a2743c8cff876859",
+  "jsonHash": "fnv1a64:09e4021b8cb47394",
   "findings": []
 }

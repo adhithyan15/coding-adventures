@@ -14,7 +14,8 @@ romanization: "âsiyâb"
 concept_tag: FA-MAKAN156-ASIYAB
 prerequisites: [FA-C156-chah, FA-C156-kolbe]
 sounds: []
-roots: []
+roots: [persian-ab]
+etymology_hook: "âsiyâb: Persian âs 'millstone' + âb 'water' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C156-kolbe]
 <!-- hl-knowledge: introduces=[FA-LEX-C156-MAKAN156-03]; assesses=[] -->
 
 **آسیاب** — *âsiyâb* — "a mill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âsiyâb* is usually explained as *âs*, "millstone", with *âb*, "water": the water-driven mill. EtymDB derives it from *âb*, which is inherited (Middle Persian *āb*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

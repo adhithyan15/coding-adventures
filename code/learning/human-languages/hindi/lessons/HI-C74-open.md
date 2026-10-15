@@ -14,7 +14,8 @@ romanization: "khulā / khulnā"
 concept_tag: HI-ADJ-OPEN
 prerequisites: [HI-C73-drink, HI-C73-waiter, HI-C72-money, HI-C73-eating-house]
 sounds: []
-roots: []
+roots: [indo-aryan-khull]
+etymology_hook: "khulā ← *khull 'to be open', a reconstructed form; a tadbhava (CDIAL 3945)"
 duration:
   max_seconds: 240
 requires:
@@ -55,6 +56,11 @@ window. It is also used of a thing that is loose or unpacked: **खुला** (
 coins rather than a note, which is the phrase that will save you at a counter.
 
 The ु under the ख is the short *u* matra, hanging below.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खुला** (*khulā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khull*, "to be open", a form CDIAL reconstructs from its descendants (CDIAL 3945).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

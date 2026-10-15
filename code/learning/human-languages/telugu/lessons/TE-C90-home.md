@@ -11,7 +11,8 @@ romanization: "iṇṭiki"
 concept_tag: TE-LEAVE-HOME
 prerequisites: [TE-C90-care, TE-C90-soon]
 sounds: []
-roots: []
+roots: [dravidian-il-house]
+etymology_hook: "iṇṭiki: native illu 'house', adjective iṇṭi (DEDR 494), one word with Tamil il, + -ki 'to'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C90-soon]
 
 It is **ఇల్లు**, "a house", with the **-కి** "to" ending on it, and the house word changes shape
 to take it. **నేను ఇంటికి వెళ్తాను** — "I am going home".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఇంటికి** (*iṇṭiki*) is native Dravidian: *iṇṭi*, the form *illu*, "house", takes before an ending, which DEDR 494 lists with Tamil *il*, "house", followed by *-ki*, "to".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

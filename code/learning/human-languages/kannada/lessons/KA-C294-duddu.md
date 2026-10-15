@@ -14,7 +14,8 @@ romanization: "duḍḍu"
 concept_tag: KA-VASTU294-DUDDU
 prerequisites: [KA-C294-masale, KA-C294-catni]
 sounds: []
-roots: []
+roots: [dravidian-tuttu-coin]
+etymology_hook: "duḍḍu: native Dravidian, one word with Telugu duḍḍu (DEDR 3303)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C294-catni]
 <!-- hl-knowledge: introduces=[KA-LEX-C294-VASTU294-04]; assesses=[] -->
 
 **ದುಡ್ಡು** — *duḍḍu* — "money".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದುಡ್ಡು** (*duḍḍu*) is native Dravidian, one word with Telugu *duḍḍu* (DEDR 3303). DEDR lists *duḍḍu*, "a copper coin; money".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

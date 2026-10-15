@@ -14,7 +14,8 @@ romanization: "rasmī"
 concept_tag: AR-SIFA178-RASMI
 prerequisites: [AR-C177-matbukh, AR-C177-maqli]
 sounds: []
-roots: []
+roots: [r-s-m]
+etymology_hook: "rasmī: built on the root r-s-m, 'a trace, a mark' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C177-maqli]
 <!-- hl-knowledge: introduces=[AR-LEX-C178-SIFA178-01]; assesses=[] -->
 
 **رسمي** — *rasmī* — "official".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رسمي** (*rasmī*) is built on the native Arabic root *r-s-m*, "a trace, a mark" (Lane). *Rasmī* is *rasm*, "a mark, a prescribed form", with the adjective ending *-ī*; "official" is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

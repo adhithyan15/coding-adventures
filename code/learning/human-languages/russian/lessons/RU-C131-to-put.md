@@ -14,7 +14,8 @@ romanization: "klast"
 concept_tag: RU-VERB-TO-PUT
 prerequisites: [RU-C131-to-begin, RU-C131-to-visit]
 sounds: []
-roots: []
+roots: [slavic-klasti]
+etymology_hook: "класть ← Proto-Slavic *klasti; Lithuanian klóti 'to spread' and German laden 'to load' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C131-to-visit]
 <!-- hl-knowledge: introduces=[RU-LEX-C131-ACT131-03]; assesses=[] -->
 
 **класть** (*klast*) — "to put (flat)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**класть** ← Proto-Slavic *\*klasti*, present *\*kladǫ* — inherited. Vasmer relates it to Lithuanian *klóti*, "to spread", and Gothic *-hlaþan*, German *laden*, "to load": English *lade* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

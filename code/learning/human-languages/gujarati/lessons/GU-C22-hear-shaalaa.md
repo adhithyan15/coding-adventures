@@ -11,8 +11,8 @@ gloss: school, heard before it is shown as a reading target
 concept_tag: GU-PLACE-SCHOOL-HEARD
 prerequisites: [GU-C22-shahar]
 sounds: [voiceless-sh, long-aa, retroflex-lla]
-roots: []
-etymology_hook: A second useful place enters through listening, not decoding.
+roots: [sanskrit-shala]
+etymology_hook: "shāḷā ← Sanskrit śālā 'shed, stable, house', a semi-tatsama (CDIAL 12414)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: []
 
 Listen twice: **shāḷā**. It means **school**. Keep the two long *ā* sounds and
 the meaning together; ignore the printed form for now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**શાળા** (*shāḷā*) is a semi-tatsama: Sanskrit *śālā*, "shed, stable, house", borrowed after the old sound changes had run their course and then lightly reshaped (CDIAL 12414). CDIAL lists no Gujarati form there; Marathi *sāḷ*, "school", shows the inherited shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-SHAALAA-01] -->

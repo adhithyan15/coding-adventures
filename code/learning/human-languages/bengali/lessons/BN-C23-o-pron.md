@@ -11,8 +11,8 @@ gloss: him, her, the one standing there — the third job of a letter that has a
 concept_tag: BN-LEX-O-PRON
 prerequisites: [BN-C23-tini, BN-C21-oi, BN-C17-o, BN-C11-bondhu]
 sounds: []
-roots: []
-etymology_hook: "One syllable, three jobs — also, that, and him — and all three are the same gesture of the hand: away from me, over there, that one too. Bengali did not build three words because it did not need to."
+roots: [sanskrit-asau]
+etymology_hook: "o: the far head, beside Middle Bengali oū 'that' ← Sanskrit asau 'that' (CDIAL 972)"
 duration:
   max_seconds: 240
 requires:
@@ -54,6 +54,11 @@ Three jobs, one syllable, and they are told apart by position:
 | between two things | **also, and** |
 | in front of a noun, as **ওই** | **that** |
 | standing alone as a subject | **him, her** |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists Middle Bengali *oū* and *ohā*, "that", under Sanskrit *asau*, "that" (CDIAL 972), the old far pointer behind **ও**.
 
 ## Grammar Lens: near, there, and away
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C23-O-PRON-01, BN-LEX-C23-SHE-01, BN-LEX-C23-TINI-01, BN-LEX-C21-EI-01] -->

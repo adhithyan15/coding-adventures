@@ -14,7 +14,8 @@ romanization: "ḥuqna"
 concept_tag: AR-SIHHA201-HUQNA
 prerequisites: [AR-C200-jurh, AR-C200-sihha]
 sounds: []
-roots: []
+roots: [ḥ-q-n]
+etymology_hook: "ḥuqna: built on the root ḥ-q-n, 'to retain' (Lane); Lane's ḥuqna is a clyster, a medicine given by the gut"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C200-sihha]
 <!-- hl-knowledge: introduces=[AR-LEX-C201-SIHHA201-01]; assesses=[] -->
 
 **حقنة** — *ḥuqna* — "an injection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حقنة** (*ḥuqna*) is built on the native Arabic root *ḥ-q-n*, "to retain; to give a clyster" (Lane). Lane's *ḥuqna* is a clyster, a medicine given by the gut; the injection is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

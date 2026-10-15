@@ -15,7 +15,7 @@ concept_tag: TA-NERAM233-NERRU-MUNTINAM
 prerequisites: [TA-C233-vitiyal, TA-C233-nalai-marunal]
 sounds: []
 roots: [dravidian-nerunal-yesterday, sanskrit-dina]
-etymology_hook: "நேற்று முன்தினம் — nēṟṟu, short for nerunaṟṟu (DEDR 3758), + muṉ 'before' (DEDR 5020) + tiṉam ← Sanskrit dina"
+etymology_hook: "நேற்று முன்தினம் — nēṟṟu, probably short for nerunaṟṟu (DEDR 3758), + muṉ 'before' (DEDR 5020) + tiṉam ← Sanskrit dina"
 duration:
   max_seconds: 200
 requires:

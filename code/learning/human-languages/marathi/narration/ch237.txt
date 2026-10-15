@@ -12,6 +12,9 @@ Before the new one: say the Marathi for a booking, then the Marathi for a river 
 You'll want to know: परंपरा.
 परंपरा — paramparā — "a tradition".
 
+The word, taken apart.
+परंपरा (paramparā) is Sanskrit paramparā, "an unbroken series", taken over whole, a tatsama. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for a river valley, then the Marathi for a t
 
 You'll want to know: बोली.
 बोली — bolī — "a dialect".
+
+The word, taken apart.
+बोली (bolī) is a tadbhava, a word inherited and reshaped by sound change. It comes from bōll, "speak", a form CDIAL reconstructs from its descendants (CDIAL 9321). CDIAL glosses the Marathi word "language".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a tradition, then the Marathi for a dial
 You'll want to know: प्रसिद्धी.
 प्रसिद्धी — prasiddhī — "publicity, fame".
 
+The word, taken apart.
+प्रसिद्धी (prasiddhī) is Sanskrit prasiddhi, "success, celebrity", a tatsama built on pra, "forth", and siddha, "accomplished".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a dialect, then the Marathi for publicit
 You'll want to know: संकेतस्थळ.
 संकेतस्थळ — saṅketsthaḷ — "a website".
 
+The word, taken apart.
+संकेतस्थळ (saṅketsthaḷ) is a modern coinage of Sanskrit parts: saṅketa, "sign, appointment", and sthala, "ground, place" (CDIAL 13744).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for publicity, then the Marathi for a websit
 
 You'll want to know: कळफलक.
 कळफलक — kaḷphalak — "a keyboard".
+
+The word, taken apart.
+कळफलक (kaḷphalak) is kaḷ, "key, little contrivance", which CDIAL lists under Sanskrit kalā, "any practical art", a word it takes from Dravidian (CDIAL 2927), and Sanskrit phalaka, "board" (CDIAL 9053).
 
 What you've built.
 One more word for this chapter.

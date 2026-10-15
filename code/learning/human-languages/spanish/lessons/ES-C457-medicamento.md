@@ -11,6 +11,7 @@ concept_tag: ES-PHARM-MEDICAMENTO
 prerequisites: [ES-C456-sintesis-cuenta, ES-C394-medico, ES-C353-farmacia]
 sounds: [d-soft, nasal-n, stress-penultimate]
 roots: [medicus-latin]
+etymology_hook: "medicamento ← Latin medicus 'a doctor', from mederi 'to heal' — kin to médico"
 duration:
   max_seconds: 275
 requires:

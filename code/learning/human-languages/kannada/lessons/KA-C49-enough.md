@@ -11,7 +11,8 @@ romanization: "sāku"
 concept_tag: KA-WORD-ENOUGH
 prerequisites: [KA-C49-true, KA-C47-tooth]
 sounds: []
-roots: []
+roots: [dravidian-caal-suffice]
+etymology_hook: "sāku: native Dravidian, from sāl 'to suffice' (DEDR 2470); Tamil cāl"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C49-true]
 ಸಾಕು is a complete sentence with one word in it. Held up over a plate while someone is ladling rice, it means 'that's enough' and stops the ladle.
 
 No Sanskrit anywhere in it — ಸಾಕು is Kannada's own, resting on an inherited verb for sufficing. It covers a whole English shelf on its own: enough, plenty, stop, that will do. Kannada is content to let the situation and the tone sort out which.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಕು** (*sāku*) is native Dravidian, from *sāl*, "to suffice", and DEDR 2470 lists *sāku*, "it is enough", itself; the entry also has Tamil *cāl*, Telugu *cālu* and Malayalam *cāla*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

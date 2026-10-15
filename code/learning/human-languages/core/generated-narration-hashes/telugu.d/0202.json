@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 202,
-  "sourceHash": "fnv1a64:486aa1a93faece12",
+  "sourceHash": "fnv1a64:b5850393668b2695",
   "lessonIds": [
     "TE-C202-carcincu",
     "TE-C202-sampradincu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch202.txt",
   "json": "telugu/narration/ch202.json",
-  "textHash": "fnv1a64:ab8b12920cc5a1c9",
-  "jsonHash": "fnv1a64:e731170a6012f9e6",
+  "textHash": "fnv1a64:2549c1c2bbb78ea1",
+  "jsonHash": "fnv1a64:991000c1f6543242",
   "findings": []
 }

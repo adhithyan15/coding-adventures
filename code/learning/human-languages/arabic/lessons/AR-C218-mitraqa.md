@@ -14,7 +14,8 @@ romanization: "miṭraqa"
 concept_tag: AR-SHAY218-MITRAQA
 prerequisites: [AR-C217-sammaa, AR-C217-battariyya]
 sounds: []
-roots: []
+roots: [ṭ-r-q]
+etymology_hook: "miṭraqa: built on the root ṭ-r-q, 'to strike, to beat' (Lane); miṭraqa is an instrument noun, 'a thing to strike with'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C217-battariyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C218-SHAY218-01]; assesses=[] -->
 
 **مطرقة** — *miṭraqa* — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مطرقة** (*miṭraqa*) is built on the native Arabic root *ṭ-r-q*, "to strike, to beat" (Lane). *Miṭraqa* is an instrument noun, "a thing to strike with".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

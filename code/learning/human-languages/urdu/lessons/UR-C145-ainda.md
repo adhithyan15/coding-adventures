@@ -14,7 +14,8 @@ romanization: "āindā"
 concept_tag: UR-MUST145-AINDA
 prerequisites: [UR-C144-pesh-ana, UR-C145-mustaqbil]
 sounds: []
-roots: []
+roots: [persian-ayanda]
+etymology_hook: "āindā: usually traced to Persian āyanda 'coming'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C145-mustaqbil]
 <!-- hl-knowledge: introduces=[UR-LEX-C145-MUST145-02]; assesses=[] -->
 
 **آئندہ** — *āindā* — "next, in future". **آئندہ ہفتے** — *āindā hafte* — "next week". On its own it means "from now on": **آئندہ ایسا نہ کرنا۔** — *āindā aisā na karnā* — "Don't do that again."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آئندہ** (*āindā*) is a loan, usually traced to Persian *āyanda*, "coming". It is the present participle of *āmadan*, "to come".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

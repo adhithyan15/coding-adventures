@@ -14,7 +14,8 @@ romanization: "tez"
 concept_tag: PA-ADJ80-TEZ
 prerequisites: [PA-C80-garam, PA-C80-hauli]
 sounds: []
-roots: []
+roots: [persian-tez]
+etymology_hook: "tez: usually traced to Persian tēz 'sharp, swift'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C80-hauli]
 <!-- hl-knowledge: introduces=[PA-LEX-C80-ADJ80-05]; assesses=[] -->
 
 **ਤੇਜ਼** — *tez* — "fast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਤੇਜ਼** (*tez*) is a loan, usually traced to Persian *tēz*, "sharp, swift".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

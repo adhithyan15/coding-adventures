@@ -14,7 +14,8 @@ romanization: "cāraniṟaṁ"
 concept_tag: ML-GUNAM245-CARANIRAM
 prerequisites: [ML-C245-niram, ML-C245-tavittu]
 sounds: []
-roots: []
+roots: [sanskrit-kshara, dravidian-niram-colour]
+etymology_hook: "cāraniṟaṁ: cāram 'ash', from Sanskrit kṣāra (CDIAL 3674), + native niṟam 'colour' (DEDR 3680)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C245-tavittu]
 <!-- hl-knowledge: introduces=[ML-LEX-C245-GUNAM245-03]; assesses=[] -->
 
 **ചാരനിറം** — *cāraniṟaṁ* — "grey (ash-coloured)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ചാരനിറം** (*cāraniṟaṁ*) is "ash colour": *cāram*, "ash", from Sanskrit *kṣāra*, "alkali", whose descendants often mean "ashes" (CDIAL 3674), with native *niṟam*, "colour" (DEDR 3680).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

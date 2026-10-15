@@ -11,8 +11,8 @@ gloss: girl, heard and said before it is ever shown
 concept_tag: GU-PEOPLE-GIRL-HEARD
 prerequisites: [GU-C30-hear-chhokro]
 sounds: [chha, o-sign, ka, long-ii]
-roots: []
-etymology_hook: Here the -o and -ī endings do predict gender, which is why the book warned you twice that they usually do not.
+roots: [indo-aryan-chokara]
+etymology_hook: "chhokrī: the feminine of chhokro ← *chokkara 'boy', a reconstructed form (CDIAL 5070)"
 duration:
   max_seconds: 120
 requires:
@@ -39,6 +39,11 @@ reviews_of: [GU-C30-hear-chhokro, GU-C10-rotli]
 
 [PAUSE 3s] Say the word for boy. Now listen twice: **chhokrī**. It means
 **girl** — the pair of *chhokro*, and this time the *-o* and *-ī* endings really do mark gender.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**છોકરી** (*chhokrī*) is the feminine of *chhokro*, "boy". CDIAL lists *chhokro* under a reconstructed *\*chokkara*, a variant of *\*chokara*, "boy" (CDIAL 5070).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-CHHOKRI-01, GU-LEX-CHHOKRO-01, GU-GRAMMAR-GENDER-NOT-BY-ENDING] -->

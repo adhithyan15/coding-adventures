@@ -14,7 +14,8 @@ romanization: "dauṛṇo"
 concept_tag: MW-VERB-DAURNO
 prerequisites: [MW-C52-uthno, MW-C52-chalno]
 sounds: []
-roots: []
+roots: [sanskrit-dravati]
+etymology_hook: "dauṛṇo ← Sanskrit dravati 'runs', a tadbhava (CDIAL 6624, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C52-chalno]
 <!-- hl-knowledge: introduces=[MW-LEX-C52-VERBS52-05]; assesses=[] -->
 
 **दौड़णो** — *dauṛṇo* — "to run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दौड़णो** (*dauṛṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dravati*, "runs". CDIAL lists Marwari *doṛṇo* under it (CDIAL 6624). CDIAL explains the *ṛ* as an added suffix.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

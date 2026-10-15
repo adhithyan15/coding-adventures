@@ -12,7 +12,7 @@ concept_tag: AR-FUNC-REPEAT-REQUEST
 prerequisites: [AR-C41-ya, AR-C06-min-fadlik, AR-C37-la-afham]
 sounds: [shadda]
 roots: [k-r-r]
-etymology_hook: "كرّر is the doubled Form II of the root ك-ر-ر, 'to return, to repeat' — the same shape as فكّر in chapter thirty-two, and the root behind كرّة, 'a time, an instance', so 'repeat' in Arabic is built from 'do it another time'"
+etymology_hook: "karrir min faḍlik: karrir, Form II of k-r-r 'to return' (Lane), + min faḍlik 'from your favour'"
 duration:
   max_seconds: 245
 requires:
@@ -71,6 +71,11 @@ The inventory that measured this track said the repair kit was strong with one
 hole in it: sorry, excuse me, pardon, please and thank you were all taught, and
 *I do not understand* and *say it again* were not. Those two are what chapters
 thirty-seven and forty-one add, and between them they needed one new verb.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كرّر من فضلك** (*karrir min faḍlik*) is built from *karrir*, "repeat", the Form II command of the native root *k-r-r*, "to return" (Lane), and *min faḍlik*, "please", from *faḍl*, "favour", on *f-ḍ-l*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-FUNC-C41-KARRIR-01, AR-FUNC-C37-LA-AFHAM-01, AR-CONCEPT-SHUKRAN-21, AR-GRAMMAR-C41-YA-01] -->

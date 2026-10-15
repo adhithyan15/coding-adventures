@@ -14,8 +14,8 @@ romanization: "kuruma"
 concept_tag: JA-ANCHOR-KURUMA
 prerequisites: [JA-C132-sore, JA-W09-ku, JA-W03-ma, JA-W15-ro, JA-W132-so, JA-C118-honya, JA-C130-makka]
 sounds: [mora]
-roots: []
-etymology_hook: Kuruma first meant a wheel, and then anything that runs on wheels; a car is the sense it is used for most today.
+roots: [japanese-kuruma]
+etymology_hook: "kuruma: native Japanese, inherited, not borrowed; kanji 車 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -51,6 +51,11 @@ reviews_of: [JA-C132-sore, JA-W09-ku, JA-W03-ma, JA-W15-ro, JA-W132-so, JA-C118-
 Three beats: *ku–ru–ma*. The first and last signs are **く** and **ま**, and you
 write both. The middle one is new. It looks like **ろ** with a small loop tied at
 the bottom, and the next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**くるま** (*kuruma*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). JMdict still lists "wheel" among its senses, and the word named wheeled carts long before cars.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KURUMA, JA-SCRIPT-KU-01, JA-SCRIPT-MA-01] -->

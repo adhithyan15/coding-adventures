@@ -14,7 +14,8 @@ romanization: "zvonít"
 concept_tag: RU-VERB-ZVONIT
 prerequisites: [RU-C232-kopit, RU-C232-zanimat]
 sounds: []
-roots: []
+roots: [slavic-zvonu]
+etymology_hook: "звонить is from звон 'a ringing'; Latin sonus 'sound' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C232-zanimat]
 <!-- hl-knowledge: introduces=[RU-LEX-C232-ACT232-03]; assesses=[] -->
 
 **звонить** (*zvonít*) — "to ring, to phone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**звонить** comes from *звон*, "a ringing", Proto-Slavic *\*zvonŭ* — inherited. Vasmer relates it to Albanian *zë*, "voice", and Armenian *jayn*, "voice", and a variant root in Latin *sonus*, "sound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

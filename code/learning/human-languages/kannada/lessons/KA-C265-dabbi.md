@@ -14,7 +14,8 @@ romanization: "ḍabbi"
 concept_tag: KA-VASTU265-DABBI
 prerequisites: [KA-C264-ap, KA-C264-vidiyo]
 sounds: []
-roots: []
+roots: [hindustani-dabba-box]
+etymology_hook: "ḍabbi: probably Hindi ḍabbī 'box', from *ḍabba (CDIAL 5528), a word of non-Aryan origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C264-vidiyo]
 <!-- hl-knowledge: introduces=[KA-LEX-C265-VASTU265-01]; assesses=[] -->
 
 **ಡಬ್ಬಿ** — *ḍabbi* — "a tin, a container".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಡಬ್ಬಿ** (*ḍabbi*) is probably the northern word for "box", Hindi *ḍabbī*, *ḍabbā*, which CDIAL 5528 traces to a reconstructed *\*ḍabba*, "box", and calls non-Aryan in origin, citing a view that takes it from Dravidian. CDIAL does not list the Kannada word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

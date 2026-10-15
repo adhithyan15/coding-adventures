@@ -14,7 +14,8 @@ romanization: "shīk"
 concept_tag: AR-SHAY183-SHIK
 prerequisites: [AR-C183-tabi, AR-C183-tard]
 sounds: []
-roots: []
+roots: [english-cheque]
+etymology_hook: "shīk: a modern loan from English cheque or French chèque"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C183-tard]
 <!-- hl-knowledge: introduces=[AR-LEX-C183-SHAY183-03]; assesses=[] -->
 
 **شيك** — *shīk* — "a cheque".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شيك** (*shīk*) is a modern loan from English *cheque* or French *chèque*; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

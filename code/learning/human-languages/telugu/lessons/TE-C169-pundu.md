@@ -14,7 +14,8 @@ romanization: "puṇḍu"
 concept_tag: TE-AROGYAM169-PUNDU
 prerequisites: [TE-C168-santi, TE-C168-sahanam]
 sounds: []
-roots: []
+roots: [dravidian-pun-wound]
+etymology_hook: "puṇḍu: native Dravidian, one word with Tamil puṇ and Kannada puṇ (DEDR 4268)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C168-sahanam]
 <!-- hl-knowledge: introduces=[TE-LEX-C169-AROGYAM169-01]; assesses=[] -->
 
 **పుండు** — *puṇḍu* — "a sore, an ulcer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పుండు** (*puṇḍu*) is native Dravidian, one word with Tamil *puṇ* and Kannada *puṇ* (DEDR 4268). DEDR lists Telugu *puṇḍu*, "sore, ulcer, boil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

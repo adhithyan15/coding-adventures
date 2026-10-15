@@ -14,7 +14,8 @@ romanization: "bhariā"
 concept_tag: PA-ADJ82-BHARIA
 prerequisites: [PA-C81-uchcha, PA-C81-nivam]
 sounds: []
-roots: []
+roots: [sanskrit-bharati]
+etymology_hook: "bhariā: past participle of bharnā 'to fill' ← Sanskrit bharati 'bears, fills' (CDIAL 9397)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C81-nivam]
 <!-- hl-knowledge: introduces=[PA-LEX-C82-ADJ82-01]; assesses=[] -->
 
 **ਭਰਿਆ** — *bhariā* — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਭਰਿਆ** (*bhariā*) is the past participle of *bharnā*, "to fill", inherited from Sanskrit *bharati*, "bears, brings; fills". CDIAL lists *bharnā*, "to bear", from the Punjabi of Ludhiana, and Lahnda *bharaṇ*, "to fill" (CDIAL 9397).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

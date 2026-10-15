@@ -12,6 +12,9 @@ Before the new one: say the Bengali for a motorbike, then the Bengali for a lorr
 You'll want to know: শাশুড়ি.
 শাশুড়ি — shāshuṛi — "a mother-in-law".
 
+The word, taken apart.
+শাশুড়ি (shāshuṛi) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śvaśrū, "husband's or wife's mother" (CDIAL 12759). CDIAL lists Bengali sāsuṛi and the shorter sās.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for a lorry, then the Bengali for a mother-i
 
 You'll want to know: বর.
 বর — bôr — "a bridegroom".
+
+The word, taken apart.
+বর (bôr) is inherited from Sanskrit vara, "suitor, bridegroom", and has come down with almost no change (CDIAL 11309).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for a mother-in-law, then the Bengali for a 
 You'll want to know: কনে.
 কনে — kône — "a bride".
 
+The word, taken apart.
+কনে (kône) appears to go back to Sanskrit kanyā, "maiden", but CDIAL gives no Bengali form under that entry, only Assamese kanāi in a ritual sense (CDIAL 2737).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for a bridegroom, then the Bengali for a bri
 You'll want to know: বিয়ে.
 বিয়ে — biye — "a wedding".
 
+The word, taken apart.
+বিয়ে (biye) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from vivāha, "marriage" (CDIAL 11920). CDIAL lists Bengali biyā, "marriage".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a bride, then the Bengali for a wedding.
 
 You'll want to know: আত্মীয়.
 আত্মীয় — ātmīyô — "a relative".
+
+The word, taken apart.
+আত্মীয় (ātmīyô) is Sanskrit ātmīya, "one's own", taken over whole as a learned loan, a tatsama.
 
 What you've built.
 One more word for this chapter.

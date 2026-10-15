@@ -12,6 +12,9 @@ Before the new one: say the Latin for an elephant, then the Latin for a deer.
 You'll want to know: magnus, magna, magnum.
 magnus, magna, magnum — "big, great". English magnify.
 
+The word, taken apart.
+magnus is inherited, usually traced to Proto-Indo-European mgh2nos, "big", from megh2s, "great" (EtymDB 2.1); Greek megas, "great", is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a deer, then the Latin for big.
 
 You'll want to know: parvus, parva, parvum.
 parvus, parva, parvum — "small".
+
+The word, taken apart.
+parvus has no sure origin; it may belong with paucus, "few", and paulum, "a little", but the details are disputed.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for big, then the Latin for small.
 You'll want to know: longus, longa, longum.
 longus, longa, longum — "long".
 
+The word, taken apart.
+longus is inherited, usually traced to Proto-Indo-European dlongh-, "long" (EtymDB 2.1), with the first d lost. English long is probably a cousin.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for small, then the Latin for long.
 You'll want to know: brevis, breve.
 brevis, breve — "short, brief". English brief.
 
+The word, taken apart.
+brevis is inherited, usually traced to Proto-Indo-European mreghus, "short" (EtymDB 2.1); Greek brakhys, "short", is a cousin (Lewis & Short).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for long, then the Latin for short.
 
 You'll want to know: altus, alta, altum.
 altus, alta, altum — "high; deep". English altitude.
+
+The word, taken apart.
+altus is the old past participle of alō, "to nourish, to make grow" (Lewis & Short): high was first "grown tall". The root is usually traced to Proto-Indo-European h2el-, "to grow, to nourish" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

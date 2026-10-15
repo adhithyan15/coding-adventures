@@ -14,7 +14,8 @@ romanization: "koṭuṅkāṟṟŭ"
 concept_tag: ML-VASTU292-KOTUNKARRU
 prerequisites: [ML-C292-tira, ML-C292-nilavu]
 sounds: []
-roots: []
+roots: [dravidian-kodu-severe, dravidian-kal-wind]
+etymology_hook: "koṭuṅkāṟṟŭ: native Dravidian, 'fierce wind': koṭu (DEDR 2055) + kāṟṟŭ (DEDR 1481)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C292-nilavu]
 <!-- hl-knowledge: introduces=[ML-LEX-C292-VASTU292-03]; assesses=[] -->
 
 **കൊടുങ്കാറ്റ്** — *koṭuṅkāṟṟŭ* — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൊടുങ്കാറ്റ്** (*koṭuṅkāṟṟŭ*) is native Dravidian, "the fierce wind": *koṭu*, "severe, cruel" (DEDR 2055, with Tamil *koṭu*), and *kāṟṟŭ*, "wind" (DEDR 1481).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

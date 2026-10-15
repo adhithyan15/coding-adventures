@@ -49,7 +49,7 @@ reviews_of: [FR-C07-lundi, FR-C07-lune]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**mardi** is **Martis diēs**, "the day of **Mars**" — the god of war, and the
+**mardi** is Latin **Martis diēs**, "the day of **Mars**" — the god of war, and the
 red planet named for him.
 
 ## Why it's said this way: the war-god, translated

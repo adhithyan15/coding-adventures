@@ -14,7 +14,8 @@ romanization: "vetanam"
 concept_tag: SA-THG162-VETANAM
 prerequisites: [SA-C161-nupuram, SA-C161-kundalam]
 sounds: []
-roots: []
+roots: [sanskrit-vetana]
+etymology_hook: "vetana 'wages' (Manu); grammarians say √vī, MW thinks rather √vṛt 'turn'; origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C161-kundalam]
 <!-- hl-knowledge: introduces=[SA-LEX-C162-THG162-01]; assesses=[] -->
 
 **वेतनम्** — *vetanam* — "wages, salary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vetana* "wages, hire, salary" appears from Manu on. The grammarians derive it from √vī, while MW thinks it rather belongs with √vṛt "turn" and *vartana* "livelihood", so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

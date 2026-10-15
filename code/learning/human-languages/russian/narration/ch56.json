@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "Mountain, Forest, River, Lake, Sea",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f163c54ceb4c5100",
+  "sourceHash": "fnv1a64:4e76b87cff88eb09",
   "lessons": [
     {
       "id": "RU-C56-mountain",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:018b2664c1200c92",
+      "sourceHash": "fnv1a64:2c36bdc42cf66160",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "гора (gorá) from Proto-Slavic gora — inherited, related to Sanskrit girí-, \"mountain\", Avestan gairi- and Lithuanian girià, \"forest\" (Vasmer). Bulgarian гора (gorá) still means \"forest\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64dbd8f2df8d0fa9",
+      "sourceHash": "fnv1a64:1ed63e84606047f4",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "лес (les) from Proto-Slavic lěsŭ — inherited. Its deeper origin is not certain: Vasmer relates it to Old English læs, \"pasture\", and English dialect leasow, and finds a link with Lithuanian laĩškas, \"leaf\", doubtful, while Trubachev, in a note, thinks it the most likely."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f680a113acf2da5b",
+      "sourceHash": "fnv1a64:a678d5c54271e015",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "река (reká) from Proto-Slavic rěka — inherited, from a root \"to flow\". Vasmer lists Sanskrit rīyate, \"begins to flow\", Latin rīvus, \"a stream\", and Gaulish Rēnos, the Rhine."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50e58977acef65e1",
+      "sourceHash": "fnv1a64:cd614a1b165a456e",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "озеро (ózero) from Proto-Slavic ezero — inherited, a cousin of Lithuanian ẽžeras and Latvian ezers, \"lake\" (Vasmer). East Slavic turned the first je- into о-: compare Old Church Slavonic jezero."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a134e25a39fbe06e",
+      "sourceHash": "fnv1a64:12d6195e30342268",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "море (móre) from Proto-Slavic morje — inherited. Vasmer lists Lithuanian mãrios, \"lagoon\", Gothic marei, Old Irish muir and Latin mare, all \"sea\": English mere, \"a lake\", is a cousin. He gives \"marsh\" as a possible older sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

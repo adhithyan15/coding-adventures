@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a Japanese serow, then the Japanese for
 You'll want to know: なわ.
 なわ — nawa — "a rope (of straw)".
 
+The word, taken apart.
+なわ (nawa) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a water flask, then the Japanese for a 
 
 You'll want to know: はしご.
 はしご — hashigo — "a ladder".
+
+The word, taken apart.
+はしご (hashigo) is a native word, inherited rather than borrowed, usually explained as hashi, an old word for a ladder or bridge, with ko voiced. JMdict marks it as usually written in kana.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a rope, then the Japanese for a ladder.
 You'll want to know: くさり.
 くさり — kusari — "a chain".
 
+The word, taken apart.
+くさり (kusari) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a ladder, then the Japanese for a chain
 You'll want to know: わた.
 わた — wata — "cotton wool".
 
+The word, taken apart.
+わた (wata) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a chain, then the Japanese for cotton w
 
 You'll want to know: ほんや.
 ほんや — honya — "a bookshop".
+
+The word, taken apart.
+ほんや (honya) (hon'ya) mixes the two layers: hon, "book", the on'yomi of its first character, borrowed from Chinese (Middle Chinese pwonX), and native ya, "house, shop" (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

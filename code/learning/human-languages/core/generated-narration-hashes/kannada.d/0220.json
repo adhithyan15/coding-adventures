@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 220,
-  "sourceHash": "fnv1a64:8b9ef7477582677a",
+  "sourceHash": "fnv1a64:5fe9ee9597e472cb",
   "lessonIds": [
     "KA-C220-muccala",
     "KA-C220-biru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch220.txt",
   "json": "kannada/narration/ch220.json",
-  "textHash": "fnv1a64:25020129d6681211",
-  "jsonHash": "fnv1a64:242008beb64f703f",
+  "textHash": "fnv1a64:ad3f8c6392f35fe4",
+  "jsonHash": "fnv1a64:af9c28cea92f6919",
   "findings": []
 }

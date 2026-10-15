@@ -14,7 +14,8 @@ romanization: "ārsā"
 concept_tag: MR-HOME91-ARSA
 prerequisites: [MR-C90-jamin, MR-C91-jina]
 sounds: []
-roots: []
+roots: [sanskrit-adarsha]
+etymology_hook: "ārsā ← Sanskrit ādarśa 'mirror', a tadbhava (CDIAL 1143)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C91-jina]
 <!-- hl-knowledge: introduces=[MR-LEX-C91-HOME91-02]; assesses=[] -->
 
 **आरसा** — *ārsā* — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आरसा** (*ārsā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ādarśa*, "mirror" (CDIAL 1143). It is built on *dṛś*, "to see".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

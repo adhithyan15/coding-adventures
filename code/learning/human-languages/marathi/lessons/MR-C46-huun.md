@@ -12,6 +12,7 @@ concept_tag: MR-POSTP-HUUN
 prerequisites: [MR-R45-with, MR-A1F01-shahar]
 sounds: [matra-oo]
 roots: []
+etymology_hook: "-hūn 'from': origin not settled; CDIAL has no entry for the ending"
 duration:
   max_seconds: 220
 requires:
@@ -64,6 +65,11 @@ give you two more:
 Notice what happened to the shape: **इथे** ends in **-ए** and the ending
 replaced it, exactly as it does on **पुणे**. The rule you learned in chapter
 forty-one is doing all the work.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of the ending **-हून** (*-hūn*) is not settled. CDIAL has no entry for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-POSTP-HUUN, MR-GRAMMAR-OBLIQUE, MR-LEX-GHAR, MR-LEX-UJVA, MR-LEX-YENE] -->

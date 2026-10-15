@@ -392,7 +392,11 @@
       "id": "SA-A1-POS-02",
       "category": "Ṣaṣṭhī — possession",
       "label": "possession, several possessors: our and your-plural",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C259-ASMAKAM-01",
+        "SA-LEX-C259-YUSMAKAM-02",
+        "SA-GRAMMAR-C259-PLURAL-POSSESSORS-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -401,7 +405,7 @@
       "derivedFrom": [
         "A1-POS-02"
       ],
-      "note": "UNCOVERED. asmākam and yuṣmākam are taught nowhere. The track teaches the first and second person singular genitive only, so a learner can say 'my name' and never 'our house'."
+      "note": "Chapter 259 teaches asmākam and yuṣmākam one at a time after retrieving chapter 2's singular mama/tava contrast, then requires model-free selection between one and several possessors in already-known house and family frames. The probe names both forms and the productive contrast atom; these are genitives answering 'whose?', not agreeing possessive adjectives."
     },
     {
       "id": "SA-A1-POS-03",
@@ -570,7 +574,17 @@
       "id": "SA-A1-PRON-03",
       "category": "Sarvanāma — the pronoun",
       "label": "object pronouns",
-      "probe": null,
+      "probe": [
+        "SA-PRON-C260-MAM-01",
+        "SA-PRON-C260-TVAM-02",
+        "SA-GRAMMAR-C260-SINGULAR-OBJECTS-03",
+        "SA-PRON-C261-AVAM-01",
+        "SA-PRON-C261-YUVAM-02",
+        "SA-GRAMMAR-C261-DUAL-OBJECTS-03",
+        "SA-PRON-C262-ASMAN-01",
+        "SA-PRON-C262-YUSMAN-02",
+        "SA-GRAMMAR-C262-OBJECT-PERSON-NUMBER-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -580,7 +594,7 @@
         "A1-PRON-02",
         "A1-PRON-08"
       ],
-      "note": "UNCOVERED. mām, tvām and the rest are not taught. The track's sentences take a NOUN object throughout, so a learner can say 'I see the house' and not 'I see you'."
+      "note": "Closed by chapters 260-262. The six independent first- and second-person accusatives are taught one number at a time: mām/tvām, āvām/yuvām, then asmān/yuṣmān. A separate rule lesson makes the learner choose person and number, and a terminal retrieval produces all six in the already-known paśyati frame. This is deliberately not a claim that the first two personal-pronoun paradigms are complete: their short enclitic alternatives, respectful bhavantam and third-person objects remain outside this point."
     },
     {
       "id": "SA-A1-PRON-04",
@@ -1665,7 +1679,13 @@
       "id": "SA-A1-F-10",
       "category": "Likes, wishes and feelings",
       "label": "say what you are going to do",
-      "probe": null,
+      "probe": [
+        "SA-VERB-C263-GAMISYAMI-01",
+        "SA-GRAMMAR-C263-FUTURE-FIRST-SINGULAR-02",
+        "SA-VERB-C264-KARISYAMI-01",
+        "SA-VERB-C264-PATHISYAMI-02",
+        "SA-PATTERN-C264-NEAR-TERM-PLAN-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -1676,7 +1696,7 @@
         "A1-F3-05",
         "A1-F3-06"
       ],
-      "note": "UNCOVERED. There is no future tense anywhere in the track and no periphrastic intention frame. Chapter 56 gave the track a past and left this untouched on purpose: śvaḥ ('tomorrow') has been taught since chapter 4 and is still the one relative day a learner cannot build a sentence around."
+      "note": "Closed by chapters 263-264. Chapter 139 already supplied third-person future recognition; the new ramp bridges from gamiṣyati to first-person gamiṣyāmi, then adds kariṣyāmi and paṭhiṣyāmi before two model-free rounds of near-term planning with śvaḥ and paraśvaḥ. The slice is explicitly first-person singular, not a complete future paradigm."
     },
     {
       "id": "SA-A1-F-11",
@@ -1999,7 +2019,14 @@
       "id": "SA-A1-SP-02",
       "category": "Spatial notions",
       "label": "relative position: left, right, above, below, in front, behind",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C93-TIME93-03",
+        "SA-LEX-C93-TIME93-04",
+        "SA-LEX-C94-LOC94-02",
+        "SA-LEX-C94-LOC94-03",
+        "SA-LEX-C94-LOC94-04",
+        "SA-LEX-C94-LOC94-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -2008,7 +2035,7 @@
       "derivedFrom": [
         "A1-NG3-02"
       ],
-      "note": "UNCOVERED. Not one of vāmam, dakṣiṇam, upari, adhaḥ, agre or paścāt is taught. A learner can say something is here and never where."
+      "note": "CLOSED by chapters 93-94 and jointly retrieved in SA-R99-first-pass-time-and-places: vāmaḥ (left), dakṣiṇaḥ (right; south), upari (above), adhaḥ (below), agre (in front) and pṛṣṭhataḥ (behind). The earlier null probe was stale: it said none of these meanings was taught even though all six introducing atoms already existed. It also named paścāt for 'behind', but the book teaches paścāt in chapter 92 only as temporal 'after, later'; chapter 94's pṛṣṭhataḥ is the actual spatial exponent and the atom this point probes."
     },
     {
       "id": "SA-A1-SP-03",
@@ -2220,7 +2247,18 @@
       "id": "SA-A1-EV-02",
       "category": "Evaluative notions",
       "label": "value and price",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C74-MARKET-01",
+        "SA-LEX-C74-MARKET-02",
+        "SA-LEX-C74-MARKET-03",
+        "SA-LEX-C87-NUMBERS-03",
+        "SA-LEX-C138-ACT138-01",
+        "SA-LEX-C185-WHY185-01",
+        "SA-LEX-C215-QUAL215-05",
+        "SA-LEX-C248-THG248-03",
+        "SA-VERB-C266-KRINAMI-01",
+        "SA-PATTERN-C266-MARKET-EXCHANGE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -2231,7 +2269,7 @@
         "A1-NE12-03",
         "A1-NE15-01"
       ],
-      "note": "UNCOVERED. No word for money, price, cost, buying or selling appears in the track. A whole transactional field is absent."
+      "note": "Covered by composing the already-owned money, price, buying, selling, number, value and rupee vocabulary with chapter 266's first-person buyer form and independently retrieved price exchange. This is a small A1 transaction, not complete commerce or currency coverage."
     },
     {
       "id": "SA-A1-EV-03",
@@ -3083,7 +3121,19 @@
       "id": "SA-A1-M-02",
       "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
       "label": "meals, the restaurant and ordering",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C97-LOC97-02",
+        "SA-LEX-C160-THG160-01",
+        "SA-LEX-KHADATI-EAT",
+        "SA-LEX-C29-COURTESY-01",
+        "SA-PRON-DATIVE-ME-01",
+        "SA-LEX-C72-HOUSEWORK-05",
+        "SA-LEX-ANNAM-FOOD",
+        "SA-LEX-PANIYAM-WATER",
+        "SA-LEX-KSHIRAM-MILK",
+        "SA-GRAMMAR-C265-DADATU-01",
+        "SA-PATTERN-C265-POLITE-ORDER-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -3094,13 +3144,30 @@
         "A1-NE05-01",
         "A1-NE05-05"
       ],
-      "note": "UNCOVERED. The track teaches fifteen foodstuffs (SA-A1-X-05) and no meal, no eating-place and no way to order. A pantry without a table."
+      "note": "COVERED. Chapters 97 and 160 already owned bhojanālayaḥ (restaurant) and bhojanam (meal); chapter 265 corrects that stale audit note, retrieves familiar food and drink, bridges known dadāti to the complete request form dadātu, and twice requires a model-free kṛpayā mahyaṃ X dadātu request. This closes one narrow project-defined meal-ordering point, not a complete imperative paradigm or restaurant vocabulary."
     },
     {
       "id": "SA-A1-M-03",
       "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
       "label": "the school as an institution: timetable, examination, marks, classroom language",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C83-SCHOOL-01",
+        "SA-LEX-C83-SCHOOL-02",
+        "SA-LEX-C83-SCHOOL-03",
+        "SA-LEX-C83-SCHOOL-04",
+        "SA-LEX-C83-SCHOOL-05",
+        "SA-LEX-C140-READ140-02",
+        "SA-LEX-C168-SCH168-01",
+        "SA-LEX-C169-SCH169-02",
+        "SA-LEX-C255-SCH255-04",
+        "SA-LEX-C255-SCH255-05",
+        "SA-LEX-C18-ASK-01",
+        "SA-LEX-C139-FUT139-02",
+        "SA-LEX-C139-FUT139-04",
+        "SA-VERB-C264-KARISYAMI-01",
+        "SA-VERB-C264-PATHISYAMI-02",
+        "SA-PATTERN-C267-SCHOOL-PLAN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -3112,7 +3179,7 @@
         "A1-NE06-05",
         "A1-NE06-06"
       ],
-      "note": "UNCOVERED. guruḥ and śiṣyaḥ are taught (SA-A1-X-12); vidyālayaḥ, parīkṣā and the classroom imperatives are not."
+      "note": "COVERED. Earlier chapters already own the school, student, teacher, lesson, examination, timetable, classroom, marks, homework and answer words. Chapter 267 retrieves them, adds one narrow school-plan frame, composes an exam-time question and answer with known near-future language, and twice requires a model-free homework-and-study plan. This closes one small A1 school-day plan, not complete classroom discourse, an educational system, grading practices or educational rights."
     },
     {
       "id": "SA-A1-M-04",
@@ -3197,7 +3264,15 @@
       "id": "SA-A1-M-08",
       "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
       "label": "services: post, bank, health service, police",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C120-THINGS120-02",
+        "SA-LEX-C268-SERVICE-01",
+        "SA-LEX-C84-PLACES-02",
+        "SA-LEX-C238-PPL238-04",
+        "SA-LEX-C14-DEIXIS-06",
+        "SA-LEX-ASTI",
+        "SA-PATTERN-C268-SERVICE-LOCATION-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -3210,13 +3285,29 @@
         "A1-NE11-03",
         "A1-NE11-04"
       ],
-      "note": "UNCOVERED, four proxy points, nothing in the corpus."
+      "note": "COVERED by chapter 268 as one bounded four-service location exchange: previously owned post office, hospital, policeman, and location-question atoms join one explicitly sourced financial-bank lexeme, with two model-free retrieval rounds. This does not claim directions, service transactions, emergency communication, police-station vocabulary, institutional knowledge, human validation, learner attainment, or exam readiness."
     },
     {
       "id": "SA-A1-M-09",
       "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
       "label": "shopping: the shop, the shopkeeper, buying",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C74-MARKET-01",
+        "SA-LEX-C74-MARKET-03",
+        "SA-LEX-C74-MARKET-04",
+        "SA-LEX-C74-MARKET-05",
+        "SA-LEX-C24-ASK-03",
+        "SA-LEX-C87-NUMBERS-03",
+        "SA-LEX-C185-WHY185-01",
+        "SA-LEX-C222-THG222-03",
+        "SA-LEX-C222-THG222-04",
+        "SA-LEX-C248-THG248-03",
+        "SA-LEX-DHANYAVADA",
+        "SA-GRAMMAR-C265-DADATU-01",
+        "SA-PATTERN-C265-POLITE-ORDER-02",
+        "SA-VERB-C266-KRINAMI-01",
+        "SA-PATTERN-C266-MARKET-EXCHANGE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -3227,7 +3318,7 @@
         "A1-NE12-01",
         "A1-NE15-02"
       ],
-      "note": "UNCOVERED. No verb of buying or selling and no word for a shop. See also SA-A1-EV-02 for price."
+      "note": "Covered by composing the already-owned shop, market, shopkeeper, goods, rupee, fruit, number and courtesy vocabulary with chapter 266's first-person buyer form, price turn and previously taught polite request. This is one small A1 shopping exchange, not bargaining or consumer-rights coverage."
     },
     {
       "id": "SA-A1-M-10",

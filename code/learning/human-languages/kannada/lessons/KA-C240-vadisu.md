@@ -14,7 +14,8 @@ romanization: "vādisu"
 concept_tag: KA-VERB-VADISU
 prerequisites: [KA-C240-kugu, KA-C240-mulugu]
 sounds: []
-roots: []
+roots: [vada]
+etymology_hook: "vādisu: Sanskrit vāda 'speech, dispute' (CDIAL 11507) + the verb ending -isu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C240-mulugu]
 <!-- hl-knowledge: introduces=[KA-LEX-C240-KRIYE240-04]; assesses=[] -->
 
 **ವಾದಿಸು** — *vādisu* — "to argue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ವಾದಿಸು** (*vādisu*) is Sanskrit *vāda*, "speech, dispute" (CDIAL 11507), made into a Kannada verb with *-isu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bhāṣāntar karṇe"
 concept_tag: MR-VERB-BHASANTAR-KARNE
 prerequisites: [MR-C223-photo-kadhne, MR-C223-samjavne]
 sounds: []
-roots: []
+roots: [sanskrit-bhasha, sanskrit-antara, sanskrit-karoti]
+etymology_hook: "bhāṣāntar: Sanskrit bhāṣā 'speech' (CDIAL 9479) + antara 'other'; karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C223-samjavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C223-ACT223-04]; assesses=[] -->
 
 **भाषांतर करणे** — *bhāṣāntar karṇe* — "to translate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**भाषांतर** is a compound of Sanskrit parts: *bhāṣā*, "speech" (CDIAL 9479), and *antara*, "other": speech made other. **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

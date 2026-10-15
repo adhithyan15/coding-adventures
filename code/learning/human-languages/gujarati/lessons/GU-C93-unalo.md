@@ -14,7 +14,8 @@ romanization: "unāḷo"
 concept_tag: GU-TIME93-UNALO
 prerequisites: [GU-C92-pal, GU-C93-mosam]
 sounds: []
-roots: []
+roots: [sanskrit-ushnakala]
+etymology_hook: "unāḷo ← Sanskrit uṣṇakāla 'hot season', a tadbhava (CDIAL 2391)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C93-mosam]
 <!-- hl-knowledge: introduces=[GU-LEX-C93-TIME93-02]; assesses=[] -->
 
 **ઉનાળો** (*unāḷo*) — "summer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ઉનાળો** (*unāḷo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *uṣṇakāla*, "hot season" (CDIAL 2391). It is *uṣṇa*, "hot", and *kāla*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

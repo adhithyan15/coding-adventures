@@ -14,7 +14,8 @@ romanization: "gītam"
 concept_tag: SA-SOUND-GITA
 prerequisites: [SA-C50-voice, SA-C48-monkey, SA-C49-again-and-again]
 sounds: []
-roots: []
+roots: [sanskrit-gita]
+etymology_hook: "gīta 'sung; song' ← the root √gai 'sing' (MW; CDIAL 4167)"
 duration:
   max_seconds: 210
 requires:
@@ -46,7 +47,13 @@ reviews_of: [SA-C50-voice]
 
 It stands on *gai*, "to sing". The *Bhagavad Gītā* is this same word wearing a feminine ending — "the song", and nothing more mysterious than that.
 
-No secure western cousin has been agreed for it, but it kept its ground at home: Hindi *gīt* and Bengali *gīt* are still the everyday word for a song. Neuter, ending in **-अम्**.
+No secure western cousin has been agreed for it, but it kept its ground at home: Hindi and Punjabi *gīt* are still the everyday word for a song. Neuter, ending in **-अम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Gīta* is the past participle of the root √gai, "to sing": "what is sung" (MW,
+CDIAL 4167).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

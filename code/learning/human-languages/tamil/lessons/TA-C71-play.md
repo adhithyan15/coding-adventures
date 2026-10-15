@@ -53,7 +53,7 @@ usually has a short one you already own hiding at one end of it.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**விளையாடு** (*viḷaiyāḍu*) is native Dravidian. DEDR 5438 lists Malayalam *viḷay-āṭuka*. The second half is *āṭu*, "to move, to dance".
+**விளையாடு** (*viḷaiyāḍu*) is native Dravidian. DEDR 5438 lists Malayalam *viḷay-āṭuka*. The second half is *āṭu*, "to move, to dance". DEDR compares, with a query, Sanskrit *vilāsa*, "play".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

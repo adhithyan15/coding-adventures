@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 200,
-  "sourceHash": "fnv1a64:4d022552791e19d8",
+  "sourceHash": "fnv1a64:bd102b480517d06e",
   "lessonIds": [
     "SA-C200-pathanam",
     "SA-C200-sravanam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch200.txt",
   "json": "sanskrit/narration/ch200.json",
-  "textHash": "fnv1a64:007f18a118b811b0",
-  "jsonHash": "fnv1a64:0a5f62cbe29a5370",
+  "textHash": "fnv1a64:90cb622612b2dbff",
+  "jsonHash": "fnv1a64:27380326db2986ed",
   "findings": []
 }

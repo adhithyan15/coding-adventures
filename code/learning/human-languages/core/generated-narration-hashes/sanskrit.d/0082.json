@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 82,
-  "sourceHash": "fnv1a64:9b3c49f7d6ce9f0e",
+  "sourceHash": "fnv1a64:36ab819b0a46b67f",
   "lessonIds": [
     "SA-C82-lake",
     "SA-C82-well",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch82.txt",
   "json": "sanskrit/narration/ch82.json",
-  "textHash": "fnv1a64:afbe17dd7d0cc733",
-  "jsonHash": "fnv1a64:d5db2878156c368f",
+  "textHash": "fnv1a64:8abb0f708c2856ce",
+  "jsonHash": "fnv1a64:edee8c9e0180d879",
   "findings": []
 }

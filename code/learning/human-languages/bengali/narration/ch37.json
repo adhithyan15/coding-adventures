@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Here, There, and Where",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:66d3beea572e61d1",
+  "sourceHash": "fnv1a64:1cbbae22ae7f6226",
   "lessons": [
     {
       "id": "BN-W05-tha",
@@ -192,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28beb97d190a38b4",
+      "sourceHash": "fnv1a64:ec1f5a4d2a705d41",
       "notice": null,
       "blocks": [
         {
@@ -246,6 +246,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The head এ- points back to Sanskrit ēṣa, \"this\" (CDIAL 2530). CDIAL has no entry for the place frame -khāne, so its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the grid, now in three dimensions",
           "segments": [
@@ -281,7 +292,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -339,7 +350,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -374,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5af94265f5b23934",
+      "sourceHash": "fnv1a64:897ca66e47f9243c",
       "notice": null,
       "blocks": [
         {
@@ -423,6 +434,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The far head ও- has Middle Bengali oū, \"that\", behind it, from Sanskrit asau (CDIAL 972); CDIAL has no entry for the frame -khāne, so its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: eight of nine",
           "segments": [
@@ -452,7 +474,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -510,7 +532,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -545,7 +567,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:5e81624ac1cf5ce3",
+      "sourceHash": "fnv1a64:99b555b01491e619",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -618,6 +640,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Its head is the question stem ka- (CDIAL 2574); CDIAL has no entry for kothā, so the rest is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "grammar",
           "title": "Grammar Lens: the question and its answer are the same shape",
           "segments": [
@@ -644,7 +677,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -684,7 +717,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

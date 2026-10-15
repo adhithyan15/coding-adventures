@@ -14,7 +14,8 @@ romanization: "sâlgard"
 concept_tag: FA-ZAMAN264-SALGARD
 prerequisites: [FA-C263-deldard, FA-C263-kabudi]
 sounds: []
-roots: []
+roots: [persian-sal]
+etymology_hook: "sâlgard: Persian sâl 'year' (EtymDB) + gard 'turn'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C263-kabudi]
 <!-- hl-knowledge: introduces=[FA-LEX-C264-ZAMAN264-01]; assesses=[] -->
 
 **سالگرد** — *sâlgard* — "an anniversary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâlgard* is *sâl*, "year", with *gard*, "turn": the turn of the year. Both are native; *sâl* continues Middle Persian *sāl* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

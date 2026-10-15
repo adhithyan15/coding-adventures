@@ -12,6 +12,9 @@ Before the new one: say the Bengali for hard, then the Bengali for soft.
 You'll want to know: ভিজে.
 ভিজে — bhije — "wet".
 
+The word, taken apart.
+ভিজে (bhije) is a tadbhava, a word inherited and reshaped by sound change. It comes from bhiyajyate, "is smeared, gets wet", a form CDIAL reconstructs from its descendants (CDIAL 9502). CDIAL lists Bengali bhijā, "to get wet"; bhije is its participle.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for soft, then the Bengali for wet.
 
 You'll want to know: শুকনো.
 শুকনো — shukno — "dry".
+
+The word, taken apart.
+শুকনো (shukno) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śuṣka, "dried" (CDIAL 12548). CDIAL writes the Bengali form sukhā.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for wet, then the Bengali for dry.
 You'll want to know: ভরা.
 ভরা — bhôrā — "full".
 
+The word, taken apart.
+ভরা (bhôrā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bharati, "bears, fills" (CDIAL 9397). CDIAL lists the Bengali verb bharā.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for dry, then the Bengali for full.
 You'll want to know: দ্রুত.
 দ্রুত — drutô — "fast".
 
+The word, taken apart.
+দ্রুত (drutô) is Sanskrit druta, "quick, swift", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for full, then the Bengali for fast.
 
 You'll want to know: ধীর.
 ধীর — dhīr — "slow".
+
+The word, taken apart.
+ধীর (dhīr) is inherited from Sanskrit dhīra, "steady, resolute", and has come down with almost no change (CDIAL 6817).
 
 What you've built.
 One more word for this chapter.

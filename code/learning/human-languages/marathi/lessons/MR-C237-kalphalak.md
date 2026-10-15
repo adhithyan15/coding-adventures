@@ -14,7 +14,8 @@ romanization: "kaḷphalak"
 concept_tag: MR-VASTU237-KALPHALAK
 prerequisites: [MR-C237-prasiddhi, MR-C237-sanketsthal]
 sounds: []
-roots: []
+roots: [sanskrit-kala-art, sanskrit-phalaka]
+etymology_hook: "kaḷphalak: kaḷ 'contrivance' ← kalā, from Dravidian (CDIAL 2927) + phalaka 'board' (CDIAL 9053)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C237-sanketsthal]
 <!-- hl-knowledge: introduces=[MR-LEX-C237-VASTU237-05]; assesses=[] -->
 
 **कळफलक** — *kaḷphalak* — "a keyboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कळफलक** (*kaḷphalak*) is *kaḷ*, "key, little contrivance", which CDIAL lists under Sanskrit *kalā*, "any practical art", a word it takes from Dravidian (CDIAL 2927), and Sanskrit *phalaka*, "board" (CDIAL 9053).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "eḍama"
 concept_tag: TE-LOC100-EDAMA
 prerequisites: [TE-C99-invitation, TE-C100-kudi]
 sounds: []
-roots: []
+roots: [dravidian-idam-left]
+etymology_hook: "eḍama: native Dravidian, one word with Tamil iṭam and Kannada eḍa 'left' (DEDR 449)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C100-kudi]
 <!-- hl-knowledge: introduces=[TE-LEX-C100-LOC100-02]; assesses=[] -->
 
 **ఎడమ** — *eḍama* — "left (not right)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎడమ** (*eḍama*) is native Dravidian, one word with Tamil *iṭam* and Kannada *eḍa*, "left side" (DEDR 449). DEDR compares the Indo-Aryan words for "left" in CDIAL 5539, such as Hindi *ḍāwā*, which CDIAL itself calls non-Aryan, perhaps from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

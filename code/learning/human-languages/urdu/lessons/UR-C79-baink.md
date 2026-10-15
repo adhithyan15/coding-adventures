@@ -14,7 +14,8 @@ romanization: "baink"
 concept_tag: UR-PLACE79-BAINK
 prerequisites: [UR-C79-dukan, UR-C79-sarak]
 sounds: []
-roots: []
+roots: [english-bank]
+etymology_hook: "baink ← English bank"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C79-sarak]
 <!-- hl-knowledge: introduces=[UR-LEX-C79-PLACE79-05]; assesses=[] -->
 
 **بینک** — *baink* — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بینک** (*baink*) is a loan from English *bank*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

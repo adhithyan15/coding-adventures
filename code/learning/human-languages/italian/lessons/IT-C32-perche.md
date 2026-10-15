@@ -65,10 +65,10 @@ as they are, and until this line it had no way to let you say *because*.
 ## The word, taken apart: for + what
 <!-- hl-knowledge: introduces=[IT-ETYMON-PERCHE-03]; assesses=[] -->
 
-**Perché** is **per** + **ché**. *Per* is "for, through" — the same *per* that is
-in English *per cent*, "for each hundred." *Ché* is the **che** of the last
-chapter, wearing an accent because it now carries the stress at the end of the
-word.
+**Perché** is **per** + **ché**, both inherited from Latin (EtymDB 2.1). *Per*,
+"for, through", is the *per* of English *per cent*. *Ché* is the **che** of the
+last chapter, from *quid*, wearing an accent because it now carries the
+stress at the end.
 
 So *perché* is literally "**for what**" — which is how a question about a reason
 becomes a statement of one. English does the same with another preposition:

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for daily, then the Bengali for winter; cold
 You'll want to know: বসন্ত.
 বসন্ত — bôsôntô — "spring".
 
+The word, taken apart.
+বসন্ত (bôsôntô) is Sanskrit vasanta, "spring season", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for winter; cold, then the Bengali for sprin
 
 You'll want to know: হেমন্ত.
 হেমন্ত — hemôntô — "late autumn".
+
+The word, taken apart.
+হেমন্ত (hemôntô) is Sanskrit hemanta, "winter", taken over whole as a learned loan, a tatsama (CDIAL 14164). The word inherited from it is heõt, "winter", which CDIAL lists; in Bengali the season it names is late autumn.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for spring, then the Bengali for late autumn
 You'll want to know: সেকেন্ড.
 সেকেন্ড — sekend — "a second".
 
+The word, taken apart.
+সেকেন্ড (sekend) is a loan from English second.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for late autumn, then the Bengali for a seco
 You'll want to know: শুরু.
 শুরু — shuru — "the beginning".
 
+The word, taken apart.
+শুরু (shuru) is a loan from Arabic shurūʿ, "beginning", which reached Bengali through Persian. Its Arabic root is sh-r-ʿ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for a second, then the Bengali for the begin
 
 You'll want to know: আজকাল.
 আজকাল — ājkāl — "nowadays".
+
+The word, taken apart.
+আজকাল (ājkāl) is āj, "today", from Sanskrit adya (CDIAL 242), + kāl, "tomorrow, yesterday", from Sanskrit kalya, "dawn" (CDIAL 3104): "today and tomorrow", so "these days".
 
 What you've built.
 One more word for this chapter.

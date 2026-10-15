@@ -14,7 +14,8 @@ romanization: "jāṇṇo"
 concept_tag: MW-VERB-JANNO
 prerequisites: [MW-C105-raivno, MW-C105-bachno]
 sounds: []
-roots: []
+roots: [sanskrit-janati]
+etymology_hook: "jāṇṇo ← Sanskrit jānāti 'knows', a tadbhava (CDIAL 5193, Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C105-bachno]
 <!-- hl-knowledge: introduces=[MW-LEX-C105-ACT105-03]; assesses=[] -->
 
 **जाणणो** — *jāṇṇo* — "to know".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जाणणो** (*jāṇṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jānāti*, "knows". CDIAL lists Marwari *jāṇṇo* under it (CDIAL 5193). English *know* is the same ancient word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

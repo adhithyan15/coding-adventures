@@ -14,7 +14,8 @@ romanization: "vaśaṁ"
 concept_tag: ML-STHALAM240-VASAM
 prerequisites: [ML-C240-annottu, ML-C240-innottu]
 sounds: []
-roots: []
+roots: [malayalam-vasam]
+etymology_hook: "vaśaṁ 'a side': of uncertain origin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C240-innottu]
 <!-- hl-knowledge: introduces=[ML-LEX-C240-STHALAM240-05]; assesses=[] -->
 
 **വശം** — *vaśaṁ* — "a side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വശം** (*vaśaṁ*) has the shape of a Sanskrit word, but which one is uncertain; it is not the Sanskrit *vaśa*, "power" (CDIAL 11430), in meaning.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

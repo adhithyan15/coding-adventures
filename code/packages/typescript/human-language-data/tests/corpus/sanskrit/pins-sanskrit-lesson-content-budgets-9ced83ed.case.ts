@@ -122,7 +122,30 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 1391 -> 1393: the chapter-65 A1 writing close adds one controlled
     // meaning-only question and one genuine timed form-plus-message paper. Both
     // reuse known atoms, so idiom, sense, and culture-claim totals do not move.
-    lessons: 1393,
+    // 1393 -> 1394: chapter 258 adds one model-free A2 connected-composition
+    // lesson. It reuses known atoms, so no content total moves.
+    // 1394 -> 1397: chapter 259 teaches asmākam, then yuṣmākam, then the
+    // productive one-versus-several possessor contrast. It introduces no
+    // idiom, sense, or culture claim.
+    // 1397 -> 1407: chapters 260-262 add six independent first-/second-person
+    // accusatives, two number-local contrasts, one cumulative choice lesson,
+    // and a terminal retrieval. They add no idiom, sense, or culture claim.
+    // 1407 -> 1416: chapters 263-264 bridge the known third-person future to
+    // three first-person singular plan forms, with four no-new-atom retrieval
+    // lessons. They add no idiom, sense, or culture claim.
+    // 1416 -> 1422: chapter 265 retrieves already-owned meal language, adds
+    // one request form and one order frame, then closes with two model-free
+    // retrievals. It adds no idiom, sense, or culture claim.
+    // 1422 -> 1428: chapter 266 retrieves already-owned market language, adds
+    // one first-person buyer form and one price-exchange frame, then closes
+    // with two model-free retrievals. It adds no idiom, sense, or culture claim.
+    // 1428 -> 1434: chapter 267 retrieves already-owned school language, adds
+    // one school-plan frame, then closes with two model-free school-day plans.
+    // It adds no idiom, sense, or culture claim.
+    // 1434 -> 1440: chapter 268 adds one sourced financial-bank word, joins
+    // four service referents to the known location question, and retrieves the
+    // exchange twice without a model.
+    lessons: 1440,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

@@ -15,6 +15,7 @@ concept_tag: FA-FOOD41-HAVIJ
 prerequisites: [FA-C41-moz, FA-C41-gowje]
 sounds: []
 roots: []
+etymology_hook: "havij: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C41-gowje]
 <!-- hl-knowledge: introduces=[FA-LEX-C41-FOOD41-05]; assesses=[] -->
 
 **هویج** — *havij* — "a carrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*havij* is treated as a native Persian word, but no older form is given in the sources used here, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

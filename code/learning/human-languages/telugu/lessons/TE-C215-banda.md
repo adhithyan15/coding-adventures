@@ -14,7 +14,8 @@ romanization: "baṇḍa"
 concept_tag: TE-STHALAM215-BANDA
 prerequisites: [TE-C214-jilla, TE-C215-edari]
 sounds: []
-roots: []
+roots: [dravidian-bande-rock]
+etymology_hook: "baṇḍa: native Dravidian, one word with Kannada baṇḍe (DEDR 3903)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C215-edari]
 <!-- hl-knowledge: introduces=[TE-LEX-C215-STHALAM215-02]; assesses=[] -->
 
 **బండ** — *baṇḍa* — "a rock, a boulder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బండ** (*baṇḍa*) is native Dravidian, one word with Kannada *baṇḍe* (DEDR 3903). DEDR lists Telugu *baṇḍa*, "rock, block of stone".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

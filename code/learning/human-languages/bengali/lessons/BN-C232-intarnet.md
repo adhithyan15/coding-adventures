@@ -14,7 +14,8 @@ romanization: "inṭārneṭ"
 concept_tag: BN-JINIS232-INTARNET
 prerequisites: [BN-C232-bhutta, BN-C232-chhola]
 sounds: []
-roots: []
+roots: [english-internet]
+etymology_hook: "inṭārneṭ ← English internet"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C232-chhola]
 <!-- hl-knowledge: introduces=[BN-LEX-C232-JINIS232-05]; assesses=[] -->
 
 **ইন্টারনেট** — *inṭārneṭ* — "the internet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইন্টারনেট** (*inṭārneṭ*) is a loan from English *internet*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

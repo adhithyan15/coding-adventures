@@ -14,7 +14,8 @@ romanization: "hivāḷā"
 concept_tag: MR-TIME127-HIVALA
 prerequisites: [MR-C126-roj, MR-C126-unhala]
 sounds: []
-roots: []
+roots: [indo-aryan-himakala]
+etymology_hook: "hivāḷā ← *himakāla 'winter-time', a reconstructed form; a tadbhava (CDIAL 14098)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C126-unhala]
 <!-- hl-knowledge: introduces=[MR-LEX-C127-TIME127-01]; assesses=[] -->
 
 **हिवाळा** — *hivāḷā* — "winter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हिवाळा** (*hivāḷā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*himakāla*, "winter-time", a form CDIAL reconstructs from its descendants (CDIAL 14098). It is *hima*, "cold, snow", and *kāla*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

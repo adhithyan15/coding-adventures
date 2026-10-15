@@ -14,7 +14,8 @@ romanization: "bālaḥ"
 concept_tag: SA-NOUN-CHILD
 prerequisites: [SA-C20-woman, SA-C18-how-many, SA-C19-eight]
 sounds: []
-roots: []
+roots: [sanskrit-bala-child]
+etymology_hook: "bāla 'young, a child': origin not settled; CDIAL 9216 tentatively links it to a Munda or Dravidian set"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,14 @@ readily as of a child. The feminine **बाला** (*bālā*) is a girl.
 
 Notice that the feminine here is *-ā*, not the *-ī* you just met. Sanskrit has
 more than one way to make a feminine, which is inconvenient and true.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Bāla* "young" has several proposed etymologies and none is settled. CDIAL 9216
+tentatively puts it in a set of words for a defect of body or mind, whose source
+may be Munda or Dravidian (CDIAL 9124). It lives on as Hindi *bāl* and *bālā*,
+"child".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

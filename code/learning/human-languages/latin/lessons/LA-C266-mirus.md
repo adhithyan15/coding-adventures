@@ -13,7 +13,8 @@ gloss: "wonderful, strange"
 concept_tag: LA-QUAL266-MIRUS
 prerequisites: [LA-C265-immo, LA-C265-saltem]
 sounds: []
-roots: []
+roots: [mirus-latin]
+etymology_hook: "mīrus 'wonderful' — usually traced to PIE *smeyros 'smiling'; English smile is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C265-saltem]
 <!-- hl-knowledge: introduces=[LA-LEX-C266-QUAL266-01]; assesses=[] -->
 
 **mīrus, mīra, mīrum** — "wonderful, strange".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mīrus** is inherited, usually traced to Proto-Indo-European *\*smeyros*, "smiling, astonishing", from *\*(s)mey-*, "to smile, to wonder" (EtymDB 2.1). English *smile* is a cousin, and English *miracle* comes from its family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

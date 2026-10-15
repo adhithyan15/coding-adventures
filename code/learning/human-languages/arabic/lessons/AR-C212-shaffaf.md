@@ -14,7 +14,8 @@ romanization: "shaffāf"
 concept_tag: AR-SIFA212-SHAFFAF
 prerequisites: [AR-C212-lazij, AR-C212-hashsh]
 sounds: []
-roots: []
+roots: [sh-f-f]
+etymology_hook: "shaffāf: built on the root sh-f-f, 'to be thin, to show through' (Lane); shaffāf is 'very thin, see-through'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C212-hashsh]
 <!-- hl-knowledge: introduces=[AR-LEX-C212-SIFA212-04]; assesses=[] -->
 
 **شفاف** — *shaffāf* — "transparent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شفاف** (*shaffāf*) is built on the native Arabic root *sh-f-f*, "to be thin, to show through" (Lane). *Shaffāf* is "very thin, see-through".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

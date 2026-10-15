@@ -14,7 +14,8 @@ romanization: "piyâderow"
 concept_tag: FA-MAKAN268-PIYADEROW
 prerequisites: [FA-C268-golkhane, FA-C268-jub]
 sounds: []
-roots: []
+roots: [persian-piyada]
+etymology_hook: "piyâderow: Persian piyâde 'on foot' (EtymDB) + row 'going'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C268-jub]
 <!-- hl-knowledge: introduces=[FA-LEX-C268-MAKAN268-05]; assesses=[] -->
 
 **پیاده رو** — *piyâderow* — "a pavement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*piyâderow* is *piyâde*, "on foot" (Middle Persian *payādag*, EtymDB), with *-row*, "going" (from *raftan*): the way for those on foot. Both are native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

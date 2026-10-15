@@ -14,7 +14,8 @@ romanization: "khosusi"
 concept_tag: FA-SEFAT271-KHOSUSI
 prerequisites: [FA-C271-mahalli, FA-C271-rasmi]
 sounds: []
-roots: []
+roots: [arabic-hususi]
+etymology_hook: "khosusi ← Arabic ḫuṣūṣī 'particular, private', root ḫ-ṣ-ṣ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C271-rasmi]
 <!-- hl-knowledge: introduces=[FA-LEX-C271-SEFAT271-05]; assesses=[] -->
 
 **خصوصی** — *khosusi* — "private".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khosusi* is borrowed from Arabic *ḫuṣūṣī*, "particular, private". Its Arabic root is *ḫ-ṣ-ṣ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

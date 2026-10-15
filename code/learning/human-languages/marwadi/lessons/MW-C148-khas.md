@@ -14,7 +14,8 @@ romanization: "khās"
 concept_tag: MW-QUAL148-KHAS
 prerequisites: [MW-C148-buro, MW-C148-jaruri]
 sounds: []
-roots: []
+roots: [arabic-khass]
+etymology_hook: "khās ← Arabic ḫāṣṣ 'particular, special', through Persian (Lane, root ḫ-ṣ-ṣ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C148-jaruri]
 <!-- hl-knowledge: introduces=[MW-LEX-C148-QUAL148-03]; assesses=[] -->
 
 **खास** — *khās* — "special".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**खास** (*khās*) is a loan from Arabic *ḫāṣṣ*, "particular, special", which reached Marwadi through Persian. Its Arabic root is *ḫ-ṣ-ṣ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

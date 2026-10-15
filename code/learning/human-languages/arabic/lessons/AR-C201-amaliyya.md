@@ -14,7 +14,8 @@ romanization: "ʿamaliyya"
 concept_tag: AR-SIHHA201-AMALIYYA
 prerequisites: [AR-C200-sihha, AR-C201-huqna]
 sounds: []
-roots: []
+roots: [ʿ-m-l]
+etymology_hook: "ʿamaliyya: built on the root ʿ-m-l, 'to work, to do' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C201-huqna]
 <!-- hl-knowledge: introduces=[AR-LEX-C201-SIHHA201-02]; assesses=[] -->
 
 **عملية** — *ʿamaliyya* — "an operation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عملية** (*ʿamaliyya*) is built on the native Arabic root *ʿ-m-l*, "to work, to do" (Lane). *ʿAmaliyya* is a modern abstract noun from *ʿamal*, "work": an operation.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

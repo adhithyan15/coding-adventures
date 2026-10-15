@@ -13,7 +13,8 @@ gloss: "a consul"
 concept_tag: LA-RES245-CONSUL
 prerequisites: [LA-C245-fur, LA-C245-latro]
 sounds: []
-roots: []
+roots: [consul-latin, consulere-latin]
+etymology_hook: "cōnsul 'consul' — kin to cōnsulō 'to deliberate'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C245-latro]
 <!-- hl-knowledge: introduces=[LA-LEX-C245-RES245-03]; assesses=[] -->
 
 **cōnsul, cōnsulis** — "a consul".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**cōnsul** belongs with *cōnsulō*, "to consult, to deliberate" (EtymDB 2.1); Old Latin wrote it *consol*. Where the root comes from is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

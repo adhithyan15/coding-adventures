@@ -14,7 +14,8 @@ romanization: "lāpṭōppŭ"
 concept_tag: ML-VASTU255-LAPTOPPU
 prerequisites: [ML-C254-val, ML-C254-ciraku]
 sounds: []
-roots: []
+roots: [english-laptop]
+etymology_hook: "lāpṭōppŭ ← English laptop"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C254-ciraku]
 <!-- hl-knowledge: introduces=[ML-LEX-C255-VASTU255-01]; assesses=[] -->
 
 **ലാപ്ടോപ്പ്** — *lāpṭōppŭ* — "a laptop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ലാപ്ടോപ്പ്** (*lāpṭōppŭ*) ← English *laptop*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

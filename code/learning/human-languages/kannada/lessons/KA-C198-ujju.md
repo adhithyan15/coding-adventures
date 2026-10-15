@@ -14,7 +14,8 @@ romanization: "ujju"
 concept_tag: KA-VERB-UJJU
 prerequisites: [KA-C197-mukhyopadhyaya, KA-C197-karyadarsi]
 sounds: []
-roots: []
+roots: [dravidian-urai-rub]
+etymology_hook: "ujju: native Dravidian, one word with Tamil urai and Telugu ora (DEDR 665)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C197-karyadarsi]
 <!-- hl-knowledge: introduces=[KA-LEX-C198-KRIYE198-01]; assesses=[] -->
 
 **ಉಜ್ಜು** — *ujju* — "to scrub, to rub, to brush (teeth)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉಜ್ಜು** (*ujju*) is native Dravidian, one word with Tamil *urai* and Telugu *ora* (DEDR 665). DEDR lists *urdu*, *uddu*, *ujju*, "to rub". DEDR 665 compares, with a query, Sanskrit *uñch*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -48,6 +48,11 @@ Both native Dravidian, both close cousins of Tamil's own words — a reminder
 that Malayalam and Tamil's vocabulary agreement varies concept by concept,
 not uniformly.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തല** (*tala*) and **കൈ** (*kai*) are both native Dravidian. DEDR 3103 lists *tala* with Tamil *talai*, Kannada *tale* and Telugu *tala*; DEDR 2023 lists *kai* with Tamil *kai* and Kannada *kay*.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04] -->
 

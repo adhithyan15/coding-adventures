@@ -14,7 +14,8 @@ romanization: "ekkiḷḷu"
 concept_tag: TE-AROGYAM211-EKKILLU
 prerequisites: [TE-C210-benga, TE-C211-timmiri]
 sounds: []
-roots: []
+roots: [dravidian-ekkil-hiccup]
+etymology_hook: "ekkiḷḷu: native Dravidian; DEDR 772 lists ekkili 'hiccup' with Malayalam ekkiḷ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C211-timmiri]
 <!-- hl-knowledge: introduces=[TE-LEX-C211-AROGYAM211-02]; assesses=[] -->
 
 **ఎక్కిళ్ళు** — *ekkiḷḷu* — "hiccups".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఎక్కిళ్ళు** (*ekkiḷḷu*) is native Dravidian. DEDR 772 lists *ekkili*, "hiccup", with Malayalam *ekkiḷ*, "hiccough"; **ఎక్కిళ్ళు** (*ekkiḷḷu*) is its plural.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

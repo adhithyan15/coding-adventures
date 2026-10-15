@@ -12,6 +12,9 @@ Before the new one: say the Urdu for meat, then the Urdu for a fish.
 You'll want to know: چاول.
 چاول — chāval — "rice".
 
+The word, taken apart.
+چاول (chāval) is a tadbhava, a word inherited and reshaped by sound change. It comes from cāvala, "husked rice", a form CDIAL reconstructs from its descendants (CDIAL 4749). CDIAL suggests, with a "possibly", that it shares a non-Aryan origin with Sanskrit taṇḍula, "rice".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a fish, then the Urdu for rice.
 
 You'll want to know: دال.
 دال — dāl — "lentils".
+
+The word, taken apart.
+دال (dāl) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from dāla, "kind of grain, split peas" (CDIAL 6309). CDIAL asks whether it is the same word as dāla, "splitting".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for rice, then the Urdu for lentils.
 You'll want to know: پھل.
 پھل — phal — "fruit".
 
+The word, taken apart.
+پھل (phal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from phala, "fruit" (CDIAL 9051). CDIAL compares Dravidian words for ripe fruit, such as Tamil paẓam.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for lentils, then the Urdu for fruit.
 You'll want to know: سیب.
 سیب — seb — "an apple".
 
+The word, taken apart.
+سیب (seb) is a loan, usually traced to Persian sēb, "apple".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for fruit, then the Urdu for an apple.
 
 You'll want to know: کیلا.
 کیلا — kelā — "a banana".
+
+The word, taken apart.
+کیلا (kelā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kadala, "banana plant" (CDIAL 2712). CDIAL takes the Sanskrit word from an Austroasiatic language.
 
 What you've built.
 One more word for this chapter.

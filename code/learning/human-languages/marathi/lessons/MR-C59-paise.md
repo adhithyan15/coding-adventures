@@ -11,7 +11,8 @@ gloss: money — a plural-only noun, and the first word this book has for the th
 concept_tag: MR-LEX-PAISE
 prerequisites: [MR-C58-ekonis, MR-R58-seventeen-to-twenty, MR-W59-ai-matra]
 sounds: [matra-ai, matra-e]
-roots: []
+roots: [indo-aryan-padamsha]
+etymology_hook: "paise: plural of paisā ← *padāṁśa 'quarter part'; CDIAL marks the Marathi word as taken from Hindi (CDIAL 7761)"
 duration:
   max_seconds: 220
 requires:
@@ -55,6 +56,11 @@ is why the plural is the natural form: money is counted in many small pieces.
 Now the numbers earn their keep. **किती पैसे?** — *how much money?* — is the
 question the speaking paper's transactional part is built on, and you have owned
 **किती** since chapter thirty-seven with nothing to ask it about.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पैसे** (*paise*) is the plural of *paisā*, which CDIAL traces to a reconstructed *\*padāṁśa*, "quarter part", built with *aṁśa*, "part". CDIAL marks the Marathi word as taken from Hindi *paisā*, "quarter anna" (CDIAL 7761).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PAISE, MR-SCRIPT-AI-MATRA-01, MR-LEX-ATHRA, MR-LEX-VIS, MR-LEX-SAAT, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-QUESTION-KITI, MR-GRAMMAR-POSSESSION, MR-POSTP-KADE] -->

@@ -14,7 +14,8 @@ romanization: "hesâbdâr"
 concept_tag: FA-KAR284-HESABDAR
 prerequisites: [FA-C284-postchi, FA-C284-ketabdar]
 sounds: []
-roots: []
+roots: [arabic-hisab, persian-dar-holder]
+etymology_hook: "hesâbdâr: hesâb ← Arabic ḥisāb (Lane) + Persian -dâr 'holder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C284-ketabdar]
 <!-- hl-knowledge: introduces=[FA-LEX-C284-KAR284-05]; assesses=[] -->
 
 **حسابدار** — *hesâbdâr* — "an accountant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hesâbdâr* is *hesâb*, "account", with *-dâr*, "holder": the account-keeper. *hesâb* is borrowed from Arabic *ḥisāb*, "reckoning" (root *ḥ-s-b*, Lane); *-dâr* is native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

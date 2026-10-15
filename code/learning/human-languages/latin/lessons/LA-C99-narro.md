@@ -13,7 +13,8 @@ gloss: "to tell, to relate"
 concept_tag: LA-VERB-NARRO
 prerequisites: [LA-C99-cognosco, LA-C99-curo]
 sounds: []
-roots: []
+roots: [narrare-latin, gnarus-latin]
+etymology_hook: "nārrō 'to tell' — usually derived from gnārus 'knowing': to make known"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C99-curo]
 <!-- hl-knowledge: introduces=[LA-LEX-C99-VERBA5-03]; assesses=[] -->
 
 **nārrō, nārrāre** — "to tell, to relate". English *narrate*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**nārrō** is usually derived from *gnārus*, "knowing, acquainted with" (Lewis & Short): to tell is to make known.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

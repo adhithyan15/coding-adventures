@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 121,
-  "sourceHash": "fnv1a64:98f20a0eb09fea8c",
+  "sourceHash": "fnv1a64:f502c7c620636954",
   "lessonIds": [
     "MR-C121-sakne",
     "MR-C121-jamne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch121.txt",
   "json": "marathi/narration/ch121.json",
-  "textHash": "fnv1a64:ee52572e942d67e6",
-  "jsonHash": "fnv1a64:9835623716fbc347",
+  "textHash": "fnv1a64:fe9abcfa8751c07f",
+  "jsonHash": "fnv1a64:b49fd01dce20c84f",
   "findings": []
 }

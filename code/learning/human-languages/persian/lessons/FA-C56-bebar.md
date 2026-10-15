@@ -14,7 +14,8 @@ romanization: "bebar"
 concept_tag: FA-ANIMALS56-BEBAR
 prerequisites: [FA-C55-parande, FA-C56-mush]
 sounds: []
-roots: []
+roots: [persian-babr]
+etymology_hook: "bebar ← Middle Persian babr (EtymDB); older origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C56-mush]
 <!-- hl-knowledge: introduces=[FA-LEX-C56-ANIMALS56-02]; assesses=[] -->
 
 **ببر** — *bebar* — "a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bebar* continues Middle Persian *babr*, "tiger" (EtymDB). EtymDB links it further to the Indo-European word for "beaver", but that link is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

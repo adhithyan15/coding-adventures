@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "Ball, Toy, Ring, Bangle, Shawl",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ecd31a8bdb2dc880",
+  "sourceHash": "fnv1a64:1808f33adcf7b1ac",
   "lessons": [
     {
       "id": "SA-C103-kandukah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3d0af746c946476",
+      "sourceHash": "fnv1a64:2c4d68f860858dbc",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kanduka \"a ball to play with\" is often taken to be borrowed from Dravidian: CDIAL 2727 and 4248, after Burrow and Mayrhofer, put it and its twin genduka down to a Dravidian source. The twin lives on as Hindi gẽd \"ball\" (CDIAL 4248)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fda88bb1f56ef004",
+      "sourceHash": "fnv1a64:b36c0d2905d80891",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "krīḍanaka is built from krīḍana \"playing\" (CDIAL 3593), from the root √krīḍ \"play, sport\", with the suffix -ka: \"a plaything\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4aaaf80079d0c4eb",
+      "sourceHash": "fnv1a64:c146dda06ef2ff11",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aṅgulīyaka is aṅgulīya \"finger-ring\" (CDIAL 136) with the suffix -ka, and aṅgulīya is built from aṅguli \"finger\" with the suffix -īya \"belonging to\": \"the thing that belongs on a finger\", a ring (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49bd16ade5738fb9",
+      "sourceHash": "fnv1a64:551f143eabf7ac6a",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kaṅkaṇa \"a bracelet\" is found from the Mahābhārata on (MW); MW cites only a grammarians' root √kai for it, so its origin is uncertain. It lives on as Punjabi kaṅgaṇ and Hindi kaknā \"bracelet\" (CDIAL 2597)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c140eca862abdb0b",
+      "sourceHash": "fnv1a64:83abc149a49690a0",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "uttarīya is built from uttara \"upper, higher\" with the suffix -īya \"belonging to\": the garment that belongs on the upper body (MW; CDIAL 1781). Marathi kept it as uttarī \"scarf\" (CDIAL 1781)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

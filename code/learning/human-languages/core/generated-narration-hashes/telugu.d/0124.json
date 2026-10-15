@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 124,
-  "sourceHash": "fnv1a64:026d3ae322b6f60c",
+  "sourceHash": "fnv1a64:a6cd554530f177ee",
   "lessonIds": [
     "TE-C124-jinka",
     "TE-C124-nakka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch124.txt",
   "json": "telugu/narration/ch124.json",
-  "textHash": "fnv1a64:e207cd8f297bf16a",
-  "jsonHash": "fnv1a64:a67b1789fa703714",
+  "textHash": "fnv1a64:48eb8be879671497",
+  "jsonHash": "fnv1a64:e9ccb59e8c45563a",
   "findings": []
 }

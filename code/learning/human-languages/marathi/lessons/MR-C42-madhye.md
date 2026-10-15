@@ -12,6 +12,7 @@ concept_tag: MR-POSTP-MADHYE
 prerequisites: [MR-R41-in-the-house]
 sounds: [halant-conjunct, matra-e]
 roots: [sanskrit-madhya]
+etymology_hook: "madhye: Sanskrit madhye 'in, among', the locative of madhya 'middle'; a tatsama (CDIAL 9804)"
 duration:
   max_seconds: 220
 requires:

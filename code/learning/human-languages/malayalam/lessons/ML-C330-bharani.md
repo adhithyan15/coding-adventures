@@ -14,7 +14,8 @@ romanization: "bharaṇi"
 concept_tag: ML-VASTU330-BHARANI
 prerequisites: [ML-C329-krikkarru, ML-C330-muti]
 sounds: []
-roots: []
+roots: [sanskrit-bharani]
+etymology_hook: "bharaṇi: has the shape of Sanskrit bharaṇī 'bearing' (CDIAL 9396); whether the jar's name comes from it is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C330-muti]
 <!-- hl-knowledge: introduces=[ML-LEX-C330-VASTU330-02]; assesses=[] -->
 
 **ഭരണി** — *bharaṇi* — "a jar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഭരണി** (*bharaṇi*) has the shape of Sanskrit *bharaṇī*, "bearing", also the name of a lunar asterism (CDIAL 9396); whether the jar's name comes from it is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

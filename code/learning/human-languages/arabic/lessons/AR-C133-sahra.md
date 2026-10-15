@@ -14,7 +14,8 @@ romanization: "ṣaḥrāʾ"
 concept_tag: AR-THINGS133-SAHRA
 prerequisites: [AR-C132-wadi, AR-C132-tall]
 sounds: []
-roots: []
+roots: [ṣ-ḥ-r]
+etymology_hook: "ṣaḥrāʾ: built on the root ṣ-ḥ-r, 'a dun, whitish-red colour' (Lane); ṣaḥrāʾ is the dun land, the desert"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C132-tall]
 <!-- hl-knowledge: introduces=[AR-LEX-C133-THINGS133-01]; assesses=[] -->
 
 **صحراء** — *ṣaḥrāʾ* — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صحراء** (*ṣaḥrāʾ*) is built on the native Arabic root *ṣ-ḥ-r*, "a dun, whitish-red colour" (Lane). *Ṣaḥrāʾ* is the dun land, the desert; English *Sahara* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

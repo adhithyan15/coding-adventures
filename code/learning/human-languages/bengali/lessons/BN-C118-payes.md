@@ -14,7 +14,8 @@ romanization: "pāyes"
 concept_tag: BN-THINGS118-PAYES
 prerequisites: [BN-C117-chal, BN-C118-rosogolla]
 sounds: []
-roots: []
+roots: [sanskrit-payasa]
+etymology_hook: "pāyes ← Sanskrit pāyasa 'rice boiled in milk', lightly reshaped; CDIAL has no Bengali form (CDIAL 8099)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C118-rosogolla]
 <!-- hl-knowledge: introduces=[BN-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **পায়েস** — *pāyes* — "rice pudding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পায়েস** (*pāyes*) is Sanskrit *pāyasa*, "rice boiled in milk", lightly reshaped. CDIAL has that entry but lists no Bengali form under it (CDIAL 8099).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

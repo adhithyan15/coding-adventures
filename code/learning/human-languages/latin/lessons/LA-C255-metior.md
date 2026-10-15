@@ -13,7 +13,8 @@ gloss: "to measure"
 concept_tag: LA-VERB-METIOR
 prerequisites: [LA-C255-calefacio, LA-C255-impleo]
 sounds: []
-roots: []
+roots: [metiri-latin]
+etymology_hook: "mētior 'to measure' — inherited, usually traced to PIE *meh1- 'to measure'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C255-impleo]
 <!-- hl-knowledge: introduces=[LA-LEX-C255-ACT255-05]; assesses=[] -->
 
 **mētior, mētīrī** — "to measure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**mētior** is inherited, usually traced to Proto-Indo-European *\*meh1-*, "to measure" (EtymDB 2.1); Greek *metron*, "a measure", is a cousin (Lewis & Short).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -46,7 +46,7 @@ You'll want to know: कलशः.
 कलशः (kalaśaḥ) — "a water-pot".
 कलशः (kalaśaḥ) is the round-bellied water-pot — the one set at a द्वारम् with leaves and a coconut on top, and any pot of that shape.
 Fill it with पानीयम् and it is doing its everyday job; put it at a doorway and it is doing its other one.
-Greek kalux, a husk or a cup, has been offered as a cousin, and Latin calix, which English keeps in chalice, names the same swelling shape.
+Greek kalux, a husk or a cup, has been offered as a cousin (MW), though the link is not settled, and Latin calix, which English keeps in chalice, names the same swelling shape.
 
 What you've built.
 The pot that holds water and welcomes people.
@@ -111,8 +111,11 @@ Before the new word: what did plavaḥ mean?
 You'll want to know: दर्पणः.
 दर्पणः (darpaṇaḥ) — "a mirror".
 दर्पणः (darpaṇaḥ) is a mirror — a disc of metal polished bright, centuries before glass could do the job.
-It stands on dṛp, "to be proud", so the object is named for what people do in front of it rather than for what it is made of. That is a small joke three thousand years old.
+It stands on dṛp, "to be proud", so the object is named for what people do in front of it rather than for what it is made of. That is a small joke, and an old one.
 Hindi darpaṇ is the same word, unchanged.
+
+The word, taken apart.
+MW explains darpaṇa as "causing vanity", built on darpa, "pride", from the root √dṛp; CDIAL 6201 marks the root with a question mark.
 
 What you've built.
 A mirror, named for vanity rather than for glass.
@@ -146,6 +149,9 @@ You'll want to know: छत्रम्.
 छत्रम् (chatram) is a parasol: the shade held over a rājā, and the umbrella carried in the rain.
 From chad, "to cover". The covering is the whole of it — what the छत्रम् (chatram) covers you from, sun or water, the word does not say.
 It went east as well as up in the world: Hindi chātā, the umbrella anyone carries, is this word worn smooth.
+
+The word, taken apart.
+Chattra is built on the root √chad, "to cover" (MW, CDIAL 4972). It lives on as Hindi chātā, "umbrella".
 
 What you've built.
 Five things made by hand: a wheel, a pot, a boat, a mirror, a parasol.

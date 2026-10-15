@@ -14,7 +14,8 @@ romanization: "rājīnāme"
 concept_tag: KA-KELASA232-RAJINAME
 prerequisites: [KA-C232-salu, KA-C232-anubhava]
 sounds: []
-roots: []
+roots: [persian-raziname]
+etymology_hook: "rājīnāme ← Persian rāzīnāma 'a deed of consent', through Hindustani"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C232-anubhava]
 <!-- hl-knowledge: introduces=[KA-LEX-C232-KELASA232-05]; assesses=[] -->
 
 **ರಾಜೀನಾಮೆ** — *rājīnāme* — "a resignation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರಾಜೀನಾಮೆ** (*rājīnāme*) is a loan from Persian *rāzīnāma*, "a deed of consent": *rāzī*, "content, agreeing", and *nāma*, "a letter". It came through Hindustani.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

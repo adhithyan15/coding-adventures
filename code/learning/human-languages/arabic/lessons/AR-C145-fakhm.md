@@ -14,7 +14,8 @@ romanization: "fakhm"
 concept_tag: AR-QUAL145-FAKHM
 prerequisites: [AR-C144-jamia, AR-C145-malih]
 sounds: []
-roots: []
+roots: [f-kh-m]
+etymology_hook: "fakhm: built on the root f-kh-m, 'to be large, to be grand' (Lane); fakhm is 'grand', hence 'luxurious'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C145-malih]
 <!-- hl-knowledge: introduces=[AR-LEX-C145-QUAL145-02]; assesses=[] -->
 
 **فخم** — *fakhm* — "luxurious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فخم** (*fakhm*) is built on the native Arabic root *f-kh-m*, "to be large, to be grand" (Lane). *Fakhm* is "grand", hence "luxurious".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

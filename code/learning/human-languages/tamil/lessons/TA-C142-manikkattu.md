@@ -47,7 +47,7 @@ reviews_of: [TA-C142-kannam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**மணிக்கட்டு** (*maṇikkaṭṭu*) is native Dravidian. DEDR 4673 lists Malayalam *maṇikkeṭṭu* and Kannada *maṇikaṭṭu*.
+**மணிக்கட்டு** (*maṇikkaṭṭu*) is native Dravidian. DEDR 4673 lists Malayalam *maṇikkeṭṭu* and Kannada *maṇikaṭṭu*. It notes Sanskrit *maṇibandha*, "wrist", whose *bandha* translates *kaṭṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

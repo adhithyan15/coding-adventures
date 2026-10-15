@@ -11,8 +11,8 @@ gloss: cold or cold weather; the source also labels winter
 concept_tag: MW-WEATHER-COLD
 prerequisites: [MW-R12-weather-first-two]
 sounds: [retroflex-aspirated-tth, retroflex-dd, long-ii]
-roots: []
-etymology_hook: Cold arrives by ear before its one new middle consonant.
+roots: [indo-aryan-thandha]
+etymology_hook: "ṭhaṇḍī: on *ṭhaṇḍha 'cold', listed by CDIAL under Sanskrit stabdha 'stiff' (CDIAL 13676)"
 duration:
   max_seconds: 145
 requires:
@@ -48,6 +48,11 @@ Recall cloud. [YOU WRITE: the words for rain and money]
 
 The source also groups this form with winter. Keep the narrow cold meaning for
 now and contrast it with heat.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ṭhaṇḍī* is built on *ṭhaṇḍ*, "cold". CDIAL lists Hindi *ṭhaṇḍā* and *ṭhaṇḍh*, "cold", under a reconstructed *\*ṭhaṇḍha*, which it sets under Sanskrit *stabdha*, "stiff, solidified", tracing the sense from "firm" through "sluggish" to "cold" (CDIAL 13676); it gives no Marwari form. DEDR compares Dravidian words for "cool", such as Tamil *taṇ* (DEDR 3045).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THANDI-01] -->

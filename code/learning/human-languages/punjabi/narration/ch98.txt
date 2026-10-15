@@ -12,6 +12,9 @@ Before the new one: say the Punjabi for a song, then the Punjabi for a journey.
 You'll want to know: ਛੁੱਟੀ.
 ਛੁੱਟੀ — chhuṭṭī — "a holiday, time off".
 
+The word, taken apart.
+ਛੁੱਟੀ (chhuṭṭī) is a tadbhava, a word inherited and reshaped by sound change. It comes from kṣuṭyate, "is released", a form CDIAL reconstructs from its descendants (CDIAL 3707). CDIAL says Hindi and Gujarati chuṭṭī were taken from Punjabi.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Punjabi for a journey, then the Punjabi for a holida
 
 You'll want to know: ਪਿਆਰ.
 ਪਿਆਰ — piār — "love".
+
+The word, taken apart.
+ਪਿਆਰ (piār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from priyakāra, "doing a kindness" (CDIAL 8975).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Punjabi for a holiday, then the Punjabi for love.
 You'll want to know: ਸੰਗੀਤ.
 ਸੰਗੀਤ — saṅgīt — "music".
 
+The word, taken apart.
+ਸੰਗੀਤ (saṅgīt) is Sanskrit saṁgīta, "chorus, concert", taken over whole as a learned loan, a tatsama (CDIAL 12849).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Punjabi for love, then the Punjabi for music.
 You'll want to know: ਰਸਤਾ.
 ਰਸਤਾ — rastā — "a way, a route".
 
+The word, taken apart.
+ਰਸਤਾ (rastā) is a loan, usually traced to Persian rāsta, "straight; a road". Persian rāsta is built on rāst, "straight".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Punjabi for music, then the Punjabi for a way.
 
 You'll want to know: ਦੇਸ਼.
 ਦੇਸ਼ — desh — "a country".
+
+The word, taken apart.
+ਦੇਸ਼ (desh) is Sanskrit deśa, "province, country", taken over whole as a learned loan, a tatsama (CDIAL 6547). The inherited form, as in Hindi des, has a plain s.
 
 What you've built.
 One more word for this chapter.

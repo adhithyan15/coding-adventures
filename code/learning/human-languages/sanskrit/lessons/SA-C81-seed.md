@@ -14,7 +14,8 @@ romanization: "bījam"
 concept_tag: SA-PLANT-SEED
 prerequisites: [SA-C80-frog, SA-C81-tree]
 sounds: []
-roots: []
+roots: [sanskrit-bija]
+etymology_hook: "bīja 'seed' is Rigvedic, of doubtful origin (MW); it lives on as Gujarati and Marathi bī (CDIAL 9250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C81-tree]
 <!-- hl-knowledge: introduces=[SA-LEX-C81-PLANTS-02]; assesses=[] -->
 
 **बीजम्** (*bījam*) — "a seed", the start of every **वृक्षः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Bīja* is already in the Rigveda, and MW calls it "of doubtful origin". It lives
+on as Gujarati *bī*, "seed" (CDIAL 9250).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

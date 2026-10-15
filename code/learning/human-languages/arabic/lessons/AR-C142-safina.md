@@ -14,7 +14,8 @@ romanization: "safīna"
 concept_tag: AR-THINGS142-SAFINA
 prerequisites: [AR-C141-azm, AR-C142-darraja, AR-C09-aswad-abyad, AR-C09-aswad-abyad, AR-C09-ahmar-azraq, AR-C09-ahmar-azraq]
 sounds: []
-roots: []
+roots: [s-f-n]
+etymology_hook: "safīna: built on the root s-f-n, 'a ship' (Lane); Lane gives safīna as a ship"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C142-darraja]
 <!-- hl-knowledge: introduces=[AR-LEX-C142-THINGS142-02]; assesses=[] -->
 
 **سفينة** — *safīna* — "a ship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سفينة** (*safīna*) is built on the native Arabic root *s-f-n*, "a ship; to pare" (Lane). Lane gives *safīna* as a ship.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

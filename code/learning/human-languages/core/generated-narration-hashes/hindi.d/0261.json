@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 261,
-  "sourceHash": "fnv1a64:675c33adcce19950",
+  "sourceHash": "fnv1a64:40c76c0f40aacf66",
   "lessonIds": [
     "HI-C261-naukarani",
     "HI-C261-mali",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch261.txt",
   "json": "hindi/narration/ch261.json",
-  "textHash": "fnv1a64:c5108c84b12af3f4",
-  "jsonHash": "fnv1a64:163359340500b308",
+  "textHash": "fnv1a64:f326e0cdc301df75",
+  "jsonHash": "fnv1a64:e16fb825ad8b3ed5",
   "findings": []
 }

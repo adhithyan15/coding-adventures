@@ -11,8 +11,8 @@ gloss: city — the first place-noun bigger than a room, and half of what a lear
 concept_tag: UR-LEX-SHAHR
 prerequisites: [UR-R26-whose-and-who-to, UR-C23-mein, UR-C24-yahan, UR-C23-kamra]
 sounds: []
-roots: []
-etymology_hook: "شہر is Persian, and behind it is Old Persian xsathra, 'realm' — the same word that ends the name Ardashir and that gives the Sanskrit kshatra, 'dominion'. A city was once the place a ruler ruled, and nothing more."
+roots: [persian-shahr]
+etymology_hook: "shahr: usually traced to Persian shahr 'city'; behind it stands an older Iranian word for 'realm'"
 duration:
   max_seconds: 240
 requires:

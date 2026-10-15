@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 37,
-  "sourceHash": "fnv1a64:cbb4cb159f56eb6b",
+  "sourceHash": "fnv1a64:776b1dc52db530d7",
   "lessonIds": [
     "AR-C37-present",
     "AR-C37-la-afham",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "arabic/narration/ch37.txt",
   "json": "arabic/narration/ch37.json",
-  "textHash": "fnv1a64:ad3985de760f292f",
-  "jsonHash": "fnv1a64:a3832bdd764f2033",
+  "textHash": "fnv1a64:d8664e69bc7485ed",
+  "jsonHash": "fnv1a64:27a4d11bcf072047",
   "findings": []
 }

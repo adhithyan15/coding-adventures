@@ -14,7 +14,8 @@ romanization: "zistan"
 concept_tag: FA-VERB-ZISTAN
 prerequisites: [FA-C135-randan, FA-C135-mandan]
 sounds: []
-roots: []
+roots: [persian-zistan]
+etymology_hook: "zistan: inherited, usually traced to Middle Persian zīstan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C135-mandan]
 <!-- hl-knowledge: introduces=[FA-LEX-C135-ACT135-03]; assesses=[] -->
 
 **زیستن** — *zistan* — "to live".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zistan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *zīstan*, "to live".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

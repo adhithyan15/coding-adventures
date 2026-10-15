@@ -14,7 +14,8 @@ romanization: "suvarṇam"
 concept_tag: SA-THINGS121-SUVARNAM
 prerequisites: [SA-C121-pattah, SA-C121-ratnam]
 sounds: []
-roots: []
+roots: [sanskrit-suvarna]
+etymology_hook: "suvarṇa ← su 'good' + varṇa 'colour': 'of beautiful colour', so 'gold' (CDIAL 13519); Hindi sonā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C121-ratnam]
 <!-- hl-knowledge: introduces=[SA-LEX-C121-THINGS121-05]; assesses=[] -->
 
 **सुवर्णम्** — *suvarṇam* — "gold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*suvarṇa* is built from *su* "good" and *varṇa* "colour" (CDIAL 13519): "of a good, bright colour", and so "gold". It wore down into Hindi, Punjabi and Bengali *sonā* "gold" (CDIAL 13519).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

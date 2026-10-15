@@ -14,7 +14,8 @@ romanization: "kālī mirch"
 concept_tag: UR-CHIZ207-KALI-MIRCH
 prerequisites: [UR-C207-ilaichi, UR-C207-darchini]
 sounds: []
-roots: []
+roots: [sanskrit-kala-black, sanskrit-marica]
+etymology_hook: "kālī ← Sanskrit kāla 'black' (CDIAL 3083); mirch ← *maricca 'peppercorn' (CDIAL 9875)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C207-darchini]
 <!-- hl-knowledge: introduces=[UR-LEX-C207-CHIZ207-04]; assesses=[] -->
 
 **کالی مرچ** — *kālī mirch* — "black pepper".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کالی مرچ** (*kālī mirch*) is "black pepper". *kālī*, "black", comes from Sanskrit *kāla*, "black, dark-blue", which CDIAL takes from Dravidian (CDIAL 3083). *mirch* comes from *\*maricca*, a variant CDIAL reconstructs beside Sanskrit *marīca*, "peppercorn" (CDIAL 9875).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

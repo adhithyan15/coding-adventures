@@ -14,7 +14,8 @@ romanization: "mārjāraḥ"
 concept_tag: SA-ANIMAL-CAT
 prerequisites: [SA-C79-camel, SA-C79-mouse]
 sounds: []
-roots: []
+roots: [sanskrit-marjara]
+etymology_hook: "mārjāra 'cat', probably 'the cleaner', from the root √mṛj 'wipe, clean' (MW; CDIAL 10082)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C79-mouse]
 <!-- hl-knowledge: introduces=[SA-LEX-C79-ANIMALS-05]; assesses=[] -->
 
 **मार्जारः** (*mārjāraḥ*) — "a cat", the one that chases the **मूषकः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW explains *mārjāra* as probably "the cleaner", from the root √mṛj, "to wipe,
+clean", after the cat's habit of washing itself (CDIAL 10082).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,9 +11,10 @@ gloss: please say it again — two words this book taught fourteen chapters apar
 concept_tag: BN-FUNC-REPEAT-REQUEST
 prerequisites: [BN-C19-jokhon, BN-C04-abar, BN-C05-bola, BN-C13-maf-korben]
 sounds: []
-roots: []
+roots: [bol-speak]
+etymology_hook: "bôlben, from bôlā ← *bōll 'speak' (CDIAL 9321); ābār: origin not settled, no CDIAL entry"
 duration:
-  max_seconds: 240
+  max_seconds: 245
 requires:
   knowledge: [BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C05-BOLA-01, BN-LEX-C13-MAFKORBEN-01, BN-GRAMMAR-C13-FUTURE-POLITE-02, BN-LEX-C13-DOYAKORE-01]
 introduces:
@@ -50,6 +51,11 @@ The ending is not new. Chapter twenty-two taught *māf kôrben*, "excuse me", an
 named **-বেন** as the polite ending that sounds like a future and works as a
 request. Put it on **বলা** and you have asked somebody to repeat themselves
 without learning a single new word.
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Bôlben* is the polite form of *bôlā*, from *\*bōll*, "speak", a form CDIAL reconstructs (CDIAL 9321); *ābār* has no CDIAL entry, so its origin is not settled.
 
 ## Grammar Lens: the whole repair kit, in two sentences
 <!-- hl-knowledge: introduces=[]; assesses=[BN-FUNC-C19-ABAR-BOLBEN-01, BN-GRAMMAR-C16-NA-VERB-01, BN-LEX-C13-DOYAKORE-01] -->

@@ -14,7 +14,8 @@ romanization: "uṣṇaḥ"
 concept_tag: SA-QUAL155-USNAH
 prerequisites: [SA-C155-nutanah, SA-C155-jirnah]
 sounds: []
-roots: []
+roots: [sanskrit-ushna]
+etymology_hook: "uṣṇa 'hot' ← √uṣ 'burn' (MW; CDIAL 2389), inherited from Indo-European, cf. Latin ussī 'burnt' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C155-jirnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C155-QUAL155-03]; assesses=[] -->
 
 **उष्णः** — *uṣṇaḥ* — "hot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*uṣṇa* "hot, warm" comes from the root √uṣ "burn" (MW; CDIAL 2389), already in the Rigveda. It is inherited from Indo-European, and Latin *ussī* "I burned" is a cousin (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

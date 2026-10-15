@@ -14,7 +14,8 @@ romanization: "miʿṣam"
 concept_tag: AR-SIHHA263-MISAM
 prerequisites: [AR-C263-laqah, AR-C263-araq]
 sounds: []
-roots: []
+roots: [ʿ-ṣ-m]
+etymology_hook: "miʿṣam: listed by Lane under ʿ-ṣ-m, 'to hold back, to protect'; Lane's miʿṣam is the wrist"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C263-araq]
 <!-- hl-knowledge: introduces=[AR-LEX-C263-SIHHA263-03]; assesses=[] -->
 
 **معصم** — *miʿṣam* — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**معصم** (*miʿṣam*) is built on the native Arabic root *ʿ-ṣ-m*, "to hold back, to protect" (Lane). Lane's *miʿṣam* is the wrist, the place of the bracelet.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ṭiphinu"
 concept_tag: TE-VASTUVU262-TIPHINU
 prerequisites: [TE-C262-capati, TE-C262-upma]
 sounds: []
-roots: []
+roots: [english-tiffin]
+etymology_hook: "ṭiphinu ← English tiffin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C262-upma]
 <!-- hl-knowledge: introduces=[TE-LEX-C262-VASTUVU262-04]; assesses=[] -->
 
 **టిఫిను** — *ṭiphinu* — "breakfast, a light snack".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**టిఫిను** (*ṭiphinu*) is a loan from English *tiffin*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

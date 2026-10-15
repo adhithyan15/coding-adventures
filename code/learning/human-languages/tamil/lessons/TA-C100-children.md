@@ -46,7 +46,7 @@ reviews_of: [TA-C99-dontworry]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**குழந்தைகள்** (*kuḻantaikaḷ*) is native Dravidian (DEDR 2149). It is *kuḻandai*, "child", with the plural *-kaḷ*.
+**குழந்தைகள்** (*kuḻantaikaḷ*) is native Dravidian (DEDR 2149). It is *kuḻandai*, "child", with the plural *-kaḷ*. DEDR compares Sanskrit *kuḍaka*, "child".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

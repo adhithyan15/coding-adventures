@@ -13,7 +13,8 @@ gloss: "soap"
 concept_tag: LA-THINGS141-SAPO
 prerequisites: [LA-C140-lana, LA-C141-linteum]
 sounds: []
-roots: []
+roots: [sapo-latin]
+etymology_hook: "sāpō 'soap' — borrowed from Germanic; English soap comes from the same word"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C141-linteum]
 <!-- hl-knowledge: introduces=[LA-LEX-C141-THINGS141-02]; assesses=[] -->
 
 **sāpō, sāpōnis** — "soap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sāpō** was borrowed from Germanic, as Lewis & Short note. The Germanic word is usually reconstructed as Proto-Germanic *\*saipōn*, "soap, salve" (EtymDB 2.1); English *soap* comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

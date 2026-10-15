@@ -14,7 +14,8 @@ romanization: "sādhā / sādhī"
 concept_tag: MR-GUN259-SADHA
 prerequisites: [MR-C258-divasbhar, MR-C259-anolkhi]
 sounds: []
-roots: []
+roots: [sanskrit-sadhu]
+etymology_hook: "sādhā: often tied to Sanskrit sādhu 'straight, right', but CDIAL lists no Marathi form (CDIAL 13337)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C259-anolkhi]
 <!-- hl-knowledge: introduces=[MR-LEX-C259-GUN259-02]; assesses=[] -->
 
 **साधा / साधी** — *sādhā / sādhī* — "simple, plain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**साधा** (*sādhā*) is often tied to Sanskrit *sādhu*, "straight, right", but CDIAL lists no Marathi form under it (CDIAL 13337), and no source here settles it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

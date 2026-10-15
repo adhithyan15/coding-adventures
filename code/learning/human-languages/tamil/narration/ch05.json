@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1330443b5f1375df",
+  "sourceHash": "fnv1a64:c329c98e4597f426",
   "lessons": [
     {
       "id": "TA-C05-pesu",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0629379fb5262c6",
+      "sourceHash": "fnv1a64:fbbae4767f30f258",
       "notice": null,
       "blocks": [
         {
@@ -168,7 +168,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "நான் தமிழ் பேசுகிறேன் (nāṉ tamiḻ pēsugiṟēṉ) = நான் (nāṉ, \"I\") + தமிழ் (tamiḻ, \"Tamil,\" the object) + பேசுகிறேன் (pēsugiṟēṉ, \"speak\") — \"I Tamil speak,\" the verb last as always. The name தமிழ் (tamiḻ) is native, of debated but clearly Dravidian origin (often linked to a sense of \"sweetness / one's own speech\"); it names one of the oldest living literary languages in the world, with poetry two thousand years old still read today."
+              "text": "நான் தமிழ் பேசுகிறேன் (nāṉ tamiḻ pēsugiṟēṉ) = நான் (nāṉ, \"I\") + தமிழ் (tamiḻ, \"Tamil,\" the object) + பேசுகிறேன் (pēsugiṟēṉ, \"speak\") — \"I Tamil speak,\" the verb last as always. The name தமிழ் (tamiḻ) is native (DEDR 3080), of disputed but clearly Dravidian origin (often linked to a sense of \"sweetness / one's own speech\"); it names one of the oldest living literary languages in the world, with poetry two thousand years old still read today."
             },
             {
               "kind": "speech",

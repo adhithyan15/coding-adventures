@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 121,
-  "sourceHash": "fnv1a64:2cfda2e94c63453c",
+  "sourceHash": "fnv1a64:d1f77e8ee0323536",
   "lessonIds": [
     "JA-C121-shikakui",
     "JA-C121-momoiro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch121.txt",
   "json": "japanese/narration/ch121.json",
-  "textHash": "fnv1a64:bd01e2bd4cad0f59",
-  "jsonHash": "fnv1a64:19b8b1c7860e7602",
+  "textHash": "fnv1a64:3846881a5408a2d3",
+  "jsonHash": "fnv1a64:ce60b6c7f6f63eaa",
   "findings": []
 }

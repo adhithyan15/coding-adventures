@@ -14,7 +14,8 @@ romanization: "nokku"
 concept_tag: TE-VERB-NOKKU
 prerequisites: [TE-C281-raddu-ceyu, TE-C281-samarpincu]
 sounds: []
-roots: []
+roots: [dravidian-okku-indent]
+etymology_hook: "nokku: native Dravidian; DEDR 3780 lists nokku 'to press' with Malayalam okkuka 'to indent'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C281-samarpincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C281-KRIYA281-03]; assesses=[] -->
 
 **నొక్కు** — *nokku* — "to press, to push (a button)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**నొక్కు** (*nokku*) is native Dravidian. DEDR 3780 lists *nokku*, "to press, squeeze", with Malayalam *okkuka*, "to indent".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

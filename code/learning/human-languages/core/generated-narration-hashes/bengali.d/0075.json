@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 75,
-  "sourceHash": "fnv1a64:3afb7f88afd481ff",
+  "sourceHash": "fnv1a64:62440b35f24d92ee",
   "lessonIds": [
     "BN-C75-dhoni",
     "BN-C75-gorib",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch75.txt",
   "json": "bengali/narration/ch75.json",
-  "textHash": "fnv1a64:afcc03f4858a684a",
-  "jsonHash": "fnv1a64:ac8ceb38045cd548",
+  "textHash": "fnv1a64:2a4f78522b1e8e42",
+  "jsonHash": "fnv1a64:19c5ee12036181ca",
   "findings": []
 }

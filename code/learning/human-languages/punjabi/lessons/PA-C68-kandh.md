@@ -14,7 +14,8 @@ romanization: "kandh"
 concept_tag: PA-HOME68-KANDH
 prerequisites: [PA-C67-kursi, PA-C68-mez]
 sounds: []
-roots: []
+roots: [sanskrit-kantha-wall]
+etymology_hook: "kandh ← kanthā 'wall, town', from Iranian (CDIAL 2720); it coincides with kaṇṭha 'border' (CDIAL 2680)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C68-mez]
 <!-- hl-knowledge: introduces=[PA-LEX-C68-HOME68-02]; assesses=[] -->
 
 **ਕੰਧ** — *kandh* — "a wall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **ਕੰਧ** (*kandh*), "wall", under Sanskrit *kanthā*, "wall, town", which it takes from Iranian (CDIAL 2720). It adds that the word coincides with *kaṇṭha*, "throat; border", under which it lists Punjabi *kaṇḍh*, "wall", as perhaps belonging there (CDIAL 2680).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

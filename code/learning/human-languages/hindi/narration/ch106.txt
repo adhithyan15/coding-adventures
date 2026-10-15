@@ -13,6 +13,9 @@ You'll want to know: थकान.
 थकान (thakān) — "tiredness".
 आज बहुत थकान (thakān) है — "I am very tired today", literally "today there is a lot of tiredness". The बहुत and आज are both yours already.
 
+The word, taken apart.
+थकान (thakān) is built on thaknā, "to get tired", with the ending -ān. CDIAL lists thaknā under a reconstructed sthakk, "stop, halt", and calls its link with sthā-, "to stand", probable but not clear (CDIAL 13737).
+
 What you've built.
 A first word for how the body feels at the end of a day.
 
@@ -42,6 +45,9 @@ Before the new one: say the Hindi for pain, then the Hindi for tiredness.
 You'll want to know: ज़ुकाम.
 ज़ुकाम (zukām) — "a cold", the kind with a runny nose.
 मुझे ज़ुकाम (zukām) है — "I have a cold", literally "to me there is a cold". The person sits in मुझे, as in मुझे चाय चाहिए.
+
+The word, taken apart.
+ज़ुकाम (zukām) is a loan from Arabic zukām, "a cold, catarrh", which reached Hindi through Persian. Its Arabic root is z-k-m (Lane).
 
 What you've built.
 An illness, in the to-me frame you already use for wanting.
@@ -73,6 +79,9 @@ You'll want to know: खाँसी.
 खाँसी (khā̃sī) — "a cough". It is feminine.
 मुझे खाँसी (khā̃sī) है — "I have a cough". Same frame, new word in the middle.
 
+The word, taken apart.
+खाँसी (khā̃sī) (khāṁsī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kāsa, "cough" (CDIAL 3138). CDIAL notes the kh- as imitating the sound.
+
 What you've built.
 A second complaint in the same frame.
 
@@ -103,6 +112,9 @@ You'll want to know: बीमार.
 बीमार (bīmār) — "ill, sick".
 मैं बीमार (bīmār) हूँ — "I am ill". This one describes you, so it takes मैं... हूँ, not मुझे.
 
+The word, taken apart.
+बीमार (bīmār) is a loan, usually traced to Persian bīmār, "ill, sick".
+
 What you've built.
 The difference between having an illness and being ill.
 
@@ -132,6 +144,9 @@ Before the new one: say the Hindi for a cough, then the Hindi for ill.
 You'll want to know: तबीयत.
 तबीयत (tabīyat) — "how one is feeling", one's health on the day.
 आपकी तबीयत (tabīyat) कैसी है? — "how are you feeling?", the question to ask someone who has been ill. तबीयत (tabīyat) ठीक नहीं है — "I am not well".
+
+The word, taken apart.
+तबीयत (tabīyat) is a loan from Arabic ṭabīʿa, "nature, temperament", which reached Hindi through Persian. Its Arabic root is ṭ-b-ʿ (Lane).
 
 What you've built.
 The question after how are you, when you know someone has been unwell.

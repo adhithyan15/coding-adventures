@@ -20,6 +20,9 @@ And it is choosy in a way you can now predict. কে (-ke) goes on জীব no
 জামাকে — no; a shirt stays জামা.
 The animacy split you learned three chapters ago is doing this too. That one question keeps paying.
 
+The word, taken apart.
+The origin of কে (-ke) is not settled. Under kakṣa, "side", CDIAL lists Old Bengali kakhu, "to, for", and says some postpositions probably grew from that sense (CDIAL 2588), but not কে (-ke).
+
 Grammar Lens: the same slot, still one at a time.
 Line the endings up and the system is visible:
 [a table of 4 rows, read aloud]
@@ -61,6 +64,9 @@ job: I. the word: আমি. ending: —.
 job: my. the word: আমার. ending: -র.
 job: me. the word: আমাকে (āmāke). ending: -কে (-ke).
 Same stem আমা-, three endings, no memorisation.
+
+The word, taken apart.
+The stem আমা- goes back to Sanskrit asmad, the stem of "we" (CDIAL 986); where the ending -কে (-ke) comes from is not settled.
 
 Grammar Lens: the frame that had no filler.
 Chapter nine taught something odd and important: Bengali does not say I like tea. It says, near enough, tea is good to me — the liking is not something you do, it is something that happens to you.
@@ -105,6 +111,9 @@ person: তুমি. possessive: তোমার. object: তোমাকে (t
 person: সে. possessive: তার. object: তাকে.
 Three stems, three endings, nine words, nothing irregular.
 
+The word, taken apart.
+The stem tomā- goes back, with তুমি, to Sanskrit yuṣmad-, "you" (CDIAL 10511); where -কে (-ke) comes from is not settled.
+
 Grammar Lens: what English makes you memorise and Bengali does not.
 The English column is I, my, me — he, his, him, and there is no rule in it: a learner memorises each cell. The Bengali column is one stem with -র or -কে (-ke) stuck on. Nothing about তাকে has to be learned once তার is known.
 The careful rungs behave, too: আপনাকে and তাঁকে.
@@ -139,7 +148,7 @@ Put the object ending on ভাই. Then say you, as the one it is done to.
 You'll want to know: কে standing alone.
 কে? — ke? — who?
 সে কে? — she ke? — who is he?
-This is a different word from the ending you learned two lessons ago. They are spelled identically and they are not related, and Bengali tells them apart the way it tells ও apart from ও: by where they sit.
+This is Sanskrit ka-, "who" (CDIAL 2574), not the ending of two lessons ago. They are spelled identically and they are not related, and Bengali tells them apart the way it tells ও apart from ও: by where they sit.
 [a table of 2 rows, read aloud]
 where: stuck to the back of a noun. what it is: -কে (ke), the object ending.
 where: standing on its own. what it is: কে (ke), who?

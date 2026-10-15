@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 90,
-  "sourceHash": "fnv1a64:547a7c1a46ac79af",
+  "sourceHash": "fnv1a64:a741b46ee484f0bd",
   "lessonIds": [
     "KA-C90-grandson",
     "KA-C90-granddaughter",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch90.txt",
   "json": "kannada/narration/ch90.json",
-  "textHash": "fnv1a64:b976e37adb5631d3",
-  "jsonHash": "fnv1a64:13be107ffc61da82",
+  "textHash": "fnv1a64:f6b3183a23e431f6",
+  "jsonHash": "fnv1a64:92a0b5111db4eb47",
   "findings": []
 }

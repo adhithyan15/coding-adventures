@@ -14,7 +14,8 @@ romanization: "vaḍakaṭṭu"
 concept_tag: TE-VERB-VADAKATTU
 prerequisites: [TE-C163-tannu, TE-C164-turumu]
 sounds: []
-roots: []
+roots: [dravidian-vadi-strain]
+etymology_hook: "vaḍakaṭṭu: native Dravidian; DEDR 5221 lists it, 'to strain, filter', under vaḍiyu 'to be strained'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C164-turumu]
 <!-- hl-knowledge: introduces=[TE-LEX-C164-KRIYA164-02]; assesses=[] -->
 
 **వడకట్టు** — *vaḍakaṭṭu* — "to strain, to filter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వడకట్టు** (*vaḍakaṭṭu*) is native Dravidian. DEDR 5221 lists nasalised forms of *vaḍigaṭṭu*, "to strain, filter", under *vaḍiyu*, "to be strained, percolate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

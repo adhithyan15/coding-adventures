@@ -13,7 +13,8 @@ gloss: "to climb, to go up"
 concept_tag: LA-VERB-ASCENDO
 prerequisites: [LA-C153-ventosus, LA-C153-aedifico]
 sounds: []
-roots: []
+roots: [ascendere-latin, scandere-latin]
+etymology_hook: "ascendō 'to climb' — ad 'towards' + scandō 'to climb'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C153-aedifico]
 <!-- hl-knowledge: introduces=[LA-LEX-C153-QUAL153-04]; assesses=[] -->
 
 **ascendō, ascendere** — "to climb, to go up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ascendō** is *ad*, "to, towards", with *scandō*, "to climb" (Lewis & Short); the a of the verb weakened to e in the compound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

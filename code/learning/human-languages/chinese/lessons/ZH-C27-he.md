@@ -11,8 +11,8 @@ gloss: "hé — 'and' between two nouns, and never between two sentences"
 concept_tag: ZH-JOIN-HE
 prerequisites: [ZH-W27-he, ZH-C26-dui, ZH-C23-huati, ZH-C18-hear-kanjian, ZH-W09-shen]
 sounds: [tone-2]
-roots: []
-etymology_hook: "Mandarin does not join clauses with its word for and, which is the fact a learner most needs and which cannot be taught before the word itself is."
+roots: [middle-chinese-hwa]
+etymology_hook: "hé 'and': inherited, from Middle Chinese hwa 'in harmony'; 'and' is a later development"
 duration:
   max_seconds: 225
 requires:
@@ -83,6 +83,13 @@ taught.
 
 **So 和 is the first joining word in this track**, and the first thing it teaches
 is where it may not go.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**和** is inherited from Middle Chinese *hwa*, "in harmony" (Guangyun, in
+Baxter's transcription); its use as "and" is a later development, usually traced
+through "together with".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HE-01, ZH-GRAMMAR-HE-NOUNS-ONLY-01] -->

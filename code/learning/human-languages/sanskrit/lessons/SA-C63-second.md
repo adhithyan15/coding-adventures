@@ -14,7 +14,8 @@ romanization: "dvitīyaḥ"
 concept_tag: SA-ORDINAL-SECOND
 prerequisites: [SA-C63-third, SA-C62-tenth, SA-C57-icchati, SA-C44-white, SA-C06-numbers-1-5]
 sounds: []
-roots: []
+roots: [sanskrit-dvitiya]
+etymology_hook: "dvitīya 'second' ← dvi 'two' + the ordinal ending -tīya (MW; CDIAL 6680)"
 duration:
   max_seconds: 215
 requires:
@@ -66,6 +67,9 @@ Two and three take **-तीय**; four and six take **-थ**; five and seven up
 There is something else worth saying about this one in particular. Chapter six taught you that **द्व** is grammatically DUAL — Sanskrit's own third number, used for exactly two of anything. The ordinal shows no trace of that. **द्वितीयः** is an ordinary singular adjective describing one thing, the second one. Being *second* is not being *two*.
 
 Sanskrit also uses **द्वितीयः** for "a companion" — the second person in a pair. Macdonell lists that sense right beside the numeral.
+
+*Dvitīya* is built on *dvi*, the combining form of the inherited numeral *dva*
+(MW, CDIAL 6680).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C63-ORDINAL-06, SA-GRAMMAR-C63-ORDINAL-TIYA-05] -->

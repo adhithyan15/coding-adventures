@@ -12,6 +12,9 @@ Before the new one: say the Telugu for to be born, then the Telugu for to confro
 You'll want to know: దురద.
 దురద — durada — "an itch".
 
+The word, taken apart.
+దురద (durada) is native Dravidian. DEDR 2865 lists durada, "itching", with Kannada tuṟi and Tamil coṟi, "itching".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for to confront, then the Telugu for an itch.
 
 You'll want to know: నర్సు.
 నర్సు — narsu — "a nurse".
+
+The word, taken apart.
+నర్సు (narsu) is a loan from English nurse.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for an itch, then the Telugu for a nurse.
 You'll want to know: పరీక్ష.
 పరీక్ష — parīkṣa — "a test, an examination".
 
+The word, taken apart.
+పరీక్ష (parīkṣa) is Sanskrit parīkṣā, "examination", from parīkṣatē, "observes, examines" (CDIAL 7904), with the final -ā shortened.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a nurse, then the Telugu for a test.
 You'll want to know: వైద్యం.
 వైద్యం — vaidyaṁ — "medical treatment".
 
+The word, taken apart.
+వైద్యం (vaidyaṁ) is Sanskrit vaidya, "learned; physician" (CDIAL 12140), with the Telugu noun ending -ṁ: "the physician's art".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a test, then the Telugu for medical treat
 
 You'll want to know: నుదురు.
 నుదురు — nuduru — "the forehead".
+
+The word, taken apart.
+నుదురు (nuduru) is native Dravidian, one word with Tamil nutal and Kannada nosalu, "forehead" (DEDR 3705). DEDR compares Sanskrit niṭāla, "forehead", which CDIAL 10970 takes as a later borrowing from Dravidian.
 
 What you've built.
 One more word for this chapter.

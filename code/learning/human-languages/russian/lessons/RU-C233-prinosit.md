@@ -14,7 +14,8 @@ romanization: "prinosít"
 concept_tag: RU-VERB-PRINOSIT
 prerequisites: [RU-C233-menyat, RU-C233-pokazyvat]
 sounds: []
-roots: []
+roots: [slavic-nositi]
+etymology_hook: "приносить is при- 'to, near' + носить 'to carry': to carry here"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C233-pokazyvat]
 <!-- hl-knowledge: introduces=[RU-LEX-C233-ACT233-05]; assesses=[] -->
 
 **приносить** (*prinosít*) — "to bring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**приносить** is *при-*, "to, toward", with *носить*, "to carry": to carry to someone. *Носить* goes with *нести*, "to carry", which Vasmer relates to Lithuanian *nèšti*, "to carry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

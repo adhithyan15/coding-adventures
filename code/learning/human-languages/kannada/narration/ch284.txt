@@ -12,6 +12,9 @@ Before the new one: say the Kannada for an operation, then the Kannada for pregn
 You'll want to know: ಹುಣ್ಣಿಮೆ.
 ಹುಣ್ಣಿಮೆ — huṇṇime — "full moon (day)".
 
+The word, taken apart.
+ಹುಣ್ಣಿಮೆ (huṇṇime) is a tadbhava of Sanskrit pūrṇimā, "full-moon day" (CDIAL 8340), through Prakrit puṇṇimasī; the p- became h-.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Kannada for pregnant, then the Kannada for full moon
 
 You'll want to know: ಸೂರ್ಯಾಸ್ತ.
 ಸೂರ್ಯಾಸ್ತ — sūryāsta — "sunset".
+
+The word, taken apart.
+ಸೂರ್ಯಾಸ್ತ (sūryāsta) is Sanskrit sūrya, "sun" (CDIAL 13574), and asta, "home" (CDIAL 973): in Sanskrit the setting sun "goes home".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Kannada for full moon, then the Kannada for sunset.
 You'll want to know: ನಿನ್ನೆ.
 ನಿನ್ನೆ — ninne — "yesterday".
 
+The word, taken apart.
+ನಿನ್ನೆ (ninne) is native Dravidian, one word with Telugu ninna and Malayalam innalē (DEDR 3758). DEDR lists ninne, "yesterday".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Kannada for sunset, then the Kannada for yesterday.
 You'll want to know: ಸಮಯ.
 ಸಮಯ — samaya — "time".
 
+The word, taken apart.
+ಸಮಯ (samaya) is Sanskrit samaya, "meeting; agreement; time", taken over whole as a learned loan, a tatsama (CDIAL 13185).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Kannada for yesterday, then the Kannada for time.
 
 You'll want to know: ಕೆಲವೊಮ್ಮೆ.
 ಕೆಲವೊಮ್ಮೆ — kelavomme — "sometimes".
+
+The word, taken apart.
+ಕೆಲವೊಮ್ಮೆ (kelavomme) is native Dravidian: kelavu, "some, a few" (DEDR 1571), and omme, "once", which DEDR 990 lists under the word for "one": "some times".
 
 What you've built.
 One more word for this chapter.

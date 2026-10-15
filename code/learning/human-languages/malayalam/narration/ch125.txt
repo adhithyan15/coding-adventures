@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for welcome, then the Malayalam for good w
 You'll want to know: പേരക്കുട്ടി.
 പേരക്കുട്ടി (pērakkuṭṭi) — "a grandchild". It ends in കുട്ടി (kuṭṭi), "child", which you already know.
 
+The word, taken apart.
+പേരക്കുട്ടി (pērakkuṭṭi) is native Dravidian: a grandchild word built on the word for "name" (DEDR 4410, where Tamil peyaraṉ, "grandson", is one who bears the grandfather's name), with kuṭṭi, "child" (DEDR 1670).
+
 What you've built.
 A known word inside a new one.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for good wishes, then the Malayalam for a 
 
 You'll want to know: ബന്ധു.
 ബന്ധു (bandhu) — "a relative". ബന്ധുക്കൾ (bandhukkaḷ) — "relatives".
+
+The word, taken apart.
+ബന്ധു (bandhu) from Sanskrit bandhu, "kinsman", taken over whole as a tatsama (CDIAL 9144). It is built on the root bandh, "to bind".
 
 What you've built.
 The word for everyone the family tree connects.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a grandchild, then the Malayalam for a
 You'll want to know: അയൽക്കാർ.
 അയൽക്കാർ (ayalkkār) — "the neighbours", from അയൽ (ayal), "next door".
 
+The word, taken apart.
+അയൽക്കാർ (ayalkkār) is native Dravidian: ayal, "neighbourhood" (DEDR 189, with Tamil ayal), with an ending for the people of a place.
+
 What you've built.
 The people close to home.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a relative, then the Malayalam for the
 You'll want to know: അമ്മാവൻ.
 അമ്മാവൻ (ammāvan) — "uncle", the mother's brother. It begins with അമ്മ, "mother".
 
+The word, taken apart.
+അമ്മാവൻ (ammāvan) is native Dravidian: DEDR 183 lists it, "maternal uncle", under amma, "mother", with Tamil ammā and Kannada amma. DEDR 183 compares Sanskrit ambā.
+
 What you've built.
 Mother's side of the family.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for the neighbours, then the Malayalam for
 
 You'll want to know: മരുമകൻ.
 മരുമകൻ (marumakan) — "a nephew", and also "a son-in-law". It contains മകൻ (makan), "son".
+
+The word, taken apart.
+മരുമകൻ (marumakan) is native Dravidian, one word with Tamil marukaṉ (DEDR 4715). DEDR 4715 lists Malayalam marumakan itself, "sister's son, son-in-law".
 
 What you've built.
 Son, one step removed.

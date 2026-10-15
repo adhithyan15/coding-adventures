@@ -14,7 +14,8 @@ romanization: "manegelasa"
 concept_tag: KA-KELASA194-MANEGELASA
 prerequisites: [KA-C194-grahaka, KA-C194-darji]
 sounds: []
-roots: []
+roots: [dravidian-manai-house, kelasa-work-dravidian]
+etymology_hook: "manegelasa: native mane 'house' (DEDR 4776) + kelasa 'work' (DEDR 1970)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C194-darji]
 <!-- hl-knowledge: introduces=[KA-LEX-C194-KELASA194-04]; assesses=[] -->
 
 **ಮನೆಗೆಲಸ** — *manegelasa* — "housework".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮನೆಗೆಲಸ** (*manegelasa*) is native Dravidian: *mane*, "house" (DEDR 4776), and *kelasa*, "work" (DEDR 1970), with the *k-* softened to *g-* inside the compound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

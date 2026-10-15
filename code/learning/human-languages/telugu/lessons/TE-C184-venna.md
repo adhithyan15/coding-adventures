@@ -14,7 +14,8 @@ romanization: "venna"
 concept_tag: TE-VASTUVU184-VENNA
 prerequisites: [TE-C183-muta, TE-C183-banali]
 sounds: []
-roots: []
+roots: [dravidian-venney-butter]
+etymology_hook: "venna: native Dravidian, one word with Tamil veṇṇai 'butter' (DEDR 5496)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C183-banali]
 <!-- hl-knowledge: introduces=[TE-LEX-C184-VASTUVU184-01]; assesses=[] -->
 
 **వెన్న** — *venna* — "butter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వెన్న** (*venna*) is native Dravidian, one word with Tamil *veṇṇai* and Kannada *beṇṇe*, "butter" (DEDR 5496).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

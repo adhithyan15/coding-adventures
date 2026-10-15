@@ -14,7 +14,8 @@ romanization: "dandân"
 concept_tag: FA-BODY27-DANDAN
 prerequisites: [FA-C27-bini, FA-C27-dahan]
 sounds: []
-roots: []
+roots: [persian-dandan]
+etymology_hook: "dandân ← Middle Persian dandān (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C27-dahan]
 <!-- hl-knowledge: introduces=[FA-LEX-C27-BODY27-05]; assesses=[] -->
 
 **دندان** — *dandân* — "a tooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dandân* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *dandān*, "tooth" (EtymDB). EtymDB takes it back to the Indo-European word for "tooth", *\*h₃dónts*, the same word behind Latin *dens* and English *tooth*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bhāraḥ"
 concept_tag: SA-THG222-BHARAH
 prerequisites: [SA-C221-pithika, SA-C222-sadhanam]
 sounds: []
-roots: []
+roots: [sanskrit-bhara, sanskrit-bharati]
+etymology_hook: "bhāra 'burden' ← root √bhṛ 'bear, carry' (MW); Hindi bhār 'load' (CDIAL 9459)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C222-sadhanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C222-THG222-02]; assesses=[] -->
 
 **भारः** — *bhāraḥ* — "a load, a burden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhāra* is built on the root √bhṛ, "to bear, carry" (MW), the root of *bharati*, "bears": a load is what is borne. It lives on as Hindi *bhār*, "load" (CDIAL 9459).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

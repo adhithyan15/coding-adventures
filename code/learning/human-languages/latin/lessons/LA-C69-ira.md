@@ -13,7 +13,8 @@ gloss: "anger"
 concept_tag: LA-AFFECTUS-IRA
 prerequisites: [LA-C68-cura, LA-C69-gaudium]
 sounds: []
-roots: []
+roots: [ira-latin]
+etymology_hook: "īra 'anger' — probably from PIE *h1eysh2- 'to fall upon'; English ire and irate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C69-gaudium]
 <!-- hl-knowledge: introduces=[LA-LEX-C69-AFFECTUS-02]; assesses=[] -->
 
 **īra, īrae** — "anger". English *ire* and *irate*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**īra** is probably inherited, from a Proto-Indo-European root *\*h1eysh2-*, "to fall upon, to act sharply" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

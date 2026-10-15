@@ -14,7 +14,8 @@ romanization: "kummari"
 concept_tag: TE-PANI277-KUMMARI
 prerequisites: [TE-C277-mangali, TE-C277-cakali]
 sounds: []
-roots: []
+roots: [sanskrit-kumbhakara]
+etymology_hook: "kummari ← Sanskrit kumbhakāra 'potter' (CDIAL 3310), reshaped as a tadbhava"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C277-cakali]
 <!-- hl-knowledge: introduces=[TE-LEX-C277-PANI277-04]; assesses=[] -->
 
 **కుమ్మరి** — *kummari* — "a potter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కుమ్మరి** (*kummari*) comes from Sanskrit *kumbhakāra*, "potter" (CDIAL 3310), reshaped to Telugu sounds: a tadbhava.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

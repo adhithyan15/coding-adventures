@@ -14,7 +14,8 @@ romanization: "appiko"
 concept_tag: KA-VERB-APPIKO
 prerequisites: [KA-C239-hancu, KA-C239-bheti-kodu]
 sounds: []
-roots: []
+roots: [dravidian-appu-embrace, dravidian-kol-take]
+etymology_hook: "appiko: native appu 'to embrace' (DEDR 158) + ko 'take' (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C239-bheti-kodu]
 <!-- hl-knowledge: introduces=[KA-LEX-C239-KRIYE239-05]; assesses=[] -->
 
 **ಅಪ್ಪಿಕೊ** — *appiko* — "to hug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಪ್ಪಿಕೊ** (*appiko*) is native Dravidian: *appu*, "to embrace", which DEDR 158 lists, and *ko*, "take", from *koḷḷu* (DEDR 2151).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

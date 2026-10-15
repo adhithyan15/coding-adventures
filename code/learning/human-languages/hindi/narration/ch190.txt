@@ -12,6 +12,9 @@ Before the new one: say the Hindi for an answer, then the Hindi for a mistake.
 You'll want to know: मदद.
 मदद — madad — "help".
 
+The word, taken apart.
+मदद (madad) is a loan from Arabic madad, "help, reinforcement", which reached Hindi through Persian. Its Arabic root is m-d-d (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for a mistake, then the Hindi for help.
 
 You'll want to know: ख़बर.
 ख़बर — khabar — "news".
+
+The word, taken apart.
+ख़बर (khabar) is a loan from Arabic khabar, "news, report", which reached Hindi through Persian. Its Arabic root is kh-b-r (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for help, then the Hindi for news.
 You'll want to know: अख़बार.
 अख़बार — akhbār — "a newspaper".
 
+The word, taken apart.
+अख़बार (akhbār) is a loan from Arabic akhbār, "reports, news", which reached Hindi through Persian. Its Arabic root is kh-b-r (Lane). It is the plural of khabar, "news"; Hindi uses it for the newspaper that carries them.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for news, then the Hindi for a newspaper.
 You'll want to know: चीज़.
 चीज़ — cīz — "a thing".
 
+The word, taken apart.
+चीज़ (cīz) is a loan, usually traced to Persian chīz, "thing".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for a newspaper, then the Hindi for a thing.
 
 You'll want to know: रंग.
 रंग — raṅg — "a colour".
+
+The word, taken apart.
+रंग (raṅg) has two possible sources: Sanskrit raṅga, "dye, colour", whose inherited Hindi form CDIAL gives as rāṁg (CDIAL 10560), and Persian rang, "colour". The two may have merged.
 
 What you've built.
 One more word for this chapter.

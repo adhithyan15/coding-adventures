@@ -14,7 +14,8 @@ romanization: "sitār"
 concept_tag: HI-THG264-SITAR
 prerequisites: [HI-C263-payal, HI-C263-basuri]
 sounds: []
-roots: []
+roots: [persian-sitar]
+etymology_hook: "sitār: usually traced to Persian sitār 'three strings'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C263-basuri]
 <!-- hl-knowledge: introduces=[HI-LEX-C264-THG264-01]; assesses=[] -->
 
 **सितार** — *sitār* — "a sitar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सितार** (*sitār*) is a loan, usually traced to Persian *sitār*, "three strings". It is built from *sih*, "three", and *tār*, "string".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

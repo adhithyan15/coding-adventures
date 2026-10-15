@@ -14,7 +14,8 @@ romanization: "rāy"
 concept_tag: HI-THG206-RAY
 prerequisites: [HI-C205-batcit, HI-C206-salah]
 sounds: []
-roots: []
+roots: [arabic-ray]
+etymology_hook: "rāy ← Arabic raʾy 'opinion, view', through Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C206-salah]
 <!-- hl-knowledge: introduces=[HI-LEX-C206-THG206-02]; assesses=[] -->
 
 **राय** — *rāy* — "an opinion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**राय** (*rāy*) is a loan from Arabic *raʾy*, "opinion, view", which reached Hindi through Persian. Its Arabic root is *r-ʾ-y* (Lane). It is a different word from the older Hindi *rāy*, "king", from Sanskrit *rājan* (CDIAL 10679).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

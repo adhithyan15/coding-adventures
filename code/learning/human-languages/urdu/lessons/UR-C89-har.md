@@ -14,7 +14,8 @@ romanization: "har"
 concept_tag: UR-DEF89-HAR
 prerequisites: [UR-C88-itna, UR-C89-sab]
 sounds: []
-roots: []
+roots: [persian-har]
+etymology_hook: "har: usually traced to Persian har 'every'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C89-sab]
 <!-- hl-knowledge: introduces=[UR-LEX-C89-DEF89-02]; assesses=[] -->
 
 **ہر** — *har* — "every".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہر** (*har*) is a loan, usually traced to Persian *har*, "every".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

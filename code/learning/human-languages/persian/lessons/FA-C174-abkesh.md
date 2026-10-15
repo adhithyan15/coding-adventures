@@ -14,7 +14,8 @@ romanization: "âbkesh"
 concept_tag: FA-CHIZ174-ABKESH
 prerequisites: [FA-C174-kabinet, FA-C174-zarfshuyi]
 sounds: []
-roots: []
+roots: [persian-ab, persian-kashidan]
+etymology_hook: "âbkesh: Persian âb 'water' (EtymDB) + kesh 'drawing'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C174-zarfshuyi]
 <!-- hl-knowledge: introduces=[FA-LEX-C174-CHIZ174-03]; assesses=[] -->
 
 **آبکش** — *âbkesh* — "a colander".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âbkesh* is *âb*, "water", with *-kesh*, "drawing" (from *keshidan*): what draws the water off. *âb* is inherited, from Middle Persian *āb* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

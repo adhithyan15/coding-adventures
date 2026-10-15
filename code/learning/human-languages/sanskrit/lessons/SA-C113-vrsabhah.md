@@ -14,7 +14,8 @@ romanization: "vṛṣabhaḥ"
 concept_tag: SA-THINGS113-VRSABHAH
 prerequisites: [SA-C113-gardabhah, SA-C113-varahah]
 sounds: []
-roots: []
+roots: [sanskrit-vrshabha]
+etymology_hook: "vṛṣabha 'bull' ← vṛṣan 'male, mighty' (CDIAL 12085): 'the mighty one' (MW); Pali vasabha"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C113-varahah]
 <!-- hl-knowledge: introduces=[SA-LEX-C113-THINGS113-04]; assesses=[] -->
 
 **वृषभः** — *vṛṣabhaḥ* — "a bull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vṛṣabha* is built on *vṛṣan* "male, mighty" (CDIAL 12085): in the Rigveda it first means "manly, mighty", then "the bull", and then "the chief, the best" (MW). Pali wore it down to *vasabha* "bull" (CDIAL 12085).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

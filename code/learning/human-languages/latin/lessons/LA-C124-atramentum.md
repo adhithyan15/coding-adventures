@@ -13,7 +13,8 @@ gloss: "ink"
 concept_tag: LA-THINGS124-ATRAMENTUM
 prerequisites: [LA-C123-nummus, LA-C124-codex]
 sounds: []
-roots: []
+roots: [atramentum-latin, ater-latin]
+etymology_hook: "ātrāmentum 'ink' — built on āter 'black': what blackens"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C124-codex]
 <!-- hl-knowledge: introduces=[LA-LEX-C124-THINGS124-02]; assesses=[] -->
 
 **ātrāmentum, ātrāmentī** — "ink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ātrāmentum** is built on *āter*, "black" (Lewis & Short), with *-mentum*, an ending for a thing: what blackens.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

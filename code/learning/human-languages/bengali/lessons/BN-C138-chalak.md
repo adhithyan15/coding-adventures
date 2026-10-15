@@ -14,7 +14,8 @@ romanization: "chālāk"
 concept_tag: BN-QUAL138-CHALAK
 prerequisites: [BN-C137-sustho, BN-C138-byasto]
 sounds: []
-roots: []
+roots: [persian-chalak]
+etymology_hook: "chālāk: usually traced to Persian chālāk 'quick, clever'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C138-byasto]
 <!-- hl-knowledge: introduces=[BN-LEX-C138-QUAL138-02]; assesses=[] -->
 
 **চালাক** — *chālāk* — "clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**চালাক** (*chālāk*) is a loan, usually traced to Persian *chālāk*, "quick, clever".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

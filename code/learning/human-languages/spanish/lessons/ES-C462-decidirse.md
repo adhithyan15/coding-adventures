@@ -11,6 +11,7 @@ concept_tag: ES-VERB-DECIDIRSE
 prerequisites: [ES-C462-reducir, ES-C437-decidir, ES-C449-acercar]
 sounds: [d-soft, soft-c, stress-final]
 roots: [caedere-latin]
+etymology_hook: "decidirse ← Latin decidere: de- 'off' + caedere 'to cut' — English decision"
 duration:
   max_seconds: 275
 requires:

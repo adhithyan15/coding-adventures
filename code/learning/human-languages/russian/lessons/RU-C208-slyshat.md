@@ -14,7 +14,8 @@ romanization: "slýshat"
 concept_tag: RU-VERB-SLYSHAT
 prerequisites: [RU-C208-chuvstvovat, RU-C208-zamechat]
 sounds: []
-roots: []
+roots: [pie-klew]
+etymology_hook: "слышать ← Proto-Slavic *slyšati, with слух 'hearing'; English listen is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C208-zamechat]
 <!-- hl-knowledge: introduces=[RU-LEX-C208-ACT208-03]; assesses=[] -->
 
 **слышать** (*slýshat*) — "to hear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**слышать** ← Proto-Slavic *\*slyšati*, with *слух*, "hearing", and *слушать*, "to listen" — inherited, from PIE *\*ḱlew-*, "to hear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

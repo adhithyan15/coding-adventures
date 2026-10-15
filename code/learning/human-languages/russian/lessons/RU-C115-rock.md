@@ -14,7 +14,8 @@ romanization: "skalá"
 concept_tag: RU-THINGS115-ROCK
 prerequisites: [RU-C115-ice, RU-C115-hill]
 sounds: []
-roots: []
+roots: [slavic-skala]
+etymology_hook: "скала ← Proto-Slavic *skala 'a split piece'; Lithuanian skelti 'to split' is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C115-hill]
 <!-- hl-knowledge: introduces=[RU-LEX-C115-THINGS115-04]; assesses=[] -->
 
 **скала** (*skalá*) — "a rock, a cliff".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**скала** ← Proto-Slavic *\*skala* — inherited, from a root "to split", as in *осколок*, "a splinter", and *щель*, "a crack" (Vasmer). Vasmer relates it to Lithuanian *skélti*, "to split", and Old Norse *skilja*, "to separate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

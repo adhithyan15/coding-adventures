@@ -14,8 +14,8 @@ romanization: "ippai"
 concept_tag: JA-ANCHOR-IPPAI
 prerequisites: [JA-R136-family-and-water, JA-W01-i, JA-W11-small-tsu, JA-W136-zu, JA-W135-bi, JA-C128-kashikoi]
 sounds: [mora]
-roots: []
-etymology_hook: Ippai is the word for full, as a cup or a stomach is full; its third sign is は with the small circle, a sign the book has not yet written.
+roots: [middle-chinese-jit, middle-chinese-pwoj]
+etymology_hook: "ippai: Sino-Japanese 一 'one' + 杯 'cup', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -53,6 +53,11 @@ Four beats: *i–p–pa–i*. **い**, the small **っ** that holds a beat, and 
 last **い** you already write. The third sign is **は** with the small
 circle at its upper right, and that circle makes a *p*: *ha* becomes *pa*.
 The next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いっぱい** (*ippai*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *ichi*, "one" (Middle Chinese *'jit*) and *hai*, "cup" (*pwoj*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). *Ichi* and *hai* join as *ippai*: one cupful.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-IPPAI, JA-SCRIPT-I-01, JA-SCRIPT-SMALL-TSU-01] -->

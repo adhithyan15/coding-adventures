@@ -14,7 +14,8 @@ romanization: "sumāre"
 concept_tag: MR-KARAN203-SUMARE
 prerequisites: [MR-C203-kharokhar, MR-C203-javaljaval]
 sounds: []
-roots: []
+roots: [persian-shumar]
+etymology_hook: "sumāre: often traced to Persian shumār 'count, number', but not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C203-javaljaval]
 <!-- hl-knowledge: introduces=[MR-LEX-C203-KARAN203-04]; assesses=[] -->
 
 **सुमारे** — *sumāre* — "about, approximately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सुमारे** (*sumāre*) is often traced to Persian *shumār*, "count, number", but no source here settles it. Neither CDIAL nor DEDR has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

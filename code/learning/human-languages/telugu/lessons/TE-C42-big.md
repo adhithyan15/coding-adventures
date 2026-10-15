@@ -11,7 +11,8 @@ romanization: "pedda"
 concept_tag: TE-ADJ-BIG
 prerequisites: [TE-C40-second-pass-meal]
 sounds: []
-roots: []
+roots: [dravidian-peru-big]
+etymology_hook: "pedda: native Dravidian; DEDR 4411 lists pedda 'big, great' with Tamil periya and Kannada pēr"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ That is all an adjective does in this language.
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**పెద్ద** (*pedda*) is native Dravidian, from the root for "great". DEDR 4411 lists *pedda*, "big, great, elder", itself, with Tamil *periya*, "large", and Kannada *pēr*, "great".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C42-ADJ-01] -->

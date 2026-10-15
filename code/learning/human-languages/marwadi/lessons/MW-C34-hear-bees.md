@@ -12,7 +12,7 @@ concept_tag: MW-NUMBER-TWENTY
 prerequisites: [MW-R33-script-close]
 sounds: [voiced-b, long-ii, voiceless-s]
 roots: [sanskrit-vimshati]
-etymology_hook: Marwari's nineteen is ughanis, one short of twenty, so twenty has to exist before the number below it can.
+etymology_hook: "bīs ← Sanskrit viṃśati 'twenty', a tadbhava (CDIAL 11616, Old Marwari row)"
 duration:
   max_seconds: 180
 requires:
@@ -56,6 +56,11 @@ short of twenty — the same way the dictionary records *ekuṇcālīs*, one sho
 forty, for thirty-nine. A language that counts down to its round numbers has to
 be taught the round number first. Teaching the teens before twenty would print
 twenty in bold in a lesson that had not taught it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bīs* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *viṃśati*, "twenty". CDIAL lists Old Marwari *bīsa* under it (CDIAL 11616).
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BEES-01, MW-LEX-DAS-01] -->

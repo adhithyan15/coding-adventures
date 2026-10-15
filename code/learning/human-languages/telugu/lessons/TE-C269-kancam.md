@@ -14,7 +14,8 @@ romanization: "kañcaṁ"
 concept_tag: TE-VASTUVU269-KANCAM
 prerequisites: [TE-C268-vebsait, TE-C269-dabba]
 sounds: []
-roots: []
+roots: [sanskrit-kamsa]
+etymology_hook: "kañcaṁ: usually traced to Sanskrit kaṁsa 'metal cup' (CDIAL 2576)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C269-dabba]
 <!-- hl-knowledge: introduces=[TE-LEX-C269-VASTUVU269-02]; assesses=[] -->
 
 **కంచం** — *kañcaṁ* — "an eating plate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కంచం** (*kañcaṁ*) is usually traced to Sanskrit *kaṁsa*, "metal cup; bell-metal" (CDIAL 2576), reshaped to Telugu sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

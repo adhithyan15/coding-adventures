@@ -14,7 +14,8 @@ romanization: "saciv"
 concept_tag: MR-VASTU191-SACIV
 prerequisites: [MR-C190-gardi, MR-C191-vyavasthapak]
 sounds: []
-roots: []
+roots: [sanskrit-saciva]
+etymology_hook: "saciv: Sanskrit saciva 'companion; minister', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C191-vyavasthapak]
 <!-- hl-knowledge: introduces=[MR-LEX-C191-VASTU191-02]; assesses=[] -->
 
 **सचिव** — *saciv* — "a secretary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सचिव** (*saciv*) is Sanskrit *saciva*, "companion, counsellor, minister", taken over whole, a tatsama. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

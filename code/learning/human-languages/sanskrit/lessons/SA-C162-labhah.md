@@ -14,7 +14,8 @@ romanization: "lābhaḥ"
 concept_tag: SA-THG162-LABHAH
 prerequisites: [SA-C162-vetanam, SA-C162-rnam]
 sounds: []
-roots: []
+roots: [sanskrit-labha, sanskrit-labhate]
+etymology_hook: "lābha 'finding, profit' ← √labh 'take, obtain' (CDIAL 11018); MW compares Greek lambanō 'take'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C162-rnam]
 <!-- hl-knowledge: introduces=[SA-LEX-C162-THG162-03]; assesses=[] -->
 
 **लाभः** — *lābhaḥ* — "profit, gain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lābha* comes from the root √labh "take, obtain" (CDIAL 11018): "finding, getting", and so "profit". MW compares √labh with Greek *lambanō* "take", and *labhate* "gets" is its present.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

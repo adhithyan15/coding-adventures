@@ -13,7 +13,8 @@ gloss: "above"
 concept_tag: LA-LOCUS-SUPRA
 prerequisites: [LA-C101-deinde, LA-C102-procul]
 sounds: []
-roots: []
+roots: [supra-latin, superus-latin]
+etymology_hook: "suprā 'above' — from superus 'upper': on the upper side"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C102-procul]
 <!-- hl-knowledge: introduces=[LA-LEX-C102-LOCUS-02]; assesses=[] -->
 
 **suprā** — "above". English *supra* and *super-*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**suprā** comes from *superus*, "upper" (Lewis & Short), as if "on the upper side". Old Latin wrote *suprād* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

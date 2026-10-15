@@ -11,8 +11,8 @@ gloss: to be — and the ending every Urdu verb wears when you name it
 concept_tag: VERB-BE
 prerequisites: [UR-C05-practice, UR-C04-thik, UR-C04-main-hun-more]
 sounds: [rtl, long-a, long-u, short-vowels-unwritten]
-roots: [indo-aryan-ho, sanskrit-bhu, pie-bhuh]
-etymology_hook: honā descends from Sanskrit bhavati “becomes”, from PIE *bʰuH- — the root English wore down into be and Latin into future.
+roots: [indo-aryan-ho, sanskrit-bhu, pie-bhuh, sanskrit-bhavati]
+etymology_hook: "honā ← Sanskrit bhavati 'becomes' (CDIAL 9416), from PIE *bʰuH-, the root of English be"
 duration:
   max_seconds: 260
 requires:
@@ -69,8 +69,7 @@ its own stem for free.
 ## The word, taken apart — the root English wore down to “be”
 <!-- hl-knowledge: introduces=[UR-ETYMON-HONA-BE]; assesses=[] -->
 
-**honā** comes from Sanskrit *bhavati*, “becomes,” built on the root
-*bhū-*. The middle stage of Indo-Aryan softened that *bh-* to *h-*, so
+**honā** comes from Sanskrit *bhavati*, “becomes” (CDIAL 9416), built on the root *bhū-*. The middle stage of Indo-Aryan softened that *bh-* to *h-*, so
 *bhavati* thinned to *hoi* and then to **honā**.
 
 The root is Indo-European: \**bʰuH-*, “grow, become.” English kept it in

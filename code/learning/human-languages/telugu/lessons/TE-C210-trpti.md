@@ -14,7 +14,8 @@ romanization: "tṛpti"
 concept_tag: TE-AROGYAM210-TRPTI
 prerequisites: [TE-C209-nuduru, TE-C210-anumanam]
 sounds: []
-roots: []
+roots: [sanskrit-trpti]
+etymology_hook: "tṛpti ← Sanskrit tṛpti 'satisfaction', a tatsama (CDIAL 5931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C210-anumanam]
 <!-- hl-knowledge: introduces=[TE-LEX-C210-AROGYAM210-02]; assesses=[] -->
 
 **తృప్తి** — *tṛpti* — "contentment, satisfaction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**తృప్తి** (*tṛpti*) is Sanskrit *tṛpti*, "satisfaction", taken over whole as a learned loan, a tatsama (CDIAL 5931).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

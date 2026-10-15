@@ -13,7 +13,8 @@ gloss: "a fox"
 concept_tag: LA-THINGS133-VULPES
 prerequisites: [LA-C133-rana, LA-C133-lepus]
 sounds: []
-roots: []
+roots: [vulpes-latin]
+etymology_hook: "vulpēs 'fox' — inherited from Proto-Italic *wolpi-; Greek alōpēx is often compared"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C133-lepus]
 <!-- hl-knowledge: introduces=[LA-LEX-C133-THINGS133-04]; assesses=[] -->
 
 **vulpēs, vulpis** — "a fox".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**vulpēs** is inherited from Proto-Italic *\*wolpi-*, "fox" (EtymDB 2.1); Greek *alōpēx*, "fox", is often compared (Lewis & Short), but the details are uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "plávaniye"
 concept_tag: RU-VESHCH252-PLAVANIYE
 prerequisites: [RU-C252-basketbol, RU-C252-beg]
 sounds: []
-roots: []
+roots: [pie-plew]
+etymology_hook: "плавание is from плавать 'to swim'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C252-beg]
 <!-- hl-knowledge: introduces=[RU-LEX-C252-VESHCH252-05]; assesses=[] -->
 
 **плавание** (*plávaniye*) — "swimming".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**плавание** is a noun from *плавать*, "to swim", on the root of *плыть*, "to float". Vasmer relates *плыть* to Sanskrit *plávatē*, "floats", and Greek *pléō*, "I sail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 84,
-  "sourceHash": "fnv1a64:084f19964ca5a486",
+  "sourceHash": "fnv1a64:a2fee33cb80290da",
   "lessonIds": [
     "RU-C84-in-the-daytime",
     "RU-C84-in-the-evening",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch84.txt",
   "json": "russian/narration/ch84.json",
-  "textHash": "fnv1a64:cd29a6d63b7193d9",
-  "jsonHash": "fnv1a64:c40495e1816addc5",
+  "textHash": "fnv1a64:6c91ca9e36b00c27",
+  "jsonHash": "fnv1a64:8d19d7d0291309d1",
   "findings": []
 }

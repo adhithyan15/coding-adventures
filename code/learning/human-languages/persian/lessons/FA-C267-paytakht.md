@@ -14,7 +14,8 @@ romanization: "pâytakht"
 concept_tag: FA-MAKAN267-PAYTAKHT
 prerequisites: [FA-C266-khoruji, FA-C267-varzeshgah]
 sounds: []
-roots: []
+roots: [old-persian-pad, persian-takht]
+etymology_hook: "pâytakht: Persian pâ 'foot' + takht 'throne' (EtymDB): the throne's foot"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C267-varzeshgah]
 <!-- hl-knowledge: introduces=[FA-LEX-C267-MAKAN267-02]; assesses=[] -->
 
 **پایتخت** — *pâytakht* — "a capital city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâytakht* is *pâ*, "foot", with *takht*, "throne": the foot of the throne, the seat of the ruler. Both are inherited; *takht* continues Middle Persian *taxt* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

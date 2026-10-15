@@ -14,7 +14,8 @@ romanization: "yajamāni"
 concept_tag: TE-CAN106-YAJAMANI
 prerequisites: [TE-C106-parikaram, TE-C106-asti]
 sounds: []
-roots: []
+roots: [sanskrit-yajamana]
+etymology_hook: "yajamāni ← Sanskrit yajamāna 'the patron of a sacrifice', reshaped"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C106-asti]
 <!-- hl-knowledge: introduces=[TE-LEX-C106-CAN106-04]; assesses=[] -->
 
 **యజమాని** — *yajamāni* — "an owner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**యజమాని** (*yajamāni*) comes from Sanskrit *yajamāna*, "the patron of a sacrifice", the man who paid for the rite, reshaped to Telugu sounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

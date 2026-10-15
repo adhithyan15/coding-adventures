@@ -14,7 +14,8 @@ romanization: "bombe"
 concept_tag: KA-THINGS119-BOMBE
 prerequisites: [KA-C119-menabatti, KA-C119-benkipettige]
 sounds: []
-roots: []
+roots: [dravidian-pommai-doll]
+etymology_hook: "bombe: native Dravidian, one word with Tamil pommai and Telugu bomma (DEDR 4530)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C119-benkipettige]
 <!-- hl-knowledge: introduces=[KA-LEX-C119-THINGS119-04]; assesses=[] -->
 
 **ಬೊಂಬೆ** — *bombe* — "a doll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬೊಂಬೆ** (*bombe*) is native Dravidian, one word with Tamil *pommai* and Telugu *bomma* (DEDR 4530).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bijī"
 concept_tag: TE-GUNAM259-BIJI
 prerequisites: [TE-C259-mukhyamaina, TE-C259-sonta]
 sounds: []
-roots: []
+roots: [english-busy]
+etymology_hook: "bijī ← English busy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C259-sonta]
 <!-- hl-knowledge: introduces=[TE-LEX-C259-GUNAM259-04]; assesses=[] -->
 
 **బిజీ** — *bijī* — "busy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బిజీ** (*bijī*) is a loan from English *busy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

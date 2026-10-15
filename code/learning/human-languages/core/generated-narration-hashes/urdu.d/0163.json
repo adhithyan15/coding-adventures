@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 163,
-  "sourceHash": "fnv1a64:f1d1b1e8a40d1555",
+  "sourceHash": "fnv1a64:551b148609a9eaa5",
   "lessonIds": [
     "UR-C163-fuzul",
     "UR-C163-majbur",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch163.txt",
   "json": "urdu/narration/ch163.json",
-  "textHash": "fnv1a64:e85ab735abc00363",
-  "jsonHash": "fnv1a64:d9c3c35f63a2ef14",
+  "textHash": "fnv1a64:142086cb6913955d",
+  "jsonHash": "fnv1a64:eb96c17b8aa8e379",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 192,
-  "sourceHash": "fnv1a64:d7b7ee9ca9938a3b",
+  "sourceHash": "fnv1a64:3295d47c7f152648",
   "lessonIds": [
     "KA-C192-oralu",
     "KA-C192-onake",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch192.txt",
   "json": "kannada/narration/ch192.json",
-  "textHash": "fnv1a64:8594ddb2c6262bf9",
-  "jsonHash": "fnv1a64:e6690225782761fc",
+  "textHash": "fnv1a64:ab2155db67b4fdbf",
+  "jsonHash": "fnv1a64:c53a92a3b2eb0ddc",
   "findings": []
 }

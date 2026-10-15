@@ -14,7 +14,8 @@ romanization: "ashita"
 concept_tag: JA-TIME54-ASHITA
 prerequisites: [JA-C53-asa, JA-C54-yuugata]
 sounds: []
-roots: []
+roots: [japanese-ashita]
+etymology_hook: "ashita: native; 明日 'bright day' read as a whole; myōnichi is the Sino-Japanese reading"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C54-yuugata]
 <!-- hl-knowledge: introduces=[JA-LEX-C54-TIME54-02]; assesses=[] -->
 
 **あした** — *ashita* — "tomorrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あした** (*ashita*) is a native word, inherited rather than borrowed. JMdict writes it with the characters for "bright" and "day", read as a whole for their meaning; read *myōnichi*, the same characters are Sino-Japanese.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

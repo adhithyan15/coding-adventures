@@ -14,7 +14,8 @@ romanization: "āvaśyakaḥ"
 concept_tag: SA-QUAL244-AVASYAKAH
 prerequisites: [SA-C244-ucitah, SA-C244-anucitah]
 sounds: []
-roots: []
+roots: [sanskrit-avashyaka]
+etymology_hook: "āvaśyaka 'necessary' ← avaśya 'inevitable', from a- 'not' + vaśa 'will' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C244-anucitah]
 <!-- hl-knowledge: introduces=[SA-LEX-C244-QUAL244-03]; assesses=[] -->
 
 **आवश्यकः** — *āvaśyakaḥ* — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āvaśyaka* is built on *avaśya*, "inevitable", the stem of *avaśyam*, "certainly", which you have already met, with the suffix *-ka* and a lengthened first vowel (MW). What no will can avoid is necessary.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

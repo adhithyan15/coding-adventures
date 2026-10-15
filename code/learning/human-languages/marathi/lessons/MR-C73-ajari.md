@@ -14,7 +14,8 @@ romanization: "ājārī"
 concept_tag: MR-HEALTH73-AJARI
 prerequisites: [MR-C72-tap, MR-C72-davakhana]
 sounds: []
-roots: []
+roots: [persian-azar]
+etymology_hook: "ājārī: usually traced to Persian āzār 'harm, pain, illness'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C72-davakhana]
 <!-- hl-knowledge: introduces=[MR-LEX-C73-HEALTH73-01]; assesses=[] -->
 
 **आजारी** — *ājārī* — "ill, sick".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**आजारी** (*ājārī*) is a loan, usually traced to Persian *āzār*, "harm, pain, illness". Marathi adds *-ī*: "having an illness".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

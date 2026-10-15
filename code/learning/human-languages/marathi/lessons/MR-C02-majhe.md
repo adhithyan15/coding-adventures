@@ -12,6 +12,7 @@ concept_tag: PRONOUN-MY
 prerequisites: [MR-C02-naav]
 sounds: [inherent-a, anusvara]
 roots: [ma]
+etymology_hook: "mājhaṁ: CDIAL lists mājhā under the Sanskrit first-person base ma- of mām, mayā, mama (CDIAL 9691)"
 reviews_of: [MR-C02-naav, MR-C01-yeto]
 duration:
   max_seconds: 240

@@ -14,7 +14,8 @@ romanization: "ulybátsya"
 concept_tag: RU-VERB-ULYBATSYA
 prerequisites: [RU-C235-sheptat, RU-C235-molchat]
 sounds: []
-roots: []
+roots: [slavic-lybiti]
+etymology_hook: "улыбаться is from dialect лыбить 'to smile', which Vasmer calls unclear"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C235-molchat]
 <!-- hl-knowledge: introduces=[RU-LEX-C235-ACT235-04]; assesses=[] -->
 
 **улыбаться** (*ulybátsya*) — "to smile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**улыбаться** is *у-* with dialect *лыбить*, "to smile", and *-ся*. Vasmer calls *лыбить* unclear and finds the proposed links unconvincing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

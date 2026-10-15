@@ -14,7 +14,8 @@ romanization: "varu"
 concept_tag: GU-THINGS122-VARU
 prerequisites: [GU-C122-rich, GU-C122-siyal]
 sounds: []
-roots: []
+roots: [sanskrit-vrka]
+etymology_hook: "varu ← Sanskrit vṛka 'wolf', a tadbhava (CDIAL 12062)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C122-siyal]
 <!-- hl-knowledge: introduces=[GU-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **વરુ** (*varu*) — "a wolf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**વરુ** (*varu*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vṛka*, "wolf" (CDIAL 12062).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

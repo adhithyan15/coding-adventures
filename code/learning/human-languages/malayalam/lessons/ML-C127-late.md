@@ -11,7 +11,8 @@ romanization: "vaiki"
 concept_tag: ML-LEAVE-LATE
 prerequisites: [ML-C126-office, ML-C127-takecare]
 sounds: []
-roots: []
+roots: [dravidian-vaiku-stay]
+etymology_hook: "vaiki: native Dravidian, from the verb 'to stay, delay'; Tamil vaiku (DEDR 5554)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C127-takecare]
 <!-- hl-knowledge: introduces=[ML-LEX-C127-CARE-02]; assesses=[] -->
 
 **വൈകി** (*vaiki*) — "(it got) late". **നേരം വൈകി** (*nēraṁ vaiki*) — "it's getting late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വൈകി** (*vaiki*) is native Dravidian, a form of the verb "to stay the night, delay"; DEDR 5554 lists the root with Tamil *vaiku*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

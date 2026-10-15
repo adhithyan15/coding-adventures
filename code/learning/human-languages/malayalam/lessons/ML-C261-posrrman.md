@@ -14,7 +14,8 @@ romanization: "pōsṟṟmān"
 concept_tag: ML-JOLI261-POSRRMAN
 prerequisites: [ML-C260-kilo, ML-C260-sadhanam]
 sounds: []
-roots: []
+roots: [english-postman]
+etymology_hook: "pōsṟṟmān ← English postman"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C260-sadhanam]
 <!-- hl-knowledge: introduces=[ML-LEX-C261-JOLI261-01]; assesses=[] -->
 
 **പോസ്റ്റ്മാൻ** — *pōsṟṟmān* — "a postman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പോസ്റ്റ്മാൻ** (*pōsṟṟmān*) ← English *postman*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

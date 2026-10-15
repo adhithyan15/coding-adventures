@@ -14,7 +14,8 @@ romanization: "keṭli"
 concept_tag: BN-JINIS194-KETLI
 prerequisites: [BN-C194-istri, BN-C194-jog]
 sounds: []
-roots: []
+roots: [english-kettle]
+etymology_hook: "keṭli ← English kettle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C194-jog]
 <!-- hl-knowledge: introduces=[BN-LEX-C194-JINIS194-04]; assesses=[] -->
 
 **কেটলি** — *keṭli* — "a kettle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**কেটলি** (*keṭli*) is a loan from English *kettle*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

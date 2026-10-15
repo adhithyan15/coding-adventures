@@ -14,7 +14,8 @@ romanization: "kanukkō"
 concept_tag: TE-VERB-KANUKKO
 prerequisites: [TE-C205-photo-tiyu, TE-C205-pancuko]
 sounds: []
-roots: []
+roots: [dravidian-kaan-see]
+etymology_hook: "kanukkō: native kanu 'to see' (DEDR 1443) + konu 'for oneself'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C205-pancuko]
 <!-- hl-knowledge: introduces=[TE-LEX-C205-KRIYA205-04]; assesses=[] -->
 
 **కనుక్కో** — *kanukkō* — "to find out, to discover".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కనుక్కో** (*kanukkō*) is native Dravidian: *kanu*, "to see", one word with Tamil *kāṇ*, "to see" (DEDR 1443), with *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

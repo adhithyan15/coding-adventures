@@ -14,7 +14,8 @@ romanization: "satya"
 concept_tag: MR-VASTU239-SATYA
 prerequisites: [MR-C239-pharak, MR-C239-udaharan]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "satya ← Sanskrit satya 'true; truth', a tatsama (CDIAL 13112)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C239-udaharan]
 <!-- hl-knowledge: introduces=[MR-LEX-C239-VASTU239-04]; assesses=[] -->
 
 **सत्य** — *satya* — "the truth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सत्य** (*satya*) is Sanskrit *satya*, "true; truth", taken over whole as a learned loan, a tatsama (CDIAL 13112). CDIAL lists the inherited Marathi form as *sāc*, "true".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

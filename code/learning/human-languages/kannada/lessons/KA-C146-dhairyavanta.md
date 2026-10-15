@@ -14,7 +14,8 @@ romanization: "dhairyavanta"
 concept_tag: KA-QUAL146-DHAIRYAVANTA
 prerequisites: [KA-C146-ketta, KA-C146-bhayankara]
 sounds: []
-roots: []
+roots: [sanskrit-dhairya]
+etymology_hook: "dhairyavanta: Sanskrit dhairya 'firmness, courage' + -vant 'having'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C146-bhayankara]
 <!-- hl-knowledge: introduces=[KA-LEX-C146-QUAL146-03]; assesses=[] -->
 
 **ಧೈರ್ಯವಂತ** — *dhairyavanta* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಧೈರ್ಯವಂತ** (*dhairyavanta*) is Sanskrit *dhairya*, "firmness, courage", with *-vanta*, from Sanskrit *-vant*, "having": "having courage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

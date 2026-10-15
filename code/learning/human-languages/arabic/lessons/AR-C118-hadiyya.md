@@ -14,7 +14,8 @@ romanization: "hadiyya"
 concept_tag: AR-THINGS118-HADIYYA
 prerequisites: [AR-C117-risala, AR-C117-zarf]
 sounds: []
-roots: []
+roots: [h-d-y]
+etymology_hook: "hadiyya: built on the root h-d-y, 'to guide' (Lane); hadiyya is a gift sent"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C117-zarf]
 <!-- hl-knowledge: introduces=[AR-LEX-C118-THINGS118-01]; assesses=[] -->
 
 **هدية** — *hadiyya* — "a present".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هدية** (*hadiyya*) is built on the native Arabic root *h-d-y*, "to guide; to send a gift" (Lane). *Hadiyya* is a gift sent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

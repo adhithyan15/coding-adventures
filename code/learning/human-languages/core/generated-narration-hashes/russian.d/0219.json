@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 219,
-  "sourceHash": "fnv1a64:914c56f50bc1a054",
+  "sourceHash": "fnv1a64:d0e1e5fb18820ea3",
   "lessonIds": [
     "RU-C219-zubnaya-pasta",
     "RU-C219-britva",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch219.txt",
   "json": "russian/narration/ch219.json",
-  "textHash": "fnv1a64:874518709fe8fbcf",
-  "jsonHash": "fnv1a64:c594f96ed7542367",
+  "textHash": "fnv1a64:435a79d3f2e0147f",
+  "jsonHash": "fnv1a64:93f705dc45487736",
   "findings": []
 }

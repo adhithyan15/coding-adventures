@@ -4,7 +4,7 @@
   "chapter": 159,
   "title": "Cumin, Mustard, Asafoetida, Sesame, Chickpea",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c3aad8634b513b63",
+  "sourceHash": "fnv1a64:0e5573d7e9fbdf24",
   "lessons": [
     {
       "id": "SA-C159-jirakam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:435b6d6152ed2fc9",
+      "sourceHash": "fnv1a64:58280b74d7be86d5",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jīraka \"cumin seed\" is a word of the medical writer Suśruta, and neither MW nor CDIAL 5234 gives a derivation, so its origin is uncertain. It lives on as Hindi and Bengali jīrā and Gujarati jīrũ \"cumin\" (CDIAL 5234)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:162e502c7dc88c14",
+      "sourceHash": "fnv1a64:d97a4ad01a342d93",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sarṣapa \"mustard, mustard seed\" goes back to the Ṣaḍviṃśa Brāhmaṇa (CDIAL 13281). Its origin is uncertain: DEDR 921, citing Burrow and Mayrhofer, discusses a possible link with Dravidian words for mustard."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e402ca1adf2de099",
+      "sourceHash": "fnv1a64:df3905df1657f87d",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hiṅgu \"asafoetida\" appears from the Mahābhārata on. EtymDB lists it as borrowed from Iranian, but neither MW nor CDIAL 14079 gives a derivation, so its origin is not settled. It lives on as Punjabi hiṅg and Hindi hīṅg (CDIAL 14079)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32340dc4cbc6b452",
+      "sourceHash": "fnv1a64:38ae4774def6d21e",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tila \"sesame\" is old, in the Atharvaveda, and is probably borrowed from Munda: CDIAL 5827 follows Kuiper and thinks a Dravidian source less likely. It lives on as Hindi and Punjabi til (CDIAL 5827)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ea78f302ecd43c3",
+      "sourceHash": "fnv1a64:aa78873acfd6340a",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "caṇaka is caṇa \"the chickpea\" with the suffix -ka (CDIAL 4579). Neither MW nor CDIAL gives a derivation for caṇa, so its origin is uncertain. It lives on as Hindi and Punjabi canā, caṇā (CDIAL 4579)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

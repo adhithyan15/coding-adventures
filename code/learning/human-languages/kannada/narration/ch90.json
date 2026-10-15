@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "More of the Family",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:547a7c1a46ac79af",
+  "sourceHash": "fnv1a64:a741b46ee484f0bd",
   "lessons": [
     {
       "id": "KA-C90-grandson",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62d0c1bba53dccb9",
+      "sourceHash": "fnv1a64:a090bd688a82ed7b",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೊಮ್ಮಗ (mommaga) is native Dravidian, built on maga, \"son\", and DEDR 4715 lists mom-maga itself, \"grandson\"; the entry also has Tamil marumakaṉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64904182e9ba7960",
+      "sourceHash": "fnv1a64:4e09f2586317b1e9",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೊಮ್ಮಗಳು (mommagaḷu) is native Dravidian, built on magaḷu, \"daughter\", and DEDR 4715 lists mom-magaḷu itself, \"granddaughter\"; the entry also has Tamil marumakaṉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:993fa9e2d470bdc3",
+      "sourceHash": "fnv1a64:c8f694942c10ac72",
       "notice": null,
       "blocks": [
         {
@@ -302,6 +324,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಬಂಧಿಕ (sambandhika) is built on Sanskrit sambandha, \"connection, kinship\" (CDIAL 12955), with the ending -ika, \"one belonging to\": a kinsman."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -312,7 +345,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -361,7 +394,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -392,7 +425,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18fce656abb240e0",
+      "sourceHash": "fnv1a64:edad29fbd94f3ae2",
       "notice": null,
       "blocks": [
         {
@@ -425,6 +458,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೆರೆಯವರು (nereyavaru) is native Dravidian: nere, \"proximity, neighbourhood\", which DEDR 3770 lists itself, and avaru, \"those people\" (DEDR 1). The neighbours are \"the people close by\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -435,7 +479,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -484,7 +528,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -515,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adb044357dfd8a29",
+      "sourceHash": "fnv1a64:5004ba55f6fd6120",
       "notice": null,
       "blocks": [
         {
@@ -548,6 +592,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾವ (māva) is native Dravidian, one word with Tamil māmaṉ and Telugu māma (DEDR 4813). DEDR lists māva itself, \"mother's brother; spouse's father\". DEDR 4813 compares Sanskrit māma(ka)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -558,7 +613,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -607,7 +662,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

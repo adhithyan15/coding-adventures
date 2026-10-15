@@ -14,7 +14,8 @@ romanization: "slovár"
 concept_tag: RU-VESHCH192-SLOVAR
 prerequisites: [RU-C192-gazeta, RU-C192-zhurnal]
 sounds: []
-roots: []
+roots: [pie-klew]
+etymology_hook: "словарь is слово 'a word' + -арь: a word book"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C192-zhurnal]
 <!-- hl-knowledge: introduces=[RU-LEX-C192-VESHCH192-03]; assesses=[] -->
 
 **словарь** (*slovár*) — "a dictionary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**словарь** is *слово*, "a word", with *-арь*, a suffix for a thing or keeper: a book of words. *Слово* ← Proto-Slavic *\*slovo* — inherited; Vasmer relates it to Sanskrit *śrávas*, "fame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

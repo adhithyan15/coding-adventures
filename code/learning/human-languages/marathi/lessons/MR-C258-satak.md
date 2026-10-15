@@ -14,7 +14,8 @@ romanization: "śatak"
 concept_tag: MR-VEL258-SATAK
 prerequisites: [MR-C257-dhairya, MR-C258-halli]
 sounds: []
-roots: []
+roots: [sanskrit-shataka]
+etymology_hook: "śatak: Sanskrit śataka 'a hundred', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C258-halli]
 <!-- hl-knowledge: introduces=[MR-LEX-C258-VEL258-02]; assesses=[] -->
 
 **शतक** — *śatak* — "a century".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**शतक** (*śatak*) is Sanskrit *śataka*, "consisting of a hundred", a tatsama built on *śata*, "hundred". CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

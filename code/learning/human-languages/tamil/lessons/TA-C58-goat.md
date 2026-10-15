@@ -48,7 +48,7 @@ Start it long — ஆ, held — and put the ட of கூடை in the middle. T
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ஆடு** (*āṭu*) is native Dravidian. DEDR 5152 lists Malayalam *āṭu* and Kannada *āḍu*.
+**ஆடு** (*āṭu*) is native Dravidian. DEDR 5152 lists Malayalam *āṭu* and Kannada *āḍu*. The entry compares Sanskrit *eḍa*, "a kind of sheep" (CDIAL 2512).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

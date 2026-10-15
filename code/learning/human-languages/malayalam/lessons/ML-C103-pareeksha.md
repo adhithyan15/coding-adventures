@@ -52,6 +52,11 @@ this.
 The Sanskrit behind it is *pari-* (**around**) plus a root meaning **to look**.
 An examination is a **looking all around** something.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പരീക്ഷ** (*parīkṣa*) ← Sanskrit *parīkṣā*, "examination" (CDIAL 7904), a tatsama: *pari*, "around", + *īkṣ*, "to look".
+
 ## Grammar Lens: this one does not end in -ം
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C103-EXAM-01, ML-LEX-C103-LESSON-01] -->
 

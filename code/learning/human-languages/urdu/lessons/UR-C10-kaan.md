@@ -12,7 +12,7 @@ concept_tag: UR-EAR
 prerequisites: [UR-C09-khandan, UR-C07-sochna, UR-C07-samajhna, UR-C07-parhna]
 sounds: [rtl, long-a]
 roots: [sanskrit-karna]
-etymology_hook: kān continues Sanskrit karṇa by way of Prakrit and Apabhramsa kaṇṇa, but karṇa's own origin is unsettled — dictionaries note only a possible link to Persian kar, "deaf", nothing as clean as bhāī's cousin brother.
+etymology_hook: "kān ← Sanskrit karṇa 'ear' (CDIAL 2830), through Prakrit kaṇṇa; karṇa's own origin is not settled"
 duration:
   max_seconds: 250
 requires:
@@ -55,8 +55,7 @@ question.
 ## The word, taken apart — honestly, not fully traced
 <!-- hl-knowledge: introduces=[UR-ETYMON-KAAN-UNCERTAIN]; assesses=[UR-LEX-KAAN, UR-ETYMON-KHANDAN-PERSIAN] -->
 
-**kān** continues Sanskrit *karṇa* by way of Prakrit and
-Apabhramsa *kaṇṇa*. That much is solid. Where *karṇa* itself comes from is
+**kān** continues Sanskrit *karṇa*, "ear", by way of Prakrit and Apabhramsa *kaṇṇa* (CDIAL 2830). That much is solid. Where *karṇa* itself comes from is
 not: the trail runs out inside Indo-Aryan, with only a loose, unconfirmed
 suggestion linking it to Persian **کر** (*kar*), "deaf." No English cousin,
 no settled Indo-European root — the same honest dead end *paṛhnā*'s *paṭh-*

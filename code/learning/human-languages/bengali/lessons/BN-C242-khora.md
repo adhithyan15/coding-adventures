@@ -14,7 +14,8 @@ romanization: "khõṛā"
 concept_tag: BN-VERB-KHORA
 prerequisites: [BN-C242-gotano, BN-C242-mora2]
 sounds: []
-roots: []
+roots: [indo-aryan-khodd]
+etymology_hook: "khõṛā ← *khodd 'dig', a reconstructed form; a tadbhava (CDIAL 3934)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C242-mora2]
 <!-- hl-knowledge: introduces=[BN-LEX-C242-ACT242-05]; assesses=[] -->
 
 **খোঁড়া** — *khõṛā* — "to dig".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**খোঁড়া** (*khõṛā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khodd*, "dig", a form CDIAL reconstructs from its descendants (CDIAL 3934). CDIAL lists Bengali *khõṛā*, "to dig", here and also under *\*khuṭati*, "breaks" (CDIAL 3892).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

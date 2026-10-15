@@ -12,6 +12,7 @@ concept_tag: KA-WORD-PERHAPS
 prerequisites: [KA-C49-certainly, KA-C47-finger]
 sounds: []
 roots: []
+etymology_hook: "bahuśaḥ ← Sanskrit bahuśas 'in many ways', from bahu 'much, many' (CDIAL 9187)"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,8 @@ reviews_of: [KA-C49-certainly]
 Sanskrit *bahuśas*, 'in many ways, in many instances', from *bahu*, 'much, many'. If a thing can fall out in many ways then no one of them is settled, and the word slid quietly from 'in many ways' to 'probably, perhaps'. It is the exact opposite journey to the one ಖಂಡಿತ took.
 
 Notice the last mark: ಃ, the *visarga*, a light breath let out at the end of a word. It is uncommon in everyday Kannada, and this is one of the few ordinary words that carries it.
+
+CDIAL 9187 lists Sanskrit *bahu*, "much, many".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

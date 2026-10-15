@@ -11,7 +11,8 @@ romanization: "mūḍava"
 concept_tag: TE-ORDINAL-THIRD
 prerequisites: [TE-C81-second, TE-C79-garu, TE-C69-spade, TE-C71-sister-in-law, TE-S126-letter-nna, TE-S127-letter-ja]
 sounds: [long-u, retroflex-da]
-roots: []
+roots: [proto-dravidian-numbers]
+etymology_hook: "mūḍava: native mūḍu 'three' (DEDR 5052) + the ordinal ending -va"
 duration:
   max_seconds: 220
 requires:
@@ -54,6 +55,11 @@ reviews_of: [TE-C81-second, TE-C79-garu, TE-C69-spade, TE-C71-sister-in-law]
 Two numbers in a row have now taken the same ending, which is what a rule looks
 like from inside: not a statement, but the second time you were not surprised.
 The spoken form is **మూడో** (*mūḍō*), exactly as *reṇḍō* was.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మూడవ** (*mūḍava*) is native Dravidian: *mūḍu*, "three", one word with Tamil *mūṉṟu* (DEDR 5052), with the ordinal ending *-va*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C81-ORDINAL-04] -->

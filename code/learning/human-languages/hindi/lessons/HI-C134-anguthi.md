@@ -14,7 +14,8 @@ romanization: "aṅgūṭhī"
 concept_tag: HI-THINGS134-ANGUTHI
 prerequisites: [HI-C134-tasvir, HI-C134-sisa]
 sounds: []
-roots: []
+roots: [indo-aryan-angushthiya]
+etymology_hook: "aṅgūṭhī ← *aṅguṣṭhiya 'of the thumb', a reconstructed form; a tadbhava (CDIAL 138)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C134-sisa]
 <!-- hl-knowledge: introduces=[HI-LEX-C134-THINGS134-05]; assesses=[] -->
 
 **अंगूठी** — *aṅgūṭhī* — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**अंगूठी** (*aṅgūṭhī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*aṅguṣṭhiya*, "of the thumb", a form CDIAL reconstructs from its descendants (CDIAL 138). It is built on *aṅguṣṭha*, "thumb": a ring was "the thumb's thing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

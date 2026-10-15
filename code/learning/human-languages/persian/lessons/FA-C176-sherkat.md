@@ -14,7 +14,8 @@ romanization: "sherkat"
 concept_tag: FA-KAR176-SHERKAT
 prerequisites: [FA-C175-lebasshuyi, FA-C176-herfe]
 sounds: []
-roots: []
+roots: [arabic-sarika]
+etymology_hook: "sherkat ← Arabic šarika 'partnership', root š-r-k (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C176-herfe]
 <!-- hl-knowledge: introduces=[FA-LEX-C176-KAR176-02]; assesses=[] -->
 
 **شرکت** — *sherkat* — "a company".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sherkat* is borrowed from Arabic *šarika*, "partnership". Its Arabic root is *š-r-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

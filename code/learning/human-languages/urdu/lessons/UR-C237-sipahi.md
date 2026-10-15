@@ -14,7 +14,8 @@ romanization: "sipāhī"
 concept_tag: UR-KAM237-SIPAHI
 prerequisites: [UR-C237-bera, UR-C237-chaukidar]
 sounds: []
-roots: []
+roots: [persian-sipahi]
+etymology_hook: "sipāhī: usually traced to Persian sipāhī 'soldier'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C237-chaukidar]
 <!-- hl-knowledge: introduces=[UR-LEX-C237-KAM237-04]; assesses=[] -->
 
 **سپاہی** — *sipāhī* — "a soldier; a constable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سپاہی** (*sipāhī*) is a loan, usually traced to Persian *sipāhī*, "soldier". It is built on *sipāh*, "army". English took the word as *sepoy*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

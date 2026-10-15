@@ -12,6 +12,9 @@ Before the new one: say the Latin for wet, then the Latin for sweet.
 You'll want to know: pulcher, pulchra, pulchrum.
 pulcher, pulchra, pulchrum — "beautiful".
 
+The word, taken apart.
+pulcher has no sure origin; no proposal is generally accepted. The ch, imitating Greek spelling, came in later; early Latin wrote pulcer.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for sweet, then the Latin for beautiful.
 
 You'll want to know: rotundus, rotunda, rotundum.
 rotundus, rotunda, rotundum — "round".
+
+The word, taken apart.
+rotundus is built on rota, "a wheel" (Lewis & Short): wheel-shaped. English round comes from it through French.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for beautiful, then the Latin for round.
 You'll want to know: vacuus, vacua, vacuum.
 vacuus, vacua, vacuum — "empty". English vacuum.
 
+The word, taken apart.
+vacuus is built on vacō, "to be empty, to be free" (Lewis & Short). Where vacō comes from is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for round, then the Latin for empty.
 You'll want to know: clārus, clāra, clārum.
 clārus, clāra, clārum — "bright, clear; famous".
 
+The word, taken apart.
+clārus is inherited, usually traced to Proto-Indo-European klh1ros, "clear, bright", from kelh1-, "to call, to shout" (EtymDB 2.1): it may first have meant "loud", like clāmō, "to shout" (Lewis & Short). English clear comes from clārus through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for empty, then the Latin for bright.
 
 You'll want to know: obscūrus, obscūra, obscūrum.
 obscūrus, obscūra, obscūrum — "dark, obscure".
+
+The word, taken apart.
+obscūrus is usually traced to Proto-Indo-European (s)kewH-, "to cover" (EtymDB 2.1), with the prefix ob-, "over": covered over, so dark.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "ānandaḥ"
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [SA-C02-mama-nama-asti]
 sounds: [independent-aa, visarga]
-roots: [nand-rejoice]
+roots: [nand-rejoice, ananda-sanskrit]
+etymology_hook: "ānanda 'joy' ← ā- + the root √nand 'rejoice, be glad' (MW; CDIAL 1172)"
 reviews_of: [SA-C02-tava-nama-kim]
 duration:
   max_seconds: 210
@@ -57,6 +58,9 @@ the root *nand* ("to rejoice"). It is one of Sanskrit's most beloved
 words — the *ānanda* of *sat-cit-ānanda* ("being-consciousness-bliss"), and the
 name **Ānanda**, the Buddha's devoted disciple. So a simple greeting reaches for
 the word Indian thought uses for the deepest happiness.
+
+The noun is built on the root √nand "to rejoice" with the prefix *ā-*, and
+it is already in the Rigveda (MW, CDIAL 1172).
 
 ## Guided Practice
 

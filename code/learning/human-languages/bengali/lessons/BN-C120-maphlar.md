@@ -14,7 +14,8 @@ romanization: "māphlār"
 concept_tag: BN-THINGS120-MAPHLAR
 prerequisites: [BN-C119-panjabi, BN-C120-choti]
 sounds: []
-roots: []
+roots: [english-muffler]
+etymology_hook: "māphlār ← English muffler"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C120-choti]
 <!-- hl-knowledge: introduces=[BN-LEX-C120-THINGS120-02]; assesses=[] -->
 
 **মাফলার** — *māphlār* — "a scarf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**মাফলার** (*māphlār*) is a loan from English *muffler*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

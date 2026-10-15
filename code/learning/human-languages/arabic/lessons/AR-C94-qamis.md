@@ -14,7 +14,8 @@ romanization: "qamīṣ"
 concept_tag: AR-CLOTHES94-QAMIS
 prerequisites: [AR-C93-matam, AR-C94-malabis]
 sounds: []
-roots: []
+roots: [latin-camisia]
+etymology_hook: "qamīṣ: usually traced to Late Latin camisia 'shirt' (EtymDB); Lane lists it under q-m-ṣ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C94-malabis]
 <!-- hl-knowledge: introduces=[AR-LEX-C94-CLOTHES94-02]; assesses=[] -->
 
 **قميص** — *qamīṣ* — "a shirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قميص** (*qamīṣ*) is listed by Lane under *q-m-ṣ* as a well-known sewn garment with sleeves. It is usually traced to Late Latin *camisia*, "shirt" (EtymDB), probably through Greek or Aramaic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

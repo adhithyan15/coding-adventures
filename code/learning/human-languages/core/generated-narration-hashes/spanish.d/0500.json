@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 500,
-  "sourceHash": "fnv1a64:565303af6f4e8e2a",
+  "sourceHash": "fnv1a64:3a55408d00ad433a",
   "lessonIds": [
     "ES-C500-respetar",
     "ES-C500-molestar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch500.txt",
   "json": "spanish/narration/ch500.json",
-  "textHash": "fnv1a64:40ec381f7611d40a",
-  "jsonHash": "fnv1a64:40059317d63c388a",
+  "textHash": "fnv1a64:48bea37080ed4b5e",
+  "jsonHash": "fnv1a64:5033ac3d64392fa3",
   "findings": []
 }

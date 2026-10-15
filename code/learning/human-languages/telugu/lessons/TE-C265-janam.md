@@ -14,7 +14,8 @@ romanization: "janaṁ"
 concept_tag: TE-VASTUVU265-JANAM
 prerequisites: [TE-C264-nambaru, TE-C265-pellikuturu]
 sounds: []
-roots: []
+roots: [sanskrit-jana]
+etymology_hook: "janaṁ ← Sanskrit jana 'race, person', a tatsama (CDIAL 5098)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C265-pellikuturu]
 <!-- hl-knowledge: introduces=[TE-LEX-C265-VASTUVU265-02]; assesses=[] -->
 
 **జనం** — *janaṁ* — "people, a crowd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జనం** (*janaṁ*) is Sanskrit *jana*, "race, person", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 5098).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to hurry, then the Bengali for to delay.
 You'll want to know: সন্দেহ করা.
 সন্দেহ করা — sôndeh kôrā — "to doubt".
 
+The phrase, taken apart.
+সন্দেহ করা (sôndeh kôrā) is sôndeh, "doubt", Sanskrit saṁdeha taken over whole, + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to delay, then the Bengali for to doubt.
 
 You'll want to know: তর্ক করা.
 তর্ক করা — tôrkô kôrā — "to argue".
+
+The phrase, taken apart.
+তর্ক করা (tôrkô kôrā) is tôrkô, "argument", Sanskrit tarka, "inquiry, reasoning", taken over whole (CDIAL 5714), + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to doubt, then the Bengali for to argue.
 You'll want to know: চালিয়ে যাওয়া.
 চালিয়ে যাওয়া — chāliye jāoyā — "to carry on".
 
+The phrase, taken apart.
+চালিয়ে যাওয়া (chāliye jāoyā) is chāliye, "keeping going", a form of chālāno, "to drive, run", which belongs with Bengali cālā, "to be moved", under calyati, "goes" (CDIAL 4721), + jāoyā, "to go", from Sanskrit yāti, "goes" (CDIAL 10452).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to argue, then the Bengali for to carry 
 You'll want to know: হাঁচা.
 হাঁচা — hā̃chā — "to sneeze".
 
+The word, taken apart.
+হাঁচা (hā̃chā) (hāṁchā) goes back to Sanskrit hañji, "sneezing". CDIAL gives no Bengali form under that entry, but it lists Assamese hāṁci, "sneezing", the forms nearest to Bengali (CDIAL 13941a). CDIAL notes that the Sanskrit word is thought to be imitative.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to carry on, then the Bengali for to sne
 
 You'll want to know: কাশা.
 কাশা — kāshā — "to cough".
+
+The word, taken apart.
+কাশা (kāshā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kāsate, "coughs" (CDIAL 3135).
 
 What you've built.
 One more word for this chapter.

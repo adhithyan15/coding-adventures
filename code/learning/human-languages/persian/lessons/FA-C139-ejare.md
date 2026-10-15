@@ -14,7 +14,8 @@ romanization: "ejâre"
 concept_tag: FA-KHANDAN139-EJARE
 prerequisites: [FA-C139-jadval-e-zamani, FA-C139-tablo]
 sounds: []
-roots: []
+roots: [arabic-ijara]
+etymology_hook: "ejâre ← Arabic ijāra 'hire, rent', root ʾ-j-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C139-tablo]
 <!-- hl-knowledge: introduces=[FA-LEX-C139-KHANDAN139-03]; assesses=[] -->
 
 **اجاره** — *ejâre* — "rent". The money for a flat: **اجاره خانه** — *ejâre-ye khâne* — "the rent for the house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ejâre* is borrowed from Arabic *ijāra*, "hire, rent". Its Arabic root is *ʾ-j-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:7d6720578011a4c3",
+  "lessonIds": [
+    "SA-W258-a2-connected-composition"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "sanskrit/narration/ch258.txt",
+  "json": "sanskrit/narration/ch258.json",
+  "textHash": "fnv1a64:9cba5fcb67eae79d",
+  "jsonHash": "fnv1a64:4b1f0c718df7c808",
+  "findings": []
+}

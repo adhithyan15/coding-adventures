@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-267-SCHOOL267",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "SA-EXT-267-SCHOOL267"
+  ],
+  "after": []
+}

@@ -14,7 +14,8 @@ romanization: "aʿṭā"
 concept_tag: AR-VERB-ATA
 prerequisites: [AR-C58-ishtara, AR-C59-baa]
 sounds: []
-roots: []
+roots: [ʿ-ṭ-w]
+etymology_hook: "aʿṭā: built on the root ʿ-ṭ-w, 'to take, to reach for' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C59-baa]
 <!-- hl-knowledge: introduces=[AR-LEX-C59-VERBS59-02]; assesses=[] -->
 
 **أعطى** — *aʿṭā* — "to give (he gave)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أعطى** (*aʿṭā*) is built on the native Arabic root *ʿ-ṭ-w*, "to take, to reach for" (Lane). Form IV *aʿṭā*, "he gave", is the causative: to make another take (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

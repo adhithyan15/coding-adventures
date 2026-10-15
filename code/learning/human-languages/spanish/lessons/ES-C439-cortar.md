@@ -11,6 +11,7 @@ concept_tag: ES-VERB-CORTAR
 prerequisites: [ES-C439-cerrado, ES-C365-corto, ES-C294-cuchillo]
 sounds: [stress-final, r-tap]
 roots: [curtus-latin]
+etymology_hook: "cortar — from Latin curtus 'shortened, cut off', like corto — English curt, curtail"
 duration:
   max_seconds: 270
 requires:

@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "Island, Insect, Spider, Pig, Donkey",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:afc8a6fecb66a7f9",
+  "sourceHash": "fnv1a64:27e591bbdc613c73",
   "lessons": [
     {
       "id": "TA-C141-tivu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09fd204593d15889",
+      "sourceHash": "fnv1a64:1fe314e88b62fa9f",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "சிலந்தி (cilanti) is native Dravidian. DEDR 2562 lists Malayalam cilanni and Kannada selandi."
+              "text": "சிலந்தி (cilanti) is native Dravidian. DEDR 2562 lists Malayalam cilanni and Kannada selandi. The entry compares Sanskrit śalaka, \"spider\"."
             }
           ]
         },

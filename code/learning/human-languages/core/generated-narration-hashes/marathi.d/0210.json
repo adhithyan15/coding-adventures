@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 210,
-  "sourceHash": "fnv1a64:229744340ef54bfb",
+  "sourceHash": "fnv1a64:fd74afb9717d29ba",
   "lessonIds": [
     "MR-C210-dantavaidya",
     "MR-C210-khatik",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch210.txt",
   "json": "marathi/narration/ch210.json",
-  "textHash": "fnv1a64:2dfb764240b867ea",
-  "jsonHash": "fnv1a64:b144a843676f40e4",
+  "textHash": "fnv1a64:f7ea965206f5bb0b",
+  "jsonHash": "fnv1a64:08baa7c5a41ec2c4",
   "findings": []
 }

@@ -14,8 +14,8 @@ romanization: "ocha"
 concept_tag: JA-ANCHOR-OCHA
 prerequisites: [JA-R130-second-pass-describing-people-and-colours, JA-W10-o, JA-W01-chi, JA-C115-ayu, JA-C127-sawayaka]
 sounds: [mora]
-roots: []
-etymology_hook: The cha is the word for tea that Japanese took from Chinese, and the o in front is the polite prefix Japanese puts on many everyday things.
+roots: [chinese-cha]
+etymology_hook: "ocha: polite o- + cha 茶 'tea', a reading borrowed from Chinese (Middle Chinese drae)"
 duration:
   max_seconds: 200
 requires:
@@ -51,6 +51,11 @@ reviews_of: [JA-W10-o, JA-W01-chi, JA-C115-ayu, JA-C127-sawayaka]
 Count the beats as you say it: *o–cha*. Two beats, not three. The last two signs
 are one beat between them, and the small sign at the end is the reason. The next
 lesson takes that small sign and writes it on its own.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おちゃ** (*ocha*) is the native polite prefix *o-* with *cha*, "tea", the on'yomi of its character, borrowed from Chinese (Middle Chinese *drae*; JMdict, Unihan).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-OCHA, JA-SCRIPT-O-01, JA-SCRIPT-CHI-01] -->

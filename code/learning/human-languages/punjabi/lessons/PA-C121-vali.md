@@ -14,7 +14,8 @@ romanization: "vālī"
 concept_tag: PA-THINGS121-VALI
 prerequisites: [PA-C120-anguthi, PA-C120-kangan]
 sounds: []
-roots: []
+roots: [sanskrit-valaka]
+etymology_hook: "vālī: listed under Sanskrit vālaka 'bracelet', whose feminine vālikā meant 'ear ornament' (CDIAL 11573)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C120-kangan]
 <!-- hl-knowledge: introduces=[PA-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **ਵਾਲੀ** — *vālī* — "an earring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਵਾਲੀ** (*vālī*) is inherited. CDIAL lists it under Sanskrit *vālaka*, "bracelet", whose feminine *vālikā* the old word-lists give as "ear ornament" (CDIAL 11573).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

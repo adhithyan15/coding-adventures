@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "The Words That Ask, and the Word That Points Back",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:af3c4fc4899b0cf5",
+  "sourceHash": "fnv1a64:69e164dbf8f30ccc",
   "lessons": [
     {
       "id": "RU-C22-kto",
@@ -197,7 +197,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8a614ed3a35a09d9",
+      "sourceHash": "fnv1a64:fc8f91a5d932c5c2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -280,6 +280,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "какой (kakóy) from Proto-Slavic kakŭjĭ, built on как, \"how\", on the old question stem of кто (kto), \"who\"; Vasmer compares Lithuanian kõks, \"what kind of\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -319,7 +330,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -350,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37be543c6c0dccb8",
+      "sourceHash": "fnv1a64:24c9f88900e2490c",
       "notice": null,
       "blocks": [
         {
@@ -417,7 +428,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stress the first syllable; the final о is unstressed and says a."
+              "text": "Stress the first syllable; the final о is unstressed and says a. Vasmer traces it to Proto-Slavic kolikŭ, \"how great\", with an с- probably from sŭ, \"about\"."
             },
             {
               "kind": "speech",
@@ -426,10 +437,6 @@
             {
               "kind": "speech",
               "text": "сколько (skólka)? — a complete question, like the rest of the family."
-            },
-            {
-              "kind": "speech",
-              "text": "The smallest answer it can take is один, the number whose root became English one, an, a, alone and only."
             },
             {
               "kind": "speech",
@@ -477,10 +484,6 @@
             {
               "kind": "speech",
               "text": "Seven questions, one root. And two of them have pointing-word answers built by the same swap — потому for почему, столько for сколько (skólka) — so the family supplies its own replies."
-            },
-            {
-              "kind": "speech",
-              "text": "Learning any one of these in Russian really is most of the way to learning all of them, which is not true of the English set at all."
             }
           ]
         },

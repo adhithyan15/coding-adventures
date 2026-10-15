@@ -12,6 +12,9 @@ Before the new one: say the Latin for a farm manager, then the Latin for a tenan
 You'll want to know: cognātus, cognātī.
 cognātus, cognātī — "a blood relative".
 
+The word, taken apart.
+cognātus is built on nātus, "born" (Lewis & Short), older gnātus, with con-, "together": born into the same family.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a tenant farmer, then the Latin for a bloo
 
 You'll want to know: avunculus, avunculī.
 avunculus, avunculī — "a mother's brother, an uncle".
+
+The word, taken apart.
+avunculus is a diminutive built on avus, "a grandfather" (Lewis & Short): "little grandfather", an old name for the mother's brother. English uncle comes from it through French.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a blood relative, then the Latin for a mot
 You'll want to know: mātertera, māterterae.
 mātertera, māterterae — "a mother's sister, an aunt".
 
+The word, taken apart.
+mātertera is built on māter, "mother" (Lewis & Short), with an ending like the one in altera, "the other of two": a second mother.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a mother's brother, then the Latin for a m
 You'll want to know: vēritās, vēritātis.
 vēritās, vēritātis — "truth".
 
+The word, taken apart.
+vēritās is built on vērus, "true" (Lewis & Short), with -tās, an ending for a quality. vērus is usually traced to Proto-Indo-European weh1ros, "true" (EtymDB 2.1).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a mother's sister, then the Latin for trut
 
 You'll want to know: mendācium, mendāciī.
 mendācium, mendāciī — "a lie".
+
+The word, taken apart.
+mendācium is built on mendāx, "lying, a liar" (Lewis & Short). Where mendāx comes from is uncertain; a link with mendum, "a fault", is often suggested.
 
 What you've built.
 One more word for this chapter.

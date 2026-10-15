@@ -14,7 +14,8 @@ romanization: "diddu"
 concept_tag: TE-VERB-DIDDU
 prerequisites: [TE-C166-konasagu, TE-C166-patincu]
 sounds: []
-roots: []
+roots: [dravidian-tiruttu-correct]
+etymology_hook: "diddu: native Dravidian, one word with Tamil tiruttu and Kannada tiddu (DEDR 3251)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C166-patincu]
 <!-- hl-knowledge: introduces=[TE-LEX-C166-KRIYA166-03]; assesses=[] -->
 
 **దిద్దు** — *diddu* — "to correct (written work)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**దిద్దు** (*diddu*) is native Dravidian, one word with Tamil *tiruttu* and Kannada *tiddu* (DEDR 3251). DEDR lists Telugu *diddu*, "to correct, set right".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

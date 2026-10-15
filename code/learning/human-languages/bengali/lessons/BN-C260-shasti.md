@@ -14,7 +14,8 @@ romanization: "shāsti"
 concept_tag: BN-JINIS260-SHASTI
 prerequisites: [BN-C260-sadh, BN-C260-puroskar]
 sounds: []
-roots: []
+roots: [sanskrit-shasti]
+etymology_hook: "shāsti ← Sanskrit śāsti 'correction, punishment', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C260-puroskar]
 <!-- hl-knowledge: introduces=[BN-LEX-C260-JINIS260-03]; assesses=[] -->
 
 **শাস্তি** — *shāsti* — "a punishment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শাস্তি** (*shāsti*) is Sanskrit *śāsti*, "correction, punishment", taken over whole as a learned loan, a tatsama.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

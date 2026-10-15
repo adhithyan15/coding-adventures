@@ -14,7 +14,8 @@ romanization: "chhôbi"
 concept_tag: BN-SCHOOL65-CHHOBI
 prerequisites: [BN-C64-proshno, BN-C65-shobdo]
 sounds: []
-roots: []
+roots: [sanskrit-chavi]
+etymology_hook: "chhôbi ← Sanskrit chavi 'skin, colour, beauty', a tatsama"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C65-shobdo]
 <!-- hl-knowledge: introduces=[BN-LEX-C65-SCHOOL65-02]; assesses=[] -->
 
 **ছবি** — *chhôbi* — "a picture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ছবি** (*chhôbi*) is Sanskrit *chavi*, "skin, colour, beauty", taken over whole as a learned loan, a tatsama. In Bengali it has come to mean "picture".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

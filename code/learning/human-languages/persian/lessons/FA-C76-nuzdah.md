@@ -14,7 +14,8 @@ romanization: "nuzdah"
 concept_tag: FA-NUMBERS76-NUZDAH
 prerequisites: [FA-C76-hefdah, FA-C76-hejdah]
 sounds: []
-roots: []
+roots: [proto-indo-european-hnewn, proto-indo-european-dekm]
+etymology_hook: "nuzdah ← Middle Persian nōzdah (EtymDB): noh 'nine' + dah 'ten'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C76-hejdah]
 <!-- hl-knowledge: introduces=[FA-LEX-C76-NUMBERS76-03]; assesses=[] -->
 
 **نوزده** — *nuzdah* — "nineteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nuzdah* is *noh*, "nine", with *dah*, "ten". It is inherited: EtymDB traces it to Middle Persian *nōzdah*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

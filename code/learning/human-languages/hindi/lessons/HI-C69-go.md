@@ -14,7 +14,8 @@ romanization: "jānā / jātā"
 concept_tag: VERB-GO
 prerequisites: [HI-C69-ticket]
 sounds: []
-roots: []
+roots: [sanskrit-yati]
+etymology_hook: "jānā ← Sanskrit yāti 'goes', a tadbhava (CDIAL 10452)"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +54,11 @@ ending is the pattern, not a coincidence, and **जाना**, *jānā*, now jo
 **जाना**, *jānā*, is the one doing word a traveller cannot do without. **मैं स्टेशन जाता हूँ**
 uses the same shape as **मैं हिंदी बोलता हूँ**, which you have been saying since
 the early chapters — the same frame, a different word inside it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जाना** (*jānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *yāti*, "goes" (CDIAL 10452). Sanskrit *y-* regularly became Hindi *j-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

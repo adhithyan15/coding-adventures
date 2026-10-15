@@ -11,6 +11,7 @@ concept_tag: ES-COUNT-UNPLEASANT
 prerequisites: [ES-C380-simpatico, ES-W02-cuatro-lineas-ayer]
 sounds: [s-clear, t-dental, k-hard, accent-acute]
 roots: [sympatheia-greek]
+etymology_hook: "antipático — Greek anti- 'against' + páthos 'feeling', the pair of simpático"
 duration:
   max_seconds: 240
 requires:
@@ -74,7 +75,7 @@ So *simpático* and *antipático* are literally *feeling-with* and
 to be around, which is a fair everyday translation of the same idea.
 
 *Anti-* is doing exactly the job you already know it does in English:
-**anti**biotic, **anti**septic, **Anti**arctic — against life, against rot,
+**anti**biotic, **anti**septic, **Ant**arctic — against life, against rot,
 opposite the Bear.
 
 ## What you've built

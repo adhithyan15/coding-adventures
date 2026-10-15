@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 85,
-  "sourceHash": "fnv1a64:c93c789ed9a07e8d",
+  "sourceHash": "fnv1a64:af58de5fc61fd0b7",
   "lessonIds": [
     "UR-C85-unnis",
     "UR-C85-tis",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch85.txt",
   "json": "urdu/narration/ch85.json",
-  "textHash": "fnv1a64:2aed7a4002f472dc",
-  "jsonHash": "fnv1a64:4ef460843aa692fc",
+  "textHash": "fnv1a64:caaba1e136d36f9c",
+  "jsonHash": "fnv1a64:dece1a195714a40b",
   "findings": []
 }

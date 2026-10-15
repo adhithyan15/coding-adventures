@@ -14,7 +14,8 @@ romanization: "mahalli"
 concept_tag: FA-SEFAT271-MAHALLI
 prerequisites: [FA-C271-azad, FA-C271-khareji]
 sounds: []
-roots: []
+roots: [arabic-mahalli]
+etymology_hook: "mahalli ← Arabic maḥallī 'of a place, local', root ḥ-l-l (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C271-khareji]
 <!-- hl-knowledge: introduces=[FA-LEX-C271-SEFAT271-03]; assesses=[] -->
 
 **محلی** — *mahalli* — "local".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mahalli* is borrowed from Arabic *maḥallī*, "of a place, local". Its Arabic root is *ḥ-l-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

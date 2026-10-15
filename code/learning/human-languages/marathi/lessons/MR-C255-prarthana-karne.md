@@ -14,7 +14,8 @@ romanization: "prārthanā karṇe"
 concept_tag: MR-VERB-PRARTHANA-KARNE
 prerequisites: [MR-C255-madhye-bolne, MR-C255-misalne]
 sounds: []
-roots: []
+roots: [sanskrit-prarthana, sanskrit-karoti]
+etymology_hook: "prārthanā: Sanskrit prārthanā 'request, prayer', a tatsama; karṇe ← karoti"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C255-misalne]
 <!-- hl-knowledge: introduces=[MR-LEX-C255-ACT255-04]; assesses=[] -->
 
 **प्रार्थना करणे** — *prārthanā karṇe* — "to pray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**प्रार्थना** is Sanskrit *prārthanā*, "request, prayer", a tatsama. **करणे** comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

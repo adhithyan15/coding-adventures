@@ -14,7 +14,8 @@ romanization: "sāyam"
 concept_tag: SA-DAYTIME-SAYAM
 prerequisites: [SA-C45-noon, SA-C43-humility, SA-C44-yellow, SA-C17-night]
 sounds: []
-roots: []
+roots: [sanskrit-sayam-evening]
+etymology_hook: "sāyam 'in the evening' ← sāya 'close of day', probably from the root √so 'finish' (MW; CDIAL 13353)"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,12 @@ reviews_of: [SA-C45-noon]
 Put it beside प्रातः and you hold the two ends of the daylight — the greeting at one end and the leave-taking at the other. *sāyaṁ prātaḥ*, "evening and morning", is one of the oldest paired phrases the language has.
 
 It rests on a piece meaning "to finish, to let go", so evening is named as the slackening of the day rather than as its darkness.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Sāyam* is the adverb of *sāya*, "close of day", which MW derives, probably, from
+the root √so, "to bring to an end" (CDIAL 13353).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,6 +11,7 @@ concept_tag: ES-VERB-PRODUCIR
 prerequisites: [ES-C466-sintesis-informe, ES-C462-reducir, ES-C310-ducha]
 sounds: [soft-c, stress-final, r-tap]
 roots: [ducere-latin]
+etymology_hook: "producir ← Latin producere: pro- 'forward' + ducere 'to lead' — English produce"
 duration:
   max_seconds: 270
 requires:
@@ -70,7 +71,7 @@ spelling, and the *-ducir* verbs are the half that also changes its past.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C467-ALIMENTO-01, ES-LEX-C310-ASK-02] -->
 
-**pro-**, forward, plus **ducere**, to lead — the *ducere* already under
+*Producir* ← Latin *prōdūcere* (EtymDB 2.1): **pro-**, forward, plus **ducere**, to lead — the *ducere* already under
 *reducir* and under *la ducha*.
 
 To produce is to **lead something forward**, out where it can be seen. A

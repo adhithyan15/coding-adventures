@@ -13,7 +13,8 @@ gloss: "a mother's brother, an uncle"
 concept_tag: LA-RES189-AVUNCULUS
 prerequisites: [LA-C188-colonus, LA-C189-cognatus]
 sounds: []
-roots: []
+roots: [avunculus-latin, avus]
+etymology_hook: "avunculus 'mother's brother' — 'little grandfather', from avus; English uncle"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C189-cognatus]
 <!-- hl-knowledge: introduces=[LA-LEX-C189-RES189-02]; assesses=[] -->
 
 **avunculus, avunculī** — "a mother's brother, an uncle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**avunculus** is a diminutive built on *avus*, "a grandfather" (Lewis & Short): "little grandfather", an old name for the mother's brother. English *uncle* comes from it through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

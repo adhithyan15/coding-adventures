@@ -14,7 +14,8 @@ romanization: "āsaktikaramaina"
 concept_tag: TE-GUNAM181-ASAKTIKARAMAINA
 prerequisites: [TE-C181-goppa, TE-C181-vasana]
 sounds: []
-roots: []
+roots: [sanskrit-asakta, tamil-aaku-become]
+etymology_hook: "āsaktikaramaina: Sanskrit āsakti 'attachment' (cf. āsakta, CDIAL 1477) + kara 'making' + aina (DEDR 333)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C181-vasana]
 <!-- hl-knowledge: introduces=[TE-LEX-C181-GUNAM181-03]; assesses=[] -->
 
 **ఆసక్తికరమైన** — *āsaktikaramaina* — "interesting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ఆసక్తికరమైన** (*āsaktikaramaina*) is Sanskrit *āsakti*, "attachment, interest", from *āsakta*, "attached to" (CDIAL 1477), with *kara*, "making", and native *aina*, "which is" (DEDR 333).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "grīvā"
 concept_tag: SA-LIMB-GRIVA
 prerequisites: [SA-C34-arm, SA-C32-leaf, SA-C33-bridge]
 sounds: []
-roots: []
+roots: [sanskrit-griva]
+etymology_hook: "grīvā 'nape, neck', usually traced to a root for swallowing; CDIAL 4387 marks that root as doubtful"
 duration:
   max_seconds: 210
 requires:
@@ -43,9 +44,9 @@ reviews_of: [SA-C34-arm]
 
 **ग्रीवा** (*grīvā*) — "the neck".
 
-**ग्रीवा** is the neck, and its family kept the swallowing that the old root began with.
+**ग्रीवा** is the neck. Russian *griva*, a mane — the hair along a neck — is its cousin (EtymDB).
 
-Latin *gula*, "throat", is a cousin, behind *gullet*; Russian *griva* is a mane, the hair along a neck; and Latin *vorāre*, "to devour", belongs to the same wide family, giving *devour*, *voracious* and *carnivore*. Ends in **-आ**, like **तारा** and **लता**.
+It is often traced to an old root for swallowing, the root of Latin *gula*, "throat" (behind *gullet*), and *vorāre*, "to devour" (behind *devour*, *voracious* and *carnivore*), but CDIAL 4387 marks that link as doubtful. Ends in **-आ**, like **तारा** and **लता**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

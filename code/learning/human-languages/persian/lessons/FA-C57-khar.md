@@ -14,7 +14,8 @@ romanization: "khar"
 concept_tag: FA-ANIMALS57-KHAR
 prerequisites: [FA-C57-khers, FA-C57-shotor]
 sounds: []
-roots: []
+roots: [persian-khar]
+etymology_hook: "khar: inherited, usually traced to Middle Persian xar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C57-shotor]
 <!-- hl-knowledge: introduces=[FA-LEX-C57-ANIMALS57-03]; assesses=[] -->
 
 **خر** — *khar* — "a donkey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khar* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *xar*, "donkey".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

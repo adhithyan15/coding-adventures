@@ -13,7 +13,8 @@ gloss: "a shoemaker"
 concept_tag: LA-THINGS137-SUTOR
 prerequisites: [LA-C137-faber, LA-C137-pistor]
 sounds: []
-roots: []
+roots: [sutor-latin, suere-latin]
+etymology_hook: "sūtor 'shoemaker' — built on suō 'to sew': the stitcher; English sew is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C137-pistor]
 <!-- hl-knowledge: introduces=[LA-LEX-C137-THINGS137-03]; assesses=[] -->
 
 **sūtor, sūtōris** — "a shoemaker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**sūtor** is built on *suō*, "to sew, to stitch" (EtymDB 2.1), with *-tor*, "one who does it": the stitcher. *suō* is a cousin of English *sew*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

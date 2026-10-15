@@ -10,7 +10,8 @@ gloss: "to hug"
 concept_tag: ES-VERB-ABRAZAR
 prerequisites: [ES-C506-juguete, ES-C506-felicitar]
 sounds: []
-roots: []
+roots: [bracchium-latin]
+etymology_hook: "abrazar — a- + brazo 'arm' + -ar: to take into your arms; brazo is Latin bracchium"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [ES-C506-felicitar]
 > *He hugs his grandmother.*
 
 *Un abrazo* — a hug, and a common way to sign off a message.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**abrazar** is *a-*, *brazo*, "arm", and *-ar* (EtymDB 2.1): to take into your arms. *Brazo* is Latin *bracchium*, "an arm", taken from Greek.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

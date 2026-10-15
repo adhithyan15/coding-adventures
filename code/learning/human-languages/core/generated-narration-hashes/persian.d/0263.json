@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 263,
-  "sourceHash": "fnv1a64:c3e33515e5425157",
+  "sourceHash": "fnv1a64:451f1ec112692e36",
   "lessonIds": [
     "FA-C263-asib",
     "FA-C263-sargije",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch263.txt",
   "json": "persian/narration/ch263.json",
-  "textHash": "fnv1a64:e6aa0ea1163565f1",
-  "jsonHash": "fnv1a64:427803e34b28529e",
+  "textHash": "fnv1a64:fa9fdb4c785a74d3",
+  "jsonHash": "fnv1a64:9be8151044ab1416",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "plāvŭ"
 concept_tag: ML-VASTU253-PLAVU
 prerequisites: [ML-C252-patakkam, ML-C253-almaram]
 sounds: []
-roots: []
+roots: [dravidian-palavu-jack]
+etymology_hook: "plāvŭ: native Dravidian, one word with Tamil palavu (DEDR 3988)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C253-almaram]
 <!-- hl-knowledge: introduces=[ML-LEX-C253-VASTU253-02]; assesses=[] -->
 
 **പ്ലാവ്** — *plāvŭ* — "a jackfruit tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പ്ലാവ്** (*plāvŭ*) is native Dravidian, one word with Tamil *palavu* (DEDR 3988). Telugu uses *panasa*, the Sanskrit word for the same tree; Kannada has *panasa* beside *palasu*. DEDR 3988 compares Sanskrit *panasa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

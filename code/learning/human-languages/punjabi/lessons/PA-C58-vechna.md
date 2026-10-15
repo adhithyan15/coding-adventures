@@ -14,7 +14,8 @@ romanization: "vechṇā"
 concept_tag: PA-VERB-VECHNA
 prerequisites: [PA-C57-khedna, PA-C57-kharidna]
 sounds: []
-roots: []
+roots: [indo-aryan-vetyayati]
+etymology_hook: "vechṇā ← *vetyayati 'makes a price', a reconstructed form; a tadbhava (CDIAL 12100)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C57-kharidna]
 <!-- hl-knowledge: introduces=[PA-LEX-C58-VERBS58-01]; assesses=[] -->
 
 **ਵੇਚਣਾ** — *vechṇā* — "to sell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਵੇਚਣਾ** (*vechṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*vetyayati*, "makes a price", a form CDIAL reconstructs from its descendants (CDIAL 12100).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

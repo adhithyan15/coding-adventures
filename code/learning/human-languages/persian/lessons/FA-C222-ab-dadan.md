@@ -14,7 +14,8 @@ romanization: "âb dâdan"
 concept_tag: FA-VERB-AB-DADAN
 prerequisites: [FA-C221-shukhi-kardan, FA-C221-hasudi-kardan]
 sounds: []
-roots: []
+roots: [persian-ab, pie-deh3]
+etymology_hook: "âb dâdan: Persian âb 'water' (EtymDB) + dâdan 'to give'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C221-hasudi-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C222-KONESH222-01]; assesses=[] -->
 
 **آب دادن** — *âb dâdan* — "to water (plants)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âb dâdan* is "to give water": *âb* is inherited (Middle Persian *āb*, EtymDB). *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

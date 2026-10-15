@@ -11,8 +11,8 @@ gloss: hair
 concept_tag: JA-BODY-HAIR
 prerequisites: [JA-C12-atama]
 sounds: [mora]
-roots: []
-etymology_hook: Hair adds no new sign; context will later distinguish this sound from unrelated kami words.
+roots: [japanese-kami-hair]
+etymology_hook: "kami: native Japanese, inherited, not borrowed; kanji 髪 attached later as kun'yomi"
 duration:
   max_seconds: 190
 requires:
@@ -46,6 +46,11 @@ reviews_of: [JA-C12-atama, JA-W01-hai-read, JA-W05-hon-kanji, JA-W05-gen-compone
 > **かみ** — *ka-mi* — hair
 
 Two known signs, two morae.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かみ** (*kami*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2). JMdict gives it an entry of its own, apart from *kami*, "paper", and *kami*, "god", which sound the same.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KAMI-HAIR] -->

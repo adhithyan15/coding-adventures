@@ -11,9 +11,10 @@ romanization: vāyikkāṉ pōkunnu
 concept_tag: ML-PURPOSE
 prerequisites: [ML-C74-aan, ML-C32-pokuka]
 sounds: []
-roots: []
+roots: [sanskrit-vac-speech, po-go-dravidian]
+etymology_hook: "vāyikkāṉ ← Sanskrit vācayati 'causes to speak, reads' (CDIAL 11471) + native -āṉ; pōkunnu is native (DEDR 4572)"
 duration:
-  max_seconds: 240
+  max_seconds: 278
 requires:
   knowledge: [ML-GRAMMAR-C74-AAN-01, ML-CONCEPT-C32-POKUKA-01]
 introduces:
@@ -56,6 +57,11 @@ needs no extra word at all: the ending is the whole of it.
 |---|---|
 | **കാണാൻ വന്നു** *kāṇāṉ vannu* | came in order to see |
 | **പറയാൻ വന്നു** *paṟayāṉ vannu* | came in order to say |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വായിക്കാൻ പോകുന്നു** (*vāyikkāṉ pōkunnu*) joins two verbs. *vāyikkuka*, "to read", is built on Sanskrit *vācayati*, "makes to speak, reads" (CDIAL 11471), with the Sanskrit c softened to y; *pōkuka*, "to go", is native Dravidian (DEDR 4572, with Tamil *pō*).
 
 ## Grammar Lens: the order is the meaning
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C74-PURPOSE-01, ML-GRAMMAR-C74-AAN-01] -->

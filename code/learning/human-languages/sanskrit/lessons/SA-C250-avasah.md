@@ -14,7 +14,8 @@ romanization: "āvāsaḥ"
 concept_tag: SA-THG250-AVASAH
 prerequisites: [SA-C250-kutiram, SA-C250-bhavanam]
 sounds: []
-roots: []
+roots: [sanskrit-avasa, vas-dwell]
+etymology_hook: "āvāsa ← ā- + √vas 'dwell': 'abode, residence' (MW; CDIAL 1432)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C250-bhavanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C250-THG250-05]; assesses=[] -->
 
 **आवासः** — *āvāsaḥ* — "lodging, a residence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āvāsa* is built on *ā-* and the root √vas, "to dwell" (MW), the root of *vasāmi* and *nivāsa*: an abode, a house (CDIAL 1432). Gujarati *avās*, "abode", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

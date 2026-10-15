@@ -14,7 +14,8 @@ romanization: "saraḷ"
 concept_tag: MR-TIME127-SARAL
 prerequisites: [MR-C127-hivala, MR-C127-pavsala]
 sounds: []
-roots: []
+roots: [sanskrit-sarala]
+etymology_hook: "saraḷ ← Sanskrit sarala 'straight', a tadbhava (CDIAL 13252)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C127-pavsala]
 <!-- hl-knowledge: introduces=[MR-LEX-C127-TIME127-03]; assesses=[] -->
 
 **सरळ** — *saraḷ* — "straight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सरळ** (*saraḷ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sarala*, "straight" (CDIAL 13252).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

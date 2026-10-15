@@ -11,7 +11,8 @@ gloss: seventeen, on the page — seven with its long mark taken off
 concept_tag: MW-NUMBER-SEVENTEEN-WRITTEN
 prerequisites: [MW-C38-hear-satara]
 sounds: []
-roots: []
+roots: [sanskrit-saptadasha]
+etymology_hook: "satarā ← Sanskrit saptadaśa 'seventeen', a tadbhava (CDIAL 13146, Hindi and Gujarati rows)"
 duration:
   max_seconds: 175
 requires:
@@ -50,6 +51,11 @@ Write **सात** and then **सतरा** underneath it. The difference is o
 
 That is the whole spelling, and it is the tidiest evidence in the set that the
 teens are built rather than learned.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सतरा** (*satarā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *saptadaśa*, "seventeen". CDIAL gives no Marwari form in this entry (CDIAL 13146); the match is through Hindi *sattrah* and Gujarati *sattar*. It is *sapta*, "seven", and *daśa*, "ten".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SATARA-01, MW-SCRIPT-SAAT-01, MW-SCRIPT-SOLA-01] -->

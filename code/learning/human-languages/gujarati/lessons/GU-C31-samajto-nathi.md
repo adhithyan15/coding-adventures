@@ -11,8 +11,8 @@ gloss: "I do not understand — the most useful sentence a beginner owns"
 concept_tag: GU-NEG-SAMAJTO-NATHI
 prerequisites: [GU-C31-nathi, GU-C08-samajvun]
 sounds: []
-roots: []
-etymology_hook: "The verb you were taught fifteen chapters ago finally has something it can be denied with."
+roots: [sanskrit-sambudhyate, sanskrit-nasti]
+etymology_hook: "samajto from samajvũ ← Sanskrit saṁbudhyate 'understands' (CDIAL 12959); nathī ← nāsti 'is not' (CDIAL 7091)"
 duration:
   max_seconds: 240
 requires:
@@ -58,6 +58,8 @@ form. A woman says **સમજતી નથી** (*samajtī nathī*), with **-�
 marks the speaker's own gender on this verb, so the sentence you use is the one
 that matches you — the same choice the track's gender chapter set up, arriving
 now on a sentence you will say every day.
+
+Both words are inherited. CDIAL lists *samajvũ* under Sanskrit *saṁbudhyate*, "wakes up, understands" (CDIAL 12959), and *nathī* under *nāsti*, "is not" (CDIAL 7091).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

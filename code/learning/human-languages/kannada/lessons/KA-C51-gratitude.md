@@ -11,7 +11,8 @@ romanization: "kṛtajñate"
 concept_tag: KA-NOUN-GRATITUDE
 prerequisites: [KA-C50-farewell, KA-C49-true]
 sounds: []
-roots: []
+roots: [sanskrit-krtajna]
+etymology_hook: "kṛtajñate ← Sanskrit kṛtajñatā 'gratitude', kṛta 'what was done' + jña 'knowing'"
 duration:
   max_seconds: 210
 requires:
@@ -43,6 +44,11 @@ reviews_of: [KA-C50-farewell]
 Two Sanskrit pieces once more: *kṛta*, 'done', and *jña*, 'knowing'. Gratitude is knowing-what-was-done — the condition of a person who has not forgotten the favour.
 
 *jña* is a very old root, and English holds it too. The *know* of English, the *nōscere* of Latin, the *gnosis* of Greek and this *jña* all come down from one ancestor. Saying ಕೃತಜ್ಞತೆ is saying *know* with three thousand years of Indian weather on it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೃತಜ್ಞತೆ** (*kṛtajñate*) is Sanskrit *kṛtajñatā*, "gratitude", with Kannada's *-e* for the Sanskrit *-ā*: *kṛta*, "what was done", and *jña*, "knowing", so the grateful person is the one who knows what was done for them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

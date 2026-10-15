@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 222,
-  "sourceHash": "fnv1a64:5666b74a823d86a4",
+  "sourceHash": "fnv1a64:196f82e28917073b",
   "lessonIds": [
     "HI-C222-patjhar",
     "HI-C222-karan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch222.txt",
   "json": "hindi/narration/ch222.json",
-  "textHash": "fnv1a64:6d7c6c77ede31eef",
-  "jsonHash": "fnv1a64:c2a58f73cc9c4fbf",
+  "textHash": "fnv1a64:0dcf15654b265de4",
+  "jsonHash": "fnv1a64:0de19f422fe19451",
   "findings": []
 }

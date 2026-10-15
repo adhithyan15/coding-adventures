@@ -12,6 +12,9 @@ Before the new one: say the Malayalam for a channel, then the Malayalam for a pr
 You'll want to know: കാഴ്ചപ്പാട്.
 കാഴ്ചപ്പാട് — kāḻcappāṭŭ — "a point of view".
 
+The word, taken apart.
+കാഴ്ചപ്പാട് (kāḻcappāṭŭ) is native Dravidian: kāḻca, "sight", which DEDR 1443 lists under the seeing verb, with a second part meaning "manner": "the manner of seeing".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Malayalam for a programme, then the Malayalam for a 
 
 You'll want to know: തീപ്പെട്ടി.
 തീപ്പെട്ടി — tīppeṭṭi — "a matchbox".
+
+The word, taken apart.
+തീപ്പെട്ടി (tīppeṭṭi) is native Dravidian, "the fire box": tī, "fire" (DEDR 3266), and peṭṭi, "box" (DEDR 4388). DEDR 4388 compares Sanskrit peṭaka.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Malayalam for a point of view, then the Malayalam fo
 You'll want to know: താഴ്.
 താഴ് — tāḻŭ — "a padlock".
 
+The word, taken apart.
+താഴ് (tāḻŭ) is native Dravidian, one word with Tamil tāḻ and Kannada tāḻ (DEDR 3179). DEDR 3179 compares Sanskrit tāḍa(ka).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Malayalam for a matchbox, then the Malayalam for a p
 You'll want to know: ചങ്ങല.
 ചങ്ങല — caṅṅala — "a chain".
 
+The word, taken apart.
+ചങ്ങല (caṅṅala) is a tadbhava of Sanskrit śṛṅkhala, "chain" (CDIAL 12580), reshaped in the mouth.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Malayalam for a padlock, then the Malayalam for a ch
 
 You'll want to know: വടി.
 വടി — vaṭi — "a stick".
+
+The word, taken apart.
+വടി (vaṭi) is native Dravidian, one word with Tamil vaṭi, Kannada baḍi and Telugu baḍita (DEDR 5224).
 
 What you've built.
 One more word for this chapter.

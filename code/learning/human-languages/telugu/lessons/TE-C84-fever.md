@@ -11,7 +11,8 @@ romanization: "jvaraṁ"
 concept_tag: TE-WELLBEING-FEVER
 prerequisites: [TE-C63-disease, TE-C63-health]
 sounds: []
-roots: []
+roots: [sanskrit-jvara]
+etymology_hook: "jvaraṁ ← Sanskrit jvara 'fever', a tatsama (CDIAL 5303)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [TE-C63-health]
 
 Notice the shape. The person sits in the dative నాకు and the fever *arrives*, on the same
 come-verb as **నాకు తెలుగు వచ్చు**. In Telugu an illness is something that comes to you.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**జ్వరం** (*jvaraṁ*) is Sanskrit *jvara*, "fever", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 5303).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

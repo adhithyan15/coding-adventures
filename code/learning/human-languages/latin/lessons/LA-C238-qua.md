@@ -13,7 +13,8 @@ gloss: "by which way"
 concept_tag: LA-LOC238-QUA
 prerequisites: [LA-C238-apud, LA-C238-coram]
 sounds: []
-roots: []
+roots: [qua-latin, qui-latin]
+etymology_hook: "quā 'by which way' — the ablative of quī 'which', with viā 'way' understood"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C238-coram]
 <!-- hl-knowledge: introduces=[LA-LEX-C238-LOC238-05]; assesses=[] -->
 
 **quā** — "by which way".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**quā** is the ablative feminine of *quī*, "who, which" (Lewis & Short), with *viā*, "way", understood: by which way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ203-PELLE
 prerequisites: [FA-C202-kamrang, FA-C202-bimaze]
 sounds: []
 roots: []
+etymology_hook: "pelle: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C202-bimaze]
 <!-- hl-knowledge: introduces=[FA-LEX-C203-CHIZ203-01]; assesses=[] -->
 
 **پله** — *pelle* — "a stair, a step".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pelle* is the word for a stair or step, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "naḍugu"
 concept_tag: KA-VERB-NADUGU
 prerequisites: [KA-C160-vyayama-madu, KA-C160-sinu]
 sounds: []
-roots: []
+roots: [dravidian-natunku-tremble]
+etymology_hook: "naḍugu: native Dravidian, one word with Tamil naṭuṅku (DEDR 3585)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C160-sinu]
 <!-- hl-knowledge: introduces=[KA-LEX-C160-KRIYE160-05]; assesses=[] -->
 
 **ನಡುಗು** — *naḍugu* — "to shiver, to tremble".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಡುಗು** (*naḍugu*) is native Dravidian, one word with Tamil *naṭuṅku* (DEDR 3585). DEDR lists *naḍugu* itself, "to tremble, shiver".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

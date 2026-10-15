@@ -14,7 +14,8 @@ romanization: "yōgaṁ"
 concept_tag: ML-JOLI334-YOGAM
 prerequisites: [ML-C334-manejar, ML-C334-kampani]
 sounds: []
-roots: []
+roots: [sanskrit-yoga]
+etymology_hook: "yōgaṁ ← Sanskrit yōga 'yoking, joining', a tatsama (CDIAL 10526)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C334-kampani]
 <!-- hl-knowledge: introduces=[ML-LEX-C334-JOLI334-05]; assesses=[] -->
 
 **യോഗം** — *yōgaṁ* — "a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**യോഗം** (*yōgaṁ*) ← Sanskrit *yōga*, "yoking, joining", taken over whole as a tatsama, with Malayalam's noun ending *-ṁ* (CDIAL 10526). A meeting is a joining.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

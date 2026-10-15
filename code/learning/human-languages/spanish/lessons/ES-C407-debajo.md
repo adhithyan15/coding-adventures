@@ -41,6 +41,7 @@ reviews_of: [ES-C407-medio, ES-C310-mesa]
 
 The history is visible: **de + bajo**. **Bajo** is low; **debajo** names the
 lower position. The DLE defines it as a place below another higher one.
+*Bajo* ← Late Latin *bassus*, "low" (EtymDB 2.1), and *de* ← Latin *dē*.
 
 ## Grammar Lens: debajo de
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DEBAJO, ES-LEX-C310-ASK-03] -->

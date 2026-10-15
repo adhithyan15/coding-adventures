@@ -14,7 +14,8 @@ romanization: "kam-kam"
 concept_tag: FA-ZAMAN192-KAM-KAM
 prerequisites: [FA-C191-yalda, FA-C192-salane]
 sounds: []
-roots: []
+roots: [persian-kam]
+etymology_hook: "kam-kam: Persian kam 'little' (Middle Persian kam), doubled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C192-salane]
 <!-- hl-knowledge: introduces=[FA-LEX-C192-ZAMAN192-02]; assesses=[] -->
 
 **کم کم** — *kam-kam* — "gradually, little by little".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kam-kam* is *kam*, "little", doubled: little by little. *kam* is native, usually traced to Middle Persian *kam*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "potī"
 concept_tag: UR-CHIZ230-POTI
 prerequisites: [UR-C229-petrol-pamp, UR-C229-sit]
 sounds: []
-roots: []
+roots: [sanskrit-pautri]
+etymology_hook: "potī ← Sanskrit pautrī 'son's daughter', a tadbhava (CDIAL 8417)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C229-sit]
 <!-- hl-knowledge: introduces=[UR-LEX-C230-CHIZ230-01]; assesses=[] -->
 
 **پوتی** — *potī* — "a granddaughter (son's daughter)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پوتی** (*potī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pautrī*, "son's daughter" (CDIAL 8417). It is the feminine of *pautra*, "son's son".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

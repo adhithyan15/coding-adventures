@@ -14,7 +14,8 @@ romanization: "sviccŭ"
 concept_tag: ML-VASTU214-SVICCU
 prerequisites: [ML-C214-barrari, ML-C214-pasa]
 sounds: []
-roots: []
+roots: [english-switch]
+etymology_hook: "sviccŭ ← English switch"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C214-pasa]
 <!-- hl-knowledge: introduces=[ML-LEX-C214-VASTU214-04]; assesses=[] -->
 
 **സ്വിച്ച്** — *sviccŭ* — "a switch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**സ്വിച്ച്** (*sviccŭ*) ← English *switch*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

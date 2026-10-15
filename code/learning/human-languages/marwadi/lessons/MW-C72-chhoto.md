@@ -14,7 +14,8 @@ romanization: "chhoṭo"
 concept_tag: MW-ANIMALS72-CHHOTO
 prerequisites: [MW-C72-mor, MW-C72-baro]
 sounds: []
-roots: []
+roots: [indo-aryan-chotta]
+etymology_hook: "chhoṭo ← *choṭṭa 'small', reconstructed (CDIAL 5071, Hindi and Gujarati rows)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C72-baro]
 <!-- hl-knowledge: introduces=[MW-LEX-C72-ANIMALS72-05]; assesses=[] -->
 
 **छोटो** — *chhoṭo* — "small".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**छोटो** (*chhoṭo*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*choṭṭa*, "small", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 5071); the match is through Hindi *choṭā* and Gujarati *choṭũ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

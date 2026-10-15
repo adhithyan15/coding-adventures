@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 97,
-  "sourceHash": "fnv1a64:cd129b27ab56ef7e",
+  "sourceHash": "fnv1a64:a1aa03b43e300c0e",
   "lessonIds": [
     "TE-C97-laugh",
     "TE-C97-crying",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch97.txt",
   "json": "telugu/narration/ch97.json",
-  "textHash": "fnv1a64:270ec05c57ca4b38",
-  "jsonHash": "fnv1a64:5eea780c71d17e06",
+  "textHash": "fnv1a64:5db52cfa29b90457",
+  "jsonHash": "fnv1a64:80e8bd9023d7ce37",
   "findings": []
 }

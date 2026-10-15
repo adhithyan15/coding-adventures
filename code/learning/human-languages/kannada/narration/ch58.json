@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "More Short Replies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ceb0bba9dc2091cb",
+  "sourceHash": "fnv1a64:7bbc7dc606592576",
   "lessons": [
     {
       "id": "KA-C58-a-little",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df379258ceea7950",
+      "sourceHash": "fnv1a64:a287f0759ee862c0",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಲ್ಪ (svalpa) is Sanskrit svalpa, \"very little\", taken over whole: su-, \"well, very\", and alpa, \"small\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -123,7 +134,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e29093063533c259",
+      "sourceHash": "fnv1a64:ebbf03e28399f810",
       "notice": null,
       "blocks": [
         {
@@ -199,6 +210,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೆಚ್ಚು (heccu) is native Dravidian, of the root per, \"great\", and DEDR 4411 lists peccu, heccu, \"to become great, increase\", under it; the entry also has Tamil peru and Malayalam peru."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -209,7 +231,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -258,7 +280,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -289,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25a18d7ed0c84bd5",
+      "sourceHash": "fnv1a64:0dc211500a1acc51",
       "notice": null,
       "blocks": [
         {
@@ -334,6 +356,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಡಿಮೆ (kaḍime) is native Dravidian, of the root kaḍe, \"to pass over; end, last\", and DEDR 1109 lists kaḍime, \"deficiency\", under it; the entry also has Tamil kaṭa and Telugu kaḍacu."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -344,7 +377,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -393,7 +426,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -424,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4800359b5132acd1",
+      "sourceHash": "fnv1a64:2aad17d3b93d7ee7",
       "notice": null,
       "blocks": [
         {
@@ -469,6 +502,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೇಡ (bēḍa) is native Dravidian, the negative of bēku, \"it is wanted\", and DEDR 5528 lists bēḍa, \"it is not wanted\", itself; the entry also has Telugu vēḍu and Malayalam vēṇam."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -479,7 +523,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -528,7 +572,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -559,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b9d7ab8e9362d55",
+      "sourceHash": "fnv1a64:80545629c396b176",
       "notice": null,
       "blocks": [
         {
@@ -604,6 +648,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಷ್ಟೇ (aṣṭē) is native Dravidian: aṣṭu, \"that much\", which DEDR 1 lists on the far-pointing base a-, with -ē, \"only\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -614,7 +669,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -663,7 +718,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

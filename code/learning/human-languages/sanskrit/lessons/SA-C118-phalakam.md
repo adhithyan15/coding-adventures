@@ -14,7 +14,8 @@ romanization: "phalakam"
 concept_tag: SA-THINGS118-PHALAKAM
 prerequisites: [SA-C118-kaksah, SA-C118-asandi]
 sounds: []
-roots: []
+roots: [sanskrit-phalaka]
+etymology_hook: "phalaka 'board, plank' (Brāhmaṇas) ← √phal 'burst, split' (CDIAL 9053), cf. English split (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C118-asandi]
 <!-- hl-knowledge: introduces=[SA-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **फलकम्** — *phalakam* — "a board, a plank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*phalaka* "a board, a plank, a bench" is found from the Brāhmaṇas on (MW). CDIAL 9053 refers it to the root √phal "burst, split", the root MW files it under, and MW compares √phal with English *split*. Nepali kept it as *phalek* "board, plank" (CDIAL 9053).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

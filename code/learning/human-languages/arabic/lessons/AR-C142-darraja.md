@@ -14,7 +14,8 @@ romanization: "darrāja"
 concept_tag: AR-THINGS142-DARRAJA
 prerequisites: [AR-C141-jild, AR-C141-azm]
 sounds: []
-roots: []
+roots: [d-r-j]
+etymology_hook: "darrāja: built on the root d-r-j, 'to go step by step' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C141-azm]
 <!-- hl-knowledge: introduces=[AR-LEX-C142-THINGS142-01]; assesses=[] -->
 
 **دراجة** — *darrāja* — "a bicycle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دراجة** (*darrāja*) is built on the native Arabic root *d-r-j*, "to go step by step" (Lane). Lane's *darrāja* is a wheeled frame on which a child or an old man steps along; the bicycle took over the word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

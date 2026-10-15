@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for a tooth, then the Marwadi for the throat
 You'll want to know: पेट.
 पेट — peṭ — "the stomach".
 
+The word, taken apart.
+पेट (peṭ) is a tadbhava, a word inherited and reshaped by sound change. It comes from peṭṭa, "belly", a form CDIAL reconstructs from its descendants. CDIAL lists Old Marwari peṭa under it (CDIAL 8376). CDIAL notes that the word may be the same as one for "basket".
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for the throat, then the Marwadi for the sto
 
 You'll want to know: आंगळी.
 आंगळी — āṅgḷī — "a finger".
+
+The word, taken apart.
+आंगळी (āṅgḷī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from aṅguli, "finger, toe". CDIAL gives no Marwari form in this entry (CDIAL 135); the match is through Gujarati ā̃gḷī. Marwadi, like Gujarati, says the l curled back.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for the stomach, then the Marwadi for a fing
 You'll want to know: होठ.
 होठ — hoṭh — "a lip".
 
+The word, taken apart.
+होठ (hoṭh) is a tadbhava of Sanskrit oṣṭha, "lip", under which CDIAL lists Hindi and Gujarati hoṭh (CDIAL 2563). Where the h- came from is not settled: a proposal CDIAL records traces it to adhaoṣṭha, "lower lip" (CDIAL 245a).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for a finger, then the Marwadi for a lip.
 You'll want to know: मूंडो.
 मूंडो — mū̃ḍo — "the face, the mouth".
 
+The word, taken apart.
+CDIAL lists Old Marwari mūḍho, "face", under Sanskrit mūrdhan, "head, top" (CDIAL 10247). मूंडो (mū̃ḍo) is a close form of the same word, with a nasal vowel and no breath after the ḍ; CDIAL does not list that exact shape.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for a lip, then the Marwadi for the face.
 
 You'll want to know: गोडो.
 गोडो — goḍo — "a knee".
+
+The word, taken apart.
+गोडो (goḍo) is a tadbhava, a word inherited and reshaped by sound change. It comes from goḍḍa, "foot, leg, knee", a form CDIAL reconstructs from its descendants. CDIAL gives no Marwari form in this entry (CDIAL 4272); the match is through Punjabi goḍḍā and Hindi goṛ. CDIAL sets it in a group of words for "heel, ankle, knee, wrist".
 
 What you've built.
 One more word for this chapter.

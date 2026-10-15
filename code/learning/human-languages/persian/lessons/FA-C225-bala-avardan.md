@@ -14,7 +14,8 @@ romanization: "bâlâ âvardan"
 concept_tag: FA-VERB-BALA-AVARDAN
 prerequisites: [FA-C225-nale-kardan, FA-C225-khamyaze-keshidan]
 sounds: []
-roots: []
+roots: [persian-bala]
+etymology_hook: "bâlâ âvardan: Persian bâlâ 'up' + âvardan 'to bring'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C225-khamyaze-keshidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C225-KONESH225-04]; assesses=[] -->
 
 **بالا آوردن** — *bâlâ âvardan* — "to vomit, to throw up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâlâ âvardan* is "to bring up": *bâlâ*, "up" (usually traced to Middle Persian *bālāy*), with *âvardan*, "to bring". Both are native. *âvardan*, "to bring", is an inherited verb; it is usually traced to Middle Persian *āwurdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

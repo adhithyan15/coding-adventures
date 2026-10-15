@@ -14,7 +14,8 @@ romanization: "ṭikaṭ ghar"
 concept_tag: HI-THG205-TIKATGHAR
 prerequisites: [HI-C205-patra, HI-C205-lifafa]
 sounds: []
-roots: []
+roots: [english-ticket, sanskrit-ghara]
+etymology_hook: "ṭikaṭ ← English ticket; ghar ← ghara 'house' (CDIAL 4428)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C205-lifafa]
 <!-- hl-knowledge: introduces=[HI-LEX-C205-THG205-03]; assesses=[] -->
 
 **टिकट घर** — *ṭikaṭ ghar* — "a ticket office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**टिकट घर** (*ṭikaṭ ghar*) joins English *ticket* with *ghar*, "house", from *ghara* (CDIAL 4428).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

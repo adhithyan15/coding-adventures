@@ -11,7 +11,8 @@ romanization: "cūḍu"
 concept_tag: TE-VERB-LOOK
 prerequisites: [TE-C32-cuudu]
 sounds: []
-roots: []
+roots: [dravidian-cuucu-see]
+etymology_hook: "cūḍu: native Dravidian; DEDR 2735 lists cūcu, stem cūḍ-, 'to see', with Kannada cūpu 'sight'"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C32-cuudu]
 **చూడు** (*cūḍu*) — "look".
 
 You met it earlier as "to see, to look"; here it opens the run. It also stretches to 'to look after', the same three meanings Kannada packs into *nōḍu*, although the two verbs themselves are not related.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**చూడు** (*cūḍu*) is native Dravidian. DEDR 2735 lists the Telugu verb *cūcu*, "to see, look at", with the stem *cūḍ-*, beside Kannada *cūpu*, "sight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "har"
 concept_tag: HI-THG245-HAR
 prerequisites: [HI-C244-kai, HI-C244-dono]
 sounds: []
-roots: []
+roots: [persian-har]
+etymology_hook: "har: usually traced to Persian har 'every'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C244-dono]
 <!-- hl-knowledge: introduces=[HI-LEX-C245-THG245-01]; assesses=[] -->
 
 **हर** — *har* — "every, each".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हर** (*har*) is a loan, usually traced to Persian *har*, "every".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

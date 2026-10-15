@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 236,
-  "sourceHash": "fnv1a64:d24afcd78d96fc2d",
+  "sourceHash": "fnv1a64:874fc877bcb5276a",
   "lessonIds": [
     "MR-C236-phalat",
     "MR-C236-parpatra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch236.txt",
   "json": "marathi/narration/ch236.json",
-  "textHash": "fnv1a64:115f1aa4c7431a10",
-  "jsonHash": "fnv1a64:c97c1fd21fa62dab",
+  "textHash": "fnv1a64:66485b9b41439110",
+  "jsonHash": "fnv1a64:a7dc48d73ca39f90",
   "findings": []
 }

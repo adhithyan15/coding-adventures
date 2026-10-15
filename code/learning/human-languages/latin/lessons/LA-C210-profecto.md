@@ -13,7 +13,8 @@ gloss: "surely"
 concept_tag: LA-CAUSA210-PROFECTO
 prerequisites: [LA-C210-autem, LA-C210-vero]
 sounds: []
-roots: []
+roots: [profecto-latin, facere-latin]
+etymology_hook: "profectō 'surely' — prō factō 'for a fact'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C210-vero]
 <!-- hl-knowledge: introduces=[LA-LEX-C210-CAUSA210-03]; assesses=[] -->
 
 **profectō** — "surely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**profectō** is *prō factō*, "for a fact" (Lewis & Short): surely.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

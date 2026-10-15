@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 140,
-  "sourceHash": "fnv1a64:99ca0a36aacb17b6",
+  "sourceHash": "fnv1a64:19e980db23199146",
   "lessonIds": [
     "HI-C140-angur",
     "HI-C140-santara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch140.txt",
   "json": "hindi/narration/ch140.json",
-  "textHash": "fnv1a64:bbd06cb048e2927e",
-  "jsonHash": "fnv1a64:c1d442b9a727939c",
+  "textHash": "fnv1a64:7d81b1773f2a9bf2",
+  "jsonHash": "fnv1a64:d53abef0cf7c25dd",
   "findings": []
 }

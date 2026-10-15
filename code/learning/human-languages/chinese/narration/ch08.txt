@@ -159,6 +159,7 @@ Both halves are characters you have just written, and both mean something:
 名 míng — name.
 字 zì — character, a written unit.
 So the word is "name-character", and that is not a stretched hook. A Chinese personal name is a small number of characters, usually two or three, each chosen deliberately for what it means. The word for "name" says what a name is made of.
+Both are inherited from Middle Chinese: mjieng, "name", and dziH, "written character" (Guangyun, in Baxter's transcription).
 
 Sounds you'll need — the second syllable goes light again.
 míngzi, not míngzì.

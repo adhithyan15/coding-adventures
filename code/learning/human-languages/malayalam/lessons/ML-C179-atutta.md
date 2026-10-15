@@ -14,7 +14,8 @@ romanization: "aṭutta"
 concept_tag: ML-BHAVI179-ATUTTA
 prerequisites: [ML-C178-orikkal, ML-C178-celavazhikkuka]
 sounds: []
-roots: []
+roots: [dravidian-atu-near]
+etymology_hook: "aṭutta: native Dravidian, 'coming near', from the verb 'to approach'; Tamil aṭu (DEDR 79)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C178-celavazhikkuka]
 <!-- hl-knowledge: introduces=[ML-LEX-C179-BHAVI179-01]; assesses=[] -->
 
 **അടുത്ത** — *aṭutta* — "next, coming". The future adds **-ഉം** (*-uṁ*) to the verb: **പോകുക** gives **പോകും**. **അടുത്ത ആഴ്ച ഞാൻ കൊല്ലത്ത് പോകും** — *aṭutta āḻca ñān kollattŭ pōkuṁ* — "Next week I will go to Kollam."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**അടുത്ത** (*aṭutta*) is native Dravidian, a form of the verb "to come near"; DEDR 79 lists the root with Tamil *aṭu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

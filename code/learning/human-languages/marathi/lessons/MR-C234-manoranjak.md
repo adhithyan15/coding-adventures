@@ -14,7 +14,8 @@ romanization: "manorañjak"
 concept_tag: MR-GUN234-MANORANJAK
 prerequisites: [MR-C233-sahansil, MR-C234-mahattvaca]
 sounds: []
-roots: []
+roots: [sanskrit-manas, sanskrit-ranjaka]
+etymology_hook: "manorañjak: Sanskrit manas 'mind' + rañjaka 'colouring, delighting'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C234-mahattvaca]
 <!-- hl-knowledge: introduces=[MR-LEX-C234-GUN234-02]; assesses=[] -->
 
 **मनोरंजक** — *manorañjak* — "entertaining".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मनोरंजक** (*manorañjak*) is a compound built from Sanskrit *manas*, "mind" (CDIAL 9822), and *rañjaka*, "colouring, delighting".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

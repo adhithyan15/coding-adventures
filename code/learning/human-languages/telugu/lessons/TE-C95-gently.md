@@ -11,7 +11,8 @@ romanization: "mellagā"
 concept_tag: TE-ASK-GENTLY
 prerequisites: [TE-C95-intelugu, TE-C95-howsay]
 sounds: []
-roots: []
+roots: [dravidian-mel-soft]
+etymology_hook: "mellagā: native Dravidian, one word with Tamil mella and Kannada mel (DEDR 5078)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [TE-C95-howsay]
 **మెల్లగా** (*mellagā*) — "gently, softly", and "slowly".
 
 It overlaps with **నెమ్మదిగా**. **మెల్లగా** leans to softness: a quiet voice, a careful hand.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**మెల్లగా** (*mellagā*) is native Dravidian, one word with Tamil *mella* and Kannada *mel* (DEDR 5078). DEDR lists Telugu *mella*, "slowly", itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

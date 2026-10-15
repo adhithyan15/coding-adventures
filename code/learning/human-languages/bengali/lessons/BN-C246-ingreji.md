@@ -14,7 +14,8 @@ romanization: "ingreji"
 concept_tag: BN-GUN246-INGREJI
 prerequisites: [BN-C245-laibreri, BN-C246-bideshi]
 sounds: []
-roots: []
+roots: [persian-angrez, portuguese-ingles]
+etymology_hook: "ingreji: usually traced, through Persian angrēz 'Englishman', to Portuguese inglês"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C246-bideshi]
 <!-- hl-knowledge: introduces=[BN-LEX-C246-GUN246-02]; assesses=[] -->
 
 **ইংরেজি** — *ingreji* — "English".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ইংরেজি** (*ingreji*) is usually traced, through Persian *angrēz*, "an Englishman", to Portuguese *inglês*, "English", with the ending *-i*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

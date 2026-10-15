@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to run away, then the Urdu for to call.
 You'll want to know: جیتنا.
 جیتنا — jītnā — "to win".
 
+The word, taken apart.
+جیتنا (jītnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jita, "won, conquered" (CDIAL 5224).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to call, then the Urdu for to win.
 
 You'll want to know: ہارنا.
 ہارنا — hārnā — "to lose (a game)".
+
+The word, taken apart.
+ہارنا (hārnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from hārayati, "causes to be taken; loses" (CDIAL 14061).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to win, then the Urdu for to lose.
 You'll want to know: سکھانا.
 سکھانا — sikhānā — "to teach".
 
+The word, taken apart.
+سکھانا (sikhānā) is the causing form of sīkhnā, "to learn": to teach is to make someone learn. CDIAL lists both under Sanskrit śikṣate, "learns" (CDIAL 12430).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to lose, then the Urdu for to teach.
 You'll want to know: سمجھانا.
 سمجھانا — samjhānā — "to explain".
 
+The word, taken apart.
+سمجھانا (samjhānā) is the causing form of samajhnā, "to understand": to explain is to make someone understand. CDIAL lists the verb under Sanskrit saṃbudhyate, "wakes up, understands" (CDIAL 12959).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to teach, then the Urdu for to explain.
 
 You'll want to know: مانگنا.
 مانگنا — māṅgnā — "to ask for".
+
+The word, taken apart.
+مانگنا (māṅgnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mārgati, "seeks, requests" (CDIAL 10074). It is built on mārga, "path": to seek was "to track".
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 51,
-  "sourceHash": "fnv1a64:ced1dee92d604a47",
+  "sourceHash": "fnv1a64:2d90fae3e100cb67",
   "lessonIds": [
     "FA-C51-name",
     "FA-C51-ruzname",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch51.txt",
   "json": "persian/narration/ch51.json",
-  "textHash": "fnv1a64:95de2c9cff8faa19",
-  "jsonHash": "fnv1a64:5b906436537bd30c",
+  "textHash": "fnv1a64:eabe9c3f7dccc08e",
+  "jsonHash": "fnv1a64:58de15237bf744d6",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "ārisu"
 concept_tag: KA-VERB-ARISU
 prerequisites: [KA-C151-kapadu, KA-C151-sudu]
 sounds: []
-roots: []
+roots: [dravidian-aaru-dry, dravidian-aray-search]
+etymology_hook: "ārisu: 'put out' is native āru 'to go out' + -isu (DEDR 404); 'choose' is queried under āray 'to search' (DEDR 377)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C151-sudu]
 <!-- hl-knowledge: introduces=[KA-LEX-C152-ACT152-01]; assesses=[] -->
 
 **ಆರಿಸು** — *ārisu* — "to put out; to choose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆರಿಸು** (*ārisu*) is native Dravidian, and it is two verbs that sound alike. "To put out" is the causative of *āru*, "to go out, cool": DEDR 404 lists *āṟisu*, "to cause to go out". "To choose" is listed, with a query, under *āray*, "to search, look for": DEDR 377 has *ārisu*, "to pick out, select", marked as doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

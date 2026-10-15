@@ -14,7 +14,8 @@ romanization: "hor"
 concept_tag: PA-DEF108-HOR
 prerequisites: [PA-C108-ive, PA-C108-uve, PA-C07-vekhna]
 sounds: []
-roots: []
+roots: [sanskrit-apara]
+etymology_hook: "hor ← Sanskrit apara 'posterior; different, other', a tadbhava (CDIAL 434)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [PA-C108-uve]
 <!-- hl-knowledge: introduces=[PA-LEX-C108-DEF108-05]; assesses=[] -->
 
 **ਹੋਰ** — *hor* — "other, more".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਹੋਰ** (*hor*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *apara*, "posterior; different, other" (CDIAL 434). CDIAL lists Punjabi *hor*, "other, more".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

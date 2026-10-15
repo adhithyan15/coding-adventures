@@ -14,7 +14,8 @@ romanization: "bāsrī"
 concept_tag: MR-VASTU268-BASRI
 prerequisites: [MR-C268-avjar, MR-C268-tabla]
 sounds: []
-roots: []
+roots: [sanskrit-vamshi]
+etymology_hook: "bāsrī: as Hindi bāṁsurī; CDIAL lists only bāṁsī 'flute' under vaṁśī 'flute, pipe' (CDIAL 11180)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C268-tabla]
 <!-- hl-knowledge: introduces=[MR-LEX-C268-VASTU268-03]; assesses=[] -->
 
 **बासरी** — *bāsrī* — "a flute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बासरी** (*bāsrī*) matches Hindi *bāṁsurī*. CDIAL lists the Hindi *bāṁsī*, "flute", under Sanskrit *vaṁśī*, "flute, pipe" (CDIAL 11180), but has no entry for **बासरी**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

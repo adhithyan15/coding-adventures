@@ -12,6 +12,9 @@ Before the new one: say the Persian for "to look at", then the Persian for "to l
 You'll want to know: مخلوط کردن.
 مخلوط کردن — makhlut kardan — "to mix".
 
+The word, taken apart.
+makhlut kardan pairs makhlut, borrowed from Arabic maḫlūṭ, "mixed" (root ḫ-l-ṭ, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to listen, then the Persian for to mix.
 
 You'll want to know: هم زدن.
 هم زدن — ham zadan — "to stir".
+
+The word, taken apart.
+ham zadan pairs ham, "together", with zadan, "to strike": to beat together. ham is inherited: EtymDB traces it to Middle Persian ham and Old Persian hama-, "same, together". zadan, "to strike", is an inherited verb; it is usually traced to Middle Persian zadan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to mix, then the Persian for to stir.
 You'll want to know: جوشاندن.
 جوشاندن — jushândan — "to boil".
 
+The word, taken apart.
+jushândan is the causative of jushidan, "to boil": to make boil. The verb is native, usually traced to Middle Persian jōšīdan.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to stir, then the Persian for to boil.
 You'll want to know: سرخ کردن.
 سرخ کردن — sorkh kardan — "to fry".
 
+The word, taken apart.
+sorkh kardan pairs sorkh, "red", with kardan, "to make": to make red, to fry. sorkh is native, usually traced to Middle Persian suxr. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to boil, then the Persian for to fry.
 
 You'll want to know: خرد کردن.
 خرد کردن — khord kardan — "to chop".
+
+The word, taken apart.
+khord kardan pairs khord, "small, fine", with kardan, "to make": to make small. khord is native, usually traced to Middle Persian xward. kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.

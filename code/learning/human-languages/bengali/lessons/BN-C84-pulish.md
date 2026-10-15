@@ -14,7 +14,8 @@ romanization: "pulish"
 concept_tag: BN-TOWN84-PULISH
 prerequisites: [BN-C83-mondir, BN-C83-hotel]
 sounds: []
-roots: []
+roots: [english-police]
+etymology_hook: "pulish ← English police"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C83-hotel]
 <!-- hl-knowledge: introduces=[BN-LEX-C84-TOWN84-01]; assesses=[] -->
 
 **পুলিশ** — *pulish* — "the police".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**পুলিশ** (*pulish*) is a loan from English *police*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "yek bâr"
 concept_tag: FA-GOZASHTE137-YEK-BAR
 prerequisites: [FA-C137-qablan, FA-C137-parsal]
 sounds: []
-roots: []
+roots: [proto-indo-european-oywos]
+etymology_hook: "yek bâr: Persian yek 'one' + bâr 'time'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C137-parsal]
 <!-- hl-knowledge: introduces=[FA-LEX-C137-GOZASHTE137-04]; assesses=[] -->
 
 **یک بار** — *yek bâr* — "once, one time". **یک بار به تهران رفتم** — *yek bâr be tehrân raftam* — "I went to Tehran once."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yek bâr* is *yek*, "one", with *bâr*, "time, turn": one time. Both are native Persian; *yek* is inherited from Middle Persian *ēk*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

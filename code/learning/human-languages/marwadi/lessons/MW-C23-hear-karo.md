@@ -11,8 +11,8 @@ gloss: make it; do it — the second asking word this track teaches
 concept_tag: MW-VERB-DO
 prerequisites: [MW-C23-thodu]
 sounds: [unaspirated-k, tapped-r, long-o]
-roots: []
-etymology_hook: The same ending as dikhaavo, on the shortest asking word in the source.
+roots: [sanskrit-karoti]
+etymology_hook: "karo ← Sanskrit karoti 'does', a tadbhava (CDIAL 2814, Old Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -51,6 +51,11 @@ same kind of asking word, said to one person across a counter.
 
 *dikhāvo* asks somebody to show you a thing. *karo* asks them to make something
 so — and what they are to make it, you say in front of the word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*karo* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *karoti*, "does". CDIAL lists Old Marwari *karaï* under it (CDIAL 2814). *karo* is the asking form of this verb.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KARO-01, MW-LEX-DIKHAVO-01] -->

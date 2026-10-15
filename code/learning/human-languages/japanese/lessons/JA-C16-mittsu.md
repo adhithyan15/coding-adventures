@@ -11,8 +11,8 @@ gloss: three things — the first word in the chapter that costs nothing at all
 concept_tag: JA-NATIVE-THREE
 prerequisites: [JA-C16-futatsu, JA-W09-mi, JA-W11-small-tsu, JA-C09-mou-ichido-onegaishimasu, JA-C13-family-reception]
 sounds: [mora]
-roots: []
-etymology_hook: Three signs, all of them old, and the small tsu doing exactly the job it was taught to do.
+roots: [japanese-mi-three, japanese-tsu-counter]
+etymology_hook: "mittsu: native mi 'three' + native counter -tsu, with a held t"
 duration:
   max_seconds: 185
 requires:
@@ -51,6 +51,11 @@ The small **っ** is the sign you met in **ゆっくり**: it holds the mouth sh
 one beat. **みっつ** is three beats, and the middle one is silence.
 
 **さん** is *three*. **みっつ** is *three things*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**みっつ** (*mittsu*) is native: *mi*, the inherited word for "three", with the counter *-tsu*, the consonant held before it (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MITTSU, JA-LEX-HITOTSU, JA-LEX-FUTATSU, JA-SCRIPT-SMALL-TSU-01] -->

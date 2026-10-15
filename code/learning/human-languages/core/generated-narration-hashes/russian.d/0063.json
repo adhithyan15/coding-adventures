@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 63,
-  "sourceHash": "fnv1a64:bcc39a85232d4a61",
+  "sourceHash": "fnv1a64:40259d7c5134f30c",
   "lessonIds": [
     "RU-C63-white",
     "RU-C63-black",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch63.txt",
   "json": "russian/narration/ch63.json",
-  "textHash": "fnv1a64:1ead97279acc19de",
-  "jsonHash": "fnv1a64:fc2f14c029dbc9b5",
+  "textHash": "fnv1a64:62293f492f4538ff",
+  "jsonHash": "fnv1a64:e17d66b45ed01022",
   "findings": []
 }

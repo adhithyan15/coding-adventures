@@ -11,7 +11,8 @@ romanization: "dēśa"
 concept_tag: KA-HOME-COUNTRY
 prerequisites: [KA-C103-street, KA-C103-city]
 sounds: []
-roots: []
+roots: [sanskrit-desha]
+etymology_hook: "dēśa ← Sanskrit deśa 'point, region; country', a tatsama (CDIAL 6547)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C103-city]
 **ದೇಶ** (*dēśa*) — "country".
 
 **ನಿಮ್ಮ ದೇಶ ಯಾವುದು?** (*nimma dēśa yāvudu?*) — "what is your country?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದೇಶ** (*dēśa*) is Sanskrit *deśa*, "point, region; country", taken over whole as a learned loan, a tatsama (CDIAL 6547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

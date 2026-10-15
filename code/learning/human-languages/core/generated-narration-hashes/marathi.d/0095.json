@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 95,
-  "sourceHash": "fnv1a64:4ae0749f47b4e51f",
+  "sourceHash": "fnv1a64:c0134fa3749c8d1e",
   "lessonIds": [
     "MR-C95-shabda",
     "MR-C95-khel",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch95.txt",
   "json": "marathi/narration/ch95.json",
-  "textHash": "fnv1a64:01f96690e3d90eb2",
-  "jsonHash": "fnv1a64:b54d73fea458a323",
+  "textHash": "fnv1a64:2417ece2a2bc4f02",
+  "jsonHash": "fnv1a64:36f61c29c3b9f7d3",
   "findings": []
 }

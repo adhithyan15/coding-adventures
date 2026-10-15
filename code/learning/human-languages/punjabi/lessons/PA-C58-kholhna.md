@@ -14,7 +14,8 @@ romanization: "kholhṇā"
 concept_tag: PA-VERB-KHOLHNA
 prerequisites: [PA-C58-dena, PA-C58-rakkhna]
 sounds: []
-roots: []
+roots: [indo-aryan-kholl]
+etymology_hook: "kholhṇā ← *kholl 'to open', a reconstructed form; a tadbhava (CDIAL 3945)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C58-rakkhna]
 <!-- hl-knowledge: introduces=[PA-LEX-C58-VERBS58-04]; assesses=[] -->
 
 **ਖੋਲ੍ਹਣਾ** — *kholhṇā* — "to open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਖੋਲ੍ਹਣਾ** (*kholhṇā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kholl*, "to open", a form CDIAL reconstructs from its descendants (CDIAL 3945).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "majalla"
 concept_tag: AR-THINGS117-MAJALLA
 prerequisites: [AR-C117-tilfaz, AR-C117-jarida, AR-C18-al-taqs, AR-C18-al-taqs]
 sounds: []
-roots: []
+roots: [j-l-l]
+etymology_hook: "majalla: Lane's majalla is a book or scroll (j-l-l); often compared with Aramaic megillā 'scroll'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C117-jarida]
 <!-- hl-knowledge: introduces=[AR-LEX-C117-THINGS117-03]; assesses=[] -->
 
 **مجلة** — *majalla* — "a magazine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مجلة** (*majalla*) is filed by Lane under *j-l-l* as a book or scroll, and one of his sources ties it to *jill*, "a book's cover". It is often compared with Aramaic *megillā*, "scroll", and may be borrowed from it; the magazine is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

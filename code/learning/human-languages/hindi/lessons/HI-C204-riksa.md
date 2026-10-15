@@ -14,7 +14,8 @@ romanization: "rikśā"
 concept_tag: HI-THG204-RIKSA
 prerequisites: [HI-C203-skutar, HI-C204-trak]
 sounds: []
-roots: []
+roots: [english-rickshaw]
+etymology_hook: "rikśā ← English rickshaw"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C204-trak]
 <!-- hl-knowledge: introduces=[HI-LEX-C204-THG204-02]; assesses=[] -->
 
 **रिक्शा** — *rikśā* — "a rickshaw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रिक्शा** (*rikśā*) is a loan from English *rickshaw*. English shortened it from Japanese *jinrikisha*, "man-powered vehicle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

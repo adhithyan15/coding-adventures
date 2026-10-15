@@ -14,7 +14,8 @@ romanization: "kaḷākāruḍu"
 concept_tag: TE-PANI275-KALAKARUDU
 prerequisites: [TE-C274-ganitam, TE-C275-pujari]
 sounds: []
-roots: []
+roots: [sanskrit-kala]
+etymology_hook: "kaḷākāruḍu: Sanskrit kalā 'art' (CDIAL 2927) + kāra 'maker' + -uḍu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C275-pujari]
 <!-- hl-knowledge: introduces=[TE-LEX-C275-PANI275-02]; assesses=[] -->
 
 **కళాకారుడు** — *kaḷākāruḍu* — "an artist, a performer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కళాకారుడు** (*kaḷākāruḍu*) is Sanskrit *kalā*, "any practical art" (CDIAL 2927), and *kāra*, "maker", with the Telugu ending *-uḍu*. CDIAL takes this *kalā* from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

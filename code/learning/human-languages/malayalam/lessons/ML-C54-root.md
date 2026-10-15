@@ -11,7 +11,8 @@ romanization: "vērŭ"
 concept_tag: ML-NOUN-ROOT
 prerequisites: [ML-C54-trunk, ML-C52-flower]
 sounds: []
-roots: []
+roots: [dravidian-ver-root]
+etymology_hook: "vērŭ: native Dravidian, one word with Tamil vēr and Kannada bēr(u) (DEDR 5535)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ Inherited, matching Tamil *vēr* closely. The little ŭ at the end is the enunci
 വേര് reaches past the plant, as the English word does. The വേര് of a matter is where it started, and a question about the വേര് of a quarrel is a question about its cause.
 
 The two languages arriving at the same figure from the same word is not a coincidence here — it is what roots look like to anybody who has pulled one up.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**വേര്** (*vērŭ*) is native Dravidian, one word with Tamil *vēr*, Kannada *bēr(u)* and Telugu *vēru* (DEDR 5535).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

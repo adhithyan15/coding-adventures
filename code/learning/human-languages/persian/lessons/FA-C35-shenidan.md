@@ -14,7 +14,8 @@ romanization: "shenidan"
 concept_tag: FA-VERB-SHENIDAN
 prerequisites: [FA-C35-nushidan, FA-C35-didan]
 sounds: []
-roots: []
+roots: [persian-shenidan]
+etymology_hook: "shenidan: inherited, usually traced to Middle Persian ašnūdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C35-didan]
 <!-- hl-knowledge: introduces=[FA-LEX-C35-VERBS35-04]; assesses=[] -->
 
 **شنیدن** — *shenidan* — "to hear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shenidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *ašnūdan*, "to hear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

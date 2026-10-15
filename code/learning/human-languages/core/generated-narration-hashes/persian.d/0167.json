@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 167,
-  "sourceHash": "fnv1a64:0722127ffc12510f",
+  "sourceHash": "fnv1a64:1e7ae6c847371ea4",
   "lessonIds": [
     "FA-C167-bastani",
     "FA-C167-shokolat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch167.txt",
   "json": "persian/narration/ch167.json",
-  "textHash": "fnv1a64:8fdd82097a1b021f",
-  "jsonHash": "fnv1a64:462dde7e525b7eac",
+  "textHash": "fnv1a64:bcab2c2fbff3b76b",
+  "jsonHash": "fnv1a64:bdad0bb539a46bc3",
   "findings": []
 }

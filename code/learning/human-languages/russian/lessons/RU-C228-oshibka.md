@@ -14,7 +14,8 @@ romanization: "oshíbka"
 concept_tag: RU-VESHCH228-OSHIBKA
 prerequisites: [RU-C227-zhenshchina, RU-C227-malchik]
 sounds: []
-roots: []
+roots: [slavic-shibati]
+etymology_hook: "ошибка is from ошибиться 'to miss', from шибать 'to strike': to strike past the mark"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C227-malchik]
 <!-- hl-knowledge: introduces=[RU-LEX-C228-VESHCH228-01]; assesses=[] -->
 
 **ошибка** (*oshíbka*) — "a mistake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ошибка** comes from *ошибиться*, "to make a mistake", first "to miss, to strike past the target", from *шибать*, "to strike" (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 234,
-  "sourceHash": "fnv1a64:8b8155b628a2e321",
+  "sourceHash": "fnv1a64:43f702da5faf1598",
   "lessonIds": [
     "LA-C234-demitto",
     "LA-C234-colligo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch234.txt",
   "json": "latin/narration/ch234.json",
-  "textHash": "fnv1a64:c3138942838964bc",
-  "jsonHash": "fnv1a64:ea114329d9a64cd3",
+  "textHash": "fnv1a64:8230166d608eeced",
+  "jsonHash": "fnv1a64:2cbd7a8784f2c5f9",
   "findings": []
 }

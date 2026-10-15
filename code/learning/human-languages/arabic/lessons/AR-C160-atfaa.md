@@ -14,7 +14,8 @@ romanization: "aṭfaʾa"
 concept_tag: AR-VERB-ATFAA
 prerequisites: [AR-C160-dhaqa, AR-C160-sabba]
 sounds: []
-roots: []
+roots: [ṭ-f-ʾ]
+etymology_hook: "aṭfaʾa: built on the root ṭ-f-ʾ, 'to be put out (of fire)' (Lane); aṭfaʾa is Form IV, 'to put out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C160-sabba]
 <!-- hl-knowledge: introduces=[AR-LEX-C160-ACT160-03]; assesses=[] -->
 
 **أطفأ** — *aṭfaʾa* — "to switch off, to put out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أطفأ** (*aṭfaʾa*) is built on the native Arabic root *ṭ-f-ʾ*, "to be put out (of fire)" (Lane). *Aṭfaʾa* is Form IV, "to put out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

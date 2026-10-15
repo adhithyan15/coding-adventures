@@ -14,7 +14,8 @@ romanization: "cipiṭakaḥ"
 concept_tag: SA-THG219-CIPITAKAH
 prerequisites: [SA-C219-kapitthah, SA-C219-sevaphalam]
 sounds: []
-roots: []
+roots: [sanskrit-cipita]
+etymology_hook: "cipiṭaka ← cipiṭa 'flat, flattened' + -ka (MW); Hindi cūṛā (CDIAL 4818)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C219-sevaphalam]
 <!-- hl-knowledge: introduces=[SA-LEX-C219-THG219-05]; assesses=[] -->
 
 **चिपिटकः** — *cipiṭakaḥ* — "flattened rice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cipiṭaka* is *cipiṭa*, "flat, flattened" (MW), with the suffix *-ka*: rice beaten flat. It lives on as Hindi *cūṛā* and Bengali *ciṛā* (CDIAL 4818).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

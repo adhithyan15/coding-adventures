@@ -14,7 +14,8 @@ romanization: "ākaḷisu"
 concept_tag: KA-VERB-AKALISU
 prerequisites: [KA-C279-cuccu, KA-C279-ugulu]
 sounds: []
-roots: []
+roots: [dravidian-akalisu-yawn]
+etymology_hook: "ākaḷisu: native Dravidian, one word with Tamil āvi and Telugu āvalincu (DEDR 392)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C279-ugulu]
 <!-- hl-knowledge: introduces=[KA-LEX-C279-KRIYE279-03]; assesses=[] -->
 
 **ಆಕಳಿಸು** — *ākaḷisu* — "to yawn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಕಳಿಸು** (*ākaḷisu*) is native Dravidian, one word with Tamil *āvi*, Telugu *āvalincu* and Malayalam *āvi* (DEDR 392). DEDR lists *ākaḷisu*, "to yawn, gape".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

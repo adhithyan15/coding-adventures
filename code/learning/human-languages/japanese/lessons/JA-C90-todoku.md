@@ -14,7 +14,8 @@ romanization: "todoku"
 concept_tag: JA-VERB-TODOKU
 prerequisites: [JA-C89-tatamu, JA-C90-odoroku]
 sounds: []
-roots: []
+roots: [japanese-todoku]
+etymology_hook: "todoku: native Japanese, inherited, not borrowed; kanji 届く attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C90-odoroku]
 <!-- hl-knowledge: introduces=[JA-LEX-C90-ACT90-02]; assesses=[] -->
 
 **とどく** — *todoku* — "to arrive, to reach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**とどく** (*todoku*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

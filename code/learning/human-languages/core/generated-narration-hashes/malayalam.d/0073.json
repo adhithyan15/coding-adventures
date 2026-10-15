@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 73,
-  "sourceHash": "fnv1a64:54e150e01feeb2a7",
+  "sourceHash": "fnv1a64:e0fad9b452c690c6",
   "lessonIds": [
     "ML-C73-enthukondu",
     "ML-C73-kaaranam",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch73.txt",
   "json": "malayalam/narration/ch73.json",
-  "textHash": "fnv1a64:bbce59b8c47c83db",
-  "jsonHash": "fnv1a64:eaef7e2ce4681b2b",
+  "textHash": "fnv1a64:92dd2e97996ce872",
+  "jsonHash": "fnv1a64:9b86727ca4e6cc5f",
   "findings": []
 }

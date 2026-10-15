@@ -14,7 +14,8 @@ romanization: "myáso"
 concept_tag: RU-FOOD1-MEAT
 prerequisites: [RU-C42-question, RU-C42-answer]
 sounds: []
-roots: []
+roots: [pie-mems]
+etymology_hook: "мясо ← Proto-Slavic *męso; Sanskrit māṃsa 'meat' and Gothic mimz 'meat' are cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C42-answer]
 <!-- hl-knowledge: introduces=[RU-LEX-C43-FOOD1-01]; assesses=[] -->
 
 **мясо** (*myáso*) — "meat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мясо** ← Proto-Slavic *\*męso* — inherited; the old nasal *ę* became Russian *я*. Vasmer lists Old Prussian *mensā*, Sanskrit *māṃsá-* and Gothic *mimz*, all "meat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

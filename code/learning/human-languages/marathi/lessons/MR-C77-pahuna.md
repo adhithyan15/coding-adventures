@@ -14,7 +14,8 @@ romanization: "pāhuṇā"
 concept_tag: MR-FAMILY77-PAHUNA
 prerequisites: [MR-C76-bai, MR-C77-shejari]
 sounds: []
-roots: []
+roots: [sanskrit-prahuna]
+etymology_hook: "pāhuṇā ← Sanskrit prāhuṇa 'guest', a tadbhava (CDIAL 8973)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C77-shejari]
 <!-- hl-knowledge: introduces=[MR-LEX-C77-FAMILY77-02]; assesses=[] -->
 
 **पाहुणा** — *pāhuṇā* — "a guest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पाहुणा** (*pāhuṇā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prāhuṇa*, "guest" (CDIAL 8973).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

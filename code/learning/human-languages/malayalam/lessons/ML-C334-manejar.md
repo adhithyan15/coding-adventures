@@ -14,7 +14,8 @@ romanization: "mānējar"
 concept_tag: ML-JOLI334-MANEJAR
 prerequisites: [ML-C334-jivanakkaran, ML-C334-mutalali]
 sounds: []
-roots: []
+roots: [english-manager]
+etymology_hook: "mānējar ← English manager"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C334-mutalali]
 <!-- hl-knowledge: introduces=[ML-LEX-C334-JOLI334-03]; assesses=[] -->
 
 **മാനേജർ** — *mānējar* — "a manager".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**മാനേജർ** (*mānējar*) ← English *manager*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

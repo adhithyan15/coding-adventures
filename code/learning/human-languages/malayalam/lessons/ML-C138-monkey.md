@@ -11,7 +11,8 @@ romanization: "kuraṅṅŭ"
 concept_tag: ML-ANIMAL-MONKEY
 prerequisites: [ML-C138-bird, ML-C138-snake]
 sounds: []
-roots: []
+roots: [dravidian-kurangu-monkey]
+etymology_hook: "kuraṅṅŭ: native Dravidian, one word with Tamil kuraṅku and Kannada koraṅgi (DEDR 1769)"
 duration:
   max_seconds: 200
 requires:
@@ -39,6 +40,11 @@ reviews_of: [ML-C138-snake]
 <!-- hl-knowledge: introduces=[ML-LEX-C138-ANIMALS-03]; assesses=[] -->
 
 **കുരങ്ങ്** (*kuraṅṅŭ*) — "a monkey", found near temples and in the **മരം**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കുരങ്ങ്** (*kuraṅṅŭ*) is native Dravidian, one word with Tamil *kuraṅku*, Kannada *koraṅgi* and Telugu *k(r)ōti* (DEDR 1769).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

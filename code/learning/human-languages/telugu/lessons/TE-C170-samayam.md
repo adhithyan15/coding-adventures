@@ -14,7 +14,8 @@ romanization: "samayaṁ"
 concept_tag: TE-SAMAYAM170-SAMAYAM
 prerequisites: [TE-C169-macca, TE-C169-benuku]
 sounds: []
-roots: []
+roots: [sanskrit-samaya]
+etymology_hook: "samayaṁ ← Sanskrit samaya 'meeting; rule; agreement; time', a tatsama (CDIAL 13185)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C169-benuku]
 <!-- hl-knowledge: introduces=[TE-LEX-C170-SAMAYAM170-01]; assesses=[] -->
 
 **సమయం** — *samayaṁ* — "time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**సమయం** (*samayaṁ*) is Sanskrit *samaya*, "meeting; rule; agreement; time", taken over whole as a learned loan, a tatsama, with the Telugu noun ending *-ṁ* (CDIAL 13185).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

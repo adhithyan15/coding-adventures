@@ -14,7 +14,8 @@ romanization: "mān"
 concept_tag: MR-BODY71-MAN
 prerequisites: [MR-C71-khanda, MR-C71-bot]
 sounds: []
-roots: []
+roots: [sanskrit-manya]
+etymology_hook: "mān ← Sanskrit manyā 'nape of the neck', a tadbhava (CDIAL 9858)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C71-bot]
 <!-- hl-knowledge: introduces=[MR-LEX-C71-BODY71-04]; assesses=[] -->
 
 **मान** — *mān* — "the neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मान** (*mān*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *manyā*, "nape of the neck" (CDIAL 9858). CDIAL glosses the Marathi word "neck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

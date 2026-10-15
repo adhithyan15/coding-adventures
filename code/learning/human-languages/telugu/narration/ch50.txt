@@ -14,6 +14,9 @@ You'll want to know: ఇప్పుడు.
 The grid from the last chapter has a time row, and this is its near corner. -ప్పుడు is the time-piece; put a pointing vowel in front of it and the word makes itself.
 ఇప్పుడు (ippuḍu) is "this time" — now. అప్పుడు is "that time" — then. ఎప్పుడు is "which time" — when? You already owned the vowels; the row costs you one word.
 
+The word, taken apart.
+ఇప్పుడు (ippuḍu) is native Dravidian: the near-pointing i-, "this", and -ppuḍu, "time". DEDR 410 lists ippuḍu, "this time, now", and DEDR 4559 sets it beside poddu, "time, sun", with Tamil poḻutu, "time".
+
 What you've built.
 Now — and a shape that gives you two more words for free.
 
@@ -46,6 +49,9 @@ You'll want to know: ఎల్లుండి.
 One settled noun for the day after tomorrow. English needs four words and still sounds unsure of itself; Telugu, like its sisters, simply has the word.
 There is an older tomorrow hiding at the front of it. ఎల్లి once meant tomorrow, and though రేపు took that job in everyday speech, ఎల్లి is still in service inside ఎల్లుండి (elluṇḍi), doing its old work one day further out.
 
+The word, taken apart.
+ఎల్లుండి (elluṇḍi) is native Dravidian. DEDR 845 lists Telugu elli, "tomorrow", and elluṇḍi, "the day after tomorrow", itself.
+
 What you've built.
 Two: now, and the day after tomorrow.
 
@@ -77,6 +83,7 @@ You'll want to know: ప్రయాణం.
 ప్రయాణం (prayāṇaṁ) — "a journey".
 Sanskrit pra-yāṇa: the root yā, "to go", with pra-, "forth". A journey is a going-forth, and the word is transparent to anyone holding the pieces.
 The ending is the -ం you have now sorted three times: the tatsama neuter, as on దీపం, హృదయం and భోజనం. When a Telugu noun ends in -ం and names an abstraction, Sanskrit is usually behind it.
+CDIAL 8732 lists Sanskrit prayāṇa, "setting out, journey".
 
 What you've built.
 Three.
@@ -107,8 +114,11 @@ Before the new one: what did prayāṇaṁ mean?
 
 You'll want to know: బయలుదేరు.
 బయలుదేరు (bayaludēru) — "to set out, to start off".
-Native, and a picture rather than an abstraction. బయలు is open ground, the outside; దేరు is to rise, to come forth. To set out is to come out into the open.
+Native, and a picture rather than an abstraction. బయలు is open ground, the outside, and the verb దేరు follows it: to set out is to come out into the open.
 Set it beside ప్రయాణం (prayāṇaṁ) and you have two languages building the same idea from opposite ends: Sanskrit from the going, Telugu from the doorstep.
+
+The word, taken apart.
+The first piece of బయలుదేరు (bayaludēru) is native Dravidian: bayalu, which DEDR 3940 lists as "outside, exterior" and DEDR 5258 as "open space, plain", with Tamil vayal, "open space". DEDR does not settle the second piece.
 
 What you've built.
 Four.
@@ -141,6 +151,9 @@ You'll want to know: వెళ్ళొస్తాను.
 వెళ్ళొస్తాను (veḷḷostānu) — "I'll go and come back --- the everyday goodbye".
 Two verbs you already have, welded at the seam: వెళ్ళి, "having gone", and వస్తాను, "I will come". వెళ్ళొస్తాను (veḷḷostānu) is I'll go and come back, and it is what is said at the door.
 What is not said is the flat "I am going". Leaving without the returning half is what is said of the dead, and the rule holds right across the South. The politeness here is not decoration laid over the grammar; it is the grammar. The reply comes back in the same shape: వెళ్ళి రండి — "go, and come".
+
+The word, taken apart.
+వెళ్ళొస్తాను (veḷḷostānu) is two native Dravidian verbs run together: veḷḷi, "having gone" (DEDR 5393), and vastānu, "I will come", from vaccu (DEDR 5270).
 
 What you've built.
 Five: ఇప్పుడు (ippuḍu), ఎల్లుండి (elluṇḍi), ప్రయాణం (prayāṇaṁ), బయలుదేరు (bayaludēru), and a goodbye that refuses to be one.

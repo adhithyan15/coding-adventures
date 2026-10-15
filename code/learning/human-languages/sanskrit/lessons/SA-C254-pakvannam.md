@@ -14,7 +14,8 @@ romanization: "pakvānnam"
 concept_tag: SA-THG254-PAKVANNAM
 prerequisites: [SA-C254-pratarasah, SA-C254-ratribhojanam]
 sounds: []
-roots: []
+roots: [sanskrit-pakva, ad-eat]
+etymology_hook: "pakvānna = pakva 'cooked' (√pac 'cook') + anna 'food' (MW); pakva gives Hindi pakkā (CDIAL 7621)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C254-ratribhojanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C254-THG254-05]; assesses=[] -->
 
 **पक्वान्नम्** — *pakvānnam* — "cooked food".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pakvānna* is a compound of *pakva*, "cooked, ripe", from the root √pac, "to cook", and *anna*, "food" (MW). *Pakva* lives on as Hindi *pakkā*, "cooked, ripe, real" (CDIAL 7621), and *anna* is the food word you have already met.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 216,
-  "sourceHash": "fnv1a64:a5fd12aa37c54c72",
+  "sourceHash": "fnv1a64:3aa71e0b78d0dda7",
   "lessonIds": [
     "AR-C216-qasida",
     "AR-C216-hadith",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch216.txt",
   "json": "arabic/narration/ch216.json",
-  "textHash": "fnv1a64:8422a01d39cf7155",
-  "jsonHash": "fnv1a64:d64d1b2579a56ccb",
+  "textHash": "fnv1a64:247483d893473d6a",
+  "jsonHash": "fnv1a64:cdc81c1580eb3490",
   "findings": []
 }

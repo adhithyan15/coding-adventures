@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a heron, then the Sanskrit for a bee.
 You'll want to know: मक्षिका.
 मक्षिका — makṣikā — "a fly".
 
+The word, taken apart.
+makṣikā "a fly, a bee" is built on the Rigvedic makṣ "fly" with the suffix -ikā (MW). It lives on as Hindi makkhī "fly" (CDIAL 9696).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a bee, then the Sanskrit for a fly.
 
 You'll want to know: मशकः.
 मशकः — maśakaḥ — "a mosquito".
+
+The word, taken apart.
+maśaka "a mosquito, a gnat" is old, in the Atharvaveda, and is inherited from Indo-European (EtymDB). It lives on as Hindi masā and Bengali maśā "mosquito" (CDIAL 9917).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a fly, then the Sanskrit for a mosquito
 You'll want to know: पिपीलिका.
 पिपीलिका — pipīlikā — "an ant".
 
+The word, taken apart.
+pipīlikā "the small red ant" is old, in the Atharvaveda, and is built on pipīla "ant". CDIAL 8201, after EWA, takes the word to be of unknown non-Aryan origin. It lives on as Hindi pipṛī "small red ant" (CDIAL 8201).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a mosquito, then the Sanskrit for an an
 You'll want to know: चित्रपतंगः.
 चित्रपतंगः — citrapataṅgaḥ — "a butterfly".
 
+The word, taken apart.
+citrapataṅga is built from citra "bright, many-coloured" and pataṅga "a flying insect, a butterfly or moth", from the root √pat "fly" (MW): "the many-coloured flier". MW does not list the pair, so it is a later coinage.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for an ant, then the Sanskrit for a butterf
 
 You'll want to know: कुक्कुटः.
 कुक्कुटः — kukkuṭaḥ — "a rooster".
+
+The word, taken apart.
+kukkuṭa "a cock" is imitative: MW records kukkuṭ as a word that copies the cock's cry, and CDIAL 3208 calls it onomatopoeic. It lives on as Punjabi kukkaṛ "cock" (CDIAL 3208).
 
 What you've built.
 One more word for this chapter.

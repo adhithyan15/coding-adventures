@@ -11,8 +11,8 @@ gloss: here — the near demonstrative on a frame that means place, and an answe
 concept_tag: UR-LEX-YAHAN
 prerequisites: [UR-C24-un, UR-C17-kahan, UR-C23-mein, UR-C17-yih]
 sounds: []
-roots: []
-etymology_hook: "یہاں is یہ carrying the same -اں ending that turns کہاں into 'where'. Urdu builds this, that and which on one frame with three heads, and the reader has owned two of the three since chapter seventeen without being shown the pattern."
+roots: [sanskrit-iha]
+etymology_hook: "yahāṅ: CDIAL sets it beside Sanskrit iha 'here' as ultimately connected (CDIAL 1605)"
 duration:
   max_seconds: 240
 requires:
@@ -52,6 +52,11 @@ reply.
 Look at the two words together. **کہاں** and **یہاں** share their ending, and
 differ only in the head: **ک-** asks, **یہ-** points near. That is not a
 coincidence to be memorised — it is a frame.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**یہاں** (*yahāṅ*) is inherited. CDIAL sets it beside Sanskrit *iha*, "here", as a form ultimately connected with it rather than its direct descendant (CDIAL 1605).
 
 ## Grammar Lens: the frame, two thirds filled
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-YAHAN, UR-LEX-KAHAN, UR-LEX-YIH, UR-LEX-VOH, UR-ETYMON-K-QUESTION-FAMILY] -->

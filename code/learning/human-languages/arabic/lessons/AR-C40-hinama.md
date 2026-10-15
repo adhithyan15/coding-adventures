@@ -12,7 +12,7 @@ concept_tag: AR-JOIN-WHEN
 prerequisites: [AR-C40-anna, AR-C39-ma, AR-C28-jaa]
 sounds: [long-i]
 roots: [h-y-n]
-etymology_hook: "حينما is حين, 'a time, a moment', plus the general particle ما — so the joiner is literally 'at-the-moment-that', and حين is still an ordinary noun meaning a stretch of time, which is why the phrase can be read as a noun before it is read as a conjunction"
+etymology_hook: "ḥīnamā: ḥīn 'a time', root ḥ-y-n (Lane), + mā: 'at the time that'"
 duration:
   max_seconds: 245
 requires:
@@ -65,6 +65,8 @@ Arabic writes another word here, *ʿindamā*, built the same way on a prepositio
 meaning *at*. It is the commoner of the two in modern prose and it needs a letter
 this track's script ladder has not reached, so it is named in romanization and
 left for a script lesson. **حينما** costs no new letters at all.
+
+*Ḥīn* is built on the native root *ḥ-y-n*, "(of a time) to draw near" (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C40-HINAMA-01, AR-CONCEPT-C28-JAA-01, AR-CONCEPT-C31-KATABA-01, AR-GRAMMAR-C37-PRESENT-I-01] -->

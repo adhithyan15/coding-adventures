@@ -14,7 +14,8 @@ romanization: "kalaśī"
 concept_tag: SA-THG160-KALASI
 prerequisites: [SA-C160-aharah, SA-C160-asanam]
 sounds: []
-roots: []
+roots: [sanskrit-kalasha]
+etymology_hook: "kalaśī, feminine of kalaśa 'water-pot' (RV) (CDIAL 2920); MW compares Latin calix 'cup'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C160-asanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C160-THG160-05]; assesses=[] -->
 
 **कलशी** — *kalaśī* — "a small pitcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kalaśī* is the feminine of *kalaśa* "a water-pot, a jar", already in the Rigveda (CDIAL 2920). MW compares Latin *calix* "cup", and *kalaśa* lives on as Hindi *kalsā* and *kalsī* "small pot" (CDIAL 2920).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

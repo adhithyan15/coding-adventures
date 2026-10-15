@@ -69,7 +69,7 @@ shape — **माफ़ कीजिए** carries the very same **-िए**.
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C37-CHAI-03]; assesses=[HI-CONCEPT-C37-CHAI-01] -->
 
 **चाय** is **Chinese**. In most of China the word for the leaf is **chá**,
-which Persian took as **چای** (*chāy*) and handed to Hindi.
+which Persian took as **چای** (*chāy*) and Hindi borrowed.
 
 Now the English word: **tea**. French **thé**, Dutch **thee** — a different
 sound entirely, for the identical leaf.

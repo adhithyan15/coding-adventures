@@ -14,7 +14,8 @@ romanization: "davākhānā"
 concept_tag: MR-BODY72-DAVAKHANA
 prerequisites: [MR-C72-doke, MR-C72-tap]
 sounds: []
-roots: []
+roots: [arabic-dawa, persian-khana]
+etymology_hook: "davākhānā: davā 'medicine', from Arabic dawāʾ (Lane), + Persian khāna 'house'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C72-tap]
 <!-- hl-knowledge: introduces=[MR-LEX-C72-BODY72-05]; assesses=[] -->
 
 **दवाखाना** — *davākhānā* — "a clinic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दवाखाना** (*davākhānā*) is a Persian compound: *davā*, "medicine", from Arabic *dawāʾ*, "remedy", whose root is *d-w-y* (Lane), and Persian *khāna*, "house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

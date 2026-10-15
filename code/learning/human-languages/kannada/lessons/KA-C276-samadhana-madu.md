@@ -14,7 +14,8 @@ romanization: "samādhāna māḍu"
 concept_tag: KA-VERB-SAMADHANA-MADU
 prerequisites: [KA-C276-regisu, KA-C276-jagalavadu]
 sounds: []
-roots: []
+roots: [sanskrit-samadhana, maadu-do-dravidian]
+etymology_hook: "samādhāna māḍu: Sanskrit samādhāna 'reconciliation' (CDIAL 13210) + māḍu (DEDR 4797)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C276-jagalavadu]
 <!-- hl-knowledge: introduces=[KA-LEX-C276-KRIYE276-04]; assesses=[] -->
 
 **ಸಮಾಧಾನ ಮಾಡು** — *samādhāna māḍu* — "to console, to calm (someone) down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಮಾಧಾನ ಮಾಡು** (*samādhāna māḍu*) is Sanskrit *samādhāna*, "putting together, reconciliation" (CDIAL 13210), with native *māḍu*, "to do" (DEDR 4797).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

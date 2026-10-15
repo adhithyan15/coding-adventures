@@ -11,8 +11,8 @@ gloss: cloud or clouds
 concept_tag: MW-WEATHER-CLOUD
 prerequisites: [MW-C11-hawa]
 sounds: [voiced-b, long-aa, voiced-d]
-roots: []
-etymology_hook: A sky word follows wind by ear before the page appears.
+roots: [sanskrit-vardala]
+etymology_hook: "bādal ← Sanskrit vārdala 'rainy day, bad weather', a tadbhava (CDIAL 11567, Hindi row)"
 duration:
   max_seconds: 145
 requires:
@@ -47,6 +47,11 @@ Then recall temple, hand, maternal grandmother, and the **ै** mark in **है
 > *bādal* — **cloud; clouds**
 
 Hear the long first vowel. Say the sky word once without looking at any script.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bādal* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vārdala*, "rainy day, bad weather". CDIAL gives no Marwari form in this entry (CDIAL 11567); the match is through Hindi *bādal*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAADAL-01] -->

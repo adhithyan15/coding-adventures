@@ -12,6 +12,9 @@ Before the new one: say the Marathi for sunrise, then the Marathi for the end.
 You'll want to know: सीमा.
 सीमा — sīmā — "a border".
 
+The word, taken apart.
+सीमा (sīmā) is Sanskrit sīmā, "parting of the hair; boundary", taken over whole as a learned loan, a tatsama (CDIAL 13435). CDIAL lists the inherited Marathi form as śīv, "boundary of village or field".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for the end, then the Marathi for a border.
 
 You'll want to know: प्रदेश.
 प्रदेश — pradeś — "a region".
+
+The word, taken apart.
+प्रदेश (pradeś) is Sanskrit pradeśa, "region, country", taken over whole as a learned loan, a tatsama (CDIAL 8668). CDIAL lists the inherited Marathi form as pais, "place, space".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for a border, then the Marathi for a region.
 You'll want to know: राजधानी.
 राजधानी — rājdhānī — "a capital city".
 
+The word, taken apart.
+राजधानी (rājdhānī) is Sanskrit rājadhānī, "royal seat", a tatsama: rāja, "king", and dhānī, "seat, receptacle". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for a region, then the Marathi for a capital
 You'll want to know: उपनगर.
 उपनगर — upnagar — "a suburb".
 
+The word, taken apart.
+उपनगर (upnagar) is a modern compound of Sanskrit parts: upa, "near, under", and nagara, "town" (CDIAL 6924).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for a capital city, then the Marathi for a s
 
 You'll want to know: वरती.
 वरती — varatī — "up, upstairs".
+
+The word, taken apart.
+वरती (varatī) is built on Marathi var, "on, up to", which CDIAL lists under Sanskrit upari, "above" (CDIAL 2218).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "korótkiy"
 concept_tag: RU-SIZE-SHORT
 prerequisites: [RU-C65-old, RU-C65-long]
 sounds: []
-roots: []
+roots: [slavic-korotku]
+etymology_hook: "короткий ← Proto-Slavic *kortŭkŭ; Vasmer relates it to Lithuanian kartùs 'bitter', perhaps Latin curtus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C65-long]
 <!-- hl-knowledge: introduces=[RU-LEX-C65-SIZE-05]; assesses=[] -->
 
 **короткий** (*korótkiy*) — "short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**короткий** ← Proto-Slavic *\*kortŭkŭ* — inherited; Church Slavonic has *краткий*, "brief". Vasmer relates it to Lithuanian *kartùs*, "bitter", and Sanskrit *kaṭu-*, "sharp", and perhaps to Latin *curtus*, "cut short".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

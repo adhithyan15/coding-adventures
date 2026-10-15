@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 280,
-  "sourceHash": "fnv1a64:67589c408062f12d",
+  "sourceHash": "fnv1a64:b33357d758585eb7",
   "lessonIds": [
     "FA-C280-shatranj",
     "FA-C280-kuhnavardi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch280.txt",
   "json": "persian/narration/ch280.json",
-  "textHash": "fnv1a64:7b2a07d13fedc338",
-  "jsonHash": "fnv1a64:16ea450b59f3049b",
+  "textHash": "fnv1a64:1366b5f8cb05bf60",
+  "jsonHash": "fnv1a64:05fbb69f97bbb010",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "navembar"
 concept_tag: GU-TIME97-NAVEMBAR
 prerequisites: [GU-C96-julai, GU-C96-saptembar]
 sounds: []
-roots: []
+roots: [english-november]
+etymology_hook: "navembar ← English November"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C96-saptembar]
 <!-- hl-knowledge: introduces=[GU-LEX-C97-TIME97-01]; assesses=[] -->
 
 **નવેમ્બર** (*navembar*) — "November".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**નવેમ્બર** (*navembar*) is a loan from English *November*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

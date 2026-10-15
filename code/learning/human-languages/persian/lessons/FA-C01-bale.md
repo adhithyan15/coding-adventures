@@ -12,7 +12,7 @@ concept_tag: RESPONSE-YES
 prerequisites: [FA-C01-mamnoon]
 sounds: [rtl, short-vowels-unwritten]
 roots: []
-etymology_hook: Bale is the standard polite Persian affirmative; learn its three-letter shape as a whole.
+etymology_hook: "bale: usually traced to Arabic balā 'yes, indeed', a particle of assent (Lane)"
 reviews_of: []
 duration:
   max_seconds: 150
@@ -49,6 +49,11 @@ leaves out — so the written word carries no vowel at all and the reader suppli
 *a* and *e*. That is the same habit you just met in *mamnun*, met twice in one
 short word. Read the romanization and take the shape as a whole; no letter is
 being asked of you yet.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bale* is usually traced to Arabic *balā*, "yes, indeed" (Lane).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[FA-LEX-BALE-01]; assesses=[] -->

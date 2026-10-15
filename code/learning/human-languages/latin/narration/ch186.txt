@@ -12,6 +12,9 @@ Before the new one: say the Latin for a rain basin, then the Latin for a foundat
 You'll want to know: gubernātor, gubernātōris.
 gubernātor, gubernātōris — "a helmsman".
 
+The word, taken apart.
+gubernātor is built on gubernō, "to steer" (EtymDB 2.1), a verb Latin took from Greek kybernaō, "to steer, to pilot", with -tor, "one who does it". English governor comes from it through French.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Latin for a foundation, then the Latin for a helmsma
 
 You'll want to know: mercātus, mercātūs.
 mercātus, mercātūs — "a market, a fair".
+
+The word, taken apart.
+mercātus is built on mercor, "to trade" (EtymDB 2.1), from merx, "goods". English market comes from it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Latin for a helmsman, then the Latin for a market.
 You'll want to know: pondus, ponderis.
 pondus, ponderis — "a weight".
 
+The word, taken apart.
+pondus belongs with pendō, "to weigh" (Lewis & Short), and is usually traced to Proto-Indo-European (s)pend-, "to stretch, to pull" (EtymDB 2.1). English pound comes from its family.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Latin for a market, then the Latin for a weight.
 You'll want to know: mēnsūra, mēnsūrae.
 mēnsūra, mēnsūrae — "a measure".
 
+The word, taken apart.
+mēnsūra is built on mēnsus, "measured", the participle of mētior, "to measure" (EtymDB 2.1), with -ūra, an ending for an act or result.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Latin for a weight, then the Latin for a measure.
 
 You'll want to know: lībra, lībrae.
 lībra, lībrae — "a pound; a pair of scales".
+
+The word, taken apart.
+lībra has no sure origin; Greek litra, "a pound", is often compared (Lewis & Short), and both may come from a common Mediterranean word. The abbreviation lb for the pound comes from it.
 
 What you've built.
 One more word for this chapter.

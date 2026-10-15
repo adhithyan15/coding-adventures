@@ -12,6 +12,9 @@ Before the new one: say the Marathi for fearful, then the Marathi for curious.
 You'll want to know: मोफत.
 मोफत — mophat — "free of charge".
 
+The word, taken apart.
+मोफत (mophat) is a loan, usually traced to Persian muft, "free, gratis".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Marathi for curious, then the Marathi for free of ch
 
 You'll want to know: आधुनिक.
 आधुनिक — ādhunik — "modern".
+
+The word, taken apart.
+आधुनिक (ādhunik) is Sanskrit ādhunika, "recent", a tatsama built on adhunā, "now". CDIAL has no entry for it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Marathi for free of charge, then the Marathi for mod
 You'll want to know: प्राचीन.
 प्राचीन — prācīn — "ancient".
 
+The word, taken apart.
+प्राचीन (prācīn) is Sanskrit prācīna, "turned east; former, old", a tatsama (CDIAL 8920).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Marathi for modern, then the Marathi for ancient.
 You'll want to know: शिजलेला.
 शिजलेला — śijlelā — "cooked".
 
+The word, taken apart.
+शिजलेला (śijlelā) is the "-ed" form of śijṇẽ, "to be cooked by boiling", which CDIAL lists under Sanskrit sidhyati, "succeeds; is well cooked" (CDIAL 13408), and also, as another possibility, under a reconstructed śrīyate, "is cooked" (CDIAL 12712).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Marathi for ancient, then the Marathi for cooked.
 
 You'll want to know: पिकलेला.
 पिकलेला — piklelā — "ripe".
+
+The word, taken apart.
+पिकलेला (piklelā) is the "-ed" form of pikṇẽ, "to become ripe", which CDIAL lists under Sanskrit pakva, "cooked, ripe", in a reconstructed form pikva- (CDIAL 7621).
 
 What you've built.
 One more word for this chapter.

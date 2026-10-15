@@ -14,7 +14,8 @@ romanization: "kammani"
 concept_tag: TE-GUNAM179-KAMMANI
 prerequisites: [TE-C178-saratu, TE-C178-saku]
 sounds: []
-roots: []
+roots: [dravidian-kamakama-fragrant]
+etymology_hook: "kammani: native Dravidian; DEDR 1247 lists kammani 'delicious, sweet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C178-saku]
 <!-- hl-knowledge: introduces=[TE-LEX-C179-GUNAM179-01]; assesses=[] -->
 
 **కమ్మని** — *kammani* — "delicious, tasty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కమ్మని** (*kammani*) is native Dravidian. DEDR 1247 lists *kammani*, "delicious, sweet", beside *kampu*, "smell", with Kannada *kamma*, "fragrance". DEDR compares Hindi *gamak*, "fragrance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

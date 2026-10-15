@@ -11,7 +11,8 @@ romanization: "kūṭe"
 concept_tag: ML-WITH-ALONGSIDE
 prerequisites: [ML-C86-oppam]
 sounds: []
-roots: []
+roots: [dravidian-kudu-join]
+etymology_hook: "kūṭe: native Dravidian, 'joined', from the verb 'to come together'; Tamil kūṭu (DEDR 1882)"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +57,11 @@ difference was register rather than meaning. This is the same split:
 Neither is wrong anywhere. **A learner who owns only one will be understood, and
 a learner who owns both will place themselves correctly**, which is the same
 return the degree pair paid.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കൂടെ** (*kūṭe*) is native Dravidian, a form of the verb "to come together, join"; DEDR 1882 lists the root with Tamil *kūṭu* and Kannada *kūḍu*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C86-WITH-02, ML-LEX-C86-WITH-01, ML-LEX-C79-DEGREE-01, ML-LEX-C79-DEGREE-02] -->

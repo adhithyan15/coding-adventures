@@ -11,7 +11,8 @@ romanization: "aṅgaḍi"
 concept_tag: KA-JOBS-SHOP
 prerequisites: [KA-C104-police, KA-C104-driver]
 sounds: []
-roots: []
+roots: [dravidian-angadi-shop]
+etymology_hook: "aṅgaḍi: native Dravidian, one word with Tamil aṅkāṭi and Telugu aṅgaḍi (DEDR 35)"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [KA-C104-driver]
 **ಅಂಗಡಿ** (*aṅgaḍi*) — "a shop".
 
 **ಅಂಗಡಿ ಎಲ್ಲಿ?** (*aṅgaḍi elli?*) — "where is the shop?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಂಗಡಿ** (*aṅgaḍi*) is native Dravidian, one word with Tamil *aṅkāṭi* and Telugu *aṅgaḍi* (DEDR 35). DEDR 35 compares, with a query, Sanskrit *aṅgaṇa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

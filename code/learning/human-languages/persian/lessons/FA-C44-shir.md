@@ -14,7 +14,8 @@ romanization: "shir"
 concept_tag: FA-FOOD44-SHIR
 prerequisites: [FA-C44-keyk, FA-C44-panir]
 sounds: []
-roots: []
+roots: [persian-shir]
+etymology_hook: "shir: two inherited words: 'milk' ← Middle Persian šīr, 'lion' ← Middle Persian šēr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C44-panir]
 <!-- hl-knowledge: introduces=[FA-LEX-C44-FOOD44-05]; assesses=[] -->
 
 **شیر** — *shir* — "milk; a lion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shir* is two inherited words that now sound alike. "Milk" is usually traced to Middle Persian *šīr*, and "lion" to Middle Persian *šēr*; Iranian Persian merged their vowels, so the two fell together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

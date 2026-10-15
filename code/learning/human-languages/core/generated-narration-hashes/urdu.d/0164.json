@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 164,
-  "sourceHash": "fnv1a64:751503d8af87ca97",
+  "sourceHash": "fnv1a64:778206e9d07a4631",
   "lessonIds": [
     "UR-C164-saman",
     "UR-C164-chiz",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch164.txt",
   "json": "urdu/narration/ch164.json",
-  "textHash": "fnv1a64:cb1422eeaf5e2b97",
-  "jsonHash": "fnv1a64:7b8b959ca1ff82cb",
+  "textHash": "fnv1a64:4224eff5c7a76975",
+  "jsonHash": "fnv1a64:3d3fcc1c4d685edd",
   "findings": []
 }

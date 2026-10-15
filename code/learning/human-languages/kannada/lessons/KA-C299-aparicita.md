@@ -14,7 +14,8 @@ romanization: "aparicita"
 concept_tag: KA-VASTU299-APARICITA
 prerequisites: [KA-C299-jana, KA-C299-manusya]
 sounds: []
-roots: []
+roots: [sanskrit-aparicita]
+etymology_hook: "aparicita ← Sanskrit a- 'not' + paricita 'acquainted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C299-manusya]
 <!-- hl-knowledge: introduces=[KA-LEX-C299-VASTU299-04]; assesses=[] -->
 
 **ಅಪರಿಚಿತ** — *aparicita* — "a stranger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಅಪರಿಚಿತ** (*aparicita*) is Sanskrit *a-*, "not", with *paricita*, "known, acquainted": "someone not known".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

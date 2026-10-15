@@ -13,7 +13,8 @@ gloss: "thunder"
 concept_tag: LA-THINGS130-TONITRUS
 prerequisites: [LA-C130-glacies, LA-C130-grando]
 sounds: []
-roots: []
+roots: [tonitrus-latin, tonare-latin]
+etymology_hook: "tonitrus 'thunder' — built on tonō 'to thunder'; English thunder is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C130-grando]
 <!-- hl-knowledge: introduces=[LA-LEX-C130-THINGS130-04]; assesses=[] -->
 
 **tonitrus, tonitrūs** — "thunder".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**tonitrus** is built on *tonō*, "to thunder" (Lewis & Short), which is usually traced to Proto-Indo-European *\*(s)tenh2-*, "to thunder"; English *thunder* is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

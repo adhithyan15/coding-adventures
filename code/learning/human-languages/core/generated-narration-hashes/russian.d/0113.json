@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 113,
-  "sourceHash": "fnv1a64:03e338e596043300",
+  "sourceHash": "fnv1a64:c66f27a127b9874f",
   "lessonIds": [
     "RU-C113-game",
     "RU-C113-film",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch113.txt",
   "json": "russian/narration/ch113.json",
-  "textHash": "fnv1a64:7d7946e9a4c7a856",
-  "jsonHash": "fnv1a64:8cf2f965015246d2",
+  "textHash": "fnv1a64:d69e8257156e87ff",
+  "jsonHash": "fnv1a64:9c1b6e7ebf182fcf",
   "findings": []
 }

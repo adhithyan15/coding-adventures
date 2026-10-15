@@ -54,7 +54,8 @@ does not have exceptions to remember.
 <!-- hl-knowledge: introduces=[GE-ETYMON-FREITAG-FRIJA-01]; assesses=[GE-LEX-FREITAG-01, GE-GRAMMAR-GOTT-PLUS-TAG-01] -->
 
 The goddess is **Frija** — **Frigg** in the Norse — and she stood in for
-**Venus**. English named the day for her too: **Fri**day.
+**Venus**. English named the day for her too: **Fri**day. *Freitag* ← Old High German
+*frīatag*, "Frija's day" (EtymDB 2.1).
 
 This is the one day of the week named for a **goddess**, and it is a goddess in
 both systems. The Germanic swap did not merely fill the slot; it matched the god

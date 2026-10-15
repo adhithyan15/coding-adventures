@@ -14,7 +14,8 @@ romanization: "perekryóstok"
 concept_tag: RU-LOC89-CROSSROADS
 prerequisites: [RU-C89-office, RU-C89-corner]
 sounds: []
-roots: []
+roots: [christos-greek]
+etymology_hook: "перекрёсток is пере- 'across' + крест 'cross' + -ок: where roads make a cross"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C89-corner]
 <!-- hl-knowledge: introduces=[RU-LEX-C89-LOC89-04]; assesses=[] -->
 
 **перекрёсток** (*perekryóstok*) — "a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**перекрёсток** is *пере-*, "across", with *крест*, "a cross", and *-ок*: where roads cross. Vasmer says *крест* first meant "Christ", from Old High German *krist*, then "crucifix", then "cross".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

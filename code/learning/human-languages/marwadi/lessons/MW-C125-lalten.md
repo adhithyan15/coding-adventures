@@ -14,7 +14,8 @@ romanization: "lālṭeṇ"
 concept_tag: MW-THINGS125-LALTEN
 prerequisites: [MW-C124-doro, MW-C125-kainchi]
 sounds: []
-roots: []
+roots: [english-lantern]
+etymology_hook: "lālṭeṇ ← English lantern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C125-kainchi]
 <!-- hl-knowledge: introduces=[MW-LEX-C125-THINGS125-02]; assesses=[] -->
 
 **लालटेण** — *lālṭeṇ* — "a lantern".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**लालटेण** (*lālṭeṇ*) is a loan from English *lantern*. Marwadi ends it in *ṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

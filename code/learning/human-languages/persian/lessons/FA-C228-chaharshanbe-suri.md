@@ -14,7 +14,8 @@ romanization: "chahârshanbe suri"
 concept_tag: FA-ZAMAN228-CHAHARSHANBE-SURI
 prerequisites: [FA-C227-dandanpezeshk, FA-C228-sizdah-bedar]
 sounds: []
-roots: []
+roots: [pie-kwetwores, aramaic-shabbat]
+etymology_hook: "chahârshanbe suri: chahâr 'four' + shanbe 'Sabbath' (EtymDB) + suri 'festive'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C228-sizdah-bedar]
 <!-- hl-knowledge: introduces=[FA-LEX-C228-ZAMAN228-02]; assesses=[] -->
 
 **چهارشنبه سوری** — *chahârshanbe suri* — "Chaharshanbe Suri (the fire festival before Nowruz)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chahârshanbe suri* is "festive Wednesday": *chahârshanbe*, "Wednesday" (*chahâr*, "four", with *shanbe*, "Sabbath", EtymDB), with *suri*, usually taken as "festive", from *sur*, "feast".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

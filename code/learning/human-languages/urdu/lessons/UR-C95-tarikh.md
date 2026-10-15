@@ -14,7 +14,8 @@ romanization: "tārīkh"
 concept_tag: UR-TIME95-TARIKH
 prerequisites: [UR-C94-sardiyan, UR-C95-khizan, UR-C32-practice]
 sounds: []
-roots: []
+roots: [arabic-tarikh]
+etymology_hook: "tārīkh ← Arabic tārīkh 'a dating, a date', through Persian (Lane, root ʾ-r-kh)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [UR-C95-khizan]
 <!-- hl-knowledge: introduces=[UR-LEX-C95-TIME95-02]; assesses=[] -->
 
 **تاریخ** — *tārīkh* — "a date; history".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تاریخ** (*tārīkh*) is a loan from Arabic *tārīkh*, "a dating, a date", which reached Urdu through Persian. Its Arabic root is *ʾ-r-kh* (Lane). In Urdu it also means "history".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

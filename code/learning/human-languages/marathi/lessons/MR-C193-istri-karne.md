@@ -14,7 +14,8 @@ romanization: "istrī karṇe"
 concept_tag: MR-VERB-ISTRI-KARNE
 prerequisites: [MR-C193-magavne, MR-C193-valavne]
 sounds: []
-roots: []
+roots: [portuguese-estirar]
+etymology_hook: "istrī: usually traced to Portuguese estirar 'to stretch out'; karṇe 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C193-valavne]
 <!-- hl-knowledge: introduces=[MR-LEX-C193-ACT193-05]; assesses=[] -->
 
 **इस्त्री करणे** — *istrī karṇe* — "to iron".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इस्त्री**, "an iron", is usually traced to Portuguese *estirar*, "to stretch out". **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

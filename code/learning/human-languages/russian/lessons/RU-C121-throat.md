@@ -14,7 +14,8 @@ romanization: "górlo"
 concept_tag: RU-THINGS121-THROAT
 prerequisites: [RU-C121-skin, RU-C121-stomach]
 sounds: []
-roots: []
+roots: [slavic-gurlo]
+etymology_hook: "горло ← Proto-Slavic *gŭrdlo; Lithuanian gurklỹs 'throat' is a cousin, with жрать 'to devour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C121-stomach]
 <!-- hl-knowledge: introduces=[RU-LEX-C121-THINGS121-05]; assesses=[] -->
 
 **горло** (*górlo*) — "a throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**горло** ← Proto-Slavic *\*gŭrdlo* — inherited. Vasmer relates it to Lithuanian *gurklỹs*, "crop, throat", Old Prussian *gurcle*, "throat", and to *жрать*, "to devour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jībh"
 concept_tag: MR-THINGS145-JIBH
 prerequisites: [MR-C144-kapal, MR-C145-gal]
 sounds: []
-roots: []
+roots: [sanskrit-jihva]
+etymology_hook: "jībh ← Sanskrit jihvā 'tongue', a tadbhava (CDIAL 5228)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C145-gal]
 <!-- hl-knowledge: introduces=[MR-LEX-C145-THINGS145-02]; assesses=[] -->
 
 **जीभ** — *jībh* — "the tongue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**जीभ** (*jībh*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jihvā*, "tongue" (CDIAL 5228).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sikkihākikoḷḷu"
 concept_tag: KA-VERB-SIKKIHAKIKOLLU
 prerequisites: [KA-C281-kalacu, KA-C281-phelagu]
 sounds: []
-roots: []
+roots: [dravidian-sikku-entangle, kannada-haku-put, dravidian-kol-take]
+etymology_hook: "sikkihākikoḷḷu: native sikku 'be caught' (DEDR 2498) + hāku 'put' + koḷḷu (DEDR 2151)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C281-phelagu]
 <!-- hl-knowledge: introduces=[KA-LEX-C281-KRIYE281-05]; assesses=[] -->
 
 **ಸಿಕ್ಕಿಹಾಕಿಕೊಳ್ಳು** — *sikkihākikoḷḷu* — "to get stuck, to get caught".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಿಕ್ಕಿಹಾಕಿಕೊಳ್ಳು** (*sikkihākikoḷḷu*) is *sikki*, "having got caught", from native *sikku*, "to become entangled, be caught" (DEDR 2498), with *hāku*, "to put", whose history neither DEDR nor CDIAL gives, and *koḷḷu*, "to take" (DEDR 2151), which turns the action back on yourself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

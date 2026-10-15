@@ -11,8 +11,8 @@ gloss: foot; leg
 concept_tag: JA-BODY-FOOT-LEG
 prerequisites: [JA-C11-kuchi]
 sounds: [mora]
-roots: []
-etymology_hook: Japanese commonly uses one short word where English chooses foot or leg from context.
+roots: [japanese-ashi]
+etymology_hook: "ashi: native Japanese, inherited, not borrowed; kanji 足 attached later as kun'yomi"
 duration:
   max_seconds: 155
 requires:
@@ -45,6 +45,11 @@ Retrieve **くち** — mouth.
 
 Context chooses the narrower English translation. The Japanese word stays the
 same.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あし** (*ashi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ASHI, JA-SCRIPT-A-01, JA-SCRIPT-SHI-01] -->

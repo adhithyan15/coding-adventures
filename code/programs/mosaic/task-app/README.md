@@ -94,7 +94,7 @@ rows, and the main content remains vertically scrollable. The fresh and restored
 lifecycle runs both require zero layout exceptions at that size (#16949).
 
 The same native contract ratchets the remaining style debt per backend and per
-property. Fresh `native-complete` reports currently contain 38 XAML, 63 SwiftUI,
+property. Fresh `native-complete` reports currently contain 29 XAML, 63 SwiftUI,
 40 Compose, 83 Qt, and 69 Flutter drops; any new property or increase above
 those measured maxima fails CI. These inventories are explicit debt on the path
 to #12022's zero-drop gate, not a claim of visual completeness. Native text
@@ -266,6 +266,17 @@ reconciles supported elevation-backed shadows across Compose Desktop and
 SwiftUI. The downloadable web/native artifact matrix remains unchanged: Static
 HTML, Web Components, and Paint are CI-only, while signing, notarization, and
 installers remain #13977.
+
+The `task-app-v0.5.5` patch preserves the seven-column XAML calendar and
+reconciles Qt elevation-shadow reporting. The downloadable artifact matrix
+remains unchanged: Static HTML, Web Components, and Paint are CI-only, while
+signing, notarization, and installers remain #13977. Publication and the
+immutable asset audit are tracked in #17469.
+
+The `task-app-v0.5.6` patch corrects SwiftUI drag-body gap reporting and tightens
+the style regression gate from 63 to 59 allowances. Emitted drag behavior and
+downloadable artifact coverage remain unchanged. Publication and the immutable
+asset audit are tracked in #17491; the same CI-only and signing limitations apply.
 
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI

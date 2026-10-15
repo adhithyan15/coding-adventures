@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for climbs, then the Sanskrit for climbs do
 You'll want to know: प्राप्नोति.
 प्राप्नोति — prāpnoti — "reaches, obtains".
 
+The word, taken apart.
+prāpnoti comes from pra "forward" and the root √āp "reach, obtain" (MW; CDIAL 8947): "reaches forward to, attains". MW compares √āp with Latin apiscor "reach" and aptus, the source of English apt; Gujarati kept it as pāmvũ "to obtain" (CDIAL 8947).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for climbs down, then the Sanskrit for reac
 
 You'll want to know: धारयति.
 धारयति — dhārayati — "wears, holds".
+
+The word, taken apart.
+dhārayati is the causative form of the root √dhṛ "hold, bear, support", and in practice the usual present (MW; CDIAL 6791). The root is inherited from Indo-European (EtymDB), and dharma, "what holds things up", comes from it too. Hindi kept it as dhārnā "to hold, owe" (CDIAL 6791).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for reaches, then the Sanskrit for wears.
 You'll want to know: गणयति.
 गणयति — gaṇayati — "counts".
 
+The word, taken apart.
+gaṇayati "counts, reckons" appears from the Mahābhārata on. CDIAL 3993, after J. C. Wright, suggests it grew from a Middle Indic form of gṛṇ- "address, praise", so its origin is uncertain. It lives on as Hindi ginnā "to count" (CDIAL 3993).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for wears, then the Sanskrit for counts.
 You'll want to know: मार्जयति.
 मार्जयति — mārjayati — "wipes, cleans".
 
+The word, taken apart.
+mārjayati is the causative form of the root √mṛj "wipe, rub, clean" (MW). MW sets √mṛj beside Latin mulgere "to milk" and English milk. The plain verb mārjati lives on as Gujarati mājvũ "to scour" (CDIAL 10080).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for counts, then the Sanskrit for wipes.
 
 You'll want to know: बध्नाति.
 बध्नाति — badhnāti — "ties".
+
+The word, taken apart.
+badhnāti comes from the root √bandh "bind, tie", in its Rigvedic class-9 form (CDIAL 9133). MW sets √bandh beside Gothic bindan and English bind, and the other present bandhati lives on as Hindi bāṁdhnā "to tie" (CDIAL 9139).
 
 What you've built.
 One more word for this chapter.

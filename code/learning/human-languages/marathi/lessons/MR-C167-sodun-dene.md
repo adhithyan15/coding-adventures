@@ -14,7 +14,8 @@ romanization: "soḍūn deṇe"
 concept_tag: MR-VERB-SODUN-DENE
 prerequisites: [MR-C166-marne, MR-C167-svas-ghene]
 sounds: []
-roots: []
+roots: [sanskrit-kshotayati, sanskrit-dadati]
+etymology_hook: "soḍūn: from soḍṇe ← kṣoṭayati 'throws' (CDIAL 3747); deṇe ← dadāti 'gives' (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C167-svas-ghene]
 <!-- hl-knowledge: introduces=[MR-LEX-C167-ACT167-02]; assesses=[] -->
 
 **सोडून देणे** — *soḍūn deṇe* — "to give up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सोडून** is "having let go", from **सोडणे**, which comes from Sanskrit *kṣoṭayati*, "throws" (CDIAL 3747). **देणे** comes from Sanskrit *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "śāntaḥ"
 concept_tag: SA-QUAL156-SANTAH
 prerequisites: [SA-C156-priyah, SA-C156-apriyah]
 sounds: []
-roots: []
+roots: [sanskrit-shanta]
+etymology_hook: "śānta 'calmed' is the past participle of √śam 'be quiet, be calm' (MW; CDIAL 12390); śānti is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C156-apriyah]
 <!-- hl-knowledge: introduces=[SA-LEX-C156-QUAL156-03]; assesses=[] -->
 
 **शान्तः** — *śāntaḥ* — "calm, quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śānta* is the past participle of the root √śam "become quiet, be calm" (MW; CDIAL 12390): "appeased, calm". *śānti* "peace" comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

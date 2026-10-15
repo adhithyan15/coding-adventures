@@ -14,7 +14,8 @@ romanization: "man nahīṁ hai"
 concept_tag: HI-CALM-DONT-FEEL-LIKE
 prerequisites: [HI-C125-ghabrahat, HI-C125-bechain]
 sounds: []
-roots: []
+roots: [sanskrit-manas]
+etymology_hook: "man ← Sanskrit manas 'mind' (CDIAL 9822)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [HI-C125-bechain]
 **मन नहीं है** (*man nahīṁ hai*) — "I don't feel like it", literally "there is no mind for it".
 
 **मन** is "mind, heart". **आज खाने का मन नहीं है** — "I don't feel like eating today".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मन नहीं है** (*man nahīṁ hai*) is "the mind is not there". *man*, "mind, heart", comes from Sanskrit *manas*, "mind" (CDIAL 9822).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

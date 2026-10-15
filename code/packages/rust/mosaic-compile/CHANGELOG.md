@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+### Added — `pkg` reports mosstyle v2 warnings (UI90 §4 step 1)
+
+- After a v1 package builds, `pkg` prints one line with its v2 finding
+  count, for example: `mosstyle v1: 108 warning(s) against the v2 property
+  table`. Set `MOSAIC_STYLE_FINDINGS=1` to list each finding.
+- A package that declares `[styles] version = 2` fails instead, listing
+  every finding.
+
+### Added — Compose `--emit-project` and `--fixtures` in pipeline mode (EM-6, #14704)
+
+- `--backend compose --emit-project` writes a runnable Compose Desktop
+  Gradle project next to the component (UI32 §2.2):
+  - `settings.gradle.kts`, `build.gradle.kts` and `README.md`;
+  - under `src/main/kotlin/`, `Main.kt`, `MosaicAppShell.kt`, a copy of the
+    component, and the platform library.
+- `--fixtures` now reach that shell as the story's values, as on every
+  other pipeline backend (#14459). This includes list fixtures, so
+  `--strict-fixtures` passes on Compose when every value applies.
+- The #16930 refusal and the two warnings are gone. A value of a shape no
+  backend renders (an object, a mixed list) still fails under
+  `--strict-fixtures`. A number or bool that does not parse keeps the
+  sample instead, as on the other native shells.
+- `tests/compose_fixtures.rs` covers the shell, its fixtures and its
+  determinism. `list_fixtures.rs` adds Compose to the native backends.
+- `mosaic-compile.json`: the `fixtures` and `emit-project` descriptions now
+  cover every pipeline backend.
+
 ### Fixed — Compose says it cannot render fixtures, instead of ignoring them (#16930)
 
 - The Compose pipeline takes no `EmitOptions` yet (#14704). It ignored

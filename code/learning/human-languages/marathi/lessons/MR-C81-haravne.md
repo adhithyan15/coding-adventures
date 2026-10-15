@@ -14,7 +14,8 @@ romanization: "haravṇe"
 concept_tag: MR-VERB-HARAVNE
 prerequisites: [MR-C81-thambne, MR-C81-shodhne]
 sounds: []
-roots: []
+roots: [sanskrit-harayati]
+etymology_hook: "haravṇe ← Sanskrit hārayati 'causes to be taken; loses', a tadbhava (CDIAL 14061)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C81-shodhne]
 <!-- hl-knowledge: introduces=[MR-LEX-C81-VERBS81-03]; assesses=[] -->
 
 **हरवणे** — *haravṇe* — "to lose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**हरवणे** (*haravṇe*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *hārayati*, "causes to be taken; loses" (CDIAL 14061). CDIAL lists the Marathi form *haraviṇẽ*, "to lose, cast away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

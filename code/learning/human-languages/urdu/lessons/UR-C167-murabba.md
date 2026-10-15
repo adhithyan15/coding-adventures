@@ -14,7 +14,8 @@ romanization: "murabbā"
 concept_tag: UR-CHIZ167-MURABBA
 prerequisites: [UR-C167-pista, UR-C167-kishmish]
 sounds: []
-roots: []
+roots: [arabic-murabba]
+etymology_hook: "murabbā ← Arabic murabbā 'preserved, made into a conserve', through Persian (Lane, root r-b-b)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C167-kishmish]
 <!-- hl-knowledge: introduces=[UR-LEX-C167-CHIZ167-03]; assesses=[] -->
 
 **مربہ** — *murabbā* — "a fruit preserve, jam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مربہ** (*murabbā*) is a loan from Arabic *murabbā*, "preserved, made into a conserve", which reached Urdu through Persian. Its Arabic root is *r-b-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

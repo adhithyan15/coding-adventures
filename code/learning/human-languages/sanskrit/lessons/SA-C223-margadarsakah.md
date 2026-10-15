@@ -14,7 +14,8 @@ romanization: "mārgadarśakaḥ"
 concept_tag: SA-THG223-MARGADARSAKAH
 prerequisites: [SA-C222-patrika, SA-C223-yatrikah]
 sounds: []
-roots: []
+roots: [sanskrit-marga, sanskrit-darshaka]
+etymology_hook: "mārgadarśaka = mārga 'road' (from mṛga 'deer') + darśaka 'one who shows' (MW; CDIAL 10071)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C223-yatrikah]
 <!-- hl-knowledge: introduces=[SA-LEX-C223-THG223-02]; assesses=[] -->
 
 **मार्गदर्शकः** — *mārgadarśakaḥ* — "a guide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mārgadarśaka* is MW's "way-shower": *mārga*, "road", with *darśaka*, "one who shows", from the root √dṛś, "to see". *Mārga* first meant the track of a wild animal, from *mṛga*, "deer" (CDIAL 10071).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

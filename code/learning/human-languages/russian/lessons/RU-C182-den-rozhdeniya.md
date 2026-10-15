@@ -14,7 +14,8 @@ romanization: "den rozhdéniya"
 concept_tag: RU-VREMYA182-DEN-ROZHDENIYA
 prerequisites: [RU-C182-teper, RU-C182-kanikuly]
 sounds: []
-roots: []
+roots: [pie-dyew-shine, slavic-rodu]
+etymology_hook: "день рождения is 'day of birth': день 'day' + рождение 'birth', from родить 'to give birth'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C182-kanikuly]
 <!-- hl-knowledge: introduces=[RU-LEX-C182-VREMYA182-03]; assesses=[] -->
 
 **день рождения** (*den rozhdéniya*) — "a birthday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**день рождения** is "the day of birth": *день*, "day", with *рождения*, a form of *рождение*, "birth", from *родить*, "to give birth", and *род*, "kin". The *-жд-* is Church Slavonic.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a window"
 concept_tag: LA-DOMUS1-FENESTRA
 prerequisites: [LA-C82-sella, LA-C82-lectus]
 sounds: []
-roots: []
+roots: [fenestra-latin]
+etymology_hook: "fenestra 'window' — origin uncertain, perhaps an Etruscan loan; English defenestrate"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C82-lectus]
 <!-- hl-knowledge: introduces=[LA-LEX-C82-DOMUS1-04]; assesses=[] -->
 
 **fenestra, fenestrae** — "a window".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**fenestra** has no sure origin; it is often thought to be a loan from Etruscan, and the old link with Greek *phainō*, "to show", that Lewis & Short give is not generally accepted. English *defenestrate* is built on it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

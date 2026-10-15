@@ -14,7 +14,8 @@ romanization: "phayal"
 concept_tag: ML-VASTU251-PHAYAL
 prerequisites: [ML-C250-srrampu, ML-C251-kampyuttar]
 sounds: []
-roots: []
+roots: [english-file]
+etymology_hook: "phayal ← English file"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C251-kampyuttar]
 <!-- hl-knowledge: introduces=[ML-LEX-C251-VASTU251-02]; assesses=[] -->
 
 **ഫയൽ** — *phayal* — "a file".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഫയൽ** (*phayal*) ← English *file*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

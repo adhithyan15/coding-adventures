@@ -14,7 +14,8 @@ romanization: "gheychi"
 concept_tag: FA-THINGS94-GHEYCHI
 prerequisites: [FA-C93-mikh, FA-C94-chakosh]
 sounds: []
-roots: []
+roots: [turkic-qaychi]
+etymology_hook: "gheychi ← Turkic (Azerbaijani qayçı 'scissors', EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C94-chakosh]
 <!-- hl-knowledge: introduces=[FA-LEX-C94-THINGS94-02]; assesses=[] -->
 
 **قیچی** — *gheychi* — "scissors".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gheychi* is borrowed from Turkic: EtymDB gives Azerbaijani *qayçı*, "scissors".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

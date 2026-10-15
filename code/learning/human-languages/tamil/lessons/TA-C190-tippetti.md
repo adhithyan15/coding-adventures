@@ -47,7 +47,7 @@ reviews_of: [TA-C190-yocanai]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**தீப்பெட்டி** (*tīppeṭṭi*) is native: *tī*, "fire" (DEDR 3266; Malayalam *tī*), and *peṭṭi*, "box" (DEDR 4388): "the fire box".
+**தீப்பெட்டி** (*tīppeṭṭi*) is native: *tī*, "fire" (DEDR 3266; Malayalam *tī*), and *peṭṭi*, "box" (DEDR 4388, which compares Sanskrit *peṭaka*): "the fire box".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

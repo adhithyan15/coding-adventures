@@ -14,7 +14,8 @@ romanization: "shæmpu"
 concept_tag: BN-JINIS163-SHMPU
 prerequisites: [BN-C163-malpotro, BN-C163-asbab]
 sounds: []
-roots: []
+roots: [english-shampoo]
+etymology_hook: "shæmpu ← English shampoo"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C163-asbab]
 <!-- hl-knowledge: introduces=[BN-LEX-C163-JINIS163-03]; assesses=[] -->
 
 **শ্যাম্পু** — *shæmpu* — "shampoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**শ্যাম্পু** (*shæmpu*) is a loan from English *shampoo*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

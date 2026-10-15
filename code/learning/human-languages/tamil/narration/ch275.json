@@ -4,7 +4,7 @@
   "chapter": 275,
   "title": "Feather, Tail, Nest, Plant, Creeper",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ae3d3d016bfca9f7",
+  "sourceHash": "fnv1a64:dc59a152371b2831",
   "lessons": [
     {
       "id": "TA-C275-iraku",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:001ebf910b81eed2",
+      "sourceHash": "fnv1a64:c729fa233da821ba",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கூடு (kūṭu) is native Dravidian. DEDR 1883 lists Malayalam kūṭu, \"nest, cage\" and Kannada gūḍu."
+              "text": "கூடு (kūṭu) is native Dravidian. DEDR 1883 lists Malayalam kūṭu, \"nest, cage\" and Kannada gūḍu. The entry compares Sanskrit kūṭa, \"trap\" (CDIAL 3397)."
             }
           ]
         },

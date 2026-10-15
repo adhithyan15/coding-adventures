@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 165,
-  "sourceHash": "fnv1a64:07061df81654dbc4",
+  "sourceHash": "fnv1a64:55a88b5ca2741852",
   "lessonIds": [
     "ML-C165-vrttiyulla",
     "ML-C165-madhuramulla",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch165.txt",
   "json": "malayalam/narration/ch165.json",
-  "textHash": "fnv1a64:01c91cb2796dec8e",
-  "jsonHash": "fnv1a64:68af0d987dce7dee",
+  "textHash": "fnv1a64:86930f45942d6fb2",
+  "jsonHash": "fnv1a64:7df45da3afb09b43",
   "findings": []
 }

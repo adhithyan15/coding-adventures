@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 244,
-  "sourceHash": "fnv1a64:7b9c385013ad7d7b",
+  "sourceHash": "fnv1a64:c708cacc689fc205",
   "lessonIds": [
     "ML-C244-niranna",
     "ML-C244-kiriya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch244.txt",
   "json": "malayalam/narration/ch244.json",
-  "textHash": "fnv1a64:cc95f731a4648629",
-  "jsonHash": "fnv1a64:421a0cfb1822345c",
+  "textHash": "fnv1a64:275c72af5ffd1eb0",
+  "jsonHash": "fnv1a64:c0b312475f445a77",
   "findings": []
 }

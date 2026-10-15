@@ -14,7 +14,8 @@ romanization: "kīḷu"
 concept_tag: KA-VERB-KILU
 prerequisites: [KA-C204-maja-madu, KA-C204-spardhisu]
 sounds: []
-roots: []
+roots: [dravidian-kizhi-pluck]
+etymology_hook: "kīḷu: native Dravidian, one word with Tamil kiḻi and Malayalam kiḻi (DEDR 1581)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C204-spardhisu]
 <!-- hl-knowledge: introduces=[KA-LEX-C205-KRIYE205-01]; assesses=[] -->
 
 **ಕೀಳು** — *kīḷu* — "to pluck, to pull out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೀಳು** (*kīḷu*) is native Dravidian, one word with Tamil *kiḻi* and Malayalam *kiḻi* (DEDR 1581). DEDR gives the older Kannada *kīḻ*, "to pull out, pluck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

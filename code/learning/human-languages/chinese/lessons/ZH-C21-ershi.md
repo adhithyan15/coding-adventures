@@ -11,8 +11,8 @@ gloss: "twenty — two ten, and the same ten words now reach ninety-nine"
 concept_tag: ZH-DECIMAL-TENS
 prerequisites: [ZH-C21-shiyi]
 sounds: [tone-lexical, tone-sandhi-third]
-roots: []
-etymology_hook: "Turn the pair round and ten one becomes two ten: shi yi is eleven and er shi is twenty, so ten words reach ninety-nine and the order is the whole grammar."
+roots: [middle-chinese-nyijh, middle-chinese-dzyip]
+etymology_hook: "èrshí: a Chinese formation, two tens, from Middle Chinese nyijH and dzyip"
 duration:
   max_seconds: 275
 requires:
@@ -58,10 +58,17 @@ shapes again. Mandarin needs none of them.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-SANDHI-THIRD, ZH-LEX-NUM-JIU] -->
 
 **九十九**, ninety-nine, is the drill this book has been waiting for. *jiǔ* is
-third tone and so is the *jiǔ* at the end, and the rule you met in chapter 1
+third tone and so is the *jiǔ* at the end, and the rule you met with *nǐ hǎo*
 applies: a third tone before another third tone lifts and becomes a rise.
 
 Say it: **jiú-shí-jiǔ**. The first nine rises, the last one dips.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**二十** is a Chinese formation, two tens, made of words inherited from Middle
+Chinese: *nyijH*, "two", and *dzyip*, "ten" (Guangyun, in Baxter's
+transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ERSHI, ZH-GRAMMAR-DECIMAL-TENS, ZH-TONE-SANDHI-THIRD, ZH-LEX-NUM-JIU] -->

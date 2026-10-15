@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 286,
-  "sourceHash": "fnv1a64:fadf43d02d784da3",
+  "sourceHash": "fnv1a64:9adaa5a149c74f8f",
   "lessonIds": [
     "KA-C286-kattada",
     "KA-C286-mahadi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch286.txt",
   "json": "kannada/narration/ch286.json",
-  "textHash": "fnv1a64:ec09781120b1890a",
-  "jsonHash": "fnv1a64:2a625673440bd12e",
+  "textHash": "fnv1a64:6fb43828802630ed",
+  "jsonHash": "fnv1a64:4c0cb8c160039d3f",
   "findings": []
 }

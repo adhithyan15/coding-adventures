@@ -14,7 +14,8 @@ romanization: "kūdṇo"
 concept_tag: MW-VERB-KUDNO
 prerequisites: [MW-C108-utarno, MW-C108-tairno]
 sounds: []
-roots: []
+roots: [sanskrit-kurdati]
+etymology_hook: "kūdṇo ← Sanskrit kūrdati 'leaps', prob. from Dravidian (CDIAL 3412, Old Marwari row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C108-tairno]
 <!-- hl-knowledge: introduces=[MW-LEX-C108-ACT108-05]; assesses=[] -->
 
 **कूदणो** — *kūdṇo* — "to jump".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**कूदणो** (*kūdṇo*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kūrdati*, "leaps, jumps". CDIAL lists Old Marwari *kūdaï* under it (CDIAL 3412). CDIAL thinks the Sanskrit verb itself probably came from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mir"
 concept_tag: RU-WEATHER-WORLD
 prerequisites: [RU-C59-wind, RU-C59-weather]
 sounds: []
-roots: []
+roots: [slavic-miru]
+etymology_hook: "мир ← Proto-Slavic *mirŭ 'peace'; Vasmer derives 'community, world' from 'peace'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C59-weather]
 <!-- hl-knowledge: introduces=[RU-LEX-C59-WEATHER-05]; assesses=[] -->
 
 **мир** (*mir*) — "the world; peace". Both meanings in one word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**мир** ← Proto-Slavic *\*mirŭ*, "peace" — inherited, related to Old Lithuanian *mieras*, "peace", and Latvian *miêrs* (Vasmer). The sense "village community" grew from "peaceful community", and from it "the world".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

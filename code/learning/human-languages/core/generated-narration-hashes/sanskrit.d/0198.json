@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 198,
-  "sourceHash": "fnv1a64:e5ca7d36ca02733a",
+  "sourceHash": "fnv1a64:9ba05a029046247d",
   "lessonIds": [
     "SA-C198-harinah",
     "SA-C198-citrakah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch198.txt",
   "json": "sanskrit/narration/ch198.json",
-  "textHash": "fnv1a64:51d330977d87df03",
-  "jsonHash": "fnv1a64:6d93df95fd21251b",
+  "textHash": "fnv1a64:b30c701aeebe4a2e",
+  "jsonHash": "fnv1a64:23da7029d13a2b4c",
   "findings": []
 }

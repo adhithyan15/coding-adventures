@@ -12,6 +12,9 @@ Before the new one: say the Telugu for therefore, then the Telugu for because of
 You'll want to know: అందుకే.
 అందుకే — andukē — "that is exactly why".
 
+The word, taken apart.
+అందుకే (andukē) is native Dravidian: andu, "that", on the far-pointing base of DEDR 1, with the dative -ku and the emphatic -ē: "for exactly that".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Telugu for because of, then the Telugu for that is e
 
 You'll want to know: మంచం.
 మంచం — mañcaṁ — "a bed".
+
+The word, taken apart.
+మంచం (mañcaṁ) is Sanskrit mañca, "stage, platform; bed", taken over whole as a learned loan, a tatsama, with the Telugu noun ending -ṁ (CDIAL 9715).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Telugu for that is exactly why, then the Telugu for 
 You'll want to know: దిండు.
 దిండు — diṇḍu — "a pillow".
 
+The word, taken apart.
+దిండు (diṇḍu) is native Dravidian, one word with Tamil tiṇṭu and Kannada diṇḍu (DEDR 3224). DEDR lists Telugu diṇḍu, "pillow, cushion".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Telugu for a bed, then the Telugu for a pillow.
 You'll want to know: దుప్పటి.
 దుప్పటి — duppaṭi — "a blanket".
 
+The word, taken apart.
+దుప్పటి (duppaṭi) is probably a loan of the northern word for a double cloth, Hindi dupaṭṭā. CDIAL does not list dupaṭṭā; its entry 6413 reconstructs dupaṭṭikā, "two cloths", from a single Ḍogrī word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Telugu for a pillow, then the Telugu for a blanket.
 
 You'll want to know: తెర.
 తెర — tera — "a curtain, a screen".
+
+The word, taken apart.
+తెర (tera) is native Dravidian, one word with Kannada tere (DEDR 3244). DEDR lists Telugu tera, "screen, curtain, wave".
 
 What you've built.
 One more word for this chapter.

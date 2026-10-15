@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 109,
-  "sourceHash": "fnv1a64:c3c2c378f45fb5aa",
+  "sourceHash": "fnv1a64:0322087005879974",
   "lessonIds": [
     "AR-C109-tharwa",
     "AR-C109-khibra",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch109.txt",
   "json": "arabic/narration/ch109.json",
-  "textHash": "fnv1a64:4737f38d5ee3e49e",
-  "jsonHash": "fnv1a64:b5615198233ef8f9",
+  "textHash": "fnv1a64:a081d8364bb0c74f",
+  "jsonHash": "fnv1a64:da4b68c1a738cb7c",
   "findings": []
 }

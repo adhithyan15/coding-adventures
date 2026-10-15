@@ -14,7 +14,8 @@ romanization: "adviye"
 concept_tag: FA-CHIZ247-ADVIYE
 prerequisites: [FA-C246-barq, FA-C247-quti]
 sounds: []
-roots: []
+roots: [arabic-dawa]
+etymology_hook: "adviye ← Arabic adwiya 'medicines, remedies', root d-w-y (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C247-quti]
 <!-- hl-knowledge: introduces=[FA-LEX-C247-CHIZ247-02]; assesses=[] -->
 
 **ادویه** — *adviye* — "spices".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*adviye* is borrowed from Arabic *adwiya*, "medicines, remedies". Its Arabic root is *d-w-y* (Lane). It is the plural of *dawāʾ*, "remedy"; Persian uses it for spices.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

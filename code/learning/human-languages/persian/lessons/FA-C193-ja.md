@@ -14,7 +14,8 @@ romanization: "jâ"
 concept_tag: FA-MAKAN193-JA
 prerequisites: [FA-C193-bashgah, FA-C193-hayat]
 sounds: []
-roots: []
+roots: [persian-ja]
+etymology_hook: "jâ ← Middle Persian gyāg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C193-hayat]
 <!-- hl-knowledge: introduces=[FA-LEX-C193-MAKAN193-04]; assesses=[] -->
 
 **جا** — *jâ* — "a place".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jâ* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *gyāg*, "place" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "Notices: Caution, No Smoking, Reception, Open",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:83b92b6246b1339d",
+  "sourceHash": "fnv1a64:530894434169f7af",
   "lessons": [
     {
       "id": "JA-C142-chuui",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:355421961622c562",
+      "sourceHash": "fnv1a64:e546553289004224",
       "notice": null,
       "blocks": [
         {
@@ -96,6 +96,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゅうい (chūi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chū, \"pour; direct\" (Middle Chinese tsyuH) and i, \"thought, mind\" ('iH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -135,7 +146,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -187,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27a54a851ba8ba5b",
+      "sourceHash": "fnv1a64:a28d77f32169a2de",
       "notice": null,
       "blocks": [
         {
@@ -255,6 +266,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きんえん (kin'en) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kin, \"forbid\" (Middle Chinese kimH) and en, \"smoke\" ('en) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -294,7 +316,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -345,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:027c857b0b829d54",
+      "sourceHash": "fnv1a64:55bb3917d85577a9",
       "notice": null,
       "blocks": [
         {
@@ -422,6 +444,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うけつけ (uketsuke) is a native compound, inherited rather than borrowed: uke, \"receiving\", from ukeru, and tsuke, \"attaching, noting\", from tsukeru (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -461,7 +494,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +544,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6cf80982edc4d8e",
+      "sourceHash": "fnv1a64:9ca7f70a7d325ccb",
       "notice": null,
       "blocks": [
         {
@@ -593,6 +626,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えいぎょうちゅう (eigyōchū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ei, \"manage\" (Middle Chinese yweng), gyō, \"business, trade\" (ngjaep) and chū, \"middle, during\" (trjuwng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -632,7 +676,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -684,7 +728,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3b361d8f9347abb",
+      "sourceHash": "fnv1a64:36284ffcb68f8e22",
       "notice": null,
       "blocks": [
         {
@@ -770,6 +814,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅんびちゅう (junbichū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jun, \"standard\" (Middle Chinese tsywinX), bi, \"prepare\" (bijH) and chū, \"middle, during\" (trjuwng) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -809,7 +864,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

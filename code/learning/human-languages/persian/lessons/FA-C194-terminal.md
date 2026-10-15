@@ -14,7 +14,8 @@ romanization: "terminâl"
 concept_tag: FA-MAKAN194-TERMINAL
 prerequisites: [FA-C193-ja, FA-C193-fasele]
 sounds: []
-roots: []
+roots: [french-terminal]
+etymology_hook: "terminâl: a loan, usually traced to French terminal 'terminal'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C193-fasele]
 <!-- hl-knowledge: introduces=[FA-LEX-C194-MAKAN194-01]; assesses=[] -->
 
 **ترمینال** — *terminâl* — "a coach terminal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*terminâl* is a loan, usually traced to French *terminal*, "terminal".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "a wish, the will"
 concept_tag: LA-WANT111-VOLUNTAS
 prerequisites: [LA-C111-opto, LA-C111-desidero]
 sounds: []
-roots: []
+roots: [voluntas-latin, velle-latin]
+etymology_hook: "voluntās 'will, wish' — built on volō, velle 'to want'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C111-desidero]
 <!-- hl-knowledge: introduces=[LA-LEX-C111-WANT111-05]; assesses=[] -->
 
 **voluntās, voluntātis** — "a wish, the will".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**voluntās** is built on *volō*, *velle*, "to want" (Lewis & Short), with *-tās*, an ending for a quality. *volō* is usually traced to Proto-Indo-European *\*welh1-*, "to choose, to wish".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

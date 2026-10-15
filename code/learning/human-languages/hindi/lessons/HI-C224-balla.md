@@ -14,7 +14,8 @@ romanization: "ballā"
 concept_tag: HI-THG224-BALLA
 prerequisites: [HI-C223-khelkud, HI-C223-ged]
 sounds: []
-roots: []
+roots: [sanskrit-vala-beam]
+etymology_hook: "ballā: CDIAL lists ballā 'large beam, pole' under Sanskrit vala 'beam, pole' (CDIAL 11403)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C223-ged]
 <!-- hl-knowledge: introduces=[HI-LEX-C224-THG224-01]; assesses=[] -->
 
 **बल्ला** — *ballā* — "a bat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बल्ला** (*ballā*) is listed by CDIAL in the sense "large beam, pole", under Sanskrit *vala*, "beam, pole" (CDIAL 11403). The sense "bat" probably grew from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

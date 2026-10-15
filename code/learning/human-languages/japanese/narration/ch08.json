@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "One Goodbye, Sign by Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7f108d0cfd11c99a",
+  "sourceHash": "fnv1a64:b0052296e68c78d2",
   "lessons": [
     {
       "id": "JA-C08-hear-sayounara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78abcb868633133d",
+      "sourceHash": "fnv1a64:be536a1c3a7ae9b0",
       "notice": null,
       "blocks": [
         {
@@ -82,6 +82,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sayōnara began as a phrase: sayō, \"so, like that\", and nara, \"if\", from the old copula nari, so \"if that is how it is\" (JMdict). Sa, \"so\", is native and yō, \"manner\", was borrowed from Chinese."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -92,7 +103,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

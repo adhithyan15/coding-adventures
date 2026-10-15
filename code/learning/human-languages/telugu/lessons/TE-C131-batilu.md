@@ -14,7 +14,8 @@ romanization: "bāṭilu"
 concept_tag: TE-THINGS131-BATILU
 prerequisites: [TE-C130-paisa, TE-C131-rupayi]
 sounds: []
-roots: []
+roots: [english-bottle]
+etymology_hook: "bāṭilu ← English bottle"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C131-rupayi]
 <!-- hl-knowledge: introduces=[TE-LEX-C131-THINGS131-02]; assesses=[] -->
 
 **బాటిలు** — *bāṭilu* — "a bottle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**బాటిలు** (*bāṭilu*) is a loan from English *bottle*, with Telugu's added *-u*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

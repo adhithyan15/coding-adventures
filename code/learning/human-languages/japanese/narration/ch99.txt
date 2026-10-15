@@ -12,6 +12,9 @@ Before the new one: say the Japanese for the fault, then the Japanese for a reas
 You'll want to know: さいふ.
 さいふ — saifu — "a wallet".
 
+The word, taken apart.
+さいふ (saifu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sai, "wealth" (Middle Chinese dzoj) and fu, "cloth" (puH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for a reason, then the Japanese for a walle
 
 You'll want to know: つえ.
 つえ — tsue — "a walking stick".
+
+The word, taken apart.
+つえ (tsue) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a wallet, then the Japanese for a walki
 You'll want to know: ふくろ.
 ふくろ — fukuro — "a bag, a sack".
 
+The word, taken apart.
+ふくろ (fukuro) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for a walking stick, then the Japanese for 
 You'll want to know: たわし.
 たわし — tawashi — "a scrubbing brush".
 
+The word, taken apart.
+たわし (tawashi) is a native word, inherited rather than borrowed. JMdict writes it with characters for "bundle" and "child", read as a whole, and marks it as usually written in kana. Its older origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a bag, then the Japanese for a scrubbin
 
 You'll want to know: ちりとり.
 ちりとり — chiritori — "a dustpan".
+
+The word, taken apart.
+ちりとり (chiritori) is a native compound, inherited rather than borrowed: chiri, "dust", and tori, "taking", from toru, "to take" (JMdict).
 
 What you've built.
 One more word for this chapter.

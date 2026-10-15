@@ -46,7 +46,7 @@ reviews_of: [FR-C193-drap]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**tiroir** — *tirer*, "to pull", with *-oir*, "a thing for": the thing you pull out.
+**tiroir** — *tirer*, "to pull", with *-oir*, "a thing for": the thing you pull out. *Tirer* is of uncertain origin; EtymDB 2.1 points to a Gothic verb, "to tear away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

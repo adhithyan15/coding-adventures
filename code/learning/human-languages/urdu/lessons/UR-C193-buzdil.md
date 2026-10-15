@@ -14,7 +14,8 @@ romanization: "buzdil"
 concept_tag: UR-SIFAT193-BUZDIL
 prerequisites: [UR-C192-afsos, UR-C193-imandar]
 sounds: []
-roots: []
+roots: [persian-buzdil]
+etymology_hook: "buzdil: usually traced to Persian buzdil, buz 'goat' + dil 'heart'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C193-imandar]
 <!-- hl-knowledge: introduces=[UR-LEX-C193-SIFAT193-02]; assesses=[] -->
 
 **بزدل** — *buzdil* — "cowardly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بزدل** (*buzdil*) is usually traced to Persian *buzdil*, "goat-hearted", built from *buz*, "goat", and *dil*, "heart".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

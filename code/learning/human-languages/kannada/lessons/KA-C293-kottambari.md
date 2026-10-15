@@ -14,7 +14,8 @@ romanization: "kottambari"
 concept_tag: KA-VASTU293-KOTTAMBARI
 prerequisites: [KA-C292-anukula, KA-C293-sasive]
 sounds: []
-roots: []
+roots: [sanskrit-kustumbari]
+etymology_hook: "kottambari: tadbhava of Sanskrit kustumbarī 'coriander' (CDIAL 3380)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C293-sasive]
 <!-- hl-knowledge: introduces=[KA-LEX-C293-VASTU293-02]; assesses=[] -->
 
 **ಕೊತ್ತಂಬರಿ** — *kottambari* — "coriander".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೊತ್ತಂಬರಿ** (*kottambari*) is a tadbhava of Sanskrit *kustumbarī*, "coriander" (CDIAL 3380), close to the reconstructed *\*kōstambarī*, "coriander", that CDIAL also gives. CDIAL calls the Sanskrit word itself non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

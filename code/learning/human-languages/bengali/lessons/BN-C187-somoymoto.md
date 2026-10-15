@@ -14,7 +14,8 @@ romanization: "sômôymôto"
 concept_tag: BN-SOMOY187-SOMOYMOTO
 prerequisites: [BN-C186-mogoj, BN-C186-peshi]
 sounds: []
-roots: []
+roots: [sanskrit-samaya]
+etymology_hook: "sômôymôto: sômôy 'time', Sanskrit samaya, + môto 'according to', whose origin is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C186-peshi]
 <!-- hl-knowledge: introduces=[BN-LEX-C187-SOMOY187-01]; assesses=[] -->
 
 **সময়মতো** — *sômôymôto* — "on time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**সময়মতো** (*sômôymôto*) is *sômôy*, "time", Sanskrit *samaya* taken over whole, + *môto*, "according to", whose origin is not settled, as CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7d712b4fe8858c11",
+  "sourceHash": "fnv1a64:69bad8f0c92778ec",
   "lessons": [
     {
       "id": "TA-C04-po",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32f6271840008c43",
+      "sourceHash": "fnv1a64:862b77908b4667c7",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +169,7 @@
             },
             {
               "kind": "speech",
-              "text": "Varugiṟēṉ itself is built in three parts: varu (\"come\") + a present-tense marker + -ēṉ (\"I\"). Chapter 5 makes that stem-tense-person pattern explicit; here it is enough to hear the three pieces."
+              "text": "Varugiṟēṉ itself is built in three parts: varu (\"come\") + a present-tense marker + -ēṉ (\"I\"). Chapter 5 makes that stem-tense-person pattern explicit; here it is enough to hear the three pieces. Both verbs are native Dravidian: pō, \"go\" (DEDR 4572), and varu, \"come\" (DEDR 5270)."
             }
           ]
         },

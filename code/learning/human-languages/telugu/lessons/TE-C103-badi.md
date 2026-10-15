@@ -14,7 +14,8 @@ romanization: "baḍi"
 concept_tag: TE-LOC103-BADI
 prerequisites: [TE-C102-parku, TE-C103-gudi]
 sounds: []
-roots: []
+roots: [telugu-badi-school]
+etymology_hook: "baḍi: origin uncertain; DEDR and CDIAL list no word of this shape for 'school'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C103-gudi]
 <!-- hl-knowledge: introduces=[TE-LEX-C103-LOC103-02]; assesses=[] -->
 
 **బడి** — *baḍi* — "a school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **బడి** (*baḍi*) is uncertain. DEDR and CDIAL list no word of this shape meaning "school".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

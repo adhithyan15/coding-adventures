@@ -14,7 +14,8 @@ romanization: "vykhodnóy"
 concept_tag: RU-VREMYA182-VYKHODNOY
 prerequisites: [RU-C182-kanikuly, RU-C182-den-rozhdeniya]
 sounds: []
-roots: []
+roots: [slavic-khoditi]
+etymology_hook: "выходной is выходной день 'a day for going out', from выход 'a way out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C182-den-rozhdeniya]
 <!-- hl-knowledge: introduces=[RU-LEX-C182-VREMYA182-04]; assesses=[] -->
 
 **выходной** (*vykhodnóy*) — "a day off".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**выходной** is short for *выходной день*, "a day off", from *выход*, "a going out": *вы-*, "out", with *ход*, "a going".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

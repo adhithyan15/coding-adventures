@@ -15,6 +15,7 @@ concept_tag: GU-DEF99-AVU
 prerequisites: [GU-C98-aso, GU-C99-pelu]
 sounds: []
 roots: []
+etymology_hook: "āvũ 'like this': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C99-pelu]
 <!-- hl-knowledge: introduces=[GU-LEX-C99-DEF99-02]; assesses=[] -->
 
 **આવું** (*āvũ*) — "like this, such".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **આવું** (*āvũ*) is not settled. CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "paṭiññāṟŭ"
 concept_tag: ML-STHALAM198-PATINNARU
 prerequisites: [ML-C198-tekku, ML-C198-kilakku]
 sounds: []
-roots: []
+roots: [dravidian-padu-fall, dravidian-nayiru-sun]
+etymology_hook: "paṭiññāṟŭ: native Dravidian, 'the setting sun'; DEDR 2910 cites Malayalam paṭi ñāṟu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C198-kilakku]
 <!-- hl-knowledge: introduces=[ML-LEX-C198-STHALAM198-03]; assesses=[] -->
 
 **പടിഞ്ഞാറ്** — *paṭiññāṟŭ* — "west".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പടിഞ്ഞാറ്** (*paṭiññāṟŭ*) is native Dravidian, "where the sun falls": DEDR 2910 cites Malayalam *paṭi ñāṟu*, "setting sun", built on the word for "sun", with Tamil *ñāyiṟu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

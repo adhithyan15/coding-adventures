@@ -14,7 +14,8 @@ romanization: "kaṇakkŭ"
 concept_tag: ML-JOLI335-KANAKKU
 prerequisites: [ML-C335-birudam, ML-C335-visayam]
 sounds: []
-roots: []
+roots: [malayalam-kanakku]
+etymology_hook: "kaṇakkŭ 'count, account': of uncertain origin; DEDR has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C335-visayam]
 <!-- hl-knowledge: introduces=[ML-LEX-C335-JOLI335-03]; assesses=[] -->
 
 **കണക്ക്** — *kaṇakkŭ* — "mathematics; accounts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കണക്ക്** (*kaṇakkŭ*) is of uncertain origin; DEDR, the dictionary of the Dravidian family, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

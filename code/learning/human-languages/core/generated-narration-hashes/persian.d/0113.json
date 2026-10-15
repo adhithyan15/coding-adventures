@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 113,
-  "sourceHash": "fnv1a64:33c2b282ad0f05e8",
+  "sourceHash": "fnv1a64:280f5c3f011bd3ec",
   "lessonIds": [
     "FA-C113-kart",
     "FA-C113-bilit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch113.txt",
   "json": "persian/narration/ch113.json",
-  "textHash": "fnv1a64:409d4db8f49c5b5b",
-  "jsonHash": "fnv1a64:97af321529576f9a",
+  "textHash": "fnv1a64:4db4185359882f0d",
+  "jsonHash": "fnv1a64:33b6ffd3eaa57613",
   "findings": []
 }

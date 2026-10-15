@@ -12,6 +12,9 @@ Before the new one: say the Hindi for a lamp, a light, then the Hindi for bread 
 You'll want to know: पराठा.
 पराठा — parāṭhā — "a paratha".
 
+The word, taken apart.
+The origin of पराठा (parāṭhā) is uncertain. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Hindi for bread (flatbread), then the Hindi for a pa
 
 You'll want to know: खिचड़ी.
 खिचड़ी — khicṛī — "khichri (rice and lentils)".
+
+The word, taken apart.
+खिचड़ी (khicṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from khiccā, "dish of rice and peas" (CDIAL 3880). CDIAL notes an added -ḍ-.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Hindi for a paratha, then the Hindi for khichri.
 You'll want to know: हलवा.
 हलवा — halvā — "halwa (a sweet)".
 
+The word, taken apart.
+हलवा (halvā) is a loan from Arabic ḥalwā, "a sweetmeat", which reached Hindi through Persian. Its Arabic root is ḥ-l-w (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Hindi for khichri, then the Hindi for halwa.
 You'll want to know: लड्डू.
 लड्डू — laḍḍū — "a laddu (a sweet)".
 
+The word, taken apart.
+लड्डू (laḍḍū) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from laḍḍu, "a kind of sweetmeat" (CDIAL 10926). CDIAL thinks it the same as laḍḍu, "lump", and notes a suggested Munda link.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Hindi for halwa, then the Hindi for a laddu.
 
 You'll want to know: अचार.
 अचार — achār — "pickle".
+
+The word, taken apart.
+अचार (achār) is a loan, usually traced to Persian āchār, "pickle".
 
 What you've built.
 One more word for this chapter.

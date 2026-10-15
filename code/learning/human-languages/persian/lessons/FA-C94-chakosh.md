@@ -14,7 +14,8 @@ romanization: "chakosh"
 concept_tag: FA-THINGS94-CHAKOSH
 prerequisites: [FA-C93-parde, FA-C93-mikh]
 sounds: []
-roots: []
+roots: [turkic-cakuc]
+etymology_hook: "chakosh: a loan, usually traced to Turkic čakuč 'hammer'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C93-mikh]
 <!-- hl-knowledge: introduces=[FA-LEX-C94-THINGS94-01]; assesses=[] -->
 
 **چکش** — *chakosh* — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chakosh* is a loan, usually traced to Turkic *čakuč*, "hammer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

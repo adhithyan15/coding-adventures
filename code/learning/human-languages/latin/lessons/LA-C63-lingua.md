@@ -13,7 +13,8 @@ gloss: "the tongue; a language"
 concept_tag: LA-CORPUS1-LINGUA
 prerequisites: [LA-C63-digitus, LA-C63-dens]
 sounds: []
-roots: []
+roots: [lingua-latin]
+etymology_hook: "lingua 'tongue' — early Latin dingua, usually traced to PIE *dnghweh2s; English tongue is a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C63-dens]
 <!-- hl-knowledge: introduces=[LA-LEX-C63-CORPUS1-04]; assesses=[] -->
 
 **lingua, linguae** — "the tongue; a language". Both meanings, as in English *tongue*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**lingua** is inherited. Early Latin had *dingua*, "tongue" (Lewis & Short), and the word is usually traced to Proto-Indo-European *\*dnghweh2s*, "tongue" (EtymDB 2.1); English *tongue* is a cousin. The *l* is often put down to the pull of *lingō*, "to lick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

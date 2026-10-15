@@ -11,7 +11,8 @@ gloss: six — the first number past the five this book taught in chapter thirte
 concept_tag: MR-LEX-SAHA
 prerequisites: [MR-R54-how-much]
 sounds: [matra-aa]
-roots: []
+roots: [sanskrit-shash]
+etymology_hook: "sahā: CDIAL lists it under Sanskrit ṣaṣ 'six', from a variant it reconstructs as *kṣaṭ or *kṣvaṭ (CDIAL 12803)"
 duration:
   max_seconds: 210
 requires:

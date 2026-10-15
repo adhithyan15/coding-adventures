@@ -11,8 +11,8 @@ gloss: shop, written after short u is isolated
 concept_tag: MW-SHOPPING-SHOP-WRITTEN
 prerequisites: [MW-W13-u-matra]
 sounds: [voiced-d, short-u, long-aa]
-roots: []
-etymology_hook: Familiar द, क, ा, and न join the newly isolated short-u mark.
+roots: [arabic-dukkan]
+etymology_hook: "dukān ← Arabic dukkān 'shop', through Persian (Lane, root d-k-n)"
 duration:
   max_seconds: 165
 requires:
@@ -44,6 +44,11 @@ reviews_of: [MW-C13-hear-dukan, MW-W13-u-matra, MW-C10-bajar, MW-C11-barsaat, MW
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01] -->
 
 > **दु** + **कान** → **दुकान** — *dukān* — shop
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**दुकान** (*dukān*) is a loan from Arabic *dukkān*, "shop", which reached Marwadi through Persian. Its Arabic root is *d-k-n* (Lane), though Lane notes that some take the Arabic word itself from Persian.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DUKAN-01] -->

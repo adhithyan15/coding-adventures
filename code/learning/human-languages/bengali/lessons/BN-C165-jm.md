@@ -14,7 +14,8 @@ romanization: "jæm"
 concept_tag: BN-JINIS165-JM
 prerequisites: [BN-C164-soyetar, BN-C165-kishmish]
 sounds: []
-roots: []
+roots: [english-jam]
+etymology_hook: "jæm ← English jam"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [BN-C165-kishmish]
 <!-- hl-knowledge: introduces=[BN-LEX-C165-JINIS165-02]; assesses=[] -->
 
 **জ্যাম** — *jæm* — "jam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**জ্যাম** (*jæm*) is a loan from English *jam*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Marwadi for plain, then the Marwadi for unusual.
 You'll want to know: पूरो.
 पूरो — pūro — "complete, whole".
 
+The word, taken apart.
+पूरो (pūro) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pūra, "filling". CDIAL lists Old Marwari puraü under it (CDIAL 8330).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Marwadi for unusual, then the Marwadi for complete.
 
 You'll want to know: खुस.
 खुस — khus — "happy".
+
+The word, taken apart.
+खुस (khus) is a loan, usually traced to Persian xuš, "happy, pleasant". Marwadi says the š as s.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Marwadi for complete, then the Marwadi for happy.
 You'll want to know: डरपोक.
 डरपोक — ḍarpok — "timid".
 
+The word, taken apart.
+डरपोक (ḍarpok) is built on ḍar, "fear", which CDIAL lists as Marwari ḍar under Sanskrit dara, "fear" (CDIAL 6186). CDIAL has no entry for the ending -pok, so that part is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Marwadi for happy, then the Marwadi for timid.
 You'll want to know: बहादुर.
 बहादुर — bahādur — "brave".
 
+The word, taken apart.
+बहादुर (bahādur) is a loan, usually traced to Persian bahādur, "brave, hero". Persian took it from a Turkic or Mongol word for "hero".
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Marwadi for timid, then the Marwadi for brave.
 
 You'll want to know: गैलो.
 गैलो — gailo — "crazy".
+
+The word, taken apart.
+गैलो (gailo) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from grahila, "possessed by an evil spirit". CDIAL lists Marwari gahalo under it (CDIAL 4366). The Marwari row means "foolish"; गैलो (gailo) has lost its h. CDIAL thinks the Sanskrit word was made from Middle Indo-Aryan gahila, built on graha, "seizing".
 
 What you've built.
 One more word for this chapter.

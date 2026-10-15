@@ -14,7 +14,8 @@ romanization: "ini mutal"
 concept_tag: ML-BHAVI179-INI-MUTAL
 prerequisites: [ML-C178-celavazhikkuka, ML-C179-atutta]
 sounds: []
-roots: []
+roots: [dravidian-i-proximal-deictic, dravidian-mutal-beginning]
+etymology_hook: "ini mutal: native Dravidian, ini 'henceforth' (DEDR 410) + mutal 'beginning' (DEDR 4950)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C179-atutta]
 <!-- hl-knowledge: introduces=[ML-LEX-C179-BHAVI179-02]; assesses=[] -->
 
 **ഇനി മുതൽ** — *ini mutal* — "from now on". **ഇനി മുതൽ ഞാൻ നേരത്തെ എഴുന്നേൽക്കും** — *ini mutal ñān nēratte eḻunnēlkkuṁ* — "From now on I will get up early."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ഇനി മുതൽ** (*ini mutal*) is native Dravidian: *ini*, "henceforth", from the near-pointing base (DEDR 410, with Tamil *iṉi*), and *mutal*, "beginning" (DEDR 4950, with Tamil *mutal*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

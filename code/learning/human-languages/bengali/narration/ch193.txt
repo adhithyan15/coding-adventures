@@ -12,6 +12,9 @@ Before the new one: say the Bengali for separate, then the Bengali for the same.
 You'll want to know: বিশাল.
 বিশাল — bishāl — "huge".
 
+The word, taken apart.
+বিশাল (bishāl) is Sanskrit viśāla, "broad, great", taken over whole as a learned loan, a tatsama.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for the same, then the Bengali for huge.
 
 You'll want to know: মাঝারি.
 মাঝারি — mājhāri — "medium".
+
+The word, taken apart.
+মাঝারি (mājhāri) is built on mājh, "middle", from Sanskrit madhya, "middle" (CDIAL 9804).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for huge, then the Bengali for medium.
 You'll want to know: কাছের.
 কাছের — kāchher — "nearby".
 
+The word, taken apart.
+কাছের (kāchher) is kāchh, "nearness", + -er, "of". CDIAL has no entry for kāchh, but it appears to belong with Sanskrit kakṣa, "armpit, side": there CDIAL lists Bengali kāṁkh, "flank", Nepali kāch, "side, edge", and Assamese kāxe, "by the side of", and notes that some words for "beside" probably grew from the sense "side" (CDIAL 2588).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for medium, then the Bengali for nearby.
 You'll want to know: ব্যক্তিগত.
 ব্যক্তিগত — bæktigôtô — "personal".
 
+The word, taken apart.
+ব্যক্তিগত (bæktigôtô) is built from Sanskrit vyakti, "an individual", and gata, "gone to, concerning", both taken over whole: "concerning the person".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for nearby, then the Bengali for personal.
 
 You'll want to know: সরকারি.
 সরকারি — sôrkāri — "public, governmental".
+
+The word, taken apart.
+সরকারি (sôrkāri) is a loan, usually traced to Persian sarkār, "government; master". It carries the adjective ending -i.
 
 What you've built.
 One more word for this chapter.

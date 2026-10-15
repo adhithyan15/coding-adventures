@@ -14,7 +14,8 @@ romanization: "ondu vēḷe"
 concept_tag: KA-KARANA176-ONDU-VELE
 prerequisites: [KA-C176-illadiddare, KA-C176-adaru]
 sounds: []
-roots: []
+roots: [proto-dravidian-numbers, sanskrit-vela]
+etymology_hook: "ondu vēḷe: native ondu 'one' (DEDR 990) + vēḷe 'time' ← Sanskrit velā (CDIAL 12115)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C176-adaru]
 <!-- hl-knowledge: introduces=[KA-LEX-C176-KARANA176-04]; assesses=[] -->
 
 **ಒಂದು ವೇಳೆ** — *ondu vēḷe* — "in case, if by chance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಒಂದು ವೇಳೆ** (*ondu vēḷe*) is *ondu*, "one" (DEDR 990), native, and *vēḷe*, "time", from Sanskrit *velā*, "limit, time" (CDIAL 12115): "at one time", if it so happens. CDIAL thinks *velā* probably came into Sanskrit from Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

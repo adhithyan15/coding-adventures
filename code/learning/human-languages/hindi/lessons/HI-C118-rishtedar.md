@@ -14,7 +14,8 @@ romanization: "riśtedār"
 concept_tag: HI-SPOUSE-RELATIVE
 prerequisites: [HI-C118-pati, HI-C118-patni]
 sounds: []
-roots: []
+roots: [persian-rishtadar]
+etymology_hook: "riśtedār: usually traced to Persian rishtadār 'a relative'"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,11 @@ reviews_of: [HI-C118-patni]
 
 **रिश्ता** is "a relationship", and **-दार** is "one who has": a relative is one who has a tie
 to you. **वह मेरा रिश्तेदार है** — "he is my relative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**रिश्तेदार** (*riśtedār*) is a loan, usually traced to Persian *rishtadār*, "a relative". It is built from *rishta*, "thread, tie", and *-dār*, "holder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 60,
-  "sourceHash": "fnv1a64:42e389a251395804",
+  "sourceHash": "fnv1a64:7189d2f40f9dadd9",
   "lessonIds": [
     "GU-C60-chilli",
     "GU-C60-salt",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch60.txt",
   "json": "gujarati/narration/ch60.json",
-  "textHash": "fnv1a64:5bb093deb6c7ee19",
-  "jsonHash": "fnv1a64:9c3c92fc583b965f",
+  "textHash": "fnv1a64:362ea177c145518f",
+  "jsonHash": "fnv1a64:16e1fec7af6b3d0e",
   "findings": []
 }

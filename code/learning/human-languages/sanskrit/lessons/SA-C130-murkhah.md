@@ -14,7 +14,8 @@ romanization: "mūrkhaḥ"
 concept_tag: SA-QUAL130-MURKHAH
 prerequisites: [SA-C129-virah, SA-C129-caturah]
 sounds: []
-roots: []
+roots: [sanskrit-murkha]
+etymology_hook: "mūrkha 'stupid' (TS); MW files it under √mūrch 'thicken, congeal', without deriving it; origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C129-caturah]
 <!-- hl-knowledge: introduces=[SA-LEX-C130-QUAL130-01]; assesses=[] -->
 
 **मूर्खः** — *mūrkhaḥ* — "foolish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mūrkha* "stupid, foolish" is old, in the Taittirīya Saṃhitā. MW files it under the root √mūrch "thicken, congeal, faint" without deriving it from there, so its source is uncertain. Hindi uses it unchanged as *mūrkh* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

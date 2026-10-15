@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for an aeroplane, then the Sanskrit for he 
 You'll want to know: वर्षा.
 वर्षा (varṣā) — "rain", and in the plural the rainy season.
 
+The word, taken apart.
+Varṣā is built on the root √vṛṣ, "to rain" (MW, CDIAL 11396). Its sister varṣa, "rain; a year", counted in rainy seasons, lives on as Hindi baras, "year" (CDIAL 11392).
+
 What you've built.
 Water from the sky.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for he goes in, then the Sanskrit for rain.
 
 You'll want to know: शीतम्.
 शीतम् (śītam) — "cold". शीतम् अस्ति — "it is cold".
+
+The word, taken apart.
+Śīta is built on the root √śyai, "to congeal, freeze" (MW, CDIAL 12485), and is already in the Rigveda.
 
 What you've built.
 The weather of the snow.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for rain, then the Sanskrit for the cold.
 You'll want to know: उष्णम्.
 उष्णम् (uṣṇam) — "heat", "hot". उष्णम् अस्ति — "it is hot".
 
+The word, taken apart.
+Uṣṇa is a Rigvedic word for "hot", which MW files under the root √uṣ, "to burn" (CDIAL 2389).
+
 What you've built.
 The other side of cold.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for the cold, then the Sanskrit for the hea
 You'll want to know: वसन्तः.
 वसन्तः (vasantaḥ) — "spring", the first ऋतुः of the year, when the पुष्पम् opens.
 
+The word, taken apart.
+MW explains vasanta as "the brilliant season", from the root √vas, "to shine" (CDIAL 11439). It is inherited: MW compares Greek ear and Latin vēr, "spring", the source of English vernal.
+
 What you've built.
 The flower season.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for the heat, then the Sanskrit for spring.
 
 You'll want to know: ग्रीष्मः.
 ग्रीष्मः (grīṣmaḥ) — "summer", the ऋतुः of उष्णम् (uṣṇam).
+
+The word, taken apart.
+Grīṣma is already in the Rigveda. The native grammarians derive it from the root √gras, "to devour" (MW). MW also compares an Irish word for fire, a comparison CDIAL 4391 does not take up, so its origin is not settled.
 
 What you've built.
 The hot season.

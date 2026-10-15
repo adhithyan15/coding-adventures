@@ -14,7 +14,8 @@ romanization: "cauṅk"
 concept_tag: PA-THINGS138-CAUNK
 prerequisites: [PA-C137-karkhana, PA-C137-laibreri]
 sounds: []
-roots: []
+roots: [sanskrit-catushka]
+etymology_hook: "cauṅk ← Sanskrit catuṣka 'set of four; quadrangular courtyard', a tadbhava (CDIAL 4629)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [PA-C137-laibreri]
 <!-- hl-knowledge: introduces=[PA-LEX-C138-THINGS138-01]; assesses=[] -->
 
 **ਚੌਂਕ** — *cauṅk* — "a town square".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਚੌਂਕ** (*cauṅk*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *catuṣka*, "set of four; quadrangular courtyard" (CDIAL 4629). CDIAL lists Punjabi *cauk*, "open square where four roads meet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

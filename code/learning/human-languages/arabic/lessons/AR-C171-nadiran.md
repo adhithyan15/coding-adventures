@@ -14,7 +14,8 @@ romanization: "nādiran"
 concept_tag: AR-WAQT171-NADIRAN
 prerequisites: [AR-C171-mudda, AR-C171-bidaya]
 sounds: []
-roots: []
+roots: [n-d-r]
+etymology_hook: "nādiran: built on the root n-d-r, 'to be rare, to drop out' (Lane); nādiran is nādir, 'rare', with the adverb ending -an"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C171-bidaya]
 <!-- hl-knowledge: introduces=[AR-LEX-C171-WAQT171-04]; assesses=[] -->
 
 **نادرا** — *nādiran* — "rarely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نادرا** (*nādiran*) is built on the native Arabic root *n-d-r*, "to be rare, to drop out" (Lane). *Nādiran* is *nādir*, "rare", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

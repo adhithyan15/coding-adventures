@@ -15,6 +15,7 @@ concept_tag: MR-VASTU248-MIRAVNUK
 prerequisites: [MR-C247-bhavana, MR-C248-san]
 sounds: []
 roots: []
+etymology_hook: "miravṇūk 'procession': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C248-san]
 <!-- hl-knowledge: introduces=[MR-LEX-C248-VASTU248-02]; assesses=[] -->
 
 **मिरवणूक** — *miravṇūk* — "a procession".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **मिरवणूक** (*miravṇūk*) is not settled. Neither CDIAL nor DEDR, searched by form and by meaning, has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

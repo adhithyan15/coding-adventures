@@ -12,6 +12,9 @@ Before the new one: say the Bengali for to wake up, then the Bengali for to bath
 You'll want to know: মেনে নেওয়া.
 মেনে নেওয়া — mene neoyā — "to accept".
 
+The phrase, taken apart.
+মেনে নেওয়া (mene neoyā) is mene, "having accepted", a form of mānā, "to consider, obey", from Sanskrit manyate, "thinks, agrees" (CDIAL 9857), + neoyā, "to take", from Sanskrit nayati, "leads, carries off" (CDIAL 6966).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Bengali for to bathe, then the Bengali for to accept
 
 You'll want to know: রাজি হওয়া.
 রাজি হওয়া — rāji hôoyā — "to agree".
+
+The phrase, taken apart.
+রাজি হওয়া (rāji hôoyā) is rāji, "willing", from Arabic rāḍī, "content", which reached Bengali through Persian; its Arabic root is r-ḍ-w (Lane). Hôoyā, "to be", comes from Sanskrit bhavati, "becomes, is" (CDIAL 9416).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Bengali for to accept, then the Bengali for to agree
 You'll want to know: জোর করা.
 জোর করা — jor kôrā — "to force".
 
+The phrase, taken apart.
+জোর করা (jor kôrā) is jor, "force", usually traced to Persian zōr, "strength", + kôrā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Bengali for to agree, then the Bengali for to force.
 You'll want to know: বাধা দেওয়া.
 বাধা দেওয়া — bādhā deoyā — "to obstruct".
 
+The phrase, taken apart.
+বাধা দেওয়া (bādhā deoyā) is bādhā, "an obstacle", Sanskrit bādhā, "pressure, hindrance", taken over whole, + deoyā, "to give", from Sanskrit dadāti, "gives" (CDIAL 6141).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Bengali for to force, then the Bengali for to obstru
 
 You'll want to know: ঝুঁকি নেওয়া.
 ঝুঁকি নেওয়া — jhũki neoyā — "to take a risk".
+
+The phrase, taken apart.
+ঝুঁকি নেওয়া (jhũki neoyā) is jhũki, "a risk", which appears to belong with Bengali jhũkā, "to stoop", listed under jhukkati, "stoops" (CDIAL 5399), + neoyā, "to take", from Sanskrit nayati, "leads, carries off" (CDIAL 6966).
 
 What you've built.
 One more word for this chapter.

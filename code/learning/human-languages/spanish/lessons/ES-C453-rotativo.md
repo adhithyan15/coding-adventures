@@ -11,6 +11,7 @@ concept_tag: ES-WORK-ROTATIVO
 prerequisites: [ES-C453-instalacion, ES-C449-rueda, ES-C347-alrededor]
 sounds: [r-tap, v-b, stress-penultimate]
 roots: [rota-latin]
+etymology_hook: "rotativo ← Latin rota 'wheel', taken whole from books — kin to rueda"
 duration:
   max_seconds: 275
 requires:

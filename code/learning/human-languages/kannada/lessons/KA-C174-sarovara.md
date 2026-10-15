@@ -14,7 +14,8 @@ romanization: "sarōvara"
 concept_tag: KA-STHALA174-SAROVARA
 prerequisites: [KA-C173-angala, KA-C174-pravasi]
 sounds: []
-roots: []
+roots: [sanskrit-saras]
+etymology_hook: "sarōvara ← Sanskrit sarovara 'best of lakes', saras 'lake' (CDIAL 13254) + vara 'best'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C174-pravasi]
 <!-- hl-knowledge: introduces=[KA-LEX-C174-STHALA174-02]; assesses=[] -->
 
 **ಸರೋವರ** — *sarōvara* — "a lake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸರೋವರ** (*sarōvara*) is Sanskrit *sarovara*, "a fine lake": *saras*, "lake, pool" (CDIAL 13254), and *vara*, "best".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

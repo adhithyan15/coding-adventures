@@ -14,7 +14,8 @@ romanization: "tahdig"
 concept_tag: FA-CHIZ249-TAHDIG
 prerequisites: [FA-C249-tekke, FA-C249-zardchube]
 sounds: []
-roots: []
+roots: [persian-tah]
+etymology_hook: "tahdig: Persian tah 'bottom' (EtymDB) + dig 'pot'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C249-zardchube]
 <!-- hl-knowledge: introduces=[FA-LEX-C249-CHIZ249-03]; assesses=[] -->
 
 **ته دیگ** — *tahdig* — "crispy rice from the bottom of the pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tahdig* is *tah*, "bottom" (Middle Persian *tah*, EtymDB), with *dig*, "pot": the bottom of the pot. Both are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

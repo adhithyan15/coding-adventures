@@ -14,7 +14,8 @@ romanization: "ghāliban"
 concept_tag: AR-WAQT202-GHALIBAN
 prerequisites: [AR-C201-harq, AR-C201-maghas]
 sounds: []
-roots: []
+roots: [gh-l-b]
+etymology_hook: "ghāliban: built on the root gh-l-b, 'to overcome' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C201-maghas]
 <!-- hl-knowledge: introduces=[AR-LEX-C202-WAQT202-01]; assesses=[] -->
 
 **غالبا** — *ghāliban* — "usually, mostly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غالبا** (*ghāliban*) is built on the native Arabic root *gh-l-b*, "to overcome" (Lane). *Ghāliban* is the active participle, "prevailing", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

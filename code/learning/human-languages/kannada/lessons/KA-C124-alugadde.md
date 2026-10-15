@@ -14,7 +14,8 @@ romanization: "ālūgaḍḍe"
 concept_tag: KA-THINGS124-ALUGADDE
 prerequisites: [KA-C123-tengu, KA-C123-irulli]
 sounds: []
-roots: []
+roots: [hindustani-alu, dravidian-gadde-tuber]
+etymology_hook: "ālūgaḍḍe: ālū 'potato' ← Hindustani + native gaḍḍe 'bulbous root' (DEDR 1171)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C123-irulli]
 <!-- hl-knowledge: introduces=[KA-LEX-C124-THINGS124-01]; assesses=[] -->
 
 **ಆಲೂಗಡ್ಡೆ** — *ālūgaḍḍe* — "a potato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಆಲೂಗಡ್ಡೆ** (*ālūgaḍḍe*) is *ālū*, "potato", from Hindustani *ālū*, and *gaḍḍe*, "bulbous root", native Dravidian (DEDR 1171).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "miḷavṇe"
 concept_tag: MR-VERB-MILAVNE
 prerequisites: [MR-C158-jhadne, MR-C158-bhandne]
 sounds: []
-roots: []
+roots: [sanskrit-milati]
+etymology_hook: "miḷavṇe: the 'make' form of miḷṇe 'to get', from Sanskrit milati 'meets' (CDIAL 10133)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C158-bhandne]
 <!-- hl-knowledge: introduces=[MR-LEX-C158-ACT158-04]; assesses=[] -->
 
 **मिळवणे** — *miḷavṇe* — "to obtain, to earn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**मिळवणे** (*miḷavṇe*) is the "make" form of **मिळणे**, "to be got", which comes from Sanskrit *milati*, "meets, encounters" (CDIAL 10133).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

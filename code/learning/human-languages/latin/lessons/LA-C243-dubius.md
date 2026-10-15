@@ -13,7 +13,8 @@ gloss: "doubtful"
 concept_tag: LA-QUAL243-DUBIUS
 prerequisites: [LA-C242-ceteri, LA-C242-alius]
 sounds: []
-roots: []
+roots: [dubius-latin, duo-latin]
+etymology_hook: "dubius 'doubtful' — usually traced to duo 'two' + a root for 'being': two ways at once"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C242-alius]
 <!-- hl-knowledge: introduces=[LA-LEX-C243-QUAL243-01]; assesses=[] -->
 
 **dubius, dubia, dubium** — "doubtful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**dubius** is usually traced to an old compound of *duo*, "two", and a root for "being": being two ways at once, so in doubt.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

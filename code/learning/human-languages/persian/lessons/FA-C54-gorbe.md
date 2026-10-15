@@ -14,7 +14,8 @@ romanization: "gorbe"
 concept_tag: FA-NATURE54-GORBE
 prerequisites: [FA-C54-biyaban, FA-C54-sag]
 sounds: []
-roots: []
+roots: [persian-gorbe]
+etymology_hook: "gorbe ← Middle Persian gurbag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C54-sag]
 <!-- hl-knowledge: introduces=[FA-LEX-C54-NATURE54-05]; assesses=[] -->
 
 **گربه** — *gorbe* — "a cat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gorbe* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *gurbag*, "cat" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

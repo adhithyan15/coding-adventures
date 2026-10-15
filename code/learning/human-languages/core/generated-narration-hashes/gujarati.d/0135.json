@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 135,
-  "sourceHash": "fnv1a64:2f114e1f1aa6dd61",
+  "sourceHash": "fnv1a64:8fb1eb1e23aa2560",
   "lessonIds": [
     "GU-C135-tarasyu",
     "GU-C135-bimar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "gujarati/narration/ch135.txt",
   "json": "gujarati/narration/ch135.json",
-  "textHash": "fnv1a64:6245e6ab5f5d9767",
-  "jsonHash": "fnv1a64:0eed038857b47e05",
+  "textHash": "fnv1a64:281f0528b09ba047",
+  "jsonHash": "fnv1a64:9c150984df821be5",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "kuḷāyi"
 concept_tag: TE-VASTUVU309-KULAYI
 prerequisites: [TE-C309-pasuvulu, TE-C309-stambham]
 sounds: []
-roots: []
+roots: [telugu-kulayi-tap]
+etymology_hook: "kuḷāyi: origin uncertain; DEDR and CDIAL list no word of this shape meaning 'tap'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C309-stambham]
 <!-- hl-knowledge: introduces=[TE-LEX-C309-VASTUVU309-04]; assesses=[] -->
 
 **కుళాయి** — *kuḷāyi* — "a water tap, a faucet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **కుళాయి** (*kuḷāyi*) is uncertain. DEDR and CDIAL list no word of this shape meaning "tap".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -13,7 +13,8 @@ gloss: "afterwards, later"
 concept_tag: LA-FUT163-POSTEA
 prerequisites: [LA-C162-accido, LA-C163-perendie]
 sounds: []
-roots: []
+roots: [postea-latin, post-latin]
+etymology_hook: "posteā 'afterwards' — post 'after' + eā 'that'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C163-perendie]
 <!-- hl-knowledge: introduces=[LA-LEX-C163-FUT163-02]; assesses=[] -->
 
 **posteā** — "afterwards, later". It is **post**, "after", with **eā**. **Posteā tē vidēbō.** — "I will see you afterwards." **vidēbō** is the future you met in **crās tē vidēbō**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**posteā** is *post*, "after", with *eā*, "that" (Lewis & Short), like *anteā*, "before": after that.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

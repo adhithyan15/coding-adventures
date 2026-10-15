@@ -11,7 +11,8 @@ romanization: "rampaṁ"
 concept_tag: TE-NOUN-SAW
 prerequisites: [TE-C69-axe]
 sounds: []
-roots: []
+roots: [prakrit-rampa]
+etymology_hook: "rampaṁ: an Indo-Aryan loan (DEDR App. 55), from Prakrit rampa 'knife' (CDIAL 10629)"
 duration:
   max_seconds: 210
 requires:
@@ -45,6 +46,11 @@ reviews_of: [TE-C69-axe]
 It is a borrowing, and it came in with the trade rather than ahead of it: the long two-man saw and its name reached the carpenter's shed together.
 
 The noise is half the word. Telugu calls a rasping sound a రంపం sound, and somebody who repeats a complaint until you give way is running a రంపం over your చెవి.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**రంపం** (*rampaṁ*) is listed in DEDR's appendix of words taken from Indo-Aryan (DEDR App. 55), under Prakrit *rampa*, "knife, scraper" (CDIAL 10629), with Tamil *irampam*, "a saw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

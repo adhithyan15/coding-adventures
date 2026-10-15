@@ -14,7 +14,8 @@ romanization: "vānti cēsukō"
 concept_tag: TE-VERB-VANTI-CESUKO
 prerequisites: [TE-C241-pilcu, TE-C241-tummu]
 sounds: []
-roots: []
+roots: [sanskrit-vanti, sey-do-dravidian]
+etymology_hook: "vānti cēsukō: Sanskrit vānti 'vomiting' (CDIAL 11518) + native cēyu 'to do' (DEDR 1957) + konu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C241-tummu]
 <!-- hl-knowledge: introduces=[TE-LEX-C241-KRIYA241-05]; assesses=[] -->
 
 **వాంతి చేసుకో** — *vānti cēsukō* — "to vomit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**వాంతి చేసుకో** (*vānti cēsukō*) pairs Sanskrit *vānti*, "vomiting" (CDIAL 11518), with native *cēyu*, "to do" (DEDR 1957), and *-konu*, "for oneself".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

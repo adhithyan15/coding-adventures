@@ -14,7 +14,8 @@ romanization: "havâ"
 concept_tag: FA-CHIZ208-HAVA
 prerequisites: [FA-C207-mehmani, FA-C207-saz]
 sounds: []
-roots: []
+roots: [arabic-hawa]
+etymology_hook: "havâ ← Arabic hawāʾ 'air', root h-w-y (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C207-saz]
 <!-- hl-knowledge: introduces=[FA-LEX-C208-CHIZ208-01]; assesses=[] -->
 
 **هوا** — *havâ* — "weather; air".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*havâ* is borrowed from Arabic *hawāʾ*, "air". Its Arabic root is *h-w-y* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 190,
-  "sourceHash": "fnv1a64:dd6b031f48d4fc3b",
+  "sourceHash": "fnv1a64:bb1d2b1b1aded7f0",
   "lessonIds": [
     "FR-C190-joyeux-joyeuse",
     "FR-C190-serieux-serieuse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch190.txt",
   "json": "french/narration/ch190.json",
-  "textHash": "fnv1a64:225d92f4a58949a6",
-  "jsonHash": "fnv1a64:3fcaecfdd0be0d39",
+  "textHash": "fnv1a64:a0c34d4dbc912801",
+  "jsonHash": "fnv1a64:0e852402dc02ee19",
   "findings": []
 }

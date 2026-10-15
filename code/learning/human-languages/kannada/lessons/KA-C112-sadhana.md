@@ -14,7 +14,8 @@ romanization: "sādhana"
 concept_tag: KA-CAN112-SADHANA
 prerequisites: [KA-C112-hakku, KA-C112-avakasa]
 sounds: []
-roots: []
+roots: [sanskrit-sadhana]
+etymology_hook: "sādhana ← Sanskrit sādhana 'furthering; completion', a tatsama (CDIAL 13334)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C112-avakasa]
 <!-- hl-knowledge: introduces=[KA-LEX-C112-CAN112-05]; assesses=[] -->
 
 **ಸಾಧನ** — *sādhana* — "a tool, a means".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಾಧನ** (*sādhana*) is Sanskrit *sādhana*, "furthering; completion", taken over whole as a learned loan, a tatsama (CDIAL 13334). What helps a thing get done is its means.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

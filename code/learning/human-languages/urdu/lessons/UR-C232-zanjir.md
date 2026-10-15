@@ -14,7 +14,8 @@ romanization: "zanjīr"
 concept_tag: UR-CHIZ232-ZANJIR
 prerequisites: [UR-C232-tarch, UR-C232-baitri]
 sounds: []
-roots: []
+roots: [persian-zanjir]
+etymology_hook: "zanjīr: usually traced to Persian zanjīr 'chain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C232-baitri]
 <!-- hl-knowledge: introduces=[UR-LEX-C232-CHIZ232-04]; assesses=[] -->
 
 **زنجیر** — *zanjīr* — "a chain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زنجیر** (*zanjīr*) is a loan, usually traced to Persian *zanjīr*, "chain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

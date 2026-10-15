@@ -11,8 +11,8 @@ gloss: very — the word that turns a plain description into a reaction
 concept_tag: MW-DEGREE-VERY
 prerequisites: [MW-R22-script-close]
 sounds: [aspirated-gh, retroflex-n, long-o]
-roots: []
-etymology_hook: The track can name expensive and cheap but cannot yet say how expensive.
+roots: [sanskrit-ghana]
+etymology_hook: "ghaṇo ← Sanskrit ghana 'compact, firm, dense', a tadbhava (CDIAL 4424, Marwari row)"
 duration:
   max_seconds: 165
 requires:
@@ -52,6 +52,11 @@ The source prints it in front of a description, where English puts *very*: the
 food is *ghaṇo* tasty. Put it in front of *mahaṅgo* and you have said more than
 that a thing costs money: you have said it costs too much, which is the whole
 reason a bargain begins.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ghaṇo* is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghana*, "compact, firm, dense". CDIAL lists Marwari *ghaṇo* under it (CDIAL 4424). The sense moved from "dense" to "much" and "very".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHANO-01] -->

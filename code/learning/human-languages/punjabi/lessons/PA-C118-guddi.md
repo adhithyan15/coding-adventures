@@ -14,7 +14,8 @@ romanization: "guḍḍī"
 concept_tag: PA-THINGS118-GUDDI
 prerequisites: [PA-C118-galica, PA-C118-sirhana, PA-C44-panjvan, PA-C44-panjvan]
 sounds: []
-roots: []
+roots: [indo-aryan-gudda]
+etymology_hook: "guḍḍī ← *guḍḍa 'doll, effigy', a reconstructed form; a tadbhava (CDIAL 4189)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [PA-C118-sirhana]
 <!-- hl-knowledge: introduces=[PA-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **ਗੁੱਡੀ** — *guḍḍī* — "a doll".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਗੁੱਡੀ** (*guḍḍī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*guḍḍa*, "doll, effigy", a form CDIAL reconstructs from its descendants (CDIAL 4189).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

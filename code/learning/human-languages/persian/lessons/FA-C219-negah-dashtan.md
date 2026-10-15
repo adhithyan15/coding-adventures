@@ -14,7 +14,8 @@ romanization: "negah dâshtan"
 concept_tag: FA-VERB-NEGAH-DASHTAN
 prerequisites: [FA-C218-shena-kardan, FA-C219-tavaqqof-kardan]
 sounds: []
-roots: []
+roots: [persian-negah, persian-dashtan]
+etymology_hook: "negah dâshtan: Persian negah 'look' + dâshtan 'to hold'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C219-tavaqqof-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C219-KONESH219-02]; assesses=[] -->
 
 **نگه داشتن** — *negah dâshtan* — "to keep, to hold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*negah dâshtan* is "to hold in view": *negah*, "look", with *dâshtan*, "to hold". Both are native; *negah* is usually traced to Middle Persian *nigāh*. *dâshtan*, "to have", is an inherited verb; it is usually traced to Middle Persian *dāštan*, "to hold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

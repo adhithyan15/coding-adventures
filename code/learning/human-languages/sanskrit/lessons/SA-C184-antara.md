@@ -14,7 +14,8 @@ romanization: "antarā"
 concept_tag: SA-LOC184-ANTARA
 prerequisites: [SA-C184-duratah, SA-C184-nikate]
 sounds: []
-roots: []
+roots: [sanskrit-antara]
+etymology_hook: "antarā 'between' ← antara 'inner', from antar 'within'; MW compares Latin inter (CDIAL 362)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C184-nikate]
 <!-- hl-knowledge: introduces=[SA-LEX-C184-LOC184-03]; assesses=[] -->
 
 **अन्तरा** — *antarā* — "between".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*antarā* is an adverb formed from *antara*, "interior, near" (CDIAL 362), which comes from *antar*, "within". MW compares *antar* with Latin *inter*, "between", an inherited Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

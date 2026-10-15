@@ -14,7 +14,8 @@ romanization: "saṅgīta"
 concept_tag: KA-VASTU298-SANGITA
 prerequisites: [KA-C298-ata, KA-C298-sinima]
 sounds: []
-roots: []
+roots: [sanskrit-sangita]
+etymology_hook: "saṅgīta ← Sanskrit saṁgīta 'chorus, concert', a tatsama (CDIAL 12849)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C298-sinima]
 <!-- hl-knowledge: introduces=[KA-LEX-C298-VASTU298-03]; assesses=[] -->
 
 **ಸಂಗೀತ** — *saṅgīta* — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಂಗೀತ** (*saṅgīta*) is Sanskrit *saṁgīta*, "chorus, concert", taken over whole as a learned loan, a tatsama (CDIAL 12849). Kannada writes the nasal before *g* as *ṅ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

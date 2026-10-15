@@ -11,6 +11,7 @@ concept_tag: ES-ASK-BUFANDA
 prerequisites: [ES-C468-abrigo, ES-C450-patio, ES-C468-chaqueta]
 sounds: [stress-penultimate, b-soft]
 roots: []
+etymology_hook: "bufanda — origin not settled; French bouffante 'puffed out' is the usual suggestion"
 duration:
   max_seconds: 270
 requires:

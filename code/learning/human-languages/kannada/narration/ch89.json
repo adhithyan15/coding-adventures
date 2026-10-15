@@ -4,7 +4,7 @@
   "chapter": 89,
   "title": "Take Care on the Way",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:5ed5c5bfef6d8049",
+  "sourceHash": "fnv1a64:3a8477bfa4a38004",
   "lessons": [
     {
       "id": "KA-C89-takecare",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d637f01cb8d028f",
+      "sourceHash": "fnv1a64:4be7d1eaf12a7ec5",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹುಷಾರು (huṣāru) is a loan from Persian hušyār, \"awake, alert, careful\", which came to Kannada through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9ad1f7332d11535",
+      "sourceHash": "fnv1a64:7b11b48231023cca",
       "notice": null,
       "blocks": [
         {
@@ -179,6 +190,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜೋಪಾನ (jōpāna) is native Dravidian, one word with Telugu jōka (DEDR 2871). DEDR lists jōpāna itself, \"looking after\", in a Kannada dialect, with jōke, \"care, caution\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -189,7 +211,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -238,7 +260,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -269,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0247c48e2113dee4",
+      "sourceHash": "fnv1a64:bdbd3bd37de02eaa",
       "notice": null,
       "blocks": [
         {
@@ -302,6 +324,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಡವಾಯಿತು (taḍavāyitu) is native Dravidian: taḍa, \"delay\", which DEDR 3031 lists itself, and āyitu, \"it became\", from āgu, \"to become\" (DEDR 333). DEDR 333 compares Sanskrit ām."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -312,7 +345,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -361,7 +394,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -392,7 +425,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b616e6d576f01a0f",
+      "sourceHash": "fnv1a64:372f3f3f2d39a5ef",
       "notice": null,
       "blocks": [
         {
@@ -425,6 +458,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೋಗೋಣ (hōgōṇa) is native Dravidian: hōgu, \"to go\" (DEDR 4572, with Tamil pō), with -ōṇa, the ending that means \"let us\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -435,7 +479,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -484,7 +528,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -515,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1eda344594520c1",
+      "sourceHash": "fnv1a64:685155ff811f5061",
       "notice": null,
       "blocks": [
         {
@@ -552,6 +596,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಜೆ (raje) came through Hindustani rajā, \"leave, permission\", from Arabic riḍā, \"consent\". Leave from work is what you are given permission for."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -562,7 +617,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -611,7 +666,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

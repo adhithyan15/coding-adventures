@@ -14,7 +14,8 @@ romanization: "pal"
 concept_tag: HI-TIME191-PAL
 prerequisites: [HI-C191-sal, HI-C191-sadi]
 sounds: []
-roots: []
+roots: [sanskrit-pala]
+etymology_hook: "pal ← Sanskrit pala 'a weight; a measure of time', inherited (CDIAL 7952)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C191-sadi]
 <!-- hl-knowledge: introduces=[HI-LEX-C191-TIME191-04]; assesses=[] -->
 
 **पल** — *pal* — "a moment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**पल** (*pal*) is inherited from Sanskrit *pala*, "a weight; a measure of time", and has come down with almost no change (CDIAL 7952).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

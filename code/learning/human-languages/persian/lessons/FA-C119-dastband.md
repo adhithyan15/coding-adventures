@@ -14,7 +14,8 @@ romanization: "dastband"
 concept_tag: FA-THINGS119-DASTBAND
 prerequisites: [FA-C119-nokhod, FA-C119-sekke]
 sounds: []
-roots: []
+roots: [persian-dast, persian-band]
+etymology_hook: "dastband: Persian dast 'hand' + band 'band' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C119-sekke]
 <!-- hl-knowledge: introduces=[FA-LEX-C119-THINGS119-04]; assesses=[] -->
 
 **دستبند** — *dastband* — "a bracelet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dastband* is *dast*, "hand, wrist" (EtymDB), with *band*, "band, tie" (EtymDB): a band for the wrist. Both are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

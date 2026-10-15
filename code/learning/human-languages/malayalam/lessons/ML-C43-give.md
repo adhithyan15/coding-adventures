@@ -11,7 +11,8 @@ romanization: "tarū"
 concept_tag: ML-VERB-GIVE
 prerequisites: [ML-C43-stand]
 sounds: []
-roots: []
+roots: [dravidian-taru-give]
+etymology_hook: "tarū: native Dravidian, one word with Tamil taru and Kannada tar (DEDR 3098)"
 duration:
   max_seconds: 210
 requires:
@@ -41,6 +42,11 @@ reviews_of: [ML-C43-stand]
 **തരൂ** (*tarū*) — "give".
 
 'Give — to me.' Malayalam distinguishes giving toward the speaker from giving away; this is the toward-me one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**തരൂ** (*tarū*) is native Dravidian, one word with Tamil *taru* and Kannada *tar* (DEDR 3098). It is the "give" that moves toward the speaker or the listener; giving to anyone else takes another verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kholm"
 concept_tag: RU-THINGS115-HILL
 prerequisites: [RU-C115-thunderstorm, RU-C115-ice]
 sounds: []
-roots: []
+roots: [germanic-hulma]
+etymology_hook: "холм ← early Germanic *hulma-, as in Old English holm 'a rise, a hill'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [RU-C115-ice]
 <!-- hl-knowledge: introduces=[RU-LEX-C115-THINGS115-03]; assesses=[] -->
 
 **холм** (*kholm*) — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**холм** ← Proto-Slavic *\*xŭlmŭ*, borrowed from early Germanic *\*hulma-*, as in Old English *holm*, "a height", and Old Norse *holmr*, "an islet" (Vasmer). He rejects attempts to make it native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

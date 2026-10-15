@@ -14,7 +14,8 @@ romanization: "kāvalkkāran"
 concept_tag: ML-JOLI263-KAVALKKARAN
 prerequisites: [ML-C263-asari, ML-C263-mestiri]
 sounds: []
-roots: []
+roots: [dravidian-ka-guard]
+etymology_hook: "kāvalkkāran: native Dravidian, kāval 'guard, watch' (DEDR 1416) + -kkāran 'one who does'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C263-mestiri]
 <!-- hl-knowledge: introduces=[ML-LEX-C263-JOLI263-03]; assesses=[] -->
 
 **കാവൽക്കാരൻ** — *kāvalkkāran* — "a watchman, a guard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**കാവൽക്കാരൻ** (*kāvalkkāran*) is native Dravidian: *kāval*, "custody, guard" (DEDR 1416, with Tamil *kā*, "to guard"), with *-kkāran*, the ending for a person who does something.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

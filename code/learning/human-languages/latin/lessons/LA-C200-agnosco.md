@@ -13,7 +13,8 @@ gloss: "to recognise"
 concept_tag: LA-VERB-AGNOSCO
 prerequisites: [LA-C200-tollo, LA-C200-pervenio]
 sounds: []
-roots: []
+roots: [agnoscere-latin, noscere-latin]
+etymology_hook: "agnōscō 'to recognise' — ad + gnōscō, the older form of nōscō"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C200-pervenio]
 <!-- hl-knowledge: introduces=[LA-LEX-C200-ACT200-03]; assesses=[] -->
 
 **agnōscō, agnōscere** — "to recognise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**agnōscō** is *ad*, "to", with *gnōscō*, "to get to know", the older form of nōscō (Lewis & Short): the g of the old form survives here.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

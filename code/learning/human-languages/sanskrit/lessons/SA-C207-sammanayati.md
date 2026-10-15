@@ -14,7 +14,8 @@ romanization: "sammānayati"
 concept_tag: SA-VERB-SAMMANAYATI
 prerequisites: [SA-C207-asvadayati, SA-C207-upadisati]
 sounds: []
-roots: []
+roots: [sanskrit-sammana]
+etymology_hook: "sammānayati ← sam + mānayati 'honours', the causative of √man 'think' (MW; CDIAL 10047)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C207-upadisati]
 <!-- hl-knowledge: introduces=[SA-LEX-C207-ACT207-05]; assesses=[] -->
 
 **सम्मानयति** — *sammānayati* — "honours".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sammānayati* is built on *sam* and *mānayati*, "esteems, honours" (CDIAL 10047), which MW calls the causative of the root √man, "to think". To honour someone is to make them thought of. MW compares √man with Latin *meminisse*, "to remember", and English *mean*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

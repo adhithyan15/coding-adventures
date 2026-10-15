@@ -14,7 +14,8 @@ romanization: "ghevar"
 concept_tag: MW-THINGS132-GHEVAR
 prerequisites: [MW-C132-achar, MW-C132-lapsi]
 sounds: []
-roots: []
+roots: [sanskrit-ghrtapura]
+etymology_hook: "ghevar ← Sanskrit ghṛtapūra 'sweetmeat of flour, milk, coconut and ghee', a tadbhava (CDIAL 4502, Gujarati row)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C132-lapsi]
 <!-- hl-knowledge: introduces=[MW-LEX-C132-THINGS132-03]; assesses=[] -->
 
 **घेवर** — *ghevar* — "a honeycomb sweet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**घेवर** (*ghevar*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghṛtapūra*, "sweetmeat of flour, milk, coconut and ghee". CDIAL gives no Marwari form in this entry (CDIAL 4502); the match is through Gujarati *ghebar*. It is built on *ghṛta*, "ghee", and *pūra*, "cake".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

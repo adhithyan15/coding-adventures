@@ -15,6 +15,7 @@ concept_tag: MR-ADJ105-SVASTA
 prerequisites: [MR-C104-jalad, MR-C104-mahag]
 sounds: []
 roots: []
+etymology_hook: "svasta 'cheap': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C104-mahag]
 <!-- hl-knowledge: introduces=[MR-LEX-C105-ADJ105-01]; assesses=[] -->
 
 **स्वस्त** — *svasta* — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **स्वस्त** (*svasta*) is not settled: CDIAL has no entry for it, nor for Hindi *sastā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

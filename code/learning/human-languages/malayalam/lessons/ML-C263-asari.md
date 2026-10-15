@@ -14,7 +14,8 @@ romanization: "āśāri"
 concept_tag: ML-JOLI263-ASARI
 prerequisites: [ML-C262-pujari, ML-C262-gayakan]
 sounds: []
-roots: []
+roots: [sanskrit-acarya]
+etymology_hook: "āśāri: a tadbhava of Sanskrit ācārya 'master, teacher' (CDIAL 1072)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C262-gayakan]
 <!-- hl-knowledge: introduces=[ML-LEX-C263-JOLI263-01]; assesses=[] -->
 
 **ആശാരി** — *āśāri* — "a carpenter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ആശാരി** (*āśāri*) is a tadbhava of Sanskrit *ācārya*, "master, teacher" (CDIAL 1072): the master craftsman.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

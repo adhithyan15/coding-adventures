@@ -14,7 +14,8 @@ romanization: "poṭṭŭ"
 concept_tag: ML-VASTU333-POTTU
 prerequisites: [ML-C333-karimpu, ML-C333-arival]
 sounds: []
-roots: []
+roots: [dravidian-pottu-dot]
+etymology_hook: "poṭṭŭ: native Dravidian, one word with Tamil poṭṭu and Kannada boṭṭu (DEDR 4492)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [ML-C333-arival]
 <!-- hl-knowledge: introduces=[ML-LEX-C333-VASTU333-04]; assesses=[] -->
 
 **പൊട്ട്** — *poṭṭŭ* — "a bindi, a forehead dot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**പൊട്ട്** (*poṭṭŭ*) is native Dravidian, one word with Tamil *poṭṭu*, Kannada *boṭṭu* and Telugu *boṭṭu* (DEDR 4492).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

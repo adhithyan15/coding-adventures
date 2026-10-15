@@ -14,7 +14,8 @@ romanization: "sāvadh karṇe"
 concept_tag: MR-VERB-SAVADH-KARNE
 prerequisites: [MR-C194-raksan-karne, MR-C194-marne2]
 sounds: []
-roots: []
+roots: [sanskrit-savadhana]
+etymology_hook: "sāvadh: Sanskrit sāvadhāna 'attentive', shortened; karṇe 'to do'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MR-C194-marne2]
 <!-- hl-knowledge: introduces=[MR-LEX-C195-ACT195-01]; assesses=[] -->
 
 **सावध करणे** — *sāvadh karṇe* — "to warn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**सावध**, "alert", is Sanskrit *sāvadhāna*, "attentive": *sa-*, "with", and *avadhāna*, "attention", shortened. **करणे** is "to do".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

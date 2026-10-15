@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 40,
-  "sourceHash": "fnv1a64:afa86341a38ea57d",
+  "sourceHash": "fnv1a64:afcf353955032537",
   "lessonIds": [
     "FA-C40-shodan",
     "FA-C40-sakhtan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch40.txt",
   "json": "persian/narration/ch40.json",
-  "textHash": "fnv1a64:75d5618770ffc1bc",
-  "jsonHash": "fnv1a64:00c92835a88bb990",
+  "textHash": "fnv1a64:794dc857e8bdeeeb",
+  "jsonHash": "fnv1a64:d502d60a49f0bccc",
   "findings": []
 }

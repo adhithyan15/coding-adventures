@@ -14,7 +14,8 @@ romanization: "kuḍi"
 concept_tag: TE-LOC100-KUDI
 prerequisites: [TE-C99-gift, TE-C99-invitation]
 sounds: []
-roots: []
+roots: [dravidian-kudi-right]
+etymology_hook: "kuḍi: native Dravidian; DEDR 1654 lists kuḍi 'right, right-hand' in the entry for kuḍucu 'to eat, drink'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [TE-C99-invitation]
 <!-- hl-knowledge: introduces=[TE-LEX-C100-LOC100-01]; assesses=[] -->
 
 **కుడి** — *kuḍi* — "right (not left)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**కుడి** (*kuḍi*) is native Dravidian. DEDR 1654 lists *kuḍi*, "right, right-hand", in the same entry as *kuḍucu*, "to eat, drink", with Tamil *kuṭi*, "to drink".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

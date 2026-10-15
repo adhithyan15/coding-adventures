@@ -11,8 +11,8 @@ concept_tag: ZH-FAMILY-MEMBERS
 gloss: family members, now read and written
 prerequisites: [ZH-C12-hear-jiaren]
 sounds: [tone-1, tone-2]
-roots: []
-etymology_hook: 家 plus 人 is a transparent compound: home people, the family.
+roots: [middle-chinese-kae, middle-chinese-nyin]
+etymology_hook: "jiārén: 'dwelling' + 'person', from Middle Chinese kae and nyin; an old pair, a hexagram's name"
 duration:
   max_seconds: 180
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-C12-hear-jiaren, ZH-C12-jia, ZH-C12-ren]
 
 Read from the characters: home + person. The word is plural by meaning here,
 but Mandarin adds no plural ending to 人.
+
+Both are inherited from Middle Chinese, *kae* and *nyin* (Guangyun, in Baxter's
+transcription), and the pair is old: it names a hexagram in the Book of Changes.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-JIAREN-01, ZH-SCRIPT-JIA-01, ZH-SCRIPT-REN-01] -->

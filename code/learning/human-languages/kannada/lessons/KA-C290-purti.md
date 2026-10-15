@@ -14,7 +14,8 @@ romanization: "pūrti"
 concept_tag: KA-GUNA290-PURTI
 prerequisites: [KA-C289-saksi, KA-C290-ardha]
 sounds: []
-roots: []
+roots: [sanskrit-purti]
+etymology_hook: "pūrti ← Sanskrit pūrti 'fulfilling, completion'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C290-ardha]
 <!-- hl-knowledge: introduces=[KA-LEX-C290-GUNA290-02]; assesses=[] -->
 
 **ಪೂರ್ತಿ** — *pūrti* — "whole, complete".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಪೂರ್ತಿ** (*pūrti*) is Sanskrit *pūrti*, "fulfilling, completion".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

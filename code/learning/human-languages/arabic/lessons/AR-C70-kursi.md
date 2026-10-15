@@ -14,7 +14,8 @@ romanization: "kursī"
 concept_tag: AR-HOME70-KURSI
 prerequisites: [AR-C69-ghurfa, AR-C69-nafidha]
 sounds: []
-roots: []
+roots: [aramaic-kursya]
+etymology_hook: "kursī: usually traced to Aramaic kursyā 'throne'; Lane lists it under k-r-s as throne, chair"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C69-nafidha]
 <!-- hl-knowledge: introduces=[AR-LEX-C70-HOME70-01]; assesses=[] -->
 
 **كرسي** — *kursī* — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كرسي** (*kursī*) is listed by Lane under *k-r-s* as a throne or chair. It is usually traced to Aramaic *kursyā*, "throne"; Hebrew *kissē*, "throne", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tavā"
 concept_tag: HI-NOUN-GRIDDLE
 prerequisites: [HI-C61-tumbler]
 sounds: []
-roots: []
+roots: [indo-aryan-tapaka]
+etymology_hook: "tavā ← *tapaka 'frying pan', a reconstructed form; a tadbhava (CDIAL 5670)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,11 @@ reviews_of: [HI-C61-tumbler]
 Usually traced to a Sanskrit word on the root तप् (*tap-*), 'to heat, to burn' — the heater. The same root is inside तपस्, the heat of hard practice, so the kitchen and the hermitage turn out to share a syllable.
 
 A तवा is a flat iron disc over the fire, and it is what रोटी is made on. No तवा, no रोटी: the bread you met early on is defined by the surface it is cooked on as much as by the flour.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**तवा** (*tavā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*tapaka*, "frying pan", a form CDIAL reconstructs from its descendants (CDIAL 5670). It is built on the verb *tap-*, "to heat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

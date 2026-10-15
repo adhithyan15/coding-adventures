@@ -14,7 +14,8 @@ romanization: "bãigan"
 concept_tag: HI-THG216-BAIGAN
 prerequisites: [HI-C216-mugphali, HI-C216-muli]
 sounds: []
-roots: []
+roots: [sanskrit-vatingana]
+etymology_hook: "bãigan ← Sanskrit vātiṅgaṇa 'egg-plant', perhaps of Dravidian source; a tadbhava (CDIAL 11503)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [HI-C216-muli]
 <!-- hl-knowledge: introduces=[HI-LEX-C216-THG216-03]; assesses=[] -->
 
 **बैंगन** — *bãigan* — "an aubergine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**बैंगन** (*bãigan*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vātiṅgaṇa*, "the egg-plant" (CDIAL 11503). CDIAL thinks the names of this plant share one ultimate source, which Bloch took to be Dravidian; the word also passed into Persian as *bādingān*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

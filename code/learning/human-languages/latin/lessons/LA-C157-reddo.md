@@ -13,7 +13,8 @@ gloss: "to give back"
 concept_tag: LA-VERB-REDDO
 prerequisites: [LA-C156-porto, LA-C156-solvo]
 sounds: []
-roots: []
+roots: [reddere-latin, dare-latin]
+etymology_hook: "reddō 'to give back' — red- 'back' + dō 'to give'"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C156-solvo]
 <!-- hl-knowledge: introduces=[LA-LEX-C157-ACT157-01]; assesses=[] -->
 
 **reddō, reddere** — "to give back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**reddō** is *red-*, "back", with *dō*, "to give" (Lewis & Short): to give back.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

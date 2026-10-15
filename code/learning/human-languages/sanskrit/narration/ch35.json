@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "In the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:01b5830fb4efa00d",
+  "sourceHash": "fnv1a64:a7f4f9f817d72eb0",
   "lessons": [
     {
       "id": "SA-C35-milk",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eeb56b63656ee836",
+      "sourceHash": "fnv1a64:8b367e5851a44a33",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Dugdha is the past participle of the root √duh, \"to milk\": \"the milked thing\" (MW). It lives on as Hindi and Gujarati dūdh (CDIAL 6391)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67e19c71f69f8002",
+      "sourceHash": "fnv1a64:bd93dbc9917db5ab",
       "notice": null,
       "blocks": [
         {
@@ -194,7 +205,7 @@
             },
             {
               "kind": "speech",
-              "text": "Almost nothing in this book has cousins this far-flung. English mead is the same word; Greek methu is wine, and amethyst — a-methustos, \"not drunk\" — is the stone that was thought to keep you sober; Lithuanian medus and Old Irish mid are honey and mead again. Even Chinese mì, \"honey\", was borrowed from an early Indo-European neighbour. Ends in short -u, like साधु and दारु."
+              "text": "Almost nothing in this book has cousins this far-flung. English mead is the same word; Greek methu is wine, and amethyst — a-methustos, \"not drunk\" — is the stone that was thought to keep you sober; Lithuanian medus and Old Irish mid are honey and mead again. Even Chinese mì, \"honey\", is widely thought to have been borrowed from an early Indo-European neighbour. Ends in short -u, like साधु and दारु."
             }
           ]
         },
@@ -299,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2582ff4e00071a7",
+      "sourceHash": "fnv1a64:9826798581917862",
       "notice": null,
       "blocks": [
         {
@@ -345,7 +356,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Salt, and a word with no European relatives at all."
+              "text": "Salt, and a word with no known European relatives."
             }
           ]
         },
@@ -439,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ec6a907340c0ee9",
+      "sourceHash": "fnv1a64:ebcfb35717cc1ec9",
       "notice": null,
       "blocks": [
         {
@@ -470,7 +481,7 @@
             },
             {
               "kind": "speech",
-              "text": "पुस्तकम् (pustakam) is a traveller. It came into Sanskrit from Persian post, \"hide, skin\" — what a book was written on before paper — and then India handed it back out again."
+              "text": "पुस्तकम् (pustakam) is a traveller. It came into Sanskrit from an Iranian word related to Persian pōst, \"hide, skin\" — what a book was written on before paper (CDIAL 8413) — and then India handed it back out again."
             },
             {
               "kind": "speech",
@@ -579,7 +590,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0fae9301dc219b0",
+      "sourceHash": "fnv1a64:7c6e14781df0c7d7",
       "notice": null,
       "blocks": [
         {
@@ -614,7 +625,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its cousins settle rather than sleep: Greek keitai, \"he lies\"; Latin cīvis, a citizen — one who lies down in a place instead of moving on — behind city, civil and civilian; and English home, and hide, once a measure of land a single family could settle. A bed and a city turn out to be one idea at two sizes. Ends in -आ, like लता."
+              "text": "Its usual cousins settle rather than sleep, and EtymDB groups them under one old root for lying down: Greek keitai, \"he lies\"; Latin cīvis, a citizen — one who lies down in a place instead of moving on — behind city, civil and civilian; and English home, and hide, once a measure of land a single family could settle. A bed and a city turn out to be one idea at two sizes. Ends in -आ, like लता."
             }
           ]
         },

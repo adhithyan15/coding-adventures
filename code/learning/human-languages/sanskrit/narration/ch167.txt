@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a banyan tree, then the Sanskrit for a 
 You'll want to know: कच्छपः.
 कच्छपः — kacchapaḥ — "a turtle".
 
+The word, taken apart.
+MW reads kacchapa "a turtle" as kaccha "marsh" + -pa "keeping": "the one that keeps to the marsh". CDIAL 2619 thinks that a popular reshaping of the older kaśyapa, so its origin is disputed. It lives on as Hindi kachuā and Gujarati kācbo (CDIAL 2619).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a palm tree, then the Sanskrit for a tu
 
 You'll want to know: महिषी.
 महिषी — mahiṣī — "a she-buffalo".
+
+The word, taken apart.
+mahiṣī is the feminine of mahiṣa "great, mighty; buffalo" (CDIAL 9964): "the buffalo cow". In the Rigveda the same word also means "the king's chief wife", "the great one" (CDIAL 9972). It lives on as Hindi bhaĩs "buffalo" (CDIAL 9964).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a turtle, then the Sanskrit for a she-b
 You'll want to know: वत्सः.
 वत्सः — vatsaḥ — "a calf".
 
+The word, taken apart.
+vatsa "a calf, a child" probably first meant "a yearling" (MW; CDIAL 11239). It is inherited from Indo-European, cousin of Greek etos "year" and Latin vetus "old", the source of English veteran (EtymDB). It lives on as Hindi bachiyā "calf" (CDIAL 11239).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a she-buffalo, then the Sanskrit for a 
 You'll want to know: अजा.
 अजा — ajā — "a she-goat".
 
+The word, taken apart.
+ajā is the feminine of aja "a goat" (MW). MW sets aja beside Greek aix "goat" and Lithuanian ožys "he-goat": an inherited Indo-European word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a calf, then the Sanskrit for a she-goa
 
 You'll want to know: अश्वा.
 अश्वा — aśvā — "a mare".
+
+The word, taken apart.
+aśvā is the feminine of aśva "horse". It is inherited from Indo-European: MW sets aśva beside Latin equus and Greek hippos, and EtymDB pairs aśvā with Latin equa "mare".
 
 What you've built.
 One more word for this chapter.

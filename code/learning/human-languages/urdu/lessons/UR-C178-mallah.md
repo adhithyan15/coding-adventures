@@ -14,7 +14,8 @@ romanization: "mallāh"
 concept_tag: UR-KAM178-MALLAH
 prerequisites: [UR-C178-gulukar, UR-C178-pailat]
 sounds: []
-roots: []
+roots: [arabic-mallah]
+etymology_hook: "mallāh ← Arabic mallāḥ 'a sailor', through Persian (Lane, root m-l-ḥ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C178-pailat]
 <!-- hl-knowledge: introduces=[UR-LEX-C178-KAM178-03]; assesses=[] -->
 
 **ملاح** — *mallāh* — "a sailor, a boatman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملاح** (*mallāh*) is a loan from Arabic *mallāḥ*, "a sailor", which reached Urdu through Persian. Its Arabic root is *m-l-ḥ* (Lane). It is built on the same root as *milḥ*, "salt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

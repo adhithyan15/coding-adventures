@@ -13,7 +13,8 @@ gloss: "a military camp"
 concept_tag: LA-LOC115-CASTRA
 prerequisites: [LA-C115-theatrum, LA-C115-balneum]
 sounds: []
-roots: []
+roots: [castra-latin, castrum-latin]
+etymology_hook: "castra 'camp' — the plural of castrum 'a fort'; English Chester takes its name from it"
 duration:
   max_seconds: 200
 requires:
@@ -41,6 +42,11 @@ reviews_of: [LA-C115-balneum]
 <!-- hl-knowledge: introduces=[LA-LEX-C115-LOC115-05]; assesses=[] -->
 
 **castra, castrōrum** — "a military camp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**castra** is the plural of *castrum*, "a fort" (Lewis & Short). Where *castrum* comes from is uncertain. English *Chester* and *Lancaster* take their names from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

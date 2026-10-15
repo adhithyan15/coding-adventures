@@ -14,7 +14,8 @@ romanization: "samasye"
 concept_tag: KA-KELASA269-SAMASYE
 prerequisites: [KA-C268-taragati, KA-C269-varadi]
 sounds: []
-roots: []
+roots: [sanskrit-samasya]
+etymology_hook: "samasye ← Sanskrit samasyā, from samasyati 'puts together' (CDIAL 13197a)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C269-varadi]
 <!-- hl-knowledge: introduces=[KA-LEX-C269-KELASA269-02]; assesses=[] -->
 
 **ಸಮಸ್ಯೆ** — *samasye* — "a problem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸಮಸ್ಯೆ** (*samasye*) is Sanskrit *samasyā*, built on *samasyati*, "puts together, combines" (CDIAL 13197a), with the Kannada *-e* for final *-ā*: a problem is something to be put together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

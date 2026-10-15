@@ -14,7 +14,8 @@ romanization: "guphā"
 concept_tag: GU-THINGS119-GUPHA
 prerequisites: [GU-C119-kinaro, GU-C119-dhodh]
 sounds: []
-roots: []
+roots: [indo-aryan-guppha]
+etymology_hook: "guphā ← *gupphā 'cave', a reconstructed form; CDIAL's further link is very doubtful (CDIAL 4204)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [GU-C119-dhodh]
 <!-- hl-knowledge: introduces=[GU-LEX-C119-THINGS119-03]; assesses=[] -->
 
 **ગુફા** (*guphā*) — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ગુફા** (*guphā*) comes from *\*gupphā*, "cave", a form CDIAL reconstructs (CDIAL 4204). It suggests a crossing of Sanskrit *guhā*, "cave", with words for hiding, and calls that very doubtful.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

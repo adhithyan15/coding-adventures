@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 254,
-  "sourceHash": "fnv1a64:47b4b935d514cc36",
+  "sourceHash": "fnv1a64:904372513fa5a5ca",
   "lessonIds": [
     "RU-C254-devochka",
     "RU-C254-paren",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch254.txt",
   "json": "russian/narration/ch254.json",
-  "textHash": "fnv1a64:761f74fc2b5c2c29",
-  "jsonHash": "fnv1a64:3bef9c57dfb54c1b",
+  "textHash": "fnv1a64:decf6913ea0969b2",
+  "jsonHash": "fnv1a64:506949fc7332dcd6",
   "findings": []
 }

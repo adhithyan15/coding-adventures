@@ -14,7 +14,8 @@ romanization: "ichchhā"
 concept_tag: MW-WANT111-ICHCHHA
 prerequisites: [MW-C110-tolno, MW-C111-chavno]
 sounds: []
-roots: []
+roots: [sanskrit-iccha]
+etymology_hook: "ichchhā ← Sanskrit icchā 'wish', a tatsama (CDIAL 1557)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C111-chavno]
 <!-- hl-knowledge: introduces=[MW-LEX-C111-WANT111-02]; assesses=[] -->
 
 **इच्छा** — *ichchhā* — "a wish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**इच्छा** (*ichchhā*) is Sanskrit *icchā*, "wish", taken over whole as a learned loan, a tatsama (CDIAL 1557).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

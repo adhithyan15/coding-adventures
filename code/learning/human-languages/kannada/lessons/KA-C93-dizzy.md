@@ -11,7 +11,8 @@ romanization: "talesuttu"
 concept_tag: KA-WX-DIZZY
 prerequisites: [KA-C92-job, KA-C92-english]
 sounds: []
-roots: []
+roots: [dravidian-talai-head, dravidian-suttu-surround]
+etymology_hook: "talesuttu: native tale 'head' (DEDR 3103) + suttu 'going round' (DEDR 2715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [KA-C92-english]
 (*tale*), "head", with **ಸುತ್ತು** (*suttu*), "to go round".
 
 **ನನಗೆ ತಲೆಸುತ್ತು** (*nanage talesuttu*) — "I feel dizzy", built like **ನನಗೆ ತಲೆನೋವು**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಲೆಸುತ್ತು** (*talesuttu*) is native Dravidian: *tale*, "head" (DEDR 3103), and *suttu*, "going round, winding" (DEDR 2715). Dizziness is the head going round.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

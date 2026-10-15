@@ -17,6 +17,9 @@ You'll want to know: এই.
 Thirty-one chapters, and nothing in the room could be pointed at. টা says the one we both mean; it does not say this one, here, the one I am looking at. That is a different job and it needs a different word.
 এই (ei) goes in front of the noun — the opposite end from the classifier, and worth noticing, because those two are about to appear in the same phrase.
 
+The word, taken apart.
+CDIAL lists Bengali e, "in this way", and Assamese ei under Sanskrit ēṣa, "this" (CDIAL 2530), which is where the near head এ- points; it has no entry for এই itself.
+
 Grammar Lens: the near head.
 Bengali builds a family of pointing words on one frame with three heads, and you met the frame in chapter thirty:
 [a table of 3 rows, read aloud]
@@ -54,6 +57,9 @@ You'll want to know: ওই.
 এই লাল, ওই কালো — ei lāl, oi kālo — this one red, that one black.
 Swap the head and you have crossed the room. এ- is here; ও- is there. That is the whole system: Bengali has two distances, not three. Spanish insists on este, ese and aquel; Bengali stops at two and lets context do the rest.
 
+The word, taken apart.
+CDIAL lists Middle Bengali oū and ohā, "that", under Sanskrit asau, "that" (CDIAL 972): the far head ও- has a long history, though CDIAL has no entry for ওই (oi) itself.
+
 Grammar Lens: one letter, two jobs.
 You have met ও before, in chapter twenty-eight, as the joiner meaning also. It is the same letter and it is not an accident: a word that means that one over there and a word that means and that too are the same gesture, pointing away from the speaker.
 Told apart by where it sits:
@@ -90,6 +96,9 @@ You'll want to know: both ends at once.
 English cannot do this. The this shirt is not English, because the and this are fighting over one slot in front of the noun and only one of them can win. In Bengali they are nowhere near each other:
 এই (ei) + জামা + টা, pointer, noun, classifier.
 Front and back. No competition, so no choice to make — and a Bengali speaker uses both far more often than an English speaker would expect, because leaving the classifier off sounds unfinished.
+
+The phrase, taken apart.
+এই (ei) points back to Sanskrit ēṣa, "this" (CDIAL 2530); জামা is usually traced to Persian jāma, "garment"; and the origin of টা is not settled.
 
 Grammar Lens: the fixed order.
 Once a number and an adjective join in, the order still does not move:
@@ -130,6 +139,9 @@ You'll want to know: এটা.
 Take the noun out of এই জামাটা (ei jāmāṭā) and keep the two ends. What is left — এ and টা — is এটা (eṭā), and it means this thing, standing on its own as the subject of a sentence.
 Chapter two taught কী as the question word inside what is your name, and then gave you nothing else to ask it about. এটা (eṭā) is the missing half. Between them they make the first question a learner of any language actually uses, and it has been out of reach for thirty-one chapters.
 The far one works the same way: ওটা — oṭā — that one.
+
+The word, taken apart.
+এ- goes back to Sanskrit ēṣa, "this" (CDIAL 2530); the origin of টা is not settled.
 
 Grammar Lens: no verb in the middle.
 Notice what is not in এটা (eṭā) জল. There is no is. Bengali joins a subject to what it is by putting the two side by side and stopping, exactly as chapter twenty-seven showed when it taught you to deny such a sentence with নয়:

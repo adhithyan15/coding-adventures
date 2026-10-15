@@ -14,7 +14,8 @@ romanization: "samandar"
 concept_tag: MW-NATURE69-SAMANDAR
 prerequisites: [MW-C69-suraj, MW-C69-chad]
 sounds: []
-roots: []
+roots: [sanskrit-samudra]
+etymology_hook: "samandar ← Sanskrit samudra 'sea' with an added nasal, like Old Awadhi samuṃda (CDIAL 13236)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [MW-C69-chad]
 <!-- hl-knowledge: introduces=[MW-LEX-C69-NATURE69-04]; assesses=[] -->
 
 **समंदर** — *samandar* — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**समंदर** (*samandar*) goes back to Sanskrit *samudra*, "sea", with an added nasal, like the Old Awadhi *samuṃda* that CDIAL lists under it (CDIAL 13236). CDIAL gives no Marwari form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

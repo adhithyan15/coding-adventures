@@ -14,7 +14,8 @@ romanization: "kartavyam"
 concept_tag: SA-SCH229-KARTAVYAM
 prerequisites: [SA-C229-niyamah, SA-C229-dharmah]
 sounds: []
-roots: []
+roots: [sanskrit-kartavya, kr-do]
+etymology_hook: "kartavya 'to be done', the future passive participle of √kṛ 'do' (MW; CDIAL 2859)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C229-dharmah]
 <!-- hl-knowledge: introduces=[SA-LEX-C229-SCH229-03]; assesses=[] -->
 
 **कर्तव्यम्** — *kartavyam* — "an obligation, a duty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kartavya* is the future passive participle of the root √kṛ, "to do" (MW): "what is to be done", and so a duty (CDIAL 2859). It comes from the root of *karomi*, "I do", which you have already met.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
