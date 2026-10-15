@@ -4,7 +4,7 @@
   "chapter": 229,
   "title": "To bend, To gather up, To spread, To spread, To be left behind",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d87370609b2abc12",
+  "sourceHash": "fnv1a64:0405812a0e190ff4",
   "lessons": [
     {
       "id": "HI-C229-morna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3fe0a7042ac72200",
+      "sourceHash": "fnv1a64:de425db7ea0e96c9",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मोड़ना (moṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from muṭati, \"twists\" (CDIAL 10186)."
+              "text": "मोड़ना (moṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mōṭati, a verb known from the Sanskrit grammarians' root-lists, which CDIAL gives as the second form in its entry for muṭati, \"twists\" (CDIAL 10186). The plain muṭati gave Hindi the intransitive muṛnā, \"to be turned\"."
             }
           ]
         },

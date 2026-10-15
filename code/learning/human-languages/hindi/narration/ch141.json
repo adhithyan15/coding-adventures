@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "Butter, Paneer, Honey, Chilli, Flour",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3f942cbac6297e00",
+  "sourceHash": "fnv1a64:5c21117a9521df41",
   "lessons": [
     {
       "id": "HI-C141-makkhan",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38f341685a768c12",
+      "sourceHash": "fnv1a64:f24bbb387847b13d",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मिर्च (mirc) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from marīca, \"peppercorn\" (CDIAL 9875). CDIAL takes the Sanskrit word from an Austroasiatic language. When the chilli came to India, it took the name of black pepper."
+              "text": "मिर्च (mirc) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from maricca, a by-form CDIAL reconstructs beside Sanskrit marīca, \"peppercorn\" (CDIAL 9875). The plain marīca gave Hindi a different word, mirī, \"black pepper\". CDIAL takes the Sanskrit word from an Austroasiatic language. When the chilli came to India, it took the name of black pepper."
             }
           ]
         },

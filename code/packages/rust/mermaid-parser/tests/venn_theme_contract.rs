@@ -4,7 +4,7 @@ use mermaid_parser::parse_venn;
 
 fn baseline() -> VennConfig {
     VennConfig { width:800.0,height:450.0,padding:8.0,use_max_width:true,use_debug_layout:false,
-        font_family:"sans-serif".into(),title_text_color:"#0f172a".into(),set_text_color:"#0f172a".into() }
+        font_family:"sans-serif".into(),title_text_color:"#0f172a".into(),set_text_color:"#0f172a".into(),theme_colors:["#60a5fa","#f59e0b","#34d399","#f472b6","#a78bfa","#22d3ee","#fb7185","#a3e635"].into_iter().map(str::to_string).collect() }
 }
 fn config(prefix: &str) -> VennConfig {
     parse_venn(&format!("{prefix}\nvenn-beta\nset A")).unwrap().config

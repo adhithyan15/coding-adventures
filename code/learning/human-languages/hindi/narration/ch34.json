@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1cc7b0e896e18321",
+  "sourceHash": "fnv1a64:c1b8cd98afb6cd1c",
   "lessons": [
     {
       "id": "HI-C34-sochna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8cfe30c3aaf67ce",
+      "sourceHash": "fnv1a64:2dcad96e870149ec",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "The stem is also a noun on its own. सोच (soch) means \"a thought\" — and, just as ordinarily, \"worry.\" Hold on to that double meaning; the word's history is the reason for it."
+              "text": "The stem is also a noun on its own. सोच (soch) means \"a thought\" — and, as often, \"worry.\" Hold on to that double meaning."
             }
           ]
         },
@@ -61,15 +61,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सोचना comes down from Sanskrit शोचति (śocati) — \"burns; grieves; mourns\" — on the root शुच् (śuc-). Through Prakrit the sound softened and the sense drifted: burn becomes be consumed by something becomes brood on it becomes plain think. Hindi's ordinary word for thinking is an old word for sorrow that cooled down."
+              "text": "सोचना comes down from Sanskrit śocyate, \"is made to feel pain\" (CDIAL 12621), on the root शुच् (śuc-), \"burn, grieve\". Through Prakrit the sound softened and the sense drifted: burn becomes be consumed by something becomes brood on it becomes plain think. Hindi's ordinary word for thinking is an old word for sorrow that cooled down."
             },
             {
               "kind": "speech",
-              "text": "Be honest about the limits: शुच् has no secure English cousin. Nothing think-shaped waits at the other end of this trail, and inventing one would be worse than saying so."
+              "text": "Be honest about the limits: शुच् has no secure English cousin, and inventing one would be worse than saying so."
             },
             {
               "kind": "speech",
-              "text": "What travels instead is the shape of the change. English think and thank are one Germanic root — to thank someone was to think well of them. Latin pēnsāre meant \"to weigh,\" which is why English has pensive. Three unrelated families, three mind-verbs, not one of them starting out meaning \"to think.\""
+              "text": "What travels instead is the shape of the change. English think and thank are one Germanic root — to thank someone was to think well of them. Latin pēnsāre meant \"to weigh,\" which is why English has pensive. Three families, and no mind-verb that began as \"think.\""
             }
           ]
         },
@@ -136,7 +136,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did śocati mean before it meant \"think\"? (To burn, to grieve.) Which everyday Hindi noun still carries both halves, and where does nahīṁ sit in maiṁ nahīṁ sochtā? (सोच, a thought and a worry; nahīṁ goes before the verb.) Is there an English cousin of śuc-? (No.)"
+              "text": "What did the root śuc- mean before it meant \"think\"? (To burn, to grieve.) Which everyday Hindi noun still carries both halves, and where does nahīṁ sit in maiṁ nahīṁ sochtā? (सोच, a thought and a worry; nahīṁ goes before the verb.) Is there an English cousin of śuc-? (No.)"
             }
           ]
         }

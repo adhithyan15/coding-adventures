@@ -144,8 +144,8 @@ Before the new one: what did mehmān mean?
 
 You'll want to know: पड़ोसी.
 पड़ोसी (paṛosī) — "a neighbour".
-Built on paṛos, the neighbourhood, with the -ī that turns a place into a person — the very ending that makes आदमी out of Adam.
-Behind paṛos is Sanskrit prati-veśa, 'the dwelling opposite', on veś-, 'to enter, to settle'. So a neighbour here is not merely the one who is near you. It is the one whose door faces yours.
+It sits beside paṛos, the neighbourhood, and its -ī sounds like the ending that makes आदमी out of Adam. The history is a little different. CDIAL derives paṛosī from prativeśiya, a by-form it reconstructs beside Sanskrit prativeśya, "neighbour" (CDIAL 8599), so the -ī continues that old -iya. The place-word paṛos comes separately from Sanskrit prativeśa, "neighbouring" (CDIAL 8598).
+Both are built on prati-, "towards, facing", and the verb viś-, "to enter, to settle". CDIAL prefers that verb to the older idea of a compound with veśa, "dwelling".
 
 What you've built.
 Five, and the run is closed: a teacher, a student, a farmer, a guest, a neighbour.

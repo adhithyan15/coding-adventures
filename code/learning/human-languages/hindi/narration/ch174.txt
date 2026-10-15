@@ -77,7 +77,7 @@ You'll want to know: सँभालना.
 सँभालना — sãbhālnā — "to look after, to handle".
 
 The word, taken apart.
-सँभालना (sãbhālnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from saṁbhārayati, "prepares, maintains" (CDIAL 12961). It is the causing form of saṁbharati, "brings together".
+सँभालना (sãbhālnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it in its entry for Sanskrit saṁbharati, "brings together, prepares" (CDIAL 12961), among a group of forms with -l- that it places under neither of its two numbered headwords. The same entry puts Hindi sãbhārnā, "to sustain", under the causing form saṁbhārayati, "maintains".
 
 What you've built.
 One more word for this chapter.

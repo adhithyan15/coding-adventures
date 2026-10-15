@@ -14,7 +14,7 @@ You'll want to know: के साथ.
 English spends one word on this. Hindi spends two, and only the second one is new.
 
 The phrase, taken apart.
-sāth, "with", comes from Sanskrit sārtha, "caravan, company", whose form sārthena meant "in company with" (CDIAL 13364).
+sāth, "with", comes from Sanskrit sārthena, "in company with", the instrumental case of sārtha, "caravan, company"; CDIAL lists the Hindi word under that case form (CDIAL 13364).
 
 The two words.
 Take the phrase apart and something familiar falls out:

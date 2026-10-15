@@ -434,6 +434,7 @@ mod tests {
         assert!(first.circles[0].radius > first.circles[1].radius);
         assert!(first.labels.iter().any(|label| label.text == "AB"));
         assert_eq!((first.width, first.height, first.config.padding), (600.0, 360.0, 20.0));
+        assert_eq!(first.config.theme_colors, diagram.config.theme_colors);
         assert!(first.circles.iter().all(|circle| circle.cx - circle.radius >= 20.0
             && circle.cx + circle.radius <= 580.0 && circle.cy - circle.radius >= 20.0
             && circle.cy + circle.radius <= 340.0));

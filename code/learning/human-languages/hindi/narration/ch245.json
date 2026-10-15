@@ -4,7 +4,7 @@
   "chapter": 245,
   "title": "Every, All, Some, A dozen, A pair",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b65042d01ea0af01",
+  "sourceHash": "fnv1a64:822ca9c27507ff6c",
   "lessons": [
     {
       "id": "HI-C245-har",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2087c19ed8f09490",
+      "sourceHash": "fnv1a64:72787e61373c0dab",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "जोड़ा (joṛā) is a tadbhava, a word inherited and reshaped by sound change. It comes from yuṭati, \"is joined\", a form CDIAL reconstructs from its descendants (CDIAL 10496). CDIAL lists Hindi joṛ, \"pair\", with it."
+              "text": "जोड़ा (joṛā) is a tadbhava, a word inherited and reshaped by sound change. It belongs with yoṭa, a noun CDIAL reconstructs from its descendants in the entry for yuṭati, \"is joined\" (CDIAL 10496). CDIAL lists Hindi joṛ and joṛī, \"pair\", there, and Gujarati joṛā, \"a pair of shoes\", but not the Hindi joṛā itself."
             }
           ]
         },
