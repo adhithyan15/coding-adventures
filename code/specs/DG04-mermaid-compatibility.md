@@ -882,9 +882,14 @@ while unsafe or malformed values fall back to the resolved theme defaults.
 The `compactMode` option is retained as typed semantic configuration and
 PaintScene metadata. Mermaid 11.16.1's pinned Railroad renderer does not branch
 on this value, so native geometry intentionally remains unchanged.
+Rule-name labels now include the pinned ` =` suffix, use bold configured
+typography, and reserve deterministic width before their start markers. Special
+sequence labels likewise retain semantic text while layout and Paint display
+the pinned `? text ?` decoration. Marker centers and connecting paths are
+explicit layout geometry rather than Paint-backend assumptions.
 
-This is intentionally partial. Comment styling and exact typography remain
-unsupported rather than being counted as compatible.
+This is intentionally partial. Comment styling and browser-exact text
+measurement remain unsupported rather than being counted as compatible.
 
 ### Info Full Compatibility
 

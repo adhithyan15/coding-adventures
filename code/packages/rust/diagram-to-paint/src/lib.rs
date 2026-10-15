@@ -2018,13 +2018,13 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     if let Some(title) = &diagram.title { text_children.push(text_node(title, diagram.config.padding, 5.0, diagram.width - diagram.config.padding * 2.0, 30.0,
         options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 })); }
     for rule in &diagram.rules {
-        let center = rule.y + rule.height / 2.0;
-        text_children.push(text_node_no_wrap(&rule.name, diagram.config.padding, center - 14.0, 92.0, 28.0,
-            railroad_font.clone(), css_to_color(&diagram.config.rule_name_color)));
-        let end_x = rule.paths.iter().flat_map(|path| path.points.iter().map(|point| point.x)).fold(140.0, f64::max);
+        let mut rule_name_font = railroad_font.clone();
+        rule_name_font.weight = 700;
+        text_children.push(text_node_no_wrap(&format!("{} =", rule.name), diagram.config.padding, rule.start_marker.y - 14.0,
+            rule.start_marker.x - diagram.config.padding, 28.0, rule_name_font, css_to_color(&diagram.config.rule_name_color)));
         if diagram.config.show_markers {
-            for cx in [diagram.config.padding + 100.0, end_x + 6.0] {
-                instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx, cy: center,
+            for marker in [&rule.start_marker, &rule.end_marker] {
+                instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: marker.x, cy: marker.y,
                     rx: diagram.config.marker_radius, ry: diagram.config.marker_radius,
                     fill: Some(diagram.config.marker_fill.clone()), stroke: None, stroke_width: None,
                     stroke_dash: None, stroke_dash_offset: None }));
