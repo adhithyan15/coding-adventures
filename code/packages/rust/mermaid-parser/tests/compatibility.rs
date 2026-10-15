@@ -2828,11 +2828,12 @@ fn railroad_dispatches_all_notations_to_recursive_ir() {
 #[test]
 fn railroad_preserves_layout_spacing_config_for_every_notation() {
     let constructor = parse_railroad(
-        "---\nconfig:\n  railroad:\n    padding: 24\n    verticalSeparation: 30\n    horizontalSeparation: 36\n---\nrailroad-beta\nvalue = terminal(\"x\");",
+        "---\nconfig:\n  railroad:\n    padding: 24\n    verticalSeparation: 30\n    horizontalSeparation: 36\n    arcRadius: 18\n---\nrailroad-beta\nvalue = terminal(\"x\");",
     ).expect("Railroad front matter config should parse");
     assert_eq!(constructor.config.padding, 24.0);
     assert_eq!(constructor.config.vertical_separation, 30.0);
     assert_eq!(constructor.config.horizontal_separation, 36.0);
+    assert_eq!(constructor.config.arc_radius, 18.0);
 
     let ebnf = parse_railroad(
         "%%{init: {\"railroad\": {\"padding\": 18, \"verticalSeparation\": 20, \"horizontalSeparation\": 22}}}%%\nrailroad-ebnf-beta\nvalue = 'x';",
