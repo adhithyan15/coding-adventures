@@ -3,6 +3,22 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a pathwise pending checkpoint -->
+October15 pending seven-unit/display-label reconciliation: sole PR17288 currently
+publishes1c14ad3a; auto OFF, conflicted against main4a721b2c. Specd34aa2e2
+precedes mergece283d14 (3663incoming/3653pure/10reconstructed overlaps/
+221728retained). Complete merge proof passes; failed generic DG04 conflict
+reconstruction proof remains preserved with its explicit corrected recipe.
+Native raw baseline867P2F/incoming0P1F; tests-first4203e959 focus24P3F,
+library868P4F/incoming0P1F/owned7P1F. This pending repair changes only four
+canonical budget/comment lines6→7, range[-8,8]; shared exp/log/legacy stays
+exact. New focused/full native acceptance has NOT yet been obtained. Existing
+native1794/style899 receipts remain specific to earlier sources. Incoming labels
+and explicit marker points require new exact glyph/geometry/font-query tests,
+constructor migration, scaled name-box restoration and checked finite points.
+Large-marker clearance/reversed connectors remain explicit debt. Miri remains
+DEFERRED/PENDING, frozen inputs untouched; full objective OPEN, heartbeat ACTIVE.
+
+Previous source-specific checkpoint (superseded publication status):
 LOCAL/UNPUBLISHED combined source30dd82c6 includes current relevant mainb8638ea6
 (#17556 circular Railroad) and0bb3f690 (#17553 six-unit ALGOL). Sole PR17288
 still publishes0d316837; auto OFF. Reviewed compact0b publication stopped
