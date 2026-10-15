@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Red, Yellow, Green",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0a22622c99899521",
+  "sourceHash": "fnv1a64:0a80b15f0e2a2ddd",
   "lessons": [
     {
       "id": "GU-C70-red",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06c5ce3bebd18943",
+      "sourceHash": "fnv1a64:0f2c32f41029e20d",
       "notice": null,
       "blocks": [
         {

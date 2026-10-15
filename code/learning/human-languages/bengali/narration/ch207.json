@@ -4,7 +4,7 @@
   "chapter": 207,
   "title": "Price, Shopkeeper, Customer, Business, Company",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7903a1b5e5a9181e",
+  "sourceHash": "fnv1a64:4622fa0a1e5e796d",
   "lessons": [
     {
       "id": "BN-C207-dam",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82c56a30708eb3c9",
+      "sourceHash": "fnv1a64:03663c57bccb2af6",
       "notice": null,
       "blocks": [
         {

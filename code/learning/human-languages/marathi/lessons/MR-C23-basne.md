@@ -12,7 +12,7 @@ concept_tag: VERB-SIT
 prerequisites: [MR-R22-request-verbs]
 sounds: [retroflex-na]
 roots: [prakrit-vaisai-sit, sanskrit-vish-settle, pie-weyk-settlement]
-etymology_hook: "बसणे continues Prakrit vaisai, from Sanskrit उपविशति upaviśati \"sits down,\" on विश् vish- \"to enter, to settle,\" from Indo-European *weyk- \"dwelling, clan\" — the root behind Latin vicus and the English place-name ending -wich"
+etymology_hook: "बसणे ← Prakrit vaisai ← Sanskrit upaviśati 'sits down', root viś- 'settle', PIE *weyḱ-: Latin vīcus"
 duration:
   max_seconds: 250
 requires:

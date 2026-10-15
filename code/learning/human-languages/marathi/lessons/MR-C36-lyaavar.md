@@ -12,7 +12,7 @@ concept_tag: MR-GRAMMAR-LYAAVAR
 prerequisites: [MR-C36-jevha]
 sounds: [halant-conjunct, matra-aa]
 roots: []
-etymology_hook: "-ल्यावर is the past participle in -ल- with the postposition वर ('on, upon') behind it, so 'after reading' is literally 'upon having-read' — English says upon reading with the same preposition and the same logic"
+etymology_hook: "-ल्यावर is the past participle in -ल- + वर 'on, upon': 'after reading' is 'upon having-read'"
 duration:
   max_seconds: 210
 requires:

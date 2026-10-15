@@ -12,7 +12,7 @@ concept_tag: BN-JOIN-JOKHON
 prerequisites: [BN-C19-je, BN-C07-asha, BN-C07-jaowa]
 sounds: []
 roots: [sanskrit-kshana]
-etymology_hook: "যখন is built on the same relative stem ya- as যে, with the ending that also makes তখন ('then') and কখন ('when?'): Bengali marks relative, demonstrative and interrogative with three prefixes on one frame, so learning the pair teaches the whole series"
+etymology_hook: "যখন: relative ja- + -khôn 'moment', built like তখন ← Sanskrit tatkṣaṇa 'that very moment' (CDIAL 5640)"
 duration:
   max_seconds: 240
 requires:

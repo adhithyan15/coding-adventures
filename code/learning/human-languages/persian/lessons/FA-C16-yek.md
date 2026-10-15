@@ -12,7 +12,7 @@ concept_tag: FA-NUMBER-ONE
 prerequisites: [FA-C15-practice]
 sounds: [rtl, short-vowels-unwritten, long-i]
 roots: [proto-indo-european-oywos]
-etymology_hook: "yek continues Middle Persian ēk, from Proto-Iranian *Haywah and Proto-Indo-European *oywos, 'one' — the same root that gives English one, Latin unus and Sanskrit eka."
+etymology_hook: "yek ← Middle Persian ēk ← PIE *óywos 'one'; the same root gives English one, Latin ūnus and Sanskrit eka"
 duration:
   max_seconds: 240
 requires:

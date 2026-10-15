@@ -14,7 +14,7 @@ romanization: "īmāndār"
 concept_tag: MW-QUAL147-IMANDAR
 prerequisites: [MW-C146-alsi, MW-C147-mehanti]
 sounds: []
-roots: [arabic-iman, persian-dar]
+roots: [arabic-iman, persian-dar-holder]
 etymology_hook: "īmāndār: Arabic īmān 'faith' (Lane, root ʾ-m-n) + Persian -dār 'holder'"
 duration:
   max_seconds: 200

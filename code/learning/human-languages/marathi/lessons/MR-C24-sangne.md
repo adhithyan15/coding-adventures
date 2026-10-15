@@ -12,7 +12,7 @@ concept_tag: VERB-SAY
 prerequisites: [MR-R23-wellbeing-verbs]
 sounds: [anusvara-nasal, retroflex-na]
 roots: [sanskrit-shams-proclaim, pie-kens-proclaim]
-etymology_hook: "सांगणे continues Prakrit saṁgai from Sanskrit शंसति shamsati \"recites, proclaims,\" on शंस् shams- from Indo-European *kens- \"to proclaim\" — the root Latin took as censeo, behind English census and censor"
+etymology_hook: "सांगणे is often tied to śaṃsati 'proclaims' (PIE *ḱens-), but CDIAL files it under saṁkhyāti (12842)"
 duration:
   max_seconds: 250
 requires:

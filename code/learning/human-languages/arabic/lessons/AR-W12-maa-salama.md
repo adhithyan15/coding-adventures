@@ -10,7 +10,7 @@ gloss: assembling the farewell maʿa s-salāma, "with safety" — built on the v
 romanization: "maʿa s-salāma"
 prerequisites: [AR-W11-ha-and-ta-marbuta]
 sounds: [arabic-ayn, arabic-ta-marbuta]
-roots: [semitic-s-l-m]
+roots: [s-l-m]
 duration:
   max_seconds: 240
 requires:

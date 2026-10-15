@@ -12,7 +12,7 @@ concept_tag: VERB-THINK
 prerequisites: [MR-C07-mahit-asne, MR-C06-numbers-1-5]
 sounds: [matra-i, matra-aa, retroflex-na]
 roots: [sanskrit-vicara-deliberation, sanskrit-carati-move, pie-kwelh-turn]
-etymology_hook: "विचार is वि- plus the Sanskrit root चर् car- 'to move, to range about', and चर् goes back to Indo-European \\*kʷelh₁- 'to turn' — the root that also became wheel and cycle, so a Marathi thought is literally something turned over"
+etymology_hook: "विचार is vi- + Sanskrit car- 'to move, range about', from PIE *kʷelh₁- 'to turn', the root of wheel"
 duration:
   max_seconds: 270
 requires:

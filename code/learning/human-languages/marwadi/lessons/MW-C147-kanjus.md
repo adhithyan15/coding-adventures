@@ -15,7 +15,7 @@ concept_tag: MW-QUAL147-KANJUS
 prerequisites: [MW-C147-imandar, MW-C147-dayalu]
 sounds: []
 roots: []
-etymology_hook: "kañjūs 'miserly': origin not settled; CDIAL has no entry; often said to be Persian"
+etymology_hook: "kañjūs 'miserly': usually traced to Persian kanjūs 'miserly'; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [MW-C147-dayalu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-The origin of **कंजूस** (*kañjūs*) is not settled. CDIAL, searched by form and by meaning, has no entry for it; it is often said to come from Persian.
+**कंजूस** (*kañjūs*) is usually traced to Persian *kanjūs*, "miserly". CDIAL, searched by form and by meaning, has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

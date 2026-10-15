@@ -11,7 +11,7 @@ gloss: I am ...
 concept_tag: UR-C04-MAIN-HUN
 prerequisites: [UR-C04-aap-kaise-hain]
 sounds: [rtl, nasal-vowel, long-u, short-vowels-unwritten]
-roots: [indo-aryan-main, indo-aryan-copula]
+roots: [ma-first-person, indo-aryan-copula]
 etymology_hook: "maiṅ ← Sanskrit mayā 'by me', from the first-person base ma- (CDIAL 9691); hūṅ 'am' is inherited"
 duration:
   max_seconds: 230

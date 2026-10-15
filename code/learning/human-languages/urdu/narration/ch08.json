@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Four Verbs Between People",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:379742815c18ba5b",
+  "sourceHash": "fnv1a64:e41178f6caa9ddcd",
   "lessons": [
     {
       "id": "UR-C08-lena",
@@ -751,7 +751,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:269a303b2d7e0873",
+      "sourceHash": "fnv1a64:48a09b4d7074a128",
       "notice": {
         "modality": "sight",
         "needs": [

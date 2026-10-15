@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Six Verbs at the Core",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:217e75e4bcc262ae",
+  "sourceHash": "fnv1a64:fb5281398b50b9aa",
   "lessons": [
     {
       "id": "GU-C07-hovun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:307b18917a987bf4",
+      "sourceHash": "fnv1a64:47c358fed2e6fe17",
       "notice": null,
       "blocks": [
         {

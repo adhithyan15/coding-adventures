@@ -12,7 +12,7 @@ concept_tag: VERB-TAKE
 prerequisites: [MR-C08-lihine]
 sounds: [matra-e, retroflex-na]
 roots: [sanskrit-grah-seize, pie-ghrebh-seize]
-etymology_hook: "घेणे comes through Prakrit gahaï from Sanskrit ग्रह् grah- 'to seize' — Vedic ग्रभ् grabh-, whose bh matches the b of English grab letter for letter, both from Indo-European \\*gʰrebʰ-"
+etymology_hook: "घेणे ← Prakrit gahaï, Sanskrit grah-, Vedic grabh- 'to seize', PIE *gʰrebʰ-, the root of English grab"
 duration:
   max_seconds: 270
 requires:

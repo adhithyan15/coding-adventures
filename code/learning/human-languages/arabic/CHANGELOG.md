@@ -1,5 +1,10 @@
 # Changelog
 
+## Fixed — one slug for the root s-l-m, and قفل is qufl
+
+- **`semitic-s-l-m` retired.** AR-C04-al-salama, AR-C04-maa-salama, AR-W00-alif-mim-salam, AR-W00-full-greeting-recall, AR-W00-kaf-waw-alaykum and AR-W12-maa-salama now use `s-l-m`, the slug AR-C01-salam, AR-C192-istalama, Persian and Urdu already use for the same root "to be safe" (Lane). The corpus split entry `s-l-m|` is gone (human-language-data root-slug baseline 77 → 76), and the Arabic root ledger counts 941 roots, with s-l-m spent eight times. The other roots the review named (`h-b-b`, `m-l-h`, `h-w-l`, `h-m-d`, `fadl`, `jamaa-gather`, `khabaza-bake`) each have one spelling in this track, so nothing was merged.
+- **قفل (AR-C127-qifl)** was romanized *qifl*; Modern Standard Arabic says *qufl*. The romanization, heading, cues, hook and AR-R129's recall answer now say *qufl*. The lesson id is unchanged. The block had also said Lane lists *qufl* under *q-f-l*; Lane's entry for the root (in the Supplement) has no *qufl*, so the hook and block now cite what it does give: *aqfala l-bāba*, "he locked the door", and *qāfila*, "a caravan".
+
 ## Added — every Arabic word lesson says where its word comes from
 
 HL24 §9 asks every lesson that introduces a word to say where the word comes from, from a cited source. Each Arabic word lesson now carries an `etymology_hook` and an origin in its body (human-language-data: Arabic etymology gaps 1,187 / 1,195 → 0 / 0, empty "taken apart" blocks 19 → 0).

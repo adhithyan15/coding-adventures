@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Sit, and How You Feel",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7fa1478d97782aee",
+  "sourceHash": "fnv1a64:d9a40ff9cd7f31ec",
   "lessons": [
     {
       "id": "MR-C23-basne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7b97622441219280",
+      "sourceHash": "fnv1a64:59d2dfa396259926",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -369,7 +369,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a8b10eba8f52258b",
+      "sourceHash": "fnv1a64:f0f0b5873e282d09",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -532,7 +532,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1e0b33f79b459c9b",
+      "sourceHash": "fnv1a64:004afce136440473",
       "notice": {
         "modality": "sight",
         "needs": [

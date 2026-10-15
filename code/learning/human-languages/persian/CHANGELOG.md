@@ -1,5 +1,10 @@
 # Changelog
 
+## Fixed — one root slug for ṭaraf, and five hooks cut to 120 characters
+
+- **FA-C196-atraf** moves from `arabic-atraf` to `arabic-taraf`, the slug FA-C86-taraf and Urdu use: *aṭrāf* is the plural of *ṭaraf*, one Arabic word on the root *ṭ-r-f* (Lane), so the two lessons now share a cousin panel.
+- **Hooks cut to 120 characters**, each keeping its origin claim: FA-C03-shoma-to, FA-C05-khodahafez, FA-C09-chay, FA-C09-kelid and FA-C16-yek.
+
 ## Changed — every word lesson says where its word comes from
 
 Every Persian word lesson now carries an `etymology_hook` and states its word's origin in the lesson body (HL24 §9). The etymology gap pins fall from 1,300 / 1,311 to 0 / 0, and the two empty "taken apart" blocks are filled (human-language-data: `persian.owner.ts`, `EMPTY_ETYMOLOGY_BLOCK_PINS.persian` 2 → 0).

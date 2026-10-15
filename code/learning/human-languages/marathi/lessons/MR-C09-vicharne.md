@@ -12,7 +12,7 @@ concept_tag: VERB-ASK
 prerequisites: [MR-C09-ghene]
 sounds: [matra-i, matra-aa, retroflex-na]
 roots: [sanskrit-vicara-deliberation, sanskrit-carati-move]
-etymology_hook: "विचारणे is simply विचार 'a thought' with the infinitive ending -णे added, so Marathi's word for asking is its word for thinking — one root वि-चर् for both, where Hindi's पूछना comes from somewhere else entirely"
+etymology_hook: "विचारणे is विचार 'a thought' + -णे, on vi- + car- 'to range': Marathi asks with its word for thinking"
 duration:
   max_seconds: 265
 requires:

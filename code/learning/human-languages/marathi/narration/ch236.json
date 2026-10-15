@@ -4,7 +4,7 @@
   "chapter": 236,
   "title": "Platform, Passport, Octroi, Booking, River valley",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bbc9d6529d26dd1e",
+  "sourceHash": "fnv1a64:874fc877bcb5276a",
   "lessons": [
     {
       "id": "MR-C236-phalat",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a03761bfb3e953cc",
+      "sourceHash": "fnv1a64:1f6eff480e4740b9",
       "notice": null,
       "blocks": [
         {

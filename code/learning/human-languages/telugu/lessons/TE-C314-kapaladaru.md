@@ -14,7 +14,7 @@ romanization: "kāpalādāru"
 concept_tag: TE-PANI314-KAPALADARU
 prerequisites: [TE-C314-plambaru, TE-C314-mekanikku]
 sounds: []
-roots: [dravidian-kaa-guard, persian-dar]
+roots: [dravidian-kaa-guard, persian-dar-holder]
 etymology_hook: "kāpalādāru: built on native kāpu 'guarding' (DEDR 1416) + Persian -dār 'holder'"
 duration:
   max_seconds: 200

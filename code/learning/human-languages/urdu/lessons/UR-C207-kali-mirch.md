@@ -14,7 +14,7 @@ romanization: "kālī mirch"
 concept_tag: UR-CHIZ207-KALI-MIRCH
 prerequisites: [UR-C207-ilaichi, UR-C207-darchini]
 sounds: []
-roots: [sanskrit-kala, sanskrit-marica]
+roots: [sanskrit-kala-black, sanskrit-marica]
 etymology_hook: "kālī ← Sanskrit kāla 'black' (CDIAL 3083); mirch ← *maricca 'peppercorn' (CDIAL 9875)"
 duration:
   max_seconds: 200

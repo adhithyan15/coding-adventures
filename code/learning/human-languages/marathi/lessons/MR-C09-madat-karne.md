@@ -12,7 +12,7 @@ concept_tag: VERB-HELP
 prerequisites: [MR-C09-vicharne]
 sounds: [inherent-a, retroflex-na]
 roots: [arabic-madad-help, persian-madad-help, sanskrit-kr-do]
-etymology_hook: "मदत is Arabic مدد madad, from a root meaning 'to stretch out, to extend' — help as a hand extended or troops sent — and it reached Marathi through Persian, in the same Deccan layer as माहीत; Marathi writes it with a final त where Hindi and Urdu write द"
+etymology_hook: "मदत ← Arabic madad, on a root 'to stretch out, extend', through Persian; Hindi and Urdu write madad"
 duration:
   max_seconds: 270
 requires:

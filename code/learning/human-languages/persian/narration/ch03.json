@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:2ddf2b83fcca790f",
+  "sourceHash": "fnv1a64:bcd6fbbb0d880f97",
   "lessons": [
     {
       "id": "FA-C03-shoma-to",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b687c2a39969af5",
+      "sourceHash": "fnv1a64:6a336362bfdebdc3",
       "notice": null,
       "blocks": [
         {

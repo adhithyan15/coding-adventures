@@ -12,7 +12,7 @@ concept_tag: VERB-BE
 prerequisites: [MR-C02-aahe]
 sounds: [inherent-a, matra-aa, retroflex-na]
 roots: [sanskrit-asti, pie-es-be]
-etymology_hook: "Sanskrit ásti is the same ancient is as Latin est and English is; Marathi's आहे belongs to that family and closes the sentence rather than sitting in its middle"
+etymology_hook: "असणे is often tied to Sanskrit asti, kin to English is, but CDIAL files it under āsatē 'sits, exists' (1480)"
 duration:
   max_seconds: 240
 requires:
