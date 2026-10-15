@@ -4,7 +4,7 @@
   "chapter": 231,
   "title": "To lean, To knock, To bend down, To pluck, To milk",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:64b8ccc426b25393",
+  "sourceHash": "fnv1a64:32cff8049b5c8f42",
   "lessons": [
     {
       "id": "ML-C231-caruka",
@@ -689,7 +689,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:108445ed146e1f13",
+      "sourceHash": "fnv1a64:d65a3c324b7c7863",
       "notice": null,
       "blocks": [
         {
@@ -771,7 +771,7 @@
             },
             {
               "kind": "speech",
-              "text": "To carry? (ചുമക്കുക, cumakkuka.) To put? (വയ്ക്കുക, vaykkuka.) To wear? (ധരിക്കുക, dharikkuka.) To take off? (ഊരുക, ūruka.) To change? (മാറ്റുക, māṟṟuka.) To mix? (കലർത്തുക, kalarttuka.) To serve? (വിളമ്പുക, viḷambuka.) To taste? (രുചിക്കുക, rucikkuka.) To fill? (നിറയ്ക്കുക, niṟaykkuka.) To cover? (മൂടുക, mūṭuka.) To drive? (ഓടിക്കുക, ōṭikkuka.) To move? (നീങ്ങുക, nīṅṅuka.) To arrive? (എത്തുക, ettuka.) To return? (മടങ്ങുക, maṭaṅṅuka.) To take? (കൊണ്ടുപോകുക, koṇṭupōkuka.) To discuss? (ചർച്ച ചെയ്യുക, carcca ceyyuka.) To explain? (വിശദീകരിക്കുക, viśadīkarikkuka.) To prepare? (തയ്യാറാക്കുക, tayyāṟākkuka.) To finish? (പൂർത്തിയാക്കുക, pūrttiyākkuka.) To check? (പരിശോധിക്കുക, pariśōdhikkuka.)"
+              "text": "To carry? (ചുമക്കുക, cumakkuka.) To put? (വയ്ക്കുക, vaykkuka.) To wear? (ധരിക്കുക, dharikkuka.) To take off? (ഊരുക, ūruka.) To change? (മാറ്റുക, māṟṟuka.) To mix? (കലർത്തുക, kalarttuka.) To serve? (വിളമ്പുക, viḷampuka.) To taste? (രുചിക്കുക, rucikkuka.) To fill? (നിറയ്ക്കുക, niṟaykkuka.) To cover? (മൂടുക, mūṭuka.) To drive? (ഓടിക്കുക, ōṭikkuka.) To move? (നീങ്ങുക, nīṅṅuka.) To arrive? (എത്തുക, ettuka.) To return? (മടങ്ങുക, maṭaṅṅuka.) To take? (കൊണ്ടുപോകുക, koṇṭupōkuka.) To discuss? (ചർച്ച ചെയ്യുക, carcca ceyyuka.) To explain? (വിശദീകരിക്കുക, viśadīkarikkuka.) To prepare? (തയ്യാറാക്കുക, tayyāṟākkuka.) To finish? (പൂർത്തിയാക്കുക, pūrttiyākkuka.) To check? (പരിശോധിക്കുക, pariśōdhikkuka.)"
             }
           ]
         }

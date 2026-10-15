@@ -4,7 +4,7 @@
   "chapter": 149,
   "title": "Garden, Leaf, Mango, Banana, Grapes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cda93181f682f48c",
+  "sourceHash": "fnv1a64:7c019ca1c51184eb",
   "lessons": [
     {
       "id": "ML-C149-puntottam",
@@ -287,9 +287,9 @@
     {
       "id": "ML-C149-mambalam",
       "sequence": 6070,
-      "title": "മാമ്പഴം (māmbaḻaṁ) — a mango",
+      "title": "മാമ്പഴം (māmpaḻaṁ) — a mango",
       "headword": "മാമ്പഴം",
-      "romanization": "māmbaḻaṁ",
+      "romanization": "māmpaḻaṁ",
       "gloss": "a mango",
       "script": "malayalam",
       "modality": "voice",
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e74692339e02b2d",
+      "sourceHash": "fnv1a64:b9093438e070fb79",
       "notice": null,
       "blocks": [
         {
@@ -334,7 +334,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "മാമ്പഴം — māmbaḻaṁ — \"a mango\"."
+              "text": "മാമ്പഴം — māmpaḻaṁ — \"a mango\"."
             }
           ]
         },
@@ -345,7 +345,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "മാമ്പഴം (māmbaḻaṁ) is native Dravidian, \"mango fruit\": mā, \"mango tree\" (DEDR 4782, with Tamil mā), and paḻaṁ, \"ripe fruit\" (DEDR 4004). DEDR 4782 compares Sanskrit mākanda. DEDR 4004 compares Sanskrit phala."
+              "text": "മാമ്പഴം (māmpaḻaṁ) is native Dravidian, \"mango fruit\": mā, \"mango tree\" (DEDR 4782, with Tamil mā), and paḻaṁ, \"ripe fruit\" (DEDR 4004). DEDR 4782 compares Sanskrit mākanda. DEDR 4004 compares Sanskrit phala."
             }
           ]
         },
@@ -374,38 +374,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "māmbaḻaṁ",
+              "instruction": "māmpaḻaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *māmbaḻaṁ*]"
+              "source": "[YOU SAY: *māmpaḻaṁ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "māmbaḻaṁ, once more",
+              "instruction": "māmpaḻaṁ, once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *māmbaḻaṁ*, once more]"
+              "source": "[YOU SAY: *māmpaḻaṁ*, once more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "say māmbaḻaṁ",
+              "instruction": "say māmpaḻaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: say *māmbaḻaṁ*]"
+              "source": "[YOU SAY: say *māmpaḻaṁ*]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Malayalam for a garden, then the Malayalam for a leaf, then say māmbaḻaṁ again",
+              "instruction": "say the Malayalam for a garden, then the Malayalam for a leaf, then say māmpaḻaṁ again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Malayalam for a garden, then the Malayalam for a leaf, then say *māmbaḻaṁ* again]"
+              "source": "[YOU RECALL: say the Malayalam for a garden, then the Malayalam for a leaf, then say *māmpaḻaṁ* again]"
             }
           ]
         },
@@ -422,7 +422,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does മാമ്പഴം (māmbaḻaṁ) mean? (\"A mango\".) Say it once more."
+              "text": "What does മാമ്പഴം (māmpaḻaṁ) mean? (\"A mango\".) Say it once more."
             }
           ]
         }

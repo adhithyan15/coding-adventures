@@ -4,7 +4,7 @@
   "chapter": 150,
   "title": "Potato, Tomato, Aubergine, Black pepper, Garlic",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e4b2d44789c14399",
+  "sourceHash": "fnv1a64:a43e27cb544cf032",
   "lessons": [
     {
       "id": "ML-C150-urulakkilannu",
@@ -810,7 +810,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00235402d25c70cf",
+      "sourceHash": "fnv1a64:99f37617f29fb4ff",
       "notice": null,
       "blocks": [
         {
@@ -901,7 +901,7 @@
             },
             {
               "kind": "speech",
-              "text": "A need? (ആവശ്യം, āvaśyaṁ.) A decision? (തീരുമാനം, tīrumānaṁ.) A bed? (കട്ടിൽ, kaṭṭil.) A mirror? (കണ്ണാടി, kaṇṇāṭi.) A comb? (ചീപ്പ്, cīppŭ.) Soap? (സോപ്പ്, sōppŭ.) A towel? (തോർത്ത്, tōrttŭ.) A bag? (ബാഗ്, bāgŭ.) A wall? (ഭിത്തി, bhitti.) A roof? (മേൽക്കൂര, mēlkkūra.) A step? (പടി, paṭi.) A well? (കിണറ്, kiṇaṟŭ.) A lake? (തടാകം, taṭākaṁ.) An island? (ദ്വീപ്, dvīpŭ.) A shore? (തീരം, tīraṁ.) A garden? (പൂന്തോട്ടം, pūntōṭṭaṁ.) A leaf? (ഇല, ila.) A mango? (മാമ്പഴം, māmbaḻaṁ.) A banana? (വാഴപ്പഴം, vāḻappaḻaṁ.) Grapes? (മുന്തിരി, muntiri.) A potato? (ഉരുളക്കിഴങ്ങ്, urulakkiḻaṅṅŭ.) A tomato? (തക്കാളി, takkāḷi.) An aubergine? (വഴുതന, vaḻutana.) Black pepper? (കുരുമുളക്, kurumuḷakŭ.) Garlic? (വെളുത്തുള്ളി, veḷuttuḷḷi.)"
+              "text": "A need? (ആവശ്യം, āvaśyaṁ.) A decision? (തീരുമാനം, tīrumānaṁ.) A bed? (കട്ടിൽ, kaṭṭil.) A mirror? (കണ്ണാടി, kaṇṇāṭi.) A comb? (ചീപ്പ്, cīppŭ.) Soap? (സോപ്പ്, sōppŭ.) A towel? (തോർത്ത്, tōrttŭ.) A bag? (ബാഗ്, bāgŭ.) A wall? (ഭിത്തി, bhitti.) A roof? (മേൽക്കൂര, mēlkkūra.) A step? (പടി, paṭi.) A well? (കിണറ്, kiṇaṟŭ.) A lake? (തടാകം, taṭākaṁ.) An island? (ദ്വീപ്, dvīpŭ.) A shore? (തീരം, tīraṁ.) A garden? (പൂന്തോട്ടം, pūntōṭṭaṁ.) A leaf? (ഇല, ila.) A mango? (മാമ്പഴം, māmpaḻaṁ.) A banana? (വാഴപ്പഴം, vāḻappaḻaṁ.) Grapes? (മുന്തിരി, muntiri.) A potato? (ഉരുളക്കിഴങ്ങ്, urulakkiḻaṅṅŭ.) A tomato? (തക്കാളി, takkāḷi.) An aubergine? (വഴുതന, vaḻutana.) Black pepper? (കുരുമുളക്, kurumuḷakŭ.) Garlic? (വെളുത്തുള്ളി, veḷuttuḷḷi.)"
             }
           ]
         }

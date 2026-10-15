@@ -7,7 +7,7 @@ chapter: 35
 type: writing
 delivery: script
 headword: ९
-romanization: 9
+romanization: '9'
 gloss: the last digit sign, and the one that closes the set
 prerequisites: [MW-C35-read-eight-ticket]
 sounds: [mixed]

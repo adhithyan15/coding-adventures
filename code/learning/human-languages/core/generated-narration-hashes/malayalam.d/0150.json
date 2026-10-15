@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 150,
-  "sourceHash": "fnv1a64:e4b2d44789c14399",
+  "sourceHash": "fnv1a64:a43e27cb544cf032",
   "lessonIds": [
     "ML-C150-urulakkilannu",
     "ML-C150-takkali",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "malayalam/narration/ch150.txt",
   "json": "malayalam/narration/ch150.json",
-  "textHash": "fnv1a64:db6809c28d423da6",
-  "jsonHash": "fnv1a64:608c2756dddb3c22",
+  "textHash": "fnv1a64:e613bdfb45e46cd8",
+  "jsonHash": "fnv1a64:0753161ec04d4ea9",
   "findings": []
 }

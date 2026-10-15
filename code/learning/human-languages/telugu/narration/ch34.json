@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5a799f2eb1d1fb7a",
+  "sourceHash": "fnv1a64:be9568c324079587",
   "lessons": [
     {
       "id": "TE-C34-tiisuko",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:53725138bdab95b7",
+      "sourceHash": "fnv1a64:958d530ebc4a2ad9",
       "notice": {
         "modality": "sight",
         "needs": [
