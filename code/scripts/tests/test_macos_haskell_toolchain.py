@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -174,6 +175,21 @@ class MacosHaskellToolchainTests(unittest.TestCase):
                 _, github_env, receipt, _ = self.run_mock_bootstrap(wrong_stage=stage)
                 self.assertIsNone(receipt)
                 self.assertEqual("EXISTING=retained\n", github_env.read_text(encoding="utf-8"))
+
+    def test_generated_driver_executes_without_shell_argument_reinterpretation(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            handler = root / "capture.py"
+            handler.write_text("import json, sys\nprint(json.dumps(sys.argv[1:]))\n", encoding="utf-8")
+            wrapper, forced = toolchain.write_hsc_driver(root, sys.executable, CLANG, LD, SDK)
+            literal = "a;'$() literal with spaces"
+            result = subprocess.run([sys.executable, str(root / "hsc2hs-driver.py"), str(handler),
+                                     "Main.hsc", literal, "--cc=/caller/clang"],
+                                    capture_output=True, text=True, check=True)
+            self.assertEqual(["Main.hsc", literal, "--cc=/caller/clang", *forced], json.loads(result.stdout))
+            self.assertEqual(1, toolchain.verify_hsc_route(root, sys.executable, forced))
+            self.assertEqual(["exec", sys.executable, str(root / "hsc2hs-driver.py"), "$@"],
+                             shlex.split(wrapper.read_text(encoding="utf-8").splitlines()[1]))
 
     def test_ignored_phase_refusal_and_missing_or_wrong_hsc_route_publish_nothing(self):
         for options in [{"ignore_refusal": True}, {"omit_hsc_trace": True}, {"bad_hsc_trace": True}]:
