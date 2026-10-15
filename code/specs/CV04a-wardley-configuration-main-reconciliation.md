@@ -119,3 +119,8 @@ stableIDs/spans/pass-sweep remain OPEN. Miri DEFERRED/PENDING, never passed;
 frozen checkout/run/inputs/target/receipts untouched/unpolled, no duplicate or
 termination. Delivery first, genuine final-source Miri before full completion
 or disabling the ACTIVE heartbeat.
+
+The two positive over-cap body-size forms must produce line2/column1 with the
+exact message `size must be finite and at most 65536`; existing nonpositive-size
+errors retain their earlier message. Parser testfirst declares94 complete IR
+cells (70 scalar/16 origin/6 boolean/2 body) plus2 exact size-error controls.
