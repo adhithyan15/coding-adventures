@@ -15,7 +15,7 @@ exposure: 3 native-script headwords carry no romanization, so they are load-bear
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 1 of 29984 atoms never revisited (0%); missed windows R1 1554, R2 19846, R3 16003, R4 24372
 forward references: 788 uses of material a later lesson teaches
-etymology: 1200 of 25693 word-introducing lessons carry no etymology_hook; 1099 show the reader no origin in the body, and 305 more only an empty etymology block (per track below)
+etymology: 1200 of 25693 word-introducing lessons carry no etymology_hook; 1099 show the reader no origin in the body, and 12 more only an empty etymology block (per track below)
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 926 evidence blocks, 0 invalid; 134 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 71 named track/debt items
 writing ramp: 0 track(s) never practise writing; 0 start after lesson one
@@ -108,29 +108,29 @@ Modality findings (report-only): 0
 Etymology coverage (HL24 §9) — every lesson that introduces a word says where it comes from:
   25693 word-introducing lessons; 1200 carry no etymology_hook (95% covered), 1099 show the reader no origin in the body (95% covered), 1098 have neither
   the hook is read by the app only; the book and narration print the body, so both are counted
-  305 more count as visible only because a "taken apart" block or origin heading is there, and never say where the word came from
+  12 more count as visible only because a "taken apart" block or origin heading is there, and never say where the word came from
   arabic: 1262 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   bengali: 1219 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   chinese: 108 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
-  french: 1230 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 66 empty etymology block
-  german: 1227 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 43 empty etymology block
+  french: 1230 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
+  german: 1227 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   gujarati: 630 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
-  hindi: 1200 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 7 empty etymology block
-  italian: 1247 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 7 empty etymology block
+  hindi: 1200 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
+  italian: 1247 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   japanese: 695 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
-  kannada: 1396 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 8 empty etymology block
-  latin: 1238 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 31 empty etymology block
-  malayalam: 1445 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 6 empty etymology block
+  kannada: 1396 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
+  latin: 1238 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
+  malayalam: 1445 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   marathi: 1217 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   marwadi: 718 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   persian: 1373 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
-  portuguese: 1236 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 5 empty etymology block
+  portuguese: 1236 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   punjabi: 623 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
-  russian: 1224 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 52 empty etymology block
+  russian: 1224 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   sanskrit: 1238 word lessons; 1200 no hook, 1099 no visible etymology, 1098 neither, 12 empty etymology block
-  spanish: 1267 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 48 empty etymology block
-  tamil: 1247 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 12 empty etymology block
-  telugu: 1435 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 8 empty etymology block
+  spanish: 1267 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
+  tamil: 1247 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
+  telugu: 1435 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
   urdu: 1218 word lessons; 0 no hook, 0 no visible etymology, 0 neither, 0 empty etymology block
 
 
@@ -158,7 +158,7 @@ info dump (report-only): 120 of 29609 lessons -- 32 rule statements, 91 paradigm
 lesson content budgets (report-only): 25217 of 29609 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
   annotation coverage: idioms 25217, senses 25218, culture claims 25217
 
-metalanguage: 54 of 54 grammar terms appear in 29134 lessons; 55152 uses come before introduction, of which 9464 are technical terms across 6315 lessons
-  most-used-before-introduction: verb (3558 lessons), noun (2006 lessons), participle (512 lessons), adjective (490 lessons), case (310 lessons), pronoun (296 lessons)
+metalanguage: 54 of 54 grammar terms appear in 29134 lessons; 55162 uses come before introduction, of which 9469 are technical terms across 6320 lessons
+  most-used-before-introduction: verb (3562 lessons), noun (2006 lessons), participle (512 lessons), adjective (490 lessons), case (310 lessons), pronoun (296 lessons)
 literal markup: none in 29609 lessons or any generated book
 glyph coverage: every character renders -- 153 main-font and 829 script characters across 5927 generated files

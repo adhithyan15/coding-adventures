@@ -33,7 +33,7 @@
     "wordLessons": 25693,
     "wordLessonsWithoutEtymologyHook": 1200,
     "wordLessonsWithoutVisibleEtymology": 1099,
-    "wordLessonsWithEmptyEtymologyBlock": 305,
+    "wordLessonsWithEmptyEtymologyBlock": 12,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 1,
@@ -341725,7 +341725,7 @@
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
-        "wordLessonsWithEmptyEtymologyBlock": 66
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "german",
@@ -341733,7 +341733,7 @@
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
-        "wordLessonsWithEmptyEtymologyBlock": 43
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "gujarati",
@@ -341749,7 +341749,7 @@
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
-        "wordLessonsWithEmptyEtymologyBlock": 7
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "italian",
@@ -341757,7 +341757,7 @@
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
-        "wordLessonsWithEmptyEtymologyBlock": 7
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "japanese",
@@ -341773,7 +341773,7 @@
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
-        "wordLessonsWithEmptyEtymologyBlock": 8
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "latin",
@@ -341781,7 +341781,7 @@
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
-        "wordLessonsWithEmptyEtymologyBlock": 31
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "malayalam",
@@ -341789,7 +341789,7 @@
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
-        "wordLessonsWithEmptyEtymologyBlock": 6
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "marathi",
@@ -341821,7 +341821,7 @@
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
-        "wordLessonsWithEmptyEtymologyBlock": 5
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "punjabi",
@@ -341837,7 +341837,7 @@
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
-        "wordLessonsWithEmptyEtymologyBlock": 52
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "sanskrit",
@@ -341853,7 +341853,7 @@
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
-        "wordLessonsWithEmptyEtymologyBlock": 48
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "tamil",
@@ -341861,7 +341861,7 @@
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
-        "wordLessonsWithEmptyEtymologyBlock": 12
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "telugu",
@@ -341869,7 +341869,7 @@
         "wordLessonsWithoutEtymologyHook": 0,
         "wordLessonsWithoutVisibleEtymology": 0,
         "wordLessonsWithoutAnyEtymology": 0,
-        "wordLessonsWithEmptyEtymologyBlock": 8
+        "wordLessonsWithEmptyEtymologyBlock": 0
       },
       {
         "language": "urdu",
@@ -341885,7 +341885,7 @@
       "wordLessonsWithoutEtymologyHook": 1200,
       "wordLessonsWithoutVisibleEtymology": 1099,
       "wordLessonsWithoutAnyEtymology": 1098,
-      "wordLessonsWithEmptyEtymologyBlock": 305,
+      "wordLessonsWithEmptyEtymologyBlock": 12,
       "hookPercent": 95,
       "visiblePercent": 95
     }
@@ -454619,13 +454619,13 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 29134,
-    "usesBeforeIntroduction": 55152,
-    "technicalUsesBeforeIntroduction": 9464,
-    "technicalLessons": 6315,
+    "usesBeforeIntroduction": 55162,
+    "technicalUsesBeforeIntroduction": 9469,
+    "technicalLessons": 6320,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 3558
+        "lessons": 3562
       },
       {
         "term": "noun",
