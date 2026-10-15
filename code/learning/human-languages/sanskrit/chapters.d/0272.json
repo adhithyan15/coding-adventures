@@ -1,0 +1,17 @@
+{
+  "chapter": 272,
+  "title": "One condolence, held as a whole",
+  "label": "ch:sa-bounded-condolence",
+  "canDo": "I can offer one attested condolence to bereaved family members.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C272-condolence-final-retrieval",
+    "kind": "production",
+    "summary": "Complete chapter 272 by independently retrieving the bounded condolence a second time.",
+    "assesses": [
+      "SA-PATTERN-C272-CONDOLENCE-01"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-272-CONDOLENCE272",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can offer one attested condolence to bereaved family members.",
+  "prerequisites": [
+    "SA-EXT-271-REQUEST271"
+  ]
+}
