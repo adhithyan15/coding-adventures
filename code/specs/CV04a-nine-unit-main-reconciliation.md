@@ -15,6 +15,19 @@ source0654acee and terminal0cbf9d1b PASS. Old516actual cells are attributed only
 by complete input identity. Separate ordering-work-cargo-target; no source/
 HEAD/target changes during new fixed-source validation. No Miri work here.
 
+## Executed acceptance
+
+Source cdca2e1154a59dfdfe534c6f0891f299a453c09f passed focused33/compiler878/
+incoming1/owned10; six actual backends executed96sources/576cells with the old
+516 tuple multiset retained exactly. Full affected six-package strict lint0
+and unfiltered tests1809P0F1existingignored/78targets completed, including LANG496.
+Tests logSHA9c9d75867e6350060bd952085de8e4ad95f0f2f6374e721bb42ce5d64e7dea45;
+strictSHAfa5a64221d66cae34f15651be93c399e5e8a8201a0fb335d4229b1df6a9bc703.
+Independent source/focused review19eb92d9 and terminalc45bd727 PASS. These are
+scoped native acceptance; combined docs carrier, current-main reconciliation,
+actual hosted checks and genuine final-source Miri remain required. Miri
+DEFERRED/PENDING, never passed; full Closure objective OPEN.
+
 Audit the actual incoming nine-unit patch before extending it. Retain incoming
 version/docs/tests through a complete closed merge. Reject shared exp/log/
 legacy widening or binary64 folding as an exact static unit-cost proof. Restore
