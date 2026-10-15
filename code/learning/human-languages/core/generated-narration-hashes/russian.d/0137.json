@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 137,
-  "sourceHash": "fnv1a64:46ebca2a8f794502",
+  "sourceHash": "fnv1a64:b0ed03662d34d8bd",
   "lessonIds": [
     "RU-C137-nedavno",
     "RU-C137-davno",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch137.txt",
   "json": "russian/narration/ch137.json",
-  "textHash": "fnv1a64:ad28efe173d71df7",
-  "jsonHash": "fnv1a64:74c12b884c0c870f",
+  "textHash": "fnv1a64:455c07dad0d7cdf1",
+  "jsonHash": "fnv1a64:325f39dab74940aa",
   "findings": []
 }

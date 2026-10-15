@@ -103,7 +103,7 @@ Count from एक to आठ (āṭh) and stop. The book has taken you no further
 
 You'll want to know: नऊ.
 नऊ — naū — 9.
-Sanskrit नव (nava) — Latin novem, English nine. And नव also meant new, in Sanskrit exactly as novem and novus are a pair in Latin. Nine is the new number: the one that starts the count over after eight.
+Sanskrit नव (nava), "nine" — Latin novem, English nine (CDIAL 6984). Sanskrit has a second नव, "new," like Latin novus and English new, but CDIAL gives it a separate entry (6983): the two only sound alike.
 
 Guided Practice.
 [pause 1 second]

@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Parting Words",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:dc70acfd4255adb8",
+  "sourceHash": "fnv1a64:c585a9b6b809419c",
   "lessons": [
     {
       "id": "RU-C11-do-svidaniya",
@@ -296,7 +296,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5aaeaa1b8edb9fa8",
+      "sourceHash": "fnv1a64:3693d5b156f7873f",
       "notice": null,
       "blocks": [
         {
@@ -558,7 +558,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05e8400e46a38b16",
+      "sourceHash": "fnv1a64:8d53eabc2dda8452",
       "notice": null,
       "blocks": [
         {

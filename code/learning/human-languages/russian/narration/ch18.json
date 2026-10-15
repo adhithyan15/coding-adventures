@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "One Word, and a Whole Sentence After It",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f7963545e0cb4ec2",
+  "sourceHash": "fnv1a64:329c4a98f888c064",
   "lessons": [
     {
       "id": "RU-C18-chto-vopros",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:951e58fb74009cf3",
+      "sourceHash": "fnv1a64:6f65174b3912ff63",
       "notice": null,
       "blocks": [
         {
@@ -58,11 +58,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "the one question mark at the end, and но, the but with no cousin",
+              "instruction": "the one question mark at the end, and но, but, likely kin to now",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: the one question mark at the **end**, and *но*, the *but* with no cousin]"
+              "source": "[YOU RECALL: the one question mark at the **end**, and *но*, *but*, likely kin to *now*]"
             }
           ]
         },

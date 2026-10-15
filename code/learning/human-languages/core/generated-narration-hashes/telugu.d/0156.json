@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 156,
-  "sourceHash": "fnv1a64:4f49680744a0aa22",
+  "sourceHash": "fnv1a64:f4fe35d3cb8f7508",
   "lessonIds": [
     "TE-C156-kalapattika",
     "TE-C156-sucana",
@@ -16,6 +16,6 @@
   "text": "telugu/narration/ch156.txt",
   "json": "telugu/narration/ch156.json",
   "textHash": "fnv1a64:6d54a7fd8b2ee67b",
-  "jsonHash": "fnv1a64:58d617ae72ce5218",
+  "jsonHash": "fnv1a64:6717da4a30f03b4a",
   "findings": []
 }

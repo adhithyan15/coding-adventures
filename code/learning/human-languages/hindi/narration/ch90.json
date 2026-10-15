@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Four Adjectives That Always Agree",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c12ffedc15ffe810",
+  "sourceHash": "fnv1a64:7abbd3001de5c60c",
   "lessons": [
     {
       "id": "HI-C82-lambaa",
@@ -174,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:660b510c17a0fd09",
+      "sourceHash": "fnv1a64:efb6868c40772d18",
       "notice": null,
       "blocks": [
         {

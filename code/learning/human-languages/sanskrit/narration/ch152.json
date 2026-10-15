@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "Period, Turn, Lunar day, Calendar date, Century",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d070d1b68c384572",
+  "sourceHash": "fnv1a64:147c6a0741120c85",
   "lessons": [
     {
       "id": "SA-C152-kalah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f66528944435aa31",
+      "sourceHash": "fnv1a64:290b0bb39b675510",
       "notice": null,
       "blocks": [
         {

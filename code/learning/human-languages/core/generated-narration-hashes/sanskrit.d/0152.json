@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 152,
-  "sourceHash": "fnv1a64:d070d1b68c384572",
+  "sourceHash": "fnv1a64:147c6a0741120c85",
   "lessonIds": [
     "SA-C152-kalah",
     "SA-C152-varah",
@@ -14,6 +14,6 @@
   "text": "sanskrit/narration/ch152.txt",
   "json": "sanskrit/narration/ch152.json",
   "textHash": "fnv1a64:99232d048267bd4b",
-  "jsonHash": "fnv1a64:e2e9ce55e35abcf7",
+  "jsonHash": "fnv1a64:a43ef8a6d8a69997",
   "findings": []
 }

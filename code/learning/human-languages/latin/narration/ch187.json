@@ -4,7 +4,7 @@
   "chapter": 187,
   "title": "Peace, Leader, Victory, Freedom, Glory",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:185a7146f049211c",
+  "sourceHash": "fnv1a64:1a0d2f17da3585ac",
   "lessons": [
     {
       "id": "LA-C187-pax",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0efd1628e79d6ca1",
+      "sourceHash": "fnv1a64:b3ac68b7f7d053c2",
       "notice": null,
       "blocks": [
         {

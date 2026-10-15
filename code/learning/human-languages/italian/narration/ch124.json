@@ -4,7 +4,7 @@
   "chapter": 124,
   "title": "Busy, Free, Open, Closed, Quiet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8dba4617d12c2499",
+  "sourceHash": "fnv1a64:e73166aaf90f1ff2",
   "lessons": [
     {
       "id": "IT-C124-occupato",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3fa554665f5d586",
+      "sourceHash": "fnv1a64:62d05e533a6b01ed",
       "notice": null,
       "blocks": [
         {

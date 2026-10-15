@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "The Hand and the Foot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2b7815a168e40035",
+  "sourceHash": "fnv1a64:43ca155bc00f0bc8",
   "lessons": [
     {
       "id": "SA-C25-hand",
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00e6b33fc57d9f78",
+      "sourceHash": "fnv1a64:e5bf59654cb8c963",
       "notice": null,
       "blocks": [
         {
