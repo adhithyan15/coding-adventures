@@ -3150,7 +3150,24 @@
       "id": "SA-A1-M-03",
       "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
       "label": "the school as an institution: timetable, examination, marks, classroom language",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C83-SCHOOL-01",
+        "SA-LEX-C83-SCHOOL-02",
+        "SA-LEX-C83-SCHOOL-03",
+        "SA-LEX-C83-SCHOOL-04",
+        "SA-LEX-C83-SCHOOL-05",
+        "SA-LEX-C140-READ140-02",
+        "SA-LEX-C168-SCH168-01",
+        "SA-LEX-C169-SCH169-02",
+        "SA-LEX-C255-SCH255-04",
+        "SA-LEX-C255-SCH255-05",
+        "SA-LEX-C18-ASK-01",
+        "SA-LEX-C139-FUT139-02",
+        "SA-LEX-C139-FUT139-04",
+        "SA-VERB-C264-KARISYAMI-01",
+        "SA-VERB-C264-PATHISYAMI-02",
+        "SA-PATTERN-C267-SCHOOL-PLAN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -3162,7 +3179,7 @@
         "A1-NE06-05",
         "A1-NE06-06"
       ],
-      "note": "UNCOVERED. guruḥ and śiṣyaḥ are taught (SA-A1-X-12); vidyālayaḥ, parīkṣā and the classroom imperatives are not."
+      "note": "COVERED. Earlier chapters already own the school, student, teacher, lesson, examination, timetable, classroom, marks, homework and answer words. Chapter 267 retrieves them, adds one narrow school-plan frame, composes an exam-time question and answer with known near-future language, and twice requires a model-free homework-and-study plan. This closes one small A1 school-day plan, not complete classroom discourse, an educational system, grading practices or educational rights."
     },
     {
       "id": "SA-A1-M-04",
