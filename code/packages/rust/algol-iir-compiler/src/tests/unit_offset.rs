@@ -103,13 +103,13 @@ fn identity_declaration_guard_checks_exact_tree_signature_and_resolved_identity(
 fn nested_offsets_and_shifted_narrow_range_proofs_have_exact_typed_refusals() {
     let mut failures = Vec::new();
     for (name, expression) in [
-        ("nested-right", "entier((sign(pick()) + 2) + 2)"),
-        ("nested-left", "entier(1 + (3 + sign(pick())))"),
-        ("entier-wrapped", "entier(entier(sign(pick()) + 1) + 3)"),
-        ("abs-wrapped", "entier(abs(sign(pick()) + 2) + 2)"),
+        ("nested-right", "entier((sign(pick()) + 3) + 2)"),
+        ("nested-left", "entier(1 + (4 + sign(pick())))"),
+        ("entier-wrapped", "entier(entier(sign(pick()) + 1) + 4)"),
+        ("abs-wrapped", "entier(abs(sign(pick()) + 2) + 3)"),
         ("shifted-triple-exp", "entier(ln(exp(exp(exp(sign(pick()) + 1)))))"),
-        ("flat-four", "entier(sign(pick()) + 2 + 2)"),
-        ("non-unit", "entier(sign(pick()) + 4)"),
+        ("flat-five", "entier(sign(pick()) + 3 + 2)"),
+        ("non-unit", "entier(sign(pick()) + 5)"),
     ] {
         let source = format!("begin real procedure pick; pick := 3.5; real saved; saved := {expression}; output(saved) end");
         match compile_source(&source, "unit_offset_refusal") {

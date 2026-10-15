@@ -32,9 +32,9 @@ fn canonical_three_unit_forms_have_one_real_formatter_and_independent_arms() {
 #[test]
 fn three_unit_proofs_refuse_four_units_rounding_traps_and_exp_widening() {
     for expression in [
-        "entier(sign(pick()) + 4)", "entier((sign(pick()) + 2) + 2)",
-        "entier(1 + (3 + sign(pick())))", "entier(entier(sign(pick()) + 1) + 3)",
-        "entier(abs(sign(pick()) + 2) + 2)", "entier(sign(pick()) + 3.5)",
+        "entier(sign(pick()) + 5)", "entier((sign(pick()) + 3) + 2)",
+        "entier(1 + (4 + sign(pick())))", "entier(entier(sign(pick()) + 1) + 4)",
+        "entier(abs(sign(pick()) + 2) + 3)", "entier(sign(pick()) + 3.5)",
         "entier(sign(pick()) + sign(pick()) + 1 + 2)",
         "entier(sign(pick()) + ((9007199254740992 + 1) - 9007199254740992) + 3)",
         "entier(ln(exp(exp(exp(sign(pick()) + 3)))))",

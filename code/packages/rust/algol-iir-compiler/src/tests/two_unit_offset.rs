@@ -20,8 +20,8 @@ fn canonical_two_unit_forms_keep_one_real_formatter_and_legacy_arm_forms() {
 
 #[test]
 fn two_unit_refusals_keep_exp_ranges_and_cumulative_wrapper_budget() {
-    for expression in ["entier((sign(pick()) + 2) + 2)","entier(1 + (3 + sign(pick())))",
-        "entier(entier(sign(pick()) + 1) + 3)","entier(abs(sign(pick()) + 2) + 2)",
+    for expression in ["entier((sign(pick()) + 3) + 2)","entier(1 + (4 + sign(pick())))",
+        "entier(entier(sign(pick()) + 1) + 4)","entier(abs(sign(pick()) + 2) + 3)",
         "entier(sign(pick()) + 2.5)","entier(sign(pick()) + sign(pick()) + 1)",
         "entier(sign(pick()) + ((9007199254740992 + 1) - 9007199254740992) + 2)",
         "entier(ln(exp(exp(exp(sign(pick()) + 2)))))",
