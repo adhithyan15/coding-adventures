@@ -13155,7 +13155,7 @@ emphasized --> direct
                     labels:vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:276.25,y:150.0,style:special},
                         diagram_ir::LayoutedVennLabel {text:"B".into(),x:123.75,y:150.0,style:Default::default()},
                         diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:150.0,style:Default::default()},
-                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:170.0,style:Default::default()}]};
+                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:170.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
                 let resolver=RecordingResolver(RefCell::new(Vec::new()));
                 let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
                 let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,
@@ -13224,7 +13224,7 @@ emphasized --> direct
                     labels:vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:label_a,y:cy,style:special},
                         diagram_ir::LayoutedVennLabel {text:"B".into(),x:label_b,y:cy,style:Default::default()},
                         diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:cy,style:Default::default()},
-                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}]};
+                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
                 assert_eq!(actual_layout,layout,"complete checked layout transport");
                 let resolver=RecordingResolver(RefCell::new(Vec::new()));
                 let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
@@ -13299,7 +13299,7 @@ emphasized --> direct
                     labels:vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:label_a,y:cy,style:special},
                         diagram_ir::LayoutedVennLabel {text:"B".into(),x:label_b,y:cy,style:Default::default()},
                         diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:cy,style:Default::default()},
-                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}]};
+                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
                 assert_eq!(actual_layout,layout,"complete checked layout transport");
                 let resolver=RecordingResolver(RefCell::new(Vec::new()));
                 let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);

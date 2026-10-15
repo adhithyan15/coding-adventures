@@ -40,7 +40,7 @@ fn venn_palette_typed_complete_scenes_empty_short_default_and_long_cycles() {
         for (i,color) in palette.iter().enumerate() {metadata.insert(format!("venn.themeColor{}",i+1),color.clone());}
         assert_eq!(metadata.len(),8+palette.len());
         let expected=PaintScene {width:400.0,height:300.0,background:"rgb(255,255,255)".into(),instructions,id:None,metadata:Some(metadata)};
-        let layout=LayoutedVennDiagram {width:400.0,height:300.0,title:None,config,circles,labels:vec![]};
+        let layout=LayoutedVennDiagram {width:400.0,height:300.0,title:None,config,circles,labels:vec![],debug_circles:vec![],debug_cells:vec![]};
         let resolver=RecordingResolver(RefCell::new(Vec::new()));
         let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
         let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,
