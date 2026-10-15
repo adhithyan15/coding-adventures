@@ -120,3 +120,21 @@ passed: deliver implementation first, then obtain genuine final-source Miri.
 Full Closure parity, output-byte/source joins, stable identities, pass/sweep
 order and folding/renaming/inlining/motion/merging/deletion lineage remain OPEN;
 heartbeat ACTIVE. Base ESTree canonical boundary and owned types retained.
+
+## Test instrumentation and checked-result boundary
+
+After the actual raw and schema baselines above, add dedicated tests before the
+repair. A test-only iteration observer must count actual visited items in raw
+text-count/circle/region scans and output emission so the existing quadratic
+implementation fails a linear input/output bound; do not use elapsed time.
+Preserve exact production behavior while instrumenting, with no test ceiling
+increase. Structural NUL/ordered-vector and complete numeric grid fixtures must
+likewise fail/pass from execution, not merely presence.
+
+For direct forged debug-field checks, factor the existing local derived-geometry
+predicate unchanged into a private result validator called by try_layout_venn.
+Prove its old predicate byte-exact before adding tests. First demonstrate that
+NaN/infinite/negative debug dimensions are currently admitted by that old
+predicate; then extend only its debug fields. Finite negative coordinates and
+zero radii/dimensions remain allowed. This is not a checked-paint API or broader
+layout admission refactor. Keep the scalar entry checks and every old term.

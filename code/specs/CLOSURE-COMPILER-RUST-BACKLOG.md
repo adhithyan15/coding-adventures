@@ -36,8 +36,23 @@ for quadratic rescanning, NUL structural-group collisions and new derived-field
 checks. Incoming defaultsa7 reviewf980cebc requires no additional production
 repair for the three defaults alone; combined integration is still WITHHELD
 until closed merge, bounded repairs and exact whole-scene adapters/tests.
-No debug/default import/tests/implementation/Cargo has occurred. Merge this
-native10 documentation carrier into R1 by complete named-path proof first.
+Local next Venn integration has begun in isolated R1: closed raw merge9a72bef7
+accounts for all225,533 entries (316 incoming paths:311 pure,5 independently
+reconstructed files). Entire owned IR/layout/paint production is reconstructed
+from explicit debug/default additions; old numerical guards, parser source and
+native166/2841 inputs remain exact except the four already named native docs.
+R1 lock changes only five expected local versions, registry376 exact.
+
+Raw baseline: parser18 passed; paint4 and geometry1 missing-debug-field compile
+errors, not behavioral regression evidence. Schema-only teste78b42cb adds empty
+debug vectors to five owned literal fixtures, reversibly retaining every old
+assertion/oracle and every production byte. Actual schema baseline parser18
+passed, paint3P4F and geometry7P1F, no compile errors. These are expected changed
+style/debug whole-oracle failures, not final acceptance. No structural/work/
+new-debug-field numeric repair or new dedicated contract tests yet; implementation
+and current-main acceptance remain WITHHELD until exact tests/repairs/full suite
+and independent reviews. Published native10 head8d73f88f remains unchanged.
+
 
 Final-source Miri **DEFERRED/PENDING, never passed**. Frozen checkout/process/
 inputs/target/receipts untouched/unpolled, no duplicate or termination. Deliver
