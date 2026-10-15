@@ -67,7 +67,7 @@ fn venn_style_admits_the_declared_lexical_color_subset_as_complete_ir() {
     for (prefix, _) in INGRESS { for text_target in [false, true] { for property in ["fill", "stroke", "color"] {
         for color in colors {
             let target = if text_target { "n" } else { "A" };
-            let source = format!("{prefix}venn-beta\nset A[A]: 1\ntext n[N]\nstyle {target} {property}:{color}");
+            let source = format!("{prefix}venn-beta\nset A[A]: 1\ntext n[N]\nstyle {target} {property}:\"{color}\"");
             let mut style = VennStyle::default();
             match property { "fill" => style.fill = Some(color.into()), "stroke" => style.stroke = Some(color.into()), _ => style.text_color = Some(color.into()) }
             assert_eq!(mermaid_parser::parse_venn(&source).unwrap(), expected(style, text_target), "{source}");
