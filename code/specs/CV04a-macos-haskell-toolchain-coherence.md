@@ -62,3 +62,35 @@ receipts untouched/unpolled, no duplicate/termination. Finish implementation/
 delivery then genuine final-source Miri. BaseESTree/ownedtypes/no crates.io
 dependencies preserved. Full Closure parity/output-byte-source/transformation
 lineage/objectiveOPEN; heartbeatACTIVE. Current-main/overlap audit before push.
+
+## Review addendum before further behavior
+
+Exactd98 securityae1901bf WITHHELD. Cabal normalizes section/field names and
+accepts brace/indent variants. Case-fold managed names, preserve unrelated lines,
+and fail closed on unsupported managed section syntax or structural braces;
+never append a second effective override. Add executable reds for uppercase
+managed fields/sections, case-normalized duplicates and brace/indent witnesses.
+
+Cabal user-config diff/update omit program-default-options on local3.16 even
+though actualGHC9.4.8 receives a deliberately invalid option and -pgmc sentinel
+(offline real-build receipts22b63fd1/35b3f36f). Rendering alone is not routing
+acceptance. UpstreamCabal11881/12260 additionally identifies ordering hazards,
+so exact3.10 hosted routing must be demonstrated rather than inferred.
+Before positive Cabal acceptance, run separate expected-refusal configurations
+for absent -pgmc/-pgma/-pgml drivers. Each must fail at that exact missing tool;
+a healthy default success or unrelated failure blocks config publication.
+Force selectedld explicitly through clang's -fuse-ld path for real link probes.
+
+Cabal may append hsc2hs compiler options after defaults. Generate a private
+hsc2hs wrapper in the fresh output directory: safely quoted exec of the real
+hsc2hs through a Python driver appending the selected cc/ld/sysroot/linker and
+one probe macro AFTER caller arguments. Retain a hashed argv trace. Configure
+hsc2hs-location to that wrapper. The actual Cabal probe uses Main.hsc with a
+constant available only from the forced probe macro, and must record that
+source's actual wrapper invocation/effective last compiler/linker arguments.
+A healthy unwrapped default, missing/wrong trace, ignored sentinel, malformed
+config or any actual runtime/compiler failure publishes nothing. No global
+GHC, SDK, PATH, developer selection or original Cabal config mutation. Fake
+traces in portable tests prove only control flow; all actual hosted probes and
+full required checks remain mandatory. Update docs/lessons/backlog/issues and
+obtain new exact-source security review; preserve the original WITHHELD report.
