@@ -1864,6 +1864,8 @@ pub struct VennStyle {
 pub struct VennRegion { pub sets: Vec<String>, pub size: f64, pub label: Option<String>, pub style: VennStyle }
 #[derive(Clone, Debug, PartialEq)]
 pub struct VennText { pub sets: Vec<String>, pub id: String, pub label: Option<String>, pub style: VennStyle }
+/// Largest admitted Venn canvas scalar; this is not a renderer pixel-area budget.
+pub const MAX_VENN_CANVAS: f64 = 65_536.0;
 #[derive(Clone, Debug, PartialEq)]
 pub struct VennConfig { pub width: f64, pub height: f64, pub padding: f64, pub use_max_width: bool, pub use_debug_layout: bool }
 impl Default for VennConfig { fn default() -> Self { Self { width: 800.0, height: 450.0, padding: 8.0, use_max_width: true, use_debug_layout: false } } }

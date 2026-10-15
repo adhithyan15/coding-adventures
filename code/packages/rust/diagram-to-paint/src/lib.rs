@@ -13063,6 +13063,57 @@ emphasized --> direct
     }
 
     #[test]
+    fn venn_complete_scene_and_config_metadata_are_independent() {
+        use std::cell::RefCell;
+        struct RecordingResolver(RefCell<Vec<FontQuery>>);
+        impl FontResolver for RecordingResolver {
+            type Handle = FakeHandle;
+            fn resolve(&self, q: &FontQuery) -> Result<FakeHandle, FontResolutionError> {
+                self.0.borrow_mut().push(q.clone()); Ok(FakeHandle)
+            }
+        }
+        for config in [diagram_ir::VennConfig::default(), diagram_ir::VennConfig {
+            width:400.0,height:300.0,padding:25.0,..Default::default() }] {
+            for max_width in [false,true] { for debug in [false,true] { for titled in [false,true] {
+                let config=diagram_ir::VennConfig { use_max_width:max_width,use_debug_layout:debug,..config.clone() };
+                let special=diagram_ir::VennStyle {fill:Some("#ff0000".into()),stroke:Some("#123456".into()),
+                    stroke_width:Some(3.0),fill_opacity:Some(0.5),text_color:Some("#ff0000".into())};
+                let layout=LayoutedVennDiagram {width:config.width,height:config.height,title:titled.then(|| "T".into()),config:config.clone(),
+                    circles:vec![diagram_ir::LayoutedVennCircle {id:"a".into(),label:"A".into(),cx:240.0,cy:150.0,radius:62.5,style:special.clone()},
+                        diagram_ir::LayoutedVennCircle {id:"b".into(),label:"B".into(),cx:160.0,cy:150.0,radius:62.5,style:Default::default()}],
+                    labels:vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:276.25,y:150.0,style:special},
+                        diagram_ir::LayoutedVennLabel {text:"B".into(),x:123.75,y:150.0,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:150.0,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:170.0,style:Default::default()}]};
+                let resolver=RecordingResolver(RefCell::new(Vec::new()));
+                let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
+                let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,
+                    label_font:defaults.label_font,title_font:defaults.title_font,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
+                let actual=diagram_to_paint_venn(&layout,&options);
+                let mut instructions=vec![PaintInstruction::Ellipse(PaintEllipse {base:PaintBase::default(),cx:240.0,cy:150.0,rx:62.5,ry:62.5,
+                    fill:Some("rgba(255,0,0,0.5)".into()),stroke:Some("#123456".into()),stroke_width:Some(3.0),stroke_dash:None,stroke_dash_offset:None}),
+                    PaintInstruction::Ellipse(PaintEllipse {base:PaintBase::default(),cx:160.0,cy:150.0,rx:62.5,ry:62.5,
+                    fill:Some("rgba(245,158,11,0.38)".into()),stroke:Some("#334155".into()),stroke_width:Some(2.0),stroke_dash:None,stroke_dash_offset:None})];
+                let glyph=|c:char,x,y,size,fill:&str| PaintInstruction::GlyphRun(PaintGlyphRun {base:PaintBase::default(),
+                    glyphs:vec![GlyphPosition {glyph_id:c as u32,x,y}],font_ref:"fake:test".into(),font_size:size,fill:Some(fill.into())});
+                if titled {instructions.push(glyph('T',config.width/2.0-4.5,19.4,18.0,"rgb(15, 23, 42)"));}
+                for (c,x,y,color) in [('A',272.75,150.0,"rgb(255, 0, 0)"),('B',120.25,150.0,"rgb(15, 23, 42)"),
+                    ('U',196.5,150.0,"rgb(15, 23, 42)"),('N',196.5,170.0,"rgb(15, 23, 42)")] {
+                    instructions.push(glyph(c,x,y-12.0+11.2,14.0,color));
+                }
+                let expected=PaintScene {width:config.width,height:config.height,background:"rgb(255,255,255)".into(),instructions,id:None,
+                    metadata:Some(HashMap::from([("venn.width".into(),config.width.to_string()),("venn.height".into(),config.height.to_string()),
+                    ("venn.padding".into(),config.padding.to_string()),("venn.useMaxWidth".into(),max_width.to_string()),("venn.useDebugLayout".into(),debug.to_string())]))};
+                assert_eq!(actual,expected,"whole scene, every primitive/glyph/style/order/config field");
+                let mut queries=Vec::new();
+                if titled {queries.push(FontQuery::named("Helvetica").with_weight(text_interfaces::FontWeight(700)));}
+                queries.push(FontQuery::named("Helvetica"));
+                assert_eq!(*resolver.0.borrow(),queries,"all ordered resolver calls");
+            }}}
+        }
+    }
+
+    #[test]
     fn ishikawa_lowers_to_backend_neutral_paths_rect_and_glyphs() {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);

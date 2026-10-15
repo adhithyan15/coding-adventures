@@ -21,6 +21,19 @@ pub fn layout_info(diagram: &InfoDiagram) -> LayoutedInfoDiagram {
 /// Produce stable Venn geometry. Sizes affect radii; exact area-proportional
 /// overlap optimization is deliberately outside this partial slice.
 pub fn layout_venn(diagram: &VennDiagram) -> LayoutedVennDiagram {
+    try_layout_venn(diagram).expect("unsupported Venn geometry")
+}
+
+/// Admission errors name the scalar before arithmetic, or the derived geometry.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum VennLayoutError { Width, Height, Padding, DerivedGeometry }
+
+/// Checked entry point for caller-owned IR. Validation is added after red controls.
+pub fn try_layout_venn(diagram: &VennDiagram) -> Result<LayoutedVennDiagram, VennLayoutError> {
+    Ok(layout_venn_supported(diagram))
+}
+
+fn layout_venn_supported(diagram: &VennDiagram) -> LayoutedVennDiagram {
     let width = diagram.config.width;
     let height = diagram.config.height;
     let padding = diagram.config.padding.min(width / 4.0).min(height / 4.0);
@@ -506,3 +519,6 @@ mod tests {
         assert_eq!(layout.font_size, 32.0);
     }
 }
+
+#[cfg(test)]
+mod venn_config_contract;
