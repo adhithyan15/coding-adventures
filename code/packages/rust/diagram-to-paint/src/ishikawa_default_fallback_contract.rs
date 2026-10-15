@@ -23,8 +23,9 @@ fn ishikawa_default_and_rejected_settings_keep_complete_scene_queries() {
         let expected=PaintScene {width:576.0,height:360.0,background:"rgb(255,255,255)".into(),id:None,
             metadata:Some(HashMap::from([("ishikawa.diagramPadding".into(),"20".into()),("ishikawa.useMaxWidth".into(),"false".into()),("ishikawa.fontFamily".into(),"sans-serif".into()),("ishikawa.lineColor".into(),"#333333".into()),("ishikawa.fillColor".into(),"#ffffff".into()),("ishikawa.textColor".into(),"#333333".into())])),
             instructions:vec![path(Point{x:36.0,y:180.0},Point{x:406.0,y:180.0},3.0),path(Point{x:132.2,y:64.80000000000001},Point{x:221.0,y:180.0},2.5),
+                PaintInstruction::Rect(PaintRect {base:PaintBase::default(),x:140.6,y:66.4,width:72.0,height:28.0,fill:Some("#ffffff".into()),stroke:Some("#333333".into()),stroke_width:Some(1.0),corner_radius:Some(4.0),stroke_dash:None,stroke_dash_offset:None}),
                 PaintInstruction::Rect(PaintRect {base:PaintBase::default(),x:406.0,y:151.0,width:150.0,height:58.0,fill:Some("#ffffff".into()),stroke:Some("#333333".into()),stroke_width:Some(2.0),corner_radius:Some(8.0),stroke_dash:None,stroke_dash_offset:None}),
-                glyph('A',172.6,83.2,16.0),glyph('E',476.0,175.0,20.0)]};
+                glyph('A',172.6,81.2,16.0),glyph('E',476.0,175.0,20.0)]};
         let resolver=VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
         let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,
             label_font:FontSpec {family:"Ignored Caller".into(),size:16.0,weight:600,italic:true,stretch:FontStretch::Condensed,..defaults.label_font},
