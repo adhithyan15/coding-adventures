@@ -1,10 +1,18 @@
 # diagram-layout-hierarchy
 
-`try_layout_railroad` validates all six numeric spacing/style values before
+`try_layout_railroad` validates all seven numeric spacing/style values before
 font clamp or derived arithmetic, including empty diagrams. Invalid font size,
-stroke width or marker radius returns `UnsupportedStyle`; spacing errors stay
-unchanged. Font measurement retains the producer's 14px default (44.1px minimum
-leaf content width and 16.1px height before padding).
+stroke width, marker radius or arc radius returns `UnsupportedStyle`; spacing
+errors stay unchanged. Font measurement retains the producer's 14px default
+(44.1px minimum leaf content width and 16.1px height before padding).
+
+Radius-driven Optional and both Repetition variants reserve twice the arc
+radius above and below child content. Matching measurement and placement keep
+their main ports on the containing box's center through nested sequences and
+choices. Independent wrapper geometry and complete path goldens cover zero,
+tiny, default and nondefault radii. Checked derived coordinates remain finite
+and rectangle sizes nonnegative; no global derived-layout cap is introduced.
+The inherited 4px rule-marker/root-port mismatch remains open.
 
 `try_layout_railroad` checks each finite0..65536 spacing setting before
 arithmetic and returns a typed field error or derived-geometry refusal.

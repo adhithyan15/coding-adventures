@@ -1,10 +1,12 @@
 # mermaid-parser
 
 All four Railroad dialects retain style configuration through init directives
-and YAML front matter. Font size must be finite and in (0,65536]; stroke width
-and marker radius must be finite and in [0,65536]. Zero font size retains its
-positive-number error. Portable tests verify exact refusal domains and complete
-accepted config, alongside the preserved spacing-admission matrices.
+and YAML front matter. Font size must be finite and in (0,65536]; stroke width,
+marker radius and arc radius must be finite and in [0,65536]. Zero font size
+retains its positive-number error. The existing parser helper already enforces
+the new `arcRadius` field's bounds; no parser-production repair was needed.
+Controls verify 56 exact arc refusals and 56 accepted complete configurations,
+alongside preserved font/style/spacing admission matrices and default radius 10.
 
 All four Railroad dialects preserve padding and vertical/horizontal separation
 from init directives or YAML front matter. Every setting must be finite and in

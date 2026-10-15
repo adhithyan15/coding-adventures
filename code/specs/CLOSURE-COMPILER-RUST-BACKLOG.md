@@ -3,53 +3,65 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a pathwise pending checkpoint -->
-October15 source f861be24: main2fb (#17535) compiler conflict resolved in the
-isolated native successor. Sole PR17288 still publishes d02 until this reviewed
-carrier is pushed; auto-merge OFF. No hosted acceptance or merge is claimed.
+October15 combined source4d615849 includes current maina12 (#17541) and the
+isolated three-unit native repair5ed0a02d. Sole PR17288 still publishes0d77
+until this reviewed documentation carrier is pushed; auto-merge OFF. No hosted
+acceptance or merge is claimed. Old-head Forme macOS landing median0.93<0.95
+remains an actual failure; one retry was rejected while its run was active.
 
-Spec7615 precedes merge8e778: all9 incoming paths,4 pure,5 reconstructed
-overlaps and225207 retained owned objects. The shared sign-range helper and
-legacy one-unit body remain byte-exact. A dedicated iterative outer-entier
-proof checks one unshadowed direct sign root and canonical0/1/2 literals with
-cumulative absolute-unit budget<=2, including explicit abs/entier wrappers.
-Legacy entry and one conditional front remain; no inner fallback resets the
-budget. Generic f64 constant folding is not used to prove new integer offsets.
-Identity lowering, effect invalidation and shared exp/log proofs are retained.
+Native spec84221890 precedes mergec7737d0f:391 incoming paths/386 pure/5
+independently reconstructed overlaps/224866 retained objects. Dedicated
+canonical direct-sign worklist uses cumulative checked budget3; shared/legacy/
+read-once/effects/conversions/predicates bytes retained. Wrappers cannot reset
+budgets; shared exp/log remains narrow. Raw/test-first reds remain immutable.
+Focus15/library860/incomingruntime1/owned36sources216actualcells PASS; old156
+cells exact plus60 new, six backends/exactstdout/normalexit/CL2-CR4/no CLR.
+Complete six-package strict ACTUAL0 and full unfiltered native/compiler/
+downstream ACTUAL0:1779PASS/0FAIL/1existingignored/78targets; LANG484/0.
+Tests SHA256 b69b87e1c09dddfebcf7095fa047becef765ed9bd1e5db7cf909715cababb097;
+strict SHA256 f5fe8eae19f7fc03eaf0718ab6921dd0e9407f8a74817acdaed7d3eb0e92575a.
+Scoped independent native security PASS SHA256
+05aa93573a6b324c11fa76caacc64e87ecc2e01acf774efc9cab6349e47d956b.
+Separate native terminal-log review PASS SHA256
+8d90e652c5f402d68c0594e322bf19d3a83e876d0fec038b24a8ac5a838fbc52.
+Independent exact-head final-carrier review remains required.
 
-Imported red compiler852P2F/runtime0P1F receipts remain. Tests preceded repairs;
-the wrong mixed-type fixture is recorded separately and corrected test-only.
-Final focused12/0, fullALGOL857/0 and incoming runtime1/0 PASS. All26 owned
-sources execute156 actual cells across six backends with exact stdout/normal
-exit and branch marker order; old16sources/96cells retained, no CLR inference.
-Complete affected6-package strict EXIT0 and full unfiltered tests ACTUALLY
-EXIT0:1774PASS/0FAIL/1existingignored/78targets, including LANG482 unfiltered.
-Tests SHA256 1796f9fc000022c8616215b9e60aa7d1331bcf538a02bfa37148cde6be14d6ba;
-strict SHA256 4b0d4f2ba7149f19711f2e27d2aa1ca3099b49913395fbfccae3e989b8e51f48.
-Independent source/focused security PASS SHA256
-008ab8f35e53bc243b0e28bdf4172c43a684a3a2b195d0fd145053b862a0c92f;
-separate terminal extension PASS SHA256
-63f168c6e9b2e8a3b1c1f4b4746b5fd19d1f7943113a3c393df9c9f83158ee85.
+Arc spec8e4b6c45 precedes mergee1aa70a2:12 incoming/5 pure/7 reconstructed
+overlaps/225248 retained objects. Corrected spec7d14 records the actual finite
+geometry contract, without an invented16384 cap. Existing parser helper already
+bounds arcRadius. Test-first32bcd preserves layout11P3F actual typed/port reds;
+raw paint1P2F metadata failures remain separate. Repair4d adds precise typed
+arcRadius admission0..65536 and symmetric2r top/bottom Optional/Repetition
+placement with matching measurement. Focus parser13/layout14/paint4 PASS,
+including56 typed/35valid radius cells,56parser valid/56exactrefusal cells,
+independent recursive ports and10 full portable quadratic-command/style/order/
+eleventhmetadata goldens; font/glyph/spacing/style/resource controls retained.
+Complete affected14 style/parser/paint/downstream ACTUAL0:879PASS/0FAIL/0IGNORE/
+35targets plus strict0. Tests SHA256 e28d09c2b46b877a46ebcb4550f557ee4720154db0caf5ccb89773d82137269f;
+strict SHA256 35a452a683e504bba29759ebec5ac587ae7714c10cb6daff9beb2d110d6f97e9.
+Independent exact4d source/terminal style security PASS SHA256
+51ae41fe457e452319a09a7230e148a394131fd97fa115b19ebe775d00f96240.
+Complete166 native forward packages/2810 committed objects EXACT5ed at4d,
+no exceptions. Final carrier must prove only named documentation changes.
+Registry376 identity/version/source/checksum tuples exact; no new crates.io.
 
-Accepted style source965 retains actual871/34/strict0 receipts. Complete style
-forward50-package inventory has761 current objects: all753 other predecessor
-objects are exact, only8 known documentation changes. This is source attribution, not a
-new style execution. Registry376 tuples/checksums exact; no new crates.io.
-Standalone Closure36/3699 and prior1093/181+strict require complete carrier
-input attribution, not relabeled execution. Documentation/checker/lessons,
-current unforced production plan and exact-head carrier review gate push.
-
-Only current published-head terminal acceptable required/native CI plus
-conflict-free/review-clean state permits squash auto-merge. Actual fetched-main
-merge reachability gates cleanup. Historical4c macOS TaskApp first-row failure
-is not repaired by inference. Railroad custom-font/long-label, marker/stroke
-enclosure, fixed rule-column/typed-empty large-font fitting and forged-layout/
-depth/remeasure/floating-hop debts remain OPEN. Base ESTree/owned types remain.
-Full Closure parity, output-byte/source joins, stable identities and every
-fold/rename/inline/motion/merge/delete lineage/CV04b remain OPEN.
-Miri DEFERRED/PENDING, never passed; frozen497 checkout/inputs/target/run/receipts
-untouched and unpolled. Deliver implementation, then genuine final-source Miri.
-Full objective OPEN; heartbeat ACTIVE. Next: finish this carrier's publication
-and actual hosted/merge gates before selecting the next bounded CV04b slice.
+Final README/changelog/backlog carrier changes13 Markdown paths. Real document/
+lesson checks, fresh unforced production plan, complete Closure36/3699 input
+attribution for historical compiler1093/181+strict (not new execution) and
+independent exact-head carrier review gate push. Current published-head
+conflict-free/review-clean terminal acceptable required/native hosted checks
+alone permit squash auto-merge; actual fetched-main merge reachability gates
+cleanup. Old Forme and historical TaskApp failures are not fixed by inference.
+Inherited4px marker/root mismatch, custom-font/long-label, marker/stroke bounds,
+fixed rule-column/typed-empty huge-font, forged-layout/depth/remeasure/floating-
+hop debts remain OPEN. CLOC27 leaf-token bridge is real; stale epic allNone
+audit is not scope. Base ESTree/owned types retained. Full Closure parity,
+output-byte/source joins/stable identities/pass-sweep/all fold/rename/inline/
+motion/merge/delete lineage/CV04b remain OPEN. Miri DEFERRED/PENDING, never
+passed; frozen497 checkout/inputs/target/run/receipts untouched/unpolled.
+Deliver implementation, then genuine final-source Miri. Full objective OPEN;
+heartbeat ACTIVE. Next: finish final-carrier/hosted/actualmerge delivery gates
+before the next bounded CV04b slice.
 <!-- /CV04a pathwise pending checkpoint -->
 
 <!-- CV04a active delivery checkpoint -->
