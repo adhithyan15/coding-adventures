@@ -355,10 +355,21 @@ describe("the live corpus", () => {
     // moved the six tagged Arabic lessons onto the bare slug that Arabic,
     // Persian and Urdu already share, so the split is gone.
     //
+    // 76 -> 75: `ne` against `pie-ne`. The bare slug's only users were
+    // RU-C01-net, whose hook traces не to PIE *ne, and RU-C16-ni-ni, whose ни
+    // is that не. HI-C07-nahin and GE-C18-nein tag the same PIE *ne `pie-ne`.
+    // The etymology cleanup moved the two Russian lessons onto the tagged slug.
+    //
+    // 75 -> 74: `ne-negative` against `pie-ne-negative`. Each had one user, and
+    // both named the same PIE *ne: LA-C01-ita-non's nōn is "ne-oenum", the
+    // ancient negative ne- it sets beside Sanskrit na, and PA-C31-na's hook
+    // traces nā through Sanskrit na to PIE *ne. Both lessons now use `pie-ne`,
+    // the slug the Hindi, German and Russian negators already share.
+    //
     // THIS NUMBER MAY ONLY FALL.
     const baselineFile = loadRootSlugBaseline(defaultCurriculumRoot());
-    expect(baselineFile.splits).toHaveLength(76);
-    expect(findRootSlugSplits()).toHaveLength(76);
+    expect(baselineFile.splits).toHaveLength(74);
+    expect(findRootSlugSplits()).toHaveLength(74);
     expect(findRootSlugSplits().every((split) => split.kind === "bare-vs-tagged")).toBe(true);
   });
 });

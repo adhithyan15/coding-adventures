@@ -77,7 +77,7 @@ the four are worth seeing side by side.
 
 [PAUSE 1s]
 - [YOU SAY: śa · ri → "śari"]
-- [YOU SAY: the everyday triple — *athe* (yes) · *illa* (no) · *śari* (okay)]
+- [YOU SAY: the everyday triple — *ate* (yes) · *illa* (no) · *śari* (okay)]
 - [YOU SAY: the word across the family — *sari* / *sarē* / *śari*]
 
 ## Wrap-up Recall

@@ -11,8 +11,8 @@ gloss: no, don't — the bare negative already hiding inside nahīṁ
 concept_tag: RESPONSE-NO
 prerequisites: [PA-W09-chhachha, PA-C03-koi-gall-nahin, PA-C06-numbers-1-5-more]
 sounds: [kanna-aa]
-roots: [sanskrit-na, pie-ne-negative]
-etymology_hook: ਨਾ is the bare inherited negative, from Sanskrit na, from Proto-Indo-European *ne — the same particle that surfaces as English no, not and un-, Latin ne- and non, and Greek a- in words like atypical. Punjabi nahiṁ is this same nā with an old emphatic hi welded on, so the learner who has met nahiṁ has already met nā without being told.
+roots: [sanskrit-na, pie-ne]
+etymology_hook: "nā ← Sanskrit na ← PIE *ne, the particle behind English no and not and Latin nōn; nahīṁ is nā + emphatic hi"
 duration:
   max_seconds: 285
 requires:

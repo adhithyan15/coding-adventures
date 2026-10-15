@@ -11,7 +11,7 @@ romanization: "etra maṇikkŭ"
 concept_tag: ML-TIME-WHAT-TIME
 prerequisites: [ML-C34-codikkuka, ML-C81-dooram, ML-C91-ethra-rupa, ML-C102-manikku, ML-C102-azhcha]
 sounds: [gemination-kk]
-roots: [dravidian-dative-ku, sanskrit-mani-gem-bell]
+roots: [dravidian-dative-ku, dravidian-mani-bell]
 etymology_hook: "etra maṇikkŭ: native etra 'how much' (DEDR 5151) + maṇi 'bell, hour' (DEDR 4672) + the dative -kkŭ"
 duration:
   max_seconds: 298

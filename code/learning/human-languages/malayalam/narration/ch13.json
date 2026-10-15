@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a6793f9ad2e1b3fa",
+  "sourceHash": "fnv1a64:e247ca30bb7cd653",
   "lessons": [
     {
       "id": "ML-C13-shareera-bhaagangal",
@@ -152,7 +152,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:003c0a62dd025f11",
+      "sourceHash": "fnv1a64:979eda671ab071b1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -212,7 +212,7 @@
             },
             {
               "kind": "speech",
-              "text": "അതെ — yes (athe — \"that [is so]\")."
+              "text": "അതെ — yes (ate — \"that [is so]\")."
             },
             {
               "kind": "speech",

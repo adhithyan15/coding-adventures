@@ -4,7 +4,7 @@
   "chapter": 161,
   "title": "Soil, Coconut palm, Banana plant, Jasmine, Lotus",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b94393175b9c643c",
+  "sourceHash": "fnv1a64:20d4823abbcab3ec",
   "lessons": [
     {
       "id": "ML-C161-mannu",
@@ -575,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7070cd170bf5836",
+      "sourceHash": "fnv1a64:4b3239f4596bfd8c",
       "notice": null,
       "blocks": [
         {
@@ -601,7 +601,7 @@
             },
             {
               "kind": "speech",
-              "text": "Maṇi: a bell, or an hour? (Both; Tamil dictionaries treat them as two look-alike words.)"
+              "text": "Maṇi: a bell, or an hour? (Both: the hour is named after the bell that strikes it.)"
             }
           ]
         },

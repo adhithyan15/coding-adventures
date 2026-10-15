@@ -14,7 +14,7 @@ romanization: "rājkāraṇ"
 concept_tag: MR-VASTU179-RAJKARAN
 prerequisites: [MR-C179-mahapaur, MR-C179-nivadnuk]
 sounds: []
-roots: [sanskrit-raja, sanskrit-karana]
+roots: [sanskrit-rajan, sanskrit-karana]
 etymology_hook: "rājkāraṇ: Sanskrit rāja 'king' + kāraṇa 'cause, affair' (CDIAL 3057); a modern compound"
 duration:
   max_seconds: 200

@@ -12,7 +12,7 @@ concept_tag: ML-SON
 prerequisites: [ML-C36-kutti, ML-C33-vaayikkuka]
 sounds: [malayalam-chillu-n]
 roots: [proto-dravidian-makan-son]
-etymology_hook: "മകൻ continues Proto-Dravidian *makan, 'son' -- Tamil keeps almost the same shape, மகன் (makan); Kannada lenited the intervocalic -k- to -g- and dropped the final -n, giving ಮಗ (maga), so Malayalam and Tamil hold the more conservative form here -- the same closeness Chapter 1 already found between Malayalam's nandi/athe/illa/sari and Tamil's twins"
+etymology_hook: "makan continues Proto-Dravidian *makan 'son'; Tamil keeps makan, while Kannada softened it to maga"
 duration:
   max_seconds: 230
 requires:
@@ -53,7 +53,7 @@ same final *-n*. Kannada moved further: the *-k-* between vowels softened
 to *-g-*, and the final *-n* dropped, giving **ಮಗ** (*maga*). So on this
 word it is Malayalam and Tamil that hold the older, more conservative
 shape, and Kannada that innovated — the same closeness the very first
-greetings already showed in *nandi*, *athe*, *illa* and *śari*, this time
+greetings already showed in *nandi*, *ate*, *illa* and *śari*, this time
 in a family word rather than a greeting.
 
 ## Guided Practice

@@ -10,7 +10,7 @@ gloss: yes / no (lit. "thus" / "not")
 concept_tag: RESPONSE-YESNO
 prerequisites: [LA-C01-gratias]
 sounds: [macron-long-vowel]
-roots: [ita, sic, non, ne-negative]
+roots: [ita, sic, non, pie-ne]
 etymology_hook: "ita 'thus' and nōn 'not', from old ne-oenum 'not one'; sīc 'so' became Romance sí and sì"
 duration:
   max_seconds: 240
@@ -48,7 +48,7 @@ said instead.
 <!-- hl-knowledge: introduces=[LA-ETYMON-ITA-NON-02]; assesses=[] -->
 
 Classical Latin had **no simple "yes."** To agree you said *ita* ("thus, so"),
-*sīc* ("so, in this way"), *certē* ("certainly"), or you just **repeated the
+*sīc* ("so, in this way"), *certē* ("certainly"), or you **repeated the
 verb** — asked "are you coming?", you answered "I'm coming." It was *sīc* that
 hardened into the Romance "yes": Spanish and Italian **sí / sì**, French *si*
 (the emphatic yes). "No" is easier: *nōn* ("not"), from older *ne-oenum* "not one

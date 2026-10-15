@@ -1,6 +1,6 @@
 ## Authored
 
-- **Ch. 1 — Greetings**: namaskāram → nandi → athe → illa → śari → practice.
+- **Ch. 1 — Greetings**: namaskāram → nandi → ate → illa → śari → practice.
   Malayalam script introduced through the words (inherent *a*, vowel signs, the
   chandrakkala + conjuncts, anusvāram, independent vowels), and the native
   (Tamil-shared) vs. Sanskrit split shown through the words themselves.

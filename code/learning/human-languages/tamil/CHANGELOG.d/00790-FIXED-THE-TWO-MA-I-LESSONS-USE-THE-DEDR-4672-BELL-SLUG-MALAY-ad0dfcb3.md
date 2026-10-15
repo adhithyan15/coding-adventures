@@ -1,0 +1,5 @@
+## Fixed — the two maṇi lessons use the DEDR 4672 bell slug Malayalam uses
+
+- **TA-C18-mani** and **TA-C18-mani-homophone-time** move from `tamil-mani-bell` to `dravidian-mani-bell`, the slug the three Malayalam *maṇi* lessons use (three users against two). DEDR 4672 is one entry, Tamil *maṇi* "bell, gong, sound of bell, hour" with Malayalam *maṇi* "little bells, gong, hour by the bell", so the bell words of the two tracks now join. TA-C18-mani-homophone-time keeps `sanskrit-mani-gem` for the separate "gem" loan.
+- **TA-C18-mani**'s hook, 430 characters, is now 115 with the lesson's own claim: likely a native Dravidian bell word (DEDR 4672), not Sanskrit *ghaṇṭā*, with DEDR's query about Sanskrit *maṇi* kept. Its block now gives the DEDR entry number, and a filler word is gone from the warm-up.
+- **TA-C18-mani-homophone-time** said Malayalam dictionaries treat bell, hour and gem as one Sanskrit word, an account that rested on Wiktionary alone. It now says what DEDR 4672 says: the bell/hour word is listed with Malayalam *maṇi* and Kota, Toda and Tulu bell words, and a Sanskrit *maṇi* "jewel" source is only queried.

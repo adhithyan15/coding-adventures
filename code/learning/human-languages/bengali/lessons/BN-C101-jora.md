@@ -14,7 +14,7 @@ romanization: "jorā"
 concept_tag: BN-VERB-JORA
 prerequisites: [BN-C100-poddhoti, BN-C101-ranna]
 sounds: []
-roots: [indo-aryan-yotayati]
+roots: [indo-aryan-yutati]
 etymology_hook: "jorā ← *yoṭayati 'joins', a reconstructed form; a tadbhava (CDIAL 10496)"
 duration:
   max_seconds: 200

@@ -113,7 +113,7 @@ Say "the eighth day". (എട്ടാം (eṭṭāṁ) ദിവസം.) Did t
 
 
 Lesson 4 of 7.
-ഒമ്പതാം (ompathāṁ) — ninth.
+ഒമ്പതാം (ompatāṁ) — ninth.
 
 Warm-up.
 [pause 2 seconds]
@@ -127,33 +127,33 @@ Warm-up.
 [pause 8 seconds for the answer]
 
 You'll want to know: ഒമ്പതാം.
-ഒമ്പതാം (ompathāṁ) — "ninth".
-ഒമ്പത് was already a built word when you learned it: an old word for one plus pathŭ, ten — usually read as one short of ten, with the n turning to m before the p. The ordinal ending goes on top of that, and none of the machinery underneath reacts to it.
-ഒമ്പതാം ദിവസം (ompathāṁ divasaṁ), the ninth day.
+ഒമ്പതാം (ompatāṁ) — "ninth".
+ഒമ്പത് was already a built word when you learned it: an old word for one plus pattŭ, ten — usually read as one short of ten, with the n turning to m before the p. The ordinal ending goes on top of that, and none of the machinery underneath reacts to it.
+ഒമ്പതാം ദിവസം (ompatāṁ divasaṁ), the ninth day.
 
 The word, taken apart.
-ഒമ്പതാം (ompathāṁ) is native Dravidian: "nine" (DEDR 1025, with Tamil oṉpatu, ompatu and Kannada ombattu) with the ordinal ending -āṁ.
+ഒമ്പതാം (ompatāṁ) is native Dravidian: "nine" (DEDR 1025, with Tamil oṉpatu, ompatu and Kannada ombattu) with the ordinal ending -āṁ.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: ompathŭ, then ompathāṁ]
+[your turn — say: ompatŭ, then ompatāṁ]
 [pause 8 seconds for the answer]
-[your turn — say: eṭṭāṁ, ompathāṁ]
+[your turn — say: eṭṭāṁ, ompatāṁ]
 [pause 8 seconds for the answer]
-[your turn — say: on-pathŭ slowly, then let it settle into ompathāṁ]
+[your turn — say: on-patŭ slowly, then let it settle into ompatāṁ]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the ninth day". (ഒമ്പതാം (ompathāṁ) ദിവസം.) What two words are inside ഒമ്പത്? (An old one, and pathŭ, ten.)
+Say "the ninth day". (ഒമ്പതാം (ompatāṁ) ദിവസം.) What two words are inside ഒമ്പത്? (An old one, and pattŭ, ten.)
 
 
 Lesson 5 of 7.
-പത്താം (pathāṁ) — tenth.
+പത്താം (pattāṁ) — tenth.
 
 Warm-up.
 [pause 2 seconds]
-[your turn — recall: say ompathāṁ — R1]
+[your turn — recall: say ompatāṁ — R1]
 [pause 8 seconds for the answer]
 [your turn — recall: say añcāṁ — R2]
 [pause 8 seconds for the answer]
@@ -163,24 +163,24 @@ Warm-up.
 [pause 8 seconds for the answer]
 
 You'll want to know: പത്താം.
-പത്താം (pathāṁ) — "tenth". പത്ത് loses its ŭ and takes ആം, and the ten are done.
-പത്താം ദിവസം (pathāṁ divasaṁ), the tenth day.
+പത്താം (pattāṁ) — "tenth". പത്ത് loses its ŭ and takes ആം, and the ten are done.
+പത്താം ദിവസം (pattāṁ divasaṁ), the tenth day.
 
 The word, taken apart.
-പത്താം (pathāṁ) is native Dravidian: "ten" (DEDR 3918, with Tamil pattu and Kannada pattu) with the ordinal ending -āṁ.
+പത്താം (pattāṁ) is native Dravidian: "ten" (DEDR 3918, with Tamil pattu and Kannada pattu) with the ordinal ending -āṁ.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: pathŭ, then pathāṁ]
+[your turn — say: pattŭ, then pattāṁ]
 [pause 8 seconds for the answer]
-[your turn — say: ompathāṁ, pathāṁ]
+[your turn — say: ompatāṁ, pattāṁ]
 [pause 8 seconds for the answer]
 [your turn — say: all ten in order, from onnāṁ]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the tenth day". (പത്താം (pathāṁ) ദിവസം.) Count the ordinals from one to ten. How many of the ten were words you had to learn? (None.)
+Say "the tenth day". (പത്താം (pattāṁ) ദിവസം.) Count the ordinals from one to ten. How many of the ten were words you had to learn? (None.)
 
 
 Lesson 6 of 7.
@@ -188,7 +188,7 @@ Lesson 6 of 7.
 
 Warm-up.
 [pause 2 seconds]
-[your turn — recall: say pathāṁ — R1]
+[your turn — recall: say pattāṁ — R1]
 [pause 8 seconds for the answer]
 [your turn — recall: say āṟāṁ — R2]
 [pause 8 seconds for the answer]
@@ -199,21 +199,21 @@ Warm-up.
 
 You'll want to know: പതിനൊന്നാം.
 പതിനൊന്നാം (patinonnāṁ) — "eleventh".
-പതിനൊന്ന് was itself a built word: pathin-, the joining shape of ten, with onnŭ welded on. Now the ordinal ending goes on top of that, and the result is a word of three parts, not one of which had to be learned as a whole.
+പതിനൊന്ന് was itself a built word: patin-, the joining shape of ten, with onnŭ welded on. Now the ordinal ending goes on top of that, and the result is a word of three parts, not one of which had to be learned as a whole.
 പതിനൊന്നാം ദിവസം (patinonnāṁ divasaṁ), the eleventh day.
 
 The word, taken apart.
 പതിനൊന്നാം (patinonnāṁ) is native Dravidian throughout: the joining shape of "ten" (DEDR 3918, with Tamil patiṉ-), "one" (DEDR 990), and the ordinal ending -āṁ.
 
 Grammar Lens: the ending is a fact about numbers, not about ten.
-Most books stop an ordinal chapter at tenth, and a learner reasonably concludes that those ten words were the set. In Malayalam there is no set. ആം attaches to a number, so every number you learn from here on arrives with its ordinal already made: ഇരുപത് gives ഇരുപതാം (irupathāṁ), twentieth, without a lesson.
+Most books stop an ordinal chapter at tenth, and a learner reasonably concludes that those ten words were the set. In Malayalam there is no set. ആം attaches to a number, so every number you learn from here on arrives with its ordinal already made: ഇരുപത് gives ഇരുപതാം (irupatāṁ), twentieth, without a lesson.
 That is why this book taught the ending in the very first lesson of the previous chapter rather than after ten examples. The examples were never the content.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: patinonnŭ, then patinonnāṁ]
 [pause 8 seconds for the answer]
-[your turn — say: pathāṁ, patinonnāṁ]
+[your turn — say: pattāṁ, patinonnāṁ]
 [pause 8 seconds for the answer]
 [your turn — say: take irupatŭ and make its ordinal yourself]
 [pause 8 seconds for the answer]
@@ -228,7 +228,7 @@ Lesson 7 of 7.
 
 Warm-up.
 [pause 2 seconds]
-[your turn — recall: say patinonnāṁ, and say why irupathāṁ needs no lesson — R1]
+[your turn — recall: say patinonnāṁ, and say why irupatāṁ needs no lesson — R1]
 [pause 8 seconds for the answer]
 [your turn — recall: say ēḻāṁ — R2]
 [pause 8 seconds for the answer]

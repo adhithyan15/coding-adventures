@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Grandparents, and the Married Pair",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:39f59c0ce51a10c7",
+  "sourceHash": "fnv1a64:7874e7315f6d111b",
   "lessons": [
     {
       "id": "ML-C45-grandfather",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be1802ec94a7be1c",
+      "sourceHash": "fnv1a64:74312e37d1a11c72",
       "notice": null,
       "blocks": [
         {
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69189a96ee10cc61",
+      "sourceHash": "fnv1a64:8435d1b911f85a27",
       "notice": null,
       "blocks": [
         {

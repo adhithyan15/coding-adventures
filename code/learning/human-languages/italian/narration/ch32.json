@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "But, Or, Why",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:40d072f5cd6d541d",
+  "sourceHash": "fnv1a64:0485ff88c05b28e9",
   "lessons": [
     {
       "id": "IT-C32-ma",
@@ -402,7 +402,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10b97d7a70a97920",
+      "sourceHash": "fnv1a64:b10698def3ca66ee",
       "notice": null,
       "blocks": [
         {
@@ -486,7 +486,7 @@
             },
             {
               "kind": "speech",
-              "text": "That exchange is the point of the lesson: question and answer open with the identical word, and an Italian hears no oddity in it. Spanish splits them — ¿por qué? asking, porque answering — and Italian asks you to remember nothing."
+              "text": "Question and answer open with the identical word, and an Italian hears no oddity in it. Spanish splits them — ¿por qué? asking, porque answering — and Italian asks you to remember nothing."
             },
             {
               "kind": "speech",
@@ -501,7 +501,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Perché is per + ché, both inherited from Latin (EtymDB 2.1). Per, \"for, through\", is the per of English per cent. Ché is the che of the last chapter, from quid, wearing an accent because it now carries the stress at the end."
+              "text": "Perché is per + ché, both inherited from Latin (EtymDB 2.1). Per, \"for, through\", is the per of English per cent. Ché is the che of the last chapter, usually traced to Latin quid, \"what\"."
             },
             {
               "kind": "speech",

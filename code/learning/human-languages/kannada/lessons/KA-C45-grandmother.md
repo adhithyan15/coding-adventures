@@ -11,7 +11,7 @@ romanization: "ajji"
 concept_tag: KA-NOUN-GRANDMOTHER
 prerequisites: [KA-C45-grandfather]
 sounds: []
-roots: [dravidian-acca-elder]
+roots: [prakrit-ajja]
 etymology_hook: "ajji: probably an Indo-Aryan loan, says DEDR 50, from Prakrit ajja (Sanskrit ārya); CDIAL 1347"
 duration:
   max_seconds: 210
