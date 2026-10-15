@@ -9,6 +9,11 @@ are saved in `CV04a-venn-debug-incoming-e0ada264/manifest.json`. Do not infer
 security, execution, upstream Mermaid parity or whole-goal completion from that
 snapshot or its weak shape-presence tests.
 
+Independent incoming review `ab9dc255` WITHHOLDS integration pending the two
+repairs and debug-field finite checks below. This is a static incoming audit,
+not repaired-source acceptance. Paint consumes explicitly supplied debug vectors
+even when typed config is false; retain that behavior without a second flag gate.
+
 Seed R1 at native10 source `f94949663ffe49794f85402d5580e8cf6b246c81`.
 Its actual focused 36/compiler 881/incoming runtime 1/owned runtime 11 passed;
 636 runtime cells equal 576 exact older tuples plus 60 new tuples. Independent
