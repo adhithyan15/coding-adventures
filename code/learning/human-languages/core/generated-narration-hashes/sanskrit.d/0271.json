@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 271,
-  "sourceHash": "fnv1a64:d989cdd0d1aa9a8a",
+  "sourceHash": "fnv1a64:a5a42bd0c649d077",
   "lessonIds": [
     "SA-C271-ask-for-a-person",
     "SA-C271-request-quiet",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "sanskrit/narration/ch271.txt",
   "json": "sanskrit/narration/ch271.json",
-  "textHash": "fnv1a64:e5f9021103d2d79c",
-  "jsonHash": "fnv1a64:022124ed85f93784",
+  "textHash": "fnv1a64:425124e011904eb9",
+  "jsonHash": "fnv1a64:de9a260b776276ce",
   "findings": []
 }

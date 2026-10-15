@@ -56,8 +56,8 @@ uses the exact command **तूष्णीं भव**. The grammatical comment
 [Pāṇini 3.4.63](https://sanskritdocuments.org/learning_tools/ashtadhyayi/vyakhya/3/3.4.63.htm)
 also explicitly treats **तूष्णीम्** with √भू. The **कृपया** at the front is
 the “please” you already know. The sources attest the command **तूष्णीं भव**
-and its construction; the full polite request is this course's transparent
-composition of that command with already-owned **कृपया**.
+and its construction; the full polite request transparently combines that
+command with already-owned **कृपया**.
 
 ## Grammar Lens: one complete request
 

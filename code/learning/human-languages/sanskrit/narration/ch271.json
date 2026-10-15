@@ -4,7 +4,7 @@
   "chapter": 271,
   "title": "Two spoken requests, gently joined",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d989cdd0d1aa9a8a",
+  "sourceHash": "fnv1a64:a5a42bd0c649d077",
   "lessons": [
     {
       "id": "SA-C271-ask-for-a-person",
@@ -118,7 +118,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31fd9c3712a4d24a",
+      "sourceHash": "fnv1a64:1eb8cd424dad1278",
       "notice": null,
       "blocks": [
         {
@@ -149,7 +149,7 @@
             },
             {
               "kind": "speech",
-              "text": "The Board of School Education Haryana copy of the NCERT Class 10 Śemuṣī Sanskrit reader uses the exact command तूष्णीं भव. The grammatical commentary on Pāṇini 3.4.63 also explicitly treats तूष्णीम् with √भू. The कृपया at the front is the “please” you already know. The sources attest the command तूष्णीं भव and its construction; the full polite request is this course's transparent composition of that command with already-owned कृपया."
+              "text": "The Board of School Education Haryana copy of the NCERT Class 10 Śemuṣī Sanskrit reader uses the exact command तूष्णीं भव. The grammatical commentary on Pāṇini 3.4.63 also explicitly treats तूष्णीम् with √भू. The कृपया at the front is the “please” you already know. The sources attest the command तूष्णीं भव and its construction; the full polite request transparently combines that command with already-owned कृपया."
             }
           ]
         },

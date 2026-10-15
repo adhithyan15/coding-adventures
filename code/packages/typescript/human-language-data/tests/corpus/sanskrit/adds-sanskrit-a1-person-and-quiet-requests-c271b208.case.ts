@@ -80,8 +80,8 @@ it("asks for a person and requests quiet twice in Sanskrit A1", () => {
   expect(quietLesson?.body).toMatch(
     /The sources attest the command \*\*तूष्णीं भव\*\*\s+and its construction/u,
   );
-  expect(quietLesson?.body).toContain(
-    "composition of that command with already-owned **कृपया**",
+  expect(quietLesson?.body).toMatch(
+    /request transparently combines that\s+command with already-owned \*\*कृपया\*\*/u,
   );
   expect(quietLesson?.body).not.toMatch(/complete sourced request/u);
 
