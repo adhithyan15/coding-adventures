@@ -4,7 +4,7 @@
   "chapter": 205,
   "title": "To forget, To be a student, To study, To teach, To hand in",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8481cca2e4567816",
+  "sourceHash": "fnv1a64:723a0514ed4f8457",
   "lessons": [
     {
       "id": "RU-C205-zabyvat",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd5261d9ed632cfb",
+      "sourceHash": "fnv1a64:93ffcac348d802b9",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "преподавать (prepodavát) is пре- and по- with давать, \"to give\": to teach is to hand knowledge on."
+              "text": "преподавать (prepodavát) is пре- and по- with давать, \"to give\": to teach is to hand knowledge on. Vasmer takes давать from дать, \"to give\", kin to Lithuanian dovanà, \"a gift\"."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d33ec9e5c5e420dc",
+      "sourceHash": "fnv1a64:779875f0c298450e",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "сдавать (sdavát) is с-, \"off, over\", with давать, \"to give\": to hand in, and so to take an exam."
+              "text": "сдавать (sdavát) is с-, \"off, over\", with давать, \"to give\": to hand in, and so to take an exam. Vasmer takes давать from дать, \"to give\", kin to Lithuanian dovanà, \"a gift\"."
             }
           ]
         },

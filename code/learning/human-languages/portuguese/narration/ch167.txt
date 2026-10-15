@@ -13,7 +13,7 @@ You'll want to know: o carrinho.
 o carrinho — "a trolley".
 
 The word, taken apart.
-carrinho is carro, "cart", with -inho, "little".
+carrinho is carro, "cart", with -inho, "little". Carro is inherited from Latin carrus, "wagon", which Latin itself borrowed from Gaulish (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

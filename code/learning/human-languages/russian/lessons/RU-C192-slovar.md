@@ -47,7 +47,7 @@ reviews_of: [RU-C192-zhurnal]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**словарь** is *слово*, "a word", with *-арь*, a suffix for a thing or keeper: a book of words.
+**словарь** is *слово*, "a word", with *-арь*, a suffix for a thing or keeper: a book of words. *Слово* ← Proto-Slavic *\*slovo* — inherited; Vasmer relates it to Sanskrit *śrávas*, "fame".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -58,8 +58,9 @@ the sound now; its letter waits.
 ## The word, taken apart — nine leans on ten
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-NUMBERS-6-10-03]; assesses=[] -->
 
-Nine, *onpatu*, grew from one plus ten: one short of *pattu*. Say *on-patu*,
-then *onpatu*.
+Nine, *onpatu*, is usually read as one plus ten: one short of *pattu*. Say *on-patu*,
+then *onpatu*. The word is native Dravidian (DEDR 1025), and how it was built is
+uncertain: DEDR sets it beside both "one" and an older word for nine.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-6-10-01, TA-LEX-NUMBERS-6-10-02, TA-GRAMMAR-NUMBERS-6-10-03] -->

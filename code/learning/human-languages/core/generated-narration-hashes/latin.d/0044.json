@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 44,
-  "sourceHash": "fnv1a64:05c646f6bc9674d8",
+  "sourceHash": "fnv1a64:34cfc75cde610c61",
   "lessonIds": [
     "LA-C44-domus",
     "LA-C44-porta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch44.txt",
   "json": "latin/narration/ch44.json",
-  "textHash": "fnv1a64:642fc19cff7f50bf",
-  "jsonHash": "fnv1a64:bdc4a757ee47c08c",
+  "textHash": "fnv1a64:ae24fa454067ba84",
+  "jsonHash": "fnv1a64:d8299004cf237895",
   "findings": []
 }

@@ -74,7 +74,7 @@ the page:
   match
 - **почему** — the stem again, wearing **по** in front
 
-Learning one question word in Russian is nearly learning the set.
+Learning one question word in Russian is nearly learning the set. Vasmer reconstructs an older *\*koda* and sets it beside Lithuanian *kadà* and Sanskrit *kadā*, both "when".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-KOGDA-01, RU-ETYMON-KOGDA-KWO-STEM] -->

@@ -14,7 +14,7 @@ el pedido — the order.
 Not the act of ordering: the thing ordered. The box on its way to you, the line on the restaurant's docket, the number you quote on the phone.
 
 The word, taken apart.
-el pedido is the past participle of pedir, to ask for, used as a noun. What was asked for. Spanish does this constantly, and once you see it you will see it everywhere:
+el pedido is the past participle of pedir, to ask for, used as a noun. Pedir from Latin petere, "to seek" (EtymDB 2.1). What was asked for. Spanish does this constantly, and once you see it you will see it everywhere:
 [a table of 3 rows, read aloud]
 verb: pedir. the noun made from it: el pedido.
 verb: llamar. the noun made from it: la llamada.
@@ -47,7 +47,7 @@ devolver — to give back, to return a thing.
 A thing, not a place. You devolver a jumper, a book, a borrowed charger. For going back somewhere yourself, Spanish uses volver on its own.
 
 The word, taken apart.
-de- back, plus volver, to turn. To turn a thing back.
+de- back, plus volver, to turn. To turn a thing back. Volver from Latin volvere, "to roll, to turn" (EtymDB 2.1).
 That is the whole word, and it tells you the grammar too: devolver turns exactly like volver, which you already say. The o becomes ue when the stress lands on it:
 [a table of 2 rows, read aloud]
 form: yo devuelvo, I give back.

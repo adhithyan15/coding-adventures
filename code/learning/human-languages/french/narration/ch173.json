@@ -4,7 +4,7 @@
   "chapter": 173,
   "title": "Ball, Racket, Gym, Swimming, Victory",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9aa534302a74cc69",
+  "sourceHash": "fnv1a64:ecd427a9bea9463e",
   "lessons": [
     {
       "id": "FR-C173-ballon",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09f613ee40b2939a",
+      "sourceHash": "fnv1a64:845424134ef8ea02",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "salle de sport — \"room of sport\": salle, de and sport."
+              "text": "salle de sport — \"room of sport\": salle, de and sport. Salle from Frankish sal, \"hall\"; sport is borrowed from English (EtymDB 2.1), which took it from Old French desport, \"a pastime\"."
             }
           ]
         },

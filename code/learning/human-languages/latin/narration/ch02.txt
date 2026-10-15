@@ -68,12 +68,13 @@ septem + -ber becomes September.
 octō + -ber becomes Octōber.
 novem + -ber becomes November.
 decem + -ber becomes December.
-The first literally means "the seventh," yet it sits in ninth place, and the other three are each two places off as well. The old Roman year began in March — so month one was March, and the seventh month was the one your calendar now counts ninth. When January and February were later pushed to the front, the names never moved. Every year you write four Latin numbers, each two places off, because Rome renumbered the calendar and forgot to rename the months.
+The first literally means "the seventh," yet it sits in ninth place, and the other three are two places off as well. The old Roman year began in March — so month one was March, and the seventh month was the one your calendar now counts ninth. When January and February were later pushed to the front, the names never moved. Rome renumbered the calendar and forgot to rename the months.
 
 The word, taken apart: They seed English too.
 sex becomes sextet, sextant (and sex- "six" in sexagesimal, base-60).
-octō becomes octave, October — while its Greek twin oktṓ gives octagon and octopus (eight arms).
+octō becomes octave, October — while its Greek twin oktṓ gives octagon and octopus.
 decem becomes decimal, and — via duodecim "twelve" — dozen (its Greek cousin dekás "group of ten" adds decade).
+All five are cousins of English six to ten (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]

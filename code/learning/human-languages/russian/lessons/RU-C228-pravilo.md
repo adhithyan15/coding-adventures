@@ -47,7 +47,7 @@ reviews_of: [RU-C228-oshibka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**правило** is *править*, "to set straight, to rule", with *-ло*, a suffix for a tool: "what sets things straight". *правый* is "straight, right".
+**правило** is *править*, "to set straight, to rule", with *-ло*, a suffix for a tool: "what sets things straight". *правый* is "straight, right". Vasmer thinks *правый* probably kin to Latin *probus*, "upright".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

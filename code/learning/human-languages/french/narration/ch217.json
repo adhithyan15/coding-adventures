@@ -4,7 +4,7 @@
   "chapter": 217,
   "title": "Almost, About, Only, Together, Nevertheless",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:82022cad6c1f225e",
+  "sourceHash": "fnv1a64:e4e1ee8f754624be",
   "lessons": [
     {
       "id": "FR-C217-presque",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abef6f1635d0d569",
+      "sourceHash": "fnv1a64:5f449c2dd3b0f401",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "presque — près, \"near\", and que, \"that\": nearly."
+              "text": "presque — près, \"near\", and que, \"that\": nearly. Près from Latin presse, \"closely\" (EtymDB 2.1)."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cac03997e1cb45a9",
+      "sourceHash": "fnv1a64:3124259aa9d01aa1",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "environ — en, \"in\", and Old French viron, \"a circuit\", from the verb for \"to turn\": in the round of."
+              "text": "environ — en, \"in\", and Old French viron, \"a circuit\", from the verb for \"to turn\": in the round of. En from Latin in (EtymDB 2.1); the verb behind viron is of uncertain origin."
             }
           ]
         },

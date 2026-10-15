@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:449c57627977058f",
+  "sourceHash": "fnv1a64:9c62d9f04094b990",
   "lessons": [
     {
       "id": "HI-C04-phir",
@@ -293,7 +293,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7df4d0ae7b2dfe7",
+      "sourceHash": "fnv1a64:c3a25bf819b464af",
       "notice": null,
       "blocks": [
         {
@@ -320,7 +320,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "फिर मिलेंगे = फिर (phir, \"again\") + मिलेंगे (milenge, \"we will meet\") — \"we'll meet again.\" Where Chapter 1's अलविदा (alvidā) is a grave, final farewell (and, fittingly, a Perso-Arabic word — al-widā, \"the farewell\"), phir milenge is native, everyday, and hopeful. It is the exact sibling of the \"promise of return\" goodbyes across South Asia — Tamil, Bengali, Marathi all say \"I'll come again\" rather than \"goodbye.\""
+              "text": "फिर मिलेंगे = फिर (phir, \"again\") + मिलेंगे (milenge, \"we will meet\") — \"we'll meet again.\" Where Chapter 1's अलविदा (alvidā) is a grave, final farewell (and, fittingly, a Perso-Arabic word — al-widā, \"the farewell\"), phir milenge is native, everyday, and hopeful: फिर goes back to phirati, \"turns\" (CDIAL 9078), and मिलेंगे to Sanskrit milati, \"meets\" (CDIAL 10133). It is the exact sibling of the \"promise of return\" goodbyes across South Asia — Tamil, Bengali, Marathi all say \"I'll come again\" rather than \"goodbye.\""
             }
           ]
         },

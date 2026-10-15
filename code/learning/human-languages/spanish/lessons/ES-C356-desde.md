@@ -58,7 +58,7 @@ too long, and by the time Spanish was forming it could no longer be heard to
 mean any one thing. So speakers propped it up with another, and then with a
 third.
 
-**Desde** is *dē* + *ex* + *dē*. Three prepositions, all doing the same job,
+**Desde** is built from Latin *dē* + *ex* + *dē*. Three prepositions, all doing the same job,
 fused into one word of two beats.
 
 You have already met the trick without being told: **después** is *dē* + *ex* +

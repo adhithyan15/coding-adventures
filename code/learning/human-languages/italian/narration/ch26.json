@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Primo, Secondo, Terzo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ab4ab0db78e04979",
+  "sourceHash": "fnv1a64:5a8a6996b96dc317",
   "lessons": [
     {
       "id": "IT-C26-primo",
@@ -386,7 +386,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b54af9b6375eeadc",
+      "sourceHash": "fnv1a64:9c17ff17fe6ff906",
       "notice": null,
       "blocks": [
         {
@@ -501,6 +501,10 @@
             {
               "kind": "speech",
               "text": "So the words this chapter is teaching do a second job you will meet in a recipe or on a bill. English does exactly the same thing with a third and a quarter, and for the same reason: the ordinal already names a position in a division."
+            },
+            {
+              "kind": "speech",
+              "text": "Terzo itself is inherited from Latin tertius, \"third\", which was built on trēs, \"three\" (EtymDB 2.1)."
             }
           ]
         },

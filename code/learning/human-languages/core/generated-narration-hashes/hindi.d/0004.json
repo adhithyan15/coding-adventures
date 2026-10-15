@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 4,
-  "sourceHash": "fnv1a64:449c57627977058f",
+  "sourceHash": "fnv1a64:9c62d9f04094b990",
   "lessonIds": [
     "HI-C04-phir",
     "HI-C04-milenge",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "hindi/narration/ch04.txt",
   "json": "hindi/narration/ch04.json",
-  "textHash": "fnv1a64:dfa60c2b907f7a73",
-  "jsonHash": "fnv1a64:f9b70524de7752df",
+  "textHash": "fnv1a64:12aa21f55196f89b",
+  "jsonHash": "fnv1a64:6dc955d3455d6639",
   "findings": []
 }

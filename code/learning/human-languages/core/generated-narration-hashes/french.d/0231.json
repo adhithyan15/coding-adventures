@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 231,
-  "sourceHash": "fnv1a64:d54337f77dbb9aa2",
+  "sourceHash": "fnv1a64:d735548e4fa5602c",
   "lessonIds": [
     "FR-C231-retour",
     "FR-C231-arrivee",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch231.txt",
   "json": "french/narration/ch231.json",
-  "textHash": "fnv1a64:dfedfed88474900f",
-  "jsonHash": "fnv1a64:12d07029f9f41e5f",
+  "textHash": "fnv1a64:d49bacd1108667c0",
+  "jsonHash": "fnv1a64:bb4fb5c07cf9dc97",
   "findings": []
 }

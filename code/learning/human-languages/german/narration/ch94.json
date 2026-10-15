@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "Grey, Purple, Second, Always, Immediately",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f3e1049a06545072",
+  "sourceHash": "fnv1a64:d3a645237f9d37b5",
   "lessons": [
     {
       "id": "GE-C94-grau",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:215c5f5f3b734fab",
+      "sourceHash": "fnv1a64:d03f4a0a85737595",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sofort is so + an adverb meaning \"forth\": \"so forth\", straight on without a pause. The two grew together into one word."
+              "text": "sofort is so + an adverb meaning \"forth\": \"so forth\", straight on without a pause. The two grew together into one word. So from Proto-Germanic swa (EtymDB 2.1), and fort is the same word as English forth."
             }
           ]
         },

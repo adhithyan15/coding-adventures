@@ -1,5 +1,14 @@
 # Changelog
 
+## Fixed — every taken-apart block now says where its word comes from
+
+Forty-three German word lessons had a "taken apart" block that set the word beside its English kin, or split a compound, without saying where the word came from in a shape the measure reads (human-language-data `hasEmptyEtymologyBlock`, HL24 §9.4). Source: EtymDB 2.1 (Fourrier & Sagot 2020, CC BY-SA 4.0), read locally; Kluge was not reachable, so a claim EtymDB does not hold is hedged or left as the track already gave it. Every line is our own sentence. Empty etymology blocks 43 → 0.
+
+- **New origin sentences (33).** Old High German and Proto-Germanic sources with an EtymDB tag, and the English cognate where it is the same word: *gut*, *Tag*, *Morgen*, *Abend*, *Nacht*, *bitten*, *mir* (EtymDB traces it and English *me* to one Proto-Germanic form), *wieder*, *ihr* and English *ye*, *Freitag* ("Frija's day"), *wohnen*, *werden*, *welcher*, *sondern*, *dann*, *mögen*, *müssen*, *so*, *schenken*, *Schwester*, *Mittag*, *Kunst* (on *können*), *Dieb*, *auf*, *Karte* (Latin, from Greek), *inner*, *halb*, *wie*. *du*, *es*, *sie* and *ihn* are called inherited, with EtymDB's lack of a row said where it matters; English *she* is noted as disputed.
+- **Rewordings a signal can read (10).** GE-W01-eszett says ß "comes from" a long *s* and an *s* or *z*; GE-C15-sagen and GE-C37-uns say "the same word as English"; GE-C37-euch says *ēow* is "the same word as German *euch*"; GE-C19-bitte-requests says "cousins in English"; GE-C32-kein, -keine and -keinen say "comes from" or "grew from Old High German *nihein*"; GE-C85-huegel says "built from Middle High German *houc*"; GE-C222-sparsam calls *-sam* "a cousin of English *-some*".
+- **Corrected (2).** GE-C03-vielen-dank said *viel* "is English *full*". It is not the same word: *viel* ← Old High German *filu*, "many" (EtymDB 2.1), whose English match, Old English *fela*, died out. Block, recall question and hook now say so. GE-C33-warum said *war-* is an old shape of *was*. It is Old High German *wār umbe* (EtymDB 2.1), and *war-* is the old form of *wo*, "where", standing for "what" before a preposition, which makes the parallel with English *wherefore* exact. Block and hook now say so.
+- **Durations.** GE-W01-eszett, GE-C03-bitte, GE-C32-keinen, GE-C33-warum, GE-C34-welcher and GE-C37-ihn compute near or above 270 s; each was reworded or trimmed so it did not grow past its old figure or 270 s. No `max_seconds` was raised.
+
 ## Added — every German word lesson says where its word comes from
 
 HL24 §9 asks every lesson that introduces a word to say where it comes from, from a cited source, or to say plainly that the origin is uncertain. All 1,077 German word lessons that lacked an `etymology_hook`, visible etymology, or both now have both (human-language-data: German word lessons without a hook 988 → 0, without visible etymology 1071 → 0).

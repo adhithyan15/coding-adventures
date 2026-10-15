@@ -66,17 +66,16 @@ the first *о* reduces to *a*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POZHALUYSTA] -->
 
-**пожалуйста** is **пожалуй** + a softening tag **-ста**. **пожалуй** is the
-command form of the old verb *zhálovat'*, "to grant, to bestow a
-favour" — from the root **жал-**, the same root as *zhal'* ("a pity")
-and *zhalet'* ("to feel for someone").
+**пожалуйста** is **пожалуй** + a softening tag **-ста**. **пожалуй** is either
+the command form of the old verb *zhálovat'*, "to grant, to bestow a
+favour", or a worn-down *pozhálu(yu)*, "I grant" (Vasmer gives both) — on
+the root **жал-**, often linked to *zhal'*, "a pity".
 
 So under the politeness sits **"grant [me this], do me the kindness."** English
 **please** is the same idea worn down — short for *if it please you*.
 
 It also does a job English splits off: the **reply to thanks**. Where English
-needs a separate "you're welcome," Russian answers *spasíbo* with *пожалуйста*
-— "[it was] a favour freely given."
+needs a separate "you're welcome," Russian answers *spasíbo* with *пожалуйста*.
 
 ## The word, taken apart — across the family: "please" is a favour, everywhere
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POZHALUYSTA] -->

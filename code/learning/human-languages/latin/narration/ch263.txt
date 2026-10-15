@@ -141,7 +141,7 @@ You'll want to know: brevī.
 brevī — "shortly, soon".
 
 The word, taken apart.
-brevī is the ablative of brevis, "short", with tempore, "in a time", understood: in a short time.
+brevī is the ablative of brevis, "short", with tempore, "in a time", understood: in a short time. Brevis is inherited, usually traced to a Proto-Indo-European word for "short" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

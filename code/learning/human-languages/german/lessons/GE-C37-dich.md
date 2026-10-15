@@ -66,7 +66,8 @@ kept four distinct shapes where English kept three and then lost all of them:
 > **du** · **dich** · **dir** · **dein**
 
 Every one begins with the *d* that was English *th*, so the row is predictable
-from a rule you have had since the second chapter.
+from a rule you have had since the second chapter. *Du* and English *thou* are one
+inherited Germanic word; EtymDB 2.1 has no row tracing either further.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-DICH-01, GE-LEX-MICH-01, GE-LEX-DIR-01, GE-LEX-DU-SIE-02, GE-LEX-DEIN-01, GE-LEX-SEHEN-01, GE-LEX-HOEREN-09, GE-LEX-VERSTEHEN-05, GE-LEX-FRAGEN-05] -->

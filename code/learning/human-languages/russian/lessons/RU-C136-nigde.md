@@ -47,7 +47,7 @@ reviews_of: [RU-C136-nichego]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**нигде** is *ни*, "not even", with *где*, "where": "not anywhere".
+**нигде** is *ни*, "not even", with *где*, "where": "not anywhere". Vasmer relates *где* to Sanskrit *kúha*, "where".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

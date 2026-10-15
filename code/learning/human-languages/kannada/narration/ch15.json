@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:99056943d8ea05f5",
+  "sourceHash": "fnv1a64:60ddcbaad26f8569",
   "lessons": [
     {
       "id": "KA-C15-niiru-akki",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10a799c749d9f7ef",
+      "sourceHash": "fnv1a64:889f208865f518cb",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ನೀರು (nīru) = \"water\" — matching Tamil's நீர் (nīr, the root inside taṇṇīr) closely. Kannada didn't make Malayalam's switch to the veḷ- \"bright/white\" root."
+              "text": "ನೀರು (nīru) = \"water\" — matching Tamil's நீர் (nīr, the root inside taṇṇīr) closely. Kannada didn't make Malayalam's switch to the veḷ- \"bright/white\" root. Nīru and nīr are one native Dravidian word (DEDR 3690)."
             }
           ]
         },
@@ -57,11 +57,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಅಕ್ಕಿ (akki) = \"rice\" (raw grain)."
+              "text": "ಅಕ್ಕಿ (akki) = \"rice\" (raw grain) — native Dravidian (DEDR 215)."
             },
             {
               "kind": "speech",
-              "text": "ಅನ್ನ (anna) = \"cooked rice\" (the meal) — likely Sanskrit- influenced, the same general idea as Tamil's sātam."
+              "text": "ಅನ್ನ (anna) = \"cooked rice\" (the meal) — borrowed from Sanskrit anna, \"food, cooked rice\" (CDIAL 395), the same general idea as Tamil's sātam."
             }
           ]
         },

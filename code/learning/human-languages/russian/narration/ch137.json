@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Recently, for a Long Time, Before, Last, To Happen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:72d6dad4c89a4762",
+  "sourceHash": "fnv1a64:46ebca2a8f794502",
   "lessons": [
     {
       "id": "RU-C137-nedavno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a3049d89910b9cb",
+      "sourceHash": "fnv1a64:902229f8604df255",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "недавно (nedávno) is не, \"not\", with давно (davnó), \"long ago\": not long ago. давно (davnó) goes with old даве, \"earlier\"."
+              "text": "недавно (nedávno) is не, \"not\", with давно (davnó), \"long ago\": not long ago. давно (davnó) goes with old даве, \"earlier\". Vasmer relates даве to Latin dūdum, \"a while ago\", and Greek dēn, \"long\"."
             }
           ]
         },

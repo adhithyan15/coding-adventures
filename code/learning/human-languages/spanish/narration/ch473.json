@@ -4,7 +4,7 @@
   "chapter": 473,
   "title": "El consejo a otras bibliotecas",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fe0c5aed33f6c6fe",
+  "sourceHash": "fnv1a64:a0efa2007056ff61",
   "lessons": [
     {
       "id": "ES-C473-aconsejar",
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8acff559b49bad7c",
+      "sourceHash": "fnv1a64:4fdf877ac0379a86",
       "notice": null,
       "blocks": [
         {
@@ -280,7 +280,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "re- plus commendare: com-, wholly, plus mandare, to entrust — to put a thing into somebody's hand."
+              "text": "Latin re- plus commendare (EtymDB 2.1): com-, wholly, plus mandare, to entrust — to put a thing into somebody's hand."
             },
             {
               "kind": "speech",

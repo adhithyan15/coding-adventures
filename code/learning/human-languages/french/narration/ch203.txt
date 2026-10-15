@@ -77,7 +77,7 @@ You'll want to know: le joueur.
 le joueur — "a player".
 
 The word, taken apart.
-joueur — jouer, "to play", with -eur, "one who".
+joueur — jouer, "to play", with -eur, "one who". Jouer from Latin iocārī, "to joke" (EtymDB 2.1), and -eur from Latin -or.
 
 What you've built.
 One more word for this chapter.

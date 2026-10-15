@@ -4,7 +4,7 @@
   "chapter": 402,
   "title": "Five Words in a Clothes Shop",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:94b2b17db2959279",
+  "sourceHash": "fnv1a64:fc94149e343efb04",
   "lessons": [
     {
       "id": "ES-C402-costar",
@@ -286,7 +286,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e3169d9f21a885d",
+      "sourceHash": "fnv1a64:db558a35076c2f5d",
       "notice": null,
       "blocks": [
         {
@@ -328,7 +328,7 @@
             },
             {
               "kind": "speech",
-              "text": "The build is visible: camisa plus -eta, a suffix that can make something smaller. The lighter, smaller shirt became the ordinary T-shirt. Keep the two shop labels distinct: camisa for a shirt, camiseta for a T-shirt."
+              "text": "The build is visible: camisa plus -eta, a suffix that can make something smaller. The lighter, smaller shirt became the ordinary T-shirt. Keep the two shop labels distinct: camisa for a shirt, camiseta for a T-shirt. Camisa from Late Latin camisia, \"shirt\", which EtymDB 2.1 traces further back to Germanic."
             }
           ]
         },
@@ -408,7 +408,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad83346d8fceab2c",
+      "sourceHash": "fnv1a64:6db47c6c3f842350",
       "notice": null,
       "blocks": [
         {
@@ -450,7 +450,7 @@
             },
             {
               "kind": "speech",
-              "text": "The noun belongs to tallar, \"to cut or shape.\" A garment is cut to a measure, and that cut becomes its talla. In a shop, ¿Qué talla? asks \"What size?\""
+              "text": "The noun belongs to tallar, \"to cut or shape.\" A garment is cut to a measure, and that cut becomes its talla. In a shop, ¿Qué talla? asks \"What size?\" Both go back to Latin talea, \"a cutting\"; EtymDB 2.1 routes talla through French taille."
             }
           ]
         },

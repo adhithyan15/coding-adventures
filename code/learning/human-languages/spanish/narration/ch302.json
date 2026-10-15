@@ -4,7 +4,7 @@
   "chapter": 302,
   "title": "Out and Away --- Street, Corner, Footprint, Harbour, Lighthouse",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c8eedd1561cf8b38",
+  "sourceHash": "fnv1a64:8dc95590d1dd692d",
   "lessons": [
     {
       "id": "ES-C302-calle",
@@ -647,7 +647,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9c3a05b2087d753",
+      "sourceHash": "fnv1a64:d029934851745e61",
       "notice": null,
       "blocks": [
         {
@@ -704,7 +704,7 @@
             },
             {
               "kind": "speech",
-              "text": "There is no root to take apart, because this word was a place. Pharos was a small island off Alexandria, and on it the Ptolemies built a tower with a fire at the top that stood for some sixteen hundred years. Sailors called any such tower a pharos after it, and the name swallowed the object: French phare, Italian faro, Spanish faro."
+              "text": "There is no root to take apart, because this word was a place. Pharos was a small island off Alexandria, and on it the Ptolemies built a tower with a fire at the top that stood for some sixteen hundred years. The Greek word pharos came to mean any such tower, and the name swallowed the object: French phare, Italian faro, Spanish faro."
             },
             {
               "kind": "speech",

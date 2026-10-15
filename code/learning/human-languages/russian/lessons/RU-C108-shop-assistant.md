@@ -47,7 +47,7 @@ reviews_of: [RU-C108-police-officer]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**продавец** is *продавать*, "to sell", with *-ец*, "one who does it". The verb is *про-* with *давать*, "to give".
+**продавец** is *продавать*, "to sell", with *-ец*, "one who does it". The verb is *про-* with *давать*, "to give". Vasmer takes *давать* from *дать*, "to give", kin to Lithuanian *dovanà*, "a gift".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 307,
-  "sourceHash": "fnv1a64:f244a3f0cd810270",
+  "sourceHash": "fnv1a64:2986b724f36ac5b7",
   "lessonIds": [
     "ES-C307-esposa",
     "ES-C307-tio",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch307.txt",
   "json": "spanish/narration/ch307.json",
-  "textHash": "fnv1a64:e80e9f962ec3b217",
-  "jsonHash": "fnv1a64:7fe9a3d5a2eaf2df",
+  "textHash": "fnv1a64:b08383824139de28",
+  "jsonHash": "fnv1a64:d817ede84badba75",
   "findings": []
 }

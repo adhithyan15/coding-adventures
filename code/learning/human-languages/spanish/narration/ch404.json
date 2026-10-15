@@ -4,7 +4,7 @@
   "chapter": 404,
   "title": "Wi-Fi, Mobile Phones and Films",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:e3830a569263a0d9",
+  "sourceHash": "fnv1a64:43ec0f25c74ffe78",
   "lessons": [
     {
       "id": "ES-C404-apagar",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:843ea2194e209ef5",
+      "sourceHash": "fnv1a64:1130eefd51c2b00f",
       "notice": null,
       "blocks": [
         {
@@ -183,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "The name was coined to sound like Hi-Fi. The phrase Wireless Fidelity was attached afterward as marketing by the industry alliance and was later dropped. That history is why treating the phrase as the name's simple original expansion is misleading, while pretending the Alliance never used it also goes too far."
+              "text": "Spanish borrowed it from English Wi-Fi. The name was coined to sound like Hi-Fi. The phrase Wireless Fidelity was attached afterward as marketing by the industry alliance and was later dropped. That history is why treating the phrase as the name's simple original expansion is misleading, while pretending the Alliance never used it also goes too far."
             }
           ]
         },

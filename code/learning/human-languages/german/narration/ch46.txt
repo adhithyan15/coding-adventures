@@ -182,9 +182,9 @@ Warum? — "Why?"
 Warum lernst du Deutsch? — "Why are you learning German?"
 
 The word, taken apart: about + what.
-warum is two words that stopped being two. The first half, war-, is an old shape of was; the second, -um, is the ordinary German um, "about". About what.
+warum is two words that stopped being two. It is Old High German wār umbe (EtymDB 2.1): war- is the old form of wo, "where", here meaning "what"; -um is um, "about". About what.
 English built its own why-word the identical way and it is still readable: wherefore is where plus for, "for what". Shakespeare's "wherefore art thou Romeo" is not asking where Romeo is. It is asking why.
-So both languages fused a question word to a small preposition, and both ended up with a why that once meant about what or for what. German's fusion went further and hid the seam; English's is still visible, which is why wherefore looks quaint and warum looks like a single word.
+So both languages fused a question word to a small preposition, and both ended up with a why that once meant about what or for what. German's fusion went further and hid the seam; English's is still visible.
 
 Guided Practice.
 [pause 1 second]

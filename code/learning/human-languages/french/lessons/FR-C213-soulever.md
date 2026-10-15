@@ -46,7 +46,7 @@ reviews_of: [FR-C212-poursuivre]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**soulever** — *sou-*, "under", and *lever*, "to lift": to lift from beneath.
+**soulever** — *sou-*, "under", and *lever*, "to lift": to lift from beneath. *Lever* ← Latin *levāre*, "to raise" (EtymDB 2.1), and *sou-* ← Latin *sub*, "under".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

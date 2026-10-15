@@ -57,7 +57,8 @@ The dictionary keeps two nouns spelled **abono** apart. One belongs to
 *abonar* in the sense of paying or improving soil, so it can mean a payment or
 fertilizer. The other belongs to **abonarse**, "to subscribe." It names the
 right a subscriber acquires and the document or set of tickets that proves
-that right.
+that right. EtymDB 2.1 traces *abonar* to Latin *bonus*, "good", for the soil
+sense, and records nothing for the other.
 
 Travel uses the second word:
 

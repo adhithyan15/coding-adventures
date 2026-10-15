@@ -46,7 +46,7 @@ reviews_of: [LA-C87-fons]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ōra** has no certain origin; it is often linked with *ōs*, *ōris*, "mouth, opening": an edge as a rim.
+**ōra** is of uncertain origin; it is often linked with *ōs*, *ōris*, "mouth, opening": an edge as a rim.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

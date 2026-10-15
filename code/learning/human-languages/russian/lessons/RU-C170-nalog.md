@@ -47,7 +47,7 @@ reviews_of: [RU-C170-zarplata]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**налог** is *на-*, "on", with *-лог*, from the root of *лежать*, "to lie", and *положить*, "to lay": a tax is what is laid on you.
+**налог** is *на-*, "on", with *-лог*, from the root of *лежать*, "to lie", and *положить*, "to lay": a tax is what is laid on you. Vasmer derives *лог* from *лежать*, Proto-Slavic *\*ležati*, kin to Greek *léchos*, "a bed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

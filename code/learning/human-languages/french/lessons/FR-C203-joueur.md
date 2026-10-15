@@ -46,7 +46,7 @@ reviews_of: [FR-C203-championnat]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**joueur** — *jouer*, "to play", with *-eur*, "one who".
+**joueur** — *jouer*, "to play", with *-eur*, "one who". *Jouer* ← Latin *iocārī*, "to joke" (EtymDB 2.1), and *-eur* ← Latin *-or*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

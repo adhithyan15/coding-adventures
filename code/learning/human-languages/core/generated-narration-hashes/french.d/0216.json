@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 216,
-  "sourceHash": "fnv1a64:b7252aa159b69b7a",
+  "sourceHash": "fnv1a64:c79d3d28f0b5f772",
   "lessonIds": [
     "FR-C216-autour",
     "FR-C216-partout",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch216.txt",
   "json": "french/narration/ch216.json",
-  "textHash": "fnv1a64:2956fc452ece279f",
-  "jsonHash": "fnv1a64:60de0bf88200836b",
+  "textHash": "fnv1a64:c33935726496f51c",
+  "jsonHash": "fnv1a64:8b1051f568445b55",
   "findings": []
 }

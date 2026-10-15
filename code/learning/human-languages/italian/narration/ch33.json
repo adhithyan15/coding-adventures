@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "This and That",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ce8e83a89978c05f",
+  "sourceHash": "fnv1a64:272ffc62ae8e16a3",
   "lessons": [
     {
       "id": "IT-C33-questo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb696aecd5e3878a",
+      "sourceHash": "fnv1a64:aa99a794348cec5e",
       "notice": null,
       "blocks": [
         {
@@ -118,7 +118,7 @@
             },
             {
               "kind": "speech",
-              "text": "Eccu(m) istum becomes questo. Literally: look, that one of yours."
+              "text": "Questo grew from eccu(m) istum. Literally: look, that one of yours."
             },
             {
               "kind": "speech",

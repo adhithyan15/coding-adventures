@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b82b119102d6b430",
+  "sourceHash": "fnv1a64:8f1cff2b5430c2c2",
   "lessons": [
     {
       "id": "LA-C11-menses",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:314bab5d80af52a8",
+      "sourceHash": "fnv1a64:a2f8af92576a0966",
       "notice": null,
       "blocks": [
         {
@@ -66,6 +66,10 @@
                 "Latin: November. who / what: \"the ninth\" (novem).",
                 "Latin: December. who / what: \"the tenth\" (decem)."
               ]
+            },
+            {
+              "kind": "speech",
+              "text": "Each name comes from the god, festival or number beside it; Aprīlis is the least certain."
             }
           ]
         },

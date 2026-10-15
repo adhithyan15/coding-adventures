@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 167,
-  "sourceHash": "fnv1a64:ba8b05b54e35f050",
+  "sourceHash": "fnv1a64:82dacfc042e1cbcd",
   "lessonIds": [
     "PT-C167-carrinho",
     "PT-C167-cesto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "portuguese/narration/ch167.txt",
   "json": "portuguese/narration/ch167.json",
-  "textHash": "fnv1a64:3a03c3c5236ca6b5",
-  "jsonHash": "fnv1a64:640ae8ee318ad94c",
+  "textHash": "fnv1a64:163976eafa471a8a",
+  "jsonHash": "fnv1a64:7a3dd2edb400c81c",
   "findings": []
 }

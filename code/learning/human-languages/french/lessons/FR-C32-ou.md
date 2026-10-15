@@ -11,7 +11,7 @@ concept_tag: QUESTION-WHERE
 prerequisites: [FR-C32-est-ce-que]
 sounds: []
 roots: []
-etymology_hook: "French asks a question three ways -- voice, est-ce que, inversion -- and they differ in register rather than in meaning."
+etymology_hook: "où ← Latin ubi 'where', ou ← Latin aut 'or': two words worn into one sound, told apart by an accent"
 duration:
   max_seconds: 240
 requires:
@@ -56,7 +56,8 @@ the answer would go, and the second is what you will hear far more in speech.
 The grave accent is the **only** difference in writing, and in speech there is no
 difference at all: both are *oo*. This is the one place in French where an accent
 does nothing to the sound and everything to the meaning, which is why it is never
-optional.
+optional. The two were different words in Latin: *où* ← *ubi*, "where", and *ou*
+← *aut*, "or" (EtymDB 2.1).
 
 You now hold the first question word, and with it a question you can actually use
 on the first day in a French city.

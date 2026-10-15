@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "River, Lake, Stream, Spring, Coast",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6d2443764ce327a3",
+  "sourceHash": "fnv1a64:0b1350309bd90dd8",
   "lessons": [
     {
       "id": "LA-C87-flumen",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb708fa56c28d0eb",
+      "sourceHash": "fnv1a64:9893a0ecef2e9df3",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ōra has no certain origin; it is often linked with ōs, ōris, \"mouth, opening\": an edge as a rim."
+              "text": "ōra is of uncertain origin; it is often linked with ōs, ōris, \"mouth, opening\": an edge as a rim."
             }
           ]
         },

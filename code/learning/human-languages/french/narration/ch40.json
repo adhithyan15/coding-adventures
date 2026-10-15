@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Two Ideas, One Sentence",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:fdfec6e1d6af96be",
+  "sourceHash": "fnv1a64:2878b8747f8e0e46",
   "lessons": [
     {
       "id": "FR-C36-svo",
@@ -533,7 +533,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0affbfcc88aa56b2",
+      "sourceHash": "fnv1a64:f948ffa88b392bd6",
       "notice": null,
       "blocks": [
         {
@@ -568,7 +568,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three words are welded in there: par (\"by\"), ce (\"this\") and que (\"that\"). By this that… — a phrase that pointed forward at the reason about to be given, said so often that the first two fused and the third stayed loose."
+              "text": "Three words are welded in there: par (\"by\"), ce (\"this\") and que (\"that\"). By this that… — a phrase that pointed forward at the reason about to be given, said so often that the first two fused and the third stayed loose. All three are inherited from Latin: par from per, ce from ecce hoc, \"look, this\", and que from quid or quod (EtymDB 2.1)."
             },
             {
               "kind": "speech",

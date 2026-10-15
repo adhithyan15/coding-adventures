@@ -74,8 +74,8 @@ word, neither written down.
 ## The word, taken apart - the same entry as உடல்
 <!-- hl-knowledge: introduces=[TA-ETYMON-UDAMBU-02]; assesses=[] -->
 
-Tamil has another word for the body, **உடல்** (*uḍal*), and the Dravidian
-dictionary does not treat them as rivals: **உடல்**, **உடம்பு** and **உடலம்** sit
+Tamil has another word for the body, **உடல்** (*uḍal*), and DEDR 586
+does not treat them as rivals: **உடல்**, **உடம்பு** and **உடலம்** sit
 in the **same entry**, with Kannada's **ಒಡಲು** beside them. Usage has divided
 them: **உடல்** leans literary, **உடம்பு** is what you say aloud about someone
 unwell.

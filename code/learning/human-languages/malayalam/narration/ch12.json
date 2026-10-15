@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4f537984278eb3b6",
+  "sourceHash": "fnv1a64:c26cf6ee78fbc244",
   "lessons": [
     {
       "id": "ML-C12-kudumbam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08007c00cf22eefb",
+      "sourceHash": "fnv1a64:fd1e2dca69d01b1f",
       "notice": null,
       "blocks": [
         {
@@ -77,6 +77,10 @@
             {
               "kind": "speech",
               "text": "Notice these don't closely match Tamil/Kannada/Telugu's aṇṇaṉ/anna, tambi/tammuḍu, akkā/akka, or tangai/celli — Malayalam built its own set of sibling words. But the structure is identical: four words, not two, split by whether the sibling is older or younger than you — the same signature pattern you've now seen across all four Dravidian languages, even where the specific words diverge."
+            },
+            {
+              "kind": "speech",
+              "text": "DEDR has no entry for these four. Cēṭṭan and cēcci are usually linked to Prakrit jeṭṭha, \"eldest, elder brother\" (CDIAL 5286); where aniyan and aniyatti come from is uncertain."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 202,
   "title": "Natural rubber, Metal, Brick, Small bag, Rope",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a926d8e6adaf051d",
+  "sourceHash": "fnv1a64:3952c721ba91eded",
   "lessons": [
     {
       "id": "FR-C202-caoutchouc",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f43cbfedfcf68245",
+      "sourceHash": "fnv1a64:f1868766dbd06375",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sachet — sac, \"bag\", with -et, \"little\"."
+              "text": "sachet — sac, \"bag\", with -et, \"little\". Sac from Latin saccus, from Greek sakkos (EtymDB 2.1)."
             }
           ]
         },

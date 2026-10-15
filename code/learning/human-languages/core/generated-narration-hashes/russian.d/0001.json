@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 1,
-  "sourceHash": "fnv1a64:fc3d29150b12d50c",
+  "sourceHash": "fnv1a64:a03f2fa284f8dacc",
   "lessonIds": [
     "RU-C01-privet",
     "RU-C01-zdravstvuyte",
@@ -25,7 +25,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch01.txt",
   "json": "russian/narration/ch01.json",
-  "textHash": "fnv1a64:61815e83b0683f03",
-  "jsonHash": "fnv1a64:cf288c9aea1511f6",
+  "textHash": "fnv1a64:27436ce27298bdc5",
+  "jsonHash": "fnv1a64:a12f10f076eea00a",
   "findings": []
 }

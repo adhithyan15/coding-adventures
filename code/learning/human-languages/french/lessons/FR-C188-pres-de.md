@@ -46,7 +46,7 @@ reviews_of: [FR-C187-depuis]
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**près de** — *près*, "near", and *de*, "of".
+**près de** — *près*, "near", and *de*, "of". *Près* ← Latin *presse*, "closely" (EtymDB 2.1), and *de* ← Latin *dē*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

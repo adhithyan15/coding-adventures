@@ -42,7 +42,7 @@ Language: Malayalam. "go and come back" (goodbye): pōyi varāṁ.
 Language: Bengali (Indo-Aryan). "go and come back" (goodbye): āshi ("I come").
 Language: Hindi (Indo-Aryan). "go and come back" (goodbye): phir milenge ("we'll meet again").
 The whole subcontinent, Dravidian and Indo-Aryan alike, prefers a promise of return to a blunt farewell.
-Varugiṟēṉ itself is built in three parts: varu ("come") + a present-tense marker + -ēṉ ("I"). Chapter 5 makes that stem-tense-person pattern explicit; here it is enough to hear the three pieces.
+Varugiṟēṉ itself is built in three parts: varu ("come") + a present-tense marker + -ēṉ ("I"). Chapter 5 makes that stem-tense-person pattern explicit; here it is enough to hear the three pieces. Both verbs are native Dravidian: pō, "go" (DEDR 4572), and varu, "come" (DEDR 5270).
 
 Grammar Lens: the "having …d" participle.
 Pōy is Tamil's way of chaining actions: "having gone, (then) I come." Tamil strings verbs like beads — one in the participle "-y" form, the last one fully conjugated. You will see this chaining everywhere.

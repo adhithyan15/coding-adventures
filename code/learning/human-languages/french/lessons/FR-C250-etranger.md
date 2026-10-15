@@ -46,7 +46,7 @@ reviews_of: [FR-C249-peintre]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**étranger** — the adjective *étranger*, "foreign", used as a noun: a foreigner.
+**étranger** — the adjective *étranger*, "foreign", used as a noun: a foreigner. It is built on Old French *estrange*, "foreign" (EtymDB 2.1), from Latin *extrāneus*, "from outside".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

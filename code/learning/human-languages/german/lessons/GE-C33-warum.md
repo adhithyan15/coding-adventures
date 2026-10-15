@@ -11,7 +11,7 @@ concept_tag: GE-QUESTION-WHY
 prerequisites: [GE-C33-wann, GE-C05-was]
 sounds: [w-as-v, r-uvular]
 roots: [pie-kwis]
-etymology_hook: "warum is war + um, an old form of was welded to um (about) — literally about-what, which is exactly how English built wherefore out of where and for"
+etymology_hook: "warum ← Old High German wār umbe, 'where-about' = about what, built the way English wherefore is"
 duration:
   max_seconds: 240
 requires:
@@ -58,9 +58,9 @@ leans on its first.
 ## The word, taken apart: about + what
 <!-- hl-knowledge: introduces=[GE-ETYMON-WARUM-WAR-UM-02]; assesses=[GE-LEX-WARUM-01, GE-LEX-WAS-01, GE-ETYMON-WER-WHO-02] -->
 
-**warum** is two words that stopped being two. The first half, **war-**, is an
-old shape of **was**; the second, **-um**, is the ordinary German **um**,
-"about". *About what.*
+**warum** is two words that stopped being two. It is Old High German *wār umbe*
+(EtymDB 2.1): **war-** is the old form of **wo**, "where", here meaning "what";
+**-um** is **um**, "about". *About what.*
 
 English built its own *why*-word the identical way and it is still readable:
 **wherefore** is *where* plus *for*, "for what". Shakespeare's *"wherefore art
@@ -68,8 +68,7 @@ thou Romeo"* is not asking where Romeo is. It is asking **why**.
 
 So both languages fused a question word to a small preposition, and both ended
 up with a *why* that once meant *about what* or *for what*. German's fusion went
-further and hid the seam; English's is still visible, which is why *wherefore*
-looks quaint and *warum* looks like a single word.
+further and hid the seam; English's is still visible.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WARUM-01, GE-ETYMON-WARUM-WAR-UM-02, GE-LEX-WER-01, GE-LEX-WANN-01, GE-LEX-WAS-01, GE-LEX-WO-01, GE-LEX-WIE-02, GE-LEX-LERNEN-01, GE-LEX-DEUTSCH-01, GE-LEX-ICH-LERNE-DEUTSCH-01, GE-LEX-TEE-02, GE-ETYMON-TEE-04] -->

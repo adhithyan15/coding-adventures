@@ -67,7 +67,7 @@ unambiguous, **ಪ್ರಶ್ನೆ ಕೇಳು** (*praśne kēḷu*) is "to a
 ## The word, taken apart: the double job is inherited
 <!-- hl-knowledge: introduces=[KA-ETYMON-C34-KEELU-03]; assesses=[KA-ETYMON-C07-NUMBERS-6-10-03, KA-ETYMON-C33-OODU-02, KA-ETYMON-C33-BARE-02] -->
 
-Not a Kannada quirk. The Dravidian dictionaries reconstruct the root with
+Not a Kannada quirk. DEDR 2017 lists the root with
 **both senses at once** — "to hear, to ask" — and the sisters carry the pair:
 Tamil **கேள்** (*kēḷ*), Malayalam **കേൾക്കുക** (*kēḷkkuka*), Tulu *kēṇuni*.
 

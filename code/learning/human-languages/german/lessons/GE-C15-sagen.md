@@ -64,7 +64,7 @@ past.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SAGEN-01, GE-LEX-TAG-02] -->
 
-*Sagen* and English *say* are the same word. Germanic \**sagjaną* went to both,
+*Sagen* is the same word as English *say*. Germanic \**sagjaną* went to both,
 and then English quietly dropped the *g* out of the middle:
 
 | German | English |

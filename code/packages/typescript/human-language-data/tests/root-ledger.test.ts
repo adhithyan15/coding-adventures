@@ -239,31 +239,33 @@ const etymologyGapPinOwnerDirectory = resolve(
  * whose visible etymology rested on structure alone with no rule-3 origin
  * statement anywhere; the loose signals read 4,307 of those as origins.
  * Spanish's etymology pass (#17455) landed before this pin and filled 40 of
- * its 88, so the pins start at 435.
+ * its 88, so the pins start at 435. A later pass gave 293 empty blocks in
+ * twelve tracks an origin sentence (or reworded one a signal could not read),
+ * taking those twelve pins to 0.
  */
 const EMPTY_ETYMOLOGY_BLOCK_PINS: Readonly<Record<string, number>> = {
   arabic: 0,
   bengali: 0,
   chinese: 0,
-  french: 66,
-  german: 43,
+  french: 0,
+  german: 0,
   gujarati: 0,
-  hindi: 7,
-  italian: 7,
+  hindi: 0,
+  italian: 0,
   japanese: 0,
-  kannada: 8,
-  latin: 31,
-  malayalam: 6,
+  kannada: 0,
+  latin: 0,
+  malayalam: 0,
   marathi: 0,
   marwadi: 0,
   persian: 0,
-  portuguese: 5,
+  portuguese: 0,
   punjabi: 0,
-  russian: 52,
+  russian: 0,
   sanskrit: 12,
-  spanish: 48,
-  tamil: 12,
-  telugu: 8,
+  spanish: 0,
+  tamil: 0,
+  telugu: 0,
   urdu: 0,
 };
 

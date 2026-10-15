@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Numbers One to Ten",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:10220d3b7c1e9325",
+  "sourceHash": "fnv1a64:2a86a03a293a5dc9",
   "lessons": [
     {
       "id": "LA-C02-numbers-1-5",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3dbf1492fbbba77",
+      "sourceHash": "fnv1a64:40d522f3819bc761",
       "notice": null,
       "blocks": [
         {
@@ -261,7 +261,7 @@
             },
             {
               "kind": "speech",
-              "text": "The first literally means \"the seventh,\" yet it sits in ninth place, and the other three are each two places off as well. The old Roman year began in March — so month one was March, and the seventh month was the one your calendar now counts ninth. When January and February were later pushed to the front, the names never moved. Every year you write four Latin numbers, each two places off, because Rome renumbered the calendar and forgot to rename the months."
+              "text": "The first literally means \"the seventh,\" yet it sits in ninth place, and the other three are two places off as well. The old Roman year began in March — so month one was March, and the seventh month was the one your calendar now counts ninth. When January and February were later pushed to the front, the names never moved. Rome renumbered the calendar and forgot to rename the months."
             }
           ]
         },
@@ -276,11 +276,15 @@
             },
             {
               "kind": "speech",
-              "text": "octō becomes octave, October — while its Greek twin oktṓ gives octagon and octopus (eight arms)."
+              "text": "octō becomes octave, October — while its Greek twin oktṓ gives octagon and octopus."
             },
             {
               "kind": "speech",
               "text": "decem becomes decimal, and — via duodecim \"twelve\" — dozen (its Greek cousin dekás \"group of ten\" adds decade)."
+            },
+            {
+              "kind": "speech",
+              "text": "All five are cousins of English six to ten (EtymDB 2.1)."
             }
           ]
         },

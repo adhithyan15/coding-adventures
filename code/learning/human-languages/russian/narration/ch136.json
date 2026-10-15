@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Nobody, Nothing, Nowhere, To Nowhere, What For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ceacc8f1d4344d79",
+  "sourceHash": "fnv1a64:66b21b9e9af57a99",
   "lessons": [
     {
       "id": "RU-C136-nikto",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38cf5c744431ffac",
+      "sourceHash": "fnv1a64:69b94f74c723b6ac",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "нигде (nigdé) is ни, \"not even\", with где, \"where\": \"not anywhere\"."
+              "text": "нигде (nigdé) is ни, \"not even\", with где, \"where\": \"not anywhere\". Vasmer relates где to Sanskrit kúha, \"where\"."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fb27194b189679b",
+      "sourceHash": "fnv1a64:185c00ecce0121e1",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "никуда (nikudá) is ни, \"not even\", with куда, \"where to\": \"to no place\"."
+              "text": "никуда (nikudá) is ни, \"not even\", with куда, \"where to\": \"to no place\". Vasmer compares куда with Latin quandō, \"when\"."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07db623e07d241a2",
+      "sourceHash": "fnv1a64:a1f8b588ce0a838a",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "зачем (zachém) is за, \"for, after\", with чем, a form of что, \"what\": \"for what\"."
+              "text": "зачем (zachém) is за, \"for, after\", with чем, a form of что, \"what\": \"for what\". Vasmer traces что to Proto-Slavic čĭ, \"what\", with a pointing to on the end."
             }
           ]
         },

@@ -46,7 +46,7 @@ reviews_of: [GE-C166-moeglichkeit]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Nachmittag** is the word for "after" + *Mittag*, "noon": after noon, built the same way as English *afternoon*.
+**Nachmittag** is the word for "after" + *Mittag*, "noon": after noon, built the same way as English *afternoon*. *Mittag* is built from *Mitte*, "middle", inherited from Proto-Germanic *\*midją* (EtymDB 2.1), and *Tag*, "day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

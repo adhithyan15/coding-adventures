@@ -64,6 +64,8 @@ English merged the last two into one word, *me*, and now signals the difference
 by **word order** instead: "she gave **me** the book" — *me* is the to-whom
 there, even though it looks identical to the done-to *me* in "she saw me."
 German never merged them, so it can put the to-whom anywhere and still be clear.
+*Mir* is inherited: EtymDB 2.1 traces Old High German *mir* and English *me* to the
+same Proto-Germanic *\*miz*.
 
 That is why wellbeing works the way it does: something *goes*, and it goes **to a
 person**. The person is in the dative.

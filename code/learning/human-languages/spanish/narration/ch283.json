@@ -4,7 +4,7 @@
   "chapter": 283,
   "title": "Courtesy Past Thank You --- Excuse Me, With Permission, Kind, A Thousand Thanks",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6f7070ea1ca9e21c",
+  "sourceHash": "fnv1a64:5c1588246876a3cf",
   "lessons": [
     {
       "id": "ES-C283-disculpe",
@@ -643,7 +643,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9238044aa5d5dae2",
+      "sourceHash": "fnv1a64:1e7f0d7ec780c490",
       "notice": null,
       "blocks": [
         {
@@ -700,7 +700,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every piece is already yours. No, hay, de, qué — nothing new in the list. What is new is the assembly: literally \"there is nothing of which,\" with the thing not worth mentioning left out of the sentence entirely."
+              "text": "Every piece is already yours. No, hay, de, qué — nothing new in the list. What is new is the assembly: literally \"there is nothing of which,\" with the thing not worth mentioning left out of the sentence entirely. The pieces are all inherited: no from Latin nōn, de from dē, qué from quid, and hay is Old Spanish ha i, \"it has there\" (EtymDB 2.1)."
             },
             {
               "kind": "speech",

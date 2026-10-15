@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Traditional Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d6acbf3c95aa8bbd",
+  "sourceHash": "fnv1a64:b647972d5c37e70d",
   "lessons": [
     {
       "id": "TE-C16-nelalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b02813c53d9ed013",
+      "sourceHash": "fnv1a64:55291764143240bb",
       "notice": null,
       "blocks": [
         {
@@ -73,7 +73,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This closes out a genuine, clean split across the four Dravidian languages: Tamil and Malayalam each built their own solar calendar (nakshatra-named and zodiac-named, respectively) — while Kannada and Telugu instead share the same pan-Indian Sanskritic lunisolar calendar as Hindi's Vikram Samvat. Telugu's New Year, Ugadi, falls on the very same day as Kannada's — Chaitra Śuddha Pādyami, the first day of Chaitra's bright fortnight."
+              "text": "This closes out a genuine, clean split across the four Dravidian languages: Tamil and Malayalam each built their own solar calendar (nakshatra-named and zodiac-named, respectively) — while Kannada and Telugu instead share the same pan-Indian Sanskritic lunisolar calendar as Hindi's Vikram Samvat. Telugu's New Year, Ugadi, falls on the very same day as Kannada's — Chaitra Śuddha Pādyami, the first day of Chaitra's bright fortnight. The month names themselves are Sanskrit: Caitraṁ is caitra, the month whose full moon stands in the asterism Citrā (CDIAL 4915), and the others are named the same way."
             }
           ]
         },

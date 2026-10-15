@@ -4,7 +4,7 @@
   "chapter": 236,
   "title": "To count, To measure, To compare, To check, To fill in",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b754c10890f29beb",
+  "sourceHash": "fnv1a64:00af9967a862be04",
   "lessons": [
     {
       "id": "RU-C236-schitat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1400e4cf8b30fe2",
+      "sourceHash": "fnv1a64:f1b949c06897310a",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "считать (schitát) is с- with читать, \"to read\", which once meant \"to count\", as in число, \"a number\"."
+              "text": "считать (schitát) is с- with читать, \"to read\", which once meant \"to count\", as in число, \"a number\". Vasmer links читать with an old Slavic verb meaning \"to count, to honour\"."
             }
           ]
         },

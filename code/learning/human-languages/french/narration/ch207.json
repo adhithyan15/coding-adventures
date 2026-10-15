@@ -4,7 +4,7 @@
   "chapter": 207,
   "title": "To be born, To die, To grow old, To marry, To divorce",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:680eef5400a31f05",
+  "sourceHash": "fnv1a64:04ad5d20cbad4b86",
   "lessons": [
     {
       "id": "FR-C207-naitre",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f46980dc80070019",
+      "sourceHash": "fnv1a64:a8215bc134de5d55",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "divorcer — formed from the noun for \"a divorce\", the noun behind divorcé."
+              "text": "divorcer — formed from the noun for \"a divorce\", the noun behind divorcé. Divorce comes from Latin dīvortium, \"a separation\"."
             }
           ]
         },

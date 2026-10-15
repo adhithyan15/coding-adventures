@@ -65,6 +65,10 @@ not two, split by whether the sibling is **older or younger than you** —
 the same signature pattern you've now seen across all four Dravidian
 languages, even where the specific words diverge.
 
+DEDR has no entry for these four. *Cēṭṭan* and *cēcci* are usually linked to
+Prakrit *jeṭṭha*, "eldest, elder brother" (CDIAL 5286); where *aniyan* and
+*aniyatti* come from is uncertain.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
 

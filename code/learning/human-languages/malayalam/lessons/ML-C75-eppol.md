@@ -59,12 +59,12 @@ the same direction: near, far, **a question**. Nothing else moves.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-That unmoving piece is **പോൾ**, and Tamil holds the set together the same way:
+That unmoving piece is **പോൾ**, a native word for "time" (DEDR 4559), and Tamil holds the set together the same way:
 the lesson that taught you *now* already showed you **இப்போது** (*ippōtu*), and
 the question form is **எப்போது** (*eppōtu*).
 
 **പോൾ is not a word you can use on its own** — it only ever turns up carrying
-one of these three openers, so this book will not ask you to use it alone.
+one of these three openers.
 Remember it anyway. It comes back in the next lesson, on a verb.
 
 ## Grammar Lens: asking rearranges nothing

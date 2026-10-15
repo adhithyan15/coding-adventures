@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 32,
-  "sourceHash": "fnv1a64:74f6611d9a162605",
+  "sourceHash": "fnv1a64:bdc9224522e2b933",
   "lessonIds": [
     "RU-C32-pain",
     "RU-C32-illness",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch32.txt",
   "json": "russian/narration/ch32.json",
-  "textHash": "fnv1a64:abb6f46763d2098c",
-  "jsonHash": "fnv1a64:88257a2500d55e97",
+  "textHash": "fnv1a64:3de8d2b9956c8724",
+  "jsonHash": "fnv1a64:f81bfc89c76ea75d",
   "findings": []
 }

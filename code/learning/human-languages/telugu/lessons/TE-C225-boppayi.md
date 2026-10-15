@@ -47,7 +47,7 @@ reviews_of: [TE-C225-palakura]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**బొప్పాయి** (*boppāyi*) is a form of the fruit's name *papaya*, which came to India with the fruit. DEDR and CDIAL do not list it.
+**బొప్పాయి** (*boppāyi*) is a form of the fruit's name *papaya*, borrowed when the fruit reached India. DEDR and CDIAL do not list it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

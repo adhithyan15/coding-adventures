@@ -4,7 +4,7 @@
   "chapter": 214,
   "title": "To record, To maintain, To exist, To express, To put on weight",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:daa9ff1928308fdc",
+  "sourceHash": "fnv1a64:c8f32bfc6e75a043",
   "lessons": [
     {
       "id": "FR-C214-enregistrer",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a204c21d95f415e",
+      "sourceHash": "fnv1a64:3efc78a2d1052e8e",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "grossir — gros, \"fat\", with the verb ending -ir: to grow fat."
+              "text": "grossir — gros, \"fat\", with the verb ending -ir: to grow fat. Gros from Late Latin grossus, \"thick\" (EtymDB 2.1)."
             }
           ]
         },

@@ -58,6 +58,9 @@ of these months used to have completely different names.**
 | **November** | "**the ninth**" (*novem*) |
 | **December** | "**the tenth**" (*decem*) |
 
+Each name comes from the god, festival or number beside it; *Aprīlis* is the
+least certain.
+
 ## Why it's said this way: Be honest about the renaming — a popular myth, corrected
 <!-- hl-knowledge: introduces=[LA-PRAGMATICS-MENSES-02]; assesses=[] -->
 

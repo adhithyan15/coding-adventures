@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 30,
-  "sourceHash": "fnv1a64:4ae37c9e739fd926",
+  "sourceHash": "fnv1a64:5a205b86f49c5e8b",
   "lessonIds": [
     "IT-C30-non",
     "IT-C30-non-capisco",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch30.txt",
   "json": "italian/narration/ch30.json",
-  "textHash": "fnv1a64:063a14fc271b4449",
-  "jsonHash": "fnv1a64:12925be4f6716fbb",
+  "textHash": "fnv1a64:3a65b8675b088db7",
+  "jsonHash": "fnv1a64:2798179007b81f18",
   "findings": []
 }

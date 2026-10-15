@@ -46,7 +46,7 @@ reviews_of: [FR-C202-brique]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**sachet** — *sac*, "bag", with *-et*, "little".
+**sachet** — *sac*, "bag", with *-et*, "little". *Sac* ← Latin *saccus*, from Greek *sakkos* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

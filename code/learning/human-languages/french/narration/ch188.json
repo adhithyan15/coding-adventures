@@ -4,7 +4,7 @@
   "chapter": 188,
   "title": "Near to, Far from, At the bottom, On the right, On the left",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:384f0a645ee1df56",
+  "sourceHash": "fnv1a64:e6050c20660d22a7",
   "lessons": [
     {
       "id": "FR-C188-pres-de",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c85394b98c557256",
+      "sourceHash": "fnv1a64:f99d9bfc10966106",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "près de — près, \"near\", and de, \"of\"."
+              "text": "près de — près, \"near\", and de, \"of\". Près from Latin presse, \"closely\" (EtymDB 2.1), and de from Latin dē."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:407c13b68ce750ab",
+      "sourceHash": "fnv1a64:c73d76e825ce99f5",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "loin de — loin, \"far\", and de, \"from\"."
+              "text": "loin de — loin, \"far\", and de, \"from\". Loin comes from Latin longē, \"far off\", and de from dē."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a5837618a0232b0",
+      "sourceHash": "fnv1a64:f7dabe07b14e51e6",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "à droite — à, \"on\", and droite, \"the right\"."
+              "text": "à droite — à, \"on\", and droite, \"the right\". Droite from Latin dīrēctus, \"straight\", through Old French dreit (EtymDB 2.1); à from Latin ad."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:caecfa1627e9c785",
+      "sourceHash": "fnv1a64:13311466e30c5713",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "à gauche — à, \"on\", and gauche, \"the left\"."
+              "text": "à gauche — à, \"on\", and gauche, \"the left\". Gauche comes from Old French gauchir, \"to warp\" (EtymDB 2.1), probably Frankish further back; à from Latin ad."
             }
           ]
         },

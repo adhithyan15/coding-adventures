@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0078a2e5ca5288d0",
+  "sourceHash": "fnv1a64:4f83fd3d8b8e7b6b",
   "lessons": [
     {
       "id": "HI-C30-dopahar-widened",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9ebc08e4ebf23ba",
+      "sourceHash": "fnv1a64:90da365cc6ed04f8",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This is worth sitting with: दोपहर (dopahar)'s literal story still holds up the way Chapter 17 described it — \"two pahars,\" with noon falling around the end of the second — though, as that lesson itself noted, treat the exact pahar-count as the general shape of the story rather than a precisely dated fact. Either way, the word's job in the language has moved on well past that etymology. This kind of drift — a word for one precise instant loosening into a name for a whole surrounding stretch of time — isn't unique to Hindi, but here it's especially visible because Chapter 17 showed you exactly how tight the original math was."
+              "text": "This is worth sitting with: दोपहर (dopahar)'s literal story still holds up the way Chapter 17 described it — \"two pahars,\" with noon falling around the end of the second — though, as that lesson itself noted, treat the exact pahar-count as the general shape of the story rather than a precisely dated fact. Either way, the word's job in the language has moved on well past that etymology. This kind of drift — a word for one precise instant loosening into a name for a whole surrounding stretch of time — isn't unique to Hindi, but here it's especially visible because Chapter 17 showed you exactly how tight the original math was. पहर comes from Sanskrit prahara, \"a watch\" (CDIAL 8900)."
             }
           ]
         },

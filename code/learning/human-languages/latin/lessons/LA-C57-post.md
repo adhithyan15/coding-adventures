@@ -52,6 +52,7 @@ reviews_of: [LA-C57-ante, LA-C56-septimus]
 
 The mirror of *ante*, and the same double life. In space it is "behind": *post
 mūrum*, "behind the wall". In time it is "after".
+*Post* is inherited, and Lewis & Short compares a Sanskrit word for "behind".
 
 This book has quoted it once already and walked past it. The afternoon greeting
 was given as *salvē (post merīdiem)*, and *post merīdiem* was translated without

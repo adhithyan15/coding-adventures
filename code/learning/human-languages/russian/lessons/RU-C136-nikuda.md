@@ -47,7 +47,7 @@ reviews_of: [RU-C136-nigde]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**никуда** is *ни*, "not even", with *куда*, "where to": "to no place".
+**никуда** is *ни*, "not even", with *куда*, "where to": "to no place". Vasmer compares *куда* with Latin *quandō*, "when".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

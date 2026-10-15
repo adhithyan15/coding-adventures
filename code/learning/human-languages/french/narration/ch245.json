@@ -4,7 +4,7 @@
   "chapter": 245,
   "title": "Similar, Fair, False, Ready, Free of charge",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a0fa57c41e065a19",
+  "sourceHash": "fnv1a64:b7fdeb3ca8455e75",
   "lessons": [
     {
       "id": "FR-C245-semblable",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:221efb67be09618e",
+      "sourceHash": "fnv1a64:9bbdf7f2a50eadc4",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "semblable — sembler with -able: seeming alike."
+              "text": "semblable — sembler with -able: seeming alike. Sembler from Late Latin similāre, from similis, \"like\" (EtymDB 2.1)."
             }
           ]
         },

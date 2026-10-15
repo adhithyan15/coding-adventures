@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Coffee, Tea, Milk, Sugar",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9c9b6c27230caf58",
+  "sourceHash": "fnv1a64:1ba91cdd4dd91497",
   "lessons": [
     {
       "id": "FR-C28-cafe",
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b5d18f5f620de7f",
+      "sourceHash": "fnv1a64:a914cf3fa781ab2d",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
             },
             {
               "kind": "speech",
-              "text": "Traders who bought the leaf overland or through Mandarin-speaking ports carried home chá: it travelled into Persian, into Arabic, into Hindi. Dutch traders bought their tea specifically at Amoy, in Hokkien territory, and carried home tê instead — which became Dutch thee, then French thé, English tea, German Tee."
+              "text": "Traders who bought the leaf overland or through Mandarin-speaking ports carried home chá: it travelled into Persian, into Arabic, into Hindi. Dutch traders bought their tea specifically at Amoy, in Hokkien territory, and carried home tê instead — which became Dutch thee, then French thé, English tea, German Tee. French borrowed thé from Dutch."
             },
             {
               "kind": "speech",

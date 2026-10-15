@@ -55,7 +55,7 @@ speaker, so slow down on the approach and let each one land.
 <!-- hl-knowledge: introduces=[RU-ETYMON-VSTRECHA-NO-COUSIN]; assesses=[RU-LEX-DO-SKOROGO, RU-ETYMON-SKORYI-HURRY] -->
 
 **встреча** takes apart by its pieces rather than by a single ancient root:
-**в-**, "into," plus **с-**, "with, together," on an old Slavic base meaning
+**в-**, "into," plus **с-**, "with, together," on an old Slavic base (Vasmer compares Lithuanian *surėsti*, "to catch") meaning
 roughly "to come upon." Put together, it is close to what English *meet*
 does when it means "to come together" — but that closeness is a match of
 **idea**, not of **ancestry**: there is no secure shared root behind the two

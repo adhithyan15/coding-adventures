@@ -21,7 +21,7 @@ It is mich's partner exactly: ich becomes mich, du becomes dich. One vowel apart
 The word, taken apart.
 English once had this whole row and let it collapse. Thou was the doer, thee was both the done-to and the to-whom, thine the possessive. German kept four distinct shapes where English kept three and then lost all of them:
 du, dich, dir, dein.
-Every one begins with the d that was English th, so the row is predictable from a rule you have had since the second chapter.
+Every one begins with the d that was English th, so the row is predictable from a rule you have had since the second chapter. Du and English thou are one inherited Germanic word; EtymDB 2.1 has no row tracing either further.
 
 Guided Practice.
 [pause 1 second]
@@ -58,7 +58,7 @@ Sie and es do not move at all — the die row and the das row stand still here e
 
 The word, taken apart.
 English him looks like a translation of ihn and is not the same form. Him was originally the to-whom shape, and it swallowed the done-to shape hine somewhere in the Middle Ages. German never let that merger happen, which is why it still has ihn for the done-to and ihm for the to-whom.
-So the two languages did not lose the same thing. English lost the distinction; German lost nothing and merely stopped being able to explain it briefly.
+English lost the distinction; German lost nothing. Ihn is inherited, though EtymDB 2.1 has no row for it; it traces him to Proto-Germanic himmai.
 
 Guided Practice.
 [pause 1 second]
@@ -94,7 +94,7 @@ Er gibt uns Kaffee. — "He gives us coffee."
 One word, both jobs. Where ich needed mich and mir, wir needs only uns, and the language stops distinguishing exactly where it had been insisting.
 
 The word, taken apart.
-uns and English us are the same word, worn to the same length in both languages. English us also does both jobs — he sees us, he gives us coffee — so this is one row where the two languages agree completely and nothing has to be learned twice.
+uns is the same word as English us, worn to the same length in both languages. English us also does both jobs — he sees us, he gives us coffee — so this is one row where the two languages agree completely and nothing has to be learned twice.
 It is worth noticing why the agreement happened. German kept its distinctions in the singular, where the words are short and said constantly; it let them go in the plural, where they are longer and rarer. English did the same thing to thou and thee four centuries later, only more thoroughly.
 
 Guided Practice.
@@ -128,7 +128,7 @@ Said oykh: the eu is the oy of English boy, and the ch is the soft one.
 Ich sehe euch. — "I see you all."
 
 The word, taken apart.
-English had this word. Old English ēow was the done-to shape of ġē ("ye"), and ēow is exactly what German's euch is.
+English had this word. Old English ēow was the done-to shape of ġē ("ye"), and ēow is the same word as German euch.
 Then English did something strange. It let ēow — the object form — take over the subject job as well, so ye died out and you became the only word left for the second person, singular or plural, doer or done-to. Modern English addresses everybody with what was once a plural object pronoun.
 German still has the whole set standing: du, dich, dir for one person, ihr, euch for several, Sie, Ihnen for a stranger. English boiled all of that down to you, and y'all is the attempt to build the plural back.
 

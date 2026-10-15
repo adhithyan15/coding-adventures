@@ -4,7 +4,7 @@
   "chapter": 469,
   "title": "La impresora de la sala 2",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6671e78271ced659",
+  "sourceHash": "fnv1a64:2362d5c89e660977",
   "lessons": [
     {
       "id": "ES-C469-imprimir",
@@ -189,7 +189,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f31104bd088bbf43",
+      "sourceHash": "fnv1a64:e809cd8787f68bb5",
       "notice": null,
       "blocks": [
         {
@@ -275,11 +275,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Same imprimere as the verb: in- plus premere, to press into."
+              "text": "Same Latin imprimere as the verb: in- plus premere, to press into."
             },
             {
               "kind": "speech",
-              "text": "Why feminine rather than masculine? El contador told you the ending does not decide; this is the mechanism underneath. Impresora started life as an adjective leaning on a noun — la máquina impresora, the printing machine. The noun dropped away and left its gender behind. So the article you cannot predict from the ending was fixed by a word that is no longer said."
+              "text": "Why feminine rather than masculine? El contador told you the ending does not decide; this is the mechanism underneath. Impresora started life as an adjective leaning on a noun — la máquina impresora, the printing machine. The noun dropped away and left its gender behind. So the article you cannot predict from the ending was fixed by a word no longer said."
             }
           ]
         },

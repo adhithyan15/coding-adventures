@@ -47,7 +47,7 @@ reviews_of: [RU-C172-komandirovka]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**договор** is *до-*, "up to, through", with *говор*, "talk": an agreement reached by talking a matter through.
+**договор** is *до-*, "up to, through", with *говор*, "talk": an agreement reached by talking a matter through. *Говор* is inherited; Vasmer relates it to Latvian *gaura*, "chatter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 218,
   "title": "Breakfast, Snack, Tip, Platform, Passport",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a92b39c5b524e7eb",
+  "sourceHash": "fnv1a64:4677930cb05fe2c1",
   "lessons": [
     {
       "id": "PT-C218-pequeno-almoco",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ac809afdd19cf5a",
+      "sourceHash": "fnv1a64:012a3df28a540b74",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pequeno-almoço is \"little lunch\": pequeno, \"small\", and almoço, \"lunch\"."
+              "text": "pequeno-almoço is \"little lunch\": pequeno, \"small\", and almoço, \"lunch\". Both are inherited through Old Portuguese, pequeno unchanged and almoço from almorço (EtymDB 2.1); where pequeno came from before that is uncertain."
             }
           ]
         },

@@ -1,5 +1,14 @@
 # Changelog
 
+## Fixed — every taken-apart block now says where its word comes from
+
+Forty-eight Spanish word lessons had a "taken apart" block that took a phrase apart into words the reader owns, listed a word's parts, or told a story about the word, and never said where it came from in a shape the measure reads (human-language-data `hasEmptyEtymologyBlock`, HL24 §9.4). Sources: EtymDB 2.1 (Fourrier & Sagot 2020, CC BY-SA 4.0) and Lewis & Short (Perseus `lexica`), read locally; every line is our own sentence. Empty etymology blocks 48 → 0.
+
+- **New origin sentences (30).** Inherited words with their Latin source and an EtymDB tag (*cómo*, *estar*, *otro* ← *alter*, *diez*, *seis*, *tan*, *poco*, *no*, *de*, *qué*, Old Spanish *ha i* for *hay*, *poder* ← Vulgar Latin *\*potēre*, *ni* ← *nec*, *hablar* ← *fābulārī*, *esposa* ← *spōnsa*, *bajo*, *helar* ← *gelāre*, *pedir* ← *petere*, *volver* ← *volvere*, *comportar*); learned words and loans (*museo* through Latin from Greek, *camisa* from Late Latin, which EtymDB traces to Germanic, *talla* routed through French *taille*, *coma* and *bomba* through Latin from Greek, *calefacción* from *calefactiō*, *director* and *producir* as Latin borrowings, *wifi* from English, *fotografía* from two Greek roots); *bastar* and the *abono* that means a subscription have no source in EtymDB, and the blocks say so; *pantalla* is recorded by EtymDB as a loan from Catalan, which moves its open question back a step.
+- **Rewordings a signal can read (18).** Blocks that already gave the origin now say it in words the measure reads: "comes from" (ES-C61-o, ES-C274-ser-un-quijote, ES-C280-manzana, ES-C301-papel, ES-C324-siquiera), "the Greek word" (ES-C302-faro), "Latin *senior*" and "Latin *aliquem*" (ES-C305-senora, ES-C317-alguien), "built from Latin" (ES-C356-desde, ES-C446-acompanar), "borrowed from" (ES-C436-grupo, ES-C450-entrenamiento), *remedio* ← *remedium*, *cargar* is Latin *carricare*, *objeto* from Latin *obiectum*, "Same Latin *imprimere*", Latin *re-* + *commendare*, and *buzón* "is of uncertain origin".
+- **Corrected.** ES-C408-pastilla said *pastilla* belongs transparently with *pasta*. It comes from Latin *pastillus*, "a little loaf, a lozenge" (EtymDB 2.1; Lewis & Short gives it as a diminutive of *pānis*); block and hook now say so.
+- **Durations.** ES-C298-ni-hablar, ES-C300-remedio, ES-C301-papel, ES-C302-faro and ES-C469-impresora compute above 270 s; each was reworded so it did not grow. ES-C442-pantalla stays under 270 s. No `max_seconds` was raised.
+
 ## Added — every word lesson says where its word comes from (486 / 209 → 0 / 0)
 
 HL24 §9's etymology gap for Spanish is closed: every word lesson now has an

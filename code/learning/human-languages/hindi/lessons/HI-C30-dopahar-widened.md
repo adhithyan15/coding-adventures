@@ -66,7 +66,8 @@ than a precisely dated fact. Either way, the **word's job** in the
 language has moved on well past that etymology. This kind of drift — a word for one precise instant loosening
 into a name for a whole surrounding stretch of time — isn't unique to
 Hindi, but here it's especially visible because Chapter 17 showed you
-exactly how tight the original math was.
+exactly how tight the original math was. **पहर** comes from Sanskrit *prahara*,
+"a watch" (CDIAL 8900).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02] -->

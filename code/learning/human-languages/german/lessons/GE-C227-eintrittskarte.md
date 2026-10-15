@@ -46,7 +46,7 @@ reviews_of: [GE-C227-eintritt]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Eintrittskarte** is *Eintritt*, "entry", + *-s-* + *Karte*, "card": a card that lets you step in.
+**Eintrittskarte** is *Eintritt*, "entry", + *-s-* + *Karte*, "card": a card that lets you step in. *Karte* is borrowed from Latin *charta*, "paper", itself from Greek (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

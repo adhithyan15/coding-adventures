@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "To lose, To win, To look, To draw, To travel",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:861497399ff51bb4",
+  "sourceHash": "fnv1a64:d3ce07a3e3853ada",
   "lessons": [
     {
       "id": "RU-C135-to-lose",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76ce1d165e560a0e",
+      "sourceHash": "fnv1a64:a814c624b2facaae",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "путешествовать (puteshéstvovat) is the verb of путешествие, \"a journey\": путь, \"way\", with шествовать, \"to march, to proceed\"."
+              "text": "путешествовать (puteshéstvovat) is the verb of путешествие, \"a journey\": путь, \"way\", with шествовать, \"to march, to proceed\". Путь from Proto-Slavic pǫtĭ, kin to Sanskrit pánthās, \"path\" (Vasmer); шествие is borrowed from Church Slavonic."
             }
           ]
         },

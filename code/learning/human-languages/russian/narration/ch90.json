@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Car park, Lift, North, South, East",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:afd4de33fcdc1c03",
+  "sourceHash": "fnv1a64:5e9fdab295ea4386",
   "lessons": [
     {
       "id": "RU-C90-car-park",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c913c202be813db6",
+      "sourceHash": "fnv1a64:4acb301244062ad8",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "стоянка (stoyánka) is стоять, \"to stand\", with -нка: a place where something stands."
+              "text": "стоянка (stoyánka) is стоять, \"to stand\", with -нка: a place where something stands. Стоять from Proto-Slavic stojati — inherited; Vasmer compares Latin stō, \"I stand\"."
             }
           ]
         },

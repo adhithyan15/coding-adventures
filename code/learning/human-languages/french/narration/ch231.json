@@ -4,7 +4,7 @@
   "chapter": 231,
   "title": "Return, Arrival, Departure, Destination, Landscape",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d54337f77dbb9aa2",
+  "sourceHash": "fnv1a64:d735548e4fa5602c",
   "lessons": [
     {
       "id": "FR-C231-retour",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a782d849afbb993c",
+      "sourceHash": "fnv1a64:65795fc3fc42eb06",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "retour — formed from the verb for \"to return\", re- with tourner, \"to turn\"."
+              "text": "retour — formed from the verb for \"to return\", re- with tourner, \"to turn\". Tourner from Latin tornāre, \"to turn\" (EtymDB 2.1)."
             }
           ]
         },

@@ -46,7 +46,7 @@ reviews_of: [FR-C136-soixante]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**soixante-dix** — "sixty-ten": *soixante*, "sixty", and *dix*, "ten". France counts the seventies on from sixty.
+**soixante-dix** — "sixty-ten": *soixante*, "sixty", and *dix*, "ten". France counts the seventies on from sixty. *Soixante* ← Latin *sexāgintā* and *dix* ← *decem*, both inherited (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

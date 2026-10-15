@@ -47,6 +47,9 @@ when you first met them; you just learned **estar**. Assemble them.
 - **está** = "you are" (the *usted*/he-she form of **estar** — state, not identity)
 - **usted** = the formal "you"
 
+*Cómo* ← Latin *quōmodo* and *estar* ← Latin *stāre*, "to stand", both inherited
+(EtymDB 2.1); *usted* is *vuestra merced*, "your grace", worn down.
+
 Note the **¿** — Spanish opens a question with an upside-down mark so you know
 the melody is coming before you start reading aloud. (We take that mark apart in
 a dedicated writing lesson.)

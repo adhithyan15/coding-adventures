@@ -20,7 +20,7 @@ ein Brot becomes kein Brot — "a loaf" becomes "no loaf".
 Nothing else in the phrase moves. The k goes on the front of the word you already have, and the noun stands exactly as it stood.
 
 The word, taken apart: not + one.
-kein is Old High German nihein, which is ni ("not") plus ein ("one"). Not one. The ni- wore down to nothing over a thousand years and left the k that had crept in beside it, and the modern word no longer looks like its own parts.
+kein comes from Old High German nihein, which is ni ("not") plus ein ("one"). Not one. The ni- wore down to nothing over a thousand years and left the k that had crept in beside it, and the modern word no longer looks like its own parts.
 English did the identical thing with its own two words, and English still shows the seam:
 [a table of 2 rows, read aloud]
 the pieces: ne + ān ("not" + "one"). what they made: nān becomes none, no.
@@ -63,7 +63,7 @@ keine Hände — "no hands".
 The extra -e is not a new ending. It is eine's -e, unmoved. Put the k on the front of the word you already say and stop there.
 
 The word, taken apart.
-keine is a form of kein, which grew out of Old High German nihein, "not one": a negative fused onto the word for "one", later worn down to kein.
+keine is a form of kein, which grew from Old High German nihein, "not one": a negative fused onto the word for "one", later worn down to kein.
 
 Grammar Lens: one word cancels the whole family.
 Something worth noticing before the next lesson complicates it: German gets two jobs out of these two shapes. Keine Katze is "no cat" — one cat, and there is not one. Keine Hände is "no hands" — however many there might have been, there are none.
@@ -106,7 +106,7 @@ Ich habe einen Bruder. becomes Ich habe keinen Bruder.
 The -en is the one from einen, unchanged. You are not learning a second ending; you are watching the ending you already own ride along on the negative word, because kein is ein with two letters welded to the front and nothing else touched.
 
 The word, taken apart.
-keinen is a form of kein, which grew out of Old High German nihein, "not one": the word for "one" with a negative fused on the front.
+keinen is a form of kein, which grew from Old High German nihein, "not one": the word for "one" with a negative fused on the front.
 
 Grammar Lens: three shapes, and the one that moves.
 Line the three up against what they stand in front of and one thing jumps out:

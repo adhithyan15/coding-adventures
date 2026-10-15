@@ -46,7 +46,7 @@ reviews_of: [GE-C207-dieb]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Diebstahl** is *Dieb*, "thief", + an old noun from *stehlen*, "to steal": a thief's stealing.
+**Diebstahl** is *Dieb*, "thief", + an old noun from *stehlen*, "to steal": a thief's stealing. *Dieb* ← Proto-Germanic *\*þeubaz* (EtymDB 2.1), the same word as English *thief*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "But, Or, Why",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6b8c594b67e77a7c",
+  "sourceHash": "fnv1a64:40d072f5cd6d541d",
   "lessons": [
     {
       "id": "IT-C32-ma",
@@ -402,7 +402,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4d0f5b9f69d74d0",
+      "sourceHash": "fnv1a64:10b97d7a70a97920",
       "notice": null,
       "blocks": [
         {
@@ -501,7 +501,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Perché is per + ché. Per is \"for, through\" — the same per that is in English per cent, \"for each hundred.\" Ché is the che of the last chapter, wearing an accent because it now carries the stress at the end of the word."
+              "text": "Perché is per + ché, both inherited from Latin (EtymDB 2.1). Per, \"for, through\", is the per of English per cent. Ché is the che of the last chapter, from quid, wearing an accent because it now carries the stress at the end."
             },
             {
               "kind": "speech",

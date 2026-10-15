@@ -46,7 +46,7 @@ reviews_of: [FR-C189-malheureusement]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**heureusement** — *heureux*, "lucky", with the adverb ending *-ment*.
+**heureusement** — *heureux*, "lucky", with the adverb ending *-ment*. *Heureux* is built on Old French *eur*, "luck", from Latin *augurium*, "an omen" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

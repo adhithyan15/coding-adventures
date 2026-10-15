@@ -46,7 +46,7 @@ reviews_of: [FR-C167-fiance]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**fiancée** is the feminine of *fiancé*: the woman promised in marriage.
+**fiancée** is the feminine of *fiancé*: the woman promised in marriage. *Fiancé* comes from Old French *fiance*, "a promise", from the Latin family of *fidēs*, "faith".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

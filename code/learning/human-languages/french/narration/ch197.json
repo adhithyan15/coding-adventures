@@ -4,7 +4,7 @@
   "chapter": 197,
   "title": "Bridegroom, Bride, Widower, Success, Failure",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cff2438a8fdaa10d",
+  "sourceHash": "fnv1a64:9ffb564f3797afac",
   "lessons": [
     {
       "id": "FR-C197-marie",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6de05dfc6a1adfc9",
+      "sourceHash": "fnv1a64:8e05dd47fa524b11",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "marié — the adjective marié, \"married\", used as a noun: the man being married."
+              "text": "marié — the adjective marié, \"married\", used as a noun: the man being married. Marier from Latin marītāre, \"to wed\" (EtymDB 2.1)."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fba733e2be0a6df",
+      "sourceHash": "fnv1a64:3b841fb7f3825f79",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "mariée — the feminine of marié, used as a noun: the bride."
+              "text": "mariée — the feminine of marié, used as a noun: the bride. Marier from Latin marītāre, \"to wed\" (EtymDB 2.1)."
             }
           ]
         },

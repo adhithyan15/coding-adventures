@@ -44,6 +44,9 @@ variety: standard-contemporary
 
 - [buon](IT-C01-buono.md) ("good") + [giorno](IT-C01-giorno.md) ("day").
 
+Both halves are inherited from Latin: *buon* from *bonus*, "good", and *giorno*
+from *diurnum*, "daytime" (EtymDB 2.1).
+
 > **buongiorno** = "good day," one word.
 
 ## Why it's said this way

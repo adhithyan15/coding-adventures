@@ -4,7 +4,7 @@
   "chapter": 220,
   "title": "Tampoco --- The Same Frame, the Other Half",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:04c87d7850de7de1",
+  "sourceHash": "fnv1a64:514aa7d9ecd979f7",
   "lessons": [
     {
       "id": "ES-C58-tampoco",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b449e45ff9771482",
+      "sourceHash": "fnv1a64:e00d76e5c62186e4",
       "notice": null,
       "blocks": [
         {
@@ -77,7 +77,7 @@
             },
             {
               "kind": "speech",
-              "text": "The same tan you met yesterday. The new half is poco, which means little — a small amount of something."
+              "text": "The same tan you met yesterday. The new half is poco, which means little — a small amount of something. Poco from Latin paucus, \"few\" (EtymDB 2.1)."
             },
             {
               "kind": "table",

@@ -46,7 +46,7 @@ reviews_of: [FR-C188-au-fond]
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**à droite** — *à*, "on", and *droite*, "the right".
+**à droite** — *à*, "on", and *droite*, "the right". *Droite* ← Latin *dīrēctus*, "straight", through Old French *dreit* (EtymDB 2.1); *à* ← Latin *ad*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

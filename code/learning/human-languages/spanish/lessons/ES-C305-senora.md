@@ -46,7 +46,7 @@ reviews_of: [ES-C305-senor]
 
 **señora** — "madam," "Mrs."
 
-The same *senior*, turned by the *-o*/*-a* switch you have now met three times:
+The same Latin *senior*, turned by the *-o*/*-a* switch you have now met three times:
 *bueno*/*buena*, *tranquilo*/*tranquila*, and here.
 
 That switch is the single most useful pattern in the language, and you have been

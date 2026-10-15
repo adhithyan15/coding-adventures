@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "To go up, To go down, To stay, To rent, To repair",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:42ff616da7c18724",
+  "sourceHash": "fnv1a64:1ca43875345a9f77",
   "lessons": [
     {
       "id": "RU-C133-to-go-up",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d791f2ab698cc294",
+      "sourceHash": "fnv1a64:b385dfce34f1170e",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "спускаться (spuskátsya) is с-, \"down\", with пускать, \"to let go\", and -ся, \"oneself\": to let yourself down."
+              "text": "спускаться (spuskátsya) is с-, \"down\", with пускать, \"to let go\", and -ся, \"oneself\": to let yourself down. Vasmer links пускать with пустить and пустой, \"empty\"; its deeper origin is uncertain."
             }
           ]
         },

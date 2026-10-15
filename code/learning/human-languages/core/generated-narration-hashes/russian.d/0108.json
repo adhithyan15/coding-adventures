@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 108,
-  "sourceHash": "fnv1a64:ad18c9aed517875d",
+  "sourceHash": "fnv1a64:f95311375201d16a",
   "lessonIds": [
     "RU-C108-police-officer",
     "RU-C108-shop-assistant",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch108.txt",
   "json": "russian/narration/ch108.json",
-  "textHash": "fnv1a64:f67039e65d8dc9ca",
-  "jsonHash": "fnv1a64:1a261c6cd177b46e",
+  "textHash": "fnv1a64:db102354a02f360e",
+  "jsonHash": "fnv1a64:1b57173fdbc226d3",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 317,
   "title": "Something, Somebody, Nobody",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1bb743b976672367",
+  "sourceHash": "fnv1a64:b8c4563058d55d52",
   "lessons": [
     {
       "id": "ES-C317-algo",
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:098e7ce67675bd21",
+      "sourceHash": "fnv1a64:6b2f6b19b65daa09",
       "notice": null,
       "blocks": [
         {
@@ -236,7 +236,7 @@
             },
             {
               "kind": "speech",
-              "text": "Take algo apart once more: ali- \"other\" plus quod \"what.\" Now swap the second half. Quem is \"whom\" — the person form. Ali- plus quem is aliquem: some other whom."
+              "text": "Take algo apart once more: ali- \"other\" plus quod \"what.\" Now swap the second half. Quem is \"whom\" — the person form. Ali- plus quem is Latin aliquem: some other whom."
             },
             {
               "kind": "speech",

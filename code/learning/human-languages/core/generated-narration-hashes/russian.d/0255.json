@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 255,
-  "sourceHash": "fnv1a64:8df8f2831b3e8ebe",
+  "sourceHash": "fnv1a64:991b70acb8c6a916",
   "lessonIds": [
     "RU-C255-familiya",
     "RU-C255-vozrast",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch255.txt",
   "json": "russian/narration/ch255.json",
-  "textHash": "fnv1a64:30f0d79681c7a644",
-  "jsonHash": "fnv1a64:d3e0d75d980803dd",
+  "textHash": "fnv1a64:87e51979c18b8211",
+  "jsonHash": "fnv1a64:f4624d8e992b4b10",
   "findings": []
 }

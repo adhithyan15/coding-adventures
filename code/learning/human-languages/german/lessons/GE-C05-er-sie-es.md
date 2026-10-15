@@ -65,6 +65,9 @@ German bothers with genders:
 | *die* | *sie* | she |
 | *das* | *es* | it |
 
+All three pronouns are inherited. *Es* is kin to English *it*, and *sie* is
+usually linked to English *she*, whose own history is disputed.
+
 ## Grammar Lens: all three take -t
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-THIRD-PERSON-T-03]; assesses=[GE-LEX-ER-01, GE-LEX-SIE-SHE-02, GE-GRAMMAR-VERB-STEM-01, GE-LEX-WOHNEN-01] -->
 

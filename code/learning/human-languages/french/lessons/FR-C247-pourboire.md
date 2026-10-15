@@ -46,7 +46,7 @@ reviews_of: [FR-C247-addition]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**pourboire** — the word for "for" and *boire*, "to drink": money for a drink.
+**pourboire** — the word for "for" and *boire*, "to drink": money for a drink. *Boire* ← Latin *bibere*, "to drink" (EtymDB 2.1), and *pour* ← Vulgar Latin *por*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

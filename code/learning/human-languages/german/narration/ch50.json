@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "The One It Happens To",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a3af7c643e5a506f",
+  "sourceHash": "fnv1a64:694631caed40ca30",
   "lessons": [
     {
       "id": "GE-C37-dich",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e77efeeb0551a6f7",
+      "sourceHash": "fnv1a64:6f99bf120c4ddb41",
       "notice": null,
       "blocks": [
         {
@@ -90,7 +90,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every one begins with the d that was English th, so the row is predictable from a rule you have had since the second chapter."
+              "text": "Every one begins with the d that was English th, so the row is predictable from a rule you have had since the second chapter. Du and English thou are one inherited Germanic word; EtymDB 2.1 has no row tracing either further."
             }
           ]
         },
@@ -184,7 +184,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1c4db500deddfcf",
+      "sourceHash": "fnv1a64:ad661e7a0563685f",
       "notice": null,
       "blocks": [
         {
@@ -246,7 +246,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the two languages did not lose the same thing. English lost the distinction; German lost nothing and merely stopped being able to explain it briefly."
+              "text": "English lost the distinction; German lost nothing. Ihn is inherited, though EtymDB 2.1 has no row for it; it traces him to Proto-Germanic himmai."
             }
           ]
         },
@@ -349,7 +349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffc2f068635b97c0",
+      "sourceHash": "fnv1a64:3c83d661b68c8bd2",
       "notice": null,
       "blocks": [
         {
@@ -399,7 +399,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "uns and English us are the same word, worn to the same length in both languages. English us also does both jobs — he sees us, he gives us coffee — so this is one row where the two languages agree completely and nothing has to be learned twice."
+              "text": "uns is the same word as English us, worn to the same length in both languages. English us also does both jobs — he sees us, he gives us coffee — so this is one row where the two languages agree completely and nothing has to be learned twice."
             },
             {
               "kind": "speech",
@@ -497,7 +497,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f2bbb0d67ce920d",
+      "sourceHash": "fnv1a64:026c1d889c390239",
       "notice": null,
       "blocks": [
         {
@@ -543,7 +543,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "English had this word. Old English ēow was the done-to shape of ġē (\"ye\"), and ēow is exactly what German's euch is."
+              "text": "English had this word. Old English ēow was the done-to shape of ġē (\"ye\"), and ēow is the same word as German euch."
             },
             {
               "kind": "speech",

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 33,
-  "sourceHash": "fnv1a64:10b80a26eb75b140",
+  "sourceHash": "fnv1a64:17b4d7ff6bba79b4",
   "lessonIds": [
     "TA-C33-ninai",
     "TA-C33-puri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "tamil/narration/ch33.txt",
   "json": "tamil/narration/ch33.json",
-  "textHash": "fnv1a64:70314ba029cc6c8f",
-  "jsonHash": "fnv1a64:4259ef6f8444e6c6",
+  "textHash": "fnv1a64:5cf3e3625dae143a",
+  "jsonHash": "fnv1a64:869d5ec13c6092c1",
   "findings": []
 }

@@ -66,6 +66,9 @@ prose and **not one Romance language kept it**. Spanish and Italian took *magis*
 ("more") for *mas* and *ma*; French took *mais* from the same *magis*; Portuguese
 *mas* likewise. A word Cicero could not write a page without vanished completely.
 
+Where *sed* came from is uncertain; Lewis & Short thinks it most likely an old
+ablative of the reflexive stem *se-*, "by itself, apart".
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C48-DENY-01, LA-LEX-C48-DENY-02, LA-LEX-C48-DENY-03, LA-LEX-C48-DENY-04] -->
 

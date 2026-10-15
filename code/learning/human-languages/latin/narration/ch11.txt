@@ -23,6 +23,7 @@ Latin: September. who / what: "the seventh" (septem).
 Latin: Octōber. who / what: "the eighth" (octō).
 Latin: November. who / what: "the ninth" (novem).
 Latin: December. who / what: "the tenth" (decem).
+Each name comes from the god, festival or number beside it; Aprīlis is the least certain.
 
 Why it's said this way: Be honest about the renaming — a popular myth, corrected.
 You'll often hear that Julius Caesar and Augustus "added" two months to the calendar, which is why September through December no longer match their numbers. That's not what happened. Rome's year, centuries earlier, had already been expanded from ten months to twelve by adding Iānuārius and Februārius at the front — that's the real reason September ("seventh") ended up as the ninth month.

@@ -47,7 +47,7 @@ reviews_of: [RU-C202-moryak]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**рыбак** is *рыба*, "fish", with *-ак*, "a person": a fisherman.
+**рыбак** is *рыба*, "fish", with *-ак*, "a person": a fisherman. Where *рыба* comes from is uncertain; Vasmer reports a doubtful comparison with Old High German *rūppa*, "caterpillar".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

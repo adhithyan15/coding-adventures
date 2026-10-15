@@ -109,7 +109,7 @@ You'll want to know: le dentiste.
 le dentiste — "a dentist".
 
 The word, taken apart.
-dentiste — dent, "tooth", with -iste, "one who works with".
+dentiste — dent, "tooth", with -iste, "one who works with". Dent from Latin dentem, "tooth" (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.
@@ -141,7 +141,7 @@ You'll want to know: le pharmacien.
 le pharmacien — "a pharmacist".
 
 The word, taken apart.
-pharmacien — pharmacie with -ien, "one who works in".
+pharmacien — pharmacie with -ien, "one who works in". Pharmacie from Medieval Latin pharmacia, from Greek (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

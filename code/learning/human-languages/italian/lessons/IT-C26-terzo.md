@@ -70,6 +70,9 @@ So the words this chapter is teaching do a second job you will meet in a recipe 
 on a bill. English does exactly the same thing with *a third* and *a quarter*, and
 for the same reason: the ordinal already names a position in a division.
 
+**Terzo** itself is inherited from Latin *tertius*, "third", which was built on
+*trēs*, "three" (EtymDB 2.1).
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-TERZO-02, IT-ETYMON-TERZO-03] -->
 

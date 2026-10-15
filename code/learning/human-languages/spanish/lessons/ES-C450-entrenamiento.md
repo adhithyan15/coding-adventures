@@ -71,7 +71,7 @@ can rely on is the gender, and that is worth having.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C450-SUELO-05, ES-LEX-TREN] -->
 
-French **entraîner**, to drag along — and inside it the same *traîner* that
+Borrowed from French **entraîner**, to drag along — and inside it the same *traîner* that
 gave Spanish **el tren**.
 
 Hold the two together. A **tren** is the set of carriages *dragged* behind the

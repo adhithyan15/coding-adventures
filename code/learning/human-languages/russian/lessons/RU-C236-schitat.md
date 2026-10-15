@@ -47,7 +47,7 @@ reviews_of: [RU-C235-serditsya]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**считать** is *с-* with *читать*, "to read", which once meant "to count", as in *число*, "a number".
+**считать** is *с-* with *читать*, "to read", which once meant "to count", as in *число*, "a number". Vasmer links *читать* with an old Slavic verb meaning "to count, to honour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

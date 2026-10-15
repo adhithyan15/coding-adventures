@@ -47,7 +47,7 @@ reviews_of: [TE-C293-carci]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**పంచాయతీ** (*pañcāyatī*) matches Hindustani *pañcāyat*, "village council", which DEDR and CDIAL do not list.
+**పంచాయతీ** (*pañcāyatī*) matches Hindustani *pañcāyat*, "village council", which DEDR and CDIAL do not list, so its exact route into Telugu is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

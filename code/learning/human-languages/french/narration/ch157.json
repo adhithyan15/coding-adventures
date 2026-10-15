@@ -4,7 +4,7 @@
   "chapter": 157,
   "title": "Above, Below, In front, Behind, Beside",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:11c7f79924edafb6",
+  "sourceHash": "fnv1a64:297d09642f41425c",
   "lessons": [
     {
       "id": "FR-C157-au-dessus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b8b60dd322e5eff",
+      "sourceHash": "fnv1a64:8f8589311b4bddef",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "au-dessus — au, \"at the\", and dessus, \"on top\"."
+              "text": "au-dessus — au, \"at the\", and dessus, \"on top\". Dessus is de with Old French sus, \"above\", from Latin sursum, \"upward\"."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db0f65eec21b1ca5",
+      "sourceHash": "fnv1a64:7a8bc9f84b7f3631",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "au-dessous — au, \"at the\", and dessous, \"underneath\"."
+              "text": "au-dessous — au, \"at the\", and dessous, \"underneath\". Dessous from Latin dē + subtus, \"below\" (EtymDB 2.1)."
             }
           ]
         },

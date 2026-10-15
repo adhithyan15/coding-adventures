@@ -42,16 +42,18 @@ turns out to have its own twist here.
 
 **నీళ్ళు** (*nīḷḷu*) = "**water**" — matching Tamil's *nīr* and Kannada's
 *nīru*. Malayalam's *veḷḷam* is the odd one out among all four Dravidian
-languages for water, not Telugu.
+languages for water, not Telugu. *Nīḷḷu*, *nīr* and *nīru* are one native
+Dravidian word (DEDR 3690).
 
 ## The word, taken apart - బియ్యం, అన్నం — rice, with a twist
 <!-- hl-knowledge: introduces=[TE-ETYMON-C15-NEELLU-BIYYAM-02]; assesses=[] -->
 
 - **బియ్యం** (*biyyam*) = "**rice**" (raw grain) — **Telugu's own word**,
   unlike the shared *ari/arisi/akki* found in Malayalam, Tamil, and
-  Kannada.
+  Kannada. DEDR lists it among its words taken from Indo-Aryan (DEDR App. 60),
+  under Sanskrit *bīja*, "seed" (CDIAL 9250): seed became husked rice.
 - **అన్నం** (*annam*) = "**cooked rice**" (the meal) — matching Kannada's
-  *anna* closely, both likely Sanskrit-influenced.
+  *anna* closely, both from Sanskrit *anna*, "food, cooked rice" (CDIAL 395).
 
 So the pattern flips between water and rice: for **water**, Telugu joins
 the majority (Tamil/Kannada) against Malayalam; for **raw rice**, Telugu is

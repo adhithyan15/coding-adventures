@@ -46,7 +46,7 @@ reviews_of: [FR-C190-timide]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**courageux** — *courage* with *-eux*, "full of".
+**courageux** — *courage* with *-eux*, "full of". *Courage* is built on Latin *cor*, "heart" (EtymDB 2.1), and *-eux* ← Latin *-ōsus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

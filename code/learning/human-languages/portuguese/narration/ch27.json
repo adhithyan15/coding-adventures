@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Primeiro, Segundo, Terceiro",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d7c6516e39fa0db6",
+  "sourceHash": "fnv1a64:592c06d602f7ef7e",
   "lessons": [
     {
       "id": "PT-C27-primeiro",
@@ -597,7 +597,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d766da2adf939c73",
+      "sourceHash": "fnv1a64:4ce00d2b3074830b",
       "notice": null,
       "blocks": [
         {
@@ -702,7 +702,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Quatro is four; quarto is four with the ordinal ending, and you can hear the cardinal inside it."
+              "text": "Quatro is four; quarto is four with the ordinal ending, and you can hear the cardinal inside it. Quarto is inherited from Latin quartus, \"fourth\", itself built on quattuor, \"four\" (EtymDB 2.1)."
             },
             {
               "kind": "speech",

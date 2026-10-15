@@ -11,7 +11,7 @@ concept_tag: FR-QUESTION-WHY
 prerequisites: [FR-C32-combien]
 sounds: []
 roots: []
-etymology_hook: "French asks a question three ways -- voice, est-ce que, inversion -- and they differ in register rather than in meaning."
+etymology_hook: "pourquoi = pour (← Vulgar Latin por) + quoi (← Latin quid): 'for what', like English what for"
 duration:
   max_seconds: 240
 requires:
@@ -47,7 +47,8 @@ Take it apart:
 **pour** ("for") + **quoi** ("what") → **pourquoi**
 
 *For what?* French built its *why* out of two words you can still see inside it,
-and English does the same thing in *what for?*
+and English does the same thing in *what for?* Both halves are Latin underneath:
+*pour* ← Vulgar Latin *por*, *quoi* ← *quid*, "what" (EtymDB 2.1).
 
 > **Pourquoi ?** — Why?
 

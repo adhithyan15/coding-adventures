@@ -4,7 +4,7 @@
   "chapter": 167,
   "title": "Mother-in-law, Son-in-law, Daughter-in-law, Fiancé, Fiancée",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d4988cc320c43b49",
+  "sourceHash": "fnv1a64:d8b72005cb0cf25c",
   "lessons": [
     {
       "id": "FR-C167-belle-mere",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb98214f21bf97fe",
+      "sourceHash": "fnv1a64:2e1ab2b4b14fcee6",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "fiancée is the feminine of fiancé: the woman promised in marriage."
+              "text": "fiancée is the feminine of fiancé: the woman promised in marriage. Fiancé comes from Old French fiance, \"a promise\", from the Latin family of fidēs, \"faith\"."
             }
           ]
         },

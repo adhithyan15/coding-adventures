@@ -65,6 +65,9 @@ plain cause, **quod** states one the hearer already accepts, and **quoniam**
 ("since now") states one both parties take for granted. A reader meets all three.
 Start with *quia*.
 
+*Quia* is built on the stem of *quis*, "who, what", inherited from
+Proto-Indo-European *\*kʷis* (EtymDB 2.1); the exact form behind it is disputed.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C52-ASK-01, LA-LEX-C52-ASK-02, LA-LEX-C52-ASK-03] -->
 

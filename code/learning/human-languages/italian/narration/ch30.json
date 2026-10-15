@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Not",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4ae37c9e739fd926",
+  "sourceHash": "fnv1a64:5a205b86f49c5e8b",
   "lessons": [
     {
       "id": "IT-C30-non",
@@ -594,7 +594,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4dc490d51be82146",
+      "sourceHash": "fnv1a64:8fb793d3ae616aeb",
       "notice": null,
       "blocks": [
         {
@@ -705,7 +705,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is né + anche, welded into one word, and you were given the first half one lesson ago. Because it carries a né, it keeps the non rule with it:"
+              "text": "It is né + anche, welded into one word, and you were given the first half one lesson ago. Né is inherited from Latin nec, \"and not\" (EtymDB 2.1); where anche comes from is uncertain. Because it carries a né, it keeps the non rule with it:"
             },
             {
               "kind": "speech",

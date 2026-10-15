@@ -47,7 +47,7 @@ reviews_of: [RU-C255-soobshcheniye]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**разговор** is *раз-*, "about, back and forth", with *говор*, "talk".
+**разговор** is *раз-*, "about, back and forth", with *говор*, "talk". *Говор* is inherited; Vasmer relates it to Latvian *gaura*, "chatter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

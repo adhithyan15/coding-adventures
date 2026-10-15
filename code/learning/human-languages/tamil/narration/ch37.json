@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Your Town, Your Friend",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f692067a40f6d81f",
+  "sourceHash": "fnv1a64:e520b1c782104b53",
   "lessons": [
     {
       "id": "TA-C37-uur",
@@ -228,7 +228,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3b1e135aa5ebe420",
+      "sourceHash": "fnv1a64:5df38a88022ceb3e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -327,7 +327,7 @@
             },
             {
               "kind": "speech",
-              "text": "Be precise. The Dravidian dictionary files naṇbu and naṇbaṉ in the same entry as naṇṇu; the Tamil lexicon prefers நள்-, making them siblings rather than parent and child. They differ on the line of descent, not on the household."
+              "text": "Be precise. DEDR 3588 files naṇbu and naṇbaṉ in the same entry as naṇṇu; the Tamil lexicon prefers நள்-, making them siblings rather than parent and child. They differ on the line of descent, not on the household."
             },
             {
               "kind": "speech",

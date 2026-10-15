@@ -49,7 +49,9 @@ glimpse of how German adjectives work.
 <!-- hl-knowledge: introduces=[GE-LEX-GUTEN-TAG-01]; assesses=[] -->
 
 **Guten Tag** = **gut** ("good") + **Tag** ("day") = "good day," the neutral
-polite "hello" for daytime. Said *GOO-ten tahk*.
+polite "hello" for daytime. Said *GOO-ten tahk*. Both words are inherited: *gut*
+← Old High German *guot*, and *Tag* ← Proto-Germanic *\*dagaz*, the same word as
+English *day* (EtymDB 2.1).
 
 ## Grammar Lens: why *guten*, not *gut*?
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-ADJ-ACC-MASC-02]; assesses=[] -->

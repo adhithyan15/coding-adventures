@@ -47,7 +47,7 @@ reviews_of: [RU-C143-khodit]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**приходить** is *при-*, "to, toward", with *ходить*, "to walk": to come to a place.
+**приходить** is *при-*, "to, toward", with *ходить*, "to walk": to come to a place. Vasmer ties *ход* to the Indo-European root *\*sed-*, "to sit", its *х* grown from an *s* after prefixes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

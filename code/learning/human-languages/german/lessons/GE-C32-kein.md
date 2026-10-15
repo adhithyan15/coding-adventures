@@ -63,7 +63,7 @@ already have, and the noun stands exactly as it stood.
 ## The word, taken apart: not + one
 <!-- hl-knowledge: introduces=[GE-ETYMON-KEIN-NICHT-EIN-02]; assesses=[GE-LEX-KEIN-01, GE-LEX-EINS-01, GE-ETYMON-NICHT-NAUGHT-02] -->
 
-**kein** is Old High German ***nihein***, which is **ni** ("not") plus **ein**
+**kein** comes from Old High German ***nihein***, which is **ni** ("not") plus **ein**
 ("one"). *Not one.* The *ni-* wore down to nothing over a thousand years and
 left the *k* that had crept in beside it, and the modern word no longer looks
 like its own parts.

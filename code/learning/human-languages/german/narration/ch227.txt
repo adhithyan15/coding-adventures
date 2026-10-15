@@ -141,7 +141,7 @@ You'll want to know: die Eintrittskarte.
 die Eintrittskarte — "an admission ticket".
 
 The word, taken apart.
-Eintrittskarte is Eintritt, "entry", + -s- + Karte, "card": a card that lets you step in.
+Eintrittskarte is Eintritt, "entry", + -s- + Karte, "card": a card that lets you step in. Karte is borrowed from Latin charta, "paper", itself from Greek (EtymDB 2.1).
 
 What you've built.
 One more word for this chapter.

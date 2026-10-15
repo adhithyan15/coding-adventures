@@ -47,7 +47,7 @@ reviews_of: [RU-C132-to-get-dressed]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**умываться** is *у-* with *мыть*, "to wash", and *-ся*, "oneself": to wash your own face and hands.
+**умываться** is *у-* with *мыть*, "to wash", and *-ся*, "oneself": to wash your own face and hands. *Мыть* ← Proto-Slavic *\*myti* — inherited; Vasmer relates it to Lithuanian *máudyti*, "to bathe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

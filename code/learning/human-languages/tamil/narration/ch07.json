@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:28806f0ec500c3df",
+  "sourceHash": "fnv1a64:bbe09bc923d4b589",
   "lessons": [
     {
       "id": "TA-C07-numbers-1-5",
@@ -807,7 +807,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b13c7fd9250a184d",
+      "sourceHash": "fnv1a64:12800508d7625aef",
       "notice": null,
       "blocks": [
         {
@@ -877,7 +877,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Nine, onpatu, grew from one plus ten: one short of pattu. Say on-patu, then onpatu."
+              "text": "Nine, onpatu, is usually read as one plus ten: one short of pattu. Say on-patu, then onpatu. The word is native Dravidian (DEDR 1025), and how it was built is uncertain: DEDR sets it beside both \"one\" and an older word for nine."
             }
           ]
         },

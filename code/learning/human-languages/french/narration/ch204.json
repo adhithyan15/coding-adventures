@@ -4,7 +4,7 @@
   "chapter": 204,
   "title": "Interview, Career, Printer, Mobile phone, Sheet of paper",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:85bcc2247ced621a",
+  "sourceHash": "fnv1a64:0085c1fc6ec2a36e",
   "lessons": [
     {
       "id": "FR-C204-entretien",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a0b721c84d60af8",
+      "sourceHash": "fnv1a64:308032a45d84ed04",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "feuille de papier — feuille, \"a leaf, a sheet\", de, \"of\", and papier, \"paper\"."
+              "text": "feuille de papier — feuille, \"a leaf, a sheet\", de, \"of\", and papier, \"paper\". Feuille from Latin folia, \"leaves\", and papier from Latin papyrus (EtymDB 2.1)."
             }
           ]
         },
