@@ -3,32 +3,34 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a Venn config integration checkpoint -->
-October15 LOCAL/UNPUBLISHED combined carrier 8d550dd045051017f08a8a735004f1f82f976b2a.
-Specad12c32d precedes the complete independently reconstructed merge of R1 CI
-and R2 native9/docs04474103:225502paths,224988same/18left-only/496right-only,
-no double changes. Combined helper11controls/Ruff/docs/lessons/diff actualPASS;
-complete Rust tree differs from testedcdca only seven explicitly named files
-(sixMD plus Unix-only tcp-reactor BUILD_windows). No new Cargo execution or
-ignored-lock acceptance claimed. Combined independent review: bounded source/document/control PASS9b48a9f8; hosted/current-main acceptance still PENDING.
-Native sourcecdca2e11 actual1809P0F1existingignored/78+strict0, compiler878,
-LANG496;96sources/576actualcells retain516oldexact. Source19eb92d9 and terminal
-c45bd727 PASS. Native docs04474103 fiveMD/documentchecker/lessons/diff PASS.
-Windows7e725952 local Go/discovery/plan/vet/build and review848edc05 PASS;
-this is explicit Unix-only build selection, not Windows reactor support.
-Mac319dc1fe elevencontrols/Ruff/parser/docs/lessons/diff and independent
-source/control reviewa0e1cf4b PASS. Effective raw with-compiler pin and competing
-compiler/flavor/package-tool refusals close prior edeb WITHHELD findings.
-Real local Cabal3.16 missingselectedcompiler refused1; installed selectedGHC
-build0/run0 exact42. Retain failed ghc-location-only and quoted-path probes.
-Actual macOS3.10 compile/link/run and all required hosted acceptance PENDING.
-Latest remote main da0db47ecd52a0c1ecb1f22a3ac6c56ef6700759: Venn palette17572 merged; open ALGOLten17574 and
-Venndebug17575 require fresh exacthead audit before import. Next bounded slice
-is palette reconciliation preserving scopedparser/whole-scene oracles, eight
-color cycle/metadata, authoredfills, emptytypedpalette and invalid/decoy fallbacks.
-Incoming palette independent review ACTIVE with security_selector_review.
-SolePR17288 still publishes d4004fe5, CONFLICTING, autoOFF; publishedMacWindows
-failed, CIgatepending. Current-main integration/unforcedplan/finalcarrier/hosted
-checks/actualmerge reachability remain OPEN; no push/merge/cleanup or CIwaiver.
+October15 LOCAL/UNPUBLISHED Venn palette source55afa2b5305bed31afcbd39bf0d267c44db08dbd;
+current doc/source carrier 55afa2b5305bed31afcbd39bf0d267c44db08dbd. Spec2c05 precedes testsc7bfb2a6/72257 and
+closed main mergea20a6e1e:225512whole-tree entries,299pureincoming/7recipes/
+225206retained. Singlebasecd617 and incomingda0db47e. Owned Venn parser helpers,
+numeric admission and checked geometry retained; only bounded eight-slot palette
+selection/transport and paint cycling/metadata added. Registry376 exact;
+local Cargo lock deltas are exactly four palette package versions, outside native.
+Tests-first absent-schema/resolver-fixture compile failures retained as failures,
+never behavioral red acceptance. Actuala20 parser18/geo7 PASS, paint3P2F on old
+eight-vs-sixteen metadata oracle; reversible adapter preserves both old16-cell
+whole-scene bodies except eight explicit metadata additions. New48source->IR->
+checkedlayout->wholeScene/orderedFontQuery cells and24typedwholeScene cells,
+including0/1/2/8/10/defaultpalette, empty/11circles, authoredfills/globalordinal,
+exact8+Pmetadata. Total104completecells retain32old oracles. All8slot source
+controls include lexicalfallback/header/nested/sequence/quote/directmembers and
+empty-init no-inheritance. Focus actual18parser/6painttests/7geometric PASS.
+Full affected14 strict0; fullunfiltered suite: ACTUAL932P0F0ignored/41targets +strict0; logSHA85f3529c055186f1d94483c23da58725fc53fa16391b09f68f683a82cc3b24d6.
+Source/focused security: PASSf3864892 (exact source/focused scope); terminal: PASS88f8ef5b (exact full-suite/input scope).
+Native166/2838 inputs exactcdca2e11 except4namedMD; its actual1809P0F1existing
+ignored/78+strict0/source19eb92d9/terminalc45bd727 PASS remain scoped. Closure36/
+3705 exacthistorical316e. No new native/Closure execution claimed. CI/helper
+exact319dc1fe (reviewa0e1cf4b), Windows selection7e (review848edc05); actualMac3.10/
+fullhosted acceptancePENDING. Combinedpredecessor8d carrier review9b48a9f8 PASS.
+Latest remote main 2f160fa40c8b3a85f10beb91bfe1948152c57044; re-audit open shared/Closure heads before delivery.
+Sole implementation PR17288 still publishesd4004fe5, conflicting, autoOFF;
+publishedMacWindowsfailed/CIgatepending. Finaldocs/readmes/changelogs/backlog/
+issues/current-mainunforcedplan/exactcarrierreview/requiredhostedchecks and actual
+merge reachability remain required; no push/merge/cleanup or CIwaiver.
 Miri DEFERRED/PENDING, never passed; frozen checkout/process/inputs/target/receipts
 untouched/unpolled, no duplicate/termination. Deliver first then genuinefinalsource
 Miri. Full Closure parity/output-byte-source/fulltransformation lineage/objective

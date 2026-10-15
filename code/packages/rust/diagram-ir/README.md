@@ -133,25 +133,37 @@ and the full Closure parity/provenance objective remain separate gates.
 
 ## Bounded Venn theme transport
 
-Venn accepts root `themeVariables` front matter or a direct `themeVariables`
-object in a closed single-line init directive after the leading YAML header.
-The selected init object replaces front matter wholesale, including an empty
-object. Only direct mapping fields supply values; nested maps/arrays, scalar
-sections, sequence items and header literals cannot supply a theme. Specific
-`vennTitleTextColor`/`vennSetTextColor` precede generic `titleColor`/`textColor`;
-a present invalid specific value uses the default rather than the generic.
-Active matching quotes preserve embedded other quotes and font-family lists;
-only escaped active quotes/backslashes decode. Malformed present values default.
+Venn reads root `themeVariables` front matter or a direct object in a closed
+single-line init directive after the leading YAML header. A selected init object
+replaces front matter wholesale, including an empty object. Direct mapping
+fields supply values; header literals, nested maps/arrays, sequence items and
+scalar sections cannot supply a theme. Active quotes preserve embedded other
+quotes; malformed present values use defaults. The existing canvas/derived
+bounds and unrelated readers remain intact.
 
-Defaults are `sans-serif`, `#0f172a`, `#0f172a`. Configured family replaces caller
-option families, retaining size, weight, italic and stretch. Authored label
-`color` overrides the configured set color. The checked geometric layout carries
-all eight config fields; scenes expose all eight `venn.*` metadata entries.
-Existing canvas/scalar/derived bounds and unrelated diagram readers remain intact.
-Portable tests compare complete parsed config, geometry, paint primitives,
-glyph positions, drawing order and actual ordered resolver queries in16 themed
-source-to-scene cells, retaining the previous16 full-scene cells. This establishes
-bounded transport, not physical-font fitting, rasterization or full CSS parity.
-Actual affected14-package strict lint and925 unfiltered tests/40targets pass
-at source05e61228. Miri **DEFERRED/PENDING**, never passed; hosted checks, current
-main reconciliation, full Closure parity/lineage and delivery remain OPEN.
+Specific `vennTitleTextColor`/`vennSetTextColor` precede generic `titleColor`/
+`textColor`; present rejected specific values use defaults. Defaults are
+`sans-serif`, `#0f172a`, `#0f172a`. Configured family replaces caller option
+families while retaining size, weight, italic and stretch. Authored label color
+overrides the configured set color.
+
+`venn1` through `venn8` independently override the eight default colors:
+`#60a5fa`, `#f59e0b`, `#34d399`, `#f472b6`, `#a78bfa`, `#22d3ee`, `#fb7185`,
+`#a3e635`. Rejected lexical values fall back per slot. Checked layout transports
+all nine config fields. Circle fills use global circle order and cycle through
+the palette; an authored fill wins without shifting later indices. Source-derived
+scenes have sixteen exact metadata entries. The typed API supports arbitrary
+palette lengths: metadata contains eight base entries plus every palette entry.
+An explicitly empty typed palette gives every unstyled circle blue and retains
+only the eight base metadata entries. This is not a universal typed memory cap
+or a complete CSS validator.
+
+Portable controls verify 104 complete scenes: 32 retained oracles with a
+reversible eight-entry metadata adaptation, 48 source-to-checked-layout scenes
+with complete font-query traces, and 24 typed palette/cycle/empty/override cells.
+The affected fourteen-package suite passed 932 tests over 41 targets with no
+failures or ignores, plus strict all-target lint, at source `55afa2b5`.
+Independent source and terminal reviews passed. This establishes bounded
+transport; physical-font fitting, rasterization and full style parity remain
+open. Hosted checks and publication remain separate gates. Final-source Miri is
+**DEFERRED/PENDING**, never passed, under delivery-first sequencing.

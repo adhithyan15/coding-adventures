@@ -58,3 +58,25 @@ receipts untouched/unpolled; no duplicate/termination. Deliver implementation
 first then genuine final-source Miri. Full Closure parity/output-byte-source/
 transformation lineage/objective OPEN; heartbeat ACTIVE. ESTree boundary, own
 types, no new crates.io dependencies and unrelated local work remain preserved.
+
+## Executed source acceptance
+
+Closed mergea20a6e1e reconstructs225512entries (299pureincoming/7recipes/
+225206retained), preserving entire owned parser helpers/numeric admission and
+checked geometry. Schema/resolver fixture compilation failures are retained as
+failures, not behavioral red acceptance. The raw merged baseline passed18parser/
+7geometry and failed exactly the two old eight-vs-sixteen metadata scene oracles.
+The reversible adapter retains both16-cell old bodies except eight exact metadata
+entries. Source55afa2b5 adds48complete source/config/layout/scene/query cells and
+24typed cells, for104 total. Focus18parser/6painttests/7geometry passed.
+
+Actual unfiltered fourteen-package tests932P0F0ignored/41targets and strict0
+completed. TestsSHA85f3529c055186f1d94483c23da58725fc53fa16391b09f68f683a82cc3b24d6;
+strictSHAa2cee40006da195ada7c70583a7f01ab06b1b7e22cad1ee7227120d52e3f2e79.
+Independent exact-source and terminal security reviews passed. Native166/2838
+inputs match testedcdca except four named Markdown files; Closure36/3705 remain
+exact316e. Registry376 exact; local lock deltas only the four palette versions,
+outside native. CI/helper source remains exact319dc1fe. Current-main unforced
+plan at55af exited0 againstda0db47e; the final documentation carrier still needs
+its exact-head plan/document gates and independent carrier review before push.
+All hosted/merge/full-goal gates remain required. Miri DEFERRED/PENDING.
