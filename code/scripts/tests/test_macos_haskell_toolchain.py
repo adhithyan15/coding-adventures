@@ -41,8 +41,8 @@ class MacosHaskellToolchainTests(unittest.TestCase):
     def test_phase_options_and_quoted_paths(self):
         expected = ["-pgmc", CLANG, "-pgma", CLANG, "-pgml", CLANG,
                     "-optc-isysroot", "-optc" + SDK, "-opta-isysroot", "-opta" + SDK,
-                    "-optl-isysroot", "-optl" + SDK]
-        self.assertEqual(expected, toolchain.phase_options(CLANG, SDK))
+                    "-optl-isysroot", "-optl" + SDK, "-optl-fuse-ld=" + LD]
+        self.assertEqual(expected, toolchain.phase_options(CLANG, SDK, LD))
         actual = toolchain.overlay_config("repository private\n  secure: True\nstore-dir: /store\n", CLANG, LD, SDK)
         self.assertTrue(actual.startswith("repository private\n  secure: True\nstore-dir: /store\n"))
         self.assertIn("ghc-options: " + " ".join(json.dumps(v) for v in expected), actual)
@@ -74,7 +74,7 @@ class MacosHaskellToolchainTests(unittest.TestCase):
         for path in ["relative/tool", "", "/bad\npath", "/bad\rpath", "/bad\0path", "/bad\tpath"]:
             with self.subTest(path=path):
                 with self.assertRaises(ValueError):
-                    toolchain.phase_options(path, SDK)
+                    toolchain.phase_options(path, SDK, LD)
 
     def test_normalized_managed_names_and_unsupported_section_syntax(self):
         for source in [
@@ -89,7 +89,7 @@ class MacosHaskellToolchainTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     toolchain.overlay_config(source, CLANG, LD, SDK)
 
-    def run_mock_bootstrap(self, failed_stage=None, wrong_output=False, wrong_stage=None):
+    def run_mock_bootstrap(self, failed_stage=None, wrong_output=False, wrong_stage=None, ignore_refusal=False, omit_hsc_trace=False, bad_hsc_trace=False):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         root = Path(temporary.name)
@@ -104,6 +104,18 @@ class MacosHaskellToolchainTests(unittest.TestCase):
             stage = len(commands)
             if stage == failed_stage:
                 return subprocess.CompletedProcess(command, 7, "", "intentional failure")
+            child_config = Path(kwargs["env"].get("CABAL_CONFIG", ""))
+            if "v2-build" in command and child_config.name.startswith("refuse-"):
+                missing = child_config.parent / ("missing-" + child_config.stem.removeprefix("refuse-"))
+                if ignore_refusal:
+                    return subprocess.CompletedProcess(command, 0, "42\n", "")
+                return subprocess.CompletedProcess(command, 1, "", "ghc: could not execute: " + str(missing))
+            if "v2-build" in command and not omit_hsc_trace:
+                route = json.loads((root / "output/hsc2hs-driver.json").read_text(encoding="utf-8"))
+                effective = [route["real_hsc2hs"], "Main.hsc", *route["forced"]]
+                if bad_hsc_trace:
+                    effective.append("--cc=/unexpected/clang")
+                (root / "output/hsc2hs-invocations.jsonl").write_text(json.dumps({"argv": effective}) + "\n", encoding="utf-8")
             if command[:1] == ["/usr/bin/xcrun"]:
                 result = SDK if "--show-sdk-path" in command else (CLANG if command[-1] == "clang" else LD)
             elif "--numeric-version" in command:
@@ -132,7 +144,7 @@ class MacosHaskellToolchainTests(unittest.TestCase):
     def test_success_publishes_only_cabal_config_after_all_probes(self):
         root, github_env, receipt, commands = self.run_mock_bootstrap()
         self.assertTrue(receipt["success"])
-        self.assertEqual(13, len(commands))
+        self.assertEqual(16, len(commands))
         self.assertEqual("EXISTING=retained\nCABAL_CONFIG=" + str(root / "output/cabal.config") + "\n", github_env.read_text(encoding="utf-8"))
         for command, options in commands:
             self.assertIsInstance(command, list)
@@ -140,12 +152,12 @@ class MacosHaskellToolchainTests(unittest.TestCase):
             self.assertNotIn("SDKROOT", options["env"])
             self.assertNotIn("DEVELOPER_DIR", options["env"])
         cabal = [v for v in commands if "v2-build" in v[0] or "v2-run" in v[0]]
-        self.assertEqual(2, len(cabal))
-        self.assertTrue(all(v[1]["env"]["CABAL_CONFIG"] == str(root / "output/cabal.config") for v in cabal))
+        self.assertEqual(5, len(cabal))
+        self.assertTrue(all(Path(v[1]["env"]["CABAL_CONFIG"]).parent == root / "output" for v in cabal))
         self.assertTrue(all("--offline" in v[0] for v in cabal))
 
     def test_each_tool_failure_and_wrong_runtime_output_publish_nothing(self):
-        for stage in range(1, 14):
+        for stage in range(1, 17):
             with self.subTest(stage=stage):
                 _, github_env, receipt, commands = self.run_mock_bootstrap(failed_stage=stage)
                 self.assertIsNone(receipt)
@@ -154,9 +166,16 @@ class MacosHaskellToolchainTests(unittest.TestCase):
         _, github_env, receipt, _ = self.run_mock_bootstrap(wrong_output=True)
         self.assertIsNone(receipt)
         self.assertEqual("EXISTING=retained\n", github_env.read_text(encoding="utf-8"))
-        for stage in [5, 6, 9, 11, 13]:
+        for stage in [5, 6, 9, 11, 16]:
             with self.subTest(wrong_output_stage=stage):
                 _, github_env, receipt, _ = self.run_mock_bootstrap(wrong_stage=stage)
+                self.assertIsNone(receipt)
+                self.assertEqual("EXISTING=retained\n", github_env.read_text(encoding="utf-8"))
+
+    def test_ignored_phase_refusal_and_missing_or_wrong_hsc_route_publish_nothing(self):
+        for options in [{"ignore_refusal": True}, {"omit_hsc_trace": True}, {"bad_hsc_trace": True}]:
+            with self.subTest(options=options):
+                _, github_env, receipt, _ = self.run_mock_bootstrap(**options)
                 self.assertIsNone(receipt)
                 self.assertEqual("EXISTING=retained\n", github_env.read_text(encoding="utf-8"))
 
