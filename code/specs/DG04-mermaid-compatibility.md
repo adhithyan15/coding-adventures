@@ -749,6 +749,9 @@ cells without backend-specific logic.
 Unstyled set circles now follow Mermaid's palette-derived stroke, ten-percent
 fill opacity, and width-scaled five-unit stroke defaults. Authored fill opacity,
 stroke color, and stroke width continue to take precedence during Paint lowering.
+Repeated `style` directives now cascade per property in source order for both set
+regions and attached text IDs, matching Mermaid's style-map merge behavior without
+discarding unrelated properties from earlier declarations.
 
 ### Ishikawa Native Slice
 
