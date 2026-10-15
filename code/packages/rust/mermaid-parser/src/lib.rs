@@ -5712,11 +5712,37 @@ fn parse_venn_style(raw: &str, line: usize) -> Result<VennStyle, ParseError> {
         let (name, value) = property.split_once(':').ok_or_else(|| venn_error(line, "invalid Venn style property"))?;
         let value = value.trim().trim_matches('"').to_string();
         match name.trim().to_ascii_lowercase().as_str() {
-            "fill" => style.fill = Some(value), "stroke" => style.stroke = Some(value), "color" => style.text_color = Some(value),
-            "stroke-width" => style.stroke_width = value.trim_end_matches("px").parse().ok(), "fill-opacity" => style.fill_opacity = value.parse().ok(), _ => {}
+            "fill" => style.fill = Some(parse_venn_style_color(&value, line, "fill")?),
+            "stroke" => style.stroke = Some(parse_venn_style_color(&value, line, "stroke")?),
+            "color" => style.text_color = Some(parse_venn_style_color(&value, line, "color")?),
+            "stroke-width" => style.stroke_width = Some(parse_venn_style_number(
+                value.trim_end_matches("px"), line, "stroke-width", |number| number >= 0.0)?),
+            "fill-opacity" => style.fill_opacity = Some(parse_venn_style_number(
+                &value, line, "fill-opacity", |number| (0.0..=1.0).contains(&number))?),
+            _ => {}
         }
     }
     Ok(style)
+}
+
+fn parse_venn_style_color(value: &str, line: usize, property: &str) -> Result<String, ParseError> {
+    let sanitized = sanitize_railroad_color(Some(value), "");
+    if sanitized.is_empty() {
+        Err(venn_error(line, format!("invalid Venn {property} color")))
+    } else {
+        Ok(sanitized)
+    }
+}
+
+fn parse_venn_style_number(
+    value: &str, line: usize, property: &str, valid: impl FnOnce(f64) -> bool,
+) -> Result<f64, ParseError> {
+    let number = value.parse::<f64>().map_err(|_| venn_error(line, format!("invalid Venn {property}")))?;
+    if number.is_finite() && valid(number) {
+        Ok(number)
+    } else {
+        Err(venn_error(line, format!("invalid Venn {property}")))
+    }
 }
 
 fn merge_venn_style(base: &mut VennStyle, overlay: VennStyle) {
@@ -13947,6 +13973,16 @@ mod tests_dg04 {
         let text_style = &diagram.texts[0].style;
         assert_eq!(text_style.text_color.as_deref(), Some("#778899"));
         assert_eq!(text_style.fill_opacity, Some(0.4));
+    }
+
+    #[test]
+    fn venn_rejects_unsafe_colors_and_out_of_range_style_numbers() {
+        let unsafe_color = parse_venn("venn-beta\nset A\nstyle A fill:url(evil)").unwrap_err();
+        assert!(unsafe_color.message.contains("invalid Venn fill color"));
+        let opacity = parse_venn("venn-beta\nset A\nstyle A fill-opacity:1.5").unwrap_err();
+        assert!(opacity.message.contains("invalid Venn fill-opacity"));
+        let width = parse_venn("venn-beta\nset A\nstyle A stroke-width:-2px").unwrap_err();
+        assert!(width.message.contains("invalid Venn stroke-width"));
     }
 
     #[test]
