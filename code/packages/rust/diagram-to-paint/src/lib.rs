@@ -2358,9 +2358,15 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
     });
     instructions.extend(text_scene.instructions);
+    let mut metadata = HashMap::new();
+    metadata.insert("venn.width".into(), diagram.config.width.to_string());
+    metadata.insert("venn.height".into(), diagram.config.height.to_string());
+    metadata.insert("venn.padding".into(), diagram.config.padding.to_string());
+    metadata.insert("venn.useMaxWidth".into(), diagram.config.use_max_width.to_string());
+    metadata.insert("venn.useDebugLayout".into(), diagram.config.use_debug_layout.to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
-        instructions, id: None, metadata: None }
+        instructions, id: None, metadata: Some(metadata) }
 }
 
 /// Lower Ishikawa fishbone geometry into backend-neutral paths, a rect, and glyph runs.
@@ -13044,6 +13050,7 @@ emphasized --> direct
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedVennDiagram {
             width: 400.0, height: 300.0, title: Some("Overlap".into()),
+            config: diagram_ir::VennConfig { width: 400.0, height: 300.0, ..Default::default() },
             circles: vec![diagram_ir::LayoutedVennCircle {
                 id: "A".into(), label: "Alpha".into(), cx: 200.0, cy: 160.0, radius: 90.0,
                 style: diagram_ir::VennStyle { fill: Some("#ff0000".into()), fill_opacity: Some(0.5), ..Default::default() },
