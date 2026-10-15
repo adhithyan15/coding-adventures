@@ -2,6 +2,60 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04a Venn config integration checkpoint -->
+October15 LOCAL/UNPUBLISHED source `eb837b1e0ccef69f94c21a526d87eb95d934c80a` retains mainf0ecbfa6 via
+closed merge30cd85fc (12incoming/6pure/6reconstructed/225421retained whole-tree
+exact). Spec8ad51/3ebe precedes merge; direct-depth spec3b349 precedes67dab
+tests and a54 init repair; spec1cb precedes b53 frontmatter red/3aeb repair.
+Published solePR17288 still d4004fe5, autoOFF. Main5106314e now includes
+81708c56/#17564 eight-unit native change and #17568 Venn theme typography;
+both require separate reconciliation and fresh exact-source validation. The
+published d400 macOS build failed; actual job log is captured for diagnosis.
+
+Raw incoming parser2/layout1/paint1 PASS. Actual first red eab parser3/layout4
+failures, paint2PASS; fb7f focused6/7/2 and full913/0/0/39 strict0 preserved.
+Independent review found direct-depth ambiguity; actual67dab parser4P1F plus
+layout7/paint2PASS preserved. A54 focused parser7/layout7/paint2 and full914/
+0/0/39 strict0 PASS preserved; independent frontmatter depth finding remained.
+B53 compiling frontmatter red parser5P1F plus layout7/paint2PASS preserved.
+3aeb full915/0/0/39 strict0 preserved; mapping-section redfc0032b1 parser6P1F
+and sequence-parent redb8f5a0e7 parser7P1F preserved. Target mapping flags and
+colon-free ancestry blockers close those concrete config-origin findings.
+F532 full917/0/0/39 strict0 preserved; spec2adb before282a header-envelope
+red parser8P1F; init-looking YAML literals now skipped by the selector.
+Finaleb837b1e focused parser11/layout7/paint2PASS; full14-package918/0/0/39 and
+strictalltargets EXIT0 ACTUALLY PASS.
+Tests SHAe4ce024f44ace3a3322bb4ee2bd6031273d8be4a2283184f0c5471ecf4b388b6.
+Strict SHA9ed981dfe495f99e422a3d639cc41bf6579f78dbe5acd1a00e5fb581ab91cceb.
+Independent exact-source review SHA77bf6f1e5c1aa62aa2f68af8864685142956d3ec9d338e862e3674212990e257; terminal/carrier review
+and current-main reconciliation/plan/hosted checks remain separate gates.
+
+Width/height finite(0,65536], padding[0,65536], per-field defaults. Direct init
+Venn object replaces frontmatter as a whole; actual quoted direct keys only,
+no nested/array/value/body/style decoys. Typed config checked before empty/
+titled arithmetic; full derived canvas/circle/label finite check. Wrapper
+panics unsupported typedIR. Supported layout body/centroid and all other
+production/tests reconstruct exactly30cd; paint production unchanged.
+Complete two-set/union/text geometry and16 full scene/query/primitive/style/
+order/metadata configurations pass; both flags transport only. Tiny title/
+label/stroke fit, area-proportional overlap, theme/CSS/customfont/forgedstyle,
+renderer pixel-area/general resource bounds remain OPEN.
+
+Native166inputs retain actualb7681799/0/1existingignore/78 and LANG492 receipts
+only by complete identity with4named prior docs exceptions; no new native run.
+Global ignoredlock differs from native lock only4named diagram local versions,
+no dependency changes; registry376 identities/checksums exact. Final docs require
+explicit inventory proof. CorrectedClosure36/3705 historical1093/181+strict
+attribution must remain exact; currentmain817 native changes not accepted by
+this Venn receipt. BaseESTree/ownedtypes/no new crates.io deps unchanged.
+Full Closure parity/output-byte-source/stableIDs/pass-sweep order/allfold/
+rename/inline/motion/merge/delete lineage/CV04b remain OPEN. Miri
+**DEFERRED/PENDING**, never passed; frozen checkout/run/target/inputs/receipts
+untouched/unpolled. Deliver first then genuine final-source Miri. Fullobjective
+OPEN; heartbeatACTIVE. SamePR17288 only; terminal acceptable exacthead,
+conflictfree/reviewclean checks gate squashauto; fetchedactualmerge beforecleanup.
+<!-- /CV04a Venn config integration checkpoint -->
+
 <!-- CV04a pathwise pending checkpoint -->
 Delivery candidate from source61c5c0da retains currentmain1455d78b.
 Sole PR17288 and epic15830 track publication/hosted state. Auto OFF at
