@@ -14,7 +14,8 @@ romanization: "kāvyam"
 concept_tag: SA-THG249-KAVYAM
 prerequisites: [SA-C249-varta, SA-C249-natakam]
 sounds: []
-roots: []
+roots: [sanskrit-kavya, sanskrit-kavi]
+etymology_hook: "kāvya ← kavi 'poet, seer' + -ya: 'what comes from a poet' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C249-natakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C249-THG249-03]; assesses=[] -->
 
 **काव्यम्** — *kāvyam* — "a poem, poetry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kāvya* is built on *kavi*, "seer, poet", which you have already met, with the suffix *-ya* and a lengthened first vowel (MW): "coming from a poet", and so poetry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

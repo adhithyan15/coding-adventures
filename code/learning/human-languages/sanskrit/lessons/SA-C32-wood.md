@@ -14,7 +14,8 @@ romanization: "dāru"
 concept_tag: SA-TREE-DARU
 prerequisites: [SA-C32-vine, SA-C30-anjali, SA-C31-snow]
 sounds: []
-roots: []
+roots: [sanskrit-daru]
+etymology_hook: "dāru 'wood' is inherited: MW compares Greek doru, Gothic triu and English tree (CDIAL 6298)"
 duration:
   max_seconds: 210
 requires:

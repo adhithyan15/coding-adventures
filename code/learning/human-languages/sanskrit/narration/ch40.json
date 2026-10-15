@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0512d19deff3d3e0",
+  "sourceHash": "fnv1a64:5cd4511c6358e159",
   "lessons": [
     {
       "id": "SA-C40-curd",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fc16bfd4d76c4a4",
+      "sourceHash": "fnv1a64:5fd0f5a16fd07ee6",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word is a doubled thing: da-dh-i, the root dhā, \"to set, to place\", said twice over. Curd is milk that has been set, and the name says so twice for emphasis."
+              "text": "The word is a doubled thing, da-dh-i. MW files it with the doubled form of dhā, \"to set, to place\", which would make curd the milk that has been set."
             },
             {
               "kind": "speech",
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "EtymDB traces dadhi to a Proto-Indo-European word for milk, so the \"set milk\" reading is MW's, not the only one. It lives on as Hindi dahī (CDIAL 6146)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5743d92cfbd06aee",
+      "sourceHash": "fnv1a64:9736feb1a39d035d",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Śarkarā first meant gravel or grit, in the Atharvaveda, and only later candied sugar (CDIAL 12337, 12338); CDIAL notes a proposal that the sugar sense came through a Mon-Khmer word. Borrowed through Persian into Arabic sukkar, it reached English as sugar."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:778d2ecccaefc158",
+      "sourceHash": "fnv1a64:3751b124b1994adf",
       "notice": null,
       "blocks": [
         {
@@ -338,11 +360,11 @@
             },
             {
               "kind": "speech",
-              "text": "नवनीतम् (navanītam) is butter just off the churn, and both of its pieces are already yours."
+              "text": "नवनीतम् (navanītam) is butter fresh off the churn, and its first piece is already yours."
             },
             {
               "kind": "speech",
-              "text": "The first piece, nava, is \"new\" — the word you learned beside महत् and अल्प. nīta is \"brought, led\", from the same nī that stands inside नयति. Butter is the newly-brought thing — what has just been led up out of the दधि (dadhi)."
+              "text": "The first piece, nava, is \"new\" — the word you learned beside महत् and अल्प. The second, nīta, looks like \"brought, led\", from the nī inside नयति, but CDIAL lists a separate old nīta that already meant fresh butter, so the \"newly brought\" reading is a guess. Either way, this is the butter that comes fresh up out of the दधि (dadhi)."
             },
             {
               "kind": "speech",
@@ -352,17 +374,28 @@
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Butter, named as the new thing brought up out of the curd."
+              "text": "Navanīta is a compound of nava, \"new\", and nīta, which CDIAL 7545 lists on its own as \"fresh butter\" (CDIAL 7003). It lives on as Marathi loṇī, \"butter\"."
             }
           ]
         },
         {
           "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Butter, named as the new thing that comes up out of the curd."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fe82eaa3b723676",
+      "sourceHash": "fnv1a64:3c1a8d566b9f4e60",
       "notice": null,
       "blocks": [
         {
@@ -490,12 +523,23 @@
             },
             {
               "kind": "speech",
-              "text": "No cousin outside India has been agreed for it. The word stayed home, and it is doing the same work today it was doing three thousand years ago."
+              "text": "MW calls its derivation doubtful. The word stayed home, and it is doing the same work today it was doing three thousand years ago."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Śāka is of doubtful derivation, MW says. It lives on as Prakrit sāga (CDIAL 12370); Hindi and Punjabi sāg look like its descendants, though CDIAL does not list them."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +550,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +608,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0af636f320b350f9",
+      "sourceHash": "fnv1a64:5e82a21d76635b5c",
       "notice": null,
       "blocks": [
         {
@@ -630,7 +674,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is built on mud, \"to be glad\", so the name of the sweet is the name of the gladness it makes. आनन्दः, the joy you offered at a first meeting, reaches for the same idea by a different root."
+              "text": "It is usually tied to mud, \"to be glad\", so the name of the sweet is the name of the gladness it makes. आनन्दः, the joy you offered at a first meeting, reaches for the same idea by a different root."
             },
             {
               "kind": "speech",
@@ -640,6 +684,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Modaka first meant \"gladdening\" (MW), and CDIAL 10354 links it, with a question mark, to the root √mud, \"to be glad\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +705,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +763,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

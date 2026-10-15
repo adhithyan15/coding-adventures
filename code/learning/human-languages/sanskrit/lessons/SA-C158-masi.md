@@ -14,7 +14,8 @@ romanization: "masī"
 concept_tag: SA-THG158-MASI
 prerequisites: [SA-C157-ksudhitah, SA-C158-lekhani]
 sounds: []
-roots: []
+roots: [sanskrit-masi]
+etymology_hook: "masī, maṣī 'lampblack, ink' is borrowed from Dravidian, cf. Tamil mai (CDIAL 9920; DEDR 5101)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C158-lekhani]
 <!-- hl-knowledge: introduces=[SA-LEX-C158-THG158-02]; assesses=[] -->
 
 **मसी** — *masī* — "ink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*masī*, which MW writes *maṣī*, means "black powder, lampblack, ink". CDIAL 9920 takes it as borrowed from Dravidian, comparing Tamil *mai* "ink, lampblack" (DEDR 5101).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

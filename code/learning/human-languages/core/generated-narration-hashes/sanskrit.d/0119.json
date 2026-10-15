@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 119,
-  "sourceHash": "fnv1a64:54cc80cc1ee30f79",
+  "sourceHash": "fnv1a64:0a345fffbd544557",
   "lessonIds": [
     "SA-C119-darvi",
     "SA-C119-katahah",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch119.txt",
   "json": "sanskrit/narration/ch119.json",
-  "textHash": "fnv1a64:58ae563513a4c79b",
-  "jsonHash": "fnv1a64:db5eee44b7eed9f4",
+  "textHash": "fnv1a64:d220d362a4974fd4",
+  "jsonHash": "fnv1a64:73ea25d85f918a7a",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "mānadaṇḍaḥ"
 concept_tag: SA-THG220-MANADANDAH
 prerequisites: [SA-C219-cipitakah, SA-C220-tula]
 sounds: []
-roots: []
+roots: [sanskrit-mana, sanskrit-danda]
+etymology_hook: "mānadaṇḍa = māna 'measure' (√mā 'measure') + daṇḍa 'stick, rod'; the compound is not in MW"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C220-tula]
 <!-- hl-knowledge: introduces=[SA-LEX-C220-THG220-02]; assesses=[] -->
 
 **मानदण्डः** — *mānadaṇḍaḥ* — "a measuring rod".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mānadaṇḍa* is a compound of *māna*, "measure, standard" (CDIAL 10041), built on the root √mā, "to measure", and *daṇḍa*, "stick, rod". MW does not list the compound, so the pairing for a measuring rod is modern; *mānadaṇḍa* also means "standard".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

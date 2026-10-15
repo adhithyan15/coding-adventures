@@ -14,7 +14,8 @@ romanization: "pitṛvyaḥ"
 concept_tag: SA-PPL146-PITRVYAH
 prerequisites: [SA-C146-pitamahi, SA-C146-matamahah]
 sounds: []
-roots: []
+roots: [sanskrit-pitrvya, sanskrit-pitr]
+etymology_hook: "pitṛvya ← pitṛ 'father' + -vya; MW compares Latin patruus 'father's brother', built the same way"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C146-matamahah]
 <!-- hl-knowledge: introduces=[SA-LEX-C146-PPL146-05]; assesses=[] -->
 
 **पितृव्यः** — *pitṛvyaḥ* — "a father's brother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pitṛvya* is built from *pitṛ* "father" with the suffix *-vya* (MW): the father's brother. MW compares Greek *patrōs* and Latin *patruus* "father's brother", built the same way from the inherited word for "father".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

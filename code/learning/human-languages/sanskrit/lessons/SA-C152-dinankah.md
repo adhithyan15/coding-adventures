@@ -14,7 +14,8 @@ romanization: "dināṅkaḥ"
 concept_tag: SA-TIME152-DINANKAH
 prerequisites: [SA-C152-varah, SA-C152-tithih]
 sounds: []
-roots: []
+roots: [sanskrit-dina, sanskrit-anka]
+etymology_hook: "dināṅka ← dina 'day' + aṅka 'mark, number': 'the day's number'; a modern pairing for a calendar date"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C152-tithih]
 <!-- hl-knowledge: introduces=[SA-LEX-C152-TIME152-04]; assesses=[] -->
 
 **दिनांकः** — *dināṅkaḥ* — "a calendar date".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dināṅka* is built from *dina* "day", which MW compares with Latin *nundinae* "market day", and *aṅka* "mark, number" (MW): "the day's number". The pairing for a calendar date is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

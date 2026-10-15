@@ -14,7 +14,8 @@ romanization: "āstaraṇam"
 concept_tag: SA-THG189-ASTARANAM
 prerequisites: [SA-C189-pitakam, SA-C189-katah]
 sounds: []
-roots: []
+roots: [sanskrit-astarana]
+etymology_hook: "āstaraṇa ← ā- + the root √stṛ 'spread, strew': 'what is spread out' (MW; CDIAL 1506)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C189-katah]
 <!-- hl-knowledge: introduces=[SA-LEX-C189-THG189-05]; assesses=[] -->
 
 **आस्तरणम्** — *āstaraṇam* — "a carpet, a spread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āstaraṇa* is built on *ā-* and the root √stṛ, "to spread, strew" (MW): a carpet is what is spread out. In the Atharvaveda it is a layer of sacred grass (CDIAL 1506), and Marathi keeps it as *ãthrūṇ*, "bedspread".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

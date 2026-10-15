@@ -14,7 +14,8 @@ romanization: "pratidinam"
 concept_tag: SA-TIME240-PRATIDINAM
 prerequisites: [SA-C240-tavat, SA-C240-sanaih]
 sounds: []
-roots: []
+roots: [sanskrit-pratidinam, sanskrit-dina]
+etymology_hook: "pratidinam = prati 'each' + dina 'day'; dina lives on as Hindi din (CDIAL 6328)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C240-sanaih]
 <!-- hl-knowledge: introduces=[SA-LEX-C240-TIME240-03]; assesses=[] -->
 
 **प्रतिदिनम्** — *pratidinam* — "every day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pratidinam* is built on *prati*, "towards, each", and *dina*, "day" (MW): "day by day". MW compares *dina* with the *-dinus* of Latin *nūndinus*, "of the ninth day", and it lives on as Hindi *din*, "day" (CDIAL 6328).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

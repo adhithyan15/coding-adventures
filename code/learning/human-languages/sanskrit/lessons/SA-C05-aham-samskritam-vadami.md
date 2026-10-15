@@ -14,7 +14,8 @@ romanization: "ahaṁ saṁskṛtaṁ vadāmi"
 concept_tag: SA-WORD-SAMSKRITA
 prerequisites: [SA-C05-vadami, SA-C03-aham]
 sounds: [anusvara, kr-vocalic]
-roots: [samskrita, sam-kr]
+roots: [samskrita, sam-kr, vad-speak]
+etymology_hook: "saṃskṛta ← sam 'together' + kṛta 'made', from √kṛ: 'put together, perfected' (MW)"
 reviews_of: [SA-C05-vadami, SA-C03-aham]
 duration:
   max_seconds: 210
@@ -56,7 +57,7 @@ short vowel made with the tongue curled, near the *ri* of *rich*.
 object) + *vadāmi* ("speak") — "I Sanskrit speak," the verb last (as in
 every daughter language). The name *saṁskṛta* means "**put together,
 refined, perfected**" — from *sam-* ("together," cousin of English
-*same*, Greek *syn-*) + *kṛta* ("made, done," from the root *kṛ*
+*same*) + *kṛta* ("made, done," from the root *kṛ*
 you met in *namaskāra*). So "Sanskrit" literally means "the perfected [language],"
 named in contrast to *prākṛta* ("natural, raw" — Prakrit, the everyday speech
 from which Hindi, Bengali, and the rest descend).

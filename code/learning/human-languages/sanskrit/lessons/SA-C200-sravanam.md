@@ -14,7 +14,8 @@ romanization: "śravaṇam"
 concept_tag: SA-SCH200-SRAVANAM
 prerequisites: [SA-C199-vijnanam, SA-C200-pathanam]
 sounds: []
-roots: []
+roots: [sanskrit-shravana-hearing]
+etymology_hook: "śravaṇa 'hearing' ← root √śru 'hear'; MW compares Greek klyō 'I hear' and English loud"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C200-pathanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C200-SCH200-02]; assesses=[] -->
 
 **श्रवणम्** — *śravaṇam* — "listening".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śravaṇa* is built on the root √śru, "to hear" (MW), with the action suffix *-ana*. The root is inherited from Indo-European: MW compares Greek *klyō*, "I hear", and English *loud*. The same root gives *śruti*, "what is heard", the name for the Veda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

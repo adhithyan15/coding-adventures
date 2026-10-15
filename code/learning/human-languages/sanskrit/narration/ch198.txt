@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for dew, then the Sanskrit for moonlight.
 You'll want to know: हरिणः.
 हरिणः — hariṇaḥ — "a deer".
 
+The word, taken apart.
+hariṇa is built on hari, "tawny, yellowish", so the deer is "the fawn-coloured one" (MW). MW compares hari with English yellow. The word lives on as Hindi hiran (CDIAL 13982).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for moonlight, then the Sanskrit for a deer
 
 You'll want to know: चित्रकः.
 चित्रकः — citrakaḥ — "a leopard".
+
+The word, taken apart.
+citraka is built on citra, "bright, variegated", from the root √cit (MW): the spotted one. It lives on as Hindi cītā, "leopard" (CDIAL 4804), and English cheetah was borrowed from Hindi.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a deer, then the Sanskrit for a leopard
 You'll want to know: गण्डकः.
 गण्डकः — gaṇḍakaḥ — "a rhinoceros".
 
+The word, taken apart.
+gaṇḍaka is probably not an Indo-Aryan word: CDIAL 4000 thinks it shares a non-Aryan origin with khaḍga, another rhinoceros word, perhaps from Munda. Hindi gaĩṛā comes from a related form.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a leopard, then the Sanskrit for a rhin
 You'll want to know: नीडम्.
 नीडम् — nīḍam — "a nest".
 
+The word, taken apart.
+nīḍa is built on ni, "down", and the root √sad, "to sit" (MW): a nest is where a bird sits down. It is inherited from Indo-European: MW compares Latin nīdus and English nest.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a rhinoceros, then the Sanskrit for a n
 
 You'll want to know: अण्डम्.
 अण्डम् — aṇḍam — "an egg".
+
+The word, taken apart.
+aṇḍa is usually traced to a Munda source: CDIAL 1111 reports that Mayrhofer, following Kuiper, takes it from Munda. It lives on as Hindi aṇḍā, "egg".
 
 What you've built.
 One more word for this chapter.

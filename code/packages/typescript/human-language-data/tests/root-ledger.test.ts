@@ -262,7 +262,7 @@ const EMPTY_ETYMOLOGY_BLOCK_PINS: Readonly<Record<string, number>> = {
   portuguese: 0,
   punjabi: 0,
   russian: 0,
-  sanskrit: 12,
+  sanskrit: 0,
   spanish: 0,
   tamil: 0,
   telugu: 0,

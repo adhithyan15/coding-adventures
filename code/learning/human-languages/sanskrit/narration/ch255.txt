@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for dinner, then the Sanskrit for cooked fo
 You'll want to know: शिक्षा.
 शिक्षा — śikṣā — "education".
 
+The word, taken apart.
+śikṣā is built on śikṣ, "to learn", which MW calls the desiderative of √śak, "to be able": learning is wanting to be able. MW's first sense is "desire of being able", then "learning, study". The verb śikṣate lives on as Hindi sīkhnā, "to learn" (CDIAL 12430).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for cooked food, then the Sanskrit for educ
 
 You'll want to know: ज्ञानम्.
 ज्ञानम् — jñānam — "knowledge".
+
+The word, taken apart.
+jñāna is built on the root √jñā, "to know" (MW), the root of jānāti, "knows": "knowing, knowledge" (CDIAL 5281). Hindi uses it as jñān, said gyān.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for education, then the Sanskrit for knowle
 You'll want to know: अभ्यासः.
 अभ्यासः — abhyāsaḥ — "practice".
 
+The word, taken apart.
+abhyāsa is built on abhi, "towards", and the root √as, "to throw" (MW): "throwing towards, adding", and then "repetition" and "practice". Practice is doing a thing again and again; Hindi took the word as abhyās.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for knowledge, then the Sanskrit for practi
 You'll want to know: गृहकार्यम्.
 गृहकार्यम् — gṛhakāryam — "homework".
 
+The word, taken apart.
+gṛhakārya is a compound of gṛha, "house", and kārya, "what is to be done", from the root √kṛ (MW; CDIAL 3078). MW glosses it "a domestic affair"; its use for school homework is modern. Kārya lives on as Hindi kāj, "work".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for practice, then the Sanskrit for homewor
 
 You'll want to know: उत्तरम्.
 उत्तरम् — uttaram — "an answer".
+
+The word, taken apart.
+uttara is the comparative of ud, "up": "higher", and also "following, later" (MW). The answer is the later word: CDIAL 1767 explains uttaram as uttaram vākyam, "the following speech". The same word means "north".
 
 What you've built.
 One more word for this chapter.

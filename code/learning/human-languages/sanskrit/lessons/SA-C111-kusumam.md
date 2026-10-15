@@ -14,7 +14,8 @@ romanization: "kusumam"
 concept_tag: SA-THINGS111-KUSUMAM
 prerequisites: [SA-C111-sakha, SA-C111-parnam]
 sounds: []
-roots: []
+roots: [sanskrit-kusuma]
+etymology_hook: "kusuma 'flower'; MW cites only a grammarians' root √kus, so its origin is uncertain; Pali kusuma (CDIAL 3377)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C111-parnam]
 <!-- hl-knowledge: introduces=[SA-LEX-C111-THINGS111-05]; assesses=[] -->
 
 **कुसुमम्** — *kusumam* — "a flower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kusuma* "a flower" appears from Manu on; MW cites only a grammarians' root √kus for it, so its origin is uncertain. Pali kept it unchanged as *kusuma* (CDIAL 3377).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "maṇibandhaḥ"
 concept_tag: SA-THINGS116-MANIBANDHAH
 prerequisites: [SA-C116-cibukam, SA-C116-kurparah]
 sounds: []
-roots: []
+roots: [sanskrit-manibandha]
+etymology_hook: "maṇibandha ← maṇi 'jewel' + bandha 'tying': where jewels are tied on (MW); cf. Dravidian maṇikaṭṭu (DEDR 4673)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C116-kurparah]
 <!-- hl-knowledge: introduces=[SA-LEX-C116-THINGS116-05]; assesses=[] -->
 
 **मणिबन्धः** — *maṇibandhaḥ* — "a wrist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*maṇibandha* is built from *maṇi* "jewel, bead" and *bandha* "tying": the wrist is where jewels are tied on (MW). DEDR 4673 points out that the Dravidian word for the wrist, Kannada *maṇikaṭṭu*, is built the same way, and takes *bandha* as a translation of its *kaṭṭu* "tie".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

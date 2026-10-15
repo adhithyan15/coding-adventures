@@ -14,7 +14,8 @@ romanization: "prapātaḥ"
 concept_tag: SA-THINGS110-PRAPATAH
 prerequisites: [SA-C109-apupah, SA-C110-girih]
 sounds: []
-roots: []
+roots: [sanskrit-prapata, sanskrit-patati]
+etymology_hook: "prapāta ← pra-√pat 'fall forth, fall down' (MW; CDIAL 8682): 'a fall, a precipice', so 'a waterfall'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C110-girih]
 <!-- hl-knowledge: introduces=[SA-LEX-C110-THINGS110-02]; assesses=[] -->
 
 **प्रपातः** — *prapātaḥ* — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prapāta* comes from *pra-√pat* "fly forth, fall down", the root √pat "fall, fly" with *pra* "forth" (MW): "a fall, a precipice" (CDIAL 8682), and so a waterfall.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

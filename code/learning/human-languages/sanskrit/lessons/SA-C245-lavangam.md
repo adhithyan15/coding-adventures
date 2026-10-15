@@ -14,7 +14,8 @@ romanization: "lavaṅgam"
 concept_tag: SA-THG245-LAVANGAM
 prerequisites: [SA-C245-takram, SA-C245-phalarasah]
 sounds: []
-roots: []
+roots: [sanskrit-lavanga]
+etymology_hook: "lavaṅga 'clove', a word of the poets (CDIAL 10977); MW gives no derivation; Hindi laũg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C245-phalarasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C245-THG245-04]; assesses=[] -->
 
 **लवंगम्** — *lavaṅgam* — "a clove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lavaṅga* names the clove tree and its buds, first in the poets (CDIAL 10977). MW gives no derivation, so its origin is uncertain. It lives on as Hindi *laũg*, "clove".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

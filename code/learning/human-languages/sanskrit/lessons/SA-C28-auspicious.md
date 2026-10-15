@@ -14,7 +14,8 @@ romanization: "śubham"
 concept_tag: SA-LEAVE-AUSPICIOUS
 prerequisites: [SA-C28-journey, SA-C26-guest, SA-C27-true]
 sounds: []
-roots: []
+roots: [sanskrit-shubha]
+etymology_hook: "śubha 'bright, auspicious' ← the root √śubh 'shine, be beautiful' (MW; CDIAL 12532)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C28-journey]
 You have **उत्तम** (*uttama*) for good in the sense of best. **शुभम्** is good in the sense of *auspicious* — bright, lucky, well-omened. Its root means "to shine, to be beautiful", so the word praises a thing for looking well rather than for being best.
 
 It is a wishing word, and it goes in front of what you wish for. **शुभा यात्रा** — a good journey. **शुभा रात्रिः** — a good night. Both halves are already yours.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śubha* is built on the root √śubh, "to shine, be beautiful" (MW, CDIAL 12532):
+first "bright", then "auspicious".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

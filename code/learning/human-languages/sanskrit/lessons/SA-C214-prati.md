@@ -14,7 +14,8 @@ romanization: "prati"
 concept_tag: SA-WHY214-PRATI
 prerequisites: [SA-C214-iva, SA-C214-vina]
 sounds: []
-roots: []
+roots: [sanskrit-prati]
+etymology_hook: "prati 'towards, against', inherited: MW compares Avestan paiti and Greek proti, pros (CDIAL 8540)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C214-vina]
 <!-- hl-knowledge: introduces=[SA-LEX-C214-WHY214-05]; assesses=[] -->
 
 **प्रति** — *prati* — "towards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prati* is an old preposition, "towards, against, back" (CDIAL 8540). It is inherited from Indo-European: MW compares Avestan *paiti* and Greek *proti* and *pros*, "towards".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

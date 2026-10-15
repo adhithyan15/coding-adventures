@@ -14,7 +14,8 @@ romanization: "ulūkaḥ"
 concept_tag: SA-THINGS114-ULUKAH
 prerequisites: [SA-C114-mesah, SA-C114-kapotah]
 sounds: []
-roots: []
+roots: [sanskrit-uluka]
+etymology_hook: "ulūka 'owl' (RV); MW cites only a grammarians' root √val, so its origin is uncertain; Hindi ullū (CDIAL 2359)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C114-kapotah]
 <!-- hl-knowledge: introduces=[SA-LEX-C114-THINGS114-03]; assesses=[] -->
 
 **उलूकः** — *ulūkaḥ* — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ulūka* "an owl" is old, in the Rigveda; MW cites only a grammarians' root √val for it, so its origin is uncertain. It lives on as Hindi *ullū* "owl", and Punjabi and Gujarati *ullū* also means "fool" (CDIAL 2359).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

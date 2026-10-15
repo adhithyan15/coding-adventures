@@ -14,7 +14,8 @@ romanization: "nālikā"
 concept_tag: SA-THG245-NALIKA
 prerequisites: [SA-C244-anyah, SA-C244-ekaki]
 sounds: []
-roots: []
+roots: [sanskrit-nadi-tube]
+etymology_hook: "nālikā ← nāla 'hollow stalk, tube', from nala/naḍa 'reed' (MW); CDIAL 7047 lists it under nāḍī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C244-ekaki]
 <!-- hl-knowledge: introduces=[SA-LEX-C245-THG245-01]; assesses=[] -->
 
 **नालिका** — *nālikā* — "a tube, a pipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nālikā* is built on *nāla*, "hollow stalk, tube", which MW derives from *nala* or *naḍa*, "reed". CDIAL 7047 lists *nālikā* "stalk" under *nāḍī*, "tube", the word for the pulse: a pipe is a hollow reed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

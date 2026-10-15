@@ -14,7 +14,8 @@ romanization: "nīlaḥ"
 concept_tag: SA-COLOUR-NILA
 prerequisites: [SA-C44-green, SA-C42-much, SA-C43-honest]
 sounds: []
-roots: []
+roots: [sanskrit-nila]
+etymology_hook: "nīla 'dark blue' is Rigvedic; as 'indigo' it reached Arabic nīl and Portuguese anil; Hindi nīlā (CDIAL 7563)"
 duration:
   max_seconds: 210
 requires:

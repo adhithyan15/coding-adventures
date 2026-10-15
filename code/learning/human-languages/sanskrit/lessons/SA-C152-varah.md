@@ -14,7 +14,8 @@ romanization: "vāraḥ"
 concept_tag: SA-TIME152-VARAH
 prerequisites: [SA-C151-garvah, SA-C152-kalah]
 sounds: []
-roots: []
+roots: [sanskrit-vara-day]
+etymology_hook: "vāra 'a turn, a day of the week' ← √vṛ 'cover, enclose' (MW): an appointed span (CDIAL 11547)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C152-kalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C152-TIME152-02]; assesses=[] -->
 
 **वारः** — *vāraḥ* — "a turn, a day of the week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vāra* comes from the root √vṛ "cover, enclose" (MW): "anything enclosed in space or time", so an appointed place, a person's turn, and the day of the week (CDIAL 11547). It lives on as Marathi and Gujarati *vār* "day of the week" (CDIAL 11547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

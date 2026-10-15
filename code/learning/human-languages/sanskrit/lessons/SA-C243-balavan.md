@@ -14,7 +14,8 @@ romanization: "balavān"
 concept_tag: SA-QUAL243-BALAVAN
 prerequisites: [SA-C242-sukarah, SA-C242-duskarah]
 sounds: []
-roots: []
+roots: [sanskrit-bala, sanskrit-balavat]
+etymology_hook: "balavat = bala 'strength' + -vat 'having'; EtymDB compares Greek beltiōn 'better' (CDIAL 9161)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C242-duskarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C243-QUAL243-01]; assesses=[] -->
 
 **बलवान्** — *balavān* — "mighty, strong".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*balavān* is the nominative of *balavat*, built on *bala*, "power, strength" (CDIAL 9161), with *-vat*, "having" (MW). EtymDB sets *bala* beside Greek *beltiōn*, "better", and Latin *dēbilis*, "weak". *Bala* lives on as Hindi *bal*, "strength".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

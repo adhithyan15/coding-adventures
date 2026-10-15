@@ -14,7 +14,8 @@ romanization: "padam"
 concept_tag: SA-SCH168-PADAM
 prerequisites: [SA-C168-aksaram, SA-C168-varnah]
 sounds: []
-roots: []
+roots: [sanskrit-pada]
+etymology_hook: "pada 'step, footstep', then 'word' ← pad 'foot' (CDIAL 7747); inherited, cousin of Greek pedon (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C168-varnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C168-SCH168-05]; assesses=[] -->
 
 **पदम्** — *padam* — "a word".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pada* first meant "a step, a footstep, a track" (CDIAL 7747), built on *pad* "foot", and then a step of speech, "a word". It is inherited from Indo-European, cousin of Greek *pedon* "ground" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

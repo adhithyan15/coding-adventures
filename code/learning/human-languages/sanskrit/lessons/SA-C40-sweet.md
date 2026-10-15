@@ -14,7 +14,8 @@ romanization: "modakaḥ"
 concept_tag: SA-FOOD-MODAKA
 prerequisites: [SA-C40-vegetable, SA-C38-soil, SA-C39-snake]
 sounds: []
-roots: []
+roots: [sanskrit-modaka]
+etymology_hook: "modaka 'gladdening; a sweetmeat' ← probably the root √mud 'be glad' (MW; CDIAL 10354)"
 duration:
   max_seconds: 210
 requires:
@@ -44,9 +45,15 @@ reviews_of: [SA-C40-vegetable]
 
 **मोदकः** is a sweet — the round steamed dumpling put before a guest, and before a god.
 
-It is built on *mud*, "to be glad", so the name of the sweet is the name of the gladness it makes. आनन्दः, the joy you offered at a first meeting, reaches for the same idea by a different root.
+It is usually tied to *mud*, "to be glad", so the name of the sweet is the name of the gladness it makes. आनन्दः, the joy you offered at a first meeting, reaches for the same idea by a different root.
 
 Set one in front of an अतिथिः and the word does its own explaining.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Modaka* first meant "gladdening" (MW), and CDIAL 10354 links it, with a question
+mark, to the root √mud, "to be glad".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

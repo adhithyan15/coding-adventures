@@ -14,7 +14,8 @@ romanization: "mudgaraḥ"
 concept_tag: SA-THINGS100-MUDGARAH
 prerequisites: [SA-C99-talakam, SA-C100-kilah]
 sounds: []
-roots: []
+roots: [sanskrit-mudgara]
+etymology_hook: "mudgara 'hammer, mallet', which MW takes as probably from mudga 'mung bean'; Marathi mogar (CDIAL 10199)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C100-kilah]
 <!-- hl-knowledge: introduces=[SA-LEX-C100-THINGS100-02]; assesses=[] -->
 
 **मुद्गरः** — *mudgaraḥ* — "a hammer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW takes *mudgara* "a hammer, a mallet" as probably formed from *mudga* "mung bean", but gives no further account, so its source is uncertain. It lives on as Marathi and Gujarati *mogar* "mallet" (CDIAL 10199).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

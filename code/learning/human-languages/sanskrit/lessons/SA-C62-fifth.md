@@ -14,7 +14,8 @@ romanization: "pañcamaḥ"
 concept_tag: SA-ORDINAL-FIFTH
 prerequisites: [SA-S225-letter-vocalic-r, SA-C59-bharatiyah, SA-C54-iti-clause, SA-C42-suddenly, SA-C06-numbers-1-5]
 sounds: []
-roots: []
+roots: [sanskrit-pancama]
+etymology_hook: "pañcama 'fifth' ← pañca 'five' + -ma; pañca is inherited, cousin of Latin quīnque (CDIAL 7669)"
 duration:
   max_seconds: 220
 requires:
@@ -61,6 +62,9 @@ The number is not worn down and not replaced. It stands there whole, and a singl
 Macdonell's dictionary prints the word with the join marked — *pañca-má* — and it will print four more the same way before this chapter is out.
 
 **This lesson does not begin at *first*.** It begins at *fifth* because **-म** is the ending that WORKS, and a rule has to be visible before anything can be seen departing from it. The words for *first*, *second* and *third* all depart from it, and they wait.
+
+*Pañca* itself is inherited: MW compares Latin *quīnque* and English *five*, and
+the ordinal is as old as the Atharvaveda (CDIAL 7669).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C62-ORDINAL-01, SA-GRAMMAR-C62-ORDINAL-MA-02] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 209,
-  "sourceHash": "fnv1a64:fb0057fd98b27ff8",
+  "sourceHash": "fnv1a64:658fb74350109b79",
   "lessonIds": [
     "SA-C209-kavih",
     "SA-C209-gayakah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch209.txt",
   "json": "sanskrit/narration/ch209.json",
-  "textHash": "fnv1a64:573ea15990e99e40",
-  "jsonHash": "fnv1a64:ef51d73049303dc7",
+  "textHash": "fnv1a64:979ff9f3695f2c1e",
+  "jsonHash": "fnv1a64:7a44283c4bafb105",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "vijñaḥ"
 concept_tag: SA-QUAL216-VIJNAH
 prerequisites: [SA-C216-nipunah, SA-C216-ajnah]
 sounds: []
-roots: []
+roots: [sanskrit-jna]
+etymology_hook: "vijña = vi- + jña 'knowing', from √jñā 'know': 'one who discerns' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C216-ajnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C216-QUAL216-04]; assesses=[] -->
 
 **विज्ञः** — *vijñaḥ* — "wise, knowing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vijña* is built on *vi-*, "apart", and *jña*, "knowing", from the root √jñā, "to know" (MW): one who knows things apart, wise. It is the opposite of *ajña*, and *vijñāna*, "science", is built the same way.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

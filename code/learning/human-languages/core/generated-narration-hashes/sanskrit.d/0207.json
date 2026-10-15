@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 207,
-  "sourceHash": "fnv1a64:198543259bc98676",
+  "sourceHash": "fnv1a64:908d9e688a228a86",
   "lessonIds": [
     "SA-C207-divyati",
     "SA-C207-pravahati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch207.txt",
   "json": "sanskrit/narration/ch207.json",
-  "textHash": "fnv1a64:d8e50e2e82cef4ea",
-  "jsonHash": "fnv1a64:67fed2d02c79be55",
+  "textHash": "fnv1a64:d405a5c9b92934e2",
+  "jsonHash": "fnv1a64:c604f148eb451892",
   "findings": []
 }

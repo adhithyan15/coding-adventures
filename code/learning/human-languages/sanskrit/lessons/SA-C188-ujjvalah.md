@@ -14,7 +14,8 @@ romanization: "ujjvalaḥ"
 concept_tag: SA-QUAL188-UJJVALAH
 prerequisites: [SA-C188-vyastah, SA-C188-nirmalah]
 sounds: []
-roots: []
+roots: [sanskrit-ujjvala]
+etymology_hook: "ujjvala ← ud 'up' + √jval 'blaze': 'blazing up' (MW); Hindi ujlā 'bright' (CDIAL 1670)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C188-nirmalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C188-QUAL188-05]; assesses=[] -->
 
 **उज्ज्वलः** — *ujjvalaḥ* — "bright, shining".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ujjvala* is built on *ud*, "up", and the root √jval, "to blaze, glow" (MW): "blazing up". It lives on as Hindi *ujlā*, "bright" (CDIAL 1670).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for accepts, then the Sanskrit for blossoms
 You'll want to know: मज्जति.
 मज्जति — majjati — "sinks, dives".
 
+The word, taken apart.
+majjati is the present of the root √majj, "to sink, dive" (MW). In the Rigveda it means "sinks, perishes" (CDIAL 9711). MW compares Latin mergere, "to dip, sink", the source of English merge and submerge.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for blossoms, then the Sanskrit for sinks.
 
 You'll want to know: स्नाति.
 स्नाति — snāti — "bathes".
+
+The word, taken apart.
+snāti is the present of the root √snā, "to bathe" (MW). The root is inherited from Indo-European: MW compares Latin nāre, "to swim". It lives on as Hindi nahānā, "to bathe" (CDIAL 13786).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for sinks, then the Sanskrit for bathes.
 You'll want to know: खेलति.
 खेलति — khelati — "frolics, plays".
 
+The word, taken apart.
+khelati first means "shakes, moves to and fro" (MW), and later "plays". CDIAL 3918 says it may go with a family of "play" words that are perhaps non-Aryan; their origin is uncertain. Hindi khelnā, "to play", belongs to that family.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for bathes, then the Sanskrit for frolics.
 You'll want to know: निमीलयति.
 निमीलयति — nimīlayati — "shuts (the eyes)".
 
+The word, taken apart.
+nimīlayati is built on ni-, "down", and the causative of the root √mīl, "to close the eyes" (MW; CDIAL 10143). The Rigveda already has sam mīlya, "with closed eyes". MW gives the root no older source.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for frolics, then the Sanskrit for shuts.
 
 You'll want to know: उन्मीलयति.
 उन्मीलयति — unmīlayati — "opens (the eyes)".
+
+The word, taken apart.
+unmīlayati is built on ud, "up", and the causative of the root √mīl, "to close the eyes" (MW). Ud turns closing into opening, the mirror image of nimīlayati.
 
 What you've built.
 One more word for this chapter.

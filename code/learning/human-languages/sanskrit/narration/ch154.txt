@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for all around, then the Sanskrit for on al
 You'll want to know: यदि.
 यदि — yadi — "if".
 
+The word, taken apart.
+yadi "if" is built on the relative stem ya- "which" (CDIAL 10410), already in the Rigveda (MW). MW compares the relative ya- with Greek hos "who". It lives on as Punjabi je and Marathi jai "if" (CDIAL 10410).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for on all sides, then the Sanskrit for if.
 
 You'll want to know: चेत्.
 चेत् — cet — "provided that, if".
+
+The word, taken apart.
+cet is ced, built from ca "and" + id, an emphatic particle, as the Vedic word-by-word text splits it (MW). It first meant "and" and "when", and later "if"; like ca, it follows the first word of its clause.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for if, then the Sanskrit for provided that
 You'll want to know: तथापि.
 तथापि — tathāpi — "even so, still".
 
+The word, taken apart.
+tathāpi is built from tathā "so, thus", on the pronoun base ta- "that", and api "even, also" (CDIAL 5647): "even so, nevertheless". CDIAL 5647 traces Punjabi te "and" to it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for provided that, then the Sanskrit for ev
 You'll want to know: यद्यपि.
 यद्यपि — yadyapi — "although".
 
+The word, taken apart.
+yadyapi is built from yadi "if" and api "even, also", with i turning to y before the vowel (MW): "even if", so "although". It pairs with tathāpi "even so".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for even so, then the Sanskrit for although
 
 You'll want to know: अथवा.
 अथवा — athavā — "or else, or".
+
+The word, taken apart.
+athavā is built from atha "then, now" and vā "or" (CDIAL 231): "or else, or rather". MW compares vā with Latin -ve "or", which also follows the word it joins.
 
 What you've built.
 One more word for this chapter.

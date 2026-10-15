@@ -14,7 +14,8 @@ romanization: "madhyarātriḥ"
 concept_tag: SA-TIME90-MADHYARATRIH
 prerequisites: [SA-C90-pradosah, SA-C90-aparahnah]
 sounds: []
-roots: []
+roots: [sanskrit-madhya, sanskrit-ratri]
+etymology_hook: "madhyarātri 'midnight' ← madhya 'middle' + rātri 'night' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C90-aparahnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C90-TIME90-04]; assesses=[] -->
 
 **मध्यरात्रिः** — *madhyarātriḥ* — "midnight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Madhyarātri* is built from *madhya*, "middle", and *rātri*, "night" (MW).
+*Madhya* is inherited: MW compares Latin *medius* and English **mid**, as in
+*midnight*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

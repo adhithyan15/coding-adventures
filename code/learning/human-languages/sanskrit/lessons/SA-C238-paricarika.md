@@ -14,7 +14,8 @@ romanization: "paricārikā"
 concept_tag: SA-PPL238-PARICARIKA
 prerequisites: [SA-C237-tantuvayah, SA-C237-rajakah]
 sounds: []
-roots: []
+roots: [sanskrit-paricarika]
+etymology_hook: "paricārikā ← pari 'around' + √car 'move, attend': 'female attendant' (MW); 'nurse' is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C237-rajakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C238-PPL238-01]; assesses=[] -->
 
 **परिचारिका** — *paricārikā* — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paricārikā* is built on *pari*, "around", and the root √car, "to move, attend upon" (MW): one who moves around a person to look after them. MW glosses it "a female attendant"; the sense "nurse" is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

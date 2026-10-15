@@ -14,7 +14,8 @@ romanization: "upatyakā"
 concept_tag: SA-THG225-UPATYAKA
 prerequisites: [SA-C224-jyotih, SA-C224-bhumih]
 sounds: []
-roots: []
+roots: [sanskrit-upatyaka]
+etymology_hook: "upatyakā 'land at the foot of a hill' ← upa 'near' + the suffix -tyaka (Pāṇini 5.2.34; MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C224-bhumih]
 <!-- hl-knowledge: introduces=[SA-LEX-C225-THG225-01]; assesses=[] -->
 
 **उपत्यका** — *upatyakā* — "a valley".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*upatyakā* is built on *upa*, "near, below", with the suffix *-tyaka*; Pāṇini 5.2.34 forms it beside *adhityakā*, "table-land", from *adhi*, "above". MW glosses it "land at the foot of a mountain, low-land" and "a valley".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

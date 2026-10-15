@@ -14,7 +14,8 @@ romanization: "candraḥ"
 concept_tag: SA-SKY-CANDRA
 prerequisites: [SA-C31-sky, SA-C29-pardon, SA-C30-seat]
 sounds: []
-roots: []
+roots: [sanskrit-candra]
+etymology_hook: "candra 'shining, moon' ← the root √cand 'shine'; MW compares Latin candeō (CDIAL 4661)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,13 @@ reviews_of: [SA-C31-sky]
 Sanskrit names the moon by what it does: the root behind **चन्द्रः** means "to shine, to glitter". The moon is simply the shining one.
 
 Latin kept that root in *candēre*, "to glow white", and English is full of its children — *candle*, *candid*, *incandescent*, and the *candidate*, who once wore a bleached white toga to be seen in a crowd. Sanskrit called the moon the glowing thing; Latin called a candle the same thing.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Candra* first meant "shining" and is built on the root √cand, "to shine", which
+MW compares with Latin *candeō*, "I glow" (CDIAL 4661). It lives on as Hindi
+*cāṃd*, "moon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

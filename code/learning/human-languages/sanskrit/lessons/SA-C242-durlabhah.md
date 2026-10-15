@@ -14,7 +14,8 @@ romanization: "durlabhaḥ"
 concept_tag: SA-QUAL242-DURLABHAH
 prerequisites: [SA-C241-parantu, SA-C242-sulabhah]
 sounds: []
-roots: []
+roots: [sanskrit-durlabha, sanskrit-labhate]
+etymology_hook: "durlabha = dus 'hard' + √labh 'obtain'; Hindi dūlhā 'bridegroom', the precious one (CDIAL 6446)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C242-sulabhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C242-QUAL242-02]; assesses=[] -->
 
 **दुर्लभः** — *durlabhaḥ* — "hard to get, rare".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*durlabha* is built on *dus-*, "hard, ill", and the root √labh, "to obtain" (MW): "hard to get, rare". CDIAL 6446 also records the sense "beloved", and from it comes Hindi *dūlhā*, "bridegroom".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

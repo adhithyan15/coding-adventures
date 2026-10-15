@@ -14,7 +14,8 @@ romanization: "āste"
 concept_tag: SA-VERB-ASTE
 prerequisites: [SA-C143-pratyagacchati, SA-C143-sete]
 sounds: []
-roots: []
+roots: [sanskrit-aste]
+etymology_hook: "āste 'sits, stays' ← √ās 'sit', inherited, cf. Greek hēmai 'sit' (MW; EtymDB); Marathi asṇe (CDIAL 1480)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C143-sete]
 <!-- hl-knowledge: introduces=[SA-LEX-C143-ACT143-03]; assesses=[] -->
 
 **आस्ते** — *āste* — "sits, stays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āste* comes from the root √ās "sit, stay, remain" (CDIAL 1480), inherited from Indo-European (EtymDB): MW compares Greek *hēmai* "sit". It lives on as Marathi *asṇe* "to wait, to exist" (CDIAL 1480), and *āsana* "seat, posture" comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

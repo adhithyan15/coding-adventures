@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for now, then the Sanskrit for always.
 You'll want to know: कदापि.
 कदापि — kadāpi — "ever".
 
+The word, taken apart.
+kadāpi is built from kadā "when", which MW derives from the question stem ka-, and the particle api "even, also": "at any time at all". After na it turns into "never".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for always, then the Sanskrit for ever.
 
 You'll want to know: विलम्बः.
 विलम्बः — vilambaḥ — "a delay".
+
+The word, taken apart.
+vilamba comes from the verb vi-√lamb, the root √lamb "hang" with vi- "apart, away": to hang back, linger, delay (MW). It lives on as Punjabi vilamb, bilamb "delay" (CDIAL 11890).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for ever, then the Sanskrit for a delay.
 You'll want to know: वामः.
 वामः — vāmaḥ — "left".
 
+The word, taken apart.
+MW thinks vāma "left" was perhaps once the same word as vāma "lovely, pleasant", from the root √van "love, desire", which would make "the lovely side" a polite name for the left; CDIAL keeps the two apart (11533, 11534), so the link is not settled. vāma lives on as Hindi bāyāṁ "left" (CDIAL 11533).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a delay, then the Sanskrit for left.
 You'll want to know: दक्षिणः.
 दक्षिणः — dakṣiṇaḥ — "right; south".
 
+The word, taken apart.
+dakṣiṇa is inherited from an Indo-European word for "right" that also gave Latin dexter (English dexterous) and Greek dexios (EtymDB). It means "south" because someone facing east has the south on the right hand (MW). It lives on as Hindi dakkhin "the south" (CDIAL 6119).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for left, then the Sanskrit for right; sout
 
 You'll want to know: अन्तः.
 अन्तः — antaḥ — "inside".
+
+The word, taken apart.
+antaḥ is antar "within, between", with the final r said as ḥ at the end of a phrase (MW). MW sets it beside Latin inter "between", the inter- of English international, so it is inherited from Indo-European. It lives on as Marathi āt "inside" (CDIAL 356).
 
 What you've built.
 One more word for this chapter.

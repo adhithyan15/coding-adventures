@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 84,
-  "sourceHash": "fnv1a64:b5ee9865e3e72018",
+  "sourceHash": "fnv1a64:bd633dd8264553d7",
   "lessonIds": [
     "SA-C84-temple",
     "SA-C84-hospital",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch84.txt",
   "json": "sanskrit/narration/ch84.json",
-  "textHash": "fnv1a64:299de0f94929c43a",
-  "jsonHash": "fnv1a64:22457515ccbe2e0c",
+  "textHash": "fnv1a64:8c187ae8ed2f2842",
+  "jsonHash": "fnv1a64:b71eafc4da13d646",
   "findings": []
 }

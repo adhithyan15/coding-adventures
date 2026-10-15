@@ -14,7 +14,8 @@ romanization: "śanaiḥ"
 concept_tag: SA-TIME240-SANAIH
 prerequisites: [SA-C239-karuna, SA-C240-tavat]
 sounds: []
-roots: []
+roots: [sanskrit-shanais]
+etymology_hook: "śanaiḥ 'gradually' is an old instrumental plural of śana 'quiet', probably from √śam 'be calm' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C240-tavat]
 <!-- hl-knowledge: introduces=[SA-LEX-C240-TIME240-02]; assesses=[] -->
 
 **शनैः** — *śanaiḥ* — "gradually, slowly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śanaiḥ* comes from an old instrumental plural of *śana*, "quiet, soft", MW says, and MW connects *śana*, probably, with the root √śam, "to be calm". It is formed like *uccaiḥ*, "loudly", and *nīcaiḥ*, "softly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "saralaḥ"
 concept_tag: SA-COURTESY-SARALA
 prerequisites: [SA-C43-trust, SA-C41-parasol, SA-C42-much]
 sounds: []
-roots: []
+roots: [sanskrit-sarala]
+etymology_hook: "sarala 'straight, honest' (MW glosses it 'running on'); Punjabi and Bengali saral (CDIAL 13252)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C43-trust]
 The pine is called *sarala* because it grows straight up, and the same word does duty for a road with no bends and for someone with no side to them.
 
 English runs the metaphor the same way — *straight*, *upright*, *a straight answer* — which is worth noticing, because the two languages arrived at it separately.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW glosses *sarala* "running on, straight", filing it under *sara*, "running",
+from the root √sṛ, "to run, flow". It lives on as Punjabi and Bengali *saral*
+(CDIAL 13252).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

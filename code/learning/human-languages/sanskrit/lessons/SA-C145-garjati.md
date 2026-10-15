@@ -14,7 +14,8 @@ romanization: "garjati"
 concept_tag: SA-VERB-GARJATI
 prerequisites: [SA-C145-nandati, SA-C145-krandati]
 sounds: []
-roots: []
+roots: [sanskrit-garjati, sanskrit-garjana]
+etymology_hook: "garjati ← √garj 'roar, thunder' (CDIAL 4046), inherited (EtymDB); MW compares Latin garrire; garjana is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C145-krandati]
 <!-- hl-knowledge: introduces=[SA-LEX-C145-ACT145-03]; assesses=[] -->
 
 **गर्जति** — *garjati* — "roars, thunders".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*garjati* comes from the root √garj "roar, growl, thunder" (CDIAL 4046), inherited from Indo-European (EtymDB); MW compares Latin *garrire* "chatter". *garjana* "thunder" is the noun of the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cālanī"
 concept_tag: SA-THG191-CALANI
 prerequisites: [SA-C191-ulukhalam, SA-C191-musalam]
 sounds: []
-roots: []
+roots: [sanskrit-calani, sanskrit-calati]
+etymology_hook: "cālanī 'sieve' ← root √cal 'move, shake': what you shake (CDIAL 4771); Hindi cālnī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C191-musalam]
 <!-- hl-knowledge: introduces=[SA-LEX-C191-THG191-05]; assesses=[] -->
 
 **चालनी** — *cālanī* — "a sieve".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cālanī* is built on the root √cal, "to move, shake" (MW): a sieve is what you shake to sift. CDIAL 4771 lists it, and it lives on as Hindi *cālnī*, "sieve".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

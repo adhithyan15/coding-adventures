@@ -14,7 +14,8 @@ romanization: "ārogyam"
 concept_tag: SA-UNWELL-HEALTH
 prerequisites: [SA-C66-pain, SA-C66-illness]
 sounds: []
-roots: []
+roots: [sanskrit-arogya, sanskrit-roga]
+etymology_hook: "ārogya 'health' ← a-roga 'free from disease', from roga 'disease' (MW; CDIAL 1330)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,12 @@ reviews_of: [SA-C66-illness]
 
 **आरोग्यम्** (*ārogyam*) — "health": **आ-**, then **रोग**, "illness", with **-य** after
 it — the state of the body once the illness is gone.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Ārogya* is built from *a-roga*, "free from disease": *a-* "not" with *roga*
+"disease", made into an abstract noun (MW, CDIAL 1330).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

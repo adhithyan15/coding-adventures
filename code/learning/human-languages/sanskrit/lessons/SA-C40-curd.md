@@ -14,7 +14,8 @@ romanization: "dadhi"
 concept_tag: SA-FOOD-DADHI
 prerequisites: [SA-C39-snake, SA-C38-fire, SA-C39-cow]
 sounds: []
-roots: []
+roots: [sanskrit-dadhi]
+etymology_hook: "dadhi 'thick sour milk': EtymDB traces it to a Proto-Indo-European word for milk; Hindi dahī (CDIAL 6146)"
 duration:
   max_seconds: 210
 requires:
@@ -44,9 +45,15 @@ reviews_of: [SA-C39-snake]
 
 **दधि** is curd — दुग्धम् set thick, the *dahī* of every kitchen in India.
 
-The word is a doubled thing: *da-dh-i*, the root *dhā*, "to set, to place", said twice over. Curd is milk that has been set, and the name says so twice for emphasis.
+The word is a doubled thing, *da-dh-i*. MW files it with the doubled form of *dhā*, "to set, to place", which would make curd the milk that has been set.
 
 Hindi *dahī*, Marathi *dahī*, Gujarati *dahī* — the word barely moved.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+EtymDB traces *dadhi* to a Proto-Indo-European word for milk, so the "set milk"
+reading is MW's, not the only one. It lives on as Hindi *dahī* (CDIAL 6146).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

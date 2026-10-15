@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a bull, then the Sanskrit for a buffalo
 You'll want to know: मेषः.
 मेषः — meṣaḥ — "a sheep".
 
+The word, taken apart.
+meṣa "a ram, a sheep" is inherited from Indo-European (EtymDB): Avestan maēša and Persian mīš "ewe" are cousins. In astronomy it names Aries, the first sign of the zodiac (MW). Hindi kept it as mes "ram" (CDIAL 10334).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a buffalo, then the Sanskrit for a shee
 
 You'll want to know: कपोतः.
 कपोतः — kapotaḥ — "a pigeon".
+
+The word, taken apart.
+kapota "a dove, a pigeon" is old, in the Rigveda, and is inherited from Indo-Iranian (EtymDB). Its cousin is Persian kabūtar "pigeon", which Hindi and Urdu took from Persian, so the Hindi pigeon is a Persian cousin of this Sanskrit word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a sheep, then the Sanskrit for a pigeon
 You'll want to know: उलूकः.
 उलूकः — ulūkaḥ — "an owl".
 
+The word, taken apart.
+ulūka "an owl" is old, in the Rigveda; MW cites only a grammarians' root √val for it, so its origin is uncertain. It lives on as Hindi ullū "owl", and Punjabi and Gujarati ullū also means "fool" (CDIAL 2359).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a pigeon, then the Sanskrit for an owl.
 You'll want to know: बकः.
 बकः — bakaḥ — "a heron".
 
+The word, taken apart.
+baka "a heron, a crane" is probably imitative in origin, as CDIAL 9115 explains after EWA, which is why its k survives into the modern forms. It lives on as Hindi bagulā and Bengali bak (CDIAL 9115).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for an owl, then the Sanskrit for a heron.
 
 You'll want to know: भ्रमरः.
 भ्रमरः — bhramaraḥ — "a bee".
+
+The word, taken apart.
+bhramara "a large black bee" is filed by MW under the root √bhram "wander, whirl", which MW compares with Greek bremō and Latin fremere "roar, hum" (EtymDB gives an Indo-European root "make noise"). It lives on as Hindi bhaũrā "black bee" (CDIAL 9651).
 
 What you've built.
 One more word for this chapter.

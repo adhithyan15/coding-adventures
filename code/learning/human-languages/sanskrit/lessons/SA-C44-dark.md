@@ -14,7 +14,8 @@ romanization: "śyāmaḥ"
 concept_tag: SA-COLOUR-SHYAMA
 prerequisites: [SA-C44-white, SA-C42-suddenly, SA-C43-conduct]
 sounds: []
-roots: []
+roots: [sanskrit-shyama]
+etymology_hook: "śyāma 'dark, black': MW reports a link with √śyai, CDIAL 12664 compares śyāva; its source is not settled"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C44-white]
 It is the darkness of a thundercloud rather than of soot, which is why the god whose name means "the dark one" is also called *Śyām* with affection.
 
 No European cousin has been agreed. The word stayed home, and *Śyām* and *Śyāmā* are ordinary names in India today.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śyāma* is already in the Atharvaveda. MW reports a traditional link with the root
+√śyai, and CDIAL 12664 compares *śyāva*, "dark brown", but its source is not
+settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

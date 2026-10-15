@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for finishes, then the Sanskrit for hands o
 You'll want to know: पिदधाति.
 पिदधाति — pidadhāti — "covers, closes".
 
+The word, taken apart.
+pidadhāti is built on pi-, a shortened form of api, "upon", and dadhāti, "puts", from the root √dhā (MW). To put something upon a thing is to cover or close it; the Veda still says api-dhā. MW compares √dhā with English do.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for hands over, then the Sanskrit for cover
 
 You'll want to know: आरोपयति.
 आरोपयति — āropayati — "plants, raises".
+
+The word, taken apart.
+āropayati comes from ā-ruh, "to climb, rise", as its causative, from the root √ruh, "to rise, grow" (MW), the root of rohati, "grows". To make a plant rise is to plant it, and to make a thing rise is to raise it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for covers, then the Sanskrit for plants.
 You'll want to know: चालयति.
 चालयति — cālayati — "drives, moves".
 
+The word, taken apart.
+cālayati is the causative of the root √cal, "to move, stir" (MW): "makes something move", and so "drives". CDIAL 4772 records "shakes, drives away", and Hindi cālnā, "to shake, sift", comes from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for plants, then the Sanskrit for drives.
 You'll want to know: आलिंगति.
 आलिंगति — āliṅgati — "embraces".
 
+The word, taken apart.
+āliṅgati is built on ā- and the root √liṅg (MW). MW glosses the compound "to clasp, join the limbs closely, embrace", and the Mahābhārata uses it for "embraces" (CDIAL 1383); MW gives the simple root no clear older source.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for drives, then the Sanskrit for embraces.
 
 You'll want to know: चुम्बति.
 चुम्बति — cumbati — "kisses".
+
+The word, taken apart.
+cumbati is the present of the root √cumb, "to kiss, touch with the mouth" (MW). MW gives no older source for the root, so its origin is uncertain. It lives on as Hindi cūmnā and Gujarati cumvũ, "to kiss" (CDIAL 4870).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "paṇyam"
 concept_tag: SA-THG222-PANYAM
 prerequisites: [SA-C222-sadhanam, SA-C222-bharah]
 sounds: []
-roots: []
+roots: [sanskrit-panya]
+etymology_hook: "paṇya 'article for sale' ← root √paṇ 'barter, buy': 'to be bought or sold' (MW; CDIAL 7719)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C222-bharah]
 <!-- hl-knowledge: introduces=[SA-LEX-C222-THG222-03]; assesses=[] -->
 
 **पण्यम्** — *paṇyam* — "goods for sale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paṇya* is built on the root √paṇ, "to barter, purchase" (MW): "to be bought or sold", and so goods for sale (CDIAL 7719). *Paṇa*, "a coin, a stake", comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

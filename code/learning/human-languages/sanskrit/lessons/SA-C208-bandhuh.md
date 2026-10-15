@@ -14,7 +14,8 @@ romanization: "bandhuḥ"
 concept_tag: SA-PPL208-BANDHUH
 prerequisites: [SA-C207-sammanayati, SA-C208-parivarah]
 sounds: []
-roots: []
+roots: [sanskrit-bandhu]
+etymology_hook: "bandhu 'kinsman' ← root √bandh 'bind'; MW compares English bind (CDIAL 9144)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C208-parivarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C208-PPL208-02]; assesses=[] -->
 
 **बन्धुः** — *bandhuḥ* — "a relative".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bandhu* is built on the root √bandh, "to bind, tie" (MW): a relative is someone bound to you. The root is inherited from Indo-European, and MW compares English *bind*. It is a Rigvedic word for "kinsman" (CDIAL 9144).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

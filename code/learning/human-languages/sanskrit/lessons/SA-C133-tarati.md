@@ -14,7 +14,8 @@ romanization: "tarati"
 concept_tag: SA-VERB-TARATI
 prerequisites: [SA-C133-unnatah, SA-C133-uddayate]
 sounds: []
-roots: []
+roots: [sanskrit-tarati]
+etymology_hook: "tarati ← √tṝ 'cross over', inherited from Indo-European (EtymDB), cf. Latin trans (MW); Hindi tarnā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C133-uddayate]
 <!-- hl-knowledge: introduces=[SA-LEX-C133-QUAL133-04]; assesses=[] -->
 
 **तरति** — *tarati* — "swims, crosses".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tarati* comes from the root √tṝ "cross over", and then "float, swim" (CDIAL 5702). The root is inherited from Indo-European (EtymDB), and MW sets it beside Latin *trans* "across" and *terminus* "boundary". It lives on as Hindi *tarnā* "to cross" and Punjabi *tarnā* "to swim" (CDIAL 5702).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 189,
   "title": "Trunk, Hanging basket, Basket, Mat, Carpet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:98854977e7fe9796",
+  "sourceHash": "fnv1a64:b9bb89a01ec4e42f",
   "lessons": [
     {
       "id": "SA-C189-manjusa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c017cef978531000",
+      "sourceHash": "fnv1a64:e407920ed0e26536",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mañjūṣā may be borrowed from Dravidian: CDIAL 9721 says \"possibly\", and DEDR 4640 compares Tamil mañcikai, \"chest, box\", with a question mark. Pali has it as mañjūsā, \"casket\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7795cb754c5fdb5a",
+      "sourceHash": "fnv1a64:39e6a10ee0abd2d4",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "śikya is a rope loop hung from a pole or yoke to carry a load (MW), and so a hanging basket. Neither MW nor CDIAL 12427 gives a derivation, so its origin is uncertain; CDIAL compares śic, \"sling, net\". It lives on as Hindi chīkā, \"hanging net\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fbd240fca4e304f9",
+      "sourceHash": "fnv1a64:6c77bd132a8f8d04",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "piṭaka is probably borrowed from a non-Indo-Aryan language: CDIAL 8164 calls it \"non-Aryan\", while MW derives it from a root √piṭ, \"to gather\". The Buddhist canon is the Tipiṭaka, \"three baskets\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97cad02852ed8545",
+      "sourceHash": "fnv1a64:3c8212b742062ff3",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kaṭa is a twist of straw and so a straw mat. MW thinks it may stand for karta from √kṛt, \"to spin, twist\", and CDIAL 2629 supports a derivation of that kind. In Hindi the word became kaṛā, \"ring, bracelet\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6b1f8c6d0e28c4d",
+      "sourceHash": "fnv1a64:3a14b9f83ec6a45a",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "āstaraṇa is built on ā- and the root √stṛ, \"to spread, strew\" (MW): a carpet is what is spread out. In the Atharvaveda it is a layer of sacred grass (CDIAL 1506), and Marathi keeps it as ãthrūṇ, \"bedspread\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

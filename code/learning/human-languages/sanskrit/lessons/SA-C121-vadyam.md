@@ -14,7 +14,8 @@ romanization: "vādyam"
 concept_tag: SA-THINGS121-VADYAM
 prerequisites: [SA-C120-granthah, SA-C120-citram]
 sounds: []
-roots: []
+roots: [sanskrit-vadya]
+etymology_hook: "vādya 'to be sounded', then 'musical instrument' ← √vad 'speak, sound' (CDIAL 11511); Hindi bājā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C120-citram]
 <!-- hl-knowledge: introduces=[SA-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **वाद्यम्** — *vādyam* — "a musical instrument".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vādya* comes from the root √vad "speak, sound": first "to be said", then "to be played", and so "a musical instrument" (CDIAL 11511). It lives on as Hindi *bājā* "musical instrument" (CDIAL 11511).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

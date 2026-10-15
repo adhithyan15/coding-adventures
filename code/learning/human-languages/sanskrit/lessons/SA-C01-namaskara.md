@@ -14,7 +14,8 @@ romanization: "namaskāraḥ"
 concept_tag: GREETING-FORMAL
 prerequisites: [SA-C01-namaste]
 sounds: [inherent-a, visarga, vowel-sign]
-roots: [namas, kara, kr-do]
+roots: [namas, kara, kr-do, sanskrit-namaskara]
+etymology_hook: "namaskāra ← namas 'a bow' + kāra 'making', from the root √kṛ 'do, make' (MW; CDIAL 6960)"
 reviews_of: [SA-C01-namaste]
 duration:
   max_seconds: 210

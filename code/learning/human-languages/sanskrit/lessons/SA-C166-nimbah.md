@@ -14,7 +14,8 @@ romanization: "nimbaḥ"
 concept_tag: SA-THG166-NIMBAH
 prerequisites: [SA-C165-lauham, SA-C166-asvatthah]
 sounds: []
-roots: []
+roots: [sanskrit-nimba]
+etymology_hook: "nimba 'neem tree' (Gobhila); MW and CDIAL 7245 give no derivation; origin uncertain; Hindi nīm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C166-asvatthah]
 <!-- hl-knowledge: introduces=[SA-LEX-C166-THG166-02]; assesses=[] -->
 
 **निम्बः** — *nimbaḥ* — "a neem tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nimba* "the neem tree" appears in the ritual manuals, and neither MW nor CDIAL 7245 gives a derivation, so its origin is uncertain. It lives on as Hindi *nīm* and Punjabi *nimb* (CDIAL 7245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

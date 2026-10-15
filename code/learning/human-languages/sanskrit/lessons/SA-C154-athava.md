@@ -14,7 +14,8 @@ romanization: "athavā"
 concept_tag: SA-WHY154-ATHAVA
 prerequisites: [SA-C154-tathapi, SA-C154-yadyapi]
 sounds: []
-roots: []
+roots: [sanskrit-athava]
+etymology_hook: "athavā ← atha 'then, now' + vā 'or' (CDIAL 231); MW compares vā with Latin -ve 'or'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C154-yadyapi]
 <!-- hl-knowledge: introduces=[SA-LEX-C154-WHY154-05]; assesses=[] -->
 
 **अथवा** — *athavā* — "or else, or".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*athavā* is built from *atha* "then, now" and *vā* "or" (CDIAL 231): "or else, or rather". MW compares *vā* with Latin *-ve* "or", which also follows the word it joins.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

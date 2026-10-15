@@ -14,7 +14,8 @@ romanization: "paṭahaḥ"
 concept_tag: SA-THG247-PATAHAH
 prerequisites: [SA-C247-kavacam, SA-C247-dhvajah]
 sounds: []
-roots: []
+roots: [sanskrit-pataha]
+etymology_hook: "paṭaha 'kettledrum'; origin disputed: Munda, Dravidian, or prahṛta 'struck' (CDIAL 7696)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C247-dhvajah]
 <!-- hl-knowledge: introduces=[SA-LEX-C247-THG247-05]; assesses=[] -->
 
 **पटहः** — *paṭahaḥ* — "a drum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paṭaha* is a kettledrum or war-drum (MW). Its origin is disputed: CDIAL 7696 lists a Munda source and a Dravidian one, both with a question mark, and calls a third derivation, from *prahṛta*, "struck", very doubtful. Bengali *paṛā*, "drum", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

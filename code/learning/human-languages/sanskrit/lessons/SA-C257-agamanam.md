@@ -14,7 +14,8 @@ romanization: "āgamanam"
 concept_tag: SA-TRV257-AGAMANAM
 prerequisites: [SA-C257-lokayanam, SA-C257-karayanam]
 sounds: []
-roots: []
+roots: [sanskrit-agamana, gam-go]
+etymology_hook: "āgamana ← ā 'towards' + √gam 'go': 'coming, arrival' (MW; CDIAL 1046)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C257-karayanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C257-TRV257-04]; assesses=[] -->
 
 **आगमनम्** — *āgamanam* — "arrival".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āgamana* is built on *ā-*, "towards", and the root √gam, "to go" (MW): going towards is coming, so "arrival" (CDIAL 1046). MW compares √gam with English *come*, and *āgacchati*, "comes", is its verb.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

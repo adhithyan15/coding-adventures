@@ -14,7 +14,8 @@ romanization: "nadītīram"
 concept_tag: SA-THINGS124-NADITIRAM
 prerequisites: [SA-C124-patah, SA-C124-sarovarah]
 sounds: []
-roots: []
+roots: [sanskrit-nadi, sanskrit-tira]
+etymology_hook: "nadītīra ← nadī 'river' (MW lists it under √nad 'roar') + tīra 'bank' (CDIAL 5842)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C124-sarovarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C124-THINGS124-03]; assesses=[] -->
 
 **नदीतीरम्** — *nadītīram* — "a riverbank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nadītīra* is built from *nadī* "river", which MW lists under the root √nad "roar, sound", and *tīra* "shore, bank" (CDIAL 5842): "the bank of a river" (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

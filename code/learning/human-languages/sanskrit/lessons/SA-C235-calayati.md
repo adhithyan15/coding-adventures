@@ -14,7 +14,8 @@ romanization: "cālayati"
 concept_tag: SA-VERB-CALAYATI
 prerequisites: [SA-C235-pidadhati, SA-C235-aropayati]
 sounds: []
-roots: []
+roots: [sanskrit-calati]
+etymology_hook: "cālayati ← causative of √cal 'move, stir': 'makes move' (MW); Hindi cālnā 'to sift' (CDIAL 4772)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C235-aropayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C235-ACT235-03]; assesses=[] -->
 
 **चालयति** — *cālayati* — "drives, moves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cālayati* is the causative of the root √cal, "to move, stir" (MW): "makes something move", and so "drives". CDIAL 4772 records "shakes, drives away", and Hindi *cālnā*, "to shake, sift", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

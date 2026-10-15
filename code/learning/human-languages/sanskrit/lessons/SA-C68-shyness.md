@@ -14,7 +14,8 @@ romanization: "lajjā"
 concept_tag: SA-FEEL-SHYNESS
 prerequisites: [SA-C68-fear, SA-C68-anger]
 sounds: []
-roots: []
+roots: [sanskrit-lajja]
+etymology_hook: "lajjā 'shame, modesty' ← the root √lajj 'be ashamed' (MW); it lives on as Hindi lāj (CDIAL 10910)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C68-anger]
 <!-- hl-knowledge: introduces=[SA-LEX-C68-FEELINGS-04]; assesses=[] -->
 
 **लज्जा** (*lajjā*) — "shyness", the feeling that turns the face away.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Lajjā* is built on the root √lajj, "to be ashamed, blush" (MW). It lives on as
+Hindi *lāj*, "shame" (CDIAL 10910).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

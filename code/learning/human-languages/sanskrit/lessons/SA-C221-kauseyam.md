@@ -14,7 +14,8 @@ romanization: "kauśeyam"
 concept_tag: SA-THG221-KAUSEYAM
 prerequisites: [SA-C220-dhanuh, SA-C221-karpasah]
 sounds: []
-roots: []
+roots: [sanskrit-kausheya]
+etymology_hook: "kauśeya 'silken' ← kośa 'case, cocoon' (MW): what comes from the cocoon"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C221-karpasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C221-THG221-02]; assesses=[] -->
 
 **कौशेयम्** — *kauśeyam* — "silk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kauśeya* is an adjective from *kośa*, "case, sheath", here the silkworm's cocoon (MW): "silken", and so silk cloth. *Kośa* itself is a Rigvedic word for "bucket, case" (CDIAL 3539).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

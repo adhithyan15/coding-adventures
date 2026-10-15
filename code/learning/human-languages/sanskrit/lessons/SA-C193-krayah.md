@@ -14,7 +14,8 @@ romanization: "krayaḥ"
 concept_tag: SA-THG193-KRAYAH
 prerequisites: [SA-C192-paridhanam, SA-C192-vasanam]
 sounds: []
-roots: []
+roots: [sanskrit-kraya, sanskrit-krinati]
+etymology_hook: "kraya 'purchase' ← root √krī 'buy' (MW; CDIAL 3581); the verb krīṇāti gives Bengali kinā (CDIAL 3594)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C192-vasanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C193-THG193-01]; assesses=[] -->
 
 **क्रयः** — *krayaḥ* — "a purchase".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kraya* is built on the root √krī, "to buy", whose present is *krīṇāti* (MW; CDIAL 3581). MW compares Greek *priamai*, "I buy". The verb lives on as Bengali *kinā*, "to buy" (CDIAL 3594), though most modern languages replaced it with other verbs.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 203,
-  "sourceHash": "fnv1a64:f180b6a96e463104",
+  "sourceHash": "fnv1a64:3e5914348eee6c31",
   "lessonIds": [
     "SA-C203-modate",
     "SA-C203-vandate",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch203.txt",
   "json": "sanskrit/narration/ch203.json",
-  "textHash": "fnv1a64:38650be8136c874a",
-  "jsonHash": "fnv1a64:be3b3835d9057d69",
+  "textHash": "fnv1a64:b4fa3d75e907acfd",
+  "jsonHash": "fnv1a64:fcf4d6c38ee4ab5e",
   "findings": []
 }

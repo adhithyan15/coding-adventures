@@ -14,7 +14,8 @@ romanization: "vātyā"
 concept_tag: SA-THINGS111-VATYA
 prerequisites: [SA-C110-vidyut, SA-C110-garjanam]
 sounds: []
-roots: []
+roots: [sanskrit-vata-wind]
+etymology_hook: "vātyā 'gale' ← vāta 'wind' (CDIAL 11505), from √vā 'blow', which MW compares with Latin ventus, English wind"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C110-garjanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C111-THINGS111-01]; assesses=[] -->
 
 **वात्या** — *vātyā* — "a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vātyā* "a strong wind, a gale" is built on *vāta* "wind" (CDIAL 11505), from the root √vā "blow". MW sets √vā beside Latin *ventus* and English *wind*: an inherited Indo-European root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

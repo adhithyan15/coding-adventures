@@ -14,7 +14,8 @@ romanization: "sammelanam"
 concept_tag: SA-WRK256-SAMMELANAM
 prerequisites: [SA-C255-uttaram, SA-C256-prasiksanam]
 sounds: []
-roots: []
+roots: [sanskrit-sammelana, mil-meet]
+etymology_hook: "sammelana ← sam 'together' + √mil 'meet': 'meeting together' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C256-prasiksanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C256-WRK256-02]; assesses=[] -->
 
 **सम्मेलनम्** — *sammelanam* — "a conference".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sammelana* is built on *sam*, "together", and the root √mil, "to meet" (MW): "mingling or meeting together". The same root gives *melaka*, "fair", which you have already met, and Hindi *milnā*, "to meet" (CDIAL 10133).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

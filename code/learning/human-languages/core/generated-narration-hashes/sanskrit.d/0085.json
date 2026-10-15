@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 85,
-  "sourceHash": "fnv1a64:3d99abef3d28a85e",
+  "sourceHash": "fnv1a64:f12ab64da1c71d53",
   "lessonIds": [
     "SA-C85-week",
     "SA-C85-monday",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch85.txt",
   "json": "sanskrit/narration/ch85.json",
-  "textHash": "fnv1a64:ec7be8282aac7e0c",
-  "jsonHash": "fnv1a64:855024c756512fe6",
+  "textHash": "fnv1a64:479807581b30667f",
+  "jsonHash": "fnv1a64:d93e012e98142893",
   "findings": []
 }

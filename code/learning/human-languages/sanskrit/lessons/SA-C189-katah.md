@@ -14,7 +14,8 @@ romanization: "kaṭaḥ"
 concept_tag: SA-THG189-KATAH
 prerequisites: [SA-C189-sikyam, SA-C189-pitakam]
 sounds: []
-roots: []
+roots: [sanskrit-kata]
+etymology_hook: "kaṭa 'straw mat', perhaps an early worn-down form tied to √kṛt 'spin, twist' (MW; CDIAL 2629)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C189-pitakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C189-THG189-04]; assesses=[] -->
 
 **कटः** — *kaṭaḥ* — "a mat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kaṭa* is a twist of straw and so a straw mat. MW thinks it may stand for *karta* from √kṛt, "to spin, twist", and CDIAL 2629 supports a derivation of that kind. In Hindi the word became *kaṛā*, "ring, bracelet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

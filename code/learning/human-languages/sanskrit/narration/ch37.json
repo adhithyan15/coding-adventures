@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "More Courtesy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2e106b85db59d592",
+  "sourceHash": "fnv1a64:803f011943ec0203",
   "lessons": [
     {
       "id": "SA-C37-peace",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39f1903f6176d1d3",
+      "sourceHash": "fnv1a64:b9e33194672c1de7",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Śānti is built on the root √śam, \"to grow calm, come to rest\", with the noun suffix -ti (MW, CDIAL 12391)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3bffd406edc74ec",
+      "sourceHash": "fnv1a64:bf80a56b1ad17eaa",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +211,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sādaram is built from sa-, \"with\", and ādara, \"regard, respect\", a noun MW derives from ā and the root √dṛ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -210,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -299,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a2aa34ba2396270",
+      "sourceHash": "fnv1a64:9d1cacbd70de5b6d",
       "notice": null,
       "blocks": [
         {
@@ -334,12 +356,23 @@
             },
             {
               "kind": "speech",
-              "text": "To say that a guest left you प्रसन्नः (prasannaḥ) is to say they left you at ease. The offering handed back from a temple, prasāda, is this same word — grace, given a physical form."
+              "text": "To say that a guest left you प्रसन्नः (prasannaḥ) is to say they left you at ease. The offering handed back from a temple, prasāda, comes from the same root — grace, given a physical form."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Prasanna is the past participle of pra + the root √sad, \"to sit, settle\" (MW, CDIAL 8823). That root is inherited: MW compares Latin sedēre and English sit."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -350,7 +383,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -408,7 +441,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -439,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b2347b3455d873e",
+      "sourceHash": "fnv1a64:ea207705d54b7ce7",
       "notice": null,
       "blocks": [
         {
@@ -480,6 +513,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Abhinandana is built from the prefix abhi, \"toward\", and the root √nand, \"to rejoice\" (MW), the root of ānanda."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -490,7 +534,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -548,7 +592,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -579,7 +623,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9eabe0daf27b4a70",
+      "sourceHash": "fnv1a64:755427048b81643d",
       "notice": null,
       "blocks": [
         {
@@ -620,6 +664,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Āśīrvāda is built from āśis, \"a wish, prayer\", and vāda, \"a speaking\", from the root √vad (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -630,7 +685,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -688,7 +743,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

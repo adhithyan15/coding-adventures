@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a ship, then the Sanskrit for a train.
 You'll want to know: पटः.
 पटः — paṭaḥ — "a cloth".
 
+The word, taken apart.
+paṭa "woven cloth, a garment" is probably borrowed from Austroasiatic: CDIAL 7692 follows Przyluski in grouping it with karpāsa "cotton", and thinks a Dravidian source less likely. Pali kept it as paṭa "cloth" (CDIAL 7692).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a train, then the Sanskrit for a cloth.
 
 You'll want to know: सरोवरः.
 सरोवरः — sarovaraḥ — "a lake".
+
+The word, taken apart.
+sarovara is built from saras "a lake, a pool", from the root √sṛ "flow" (CDIAL 13254), and vara "choice, best": "the finest of pools", a lake deep enough for the lotus (MW).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a cloth, then the Sanskrit for a lake.
 You'll want to know: नदीतीरम्.
 नदीतीरम् — nadītīram — "a riverbank".
 
+The word, taken apart.
+nadītīra is built from nadī "river", which MW lists under the root √nad "roar, sound", and tīra "shore, bank" (CDIAL 5842): "the bank of a river" (MW).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a lake, then the Sanskrit for a riverba
 You'll want to know: कोकिलः.
 कोकिलः — kokilaḥ — "a cuckoo".
 
+The word, taken apart.
+kokila "the Indian cuckoo, the koel" is imitative of the bird's call (MW), as Greek kokkyx and English cuckoo are (EtymDB). It lives on as Hindi koyal (CDIAL 3483).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a riverbank, then the Sanskrit for a cu
 
 You'll want to know: चाटकः.
 चाटकः — cāṭakaḥ — "a sparrow".
+
+The word, taken apart.
+MW and Apte record the sparrow as caṭaka, with a short a, and CDIAL 4571 calls it imitative of the bird's call, with similar words in Dravidian and Munda. It lives on as Hindi ciṛā "sparrow" and ciṛiyā "bird" (CDIAL 4571).
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for coos, then the Sanskrit for chatters.
 You'll want to know: पौत्रः.
 पौत्रः — pautraḥ — "a grandson".
 
+The word, taken apart.
+pautra is built from putra "son" with its first vowel strengthened to au: "belonging to a son", a son's son (MW; CDIAL 8416). It lives on as Hindi potā "grandson" (CDIAL 8416).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for chatters, then the Sanskrit for a grand
 
 You'll want to know: पौत्री.
 पौत्री — pautrī — "a granddaughter".
+
+The word, taken apart.
+pautrī is the feminine of pautra "grandson", which is built from putra "son" (MW; CDIAL 8417): a son's daughter. Hindi potī "granddaughter" belongs with it.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a grandson, then the Sanskrit for a gra
 You'll want to know: पितामही.
 पितामही — pitāmahī — "a paternal grandmother".
 
+The word, taken apart.
+pitāmahī is built from pitā "father" and mahī "great" (MW): the father's mother. MW sets pitṛ "father" beside Latin pater and English father: one inherited Indo-European word.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a granddaughter, then the Sanskrit for 
 You'll want to know: मातामहः.
 मातामहः — mātāmahaḥ — "a maternal grandfather".
 
+The word, taken apart.
+mātāmaha is built from mātā "mother" and maha "great" (MW): the mother's father. MW sets mātṛ "mother" beside Latin mater and English mother: one inherited Indo-European word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a paternal grandmother, then the Sanskr
 
 You'll want to know: पितृव्यः.
 पितृव्यः — pitṛvyaḥ — "a father's brother".
+
+The word, taken apart.
+pitṛvya is built from pitṛ "father" with the suffix -vya (MW): the father's brother. MW compares Greek patrōs and Latin patruus "father's brother", built the same way from the inherited word for "father".
 
 What you've built.
 One more word for this chapter.

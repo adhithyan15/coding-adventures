@@ -14,7 +14,8 @@ romanization: "cakram"
 concept_tag: SA-CRAFT-CAKRA
 prerequisites: [SA-C40-sweet, SA-C39-cow, SA-C40-curd]
 sounds: []
-roots: []
+roots: [sanskrit-cakra]
+etymology_hook: "cakra 'wheel' is inherited: MW compares Greek kuklos and English wheel (CDIAL 4538)"
 duration:
   max_seconds: 210
 requires:

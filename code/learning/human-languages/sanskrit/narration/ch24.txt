@@ -14,6 +14,9 @@ You'll want to know: जलम्.
 You already have one water-word: पानीयम् (pānīyam), which names water by what you do with it — "the thing to be drunk". जलम् names the stuff. Rain is jalam; the river is full of jalam; nobody offers you a cup of it in that word.
 Sanskrit keeps several words here — jalam, pānīyam, udakam, āpaḥ — and a poet chooses between them the way an English poet chooses between water, drink, and the waters. The ending puts जलम् in the neuter family you met with अन्नम् and गृहम्: -अम्.
 
+The word, taken apart.
+Jala is an old word for water, but its origin is not settled: MW gives no root for it. It lives on as Hindi and Bengali jal (CDIAL 5155).
+
 What you've built.
 Two words for water now, and a reason to prefer one over the other.
 
@@ -46,6 +49,9 @@ You'll want to know: ओदनः.
 अन्नम् (annam) was food in general — "the eaten thing". ओदनः (odanaḥ) is narrower and warmer: the grain after it has met the water. Cooked rice, on a plate, now.
 The traditional derivation takes it from a root meaning "to wet", which reads the word as grain that has been moistened — a description of cooking rather than of rice. Its ending -अः puts it in the masculine family beside मार्गः and ग्रामः, so ओदनः (odanaḥ) and अन्नम् sit in different families while naming the same meal.
 
+The word, taken apart.
+Odana is a Rigvedic word for grain cooked with milk (MW). MW traces it to the root √ud, "to wet", and CDIAL 2552 repeats that link with a question mark, so it is likely but not settled.
+
 What you've built.
 A general word for food, and a particular thing on the plate.
 
@@ -77,6 +83,9 @@ You'll want to know: फलम्.
 फलम् (phalam) — "fruit (and the result of anything)".
 फलम् is the fruit on the tree. It is also, in the same breath and with no metaphor felt, the fruit of an action — the result, the reward, the yield. A Sanskrit sentence about the phalam of your work is not reaching for a poetic image; it has one word where English has two.
 The root behind it means "to burst, to bear fruit", which is the fruit split open at the moment it is ripe. Neuter -अम्, like जलम् (jalam) and अन्नम् before it.
+
+The word, taken apart.
+Phala is Rigvedic. MW files it under the root √phal, "to burst, split", while CDIAL 9051 and DEDR 4004 compare Tamil words for ripening, so its origin is not settled. It lives on as Hindi phal (CDIAL 9051).
 
 What you've built.
 A word that carries an orchard and a consequence at once.
@@ -191,6 +200,9 @@ You'll want to know: दीपः.
 दीपः (dīpaḥ) — "a lamp".
 दीपः (dīpaḥ) is a lamp — the small clay one with oil and a wick. Its root means "to blaze", so the word names the burning rather than the vessel.
 Put दीप together with a word meaning "a row" and you get dīpāvalī, "a row of lamps" — the festival English writes as Diwali. Masculine -अः, like ओदनः (odanaḥ).
+
+The word, taken apart.
+Dīpa is built on the root √dīp, "to blaze, shine" (MW). It lives on as Hindi diyā, the small clay lamp of Diwali (CDIAL 6348).
 
 What you've built.
 Five things you might ask for: water, rice, fruit, cloth, a lamp.

@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Onion, Potato, Aubergine, Pumpkin, Coconut",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8e8d97d8ebd83594",
+  "sourceHash": "fnv1a64:bcf6c2e9e2c24cbb",
   "lessons": [
     {
       "id": "SA-C108-palanduh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f015bd0d76e1418",
+      "sourceHash": "fnv1a64:374a6050f42e858b",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "palāṇḍu \"an onion\" appears from the law book of Manu on (MW). MW gives no derivation beyond the grammarians, so its origin is uncertain. Pali kept it as palaṇḍuka (CDIAL 7954)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99a810061556727e",
+      "sourceHash": "fnv1a64:7a19a3d0190cae41",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "āluka is ālu with the suffix -ka, an old word-list name for an edible root, the elephant-foot yam (CDIAL 1388). The potato reached India from the Americas only in modern times, and the languages moved the old name onto it: Hindi ālū \"potato\" (CDIAL 1388). MW gives no source for ālu, so its origin is uncertain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d29b6a2c33cdfe6",
+      "sourceHash": "fnv1a64:21f400b02a10e369",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vṛntāka \"the aubergine\" is one of several Sanskrit names for the plant gathered in CDIAL 9369. CDIAL 11503 thinks the names probably share one origin and, after LM, gives it as Dravidian, while DEDR 5301 lists vṛntāka beside Dravidian words for the brinjal. Its sister form vātiṅgaṇa travelled west as Persian bādingān and lives on as Hindi baigan (CDIAL 11503)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a88f00710f84660",
+      "sourceHash": "fnv1a64:f521649456f66a2e",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kūṣmāṇḍa, also kuṣmāṇḍa (MW), is a pumpkin-gourd. CDIAL 3374 explains it as a Sanskritized form of a Prakrit word of non-Aryan origin. That Prakrit word lives on as Hindi kohṛā and Bengali kumṛā \"pumpkin\" (CDIAL 3374)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32e62b5268037989",
+      "sourceHash": "fnv1a64:5630ba63ef21c508",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nārikela \"coconut\" is borrowed from Dravidian: CDIAL 7075, after Bloch, takes it from a Dravidian compound, comparing Tamil nāri \"fibre\". It lives on as Hindi nāriyal and Marathi nāreḷ \"coconut\" (CDIAL 7075)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "rakṣati"
 concept_tag: SA-VERB-RAKSATI
 prerequisites: [SA-C137-jayati, SA-C137-guhati]
 sounds: []
-roots: []
+roots: [sanskrit-rakshati]
+etymology_hook: "rakṣati ← √rakṣ 'guard'; MW compares Greek alexō 'ward off' (EtymDB agrees); Hindi rakhnā 'to keep'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C137-guhati]
 <!-- hl-knowledge: introduces=[SA-LEX-C137-ACT137-04]; assesses=[] -->
 
 **रक्षति** — *rakṣati* — "protects".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rakṣati* comes from the root √rakṣ "guard, protect", which MW compares with Greek *alexō* "ward off", and EtymDB counts as inherited from Indo-European. It lives on as Hindi *rakhnā* "to keep, to put" (CDIAL 10547).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

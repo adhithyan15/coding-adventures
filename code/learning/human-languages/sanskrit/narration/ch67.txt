@@ -14,6 +14,9 @@ Before the new one: say the Sanskrit for an illness, then the Sanskrit for healt
 You'll want to know: निद्रा.
 निद्रा (nidrā) — "sleep". It comes at रात्रिः.
 
+The word, taken apart.
+Nidrā is built from ni, "down", and the root √drā, "to sleep", which MW compares with Latin dormiō. It lives on as Hindi nīd, "sleep" (CDIAL 7200).
+
 What you've built.
 What the night is for.
 
@@ -42,6 +45,9 @@ Before the new one: say the Sanskrit for health, then the Sanskrit for sleep.
 
 You'll want to know: क्षुधा.
 क्षुधा (kṣudhā) — "hunger". मम क्षुधा अस्ति — "I am hungry".
+
+The word, taken apart.
+Kṣudhā is the later form of Vedic kṣudh, "hunger", built on the root √kṣudh, "to be hungry" (MW, CDIAL 3716).
 
 What you've built.
 The need that food answers.
@@ -72,6 +78,9 @@ Before the new one: say the Sanskrit for sleep, then the Sanskrit for hunger.
 You'll want to know: पिपासा.
 पिपासा (pipāsā) — "thirst". पानीयम् answers it.
 
+The word, taken apart.
+Pipāsā is built on the desire form of the root √pā, "to drink": thirst is "wanting to drink" (MW, CDIAL 8199). It lives on as Hindi pyās, "thirst".
+
 What you've built.
 The need that water answers.
 
@@ -101,6 +110,9 @@ Before the new one: say the Sanskrit for hunger, then the Sanskrit for thirst.
 You'll want to know: विश्रामः.
 विश्रामः (viśrāmaḥ) — "rest", a pause from work or from a यात्रा.
 
+The word, taken apart.
+Viśrāma is built from vi and the root √śram, "to toil, be weary": rest is the release from weariness (MW, CDIAL 11956).
+
 What you've built.
 What a tired traveller wants.
 
@@ -129,6 +141,10 @@ Before the new one: say the Sanskrit for thirst, then the Sanskrit for rest.
 
 You'll want to know: सुखम्.
 सुखम् (sukham) — "ease", "happiness". सुखम् अस्ति — "all is well".
+
+The word, taken apart.
+Sukha first described a chariot running easily. MW reports the old reading su.
+kha, "having a good axle-hole", and also suggests a Prakrit form of su-stha, "standing well"; the question is not settled (CDIAL 13451).
 
 What you've built.
 How things are after rest.

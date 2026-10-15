@@ -14,7 +14,8 @@ romanization: "varṣati"
 concept_tag: SA-VERB-VARSATI
 prerequisites: [SA-C232-nasyati, SA-C232-kupyati]
 sounds: []
-roots: []
+roots: [sanskrit-varshati]
+etymology_hook: "varṣati ← root √vṛṣ 'rain'; Hindi barasnā 'to rain' (CDIAL 11394)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C232-kupyati]
 <!-- hl-knowledge: introduces=[SA-LEX-C233-ACT233-01]; assesses=[] -->
 
 **वर्षति** — *varṣati* — "rains".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*varṣati* is the present of the root √vṛṣ, "to rain" (MW), a Rigvedic verb (CDIAL 11394). It lives on as Hindi *barasnā*, "to rain", and its noun *varṣa*, "rain, year", gives Hindi *baras*, "year" (CDIAL 11392).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

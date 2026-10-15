@@ -14,7 +14,8 @@ romanization: "guruḥ"
 concept_tag: SA-PERSON-TEACHER
 prerequisites: [SA-C25-hair, SA-C24-water, SA-C25-hand]
 sounds: []
-roots: []
+roots: [sanskrit-guru]
+etymology_hook: "guru 'heavy' is inherited: MW compares Greek barus and Latin gravis (CDIAL 4209)"
 duration:
   max_seconds: 210
 requires:

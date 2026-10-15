@@ -4,7 +4,7 @@
   "chapter": 123,
   "title": "Seat, Bicycle, Vehicle, Ship, Train",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8ef7c836a73ff73e",
+  "sourceHash": "fnv1a64:21ae7b94c4baf5b2",
   "lessons": [
     {
       "id": "SA-C123-pitham",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:801b04aa6738c0e8",
+      "sourceHash": "fnv1a64:ffc9433262228ee1",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pīṭha \"a stool, a seat\" has an uncertain origin: MW wonders whether it is a worn form of pi-sad \"sit upon\", while CDIAL 8222 thinks the variety of its forms points to a non-Aryan source. It lives on as Hindi pīṛhā \"low stool\" (CDIAL 8222)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f914af774ca05326",
+      "sourceHash": "fnv1a64:79e62f2b02273c0d",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dvicakrikā is built from dvi \"two\" and cakra \"wheel\" with the suffix -ikā: \"the little two-wheeler\". It is a modern coinage, made the way English bicycle was made from Latin bi- \"two\" and Greek kyklos \"wheel\"; cakra lives on as Marathi cāk \"wheel\" (CDIAL 4538)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:395bf9452037d5ee",
+      "sourceHash": "fnv1a64:699e5c38bf946dff",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yāna comes from the root √yā \"go\" (CDIAL 10459): first \"a journey, going\", then \"a vehicle of any kind\", as in mahāyāna \"the great vehicle\" (MW). The root is inherited from Indo-European (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a3cfa4e2e65095c",
+      "sourceHash": "fnv1a64:888012a4e5da8342",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nauyāna is built from nau \"ship, boat\" and yāna \"going, vehicle\", from the root √yā \"go\"; MW already records it as \"a ship\". MW sets nau beside Greek naus and Latin navis, the source of English navy and naval."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c29df4cb3afe19a5",
+      "sourceHash": "fnv1a64:13feced458d4f27e",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dhūmayāna is built from dhūma \"smoke\" and yāna \"vehicle\": \"the smoke-carriage\", a modern coinage from the days of the steam engine. MW sets dhūma beside Latin fumus \"smoke\", the source of English fume, and it lives on as Hindi dhuāṁ \"smoke\" (CDIAL 6849)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

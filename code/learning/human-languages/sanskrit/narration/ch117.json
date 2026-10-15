@@ -4,7 +4,7 @@
   "chapter": 117,
   "title": "Thumb, Chest, Waist, Eyebrow, Skin",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a4cccb71328db602",
+  "sourceHash": "fnv1a64:6c23f9ac986d9792",
   "lessons": [
     {
       "id": "SA-C117-angusthah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01b4e5665130e3ef",
+      "sourceHash": "fnv1a64:e0f75a8b4fa2f6e4",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aṅguṣṭha \"the thumb\" is built on aṅgu-, the same base as aṅguli \"finger\" (CDIAL 137). It lives on as Hindi and Punjabi aṅgūṭhā \"thumb\" (CDIAL 137)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89f396bfb8f17deb",
+      "sourceHash": "fnv1a64:4c080ce0b3a82f6e",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vakṣaḥ is vakṣas \"breast, chest\", already in the Rigveda, with the final s said as ḥ at the end of a phrase (MW). MW lists it under √vakṣ \"grow, increase\" without deriving it, so its source is uncertain; Kashmiri kept it as wach \"chest\" (CDIAL 11188)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb31b87b60ee3876",
+      "sourceHash": "fnv1a64:038178a6c7b99298",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kaṭi \"the hip, the waist\" has a disputed origin: CDIAL 2639 notes an Indo-European proposal but thinks it rather borrowed from Dravidian, comparing Kannada kaḍe \"side\". It lives on as Marathi kaḍ \"side, waist\" (CDIAL 2639)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1ea1750fe59730a",
+      "sourceHash": "fnv1a64:0f09e7892fe44dc3",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bhrū \"an eyebrow\" is inherited from Indo-European (EtymDB): MW sets it beside Greek ophrys and English brow. It lives on as Hindi bhauṁh \"eyebrow\" (CDIAL 9688)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:035206ac841d519d",
+      "sourceHash": "fnv1a64:7578a576b8a0ea94",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tvak is tvac \"skin, hide\", already in the Rigveda, with the final c said as k at the end of a word (MW). MW sets it beside a root √tvac \"cover\" known only from the grammarians, so its origin is uncertain; Pali kept it as taco (CDIAL 6087)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

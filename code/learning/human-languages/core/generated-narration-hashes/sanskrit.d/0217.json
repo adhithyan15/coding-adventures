@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 217,
-  "sourceHash": "fnv1a64:35df97ab25a21894",
+  "sourceHash": "fnv1a64:7359ca0bfdb07ae7",
   "lessonIds": [
     "SA-C217-raktah",
     "SA-C217-arunah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch217.txt",
   "json": "sanskrit/narration/ch217.json",
-  "textHash": "fnv1a64:0479faa93c3ea68b",
-  "jsonHash": "fnv1a64:46f7acc61a378c05",
+  "textHash": "fnv1a64:0f6198e96bac965a",
+  "jsonHash": "fnv1a64:08b2b69291384e57",
   "findings": []
 }

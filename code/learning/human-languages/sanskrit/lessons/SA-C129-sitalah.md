@@ -14,7 +14,8 @@ romanization: "śītalaḥ"
 concept_tag: SA-QUAL129-SITALAH
 prerequisites: [SA-C128-amlah, SA-C128-tiktah]
 sounds: []
-roots: []
+roots: [sanskrit-shitala]
+etymology_hook: "śītala ← śīta 'cold' (from √śyai 'congeal', MW) + -la: 'cool' (CDIAL 12487); Marathi śiḷā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C128-tiktah]
 <!-- hl-knowledge: introduces=[SA-LEX-C129-QUAL129-01]; assesses=[] -->
 
 **शीतलः** — *śītalaḥ* — "cool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śītala* is built on *śīta* "cold" (CDIAL 12487), which MW derives from the root √śyai "congeal, freeze", with the suffix *-la*: "cool, cooling". It lives on as Marathi *śiḷā* "cold, stale" (CDIAL 12487).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

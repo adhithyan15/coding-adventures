@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 224,
-  "sourceHash": "fnv1a64:2332f0f391e23e84",
+  "sourceHash": "fnv1a64:4cdd534e19c14a7d",
   "lessonIds": [
     "SA-C224-kendram",
     "SA-C224-attalika",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch224.txt",
   "json": "sanskrit/narration/ch224.json",
-  "textHash": "fnv1a64:7edd4fc4225dc807",
-  "jsonHash": "fnv1a64:07197d1a22af229b",
+  "textHash": "fnv1a64:ea1ed6e76236c0c6",
+  "jsonHash": "fnv1a64:3081b2389e8cdfe8",
   "findings": []
 }

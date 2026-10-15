@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for he stands up, then the Sanskrit for it 
 You'll want to know: पचति.
 पचति (pacati) — "(he, she) cooks". माता ओदनं पचति — "mother cooks rice".
 
+The word, taken apart.
+Pacati is the present of the root √pac, "to cook, bake" (CDIAL 7650). It is inherited: MW compares Greek pessō and Latin coquō, "I cook", the source of English cook.
+
 What you've built.
 What happens to the rice.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for it falls, then the Sanskrit for she coo
 
 You'll want to know: स्वपिति.
 स्वपिति (svapiti) — "(he, she) sleeps", the verb of निद्रा.
+
+The word, taken apart.
+Svapiti is the present of the root √svap, "to sleep". It is inherited: MW compares Greek hupnos and Latin somnus, "sleep". It lives on as Hindi sonā, "to sleep" (CDIAL 13902).
 
 What you've built.
 What the night is for, as a verb.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for she cooks, then the Sanskrit for he sle
 You'll want to know: प्रक्षालयति.
 प्रक्षालयति (prakṣālayati) — "(he, she) washes". हस्तौ प्रक्षालयति — "washes the hands", before food.
 
+The word, taken apart.
+Prakṣālayati is built from pra and the root √kṣal, "to wash" (MW). It lives on as Hindi pakhālnā, "to wash" (CDIAL 8456).
+
 What you've built.
 Before every meal.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for he sleeps, then the Sanskrit for she wa
 You'll want to know: आनयति.
 आनयति (ānayati) — "(he, she) brings": आ-, "towards", with नयति, "leads", which you know.
 
+The word, taken apart.
+Ānayati is built from ā, "toward", and nayati, "leads", from the root √nī: to bring is to lead toward. CDIAL 1174 lists Hindi ānnā, "to bring".
+
 What you've built.
 Towards plus lead.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for she washes, then the Sanskrit for he br
 
 You'll want to know: ददाति.
 ददाति (dadāti) — "(he, she) gives". मह्यम् + ददाति: "gives to me".
+
+The word, taken apart.
+Dadāti is the doubled present of the root √dā, "to give". It is inherited: MW compares Greek didōmi and Latin dō, "I give". It lives on as Hindi denā, "to give" (CDIAL 6141).
 
 What you've built.
 The verb of every gift.

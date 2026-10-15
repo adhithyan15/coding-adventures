@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 146,
-  "sourceHash": "fnv1a64:8ce2479ab17a296c",
+  "sourceHash": "fnv1a64:b29b68a696e11f90",
   "lessonIds": [
     "SA-C146-pautrah",
     "SA-C146-pautri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch146.txt",
   "json": "sanskrit/narration/ch146.json",
-  "textHash": "fnv1a64:33b395c2b7438b93",
-  "jsonHash": "fnv1a64:124cd03e7e8f443c",
+  "textHash": "fnv1a64:c74254b6707ac559",
+  "jsonHash": "fnv1a64:b39e19b831b2d92e",
   "findings": []
 }

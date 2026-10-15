@@ -14,7 +14,8 @@ romanization: "bhāṇḍam"
 concept_tag: SA-THINGS122-BHANDAM
 prerequisites: [SA-C122-kacah, SA-C122-sakatam]
 sounds: []
-roots: []
+roots: [sanskrit-bhanda]
+etymology_hook: "bhāṇḍa 'pot, vessel, wares'; MW queries √bhaṇḍ, Burrow proposed an IE source (DEDR); origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C122-sakatam]
 <!-- hl-knowledge: introduces=[SA-LEX-C122-THINGS122-04]; assesses=[] -->
 
 **भाण्डम्** — *bhāṇḍam* — "a pot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhāṇḍa* "a pot, any vessel; goods, wares" has an uncertain origin: MW queries a root √bhaṇḍ, and DEDR (appendix 50) notes Burrow's Indo-European proposal. It lives on as Punjabi *bhāṁḍā* "cooking pot" (CDIAL 9440).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

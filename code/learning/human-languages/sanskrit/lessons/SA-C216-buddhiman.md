@@ -14,7 +14,8 @@ romanization: "buddhimān"
 concept_tag: SA-QUAL216-BUDDHIMAN
 prerequisites: [SA-C216-ajnah, SA-C216-vijnah]
 sounds: []
-roots: []
+roots: [sanskrit-buddhimat, sanskrit-buddhi]
+etymology_hook: "buddhimat = buddhi 'intelligence' + -mat 'having' (MW); buddhi is from √budh 'wake, notice'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C216-vijnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C216-QUAL216-05]; assesses=[] -->
 
 **बुद्धिमान्** — *buddhimān* — "intelligent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*buddhimān* is the nominative of *buddhimat*, *buddhi*, "intelligence", with the suffix *-mat*, "having" (MW). *Buddhi* is built on the root √budh, "to wake, notice". Hindi and Bengali took the word over as *buddhimān*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

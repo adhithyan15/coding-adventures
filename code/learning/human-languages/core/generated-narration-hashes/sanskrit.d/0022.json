@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 22,
-  "sourceHash": "fnv1a64:ead6a5f62d1f144f",
+  "sourceHash": "fnv1a64:9baf42e9b4165644",
   "lessonIds": [
     "SA-C22-hear",
     "SA-C22-lead",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "sanskrit/narration/ch22.txt",
   "json": "sanskrit/narration/ch22.json",
-  "textHash": "fnv1a64:c4e7cbb2c28c60f2",
-  "jsonHash": "fnv1a64:6a02e8ba9e904177",
+  "textHash": "fnv1a64:8d2716a0ef8e7526",
+  "jsonHash": "fnv1a64:0dd50d378764ee5f",
   "findings": []
 }

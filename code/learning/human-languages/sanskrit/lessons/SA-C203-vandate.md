@@ -14,7 +14,8 @@ romanization: "vandate"
 concept_tag: SA-VERB-VANDATE
 prerequisites: [SA-C202-uttara, SA-C203-modate]
 sounds: []
-roots: []
+roots: [sanskrit-vandate]
+etymology_hook: "vandate ← root √vand 'praise, salute respectfully' (MW; CDIAL 11270)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C203-modate]
 <!-- hl-knowledge: introduces=[SA-LEX-C203-ACT203-02]; assesses=[] -->
 
 **वन्दते** — *vandate* — "salutes, greets with respect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vandate* is the present of the root √vand, "to praise, salute respectfully" (MW). In the Rigveda it means "praises", later "greets respectfully" (CDIAL 11270), and its noun *vandana*, "reverence", is borrowed in Malayalam.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for protects, then the Sanskrit for burns.
 You'll want to know: विक्रीणाति.
 विक्रीणाति — vikrīṇāti — "sells".
 
+The word, taken apart.
+vikrīṇāti comes from vi "away, apart" and the root √krī "buy" (MW): "buys away", which is to sell. MW sets √krī beside Greek priamai "buy" and English hire, and the plain krīṇāti "buys" lives on as Nepali kinnu and Bengali kinā "to buy" (CDIAL 3594).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for burns, then the Sanskrit for sells.
 
 You'll want to know: कर्षति.
 कर्षति — karṣati — "pulls, ploughs".
+
+The word, taken apart.
+karṣati comes from the root √kṛṣ "draw, drag, plough" (CDIAL 2908), inherited from Indo-European (EtymDB); Persian kešidan "to pull" is a cousin. Pali kept it as kassate "ploughs" (CDIAL 2908), and kṛṣi "farming" comes from the same root.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for sells, then the Sanskrit for pulls.
 You'll want to know: नुदति.
 नुदति — nudati — "pushes".
 
+The word, taken apart.
+nudati comes from the root √nud "push, thrust, drive away" (MW), already in the Rigveda. MW gives no outside cousins for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for pulls, then the Sanskrit for pushes.
 You'll want to know: भ्रमति.
 भ्रमति — bhramati — "wanders".
 
+The word, taken apart.
+bhramati comes from the root √bhram "move to and fro, whirl, wander" (CDIAL 9648), which MW compares with Greek bremō and Latin fremere "roar". bhramara "the black bee" is filed under the same root (MW), and Gujarati kept the verb as bhamvũ "to wander" (CDIAL 9648).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for pushes, then the Sanskrit for wanders.
 
 You'll want to know: वर्धते.
 वर्धते — vardhate — "grows".
+
+The word, taken apart.
+vardhate comes from the root √vṛdh "grow, increase, thrive" (MW; CDIAL 11376), already in the Rigveda. It lives on as Hindi baṛhnā and Marathi vāḍhṇe "to grow, increase" (CDIAL 11376).
 
 What you've built.
 One more word for this chapter.

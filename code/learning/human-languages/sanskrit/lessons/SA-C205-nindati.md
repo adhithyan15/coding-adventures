@@ -14,7 +14,8 @@ romanization: "nindati"
 concept_tag: SA-VERB-NINDATI
 prerequisites: [SA-C204-tapati, SA-C205-ksamate]
 sounds: []
-roots: []
+roots: [sanskrit-nindati]
+etymology_hook: "nindati ← root √nind 'blame, revile'; MW compares Greek oneidos 'reproach'; Punjabi nindṇā (CDIAL 7211)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C205-ksamate]
 <!-- hl-knowledge: introduces=[SA-LEX-C205-ACT205-02]; assesses=[] -->
 
 **निन्दति** — *nindati* — "blames".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nindati* is the present of the root √nind, "to blame, censure" (MW). The root is inherited from Indo-European: MW compares Greek *oneidos*, "reproach". It is a Rigvedic verb, and it lives on as Punjabi *nindṇā*, "to blame" (CDIAL 7211).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

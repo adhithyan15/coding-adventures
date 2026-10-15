@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Places --- and the Two Noun Families",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:29c28fbf44ffa2ca",
+  "sourceHash": "fnv1a64:e800ce27f2b99f37",
   "lessons": [
     {
       "id": "SA-C16-house",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e127bcf38c69e7d",
+      "sourceHash": "fnv1a64:201823742c89680b",
       "notice": null,
       "blocks": [
         {
@@ -70,6 +70,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW files gṛha under √gṛbh, the older form of that root, but it also compares Gothic gards \"house\" and Latin hortus \"garden\". On that second account the word is inherited, a cousin of English yard, and the root story is the grammarians' reading of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -80,7 +91,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -120,7 +131,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -151,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ec1695b78210b49",
+      "sourceHash": "fnv1a64:437fc9d95da728e3",
       "notice": null,
       "blocks": [
         {
@@ -192,7 +203,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its oldest sense is not \"village\" but \"a collection, a troop\" — a gathering of people considered as one body. The settlement took its name from the group, not the group from the settlement, which tells you how the word's first speakers saw the place: people first, buildings after."
+              "text": "In the Rigveda it already means both the settlement and \"a collection, a troop\", a gathering of people considered as one body (MW). One word holds the people and the place together, which tells you how its first speakers saw a village: people and buildings as one thing."
             },
             {
               "kind": "speech",
@@ -202,6 +213,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Grāma is an old Rigvedic word for a troop or community (MW), and its deeper origin is not settled. It lives on as Gujarati gām and Sinhala gama, \"village\" (CDIAL 4368)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -212,7 +234,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -252,7 +274,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -264,7 +286,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did ग्रामः (grāmaḥ) mean before it meant \"village\"? (A collection, a troop.) Which two endings have you now seen? (-am and -aḥ.)"
+              "text": "Besides \"village\", what else did ग्रामः (grāmaḥ) mean in the Rigveda? (A collection, a troop.) Which two endings have you now seen? (-am and -aḥ.)"
             }
           ]
         }
@@ -472,7 +494,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c07e4974aa8d6c8",
+      "sourceHash": "fnv1a64:d852e4d02ec49395",
       "notice": null,
       "blocks": [
         {
@@ -523,6 +545,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mārga is formed from mṛga, \"wild animal\": first the track of an animal, then any road (MW). It lives on as Hindi and Gujarati māg (CDIAL 10071)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -533,7 +566,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -573,7 +606,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -604,7 +637,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dee02e88c4a2764a",
+      "sourceHash": "fnv1a64:632dd4b9d296d685",
       "notice": null,
       "blocks": [
         {
@@ -645,6 +678,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vana is a Rigvedic word for a single tree or a wood (CDIAL 11258). MW files it under the root √van, \"to like, win\", but its origin is not settled. It lives on as Hindi ban, \"forest\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -655,7 +699,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -695,7 +739,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -927,7 +971,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b4c98356f63494b",
+      "sourceHash": "fnv1a64:974196577c95be88",
       "notice": null,
       "blocks": [
         {
@@ -978,6 +1022,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "DEDR 3568 sets nagara beside Tamil nakar, \"house, town\", and a Dravidian source is one proposal; MW doubts a split into naga + -ra. It lives on as Sinhala nuvara, \"city\" (CDIAL 6924)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -988,7 +1043,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1028,7 +1083,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

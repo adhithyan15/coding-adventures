@@ -14,7 +14,8 @@ romanization: "krīḍā"
 concept_tag: SA-THG163-KRIDA
 prerequisites: [SA-C162-hanih, SA-C162-vyaparah]
 sounds: []
-roots: []
+roots: [sanskrit-krida, sanskrit-kridana]
+etymology_hook: "krīḍā 'play, sport' ← √krīḍ 'play, frolic' (MW), already in the Rigveda"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C162-vyaparah]
 <!-- hl-knowledge: introduces=[SA-LEX-C163-THG163-01]; assesses=[] -->
 
 **क्रीडा** — *krīḍā* — "sport, play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*krīḍā* comes from the root √krīḍ "play, sport, frolic" (MW), already in the Rigveda. *krīḍanaka* "a toy" comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

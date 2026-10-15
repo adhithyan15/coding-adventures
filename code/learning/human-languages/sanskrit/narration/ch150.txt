@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a clerk, then the Sanskrit for a leader
 You'll want to know: भेषजम्.
 भेषजम् — bheṣajam — "a remedy".
 
+The word, taken apart.
+bheṣaja "healing; a remedy" is formed from bhiṣaj "a healer, a physician" (MW), already in the Rigveda. bhiṣaj is inherited from Indo-Iranian, with a cousin in Avestan (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a leader, then the Sanskrit for a remed
 
 You'll want to know: व्रणः.
 व्रणः — vraṇaḥ — "a wound".
+
+The word, taken apart.
+vraṇa "a wound, a sore, a scar" appears from the law book of Manu on, and neither MW nor CDIAL 12227 gives a derivation, so its origin is uncertain. Marathi wore it down to vaṇ (CDIAL 12227).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a remedy, then the Sanskrit for a wound
 You'll want to know: शोथः.
 शोथः — śothaḥ — "a swelling".
 
+The word, taken apart.
+śotha "a swelling, a tumour, dropsy" comes from the root √śū, also √śvi, "swell" (MW). It is a word of the medical writer Suśruta.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a wound, then the Sanskrit for a swelli
 You'll want to know: वमनम्.
 वमनम् — vamanam — "vomiting".
 
+The word, taken apart.
+vamana comes from the root √vam "vomit" (CDIAL 11295). MW sets √vam beside Greek emeō and Latin vomere, the source of English vomit: one inherited Indo-European root.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a swelling, then the Sanskrit for vomit
 
 You'll want to know: उदरपीडा.
 उदरपीडा — udarapīḍā — "a stomach ache".
+
+The word, taken apart.
+udarapīḍā is built from udara "belly, stomach", already in the Rigveda, and pīḍā "pain", from the root √pīḍ "press, hurt" (MW): "belly-pain", a stomach ache.
 
 What you've built.
 One more word for this chapter.

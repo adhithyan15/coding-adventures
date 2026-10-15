@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a chair, then the Sanskrit for a board.
 You'll want to know: दर्वी.
 दर्वी — darvī — "a ladle".
 
+The word, taken apart.
+darvī "a ladle" is old, in the Rigveda: MW explains it as "the wooden one", and CDIAL 6206 refers it to dru "tree, wood". MW sets that word beside Greek drys "oak" and English tree.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a board, then the Sanskrit for a ladle.
 
 You'll want to know: कटाहः.
 कटाहः — kaṭāhaḥ — "a frying pan".
+
+The word, taken apart.
+kaṭāha "a frying pan, a cauldron with handles" appears from the Mahābhārata on, and neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Hindi kaṛāhī "frying pan" (CDIAL 2638).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a ladle, then the Sanskrit for a frying
 You'll want to know: पात्रम्.
 पात्रम् — pātram — "a vessel".
 
+The word, taken apart.
+pātra comes from the root √pā "drink" with the tool suffix -tra (CDIAL 8055): "the thing to drink from". It is inherited from Indo-European, a cousin of Latin pōculum "cup" (EtymDB), and lives on as Punjabi pātar "vessel" (CDIAL 8055).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a frying pan, then the Sanskrit for a v
 You'll want to know: कूपी.
 कूपी — kūpī — "a bottle, a flask".
 
+The word, taken apart.
+kūpī is a feminine of kūpa "a hole, a hollow, a well" (MW), and its sense "flask, bottle" comes from a late dictionary. MW compares Greek kypē "hollow"; kūpa itself lives on as Gujarati kuvo "small well" (CDIAL 3400).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a vessel, then the Sanskrit for a bottl
 
 You'll want to know: छत्रिका.
 छत्रिका — chatrikā — "a small umbrella".
+
+The word, taken apart.
+chatrikā is chattra "a parasol" with the small-thing suffix -ikā, and chattra comes from the root √chad "cover" (CDIAL 4972). It lives on as Hindi chātā and Punjabi chatrī "umbrella" (CDIAL 4972).
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "sarit"
 concept_tag: SA-THG196-SARIT
 prerequisites: [SA-C196-pasanah, SA-C196-ratnakarah]
 sounds: []
-roots: []
+roots: [sanskrit-sarit]
+etymology_hook: "sarit 'stream' ← root √sṛ 'run, flow' (MW; CDIAL 13261)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C196-ratnakarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C196-THG196-04]; assesses=[] -->
 
 **सरित्** — *sarit* — "a stream, a river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sarit* is built on the root √sṛ, "to run, flow" (MW): a stream is what runs. It is a Rigvedic word (CDIAL 13261), and Marathi *sarī*, "water-channel", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

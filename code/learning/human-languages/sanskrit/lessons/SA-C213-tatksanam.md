@@ -14,7 +14,8 @@ romanization: "tatkṣaṇam"
 concept_tag: SA-TIME213-TATKSANAM
 prerequisites: [SA-C212-trptih, SA-C213-sadyah]
 sounds: []
-roots: []
+roots: [sanskrit-tatkshana, sanskrit-kshana]
+etymology_hook: "tatkṣaṇa = tat 'that' + kṣaṇa 'moment' (MW); Hindi takhan 'then' (CDIAL 5640)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C213-sadyah]
 <!-- hl-knowledge: introduces=[SA-LEX-C213-TIME213-02]; assesses=[] -->
 
 **तत्क्षणम्** — *tatkṣaṇam* — "instantly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tatkṣaṇam* is built on *tat*, "that", and *kṣaṇa*, "moment" (MW): "at that very moment". CDIAL 5640 traces Hindi *takhan*, "then", to it, and CDIAL 3642 links *kṣaṇa* to *akṣi*, "eye", as the twinkling of an eye.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

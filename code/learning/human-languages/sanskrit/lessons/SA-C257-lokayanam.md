@@ -14,7 +14,8 @@ romanization: "lokayānam"
 concept_tag: SA-TRV257-LOKAYANAM
 prerequisites: [SA-C256-matam, SA-C257-simantah]
 sounds: []
-roots: []
+roots: [sanskrit-loka, sanskrit-yana]
+etymology_hook: "lokayāna = loka 'people' + yāna 'vehicle', from √yā 'go'; a modern coinage for a bus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C257-simantah]
 <!-- hl-knowledge: introduces=[SA-LEX-C257-TRV257-02]; assesses=[] -->
 
 **लोकयानम्** — *lokayānam* — "a bus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lokayāna* is a compound of *loka*, "people, the public", and *yāna*, "vehicle", from the root √yā, "to go" (MW; CDIAL 10459): the people's vehicle. MW does not list the compound, so it is a modern coinage for the bus.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

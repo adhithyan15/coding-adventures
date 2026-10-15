@@ -14,7 +14,8 @@ romanization: "śothaḥ"
 concept_tag: SA-WEL150-SOTHAH
 prerequisites: [SA-C150-bhesajam, SA-C150-vranah]
 sounds: []
-roots: []
+roots: [sanskrit-shotha]
+etymology_hook: "śotha 'swelling' ← √śū, śvi 'swell' (MW); used by the medical writer Suśruta"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C150-vranah]
 <!-- hl-knowledge: introduces=[SA-LEX-C150-WEL150-03]; assesses=[] -->
 
 **शोथः** — *śothaḥ* — "a swelling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śotha* "a swelling, a tumour, dropsy" comes from the root √śū, also √śvi, "swell" (MW). It is a word of the medical writer Suśruta.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

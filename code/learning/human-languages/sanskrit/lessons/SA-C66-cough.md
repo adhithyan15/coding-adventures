@@ -14,7 +14,8 @@ romanization: "kāsaḥ"
 concept_tag: SA-UNWELL-COUGH
 prerequisites: [SA-C63-first, SA-C66-fever, SA-C64-lines]
 sounds: []
-roots: []
+roots: [sanskrit-kasa]
+etymology_hook: "kāsa 'cough' ← the root √kās 'cough' (MW); it lives on as Hindi khāṃsī (CDIAL 3138)"
 duration:
   max_seconds: 200
 requires:
@@ -45,6 +46,12 @@ reviews_of: [SA-C66-fever]
 <!-- hl-knowledge: introduces=[SA-LEX-C66-UNWELL-02]; assesses=[] -->
 
 **कासः** (*kāsaḥ*) — "a cough". **मम कासः अस्ति** — "I have a cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kāsa* is built on the root √kās, "to cough", and the noun is already in the
+Atharvaveda (MW, CDIAL 3138). It lives on as Hindi *khāṃsī*, "cough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

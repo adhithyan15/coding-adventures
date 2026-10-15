@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for is alive, then the Sanskrit for heats.
 You'll want to know: क्षमते.
 क्षमते — kṣamate — "forgives".
 
+The word, taken apart.
+kṣamate is the present of the root √kṣam, "to be patient, endure", and so "to pardon, forgive" (MW). In the Rigveda it means "is patient, endures" (CDIAL 3657). Its noun kṣamā, "patience, forgiveness", went into Telugu and Kannada.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for heats, then the Sanskrit for forgives.
 
 You'll want to know: निन्दति.
 निन्दति — nindati — "blames".
+
+The word, taken apart.
+nindati is the present of the root √nind, "to blame, censure" (MW). The root is inherited from Indo-European: MW compares Greek oneidos, "reproach". It is a Rigvedic verb, and it lives on as Punjabi nindṇā, "to blame" (CDIAL 7211).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for forgives, then the Sanskrit for blames.
 You'll want to know: प्रशंसति.
 प्रशंसति — praśaṁsati — "praises".
 
+The word, taken apart.
+praśaṃsati is built on pra-, "forth", and the root √śaṃs, "to recite, praise" (MW). The root is inherited from Indo-European: MW compares Latin cēnsēre, "to assess", and carmen, "song". Its noun praśaṃsā, "praise", went into Bengali.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for blames, then the Sanskrit for praises.
 You'll want to know: स्वीकरोति.
 स्वीकरोति — svīkaroti — "accepts".
 
+The word, taken apart.
+svīkaroti is built on sva, "own", and karoti, "makes", from the root √kṛ (MW): to accept something is to make it your own. Sva is inherited from Indo-European; MW compares Latin suus, "his own".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for praises, then the Sanskrit for accepts.
 
 You'll want to know: विकसति.
 विकसति — vikasati — "blossoms, opens".
+
+The word, taken apart.
+vikasati is built on vi-, "apart", and the root √kas (MW), which MW glosses "to go" and "to beam, shine". MW gives the compound as "to burst, open, expand, blossom", and its noun vikāsa, "expansion", is the modern word for development.
 
 What you've built.
 One more word for this chapter.

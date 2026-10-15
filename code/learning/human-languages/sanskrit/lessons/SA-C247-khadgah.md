@@ -14,7 +14,8 @@ romanization: "khaḍgaḥ"
 concept_tag: SA-THG247-KHADGAH
 prerequisites: [SA-C246-mistannam, SA-C247-banah]
 sounds: []
-roots: []
+roots: [sanskrit-khadga]
+etymology_hook: "khaḍga 'sword', perhaps from √khaṇḍ 'break' (MW, with a question mark); origin uncertain (CDIAL 3787)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C247-banah]
 <!-- hl-knowledge: introduces=[SA-LEX-C247-THG247-02]; assesses=[] -->
 
 **खड्गः** — *khaḍgaḥ* — "a sword".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khaḍga* is a sword, and also the rhinoceros (MW). MW suggests, with a question mark, a root √khaḍ for √khaṇḍ, "to break", so its origin is uncertain; CDIAL 3786 takes the rhinoceros word as non-Aryan. Bengali *khāg* means "sword" (CDIAL 3787).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

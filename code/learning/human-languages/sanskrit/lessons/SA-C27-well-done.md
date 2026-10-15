@@ -14,7 +14,8 @@ romanization: "sādhu"
 concept_tag: SA-REPLY-WELL-DONE
 prerequisites: [SA-C27-so-be-it, SA-C25-foot, SA-C26-student]
 sounds: []
-roots: []
+roots: [sanskrit-sadhu]
+etymology_hook: "sādhu 'straight, good' ← the root √sādh 'go straight to a goal, succeed' (MW; CDIAL 13337)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,13 @@ reviews_of: [SA-C27-so-be-it]
 **साधु** is what you call out when something has been done well — *good*, *well said*, the Sanskrit *bravo*. An audience says it aloud at a concert.
 
 Its root means "to accomplish, to reach the goal", so the word praises a thing for having arrived where it was going. The same word, standing on its own as a noun, names a holy man: *a sādhu* is someone who has accomplished. English borrowed that sense and left the everyday one behind, exactly as it did with गुरुः.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Sādhu* is built on the root √sādh, "to go straight to a goal, succeed" (MW):
+first "straight, hitting the mark", then "good", and as a cry, "well done" (CDIAL
+13337).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

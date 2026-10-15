@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for in front, then the Sanskrit for behind.
 You'll want to know: मध्ये.
 मध्ये — madhye — "in the middle".
 
+The word, taken apart.
+madhye is the locative, "in the middle", of madhya "middle" (MW). MW sets madhya beside Latin medius, Greek mesos and English mid: one inherited Indo-European word. This very locative wore down into Hindi meṁ "in" (CDIAL 9804).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for behind, then the Sanskrit for in the mi
 
 You'll want to know: पार्श्वे.
 पार्श्वे — pārśve — "beside".
+
+The word, taken apart.
+pārśve is the locative, "at the side", of pārśva "side, flank", which MW derives from parśu "rib": the side is the region of the ribs. pārśva lives on as Hindi pās "near" (CDIAL 8118).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for in the middle, then the Sanskrit for be
 You'll want to know: सर्वत्र.
 सर्वत्र — sarvatra — "everywhere".
 
+The word, taken apart.
+sarvatra is built from sarva "all" and the place ending -tra "in, at" (MW). MW compares sarva with Greek holos "whole" and Latin salvus "safe". Pali wore sarvatra down to sabbattha (CDIAL 13278), and sarva itself became Hindi sab "all" (CDIAL 13276).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for beside, then the Sanskrit for everywher
 You'll want to know: अन्यत्र.
 अन्यत्र — anyatra — "elsewhere".
 
+The word, taken apart.
+anyatra is built from anya "other" and the place ending -tra "in, at" (MW). MW sets anya beside Latin alius (English alias) and Greek allos, so it is inherited from Indo-European. It lives on as Hindi anat "elsewhere" (CDIAL 401).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for everywhere, then the Sanskrit for elsew
 
 You'll want to know: वीथी.
 वीथी — vīthī — "a street".
+
+The word, taken apart.
+MW suggests vīthī "a row, a street" comes from the root √vī "go, approach", but marks it "perhaps", so the source is uncertain. It lives on as Punjabi vīhī "street" (CDIAL 12050).
 
 What you've built.
 One more word for this chapter.

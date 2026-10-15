@@ -14,7 +14,8 @@ romanization: "vṛkaḥ"
 concept_tag: SA-BEAST-VRKA
 prerequisites: [SA-C48-lion, SA-C46-ray, SA-C47-window]
 sounds: []
-roots: []
+roots: [sanskrit-vrka]
+etymology_hook: "vṛka 'wolf' is inherited: MW compares Greek lukos, Latin lupus and English wolf (CDIAL 12062)"
 duration:
   max_seconds: 210
 requires:

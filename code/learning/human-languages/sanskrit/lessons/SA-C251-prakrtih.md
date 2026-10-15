@@ -14,7 +14,8 @@ romanization: "prakṛtiḥ"
 concept_tag: SA-THG251-PRAKRTIH
 prerequisites: [SA-C251-jagat, SA-C251-lokah]
 sounds: []
-roots: []
+roots: [sanskrit-prakrti, kr-do]
+etymology_hook: "prakṛti ← pra 'before' + √kṛ 'make': 'what is made first', the original form, nature (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C251-lokah]
 <!-- hl-knowledge: introduces=[SA-LEX-C251-THG251-04]; assesses=[] -->
 
 **प्रकृतिः** — *prakṛtiḥ* — "nature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prakṛti* is built on *pra*, "before, forth", and the root √kṛ, "to make" (MW): "making or placing first", and so the original or natural form of anything. From there it came to mean "nature" (CDIAL 8446).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

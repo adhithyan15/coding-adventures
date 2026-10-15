@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 95,
-  "sourceHash": "fnv1a64:dc4972e11abdb741",
+  "sourceHash": "fnv1a64:ee2bcebd95f28181",
   "lessonIds": [
     "SA-C95-madhye",
     "SA-C95-parsve",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch95.txt",
   "json": "sanskrit/narration/ch95.json",
-  "textHash": "fnv1a64:e3b9cd1c0d02c65f",
-  "jsonHash": "fnv1a64:9596cf18b5c24ad5",
+  "textHash": "fnv1a64:d1bcc87df7e8ef55",
+  "jsonHash": "fnv1a64:b78b2ccd451c2ab9",
   "findings": []
 }

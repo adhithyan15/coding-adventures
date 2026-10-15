@@ -14,7 +14,8 @@ romanization: "nimeṣaḥ"
 concept_tag: SA-TIME92-NIMESAH
 prerequisites: [SA-C91-sisirah, SA-C91-sarad]
 sounds: []
-roots: []
+roots: [sanskrit-nimesha]
+etymology_hook: "nimeṣa 'a wink, a moment' ← ni + the root √miṣ 'open the eyes' (MW; CDIAL 7243)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C91-sarad]
 <!-- hl-knowledge: introduces=[SA-LEX-C92-TIME92-01]; assesses=[] -->
 
 **निमेषः** — *nimeṣaḥ* — "a moment, a blink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Nimeṣa* is built from *ni*, "down", and the root √miṣ, "to open the eyes":
+shutting the eye, a wink, and so a moment (MW, CDIAL 7243).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

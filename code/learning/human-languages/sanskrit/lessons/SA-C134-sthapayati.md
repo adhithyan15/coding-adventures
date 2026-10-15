@@ -14,7 +14,8 @@ romanization: "sthāpayati"
 concept_tag: SA-VERB-STHAPAYATI
 prerequisites: [SA-C134-chinatti, SA-C134-bhinatti]
 sounds: []
-roots: []
+roots: [sanskrit-sthapayati]
+etymology_hook: "sthāpayati 'makes stand, places' is the causative of √sthā 'stand' (CDIAL 13756), cf. English stand (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C134-bhinatti]
 <!-- hl-knowledge: introduces=[SA-LEX-C134-ACT134-03]; assesses=[] -->
 
 **स्थापयति** — *sthāpayati* — "places, puts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sthāpayati* is the causative of the root √sthā "stand": "makes stand, sets up, places" (CDIAL 13756). MW sets √sthā beside Latin *stare* and English *stand*; Bengali kept the causative as *thuoyā* "to put, keep" (CDIAL 13756).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

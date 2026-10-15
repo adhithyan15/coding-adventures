@@ -14,7 +14,8 @@ romanization: "dhanyaḥ"
 concept_tag: SA-COURTESY-FORTUNATE
 prerequisites: [SA-C29-favour, SA-C27-thus, SA-C28-svasti]
 sounds: []
-roots: []
+roots: [dhanya]
+etymology_hook: "dhanya 'bringing wealth, fortunate' ← dhana 'prize, wealth' (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C29-favour]
 **धन्यः** means *fortunate*, *blessed*, *rich in what matters*. It is built on *dhana*, wealth.
 
 And it closes a circle. The very first thank-you in this book was **धन्यवादः** — and that word is *dhanya* + *vāda*, **a saying of "you are fortunate"**. Sanskrit does not thank you by reporting your gift; it thanks you by calling you lucky. You said the word on the first day and could not see inside it. You can now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Dhanya* is built from *dhana*, "prize, wealth": first "bringing wealth, rich",
+then "fortunate" (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

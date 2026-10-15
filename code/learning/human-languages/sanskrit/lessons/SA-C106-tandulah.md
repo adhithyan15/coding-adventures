@@ -14,7 +14,8 @@ romanization: "taṇḍulaḥ"
 concept_tag: SA-THINGS106-TANDULAH
 prerequisites: [SA-C106-rajjuh, SA-C106-godhumah]
 sounds: []
-roots: []
+roots: [sanskrit-tandula]
+etymology_hook: "taṇḍula 'husked grain, rice' is perhaps non-Aryan, Dravidian or Austroasiatic (CDIAL 5637)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C106-godhumah]
 <!-- hl-knowledge: introduces=[SA-LEX-C106-THINGS106-03]; assesses=[] -->
 
 **तण्डुलः** — *taṇḍulaḥ* — "rice (uncooked)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*taṇḍula* "grain after threshing, rice" is old, in the Atharvaveda (MW), and its origin is uncertain: CDIAL 5637 thinks it perhaps non-Aryan, after Bloch from Dravidian or, less probably, after Chatterji from Austroasiatic. Pali kept it as *taṇḍula* (CDIAL 5637).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

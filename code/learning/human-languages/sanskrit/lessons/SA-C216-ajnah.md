@@ -14,7 +14,8 @@ romanization: "ajñaḥ"
 concept_tag: SA-QUAL216-AJNAH
 prerequisites: [SA-C216-kusalah, SA-C216-nipunah]
 sounds: []
-roots: []
+roots: [sanskrit-jna]
+etymology_hook: "ajña = a- 'not' + jña 'knowing', from √jñā 'know' (MW; CDIAL 160)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C216-nipunah]
 <!-- hl-knowledge: introduces=[SA-LEX-C216-QUAL216-03]; assesses=[] -->
 
 **अज्ञः** — *ajñaḥ* — "ignorant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ajña* is *a-*, "not", with *jña*, "knowing", from the root √jñā, "to know" (MW; CDIAL 160). √jñā is the root of *jānāti*, "knows", which you have already met.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

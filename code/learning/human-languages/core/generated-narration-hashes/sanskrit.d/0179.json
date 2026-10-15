@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 179,
-  "sourceHash": "fnv1a64:23250773c9769f8c",
+  "sourceHash": "fnv1a64:4711a5a5517d7a62",
   "lessonIds": [
     "SA-C179-sainikah",
     "SA-C179-raksakah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch179.txt",
   "json": "sanskrit/narration/ch179.json",
-  "textHash": "fnv1a64:abea964adf914e72",
-  "jsonHash": "fnv1a64:385fd460b30c1240",
+  "textHash": "fnv1a64:c5457a8e31c7f9ce",
+  "jsonHash": "fnv1a64:e4eb9eccdc586bad",
   "findings": []
 }

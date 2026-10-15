@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for rest, then the Sanskrit for ease.
 You'll want to know: दुःखम्.
 दुःखम् (duḥkham) — "sorrow", the opposite of सुखम्. The two words share their ending.
 
+The word, taken apart.
+CDIAL 6375 says duḥkha was formed after sukha, with duḥ- "bad" in place of su- "good"; MW also suggests a Prakrit form of duḥ-stha. It lives on as Hindi dukh.
+
 What you've built.
 The other side of ease.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for ease, then the Sanskrit for sorrow.
 
 You'll want to know: भयम्.
 भयम् (bhayam) — "fear". मम भयम् अस्ति — "I am afraid".
+
+The word, taken apart.
+Bhaya is built on the root √bhī, "to fear" (MW, CDIAL 9390). It is inherited: MW compares Lithuanian bijotis and Slavic bojati, "to fear".
 
 What you've built.
 What the dark brings.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for sorrow, then the Sanskrit for fear.
 You'll want to know: क्रोधः.
 क्रोधः (krodhaḥ) — "anger".
 
+The word, taken apart.
+Krodha is built on the root √krudh, "to be angry", and is already in the Atharvaveda (MW, CDIAL 3608).
+
 What you've built.
 The hot feeling.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for fear, then the Sanskrit for anger.
 You'll want to know: लज्जा.
 लज्जा (lajjā) — "shyness", the feeling that turns the face away.
 
+The word, taken apart.
+Lajjā is built on the root √lajj, "to be ashamed, blush" (MW). It lives on as Hindi lāj, "shame" (CDIAL 10910).
+
 What you've built.
 The quiet feeling.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for anger, then the Sanskrit for shyness.
 
 You'll want to know: हर्षः.
 हर्षः (harṣaḥ) — "joy", bright and sudden, where आनन्दः is deep and lasting.
+
+The word, taken apart.
+Harṣa is built on the root √hṛṣ, "to bristle, thrill": joy is the hair standing on end (MW, CDIAL 13999). MW compares Latin horreō, "I bristle", the source of English horror.
 
 What you've built.
 The bright feeling.

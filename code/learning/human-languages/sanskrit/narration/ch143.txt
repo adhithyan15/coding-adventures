@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for shows, then the Sanskrit for worships.
 You'll want to know: प्रत्यागच्छति.
 प्रत्यागच्छति — pratyāgacchati — "comes back, returns".
 
+The word, taken apart.
+pratyāgacchati is built from prati "back, against", ā "toward" and the root √gam "go", whose present stem is gaccha- (MW): "comes back, returns". It is āgacchati "comes" with prati in front, and MW sets √gam beside English come.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for worships, then the Sanskrit for comes b
 
 You'll want to know: शेते.
 शेते — śete — "lies down".
+
+The word, taken apart.
+śete comes from the root √śī "lie, rest, sleep" (MW; CDIAL 12605), already in the Rigveda, with the vowel strengthened to e throughout the present. śayana "bed, lying down" comes from the same root (MW).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for comes back, then the Sanskrit for lies 
 You'll want to know: आस्ते.
 आस्ते — āste — "sits, stays".
 
+The word, taken apart.
+āste comes from the root √ās "sit, stay, remain" (CDIAL 1480), inherited from Indo-European (EtymDB): MW compares Greek hēmai "sit". It lives on as Marathi asṇe "to wait, to exist" (CDIAL 1480), and āsana "seat, posture" comes from the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for lies down, then the Sanskrit for sits.
 You'll want to know: बिभेति.
 बिभेति — bibheti — "is afraid".
 
+The word, taken apart.
+bibheti comes from the root √bhī "fear", with the doubled syllable bi- of class-3 verbs (MW; CDIAL 9241). MW compares German beben "tremble", and bhaya "fear", which you met in bhayaṅkara, comes from the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for sits, then the Sanskrit for is afraid.
 
 You'll want to know: ध्यायति.
 ध्यायति — dhyāyati — "meditates, thinks of".
+
+The word, taken apart.
+dhyāyati comes from the root √dhyai "think of, contemplate, meditate" (MW). dhyāna "meditation" comes from the same root (MW), and Pali kept it as jhāna "contemplation" (CDIAL 6889).
 
 What you've built.
 One more word for this chapter.

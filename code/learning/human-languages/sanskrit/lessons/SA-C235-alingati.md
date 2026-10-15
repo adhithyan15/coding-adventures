@@ -14,7 +14,8 @@ romanization: "āliṅgati"
 concept_tag: SA-VERB-ALINGATI
 prerequisites: [SA-C235-aropayati, SA-C235-calayati]
 sounds: []
-roots: []
+roots: [sanskrit-alingati]
+etymology_hook: "āliṅgati ← ā- + √liṅg 'clasp': 'clasps closely, embraces' (MW; CDIAL 1383)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C235-calayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C235-ACT235-04]; assesses=[] -->
 
 **आलिंगति** — *āliṅgati* — "embraces".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āliṅgati* is built on *ā-* and the root √liṅg (MW). MW glosses the compound "to clasp, join the limbs closely, embrace", and the Mahābhārata uses it for "embraces" (CDIAL 1383); MW gives the simple root no clear older source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

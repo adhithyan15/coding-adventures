@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a clove, then the Sanskrit for cardamom
 You'll want to know: लाजाः.
 लाजाः — lājāḥ — "puffed rice".
 
+The word, taken apart.
+lājāḥ is the plural of lāja, "fried or parched grain", used in the plural for the grains (MW). MW files it under a root √lāj, "to fry", and it is already in the Vājasaneyi Saṃhitā (CDIAL 11011). It lives on as Hindi lāī, "parched grain".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for cardamom, then the Sanskrit for puffed 
 
 You'll want to know: धान्यम्.
 धान्यम् — dhānyam — "grain".
+
+The word, taken apart.
+dhānya means "of grain", and then "grain, corn" itself; it is built on dhānā, "grain" (CDIAL 6778). It lives on as Hindi dhān, "growing or unhusked rice". It is a different word from dhanya, "fortunate", in dhanyavādaḥ.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for puffed rice, then the Sanskrit for grai
 You'll want to know: सक्तुः.
 सक्तुः — saktuḥ — "barley flour".
 
+The word, taken apart.
+saktu is coarsely ground meal, especially of barley, already in the Rigveda (CDIAL 13070). MW gives no derivation, so its origin is uncertain. It lives on as Hindi sattū, the flour of parched grain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for grain, then the Sanskrit for barley flo
 You'll want to know: क्षौद्रम्.
 क्षौद्रम् — kṣaudram — "wild honey".
 
+The word, taken apart.
+kṣaudra is built on kṣudrā, "a kind of bee", from kṣudra, "tiny" (MW): the honey of small wild bees. MW glosses kṣaudra "honey, a species of honey".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for barley flour, then the Sanskrit for wil
 
 You'll want to know: मिष्टान्नम्.
 मिष्टान्नम् — miṣṭānnam — "a sweet dish".
+
+The word, taken apart.
+miṣṭānna is a compound of miṣṭa, "dainty, sweet", and anna, "food" (MW), which you have already met. CDIAL 10299 lists miṣṭa beside mṛṣṭa, "rubbed, prepared", and Hindi mīṭhā, "sweet", comes from it.
 
 What you've built.
 One more word for this chapter.

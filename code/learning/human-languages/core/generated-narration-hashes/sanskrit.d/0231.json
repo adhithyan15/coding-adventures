@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 231,
-  "sourceHash": "fnv1a64:37d1e2c8d31e5c56",
+  "sourceHash": "fnv1a64:453c7667b104874f",
   "lessonIds": [
     "SA-C231-manacitram",
     "SA-C231-sthanam",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch231.txt",
   "json": "sanskrit/narration/ch231.json",
-  "textHash": "fnv1a64:196807ad49af899b",
-  "jsonHash": "fnv1a64:58c0f537dd004593",
+  "textHash": "fnv1a64:7e9f984137f05e14",
+  "jsonHash": "fnv1a64:98c6d21b039af1b0",
   "findings": []
 }

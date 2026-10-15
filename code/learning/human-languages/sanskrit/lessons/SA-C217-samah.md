@@ -14,7 +14,8 @@ romanization: "samaḥ"
 concept_tag: SA-QUAL217-SAMAH
 prerequisites: [SA-C217-arunah, SA-C217-kapilah]
 sounds: []
-roots: []
+roots: [sanskrit-sama]
+etymology_hook: "sama 'equal, even', inherited: MW compares Greek homos, Latin similis and English same (CDIAL 13173)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C217-kapilah]
 <!-- hl-knowledge: introduces=[SA-LEX-C217-QUAL217-04]; assesses=[] -->
 
 **समः** — *samaḥ* — "equal, even".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sama* is an inherited Indo-European word for "equal, level" (CDIAL 13173). MW compares Greek *homos*, Latin *similis* and English *same*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "carati"
 concept_tag: SA-VERB-CARATI
 prerequisites: [SA-C141-pibati, SA-C141-vasati]
 sounds: []
-roots: []
+roots: [sanskrit-carati-move]
+etymology_hook: "carati ← √car 'move, wander', inherited from Indo-European, cf. Latin colō (EtymDB); Hindi carnā 'graze'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C141-vasati]
 <!-- hl-knowledge: introduces=[SA-LEX-C141-ACT141-03]; assesses=[] -->
 
 **चरति** — *carati* — "moves about, grazes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*carati* comes from the root √car "move, range about" (CDIAL 4686), inherited from Indo-European: Greek *pelō* and Latin *colō* are counted as its cousins (EtymDB). It lives on as Hindi *carnā* "to graze" (CDIAL 4686).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

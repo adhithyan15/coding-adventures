@@ -14,7 +14,8 @@ romanization: "klāntiḥ"
 concept_tag: SA-WEL211-KLANTIH
 prerequisites: [SA-C211-yogah, SA-C211-sramah]
 sounds: []
-roots: []
+roots: [sanskrit-klanta]
+etymology_hook: "klānti ← root √klam 'be weary', which MW equates with √śram (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C211-sramah]
 <!-- hl-knowledge: introduces=[SA-LEX-C211-WEL211-04]; assesses=[] -->
 
 **क्लान्तिः** — *klāntiḥ* — "tiredness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*klānti* is built on the root √klam, "to be fatigued, weary", with the noun suffix *-ti* (MW). MW gives √klam as an equivalent of √śram, "to toil", and Bengali uses its participle *klānta*, "tired".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

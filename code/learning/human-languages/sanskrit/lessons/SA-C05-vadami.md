@@ -15,6 +15,7 @@ concept_tag: SA-VERB-VAD
 prerequisites: [SA-C03-aham, SA-C01-dhanyavada]
 sounds: [inherent-a, long-aa]
 roots: [vad-speak]
+etymology_hook: "vadāmi ← the root √vad 'speak, say' (MW), the root of vāda in dhanyavāda"
 reviews_of: []
 duration:
   max_seconds: 240
@@ -56,6 +57,9 @@ say") — the very root of *vāda* ("a saying") inside Chapter 1's
 *dhanyavādaḥ* ("thank you"). The present tense is stem + person-
 ending: *vad-ā-mi*, where *-mi* means "I" — the same *-mi* you can see
 in *asmi* ("I am").
+
+The verb is built on √vad, which MW compares with Lithuanian *vadinti*,
+"to call".
 
 ## Grammar Lens: singular, DUAL, and plural
 

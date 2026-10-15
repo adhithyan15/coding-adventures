@@ -14,7 +14,8 @@ romanization: "adhikārī"
 concept_tag: SA-PPL149-ADHIKARI
 prerequisites: [SA-C149-karmakarah, SA-C149-sramikah]
 sounds: []
-roots: []
+roots: [sanskrit-adhikarin]
+etymology_hook: "adhikārin 'one in charge' ← adhi-√kṛ 'put in charge' (MW): 'possessing authority', an official"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C149-sramikah]
 <!-- hl-knowledge: introduces=[SA-LEX-C149-PPL149-03]; assesses=[] -->
 
 **अधिकारी** — *adhikārī* — "an official".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*adhikārī* is the nominative of *adhikārin* "possessing authority, entitled", built from *adhi-√kṛ* "put over, put in charge", the root √kṛ "do, make" with *adhi* "over" (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

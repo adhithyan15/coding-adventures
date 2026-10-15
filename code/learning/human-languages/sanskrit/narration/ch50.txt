@@ -15,6 +15,9 @@ You'll want to know: शब्दः.
 This one has been handed to you three times without ever being named. kāla-śabdāḥ were the time ones; ka-śabdāḥ were the question ones; saṅkhyā-śabdāḥ were the number ones. The -śabdāḥ ending each of those three names is this very word, said of more than one thing at a time.
 So you have been reading it since long before this page. Now the piece itself is yours. Ends in -अः.
 
+The word, taken apart.
+Śabda is already in the Śatapatha Brāhmaṇa. MW suggests a link with the root √śap, and CDIAL 12298 marks the same root with a question mark, so its origin is not settled.
+
 What you've built.
 The piece three earlier names were built out of.
 
@@ -81,6 +84,9 @@ You'll want to know: वाणी.
 It rests on a piece meaning "to sound". Beside शब्दः (śabdaḥ), which is any sound at all, वाणी (vāṇī) is the sound a person makes on purpose.
 Capitalised, Vāṇī is a name of the goddess of speech, so the word carries a good deal more weight in poetry than its plain sense suggests. Feminine, ending in -ī.
 
+The word, taken apart.
+Vāṇī is already in the Rigveda (MW). CDIAL 11490 compares the grammarians' root vaṇ, "to sound", and possibly varṇa, but its source is not settled.
+
 What you've built.
 A sound narrowed down to the human one.
 
@@ -112,7 +118,10 @@ You'll want to know: गीतम्.
 गीतम् (gītam) — "a song".
 गीतम् (gītam) is a song: the thing sung.
 It stands on gai, "to sing". The Bhagavad Gītā is this same word wearing a feminine ending — "the song", and nothing more mysterious than that.
-No secure western cousin has been agreed for it, but it kept its ground at home: Hindi gīt and Bengali gīt are still the everyday word for a song. Neuter, ending in -अम्.
+No secure western cousin has been agreed for it, but it kept its ground at home: Hindi and Punjabi gīt are still the everyday word for a song. Neuter, ending in -अम्.
+
+The word, taken apart.
+Gīta is the past participle of the root √gai, "to sing": "what is sung" (MW, CDIAL 4167).
 
 What you've built.
 What the voice does when it is not talking.
@@ -146,6 +155,9 @@ You'll want to know: श्लोकः.
 श्लोकः (ślokaḥ) is a verse: two lines, balanced against each other.
 Its older sense is "sound, and what is heard of a person" — fame, in other words. So a verse is named as a thing that carries a sound outward. Beside शब्दः (śabdaḥ), which is any sound, श्लोकः (ślokaḥ) is a sound cut to a shape that can be remembered.
 Nearly the whole of the long Sanskrit story-poems is in this one shape, which is how the word came to mean the shape as well as the fame. Ends in -अः.
+
+The word, taken apart.
+Śloka first meant a sound, then what is heard of a person, and then a stanza; MW and CDIAL 12748 connect it with the root √śru, "to hear". The Rāmāyaṇa's story that it began as śoka, "grief", is one MW calls fanciful.
 
 What you've built.
 Five things the ear takes in: a sound, a question, the voice, a song, a verse.

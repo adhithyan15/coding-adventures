@@ -14,7 +14,8 @@ romanization: "śanivāsaraḥ"
 concept_tag: SA-WEEK-SATURDAY
 prerequisites: [SA-C85-thursday, SA-C86-friday]
 sounds: []
-roots: []
+roots: [sanskrit-shani, sanskrit-vasara]
+etymology_hook: "śanivāsara ← śani, probably 'the slow mover', the name of Saturn + vāsara 'day' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C86-friday]
 <!-- hl-knowledge: introduces=[SA-LEX-C86-WEEKEND-02]; assesses=[] -->
 
 **शनिवासरः** (*śanivāsaraḥ*) — "Saturday", the day of **शनि**, Saturn.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śanivāsara* is built from *śani*, probably "the slow-moving one", the name given
+to Saturn, and *vāsara*, "day" (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

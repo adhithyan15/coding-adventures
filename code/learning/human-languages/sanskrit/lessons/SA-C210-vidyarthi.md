@@ -14,7 +14,8 @@ romanization: "vidyārthī"
 concept_tag: SA-PPL210-VIDYARTHI
 prerequisites: [SA-C210-acaryah, SA-C210-pradhanacaryah]
 sounds: []
-roots: []
+roots: [sanskrit-vidya, sanskrit-arthin]
+etymology_hook: "vidyārthin = vidyā 'knowledge' (√vid 'know') + arthin 'one who seeks'; MW gives 'a student'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C210-pradhanacaryah]
 <!-- hl-knowledge: introduces=[SA-LEX-C210-PPL210-03]; assesses=[] -->
 
 **विद्यार्थी** — *vidyārthī* — "a pupil, a learner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vidyārthī* is a compound of *vidyā*, "knowledge", built on the root √vid, "to know", and *arthin*, "one who seeks" (MW): a pupil is one who seeks knowledge. MW already glosses it "a student", and Gujarati and Kannada use the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

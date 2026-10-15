@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for fierce, then the Sanskrit for cruel.
 You'll want to know: कुपितः.
 कुपितः — kupitaḥ — "angry".
 
+The word, taken apart.
+kupita is the past participle of the root √kup "be agitated, be angry" (MW): "provoked, angry". MW compares √kup with Latin cupio "desire", but the link is old and not secure.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for cruel, then the Sanskrit for angry.
 
 You'll want to know: भीतः.
 भीतः — bhītaḥ — "afraid".
+
+The word, taken apart.
+bhīta is the past participle of the root √bhī "fear" (CDIAL 9511): "frightened, afraid". bibheti "is afraid" and bhaya "fear" come from the same root.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for angry, then the Sanskrit for afraid.
 You'll want to know: चकितः.
 चकितः — cakitaḥ — "startled, surprised".
 
+The word, taken apart.
+cakita "trembling, timid, startled" is filed by MW under the root √cak, which the grammarians gloss in unrelated ways, so its origin is uncertain. It is a word of classical poetry, in the Meghadūta and the Raghuvaṃśa.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for afraid, then the Sanskrit for startled.
 You'll want to know: श्रान्तः.
 श्रान्तः — śrāntaḥ — "tired".
 
+The word, taken apart.
+śrānta is the past participle of the root √śram "toil, grow tired" (CDIAL 12692): "wearied, tired", already in the Rigveda. śrāmyati "gets tired" is the present of the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for startled, then the Sanskrit for tired.
 
 You'll want to know: क्षुधितः.
 क्षुधितः — kṣudhitaḥ — "hungry".
+
+The word, taken apart.
+kṣudhita is built from the root √kṣudh "be hungry" and its noun kṣudh "hunger" (MW): "hungered, hungry", a form Pāṇini's grammar discusses. kṣudhā "hunger" belongs to the same root.
 
 What you've built.
 One more word for this chapter.

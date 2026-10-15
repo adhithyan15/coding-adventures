@@ -14,7 +14,8 @@ romanization: "snuṣā"
 concept_tag: SA-PPL178-SNUSA
 prerequisites: [SA-C178-svasruh, SA-C178-jamata]
 sounds: []
-roots: []
+roots: [sanskrit-snusha]
+etymology_hook: "snuṣā ← inherited Indo-European kin word: MW compares Latin nurus, Greek nyos; Marathi sūn (CDIAL 13801)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C178-jamata]
 <!-- hl-knowledge: introduces=[SA-LEX-C178-PPL178-05]; assesses=[] -->
 
 **स्नुषा** — *snuṣā* — "a daughter-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*snuṣā* is an inherited Indo-European kin word: MW compares Latin *nurus* and Greek *nyos*, both "daughter-in-law". It lives on as Marathi *sūn* and Punjabi *nũh* (CDIAL 13801).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

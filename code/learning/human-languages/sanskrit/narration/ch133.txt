@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for full, then the Sanskrit for empty.
 You'll want to know: नीचः.
 नीचः — nīcaḥ — "low".
 
+The word, taken apart.
+nīca is built from ni "down" and the root √añc "bend, turn" (MW; CDIAL 7540): "turned downward", so "low". It lives on as Hindi and Punjabi nīcā "low" (CDIAL 7540).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for empty, then the Sanskrit for low.
 
 You'll want to know: उन्नतः.
 उन्नतः — unnataḥ — "high, tall".
+
+The word, taken apart.
+unnata is the past participle of ud-√nam "bend upward, rise", the root √nam "bend, bow" with ud "up" (MW; CDIAL 2099): "raised, high, tall". It is the same root as namas in namaste, the greeting you already know.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for low, then the Sanskrit for high.
 You'll want to know: उड्डयते.
 उड्डयते — uḍḍayate — "flies".
 
+The word, taken apart.
+uḍḍayate comes from ud-√ḍī "fly up, soar", the root √ḍī "fly" with ud "up" (MW; CDIAL 1697). It lives on as Hindi uṛnā and Marathi uḍṇe "to fly" (CDIAL 1697).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for high, then the Sanskrit for flies.
 You'll want to know: तरति.
 तरति — tarati — "swims, crosses".
 
+The word, taken apart.
+tarati comes from the root √tṝ "cross over", and then "float, swim" (CDIAL 5702). The root is inherited from Indo-European (EtymDB), and MW sets it beside Latin trans "across" and terminus "boundary". It lives on as Hindi tarnā "to cross" and Punjabi tarnā "to swim" (CDIAL 5702).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for flies, then the Sanskrit for swims.
 
 You'll want to know: कूर्दति.
 कूर्दति — kūrdati — "jumps".
+
+The word, taken apart.
+kūrdati "leaps, jumps" is probably borrowed from Dravidian: CDIAL 3412, after Burrow, compares a Dravidian verb for springing. It lives on as Hindi kūdnā "to jump" (CDIAL 3412).
 
 What you've built.
 One more word for this chapter.

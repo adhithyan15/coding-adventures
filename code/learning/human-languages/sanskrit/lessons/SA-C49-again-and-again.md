@@ -14,7 +14,8 @@ romanization: "muhuḥ"
 concept_tag: SA-REPLY4-MUHUH
 prerequisites: [SA-C49-only, SA-C47-pillar, SA-C48-monkey]
 sounds: []
-roots: []
+roots: [sanskrit-muhur]
+etymology_hook: "muhur 'suddenly, in a moment', filed by MW under √muh 'be dazed', next to muhūrta 'a moment'"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C49-only]
 You have पुनः for "again", meaning one more time. **मुहुः** is the stronger one: not once more but repeatedly, and doubled as *muhur muhuḥ* it is stronger still.
 
 It belongs with *muhūrta*, a short measured stretch of time. The picture underneath is a thing happening moment after moment after moment.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Muhuḥ* is the Vedic adverb *muhur*, "suddenly, in a moment", built on the root
+√muh, "to be dazed", under which MW files it. MW suggests it first meant
+"bewilderingly"; *muhūrta*, "a moment", stands next to it in that entry.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

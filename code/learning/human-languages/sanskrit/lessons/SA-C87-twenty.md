@@ -14,7 +14,8 @@ romanization: "viṃśatiḥ"
 concept_tag: SA-NUMBER-TWENTY
 prerequisites: [SA-C87-eleven, SA-C87-twelve]
 sounds: []
-roots: []
+roots: [sanskrit-vimshati]
+etymology_hook: "viṃśati 'twenty', probably 'two decades'; MW compares Latin vīgintī and Greek eikosi; Hindi bīs (CDIAL 11616)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C87-twelve]
 <!-- hl-knowledge: introduces=[SA-LEX-C87-NUMBERS-03]; assesses=[] -->
 
 **विंशतिः** (*viṃśatiḥ*) — "twenty", a new word, not built from **दश**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW takes *viṃśati* as probably "two decades", and it is inherited: MW compares
+Latin *vīgintī* and Greek *eikosi*. It lives on as Hindi *bīs*, "twenty" (CDIAL
+11616).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

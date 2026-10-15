@@ -14,7 +14,8 @@ romanization: "saṁvatsaraḥ"
 concept_tag: SA-DAYTIME-SAMVATSARA
 prerequisites: [SA-C45-month, SA-C43-honest, SA-C44-blue]
 sounds: []
-roots: []
+roots: [sanskrit-samvatsara]
+etymology_hook: "saṃvatsara 'a full year' ← sam 'together, complete' + vatsara 'year' (MW; CDIAL 13011)"
 duration:
   max_seconds: 210
 requires:

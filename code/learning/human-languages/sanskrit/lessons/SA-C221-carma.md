@@ -14,7 +14,8 @@ romanization: "carma"
 concept_tag: SA-THG221-CARMA
 prerequisites: [SA-C221-karpasah, SA-C221-kauseyam]
 sounds: []
-roots: []
+roots: [sanskrit-carman]
+etymology_hook: "carman 'hide'; MW compares Latin corium 'leather'; Hindi cām (CDIAL 4701)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C221-kauseyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C221-THG221-03]; assesses=[] -->
 
 **चर्म** — *carma* — "leather, hide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*carma* is the nominative of *carman*, "hide, skin", a Rigvedic word (CDIAL 4701). MW compares Latin *corium*, "hide, leather", so it is an inherited Indo-European word. It lives on as Hindi *cām*, "hide, leather".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

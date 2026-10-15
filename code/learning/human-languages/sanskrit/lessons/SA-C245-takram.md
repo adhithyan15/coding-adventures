@@ -14,7 +14,8 @@ romanization: "takram"
 concept_tag: SA-THG245-TAKRAM
 prerequisites: [SA-C244-ekaki, SA-C245-nalika]
 sounds: []
-roots: []
+roots: [sanskrit-takra]
+etymology_hook: "takra 'buttermilk', which MW and CDIAL 5617 link to √tañc 'contract'; Marathi tāk (CDIAL 5617)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C245-nalika]
 <!-- hl-knowledge: introduces=[SA-LEX-C245-THG245-02]; assesses=[] -->
 
 **तक्रम्** — *takram* — "buttermilk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*takra* is buttermilk thinned with water (MW). MW and CDIAL 5617 both link it to the root √tañc, "to contract", as milk curdles, and CDIAL compares Persian *talx*, "bitter". It lives on as Marathi and Gujarati *tāk*, "buttermilk".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

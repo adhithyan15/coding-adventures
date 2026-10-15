@@ -14,7 +14,8 @@ romanization: "śiṣyaḥ"
 concept_tag: SA-PERSON-STUDENT
 prerequisites: [SA-C26-teacher, SA-C24-rice, SA-C25-foot]
 sounds: []
-roots: []
+roots: [sanskrit-shishya]
+etymology_hook: "śiṣya 'to be taught, a pupil' ← the root √śās 'instruct' (MW; CDIAL 12482)"
 duration:
   max_seconds: 210
 requires:

@@ -14,7 +14,8 @@ romanization: "alasaḥ"
 concept_tag: SA-QUAL130-ALASAH
 prerequisites: [SA-C129-caturah, SA-C130-murkhah]
 sounds: []
-roots: []
+roots: [sanskrit-alasa]
+etymology_hook: "alasa 'lazy': MW reads a- 'not' + lasa; EWA an l-form of arasa; DEDR 236 a Dravidian source; disputed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C130-murkhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C130-QUAL130-02]; assesses=[] -->
 
 **अलसः** — *alasaḥ* — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*alasa* "inactive, lazy" has a disputed origin: MW divides it as *a-* "not" + *lasa* "lively", CDIAL 708 reports EWA's view that it is an *l*-form of *arasa* "sapless", and DEDR 236 takes it from Dravidian. Pali kept it as *alasa* "lazy" (CDIAL 708).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

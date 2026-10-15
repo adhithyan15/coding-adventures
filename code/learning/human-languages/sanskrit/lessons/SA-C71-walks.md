@@ -14,7 +14,8 @@ romanization: "calati"
 concept_tag: SA-VERB-WALK
 prerequisites: [SA-C70-lip, SA-C71-runs]
 sounds: []
-roots: []
+roots: [sanskrit-calati]
+etymology_hook: "calati 'moves, goes' ← the root √cal 'stir, move' (MW); it lives on as Hindi calnā (CDIAL 4715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C71-runs]
 <!-- hl-knowledge: introduces=[SA-LEX-C71-MOVE-02]; assesses=[] -->
 
 **चलति** (*calati*) — "(he, she) moves, walks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Calati* is the present of the root √cal, "to stir, move" (MW). It lives on as
+Hindi *calnā*, "to move, walk" (CDIAL 4715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "manaḥ"
 concept_tag: SA-WEL212-MANAH
 prerequisites: [SA-C211-snanam, SA-C212-buddhih]
 sounds: []
-roots: []
+roots: [sanskrit-manas]
+etymology_hook: "manas 'mind' ← root √man 'think'; MW compares Greek menos; Hindi man (CDIAL 9822)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C212-buddhih]
 <!-- hl-knowledge: introduces=[SA-LEX-C212-WEL212-02]; assesses=[] -->
 
 **मनः** — *manaḥ* — "the mind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*manas* is built on the root √man, "to think" (MW). It is inherited from Indo-European: MW compares Greek *menos*, "spirit, force", and the root itself with English *mean*. It lives on as Hindi *man*, "mind" (CDIAL 9822).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

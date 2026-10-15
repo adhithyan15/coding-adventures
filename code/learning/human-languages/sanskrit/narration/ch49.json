@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Five Small Answers",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6abcf31cb9dbf634",
+  "sourceHash": "fnv1a64:0c6f4bb8a7278489",
   "lessons": [
     {
       "id": "SA-C49-then",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0c825b77fcc3a8a",
+      "sourceHash": "fnv1a64:b343784c7e5e5c8f",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tarhi is built on the pointing base ta-, the base of tat (MW, CDIAL 5730). It is the partner of yarhi, \"when\", in the same way that tathā partners yathā."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7e2241c57528172",
+      "sourceHash": "fnv1a64:cebd497952cda924",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Yathā is built from the relative base ya-, \"which\", with the manner ending -thā that also ends tathā (MW, CDIAL 10407)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5f1c43f5f288d49",
+      "sourceHash": "fnv1a64:141321c63fddf34b",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +374,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kevalam is the adverb of kevala, \"exclusively one's own, alone\", already in the Rigveda (MW). Its origin is unclear: MW gives no root for it. Gujarati kevaḷ keeps it (CDIAL 3470)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6257fbe4fa323463",
+      "sourceHash": "fnv1a64:35d860c55099c1d3",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +529,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Muhuḥ is the Vedic adverb muhur, \"suddenly, in a moment\", built on the root √muh, \"to be dazed\", under which MW files it. MW suggests it first meant \"bewilderingly\"; muhūrta, \"a moment\", stands next to it in that entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +550,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +608,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b14a93b4356dbe1",
+      "sourceHash": "fnv1a64:355a14f5901342c0",
       "notice": null,
       "blocks": [
         {
@@ -634,12 +678,23 @@
             },
             {
               "kind": "speech",
-              "text": "It is two small cries stuck together rather than a word with parts, which is why there is no history to trace under it. Sanskrit wrote its exclamations down, and this one has been in the language for as long as anything in it."
+              "text": "It is an exclamation rather than a word with parts, which is why there is no history to trace under it. Sanskrit wrote its exclamations down, and this one is recorded by Pāṇini and all through the epics."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Aho is an exclamation of joy or painful surprise, recorded by the grammarian Pāṇini and in the epics (MW, CDIAL 996)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +705,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +763,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

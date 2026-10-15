@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a mouse, then the Sanskrit for a cat.
 You'll want to know: काकः.
 काकः (kākaḥ) — "a crow", a black विहगः. Say it and hear its call.
 
+The word, taken apart.
+Kāka is an imitation of the crow's call (MW, CDIAL 2993). It lives on as Hindi kauā, "crow".
+
 What you've built.
 The bird that names itself.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a cat, then the Sanskrit for a crow.
 
 You'll want to know: शुकः.
 शुकः (śukaḥ) — "a parrot", the हरितः bird that repeats words.
+
+The word, taken apart.
+MW takes śuka as probably "the bright one", from the root √śuc, "to shine", after the parrot's green. It is Rigvedic, and lives on as Hindi suwā, "parrot" (CDIAL 12503).
 
 What you've built.
 The green bird.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a crow, then the Sanskrit for a parrot.
 You'll want to know: मयूरः.
 मयूरः (mayūraḥ) — "a peacock", who dances when the वर्षा comes.
 
+The word, taken apart.
+The origin of mayūra is disputed. CDIAL 9865 reports three proposals: a Dravidian source (compare Tamil mayil, DEDR 4642), an Austroasiatic one, and an old Indo-Iranian colour word. It lives on as Hindi mor, "peacock".
+
 What you've built.
 The dancing bird.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a parrot, then the Sanskrit for a peaco
 You'll want to know: कूर्मः.
 कूर्मः (kūrmaḥ) — "a tortoise", slow, with its house on its पृष्ठम्.
 
+The word, taken apart.
+Kūrma is an old word, already in the Vājasaneyi Saṃhitā (CDIAL 3414), but its origin is not settled: neither MW nor CDIAL gives it a root.
+
 What you've built.
 The slow one.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a peacock, then the Sanskrit for a tort
 
 You'll want to know: मण्डूकः.
 मण्डूकः (maṇḍūkaḥ) — "a frog", loudest in वर्षा.
+
+The word, taken apart.
+Maṇḍūka is already in the Rigveda, but its origin is not settled. CDIAL 9746 notes that its modern forms are unusually irregular, bent by taboo and by imitation of the frog's sound.
 
 What you've built.
 The rain singer.

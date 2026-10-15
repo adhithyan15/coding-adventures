@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Naming Who Someone Is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cbd8087b153146b5",
+  "sourceHash": "fnv1a64:8decaaec3667ec04",
   "lessons": [
     {
       "id": "SA-C26-teacher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ace674c901fda6c0",
+      "sourceHash": "fnv1a64:18ff62af897c2b7d",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ddf5e51fcb2bd57",
+      "sourceHash": "fnv1a64:d8d81f982a03d54e",
       "notice": null,
       "blocks": [
         {
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03415878a2ddde20",
+      "sourceHash": "fnv1a64:ecd71477da4f3162",
       "notice": null,
       "blocks": [
         {
@@ -340,7 +340,7 @@
             },
             {
               "kind": "speech",
-              "text": "राजा (rājā) is a king, and it belongs to the same -ṛ-shaped family as पिता and माता — the stem is rājan-."
+              "text": "राजा (rājā) is a king, and its nominative ends in -ā like पिता and माता, but it belongs to another family: the stem is rājan-."
             },
             {
               "kind": "speech",
@@ -350,6 +350,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Rājan is built on the root √rāj, \"to rule\" (MW, CDIAL 10679). It is inherited: MW compares Latin rēx, Gothic reiks \"ruler\" and English rich, which first meant \"powerful\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -360,7 +371,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -391,11 +402,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "rājā, then pitā, and name the family both stems share",
+              "instruction": "rājā, then pitā, and name the stem behind each (rājan-, pitṛ-)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *rājā*, then *pitā*, and name the family both stems share]"
+              "source": "[YOU SAY: *rājā*, then *pitā*, and name the stem behind each (*rājan-*, *pitṛ-*)]"
             },
             {
               "kind": "prompt",
@@ -418,7 +429,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -449,7 +460,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22c7f94107a0b3b3",
+      "sourceHash": "fnv1a64:05f342886f893cef",
       "notice": null,
       "blocks": [
         {
@@ -490,7 +501,7 @@
             },
             {
               "kind": "speech",
-              "text": "अतिथिः (atithiḥ) is a guest. Tradition reads the word as a-tithi, \"one without a date\" — the visitor who arrives unannounced, on no appointed day, and must be fed anyway. Linguists prefer a root meaning \"to wander\" and derive it as \"the wanderer\"."
+              "text": "अतिथिः (atithiḥ) is a guest. Tradition reads the word as a-tithi, \"one without a date\" — the visitor who arrives unannounced, on no appointed day, and must be fed anyway. MW also gives a root meaning \"to wander\", which would make it \"the wanderer\"."
             },
             {
               "kind": "speech",
@@ -500,6 +511,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW gives both accounts of atithi: the root √at, \"to wander\", or a-tithi, \"one who has no fixed day for coming\". Which one is right is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -510,7 +532,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -568,7 +590,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -599,7 +621,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39cc6346bbf68364",
+      "sourceHash": "fnv1a64:e3d629cc53f8d654",
       "notice": null,
       "blocks": [
         {
@@ -634,7 +656,7 @@
             },
             {
               "kind": "speech",
-              "text": "That root is one of the great travellers: Latin vidēre, \"to see\" — video, evident; Greek idea; English wit, wise, wisdom. And Sanskrit already gave you a second knowing-verb, जानाति, from a different root altogether. Sanskrit keeps two ways of knowing apart, and वैद्यः (vaidyaḥ) belongs to the one that also means seeing — the doctor as the one who has looked."
+              "text": "That root is one of the great travellers: Latin vidēre, \"to see\" — video, evident; Greek idea; English wit, wise, wisdom. And Sanskrit already gave you a second knowing-verb, जानाति, from a different root altogether. Sanskrit keeps two ways of knowing apart, and वैद्यः (vaidyaḥ) belongs to the one whose cousins elsewhere mean seeing — the doctor as the one who has looked."
             }
           ]
         },

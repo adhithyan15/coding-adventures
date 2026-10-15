@@ -14,7 +14,8 @@ romanization: "nāyakaḥ"
 concept_tag: SA-PPL149-NAYAKAH
 prerequisites: [SA-C149-adhikari, SA-C149-lipikah]
 sounds: []
-roots: []
+roots: [sanskrit-nayaka]
+etymology_hook: "nāyaka ← √nī 'lead' + -aka 'one who': 'a guide, a leader' (MW); netra 'eye' is from the same root"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C149-lipikah]
 <!-- hl-knowledge: introduces=[SA-LEX-C149-PPL149-05]; assesses=[] -->
 
 **नायकः** — *nāyakaḥ* — "a leader".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nāyaka* is built from the root √nī "lead, guide" with the agent suffix *-aka* (MW): "one who leads", a guide, a chief, and in drama the hero. *netra* "eye", "the guiding organ", comes from the same root (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

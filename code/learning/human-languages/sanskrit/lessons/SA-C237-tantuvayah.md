@@ -14,7 +14,8 @@ romanization: "tantuvāyaḥ"
 concept_tag: SA-PPL237-TANTUVAYAH
 prerequisites: [SA-C237-svarnakarah, SA-C237-lohakarah]
 sounds: []
-roots: []
+roots: [sanskrit-tantuvaya]
+etymology_hook: "tantuvāya = tantu 'thread' (√tan 'stretch') + vāya 'weaving' (√ve 'weave') (MW; CDIAL 5662)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C237-lohakarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C237-PPL237-04]; assesses=[] -->
 
 **तन्तुवायः** — *tantuvāyaḥ* — "a weaver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tantuvāya* is a compound of *tantu*, "thread, warp", from the root √tan, "to stretch, spin out", and *vāya*, "weaver", from √ve, "to weave" (MW; CDIAL 5662). A weaver is a thread-weaver; the same word also names the spider.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

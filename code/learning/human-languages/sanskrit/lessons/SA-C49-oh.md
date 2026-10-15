@@ -14,7 +14,8 @@ romanization: "aho"
 concept_tag: SA-REPLY4-AHO
 prerequisites: [SA-C49-again-and-again, SA-C47-floor, SA-C48-goose]
 sounds: []
-roots: []
+roots: [sanskrit-aho]
+etymology_hook: "aho 'ah! oh!' is an old exclamation, recorded by Pāṇini (MW; CDIAL 996), with no deeper history"
 duration:
   max_seconds: 210
 requires:
@@ -46,7 +47,13 @@ reviews_of: [SA-C49-again-and-again]
 
 It is the sound of being struck by something: delight, surprise or dismay, with the tone deciding which. **अहो** on its own is a whole reply, and one of the few you can give without knowing what comes next.
 
-It is two small cries stuck together rather than a word with parts, which is why there is no history to trace under it. Sanskrit wrote its exclamations down, and this one has been in the language for as long as anything in it.
+It is an exclamation rather than a word with parts, which is why there is no history to trace under it. Sanskrit wrote its exclamations down, and this one is recorded by Pāṇini and all through the epics.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Aho* is an exclamation of joy or painful surprise, recorded by the grammarian
+Pāṇini and in the epics (MW, CDIAL 996).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

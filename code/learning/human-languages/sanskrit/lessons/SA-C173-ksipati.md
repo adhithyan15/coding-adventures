@@ -14,7 +14,8 @@ romanization: "kṣipati"
 concept_tag: SA-VERB-KSIPATI
 prerequisites: [SA-C172-paryatanam, SA-C172-paryatakah]
 sounds: []
-roots: []
+roots: [sanskrit-kshipati]
+etymology_hook: "kṣipati 'throws' ← √kṣip 'throw, cast' (CDIAL 3683), inherited from Indo-Iranian (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C172-paryatakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C173-ACT173-01]; assesses=[] -->
 
 **क्षिपति** — *kṣipati* — "throws".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kṣipati* comes from the root √kṣip "throw, cast, strike" (CDIAL 3683), already in the Rigveda, and inherited from Indo-Iranian (EtymDB). *nikṣipati* "puts in" is built on the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

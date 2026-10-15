@@ -14,7 +14,8 @@ romanization: "vilambaḥ"
 concept_tag: SA-TIME93-VILAMBAH
 prerequisites: [SA-C92-sarvada, SA-C93-kadapi]
 sounds: []
-roots: []
+roots: [sanskrit-vilamba]
+etymology_hook: "vilamba ← vi-√lamb 'hang back, linger, delay', on √lamb 'hang' (MW); Punjabi bilamb 'delay' (CDIAL 11890)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C93-kadapi]
 <!-- hl-knowledge: introduces=[SA-LEX-C93-TIME93-02]; assesses=[] -->
 
 **विलम्बः** — *vilambaḥ* — "a delay".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vilamba* comes from the verb *vi-√lamb*, the root √lamb "hang" with *vi-* "apart, away": to hang back, linger, delay (MW). It lives on as Punjabi *vilamb*, *bilamb* "delay" (CDIAL 11890).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

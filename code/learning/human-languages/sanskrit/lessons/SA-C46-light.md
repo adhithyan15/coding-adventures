@@ -14,7 +14,8 @@ romanization: "prakāśaḥ"
 concept_tag: SA-LIGHT-PRAKASHA
 prerequisites: [SA-C46-ray, SA-C44-yellow, SA-C45-evening]
 sounds: []
-roots: []
+roots: [sanskrit-prakasha]
+etymology_hook: "prakāśa 'brightness, light' ← pra + the root √kāś 'shine, be visible' (MW; CDIAL 8437)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C46-ray]
 You met a piece meaning "to shine, to be seen" once before, sitting inside **आकाशः**, the open sky. **प्रकाशः** is that very piece with *pra-*, "forward", in front of it — light as shining sent out.
 
 So the sky and the light in it are built out of one word, parting only at the small piece each carries at the front. Ends in **-अः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Prakāśa* is built from the prefix *pra*, "forth", and the root √kāś, "to shine,
+be visible" (MW, CDIAL 8437), the root inside *ākāśa*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

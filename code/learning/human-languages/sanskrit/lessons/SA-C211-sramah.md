@@ -14,7 +14,8 @@ romanization: "śramaḥ"
 concept_tag: SA-WEL211-SRAMAH
 prerequisites: [SA-C211-vyayamah, SA-C211-yogah]
 sounds: []
-roots: []
+roots: [sanskrit-shrama]
+etymology_hook: "śrama ← root √śram 'toil, grow weary': 'labour', then 'fatigue' (MW; CDIAL 12682)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C211-yogah]
 <!-- hl-knowledge: introduces=[SA-LEX-C211-WEL211-03]; assesses=[] -->
 
 **श्रमः** — *śramaḥ* — "toil, fatigue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śrama* is built on the root √śram, "to toil, become tired" (MW). In the Rigveda it means "labour", in the Atharvaveda also "fatigue" (CDIAL 12682). The same root gives *āśrama*, "hermitage", a place of religious toil.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

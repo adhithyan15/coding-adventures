@@ -14,7 +14,8 @@ romanization: "kumbhakāraḥ"
 concept_tag: SA-PPL237-KUMBHAKARAH
 prerequisites: [SA-C236-yuvatih, SA-C236-purusah]
 sounds: []
-roots: []
+roots: [sanskrit-kumbhakara, sanskrit-kumbha]
+etymology_hook: "kumbhakāra = kumbha 'pot' + kāra 'maker' (MW); Hindi kumhār 'potter' (CDIAL 3310)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C236-purusah]
 <!-- hl-knowledge: introduces=[SA-LEX-C237-PPL237-01]; assesses=[] -->
 
 **कुम्भकारः** — *kumbhakāraḥ* — "a potter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kumbhakāra* is a compound of *kumbha*, "pot", which you have already met, and *kāra*, "maker", from the root √kṛ (MW). It lives on as Hindi *kumhār*, "potter" (CDIAL 3310).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

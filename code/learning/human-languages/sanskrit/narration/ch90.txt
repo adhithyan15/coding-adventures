@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for hard, difficult, then the Sanskrit for 
 You'll want to know: अहः.
 अहः — ahaḥ — "a day, daytime".
 
+The word, taken apart.
+Ahaḥ is a form of ahar, "day", which is already in the Rigveda (MW, CDIAL 993). MW gives it no root, and its origin is not settled. It is the -aha of saptāha, "week".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for sweet, then the Sanskrit for a day.
 
 You'll want to know: प्रदोषः.
 प्रदोषः — pradoṣaḥ — "early evening".
+
+The word, taken apart.
+Pradoṣa is built from pra and doṣā, "darkness, night", a Rigvedic word (MW): the first part of the night.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a day, then the Sanskrit for early even
 You'll want to know: अपराह्णः.
 अपराह्णः — aparāhṇaḥ — "afternoon".
 
+The word, taken apart.
+Aparāhṇa is built from apara, "later, hinder", and ahna, a form of ahar, "day" (MW). Apara is inherited: MW compares Gothic afar, "after".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for early evening, then the Sanskrit for af
 You'll want to know: मध्यरात्रिः.
 मध्यरात्रिः — madhyarātriḥ — "midnight".
 
+The word, taken apart.
+Madhyarātri is built from madhya, "middle", and rātri, "night" (MW). Madhya is inherited: MW compares Latin medius and English mid, as in midnight.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for afternoon, then the Sanskrit for midnig
 
 You'll want to know: उषः.
 उषः — uṣaḥ — "dawn".
+
+The word, taken apart.
+Uṣas is inherited from Proto-Indo-European: MW compares Greek ēōs and Latin aurōra, "dawn", and EtymDB links them to one ancestor. In the Rigveda the dawn is a goddess.
 
 What you've built.
 One more word for this chapter.

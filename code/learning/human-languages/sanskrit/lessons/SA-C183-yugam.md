@@ -14,7 +14,8 @@ romanization: "yugam"
 concept_tag: SA-TIME183-YUGAM
 prerequisites: [SA-C182-krtajnata, SA-C182-smrtih]
 sounds: []
-roots: []
+roots: [sanskrit-yuga]
+etymology_hook: "yuga ← root √yuj 'yoke'; first 'a yoke', then 'an age'; MW compares English yoke, Latin iugum (CDIAL 10482)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C182-smrtih]
 <!-- hl-knowledge: introduces=[SA-LEX-C183-TIME183-01]; assesses=[] -->
 
 **युगम्** — *yugam* — "an age, an era".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yuga* is built on the root √yuj, "to yoke, join" (MW). It first meant "yoke", then "a pair", "a generation", and "an age". The root is inherited from Indo-European: MW compares English *yoke* and Latin *iugum*, and Hindi *jūā*, "yoke", comes from *yuga* (CDIAL 10482).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

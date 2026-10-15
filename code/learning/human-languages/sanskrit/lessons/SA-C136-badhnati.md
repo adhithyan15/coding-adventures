@@ -14,7 +14,8 @@ romanization: "badhnāti"
 concept_tag: SA-VERB-BADHNATI
 prerequisites: [SA-C136-ganayati, SA-C136-marjayati]
 sounds: []
-roots: []
+roots: [sanskrit-bandhati]
+etymology_hook: "badhnāti ← √bandh 'bind' (CDIAL 9133), which MW sets beside Gothic bindan and English bind"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C136-marjayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C136-ACT136-05]; assesses=[] -->
 
 **बध्नाति** — *badhnāti* — "ties".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*badhnāti* comes from the root √bandh "bind, tie", in its Rigvedic class-9 form (CDIAL 9133). MW sets √bandh beside Gothic *bindan* and English *bind*, and the other present *bandhati* lives on as Hindi *bāṁdhnā* "to tie" (CDIAL 9139).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

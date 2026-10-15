@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for endures, then the Sanskrit for tries.
 You'll want to know: परिवर्तयति.
 परिवर्तयति — parivartayati — "changes".
 
+The word, taken apart.
+parivartayati is built on pari "around" and the root √vṛt, "to turn" (MW), with the causative ending -aya-: it means "makes something turn round", and so "changes". MW compares √vṛt with Latin vertere, "to turn".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for tries, then the Sanskrit for changes.
 
 You'll want to know: निवेदयति.
 निवेदयति — nivedayati — "reports, submits".
+
+The word, taken apart.
+nivedayati is the causative of ni- with the root √vid, "to know" (MW): it means "makes known", and so "reports, presents". The root is inherited from Indo-European; MW compares Latin vidēre, "to see".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for changes, then the Sanskrit for reports.
 You'll want to know: आमन्त्रयति.
 आमन्त्रयति — āmantrayati — "invites".
 
+The word, taken apart.
+āmantrayati is ā- "towards" with mantrayate, "speaks, takes counsel", which MW calls a verb made from the noun mantra, built on the root √man "to think". CDIAL 1242 records "summons" for it in the Taittirīya Brāhmaṇa and "invites" in the Mahābhārata; it lives on as Gujarati āmãtravũ, "invites".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for reports, then the Sanskrit for invites.
 You'll want to know: शोधयति.
 शोधयति — śodhayati — "cleans, corrects".
 
+The word, taken apart.
+śodhayati is the causative of the root √śudh, "to be purified, become pure" (MW). So it comes from "makes pure", which covers both cleaning a thing and correcting a text.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for invites, then the Sanskrit for cleans.
 
 You'll want to know: पूरयति.
 पूरयति — pūrayati — "fills".
+
+The word, taken apart.
+pūrayati is built on the root √pṝ, "to fill" (MW), and is listed in CDIAL 8335. The root is inherited from Indo-European: MW compares Latin plēnus and English full. CDIAL gives Punjabi pūrnā, "to fill", as one of its descendants.
 
 What you've built.
 One more word for this chapter.

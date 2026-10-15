@@ -14,7 +14,8 @@ romanization: "halam"
 concept_tag: SA-THG218-HALAM
 prerequisites: [SA-C218-kutharah, SA-C218-khanitram]
 sounds: []
-roots: []
+roots: [sanskrit-hala]
+etymology_hook: "hala 'plough'; MW gives a root √hal 'plough', perhaps made from it; Hindi hal (CDIAL 14000)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C218-khanitram]
 <!-- hl-knowledge: introduces=[SA-LEX-C218-THG218-04]; assesses=[] -->
 
 **हलम्** — *halam* — "a plough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hala* is the plough, and MW gives a root √hal, "to plough", while noting the root may have been made from the noun. Its deeper origin is uncertain. It lives on as Hindi *hal*, "plough" (CDIAL 14000).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

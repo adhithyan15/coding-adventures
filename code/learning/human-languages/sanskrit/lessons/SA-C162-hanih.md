@@ -14,7 +14,8 @@ romanization: "hāniḥ"
 concept_tag: SA-THG162-HANIH
 prerequisites: [SA-C162-rnam, SA-C162-labhah]
 sounds: []
-roots: []
+roots: [sanskrit-hani]
+etymology_hook: "hāni 'abandonment, loss' ← √hā 'leave, abandon' (MW); some derive it from √han 'strike'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C162-labhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C162-THG162-04]; assesses=[] -->
 
 **हानिः** — *hāniḥ* — "loss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hāni* "abandonment, decrease, loss" is filed by MW under the root √hā "leave, abandon", noting that some derive it from √han "strike", so the root is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

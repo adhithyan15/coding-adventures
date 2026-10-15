@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 161,
-  "sourceHash": "fnv1a64:2ab014705b3d7807",
+  "sourceHash": "fnv1a64:81ad46258b09e9b8",
   "lessonIds": [
     "SA-C161-sankhah",
     "SA-C161-venuh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch161.txt",
   "json": "sanskrit/narration/ch161.json",
-  "textHash": "fnv1a64:a1eb80d6ad374fc3",
-  "jsonHash": "fnv1a64:202dde4b2c4c1132",
+  "textHash": "fnv1a64:64ea296077285794",
+  "jsonHash": "fnv1a64:847c5fda7049f630",
   "findings": []
 }

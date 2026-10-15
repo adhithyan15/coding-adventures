@@ -14,7 +14,8 @@ romanization: "kuśalaḥ"
 concept_tag: SA-QUAL216-KUSALAH
 prerequisites: [SA-C215-kunthah, SA-C215-mulyavan]
 sounds: []
-roots: []
+roots: [kushala-sanskrit]
+etymology_hook: "kuśala 'right, well, skilful' (MW): origin not settled (CDIAL 3365); the kuśa-grass story is unsupported"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C215-mulyavan]
 <!-- hl-knowledge: introduces=[SA-LEX-C216-QUAL216-01]; assesses=[] -->
 
 **कुशलः** — *kuśalaḥ* — "able, well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kuśala* is the word behind *kuśalam*, "well-being", from your first greetings, and its origin is not settled (CDIAL 3365 judges the one modern derivation it cites "very doubtful"). A popular explanation takes it from *kuśa*, the sacred grass, with a root of cutting, "skilled at cutting the grass", but no dictionary we checked (MW, Apte, CDIAL) supports it. MW gives both "well, healthy" and "competent, skilful".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

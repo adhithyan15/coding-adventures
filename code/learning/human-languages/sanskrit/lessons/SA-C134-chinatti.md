@@ -14,7 +14,8 @@ romanization: "chinatti"
 concept_tag: SA-VERB-CHINATTI
 prerequisites: [SA-C133-tarati, SA-C133-kurdati]
 sounds: []
-roots: []
+roots: [sanskrit-chinatti]
+etymology_hook: "chinatti ← √chid 'cut' with the class-7 infix -na- (MW); MW compares Greek schizō and Latin scindo"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C133-kurdati]
 <!-- hl-knowledge: introduces=[SA-LEX-C134-ACT134-01]; assesses=[] -->
 
 **छिनत्ति** — *chinatti* — "cuts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chinatti* comes from the root √chid "cut, split", with the nasal *-na-* that class-7 verbs push inside the root (MW). MW sets √chid beside Greek *schizō* "split", the source of English *schism*, and Latin *scindo*; Gujarati kept it as *chiṇvũ* "to slit" (CDIAL 5045).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

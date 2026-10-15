@@ -14,7 +14,8 @@ romanization: "ucitaḥ"
 concept_tag: SA-QUAL244-UCITAH
 prerequisites: [SA-C243-sukhi, SA-C243-duhkhi]
 sounds: []
-roots: []
+roots: [sanskrit-ucita]
+etymology_hook: "ucita 'customary, proper', past participle of √uc 'be pleased, accustomed, suitable' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C243-duhkhi]
 <!-- hl-knowledge: introduces=[SA-LEX-C244-QUAL244-01]; assesses=[] -->
 
 **उचितः** — *ucitaḥ* — "proper, fitting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ucita* comes from the root √uc as its past participle; MW glosses the root "to take pleasure in, be accustomed, be suitable". What one is accustomed to is customary, and what is customary is proper.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

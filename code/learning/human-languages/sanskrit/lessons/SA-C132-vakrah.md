@@ -14,7 +14,8 @@ romanization: "vakraḥ"
 concept_tag: SA-QUAL132-VAKRAH
 prerequisites: [SA-C131-sthulah, SA-C132-krsah]
 sounds: []
-roots: []
+roots: [sanskrit-vakra]
+etymology_hook: "vakra 'crooked, bent' (AV) ← √vañc 'go crookedly' (CDIAL 11185); Pali vakka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C132-krsah]
 <!-- hl-knowledge: introduces=[SA-LEX-C132-QUAL132-02]; assesses=[] -->
 
 **वक्रः** — *vakraḥ* — "crooked".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vakra* "crooked, curved, bent" is old, in the Atharvaveda, and CDIAL 11185 sets it under the root √vañc "go crookedly", noting that similar words may be non-Aryan. Pali kept it as *vakka* "crooked" (CDIAL 11185).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

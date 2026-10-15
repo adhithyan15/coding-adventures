@@ -14,7 +14,8 @@ romanization: "śākam"
 concept_tag: SA-FOOD-SHAKA
 prerequisites: [SA-C40-butter, SA-C38-sand, SA-C39-dog]
 sounds: []
-roots: []
+roots: [sanskrit-shaka]
+etymology_hook: "śāka 'potherb, vegetable' is of doubtful derivation (MW); it lives on as Prakrit sāga (CDIAL 12370)"
 duration:
   max_seconds: 210
 requires:
@@ -46,7 +47,14 @@ reviews_of: [SA-C40-butter]
 
 Where पत्रम् is the leaf on a लता, **शाकम्** is the leaf in a pot.
 
-No cousin outside India has been agreed for it. The word stayed home, and it is doing the same work today it was doing three thousand years ago.
+MW calls its derivation doubtful. The word stayed home, and it is doing the same work today it was doing three thousand years ago.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śāka* is of doubtful derivation, MW says. It lives on as Prakrit *sāga*
+(CDIAL 12370); Hindi and Punjabi *sāg* look like its descendants, though CDIAL
+does not list them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

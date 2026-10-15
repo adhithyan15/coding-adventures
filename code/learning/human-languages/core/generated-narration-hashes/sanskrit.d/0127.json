@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 127,
-  "sourceHash": "fnv1a64:8c44c0f7088a5b38",
+  "sourceHash": "fnv1a64:2a45fb70e69bab84",
   "lessonIds": [
     "SA-C127-daridrah",
     "SA-C127-dhanikah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch127.txt",
   "json": "sanskrit/narration/ch127.json",
-  "textHash": "fnv1a64:c27fca789478a2fc",
-  "jsonHash": "fnv1a64:20ca1173c208f003",
+  "textHash": "fnv1a64:1ae8245edf1a8256",
+  "jsonHash": "fnv1a64:3b9387097f626352",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "pīṭhikā"
 concept_tag: SA-THG221-PITHIKA
 prerequisites: [SA-C221-carma, SA-C221-granthih]
 sounds: []
-roots: []
+roots: [sanskrit-pitha]
+etymology_hook: "pīṭhikā ← pīṭha 'stool, seat', probably non-Aryan (CDIAL 8222); Hindi pīṛhā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C221-granthih]
 <!-- hl-knowledge: introduces=[SA-LEX-C221-THG221-05]; assesses=[] -->
 
 **पीठिका** — *pīṭhikā* — "a small stool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pīṭhikā* is *pīṭha*, "stool, seat", with the diminutive *-ikā*. MW suggests *pīṭha* may be worn down from *pi-sad*, "to sit upon", while CDIAL 8222 says its many forms suggest a non-Aryan origin; the question is not settled. It lives on as Hindi *pīṛhā*, "stool".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

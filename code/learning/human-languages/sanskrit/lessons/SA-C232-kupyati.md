@@ -14,7 +14,8 @@ romanization: "kupyati"
 concept_tag: SA-VERB-KUPYATI
 prerequisites: [SA-C232-mriyate, SA-C232-nasyati]
 sounds: []
-roots: []
+roots: [sanskrit-kupyati]
+etymology_hook: "kupyati ← root √kup 'be agitated, swell with rage' (MW); Hindi kupnā (CDIAL 3299)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C232-nasyati]
 <!-- hl-knowledge: introduces=[SA-LEX-C232-ACT232-05]; assesses=[] -->
 
 **कुप्यति** — *kupyati* — "gets angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kupyati* is the present of the root √kup, "to be moved, swell with rage" (MW). It first meant "is agitated" and then "is angry" (CDIAL 3299). Hindi *kupnā* means "to become angry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

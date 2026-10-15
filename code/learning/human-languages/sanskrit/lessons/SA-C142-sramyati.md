@@ -14,7 +14,8 @@ romanization: "śrāmyati"
 concept_tag: SA-VERB-SRAMYATI
 prerequisites: [SA-C141-tyajati, SA-C142-tusyati]
 sounds: []
-roots: []
+roots: [sanskrit-shrama]
+etymology_hook: "śrāmyati ← √śram 'toil, grow tired' (CDIAL 12693); śrama 'labour, fatigue' is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C142-tusyati]
 <!-- hl-knowledge: introduces=[SA-LEX-C142-ACT142-02]; assesses=[] -->
 
 **श्राम्यति** — *śrāmyati* — "gets tired".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śrāmyati* comes from the root √śram "toil, exert oneself, grow tired" (CDIAL 12693), already in the Rigveda. *śrama* "labour, fatigue" comes from the same root, and so does *śramika* "a labourer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "citram"
 concept_tag: SA-THINGS120-CITRAM
 prerequisites: [SA-C120-lekhah, SA-C120-granthah]
 sounds: []
-roots: []
+roots: [sanskrit-citra]
+etymology_hook: "citra 'bright, many-coloured', then 'a picture' ← √cit 'perceive, shine' (CDIAL 4803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C120-granthah]
 <!-- hl-knowledge: introduces=[SA-LEX-C120-THINGS120-05]; assesses=[] -->
 
 **चित्रम्** — *citram* — "a picture".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*citra* comes from the root √cit "perceive, appear" (CDIAL 4803): it first meant "conspicuous, bright, many-coloured", and as a noun "a picture" (MW). Pali kept it as *citta* "picture" (CDIAL 4803).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

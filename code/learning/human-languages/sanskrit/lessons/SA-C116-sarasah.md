@@ -14,7 +14,8 @@ romanization: "sārasaḥ"
 concept_tag: SA-THINGS116-SARASAH
 prerequisites: [SA-C115-citrapatangah, SA-C115-kukkutah]
 sounds: []
-roots: []
+roots: [sanskrit-sarasa]
+etymology_hook: "sārasa ← saras 'lake, pond': 'the bird of the lake', the Indian crane (MW; CDIAL 13359); Hindi sāras"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C115-kukkutah]
 <!-- hl-knowledge: introduces=[SA-LEX-C116-THINGS116-01]; assesses=[] -->
 
 **सारसः** — *sārasaḥ* — "a crane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sārasa* is built from *saras* "a lake, a pond" (CDIAL 13359): first "belonging to a lake", then the Indian crane (MW). Hindi and Marathi kept it as *sāras* "crane" (CDIAL 13359).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

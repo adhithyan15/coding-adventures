@@ -14,7 +14,8 @@ romanization: "kumbhaḥ"
 concept_tag: SA-THG191-KUMBHAH
 prerequisites: [SA-C190-jambuphalam, SA-C191-saravah]
 sounds: []
-roots: []
+roots: [sanskrit-kumbha]
+etymology_hook: "kumbha 'jar' (CDIAL 3308); MW compares Greek kymbē 'cup', and CDIAL Avestan xumba- 'pot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C191-saravah]
 <!-- hl-knowledge: introduces=[SA-LEX-C191-THG191-02]; assesses=[] -->
 
 **कुम्भः** — *kumbhaḥ* — "a pitcher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kumbha* is a Rigvedic word for a water jar (CDIAL 3308). MW compares Greek *kymbē*, "cup", and CDIAL compares Avestan *xumba-*, "pot", so it is an old word shared with Iranian. *Kumbha* is also the sign Aquarius, the water-carrier.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

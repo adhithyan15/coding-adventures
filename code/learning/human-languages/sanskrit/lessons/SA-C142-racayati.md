@@ -14,7 +14,8 @@ romanization: "racayati"
 concept_tag: SA-VERB-RACAYATI
 prerequisites: [SA-C142-tusyati, SA-C142-sramyati]
 sounds: []
-roots: []
+roots: [sanskrit-racayati]
+etymology_hook: "racayati ← √rac 'fashion, arrange' (MW, from the Dhātupāṭha); no outside cousins; racanā is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C142-sramyati]
 <!-- hl-knowledge: introduces=[SA-LEX-C142-ACT142-03]; assesses=[] -->
 
 **रचयति** — *racayati* — "composes, makes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*racayati* comes from the root √rac "produce, fashion, arrange" (MW), a class-10 root known from the grammarians' Dhātupāṭha. MW gives no outside cousins for it, and *racanā* "a composition" comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

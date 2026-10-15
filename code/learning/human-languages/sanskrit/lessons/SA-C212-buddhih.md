@@ -14,7 +14,8 @@ romanization: "buddhiḥ"
 concept_tag: SA-WEL212-BUDDHIH
 prerequisites: [SA-C211-klantih, SA-C211-snanam]
 sounds: []
-roots: []
+roots: [sanskrit-buddhi]
+etymology_hook: "buddhi ← root √budh 'wake, notice', the root of Buddha; Hindi budh (CDIAL 9277)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C211-snanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C212-WEL212-01]; assesses=[] -->
 
 **बुद्धिः** — *buddhiḥ* — "intelligence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*buddhi* is built on the root √budh, "to wake, notice, understand" (MW), the root of *buddha*, "the awakened one". MW compares the root with Greek *pynthanomai*, "I learn". It lives on as Hindi *budh*, "intelligence" (CDIAL 9277).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

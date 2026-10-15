@@ -14,7 +14,8 @@ romanization: "upadhānam"
 concept_tag: SA-THINGS99-UPADHANAM
 prerequisites: [SA-C98-yasmat, SA-C99-mancah]
 sounds: []
-roots: []
+roots: [sanskrit-upadhana]
+etymology_hook: "upadhāna ← upa-√dhā 'place upon' (√dhā 'put', cf. English do): 'what one rests on' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C99-mancah]
 <!-- hl-knowledge: introduces=[SA-LEX-C99-THINGS99-02]; assesses=[] -->
 
 **उपधानम्** — *upadhānam* — "a pillow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*upadhāna* comes from *upa-√dhā* "place upon": "that on which one rests", a pillow, already in the Atharvaveda (MW). The root √dhā "put, place" is one MW sets beside Greek *tithēmi* and English *do*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

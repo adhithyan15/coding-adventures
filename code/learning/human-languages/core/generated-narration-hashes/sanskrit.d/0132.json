@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 132,
-  "sourceHash": "fnv1a64:12615962632f7f92",
+  "sourceHash": "fnv1a64:20161a47614db3e7",
   "lessonIds": [
     "SA-C132-krsah",
     "SA-C132-vakrah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch132.txt",
   "json": "sanskrit/narration/ch132.json",
-  "textHash": "fnv1a64:16ce94802c3e7ee1",
-  "jsonHash": "fnv1a64:98e737ec3cb25a93",
+  "textHash": "fnv1a64:190e29d45e3da809",
+  "jsonHash": "fnv1a64:dc3030159c44eb8a",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "dhanam"
 concept_tag: SA-MARKET-MONEY
 prerequisites: [SA-C73-bows, SA-C74-buys]
 sounds: []
-roots: []
+roots: [sanskrit-dhana-wealth]
+etymology_hook: "dhana 'prize, booty, wealth', first the prize of a race (MW); it lives on as Hindi dhan (CDIAL 6717)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C74-buys]
 <!-- hl-knowledge: introduces=[SA-LEX-C74-MARKET-02]; assesses=[] -->
 
 **धनम्** (*dhanam*) — "money", "wealth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Dhana* first meant the prize of a contest, then booty, then wealth; MW files it
+under a root √dhan, "to run" (CDIAL 6717). It lives on as Hindi *dhan*, "wealth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

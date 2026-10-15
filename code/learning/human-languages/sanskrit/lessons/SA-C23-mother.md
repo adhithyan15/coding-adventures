@@ -14,7 +14,8 @@ romanization: "mātā"
 concept_tag: SA-NOUN-MOTHER
 prerequisites: [SA-C23-father, SA-C21-laugh, SA-C22-lead]
 sounds: []
-roots: []
+roots: [sanskrit-matr]
+etymology_hook: "mātṛ 'mother' is inherited: MW compares Latin māter and English mother; Hindi mā (CDIAL 10016)"
 duration:
   max_seconds: 210
 requires:

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a pot, then the Sanskrit for a cot.
 You'll want to know: पीठम्.
 पीठम् — pīṭham — "a seat, a stool".
 
+The word, taken apart.
+pīṭha "a stool, a seat" has an uncertain origin: MW wonders whether it is a worn form of pi-sad "sit upon", while CDIAL 8222 thinks the variety of its forms points to a non-Aryan source. It lives on as Hindi pīṛhā "low stool" (CDIAL 8222).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a cot, then the Sanskrit for a seat.
 
 You'll want to know: द्विचक्रिका.
 द्विचक्रिका — dvicakrikā — "a bicycle".
+
+The word, taken apart.
+dvicakrikā is built from dvi "two" and cakra "wheel" with the suffix -ikā: "the little two-wheeler". It is a modern coinage, made the way English bicycle was made from Latin bi- "two" and Greek kyklos "wheel"; cakra lives on as Marathi cāk "wheel" (CDIAL 4538).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a seat, then the Sanskrit for a bicycle
 You'll want to know: यानम्.
 यानम् — yānam — "a vehicle".
 
+The word, taken apart.
+yāna comes from the root √yā "go" (CDIAL 10459): first "a journey, going", then "a vehicle of any kind", as in mahāyāna "the great vehicle" (MW). The root is inherited from Indo-European (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a bicycle, then the Sanskrit for a vehi
 You'll want to know: नौयानम्.
 नौयानम् — nauyānam — "a ship".
 
+The word, taken apart.
+nauyāna is built from nau "ship, boat" and yāna "going, vehicle", from the root √yā "go"; MW already records it as "a ship". MW sets nau beside Greek naus and Latin navis, the source of English navy and naval.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a vehicle, then the Sanskrit for a ship
 
 You'll want to know: धूमयानम्.
 धूमयानम् — dhūmayānam — "a train".
+
+The word, taken apart.
+dhūmayāna is built from dhūma "smoke" and yāna "vehicle": "the smoke-carriage", a modern coinage from the days of the steam engine. MW sets dhūma beside Latin fumus "smoke", the source of English fume, and it lives on as Hindi dhuāṁ "smoke" (CDIAL 6849).
 
 What you've built.
 One more word for this chapter.

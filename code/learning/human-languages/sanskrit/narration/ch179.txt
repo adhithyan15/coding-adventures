@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a son-in-law, then the Sanskrit for a d
 You'll want to know: सैनिकः.
 सैनिकः — sainikaḥ — "a soldier".
 
+The word, taken apart.
+sainika is built on senā, "army", with the suffix -ika, "belonging to" (MW): "one who belongs to the army". Senā is the old word for "army", and it lives on as Hindi sen, "army" (CDIAL 13587).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a daughter-in-law, then the Sanskrit fo
 
 You'll want to know: रक्षकः.
 रक्षकः — rakṣakaḥ — "a guard".
+
+The word, taken apart.
+rakṣaka is built on the root √rakṣ, "to guard, protect", with the agent suffix -aka (MW): "one who guards". CDIAL 10545 records it as "watchman", and the verb rakṣati lives on as Hindi rakhnā, "to keep" (CDIAL 10547).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a soldier, then the Sanskrit for a guar
 You'll want to know: न्यायाधीशः.
 न्यायाधीशः — nyāyādhīśaḥ — "a judge".
 
+The word, taken apart.
+nyāyādhīśa is a compound of nyāya, "rule, justice, judicial sentence", and adhīśa, "lord, master" (MW). MW does not list the compound, so using it for a court judge is a modern pairing. Nyāya is built on ni- and the root √i, "to go" (CDIAL 7614).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a guard, then the Sanskrit for a judge.
 You'll want to know: अधिवक्ता.
 अधिवक्ता — adhivaktā — "a lawyer".
 
+The word, taken apart.
+adhivaktā is the nominative of adhivaktṛ, built on adhi- and vaktṛ, "speaker", from the root √vac, "to speak". MW already glosses it "an advocate, protector", the one who speaks up for you.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a judge, then the Sanskrit for a lawyer
 
 You'll want to know: लेखकः.
 लेखकः — lekhakaḥ — "a writer".
+
+The word, taken apart.
+lekhaka is built on the root √likh, "to scratch, write", which you have already met in likhati, with the agent suffix -aka (MW). It means "scribe" (CDIAL 11102), and Hindi took it over unchanged as lekhak.
 
 What you've built.
 One more word for this chapter.

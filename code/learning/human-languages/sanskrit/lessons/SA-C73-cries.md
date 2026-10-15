@@ -14,7 +14,8 @@ romanization: "roditi"
 concept_tag: SA-VERB-CRY
 prerequisites: [SA-C73-sings, SA-C73-tells]
 sounds: []
-roots: []
+roots: [sanskrit-roditi]
+etymology_hook: "roditi 'weeps' ← the root √rud 'weep'; MW compares Latin rudere 'roar'; Hindi ronā (CDIAL 10840)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C73-tells]
 <!-- hl-knowledge: introduces=[SA-LEX-C73-VOICE-03]; assesses=[] -->
 
 **रोदिति** (*roditi*) — "(he, she) cries", the verb of **दुःखम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Roditi* is the present of the root √rud, "to weep, howl". MW compares Latin
+*rudere*, "to roar". It lives on as Hindi *ronā*, "to weep" (CDIAL 10840).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

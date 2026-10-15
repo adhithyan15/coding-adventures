@@ -14,7 +14,8 @@ romanization: "śunakaḥ"
 concept_tag: SA-ANIMAL-SHUNAKA
 prerequisites: [SA-C39-fish, SA-C37-congratulations, SA-C38-sand]
 sounds: []
-roots: []
+roots: [sanskrit-shvan]
+etymology_hook: "śunaka 'little dog' ← śvan 'dog' (MW); MW compares Greek kuōn, Latin canis and English hound"
 duration:
   max_seconds: 210
 requires:

@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Courtesy Words",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:d911223c02d5ffd9",
+  "sourceHash": "fnv1a64:285e58c2e524e5ba",
   "lessons": [
     {
       "id": "SA-C29-please",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7aa1fe31994cfd01",
+      "sourceHash": "fnv1a64:10fa3cdb5a9ef70b",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kṛpayā is the instrumental case of kṛpā, \"pity, compassion\" (MW), a noun MW files under the root √kṛp. Hindi has borrowed the whole word unchanged."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:530ec5190d65cebe",
+      "sourceHash": "fnv1a64:70796732a98f3943",
       "notice": null,
       "blocks": [
         {
@@ -194,12 +205,23 @@
             },
             {
               "kind": "speech",
-              "text": "Notice that Sanskrit has now given you three of these impersonal commands: अस्तु, \"let it be\", क्षम्यताम् (kṣamyatām), \"let it be forgiven\", and स्वस्ति, \"may it be well\". A polite language often prefers to leave the person out."
+              "text": "Notice that Sanskrit has now given you two of these impersonal commands, अस्तु, \"let it be\", and क्षम्यताम् (kṣamyatām), \"let it be forgiven\", and a wish in the same spirit, स्वस्ति, \"may it be well\". A polite language often prefers to leave the person out."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kṣamyatām is the passive command form of the root √kṣam, \"to be patient, bear with, forgive\"; MW cites this very form. The noun kṣamā, \"patience, forgiveness\", is built on the same root (CDIAL 3659)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -210,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -299,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8842da05cc5e6643",
+      "sourceHash": "fnv1a64:80df34b315a3f499",
       "notice": null,
       "blocks": [
         {
@@ -340,6 +362,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Praṇāma is built from the prefix pra, \"forward\", and the root √nam, \"to bend, bow\" (MW), the root inside namas."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -350,7 +383,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -408,7 +441,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -439,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e281790ee969406",
+      "sourceHash": "fnv1a64:7c8271521037689d",
       "notice": null,
       "blocks": [
         {
@@ -490,6 +523,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Upakāra is built from the prefix upa, \"toward\", and kāra, \"a doing\", from the root √kṛ (MW, CDIAL 2141)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -558,7 +602,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -589,7 +633,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1f24902df6dc9c7",
+      "sourceHash": "fnv1a64:96d4a3c4263865bc",
       "notice": null,
       "blocks": [
         {
@@ -630,6 +674,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Dhanya is built from dhana, \"prize, wealth\": first \"bringing wealth, rich\", then \"fortunate\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -640,7 +695,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -698,7 +753,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "gṛhakāryam"
 concept_tag: SA-SCH255-GRHAKARYAM
 prerequisites: [SA-C255-jnanam, SA-C255-abhyasah]
 sounds: []
-roots: []
+roots: [grha-sanskrit, sanskrit-karya]
+etymology_hook: "gṛhakārya = gṛha 'house' + kārya 'work to be done', from √kṛ; MW 'a domestic affair'; 'homework' is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C255-abhyasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C255-SCH255-04]; assesses=[] -->
 
 **गृहकार्यम्** — *gṛhakāryam* — "homework".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gṛhakārya* is a compound of *gṛha*, "house", and *kārya*, "what is to be done", from the root √kṛ (MW; CDIAL 3078). MW glosses it "a domestic affair"; its use for school homework is modern. *Kārya* lives on as Hindi *kāj*, "work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

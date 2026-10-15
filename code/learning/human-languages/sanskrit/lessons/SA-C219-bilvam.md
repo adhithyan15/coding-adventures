@@ -14,7 +14,8 @@ romanization: "bilvam"
 concept_tag: SA-THG219-BILVAM
 prerequisites: [SA-C218-halam, SA-C218-datram]
 sounds: []
-roots: []
+roots: [sanskrit-bilva]
+etymology_hook: "bilva 'bael', of Dravidian origin (CDIAL 9248); DEDR 5509 compares it with a question mark; Hindi bīl"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C218-datram]
 <!-- hl-knowledge: introduces=[SA-LEX-C219-THG219-01]; assesses=[] -->
 
 **बिल्वम्** — *bilvam* — "a bael fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bilva* is of Dravidian origin, CDIAL 9248 says, while DEDR 5509 sets Dravidian wood-apple words such as Telugu *velāga* beside it only with a question mark. It lives on as Hindi *bīl*, the tree.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

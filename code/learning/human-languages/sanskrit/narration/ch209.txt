@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for an enemy, then the Sanskrit for a neigh
 You'll want to know: कविः.
 कविः — kaviḥ — "a poet".
 
+The word, taken apart.
+kavi is a Rigvedic word for a wise man or seer, and later a poet (CDIAL 2964). MW links it to a root √kū and to kāvya, "poetry". Hindi, Telugu and Malayalam took it over as their word for "poet".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a neighbour, then the Sanskrit for a po
 
 You'll want to know: गायकः.
 गायकः — gāyakaḥ — "a singer".
+
+The word, taken apart.
+gāyaka is built on the root √gai, "to sing", with the agent suffix -aka (MW): "one who sings". The verb gāyati lives on as Gujarati gāvũ, "sings" (CDIAL 4135).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a poet, then the Sanskrit for a singer.
 You'll want to know: नर्तकः.
 नर्तकः — nartakaḥ — "a dancer".
 
+The word, taken apart.
+nartaka is built on the causative of the root √nṛt, "to dance" (MW), the root of nṛtya, "dance", which you have already met. The verb nṛtyati lives on as Hindi nācnā, "to dance" (CDIAL 7583).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a singer, then the Sanskrit for a dance
 You'll want to know: चित्रकारः.
 चित्रकारः — citrakāraḥ — "a painter".
 
+The word, taken apart.
+citrakāra is a compound of citra, "bright, variegated; a picture", and kāra, "maker", from the root √kṛ (MW; CDIAL 4807). It lives on as Hindi citārī, "painter".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a dancer, then the Sanskrit for a paint
 
 You'll want to know: शिल्पी.
 शिल्पी — śilpī — "a craftsman, a sculptor".
+
+The word, taken apart.
+śilpī is the nominative of śilpin, "one who has a craft", built on śilpa, "art, craft" (MW). MW calls śilpa "of doubtful derivation", so its origin is uncertain.
 
 What you've built.
 One more word for this chapter.

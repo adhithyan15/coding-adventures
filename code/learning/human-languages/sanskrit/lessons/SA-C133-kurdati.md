@@ -14,7 +14,8 @@ romanization: "kūrdati"
 concept_tag: SA-VERB-KURDATI
 prerequisites: [SA-C133-uddayate, SA-C133-tarati]
 sounds: []
-roots: []
+roots: [sanskrit-kurdati]
+etymology_hook: "kūrdati 'leaps' is probably borrowed from Dravidian, after Burrow (CDIAL 3412); Hindi kūdnā 'to jump'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C133-tarati]
 <!-- hl-knowledge: introduces=[SA-LEX-C133-QUAL133-05]; assesses=[] -->
 
 **कूर्दति** — *kūrdati* — "jumps".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kūrdati* "leaps, jumps" is probably borrowed from Dravidian: CDIAL 3412, after Burrow, compares a Dravidian verb for springing. It lives on as Hindi *kūdnā* "to jump" (CDIAL 3412).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

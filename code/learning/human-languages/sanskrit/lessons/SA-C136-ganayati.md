@@ -14,7 +14,8 @@ romanization: "gaṇayati"
 concept_tag: SA-VERB-GANAYATI
 prerequisites: [SA-C136-prapnoti, SA-C136-dharayati]
 sounds: []
-roots: []
+roots: [sanskrit-ganayati]
+etymology_hook: "gaṇayati 'counts' (MBh); CDIAL 3993 suggests a worn form of gṛṇ- 'address'; origin uncertain; Hindi ginnā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C136-dharayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C136-ACT136-03]; assesses=[] -->
 
 **गणयति** — *gaṇayati* — "counts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gaṇayati* "counts, reckons" appears from the Mahābhārata on. CDIAL 3993, after J. C. Wright, suggests it grew from a Middle Indic form of *gṛṇ-* "address, praise", so its origin is uncertain. It lives on as Hindi *ginnā* "to count" (CDIAL 3993).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

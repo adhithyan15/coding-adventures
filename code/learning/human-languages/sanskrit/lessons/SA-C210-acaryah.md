@@ -14,7 +14,8 @@ romanization: "ācāryaḥ"
 concept_tag: SA-PPL210-ACARYAH
 prerequisites: [SA-C209-citrakarah, SA-C209-silpi]
 sounds: []
-roots: []
+roots: [sanskrit-acarya]
+etymology_hook: "ācārya 'teacher': MW 'one who knows or teaches the ācāra', the rules of conduct, from ā + √car (CDIAL 1072)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C209-silpi]
 <!-- hl-knowledge: introduces=[SA-LEX-C210-PPL210-01]; assesses=[] -->
 
 **आचार्यः** — *ācāryaḥ* — "a preceptor, a teacher".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ācārya* is built on *ācāra*, "conduct, the rules of behaviour", from *ā-* with the root √car, "to move, behave" (MW; CDIAL 1072). MW explains it as "one who knows or teaches the rules". Tamil *āciriyar*, "teacher", was borrowed from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

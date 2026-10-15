@@ -14,7 +14,8 @@ romanization: "akṣaram"
 concept_tag: SA-SCH168-AKSARAM
 prerequisites: [SA-C168-kaksa, SA-C168-adhyayah]
 sounds: []
-roots: []
+roots: [sanskrit-akshara]
+etymology_hook: "akṣara 'imperishable', then 'syllable, letter' ← a- 'not' + kṣara 'perishing' (MW; CDIAL 38)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C168-adhyayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C168-SCH168-03]; assesses=[] -->
 
 **अक्षरम्** — *akṣaram* — "a syllable, a letter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*akṣara* is built from *a-* "not" and *kṣara* "perishing, melting away" (MW; CDIAL 38): "imperishable", and so "a syllable, a letter". It lives on as Hindi *ākhar* "letter" (CDIAL 38).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

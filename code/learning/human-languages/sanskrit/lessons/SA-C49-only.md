@@ -14,7 +14,8 @@ romanization: "kevalam"
 concept_tag: SA-REPLY4-KEVALA
 prerequisites: [SA-C49-as, SA-C47-stair, SA-C48-goat]
 sounds: []
-roots: []
+roots: [sanskrit-kevala]
+etymology_hook: "kevalam, adverb of kevala 'exclusively one's own, alone', a Rigvedic word of unclear origin (MW; CDIAL 3470)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C49-as]
 Put it in front of what you are naming and it narrows the claim: **केवलम्** दुग्धम्, "only milk". It is the ordinary Sanskrit "only", not a poetic one.
 
 It also stands alone. Asked how much of a thing there is, **केवलम्** on its own is a complete and slightly rueful answer.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kevalam* is the adverb of *kevala*, "exclusively one's own, alone", already in
+the Rigveda (MW). Its origin is unclear: MW gives no root for it. Gujarati *kevaḷ*
+keeps it (CDIAL 3470).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

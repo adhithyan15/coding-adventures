@@ -14,7 +14,8 @@ romanization: "vamanam"
 concept_tag: SA-WEL150-VAMANAM
 prerequisites: [SA-C150-vranah, SA-C150-sothah]
 sounds: []
-roots: []
+roots: [sanskrit-vamana]
+etymology_hook: "vamana 'vomiting' ← √vam 'vomit' (CDIAL 11295), which MW sets beside Latin vomere, cf. English vomit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C150-sothah]
 <!-- hl-knowledge: introduces=[SA-LEX-C150-WEL150-04]; assesses=[] -->
 
 **वमनम्** — *vamanam* — "vomiting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vamana* comes from the root √vam "vomit" (CDIAL 11295). MW sets √vam beside Greek *emeō* and Latin *vomere*, the source of English *vomit*: one inherited Indo-European root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

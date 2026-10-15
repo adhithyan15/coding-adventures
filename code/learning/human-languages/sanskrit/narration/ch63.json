@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "The Endings Before It",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:681cad5a2f66a572",
+  "sourceHash": "fnv1a64:9509e1d03b20e562",
   "lessons": [
     {
       "id": "SA-C63-sixth",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e226834516349367",
+      "sourceHash": "fnv1a64:a664ed3a86a3467d",
       "notice": null,
       "blocks": [
         {
@@ -216,7 +216,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b51230b72717ffba",
+      "sourceHash": "fnv1a64:cbf5c5664aa105d0",
       "notice": null,
       "blocks": [
         {
@@ -411,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7a011c9cd4a995c",
+      "sourceHash": "fnv1a64:d05f354be540edb7",
       "notice": null,
       "blocks": [
         {
@@ -506,6 +506,10 @@
             {
               "kind": "speech",
               "text": "The English cousin kept the -t- ending instead: thir-d, from an older thrid-. Latin took the same road with tertius."
+            },
+            {
+              "kind": "speech",
+              "text": "Tṛtīya is built on tri, \"three\", and is inherited: MW compares Latin tertius and Gothic thridja, the cousin of English third (CDIAL 5912)."
             }
           ]
         },
@@ -596,7 +600,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4dc96e5aa6c0f7c9",
+      "sourceHash": "fnv1a64:d5094db38fac5628",
       "notice": null,
       "blocks": [
         {
@@ -704,6 +708,10 @@
             {
               "kind": "speech",
               "text": "Sanskrit also uses द्वितीयः (dvitīyaḥ) for \"a companion\" — the second person in a pair. Macdonell lists that sense right beside the numeral."
+            },
+            {
+              "kind": "speech",
+              "text": "Dvitīya is built on dvi, the combining form of the inherited numeral dva (MW, CDIAL 6680)."
             }
           ]
         },
@@ -794,7 +802,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4712b68b0b15ef28",
+      "sourceHash": "fnv1a64:c0c2dd411d9f022c",
       "notice": null,
       "blocks": [
         {
@@ -897,6 +905,10 @@
             {
               "kind": "speech",
               "text": "That is why this chapter saved it for last. Every other ordinal in these two chapters answered the question what happens to the number? This one answers a different question, and it could only be heard as different once the other nine had answered the first one."
+            },
+            {
+              "kind": "speech",
+              "text": "MW gives the same account, pra-tama, the superlative of pra (CDIAL 8648), and CDIAL notes that many modern languages replaced the word with newer forms."
             }
           ]
         },

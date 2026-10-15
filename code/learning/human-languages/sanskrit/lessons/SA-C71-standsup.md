@@ -14,7 +14,8 @@ romanization: "uttiṣṭhati"
 concept_tag: SA-VERB-STAND-UP
 prerequisites: [SA-C71-walks, SA-C71-sits]
 sounds: []
-roots: []
+roots: [sanskrit-uttishthati, sanskrit-tishthati]
+etymology_hook: "uttiṣṭhati 'stands up' ← ud 'up' + tiṣṭhati, from the root √sthā 'stand' (CDIAL 1793)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,12 @@ reviews_of: [SA-C71-sits]
 
 **उत्तिष्ठति** (*uttiṣṭhati*) — "(he, she) gets up": **उत्**, "up", with **तिष्ठति**,
 "stands", which you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Uttiṣṭhati* is built from *ud*, "up", and *tiṣṭhati*, "stands", from the root
+√sthā (CDIAL 1793).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

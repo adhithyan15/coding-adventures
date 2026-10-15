@@ -14,7 +14,8 @@ romanization: "saktuḥ"
 concept_tag: SA-THG246-SAKTUH
 prerequisites: [SA-C246-lajah, SA-C246-dhanyam]
 sounds: []
-roots: []
+roots: [sanskrit-saktu]
+etymology_hook: "saktu 'coarse barley meal', a Rigvedic word (CDIAL 13070); origin uncertain; Hindi sattū"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C246-dhanyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C246-THG246-03]; assesses=[] -->
 
 **सक्तुः** — *saktuḥ* — "barley flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*saktu* is coarsely ground meal, especially of barley, already in the Rigveda (CDIAL 13070). MW gives no derivation, so its origin is uncertain. It lives on as Hindi *sattū*, the flour of parched grain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

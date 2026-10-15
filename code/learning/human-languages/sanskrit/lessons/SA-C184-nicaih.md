@@ -14,7 +14,8 @@ romanization: "nīcaiḥ"
 concept_tag: SA-LOC184-NICAIH
 prerequisites: [SA-C184-antara, SA-C184-uccaih]
 sounds: []
-roots: []
+roots: [sanskrit-nica]
+etymology_hook: "nīcaiḥ 'low, softly' ← nīca 'low' = ni 'down' + √añc 'bend' (MW); Hindi nīcā (CDIAL 7540)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C184-uccaih]
 <!-- hl-knowledge: introduces=[SA-LEX-C184-LOC184-05]; assesses=[] -->
 
 **नीचैः** — *nīcaiḥ* — "softly, low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nīcaiḥ* is an old case form of *nīca*, "low", which MW takes apart as *ni* "down" and √añc "bend". It is the mirror image of *uccaiḥ*, and *nīca* lives on as Hindi *nīcā* (CDIAL 7540).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

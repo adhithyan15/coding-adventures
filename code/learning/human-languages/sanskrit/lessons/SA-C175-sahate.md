@@ -14,7 +14,8 @@ romanization: "sahate"
 concept_tag: SA-VERB-SAHATE
 prerequisites: [SA-C175-bharati, SA-C175-vahati]
 sounds: []
-roots: []
+roots: [sanskrit-sahate]
+etymology_hook: "sahate ← root √sah 'prevail, bear, endure' (MW); it lives on as Hindi sahnā 'to bear' (CDIAL 13304)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C175-vahati]
 <!-- hl-knowledge: introduces=[SA-LEX-C175-ACT175-04]; assesses=[] -->
 
 **सहते** — *sahate* — "endures, bears".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sahate* is the present of the root √sah. In the Rigveda it means "conquers, prevails", and later "bears, endures" (MW; CDIAL 13304). It lives on as Hindi *sahnā*, "to bear" (CDIAL 13304).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

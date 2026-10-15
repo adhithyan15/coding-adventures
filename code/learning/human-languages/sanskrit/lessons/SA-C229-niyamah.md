@@ -14,7 +14,8 @@ romanization: "niyamaḥ"
 concept_tag: SA-SCH229-NIYAMAH
 prerequisites: [SA-C228-nrtyam, SA-C228-citrakala]
 sounds: []
-roots: []
+roots: [sanskrit-niyama]
+etymology_hook: "niyama ← ni- + √yam 'hold back': 'restraint', then 'fixed rule' (MW; CDIAL 7250)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C228-citrakala]
 <!-- hl-knowledge: introduces=[SA-LEX-C229-SCH229-01]; assesses=[] -->
 
 **नियमः** — *niyamaḥ* — "a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*niyama* is built on *ni-* and the root √yam, "to hold, restrain" (MW): first "restraint", then "fixed law" (CDIAL 7250). Hindi *newā*, "custom, method", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

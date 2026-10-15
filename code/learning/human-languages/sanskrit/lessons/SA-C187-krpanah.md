@@ -14,7 +14,8 @@ romanization: "kṛpaṇaḥ"
 concept_tag: SA-QUAL187-KRPANAH
 prerequisites: [SA-C187-dayaluh, SA-C187-udarah]
 sounds: []
-roots: []
+roots: [sanskrit-krpana]
+etymology_hook: "kṛpaṇa ← root √kṛp 'mourn, lament': first 'pitiable', then 'miserly' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C187-udarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C187-QUAL187-03]; assesses=[] -->
 
 **कृपणः** — *kṛpaṇaḥ* — "stingy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kṛpaṇa* is built on the root √kṛp, "to mourn, lament, implore" (MW). It first meant "pitiable, wretched", and later "miserly, stingy": the miser as a poor soul.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

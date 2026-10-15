@@ -14,7 +14,8 @@ romanization: "paṇaḥ"
 concept_tag: SA-THG248-PANAH
 prerequisites: [SA-C248-nidhih, SA-C248-rupyakam]
 sounds: []
-roots: []
+roots: [sanskrit-pana-wager]
+etymology_hook: "paṇa 'wager, stake' ← √paṇ 'barter' (CDIAL 7714); the coin sense may be Austroasiatic (CDIAL 7715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C248-rupyakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C248-THG248-04]; assesses=[] -->
 
 **पणः** — *paṇaḥ* — "a stake, a wager, a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paṇa* is built on the root √paṇ, "to barter, bet" (MW): "a wager, a stake", and so wages (CDIAL 7714). As the name of a coin, CDIAL 7715 treats it as a separate word, perhaps Austroasiatic. Hindi *pan* means "promise".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

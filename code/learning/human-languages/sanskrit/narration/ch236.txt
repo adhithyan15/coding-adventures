@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for embraces, then the Sanskrit for kisses.
 You'll want to know: शिशुः.
 शिशुः — śiśuḥ — "a baby, an infant".
 
+The word, taken apart.
+śiśu is a Rigvedic word for "the young of an animal, a child" (CDIAL 12476). MW derives it from √śū, "to swell", that is, to grow. It lives on as Hindi sisu, "infant".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for kisses, then the Sanskrit for a baby.
 
 You'll want to know: कुमारः.
 कुमारः — kumāraḥ — "a boy, a youth".
+
+The word, taken apart.
+kumāra is a Rigvedic word for "boy" (CDIAL 3303). CDIAL suggests a first sense "weak, tender", perhaps related to komala, "soft", which you have already met. MW offers two hedged derivations, so the origin is uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a baby, then the Sanskrit for a boy.
 You'll want to know: कुमारी.
 कुमारी — kumārī — "a maiden, a girl".
 
+The word, taken apart.
+kumārī is the feminine of kumāra, "boy", made with the ending -ī (MW). The Atharvaveda already has it as "young girl" (CDIAL 3303), and Punjabi kãvārī, "virgin", comes from it. India's southern tip, Kanyakumari, is named after the maiden goddess.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a boy, then the Sanskrit for a maiden.
 You'll want to know: युवतिः.
 युवतिः — yuvatiḥ — "a young woman".
 
+The word, taken apart.
+yuvati is the feminine of yuvan, "young" (MW), a Rigvedic word (CDIAL 10504). The stem is inherited from Indo-European: MW compares Latin iuvenis and English young. Hindi joī, "wife", comes from yuvati.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a maiden, then the Sanskrit for a young
 
 You'll want to know: पुरुषः.
 पुरुषः — puruṣaḥ — "a person, a man".
+
+The word, taken apart.
+puruṣa is a Rigvedic word for "man, male" (CDIAL 8289). MW derives it, probably, from √pṝ, "to fill", and connects it with puru, "much"; the derivation is not settled. In philosophy it names the conscious self.
 
 What you've built.
 One more word for this chapter.

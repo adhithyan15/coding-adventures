@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 118,
-  "sourceHash": "fnv1a64:e39ab2d9887e2537",
+  "sourceHash": "fnv1a64:ec9c2a1d20a264b9",
   "lessonIds": [
     "SA-C118-gulphah",
     "SA-C118-angulih",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch118.txt",
   "json": "sanskrit/narration/ch118.json",
-  "textHash": "fnv1a64:582c04cbacf736b8",
-  "jsonHash": "fnv1a64:dc8eb897a49b8a92",
+  "textHash": "fnv1a64:710ed4ac4c435b58",
+  "jsonHash": "fnv1a64:74f5ab10b461cf21",
   "findings": []
 }

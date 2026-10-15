@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 177,
-  "sourceHash": "fnv1a64:9db309065eb2dbdb",
+  "sourceHash": "fnv1a64:d7e58213668d3eca",
   "lessonIds": [
     "SA-C177-pracchadayati",
     "SA-C177-vitarati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch177.txt",
   "json": "sanskrit/narration/ch177.json",
-  "textHash": "fnv1a64:28516dd1a5f5d955",
-  "jsonHash": "fnv1a64:80dec52c67a9a6f1",
+  "textHash": "fnv1a64:0f10be8d0304ff4c",
+  "jsonHash": "fnv1a64:585e173505919e7c",
   "findings": []
 }

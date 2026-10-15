@@ -14,7 +14,8 @@ romanization: "vātāyanam"
 concept_tag: SA-DWELL-VATAYANA
 prerequisites: [SA-C47-wall, SA-C45-noon, SA-C46-ray]
 sounds: []
-roots: []
+roots: [sanskrit-vatayana]
+etymology_hook: "vātāyana 'window' ← vāta 'wind' + ayana 'way, passage': 'wind-passage' (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C47-wall]
 It is *vāta*, wind, joined to *ayana*, a going: a window is the wind's way in. You already say वायुः for wind, and *vāta* is its near relative from the same root, "to blow".
 
 Set it against भित्तिः and the pair makes sense of a room: the wall shuts, the window opens. Neuter, ending in **-अम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vātāyana* is a compound of *vāta*, "wind", built on the root √vā "to blow", and
+*ayana*, "a going, a passage"; MW glosses it "wind-passage".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

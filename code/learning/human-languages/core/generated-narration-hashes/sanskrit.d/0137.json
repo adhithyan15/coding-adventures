@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 137,
-  "sourceHash": "fnv1a64:66e0a772e7e96534",
+  "sourceHash": "fnv1a64:e23fb295d3434169",
   "lessonIds": [
     "SA-C137-sivyati",
     "SA-C137-jayati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch137.txt",
   "json": "sanskrit/narration/ch137.json",
-  "textHash": "fnv1a64:de867f2ef2a0d135",
-  "jsonHash": "fnv1a64:4b09df51bca13551",
+  "textHash": "fnv1a64:2215c57c83713803",
+  "jsonHash": "fnv1a64:379b93f1a2836ebb",
   "findings": []
 }

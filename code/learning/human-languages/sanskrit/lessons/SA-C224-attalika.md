@@ -14,7 +14,8 @@ romanization: "aṭṭālikā"
 concept_tag: SA-THG224-ATTALIKA
 prerequisites: [SA-C223-mathah, SA-C224-kendram]
 sounds: []
-roots: []
+roots: [sanskrit-atta-tower]
+etymology_hook: "aṭṭālikā ← aṭṭāla 'watch-tower', from aṭṭa 'tower', which Mayrhofer calls non-Aryan (CDIAL 185, 180)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C224-kendram]
 <!-- hl-knowledge: introduces=[SA-LEX-C224-THG224-02]; assesses=[] -->
 
 **अट्टालिका** — *aṭṭālikā* — "a tall building".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aṭṭālikā* is built on *aṭṭāla*, "watch-tower" (CDIAL 185), from *aṭṭa*, "high; tower". CDIAL 180 reports Mayrhofer's view that *aṭṭa* is non-Aryan, so it was probably borrowed. MW glosses *aṭṭālikā* "a palace".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

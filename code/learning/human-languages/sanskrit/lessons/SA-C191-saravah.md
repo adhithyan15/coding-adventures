@@ -14,7 +14,8 @@ romanization: "śarāvaḥ"
 concept_tag: SA-THG191-SARAVAH
 prerequisites: [SA-C190-amalakam, SA-C190-jambuphalam]
 sounds: []
-roots: []
+roots: [sanskrit-sharava]
+etymology_hook: "śarāva 'shallow earthen dish', origin uncertain (no derivation in MW or CDIAL); Hindi sarā (CDIAL 12334)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C190-jambuphalam]
 <!-- hl-knowledge: introduces=[SA-LEX-C191-THG191-01]; assesses=[] -->
 
 **शरावः** — *śarāvaḥ* — "an earthen dish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śarāva* is a shallow dish or platter of earthenware, and also its flat lid (MW). Neither MW nor CDIAL 12334 gives a derivation, so its origin is uncertain. It lives on as Hindi *sarā*, "earthen cover".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

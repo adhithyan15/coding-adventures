@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for the roof, then the Sanskrit for a key.
 You'll want to know: आम्रम्.
 आम्रम् (āmram) — "a mango", the फलम् of summer.
 
+The word, taken apart.
+Āmra is already in the Śatapatha Brāhmaṇa, but its origin is unclear: MW gives no root for it. It lives on as Hindi ām, "mango" (CDIAL 1268).
+
 What you've built.
 The summer fruit.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a key, then the Sanskrit for a mango.
 
 You'll want to know: कदलीफलम्.
 कदलीफलम् (kadalīphalam) — "a banana": कदली, "the banana plant", with फलम्, "fruit".
+
+The word, taken apart.
+Kadalīphala is a compound of kadalī, "the banana plant", and phala, "fruit". CDIAL 2712 takes kadalī as borrowed from an Austroasiatic language; it lives on as Hindi kelā, "banana".
 
 What you've built.
 Plant plus fruit.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a mango, then the Sanskrit for a banana
 You'll want to know: तैलम्.
 तैलम् (tailam) — "oil", for cooking and for the दीपः.
 
+The word, taken apart.
+Taila is built from tila, "sesame": oil was first sesame oil (MW, CDIAL 5958). It lives on as Hindi tel, "oil".
+
 What you've built.
 What the lamp burns.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a banana, then the Sanskrit for oil.
 You'll want to know: रोटिका.
 रोटिका (roṭikā) — "flatbread", eaten with शाकम्.
 
+The word, taken apart.
+Roṭikā is a late word, recorded in a medical text (MW). CDIAL 10837 sets it beside an unattested roṭṭa, "bread", the source of Hindi roṭī; where that word came from is not settled.
+
 What you've built.
 The bread beside the rice.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for oil, then the Sanskrit for flatbread.
 
 You'll want to know: पायसम्.
 पायसम् (pāyasam) — rice cooked in क्षीरम् with शर्करा: the sweet of every festival.
+
+The word, taken apart.
+Pāyasa is built from payas, "milk, juice": first "made with milk", then rice boiled in milk (MW, CDIAL 8099).
 
 What you've built.
 The festival sweet.

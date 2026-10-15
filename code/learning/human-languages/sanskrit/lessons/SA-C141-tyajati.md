@@ -14,7 +14,8 @@ romanization: "tyajati"
 concept_tag: SA-VERB-TYAJATI
 prerequisites: [SA-C141-carati, SA-C141-sprsati]
 sounds: []
-roots: []
+roots: [sanskrit-tyajati]
+etymology_hook: "tyajati ← √tyaj 'leave, give up' (CDIAL 5984), inherited from Indo-European (EtymDB); tyāga is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C141-sprsati]
 <!-- hl-knowledge: introduces=[SA-LEX-C141-ACT141-05]; assesses=[] -->
 
 **त्यजति** — *tyajati* — "leaves, gives up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tyajati* comes from the root √tyaj "leave, abandon, give up" (CDIAL 5984), inherited from Indo-European (EtymDB). *tyāga* "renunciation" comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

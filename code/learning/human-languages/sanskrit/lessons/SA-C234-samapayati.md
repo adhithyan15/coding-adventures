@@ -14,7 +14,8 @@ romanization: "samāpayati"
 concept_tag: SA-VERB-SAMAPAYATI
 prerequisites: [SA-C234-plavate, SA-C234-arabhate]
 sounds: []
-roots: []
+roots: [sanskrit-samapayati, sanskrit-ap-reach]
+etymology_hook: "samāpayati ← sam + causative of √āp 'reach, obtain': 'causes to reach completely' (MW; CDIAL 13216)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C234-arabhate]
 <!-- hl-knowledge: introduces=[SA-LEX-C234-ACT234-04]; assesses=[] -->
 
 **समापयति** — *samāpayati* — "finishes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*samāpayati* is the causative of *sam-āp*, "to obtain completely", from the root √āp, "to reach, obtain" (MW). It first meant "causes to gain completely" and then "finishes" (CDIAL 13216). MW compares √āp with Latin *apīscor*, "I reach", and *aptus*, "fitted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

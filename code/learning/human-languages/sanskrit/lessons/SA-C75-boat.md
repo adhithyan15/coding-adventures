@@ -14,7 +14,8 @@ romanization: "naukā"
 concept_tag: SA-TRAVEL-BOAT
 prerequisites: [SA-C75-vehicle, SA-C75-chariot]
 sounds: []
-roots: []
+roots: [sanskrit-nau]
+etymology_hook: "naukā 'small boat' ← nau 'ship'; MW compares Greek naus and Latin nāvis"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C75-chariot]
 <!-- hl-knowledge: introduces=[SA-LEX-C75-TRAVEL-03]; assesses=[] -->
 
 **नौका** (*naukā*) — "a boat", the way across a **नदी**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Naukā* is built from *nau*, "ship", with the small-thing ending *-kā* (MW). It is
+inherited: MW compares Greek *naus* and Latin *nāvis*, the source of English
+**naval** and **navy**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

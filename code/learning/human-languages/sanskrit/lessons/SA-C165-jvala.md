@@ -14,7 +14,8 @@ romanization: "jvālā"
 concept_tag: SA-THG165-JVALA
 prerequisites: [SA-C165-dhulih, SA-C165-dhumah]
 sounds: []
-roots: []
+roots: [sanskrit-jvalati]
+etymology_hook: "jvālā 'flame' ← √jval 'blaze, glow' (MW); jvalati 'burns' is its verb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C165-dhumah]
 <!-- hl-knowledge: introduces=[SA-LEX-C165-THG165-03]; assesses=[] -->
 
 **ज्वाला** — *jvālā* — "a flame".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jvālā* comes from the root √jval "blaze, glow, burn brightly" (MW): "a flame, a blaze". *jvalati* "burns" is the verb of the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

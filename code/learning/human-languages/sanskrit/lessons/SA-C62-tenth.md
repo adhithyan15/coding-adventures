@@ -14,7 +14,8 @@ romanization: "daśamaḥ"
 concept_tag: SA-ORDINAL-TENTH
 prerequisites: [SA-C62-ninth, SA-S225-letter-vocalic-r, SA-C51-husband, SA-C43-hospitality, SA-C19-ten]
 sounds: []
-roots: []
+roots: [sanskrit-dashama]
+etymology_hook: "daśama 'tenth' ← daśan 'ten' + -ma; MW compares Latin decimus (CDIAL 6233)"
 duration:
   max_seconds: 225
 requires:
@@ -67,6 +68,9 @@ Five ordinals, one ending, nothing memorised.
 Now look at the left-hand column and find what is missing. **षट्** is not there. You have counted with it since chapter nineteen and this chapter has walked straight past it.
 
 That was on purpose, and it is not because *sixth* is rare. **षट्** is the one number between five and ten whose ordinal does NOT take **-म**, and the next chapter opens on it — because a hole is only interesting once the thing around it is solid.
+
+MW compares *daśama* directly with Latin *decimus*: the two ordinals are inherited
+cousins, ending and all (CDIAL 6233).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C62-ORDINAL-06, SA-GRAMMAR-C62-ORDINAL-MA-02] -->

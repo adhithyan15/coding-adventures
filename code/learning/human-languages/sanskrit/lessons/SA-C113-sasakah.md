@@ -14,7 +14,8 @@ romanization: "śaśakaḥ"
 concept_tag: SA-THINGS113-SASAKAH
 prerequisites: [SA-C112-bhallukah, SA-C112-srgalah]
 sounds: []
-roots: []
+roots: [sanskrit-shasha]
+etymology_hook: "śaśaka ← śaśa 'hare' + -ka; inherited from Indo-European, cousin of English hare (EtymDB; MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C112-srgalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C113-THINGS113-01]; assesses=[] -->
 
 **शशकः** — *śaśakaḥ* — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śaśaka* is *śaśa* "hare" with the suffix *-ka* (CDIAL 12357). *śaśa* is inherited from Indo-European: MW records the view that it is the same word as German *Hase* and English *hare*, and EtymDB agrees. It lives on as Marathi *sasā* "hare" (CDIAL 12357).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

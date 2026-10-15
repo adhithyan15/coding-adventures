@@ -14,7 +14,8 @@ romanization: "yantram"
 concept_tag: SA-THINGS105-YANTRAM
 prerequisites: [SA-C105-duradarsanam, SA-C105-sanganakam]
 sounds: []
-roots: []
+roots: [sanskrit-yantra]
+etymology_hook: "yantra ← √yam 'hold, restrain' + -tra 'tool': 'a holding device' (CDIAL 10412); Punjabi jandrā 'padlock'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C105-sanganakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C105-THINGS105-03]; assesses=[] -->
 
 **यन्त्रम्** — *yantram* — "a machine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yantra* comes from the root √yam "hold, restrain" with the tool suffix *-tra* (CDIAL 10412): in the Rigveda it is a controlling device, a prop or a fetter, and later any contrivance or machine (MW). Punjabi *jandrā* "padlock" comes from it (CDIAL 10412).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

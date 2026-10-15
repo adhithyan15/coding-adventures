@@ -14,7 +14,8 @@ romanization: "bhayaṅkaraḥ"
 concept_tag: SA-QUAL128-BHAYANKARAH
 prerequisites: [SA-C127-prasiddhah, SA-C127-suraksitah]
 sounds: []
-roots: []
+roots: [sanskrit-bhaya]
+etymology_hook: "bhayaṅkara ← bhaya 'fear' (√bhī 'fear', MW) + -ṃ-kara 'making' (√kṛ): 'fear-making'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C127-suraksitah]
 <!-- hl-knowledge: introduces=[SA-LEX-C128-QUAL128-01]; assesses=[] -->
 
 **भयंकरः** — *bhayaṅkaraḥ* — "terrible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhayaṅkara* is built from *bhaya* "fear", from the root √bhī "be afraid" (MW), and *-kara* "making", from √kṛ "do, make", with an *ṃ* between them: "fear-making", so "terrible" (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

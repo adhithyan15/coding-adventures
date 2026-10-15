@@ -14,7 +14,8 @@ romanization: "mūṣakaḥ"
 concept_tag: SA-ANIMAL-MOUSE
 prerequisites: [SA-C79-horse, SA-C79-camel]
 sounds: []
-roots: []
+roots: [sanskrit-mushaka]
+etymology_hook: "mūṣaka 'thief; mouse', filed by MW under √mūṣ 'steal'; MW compares Latin mūs and English mouse"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C79-camel]
 <!-- hl-knowledge: introduces=[SA-LEX-C79-ANIMALS-04]; assesses=[] -->
 
 **मूषकः** (*mūṣakaḥ*) — "a mouse", the small animal of the **गृहम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mūṣaka* means both "thief" and "mouse"; MW files it under the root √mūṣ, "to
+steal". It is inherited: MW compares Greek *mus*, Latin *mūs* and English
+**mouse**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

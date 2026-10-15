@@ -7,7 +7,7 @@ Lesson 1 of 7.
 
 Warm-up.
 [pause 2 seconds]
-Sanskrit has no casual "bye." Like its daughters, it takes leave by saying "I go" — and the verb is a cousin of English come and go.
+Sanskrit has no casual "bye." Like its daughters, it takes leave by saying "I go" — and the verb is a cousin of English come.
 
 Sounds you'll need.
 gac, chā, mi. Both c sounds are the ch of church, and the doubling is real — hold it a moment longer than one ch.
@@ -41,6 +41,7 @@ pu, naḥ, closing on the soft breathed -ḥ. Before certain following sounds th
 
 The word, taken apart.
 punaḥ ("again, back, once more") is a native Sanskrit adverb (its combining form is punar-, as in punar-janma, "rebirth" — "birth again"). It has no tidy single English cognate, but its work is one English shares: it turns a parting into "see you again." Add it to darśana ("seeing") and you get the graceful Sanskrit farewell of the next lesson.
+Its deeper origin is not settled: MW gives no outside cousin for it. It lives on as Hindi pun "again" and as Gujarati and Marathi paṇ "but, also" (CDIAL 8273).
 
 Guided Practice.
 [pause 1 second]
@@ -109,6 +110,7 @@ pu, nar, dar, śa, nā, ya. Six even beats; ś is the sh of ship; the long ā fa
 
 The word, taken apart.
 punardarśanāya = punar ("again") + darśana ("seeing, sight, vision") in the dative case (-āya, "for the sake of") — literally "for seeing [you] again," i.e. "until we meet again." The word darśana is deep: it is "seeing" in the sense of beholding — the darśan one takes of a deity or a revered person, and the name of the six darśanas, the schools of Indian philosophy ("ways of seeing"). So this farewell promises not just a meeting but a beholding to come.
+Darśana is built on the root √dṛś "to see" (CDIAL 6208), and MW records the whole phrase punar-darśanāya as a farewell in classical drama.
 
 Grammar Lens: the dative "for the sake of".
 The ending -āya is the dative singular — "to / for." Darśana (a seeing) becomes darśanāya (for a seeing). You will meet the cases one at a time; this is your first, the "for-the-purpose-of" case.
@@ -138,10 +140,10 @@ Sounds you'll need.
 śvaḥ — one beat: the sh of ship pushed straight into v, then the soft breathed -ḥ.
 
 The word, taken apart.
-śvaḥ ("tomorrow") is from Proto-Indo-European ḱes- ("tomorrow / morning"). Where the modern Indian languages muddle "tomorrow" and "yesterday" into one word (Hindi kal, Bengali kāl, from kāla "time"), classical Sanskrit kept them separate and precise: śvaḥ is "tomorrow" and hyaḥ is "yesterday" — two distinct words. "See you tomorrow" is śvaḥ punar-darśanam ("tomorrow, a seeing-again") or śvaḥ drakṣyāmi ("tomorrow I shall see [you]").
+śvaḥ ("tomorrow") is already in the Rigveda (MW); its deeper origin is not settled, though EtymDB sets Latin crās "tomorrow" beside it. Where the modern Indian languages muddle "tomorrow" and "yesterday" into one word (Hindi kal, Bengali kāl, from kalya "dawn, tomorrow", itself built on kāla "time", CDIAL 3104), classical Sanskrit kept them separate and precise: śvaḥ is "tomorrow" and hyaḥ is "yesterday" — two distinct words. "See you tomorrow" is śvaḥ punar-darśanam ("tomorrow, a seeing-again") or śvaḥ drakṣyāmi ("tomorrow I shall see [you]").
 
 Grammar Lens: Sanskrit's precision.
-That the daughters blurred śvaḥ / hyaḥ into a single kal is a small window into language change: the modern tongues traded precision for economy, letting tense carry the load. Sanskrit, the older layer, still keeps the two days apart.
+That the daughters let a single kal (from kalya) cover both days is a small window into language change: the modern tongues traded precision for economy, letting tense carry the load. Sanskrit, the older layer, still keeps the two days apart.
 
 Guided Practice.
 [pause 1 second]
@@ -208,7 +210,7 @@ Before we start: you can do this one in the car, but part of it needs your eyes.
 
 Warm-up.
 [pause 2 seconds]
-No new words. Three ways to part — the ancestors of the modern Indian goodbyes.
+No new words. Three ways to part, in the classical language behind many modern Indian goodbyes.
 
 Guided Practice.
 [pause 1 second after each]
@@ -234,7 +236,7 @@ Guided Practice — inside the farewells.
 [pause 8 seconds for the answer]
 [your turn — say: what darśana means beyond "seeing" (a beholding — the darśan of a deity; the six schools of philosophy)]
 [pause 8 seconds for the answer]
-[your turn — say: the PIE root of śvaḥ, and the Hindi word that blurs it with "yesterday" (ḱes-; kal)]
+[your turn — say: whether the origin of śvaḥ is settled, and the one Hindi word that covers both tomorrow and yesterday (not settled; kal)]
 [pause 8 seconds for the answer]
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]

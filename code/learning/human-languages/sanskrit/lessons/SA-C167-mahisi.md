@@ -14,7 +14,8 @@ romanization: "mahiṣī"
 concept_tag: SA-THG167-MAHISI
 prerequisites: [SA-C166-talah, SA-C167-kacchapah]
 sounds: []
-roots: []
+roots: [sanskrit-mahishi]
+etymology_hook: "mahiṣī 'she-buffalo', and in the Rigveda 'chief queen', is the feminine of mahiṣa 'great' (CDIAL 9972)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C167-kacchapah]
 <!-- hl-knowledge: introduces=[SA-LEX-C167-THG167-02]; assesses=[] -->
 
 **महिषी** — *mahiṣī* — "a she-buffalo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mahiṣī* is the feminine of *mahiṣa* "great, mighty; buffalo" (CDIAL 9964): "the buffalo cow". In the Rigveda the same word also means "the king's chief wife", "the great one" (CDIAL 9972). It lives on as Hindi *bhaĩs* "buffalo" (CDIAL 9964).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

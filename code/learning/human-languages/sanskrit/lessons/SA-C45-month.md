@@ -14,7 +14,8 @@ romanization: "māsaḥ"
 concept_tag: SA-DAYTIME-MASA
 prerequisites: [SA-C45-evening, SA-C43-trust, SA-C44-green]
 sounds: []
-roots: []
+roots: [sanskrit-masa]
+etymology_hook: "māsa 'moon, month' is inherited: MW compares Latin mēnsis, Greek mēn and English moon; Hindi mās (CDIAL 10104)"
 duration:
   max_seconds: 210
 requires:

@@ -14,7 +14,8 @@ romanization: "nakṣatram"
 concept_tag: SA-THINGS112-NAKSATRAM
 prerequisites: [SA-C111-kusumam, SA-C112-padmam]
 sounds: []
-roots: []
+roots: [sanskrit-nakshatra]
+etymology_hook: "nakṣatra 'star' (RV), probably from √nakṣ 'approach, reach' (MW); Hindi nakhat (CDIAL 6913)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C112-padmam]
 <!-- hl-knowledge: introduces=[SA-LEX-C112-THINGS112-02]; assesses=[] -->
 
 **नक्षत्रम्** — *nakṣatram* — "a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nakṣatra* "a star", and later a lunar mansion, is old, in the Rigveda; MW thinks it probably comes from the root √nakṣ "approach, reach". It lives on as Hindi *nakhat* "star, constellation" (CDIAL 6913).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

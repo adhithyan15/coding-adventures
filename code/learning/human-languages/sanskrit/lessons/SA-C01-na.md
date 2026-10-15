@@ -15,6 +15,7 @@ concept_tag: RESPONSE-NO
 prerequisites: [SA-C01-am]
 sounds: [inherent-a]
 roots: [na-negative]
+etymology_hook: "na 'not' is inherited: MW compares Greek nē-, Latin ne- and English no (CDIAL 6906)"
 reviews_of: [SA-C01-am]
 duration:
   max_seconds: 180
@@ -53,7 +54,7 @@ in this whole book.
 *Na* ("no, not") you have already met wearing other clothes: it is
 Proto-Indo-European \**ne* "not," **the same negative** as the Latin *nōn* of the
 last track, as English **no**, **not**, **none**, as German *nein*, and as Hindi
-*nahīṇ*. Of every word in this book, *na* may reach furthest unchanged — one
+*nahīṃ*. Of every word in this book, *na* may reach furthest unchanged — one
 syllable spoken, in some form, from Iceland to India for five thousand years.
 
 ## Guided Practice
@@ -71,4 +72,4 @@ syllable spoken, in some form, from Iceland to India for five thousand years.
 
 [PAUSE 3s] What is the ancient root of *na*, and name three of its living
 cousins. (PIE \**ne* "not"; English *no/not/none*, Latin *nōn*, German *nein*,
-Hindi *nahīṇ* — any three.)
+Hindi *nahīṃ* — any three.)

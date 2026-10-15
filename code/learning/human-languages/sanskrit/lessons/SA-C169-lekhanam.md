@@ -14,7 +14,8 @@ romanization: "lekhanam"
 concept_tag: SA-SCH169-LEKHANAM
 prerequisites: [SA-C169-sreni, SA-C169-sabdakosah]
 sounds: []
-roots: []
+roots: [sanskrit-lekhana, sanskrit-lekha]
+etymology_hook: "lekhana 'scraping', then 'writing' ← √likh 'scratch, write' (CDIAL 11103); lekha 'letter' is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C169-sabdakosah]
 <!-- hl-knowledge: introduces=[SA-LEX-C169-SCH169-05]; assesses=[] -->
 
 **लेखनम्** — *lekhanam* — "writing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lekhana* comes from the root √likh "scratch, write" (CDIAL 11103): first "scraping" in the medical books, then "writing". *lekha* "a letter" and *lekhanī* "a pen" come from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

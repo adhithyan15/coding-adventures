@@ -14,7 +14,8 @@ romanization: "vatsaḥ"
 concept_tag: SA-THG167-VATSAH
 prerequisites: [SA-C167-kacchapah, SA-C167-mahisi]
 sounds: []
-roots: []
+roots: [vatsa-sanskrit]
+etymology_hook: "vatsa 'calf' is probably 'yearling' (MW), inherited, cousin of Latin vetus and Greek etos 'year' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C167-mahisi]
 <!-- hl-knowledge: introduces=[SA-LEX-C167-THG167-03]; assesses=[] -->
 
 **वत्सः** — *vatsaḥ* — "a calf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vatsa* "a calf, a child" probably first meant "a yearling" (MW; CDIAL 11239). It is inherited from Indo-European, cousin of Greek *etos* "year" and Latin *vetus* "old", the source of English *veteran* (EtymDB). It lives on as Hindi *bachiyā* "calf" (CDIAL 11239).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

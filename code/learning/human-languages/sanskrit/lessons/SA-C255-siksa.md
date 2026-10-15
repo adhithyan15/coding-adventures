@@ -14,7 +14,8 @@ romanization: "śikṣā"
 concept_tag: SA-SCH255-SIKSA
 prerequisites: [SA-C254-ratribhojanam, SA-C254-pakvannam]
 sounds: []
-roots: []
+roots: [sanskrit-shiksha, sanskrit-shikshate]
+etymology_hook: "śikṣā ← śikṣ 'learn', the desiderative of √śak 'be able': 'wishing to be able' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C254-pakvannam]
 <!-- hl-knowledge: introduces=[SA-LEX-C255-SCH255-01]; assesses=[] -->
 
 **शिक्षा** — *śikṣā* — "education".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śikṣā* is built on *śikṣ*, "to learn", which MW calls the desiderative of √śak, "to be able": learning is wanting to be able. MW's first sense is "desire of being able", then "learning, study". The verb *śikṣate* lives on as Hindi *sīkhnā*, "to learn" (CDIAL 12430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
