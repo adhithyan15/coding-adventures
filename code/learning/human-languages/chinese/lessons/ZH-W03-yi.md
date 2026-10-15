@@ -12,7 +12,7 @@ gloss: one — a single horizontal stroke, and the whole character
 prerequisites: [ZH-C01-practice]
 sounds: []
 roots: []
-etymology_hook: 一 is the shortest character in the language: one stroke, drawn straight across.
+etymology_hook: '一 is the shortest character in the language: one stroke, drawn straight across.'
 duration:
   max_seconds: 170
 requires:

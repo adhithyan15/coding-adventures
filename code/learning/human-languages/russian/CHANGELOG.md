@@ -1,5 +1,10 @@
 # Changelog — Russian track
 
+## Fixed — three frontmatter values are valid YAML
+
+- RU-R28-letters-second-pass, RU-R81-letters-second-pass and RU-R93-letters-second-pass had an unquoted `gloss:` with a colon and a space inside it (`gloss: second pass: the same one …`), which a strict YAML parser reads as the start of a second key and rejects. Each is now one single-quoted scalar. The wording is unchanged.
+- The repository's reader returns exactly the text it returned before for every value, and PyYAML now returns that same text.
+
 ## Changed — the но etymon atom is RU-ETYMON-NO-NU
 
 - **`RU-ETYMON-NO-NO-COUSIN` is renamed `RU-ETYMON-NO-NU`.** The old id said *но* has no English cousin, which RU-C17-no no longer claims: it now follows Vasmer in relating Old Russian *nŭ* to the old word for "now". The new id names the etymon without taking a side. RU-C17-no (which introduces it), RU-C17-a, RU-C18-chto-vopros and RU-C21-izvinite are updated in their `requires`, `introduces` and `practises` lists and their `hl-knowledge` comments; no chapter, curriculum or assessment file named the atom. Earlier entries below keep the old id as history.

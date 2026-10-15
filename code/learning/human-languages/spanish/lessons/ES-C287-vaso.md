@@ -6,7 +6,7 @@ sequence: 3490
 chapter: 287
 type: word
 headword: el vaso
-gloss: a glass — Latin vas, a vessel: named for what it does, not for what it is made of
+gloss: 'a glass — Latin vas, a vessel: named for what it does, not for what it is made of'
 concept_tag: ES-THING-GLASS
 prerequisites: [ES-C287-toalla]
 sounds: [v-b, vowel-a]

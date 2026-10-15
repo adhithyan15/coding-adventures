@@ -6,7 +6,7 @@ sequence: 4820
 chapter: 112
 type: review
 headword: (fourteen letters)
-gloss: second pass: the same fourteen letters, now from the word to the letter
+gloss: 'second pass: the same fourteen letters, now from the word to the letter'
 romanization: "patinālu eḻuttu"
 concept_tag: TA-LETTERS-FROM-WORDS
 prerequisites: [TA-S127-letter-i, TA-S128-vowel-sign-ai, TA-S129-letter-sa, TA-S130-letter-nga, TA-S131-letter-lla, TA-S132-vowel-sign-ii, TA-S133-vowel-sign-e, TA-S134-letter-ai, TA-S135-vowel-sign-uu, TA-S136-letter-ee, TA-S137-letter-nya, TA-S138-letter-uu, TA-S139-letter-o, TA-S140-letter-ssa]

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 34,
-  "sourceHash": "fnv1a64:5a799f2eb1d1fb7a",
+  "sourceHash": "fnv1a64:be9568c324079587",
   "lessonIds": [
     "TE-C34-tiisuko",
     "TE-C34-adugu",
@@ -13,6 +13,6 @@
   "text": "telugu/narration/ch34.txt",
   "json": "telugu/narration/ch34.json",
   "textHash": "fnv1a64:1a98d53bd497cef0",
-  "jsonHash": "fnv1a64:e508bae320fee991",
+  "jsonHash": "fnv1a64:e2c8e28759a93123",
   "findings": []
 }

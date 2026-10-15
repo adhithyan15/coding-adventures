@@ -12,7 +12,7 @@ concept_tag: FA-PEOPLE-MAN
 prerequisites: [FA-C14-pesar]
 sounds: [rtl, short-vowels-unwritten]
 roots: [middle-persian-mard, pie-mer]
-etymology_hook: mard continues Middle Persian mard, from Indo-European *mer-, "to die." Its literal sense is "mortal," not "man" — the same root gives Latin mortuus ("dead," source of mortal), Greek brotós, and Sanskrit martya. English man is unrelated: a false-friend-shaped pair worth naming rather than assuming.
+etymology_hook: 'mard continues Middle Persian mard, from Indo-European *mer-, "to die." Its literal sense is "mortal," not "man" — the same root gives Latin mortuus ("dead," source of mortal), Greek brotós, and Sanskrit martya. English man is unrelated: a false-friend-shaped pair worth naming rather than assuming.'
 duration:
   max_seconds: 260
 requires:

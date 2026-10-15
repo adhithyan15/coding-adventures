@@ -6,7 +6,7 @@ sequence: 3550
 chapter: 288
 type: word
 headword: la llegada
-gloss: the arrival — from llegar, Latin plicare, to fold: a ship folded its sails and had arrived
+gloss: 'the arrival — from llegar, Latin plicare, to fold: a ship folded its sails and had arrived'
 concept_tag: ES-LEAVE-ARRIVAL
 prerequisites: [ES-C288-vuelta]
 sounds: [ll-y, g-hard]

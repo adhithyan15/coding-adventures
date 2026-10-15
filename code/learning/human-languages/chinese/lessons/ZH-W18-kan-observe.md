@@ -12,7 +12,7 @@ gloss: look or watch, observed and traced in nine strokes
 prerequisites: [ZH-C18-hear-kan]
 sounds: [tone-4]
 roots: []
-etymology_hook: A hand shades an eye: the upper strokes sit above the eye-shaped 目.
+etymology_hook: 'A hand shades an eye: the upper strokes sit above the eye-shaped 目.'
 duration:
   max_seconds: 150
 requires:

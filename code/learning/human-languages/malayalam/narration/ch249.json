@@ -4,7 +4,7 @@
   "chapter": 249,
   "title": "Flour, Wheat, Bread, Juice, Tender coconut",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:082d92687024488d",
+  "sourceHash": "fnv1a64:8470c135bce36fb3",
   "lessons": [
     {
       "id": "ML-C249-mavu",
@@ -143,9 +143,9 @@
     {
       "id": "ML-C249-gotambu",
       "sequence": 11390,
-      "title": "ഗോതമ്പ് (gōtambŭ) — wheat",
+      "title": "ഗോതമ്പ് (gōtampŭ) — wheat",
       "headword": "ഗോതമ്പ്",
-      "romanization": "gōtambŭ",
+      "romanization": "gōtampŭ",
       "gloss": "wheat",
       "script": "malayalam",
       "modality": "voice",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8c7847ff3fe5cbc",
+      "sourceHash": "fnv1a64:d977b0b1be105924",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഗോതമ്പ് — gōtambŭ — \"wheat\"."
+              "text": "ഗോതമ്പ് — gōtampŭ — \"wheat\"."
             }
           ]
         },
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഗോതമ്പ് (gōtambŭ) is a tadbhava of Sanskrit gōdhūma, \"wheat\" (CDIAL 4287), worn down through Prakrit."
+              "text": "ഗോതമ്പ് (gōtampŭ) is a tadbhava of Sanskrit gōdhūma, \"wheat\" (CDIAL 4287), worn down through Prakrit."
             }
           ]
         },
@@ -220,38 +220,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "gōtambŭ",
+              "instruction": "gōtampŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *gōtambŭ*]"
+              "source": "[YOU SAY: *gōtampŭ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "gōtambŭ, once more",
+              "instruction": "gōtampŭ, once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *gōtambŭ*, once more]"
+              "source": "[YOU SAY: *gōtampŭ*, once more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "say gōtambŭ",
+              "instruction": "say gōtampŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: say *gōtambŭ*]"
+              "source": "[YOU SAY: say *gōtampŭ*]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Malayalam for jeans, then the Malayalam for flour, then say gōtambŭ again",
+              "instruction": "say the Malayalam for jeans, then the Malayalam for flour, then say gōtampŭ again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Malayalam for jeans, then the Malayalam for flour, then say *gōtambŭ* again]"
+              "source": "[YOU RECALL: say the Malayalam for jeans, then the Malayalam for flour, then say *gōtampŭ* again]"
             }
           ]
         },
@@ -268,7 +268,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ഗോതമ്പ് (gōtambŭ) mean? (\"Wheat\".) Say it once more."
+              "text": "What does ഗോതമ്പ് (gōtampŭ) mean? (\"Wheat\".) Say it once more."
             }
           ]
         }
@@ -790,7 +790,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1d9a30457a6fc45",
+      "sourceHash": "fnv1a64:291d0fc3351688dd",
       "notice": null,
       "blocks": [
         {
@@ -881,7 +881,7 @@
             },
             {
               "kind": "speech",
-              "text": "A colour? (നിറം, niṟaṁ.) Brown? (തവിട്ട്, taviṭṭŭ.) Grey? (ചാരനിറം, cāraniṟaṁ.) Pink? (പിങ്ക്, piṅkŭ.) Violet? (വയലറ്റ്, vayalaṟṟŭ.) Traditional? (പരമ്പരാഗത, paramparāgata.) Popular? (ജനപ്രിയമായ, janapriyamāya.) Exciting? (ആവേശകരമായ, āvēśakaramāya.) Firm? (ഉറപ്പുള്ള, uṟappuḷḷa.) Broken? (കേടായ, kēṭāya.) Double? (ഇരട്ട, iraṭṭa.) Elderly? (പ്രായമായ, prāyamāya.) Bald? (കഷണ്ടിയുള്ള, kaṣaṇṭiyuḷḷa.) Curly? (ചുരുണ്ട, curuṇṭa.) Orderly? (ചിട്ടയുള്ള, ciṭṭayuḷḷa.) Cooking gas? (ഗ്യാസ്, gyās.) A tap? (പൈപ്പ്, paippŭ.) A carry bag? (കവർ, kavar.) A skirt? (പാവാട, pāvāṭa.) Jeans? (ജീൻസ്, jīns.) Flour? (മാവ്, māvŭ.) Wheat? (ഗോതമ്പ്, gōtambŭ.) Bread? (റൊട്ടി, ṟoṭṭi.) Juice? (ജ്യൂസ്, jyūs.) A tender coconut? (കരിക്ക്, karikkŭ.)"
+              "text": "A colour? (നിറം, niṟaṁ.) Brown? (തവിട്ട്, taviṭṭŭ.) Grey? (ചാരനിറം, cāraniṟaṁ.) Pink? (പിങ്ക്, piṅkŭ.) Violet? (വയലറ്റ്, vayalaṟṟŭ.) Traditional? (പരമ്പരാഗത, paramparāgata.) Popular? (ജനപ്രിയമായ, janapriyamāya.) Exciting? (ആവേശകരമായ, āvēśakaramāya.) Firm? (ഉറപ്പുള്ള, uṟappuḷḷa.) Broken? (കേടായ, kēṭāya.) Double? (ഇരട്ട, iraṭṭa.) Elderly? (പ്രായമായ, prāyamāya.) Bald? (കഷണ്ടിയുള്ള, kaṣaṇṭiyuḷḷa.) Curly? (ചുരുണ്ട, curuṇṭa.) Orderly? (ചിട്ടയുള്ള, ciṭṭayuḷḷa.) Cooking gas? (ഗ്യാസ്, gyās.) A tap? (പൈപ്പ്, paippŭ.) A carry bag? (കവർ, kavar.) A skirt? (പാവാട, pāvāṭa.) Jeans? (ജീൻസ്, jīns.) Flour? (മാവ്, māvŭ.) Wheat? (ഗോതമ്പ്, gōtampŭ.) Bread? (റൊട്ടി, ṟoṭṭi.) Juice? (ജ്യൂസ്, jyūs.) A tender coconut? (കരിക്ക്, karikkŭ.)"
             }
           ]
         }

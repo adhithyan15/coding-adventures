@@ -6,7 +6,7 @@ sequence: 3540
 chapter: 288
 type: word
 headword: la vuelta
-gloss: the return — from volver, Latin volvere, to roll: a return is a turning back
+gloss: 'the return — from volver, Latin volvere, to roll: a return is a turning back'
 concept_tag: ES-LEAVE-RETURN
 prerequisites: [ES-C288-viaje]
 sounds: [diphthong-ue, l-clear]

@@ -7,7 +7,7 @@ chapter: 1
 type: word
 headword: はい
 romanization: hai
-gloss: yes
+gloss: 'yes'
 concept_tag: RESPONSE-YES
 prerequisites: [JA-W01-e]
 sounds: [mora, pure-vowels]

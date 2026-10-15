@@ -6,7 +6,7 @@ sequence: 4090
 chapter: 299
 type: word
 headword: el ganado
-gloss: the livestock — from ganar, to gain: cattle are simply "what has been gained", the way English cattle and chattel are what you own
+gloss: 'the livestock — from ganar, to gain: cattle are simply "what has been gained", the way English cattle and chattel are what you own'
 concept_tag: ES-FARM-LIVESTOCK
 prerequisites: [ES-C299-granja]
 sounds: [g-hard, d-soft]

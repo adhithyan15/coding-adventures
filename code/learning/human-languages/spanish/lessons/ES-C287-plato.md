@@ -6,7 +6,7 @@ sequence: 3510
 chapter: 287
 type: word
 headword: el plato
-gloss: a plate — Greek platys, flat: the same flatness in a plaza and in a platypus
+gloss: 'a plate — Greek platys, flat: the same flatness in a plaza and in a platypus'
 concept_tag: ES-THING-PLATE
 prerequisites: [ES-C287-cuchara]
 sounds: [l-clear, vowel-a]

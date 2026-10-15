@@ -6,7 +6,7 @@ sequence: 3870
 chapter: 295
 type: word
 headword: el sendero
-gloss: the path — Latin semita, a by-way, with semi- meaning half: a path is a half-road
+gloss: 'the path — Latin semita, a by-way, with semi- meaning half: a path is a half-road'
 concept_tag: ES-PATH-TRAIL
 prerequisites: [ES-C294-escoba]
 sounds: [nasal-n, d-soft]
