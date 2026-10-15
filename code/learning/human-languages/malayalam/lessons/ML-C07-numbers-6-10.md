@@ -59,7 +59,7 @@ only the sound now: *e-zhu*. The written letter waits for a later micro-lesson.
 ## The word, taken apart — nine is one short of ten
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C07-NUMBERS-6-10-03]; assesses=[] -->
 
-*Ompatŭ* is usually read as an old word for **one** plus *pattŭ*, **ten**: one short of
+*Ombatŭ* is usually read as an old word for **one** plus *pattŭ*, **ten**: one short of
 ten. It is native Dravidian (DEDR 1025), but how it was built is uncertain: DEDR
 sets it beside both "one" and an older word for nine. Before *p*, the older *n* becomes *m*. Say *on-pattŭ* slowly, then let it
 settle into *ombatŭ*.

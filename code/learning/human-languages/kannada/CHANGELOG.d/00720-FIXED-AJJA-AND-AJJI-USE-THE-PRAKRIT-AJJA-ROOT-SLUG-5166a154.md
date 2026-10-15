@@ -1,0 +1,4 @@
+## Fixed — ajja and ajji use the prakrit-ajja root slug
+
+- **KA-C45-grandfather** and **KA-C45-grandmother** move from `dravidian-acca-elder` to `prakrit-ajja`, the slug ML-C45-grandfather and ML-C45-grandmother now use. Both blocks already say what DEDR 50 says: Kannada *ajja* and *ajji* are listed there with Tamil and Malayalam *accan*, and the whole set is taken as probably Indo-Aryan, Prakrit *ajja*, Sanskrit *ārya* (CDIAL 1347). The old slug called the word Dravidian, and it split one DEDR entry across two slugs, so the cousins join missed the Malayalam lessons. `dravidian-acca-elder` is no longer used.
+- **KA-C45-grandfather** no longer opens by calling *ajja* "a native Dravidian word", which its own block contradicts (DEDR 50: probably an Indo-Aryan loan). The rest of that paragraph is unchanged.

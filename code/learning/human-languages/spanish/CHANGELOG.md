@@ -3,10 +3,10 @@
 ## Fixed — papel, español, pariente and the pastilla recall
 
 - **ES-C301-papel** said *papel* "comes from papyrus". It is usually traced, after Corominas and the DLE, through Catalan *paper* to Latin *papyrus*, and EtymDB 2.1 gives the same route; the block and hook now say so. The hook, 154 characters, is now 112. Other sentences were trimmed so the lesson computes 239 s, down from 294 and inside its declared 240 s; `max_seconds` is unchanged.
-- **ES-C06-espanol** told *español* as a word worn down inside Spanish. Corominas and the DLE usually trace it through Occitan *espaignol* to medieval Latin *Hispaniolus*, from *Hispania*; the block, hook and practice line now say this, hedged. The *-ni-* → *ñ* note stands.
+- **ES-C06-espanol** told *español* as a word worn down inside Spanish. Corominas and the DLE usually trace it through Occitan *espaignol* to medieval Latin *Hispaniolus*, from *Hispania*; the block, hook and practice line now say this, hedged, because neither source could be read for this change and EtymDB 2.1 gives *español* straight from *Hispania*. The *-ni-* → *ñ* note stands.
 - **ES-C309-pariente** moves from bare `parere`, which Latin and French use for *pāreō* "appear, obey", to `parens-latin` and `parere-bear-latin`, the slugs LA-C273-parens uses for *parēns* and *pariō* "bear, beget". EtymDB 2.1 gives *pariente* ← Old Spanish *pariente* ← Latin *parentem*. The hook, 155 characters, is now 100 and names *parens*.
 - **ES-C408-health-recall-2**'s hook said *pastilla* keeps "its small formed shape". It now says Latin *pastillus* "little loaf", as ES-C408-pastilla teaches (EtymDB 2.1; Lewis & Short gives *pastillus* as a diminutive of *pānis*).
-- **ES-C408-pastilla**'s roots were `[pasta-spanish, diminutive-illa]`, the *pasta* + *-illa* account its own block rejects. They are now `[pastillus-latin]`, a new slug for the Latin *pastillus* the block names; no lesson used one before, and the false join with *pasta* is gone.
+- **ES-C408-pastilla**'s roots were `[pasta-spanish, diminutive-illa]`, the *pasta* + *-illa* account its own block rejects. They are now `[pastillus-latin]`, a new slug for the Latin *pastillus* the block names; no lesson used one before, and the false join with *pasta* is gone. Its Sources line cited a RAE paper for *pastilla* from *pasta*, which contradicts the block and could not be checked; it now names the sources the block rests on, EtymDB 2.1 and Lewis & Short.
 
 ## Fixed — every taken-apart block now says where its word comes from
 

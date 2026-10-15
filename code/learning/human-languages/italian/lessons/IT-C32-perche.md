@@ -67,8 +67,7 @@ as they are, and until this line it had no way to let you say *because*.
 
 **Perché** is **per** + **ché**, both inherited from Latin (EtymDB 2.1). *Per*,
 "for, through", is the *per* of English *per cent*. *Ché* is the **che** of the
-last chapter, usually traced to Latin *quid*, "what", with *quia*, "because",
-often named behind the answering sense.
+last chapter, usually traced to Latin *quid*, "what".
 
 So *perché* is literally "**for what**" — which is how a question about a reason
 becomes a statement of one. English does the same with another preposition:

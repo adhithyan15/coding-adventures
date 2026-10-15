@@ -44,8 +44,8 @@ because the word is really the pointing-word "that."
 
 - **അ** = **"a"** — an **independent vowel** (the word starts with a vowel, so
   it gets a full letter).
-- **തെ** = "te" — **ത** (*ta*, a soft dental *t*, the tongue against the teeth)
-  with the **"e" vowel sign** written *in front* of the consonant.
+- **തെ** = "te" — **ത** (*ta*, a soft dental *t*) with the **"e" vowel
+  sign** written *in front* of the consonant.
 
 Left to right: **അ · തെ** = *a-te* →
 

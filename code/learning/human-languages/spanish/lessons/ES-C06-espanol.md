@@ -11,7 +11,7 @@ concept_tag: ES-WORD-ESPANOL
 prerequisites: [ES-C06-estudiar, ES-W02-enye-formas]
 sounds: [enye-ny]
 roots: [hispania-latin]
-etymology_hook: "español ← Occitan espaignol ← Latin Hispania (Roman name for Iberia); the -ñol ending keeps the ñ"
+etymology_hook: "español: usually traced via Occitan espaignol to Latin Hispania (Roman Iberia); the -ñol ending keeps the ñ"
 duration:
   max_seconds: 200
 requires:

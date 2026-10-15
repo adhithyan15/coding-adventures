@@ -12,7 +12,7 @@ concept_tag: RESPONSE-NO
 prerequisites: [RU-C01-da]
 sounds: [cyrillic-false-friends, e-ye]
 roots: [pie-ne]
-etymology_hook: "нет ← не + (е)сть 'not is'; не is PIE *ne → English no, not, never, nay; Latin nōn"
+etymology_hook: "нет ← older ne je tu 'not is here' (Vasmer); не is PIE *ne → English no, not, never, nay; Latin nōn"
 duration:
   max_seconds: 240
 requires:
@@ -63,16 +63,15 @@ Learn those four and Cyrillic stops disguising itself as Latin.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NET] -->
 
-**нет** is a **compression of a whole clause**. It comes from
-**не** + *(ye)st'* — **"not is"**, i.e. *"there is not."*
+**нет** is a **compression of a whole clause**. Vasmer traces it to older
+*ne je tu*, **"not is here."**
 
 - **не** (*nye*) — the negator, **"not."**
-- *yest'* — "is / there is" (its ancestor is the same verb as
-  English *is*).
+- *je* — an old "is", the verb of English *is*.
+- *tu* — "here", as in *tut*.
 
-So Russian's "no" is really "**not-is**" — a denial of existence, worn down to
-a single syllable. (Its longer form *nyétu*, "there isn't any," still
-shows the seam.)
+So Russian's "no" is "**not-is-here**", worn down to one syllable. (Its
+longer form *nyétu*, "there isn't any," still shows the seam.)
 
 And that little **не** is one of the deepest words in the whole Indo-European
 family — the ancient negation **\*ne**. You already own a dozen of its English
@@ -104,6 +103,6 @@ Russia's share of it.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NET] -->
 
-[PAUSE 3s] [YOU READ: **нет**] What clause is it worn down from? (*не + yest'*, "not
-is.") What does н sound like — and what does it *look* like? (Says n, looks like
+[PAUSE 3s] [YOU READ: **нет**] What clause is it worn down from? (Older *ne je tu*,
+"not is here.") What does н sound like — and what does it *look* like? (Says n, looks like
 Latin H.) Name two English cousins of *не*. (no, not, never, none, nay…)

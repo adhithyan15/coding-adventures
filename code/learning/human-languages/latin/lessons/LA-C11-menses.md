@@ -11,7 +11,7 @@ concept_tag: LA-MONTHS
 prerequisites: [LA-C10-panis, LA-C10-aqua-vinum]
 sounds: [macron-long-vowel, qu-as-kw]
 roots: [ianus-latin, mars-latin, numbering-months]
-etymology_hook: "Quintilis and Sextilis, the 'fifth' and 'sixth' months, were RENAMED Iulius and Augustus; Rome added no months"
+etymology_hook: "Quintilis and Sextilis, the 'fifth' and 'sixth' months, were RENAMED Iulius and Augustus, not added"
 duration:
   max_seconds: 240
 requires:
