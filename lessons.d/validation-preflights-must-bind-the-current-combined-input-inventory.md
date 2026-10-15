@@ -94,3 +94,11 @@ admitted; two old wrapped13-plus1 cases have the same budget. Preserve that fail
 formatter/read-once controls, and retain the new14-minus1/rounding/exp/structural/
 effect/work refusals. Production and caps stay fixed; rerun the actual focused
 suite at the new source rather than relabeling the failed earlier receipt.
+
+The Wardley focused suite passed, but strict all-target Clippy rejected the new
+derived-error fixture spelling `label_font_size=-1.0` as suspicious assignment
+formatting. Preserve actual101 and wrapper1 before tests started. Separate the
+assignment and unary minus with whitespace, retaining the exact negative fixture
+and all assertions; rerun strict and the complete affected suite at the new
+source. Keep fixture file counts distinct from complete semantic cells: the
+retained Venn evidence is13 files containing232 complete scene/query cells.

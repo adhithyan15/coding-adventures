@@ -16,7 +16,7 @@ fn wardley_postcondition_rejects_each_nonfinite_geometry_or_style_route() {
             4=>d.evolves.push(LayoutedWardleyEvolution{from:Point{x:0.0,y:f64::NAN},to:Point{x:0.0,y:0.0}}),
             5=>d.config.node_radius=1.5e308,
             6=>d.config.axis_font_size=1.75e308,
-            _=>d.config.label_font_size=-1.0,
+            _=>d.config.label_font_size= -1.0,
         }
         assert_eq!(validate_wardley_geometry(&d),Err(WardleyLayoutError::DerivedGeometry),"route{which}");
         eprintln!("WARDLEY-DERIVED route{which}");

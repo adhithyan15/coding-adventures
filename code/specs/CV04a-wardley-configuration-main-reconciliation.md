@@ -81,7 +81,7 @@ the complete expected mode/type/blob tree from the actual owned left and incomin
 12 paths. Independently resolve every whole-file overlap; preserve all owned
 non-Wardley production/helpers/oracles byte-exact. Migrate only Wardley ABI
 constructors and explicitly specified old default/geometry expectations. Keep
-37 complete Ishi source/IR/layout/scene/query cells,232 Venn fixturefiles and67
+37 complete Ishi source/IR/layout/scene/query cells,232 complete Venn scene/query cells in13 fixture files and67
 causal parserIR controls exact. No generic coordinate replacement/tolerance
 change/deleted assertion/default normalization or borrowed acceptance.
 
