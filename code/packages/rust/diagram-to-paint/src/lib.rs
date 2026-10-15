@@ -2235,6 +2235,11 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     }
     text_children.push(text_node("Visibility", 2.0, top, 56.0, 24.0,
         font_with_size(&options.label_font, Some(diagram.config.axis_font_size)), axis_text_color));
+    let mut note_font = font_with_size(&options.label_font, Some(11.0)); note_font.weight = 700;
+    for note in &diagram.notes {
+        text_children.push(text_node_no_wrap(&note.text, note.position.x, note.position.y - 12.0,
+            (diagram.width - note.position.x - 8.0).max(40.0), 24.0, note_font.clone(), axis_text_color));
+    }
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
         id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
         width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
@@ -2258,6 +2263,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("wardley.componentLabelColor".into(), theme.component_label_color.clone());
     metadata.insert("wardley.linkStroke".into(), theme.link_stroke.clone());
     metadata.insert("wardley.evolutionStroke".into(), theme.evolution_stroke.clone());
+    metadata.insert("wardley.noteCount".into(), diagram.notes.len().to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: theme.background_color.clone(), instructions, id: None, metadata: Some(metadata) }
 }
@@ -11528,7 +11534,7 @@ mod tests {
                 component_label_color: "#56789a".into(), link_stroke: "#6789ab".into(), evolution_stroke: "#dc2626".into() },
                 ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()],
             nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true }],
-            links: vec![], evolves: vec![] };
+            links: vec![], evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }] };
         let scene = diagram_to_paint_wardley(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
@@ -11540,6 +11546,7 @@ mod tests {
                 && ellipse.stroke.as_deref() == Some("#456789"))));
         assert_eq!(scene.background, "#f8fafc");
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.showGrid")), Some(&"true".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.noteCount")), Some(&"1".to_string()));
     }
 
 
