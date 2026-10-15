@@ -2081,10 +2081,12 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
 /// Lower Venn circle geometry into backend-neutral ellipses and glyph runs.
 pub fn diagram_to_paint_venn<S, M, R>(diagram: &LayoutedVennDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
-    const FILLS: &[&str] = &["#60a5fa", "#f59e0b", "#34d399", "#f472b6", "#a78bfa"];
     let mut instructions = Vec::new();
     for (index, circle) in diagram.circles.iter().enumerate() {
-        let fill = circle.style.fill.clone().unwrap_or_else(|| FILLS[index % FILLS.len()].into());
+        let fill = circle.style.fill.clone().unwrap_or_else(|| {
+            diagram.config.theme_colors.get(index % diagram.config.theme_colors.len().max(1))
+                .cloned().unwrap_or_else(|| "#60a5fa".into())
+        });
         instructions.push(PaintInstruction::Ellipse(PaintEllipse {
             base: PaintBase::default(), cx: circle.cx, cy: circle.cy, rx: circle.radius, ry: circle.radius,
             fill: Some(with_opacity(&fill, circle.style.fill_opacity.unwrap_or(0.38))),
@@ -2118,6 +2120,9 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("venn.fontFamily".into(), diagram.config.font_family.clone());
     metadata.insert("venn.titleTextColor".into(), diagram.config.title_text_color.clone());
     metadata.insert("venn.setTextColor".into(), diagram.config.set_text_color.clone());
+    for (index, color) in diagram.config.theme_colors.iter().enumerate() {
+        metadata.insert(format!("venn.themeColor{}", index + 1), color.clone());
+    }
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
         instructions, id: None, metadata: Some(metadata) }
@@ -11366,6 +11371,29 @@ mod tests {
         let scene = diagram_to_paint_venn(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+    }
+
+    #[test]
+    fn venn_uses_theme_palette_unless_a_set_has_an_authored_fill() {
+        let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedVennDiagram {
+            width: 400.0, height: 300.0, title: None,
+            config: diagram_ir::VennConfig { theme_colors: vec!["#112233".into(), "#445566".into()], ..Default::default() },
+            circles: vec![
+                diagram_ir::LayoutedVennCircle { id: "A".into(), label: "A".into(), cx: 140.0, cy: 150.0,
+                    radius: 80.0, style: Default::default() },
+                diagram_ir::LayoutedVennCircle { id: "B".into(), label: "B".into(), cx: 260.0, cy: 150.0,
+                    radius: 80.0, style: diagram_ir::VennStyle { fill: Some("#abcdef".into()), ..Default::default() } },
+            ], labels: vec![],
+        };
+        let scene = diagram_to_paint_venn(&layout, &opts);
+        let fills: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::Ellipse(ellipse) => ellipse.fill.as_deref(), _ => None,
+        }).collect();
+        assert_eq!(fills, ["rgba(17,34,51,0.38)", "rgba(171,205,239,0.38)"]);
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.themeColor1")),
+            Some(&"#112233".to_string()));
     }
 
     #[test]

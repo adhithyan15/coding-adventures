@@ -5508,9 +5508,13 @@ fn parse_venn_config(source: &str) -> VennConfig {
     let set_text_color = sanitize_railroad_color(
         theme_value("vennSetTextColor").or_else(|| theme_value("textColor")).as_deref(), &defaults.set_text_color);
     let font_family = sanitize_railroad_font_family(theme_value("fontFamily").as_deref(), &defaults.font_family);
+    let theme_colors = defaults.theme_colors.iter().enumerate().map(|(index, fallback)| {
+        sanitize_railroad_color(theme_value(&format!("venn{}", index + 1)).as_deref(), fallback)
+    }).collect();
     VennConfig { width: positive("width", defaults.width), height: positive("height", defaults.height),
         padding: non_negative("padding", defaults.padding), use_max_width: boolean("useMaxWidth", defaults.use_max_width),
-        use_debug_layout: boolean("useDebugLayout", defaults.use_debug_layout), font_family, title_text_color, set_text_color }
+        use_debug_layout: boolean("useDebugLayout", defaults.use_debug_layout), font_family, title_text_color, set_text_color,
+        theme_colors }
 }
 
 fn strip_keyword_ci<'a>(line: &'a str, keyword: &str) -> Option<&'a str> {
@@ -13643,6 +13647,17 @@ fn parse_duration(s: &str) -> Option<GanttDuration> {
 #[cfg(test)]
 mod tests_dg04 {
     use super::*;
+
+    #[test]
+    fn venn_resolves_and_sanitizes_the_eight_color_theme_palette() {
+        let diagram = parse_venn(
+            "%%{init: {\"themeVariables\": {\"venn1\": \"#112233\", \"venn2\": \"red\", \"venn8\": \"url(evil)\"}}}%%\nvenn-beta\nset A\nset B",
+        ).unwrap();
+        assert_eq!(diagram.config.theme_colors.len(), 8);
+        assert_eq!(diagram.config.theme_colors[0], "#112233");
+        assert_eq!(diagram.config.theme_colors[1], "red");
+        assert_eq!(diagram.config.theme_colors[7], VennConfig::default().theme_colors[7]);
+    }
 
     #[test]
     fn block_parses_grid_cells_spaces_shapes_and_connections() {
