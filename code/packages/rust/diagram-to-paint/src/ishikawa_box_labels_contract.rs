@@ -96,7 +96,7 @@ mod ishikawa_box_labels_contract {
                 effect_x:case.effect.0,effect_y:case.effect.1,effect_width:150.0,effect_height:58.0,
                 spine_from:point(case.spine.0),spine_to:point(case.spine.1),
                 bones:case.bones.iter().map(|bone|diagram_ir::LayoutedIshikawaBone {from:point(bone.from),to:point(bone.to),
-                    label:bone.label.into(),label_position:point(bone.center),depth:bone.depth}).collect()};
+                    label:bone.label.into(),label_position:point(bone.center),label_width:bone.width,label_height:28.0,depth:bone.depth}).collect()};
             let layout=diagram_layout_geometric::layout_ishikawa(&ir,case.width);assert_eq!(layout,expected_layout,"whole layout {} {family}",case.name);
             let mut instructions=vec![line(case.spine.0,case.spine.1,3.0)];
             for bone in &case.bones {instructions.push(line(bone.from,bone.to,if bone.depth==1 {2.5}else{1.5}));
@@ -118,6 +118,7 @@ mod ishikawa_box_labels_contract {
             if !case.bones.is_empty() {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(600)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Condensed));}
             queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(800)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Expanded));
             assert_eq!(*resolver.0.borrow(),queries,"whole ordered cached queries {} {family}",case.name);
+            eprintln!("ishikawa-box COMPLETE case={} family={family} wholeIR/layout/scene/query",case.name);
         }}
     }
 
@@ -130,6 +131,7 @@ mod ishikawa_box_labels_contract {
             let layout=diagram_layout_geometric::layout_ishikawa(&diagram,560.0);
             assert_eq!((layout.width,layout.height),(560.0,height),"complete canvas dimensions depth{depth}");
             assert_eq!(layout.bones.len(),depth,"authored chain not skipped");
+            eprintln!("ishikawa-box HEIGHT depth={depth} width=560 expected={height}");
         }
     }
 }

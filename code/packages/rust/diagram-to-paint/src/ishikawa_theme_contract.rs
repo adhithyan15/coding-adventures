@@ -16,7 +16,7 @@ fn ishikawa_sources_retain_complete_ir_layout_scene_and_ordered_queries() {
         let parsed=mermaid_parser::parse_ishikawa(&source).unwrap();assert_eq!(parsed,expected_ir,"whole IR source={source}");
         let expected_layout=LayoutedIshikawaDiagram {width:576.0,height:360.0,effect:"E".into(),config,
             effect_x:346.0,effect_y:151.0,effect_width:150.0,effect_height:58.0,spine_from:Point{x:96.0,y:180.0},spine_to:Point{x:346.0,y:180.0},
-            bones:vec![diagram_ir::LayoutedIshikawaBone {from:Point{x:161.0,y:108.0},to:Point{x:221.0,y:180.0},label:"A".into(),label_position:Point{x:191.0,y:102.0},depth:1}]};
+            bones:vec![diagram_ir::LayoutedIshikawaBone {from:Point{x:161.0,y:108.0},to:Point{x:221.0,y:180.0},label:"A".into(),label_position:Point{x:191.0,y:102.0},label_width:72.0,label_height:28.0,depth:1}]};
         let layout=diagram_layout_geometric::layout_ishikawa(&parsed,576.0);assert_eq!(layout,expected_layout,"whole layout source={source}");
         let path=|from:Point,to:Point,width|PaintInstruction::Path(PaintPath {base:PaintBase::default(),commands:vec![PathCommand::MoveTo{x:from.x,y:from.y},PathCommand::LineTo{x:to.x,y:to.y}],fill:Some("none".into()),fill_rule:None,stroke:Some(line.into()),stroke_width:Some(width),stroke_cap:Some(StrokeCap::Round),stroke_join:Some(StrokeJoin::Round),stroke_dash:None,stroke_dash_offset:None});
         let glyph=|c:char,x,y,size|PaintInstruction::GlyphRun(PaintGlyphRun {base:PaintBase::default(),glyphs:vec![GlyphPosition{glyph_id:c as u32,x,y}],font_ref:"fake:test".into(),font_size:size,fill:Some(format!("rgb({rgb})"))});
