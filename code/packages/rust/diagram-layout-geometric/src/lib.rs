@@ -20,14 +20,16 @@ pub fn layout_info(diagram: &InfoDiagram) -> LayoutedInfoDiagram {
 
 /// Produce stable Venn geometry. Sizes affect radii; exact area-proportional
 /// overlap optimization is deliberately outside this partial slice.
-pub fn layout_venn(diagram: &VennDiagram, canvas_width: f64) -> LayoutedVennDiagram {
-    let width = canvas_width.max(360.0);
-    let height = (width * 0.68).max(300.0);
+pub fn layout_venn(diagram: &VennDiagram) -> LayoutedVennDiagram {
+    let width = diagram.config.width;
+    let height = diagram.config.height;
+    let padding = diagram.config.padding.min(width / 4.0).min(height / 4.0);
     let title_offset = if diagram.title.is_some() { 34.0 } else { 0.0 };
     let sets: Vec<_> = diagram.regions.iter().filter(|region| region.sets.len() == 1).collect();
     let max_size = sets.iter().map(|set| set.size).fold(1.0_f64, f64::max);
-    let orbit = (width.min(height - title_offset) * 0.16).max(36.0);
-    let base_radius = (width.min(height - title_offset) * 0.25).max(64.0);
+    let available = (width - padding * 2.0).min(height - title_offset - padding * 2.0).max(1.0);
+    let orbit = available * 0.16;
+    let base_radius = available * 0.25;
     let center_x = width / 2.0;
     let center_y = title_offset + (height - title_offset) / 2.0;
     let count = sets.len().max(1) as f64;
@@ -63,7 +65,7 @@ pub fn layout_venn(diagram: &VennDiagram, canvas_width: f64) -> LayoutedVennDiag
             labels.push(LayoutedVennLabel { text: text.label.clone().unwrap_or_else(|| text.id.clone()), x, y: y + 20.0, style: text.style.clone() });
         }
     }
-    LayoutedVennDiagram { width, height, title: diagram.title.clone(), circles, labels }
+    LayoutedVennDiagram { width, height, title: diagram.title.clone(), config: diagram.config.clone(), circles, labels }
 }
 
 fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64, f64)> {
@@ -392,15 +394,20 @@ mod tests {
 
     #[test]
     fn venn_layout_is_deterministic_and_size_aware() {
-        let diagram = VennDiagram { title: None, regions: vec![
+        let diagram = VennDiagram { title: None,
+            config: diagram_ir::VennConfig { width: 600.0, height: 360.0, padding: 20.0, ..Default::default() }, regions: vec![
             VennRegion { sets: vec!["A".into()], size: 20.0, label: None, style: VennStyle::default() },
             VennRegion { sets: vec!["B".into()], size: 10.0, label: None, style: VennStyle::default() },
             VennRegion { sets: vec!["A".into(), "B".into()], size: 3.0, label: Some("AB".into()), style: VennStyle::default() },
         ], texts: vec![] };
-        let first = layout_venn(&diagram, 600.0);
-        assert_eq!(first, layout_venn(&diagram, 600.0));
+        let first = layout_venn(&diagram);
+        assert_eq!(first, layout_venn(&diagram));
         assert!(first.circles[0].radius > first.circles[1].radius);
         assert!(first.labels.iter().any(|label| label.text == "AB"));
+        assert_eq!((first.width, first.height, first.config.padding), (600.0, 360.0, 20.0));
+        assert!(first.circles.iter().all(|circle| circle.cx - circle.radius >= 20.0
+            && circle.cx + circle.radius <= 580.0 && circle.cy - circle.radius >= 20.0
+            && circle.cy + circle.radius <= 340.0));
     }
 
     #[test]
