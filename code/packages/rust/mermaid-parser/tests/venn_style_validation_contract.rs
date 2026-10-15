@@ -62,7 +62,7 @@ fn venn_style_admits_the_declared_lexical_color_subset_as_complete_ir() {
     // This is lexical admission, not a CSS name dictionary or arity validator.
     // None/transparent, shorthand/alpha hex and numeric functions retain spelling.
     let colors = ["black", "none", "transparent", "#123", "#1234", "#112233", "#11223344",
-        "rgb(1,2,3)", "rgba(10,20,30,0.5)", "hsl(120 50% 25%)", "hwb(1 2% 3%)",
+        "rgb(1,2,3)", "rgba(10,20,30,0.5)", "hsl(120,50,25)", "hwb(1,2,3)",
         "lab(1 2 3)", "lch(1 2 3)", "oklab(1 2 3)", "oklch(1 2 3)"];
     for (prefix, _) in INGRESS { for text_target in [false, true] { for property in ["fill", "stroke", "color"] {
         for color in colors {
@@ -70,9 +70,24 @@ fn venn_style_admits_the_declared_lexical_color_subset_as_complete_ir() {
             let source = format!("{prefix}venn-beta\nset A[A]: 1\ntext n[N]\nstyle {target} {property}:\"{color}\"");
             let mut style = VennStyle::default();
             match property { "fill" => style.fill = Some(color.into()), "stroke" => style.stroke = Some(color.into()), _ => style.text_color = Some(color.into()) }
-            assert_eq!(mermaid_parser::parse_venn(&source).unwrap(), expected(style, text_target), "{source}");
+            assert_eq!(mermaid_parser::parse_venn(&source).unwrap_or_else(|error| panic!("{source}: {error}")), expected(style, text_target), "{source}");
         }
     } } }
+}
+
+#[test]
+fn venn_style_percent_functions_still_refuse_at_the_existing_tokenizer_boundary() {
+    // The lexical color helper accepts a wider alphabet than this source lexer.
+    // Quotes do not change that route. Preserve both exact diagnostics instead
+    // of broadening the grammar merely to make a validator fixture reach it.
+    for (value, message) in [
+        ("hsl(120 50% 25%)", "LexerError at 4:24: Unexpected sequence '%'"),
+        ("\"hsl(120 50% 25%)\"", "LexerError at 4:25: Unexpected sequence '%'"),
+    ] {
+        let source = format!("venn-beta\nset A[A]: 1\ntext n[N]\nstyle A fill:{value}");
+        let error = mermaid_parser::parse_venn(&source).expect_err(&source);
+        assert_eq!((error.message.as_str(), error.line, error.col), (message, 1, 1), "{source}");
+    }
 }
 
 #[test]
