@@ -752,6 +752,9 @@ stroke color, and stroke width continue to take precedence during Paint lowering
 Repeated `style` directives now cascade per property in source order for both set
 regions and attached text IDs, matching Mermaid's style-map merge behavior without
 discarding unrelated properties from earlier declarations.
+Venn style colors accept safe CSS names, hex values, and numeric color functions;
+unsafe functional payloads fail parsing. Stroke widths must be finite and
+non-negative, while fill opacity is constrained to the CSS range from zero to one.
 
 ### Ishikawa Native Slice
 
