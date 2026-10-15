@@ -185,7 +185,7 @@ def bootstrap(output: Path, github_env: Path, env: dict[str, str],
         save()
         if expected_refusal is not None:
             text = result.stdout + result.stderr
-            if result.returncode == 0 or "could not execute:" not in text or str(expected_refusal) not in text:
+            if result.returncode == 0 or ("could not execute: " + str(expected_refusal)) not in text:
                 raise RuntimeError(f"{label} did not prove the configured phase refusal; see {log}")
             receipt["commands"][-1]["expected_refusal"] = str(expected_refusal)
             save()
