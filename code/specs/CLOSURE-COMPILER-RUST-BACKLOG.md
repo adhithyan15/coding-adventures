@@ -3,49 +3,42 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a Venn config integration checkpoint -->
-Local accepted source df058580 reconciles inspected main6814c2ce through closed
-four-path merge13c73a37/two independently reconstructed full files. Entire owned
-parser production is retained except the specified style match/two helpers;
-all old config/theme/palette origin/numeric guards remain. Actual full14 style
-957P/0F/0ignored across43 targets and strict all-target warning/unknown-lint
-denial PASS. Exact source review71203c6a and terminal
-review0e7f6ef6 PASS. Full receipt
-CV04a-venn-style-validation-delivery-df058580.json; strict435f66a1 and tests502b63da.
+Current local typography source04712174 retains closed main9ea15c06 through
+whole225617-entry merge0f328cef:313incoming/308pure/five reconstructed paths.
+Entire checked/indexed production retained with declared typography hunks and
+one finite/nonnegative derived-font predicate. Actual full14 960P/0F/0ignored/
+43targets plus strict all-target warning/unknown-lint denial PASS.
+Sourceef46d50b and terminal3acfd915 independent reviews PASS.
+Tests-first font and forged-font reds retained;31 constructor fields inventoried;
+208 prior complete scene/query cells retain original non-font oracles after
+checking new sizes/glyphs, plus24 new whole-scene/query cases. Old918 exact
+style errors/342positiveIR/percent/cascade guards remain. Parser/grammar exact
+prior accepted source; no CSS/rendering/general font-fit parity inferred.
+ReceiptCV04a-venn-typography-delivery-04712174.json:
+strict3bdacf6c, tests9186053e.
 
-Tests-first unsafe-value reds retained.918 exact eager errors,342 complete valid
-IR cases,2percent lexer errors,12original invalid-cascade errors/12valid complete
-IR companions, exact external corpus style,208wholeScene/query cases (192old
-exact+16RGBA/rawstroke). Invalid JSON fills remain exacterrors; valid title
-companions preserve complete config/theme oracles. Failed percent/label fixture
-attempts retained with lessons; no false green. No full CSS/visual parity claim.
+Native actual source0cc8fef6:fullsix1824P/0F/1unchangedarchiveignore/78targets,
+compiler887/fullLANG502 plus strict6.126sources/756actualsix-backend cells
+(696prior exact+60new, CLR absent/uncounted). Dedicated canonical12 only; shared
+exp/log/folded-f64 and8192/effect/alias/rounding controls retained. Independent
+sourceefda5353 and terminalb617c791 PASS. All166/2847 native inputs and21external
+static resources exact at047; final named Markdown exceptions inventoried.
+No new native execution or blanket dynamic/toolchain/OS closure claim.
+HistoricalClosure36/3705 plus3static paths retains316e attribution. Registry376
+exact; only local versions change. Base ESTree canonical/own types retained.
 
-Native actual execution remains f630e6ad:full20 actual2765P/0F/1unchangedarchive
-ignore/120targets+strict20; compiler884/full unfilteredLANG500;116sources/
-696runtime cells on six actual backends (636oldexact+60new), no absentCLR count.
-Independent terminalac4a0fec PASS. Native166/2844 inputs retain f630 except four
-namedMD paths, and21mapped external-native resources remain mode/type/blob/SHA
-exact. Independent resource review4bc13419/actual integrated proof separate
-static conservative routes from unclosed dynamic/generated/toolchain/OS inputs.
-Grammar606 overapproximation differs onlyVenncorpus; newstyle suites execute it.
-Historical Closure36/3705 plus three static includes retain316e attribution,
-not new execution or a full dynamic closure. Registry376 exact; only local parser
-0.501 to0.502 changed in this slice. No new crates.io dependency.
-
-Actual published8d macOS job116532526128 fixture failure is repaired test-onlyd2:
-12portable tests/pinned Ruff0.15.20 pass, independentba137475; production helper/
-workflow319 exact, Unix-only Windows reactor selection7e retained. PATHRuff0.16
-eight inherited diagnostics stay failed; none newly suppressed. Actual hosted
-Python3.10/C/GHC/hsc2hs/Cabal and every required check remain mandatory.
-
-Sole implementation PR17288; current delivery requires exact documentation-only
-carrier review, fresh main/openPR/epic audit and unforced plan, then verified
-normal same-PR push. Auto-mergeOFF until current conflict-free/review-clean
-exact-head terminal acceptable required CI. Actual fetched merge reachability
-and payload proof precede cleanup/CV04b. Miri **DEFERRED/PENDING**, never passed:
-frozen checkout/process/inputs/target/receipts untouched/unpolled, no duplicate/
-termination. Deliver implementation first then genuine final-source Miri.
-Full Closure parity/output-byte-source/stable IDs/pass-sweep/all transformation
-lineage OPEN; heartbeat ACTIVE. Base ESTree canonical boundary/own types retained.
+Published8f macOS job116607025275 passed12portable fixtures then failed the real
+cabal-refuse-pgmc phase proof. Root cause/hosted acceptance OPEN. Diagnostic4ab4
+adds only4096-character JSON-quoted tails to two failure branches, preserving
+all exact refusal/route/config-export checks;13portable/Ruff/review500a PASS.
+Candidate requires doc/lesson/diff gates, exact final carrier review, fresh
+main/openPR/epic audit/unforced plan and verified normal same solePR17288 push.
+AutoOFF until current conflict-free/review-clean exact-head terminal acceptable
+requiredCI; fetched actualmerge/payload proof before cleanup/CV04b. Full parity/
+output-byte-source/stableIDs/spans/pass-sweep/all transform lineage remain OPEN.
+Miri **DEFERRED/PENDING**, never passed; frozen run/source/inputs/target/receipts
+untouched/unpolled/no duplicate/termination. Deliver first then genuine final-source
+Miri acceptance. Fullobjective OPEN; heartbeatACTIVE.
 <!-- /CV04a Venn config integration checkpoint -->
 
 <!-- CV04a pathwise pending checkpoint -->
