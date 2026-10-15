@@ -66,8 +66,11 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // 153 -> 154: chapter 271 composes a person request from existing owners,
   // adds one sourced quiet request, then retrieves both turns twice without a
   // visible model before SA-A1-F-22 closes.
-  expect(coverage.covered).toBe(154);
-  expect(coverage.unmapped).toBe(10);
+  // 154 -> 155: chapter 272 teaches one attested condolence as a whole social
+  // formula, distinguishes it from tribute, and retrieves it twice before
+  // SA-A1-F-19 closes.
+  expect(coverage.covered).toBe(155);
+  expect(coverage.unmapped).toBe(9);
   expect(coverage.partial).toBe(0);
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
@@ -75,10 +78,10 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // denominator is the smallest of the twenty-five. 93% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 154/164 points covered (94%)",
+    "sanskrit A1 (partial inventory): 155/164 points covered (95%)",
   );
-  // Where the 12 gaps actually are, named rather than counted. Two columns hold
-  // 8 of them, and they are the two an editorially derived A1 inventory is
+  // Where the nine gaps actually are, named rather than counted. Two columns hold
+  // seven of them, and they are the two an editorially derived A1 inventory is
   // bound to strain on: the revival vocabulary a classical corpus never had,
   // and the orthography beyond the characters the script ladder teaches.
   expect(coverage.byCategory[

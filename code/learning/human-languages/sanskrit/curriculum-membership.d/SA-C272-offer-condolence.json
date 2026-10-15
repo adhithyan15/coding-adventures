@@ -1,0 +1,11 @@
+{
+  "id": "SA-C272-offer-condolence",
+  "pathSegment": "SA-PATH-272-CONDOLENCE272",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-272-CONDOLENCE272",
+      "order": 0
+    }
+  ]
+}

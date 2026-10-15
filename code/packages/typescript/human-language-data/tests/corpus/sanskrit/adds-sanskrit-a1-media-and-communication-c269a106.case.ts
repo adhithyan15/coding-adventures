@@ -108,8 +108,8 @@ it("builds one sourced Sanskrit A1 six-word media and communication field", () =
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   expect(coverage).toMatchObject({
     enumerated: 164,
-    covered: 154,
-    unmapped: 10,
+    covered: 155,
+    unmapped: 9,
     partial: 0,
   });
   expect(coverage.byCategory[
