@@ -17,7 +17,7 @@ fn railroad_small_padding_keeps_exact_leaf_glyphs_inside_emitted_boxes() {
             assert_eq!((rect.x,rect.y,rect.width,rect.height),(element.x,element.y,element.width,element.height));
             let height=24.0_f64.min(element.height);
             let text=text_node_no_wrap(&element.label,element.x+padding,element.y+(element.height-height)/2.0,
-                element.width-2.0*padding,height,options.label_font.clone(),Color{r:15,g:23,b:42,a:255});
+                element.width-2.0*padding,height,options.label_font.clone(),Color{r:0,g:0,b:0,a:255});
             let expected=layout_to_paint(&text,&LayoutToPaintOptions{width:layout.width,height:layout.height,
                 background:Color{r:0,g:0,b:0,a:0},device_pixel_ratio:1.0,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&FakeResolver});
             let leaf=|instructions:&[PaintInstruction]|instructions.iter().filter_map(|p|match p {
@@ -63,14 +63,18 @@ fn railroad_source_dialects_keep_complete_ordered_glyphs_and_config_metadata() {
         assert_eq!(scene.metadata,Some(HashMap::from([
             ("railroad.padding".into(),padding.to_string()),("railroad.verticalSeparation".into(),"8".into()),
             ("railroad.horizontalSeparation".into(),"10".into()),
+            ("railroad.fontSize".into(),"14".into()),("railroad.fontFamily".into(),"monospace".into()),
+            ("railroad.lineColor".into(),"#000000".into()),("railroad.strokeWidth".into(),"2".into()),
+            ("railroad.markerFill".into(),"#000000".into()),("railroad.showMarkers".into(),"true".into()),
+            ("railroad.markerRadius".into(),"5".into()),
         ])));
         let rule=&layout.rules[0];assert_eq!(rule.elements.len(),1);let element=&rule.elements[0];
         let height=24.0_f64.min(element.height);
         let children=vec![
             text_node_no_wrap("r",padding,rule.y+rule.height/2.0-14.0,92.0,28.0,
-                options.label_font.clone(),Color{r:30,g:64,b:175,a:255}),
+                options.label_font.clone(),Color{r:0,g:0,b:102,a:255}),
             text_node_no_wrap(&element.label,element.x+padding,element.y+(element.height-height)/2.0,
-                element.width-2.0*padding,height,options.label_font.clone(),Color{r:15,g:23,b:42,a:255}),
+                element.width-2.0*padding,height,options.label_font.clone(),Color{r:0,g:0,b:0,a:255}),
         ];
         let expected=layout_to_paint(&PositionedNode{x:0.0,y:0.0,width:layout.width,height:layout.height,
             id:None,content:None,children,ext:HashMap::new()},&LayoutToPaintOptions{width:layout.width,height:layout.height,

@@ -66,14 +66,14 @@ fn railroad_singleton_and_empty_sequence_have_exact_exit_geometry() {
         for empty in [false,true] {
             let expression=E::Sequence(if empty{vec![]}else{vec![E::Terminal("A".into())]});
             let layout=try_layout_railroad(&input(expression,config.clone(),false)).unwrap();
-            let width=if empty{0.0}else{44.0+2.0*padding};
+            let width=if empty{0.0}else{config.font_size*3.15+2.0*padding};
             let exit=layout.rules[0].paths.last().unwrap();
             assert_eq!(exit.points[0].x,padding+130.0+width,"padding={padding},gap={gap},empty={empty}");
             assert_eq!(exit.points[1].x,padding+130.0+width+24.0);
         }
     }}
     let normal=try_layout_railroad(&input(E::Terminal("A".into()),RailroadConfig::default(),false)).unwrap();
-    assert_eq!((normal.width,normal.height),(420.0,116.0));
+    assert_eq!((normal.width,normal.height),(420.0,116.1));
 }
 
 #[test]
@@ -81,8 +81,8 @@ fn railroad_sequences_preserve_complete_ordered_leaf_connector_and_exit_geometry
     for config in [RailroadConfig{padding:0.0,vertical_separation:0.0,horizontal_separation:0.0,..Default::default()},
         RailroadConfig::default(),RailroadConfig{padding:0.1,vertical_separation:0.5,horizontal_separation:0.3,..Default::default()},
         RailroadConfig{padding:65536.0,vertical_separation:65536.0,horizontal_separation:65536.0,..Default::default()}] {
-        let p=config.padding;let gap=config.horizontal_separation;let width=44.0+2.0*p;
-        let height=16.0+2.0*p;let sequence_height=height.max(36.0);
+        let p=config.padding;let gap=config.horizontal_separation;let width=config.font_size*3.15+2.0*p;
+        let height=config.font_size*1.15+2.0*p;let sequence_height=height.max(36.0);
         let origin=p+130.0;let content_y=16.0+2.0*p;
         let leaf_y=content_y+(sequence_height-height)/2.0;let center=content_y+sequence_height/2.0;
         let close=|actual:f64,expected:f64|assert!((actual-expected).abs()<1e-7,"{actual} != {expected}, config={config:?}");
@@ -116,7 +116,7 @@ fn railroad_sequences_preserve_complete_ordered_leaf_connector_and_exit_geometry
         // Two rows prove the vertical gap independently of recursive choices.
         let mut rows=input(E::Terminal("A".into()),config.clone(),false);
         rows.rules.push(RailroadRule{name:"s".into(),definition:E::Terminal("B".into())});
-        let layout=try_layout_railroad(&rows).unwrap();let row_height=40.0+4.0*p;
+        let layout=try_layout_railroad(&rows).unwrap();let row_height=config.font_size*1.15+24.0+4.0*p;
         assert_eq!(layout.rules.iter().map(|r|r.name.as_str()).collect::<Vec<_>>(),["r","s"]);
         close(layout.rules[0].y,8.0+p);close(layout.rules[1].y,8.0+p+row_height+config.vertical_separation);
         close(layout.height,8.0+2.0*p+2.0*row_height+2.0*config.vertical_separation);

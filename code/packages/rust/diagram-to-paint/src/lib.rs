@@ -2213,7 +2213,8 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 })); }
     for rule in &diagram.rules {
         let center = rule.y + rule.height / 2.0;
-        text_children.push(text_node_no_wrap(&rule.name, diagram.config.padding, center - 14.0, 92.0, 28.0,
+        let name_height=28.0_f64.max(diagram.config.font_size*1.15);
+        text_children.push(text_node_no_wrap(&rule.name, diagram.config.padding, center - name_height/2.0, 92.0, name_height,
             railroad_font.clone(), css_to_color(&diagram.config.rule_name_color)));
         let end_x = rule.paths.iter().flat_map(|path| path.points.iter().map(|point| point.x)).fold(140.0, f64::max);
         if diagram.config.show_markers {
@@ -2241,7 +2242,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
                 stroke_dash: (element.kind == RailroadElementKind::Special).then(|| vec![5.0, 3.0]), stroke_dash_offset: None }));
             // Small accepted padding can make a leaf shorter than24px. Keep
             // its declared label box inside the leaf before shaping glyphs.
-            let label_height=24.0_f64.min(element.height);
+            let label_height=24.0_f64.max(diagram.config.font_size*1.15).min(element.height);
             text_children.push(text_node_no_wrap(&element.label, element.x + diagram.config.padding,
                 element.y + (element.height - label_height) / 2.0,
                 (element.width - diagram.config.padding * 2.0).max(1.0), label_height,

@@ -174,6 +174,7 @@ fn swimlane_cross_lane_ranks(diagram: &SwimlaneDiagram, link_gaps: &SwimlaneLink
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum RailroadLayoutError {
     UnsupportedSpacing { field: &'static str },
+    UnsupportedStyle { field: &'static str },
     InvalidDerivedGeometry,
 }
 
@@ -181,6 +182,8 @@ impl std::fmt::Display for RailroadLayoutError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::UnsupportedSpacing { field } => write!(f,"Railroad {field} must be finite and in 0..=65536"),
+            Self::UnsupportedStyle { field: "fontSize" } => f.write_str("Railroad fontSize must be finite and in (0, 65536]"),
+            Self::UnsupportedStyle { field } => write!(f,"Railroad {field} must be finite and in 0..=65536"),
             Self::InvalidDerivedGeometry => f.write_str("Railroad layout requires finite coordinates and nonnegative dimensions"),
         }
     }
@@ -202,6 +205,16 @@ pub fn try_layout_railroad(diagram: &RailroadDiagram) -> Result<LayoutedRailroad
         ("horizontalSeparation",diagram.config.horizontal_separation)] {
         if !value.is_finite() || !(0.0..=diagram_ir::MAX_RAILROAD_SPACING).contains(&value) {
             return Err(RailroadLayoutError::UnsupportedSpacing{field});
+        }
+    }
+    // New style scalars must cross the same admission boundary before font
+    // sizes reach clamp bounds or a downstream f32 shaper argument. Empty
+    // diagrams are checked too; lack of leaves does not validate bad config.
+    for (field,value) in [("fontSize",diagram.config.font_size),
+        ("strokeWidth",diagram.config.stroke_width),("markerRadius",diagram.config.marker_radius)] {
+        if !value.is_finite() || !(0.0..=diagram_ir::MAX_RAILROAD_SPACING).contains(&value)
+            || (field=="fontSize" && value==0.0) {
+            return Err(RailroadLayoutError::UnsupportedStyle{field});
         }
     }
     let layout=layout_railroad_supported(diagram);
