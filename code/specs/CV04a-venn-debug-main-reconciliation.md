@@ -61,6 +61,22 @@ dimensions at the checked result boundary. No shared parser/helper replacement.
 
 ## Tests, closed merge and delivery
 
+Later main `a7b62b7fc277f91c9695fec1d594c21d2e09440f` (#17578), parent e0,
+changes four overlapping paint/spec paths. Its complete immutable blobs/patch
+are saved in `CV04a-venn-defaults-incoming-a7b62b7f/manifest.json`. Audit that
+delta separately before import. It changes unstyled set defaults to opacity
+0.1, raw palette/resolved-fill stroke and five times width/1600 stroke width.
+Retain authored `Some` opacity/stroke/width independently, including zero; use
+raw fill for stroke before opacity conversion. Empty palette keeps blue fallback.
+Verify widths 800/1600 produce 2.5/5 default stroke widths and complete scene
+styles/order/metadata, mixed explicit overrides and all 104 earlier palette
+cells through a reversible declared style/debug adapter with old oracles intact.
+The checked source/layout width bounds keep this scale finite; direct forged
+typed Paint layouts remain the existing unchecked trust boundary, not evidence
+of a new checked-paint API. No additional production repair is specified solely
+for these three defaults. Debug work/identity/derived-field repairs above remain
+mandatory; no defaults integration or visual/parity acceptance is inferred.
+
 Retain all unrelated incoming and owned paths through a complete closed tree.
 Specify each overlap's full-file recipe before resolving it. Semantic schema
 fields require adapting every owned literal constructor; preserve old fields,
