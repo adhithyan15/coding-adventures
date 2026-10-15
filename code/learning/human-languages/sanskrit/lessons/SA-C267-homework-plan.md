@@ -30,7 +30,7 @@ register: neutral
 variety: standard-colloquial
 ---
 
-# Add your homework and study plan
+# Retrieve your homework and study plan
 
 ## Warm-up
 
@@ -38,11 +38,11 @@ variety: standard-colloquial
 
 [PAUSE 2s] Say “a lesson,” then “homework.” (*Pāṭhaḥ; gṛhakāryam.*)
 
-## Grammar Lens: known forms, new schoolwork
+## Grammar Lens: two complete owned frames
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C83-SCHOOL-04, SA-LEX-C255-SCH255-04, SA-VERB-C264-KARISYAMI-01, SA-VERB-C264-PATHISYAMI-02, SA-PATTERN-C267-SCHOOL-PLAN-01] -->
 
-Keep the two complete future forms you already know:
+Retrieve the two whole frames introduced in the preceding lesson:
 
 > **गृहकार्यं करिष्यामि।**
 >
@@ -56,8 +56,9 @@ Keep the two complete future forms you already know:
 >
 > I will read or study the lesson.
 
-The familiar neuter and masculine objects appear in their already-practised
-object forms. This lesson adds no new case rule and no new future form.
+The school-plan atom owns both complete lines. This lesson does not derive
+**पाठं** from **पाठः**, generalise a masculine accusative rule, or add a new
+future form.
 
 ## Guided Practice
 

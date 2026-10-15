@@ -56,6 +56,15 @@ it("turns owned Sanskrit school words into a gentle A1 school-day plan", () => {
   expect(
     lessons.filter((lesson) => lesson.frontmatter["introduces.knowledge"].includes(newAtom)),
   ).toHaveLength(1);
+  const schoolPlanIntroduction = chapterLessons[1]?.blocks.find((block) =>
+    block.knowledge?.introduces.includes(newAtom),
+  );
+  expect(schoolPlanIntroduction?.markdown).toContain("गृहकार्यं करिष्यामि।");
+  expect(schoolPlanIntroduction?.markdown).toContain("पाठं पठिष्यामि।");
+  expect(schoolPlanIntroduction?.markdown).toContain(
+    "do not use it to infer a masculine accusative rule",
+  );
+  expect(chapterLessons[2]?.body).not.toContain("already-practised object forms");
 
   const pointAtoms = [
     "SA-LEX-C83-SCHOOL-01",

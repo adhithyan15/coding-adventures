@@ -4,7 +4,7 @@
   "chapter": 267,
   "title": "One small school-day plan",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8b10a8add5d29007",
+  "sourceHash": "fnv1a64:8ed5bdec59dc2909",
   "lessons": [
     {
       "id": "SA-C267-school-recall",
@@ -130,17 +130,17 @@
     {
       "id": "SA-C267-exam-time",
       "sequence": 15830,
-      "title": "Ask when the exam will be",
-      "headword": "(ask when an exam will be)",
+      "title": "Build one bounded school plan",
+      "headword": "(build one bounded school plan)",
       "romanization": "",
-      "gloss": "ask when a familiar school event will be and answer from a timetable",
+      "gloss": "ask when an exam will be, answer, and learn two complete schoolwork frames",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:699b40e1487e8c03",
+      "sourceHash": "fnv1a64:703942805fdba755",
       "notice": null,
       "blocks": [
         {
@@ -163,7 +163,7 @@
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: one timetable turn",
+          "title": "Grammar Lens: four complete turns",
           "segments": [
             {
               "kind": "speech",
@@ -183,7 +183,19 @@
             },
             {
               "kind": "speech",
-              "text": "This is one useful school-time pattern. It does not teach a new future paradigm or a complete timetable system."
+              "text": "This is one useful school-time pattern. It does not teach a new future paradigm or a complete timetable system. Complete the bounded plan with two whole schoolwork frames:"
+            },
+            {
+              "kind": "speech",
+              "text": "गृहकार्यं करिष्यामि। Gṛhakāryaṃ kariṣyāmi. I will do the homework."
+            },
+            {
+              "kind": "speech",
+              "text": "पाठं पठिष्यामि। Pāṭhaṃ paṭhiṣyāmi. I will read or study the lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Own those two lines as complete frames. In particular, पाठं belongs to the whole second frame here; do not use it to infer a masculine accusative rule."
             }
           ]
         },
@@ -219,11 +231,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the question and answer as one turn",
+              "instruction": "the complete homework frame",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the question and answer as one turn]"
+              "source": "[YOU SAY: the complete homework frame]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the complete study frame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the complete study frame]"
             }
           ]
         },
@@ -240,7 +261,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask when the exam will be, then answer from memory."
+              "text": "Ask and answer the exam-time turn, then say both complete schoolwork frames from memory."
             }
           ]
         }
@@ -249,7 +270,7 @@
     {
       "id": "SA-C267-homework-plan",
       "sequence": 15840,
-      "title": "Add your homework and study plan",
+      "title": "Retrieve your homework and study plan",
       "headword": "(one homework and study plan)",
       "romanization": "",
       "gloss": "reuse two complete first-person future forms with familiar schoolwork",
@@ -259,7 +280,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e7a39381319a2f0",
+      "sourceHash": "fnv1a64:ef185c4d8a825440",
       "notice": null,
       "blocks": [
         {
@@ -282,11 +303,11 @@
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: known forms, new schoolwork",
+          "title": "Grammar Lens: two complete owned frames",
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep the two complete future forms you already know:"
+              "text": "Retrieve the two whole frames introduced in the preceding lesson:"
             },
             {
               "kind": "speech",
@@ -298,7 +319,7 @@
             },
             {
               "kind": "speech",
-              "text": "The familiar neuter and masculine objects appear in their already-practised object forms. This lesson adds no new case rule and no new future form."
+              "text": "The school-plan atom owns both complete lines. This lesson does not derive पाठं from पाठः, generalise a masculine accusative rule, or add a new future form."
             }
           ]
         },

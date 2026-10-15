@@ -31,18 +31,21 @@ Say five pieces without looking: school, exam, timetable, classroom, and mark.
 
 
 Lesson 2 of 6.
-Ask when the exam will be — ask when a familiar school event will be and answer from a timetable.
+Build one bounded school plan — ask when an exam will be, answer, and learn two complete schoolwork frames.
 
 Warm-up.
 [pause 2 seconds]
 Ask the familiar market question and give its short rupee answer. (Mūlyaṃ kiyat? Viṃśatiḥ rūpyakāṇi.)
 
-Grammar Lens: one timetable turn.
+Grammar Lens: four complete turns.
 Put four known pieces together:
 परीक्षा कदा भविष्यति? Parīkṣā kadā bhaviṣyati? When will the exam be?
 Answer from the smallest possible timetable:
 श्वः परीक्षा भविष्यति। Śvaḥ parīkṣā bhaviṣyati. The exam will be tomorrow.
-This is one useful school-time pattern. It does not teach a new future paradigm or a complete timetable system.
+This is one useful school-time pattern. It does not teach a new future paradigm or a complete timetable system. Complete the bounded plan with two whole schoolwork frames:
+गृहकार्यं करिष्यामि। Gṛhakāryaṃ kariṣyāmi. I will do the homework.
+पाठं पठिष्यामि। Pāṭhaṃ paṭhiṣyāmi. I will read or study the lesson.
+Own those two lines as complete frames. In particular, पाठं belongs to the whole second frame here; do not use it to infer a masculine accusative rule.
 
 Guided Practice.
 [pause 2 seconds after each]
@@ -50,26 +53,28 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: answer that it will be tomorrow]
 [pause 8 seconds for the answer]
-[your turn — say: the question and answer as one turn]
+[your turn — say: the complete homework frame]
+[pause 8 seconds for the answer]
+[your turn — say: the complete study frame]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask when the exam will be, then answer from memory.
+Ask and answer the exam-time turn, then say both complete schoolwork frames from memory.
 
 
 Lesson 3 of 6.
-Add your homework and study plan — reuse two complete first-person future forms with familiar schoolwork.
+Retrieve your homework and study plan — reuse two complete first-person future forms with familiar schoolwork.
 
 Warm-up.
 [pause 2 seconds]
 Say “a lesson,” then “homework.” (Pāṭhaḥ; gṛhakāryam.)
 
-Grammar Lens: known forms, new schoolwork.
-Keep the two complete future forms you already know:
+Grammar Lens: two complete owned frames.
+Retrieve the two whole frames introduced in the preceding lesson:
 गृहकार्यं करिष्यामि। Gṛhakāryaṃ kariṣyāmi. I will do the homework.
 पाठं पठिष्यामि। Pāṭhaṃ paṭhiṣyāmi. I will read or study the lesson.
-The familiar neuter and masculine objects appear in their already-practised object forms. This lesson adds no new case rule and no new future form.
+The school-plan atom owns both complete lines. This lesson does not derive पाठं from पाठः, generalise a masculine accusative rule, or add a new future form.
 
 Guided Practice.
 [pause 2 seconds after each]

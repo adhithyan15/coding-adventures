@@ -25,9 +25,11 @@ Mapping the nouns alone would therefore overclaim functional coverage.
 Append one Sanskrit-owned chapter after chapter 266 with six lessons:
 
 1. retrieve the ten already-owned school-institution words;
-2. compose **परीक्षा कदा भविष्यति?** and answer **श्वः परीक्षा भविष्यति।**;
-3. reuse the complete known forms **करिष्यामि** and **पठिष्यामि** for one
-   homework/study plan;
+2. compose **परीक्षा कदा भविष्यति?** and answer **श्वः परीक्षा भविष्यति।**,
+   then introduce **गृहकार्यं करिष्यामि।** and **पाठं पठिष्यामि।** as complete,
+   bounded school-plan frames;
+3. retrieve the two complete homework/study frames without deriving a noun
+   declension or a future paradigm;
 4. join the timetable, exam-time answer, homework plan, and study plan;
 5. complete a first model-free school-day plan; and
 6. complete a second model-free plan from a different familiar prompt.
@@ -42,9 +44,12 @@ The chapter owns exactly one new atom:
 
 - `SA-PATTERN-C267-SCHOOL-PLAN-01`
 
-The second lesson introduces it. Every later lesson retrieves it. The last two
-lessons introduce no atoms, require and practise every point atom, and show no
-copyable Sanskrit answer before the learner responds.
+The second lesson introduces it at the block where all four complete turns are
+first shown. In particular, the atom owns **पाठं पठिष्यामि।** as a whole frame;
+the lesson does not claim that **पाठं** was previously practised or generalise
+its masculine accusative shape. Every later lesson retrieves the atom. The last
+two lessons introduce no atoms, require and practise every point atom, and show
+no copyable Sanskrit answer before the learner responds.
 
 The exact `SA-A1-M-03` probe is:
 

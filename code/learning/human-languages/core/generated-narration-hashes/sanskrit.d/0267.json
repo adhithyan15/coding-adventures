@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 267,
-  "sourceHash": "fnv1a64:8b10a8add5d29007",
+  "sourceHash": "fnv1a64:8ed5bdec59dc2909",
   "lessonIds": [
     "SA-C267-school-recall",
     "SA-C267-exam-time",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "sanskrit/narration/ch267.txt",
   "json": "sanskrit/narration/ch267.json",
-  "textHash": "fnv1a64:9d11875349e8224b",
-  "jsonHash": "fnv1a64:aa99e4aabc8c8e4e",
+  "textHash": "fnv1a64:9a73f36a4def5ebf",
+  "jsonHash": "fnv1a64:2a8c5d4e484bf987",
   "findings": []
 }
