@@ -621,7 +621,9 @@
       "id": "SA-A1-PRON-05",
       "category": "Sarvanāma — the pronoun",
       "label": "reflexive",
-      "probe": null,
+      "probe": [
+        "SA-PATTERN-C273-REFLEXIVE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -630,7 +632,7 @@
       "derivedFrom": [
         "A1-PRON-04"
       ],
-      "note": "UNCOVERED. Neither ātman used reflexively nor the middle voice is taught."
+      "note": "Covered only by chapter 273's complete attested sentence: svātmānam is the object and points back to the first-person subject. This bounded relation does not claim middle-voice mastery, a reflexive paradigm, or productive case and sandhi control."
     },
     {
       "id": "SA-A1-PRON-06",

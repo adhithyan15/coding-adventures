@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-273-REFLEXIVE273",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say one attested sentence in which the object points back to the first-person subject.",
+  "prerequisites": [
+    "SA-EXT-272-CONDOLENCE272"
+  ]
+}

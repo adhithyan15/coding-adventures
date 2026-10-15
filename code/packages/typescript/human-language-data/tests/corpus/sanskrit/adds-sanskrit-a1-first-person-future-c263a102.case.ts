@@ -125,8 +125,8 @@ it("adds a gentle Sanskrit A1 first-person future ramp", () => {
     // service-location, media-word, modern-technology, and spoken-request
     // tranches, followed by the bounded-condolence tranche; this test still
     // pins the exact first-person-future probe above.
-    covered: 155,
-    unmapped: 9,
+    covered: 156,
+    unmapped: 8,
     partial: 0,
   });
   expect(coverage.byCategory["Likes, wishes and feelings"]).toEqual({

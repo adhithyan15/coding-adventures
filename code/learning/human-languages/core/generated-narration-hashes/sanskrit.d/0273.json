@@ -1,0 +1,17 @@
+{
+  "language": "sanskrit",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:9d35cf8a82297d50",
+  "lessonIds": [
+    "SA-C273-meet-one-reflexive",
+    "SA-C273-reflexive-first-retrieval",
+    "SA-C273-reflexive-final-retrieval"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "sanskrit/narration/ch273.txt",
+  "json": "sanskrit/narration/ch273.json",
+  "textHash": "fnv1a64:91b3d8652af64e89",
+  "jsonHash": "fnv1a64:270f009b7e14f0d0",
+  "findings": []
+}
