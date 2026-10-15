@@ -19,7 +19,7 @@ fn venn_theme_defaults_and_complete_generic_specific_precedence() {
     for prefix in [
         "---\nthemeVariables:\n  fontFamily: Georgia\n  titleColor: '#112233'\n  textColor: '#445566'\n---",
         "%%{init: {'themeVariables':{'fontFamily':'Georgia','titleColor':'#112233','textColor':'#445566'}}}%%",
-        r#"%%{init: {"themeVariables":{"fontFamily":"Georgia","titleColor":"#112233","textColor":"#445566"}}}%%"#,
+        r##"%%{init: {"themeVariables":{"fontFamily":"Georgia","titleColor":"#112233","textColor":"#445566"}}}%%"##,
         "%%{init: {'themeVariables':{'fontFamily':'Georgia','titleColor':'red','textColor':'blue','vennTitleTextColor':'#112233','vennSetTextColor':'#445566'}}}%%",
     ] {assert_eq!(config(prefix),theme("Georgia","#112233","#445566"),"{prefix}");}
     assert_eq!(config("%%{init: {'themeVariables':{'vennTitleTextColor':'bad;css','titleColor':'red','vennSetTextColor':'bad;css','textColor':'blue','fontFamily':'bad;font'}}}%%"),baseline(),"present invalid specific values suppress generic fallback");
@@ -44,8 +44,8 @@ fn venn_theme_requires_real_post_header_closed_init() {
     for prefix in ["%%{other: {'themeVariables':{'fontFamily':'Georgia'}}}%%",
         "%%{init: {'themeVariables':{'fontFamily':'Georgia'}}%%",
         "%%{init: {'themeVariables':{'fontFamily':'Georgia'}} trailing}%%",
-        r#"%%{init: {"note":"themeVariables","other":{"fontFamily":"Georgia"}}}%%"#,
-        r#"%%{init: {"note":"\"themeVariables\":{\"fontFamily\":\"Georgia\"}"}}%%"#,
+        r##"%%{init: {"note":"themeVariables","other":{"fontFamily":"Georgia"}}}%%"##,
+        r##"%%{init: {"note":"\"themeVariables\":{\"fontFamily\":\"Georgia\"}"}}%%"##,
     ] {assert_eq!(config(prefix),baseline(),"{prefix}");}
     let d=parse_venn("venn-beta\nset \"themeVariables\"\nstyle \"themeVariables\" fill:{\"fontFamily\":\"Georgia\"}").unwrap();
     assert_eq!(d.config,baseline());
@@ -59,7 +59,7 @@ fn venn_theme_direct_members_exclude_nested_objects_arrays_and_values() {
         "%%{init: {'other':[{'themeVariables':{'fontFamily':'Georgia'}}]}}%%",
         "%%{init: {'themeVariables':{'other':{'fontFamily':'Georgia'}}}}%%",
         "%%{init: {'themeVariables':{'other':[{'fontFamily':'Georgia'}]}}}%%",
-        r#"%%{init: {"themeVariables":{"note":"fontFamily","other":"Georgia"}}}%%"#,
+        r##"%%{init: {"themeVariables":{"note":"fontFamily","other":"Georgia"}}}%%"##,
     ] {assert_eq!(config(prefix),baseline(),"{prefix}");}
     for prefix in [
         "%%{init: {'other':{'themeVariables':{'fontFamily':'Georgia'}},'themeVariables':{'fontFamily':'Courier New'}}}%%",
@@ -90,17 +90,17 @@ fn venn_theme_front_matter_requires_direct_root_mapping_and_fields() {
 #[test]
 fn venn_theme_active_quote_and_escape_boundaries_preserve_authored_family() {
     for (prefix,family) in [
-        (r#"%%{init: {'themeVariables':{'fontFamily':'Times "New" Roman'}}}%%"#,"Times \"New\" Roman"),
-        (r#"%%{init: {"themeVariables":{"fontFamily":"Times 'New' Roman"}}}%%"#,"Times 'New' Roman"),
-        (r#"%%{init: {"themeVariables":{"fontFamily":"Times \"New\" Roman"}}}%%"#,"Times \"New\" Roman"),
-        (r#"%%{init: {'themeVariables':{'fontFamily':'O\'Brien'}}}%%"#,"O'Brien"),
+        (r##"%%{init: {'themeVariables':{'fontFamily':'Times "New" Roman'}}}%%"##,"Times \"New\" Roman"),
+        (r##"%%{init: {"themeVariables":{"fontFamily":"Times 'New' Roman"}}}%%"##,"Times 'New' Roman"),
+        (r##"%%{init: {"themeVariables":{"fontFamily":"Times \"New\" Roman"}}}%%"##,"Times \"New\" Roman"),
+        (r##"%%{init: {'themeVariables':{'fontFamily':'O\'Brien'}}}%%"##,"O'Brien"),
         ("---\nthemeVariables:\n  fontFamily: '\"Times New Roman\", serif'\n---","\"Times New Roman\", serif"),
         ("---\nthemeVariables:\n  fontFamily: Times New Roman, serif\n---","Times New Roman, serif"),
     ] {assert_eq!(config(prefix),theme(family,"#0f172a","#0f172a"),"{prefix}");}
     for prefix in [
-        r#"%%{init: {'themeVariables':{'fontFamily':'Times'junk}}}%%"#,
-        r#"%%{init: {'themeVariables':{'fontFamily':'Bad\qFont'}}}%%"#,
-        r#"%%{init: {'themeVariables':{'vennTitleTextColor':'#112233'junk,'titleColor':'red'}}}%%"#,
-        r#"%%{init: {'themeVariables':{'vennTitleTextColor':'Bad\qColor','titleColor':'red'}}}%%"#,
+        r##"%%{init: {'themeVariables':{'fontFamily':'Times'junk}}}%%"##,
+        r##"%%{init: {'themeVariables':{'fontFamily':'Bad\qFont'}}}%%"##,
+        r##"%%{init: {'themeVariables':{'vennTitleTextColor':'#112233'junk,'titleColor':'red'}}}%%"##,
+        r##"%%{init: {'themeVariables':{'vennTitleTextColor':'Bad\qColor','titleColor':'red'}}}%%"##,
     ] {assert_eq!(config(prefix),baseline(),"malformed PRESENT fields must default: {prefix}");}
 }
