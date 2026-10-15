@@ -196,6 +196,17 @@ class MacosHaskellToolchainTests(unittest.TestCase):
             self.assertEqual(["exec", sys.executable, str(root / "hsc2hs-driver.py"), "$@"],
                              shlex.split(wrapper.read_text(encoding="utf-8").splitlines()[1]))
 
+    def test_generated_driver_preserves_child_failure_status(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            handler = root / "failure.py"
+            handler.write_text("raise SystemExit(23)\n", encoding="utf-8")
+            _, forced = toolchain.write_hsc_driver(root, sys.executable, CLANG, LD, SDK)
+            result = subprocess.run([sys.executable, str(root / "hsc2hs-driver.py"), str(handler), "Main.hsc"],
+                                    capture_output=True, text=True, check=False)
+            self.assertEqual(23, result.returncode)
+            self.assertEqual(1, toolchain.verify_hsc_route(root, sys.executable, forced))
+
     def test_ignored_phase_refusal_and_missing_or_wrong_hsc_route_publish_nothing(self):
         for options in [{"ignore_refusal": True}, {"omit_hsc_trace": True}, {"bad_hsc_trace": True}, {"wrong_refusal_cause": True}]:
             with self.subTest(options=options):
