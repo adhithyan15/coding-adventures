@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 130,
-  "sourceHash": "fnv1a64:b03c4a6f0561ffde",
+  "sourceHash": "fnv1a64:8c3b3c25b14c8653",
   "lessonIds": [
     "HI-C130-hathaura",
     "HI-C130-kil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch130.txt",
   "json": "hindi/narration/ch130.json",
-  "textHash": "fnv1a64:3ad0487a57ab90e3",
-  "jsonHash": "fnv1a64:da9a56d10906ef72",
+  "textHash": "fnv1a64:32405b2fba535024",
+  "jsonHash": "fnv1a64:578ec74c2d0bf58f",
   "findings": []
 }

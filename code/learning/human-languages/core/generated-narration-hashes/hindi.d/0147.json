@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 147,
-  "sourceHash": "fnv1a64:1fe4a6e0de9b12d6",
+  "sourceHash": "fnv1a64:2c77f83246a69b8b",
   "lessonIds": [
     "HI-C147-khargos",
     "HI-C147-hiran",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch147.txt",
   "json": "hindi/narration/ch147.json",
-  "textHash": "fnv1a64:9c6163912936d318",
-  "jsonHash": "fnv1a64:7e679d67671253c6",
+  "textHash": "fnv1a64:2e5782e391700a1d",
+  "jsonHash": "fnv1a64:c099eab89c83cacd",
   "findings": []
 }

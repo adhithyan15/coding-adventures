@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "First, Second, Third",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fec7a03ab67da1b3",
+  "sourceHash": "fnv1a64:65ef32b9ce31fcfe",
   "lessons": [
     {
       "id": "HI-C75-first",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:568e125eaf17d2a6",
+      "sourceHash": "fnv1a64:33bc4cbcbfa94476",
       "notice": null,
       "blocks": [
         {
@@ -119,7 +119,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "There is no एक inside पहला (pahlā). It comes down from Sanskrit प्रथम (prathama), a word that already meant \"foremost\" before Hindi existed, and the number was never part of it."
+              "text": "There is no एक inside पहला (pahlā). It comes down from prathilla, a form CDIAL reconstructs beside prathila, \"first\", and builds on Sanskrit प्रथम (prathama), a word that already meant \"foremost\" before Hindi existed (CDIAL 8652). The number was never part of it."
             },
             {
               "kind": "speech",

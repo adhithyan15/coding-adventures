@@ -45,7 +45,7 @@ You'll want to know: भागना.
 भागना — bhāgnā — "to run away".
 
 The word, taken apart.
-भागना (bhāgnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhajyate, "is broken" (CDIAL 9361). Bloch linked the sense "flee" with a different old verb; CDIAL finds that unnecessary, since "broken" could come to mean "routed, fled".
+भागना (bhāgnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from bhagna, "broken, defeated", the past participle that CDIAL lists in its entry for bhajyate, "is broken" (CDIAL 9361). Bloch linked the sense "flee" with a different old verb; CDIAL finds that unnecessary, since "broken" could come to mean "routed, fled".
 
 What you've built.
 One more word for this chapter.

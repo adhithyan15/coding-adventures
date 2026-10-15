@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "What Passes Between Two People",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cd965384e30fa32f",
+  "sourceHash": "fnv1a64:3e1e743f132b6094",
   "lessons": [
     {
       "id": "MR-C24-sangne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b566b29c721d1275",
+      "sourceHash": "fnv1a64:48c3730685cc99e8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -89,11 +89,15 @@
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart — proclaiming, and counting people",
+          "title": "The word, taken apart — counting, then telling",
           "segments": [
             {
               "kind": "speech",
-              "text": "Sāṅgṇe comes through Prakrit saṁgai from Sanskrit śaṃsati, \"recites, proclaims,\" on the root śaṃs-. Behind that sits Indo-European ḱens-, \"to proclaim, to declare,\" which Latin took up as cēnseō, \"I assess, I declare.\" Two English words fall out of that Latin verb: census — the formal declaring of who lives where — and censor, the official who did the declaring. Telling someone your name is, at root, the same act as being counted."
+              "text": "Sāṅgṇe is often traced to Sanskrit śaṃsati, \"recites, proclaims\", and through it to the root behind Latin cēnseō and English census. CDIAL does not file it there. It lists Marathi sāṅgṇe, \"to declare, to bid\", under Sanskrit saṃkhyāti, \"reckons\" (CDIAL 12842), beside Prakrit verbs for saying such as saṃghai. Bloch once linked those Prakrit verbs with a root seen in Greek omphē, \"voice\"; CDIAL records that view without taking it."
+            },
+            {
+              "kind": "speech",
+              "text": "So on CDIAL's account the verb for telling began as a verb for counting up. English took the same turn with an unrelated word: to tell once meant to count, which is why a bank still has tellers."
             }
           ]
         },
@@ -138,11 +142,11 @@
             {
               "kind": "prompt",
               "action": "NAME",
-              "instruction": "two English words on the same root — census, censor",
+              "instruction": "the old sense CDIAL gives — counting — and the English verb that drifted the same way, tell",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: two English words on the same root — **census**, **censor**]"
+              "source": "[YOU NAME: the old sense CDIAL gives — **counting** — and the English verb that drifted the same way, **tell**]"
             }
           ]
         },
@@ -159,11 +163,11 @@
             },
             {
               "kind": "speech",
-              "text": "Ask someone to tell you their name. (Tumchaṁ nāv sāṅgā.) What did the Sanskrit root mean? (To recite, to proclaim.) Why is this word not printed here in its own script? (Its ga has not been taught yet.)"
+              "text": "Ask someone to tell you their name. (Tumchaṁ nāv sāṅgā.) What did the Sanskrit verb CDIAL gives mean? (To reckon, to count up.) Why is this word not printed here in its own script? (Its ga has not been taught yet.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: sāṅgṇe; Wiktionary: shams-."
+              "text": "Sources: Wiktionary: sāṅgṇe; CDIAL 12842."
             }
           ]
         }
@@ -182,7 +186,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7cbc149324853c9b",
+      "sourceHash": "fnv1a64:9dbe3eef7a505a11",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -253,7 +257,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "म्हणणे (mhaṇṇe) comes through Prakrit bhaṇai from Sanskrit भणति bhaṇati, \"speaks.\" The opening भ bh- did something Marathi is fond of: it shifted to the म्ह mh- cluster, breath and nasal at once. Hindi kept a plainer descendant in bhannā. Set beside sāṅgṇe, which came from a root for proclaiming, Marathi ended up with one verb for reciting outward and one for plain uttering."
+              "text": "म्हणणे (mhaṇṇe) comes through Prakrit bhaṇai from Sanskrit भणति bhaṇati, \"speaks.\" The opening भ bh- did something Marathi is fond of: it shifted to the म्ह mh- cluster, breath and nasal at once. Hindi kept a plainer descendant in bhannā. Set beside sāṅgṇe, which CDIAL traces to a verb for counting, Marathi ended up with one verb for telling a person and one for plain uttering."
             }
           ]
         },
@@ -669,7 +673,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f95d8a10fd2a4339",
+      "sourceHash": "fnv1a64:eca2b17827fb2032",
       "notice": null,
       "blocks": [
         {

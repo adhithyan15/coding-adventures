@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Sons, Daughters, and Everyone Else",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4e3baa4eb3f74e53",
+  "sourceHash": "fnv1a64:81845e677c4d0f3e",
   "lessons": [
     {
       "id": "HI-C44-son",
@@ -422,7 +422,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dcf8420461d0e048",
+      "sourceHash": "fnv1a64:40d0de0dc4f83b6e",
       "notice": null,
       "blocks": [
         {
@@ -453,7 +453,11 @@
             },
             {
               "kind": "speech",
-              "text": "From Sanskrit लोक (loka), 'world, realm': the word for the world slid across to mean the people in it. Latin lucus, a clearing in a forest, and lux, 'light', grow from the same ancient root — an open, lit space first, then whoever stands in it. Hindi hears लोग (log) as already plural, so it needs no further ending."
+              "text": "Usually traced to Sanskrit लोक (loka), 'open space, world', which already meant 'people' in Manu: the word for the world slid across to mean the people in it. Latin lucus, a clearing in a forest, and lux, 'light', grow from the same ancient root — an open, lit space first, then whoever stands in it. Hindi hears लोग (log) as already plural, so it needs no further ending."
+            },
+            {
+              "kind": "speech",
+              "text": "The road is not the plain inherited one, though. CDIAL lists the worn-down Hindi descendants of loka as loī and loe, 'people', and not log (CDIAL 11119). Log keeps the shape of Prakrit loga, so it may be a semi-learned word, one that stayed closer to the older form than ordinary speech would have left it."
             }
           ]
         },

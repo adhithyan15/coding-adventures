@@ -13,7 +13,7 @@ You'll want to know: साथ.
 साथ — sāth — "with, together".
 
 The word, taken apart.
-साथ (sāth) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sārtha, "caravan, company" (CDIAL 13364). Its form sārthena meant "in company with".
+साथ (sāth) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from sārthena, "in company with", the instrumental case of sārtha, "caravan, company". CDIAL lists Hindi sāth, "with", under sārthena, and the noun sāth, "company, train", under sārtha itself (CDIAL 13364).
 
 What you've built.
 One more word for this chapter.
@@ -45,7 +45,7 @@ You'll want to know: एक साथ.
 एक साथ — ek sāth — "all together".
 
 The word, taken apart.
-एक साथ (ek sāth) is ek, "one", from Sanskrit eka (CDIAL 2462), and sāth, "with", from sārtha, "company" (CDIAL 13364).
+एक साथ (ek sāth) is ek, "one", from Sanskrit eka (CDIAL 2462), and sāth, "with", from sārthena, "in company with", a case form of sārtha, "company" (CDIAL 13364).
 
 What you've built.
 One more word for this chapter.

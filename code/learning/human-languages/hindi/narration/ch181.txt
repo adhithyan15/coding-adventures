@@ -77,7 +77,7 @@ You'll want to know: मोड़.
 मोड़ — moṛ — "a turn, a bend".
 
 The word, taken apart.
-मोड़ (moṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from muṭati, "twists" (CDIAL 10186). moṛ, "a turn", is the noun of moṛnā, "to twist, bend".
+मोड़ (moṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. moṛ, "a turn", is the noun of moṛnā, "to twist, bend". CDIAL lists moṛnā under mōṭati, the second form in its entry for Sanskrit muṭati, "twists" (CDIAL 10186), and gives Panjabi moṛ, "a turn in a road", from the same form.
 
 What you've built.
 One more word for this chapter.

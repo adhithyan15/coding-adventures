@@ -109,7 +109,7 @@ You'll want to know: मिर्च.
 मिर्च — mirc — "a chilli".
 
 The word, taken apart.
-मिर्च (mirc) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from marīca, "peppercorn" (CDIAL 9875). CDIAL takes the Sanskrit word from an Austroasiatic language. When the chilli came to India, it took the name of black pepper.
+मिर्च (mirc) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from maricca, a by-form CDIAL reconstructs beside Sanskrit marīca, "peppercorn" (CDIAL 9875). The plain marīca gave Hindi a different word, mirī, "black pepper". CDIAL takes the Sanskrit word from an Austroasiatic language. When the chilli came to India, it took the name of black pepper.
 
 What you've built.
 One more word for this chapter.

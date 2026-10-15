@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "One House, Four Languages",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:cc4e51b54e6b95b5",
+  "sourceHash": "fnv1a64:b6f10e8e9a790182",
   "lessons": [
     {
       "id": "HI-C36-ghar",
@@ -12,14 +12,14 @@
       "title": "घर (ghar) — \"house,\" and the fence that came first",
       "headword": "घर",
       "romanization": "ghar",
-      "gloss": "house, home — masculine, and from a Sanskrit word that meant a fenced enclosure before it meant a building",
+      "gloss": "house, home — masculine, and probably from a Sanskrit word that meant a fenced enclosure before it meant a building",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1fbe2c0661ea344b",
+      "sourceHash": "fnv1a64:65736e87f79ffafd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -74,7 +74,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every Hindi noun is masculine or feminine. Not the thing — the word. There is nothing manly about a house; the gender is a fact about ghar the way its spelling is, and you learn the two together or you learn them twice."
+              "text": "Every Hindi noun is masculine or feminine. Not the thing — the word: the gender is a fact about ghar the way its spelling is."
             },
             {
               "kind": "speech",
@@ -93,7 +93,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "घर (ghar) comes from Sanskrit गृह (gṛha), worn smooth through Prakrit ghara into the short word you just said. Hindi kept गृह too, borrowed back out of Sanskrit for formal use, so both shapes survive."
+              "text": "घर (ghar) comes from ghara, \"house\", already in the Pali canon (CDIAL 4428). It is usually taken as the spoken form of Sanskrit गृह (gṛha), but CDIAL calls that sound change phonetically difficult: likely, not proven. Hindi kept गृह too, for formal use."
             },
             {
               "kind": "speech",
@@ -101,7 +101,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the oldest sense is not walls and a roof. It is a fenced-in piece of ground. You enclose the land first; the house is what goes inside afterwards."
+              "text": "So, if the link holds, the oldest sense is not walls and a roof but a fenced-in piece of ground."
             }
           ]
         },
