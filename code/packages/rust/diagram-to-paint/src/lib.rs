@@ -13109,11 +13109,12 @@ emphasized --> direct
                 }
                 let expected=PaintScene {width:config.width,height:config.height,background:"rgb(255,255,255)".into(),instructions,id:None,
                     metadata:Some(HashMap::from([("venn.width".into(),config.width.to_string()),("venn.height".into(),config.height.to_string()),
-                    ("venn.padding".into(),config.padding.to_string()),("venn.useMaxWidth".into(),max_width.to_string()),("venn.useDebugLayout".into(),debug.to_string())]))};
+                    ("venn.padding".into(),config.padding.to_string()),("venn.useMaxWidth".into(),max_width.to_string()),("venn.useDebugLayout".into(),debug.to_string()),("venn.fontFamily".into(),"sans-serif".into()),
+                    ("venn.titleTextColor".into(),"#0f172a".into()),("venn.setTextColor".into(),"#0f172a".into())]))};
                 assert_eq!(actual,expected,"whole scene, every primitive/glyph/style/order/config field");
                 let mut queries=Vec::new();
-                if titled {queries.push(FontQuery::named("Helvetica").with_weight(text_interfaces::FontWeight(700)));}
-                queries.push(FontQuery::named("Helvetica"));
+                if titled {queries.push(FontQuery::named("sans-serif").with_weight(text_interfaces::FontWeight(700)));}
+                queries.push(FontQuery::named("sans-serif"));
                 assert_eq!(*resolver.0.borrow(),queries,"all ordered resolver calls");
             }}}
         }

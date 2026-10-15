@@ -10,11 +10,11 @@ fn config(prefix: &str) -> VennConfig {
 fn venn_source_defaults_and_exact_whole_object_precedence() {
     assert_eq!(config(""), VennConfig::default());
     let front="---\nconfig:\n  venn:\n    width: 640\n    height: 360\n    padding: 24\n    useMaxWidth: false\n    useDebugLayout: true\n---";
-    assert_eq!(config(front), VennConfig { width:640.0,height:360.0,padding:24.0,use_max_width:false,use_debug_layout:true });
+    assert_eq!(config(front), VennConfig { width:640.0,height:360.0,padding:24.0,use_max_width:false,use_debug_layout:true,..Default::default() });
     for object in [r#"{"venn":{"width":720,"height":420,"padding":30,"useMaxWidth":false,"useDebugLayout":true}}"#,
         "{'venn':{'width':720,'height':420,'padding':30,'useMaxWidth':false,'useDebugLayout':true}}"] {
         assert_eq!(config(&format!("%%{{init: {object}}}%%")), VennConfig {
-            width:720.0,height:420.0,padding:30.0,use_max_width:false,use_debug_layout:true });
+            width:720.0,height:420.0,padding:30.0,use_max_width:false,use_debug_layout:true,..Default::default() });
     }
     // A selected object replaces the entire front-matter object; absent or
     // invalid fields default instead of inheriting the front matter's values.

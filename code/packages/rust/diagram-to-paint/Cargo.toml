@@ -16,6 +16,7 @@ text-interfaces = { path = "../text-interfaces" }
 # Authored parser -> layout -> paint geometry controls run on every platform.
 mermaid-parser = { path = "../mermaid-parser" }
 diagram-layout-hierarchy = { path = "../diagram-layout-hierarchy" }
+diagram-layout-geometric = { path = "../diagram-layout-geometric" }
 
 [target.'cfg(target_vendor = "apple")'.dev-dependencies]
 dot-parser = { path = "../dot-parser" }
@@ -31,5 +32,4 @@ diagram-layout-chart = { path = "../diagram-layout-chart" }
 diagram-layout-structural = { path = "../diagram-layout-structural" }
 diagram-layout-sequence = { path = "../diagram-layout-sequence" }
 diagram-layout-temporal = { path = "../diagram-layout-temporal" }
-diagram-layout-geometric = { path = "../diagram-layout-geometric" }
 serde_json = "1"

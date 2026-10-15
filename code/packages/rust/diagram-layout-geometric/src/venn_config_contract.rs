@@ -4,7 +4,7 @@ use diagram_ir::{VennConfig, VennRegion, VennStyle, VennText, MAX_VENN_CANVAS};
 
 fn example() -> VennDiagram {
     VennDiagram { config: VennConfig { width: 400.0, height: 300.0, padding: 25.0,
-        use_max_width: false, use_debug_layout: true }, title: None,
+        use_max_width: false, use_debug_layout: true, ..Default::default() }, title: None,
         regions: vec![
             VennRegion { sets: vec!["A".into()], size: 1.0, label: Some("Alpha".into()), style: VennStyle::default() },
             VennRegion { sets: vec!["B".into()], size: 1.0, label: None, style: VennStyle::default() },
