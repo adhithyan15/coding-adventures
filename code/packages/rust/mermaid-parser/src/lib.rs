@@ -7832,6 +7832,7 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
         padding: parse("padding", 10.0)?,
         vertical_separation: parse("verticalSeparation", 8.0)?,
         horizontal_separation: parse("horizontalSeparation", 10.0)?,
+        arc_radius: parse("arcRadius", defaults.arc_radius)?,
         font_size,
         font_family: string("fontFamily", &defaults.font_family),
         terminal_fill: string("terminalFill", &defaults.terminal_fill),

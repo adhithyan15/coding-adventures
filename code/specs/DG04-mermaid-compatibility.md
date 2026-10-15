@@ -869,6 +869,9 @@ connection, marker, and rule-name colors; stroke width; and marker visibility
 and radius follow the same typed semantic and layout path. Font size participates
 in element measurement, while PaintScene emits the resolved portable geometry,
 glyph runs, strokes, fills, and marker ellipses without backend-specific CSS.
+Configured `arcRadius` controls branch, bypass, and loopback lane geometry;
+lowering converts their orthogonal corners to portable quadratic Bézier path
+commands before native rendering.
 
 This is intentionally partial. Upstream curve geometry, theme/config
 fallbacks, comment styling, compact mode, and exact typography remain
