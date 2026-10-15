@@ -72,8 +72,11 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // 155 -> 156: chapter 273 preserves one complete attested sentence whose
   // object points back to the first-person subject, then retrieves it twice
   // before SA-A1-PRON-05 closes.
-  expect(coverage.covered).toBe(156);
-  expect(coverage.unmapped).toBe(8);
+  // 156 -> 157: chapter 274 reconnects the owned house, buying, and
+  // household-work field through one cross-checked rental exchange, then
+  // retrieves the pair twice before SA-A1-M-07 closes.
+  expect(coverage.covered).toBe(157);
+  expect(coverage.unmapped).toBe(7);
   expect(coverage.partial).toBe(0);
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
@@ -81,15 +84,15 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // denominator is the smallest of the twenty-five. 95% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 156/164 points covered (95%)",
+    "sanskrit A1 (partial inventory): 157/164 points covered (96%)",
   );
-  // Where the eight gaps actually are, named rather than counted. Two columns hold
-  // seven of them, and they are the two an editorially derived A1 inventory is
+  // Where the seven gaps actually are, named rather than counted. Two columns hold
+  // all of them, and they are the two an editorially derived A1 inventory is
   // bound to strain on: the revival vocabulary a classical corpus never had,
   // and the orthography beyond the characters the script ladder teaches.
   expect(coverage.byCategory[
     "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]!).toEqual({ enumerated: 15, covered: 11 });
+  ]!).toEqual({ enumerated: 15, covered: 12 });
   expect(coverage.byCategory["Lipi — the script and its orthography"]!).toEqual({
     enumerated: 10,
     covered: 7,

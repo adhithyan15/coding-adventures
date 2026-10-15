@@ -1,0 +1,17 @@
+{
+  "language": "sanskrit",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:e1e206e6070e060d",
+  "lessonIds": [
+    "SA-C274-meet-one-rental-exchange",
+    "SA-C274-rental-first-retrieval",
+    "SA-C274-rental-final-retrieval"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "sanskrit/narration/ch274.txt",
+  "json": "sanskrit/narration/ch274.json",
+  "textHash": "fnv1a64:246eb5cba5ffaa50",
+  "jsonHash": "fnv1a64:6a94fa902844c34b",
+  "findings": []
+}

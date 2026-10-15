@@ -1,0 +1,275 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 274,
+  "title": "One rental exchange, held as a whole",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:e1e206e6070e060d",
+  "lessons": [
+    {
+      "id": "SA-C274-meet-one-rental-exchange",
+      "sequence": 16120,
+      "title": "One rental exchange, held as a whole",
+      "headword": "किं तत् भाटकितं गृहम्? — न, अहं भाटकं न ददामि।",
+      "romanization": "kiṃ tat bhāṭakitaṃ gṛham? — na, ahaṃ bhāṭakaṃ na dadāmi",
+      "gloss": "Is that a rented house? No, I do not pay rent.",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:dc27b81c958e1ee4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall गृहम्, “house” or “home,” and क्रीणामि, “I buy.” Then recall the familiar household actions पचति, प्रक्षालयति, and मार्जयति: cooking, washing, and cleaning. This is your known house, buying, and household-work field."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: one complete attested exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किं तत् भाटकितं गृहम्? kiṃ tat bhāṭakitaṃ gṛham? “Is that a rented house?” न, अहं भाटकं न ददामि। na, ahaṃ bhāṭakaṃ na dadāmi. “No, I do not pay rent.”"
+            },
+            {
+              "kind": "speech",
+              "text": "The direct conversation source supplies this complete attested exchange. A 1954 Saṃskṛtavyavahārapraśnottarī conversation and its Hindi gloss corroborate the rented-house and rent-payment function."
+            },
+            {
+              "kind": "speech",
+              "text": "The older volunteer rendering prints भाटं, with an apparent dropped syllable. The Government of India's Commission for Scientific and Technical Terminology gives भाटकम् for “hire, rent” and गृहभाटकम् for “house rent.” The conversation above independently preserves भाटकं, so this lesson uses the cross-checked complete exchange rather than copying that apparent omission."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: keep the exchange bounded",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the question and answer as one practical pair. The lesson does not turn भाटकितम्, गृहम्, or भाटकम् into a productive participle or case paradigm, and it does not ask you to derive their sandhi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read the question and answer once slowly. Then say them together as one exchange about whether a house is rented."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the complete pair once more. Keep the attested wording together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C274-rental-first-retrieval",
+      "sequence": 16130,
+      "title": "Retrieve the rental exchange: round one",
+      "headword": "(independent rental-exchange retrieval, first round)",
+      "romanization": "",
+      "gloss": "independently retrieve one bounded rental exchange",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4259aaab2365d0c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Prepare to retrieve both turns from their meaning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: independent retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No Sanskrit model is shown before you answer."
+            },
+            {
+              "kind": "speech",
+              "text": "You visit someone at home. Ask, “Is that a rented house?” Then answer, “No, I do not pay rent.” Say the Sanskrit rental exchange."
+            },
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built: check after answering",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now check: किं तत् भाटकितं गृहम्? — न, अहं भाटकं न ददामि। (kiṃ tat bhāṭakitaṃ gṛham? — na, ahaṃ bhāṭakaṃ na dadāmi.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall: boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One successful retrieval is not evidence of productive participle, case, or sandhi mastery, a general renting repertoire, housing competence, human validation, learner attainment, or exam readiness."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C274-rental-final-retrieval",
+      "sequence": 16140,
+      "title": "Retrieve the rental exchange: round two",
+      "headword": "(independent rental-exchange retrieval, second round)",
+      "romanization": "",
+      "gloss": "retrieve the same bounded exchange in a distinct home context",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d32c700599ff8029",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the same two turns in a fresh home context."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: independent retrieval in a fresh context",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No Sanskrit model is shown before you answer."
+            },
+            {
+              "kind": "speech",
+              "text": "A friend points to another home. Ask, “Is that a rented house?” Then answer, “No, I do not pay rent.” Say the Sanskrit rental exchange."
+            },
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built: check after answering",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now check: किं तत् भाटकितं गृहम्? — न, अहं भाटकं न ददामि। (kiṃ tat bhāṭakitaṃ gṛham? — na, ahaṃ bhāṭakaṃ na dadāmi.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall: boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two bounded retrievals are not evidence of productive participle, case, or sandhi mastery, a general renting repertoire, housing competence, human validation, learner attainment, or exam readiness."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

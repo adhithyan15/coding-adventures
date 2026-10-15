@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C274-meet-one-rental-exchange",
+    "language": "sanskrit",
+    "chapter": 274,
+    "sequence": 16120,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dc27b81c958e1ee4"
+  },
+  "findings": []
+}
