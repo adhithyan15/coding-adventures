@@ -77,7 +77,7 @@ You'll want to know: लोमड़ी.
 लोमड़ी — lomṛī — "a fox".
 
 The word, taken apart.
-लोमड़ी (lomṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lomaṭaka, "fox" (CDIAL 11153).
+लोमड़ी (lomṛī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from lompaṭa, the third of the fox-words in CDIAL's entry for Sanskrit lomaṭaka, "fox", a form CDIAL reconstructs from its descendants (CDIAL 11153). CDIAL adds that these words are possibly blends of an older lopi- with loman, "body hair", and lūma, "tail".
 
 What you've built.
 One more word for this chapter.

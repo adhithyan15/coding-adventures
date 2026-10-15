@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-LEX-DOLA, MR-SCRIPT-RETROFLEX-LA, MR-ETYMON-DOLA-SWING, MR-LEX-BAHIN, MR-LEX-BHAU, MR-ETYMON-PASH-SPEK, MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT, MR-GRAMMAR-KUTUMB-NEUTER]
+  knowledge: [MR-LEX-DOLA, MR-SCRIPT-RETROFLEX-LA, MR-ETYMON-DOLA-SWING, MR-LEX-BAHIN, MR-LEX-BHAU, MR-ETYMON-PAHNE-PRACAH, MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT, MR-GRAMMAR-KUTUMB-NEUTER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,17 +65,17 @@ inherited Indo-Aryan eye-word is Sanskrit **अक्षि**/**अक्ष** *
 Indo-European ***\*h₃ekʷ-***, the very cousin of Latin **oculus** and English
 **eye**. Hindi's **आँख** *ā̃kh* continues that old word, worn down through
 Prakrit *acchi*. Marathi's eye is not that word at all — it is a replacement,
-built on something that once just meant *swing*.
+built on something that once meant only *swing*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DOLA, MR-SCRIPT-RETROFLEX-LA, MR-ETYMON-DOLA-SWING, MR-ETYMON-PASH-SPEK, MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT, MR-GRAMMAR-KUTUMB-NEUTER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DOLA, MR-SCRIPT-RETROFLEX-LA, MR-ETYMON-DOLA-SWING, MR-ETYMON-PAHNE-PRACAH, MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT, MR-GRAMMAR-KUTUMB-NEUTER] -->
 
 [PAUSE 1s]
 - [YOU SAY: **ḍoḷā** — eye]
 - [YOU SAY: what its Sanskrit root actually meant — "a swing"]
 - [YOU NAME: the word Marathi's eye-word replaced — **akṣi**, Hindi's **āṅkh**]
 - [YOU SAY: what you do with your **डोळे** — **pāhṇe**, "to see," Chapter 14's
-  verb whose own root was Indo-European *\*spek-*]
+  verb, which CDIAL traces to *\*pracāh*, "look for"]
 - [YOU RECALL: Chapter 18's tatsama/tadbhava split — **मित्र, कुटुंब** taken up
   whole, **भाऊ, बहीण** worn down — and **कुटुंब**'s own neuter gender against
   Hindi's masculine]

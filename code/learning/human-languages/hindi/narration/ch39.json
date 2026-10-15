@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "The People Around You",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:014c154bada4fe81",
+  "sourceHash": "fnv1a64:5395d36e5a2ea2a4",
   "lessons": [
     {
       "id": "HI-C39-dost",
@@ -194,14 +194,14 @@
       "title": "बच्चा / बच्ची / बछड़ा (bacchā / bacchī / bachṛā) — children and the inherited \"yearling\"",
       "headword": "बच्चा / बच्ची / बछड़ा",
       "romanization": "bacchā / bacchī / bachṛā",
-      "gloss": "boy child / girl child / calf — Persian siblings beside an inherited Sanskrit cousin",
+      "gloss": "boy child / girl child / calf — usually traced to Persian, beside an inherited Sanskrit cousin",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1347f0bcf6af608",
+      "sourceHash": "fnv1a64:86a65f895bc21cbf",
       "notice": null,
       "blocks": [
         {
@@ -217,7 +217,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have पिता and माता. Here is the third person at that table — and this word finally lets the masculine and feminine forms stand side by side."
+              "text": "You have पिता and माता. Here is the third person at that table."
             }
           ]
         },
@@ -232,7 +232,7 @@
             },
             {
               "kind": "speech",
-              "text": "Here the lean does real work at last. Swap the final -ा for -ी and you get बच्ची (bacchī), a girl child, feminine — मेरी बच्ची."
+              "text": "Swap the final -ा for -ी and you get बच्ची (bacchī), a girl child, feminine — मेरी बच्ची."
             },
             {
               "kind": "speech",
@@ -251,23 +251,27 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बच्चा is Persian, بچه (bacca) — and the obvious story is wrong."
+              "text": "बच्चा is usually traced to Persian, بچه (bacca), and the obvious story about it is wrong."
             },
             {
               "kind": "speech",
-              "text": "Persian bacca did not come from Sanskrit वत्स (vatsa), \"calf, young one.\" The two are sisters: one Indo-Iranian word inherited down two separate branches. Centuries later the Persian one was borrowed into Hindi — which had already inherited the Sanskrit one as बछड़ा (bachṛā), \"calf.\""
+              "text": "Persian bacca did not come from Sanskrit वत्स (vatsa), \"calf.\" They are sisters, one Indo-Iranian word down two branches, and Hindi had already inherited the Sanskrit one as बछड़ा (bachṛā), \"calf\" (CDIAL 11241 records it as bacheṛā, under vatsatara)."
             },
             {
               "kind": "speech",
-              "text": "So Hindi holds both, the same ancient word by two roads — the pattern दरवाज़ा and द्वार showed you, running again, and the same Persian relay that brought दोस्त (dost)."
+              "text": "So Hindi holds both, one word by two roads, as with दरवाज़ा and द्वार, through the Persian relay that brought दोस्त (dost)."
             },
             {
               "kind": "speech",
-              "text": "Behind both stands wet-, \"year.\" Latin vetus, \"old,\" is from it — English veteran — and so are Latin vitulus, \"calf,\" and English wether, a yearling sheep."
+              "text": "Behind both stands wet-, \"year\": Latin vetus, \"old,\" and vitulus, \"calf,\" and English wether, a yearling sheep."
             },
             {
               "kind": "speech",
-              "text": "A child, at the root, is a yearling. पिता and माता are named by relationship; बच्चा is named by age."
+              "text": "CDIAL offers another road: it sets Panjabi baccā, \"child\", under Sanskrit apatya, \"offspring\" (CDIAL 424), and its addenda beside Persian bača (CDIAL 14226). Hindi is listed in neither, so the Persian road is usual, not settled."
+            },
+            {
+              "kind": "speech",
+              "text": "On that road, a child is a yearling, named by age, where पिता and माता are named by relationship."
             }
           ]
         },
@@ -303,11 +307,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two roads — bacchā from Persian, bachṛā inherited; one word",
+              "instruction": "the two roads — bacchā usually from Persian, bachṛā inherited; one word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two roads — *bacchā* from Persian, *bachṛā* inherited; one word]"
+              "source": "[YOU SAY: the two roads — *bacchā* usually from Persian, *bachṛā* inherited; one word]"
             },
             {
               "kind": "prompt",

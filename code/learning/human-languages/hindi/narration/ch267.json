@@ -4,7 +4,7 @@
   "chapter": 267,
   "title": "A quilt, A mosquito net, A tap, A drain, A tank",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1e639063e8828ee6",
+  "sourceHash": "fnv1a64:ccaa4f616aa1a207",
   "lessons": [
     {
       "id": "HI-C267-rajai",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ea9e7d53d7c9898",
+      "sourceHash": "fnv1a64:776d01d67d2cb61b",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नल (nal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from naḍa, \"a species of reed\" (CDIAL 6936). CDIAL lists Hindi nalā, \"hollow reed, windpipe\". It notes possible Dravidian or Munda contact."
+              "text": "नल (nal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL does not list nal itself. It puts Hindi nalā, \"hollow reed, windpipe\", under naḍaka, \"hollow of a bone\", a form beside Sanskrit naḍa, \"a species of reed\", which keeps the plain reed-word naṛ (CDIAL 6936). It notes possible Dravidian or Munda contact."
             }
           ]
         },

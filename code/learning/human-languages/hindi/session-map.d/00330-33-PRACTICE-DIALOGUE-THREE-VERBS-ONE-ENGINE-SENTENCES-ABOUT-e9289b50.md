@@ -8,7 +8,7 @@ chapter; the right-hand column names it, because that reach-back is the point.
 
 | Lesson | Introduces | Reaches back to |
 |---|---|---|
-| sochna | *śocati* "to grieve" → *sochnā*; the noun *soch* | नहीं (Ch. 7) — *maiṁ nahīṁ sochtā* |
+| sochna | *śocyate* "is pained" → *sochnā*; the noun *soch* | नहीं (Ch. 7) — *maiṁ nahīṁ sochtā* |
 | samajhna | *sam-* + *budh-* "to wake"; **Buddha**, *bode/forbid* | नहीं + माफ़ कीजिए (Ch. 7, 9) — "Sorry, I don't understand" |
 | padhna | *paṭhati* "to recite aloud"; read = study; the flap ढ़ | एक–दस (Ch. 6, 21) recited aloud; the nuqtā of माफ़ (Ch. 9) |
 | likhna | *likhati* "to scratch"; four families, one picture | the preposed ि (W03) and मेरा नाम (W04) |

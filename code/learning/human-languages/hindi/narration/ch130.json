@@ -4,7 +4,7 @@
   "chapter": 130,
   "title": "Hammer, Nail, Scissors, Thread, Comb",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b03c4a6f0561ffde",
+  "sourceHash": "fnv1a64:8c3b3c25b14c8653",
   "lessons": [
     {
       "id": "HI-C130-hathaura",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8366444d527a61fe",
+      "sourceHash": "fnv1a64:e5bf45680d24bab9",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "धागा (dhāgā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhāgga, \"thread\", a form CDIAL reconstructs from its descendants (CDIAL 6770)."
+              "text": "धागा (dhāgā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhāgga, \"thread\", a form CDIAL reconstructs from its descendants (CDIAL 6770). Where dhāgga came from is not settled: CDIAL says it was possibly crossed with dhara, \"a flock of raw cotton\", but points as well to a second thread-word, trāgga."
             }
           ]
         },

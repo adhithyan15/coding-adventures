@@ -88,8 +88,8 @@ validation remain explicit backlog.
   jāṇe, yeṇe, khāṇe, pāhṇe, māhīt asṇe — one idea each. The copula **आहे** and
   the verb-last rule; the present ending that declares your gender; *going* and
   *coming* as one Sanskrit root; the *-णे* infinitive as a **neuter** noun (the
-  third gender Hindi lost); *paś-* as Indo-European *\*spek-*, cousin of
-  *spectacle* and *spy*; and knowledge in the dative — *malā māhīt āhe*, "to me
+  third gender Hindi lost); *pāhṇe* from *\*pracāh* (CDIAL 8492), not the
+  look-alike *\*spek-* of *spectacle*; and knowledge in the dative — *malā māhīt āhe*, "to me
   known is."
 - **Chapter 15 — The Mind and the Page** ([`lessons/MR-C08-*`](./lessons/)):
   vichār karṇe, samajṇe, vāchṇe, lihiṇe. Four roots that meant something

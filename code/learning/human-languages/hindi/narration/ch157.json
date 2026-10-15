@@ -4,7 +4,7 @@
   "chapter": 157,
   "title": "Fresh, Rich, Poor, Young, Old",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cc0b07421a8ad613",
+  "sourceHash": "fnv1a64:589b26d75ed2a703",
   "lessons": [
     {
       "id": "HI-C157-taza",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2dca789e11ccb874",
+      "sourceHash": "fnv1a64:735d9c68034bd440",
       "notice": null,
       "blocks": [
         {
@@ -469,7 +469,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "जवान (javān) is a loan, usually traced to Persian javān, \"young\"."
+              "text": "जवान (javān) is usually taken as a loan from Persian javān, \"young\". That may not be the whole story: CDIAL lists a Hindi juwān, \"a youth\", under yuvāna, \"young\", a form it builds on the Sanskrit yuvan, \"young\" (CDIAL 10510). So Hindi may have this word by an inherited road as well as a borrowed one."
             }
           ]
         },

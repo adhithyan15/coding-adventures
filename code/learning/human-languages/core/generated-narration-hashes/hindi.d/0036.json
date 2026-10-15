@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 36,
-  "sourceHash": "fnv1a64:cc4e51b54e6b95b5",
+  "sourceHash": "fnv1a64:b6f10e8e9a790182",
   "lessonIds": [
     "HI-C36-ghar",
     "HI-C36-darvaaza",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "hindi/narration/ch36.txt",
   "json": "hindi/narration/ch36.json",
-  "textHash": "fnv1a64:71447f3f288a6167",
-  "jsonHash": "fnv1a64:bd6c5e6b02a8e86e",
+  "textHash": "fnv1a64:d120dc40672d638b",
+  "jsonHash": "fnv1a64:51cd536a429c1ddc",
   "findings": []
 }

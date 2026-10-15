@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 55,
-  "sourceHash": "fnv1a64:69f49b4ded2ff752",
+  "sourceHash": "fnv1a64:348e4d821072638d",
   "lessonIds": [
     "HI-C55-sun",
     "HI-C55-moon",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch55.txt",
   "json": "hindi/narration/ch55.json",
-  "textHash": "fnv1a64:c2b5554c463c87c5",
-  "jsonHash": "fnv1a64:1b3b5ead0a2065ae",
+  "textHash": "fnv1a64:6c6f8b0ee6b74e5b",
+  "jsonHash": "fnv1a64:19b4eb4c5179428d",
   "findings": []
 }

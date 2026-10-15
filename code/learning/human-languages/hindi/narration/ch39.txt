@@ -52,20 +52,21 @@ Lesson 2 of 5.
 
 Warm-up.
 [pause 2 seconds]
-You have पिता and माता. Here is the third person at that table — and this word finally lets the masculine and feminine forms stand side by side.
+You have पिता and माता. Here is the third person at that table.
 
 Grammar Lens: a pair you can see.
 बच्चा (bacchā) = "child," masculine — मेरा बच्चा.
-Here the lean does real work at last. Swap the final -ा for -ी and you get बच्ची (bacchī), a girl child, feminine — मेरी बच्ची.
+Swap the final -ा for -ी and you get बच्ची (bacchī), a girl child, feminine — मेरी बच्ची.
 This is what दरवाज़ा and कुर्सी only hinted at: for this class of noun -ā/-ī is not a lean but the machinery, and the word changes with the person. Which is exactly what दोस्त (dost) would not do.
 You already know how to ask this child's age: कितने साल के हो? — how many years someone is of, rather than how many they have.
 
 The word, taken apart: बच्चा.
-बच्चा is Persian, بچه (bacca) — and the obvious story is wrong.
-Persian bacca did not come from Sanskrit वत्स (vatsa), "calf, young one." The two are sisters: one Indo-Iranian word inherited down two separate branches. Centuries later the Persian one was borrowed into Hindi — which had already inherited the Sanskrit one as बछड़ा (bachṛā), "calf."
-So Hindi holds both, the same ancient word by two roads — the pattern दरवाज़ा and द्वार showed you, running again, and the same Persian relay that brought दोस्त (dost).
-Behind both stands wet-, "year." Latin vetus, "old," is from it — English veteran — and so are Latin vitulus, "calf," and English wether, a yearling sheep.
-A child, at the root, is a yearling. पिता and माता are named by relationship; बच्चा is named by age.
+बच्चा is usually traced to Persian, بچه (bacca), and the obvious story about it is wrong.
+Persian bacca did not come from Sanskrit वत्स (vatsa), "calf." They are sisters, one Indo-Iranian word down two branches, and Hindi had already inherited the Sanskrit one as बछड़ा (bachṛā), "calf" (CDIAL 11241 records it as bacheṛā, under vatsatara).
+So Hindi holds both, one word by two roads, as with दरवाज़ा and द्वार, through the Persian relay that brought दोस्त (dost).
+Behind both stands wet-, "year": Latin vetus, "old," and vitulus, "calf," and English wether, a yearling sheep.
+CDIAL offers another road: it sets Panjabi baccā, "child", under Sanskrit apatya, "offspring" (CDIAL 424), and its addenda beside Persian bača (CDIAL 14226). Hindi is listed in neither, so the Persian road is usual, not settled.
+On that road, a child is a yearling, named by age, where पिता and माता are named by relationship.
 
 Guided Practice.
 [pause 1 second]
@@ -73,7 +74,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the family — merā pitā, merī mātā, merā bacchā]
 [pause 8 seconds for the answer]
-[your turn — say: the two roads — bacchā from Persian, bachṛā inherited; one word]
+[your turn — say: the two roads — bacchā usually from Persian, bachṛā inherited; one word]
 [pause 8 seconds for the answer]
 [your turn — say: vetus, vitulus, wether — and the meaning under all of them (year)]
 [pause 8 seconds for the answer]

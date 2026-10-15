@@ -101,7 +101,7 @@ fretting on its own.
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-SOCHNA, UR-SCRIPT-CHE-LETTER, UR-ETYMON-SOCHNA-GRIEVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-JANNA] -->
 
 [PAUSE 3s] How many dots does **چ** carry, and where? (Three, below.) What did
-*śocati* mean before it meant “think”? (**To burn, to grieve**.) Is there an
+*śuc-* mean before it meant “think”? (**To burn, to grieve**.) Is there an
 English cousin of *śuc-*? (**No**.)
 
 Sources: [Wiktionary: سوچنا](https://en.wiktionary.org/wiki/%D8%B3%D9%88%DA%86%D9%86%D8%A7); [*Zero Zabar*: The Urdu alphabet](https://openbooks.library.northwestern.edu/zerozabar/chapter/the-urdu-alphabet/).

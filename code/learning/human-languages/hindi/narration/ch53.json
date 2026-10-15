@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e66c993b9dd17f86",
+  "sourceHash": "fnv1a64:eff9222f247d4ec1",
   "lessons": [
     {
       "id": "HI-C53-shoulder",
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96a71fefcafa1c40",
+      "sourceHash": "fnv1a64:92ccbd0d39421409",
       "notice": null,
       "blocks": [
         {
@@ -190,7 +190,7 @@
             },
             {
               "kind": "speech",
-              "text": "The Sanskrit source is घुण्ट (ghuṇṭa), a word for the ankle or knee joint, though the details of how it arrived are not agreed on."
+              "text": "Behind it stands a family of Sanskrit words for the ankle, ghuṭa and ghuṇṭa, though the details of how the knee-word grew out of them are not agreed on."
             },
             {
               "kind": "speech",
@@ -205,7 +205,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "घुटना (ghuṭnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from ghuṭa, \"ankle\" (CDIAL 4479). CDIAL takes the Sanskrit word from Dravidian, and allows a second source in its variant ghuṇṭa."
+              "text": "घुटना (ghuṭnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it under ghuṭṭa, a form it reconstructs beside Sanskrit ghuṭa, \"ankle\", and takes the whole family from Dravidian. It also allows a second road, through a form ghũṭanā built on the variant ghuṇṭa (CDIAL 4479)."
             }
           ]
         },

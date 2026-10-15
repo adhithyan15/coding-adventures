@@ -15,7 +15,7 @@ concept_tag: HI-VERB-MORNA
 prerequisites: [HI-C228-dabana, HI-C228-ghumana]
 sounds: []
 roots: [sanskrit-mutati]
-etymology_hook: "moṛnā ← Sanskrit muṭati 'twists', a tadbhava (CDIAL 10186)"
+etymology_hook: "moṛnā ← mōṭati, a form the Sanskrit root-lists give beside muṭati 'twists' (CDIAL 10186)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C228-ghumana]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मोड़ना** (*moṛnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *muṭati*, "twists" (CDIAL 10186).
+**मोड़ना** (*moṛnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mōṭati*, a verb known from the Sanskrit grammarians' root-lists, which CDIAL gives as the second form in its entry for *muṭati*, "twists" (CDIAL 10186). The plain *muṭati* gave Hindi the intransitive *muṛnā*, "to be turned".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
