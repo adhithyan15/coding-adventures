@@ -2108,13 +2108,15 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     }
     let mut text_children = Vec::new();
     let mut title_font = options.title_font.clone(); title_font.family = diagram.config.font_family.clone();
+    title_font.size = 32.0 * scale;
     let mut label_font = options.label_font.clone(); label_font.family = diagram.config.font_family.clone();
     if let Some(title) = &diagram.title {
         text_children.push(text_node(title, 8.0, 5.0, diagram.width - 16.0, 28.0, title_font,
             css_to_color(&diagram.config.title_text_color)));
     }
     for label in &diagram.labels {
-        text_children.push(text_node(&label.text, label.x - 70.0, label.y - 12.0, 140.0, 26.0, label_font.clone(),
+        let mut font = label_font.clone(); font.size = label.font_size;
+        text_children.push(text_node(&label.text, label.x - 70.0, label.y - 12.0, 140.0, 26.0, font,
             label.style.text_color.as_deref().map(css_to_color).unwrap_or_else(|| css_to_color(&diagram.config.set_text_color))));
     }
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
@@ -11378,12 +11380,17 @@ mod tests {
                 id: "A".into(), label: "Alpha".into(), cx: 200.0, cy: 160.0, radius: 90.0,
                 style: diagram_ir::VennStyle { fill: Some("#ff0000".into()), fill_opacity: Some(0.5), ..Default::default() },
             }],
-            labels: vec![diagram_ir::LayoutedVennLabel { text: "Alpha".into(), x: 200.0, y: 160.0, style: Default::default() }],
+            labels: vec![diagram_ir::LayoutedVennLabel { text: "Alpha".into(), x: 200.0, y: 160.0,
+                font_size: 12.0, style: Default::default() }],
             debug_circles: vec![], debug_cells: vec![],
         };
         let scene = diagram_to_paint_venn(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 8.0)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 12.0)));
     }
 
     #[test]

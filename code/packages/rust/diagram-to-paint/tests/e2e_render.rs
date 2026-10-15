@@ -4560,6 +4560,12 @@ line "Target" [35, 50, 68, 82]"##,
                 && ellipse.stroke.as_deref() == Some("#0f766e") && ellipse.stroke_width == Some(2.25))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(ellipse)
             if ellipse.stroke.as_deref() == Some("#123456") && ellipse.stroke_width == Some(4.0))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if (run.font_size - 14.4).abs() < 0.001)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if (run.font_size - 21.6).abs() < 0.001)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if (run.font_size - 18.0).abs() < 0.001)));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_venn_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);

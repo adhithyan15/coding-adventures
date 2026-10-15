@@ -755,6 +755,9 @@ discarding unrelated properties from earlier declarations.
 Venn style colors accept safe CSS names, hex values, and numeric color functions;
 unsafe functional payloads fail parsing. Stroke widths must be finite and
 non-negative, while fill opacity is constrained to the CSS range from zero to one.
+Venn title, set/intersection, and attached-text typography now uses Mermaid's
+width-relative 32, 48, and 40 reference-unit scales. Resolved label sizes live in
+layout IR and reach glyph runs without backend-specific typography decisions.
 
 ### Ishikawa Native Slice
 
