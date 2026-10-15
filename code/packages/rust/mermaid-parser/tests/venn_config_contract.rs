@@ -93,3 +93,13 @@ fn venn_front_matter_preserves_direct_parent_indentation() {
         assert_eq!(config(front),VennConfig::default(),"{front}");
     }
 }
+
+#[test]
+fn venn_front_matter_target_sections_must_be_mappings() {
+    for marker in ["|", ">", "|-", ">+", "false", "'text'"] {
+        for front in [format!("---\nconfig:\n  venn: {marker}\n    width: 640\n---"),
+            format!("---\nconfig: {marker}\n  venn:\n    width: 640\n---")] {
+            assert_eq!(config(&front),VennConfig::default(),"{front}");
+        }
+    }
+}
