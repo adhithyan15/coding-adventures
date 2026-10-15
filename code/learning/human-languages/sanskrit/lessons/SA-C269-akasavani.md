@@ -15,7 +15,7 @@ concept_tag: SA-MEDIA269-RADIO
 prerequisites: [SA-C269-media-recall]
 sounds: []
 roots: []
-etymology_hook: "आकाश 'sky' + वाणी 'voice' — the modern radio meaning is explicitly sourced here"
+etymology_hook: "The cited source attests the whole form but not its coinage history, so the origin remains unknown; आकाश 'sky' + वाणी 'voice' is only a spelling mnemonic"
 reviews_of: [SA-C269-media-recall]
 duration:
   max_seconds: 230
@@ -53,9 +53,10 @@ not ask you to generalise from the word's older “voice from the sky” sense.
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C269-MEDIA-01] -->
 
-**आकाश** means “sky,” and **वाणी** means “voice.” That shape can help you
-remember the sourced modern word, but the one meaning to retrieve here is
-“radio.”
+The cited entry attests the whole modern term but does not document who coined
+it or when, so its **origin remains unknown** here. For memory only, the written
+form visibly contains **आकाश**, “sky,” and **वाणी**, “voice.” The one meaning
+to retrieve is “radio.”
 
 ## Guided Practice
 

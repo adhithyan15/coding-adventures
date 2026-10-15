@@ -15,7 +15,7 @@ concept_tag: SA-MEDIA269-INTERNET
 prerequisites: [SA-C269-akasavani]
 sounds: []
 roots: []
-etymology_hook: "अन्तर् 'between, inter-' + जाल 'net' — a transparent modern compound for the internet"
+etymology_hook: "The cited source attests the whole form but not its coinage history, so the origin remains unknown; अन्तर् 'between, inter-' + जाल 'net' is only a spelling mnemonic"
 reviews_of: [SA-C269-media-recall, SA-C269-akasavani]
 duration:
   max_seconds: 235
@@ -54,9 +54,10 @@ This lesson owns only that sourced modern meaning.
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C269-MEDIA-02] -->
 
-**अन्तर्** gives the idea “between” or “inter-,” and **जाल** means “net.” The
-transparent “inter-net” shape is a memory hook, not a lesson in using the
-internet.
+The cited entries attest the whole modern term but do not document who coined
+it or when, so its **origin remains unknown** here. For memory only, the written
+form visibly contains **अन्तर्**, “between” or “inter-,” and **जाल**, “net.”
+That “inter-net” shape is not a lesson in using the internet.
 
 ## Guided Practice
 
