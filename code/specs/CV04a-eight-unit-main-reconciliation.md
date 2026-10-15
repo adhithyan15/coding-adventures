@@ -28,7 +28,15 @@ whole-compiler resource guarantee follows. No new dependencies or unsafe code.
 Capture actual raw incoming baseline failures. Then tests precede repair:
 positive literal8/-8,4+4/1+7/3+5/eight ones and8.0 through parentheses/unary/
 abs/entier/direct/assigned/relay; both conditions and independent8/8,8/1,1/8 arms
-must lower exactly one real formatter. Shift only genuine old cap8 refusal
+must preserve the typed output route. Real destinations/real relay results lower
+exactly one real formatter and no integer output builtin; direct `entier(...)`
+output lowers exactly one `call_builtin print_i64` and no real formatter, with
+one call to the real producer. The original spec incorrectly expected a real
+formatter for direct integer output. The ead4272a run's focused29P1F/library
+874P1F is preserved; its separate incoming1/owned9 runtime successes do not
+waive that failed oracle. Correct the new oracle before full acceptance; do not
+change production to force an integer expression onto a real-output route.
+Shift only genuine old cap8 refusal
 oracles to9 with a complete audited substitution inventory. Preserve all other
 old strings/assertions. Add exact formatter-Type refusal controls for9,4+5,
 wrapped1+8,8.5,two roots,true9/folded8,shifted triple-exp+8/nested3+5,unsupported
