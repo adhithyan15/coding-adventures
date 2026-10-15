@@ -2,7 +2,7 @@
 
 - Extend bounded `entier(sign(...))` additive-offset proofs from eleven to twelve exact units, including pathwise runtime conditionals and checked exact sums.
 
-## Reviewed twelve-unit canonical offsets
+### Reviewed twelve-unit canonical offsets
 
 Only the dedicated canonical outer-entier proof admits cumulative exact unit
 offsets through twelve and the range[-13,13]. Four production edits implement

@@ -2,7 +2,7 @@
 
 - Add a seven-backend ALGOL matrix proof for twelve-unit bounded additive offsets through runtime-selected real name actuals.
 
-## Reviewed twelve-unit canonical offsets
+### Reviewed twelve-unit canonical offsets
 
 Only the dedicated canonical outer-entier proof admits cumulative exact unit
 offsets through twelve and the range[-13,13]. Four production edits implement

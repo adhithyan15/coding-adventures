@@ -18,3 +18,10 @@ changelog layout before writing: geometry retains CHANGELOG.md while IR/paint
 use CHANGELOG.d. The first documentation helper stopped after exactly three
 partial Markdown edits; resume only after proving those complete planned bytes,
 then append to the existing geometry changelog without replacing its history.
+
+The actual a7866660 documentation checker refused two existing native changelog
+shards after validation notes added a second level-2 section. A non-meta shard
+must retain exactly one level-2 heading: append validation under level3 rather
+than treating a shard like an aggregate changelog. Preserve the failed actual
+doc-shards receipt/log and rerun the real checker on the corrected carrier.
+Rust source/test acceptance does not imply documentation acceptance.
