@@ -1913,6 +1913,9 @@ pub struct WardleyNode { pub id: String, pub label: String, pub visibility: f64,
 pub struct WardleyLink { pub source: String, pub target: String }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyEvolution { pub component: String, pub target: f64 }
+/// Wardley scalar subset; this does not bound diagram area or node count.
+pub const MAX_WARDLEY_SCALAR: f64 = 65_536.0;
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyConfig { pub width: f64, pub height: f64, pub padding: f64, pub node_radius: f64,
     pub node_label_offset: f64, pub axis_font_size: f64, pub label_font_size: f64,

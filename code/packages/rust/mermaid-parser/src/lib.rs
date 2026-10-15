@@ -5859,6 +5859,10 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         if let Some(value) = line.strip_prefix("size ") {
             let (width, height) = parse_wardley_coordinates(value, line_number)?;
             if width <= 0.0 || height <= 0.0 { return Err(wardley_error(line_number, "size must be positive")); }
+            if !width.is_finite() || !height.is_finite()
+                || width > diagram_ir::MAX_WARDLEY_SCALAR || height > diagram_ir::MAX_WARDLEY_SCALAR {
+                return Err(wardley_error(line_number, "size must be finite and at most 65536"));
+            }
             diagram.config.width = width; diagram.config.height = height; continue;
         }
         if let Some(value) = line.strip_prefix("evolution ") {
@@ -5895,26 +5899,38 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
 
 fn parse_wardley_config(source: &str) -> WardleyConfig {
     let defaults = WardleyConfig::default();
-    let front_matter = mermaid_front_matter_section(source, &["config", "wardley-beta"]);
-    let config = mermaid_directive_object(source, "wardley-beta").or(front_matter.as_deref()).unwrap_or("");
-    let value = |name: &str| quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
-        let (key, value) = line.trim().split_once(':')?;
-        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
-    }));
-    let positive = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
-        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
-    let non_negative = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
-        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
-    let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
+    // Select one closed source object. Reuse the established owned lexical
+    // boundaries; never search nested values or literal header text for a key.
+    // A selected init object replaces the complete header object, even empty.
+    let front = venn_front_matter_fields(source, &["config", "wardley-beta"]);
+    let object = venn_init_object(source, "wardley-beta").map(|v| format!("{{{v}}}"));
+    let value = |name: &str| {
+        if let Some(object) = &object {
+            venn_object_member(object, name).map(|v| venn_theme_string(v, true))
+        } else {
+            front.as_deref().unwrap_or("").lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name).then(|| venn_theme_string(value, false))
+            })
+        }
+    };
+    let positive = |name: &str, fallback: f64| value(name).and_then(|v| v.parse::<f64>().ok())
+        .filter(|v| v.is_finite() && *v > 0.0 && *v <= diagram_ir::MAX_WARDLEY_SCALAR).unwrap_or(fallback);
+    let nonnegative = |name: &str, fallback: f64| value(name).and_then(|v| v.parse::<f64>().ok())
+        .filter(|v| v.is_finite() && (0.0..=diagram_ir::MAX_WARDLEY_SCALAR).contains(v)).unwrap_or(fallback);
+    let font = |name: &str, fallback: f64| value(name).and_then(|v| v.parse::<f64>().ok())
+        .filter(|v| v.is_finite() && (1.0..=diagram_ir::MAX_WARDLEY_SCALAR).contains(v)).unwrap_or(fallback);
+    let boolean = |name: &str, fallback: bool| value(name).and_then(|v| match v.to_ascii_lowercase().as_str() {
         "true" => Some(true), "false" => Some(false), _ => None,
     }).unwrap_or(fallback);
     WardleyConfig { width: positive("width", defaults.width), height: positive("height", defaults.height),
-        padding: non_negative("padding", defaults.padding), node_radius: positive("nodeRadius", defaults.node_radius),
-        node_label_offset: non_negative("nodeLabelOffset", defaults.node_label_offset),
-        axis_font_size: positive("axisFontSize", defaults.axis_font_size),
-        label_font_size: positive("labelFontSize", defaults.label_font_size),
+        padding: nonnegative("padding", defaults.padding), node_radius: positive("nodeRadius", defaults.node_radius),
+        node_label_offset: nonnegative("nodeLabelOffset", defaults.node_label_offset),
+        axis_font_size: font("axisFontSize", defaults.axis_font_size),
+        label_font_size: font("labelFontSize", defaults.label_font_size),
         show_grid: boolean("showGrid", defaults.show_grid), use_max_width: boolean("useMaxWidth", defaults.use_max_width) }
 }
+
 
 fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
     let Some(open) = value.rfind('[') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
