@@ -54,6 +54,13 @@ describe("splitFrontmatter", () => {
     expect(frontmatter?.headword).toBe('\\\" \\\"');
   });
 
+  it("decodes a doubled apostrophe in a single-quoted scalar, as YAML does", () => {
+    const { frontmatter } = splitFrontmatter(
+      ["---", `gloss: '"you''re welcome" — the reply to thanks'`, "---", ""].join("\n"),
+    );
+    expect(frontmatter?.gloss).toBe(`"you're welcome" — the reply to thanks`);
+  });
+
   it("preserves backslashes in prose-only fields in the repository's tiny YAML dialect", () => {
     const { frontmatter } = splitFrontmatter(
       ['---', 'etymology_hook: "Proto-Indo-European \\*dwo-"', "---", ""].join("\n"),
