@@ -173,7 +173,7 @@ class MacosHaskellToolchainTests(unittest.TestCase):
             config = Path(options["env"].get("CABAL_CONFIG", ""))
             if config.parent == root / "output":
                 self.assertIn('  ghc-location: "/tools/ghc"', config.read_text(encoding="utf-8").splitlines())
-                self.assertIn('with-compiler: "/tools/ghc"', config.read_text(encoding="utf-8").splitlines())
+                self.assertIn('with-compiler: /tools/ghc', config.read_text(encoding="utf-8").splitlines())
 
     def test_success_publishes_only_cabal_config_after_all_probes(self):
         root, github_env, receipt, commands = self.run_mock_bootstrap()
