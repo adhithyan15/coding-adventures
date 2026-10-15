@@ -4787,7 +4787,7 @@ impl Compiler {
         self.builtin_nonpositive_unit_sign_operand(operand)
     }
 
-    /// An outer entier may consume one small additive offset without changing
+    /// An outer entier may consume two small additive units without changing
     /// the narrower proof used inside exp/log chains. The dynamic operand must
     /// use that old proof: recursing here would forget an inner offset and let
     /// parentheses or standard calls reset the one-offset budget.
@@ -4825,6 +4825,66 @@ impl Compiler {
     }
 
     fn builtin_outer_entier_flat_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        // Preserve the old one-unit domain once at this zero-budget entry.
+        // A conditional front gives each disjoint arm its own entry; this
+        // fallback is never called beneath a new additive/wrapper work item.
+        if let Some(root)=self.builtin_outer_entier_single_unit_operand(node) {return Some(root);}
+        let mut pending=vec![node];let mut root=None;let mut units=0_u64;
+        while let Some(mut current)=pending.pop() {
+            loop {
+                #[cfg(test)]
+                selector_classifier_visit();
+                if let Some(child)=single_parenthesized_child(current) {current=child;continue;}
+                if let Some((sign,child))=single_signed_child(current) {
+                    if !matches!(sign,"+"|"-") {return None;}current=child;continue;
+                }
+                if current.rule_name!="proc_call"&&direct_tokens(current).is_empty() {
+                    let children=direct_nodes(current);if children.len()==1 {current=children[0];continue;}
+                }
+                break;
+            }
+            // Only canonical small literals enter the new unit budget. A
+            // generic f64 fold is not an exact proof for integer arithmetic
+            // near2^53, and must not hide another unit in a nested subtree.
+            let tokens=direct_tokens(current);
+            if tokens.len()==1&&direct_nodes(current).is_empty() {
+                let amount=match tokens[0].effective_type_name() {
+                    "INTEGER_LIT"=>tokens[0].value.parse::<u64>().ok().filter(|v|*v<=2),
+                    "REAL_LIT"=>tokens[0].value.parse::<f64>().ok().and_then(|v|
+                        [0.0,1.0,2.0].iter().position(|allowed|*allowed==v).map(|v|v as u64)),
+                    _=>None,
+                }?;
+                units=units.checked_add(amount)?;if units>2 {return None;}continue;
+            }
+            if matches!(current.rule_name.as_str(),"expr_add"|"simple_arith") {
+                let sequence=pieces(current);
+                let first=usize::from(matches!(sequence.first(),Some(Piece::Op(op)) if matches!(op.as_str(),"+"|"-")));
+                if sequence.len()<first+3||(sequence.len()-first).is_multiple_of(2) {return None;}
+                for (index,piece) in sequence[first..].iter().enumerate() {
+                    if index.is_multiple_of(2) {
+                        let Piece::Node(child)=piece else{return None;};pending.push(*child);
+                    } else if !matches!(piece,Piece::Op(op) if matches!(op.as_str(),"+"|"-")) {return None;}
+                }
+                continue;
+            }
+            if current.rule_name!="proc_call" {return None;}
+            let source_name=tokens.iter().find(|t|t.effective_type_name()=="NAME")?.value.as_str();
+            let target=self.resolve_procedure_identity(source_name);
+            if self.proc_sigs.contains_key(&target) {return None;}
+            let actuals=self.standard_fn_actuals(current);if actuals.len()!=1 {return None;}
+            match target.as_str() {
+                "abs"|"entier"=>pending.push(actuals[0]),
+                "sign"=>{if root.replace(actuals[0]).is_some(){return None;}},
+                _=>return None,
+            }
+        }
+        root
+    }
+
+    fn builtin_outer_entier_single_unit_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
