@@ -57,13 +57,13 @@ fn canonical_thirteen_unit_forms_have_typed_output_routes_and_independent_arms()
 }
 
 #[test]
-fn thirteen_unit_proofs_refuse_fourteen_units_rounding_traps_and_exp_widening() {
+fn thirteen_unit_proofs_refuse_fifteen_units_rounding_traps_and_exp_widening() {
     for expression in [
-        "entier(sign(pick()) + 14)",
-        "entier((sign(pick()) + 7) + 7)",
-        "entier(1 + (13 + sign(pick())))",
-        "entier(entier(sign(pick()) + 1) + 13)",
-        "entier(abs(sign(pick()) + 2) + 12)",
+        "entier(sign(pick()) + 15)",
+        "entier((sign(pick()) + 7) + 8)",
+        "entier(1 + (14 + sign(pick())))",
+        "entier(entier(sign(pick()) + 1) + 14)",
+        "entier(abs(sign(pick()) + 2) + 13)",
         "entier(sign(pick()) + 12.5)",
         "entier(sign(pick()) + 13.5)",
         "entier(sign(pick()) + sign(pick()) + 6 + 7)",
@@ -106,9 +106,9 @@ fn thirteen_unit_conditional_alias_effects_obey_the_discovery_limit() {
 
 // Both arms must prove their own budget, including an unselected oversized arm.
 #[test]
-fn thirteen_unit_unselected_fourteen_unit_arms_are_semantic_refusals() {
+fn thirteen_unit_unselected_fifteen_unit_arms_are_semantic_refusals() {
     for condition in ["true", "false"] {
-        for (left, right) in [("14", "1"), ("1", "14")] {
+        for (left, right) in [("15", "1"), ("1", "15")] {
             let source = format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := entier(if choose() then (entier(sign(left)) + {left}) else (entier(sign(right)) + {right})); output(saved) end");
             assert!(matches!(compile_source(&source, "thirteen_unit_oversized_arm"), Err(CompileError::Type(m)) if m.contains("cannot print a real value")), "{source}");
         }
