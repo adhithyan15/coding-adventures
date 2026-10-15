@@ -2,7 +2,7 @@
 use super::*;
 
 #[test]
-fn canonical_eight_unit_forms_have_one_real_formatter_and_independent_arms() {
+fn canonical_eight_unit_forms_have_typed_output_routes_and_independent_arms() {
     // These include every formerly refused eight-unit boundary shape.
     for expression in [
         "entier(sign(pick()) + 8)",
@@ -17,12 +17,20 @@ fn canonical_eight_unit_forms_have_one_real_formatter_and_independent_arms() {
         "entier(abs((sign(pick()) + 1) + 7))",
         "entier(-(sign(pick()) + 8.0))",
     ] {
-        for statement in [format!("saved := {expression}; output(saved)"),
-            format!("output({expression})"), format!("saved := relay({expression}); output(saved)")] {
+        for (statement, real_count, integer_count) in [(format!("saved := {expression}; output(saved)"),1,0),
+            (format!("output({expression})"),0,1), (format!("saved := relay({expression}); output(saved)"),1,0)] {
         let source = format!("begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; real saved; {statement} end");
         let module = compile_source(&source, "eight_unit_positive").unwrap_or_else(|e| panic!("{source}: {e}"));
-        assert_eq!(module.get_function("main").unwrap().instructions.iter()
-            .filter(|i| i.op == "call" && i.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "{source}");
+        let instructions=&module.get_function("main").unwrap().instructions;
+        assert_eq!(instructions.iter()
+            .filter(|i| i.op == "call" && i.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), real_count, "{source}");
+        assert_eq!(instructions.iter()
+            .filter(|i| i.op == "call_builtin" && i.srcs.first().and_then(Operand::as_var) == Some("print_i64")).count(), integer_count, "{source}");
+        if integer_count==1 {
+            let calls=instructions.iter().filter(|i|i.op=="call").collect::<Vec<_>>();
+            assert_eq!(calls.len(),1,"direct output evaluates its real producer once: {source}");
+            assert!(calls[0].srcs.first().and_then(Operand::as_var).is_some_and(|name|name.contains("pick")),"{source}");
+        }
     }
     }
     for condition in ["true", "false"] {
