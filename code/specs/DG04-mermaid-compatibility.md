@@ -870,8 +870,8 @@ and radius follow the same typed semantic and layout path. Font size participate
 in element measurement, while PaintScene emits the resolved portable geometry,
 glyph runs, strokes, fills, and marker ellipses without backend-specific CSS.
 Configured `arcRadius` controls branch, bypass, and loopback lane geometry;
-lowering converts their orthogonal corners to portable quadratic Bézier path
-commands before native rendering.
+lowering converts their orthogonal corners to portable cubic Bézier path
+commands that approximate Mermaid's circular SVG arcs before native rendering.
 Root `themeVariables` now provide Mermaid-compatible typography and color
 fallbacks for terminals, non-terminals, specials, connections, markers, and
 rule names. Explicit Railroad options retain precedence, and the resolved
@@ -883,8 +883,8 @@ The `compactMode` option is retained as typed semantic configuration and
 PaintScene metadata. Mermaid 11.16.1's pinned Railroad renderer does not branch
 on this value, so native geometry intentionally remains unchanged.
 
-This is intentionally partial. Upstream curve geometry, comment styling,
-and exact typography remain unsupported rather than being counted as compatible.
+This is intentionally partial. Comment styling and exact typography remain
+unsupported rather than being counted as compatible.
 
 ### Info Full Compatibility
 

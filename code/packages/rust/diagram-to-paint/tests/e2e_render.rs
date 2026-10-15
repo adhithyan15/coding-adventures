@@ -4402,6 +4402,8 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#dc2626") && path.stroke_width == Some(3.0))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, paint_instructions::PathCommand::CubicTo { .. })))));
+        assert!(scene.instructions.iter().all(|instruction| !matches!(instruction,
             PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, paint_instructions::PathCommand::QuadTo { .. })))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Ellipse(marker) if marker.fill.as_deref() == Some("#7c2d12") && marker.rx == 8.0)));

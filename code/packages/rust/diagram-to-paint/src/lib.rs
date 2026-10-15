@@ -2202,6 +2202,58 @@ fn rounded_swimlane_path(points: &[Point], radius: f64) -> (Vec<PathCommand>, Po
     });
     (commands, start_previous, end_previous)
 }
+
+fn rounded_railroad_path(points: &[Point], radius: f64) -> Vec<PathCommand> {
+    const QUARTER_CIRCLE_KAPPA: f64 = 0.552_284_749_830_793_6;
+
+    let mut commands = vec![PathCommand::MoveTo { x: points[0].x, y: points[0].y }];
+    for index in 1..points.len() - 1 {
+        let previous = &points[index - 1];
+        let corner = &points[index];
+        let next = &points[index + 1];
+        let incoming_x = corner.x - previous.x;
+        let incoming_y = corner.y - previous.y;
+        let outgoing_x = next.x - corner.x;
+        let outgoing_y = next.y - corner.y;
+        let incoming_length = incoming_x.hypot(incoming_y);
+        let outgoing_length = outgoing_x.hypot(outgoing_y);
+        if incoming_length <= f64::EPSILON || outgoing_length <= f64::EPSILON {
+            continue;
+        }
+        let incoming_unit_x = incoming_x / incoming_length;
+        let incoming_unit_y = incoming_y / incoming_length;
+        let outgoing_unit_x = outgoing_x / outgoing_length;
+        let outgoing_unit_y = outgoing_y / outgoing_length;
+        let cross = incoming_unit_x * outgoing_unit_y - incoming_unit_y * outgoing_unit_x;
+        if cross.abs() <= f64::EPSILON {
+            commands.push(PathCommand::LineTo { x: corner.x, y: corner.y });
+            continue;
+        }
+        let cut = radius.min(incoming_length / 2.0).min(outgoing_length / 2.0);
+        let before = Point {
+            x: corner.x - incoming_unit_x * cut,
+            y: corner.y - incoming_unit_y * cut,
+        };
+        let after = Point {
+            x: corner.x + outgoing_unit_x * cut,
+            y: corner.y + outgoing_unit_y * cut,
+        };
+        commands.push(PathCommand::LineTo { x: before.x, y: before.y });
+        commands.push(PathCommand::CubicTo {
+            cx1: before.x + incoming_unit_x * cut * QUARTER_CIRCLE_KAPPA,
+            cy1: before.y + incoming_unit_y * cut * QUARTER_CIRCLE_KAPPA,
+            cx2: after.x - outgoing_unit_x * cut * QUARTER_CIRCLE_KAPPA,
+            cy2: after.y - outgoing_unit_y * cut * QUARTER_CIRCLE_KAPPA,
+            x: after.x,
+            y: after.y,
+        });
+    }
+    commands.push(PathCommand::LineTo {
+        x: points[points.len() - 1].x,
+        y: points[points.len() - 1].y,
+    });
+    commands
+}
 /// Lower Railroad rules into backend-neutral paths, markers, boxes, and glyphs.
 pub fn diagram_to_paint_railroad<S, M, R>(diagram: &LayoutedRailroadDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
@@ -2227,7 +2279,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         }
         for path in &rule.paths { let mut paint = line_path(&path.points, &diagram.config.line_color, diagram.config.stroke_width);
             if diagram.config.arc_radius > 0.0 && path.points.len() > 2 {
-                paint.commands = rounded_swimlane_path(&path.points, diagram.config.arc_radius).0;
+                paint.commands = rounded_railroad_path(&path.points, diagram.config.arc_radius);
             }
             if path.loopback { paint.stroke_dash = Some(vec![4.0, 3.0]); } instructions.push(PaintInstruction::Path(paint)); }
         for element in &rule.elements {
@@ -9471,6 +9523,25 @@ mod tests {
         Direction, FontQuery, FontResolutionError, Glyph, ShapeOptions, ShapedRun, ShapedText,
         ShapingError,
     };
+
+    #[test]
+    fn railroad_corners_lower_to_portable_circular_cubics() {
+        let commands = rounded_railroad_path(&[
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+            Point { x: 10.0, y: 10.0 },
+        ], 4.0);
+
+        assert!(matches!(commands[1], PathCommand::LineTo { x: 6.0, y: 0.0 }));
+        assert!(matches!(commands[2], PathCommand::CubicTo { x: 10.0, y: 4.0, .. }));
+        assert!(commands.iter().all(|command| !matches!(command, PathCommand::QuadTo { .. })));
+        if let PathCommand::CubicTo { cx1, cy1, cx2, cy2, .. } = commands[2] {
+            assert!((cx1 - 8.209_138_999_323_175).abs() < 1e-9);
+            assert_eq!(cy1, 0.0);
+            assert_eq!(cx2, 10.0);
+            assert!((cy2 - 1.790_861_000_676_825_7).abs() < 1e-9);
+        }
+    }
 
     #[test]
     fn swimlane_line_hops_accept_every_orthogonal_friendly_curve() {
