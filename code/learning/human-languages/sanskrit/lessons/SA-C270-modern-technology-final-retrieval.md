@@ -44,8 +44,10 @@ variety: standard-colloquial
 
 No Sanskrit model is shown before you answer.
 
-[PAUSE 8s] Say the Sanskrit for these meanings in the reverse order: the
-internet, then a computer.
+Say the Sanskrit for these meanings in the reverse order: the internet, then a
+computer.
+
+[PAUSE 8s]
 
 ## What you've built: check after answering
 

@@ -44,8 +44,9 @@ variety: standard-colloquial
 
 No Sanskrit model is shown before you answer.
 
-[PAUSE 8s] Say the Sanskrit for these meanings, in order: a computer, then the
-internet.
+Say the Sanskrit for these meanings, in order: a computer, then the internet.
+
+[PAUSE 8s]
 
 ## What you've built: check after answering
 

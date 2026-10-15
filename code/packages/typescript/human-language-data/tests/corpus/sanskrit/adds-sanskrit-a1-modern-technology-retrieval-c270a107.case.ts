@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { expect, it } from "vitest";
 import { measureExamCoverage } from "../../../src/exam-inventory.js";
 import {
@@ -42,6 +45,58 @@ it("retrieves the two existing Sanskrit A1 modern-technology nouns twice", () =>
     expect(
       lessons.filter((lesson) => lesson.frontmatter["introduces.knowledge"].includes(atom)),
     ).toHaveLength(1);
+  }
+
+  for (const lesson of chapterLessons) {
+    const responseBlock = lesson?.blocks.find((block) =>
+      block.markdown.includes("No Sanskrit model is shown before you answer"),
+    );
+    const checkBlock = lesson?.blocks.find((block) =>
+      block.markdown.includes("Now check:"),
+    );
+    expect(responseBlock).toBeDefined();
+    expect(checkBlock).toBeDefined();
+    expect(responseBlock?.markdown).toContain("[PAUSE 8s]");
+    expect(responseBlock?.markdown.indexOf("Say the Sanskrit")).toBeLessThan(
+      responseBlock?.markdown.indexOf("[PAUSE 8s]") ?? -1,
+    );
+    expect(responseBlock?.markdown).not.toMatch(
+      /संगणकम्|अन्तर्जालम्|saṅgaṇakam|antarjālam/u,
+    );
+    expect(checkBlock?.markdown).toContain("संगणकम्");
+    expect(checkBlock?.markdown).toContain("अन्तर्जालम्");
+    expect(checkBlock?.markdown).toContain("saṅgaṇakam");
+    expect(checkBlock?.markdown).toContain("antarjālam");
+  }
+
+  const narrationPath = resolve(
+    dirname(fileURLToPath(import.meta.url)),
+    "../../../../../../learning/human-languages/sanskrit/narration/ch270.json",
+  );
+  const narration = JSON.parse(readFileSync(narrationPath, "utf8")) as {
+    lessons: Array<{
+      id: string;
+      blocks: Array<{
+        type: string;
+        segments: Array<{ kind: string; text?: string; seconds?: number }>;
+      }>;
+    }>;
+  };
+  for (const id of ids) {
+    const spoken = narration.lessons.find((lesson) => lesson.id === id);
+    const guided = spoken?.blocks.find((block) => block.type === "guided-production");
+    const check = spoken?.blocks.find((block) => block.type === "notice");
+    expect(guided?.segments.map((segment) => segment.kind)).toEqual([
+      "speech",
+      "speech",
+      "pause",
+    ]);
+    expect(guided?.segments[1]?.text).toContain("Say the Sanskrit");
+    expect(guided?.segments[2]).toMatchObject({ kind: "pause", seconds: 8 });
+    expect(guided?.segments.map((segment) => segment.text ?? "").join(" ")).not.toMatch(
+      /संगणकम्|अन्तर्जालम्|saṅgaṇakam|antarjālam/u,
+    );
+    expect(check?.segments[0]?.text).toMatch(/संगणकम्.*अन्तर्जालम्|अन्तर्जालम्.*संगणकम्/u);
   }
 
   const learnerCopy = chapterLessons

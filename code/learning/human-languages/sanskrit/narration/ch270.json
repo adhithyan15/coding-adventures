@@ -4,7 +4,7 @@
   "chapter": 270,
   "title": "Two modern-technology words, retrieved twice",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cf91f642c1df2ec6",
+  "sourceHash": "fnv1a64:3e2cde0cb8eefa58",
   "lessons": [
     {
       "id": "SA-C270-modern-technology-first-retrieval",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56e390b5322c486f",
+      "sourceHash": "fnv1a64:62e63c77d568cfef",
       "notice": null,
       "blocks": [
         {
@@ -49,14 +49,14 @@
               "text": "No Sanskrit model is shown before you answer."
             },
             {
+              "kind": "speech",
+              "text": "Say the Sanskrit for these meanings, in order: a computer, then the internet."
+            },
+            {
               "kind": "pause",
               "seconds": 8,
               "perItem": false,
               "source": "[PAUSE 8s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say the Sanskrit for these meanings, in order: a computer, then the internet."
             }
           ]
         },
@@ -97,7 +97,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6181a1d860fe55d0",
+      "sourceHash": "fnv1a64:c009925b5c377b90",
       "notice": null,
       "blocks": [
         {
@@ -127,14 +127,14 @@
               "text": "No Sanskrit model is shown before you answer."
             },
             {
+              "kind": "speech",
+              "text": "Say the Sanskrit for these meanings in the reverse order: the internet, then a computer."
+            },
+            {
               "kind": "pause",
               "seconds": 8,
               "perItem": false,
               "source": "[PAUSE 8s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say the Sanskrit for these meanings in the reverse order: the internet, then a computer."
             }
           ]
         },

@@ -11,8 +11,8 @@ Prepare to retrieve two familiar nouns from their English meanings.
 
 Guided Practice: independent retrieval.
 No Sanskrit model is shown before you answer.
-[pause 8 seconds]
 Say the Sanskrit for these meanings, in order: a computer, then the internet.
+[pause 8 seconds]
 
 What you've built: check after answering.
 Now check: संगणकम् (saṅgaṇakam) is “a computer,” and अन्तर्जालम् (antarjālam) is “the internet.”
@@ -30,8 +30,8 @@ Prepare to retrieve the same two meanings in a fresh order.
 
 Guided Practice: independent retrieval in a fresh order.
 No Sanskrit model is shown before you answer.
-[pause 8 seconds]
 Say the Sanskrit for these meanings in the reverse order: the internet, then a computer.
+[pause 8 seconds]
 
 What you've built: check after answering.
 Now check: अन्तर्जालम् (antarjālam) is “the internet,” and संगणकम् (saṅgaṇakam) is “a computer.”

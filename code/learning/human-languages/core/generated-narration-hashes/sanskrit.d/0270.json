@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 270,
-  "sourceHash": "fnv1a64:cf91f642c1df2ec6",
+  "sourceHash": "fnv1a64:3e2cde0cb8eefa58",
   "lessonIds": [
     "SA-C270-modern-technology-first-retrieval",
     "SA-C270-modern-technology-final-retrieval"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "sanskrit/narration/ch270.txt",
   "json": "sanskrit/narration/ch270.json",
-  "textHash": "fnv1a64:7c4791d09e69d5d9",
-  "jsonHash": "fnv1a64:f6adc82104876d7e",
+  "textHash": "fnv1a64:73d5ecda2e16637f",
+  "jsonHash": "fnv1a64:d86d12e35eb8445a",
   "findings": []
 }
