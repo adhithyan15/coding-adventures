@@ -8,7 +8,7 @@ type: word
 headword: но
 gloss: "but — the flat contradiction, one of two words English hides under a single but"
 concept_tag: RU-JOIN-BUT
-romanization: no
+romanization: 'no'
 prerequisites: [RU-C16-tozhe]
 sounds: []
 roots: [slavic-nu]
