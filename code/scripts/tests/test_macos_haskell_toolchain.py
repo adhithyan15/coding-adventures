@@ -93,7 +93,7 @@ class MacosHaskellToolchainTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     toolchain.overlay_config(source, CLANG, LD, SDK)
 
-    def run_mock_bootstrap(self, failed_stage=None, wrong_output=False, wrong_stage=None, ignore_refusal=False, omit_hsc_trace=False, bad_hsc_trace=False):
+    def run_mock_bootstrap(self, failed_stage=None, wrong_output=False, wrong_stage=None, ignore_refusal=False, omit_hsc_trace=False, bad_hsc_trace=False, wrong_refusal_cause=False):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         root = Path(temporary.name)
@@ -113,6 +113,8 @@ class MacosHaskellToolchainTests(unittest.TestCase):
                 missing = child_config.parent / ("missing-" + child_config.stem.removeprefix("refuse-"))
                 if ignore_refusal:
                     return subprocess.CompletedProcess(command, 0, "42\n", "")
+                if wrong_refusal_cause:
+                    return subprocess.CompletedProcess(command, 1, "flags contain " + str(missing), "ghc: could not execute: /unexpected/tool")
                 return subprocess.CompletedProcess(command, 1, "", "ghc: could not execute: " + str(missing))
             if "v2-build" in command and not omit_hsc_trace:
                 route = json.loads((root / "output/hsc2hs-driver.json").read_text(encoding="utf-8"))
@@ -195,7 +197,7 @@ class MacosHaskellToolchainTests(unittest.TestCase):
                              shlex.split(wrapper.read_text(encoding="utf-8").splitlines()[1]))
 
     def test_ignored_phase_refusal_and_missing_or_wrong_hsc_route_publish_nothing(self):
-        for options in [{"ignore_refusal": True}, {"omit_hsc_trace": True}, {"bad_hsc_trace": True}]:
+        for options in [{"ignore_refusal": True}, {"omit_hsc_trace": True}, {"bad_hsc_trace": True}, {"wrong_refusal_cause": True}]:
             with self.subTest(options=options):
                 _, github_env, receipt, _ = self.run_mock_bootstrap(**options)
                 self.assertIsNone(receipt)
