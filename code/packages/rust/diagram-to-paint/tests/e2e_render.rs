@@ -4538,7 +4538,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_venn_to_png() {
-        let diagram = parse_venn("---\nthemeVariables:\n  fontFamily: Georgia\n  vennTitleTextColor: '#123456'\n  vennSetTextColor: '#654321'\n  venn1: '#0f766e'\n  venn2: '#f97316'\nconfig:\n  venn:\n    width: 720\n    height: 420\n    padding: 24\n    useMaxWidth: false\n    useDebugLayout: true\n---\nvenn-beta\ntitle Product Skills\nset Design[\"Design\"]:20\n  text research[\"Research\"]\nset Engineering[\"Engineering\"]:18\n  text systems[\"Systems\"]\nunion Design,Engineering[\"Product\"]:6\n  text shared[\"Prototyping\"]").expect("venn parse failed");
+        let diagram = parse_venn("---\nthemeVariables:\n  fontFamily: Georgia\n  vennTitleTextColor: '#123456'\n  vennSetTextColor: '#654321'\n  venn1: '#0f766e'\n  venn2: '#f97316'\nconfig:\n  venn:\n    width: 720\n    height: 420\n    padding: 24\n    useMaxWidth: false\n    useDebugLayout: true\n---\nvenn-beta\ntitle Product Skills\nset Design[\"Design\"]:20\n  text research[\"Research\"]\nset Engineering[\"Engineering\"]:18\n  text systems[\"Systems\"]\nunion Design,Engineering[\"Product\"]:6\n  text shared[\"Prototyping\"]\nstyle Engineering stroke:#123456\nstyle Engineering stroke-width:4").expect("venn parse failed");
         let layout = layout_venn(&diagram);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_venn(&layout, &DiagramToPaintOptions {
@@ -4558,6 +4558,8 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(ellipse)
             if ellipse.fill.as_deref() == Some("rgba(15,118,110,0.1)")
                 && ellipse.stroke.as_deref() == Some("#0f766e") && ellipse.stroke_width == Some(2.25))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(ellipse)
+            if ellipse.stroke.as_deref() == Some("#123456") && ellipse.stroke_width == Some(4.0))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_venn_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);

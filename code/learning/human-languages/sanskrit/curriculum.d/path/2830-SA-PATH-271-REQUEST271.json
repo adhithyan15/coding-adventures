@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-271-REQUEST271",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "SA-EXT-271-REQUEST271"
+  ],
+  "after": []
+}

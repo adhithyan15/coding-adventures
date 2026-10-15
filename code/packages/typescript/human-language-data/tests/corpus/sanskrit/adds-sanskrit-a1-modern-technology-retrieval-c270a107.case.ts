@@ -144,8 +144,8 @@ it("retrieves the two existing Sanskrit A1 modern-technology nouns twice", () =>
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   expect(coverage).toMatchObject({
     enumerated: 164,
-    covered: 153,
-    unmapped: 11,
+    covered: 154,
+    unmapped: 10,
     partial: 0,
   });
   expect(coverage.byCategory[

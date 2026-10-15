@@ -1,0 +1,12 @@
+{
+  "language": "sanskrit",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:44eb7a120a23a6c0",
+  "lessonIds": [
+    "SA-C271-ask-for-a-person",
+    "SA-C271-request-quiet",
+    "SA-C271-spoken-requests-first-retrieval",
+    "SA-C271-spoken-requests-final-retrieval"
+  ],
+  "tex": "sanskrit/book/chapters/ch271-two-spoken-requests-retrieved-twice.tex"
+}

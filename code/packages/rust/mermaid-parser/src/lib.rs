@@ -5473,8 +5473,13 @@ pub fn parse_venn(source: &str) -> Result<VennDiagram, ParseError> {
     }
     for (mut targets, style) in pending_styles {
         targets.sort();
-        if let Some(region) = diagram.regions.iter_mut().find(|region| region.sets == targets) { region.style = style; }
-        else if targets.len() == 1 { if let Some(text) = diagram.texts.iter_mut().find(|text| text.id == targets[0]) { text.style = style; } }
+        if let Some(region) = diagram.regions.iter_mut().find(|region| region.sets == targets) {
+            merge_venn_style(&mut region.style, style);
+        } else if targets.len() == 1 {
+            if let Some(text) = diagram.texts.iter_mut().find(|text| text.id == targets[0]) {
+                merge_venn_style(&mut text.style, style);
+            }
+        }
     }
     if diagram.regions.iter().all(|region| region.sets.len() != 1) { return Err(venn_error(1, "venn requires at least one set")); }
     Ok(diagram)
@@ -5712,6 +5717,14 @@ fn parse_venn_style(raw: &str, line: usize) -> Result<VennStyle, ParseError> {
         }
     }
     Ok(style)
+}
+
+fn merge_venn_style(base: &mut VennStyle, overlay: VennStyle) {
+    if overlay.fill.is_some() { base.fill = overlay.fill; }
+    if overlay.stroke.is_some() { base.stroke = overlay.stroke; }
+    if overlay.stroke_width.is_some() { base.stroke_width = overlay.stroke_width; }
+    if overlay.text_color.is_some() { base.text_color = overlay.text_color; }
+    if overlay.fill_opacity.is_some() { base.fill_opacity = overlay.fill_opacity; }
 }
 
 fn split_venn_style_properties(raw: &str) -> Vec<&str> {
@@ -13920,6 +13933,20 @@ mod tests_dg04 {
         assert_eq!(diagram.config.theme_colors[0], "#112233");
         assert_eq!(diagram.config.theme_colors[1], "red");
         assert_eq!(diagram.config.theme_colors[7], VennConfig::default().theme_colors[7]);
+    }
+
+    #[test]
+    fn venn_cascades_repeated_style_directives_by_property() {
+        let diagram = parse_venn(
+            "venn-beta\nset A\n  text note[Note]\nstyle A fill:#112233\nstyle A stroke:#445566, stroke-width:4\nstyle note color:#778899\nstyle note fill-opacity:0.4",
+        ).unwrap();
+        let set_style = &diagram.regions[0].style;
+        assert_eq!(set_style.fill.as_deref(), Some("#112233"));
+        assert_eq!(set_style.stroke.as_deref(), Some("#445566"));
+        assert_eq!(set_style.stroke_width, Some(4.0));
+        let text_style = &diagram.texts[0].style;
+        assert_eq!(text_style.text_color.as_deref(), Some("#778899"));
+        assert_eq!(text_style.fill_opacity, Some(0.4));
     }
 
     #[test]
