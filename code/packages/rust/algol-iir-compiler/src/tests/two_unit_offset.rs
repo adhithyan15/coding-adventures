@@ -12,7 +12,8 @@ fn canonical_two_unit_forms_keep_one_real_formatter_and_legacy_arm_forms() {
         assert_eq!(module.get_function("main").unwrap().instructions.iter().filter(|i|i.op=="call"&&i.srcs.first().and_then(Operand::as_var)==Some("__basic_print_real")).count(),1,"{source}");
     }
     for condition in ["true","false"] {for units in ["2","(0.5 + 0.5)"] {
-        let source=format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := relay(entier(if choose() then (entier(sign(left)) + {units}) else ((entier(sign(right)) + 1) + {}))); output(saved) end",if units=="2"{"1"}else{"0"});
+        let (inner,outer)=if units=="2"{("1","1")}else{("1.0","0.0")};
+        let source=format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := relay(entier(if choose() then (entier(sign(left)) + {units}) else ((entier(sign(right)) + {inner}) + {outer}))); output(saved) end");
         compile_source(&source,"two_unit_legacy_arm").unwrap_or_else(|e|panic!("{source}: {e}"));
     }}
 }
