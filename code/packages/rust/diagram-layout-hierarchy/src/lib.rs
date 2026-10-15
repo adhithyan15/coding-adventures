@@ -211,7 +211,8 @@ pub fn try_layout_railroad(diagram: &RailroadDiagram) -> Result<LayoutedRailroad
     // sizes reach clamp bounds or a downstream f32 shaper argument. Empty
     // diagrams are checked too; lack of leaves does not validate bad config.
     for (field,value) in [("fontSize",diagram.config.font_size),
-        ("strokeWidth",diagram.config.stroke_width),("markerRadius",diagram.config.marker_radius)] {
+        ("strokeWidth",diagram.config.stroke_width),("markerRadius",diagram.config.marker_radius),
+        ("arcRadius",diagram.config.arc_radius)] {
         if !value.is_finite() || !(0.0..=diagram_ir::MAX_RAILROAD_SPACING).contains(&value)
             || (field=="fontSize" && value==0.0) {
             return Err(RailroadLayoutError::UnsupportedStyle{field});
@@ -310,7 +311,9 @@ fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
             let radius = config.arc_radius;
             let inner_y = y + radius * 2.0;
             let (inner_width, inner_height) = layout_railroad_expression(element, x + radius * 2.0, inner_y, config, elements, paths);
-            let height = inner_height + radius * 2.0; let middle = inner_y + inner_height / 2.0;
+            // Callers attach at height/2. Equal top and bottom clearance
+            // keeps that midpoint on the child's main entry/exit lane.
+            let height = inner_height + radius * 4.0; let middle = inner_y + inner_height / 2.0;
             let exit_x = x + inner_width + radius * 4.0;
             paths.push(LayoutedRailroadPath { points: vec![Point { x, y: middle }, Point { x: x + radius * 2.0, y: middle }], loopback: false });
             paths.push(LayoutedRailroadPath { points: vec![Point { x: x + radius * 2.0 + inner_width, y: middle }, Point { x: exit_x, y: middle }], loopback: false });
@@ -322,11 +325,13 @@ fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
         RailroadExpression::Repetition { element, min, .. } => {
             let radius = config.arc_radius;
             let has_bypass = *min == 0;
-            let inner_y = y + if has_bypass { radius * 2.0 } else { 0.0 };
+            // The loop's lower2r clearance needs a matching upper2r even
+            // when no bypass is drawn, preserving the same midpoint port.
+            let inner_y = y + radius * 2.0;
             let inner_x = x + radius * 2.0;
             let (inner_width, inner_height) = layout_railroad_expression(element, inner_x, inner_y, config, elements, paths);
             let total_width = inner_width + radius * 4.0;
-            let height = inner_height + radius * 2.0 + if has_bypass { radius * 2.0 } else { 0.0 };
+            let height = inner_height + radius * 4.0;
             let middle = inner_y + inner_height / 2.0; let loop_y = inner_y + inner_height + radius * 2.0;
             paths.push(LayoutedRailroadPath { points: vec![Point { x: inner_x + inner_width, y: middle },
                 Point { x: x + total_width - radius, y: middle }, Point { x: x + total_width - radius, y: loop_y },
@@ -364,12 +369,12 @@ fn measure_railroad_expression(expr: &RailroadExpression, config: &diagram_ir::R
         }
         RailroadExpression::Optional(element) => {
             let (width, height) = measure_railroad_expression(element, config);
-            (width + config.arc_radius * 4.0, height + config.arc_radius * 2.0)
+            (width + config.arc_radius * 4.0, height + config.arc_radius * 4.0)
         }
-        RailroadExpression::Repetition { element, min, .. } => {
+        RailroadExpression::Repetition { element, .. } => {
             let (width, height) = measure_railroad_expression(element, config);
             (width + config.arc_radius * 4.0,
-                height + config.arc_radius * 2.0 + if *min == 0 { config.arc_radius * 2.0 } else { 0.0 })
+                height + config.arc_radius * 4.0)
         }
     }
 }
