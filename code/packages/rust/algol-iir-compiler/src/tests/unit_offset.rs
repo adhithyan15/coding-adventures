@@ -173,8 +173,8 @@ fn conditional_front_second_and_nonunit_offsets_keep_typed_refusals() {
     for condition in ["true","false"] {
         for expression in [
             "entier((if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1)) + 1)",
-            "entier(if choose() then (entier(sign(left)) + 4) else (entier(sign(right)) + 1))",
-            "entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 4))",
+            "entier(if choose() then (entier(sign(left)) + 5) else (entier(sign(right)) + 1))",
+            "entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 5))",
         ] {
             let source=format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := {expression}; output(saved) end");
             assert!(matches!(compile_source(&source,"conditional_unit_refusal"),Err(CompileError::Type(message)) if message.contains("cannot print a real value")),"condition={condition}: {source}");

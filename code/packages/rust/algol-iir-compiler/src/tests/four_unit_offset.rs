@@ -31,6 +31,16 @@ fn canonical_four_unit_forms_have_one_real_formatter_and_independent_arms() {
                 .filter(|i| i.op == "call" && i.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "{source}");
         }
     }
+    // Direct conditional arms have the same independent budgets as relay arms.
+    for condition in ["true", "false"] {
+        for (left, right) in [("4", "1"), ("1", "4")] {
+            let source = format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := entier(if choose() then (entier(sign(left)) + {left}) else (entier(sign(right)) + {right})); output(saved) end");
+            let module = compile_source(&source, "four_unit_direct_arms").unwrap_or_else(|e| panic!("{source}: {e}"));
+            assert_eq!(module.get_function("main").unwrap().instructions.iter()
+                .filter(|i| i.op == "call" && i.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "{source}");
+        }
+    }
+
 }
 
 #[test]
