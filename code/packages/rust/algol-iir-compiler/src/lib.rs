@@ -13398,6 +13398,7 @@ fn operator_from_token(token: &Token) -> Option<&'static str> {
 #[cfg(test)]
 mod tests {
     mod unit_offset;
+    mod two_unit_offset;
     use super::*;
 
     fn run_i64(source: &str) -> i64 {

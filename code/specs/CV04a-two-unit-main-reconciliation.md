@@ -27,14 +27,18 @@ requires a separately specified change. Never revive cached proof forwarding.
 
 Preserve the existing one-unit flat helper as a named legacy fast path, called
 once at the new proof entry. New bounded composition uses one iterative
-worklist and one cumulative absolute-unit budget <=2. Signed/parenthesized and
+worklist and one cumulative absolute-unit budget <=2. The legacy attempt also
+runs at each zero-budget conditional-arm entry, preserving old constexpr
+one-unit arm positives. It never runs inside the new worklist. Signed/parenthesized and
 token-free parser wrappers do not reset it. Accept additive +/- structure and
 unshadowed unary abs/entier only; reject multiplication/division/powers or
-unknown calls in the new additive composition unless the unchanged narrow
-base proof already admits that complete base subtree. Recognize wrappers and
-additive structure before delegating to the narrow base helper, avoiding a
-whole-subtree rescan at every wrapper. Require exactly one dynamic bounded
-sign-derived root. Multiple dynamic roots and variable offsets remain refused.
+unknown calls in the new additive composition. Its only new dynamic base is
+a resolved unshadowed direct sign(actual), surrounded by the explicit supported
+wrappers; arbitrary old bounded functions plus two are not newly admitted.
+Recognize wrappers and additive structure before base matching, avoiding a
+whole-subtree rescan at every wrapper. Require exactly one such dynamic root.
+Multiple dynamic roots, noncanonical static subtrees and variable offsets
+remain refused; none may be rescued by the old classifier inside a new form.
 
 New offsets use canonical integer/real literal values0,1,2 with unary signs;
 sum their absolute units with checked arithmetic. Do not use generic f64 static
