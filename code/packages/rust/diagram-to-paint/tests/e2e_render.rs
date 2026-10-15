@@ -4415,7 +4415,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_railroad_theme_fallbacks_to_png() {
-        let diagram = parse_railroad("---\nthemeVariables:\n  fontFamily: Georgia\n  fontSize: 17px\n  secondBkg: '#fef3c7'\n  secondaryBorderColor: '#b45309'\n  secondaryTextColor: '#78350f'\n  mainBkg: '#dbeafe'\n  primaryBorderColor: '#1d4ed8'\n  primaryTextColor: '#172554'\n  lineColor: '#15803d'\n  tertiaryColor: '#fce7f3'\n  tertiaryBorderColor: '#be185d'\n  titleColor: '#581c87'\nconfig:\n  railroad:\n    terminalFill: '#dcfce7'\n---\nrailroad-beta\nvalue = sequence(terminal(\"x\"), nonterminal(\"item\"), special(\"end\"));")
+        let diagram = parse_railroad("---\nthemeVariables:\n  fontFamily: Georgia\n  fontSize: 17px\n  secondBkg: '#fef3c7'\n  secondaryBorderColor: '#b45309'\n  secondaryTextColor: '#78350f'\n  mainBkg: '#dbeafe'\n  primaryBorderColor: '#1d4ed8'\n  primaryTextColor: '#172554'\n  lineColor: '#15803d'\n  tertiaryColor: '#fce7f3'\n  tertiaryBorderColor: '#be185d'\n  titleColor: '#581c87'\nconfig:\n  railroad:\n    terminalFill: '#dcfce7'\n    terminalStroke: 'url(javascript:alert(1))'\n---\nrailroad-beta\nvalue = sequence(terminal(\"x\"), nonterminal(\"item\"), special(\"end\"));")
             .expect("railroad theme fallback parse failed");
         let layout = layout_railroad(&diagram);
         assert_eq!(layout.config.font_size, 17.0);
