@@ -33,3 +33,10 @@ fixed-source965-test run, add five literal default/fallback/header-literal/empty
 replacement whole-IR/layout/scene/query companions without changing production
 or dropping the original sixteen custom cases. Revalidate the changed test
 source and retain both source-specific receipts.
+
+Git merge-file returns the number of conflict regions, rather than a boolean
+conflict exit. The thirteen-unit preflight incorrectly accepted only0/1 and
+stopped at actual2 for two compiler production conflicts. Preserve its failed
+receipt; record stdout/stderr and require each positive conflict count to equal
+the complete marker inventory before independently reconstructing owned bytes.
+No compiler, source, index or HEAD changed during that failed preflight.
