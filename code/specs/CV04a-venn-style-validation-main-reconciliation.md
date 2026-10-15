@@ -69,3 +69,30 @@ exact-head terminal acceptable required checks; actual fetched merge reachabilit
 precedes cleanup. Full Closure parity/output-byte/source/stable IDs/pass-sweep/
 all transformation lineage remains OPEN. Heartbeat ACTIVE; base ESTree canonical
 boundary/owned types/no new crates.io dependencies remain owner decisions.
+
+## Actual raw baseline and additional error-domain fixtures
+
+Tests-first8499a418 has three passing admission/tokenizer controls and five
+expected unsafe-value failures before import. Earlier0ab0/5590 runs each had an
+extra percent-tokenizer fixture failure; both are retained with a lesson, never
+called validator evidence. Closed merge13c73a37 accounts for four paths/two exact
+reconstructions and606 grammar objects, changing only the Venn corpus. Registry
+376 unchanged; local parser version0.501 to0.502 only.
+
+Actual raw import passes all8 new hardening functions, paint10 and geometry15.
+Three old parser functions fail: the12IR invalid-nope cascade assumption and
+two config/theme decoy fixtures that used JSON as an explicit fill color. The
+new stricter boundary correctly rejects these JSON fills at exact line3/col1.
+Do not weaken validation or silently discard those fixtures.
+
+Before adapting, retain each original JSON-fill source literally as an exact
+ParseError assertion. Add a valid companion carrying the identical JSON payload
+as a set label plus explicit safe fill. Keep the complete old config oracle,
+assert the label payload and safe fill exactly; all other function bytes and
+source-origin cases remain. This preserves body/config isolation while removing
+the obsolete invalid-color-admission assumption. Preserve all192 prior valid
+scene/query inputs byte-exact. For the12IR matrix, assert exact errors from each
+original invalid source, remove only its two declared nope lines for the valid
+whole-IR assertion, and keep every expected object/other assertion unchanged.
+Independent isolated opacity errors remain mandatory so first-width errors do
+not hide a missing check. Full tests and source/terminal review gate acceptance.
