@@ -23,8 +23,10 @@ claim a parser repair unless a failing execution establishes one. Add typed
 arcRadius validation before layout arithmetic using the existing precise
 UnsupportedStyle { field: "arcRadius" } contract; allow zero and finite values
 through65536. Existing spacing and style error variants/order remain stable.
-Derived geometry must still respect the existing16384 cap, with no threshold
-increase and no new crates.io dependencies.
+Derived geometry must remain finite with nonnegative rectangle dimensions,
+matching the existing checked contract. There is no global16384 layout cap:
+the retained valid-font/spacing controls already admit larger finite layouts.
+Preserve all existing production-limit controls and add no crates.io dependency.
 
 Retain producer radius-driven horizontal lanes and portable rounded corners,
 including radius0 straight paths and default10. Review the layout's existing
