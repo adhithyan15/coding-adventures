@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Wait for the failure callback before stopping all seven automation/pairing
+  worker failure fixtures. The five-second deadline replaces fixed20ms sleeps;
+  exact error, stop/join and callback assertions remain.
+
 - `channel_keys_become_the_broker_s_slots_with_home_resolved` names its
   unused broker `C:/unused` on Windows, where `/unused` is not absolute
   and the config refused it (`UnsafePath`). It failed the first time this
@@ -25,6 +29,11 @@
     brokers exactly as the daemon does.
   - `compose_host_data_plane` and `compose_host_data_plane_with_fetcher`
     no longer take a clock: nothing they build needs one now.
+
+- Use an absolute native broker fixture path with existing owned string
+  escaping. Preserve production path validation and exact key-slot assertions.
+- Observe the Hue failure callback before stopping the worker, with a bounded
+  test wait. Preserve its exact clock-error assertion and production scheduling.
 - **Each broker runs confined, and secret directories must be owner-only**
   (D18S P2.6d-3). With `[hosts.broker]` set, every broker launch first
   checks that each `channel_keys` file's directory, the vault's storage

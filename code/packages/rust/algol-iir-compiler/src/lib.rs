@@ -150,10 +150,48 @@ impl ScalarType {
     }
 }
 
+/// Grammar wrappers carry neither an operator nor an independent value. Each
+/// classifier already falls back to its single child. Taking that route first
+/// avoids re-running every competing proof over the same wrapper suffix.
+/// Typed call/variable nodes keep their earlier shape checks even for malformed
+/// caller-owned ASTs; token-bearing parentheses/operators are never stripped.
+fn selector_transparent_child(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    if matches!(node.rule_name.as_str(), "proc_call" | "variable")
+        || !direct_tokens(node).is_empty()
+    {
+        return None;
+    }
+    let children = direct_nodes(node);
+    if children.len() == 1 { Some(children[0]) } else { None }
+}
+
+// Observe real classifier entry work only in the dedicated per-thread control.
+// A test budget stops the old pathological refusal without waiting for a timer;
+// ordinary tests have no active budget and production has no counter or cap.
+#[cfg(test)]
+std::thread_local! {
+    static SELECTOR_CLASSIFIER_BUDGET: Cell<Option<(usize, usize)>> = const { Cell::new(None) };
+}
+
+#[cfg(test)]
+fn selector_classifier_visit() {
+    SELECTOR_CLASSIFIER_BUDGET.with(|counter| {
+        if let Some((visits, limit)) = counter.get() {
+            let next = visits + 1;
+            counter.set(Some((next, limit)));
+            assert!(next <= limit, "selector classifier exceeded {limit} visits: actual {next}");
+        }
+    });
+}
+
 #[derive(Debug, Clone)]
 struct ExprValue {
     slot: String,
     ty: ScalarType,
+    /// The fresh conditional result was proven after condition effects and
+    /// before either branch captured name dependencies. This belongs to the
+    /// materialized scalar, never to a mutable root or an earlier AST snapshot.
+    selector_result_proven: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1552,6 +1590,7 @@ impl Compiler {
             binding.ty.iir(),
         ));
         Ok(ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: binding.ty,
         })
@@ -2217,6 +2256,13 @@ impl Compiler {
     /// slot that holds the result.  Used from `emit_expr`.
     fn emit_proc_call(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         self.set_loc(node);
+        // A validated sole-read body adds no effects beyond the actual. Match
+        // it before ordinary calls clear local facts; nested calls in the
+        // actual still take their own normal effect/invalidation paths.
+        if let Some(actual) = self.read_once_conditional_identity_actual(node) {
+            let value = self.emit_expr(actual)?;
+            return self.coerce_value(value, ScalarType::Real, "read-once name result");
+        }
         let source_name = direct_tokens(node)
             .into_iter()
             .find(|token| token.effective_type_name() == "NAME")
@@ -2357,6 +2403,12 @@ impl Compiler {
             // above; composed dynamic real expressions still fail closed here.
             let allow_runtime_real = self.is_runtime_real_assignment_value(actual);
             let value = self.emit_expr(actual)?;
+            // Lowering a selector can promote a formerly local branch root
+            // through a by-name actual. Both proof snapshots must admit output.
+            let allow_runtime_real =
+                allow_runtime_real
+                    && (value.selector_result_proven
+                        || self.is_runtime_real_output_after_lowering(actual));
             self.emit_standard_output_value(name, value, allow_runtime_real)?;
         }
 
@@ -2463,6 +2515,25 @@ impl Compiler {
             return None;
         }
         Some((condition, branches[0], branches[1]))
+    }
+
+    fn is_runtime_real_output_after_lowering(&self, node: &GrammarASTNode) -> bool {
+        if self.is_runtime_real_assignment_value(node) {
+            return true;
+        }
+        // A call can erase the selector's static Boolean fact. Prove both
+        // alternatives independently rather than reuse that mutable fact.
+        // Literal arithmetic is context-free: no calls or tracked variables.
+        let Some((_, then_node, else_node)) = self.conditional_expression_parts(node) else {
+            return false;
+        };
+        let safe_branch = |branch: &GrammarASTNode| {
+            self.is_runtime_real_assignment_value(branch)
+                || (!self.contains_procedure_call(branch)
+                    && expr_static_real_arithmetic_value_with(branch, &|_| None)
+                        .is_some_and(|value| value.is_finite()))
+        };
+        safe_branch(then_node) && safe_branch(else_node)
     }
 
     fn is_static_real_output_expr(&self, node: &GrammarASTNode) -> bool {
@@ -3792,6 +3863,11 @@ impl Compiler {
     }
 
     fn is_direct_formatter_safe_real_procedure_call(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_direct_formatter_safe_real_procedure_call(child);
+        }
         if node.rule_name == "proc_call" {
             let Some(source_name) = direct_tokens(node)
                 .into_iter()
@@ -3837,6 +3913,11 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_real_procedure_result(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_real_procedure_result(child);
+        }
         if node.rule_name == "proc_call" {
             let Some(source_name) = direct_tokens(node)
                 .into_iter()
@@ -3878,6 +3959,11 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_entier_sign_root(child);
+        }
         if node.rule_name == "proc_call" {
             let source_name = direct_tokens(node)
                 .into_iter()
@@ -3888,7 +3974,7 @@ impl Compiler {
                 if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
-                        && self.builtin_sign_operand(actuals[0]).is_some_and(|operand| {
+                        && self.builtin_outer_entier_operand(actuals[0]).is_some_and(|operand| {
                             self.is_selector_call_safe_runtime_real_root(operand)
                         });
                 }
@@ -3905,6 +3991,11 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_signed_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_signed_entier_sign_root(child);
+        }
         if self.is_selector_call_safe_entier_sign_root(node) {
             return true;
         }
@@ -3924,6 +4015,11 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_additive_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_additive_entier_sign_root(child);
+        }
         if self.is_selector_call_safe_signed_entier_sign_root(node) {
             return true;
         }
@@ -3973,6 +4069,11 @@ impl Compiler {
         &self,
         node: &GrammarASTNode,
     ) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_multiplicative_entier_sign_root(child);
+        }
         if self.is_selector_call_safe_additive_entier_sign_root(node) {
             return true;
         }
@@ -4014,6 +4115,11 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_powered_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_powered_entier_sign_root(child);
+        }
         if self.is_selector_call_safe_multiplicative_entier_sign_root(node) {
             return true;
         }
@@ -4057,6 +4163,8 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_standard_entier_sign_root(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
         self.is_selector_call_safe_standard_entier_sign_root_with_depth(node, 6)
     }
 
@@ -4065,6 +4173,11 @@ impl Compiler {
         node: &GrammarASTNode,
         remaining_standard_calls: usize,
     ) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_standard_entier_sign_root_with_depth(child, remaining_standard_calls);
+        }
         if self.is_selector_call_safe_powered_entier_sign_root(node) {
             return true;
         }
@@ -4078,7 +4191,7 @@ impl Compiler {
                 if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
-                        && self.builtin_sign_operand(actuals[0]).is_some_and(|operand| {
+                        && self.builtin_outer_entier_operand(actuals[0]).is_some_and(|operand| {
                             self.is_selector_call_safe_runtime_real_root(operand)
                         });
                 }
@@ -4674,132 +4787,176 @@ impl Compiler {
         self.builtin_nonpositive_unit_sign_operand(operand)
     }
 
+    /// An outer entier may consume two small additive units without changing
+    /// the narrower proof used inside exp/log chains. The dynamic operand must
+    /// use that old proof: recursing here would forget an inner offset and let
+    /// parentheses or standard calls reset the one-offset budget.
+    fn builtin_outer_entier_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(root) = self.builtin_outer_entier_flat_operand(node) { return Some(root); }
+        // One conditional front, then two disjoint flat proofs. There is no
+        // recursive branch reset or widening of the shared exp/log classifier.
+        let mut front = node;
+        loop {
+            #[cfg(test)]
+            selector_classifier_visit();
+            if let Some(child) = single_parenthesized_child(front) { front = child; continue; }
+            if let Some((sign, child)) = single_signed_child(front) {
+                if !matches!(sign, "+" | "-") { return None; }
+                front = child; continue;
+            }
+            if front.rule_name != "proc_call" && direct_tokens(front).is_empty() {
+                let children = direct_nodes(front);
+                if children.len() == 1 { front = children[0]; continue; }
+            }
+            break;
+        }
+        let (_condition, then_node, else_node) = self.conditional_expression_parts(front)?;
+        let then_root = self.builtin_outer_entier_flat_operand(then_node)?;
+        let else_root = self.builtin_outer_entier_flat_operand(else_node)?;
+        // Both branches need the strict local-root proof, including after a
+        // condition has lowered its aliases. Never reuse a pre-condition bit.
+        (self.is_selector_call_safe_runtime_real_root(then_root)
+            && self.is_selector_call_safe_runtime_real_root(else_root)).then_some(then_root)
+    }
+
+    fn builtin_outer_entier_flat_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        // Preserve the old one-unit domain once at this zero-budget entry.
+        // A conditional front gives each disjoint arm its own entry; this
+        // fallback is never called beneath a new additive/wrapper work item.
+        if let Some(root)=self.builtin_outer_entier_single_unit_operand(node) {return Some(root);}
+        let mut pending=vec![node];let mut root=None;let mut units=0_u64;
+        while let Some(mut current)=pending.pop() {
+            loop {
+                #[cfg(test)]
+                selector_classifier_visit();
+                if let Some(child)=single_parenthesized_child(current) {current=child;continue;}
+                if let Some((sign,child))=single_signed_child(current) {
+                    if !matches!(sign,"+"|"-") {return None;}current=child;continue;
+                }
+                if current.rule_name!="proc_call"&&direct_tokens(current).is_empty() {
+                    let children=direct_nodes(current);if children.len()==1 {current=children[0];continue;}
+                }
+                break;
+            }
+            // Only canonical small literals enter this dedicated budget of
+            // eleven; a sign root therefore stays within [-12, 12]. A
+            // generic f64 fold is not an exact proof for integer arithmetic
+            // near2^53, and must not hide another unit in a nested subtree.
+            let tokens=direct_tokens(current);
+            if tokens.len()==1&&direct_nodes(current).is_empty() {
+                let amount=match tokens[0].effective_type_name() {
+                    "INTEGER_LIT"=>tokens[0].value.parse::<u64>().ok().filter(|v|*v<=11),
+                    "REAL_LIT"=>tokens[0].value.parse::<f64>().ok().and_then(|v|
+                        [0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0].iter().position(|allowed|*allowed==v).map(|v|v as u64)),
+                    _=>None,
+                }?;
+                units=units.checked_add(amount)?;if units>11 {return None;}continue;
+            }
+            if matches!(current.rule_name.as_str(),"expr_add"|"simple_arith") {
+                let sequence=pieces(current);
+                let first=usize::from(matches!(sequence.first(),Some(Piece::Op(op)) if matches!(op.as_str(),"+"|"-")));
+                if sequence.len()<first+3||(sequence.len()-first).is_multiple_of(2) {return None;}
+                for (index,piece) in sequence[first..].iter().enumerate() {
+                    if index.is_multiple_of(2) {
+                        let Piece::Node(child)=piece else{return None;};pending.push(*child);
+                    } else if !matches!(piece,Piece::Op(op) if matches!(op.as_str(),"+"|"-")) {return None;}
+                }
+                continue;
+            }
+            if current.rule_name!="proc_call" {return None;}
+            let source_name=tokens.iter().find(|t|t.effective_type_name()=="NAME")?.value.as_str();
+            let target=self.resolve_procedure_identity(source_name);
+            if self.proc_sigs.contains_key(&target) {return None;}
+            let actuals=self.standard_fn_actuals(current);if actuals.len()!=1 {return None;}
+            match target.as_str() {
+                "abs"|"entier"=>pending.push(actuals[0]),
+                "sign"=>{if root.replace(actuals[0]).is_some(){return None;}},
+                _=>return None,
+            }
+        }
+        root
+    }
+
+    fn builtin_outer_entier_single_unit_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(operand) = self.builtin_sign_operand(node) {
+            return Some(operand);
+        }
+        // Scan the old expression once, then normalize wrappers once. Calling
+        // the full old classifier at every wrapper would introduce quadratic
+        // work on a deeply parenthesized refusal.
+        let mut flat = node;
+        loop {
+            #[cfg(test)]
+            selector_classifier_visit();
+            if let Some(child) = single_parenthesized_child(flat) {
+                flat = child;
+                continue;
+            }
+            if let Some((sign, child)) = single_signed_child(flat) {
+                if !matches!(sign, "+" | "-") { return None; }
+                flat = child;
+                continue;
+            }
+            if flat.rule_name != "proc_call" && direct_tokens(flat).is_empty() {
+                let children = direct_nodes(flat);
+                if children.len() == 1 {
+                    flat = children[0];
+                    continue;
+                }
+            }
+            break;
+        }
+        if !matches!(flat.rule_name.as_str(), "expr_add" | "simple_arith") { return None; }
+        let sequence = pieces(flat);
+        if sequence.len() < 3 || sequence.len() % 2 != 1 { return None; }
+        let mut root = None;
+        let mut saw_unit = false;
+        for (index, piece) in sequence.iter().enumerate() {
+            #[cfg(test)]
+            selector_classifier_visit();
+            if index % 2 == 0 {
+                let Piece::Node(operand) = piece else { return None; };
+                if let Some(operand) = self.builtin_sign_operand(operand) {
+                    if root.replace(operand).is_some() { return None; }
+                } else {
+                    let mut dependencies = HashSet::new();
+                    collect_expression_dependency_names(operand, "", &mut dependencies);
+                    if !dependencies.is_empty() { return None; }
+                    let value = expr_static_real_arithmetic_value_with(operand, &|_| None)?;
+                    if value != 0.0 {
+                        if saw_unit || value.abs() != 1.0 { return None; }
+                        saw_unit = true;
+                    }
+                }
+            } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                return None;
+            }
+        }
+        root
+    }
+
     fn builtin_sign_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
-        let operand = self.builtin_sign_operand_unchecked(node)?;
-        (self.builtin_sign_unit_offset_count(node)? <= 11).then_some(operand)
-    }
-
-    fn builtin_sign_unit_offset_count(&self, node: &GrammarASTNode) -> Option<usize> {
         if let Some((_condition, then_node, else_node)) =
             self.conditional_expression_parts(node)
         {
-            return Some(
-                self.builtin_sign_unit_offset_count(then_node)?
-                    .max(self.builtin_sign_unit_offset_count(else_node)?),
-            );
-        }
-        if let Some(child) = single_parenthesized_child(node) {
-            return self.builtin_sign_unit_offset_count(child);
-        }
-        if let Some((sign, child)) = single_signed_child(node) {
-            return matches!(sign, "+" | "-")
-                .then(|| self.builtin_sign_unit_offset_count(child))?;
-        }
-        if pieces(node)
-            .iter()
-            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
-        {
-            return self.builtin_sign_unit_offset_count(literal_power_identity_base(
-                node, true,
-            )?);
-        }
-        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
-            let sequence = pieces(node);
-            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
-                let mut count = 0usize;
-                for (index, piece) in sequence.iter().enumerate() {
-                    if index % 2 == 0 {
-                        let Piece::Node(operand) = piece else {
-                            return None;
-                        };
-                        if self.builtin_sign_operand_unchecked(operand).is_some() {
-                            count = count
-                                .checked_add(self.builtin_sign_unit_offset_count(operand)?)?;
-                        } else {
-                            let value =
-                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
-                            if value != 0.0 {
-                                let units = match value.abs() {
-                                    1.0 => 1,
-                                    2.0 => 2,
-                                    3.0 => 3,
-                                    4.0 => 4,
-                                    5.0 => 5,
-                                    6.0 => 6,
-                                    7.0 => 7,
-                                    8.0 => 8,
-                                    9.0 => 9,
-                                    10.0 => 10,
-                                    11.0 => 11,
-                                    _ => return None,
-                                };
-                                count = count.checked_add(units)?;
-                            }
-                        }
-                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
-                        return None;
-                    }
-                }
-                return Some(count);
-            }
-        }
-        if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
-            let sequence = pieces(node);
-            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
-                for (index, piece) in sequence.iter().enumerate() {
-                    if index % 2 == 0 {
-                        let Piece::Node(operand) = piece else {
-                            return None;
-                        };
-                        if self.builtin_sign_operand_unchecked(operand).is_some() {
-                            return self.builtin_sign_unit_offset_count(operand);
-                        }
-                    }
-                }
-                return None;
-            }
-        }
-        if node.rule_name != "proc_call" {
-            let children = direct_nodes(node);
-            if direct_tokens(node).is_empty() && children.len() == 1 {
-                return self.builtin_sign_unit_offset_count(children[0]);
-            }
-            return None;
-        }
-        let source_name = direct_tokens(node)
-            .into_iter()
-            .find(|token| token.effective_type_name() == "NAME")?
-            .value
-            .clone();
-        let target_name = self.resolve_procedure_identity(&source_name);
-        if self.proc_sigs.contains_key(&target_name) {
-            return None;
-        }
-        let actuals = self.standard_fn_actuals(node);
-        if actuals.len() != 1 {
-            return None;
-        }
-        match target_name.as_str() {
-            "sign" => Some(0),
-            "abs" | "entier" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan" => {
-                self.builtin_sign_unit_offset_count(actuals[0])
-            }
-            _ => None,
-        }
-    }
-
-    fn builtin_sign_operand_unchecked<'n>(
-        &self,
-        node: &'n GrammarASTNode,
-    ) -> Option<&'n GrammarASTNode> {
-        if let Some((_condition, then_node, else_node)) =
-            self.conditional_expression_parts(node)
-        {
-            let then_operand = self.builtin_sign_operand_unchecked(then_node)?;
-            let else_operand = self.builtin_sign_operand_unchecked(else_node)?;
+            let then_operand = self.builtin_sign_operand(then_node)?;
+            let else_operand = self.builtin_sign_operand(else_node)?;
             if self.is_selector_call_safe_runtime_real_root(then_operand)
                 && self.is_selector_call_safe_runtime_real_root(else_operand)
             {
@@ -4808,11 +4965,11 @@ impl Compiler {
             return None;
         }
         if let Some(child) = single_parenthesized_child(node) {
-            return self.builtin_sign_operand_unchecked(child);
+            return self.builtin_sign_operand(child);
         }
         if let Some((sign, child)) = single_signed_child(node) {
             if matches!(sign, "+" | "-") {
-                return self.builtin_sign_operand_unchecked(child);
+                return self.builtin_sign_operand(child);
             }
             return None;
         }
@@ -4821,7 +4978,7 @@ impl Compiler {
             .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
         {
             if let Some(base) = literal_power_identity_base(node, true) {
-                return self.builtin_sign_operand_unchecked(base);
+                return self.builtin_sign_operand(base);
             }
             return None;
         }
@@ -4834,22 +4991,14 @@ impl Compiler {
                         let Piece::Node(operand) = piece else {
                             return None;
                         };
-                        if let Some(operand) = self.builtin_sign_operand_unchecked(operand) {
+                        if let Some(operand) = self.builtin_sign_operand(operand) {
                             if sign_operand.replace(operand).is_some() {
                                 return None;
                             }
-                        } else {
-                            let value =
-                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
-                            if value != 0.0
-                                && !matches!(
-                                    value.abs(),
-                                    1.0 | 2.0 | 3.0 | 4.0 | 5.0 | 6.0 | 7.0 | 8.0 | 9.0 | 10.0
-                                        | 11.0
-                                )
-                            {
-                                return None;
-                            }
+                        } else if !expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_some_and(|value| value == 0.0)
+                        {
+                            return None;
                         }
                     } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
                         return None;
@@ -4871,7 +5020,7 @@ impl Compiler {
                         let Piece::Node(operand) = piece else {
                             return None;
                         };
-                        if let Some(operand) = self.builtin_sign_operand_unchecked(operand) {
+                        if let Some(operand) = self.builtin_sign_operand(operand) {
                             if sign_operand.replace(operand).is_some() {
                                 return None;
                             }
@@ -4912,7 +5061,7 @@ impl Compiler {
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
-                return self.builtin_sign_operand_unchecked(children[0]);
+                return self.builtin_sign_operand(children[0]);
             }
             return None;
         }
@@ -4931,11 +5080,11 @@ impl Compiler {
         }
         match target_name.as_str() {
             "sign" => Some(actuals[0]),
-            "abs" | "entier" => self.builtin_sign_operand_unchecked(actuals[0]),
+            "abs" | "entier" => self.builtin_sign_operand(actuals[0]),
             "sqrt" => self.builtin_nonnegative_bounded_sign_operand(actuals[0]),
-            "sin" | "cos" | "arctan" => self.builtin_sign_operand_unchecked(actuals[0]),
+            "sin" | "cos" | "arctan" => self.builtin_sign_operand(actuals[0]),
             "exp" if !self.contains_builtin_exp_call(actuals[0]) => {
-                self.builtin_sign_operand_unchecked(actuals[0])
+                self.builtin_sign_operand(actuals[0])
             }
             "ln" => self
                 .builtin_single_exp_sign_operand(actuals[0])
@@ -4948,7 +5097,14 @@ impl Compiler {
         }
     }
 
+
+
     fn is_selector_call_safe_runtime_real_value(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_runtime_real_value(child);
+        }
         if self.is_selector_call_safe_real_procedure_result(node) {
             return true;
         }
@@ -5058,7 +5214,7 @@ impl Compiler {
                         let actuals = self.standard_fn_actuals(node);
                         if actuals.len() == 1
                             && self
-                                .builtin_sign_operand(actuals[0])
+                                .builtin_outer_entier_operand(actuals[0])
                                 .is_some_and(|operand| {
                                     self.is_selector_call_safe_runtime_real_value(operand)
                                 })
@@ -5091,6 +5247,11 @@ impl Compiler {
     }
 
     fn is_selector_call_safe_runtime_real_root(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_selector_call_safe_runtime_real_root(child);
+        }
         if self.is_selector_call_safe_runtime_real_value(node) {
             return true;
         }
@@ -5218,6 +5379,11 @@ impl Compiler {
     }
 
     fn is_runtime_real_assignment_value(&self, node: &GrammarASTNode) -> bool {
+        #[cfg(test)]
+        selector_classifier_visit();
+        if let Some(child) = selector_transparent_child(node) {
+            return self.is_runtime_real_assignment_value(child);
+        }
         if self.is_direct_formatter_safe_real_procedure_call(node) {
             return true;
         }
@@ -5253,7 +5419,7 @@ impl Compiler {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
                         && self
-                            .builtin_sign_operand(actuals[0])
+                            .builtin_outer_entier_operand(actuals[0])
                             .is_some_and(|operand| {
                                 self.is_runtime_real_assignment_value(operand)
                             });
@@ -5503,6 +5669,94 @@ impl Compiler {
         copy
     }
 
+    /// Only this declaration has exactly the effects of reading a name actual
+    /// once. Checking complete child lists excludes hidden labels, blocks,
+    /// extra assignments and calls; checking the registered signature against
+    /// the declaration prevents a stale or malformed heading from authorizing
+    /// the substitution. The source spelling of the result is local to this
+    /// declaration, while lookup uses the resolved stable procedure identity.
+    fn is_read_once_real_name_identity(&self, source_name: &str, sig: &ProcSig) -> bool {
+        let [param] = sig.params.as_slice() else { return false; };
+        if sig.ret != Some(ScalarType::Real)
+            || param.mode != ProcedureParamMode::Name
+            || param.ty != ProcedureParamType::Scalar(ScalarType::Real)
+        { return false; }
+        let Some(decl) = self.proc_decls.get(source_name) else { return false; };
+        if decl.rule_name != "procedure_decl" { return false; }
+        let Ok((result_name, params, ret)) = self.procedure_parts(decl) else { return false; };
+        if params != sig.params || ret != sig.ret || result_name == param.name { return false; }
+        let bodies: Vec<_> = direct_nodes(decl).into_iter().filter(|n| n.rule_name == "proc_body").collect();
+        let [body] = bodies.as_slice() else { return false; };
+        let [ASTNodeOrToken::Node(statement)] = body.children.as_slice() else { return false; };
+        if statement.rule_name != "statement" { return false; }
+        let [ASTNodeOrToken::Node(unlabeled)] = statement.children.as_slice() else { return false; };
+        if unlabeled.rule_name != "unlabeled_stmt" { return false; }
+        let [ASTNodeOrToken::Node(assign)] = unlabeled.children.as_slice() else { return false; };
+        if assign.rule_name != "assign_stmt" { return false; }
+        let [ASTNodeOrToken::Node(left), ASTNodeOrToken::Node(rhs)] = assign.children.as_slice() else { return false; };
+        if left.rule_name != "left_part" || rhs.rule_name != "expression" { return false; }
+        let [ASTNodeOrToken::Node(variable), ASTNodeOrToken::Token(assignment)] = left.children.as_slice() else { return false; };
+        let [ASTNodeOrToken::Token(target)] = variable.children.as_slice() else { return false; };
+        let mut formal = rhs;
+        // These exact wrappers are the generalized expression grammar's bare
+        // variable path. An arbitrary token-free proc_call/unknown rule is not
+        // transparent: ordinary expression lowering would reject it.
+        for rule in ["expression", "expr_eqv", "expr_impl", "expr_or", "expr_and",
+            "expr_not", "expr_cmp", "expr_add", "expr_mul", "expr_pow", "expr_atom"] {
+            if formal.rule_name != rule { return false; }
+            let [ASTNodeOrToken::Node(child)] = formal.children.as_slice() else { return false; };
+            formal = child;
+        }
+        let [ASTNodeOrToken::Token(formal_name)] = formal.children.as_slice() else { return false; };
+        variable.rule_name == "variable"
+            && assignment.effective_type_name() == "ASSIGN"
+            && target.effective_type_name() == "NAME" && target.value == result_name
+            && formal.rule_name == "variable" && formal_name.effective_type_name() == "NAME"
+            && formal_name.value == param.name
+    }
+
+    /// Resolve and validate the whole narrow call before changing caller state.
+    /// Nonmatching arity, signatures, formal-procedure bindings and active
+    /// recursive contexts all fall back to the existing call validator.
+    fn read_once_conditional_identity_actual<'n>(&self, node: &'n GrammarASTNode) -> Option<&'n GrammarASTNode> {
+        let name = direct_tokens(node).into_iter().find(|t| t.effective_type_name() == "NAME")?;
+        if self.procedure_bindings.contains_key(&name.value) { return None; }
+        let target = self.resolve_procedure_identity(&name.value);
+        if self.compiling_by_name_procedures.contains_key(&target) { return None; }
+        let sig = self.proc_sigs.get(&target)?;
+        if !self.is_read_once_real_name_identity(&target, sig) { return None; }
+        let actuals = self.standard_fn_actuals(node);
+        let [actual] = actuals.as_slice() else { return None; };
+        self.is_conditional_unit_identity_actual(actual).then_some(*actual)
+    }
+
+    /// Keep the read-once optimization within one builtin-entier conditional
+    /// front. In particular, arbitrary forwarded formals and overridden
+    /// standard functions cannot use it. Discovery is iterative and counted
+    /// just like the dedicated outer-entier classifier.
+    fn is_conditional_unit_identity_actual(&self, node: &GrammarASTNode) -> bool {
+        fn transparent(mut node: &GrammarASTNode) -> &GrammarASTNode {
+            loop {
+                #[cfg(test)] selector_classifier_visit();
+                if let Some(child) = single_parenthesized_child(node) { node = child; continue; }
+                if node.rule_name != "proc_call" && direct_tokens(node).is_empty() {
+                    let children = direct_nodes(node);
+                    if children.len() == 1 { node = children[0]; continue; }
+                }
+                return node;
+            }
+        }
+        let call = transparent(node);
+        if call.rule_name != "proc_call" { return false; }
+        let Some(name) = direct_tokens(call).into_iter().find(|t| t.effective_type_name() == "NAME") else { return false; };
+        let target = self.resolve_procedure_identity(&name.value);
+        if target != "entier" || self.proc_sigs.contains_key(&target) { return false; }
+        let actuals = self.standard_fn_actuals(call);
+        let [actual] = actuals.as_slice() else { return false; };
+        self.conditional_expression_parts(transparent(actual)).is_some()
+            && self.builtin_outer_entier_operand(actual).is_some()
+    }
+
     /// Shared call-lowering for `proc_call` and `proc_stmt`: resolve the
     /// signature, evaluate and type-check the actuals, then emit a `call`
     /// whose `srcs[0]` names the callee and whose remaining `srcs` are the
@@ -5696,7 +5950,7 @@ impl Compiler {
         srcs.extend(arg_slots.into_iter().map(Operand::Var));
         self.emit(IIRInstr::new("call", dest.clone(), srcs, type_hint));
         Ok(match (dest, sig.ret) {
-            (Some(slot), Some(ty)) => Some(ExprValue { slot, ty }),
+            (Some(slot), Some(ty)) => Some(ExprValue { selector_result_proven: false, slot, ty }),
             _ => None,
         })
     }
@@ -6413,6 +6667,7 @@ impl Compiler {
         ));
         // then: dest := -value
         let neg = self.emit_unary_minus(ExprValue {
+            selector_result_proven: false,
             slot: value.slot.clone(),
             ty,
         })?;
@@ -6438,7 +6693,7 @@ impl Compiler {
         ));
         self.emit_label(&end_label);
 
-        Ok(ExprValue { slot: dest, ty })
+        Ok(ExprValue { selector_result_proven: false, slot: dest, ty })
     }
 
     /// `sign(E)` — the *signum*: `+1` if `E > 0`, `-1` if `E < 0`, `0` if
@@ -6563,6 +6818,7 @@ impl Compiler {
         self.emit_label(&end_label);
 
         Ok(ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: ScalarType::Integer,
         })
@@ -6608,6 +6864,7 @@ impl Compiler {
             ScalarType::Integer.iir(),
         ));
         Ok(ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: ScalarType::Integer,
         })
@@ -6642,6 +6899,7 @@ impl Compiler {
             ScalarType::Real.iir(),
         ));
         Ok(ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: ScalarType::Real,
         })
@@ -6684,6 +6942,7 @@ impl Compiler {
             ScalarType::Real.iir(),
         ));
         Ok(ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: ScalarType::Real,
         })
@@ -6821,6 +7080,7 @@ impl Compiler {
                     self.emit_named_scalar_write(
                         &name,
                         ExprValue {
+                            selector_result_proven: false,
                             slot: value,
                             ty: ScalarType::String,
                         },
@@ -6907,6 +7167,7 @@ impl Compiler {
                         self.emit_named_scalar_write(
                             &name,
                             ExprValue {
+                                selector_result_proven: false,
                                 slot: src_slot.clone(),
                                 ty: ScalarType::String,
                             },
@@ -6963,6 +7224,15 @@ impl Compiler {
         }
 
         let rhs = self.emit_expr(expr)?;
+
+        // Lowering can promote a local branch root to shared by-name storage.
+        // Keep the proof only if it was valid before lowering and remains valid
+        // in the actual alias state afterward. A newly valid post-state alone
+        // cannot turn an originally unproven expression into a safe value.
+        let runtime_real_value =
+            runtime_real_value
+                && (rhs.selector_result_proven
+                    || self.is_runtime_real_assignment_value(expr));
 
         for left in left_parts {
             let var_node = first_direct_node(left, "variable")
@@ -7204,6 +7474,7 @@ impl Compiler {
                 let done_label = self.fresh_label("switch_done");
                 for (i, target) in targets.iter().enumerate() {
                     let k = ExprValue {
+                        selector_result_proven: false,
                         slot: self.emit_const(ScalarType::Integer, Operand::Int((i as i64) + 1)),
                         ty: ScalarType::Integer,
                     };
@@ -10442,6 +10713,7 @@ impl Compiler {
         self.emit_for_target_write(
             target,
             ExprValue {
+                selector_result_proven: false,
                 slot: next,
                 ty: target_ty,
             },
@@ -10514,11 +10786,13 @@ impl Compiler {
                 binding.ty.iir(),
             ));
             ExprValue {
+                selector_result_proven: false,
                 slot: dest,
                 ty: binding.ty,
             }
         } else {
             ExprValue {
+                selector_result_proven: false,
                 slot: binding.slot,
                 ty: binding.ty,
             }
@@ -10638,6 +10912,13 @@ impl Compiler {
             ));
         }
 
+        // A selector can invalidate roots before the selected value exists.
+        // Prove both arms now, in the post-condition state. Branch name calls
+        // may subsequently capture dependencies, but their scalar results join
+        // into a new slot. Capturing a root in the condition grants no proof.
+        let selector_result_proven = self.is_selector_call_safe_runtime_real_root(then_node)
+            && self.is_selector_call_safe_runtime_real_root(else_node);
+
         let else_label = self.fresh_label("expr_else");
         let end_label = self.fresh_label("expr_end");
         let dest = self.fresh_temp();
@@ -10679,6 +10960,7 @@ impl Compiler {
         self.emit_label(&end_label);
 
         Ok(ExprValue {
+            selector_result_proven: selector_result_proven && then_value.ty == ScalarType::Real,
             slot: dest,
             ty: then_value.ty,
         })
@@ -10747,6 +11029,7 @@ impl Compiler {
                 })?;
                 let slot = self.emit_const(ScalarType::Integer, Operand::Int(value));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot,
                     ty: ScalarType::Integer,
                 })
@@ -10761,6 +11044,7 @@ impl Compiler {
                 })?;
                 let slot = self.emit_const(ScalarType::Real, Operand::Float(value));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot,
                     ty: ScalarType::Real,
                 })
@@ -10774,6 +11058,7 @@ impl Compiler {
                     "str",
                 ));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot,
                     ty: ScalarType::String,
                 })
@@ -10781,6 +11066,7 @@ impl Compiler {
             ("KEYWORD", "true") => {
                 let slot = self.emit_const(ScalarType::Boolean, Operand::Bool(true));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot,
                     ty: ScalarType::Boolean,
                 })
@@ -10788,6 +11074,7 @@ impl Compiler {
             ("KEYWORD", "false") => {
                 let slot = self.emit_const(ScalarType::Boolean, Operand::Bool(false));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot,
                     ty: ScalarType::Boolean,
                 })
@@ -11035,6 +11322,7 @@ impl Compiler {
                 "f64",
             ));
             return Ok(ExprValue {
+                selector_result_proven: false,
                 slot: dest,
                 ty: ScalarType::Real,
             });
@@ -11057,7 +11345,7 @@ impl Compiler {
                 ScalarType::Real => self.emit_const(ScalarType::Real, Operand::Float(1.0)),
                 _ => self.emit_const(ScalarType::Integer, Operand::Int(1)),
             };
-            return ExprValue { slot: one, ty };
+            return ExprValue { selector_result_proven: false, slot: one, ty };
         }
         let base_slot = base.slot.clone();
         let mut acc = base.slot;
@@ -11071,7 +11359,7 @@ impl Compiler {
             ));
             acc = dest;
         }
-        ExprValue { slot: acc, ty }
+        ExprValue { selector_result_proven: false, slot: acc, ty }
     }
 
     /// Widen an integer value to `real` with the shared IIR conversion.
@@ -11085,6 +11373,7 @@ impl Compiler {
             ScalarType::Real.iir(),
         ));
         ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: ScalarType::Real,
         }
@@ -11160,7 +11449,7 @@ impl Compiler {
                     vec![Operand::Var(lhs.slot), Operand::Var(rhs.slot)],
                     ty.iir(),
                 ));
-                Ok(ExprValue { slot: dest, ty })
+                Ok(ExprValue { selector_result_proven: false, slot: dest, ty })
             }
             "div" | "mod" => {
                 // `div` (integer division) and `mod` are integer-only operators
@@ -11178,6 +11467,7 @@ impl Compiler {
                     "i64",
                 ));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot: dest,
                     ty: ScalarType::Integer,
                 })
@@ -11196,6 +11486,7 @@ impl Compiler {
                     "f64",
                 ));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot: dest,
                     ty: ScalarType::Real,
                 })
@@ -11274,6 +11565,7 @@ impl Compiler {
                         _ => unreachable!(),
                     }
                     return Ok(ExprValue {
+                        selector_result_proven: false,
                         slot: dest,
                         ty: ScalarType::Boolean,
                     });
@@ -11308,6 +11600,7 @@ impl Compiler {
                     lhs.ty.iir(),
                 ));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot: dest,
                     ty: ScalarType::Boolean,
                 })
@@ -11323,6 +11616,7 @@ impl Compiler {
                     "bool",
                 ));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot: dest,
                     ty: ScalarType::Boolean,
                 })
@@ -11342,6 +11636,7 @@ impl Compiler {
                     "bool",
                 ));
                 Ok(ExprValue {
+                    selector_result_proven: false,
                     slot: dest,
                     ty: ScalarType::Boolean,
                 })
@@ -11382,6 +11677,7 @@ impl Compiler {
             "bool",
         ));
         Ok(ExprValue {
+            selector_result_proven: false,
             slot: dest,
             ty: ScalarType::Boolean,
         })
@@ -11407,7 +11703,7 @@ impl Compiler {
             vec![Operand::Var(zero), Operand::Var(value.slot)],
             ty.iir(),
         ));
-        Ok(ExprValue { slot: dest, ty })
+        Ok(ExprValue { selector_result_proven: false, slot: dest, ty })
     }
 
     fn emit_const(&mut self, ty: ScalarType, operand: Operand) -> String {
@@ -13162,6 +13458,17 @@ fn operator_from_token(token: &Token) -> Option<&'static str> {
 
 #[cfg(test)]
 mod tests {
+    mod unit_offset;
+    mod two_unit_offset;
+    mod three_unit_offset;
+    mod four_unit_offset;
+    mod five_unit_offset;
+    mod six_unit_offset;
+    mod seven_unit_offset;
+    mod eight_unit_offset;
+    mod nine_unit_offset;
+    mod ten_unit_offset;
+    mod eleven_unit_offset;
     use super::*;
 
     fn run_i64(source: &str) -> i64 {
@@ -16099,6 +16406,718 @@ mod tests {
     }
 
     #[test]
+    fn al4_conditional_local_proof_rejects_roots_promoted_by_selector_lowering() {
+        // The pre-lowering proof sees two ordinary local snapshots. Lowering
+        // the selector's default by-name actual promotes one to shared storage.
+        // Neither branch position may retain that stale proof on the result.
+        for root in ["left", "right"] {
+            let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := false end; real procedure pick; pick := 2.25; real left, right, x; left := pick(); right := pick(); x := entier(sqrt(ln(if choose({root}) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end");
+            let error = compile_source(&source, "test").expect_err(
+                "selector lowering promotes the root: the cached local proof must not admit real output",
+            );
+            assert!(
+                format!("{error:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {error:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_conditional_local_proof_retains_value_selector_snapshots() {
+        // A value formal copies its actual. Mutating that copy leaves both
+        // branch snapshots local, for either actual and either selected arm.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure pick; pick := 2.25; real left, right, x; left := pick(); right := pick(); x := entier(sqrt(ln(if choose({root}) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end");
+                let module = compile_source(&source, "test").unwrap_or_else(|error| {
+                    panic!("the value selector preserves local proof for {source:?}: {error}")
+                });
+                let main = module.get_function("main").expect("has main");
+                assert_eq!(main.instructions.iter().filter(|instruction| {
+                    instruction.op == "call"
+                        && instruction.srcs.first().and_then(Operand::as_var)
+                            == Some("__basic_print_real")
+                }).count(), 1, "exactly one runtime real output");
+                assert!(!main.instructions.iter().any(|instruction| {
+                    matches!(instruction.op.as_str(), "global_load" | "global_store")
+                }), "value selector must not promote a branch snapshot to shared storage");
+            }
+        }
+    }
+
+    #[test]
+    fn al4_signed_selector_roots_reject_alias_promotion_at_both_consumers() {
+        // Signs retain the root proof, but selector lowering can promote either
+        // actual to shared storage. Paired value controls mutate only a copy.
+        // Distinct signed producers expose a wrong sign, arm or stale snapshot.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    for arms in ["-left else +right", "+left else -right"] {
+                    let conditional = format!("if choose({root}) then {arms}");
+                    let sink = if assigned {
+                        format!("result := {conditional}; output(result)")
+                    } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let error = compile_source(&source, "test")
+                        .expect_err("a signed root promoted by a by-name selector must lose formatter admission");
+                    assert!(format!("{error:?}").contains("cannot print a real value"), "root={root}, condition={condition}, assigned={assigned}, arms={arms}: {error:?}");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_signed_selector_roots_retain_value_snapshots_at_both_consumers() {
+        // Signs retain the root proof, but selector lowering can promote either
+        // actual to shared storage. Paired value controls mutate only a copy.
+        // Distinct signed producers expose a wrong sign, arm or stale snapshot.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    for arms in ["-left else +right", "+left else -right"] {
+                    let conditional = format!("if choose({root}) then {arms}");
+                    let sink = if assigned {
+                        format!("result := {conditional}; output(result)")
+                    } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}, arms={arms}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "exactly one runtime real output");
+                    assert!(!main.instructions.iter().any(|instruction| matches!(instruction.op.as_str(), "global_load" | "global_store")), "value selector must keep signed snapshots local");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_additive_selector_roots_reject_alias_promotion_at_both_consumers() {
+        // Additive operands retain the root proof, but selector lowering can promote either
+        // actual to shared storage. Paired value controls mutate only a copy.
+        // Distinct signed producers expose a wrong operator, arm or stale snapshot.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    for arms in ["left + 1.0 else right - 2.0", "1.0 - left else 2.0 + right"] {
+                    let conditional = format!("if choose({root}) then {arms}");
+                    let sink = if assigned {
+                        format!("result := {conditional}; output(result)")
+                    } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let error = compile_source(&source, "test")
+                        .expect_err("a additive root promoted by a by-name selector must lose formatter admission");
+                    assert!(format!("{error:?}").contains("cannot print a real value"), "root={root}, condition={condition}, assigned={assigned}, arms={arms}: {error:?}");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_additive_selector_roots_retain_value_snapshots_at_both_consumers() {
+        // Additive operands retain the root proof, but selector lowering can promote either
+        // actual to shared storage. Paired value controls mutate only a copy.
+        // Distinct signed producers expose a wrong operator, arm or stale snapshot.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    for arms in ["left + 1.0 else right - 2.0", "1.0 - left else 2.0 + right"] {
+                    let conditional = format!("if choose({root}) then {arms}");
+                    let sink = if assigned {
+                        format!("result := {conditional}; output(result)")
+                    } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}, arms={arms}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "exactly one runtime real output");
+                    assert!(!main.instructions.iter().any(|instruction| matches!(instruction.op.as_str(), "global_load" | "global_store")), "value selector must keep additive snapshots local");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_computed_name_selector_refusals_bound_classifier_work() {
+        struct BudgetGuard;
+        impl Drop for BudgetGuard {
+            fn drop(&mut self) { SELECTOR_CLASSIFIER_BUDGET.with(|counter| counter.set(None)); }
+        }
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then relay(entier(sign(left))) else relay(entier(sign(right)))");
+                    let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    SELECTOR_CLASSIFIER_BUDGET.with(|counter| counter.set(Some((0, 8192))));
+                    let _guard = BudgetGuard;
+                    let error = compile_source(&source, "classifier-work").expect_err("selector alias must still refuse the computed-name result");
+                    assert!(format!("{error:?}").contains("cannot print a real value"), "root={root}, condition={condition}, assigned={assigned}: {error:?}");
+                    let (visits, limit) = SELECTOR_CLASSIFIER_BUDGET.with(Cell::get).expect("budget active");
+                    assert!(visits > 0 && visits <= limit);
+                    eprintln!("computed-name refusal root={root} condition={condition} assigned={assigned}: {visits} classifier visits");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_computed_name_selector_roots_reject_alias_promotion_at_both_consumers() {
+        // Each branch captures a root while computing its name actual. The
+        // selector itself must finish before either branch's proof is recorded.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then relay(entier(sign(left))) else relay(entier(sign(right)))");
+                    let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let error = compile_source(&source, "test").expect_err("computed branch name actuals cannot restore proof lost by the selector");
+                    assert!(format!("{error:?}").contains("cannot print a real value"), "root={root}, condition={condition}, assigned={assigned}: {error:?}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_computed_name_selector_roots_retain_value_snapshots_at_both_consumers() {
+        // Each branch captures a root while computing its name actual. The
+        // selector itself must finish before either branch's proof is recorded.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then relay(entier(sign(left))) else relay(entier(sign(right)))");
+                    let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "one formatter for the materialized conditional result");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_quadruple_computed_name_selector_roots_reject_alias_promotion_at_both_consumers() {
+        // Each branch captures a root while computing its name actual. The
+        // selector itself must finish before either branch's proof is recorded.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))))");
+                    let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let error = compile_source(&source, "test").expect_err("computed branch name actuals cannot restore proof lost by the selector");
+                    assert!(format!("{error:?}").contains("cannot print a real value"), "root={root}, condition={condition}, assigned={assigned}: {error:?}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_quadruple_computed_name_selector_roots_retain_value_snapshots_at_both_consumers() {
+        // Each branch captures a root while computing its name actual. The
+        // selector itself must finish before either branch's proof is recorded.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))))");
+                    let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "one formatter for the materialized conditional result");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_quintuple_computed_name_selector_roots_reject_alias_promotion_at_both_consumers() {
+        // Each branch captures a root while computing its name actual. The
+        // selector itself must finish before either branch's proof is recorded.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then relay(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0)))))) else relay(abs(abs(abs(sqrt(abs(entier(sign(right))))))))");
+                    let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let error = compile_source(&source, "test").expect_err("computed branch name actuals cannot restore proof lost by the selector");
+                    assert!(format!("{error:?}").contains("cannot print a real value"), "root={root}, condition={condition}, assigned={assigned}: {error:?}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_quintuple_computed_name_selector_roots_retain_value_snapshots_at_both_consumers() {
+        // Each branch captures a root while computing its name actual. The
+        // selector itself must finish before either branch's proof is recorded.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then relay(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0)))))) else relay(abs(abs(abs(sqrt(abs(entier(sign(right))))))))");
+                    let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "one formatter for the materialized conditional result");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_sign_wrapped_computed_name_alias_roots_refuse_at_both_consumers() {
+        struct BudgetGuard;
+        impl Drop for BudgetGuard { fn drop(&mut self) { SELECTOR_CLASSIFIER_BUDGET.with(|counter| counter.set(None)); } }
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right))))");
+                    let sink = if assigned { format!("saved := {conditional}; output(saved)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); {sink} end");
+                    SELECTOR_CLASSIFIER_BUDGET.with(|counter| counter.set(Some((0, 8192)))); let _guard = BudgetGuard;
+                    let error = compile_source(&source, "sign-alias").expect_err("sign-wrapped computed actual cannot recover a root promoted by the selector");
+                    assert!(matches!(error, CompileError::Type(ref message) if message.contains("cannot print a real value")), "root={root}, condition={condition}, assigned={assigned}: {error:?}");
+                    let (visits, limit) = SELECTOR_CLASSIFIER_BUDGET.with(Cell::get).expect("budget active");
+                    assert!(visits > 0 && visits <= limit);
+                    eprintln!("sign alias root={root} condition={condition} assigned={assigned}: {visits} classifier visits");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_sign_wrapped_computed_name_value_roots_retain_one_formatter_at_both_consumers() {
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right))))");
+                    let sink = if assigned { format!("saved := {conditional}; output(saved)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let module = compile_source(&source, "sign-value").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "one formatter for the materialized sign conditional");
+                }
+            }
+        }
+    }
+
+    fn sextuple_computed_name_source(root: &str, condition: &str, assigned: bool, value: bool, depth: usize) -> String {
+        let arm = |name: &str| {
+            let exact = if name == "left" { "entier(sign(left)) + 82.0" } else { "entier(sign(right))" };
+            let mut expression = format!("sqrt(abs({exact}))");
+            for _ in 2..depth { expression = format!("abs({expression})"); }
+            format!("relay({expression})")
+        };
+        let conditional = format!("if choose({root}) then {} else {}", arm("left"), arm("right"));
+        let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+        let formal = if value { "value t; " } else { "" };
+        format!("begin boolean procedure choose(t); {formal}real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end")
+    }
+
+    fn sextuple_computed_name_ast(source: &str) -> GrammarASTNode {
+        fn name(node: &GrammarASTNode) -> Option<&str> {
+            (node.rule_name == "proc_call").then(|| direct_tokens(node).into_iter().find(|token| token.effective_type_name() == "NAME").map(|token| token.value.as_str())).flatten()
+        }
+        fn names(node: &GrammarASTNode) -> Vec<String> {
+            let mut tokens = Vec::new(); collect_tokens(node, &mut tokens);
+            tokens.into_iter().filter(|token| token.effective_type_name() == "NAME").map(|token| token.value.clone()).collect()
+        }
+        fn add_abs(node: &mut GrammarASTNode, original: &GrammarASTNode) -> bool {
+            if name(node) == Some("abs") {
+                let parameters = node.children.iter_mut().find_map(|child| match child {
+                    ASTNodeOrToken::Node(child) if child.rule_name == "actual_params" => Some(child), _ => None,
+                }).expect("parsed outer abs parameters");
+                let expressions: Vec<_> = parameters.children.iter_mut().filter_map(|child| match child {
+                    ASTNodeOrToken::Node(child) if child.rule_name == "expression" => Some(child), _ => None,
+                }).collect();
+                assert_eq!(expressions.len(), 1);
+                let inner = expressions.into_iter().next().expect("one parsed abs argument");
+                inner.clone_from(original);
+                assert_eq!(inner, original, "the entire original argument, including numeric tokens, is retained inside exactly one outer abs");
+                return true;
+            }
+            node.children.iter_mut().any(|child| match child {
+                ASTNodeOrToken::Node(child) => add_abs(child, original), _ => false,
+            })
+        }
+        fn deepen(node: &mut GrammarASTNode) -> usize {
+            if name(node) == Some("relay") {
+                let parameters = node.children.iter_mut().find_map(|child| match child {
+                    ASTNodeOrToken::Node(child) if child.rule_name == "actual_params" => Some(child), _ => None,
+                }).expect("parsed relay parameters");
+                let expressions: Vec<_> = parameters.children.iter_mut().filter_map(|child| match child {
+                    ASTNodeOrToken::Node(child) if child.rule_name == "expression" => Some(child), _ => None,
+                }).collect();
+                assert_eq!(expressions.len(), 1);
+                let actual = expressions.into_iter().next().expect("one parsed relay argument");
+                let before = names(actual);
+                assert_eq!(&before[..7], ["abs", "abs", "abs", "sqrt", "abs", "entier", "sign"]);
+                assert_eq!(before.len(), 8);
+                assert!(matches!(before[7].as_str(), "left" | "right"));
+                let original = actual.clone(); assert!(add_abs(actual, &original));
+                let after = names(actual);
+                assert_eq!(after[0], "abs"); assert_eq!(&after[1..], before.as_slice(), "retain every original wrapper and local root in exact order");
+                return 1; // Never revisit the inserted argument.
+            }
+            node.children.iter_mut().map(|child| match child {
+                ASTNodeOrToken::Node(child) => deepen(child), _ => 0,
+            }).sum()
+        }
+        let five = parse_algol(source); let mut six = five.clone();
+        assert_eq!(deepen(&mut six), 2, "only both conditional relay actuals change");
+        assert_eq!(five, parse_algol(source), "preserve the original parsed source tree");
+        // These cloned positions establish semantic AST evidence only.
+        // They do not establish source spans or output/transformation mappings.
+        six
+    }
+
+    #[test]
+    fn al4_sextuple_computed_name_alias_roots_refuse_at_both_ast_consumers() {
+        struct BudgetGuard;
+        impl Drop for BudgetGuard { fn drop(&mut self) { SELECTOR_CLASSIFIER_BUDGET.with(|counter| counter.set(None)); } }
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let source = sextuple_computed_name_source(root, condition, assigned, false, 5);
+                    let ast = sextuple_computed_name_ast(&source);
+                    SELECTOR_CLASSIFIER_BUDGET.with(|counter| counter.set(Some((0, 8192))));
+                    let _guard = BudgetGuard;
+                    let error = compile_ast(&ast, "sixth-alias").expect_err("computed name branches cannot restore a root promoted by the selector");
+                    assert!(matches!(error, CompileError::Type(ref message) if message.contains("cannot print a real value")), "root={root}, condition={condition}, assigned={assigned}: {error:?}");
+                    let (visits, limit) = SELECTOR_CLASSIFIER_BUDGET.with(Cell::get).expect("budget active");
+                    assert!(visits > 0 && visits <= limit);
+                    eprintln!("sixth alias root={root} condition={condition} assigned={assigned}: {visits} classifier visits");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_sextuple_computed_name_value_roots_retain_one_formatter_at_both_ast_consumers() {
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let source = sextuple_computed_name_source(root, condition, assigned, true, 5);
+                    let ast = sextuple_computed_name_ast(&source);
+                    let module = compile_ast(&ast, "sixth-value").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "one formatter for the materialized conditional result");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_sextuple_computed_name_direct_source_retains_parser_boundary() {
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for value in [false, true] {
+                    let source = sextuple_computed_name_source(root, condition, false, value, 6);
+                    let error = compile_source(&source, "sixth-direct-source").expect_err("direct sixth source reaches the unchanged parser boundary before semantic classification");
+                    assert!(matches!(error, CompileError::Parse(ref message) if message.contains("supported limit (135)")), "root={root}, condition={condition}, value={value}: {error:?}");
+                }
+            }
+        }
+    }
+
+    fn standard_name_depth_boundary_source(condition: &str, assigned: bool, depth: usize) -> String {
+        let arm = |root: &str| {
+            let mut expression = format!("entier(sign({root}))");
+            for _ in 0..depth {
+                expression = format!("abs({expression})");
+            }
+            format!("relay({expression})")
+        };
+        let conditional = format!("if choose() then {} else {}", arm("left"), arm("right"));
+        let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+        format!("begin boolean procedure choose; choose := {condition}; real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); {sink} end")
+    }
+
+    #[test]
+    fn al4_standard_name_actual_depth_boundary_preserves_source_parser_limit() {
+        // This is parser evidence, separate from the public AST semantic test.
+        for condition in ["true", "false"] {
+            for assigned in [false, true] {
+                let five = standard_name_depth_boundary_source(condition, assigned, 5);
+                let module = compile_source(&five, "test").expect("five-layer source parses and compiles");
+                let main = module.get_function("main").expect("has main");
+                assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
+                let six = standard_name_depth_boundary_source(condition, assigned, 6);
+                if assigned {
+                    let module = compile_source(&six, "test").expect("assigned six-layer source parses and compiles under the imported policy");
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
+                } else {
+                    // Direct output adds grammar nesting before classification.
+                    let error = compile_source(&six, "test").expect_err("direct six-layer source retains the parser boundary");
+                    assert!(matches!(error, CompileError::Parse(ref message) if message.contains("supported limit (135)")), "condition={condition}, assigned={assigned}: {error:?}");
+                }
+                let seven = standard_name_depth_boundary_source(condition, assigned, 7);
+                let error = compile_source(&seven, "test").expect_err("seven-layer source retains the parser boundary");
+                assert!(matches!(error, CompileError::Parse(ref message) if message.contains("supported limit (135)")), "condition={condition}, assigned={assigned}: {error:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn al4_standard_name_actual_depth_boundary_requires_a_proven_root() {
+        fn call_name(node: &GrammarASTNode) -> Option<&str> {
+            (node.rule_name == "proc_call").then(|| direct_tokens(node).into_iter().find(|token| token.effective_type_name() == "NAME").map(|token| token.value.as_str())).flatten()
+        }
+        fn verify_actual(node: &GrammarASTNode, depth: usize) {
+            let mut tokens = Vec::new();
+            collect_tokens(node, &mut tokens);
+            let names: Vec<_> = tokens.iter().filter(|token| token.effective_type_name() == "NAME").map(|token| token.value.as_str()).collect();
+            assert_eq!(names.iter().filter(|&&name| name == "abs").count(), depth);
+            assert_eq!(names.iter().filter(|&&name| name == "entier").count(), 1);
+            assert_eq!(names.iter().filter(|&&name| name == "sign").count(), 1);
+            assert_eq!(names.iter().filter(|&&name| matches!(name, "left" | "right")).count(), 1);
+            assert_eq!(names.len(), depth + 3, "only standard functions and the same local root");
+        }
+        fn wrap_outer_actual(node: &mut GrammarASTNode, original: &GrammarASTNode) -> bool {
+            if call_name(node) == Some("abs") {
+                let parameters = node.children.iter_mut().find_map(|child| match child {
+                    ASTNodeOrToken::Node(child) if child.rule_name == "actual_params" => Some(child),
+                    _ => None,
+                }).expect("parsed abs has actual_params");
+                let expressions: Vec<_> = parameters.children.iter_mut().filter_map(|child| match child {
+                    ASTNodeOrToken::Node(child) if child.rule_name == "expression" => Some(child),
+                    _ => None,
+                }).collect();
+                assert_eq!(expressions.len(), 1);
+                expressions.into_iter().next().expect("one parsed expression").clone_from(original);
+                return true;
+            }
+            node.children.iter_mut().any(|child| match child {
+                ASTNodeOrToken::Node(child) => wrap_outer_actual(child, original),
+                _ => false,
+            })
+        }
+        fn deepen_relay_actuals(node: &mut GrammarASTNode, depth: usize) -> usize {
+            if call_name(node) == Some("relay") {
+                let parameters = node.children.iter_mut().find_map(|child| match child {
+                    ASTNodeOrToken::Node(child) if child.rule_name == "actual_params" => Some(child),
+                    _ => None,
+                }).expect("parsed relay has actual_params");
+                let expressions: Vec<_> = parameters.children.iter_mut().filter_map(|child| match child {
+                    ASTNodeOrToken::Node(child) if child.rule_name == "expression" => Some(child),
+                    _ => None,
+                }).collect();
+                assert_eq!(expressions.len(), 1);
+                let actual = expressions.into_iter().next().expect("one parsed relay expression");
+                verify_actual(actual, depth);
+                let original = actual.clone();
+                assert!(wrap_outer_actual(actual, &original));
+                verify_actual(actual, depth + 1);
+                // Stop here: revisiting the inserted tree would add layers.
+                return 1;
+            }
+            node.children.iter_mut().map(|child| match child {
+                ASTNodeOrToken::Node(child) => deepen_relay_actuals(child, depth),
+                _ => 0,
+            }).sum()
+        }
+        for condition in ["true", "false"] {
+            for assigned in [false, true] {
+                let source = standard_name_depth_boundary_source(condition, assigned, 5);
+                let five = parse_algol(&source);
+                let module = compile_ast(&five, "test").expect("the same parsed five-layer roots are proven");
+                let main = module.get_function("main").expect("has main");
+                assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
+                let mut six = five.clone();
+                assert_eq!(deepen_relay_actuals(&mut six, 5), 2, "replace exactly both conditional relay actuals");
+                assert_eq!(five, parse_algol(&source), "retain the original parsed tree");
+                let module = compile_ast(&six, "test").expect("the same six-layer roots remain proven under the imported policy");
+                let main = module.get_function("main").expect("has main");
+                assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
+                let mut seven = six.clone();
+                assert_eq!(deepen_relay_actuals(&mut seven, 6), 2, "replace exactly both six-layer conditional relay actuals");
+                assert_eq!(six, { let mut same = five.clone(); assert_eq!(deepen_relay_actuals(&mut same, 5), 2); same }, "retain the proven sixth-layer input");
+                // Public AST evidence only. Cloned position metadata does not
+                // certify source parsing or a new source/provenance mapping.
+                let error = compile_ast(&seven, "test").expect_err("a seventh layer over the same proven root exhausts the compiler's standard-call budget");
+                assert!(!matches!(error, CompileError::Parse(_)), "semantic refusal required: {error:?}");
+                assert!(format!("{error:?}").contains("cannot print a real value"), "condition={condition}, assigned={assigned}: {error:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn al4_powered_selector_roots_reject_alias_promotion_at_both_consumers() {
+        // The selector mutates one formal before choosing an arm. A name formal
+        // can alias either root; a value formal mutates only its private copy.
+        // Both power spellings, operand positions and consumers stay observable.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    for arms in ["left ^ 2 else right ** 2", "2 ^ left else 2 ** right"] {
+                    let conditional = format!("if choose({root}) then {arms}");
+                    let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let error = compile_source(&source, "test").expect_err("a powered root promoted by a by-name selector must lose formatter admission");
+                    assert!(format!("{error:?}").contains("cannot print a real value"), "root={root}, condition={condition}, assigned={assigned}, arms={arms}: {error:?}");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_powered_selector_roots_retain_value_snapshots_at_both_consumers() {
+        // The selector mutates one formal before choosing an arm. A name formal
+        // can alias either root; a value formal mutates only its private copy.
+        // Both power spellings, operand positions and consumers stay observable.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    for arms in ["left ^ 2 else right ** 2", "2 ^ left else 2 ** right"] {
+                    let conditional = format!("if choose({root}) then {arms}");
+                    let sink = if assigned { format!("result := {conditional}; output(result)") } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}, arms={arms}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "exactly one runtime real output");
+                    assert!(!main.instructions.iter().any(|instruction| matches!(instruction.op.as_str(), "global_load" | "global_store")), "value selector must retain local powered snapshots");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_multiplicative_selector_roots_reject_alias_promotion_at_both_consumers() {
+        // Multiplicative operands retain the root proof, but selector lowering can promote either
+        // actual to shared storage. Paired value controls mutate only a copy.
+        // Distinct signed producers expose a wrong operator, arm or stale snapshot.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    for arms in ["left * 2.0 else right / 2.0", "9.0 / left else 2.0 * right"] {
+                    let conditional = format!("if choose({root}) then {arms}");
+                    let sink = if assigned {
+                        format!("result := {conditional}; output(result)")
+                    } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let error = compile_source(&source, "test")
+                        .expect_err("a multiplicative root promoted by a by-name selector must lose formatter admission");
+                    assert!(format!("{error:?}").contains("cannot print a real value"), "root={root}, condition={condition}, assigned={assigned}, arms={arms}: {error:?}");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_multiplicative_selector_roots_retain_value_snapshots_at_both_consumers() {
+        // Multiplicative operands retain the root proof, but selector lowering can promote either
+        // actual to shared storage. Paired value controls mutate only a copy.
+        // Distinct signed producers expose a wrong operator, arm or stale snapshot.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    for arms in ["left * 2.0 else right / 2.0", "9.0 / left else 2.0 * right"] {
+                    let conditional = format!("if choose({root}) then {arms}");
+                    let sink = if assigned {
+                        format!("result := {conditional}; output(result)")
+                    } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}, arms={arms}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "exactly one runtime real output");
+                    assert!(!main.instructions.iter().any(|instruction| matches!(instruction.op.as_str(), "global_load" | "global_store")), "value selector must keep multiplicative snapshots local");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_bare_selector_roots_reject_alias_promotion_at_both_consumers() {
+        // The new bare-root entry must retain the same post-lowering boundary
+        // as transformed roots. Either actual may become shared, even when its
+        // arm is not selected; a parser/depth error is not this refusal.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then left else right");
+                    let sink = if assigned {
+                        format!("result := {conditional}; output(result)")
+                    } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let error = compile_source(&source, "test")
+                        .expect_err("a bare root promoted by a by-name selector must lose formatter admission");
+                    assert!(format!("{error:?}").contains("cannot print a real value"), "root={root}, condition={condition}, assigned={assigned}: {error:?}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_bare_selector_roots_retain_value_snapshots_at_both_consumers() {
+        // Distinct producer values make either wrong arm observable in the
+        // paired native control. Mutating the formal cannot promote its actual.
+        for root in ["left", "right"] {
+            for condition in ["true", "false"] {
+                for assigned in [false, true] {
+                    let conditional = format!("if choose({root}) then left else right");
+                    let sink = if assigned {
+                        format!("result := {conditional}; output(result)")
+                    } else { format!("output({conditional})") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); {sink} end");
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("root={root}, condition={condition}, assigned={assigned}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|instruction| instruction.op == "call" && instruction.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "exactly one runtime real output");
+                    assert!(!main.instructions.iter().any(|instruction| matches!(instruction.op.as_str(), "global_load" | "global_store")), "value selector must keep both snapshots local");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn al4_direct_local_proof_rejects_roots_promoted_by_selector_lowering() {
+        for depth in 1..=4 {
+            for root in ["left", "right"] {
+                let branch = |name: &str| {
+                    let mut expression = if depth == 4 { format!("-abs(sign({name}))") } else { format!("abs(sign({name}))") };
+                    for _ in 0..depth { expression = format!("exp({expression})"); }
+                    expression
+                };
+                let conditional = format!("if choose({root}) then {} else {}", branch("left"), branch("right"));
+                let result = if depth == 4 { format!("entier(ln({conditional}))") } else { format!("entier(sqrt(ln({conditional})))") };
+                let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * {result}) end");
+                let error = compile_source(&source, "test").expect_err("direct output must not reuse a proof invalidated by selector alias promotion");
+                assert!(format!("{error:?}").contains("cannot print a real value"), "depth={depth}, root={root}: {error:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn al4_direct_local_proof_retains_value_selector_snapshots() {
+        for depth in 1..=4 {
+            for root in ["left", "right"] {
+                for condition in ["true", "false"] {
+                    let branch = |name: &str| {
+                        let mut expression = if depth == 4 { format!("-abs(sign({name}))") } else { format!("abs(sign({name}))") };
+                        for _ in 0..depth { expression = format!("exp({expression})"); }
+                        expression
+                    };
+                    let conditional = format!("if choose({root}) then {} else {}", branch("left"), branch("right"));
+                    let result = if depth == 4 { format!("entier(ln({conditional}))") } else { format!("entier(sqrt(ln({conditional})))") };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * {result}) end");
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("depth={depth}, root={root}, condition={condition}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|i| i.op == "call" && i.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
+                    assert!(!main.instructions.iter().any(|i| matches!(i.op.as_str(), "global_load" | "global_store")));
+                }
+            }
+        }
+    }
+
+    #[test]
     fn al4_local_runtime_real_roots_cross_all_bounded_conditional_result_widening() {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, x; left := leftvalue(); right := rightvalue(); x := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))); output(x) end",
@@ -16116,6 +17135,42 @@ mod tests {
                     && instr.srcs.first().and_then(Operand::as_var)
                         == Some("__basic_print_real")
             }));
+        }
+    }
+
+    #[test]
+    fn al4_expanded_assignment_proof_rejects_selector_aliases() {
+        for depth in 1..=3 {
+            for root in ["left", "right"] {
+                let branch = |name: &str| {
+                    let mut expression = format!("abs(sign({name}))");
+                    for _ in 0..depth { expression = format!("exp({expression})"); }
+                    expression
+                };
+                let source = format!("begin boolean procedure choose(t); real t; begin t := 0.0; choose := false end; real procedure pick; pick := -2.25; real left, right, x; left := pick(); right := pick(); x := entier(sqrt(ln(if choose({root}) then {} else {}))); output(x) end", branch("left"), branch("right"));
+                let error = compile_source(&source, "test").expect_err("the expanded family must reject stale assignment proof");
+                assert!(format!("{error:?}").contains("cannot print a real value"), "depth={depth}, root={root}: {error:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn al4_expanded_assignment_proof_retains_value_snapshots() {
+        for depth in 1..=3 {
+            for root in ["left", "right"] {
+                for condition in ["true", "false"] {
+                    let branch = |name: &str| {
+                        let mut expression = format!("abs(sign({name}))");
+                        for _ in 0..depth { expression = format!("exp({expression})"); }
+                        expression
+                    };
+                    let source = format!("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := {condition} end; real procedure pick; pick := -2.25; real left, right, x; left := pick(); right := pick(); x := entier(sqrt(ln(if choose({root}) then {} else {}))); output(x) end", branch("left"), branch("right"));
+                    let module = compile_source(&source, "test").unwrap_or_else(|error| panic!("depth={depth}, root={root}, condition={condition}: {error:?}"));
+                    let main = module.get_function("main").expect("has main");
+                    assert_eq!(main.instructions.iter().filter(|i| i.op == "call" && i.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1);
+                    assert!(!main.instructions.iter().any(|i| matches!(i.op.as_str(), "global_load" | "global_store")));
+                }
+            }
         }
     }
 
@@ -18529,6 +19584,15 @@ mod tests {
             instr.op == "call"
                 && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
         }));
+    }
+
+    #[test]
+    fn al4_direct_output_post_proof_does_not_certify_tracked_variables_as_literals() {
+        let error = compile_source(
+            "begin real procedure abs(x); value x; real x; abs := x + 1.0; real other; boolean flag; other := 1.5; flag := true; print(if flag then abs(2.0) else other) end",
+            "test",
+        ).expect_err("a tracked variable is not context-free literal proof after user-call tracking invalidation");
+        assert!(format!("{error:?}").contains("cannot print a real value"));
     }
 
     #[test]

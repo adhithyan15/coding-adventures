@@ -13,3 +13,5 @@ PowerShell does not expand an `rg` directory argument such as `closure-pass-*`;
 search the known parent with `-g '**/closure-pass-*/**/*.rs'` instead.
 
 A later validation-discovery command also guessed a root `scripts` directory and `code/programs/rust/Cargo.toml`; neither exists. Discover known `code/scripts` and actual Cargo manifests first.
+
+During the next source audit, a guessed `closurec/src/ast_transform.rs` also failed: the actual typed/CV driver lives in `run.rs`. Discover compiler source filenames, then search the known source directory with an rs file filter.

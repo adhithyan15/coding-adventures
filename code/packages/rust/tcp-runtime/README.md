@@ -41,3 +41,12 @@ cargo check -p tcp-runtime --tests --target x86_64-unknown-linux-gnu
 cargo check -p tcp-runtime --tests --target x86_64-pc-windows-msvc
 TCP_RUNTIME_STRESS_CLIENTS=10000 cargo test -p tcp-runtime bind_iocp_sustains_ten_thousand_concurrent_connections -- --ignored --nocapture
 ```
+
+
+## Bounded spacing and transport reconciliation
+
+Every sharded worker and acceptor signals coordinated stop on return or unwinding before destroying its owned provider. Fallible startup stops and joins already launched participants; worker and acceptor panics return ProviderFault. A two-worker native control verifies a later worker panic stops the healthy worker and acceptor. A simulated unstarted-disposal control verifies destruction order; it does not reproduce an OS launch failure.
+
+Validation is source-attributed: Windows applicable packages and standalone
+checks are recorded separately from Unix-only/hosted and whole-PR gates.
+Final-source Miri is **DEFERRED/PENDING**, never passed.

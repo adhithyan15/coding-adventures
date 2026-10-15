@@ -2515,6 +2515,18 @@ jobs:
         run: |
           cabal list --simple-output hspec | grep -Eq '^hspec [0-9]'
 
+      # Keep the developer selection for other tools; only Cabal receives the
+      # verified compiler/linker/sysroot overlay after real link/run probes.
+      - name: Verify scoped macOS Haskell toolchain
+        if: runner.os == 'macOS' && needs.detect.outputs.needs_haskell == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s code/scripts/tests -p test_macos_haskell_toolchain.py -v
+          python3 code/scripts/macos_haskell_toolchain.py \
+            --output-dir "$RUNNER_TEMP/cv04a-haskell-toolchain" \
+            --github-env "$GITHUB_ENV"
+
       - name: Set up reviewed OCaml compiler and repository
         id: setup-ocaml
         if: needs.detect.outputs.needs_ocaml == 'true' && (matrix.sharded != true || contains(matrix.languages, 'ocaml'))
@@ -5180,6 +5192,14 @@ jobs:
         if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true')
         timeout-minutes: 300
         shell: bash
+        # Disposable runners need test assertions, not debug-symbol and incremental archives.
+        # Preserve development codegen partitioning while reducing Cargo artifact storage.
+        env:
+          CARGO_PROFILE_DEV_DEBUG: "0"
+          CARGO_PROFILE_TEST_DEBUG: "0"
+          CARGO_INCREMENTAL: "0"
+          CARGO_PROFILE_DEV_CODEGEN_UNITS: "256"
+          CARGO_PROFILE_TEST_CODEGEN_UNITS: "256"
         run: |
           if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
             printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
@@ -5210,6 +5230,14 @@ jobs:
         if: needs.detect.outputs.is_main == 'true'
         timeout-minutes: 150
         shell: bash
+        # Disposable runners need test assertions, not debug-symbol and incremental archives.
+        # Preserve development codegen partitioning while reducing Cargo artifact storage.
+        env:
+          CARGO_PROFILE_DEV_DEBUG: "0"
+          CARGO_PROFILE_TEST_DEBUG: "0"
+          CARGO_INCREMENTAL: "0"
+          CARGO_PROFILE_DEV_CODEGEN_UNITS: "256"
+          CARGO_PROFILE_TEST_CODEGEN_UNITS: "256"
         run: |
           if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
             printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null

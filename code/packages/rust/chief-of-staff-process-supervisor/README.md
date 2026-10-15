@@ -7,6 +7,11 @@ delivers the exact relevant public package trust over that authenticated channel
 obtains launch bindings from an injected manifest-blind pipeline authority, and
 reports readiness and heartbeat only after the child receives both inputs and
 independently verifies the package with that trust.
+
+A never-ready host still hits the configured bootstrap timeout and is killed
+and reaped. Its observed exit code retains the native value: Windows kill code
+1, or Unix signal termination without a numeric code. The regression asserts
+that exact status and absence of a process ID within the existing bounds.
 The single configured host executable receives a final reserved
 `--package-runtime deno|skill` pair derived from that verified package snapshot,
 giving the production host a fail-closed runtime-dispatch seam without ambient

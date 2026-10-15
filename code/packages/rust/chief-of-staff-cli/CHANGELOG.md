@@ -10,6 +10,8 @@
   tests ran on windows-2025; an `icacls` attempt left the DACL failing the
   same check, and the crate's `forbid(unsafe_code)` rules out setting it by
   hand.
+- This shared fixture writer supersedes the earlier local credential-writer
+  setup; prior validated source receipts remain attributed to their old heads.
 - A vault reset is now just wiping the storage directory (VLT01 F12). The
   next `vault put` initializes a new vault, with a new vault id, and resets
   the anchor next to the KEK. A new end-to-end test checks two things: the

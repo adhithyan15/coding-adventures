@@ -1843,6 +1843,23 @@ pub fn lower_iir_to_beam(
                             detail: "str_const must have one string literal source".into(),
                         }),
                     };
+                    // Each byte becomes a two-word cons cell. put_list does
+                    // not grow the heap, so reserve before the first write.
+                    // The prologue initializes the entire normal-X prefix;
+                    // imported-call restoration sanitizes clobbered locals.
+                    // All potentially live normal values therefore remain
+                    // valid GC roots, including other strings at this point.
+                    let heap_words = text.len().checked_mul(2)
+                        .and_then(|words| u64::try_from(words).ok())
+                        .ok_or_else(|| IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "str_const heap word count overflows".into(),
+                        })?;
+                    if heap_words != 0 {
+                        instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
+                            BEAMOperand::u(heap_words), BEAMOperand::u(live),
+                        ]));
+                    }
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                         BEAMOperand::a(0),
                         BEAMOperand::x(rd),

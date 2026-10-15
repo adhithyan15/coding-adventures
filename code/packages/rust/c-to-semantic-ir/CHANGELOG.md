@@ -11,6 +11,13 @@
 - Cover acceptance/refusal, exact/cumulative/default byte boundaries and rooted
   native C/emitted C/emitted Ruby byte conformance through a real local header.
 
+## [Unreleased] — 2026-10-07 — Windows native conformance linking
+
+- Match the existing reference-C platform rule in both emitted-C test helpers:
+  omit Unix `-lm` on Windows, where CRT supplies math and `m.lib` is absent.
+- Preserve all C99 compile/run, output normalization and original C/Ruby/runtime
+  equivalence assertions. Production lowering and compiler selection are unchanged.
+
 ## Unreleased — PREP01 bounded C hexadecimal integer stringize
 
 - Admit one unsuffixed raw hexadecimal integer at `#`, preserving prefix/digit

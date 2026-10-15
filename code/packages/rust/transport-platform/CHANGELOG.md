@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Drain actual terminal cancellation packets before releasing Windows operation storage; retain outstanding allocations/port on fatal wait errors. Correct AcceptEx BOOL handling. Add real pending accepts/read and unadopted-socket controls, preserving final-bytes/EOF controls.
+- Final-source Miri **DEFERRED/PENDING**; native/hosted and whole-PR gates remain separately attributed.
+
 - Windows `close_stream` now shuts the socket down for sending before
   dropping it. Winsock turns `closesocket()` into an RST while an overlapped
   `WSARecv` is pending (this provider nearly always has one), and the peer

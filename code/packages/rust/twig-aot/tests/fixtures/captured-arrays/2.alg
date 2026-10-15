@@ -1,0 +1,1 @@
+begin integer array values[-1:0, 2:3, 5:6, 8:9]; integer result; procedure setvalues(a); value a; integer array a; begin procedure populate; begin a[-1,2,5,8] := 30; a[-1,3,6,9] := 4; a[0,2,5,8] := 6; a[0,3,6,9] := 2 end; populate(); if a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9] = 42 then result := 42 else result := 0 end; setvalues(values) end

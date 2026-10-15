@@ -675,6 +675,36 @@ mod tests {
     }
 
     #[test]
+    fn test_center_arc_neutral_raw_tangent_cases() {
+        // The shared contract expects d(point)/dt, including signed sweep
+        // magnitude; a normalized direction would lose the essential scale.
+        let fixture: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../../specs/fixtures/geometry2d-v1/cases.json"
+        )).expect("valid neutral geometry fixture");
+        let tolerance = fixture["absolute_tolerance"].as_f64().expect("pinned tolerance");
+        assert_eq!(tolerance, 1e-12);
+        let mut ids = Vec::new();
+        for case in fixture["cases"].as_array().expect("cases") {
+            if case["operation"] != "center-arc-tangent" { continue; }
+            ids.push(case["id"].as_str().expect("case id"));
+            let center = case["center"].as_array().expect("center pair");
+            let arc = CenterArc::new(
+                Point::new(center[0].as_f64().unwrap(), center[1].as_f64().unwrap()),
+                case["rx"].as_f64().unwrap(), case["ry"].as_f64().unwrap(),
+                case["start_angle"].as_f64().unwrap(), case["sweep_angle"].as_f64().unwrap(),
+                case["x_rotation"].as_f64().unwrap(),
+            );
+            let tangent = arc.tangent(case["t"].as_f64().unwrap());
+            let expected = case["expected_derivative"].as_array().expect("derivative pair");
+            assert!(tangent.x.is_finite() && tangent.y.is_finite());
+            assert!((tangent.x-expected[0].as_f64().unwrap()).abs() <= tolerance, "{} x", case["id"]);
+            assert!((tangent.y-expected[1].as_f64().unwrap()).abs() <= tolerance, "{} y", case["id"]);
+        }
+        assert_eq!(ids, vec!["arc-center-tangent-positive-axis", "arc-center-tangent-positive-rotated",
+            "arc-center-tangent-negative-rotated", "arc-center-tangent-zero-rotated"]);
+    }
+
+    #[test]
     fn test_svg_arc_strict_degenerate_boundaries_and_signed_radius() {
         let origin = Point::new(0.0, 0.0);
         let at_radius = SvgArc::new(origin, Point::new(1.0, 0.0), 1e-10, 1.0, 0.0, false, true);

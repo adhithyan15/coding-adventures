@@ -8,6 +8,9 @@ scrolling, and link hit-testing, then renders the current viewport through
 The bridge loads the shared versioned bookmark catalog from
 `%LOCALAPPDATA%\Venture\bookmarks.json` and persists generated chrome toggle
 commands atomically. Set `VENTURE_BOOKMARKS_PATH` to use an isolated profile.
+The generated WinUI build/launch/interaction acceptance uses this override with
+its own temporary bookmark file, retaining the complete native catalog checks
+on repeated runs.
 
 It does not create browser chrome or a handwritten Win32 window. The shared
 `programs/mosaic/venture-browser` MIL/MLL/MSL package emits the WinUI controls

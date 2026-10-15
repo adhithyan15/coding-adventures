@@ -5,6 +5,11 @@ The host-mediated HTTPS operation from
 URL. The daemon checks it against the agent's **signed** manifest, does the
 network work itself, and returns a bounded, scrubbed response.
 
+The public `SystemResolver` refuses an empty host with `InvalidInput` before
+calling the OS resolver, including Windows where an empty name otherwise
+resolves to the local host. Every resolved address still passes the same public
+address policy before any connection.
+
 It is also where a Chief vault lease is spent. In leased mode the model only
 ever holds an opaque `vault_ref`. `net.fetch` redeems it inside the daemon,
 for this host and this destination only. It writes the secret into one

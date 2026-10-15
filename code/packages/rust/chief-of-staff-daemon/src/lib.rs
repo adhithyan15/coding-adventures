@@ -3831,6 +3831,17 @@ fn same_file(left: &Metadata, right: &Metadata) -> bool {
 #[cfg(test)]
 mod tests {
 
+    fn wait_for_worker_failure_callback(failure_seen: &AtomicBool) {
+        // Stop is allowed to win before the first tick. Observe the failure
+        // signal before requesting stop, while retaining a bounded refusal
+        // if the callback is missing rather than relying on scheduler timing.
+        let deadline = std::time::Instant::now() + Duration::from_secs(5);
+        while !failure_seen.load(Ordering::Acquire) {
+            assert!(std::time::Instant::now() < deadline, "worker failure callback was not observed");
+            thread::sleep(Duration::from_millis(1));
+        }
+    }
+
     #[test]
     fn the_production_model_tool_surface_names_no_peer() {
         // D18S S-I7 (V1): the agent's view contains no agent identity and the
@@ -4303,15 +4314,15 @@ hardware_key_timeout = 60
         let shim = shim
             .map(|(path, digest)| {
                 format!(
-                    "seatbelt_shim = \"{}\"\nseatbelt_shim_sha256 = \"{}\"\n",
-                    path.display(),
+                    "seatbelt_shim = {}\nseatbelt_shim_sha256 = \"{}\"\n",
+                    serialize_json(&JsonValue::String(path.to_str().unwrap().to_owned())).unwrap(),
                     hex(digest)
                 )
             })
             .unwrap_or_default();
         parse_config(&format!(
-            "{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}\n[hosts.broker]\nexecutable = \"{}\"\nsha256 = \"{}\"\n{shim}",
-            executable.display(),
+            "{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}\n[hosts.broker]\nexecutable = {}\nsha256 = \"{}\"\n{shim}",
+            serialize_json(&JsonValue::String(executable.to_str().unwrap().to_owned())).unwrap(),
             hex(digest)
         ))
         .unwrap()
@@ -4365,15 +4376,8 @@ hardware_key_timeout = 60
     #[test]
     fn channel_keys_become_the_broker_s_slots_with_home_resolved() {
         let directory = TestDir::new();
-        // The broker is never opened here; only the key table is read. Its
-        // path must still be absolute to parse, on Windows too, and is
-        // spelled with `/` so it sits in a TOML string as is.
-        let unused = if cfg!(windows) {
-            "C:/unused"
-        } else {
-            "/unused"
-        };
-        let config = broker_config(Path::new(unused), [0; 32]);
+        // Only the key table is read; keep the fixture path absolute on every OS.
+        let config = broker_config(&directory.0.join("unused"), [0; 32]);
         let keys = broker_key_files(&config, &directory.0).unwrap();
         let pipeline_id = config.data_plane().channel_keys()[0].pipeline_id();
         let channel = |key: usize| config.data_plane().channel_keys()[key].channel_id();
@@ -4950,7 +4954,16 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        // Observe the callback before stopping: a fixed sleep could stop a
+        // correctly scheduled worker before its first tick under CI load.
+        let deadline = std::time::Instant::now() + Duration::from_secs(5);
+        while !failure_seen.load(Ordering::Acquire) {
+            assert!(
+                std::time::Instant::now() < deadline,
+                "failure callback was not observed"
+            );
+            thread::sleep(Duration::from_millis(1));
+        }
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeDiscoveryClock)
@@ -5063,7 +5076,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeAutomation)
@@ -5240,7 +5253,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomePairingClock)
@@ -5437,7 +5450,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeOnvifPairingClock)
@@ -5639,7 +5652,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeAxisPairingClock)
@@ -5840,7 +5853,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeZoneMinderPairingClock)
@@ -6049,7 +6062,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeReolinkPairingClock)
@@ -6257,7 +6270,7 @@ hardware_key_timeout = 60
             Duration::from_millis(1),
         )
         .unwrap();
-        thread::sleep(Duration::from_millis(20));
+        wait_for_worker_failure_callback(&failure_seen);
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeSynologyPairingClock)

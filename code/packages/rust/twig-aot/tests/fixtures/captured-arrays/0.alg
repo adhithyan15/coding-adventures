@@ -1,0 +1,1 @@
+begin boolean array flags[-1:0, 2:3, 5:6]; integer result; procedure setflags(a); value a; boolean array a; begin procedure populate; begin a[-1,2,5] := true; a[-1,3,6] := false; a[0,2,5] := false; a[0,3,6] := true end; populate(); if a[-1,2,5] and not a[-1,3,6] and not a[0,2,5] and a[0,3,6] then result := 42 else result := 0 end; setflags(flags) end

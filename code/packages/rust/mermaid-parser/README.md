@@ -1,6 +1,38 @@
 # mermaid-parser
 
+Railroad `compactMode` accepts case-insensitive true/false through the existing
+boolean parser; absence or an empty extracted value defaults to false. Other
+present values have an exact typed error. An init directive selects the whole
+Railroad object before front matter, so a missing directive field uses its
+default rather than merging a front-matter field. Compact state and showMarkers
+remain independent. All four dialects retain the complete configuration.
+
+All four Railroad dialects resolve themeVariables from init directives or
+top-level/config YAML front matter before explicit Railroad overrides. The
+selected effective font size must be finite and in (0,65536], including theme
+fallbacks; a valid explicit size overrides an excessive theme size. Unparseable,
+nonfinite and nonpositive theme numbers retain the producer's default fallback.
+Explicit-field numeric error domains and precedence remain unchanged.
+
+Authored color and font-family strings use the producer's trimmed lexical
+allowlists. A selected theme primary/secondary/default is sanitized against the
+field default, then an invalid explicit value uses that sanitized theme. An
+invalid selected primary does not retry secondary. Marker fallback follows the
+theme line independently of an explicit line override. These filters do not
+certify complete CSS/color/font grammar or sanitization of caller-forged typed IR.
+
+All four Railroad dialects preserve padding and vertical/horizontal separation
+from init directives or YAML front matter. Every setting must be finite and in
+inclusive0..65536; unsupported values return an exact field-specific parse
+error. Accepted values, including zero and the cap, are retained without
+clamping before checked layout and PaintScene lowering.
+
 Versioned Mermaid compatibility dispatcher and grammar-driven Rust parsers.
+
+Swimlane curve-only configurations share the bounded authored edge-ID index
+with animation, class and style directives. Per-field updates preserve earlier
+settings and exact authored order; operation-count controls distinguish edge
+discovery, indexed lookups and real matching updates.
 
 Compatibility is pinned to Mermaid 11.16.1 in
 `code/grammars/mermaid/compatibility.json`. The manifest distinguishes family
@@ -287,3 +319,189 @@ including boundary, control, entity, database, collections, and queue symbols.
 All other Mermaid 11.16.1 family headers are recognized and return an explicit
 `recognized but not implemented` error until their grammar, lowering, layout,
 and native render fixtures are complete.
+
+## Styled Swimlane label discovery work
+
+The partial Swimlane syntax keeps solid, thick and dotted inline labels with
+original operator precedence, point markers and minimum lengths. Each fixed
+label delimiter form discovers maximal ASCII runs with one monotone byte cursor
+and O(1) state, including nonterminating runs and absent suffixes. Labels remain
+UTF-8 slices until the selected label is copied. The bound is local to this
+operator discovery; it does not certify all lexer regex costs, node lookup,
+layout or drawing allocation. Exact parser predicate tests cover the admitted
+work bound and semantic corner cases; the independent layout duplicate-edge
+index remains unchanged. See DG04's styled-label discovery contract and #17335.
+
+Swimlane authored edge IDs also preserve metadata after multibyte whitespace
+separators; identifier slicing advances over the complete UTF-8 scalar.
+
+Class/style edge targets use one ordered ID index, retaining all duplicate-ID
+matches and node/edge-ID collisions. Node-only targets avoid repeated full-edge
+scans; actual matching updates and existing node/class/style costs remain separate.
+
+
+Swimlane animation configurations, classes and inline styles share one authored
+edge-ID index. Repeated directives visit their actual matching edges, retaining
+duplicate-ID order and exact unknown-target refusals. Node-shape metadata on
+edge endpoints and literal @{...} node labels retain their original contexts.
+This bounds local edge discovery without claiming whole-pipeline linearity.
+
+Two-point Swimlane Cardinal, CatmullRom and Natural controls are checked through
+authored LR/TB parsing, layout and paint: exact collinear cubic controls, mode
+metadata and visible marker triangles. CatmullRom aliases share the same semantic
+variant. This bounded route support does not claim a general multi-point solver.
+
+Line-hop/Qt integration controls assert exact public-layout sorted arc/gap routes
+and marker triangles, mode aliases/exclusions, and Qt native output equivalence
+with exact inset/unsupported shadow debt. Existing resource and geometry controls
+remain required. No general renderer/device acceptance is inferred.
+
+The maximal-run label scanner retains the imported point/circle/cross endpoint
+operator families and positional link styles. Dispatch handles positional styles,
+then complete edge chains, then standalone edge configurations; endpoint node
+shape metadata therefore remains in its original context. Exact endpoint metadata
+and counted label/edge-target controls remain enabled after integration.
+
+
+## Bounded spacing and transport reconciliation
+
+Swimlane flowchart spacing fields accept only finite values in 0..=65536. Existing negative/nonnumeric/nonfinite messages stay unchanged; excessive finite values report FIELD must not exceed 65536 at(1,1). Directive/front-matter precedence stays unchanged.
+
+Validation is source-attributed: Windows applicable packages and standalone
+checks are recorded separately from Unix-only/hosted and whole-PR gates.
+Final-source Miri is **DEFERRED/PENDING**, never passed.
+
+
+## Global curves and checked ranks
+
+Swimlane global flowchart curve parsing retains directive/front-matter precedence, separate per-edge overrides, all existing aliases and the exact unsupported-curve refusal. Complete source fields are compared after normalizing only the proven global curve config.
+
+Affected Windows suites/strict lint are source-attributed to e2fd7e9c;
+producer native macOS rendering, general floating work and whole-PR/hosted
+gates remain separate. Final-source Miri is **DEFERRED/PENDING**.
+
+
+## Native validation checkpoint
+
+Native complete IR/layout/scene controls pin cluster and node/edge theme values, defaults, style priority and source precedence. Invalid theme stroke widths preserve defaults and zero is accepted. Producer Mac visual fixtures are retained; Windows evidence does not claim native Mac/device rendering.
+
+The 14-package safety run passed834 tests across32 targets, explicitly
+excluding only the new expected-red work test that was executed separately
+(Cargo101,1PASS/1FAIL). Strict15-package lint passed. This is scoped evidence;
+whole/downstream/hosted/merge acceptance remains withheld. Final-source Miri
+is **DEFERRED/PENDING**.
+
+## Bounded Venn canvas configuration
+
+Venn carries width, height, padding, `useMaxWidth` and `useDebugLayout` through
+owned semantic/layout types and eight `venn.*` scene metadata entries. Defaults
+are 800/450/8/true/false. The two booleans are transport metadata in this partial
+implementation. Source dimensions admit finite(0,65536], padding finite[0,65536];
+an invalid field uses its own default. A closed single-line init object's direct
+`venn` object replaces front-matter config as a whole. Nested objects, quoted
+values and body/style text cannot supply its fields.
+
+`diagram_layout_geometric::try_layout_venn` checks caller-owned configuration
+before arithmetic and refuses nonfinite derived circle/label geometry with a
+typed `VennLayoutError`. The single-argument `layout_venn` wrapper panics for
+unsupported IR. Use the checked API for untrusted typed input. Placement clamps
+effective padding to each canvas quarter while retaining authored admitted
+padding in config/metadata. Supported placement arithmetic is unchanged.
+
+Exact two-set/union/text geometry and complete default/custom PaintScene,
+glyph vectors, ordered font queries, primitives, styles and metadata controls
+are portable tests. Finite geometry does not establish label/stroke enclosure,
+area-proportional overlap, theme/CSS parity, arbitrary font/style safety or a
+renderer pixel-area/resource budget. See
+[`CV04a-venn-config-main-reconciliation.md`](../../../specs/CV04a-venn-config-main-reconciliation.md).
+Full final-source Miri is **DEFERRED/PENDING**, never passed; compiler delivery
+and the full Closure parity/provenance objective remain separate gates.
+
+## Bounded Venn theme transport
+
+Venn reads root `themeVariables` front matter or a direct object in a closed
+single-line init directive after the leading YAML header. A selected init object
+replaces front matter wholesale, including an empty object. Direct mapping
+fields supply values; header literals, nested maps/arrays, sequence items and
+scalar sections cannot supply a theme. Active quotes preserve embedded other
+quotes; malformed present values use defaults. The existing canvas/derived
+bounds and unrelated readers remain intact.
+
+Specific `vennTitleTextColor`/`vennSetTextColor` precede generic `titleColor`/
+`textColor`; present rejected specific values use defaults. Defaults are
+`sans-serif`, `#0f172a`, `#0f172a`. Configured family replaces caller option
+families while retaining size, weight, italic and stretch. Authored label color
+overrides the configured set color.
+
+`venn1` through `venn8` independently override the eight default colors:
+`#60a5fa`, `#f59e0b`, `#34d399`, `#f472b6`, `#a78bfa`, `#22d3ee`, `#fb7185`,
+`#a3e635`. Rejected lexical values fall back per slot. Checked layout transports
+all nine config fields. Circle fills use global circle order and cycle through
+the palette; an authored fill wins without shifting later indices. Source-derived
+scenes have sixteen exact metadata entries. The typed API supports arbitrary
+palette lengths: metadata contains eight base entries plus every palette entry.
+An explicitly empty typed palette gives every unstyled circle blue and retains
+only the eight base metadata entries. This is not a universal typed memory cap
+or a complete CSS validator.
+
+Portable controls verify 104 complete scenes: 32 retained oracles with a
+reversible eight-entry metadata adaptation, 48 source-to-checked-layout scenes
+with complete font-query traces, and 24 typed palette/cycle/empty/override cells.
+The affected fourteen-package suite passed 932 tests over 41 targets with no
+failures or ignores, plus strict all-target lint, at source `55afa2b5`.
+Independent source and terminal reviews passed. This establishes bounded
+transport; physical-font fitting, rasterization and full style parity remain
+open. Hosted checks and publication remain separate gates. Final-source Miri is
+**DEFERRED/PENDING**, never passed, under delivery-first sequencing.
+
+## Reviewed Venn property cascade
+
+Present style fields overlay earlier values in authored order. Missing fields
+retain earlier values; authored zero remains explicit. Region lookup precedes
+text lookup, with the first duplicate key selected and union keys sorted.
+Twelve complete IR cases cover three ingress forms and target/order controls;
+192 complete scene/query cases retain176 earlier cases and add16 cascade cases.
+These are bounded portable contracts, not full CSS/rendering or Mermaid parity.
+
+Actual source `f630e6ad` passed 2,765 tests across 120 targets, zero failures,
+one unchanged parent-only archive ignore, and strict all-target Clippy for all
+20 affected packages. Compiler884 and full unfiltered LANG500 passed. Focused
+runtime has 116 sources/696 actual cells on six available backends; all636 old
+tuples and106 old sources stay exact. CLR is unavailable and uncounted.
+Source/native-focused review19fd3975 and style-focused76b54bb9 passed; independent
+full terminal review is pending. Hosted checks and publication remain separate.
+Final-source Miri **DEFERRED/PENDING**, never passed.
+
+## Bounded Venn source-style admission
+
+Recognized invalid fill/stroke/text color, nonfinite or negative stroke width,
+and opacity outside0..=1 reject the entire parse before target lookup. Unknown
+targets and later repairing directives do not rescue invalid recognized values.
+Missing properties still retain earlier cascade fields; authored zero remains
+explicit. Invalid theme values keep their separate existing fallback behavior.
+
+Color admission uses the existing lexical subset, not a CSS name dictionary,
+function-arity/range validator or general renderer-safety guarantee. Existing
+source tokens reject percent signs even inside quoted style values; explicit
+tests preserve that boundary. Width has no new upper cap. Direct typed IR remains
+its existing caller trust boundary; this is a source parser contract.
+
+Actual source `df058580`:957 passed/zero failures/zero ignores across43 targets
+in all14 affected packages, with strict all-target warnings/unknown-lints denial.
+Tests assert918 exact rejection scenarios,342 complete positive IR cases,
+two percent-tokenizer errors,12 original invalid-cascade errors plus12 valid
+whole-IR companions, exact external corpus style and208 complete scene/query
+cases (192 retained plus16 RGBA alpha/raw-stroke cases). Original invalid JSON
+fills remain exact errors; title companions retain complete config/theme oracles.
+Independent exact source/focused and terminal reviews passed.
+
+Native execution remains attributed to `f630e6ad`:actual full20 run2765/120 with
+one unchanged ignore, compiler884, full unfiltered LANG500 and696 runtime cells
+on six available backends. Native166 package inputs differ only in four named
+Markdown files;21 mapped external resources remain exact. Static resource maps
+include conservative test routes and do not close arbitrary dynamic/toolchain/
+OS inputs. Historical Closure36/3705 attribution is not new execution.
+
+Required hosted checks and actual merge remain separate. Final-source Miri
+**DEFERRED/PENDING**, never passed; full Closure/visual/provenance completion
+remains OPEN.

@@ -1,15 +1,1348 @@
 # Closure Compiler on Rust — parity backlog
 
 **Status:** active — resumed with provenance as a completion requirement
-**Last reprioritized:** 2026-10-07
-**Current selection:** actual bounded provenance chronology, specified in
-[CV03](CV03-actual-bounded-provenance-chronology.md), branch
-`codex/closurec-chronology-20261007`. CV02 merged and is verified;
-preserve one active Closure/shared-stack PR.
-**Current audit base:** `9e4b8d1ab9b082f4ec027a67d10f97e3827579f2`
+
+<!-- CV04a Venn config integration checkpoint -->
+Local accepted source df058580 reconciles inspected main6814c2ce through closed
+four-path merge13c73a37/two independently reconstructed full files. Entire owned
+parser production is retained except the specified style match/two helpers;
+all old config/theme/palette origin/numeric guards remain. Actual full14 style
+957P/0F/0ignored across43 targets and strict all-target warning/unknown-lint
+denial PASS. Exact source review71203c6a and terminal
+review0e7f6ef6 PASS. Full receipt
+CV04a-venn-style-validation-delivery-df058580.json; strict435f66a1 and tests502b63da.
+
+Tests-first unsafe-value reds retained.918 exact eager errors,342 complete valid
+IR cases,2percent lexer errors,12original invalid-cascade errors/12valid complete
+IR companions, exact external corpus style,208wholeScene/query cases (192old
+exact+16RGBA/rawstroke). Invalid JSON fills remain exacterrors; valid title
+companions preserve complete config/theme oracles. Failed percent/label fixture
+attempts retained with lessons; no false green. No full CSS/visual parity claim.
+
+Native actual execution remains f630e6ad:full20 actual2765P/0F/1unchangedarchive
+ignore/120targets+strict20; compiler884/full unfilteredLANG500;116sources/
+696runtime cells on six actual backends (636oldexact+60new), no absentCLR count.
+Independent terminalac4a0fec PASS. Native166/2844 inputs retain f630 except four
+namedMD paths, and21mapped external-native resources remain mode/type/blob/SHA
+exact. Independent resource review4bc13419/actual integrated proof separate
+static conservative routes from unclosed dynamic/generated/toolchain/OS inputs.
+Grammar606 overapproximation differs onlyVenncorpus; newstyle suites execute it.
+Historical Closure36/3705 plus three static includes retain316e attribution,
+not new execution or a full dynamic closure. Registry376 exact; only local parser
+0.501 to0.502 changed in this slice. No new crates.io dependency.
+
+Actual published8d macOS job116532526128 fixture failure is repaired test-onlyd2:
+12portable tests/pinned Ruff0.15.20 pass, independentba137475; production helper/
+workflow319 exact, Unix-only Windows reactor selection7e retained. PATHRuff0.16
+eight inherited diagnostics stay failed; none newly suppressed. Actual hosted
+Python3.10/C/GHC/hsc2hs/Cabal and every required check remain mandatory.
+
+Sole implementation PR17288; current delivery requires exact documentation-only
+carrier review, fresh main/openPR/epic audit and unforced plan, then verified
+normal same-PR push. Auto-mergeOFF until current conflict-free/review-clean
+exact-head terminal acceptable required CI. Actual fetched merge reachability
+and payload proof precede cleanup/CV04b. Miri **DEFERRED/PENDING**, never passed:
+frozen checkout/process/inputs/target/receipts untouched/unpolled, no duplicate/
+termination. Deliver implementation first then genuine final-source Miri.
+Full Closure parity/output-byte-source/stable IDs/pass-sweep/all transformation
+lineage OPEN; heartbeat ACTIVE. Base ESTree canonical boundary/own types retained.
+<!-- /CV04a Venn config integration checkpoint -->
+
+<!-- CV04a pathwise pending checkpoint -->
+Delivery candidate from source61c5c0da retains currentmain1455d78b.
+Sole PR17288 and epic15830 track publication/hosted state. Auto OFF at
+carrier preparation; actual publication/merge is not inferred. Re-audit before push.
+Specd34aa2e2 precedes closed mergece283d14 (3663incoming/3653pure/
+10reconstructed overlaps/221728retained), then39pure Sanskrit paths in431baea3.
+Failed generic DG04 framing proof preserved; explicit complete recipe passes.
+
+Nativeb7686f69: only four canonical budget/comment lines6→7, range[-8,8];
+whole shared exp/log/legacy/readonce/effect/conversion prefix exact1c14ad3a.
+Raw867P2F/incoming0P1F; tests4203 focus24P3F/library868P4F/incoming0P1F/
+owned7P1F preserved. Actualfocus27/library872/incoming1/owned8 PASS;66old
+sources/396exact executed cells +10new/60 =>76/456, sixavailable backends,
+CL6/CR8 normal exits; absentCLR notcounted. Fullsixpackage1799/0/
+1existingignore/78 and unfilteredLANG492/0, strict0 PASS.
+Native tests SHA998299573c5282cf7850b31ee4b765bb46b91c53f6ca8801aa2995ca40394202.
+Independent native terminal PASS SHA56958bcb842ee6e73a98bf1e9d053101ff83c584d3b902d9bd93a5cf0b3bb3f1.
+
+Labels61c5: actual focus16layout/13paint and full14package902/0/0/38,
+strict0 PASS. Tests SHAe21b090dacbc30e7b4a03fdf41e452e7f4bc871c7b60bbb83545a6934d6da72f.
+Independent labels terminal PASS SHA686d7c47fce740e1a18fb4d1114c567e5bd6a41f587b8de67da1ba197234192b.
+192new configurations compare full glyph vectors/ordered font queries,
+single-leaf coordinates/marker geometry/all12metadata. Four retained40-cell
+blocks separately cover broader shape/style/path/order. Twelve nonfinite
+marker controls; scaled name height restored around explicit rootport; noWrap
+and effectivefontcap retained. Five prior oracle files reconstruct exactly;
+circular numeric controls retained with origin130→76.6 translation/new root
+ports independently specified, no tolerance change. Failed constructor/typed
+query/runtime/cross-dialect fixture/strict-spacing receipts remain preserved.
+
+Entire native166roots/2830objects equal testedb768 before this docs carrier;
+final docs require exact named native/style exceptions, correctedClosure36/
+3705 exact316e historicalcompiler1093/181+strict attribution, registry376,
+actual checker/lessons/diff, fresh unforced mainplan and independent finalhead
+review. Hosted exacthead terminal acceptable conflictfree/reviewclean checks
+gate squashauto; actual fetchedmain merge reachability gates cleanup/nextslice.
+Marker reversal/clearance, arbitrarycustom/long-font fitting/forged/extreme/
+oblique layout/backendvisual parity remain OPEN. Circular curves are bounded
+orthogonal cubic approximations. Base ESTree/ownedtypes/no new crates.io deps
+remain. CLOC27 leafprovenance real; epicallNone stale. Fullparity/outputbyte/
+source/stableIDs/passorder/allfold/rename/inline/motion/merge/delete lineage/
+CV04b OPEN. Miri DEFERRED/PENDING, neverpassed; frozencheckout/process/target/
+inputs/receipts untouched/unpolled. Deliver first then genuinefinalsourceMiri.
+Fullobjective OPEN; heartbeat ACTIVE.
+<!-- /CV04a pathwise pending checkpoint -->
+
+<!-- CV04a active delivery checkpoint -->
+October14 source3d0f3896: final affected14-package diagram/parser/paint/downstream
+suites ACTUALLY PASS855/0/0 over32targets, strictalltargets EXIT0. TestslogSHA
+7b2de39591d272bdbb96a454d93110380fead1dfd19397857560f962d22c7df6.
+Actualmain925 import86ea closed13paths/6pure/7exactthreewayoverlaps/225122retained.
+Both new subgraph title margin fields have exact finite0..65536 admission.
+Nested title-band reserves and padding/group-aware tails enclose all accepted
+positive margins; complete zero/default layouts remain exact.
+
+Spec-first controls preserve actualred80invalid/134geometry, b81fourgroup-tail,
+2d75fortyeightouterpadding and c97twohundredfiftysixpaddedshape failures.
+Final80typed/16128geometry/36completepaintedtitleglyph cells pass. No capacity,
+ownership/safety/work/production-limit control weakened; all original32/new16
+hop cases and8192 controls retained. Registry376 identities/checksums exact.
+Independent773source review PASSf04c1d4a; final3d/carrier review required.
+
+Fixed5c native/compiler complete20-package unfiltered suite ACTUALLY PASS
+2613/0/1existingignore over110targets; LANG478/0, ALGOL849/0, strict0.
+Independent forward dependency proof166localpackages/2798objects retains
+all2796non-doc objects through773; only2changelog docs differ. Counts remain
+separate source-specific receipts, not additive or a new native execution.
+Finalcarrier must retain these objects. Fresh5c Go12fixtures/vet/build/3native
+selection PASS; refresh current production plan after docs. Cancelled4a79530
+remains actualEXIT1/incomplete, never accepted; all failed receipts preserved.
+
+Next finaldocs/checker/lessons, exact-head independent source/carrier review,
+current unforced production plan and samePR17288 publication; hosted exact-head
+CI/review/conflict/actualmerge gates remain OPEN, autoOFF until acceptable.
+General floating resource work and generic Boolean formatter range tracking OPEN.
+Full Closure parity/output-byte source/full fold-rename-inline-motion-merge-
+delete lineage/pass-sweep/stableIDs/spans/CV04b/whole objective remain OPEN.
+Existing CLOC27 leaf-token bridge is real; stale epic allNone audit is not scope.
+Miri DEFERRED/PENDING, never passed; frozen497 source/inputs/target/receipts
+unpolled/untouched, delivery first then genuine final-source acceptance.
+Heartbeat ACTIVE. Dated checkpoints below preserve source-specific history.
+<!-- /CV04a active delivery checkpoint -->
+
+<!-- CV04a current-main reconciliation -->
+October14 native8 checkpoint: functional6597951c, comment71d24b24, source-attributed
+validation316e7878 plus test-only correction7126217d. Fixed aligned outgoing argument tail follows32-byte MsX64 shadow or
+SysV0; callee extras spill from RBP+16+shadow+8index into stable negative slots.
+Checked frame/displacement arithmetic rejects overflow; ninth word/formal
+refuses. Builtin physical register ABI unchanged. No new crates.io dependencies.
+
+Actual focused native evidence: simulator10 bothABIs (5/6/7/8 ordered words,
+fullRAX, stackwords, alignment, shadow overwrite, preserved locals, restoration,
+recursion and nine-arg refusal); backend root1 exactp7 RBP-64 and external actual
+returnPC; real Windows six/eight formal-position checks Exit42; all8 original
+captured/forwarded array rows execute Exit42. Independent scoped exact-source
+security PASS712 source/carrier/terminal, reportSHA
+0665444f2dd22d1cae5f36ad7064f860a2bf5f02cc3e2ef48eece561a45c87b1.
+Original71d report preserved. No Linux/macOS hardware
+or forced-GC acceptance inferred from simulator/root metadata.
+
+Actual isolated source316e7878 validation completed: nine affected packages
+1226PASS2FAIL1existingignore/81targets; only the obsolete five/seven-formal
+refusal oracles failed. Full unfiltered LANG476/0/0, strict nine-package
+alltargets, standalone Closure1093/0/0 across181targets and strict passed.
+Spec-first test-only correction7126217d retains those accepted counts and eight,
+adds exact ABI/got9/max8 plus public-refusal checks. New complete backend
+85/0/0 over2 targets and strict nine-package alltargets passed.
+Whole production prefix and every other Rust/instruction object remain exact;
+unchanged runtime evidence is explicitly attributed to316e. These counts are
+separate source receipts, not additive, and the original failed run stays failed.
+The prior5ba run exhausted disk before tests; its failed receipts are preserved.
+Retry disabled debug symbols/incremental compilation, preserving all inputs,
+assertions and limits. Registry376 tuples remain exact. Miri
+DEFERRED/PENDING, never passed; frozen run/input/target/receipts untouched.
+General floating resource debt, hosted CI/conflict/review/merge, full Closure parity
+and output-source/full transformation lineage remain OPEN.
+
+Prior scoped JVM sourcec5 full200 tests/docs +original8JVMarrays +floatarray
+positive/descriptor-negative +realIEEE84 and strict3 remain accepted with
+immutable receipts/security reports. Historical da unfilteredLANG463PASS9FAIL
+and current5ba build failure are preserved, never latest-source acceptance.
+Original general-hop varied-support32/32 failed receipts remain preserved; no capacity,
+safety or ownership tests weakened. Actual mainf211 importb83 has2097pure
+zero-overlap paths, every retainedowned object exact, complete17530Rust/program/
+instruction objects exact before/after and registry376 exactbaseline. Actual
+parent526+f211 verified. Fresh imported-source doc checker460files was built
+after archiving old388 reusedruntime; npmoffline/build/docCLI/lessons/diff all0.
+The two npm PATH failures remain failed; boundedchild188 PATH fixes inherited
+11821-character cmd environment without touching host/Miri environment.
+No curriculum execution acceptance inferred. Native source712, docs73 and
+integration4f independent source/carrier/terminal reviews PASS; final integration
+reportSHA 1f47734f0ff79c89367f95c348faa31afc8b2705f2d6713d601276d0be2404a1. All native/doc runs terminal.
+Bounded common-origin implementation now repairs the demonstrated32 integer
+varied-support cases while preserving the rounded predicate/output/collector/
+limits. Full arbitrary-floating/general resource acceptance remains open.
+Selected spec CV04a-integer-common-origin-hop-work.md (46c674be): exact integer
+common-left rational inversion tree with conservative query/prior-right bounds.
+Independent initial sign proof PASS, but slope-only output-sensitive work was
+WITHHELD: the reviewed (0,i)->(4N+i,i+1) family has quadratic outside-right
+candidates and zero crossings. Preserve it as a new pre-production control;
+revised endpoint design independently PASS, reportSHA
+b95fd54420831a05b13b2d424def67fb7195de7ffd9d07c93a924825a0c8907b.
+Spec-first public red controls at26011d4f executed2PASS2FAIL; original32 work
+remained failed. Production e32c4728 adds an own rational/common-origin AVL
+cohort and conservative endpoint bounds. Eight independent controls now cover
+raw directed signatures/order, zero slope, independent endpoint bounds,
+epsilon interval, rotation extrema, permanent invalidation, extreme/minimal
+span and exact determinant-only candidate counts. Original32 and new16
+outside-right complete-scene/work controls PASS unchanged bounds. Original32
+measured predicate1/index3445..8242; outside-right predicate1/index3475/8304.
+C false positives remain separate from final K; no universal work guarantee.
+All8192/limit/whole-scene controls remain required and unweakened.
+
+Actual padding main import f94 has13 paths/7 overlaps. Independent whole-tree
+three-way reconstruction verifies all seven merged objects, all six pure
+incoming objects and every retained owned object. Both owned config literals
+add only padding:None, preserving defaults/assertions. Registry376 exact and
+166-package native forward cone equality retains prior native8 receipts at
+this stage. Newer audited main a2bb4ec0 includes ALGOL unit-offset work and
+Sanskrit changes; it is not imported or accepted yet.
+
+Exact e32 full diagram cone843/0/0 over32targets passed; strict failed on a
+new test tuple annotation, then corrected using a named oracle group. Independent
+review found imported padding bypassing checked admission. Its direct native
+red control fails20/20 invalid cases, including NaN clamp panics in all four
+directions; valid default/zero/cap controls pass. Spec334 +tests0fd precede
+production7d011987, which adds padding to the existing finite0..=65536 guard.
+Actual complete14-package cone at7d:847PASS/0FAIL/0ignore/32targets plus strict
+alltargets Clippy PASS. Failed receipts remain preserved. Independent exact
+source review at7d passes admission/hop scope but withholds valid-padding
+enclosure: LR/RL fixed150 lanes can clip accepted taller nodes. Spec37a24
+precedes exact20cell golden control03e55282; actual red4FAIL (LR/RL100/cap),
+initialE0609 compile failure separately preserved. Productionefd2e023 changes
+only horizontal cross extent to max150,nodeHeight+18. Complete14-package
+cone848/0/0 over32targets plus strictalltargets PASS. Final independent report
+pending; no hosted acceptance inferred. Framed maina2bb has66paths/5overlaps;
+spec CV04a-unit-offset-main-reconciliation.md precedes next actual import and
+six-package compiler/native/downstream validation, including full LANG.
+
+Scoped final diagram review PASSefd2e023, reportSHA
+53ab3f8802fa07b4b8f1978274d4334a4197b2d0d65bc8d8e4dcb2d17c21f248.
+Actual merge4a56fc64 imports maina2bb: independent closed-tree proof verifies
+all66 incoming paths (61 pure/5 overlapping three-way objects), every retained
+owned object, diagram50-package forward-cone runtime equality and registry376.
+Closure1093 source attribution independently verifies all3669 compiled/config/
+test objects across36 forward packages against actual316e source; no new
+compiler execution claimed. Six-package ALGOL/LANG/native/downstream suites,
+including unfiltered LANG, were stopped after the confirmed admission finding:
+session79530 actual EXIT1, incomplete and never accepted. Six positively
+identified owned diagnostic processes were stopped; frozen Miri was excluded,
+and all owned children were verified gone before further source changes.
+Partial logs/receipts remain preserved. Full final-source suites/strict remain
+required after the spec-first repair. Changelog headings now pass the actual
+doc-shard checker; original failed check is preserved.
+
+Imported unit-offset review is not accepted: actual current Cargo-produced CLI
+probes accept nested(sign+1)+1 while refusing flat sign+1+1, and accept a
+triple-exp offset through an outer entier/ln proof. Shared builtin_sign_operand
+widening is broader than the claimed one-unit local-name slice. Emitted LLVM
+retains floor/range/trap guards; no UB or generated-program runtime result is
+claimed. Preserve immutable probe sources/binary identity/LLVM receipts; scope
+the unit-offset proof and add adversarial exact controls after the fixed native
+baseline is terminal. Spec CV04a-unit-offset-admission-isolation.md commits the
+reviewed dedicated-flat-unit/old-helper isolation before controls/production.
+Inherited generic Boolean formatter/range composition remains separately OPEN.
+No publication/auto-merge through this review finding.
+Independent imported-source review WITHHELD at4a56fc64, reportSHA
+1ae4761b0310ee54c8f6174acc795deebefa7e5c289cec7766806e5153ffb372.
+
+SolePR17288 remains prior published82209953a0909dfaa66c8065ee6f163d7478c2d1/conflicting/failedCI/autoOFF.
+No new push/merge/cleanup; re-audit live main/openPR/backlog/epic each resume.
+Full Closure parity/output-byte source/full fold-rename-inline-motion-merge-
+delete lineage/pass-sweep/stableIDs/spans/CV04b remain OPEN. ExistingCLOC27
+leaf-token bridge is real; stale epic allNone audit is not implementation scope.
+Miri DEFERRED/PENDING, neverpassed. Frozen497 run/source/input/target/receipts
+unpolled/untouched; delivery first, genuine final-source validation afterward.
+Heartbeat ACTIVE.
+<!-- /CV04a current-main reconciliation -->
+
+<!-- CV04a BEAM heap native continuation -->
+CV04a source `282193e9b1911fb3846b4a107d5d11fb8bec02f0`, integrated main
+`160b1b4e0e8c52bf7dc8b02119e666611fd6001f`: native continuation session97289
+returned **actual EXIT0** on October13. The 29-package reverse-dependency cone
+and unchanged 11 LANG production selections plus 48 exact native regressions
+pass **3,347 tests/docs across 211 targets**, zero failures/1 existing archive
+ignore; strict all-target Clippy for all29, doc-shards, lessons1102 and whitespace
+checks pass. These counts retain IIR174/3 and 98 successful unchanged targets
+from actual source d5 by nonempty mode/type/blob equality; they do not fabricate
+an exit-zero for the original failed validator. Twig now passes88/2, including
+all seven prior Windows self-compilation failures and the new OS path-identity
+control. Its fixture-only helper preserves the production source prefix.
+
+The BEAM string-constant repair reserves exactly two heap words per list cell
+before construction; exact bytecode and real Erlang long-string red controls
+precede the repair. Original published Linux heap-overrun log and d5 validator
+EXIT1 remain preserved. Stopped session73885 was a read-only preflight EXIT1;
+batched mode/type/blob inventories replace its thousands of Git processes.
+Focused repetitions are excluded from the totals above. No hosted Linux
+acceptance, final security PASS, unfiltered LANG acceptance or current-main
+acceptance is inferred from these Windows results.
+
+The independent crossing-work finding has a spec-first repair: counted duplicate
+and unique same-axis controls first fail, then actual geometry/axis indexing
+passes six focused controls and the full paint suite102/3 plus strict lint at5b.
+Exact duplicate crossing order and drawing multiplicity are preserved. Arbitrary
+unique oblique candidate work remains unaccepted; the reviewer reached its usage
+limit before final acceptance. Existing historical blocks retain their original
+source frames and withholding decisions.
+
+Fresh full-file PR/backlog/epic audit sees main
+`894bde600d2c8693f127e09542b76678fc5169db`, including powered ALGOL selectors,
+automatic lane ordering and source/spec imports. These need bounded reconciliation.
+The external adjacent-swap arithmetic proposal passes52,818 exhaustive checks;
+it is not production validation. Separately owned open orthogonal-hop/ALGOL/Qt
+work is recorded for overlap review. Sole Closure/shared PR17288 remains published
+at822; hosted run38323457119 is terminal LinuxFAILURE/macOS+WindowsSUCCESS.
+Auto-mergeOFF; no new publication, merge, cleanup or CV04b selection.
+
+Full final-source Miri **DEFERRED/PENDING**, never passed. Frozen checkout,
+497 inputs, existing run, receipts and Cargo target stay untouched and unpolled.
+Base ESTree/own types/no new crates.io dependencies remain the owner boundary.
+Full parity, source/output joins, all transformation lineage and the full goal
+remain OPEN; heartbeat ACTIVE.
+<!-- /CV04a BEAM heap native continuation -->
+
+<!-- CV04 line-hop Qt security withheld -->
+CV04a native source4bd5520/main160 completed actual31902 EXIT0: full23package
+cone1463/62/1existingGDIignore, nativeTaskApp9/1, total1472/63; strict23,
+TaskAppPython46/Ruff, geometry27/Python18/Ruff, docs/lessons/whitespace PASS.
+Six earlier focused rows retain actualcb by nonempty whole-package equality.
+93539 preflight,65241 zero-test filter rejection (original native log overwritten,
+explicitly disclosed),75183 E0063 red before test-only line_hops None repair
+remain preserved. No whole updated-head security or hosted acceptance inferred.
+
+Independent review WITHHELD: new enabled hop loop scans every preceding eligible
+edge. Authored fixed-two-node duplicate edges yield N(N-1)/2 predicates with no
+crossings. Authored one LR lane Cartesian K-by-K same-height endpoint groups
+admit E=K² unique horizontal edges, no crossings, Θ(K⁴) predicate work. Exact
+geometry dedup alone is insufficient. Counted public parser/layout regressions,
+compatible resource repair and affected suites still required. Reviewer hit usage
+limit before final acceptance; never treat its partial review as PASS.
+
+Fresh origin/main9b47db7e5715d3bf219a1d6fec1020e3d9099be5 adds powered ALGOL
+selectors/automatic Swimlane ordering and source/content imports; main160 native
+frame stays frozen and source-attributed until bounded reconciliation.
+Published solePR17288 remains822; hostedrun38323457119 terminal: macOS/windows
+SUCCESS, LinuxFAILURE. Exact failure sparse_real_and_string_value_copies_run_on_beam
+b11_str_3d: Erlang beam/erl_gc.c775 Overrun stack and heap (lang-aot testline50).
+Full log preserved; actual backend failure needs repair/revalidation, not a skip.
+Auto-mergeOFF. No new publication, merge, cleanup or CV04b yet.
+Full final-source Miri DEFERRED/PENDING, neverpassed; frozen497inputs/run/source/
+receipts/target untouched/unpolled. Fullparity/outputjoins/alllineage/goalOPEN.
+<!-- /CV04 line-hop Qt security withheld -->
+
+<!-- CV04 multiplicative selector integration -->
+CV04a multiplicative-selector reconciliation integrates main `146f77f4734e136e2146f4427607758889f73a8f`
+(#17387). Spec649ef6fbaa precedes conflict-free merge/tests; actual source
+`329cacee024416817a13c208cf0d5a62dc6e3a9d` adds16by-name formatter-refusal cells paired with16value
+snapshot controls over both roots, selector arms, direct/assigned consumers and
+root-first/static-first multiply/divide arrangements.16native sources assert
+exact independently derived -4.5/1.75/-4/7 output on every available standard
+backend; present-but-no-result fails. Upstream bounded multiplicative admission,
+all original bare/signed/additive/preANDpost alias guards/static fallback and
+production limits remain. No general arithmetic/runtime-expression-finiteness
+or broader Closure parity claim.
+
+Actual **1263 tests/docs/124 targets/0fail/1existing archive-helper ignore**:
+compiler/shared942/16, strict4alltarget warnings/unknown-lints denied, all eleven
+unchanged LANG production BUILD selections and all48exact native targets PASS.
+16focused repeats excluded from unique counts. Docs/1101lessons/whitespace
+PASS; COMPLETE73rows and actual validator EXIT0 required. No fullunfilteredLANG
+acceptance inferred. Actual prior46native/11BUILD roster explicitly derives from
+additive766 receipt, without any rewritten ancestry pointer or reattribution.
+Initial81119 EXIT1: parallel rustc/LLVM allocation/OOM failures during production00
+compilation before tests. Serial8144 EXIT1: rust-lld output no-space-on-device,
+also before tests. Both failed receipts/logs preserved, never passed. Path-checked
+package-scoped Cargo dry-run and actual clean in separate delivery target removed
+18,913 rebuildable LANG artifacts/28.0GiB, preserving source/receipts/frozenMiri.
+Same-source/profile/assertion disk continuation uses one Cargo build job, retaining
+16 successful rows without replay and actually completing remaining selections.
+No production limit, safety assertion, source behavior or required CI weakened.
+
+Complete NONEMPTY rounded3f/19be seventeen-package/fixture/script objects retain
+829/37/strict17/oracle27/Python18/oneexistingGDIignore; SwiftUI525 sixpackages/
+scripts retain637/30/strict6/Python46/freshprofile1. TaskApp runtime/config exact
+except2release docs. OtherRust entries excludingchangedALGOL/lang and programs/
+scripts/grammars/CI match published822. No diagram/device/content/TS acceptance
+reattributed to new compiler source. Historical negative receipts retained.
+
+Final backlog-only fullobject/payload proof and independent exact-final security,
+freshmain/openPR completefile/review/conflict audit precede same sole PR17288
+publication. Current822 CI stays active until newer reviewed workflow exists.
+Exacthead terminal acceptable checks plus whole3OSnativeSUCCESS/packageSUCCESS/
+timestampedClosurecBUILT gate auto-merge. Actual fetched-main reachability/full
+payload mode/type/blob proof precede cleanup/CV04b. Prior blocks are historical
+source/CI frames, not current gates.
+
+Full final-source Miri **DEFERRED/PENDING**, neverpassed. Frozen run/497inputs/
+checkout/receipts/target preserved without progresspolling/termination/duplicate
+execution. Implementationdelivery first, genuine final-sourceMiri afterward with
+invalidated-input reruns. BaseESTree/ownedtypes/no newcrates.io dependencies. Full
+Closure parity/CV04b/output-byte-source joins/all folding-renaming-inlining-motion-
+merging-deletion lineage/fullgoal OPEN; heartbeatACTIVE.
+<!-- /CV04 multiplicative selector integration -->
+
+<!-- CV04 rounded integration -->
+CV04a rounded Swimlane reconciliation integrates main `19be4bad9817a4c5d17b61787fbb7e798aee145f`
+(#17385 and Sanskrit/Urdu/German source imports). Spec3d96cd6f10 precedes merge/
+tests. Actual source `3f8d0a914f0c8545bd997067425f1e5bf1b34289` retains upstream orthogonal routing and
+radius12/half-segment quadratic cuts. Exact public-layout long/short LR/RL/TB/BT
+fixtures assert complete route commands and both marker triangles/style/area50;
+two real authored aligned layouts keep42-unit routes. Perpendicular LR-vertical/
+TB-horizontal routes retain visible markers; actual zero routes keep degeneracy.
+Four new tests preserve all earlier curve/control-order/parser-work/Arc assertions.
+
+Red source4b736eb8: actual cargo101,3PASS/1FAIL, exact perpendicular triangle
+collapsed to its tip. Compilation, long/short/aligned/zero controls passed.
+Two Rounded endpoint references now call existing bounded marker_reference;
+no routing/corner/limit/dependency/unsafe change. Merge conflict at cubic/rounded
+dispatch resolved by retaining both original bounded cubic-reference repair and
+the imported Rounded branch. Original negative receipts remain preserved.
+
+Actual complete metadata-derived17packages **829 tests/docs/37targets/0fail/
+1existingGDIignore**, strict17alltarget warnings/unknown-lints denied, neutral
+oracle27/Python18/Ruff/docs/1101lessons/whitespace PASS. Twenty-four
+focused executions excluded from unique counts (authored rounded runs twice).
+COMPLETE14rows and actual validator EXIT0 required. First import preflight50515
+refused beforeCargo tests/receipt/CPwrite: expected11paths omittedDG04 spec from
+actual12-path inventory. Corrected count retries identical3f source without
+testduplication; original helper and negative retained.
+
+Complete additive compiler/shared/LANG/program/script/CI objects retain actual
+766/8e1258/122/1existingarchiveignore/strict4/all11BUILD/46native without replay
+or reattribution. SwiftUI525 six-package/scripts retain637/30/strict6/Python46/
+freshprofile1; TaskApp runtime/config exact except two release docs. Full closed
+Sanskrit/Urdu/German/content/TS-test import inventory retained, execution/accuracy
+unclaimed. Complete old/new relative owned-repair diffs retained for review.
+
+Final backlog-only fullobject/payload proof and independent exact-final security,
+freshmain/openPR complete files/review/conflicts precede same sole PR17288 push.
+Current7dc CI stays active until new reviewed workflow exists. Exacthead terminal
+acceptable required checks/whole3OSnativeSUCCESS/packageSUCCESS/timestamped
+ClosurecBUILT gate auto-merge. Actual fetched-main reachability/full mode/type/
+blob payload proof precede cleanup/CV04b. Full final-source Miri **DEFERRED/PENDING**,
+never passed; frozenrun/497inputs/checkout/receipts/target untouched without
+progresspolling/termination/duplicate. Implementationdelivery FIRST, genuine
+final-source Miri afterward with invalidated-input reruns. BaseESTree/ownedtypes/
+no new crates.io deps. Full Closure parity/output joins/all transformation
+lineage/CV04b/fullgoal OPEN; heartbeat ACTIVE.
+<!-- /CV04 rounded integration -->
+
+<!-- CV04 additive selector integration -->
+CV04a additive-selector reconciliation (October12) integrates main
+`8e7e8e9334a9feec1006d76784cf1fb268edf025` (#17381). Spec da0634cea0 precedes merge/tests; actual
+source `766e64d59a4a00b5617afebd2c623a75eeb2c6bf` adds sixteen by-name formatter refusals paired with
+sixteen value-formal snapshot controls across both roots, selector arms,
+direct/assigned consumers and root-first/static-first addition/subtraction.
+Sixteen native sources assert independently derived exact -1.25/1.5/3.25/5.5
+outputs on every available standard backend; present-but-no-result fails.
+Upstream bounded additive admission, alias guards, original preANDpost proof,
+finite-static fallback and production limits remain unchanged. No general
+arithmetic, runtime-sum-finiteness or broader Closure parity claim.
+
+Actual **1258 tests/docs/122 targets/0fail/1 existing archive-helper ignore**:
+compiler/shared939/16, strict four-package all-target warnings/unknown-lints
+denied, all eleven unchanged LANG production BUILD selections and all46 exact
+native targets PASS. Fourteen focused repeats excluded from unique counts.
+Docs/1097 lesson shards/whitespace PASS; COMPLETE70rows and actual
+validator EXIT0. No full unfiltered LANG acceptance claimed.
+
+Complete current spline6c17package/fixture/script objects retain824/37/strict17/
+oracle27/Python18/one existingGDIignore; SwiftUI525 six-package/script objects
+retain637/30/strict6/Python46/freshprofile1. TaskApp runtime/config inventory
+matches525 except README/CHANGELOG release docs. Other Rust entries excluding
+changedALGOL/lang and programs/scripts/grammars/CI match predecessor7dc.
+Original receipt's bare48 pointer remains historical ancestry: actual prior44
+native roster and eleven BUILD lines derive from signed4f receipt, recorded
+separately in additive attribution refinement without rewriting any original
+receipt or reattributing old execution to new source.
+
+Final backlog-only fullobject/payload proof and independent exact-final security,
+fresh main/open-PR complete inventory/review/conflict audit precede publication
+on sole PR17288. Current7dcCI remains active until a newer reviewed workflow
+exists. Exact-head terminal acceptable checks plus whole Linux/macOS/Windows
+nativeSUCCESS/packageSUCCESS/timestampedClosurecBUILT gate auto-merge. Actual
+fetched-main merge reachability/full payload mode-type-blob proof gate cleanup
+and CV04b. Earlier blocks are historical source/CI frames, not current gates.
+
+Full final-source Miri **DEFERRED/PENDING**, never passed. Frozen run/497inputs/
+checkout/receipts/target untouched without progress polling, termination or
+duplicate execution. Implementation/delivery first, genuine final-source Miri
+afterward with invalidated-input reruns. BaseESTree/ownedtypes/no newcrates.io
+dependencies. Full Closure parity/CV04b/output-byte-source joins/all folding,
+renaming,inlining,motion,merging,deletion lineage/fullgoal OPEN; heartbeatACTIVE.
+<!-- /CV04 additive selector integration -->
+
+<!-- CV04 spline integration -->
+CV04a two-point spline reconciliation (October12): publishedf4 precedes main
+`e7c6bc81064bc80c9a908e102b76cdb1977fe768` (#17376spline plus #17377TaskApp release docs). Specf377d9d8a1
+precedes merge/tests; actualsource `6cab8a68f799da4ea8cd52b2015f9b1f83eca0e2` preserves upstream fixed
+Cardinal/CatmullRom/Natural collinear cubic dispatch. Six authored LR/TB controls
+assert exact42-unit endpoints,1/3 and2/3 controls, complete cubic commands,
+canonical metadata and both marker triangles/style/area50. Three Catmull aliases
+retain the same semantic variant. ExistingBump/Step/Basis/Linear/Monotone,
+zero-route and parser-work assertions remain exact. No generalmulti-point solver,
+new algorithm/dependency/unsafe/parser/resource-limit exemption is claimed.
+
+Actual complete metadata-derived **17packages/824tests-docs/37targets/0fail/
+1existingGDIignore**, strict17alltarget warnings/unknown-lints denied, neutral
+oracle27/Python18/Ruff/docs/1097lessons/whitespacePASS. Focus19repeats
+excluded from native count; COMPLETE13rows/actualvalidatorEXIT0. Initialimport
+preflight refused beforeCargo tests/receipt/CPwrite because three already-owned
+repair paths were incorrectly compared wholesale with upstream. Originalnegative
+preserved; eleven unmodifiedimports exact, two test-extended paths reviewed,
+three fullold/newrelative diffs preserve identical added/deleted ownedrepairs
+(paintdevdeps/parserresource-context/DG04contracts). No nativefailure relabeled.
+
+Compiler/LANG/core/Closure/CI/scripts sourceobjects remain exact to actual4f/c10
+and retain1253/120/1existingignore/strict4/all11production/44native without replay
+or reattribution. SwiftUI525 sixcompleteobjects/scripts retain637/30/strict6/
+Python46/profile1; TaskAppruntime/config inventory exact exceptREADME/CHANGELOG
+release docs. Portuguese/content/TS and TaskAppdevice/release/publication
+acceptance unclaimed. Currentf4CI remainsactive; old/localchecks cannotaccept
+newhead. Subsequent blocks are historical source/CI frames, not current gates.
+
+Finalbacklog-only fullobject/payload proof and independent exactfinalsecurity,
+freshauditedmain/openPRcompletefiles/review/conflicts precede SAMEsolePR17288
+publication. Retireoldf4CI onlyafterreviewednewheadworkflowexists; nevercurrentCI/
+Miri. Exactheadterminalacceptablechecks/whole3OSnativeSUCCESS/packageSUCCESS/
+timestampedClosurecBUILT gateauto-merge. Actual fetched-main reachability/full
+payload mode-type-blob proof gatecleanup/CV04b. Fullfinal-sourceMiri
+**DEFERRED/PENDING**, neverpassed; frozen497inputs/run/checkout/receipts/target
+untouched withoutpoll/terminate/duplicate. ImplementationdeliveryFIRST then
+genuinefinal-sourceMiri/reruninvalidatedinputs. BaseESTree/ownedtypes/no new
+crates.io deps. CV04b/fullClosureparity/outputjoins/alllineage/fullgoalOPEN/
+heartbeatACTIVE.
+<!-- /CV04 spline integration -->
+
+<!-- CV04 signed selector integration -->
+CV04a signed-root reconciliation (October12): published f202 precedes integrated
+main `c10ae4d719cddbb8a3dc11135ec06e3241fc1438` (#17372 signed local roots plus source-only Sanskrit/Kannada
+imports). Spec e526fdd695 precedes merge/tests; actual source `4f3bdcbc9913d674ca4a4e19420ba839643d99d9` adds
+sixteen by-name formatter-refusal cells and sixteen value-formal snapshot cells
+across both actuals, selected arms, direct/assigned consumers and sign forms.
+Sixteen native positives assert exact 2.25/3.5/-2.25/-3.5 outputs on every
+available standard backend; present-but-no-result fails. Upstream signed policy,
+original preANDpost guards, finite fallback, tests and production limits remain.
+
+Actual **1253 tests/docs/120 targets/0fail/1 existing ignore**: compiler/shared
+936/16, all eleven unchanged LANG production BUILD selections and all forty-four
+exact native targets PASS. Twelve focused repeats excluded from unique counts.
+Strict four-package all-target warnings/unknown-lints denied; docs,
+1096 lesson shards and whitespace PASS. COMPLETE67rows and
+actual validator EXIT0 required. No full unfiltered LANG acceptance claimed.
+
+Complete six-package SwiftUI525/TaskApp/script objects retain637/30/strict6/
+Python46/freshprofile1 and originalsharedhash identity; seventeen diagram/Arc66
+plus neutral fixtures/scripts retain821/37/strict17/oracle27/Python18/oldGDI
+ignore. Other Rust entries, programs/scripts/grammars/CI exactly match f202.
+Old compiler48 receipt remains historical; changed compiler newly executed at
+the explicit source above. Sanskrit/Kannada mocks/narration/TS/content execution
+unclaimed. Subsequent blocks are historical source/CI frames, not current gates.
+
+Final backlog-only complete-object/payload proof and independent exact-final
+security remain required before same sole PR17288 publication. Fresh live main/
+complete open-PR inventories and exact-head terminal acceptable/conflict-free/
+review-clean checks plus whole three native jobs/packageSUCCESS/timestamped
+ClosurecBUILT gate auto-merge. Actual merged reachability/payload proof gate
+cleanup/CV04b. Current f202 CI untouched; only superseded CI may be retired after
+a reviewed new-head workflow exists. All earlier failed/rejected receipts remain.
+
+Full final-source Miri **DEFERRED/PENDING**, never passed. Frozen run/497inputs/
+checkout/receipts/target untouched without progress polling, termination or
+duplicate execution. Implementation/delivery first, genuine final-source Miri
+afterward. BaseESTree/owned types/no newcrates.io dependencies. Full Closure
+parity/CV04b/output-byte-sourcejoins/allfold-rename-inline-motion-merge-deletion
+lineage/fullgoal OPEN, heartbeat ACTIVE.
+<!-- /CV04 signed selector integration -->
+
+<!-- CV04 SwiftUI report work repair -->
+CV04a current repaired candidate (October12), issue#17378: published8b79
+precedes native main `033a1d96819183910069fb2ae1f4f1b472bacfae` (#17367SwiftUI). Initial exact upstream
+b0e794b9 full634/30/strict6/Python46/docs1084 passes EXECUTION ONLY; independent
+reviewWITHHELD for valid repeatedshadow properties causing per-drop elevation
+rescans. Spec066f75bb59 precedes privateobserver/red df0ce275: actualcargo101/
+1PASS2FAIL, N32 yields1024absent/1056late visits versus required32/33; semantic
+inset/standalone/ordercontrol passes. Both original negative review/red preserved.
+
+Repair actual `52554eb128c83bcc128341273f66d4cc0f04f21c` caches the EXACT existing predicate once per expanded
+immutable base part, preserving expansion/shared emitter props, report fields/
+order, gap/align/border filters and supported/inset/standalone behavior. Private
+generic observer is no-op through unchanged publicAPI; no new allocation/unsafe/
+dependency/resource or grammar exemption. Actual authored duplicate declarations
+at32/128 retain exactN/N+1 visits; unsupported enum via publicIR gives2, multi-
+part case5, with complete publicreport equality/order. Authored compiler correctly
+rejects unsupported elevation; no invalid-source resource claim/timing proxy.
+
+Full six-package SwiftUI reverse cone and actualTaskApp Rust package pass
+**637tests/docs/30targets/0fail0ignore**, focus3 repeats excluded. Strict6alltarget
+warnings/unknown-lints, completePython46/Ruff, docs/1085lesson shards/whitespace
+PASS; COMPLETE9rows/actualprocessEXIT0. Distinct fresh full-run Venture profile
+has exactly onebookmark; original shared profile hash unchanged, no interactive
+acceptance skip. No macOS/device/render/runtime/deployment/fullMosaic claim.
+
+Complete native66 diagram/Arc17packages and neutralfixture/script sourceobjects
+retain821/37/1existingGDIignore/strict17/oracle27/Python18 without replay/relabel.
+Compiler48 Rust/Closureprogram/CI/LANGspec and complete script inventory except
+four disclosed geometry/TaskApp upstream leaves remain exact:1248/118/1oldignore,
+933/16/strict4/11production/42native. OtherRustonlySwiftUI changed; programruntime
+exact except disclosed TaskAppREADME. Five unchanged upstream objects exact;
+SwiftUI pipeline adds only observer/work tests/cache repair, README/changelog/
+spec/lesson documented. Native base33 is explicit; live Sanskrit a54 ref drift
+failed first preflight BEFORECargo/receipt, then controlled runner pinned33 and
+records observedref separately. Current-main supplement/review needed, no native
+execution attributed to a newer ref. Subsequent blocks are historical frames.
+
+Final backlog-only source/payload proof and independent exact-final security,
+freshlive main/review/conflict/required exact-head terminal acceptable checks,
+whole three nativeSUCCESS/timestampedClosurecBUILT rows precede auto-merge.
+SAME sole PR17288; published8b CI stillpending, superseded415actualcompleted/
+cancelled after normal and>=120secqueuedgate-only force; currentCI/Miri untouched.
+Actual fetched-main/fullpayload proof precedescleanup/CV04b. All rejection/
+preflight/profile/input/promisor histories preserved. Full final-source Miri
+**DEFERRED/PENDING**, neverpassed; frozenrun/497inputs/checkout/receipts/target
+untouched without polling/termination/duplicate run. BaseESTree/own types/no new
+crates.io deps; CV04b/fullClosure parity/outputjoins/alllineage/fullgoalOPEN/
+heartbeatACTIVE. Delivery first, genuine final-source Miri afterward.
+<!-- /CV04 SwiftUI report work repair -->
+
+<!-- CV04 Monotone Arc integration -->
+CV04a current integrated candidate (October12): reviewed marker3d4/Italian4201
+publication guard actuallyEXIT1 BEFORE PUSH after main advanced. Spec8212b2a7c8
+precedes conflict-free merge of `92f7d0f5e68687bda9c97e989bf9278578b36361` (#17371Monotone/#17325neutralArc),
+rawArc addendum27d00dd9ce precedes actual native `66a761a6a230e74bb40170825d10c54aaaf95fdb`. Older marker3d4
+review/current4201source supplement and759/32 remain accepted only in their own
+source frames; subsequent blocks are historical checkpoints, not current gates.
+
+Exact upstream MonotoneX/Y enum/parser/layout/cubic/metadata imports preserve
+the independently reviewed first-distinct-control/waypoint marker helper.
+Additional authored LR/TB both-axis controls assert exact1/3,2/3 controls,
+both endpoint triangles/area50 and metadata; allBump/Step/Basis/Linear/zero-route/
+work/context/order/resource assertions remain. RustArc tests execute all four
+neutral positive/negative/rotated/zero-sweep raw derivatives, exact IDs and
+unchanged pinned1e-12 tolerance. No native geometry algorithm change; no new
+crates.io/runtime dependency, unsafe, coordinate threshold or limit weakening.
+
+Actual metadata-derived **17package** diagram/Arc reverse cone
+(including Direct2D-C/GDI) passes **821tests/docs/37targets/
+0fail1existingignore** (unchanged GDI render doctest). Focused17 repeats excluded. Strict all-target warnings/unknown-
+lints denial, independent neutral27case oracle, completePython18tests/Ruff,
+doc reconstruction/1084lessons/whitespace PASS. COMPLETE12rows and actual
+subprocessEXIT0 required. No physical renderer/device/deployment claim.
+Complete compiler48 Rust/program/CI/LANGspec sourceobjects retain1248/118/
+1existingignore,933/16/strict4/11production/42native; every compiler validation
+script inventory entry is exact except two explicitly imported geometry leaves.
+Other Rust entries unchanged except five disclosed packages. Neutral script/
+fixture/schema/Arc spec/parity state/roadmap/Italian sources exactly match main;
+Italian accuracy/TS runtime/all geometry backends/package parity are unclaimed.
+
+Final backlog-only complete source/payload proof and independent exact-final
+security precede guarded SAME sole PR17288 publication. Re-audit main before
+push; old415/local checks cannot accept a later source. Require fresh exact-head
+terminal acceptable required checks, conflict-free/review-clean state andwhole
+three native jobs SUCCESS/actual timestampedClosurecBUILT rows beforeauto-merge.
+Actual fetched-main reachability/full payload mode/type/blob proof precedes
+cleanup/CV04b. Original324WITHHELD/red/helper/oracle/doc/placeholder/profile/
+promisor failures remain preserved; issue#17373 still awaits actual merge.
+Full final-source Miri **DEFERRED/PENDING**, neverpassed; frozenrun/497inputs/
+checkout/receipts/target untouched without polling/termination/duplicate runs.
+BaseESTree/own types/no newcrates.io deps; CV04b/fullClosure parity/outputsource
+joins/all transformationlineage/fullgoalOPEN/heartbeatACTIVE.
+<!-- /CV04 Monotone Arc integration -->
+
+<!-- CV04 curve marker repair -->
+CV04a current isolated candidate (October12), issue#17373: independent review
+WITHHELD Bump final324bf0f2 because valid authored LR/bumpY and TB/bumpX
+controls coincide with endpoint tips, collapsing directed triangles; aligned
+Step markers share the defect. The following Bump754/32 block is historical
+execution evidence, not candidate acceptance. Spec79a227dc60 precedes authored
+red00fbdfcaaa: actual cargoEXIT101/2PASS3FAIL, both Bump+Step triangles collapsed;
+nondegenerate controls pass. Wrapper's expected1PASS missed an existing passing
+authored control, so wrapperEXIT1 and the assessed exact failure log stay.
+
+Repair6050f748 selects first noncoincident control/waypoint in endpoint-relative
+order, then opposite endpoint, with at most two candidates/no allocation/new
+dependency/threshold/limit change. Curve commands and metadata stay exact;
+entirely coincident route compatibility remains. Both endpoint triangles have
+exact tips/vertices/area50, covering both Bump axes/Basis/Linear/allStep variants
+through actual parser -> hierarchy layout -> paint on every platform. Existing
+mixed-axis/animation/class/style and all nine work/context/order/resource controls
+remain. Corrected actual native `4605e105b777264d2cd8ee87974adfcb294c2a92` passes **759tests/docs/32targets/
+0fail0ignore**, strict14 all-target warnings/unknown-lints denial; focused15
+repeats excluded. Wrong TB Step oracle6050/4PASS1FAIL, doc-filename4605 failure,
+and trailing lesson placeholder149c failure are retained, never accepted whole.
+Docs-only `83d54d97e7afc2433952770b6ccc924abae30724` preserves exact src/tests/Cargo/build/otherRust objects;
+actual docs reconstruction/1080lesson shards/whitespace PASS, complete8rows and
+actual continuation processEXIT0. No device/raster/renderer deployment claim.
+
+Compiler/shared actual48 bare-selector1248/118/0fail/1existingignore, compiler
+933/16/strict4, all11production/42native retained by complete source identities;
+native13 Compose/TaskApp1352/58/strict20/Python44 remains separately attributed.
+Native integration base `cecfb5db3923e8ca2795e5ba070f4e9e66ca013d`; latest audited Italian main4201 is a
+separate source-equivalence supplement with no added lesson/content/assessment
+execution claim. Final backlog-only payload/object proof and independent exact
+final/native/current-main security precede same single PR17288 publication.
+Fresh required exact-head terminal acceptable checks, conflict-free/review-clean
+state and three complete native jobs/actual Closurec rows remain mandatory;
+auto-mergeOFF until gates. Verify actual fetched-main full payload reachability
+before cleanup/CV04b. Base ESTree/own types/no new crates.io dependencies.
+Full final-source Miri **DEFERRED/PENDING**, neverpassed; frozenrun/497inputs/
+checkout/receipts/target untouched without polling/termination/duplicate run.
+FullClosure parity/CV04b/outputbyte-source joins/all transformation lineage,
+fullgoal/heartbeat OPEN/ACTIVE.
+<!-- /CV04 curve marker repair -->
+
+<!-- CV04 Bump integration -->
+CV04a Bump integration (October12): native main `cecfb5db3923e8ca2795e5ba070f4e9e66ca013d` (#17369),
+parent19d7a79d, adds BumpX/BumpY aliases, semantic/layout propagation, midpoint
+cubic tangents and exact scene metadata. Spec893d9a2af5 precedes conflict-free
+isolated actual `24dc1b645628203a43eeff5f9748f27fe0ab0cdc`. Exact upstream imports only; no own implementation,
+dependency, unsafe addition or assertion/resource/grammar-limit weakening.
+All nine original work/context/order controls and prior Linear/Basis/Step,
+animation/class/style and duplicate-gap fixtures remain. Actual full14package
+diagram cone passes **754tests/docs/32targets/0fail0ignore**, focused9 repeats
+excluded; strict14 all-target warnings/unknown-lints denial, doc reconstruction,
+1079lesson shards and candidate-relative whitespace PASS. Actual session95586
+EXIT0/complete6rows; no general UI/device/deployment acceptance inferred.
+
+Complete compiler/LANG/CV/program/script/CI object proof preserves actual48
+bare-root1248/118/0fail/1existingignore, compiler933/16/strict4, all11production/
+42native acceptance and its independent final9f source review. Every other Rust
+entry remains unchanged except four exact upstream diagram packages. Old
+native20/Compose evidence remains source-attributed, never relabeled. Initial
+promisor-diff failure, successful retry and all older rejected receipts stay.
+All83candidate payload objects are audited; only exact upstream Mermaid/DGspec
+overlaps change, plus new Bump specification/currentbacklog. Final backlog-only
+proof and exact-final independent security precede guarded samePR17288 update.
+Latest Italian-only content/test/lesson extension requires separate protected
+object/payload/lesson identity; no new content/TS/assessment or added-lesson
+execution claim from source equivalence. Fresh exact-head terminal acceptable
+checks, clean review/conflict state/three whole native jobs/real Closurec rows,
+then actual fetched-main/fullpayload proof precede cleanup/CV04b. Auto-mergeOFF.
+Full final-source Miri **DEFERRED/PENDING**, neverpassed; frozenrun/checkout/
+497inputs/receipts/target untouched without polling/termination/duplicate run.
+FullClosure parity/outputjoins/alltransformationlineage/CV04b/fullgoal OPEN;
+baseESTree/own types/no new crates.io dependencies retained.
+<!-- /CV04 Bump integration -->
+
+<!-- CV04 bare selector integration -->
+CV04a bare selector-root integration (October12): published415 and its
+accepted native13/current79 frames precede main `19d7a79da259f365e7fb808719bbfbf516c1ab77` (#17364), which
+admits bare unaliased local snapshots across calling selectors. Spec25fe758691
+precedes the conflict-free isolated merge and tests/docs-only actual
+`48ec9a93d9035ac0f965ed6d5b3eacfbf7c70c7d`. Production source changes only by exact upstream import; both
+assignment/output pre-proof AND post-lowering guards and original limits/
+assertions remain. New paired controls cover both actual roots, true/false
+branches and direct/assigned consumers. By-name mutation must refuse real
+output; value-formal mutation retains exactly one formatter/no main global
+load/store. Eight native source cells require exact2.25/3.5 on every available
+standard backend; present-but-no-result remains a failure.
+
+Actual complete validation passes **1248tests/docs across
+118targets**,0failures/1existing ignore; focused10 repeats
+excluded. Full compiler/shared933/16 and strict4 all-target Clippy with warnings/
+unknown-lints denied PASS; all11 unchanged production BUILD selections and all
+42exact native test targets actually PASS. Doc reconstruction,1079lesson
+shards and candidate-relative whitespace PASS. No full unfiltered LANG claim.
+Complete unchanged other Rust entries/protected programs/scripts/grammars/CI
+and all20diagram/Compose package objects retain actual13 native1352/58 and
+Python44/strict20 attribution. No old execution is relabeled. Original red/
+compatibility/input/lesson/profile/preflight and current initial promisor-diff
+fetch failure remain distinct; the separate inspected retry actuallyEXIT0.
+No implementation/numeric/UB defect is claimed by this bounded integration.
+
+Final backlog-only source proof and exact-final independent security precede
+samePR17288 update. Fresh exact-head required terminal acceptable, conflict-
+free/review-clean gates and three whole native jobs/real Closurec rows precede
+squash auto-merge; actual fetched-main reachability/fullpayload mode/type/blob
+proof precede cleanup/CV04b. Published415/local old checks cannot accept a later
+final source. Auto-mergeOFF. Full final-source local Miri **DEFERRED/PENDING**,
+neverpassed; frozenrun/497inputs/checkout/receipts/target untouched without
+polling/termination/duplicate execution. CV04b/fullClosure parity/outputjoins/
+all fold-rename-inline-motion-merge-deletionlineage/fullgoal/heartbeat OPEN;
+baseESTree/own types/no new crates.io dependencies.
+<!-- /CV04 bare selector integration -->
+
+<!-- CV04 step Compose integration -->
+CV04a step-curve/Compose integration (October12): published candidate
+`848895294295dfa2e3eef077936fa9d5f6f51f6a` accepted direct-output/native source and currentGujarati4bb source
+equivalence before main advanced through Compose1b32c3a to stepcurves
+`99d85abf0300075acccc22a87386e64cd66f0d15`. Spec441c1794ff precedes conflict-free isolated merge
+`13b44b83395a4b836a493f900d37b034a197f651`; no production code/assertion/limit alteration beyond exact upstream
+imports. Nine existing exact parser work/context controls PASS (repeats excluded).
+Full metadata-derived20-package native/downstream tests/docs and task-app Rust
+program suite actually pass 1352tests/docs/58targets,
+0failures/0ignored; strict20 all-target Clippy
+with warnings/unknown-lints denied, Python contract/Ruff, doc reconstruction,
+current lesson validation and candidate-relative whitespace PASS. Original
+shared Venture profile byte hash is unchanged; a distinct initially absent
+full-run profile keeps unchanged native host assertions and one bookmark.
+No general UI/device/runtime/deployment or curriculum accuracy claim follows.
+
+Compiler/LANG actual fa2/2007 acceptance1242/116/0fail/1existingignore,
+all11production/40native controls and strict4 remain attributed to those heads
+through COMPLETE exact compiler/CV/config/program objects. Earlier diagram
+081 and Qt979 receipts remain historical; changed diagram/Compose/shared
+dependencies are accepted only by the new affected-cone run. All previous
+red/input/compatibility/lesson/profile/preflight failures remain preserved.
+Every published81payload entry is audited; only exact upstream-overlap entries
+change, plus this current backlog checkpoint and new integration specification.
+Final backlog-only source proof and independent exact-final security are
+required before samePR17288 update. Fresh exact-head required terminal acceptable
+checks, three whole native jobs/real Closurec rows, clean review/conflict state,
+then actual fetched-main merge/fullpayload proof precede cleanup/CV04b.
+Auto-mergeOFF; prioraf CI actuallycompleted/cancelled. Current848 checks cannot
+accept a later published final source. Full local Miri **DEFERRED/PENDING**,
+neverpassed; original frozen497inputs/run/checkout/target/receipts untouched
+without polling or termination. Full Closure parity/outputjoins/all lineage,
+CV04b/fullgoal/heartbeat OPEN; own types/baseESTree/no new crates.io deps.
+<!-- /CV04 step Compose integration -->
+
+CV04a bounded-root/direct-output reconciliation (October12): main
+`e18c68942668e04b1993c8b3a25d3be2085d9568` (#17352) conflicted with publishedaf in adjacent compiler tests
+and two README descriptions. Spec50a863a/resolutionf120 retained both sides,
+all nine upstream local-root classifier changes and #17350 assignment guard.
+[#17363](https://github.com/adhithyan15/coding-adventures/issues/17363) independently
+identified a direct-output proof cached across by-name selector promotion.
+Spec2ecbe83 preceded redf6c2036e:0PASS/2FAIL (admission plus distinct four-layer
+value-input135-depth rejection). Spec c107/corrected red270458c7:1PASS/1FAIL,
+expected refusalFAIL/valuePASS. No wrong-number/UB or limit-weakening claim.
+
+First guard679 focused6PASS/full927PASS1FAIL16targets remains rejected: unchanged
+conditional user-defined abs/literal output lost static Boolean tracking.
+Spec22927c precedes output-only posthelper: initial proof AND current runtime
+proof, or strict TOP-LEVEL conditional with BOTH branches runtime-proven or
+no-call context-free finite literal arithmetic. No resurrected mutable selector/
+static-variable facts/global literal laundering/nested multiplication fallback.
+Original compatibility test stays unchanged; corrected tracked-variable refusal
+passes. Intermediate7a invalid-declaration fixture failure remains distinct.
+
+Actual runtime `fa2e2a1ca45686c9dc8bc963050ef1db4938565c` passed929 compiler/shared tests/docs/16targets,
+strict4 all-target Clippy with unknown-lint denial, actual document reconstruction
+and four new exact native controls: selected sums5/2, override/literal3/1.5,
+direct value selectors1/0,1/1,3/1,4/15, and upstream bounded-root case. Both
+alias positions, all four exponential families, prior quadruple2/3 and every
+old resource/refusal assertion remain. Its whole receipt later FAILED two
+lesson filename slugs and is preserved. Docs-only `200762634d24ec9621f66104716e64f3126c49ed` retains seven
+complete runtime/config/spec/TypeScript objects, corrects1073 lessons/whitespace,
+and actually runs all11 unchanged production BUILD selections and36 remaining
+native cases (40 total). Together these attributable native executions pass
+**1242 tests/docs across116 targets**,0failures/
+1existing ignore; focused8 repeats are excluded. No full unfiltered LANG claim.
+
+All other Rust entries, whole programs/scripts/CI/grammars and fourteen diagram
+package objects preserve earlier source/execution. Diagram752/32 remains at081;
+controlledQt629/25/strict6/Journal3/Python43/Ruff remains at979, retaining its
+profile failure and separate fresh-profile acceptance. No older execution is
+relabeled. All reds/compile/input/compatibility/lesson/preflight failures remain.
+
+Final backlog-only head requires complete source/config/lesson proof plus exact
+independent security before non-force samePR17288 publication. Fresh exact-head
+required terminal acceptable checks, whole3OS real Closurec logs, clean reviews/
+conflict-free state, then actual fetched-main/fullpayload mode/type/blob proof
+precede cleanup/CV04b. Old publishedaf CI cannot accept this source. Auto-merge
+OFF until those gates. Full local final-source Miri **DEFERRED/PENDING**, never
+passed; frozenrun/checkout/497inputs/receipts/target untouched without polling.
+Full parity/CV04b/ingestion/output-byte joins/all transformation lineage OPEN;
+baseESTree/own types/no new crates.io deps, fullgoal/heartbeat ACTIVE.
+
+CV04a current-main integration checkpoint (October12): main #17353 adds Swimlane
+edge curves. Actual isolated merge `a6aa4ad14bd85823b4fcb4c9b2d3e2c85b19b9bd`
+passed seven existing indexed-target controls, then the fourteen-package suite
+failed E0063 before any target executed: the duplicate-gap fixture omitted the
+new required curve field. Spec-first [curve integration](CV04a-swimlane-curve-integration.md)
+preserves all safety/resource assertions, adds alternating curve propagation and
+complete authored IR/update-order controls. Actual repaired source `08178b01988a8d8f7a33f39514e6bae81fc62560` passed **752 tests/docs across32 targets**
+in all14 affected diagram packages, zero failures/ignores; focused9 controls are
+repeats and excluded. Strict all-target lint, actual document reconstruction,
+1071 lesson shards and whitespace checks PASS. Original E0063 receipt remains
+rejected. Complete unchanged Rust entries outside four diagram packages and
+Mosaic Qt preserve prior reviewed compiler/lexical/ALGOL/LANG source attribution;
+all Mosaic Qt/program/script/CI objects match actual controlled-native979a1b80.
+No earlier native result is relabeled as new execution. Main curve-only configs
+now preserve omitted animation fields by upstream design; exact whole-diagram
+order/work controls verify that policy. No safety/resource assertions removed.
+Final backlog-only head requires exact source-object proof and independent
+security before updating the same PR. Fresh exact-head native CI/terminal checks,
+conflict-free clean reviews and actual merge/payload78 proof remain pending;
+sole active PR #17288, auto-merge off.
+Full Miri **DEFERRED/PENDING**, frozen run/497 inputs/receipts untouched.
+CV04b/full parity/source-output/full transformation lineage remain OPEN.
+**Last reprioritized:** 2026-10-12
+**Current selection:** CV04a exact lexical source intervals and bounded
+shared-consumer/native reconciliation, sole PR #17288. CV04b ingestion/wire
+contract and full Closure parity/source-output/transformation lineage remain open.
+**Current audit base:** `cecfb5db3923e8ca2795e5ba070f4e9e66ca013d`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
+
+## Delivery priority and deferred Miri (2026-10-11)
+
+### Current by-name proof and animation reconciliation
+
+Sole active implementation PR17288 retains the lexical source-interval API;
+CV04b and full parity/source/output/transformation-lineage delivery remain OPEN.
+Main `170ce3532ed40072e1f62a2c76bbe8675c46a554` adds ALGOL local-root proofs (#17344) and Swimlane animation
+configuration (#17347). Independent review withheld current-main acceptance.
+
+[#17350](https://github.com/adhithyan15/coding-adventures/issues/17350): native
+probe4ca25043 admitted a root promoted to shared by-name storage during selector
+lowering, while cached pre-lowering assignment proof admitted real output.
+Spec0602319e preceded original-code redccf86302: exact refusal failed, value
+control passed. The repair retains pre-proof AND post-lowering proof, covering
+both root positions, both value-selector arms, exactly one formatter and no
+shared-storage loads/stores for value controls. Distinct2.25/0.0 procedure roots
+execute both arms with exact outputs2/3 on every available standard backend.
+Original ordinary4ca baseline1229/111/48commands passed with one existing ignore
+but remains SECURITYREJECTED; no numeric-error or UB claim is inferred.
+
+[17355](https://github.com/adhithyan15/coding-adventures/issues/17355): animation configs repeated full-edge
+discovery. Spec63aa152a/red436e62a2 recorded1089 visits for32 directives/33edges,
+two executed failures. Context speceb06ff80/red531129e3 recorded two legacy
+node-metadata/quoted-label refusals. One ordered IDindex now serves configs,
+classes and styles. Actual discovery/lookups/matches are separate; duplicate-ID
+updates, configuration order, unknown-target refusal and complete authored IR
+remain exact. Layout retains animate/slow/fast alongside old ID/classes/styles/
+labels/kinds/markers/lengths and all spacing/resource/overflow controls. No new
+dependency, grammar/input exception, unsafe code or whole-pipeline linearity.
+
+Actual runtime source `d48e8da0eef6c2014227f5be84a2f2f5505a436e` passed923 ALGOL/shared tests/docs/16targets,
+830 diagram tests/docs/34targets, strict19-package all-target lint and actual
+document reconstruction. Its later lesson validation FAILED (two generated
+placeholders), and that incomplete receipt remains separate. Docs-only
+`bf728ab44ed7089c68b7c05389f0e878aca633a2` corrected them, validated1070 lessons/whitespace, and actually ran
+all11 unchanged production BUILD commands and36 exact native controls. Seven
+complete runtime/config/spec/TypeScript trees equal the original executed frame.
+Together these attributable executions pass **2062 tests/docs across146 targets**,
+zero failures/one existing ignore; focused2+7 repeats are excluded from counts.
+Initial UTF-8/cone preflight refusals executed no Rust tests; all receipts remain.
+No full unfiltered LANG acceptance is claimed. Original compiler/lexical/CV and
+other consumers retain their own unchanged complete source proofs and execution.
+
+Final backlog-only head requires complete source-object equality and independent
+exact-final review before non-force publication to PR17288. Fresh conflict-free,
+review-clean terminal acceptable required checks and whole Linux/macOS/Windows
+SUCCESS with actual Closurec completion log rows precede squash auto-merge.
+Actual fetched-main merge reachability and exact complete payload modes/types/
+blobs precede cleanup and CV04b selection; no local/prior-head hosted acceptance.
+
+Full final-source Miri **DEFERRED/PENDING**, never passed. Frozen run/checkout/
+497inputs/receipts remain untouched without polling or termination. Preserve
+base ESTree canonical boundary/own types/no new crates.io dependencies, all
+limits and independent ALGOL ownership. Full goal and heartbeat remain ACTIVE.
+
+### Historical edge-target resource repair delivery
+
+Main `e32e5788f6c51fc8927bdb48e2955a5721a39195` adds identified-edge styling (#17342), after predecessor
+eec87335 passed independent review/publication for its b1f4e459 frame. New-main
+review is NOT ACCEPTED until this bounded repair: class/style targets performed
+full-edge scans even for existing node-only targets over unidentified edges.
+Spec a2849e9d and corrected work definition3f96e59f preceded actual red source
+f2cc672d7d. Public class/style controls each observed1,024 actual edge predicates
+for32 edges/32 targets; two work tests failed, one exact duplicate-ID/collision/
+precedence control passed. [#17346](https://github.com/adhithyan15/coding-adventures/issues/17346)
+tracks the defect. Separate dd9b81c8 integration compile rejection has zero
+executed tests for the new classes/style fields; preserve it separately.
+
+Actual repair `a9dc9dc65eebad65c23615820484db0bbf63582e` builds one deterministic owned ID-to-ordered-edge-
+indices index, visits every authored edge once, skips absent IDs and copies
+each distinct key once. Target queries visit only actual matches; duplicate
+IDs, node/edge-ID collisions, application order, class deduplication and inline
+style precedence remain exact. Discovery and real matching/application work
+are counted separately; existing node lookup/style merge and whole pipeline
+linearity are not claimed. Native controls at32/128 edges/targets assert exactly
+E index visits/D lookups/zero unrelated matching visits; the collision control
+asserts3 index visits/4 queries/8 actual matching updates and complete styles.
+Layout preserves distinct IDs/classes/styles alongside the unchanged original
+duplicate-gap counters and metadata. UTF-8 and monotone-label controls remain.
+
+The full metadata-derived fourteen-package diagram cone passes **744 tests/docs
+across32 targets**, zero failures/ignores, ten focused controls included in744,
+strict all-target Clippy, actual document reconstruction, lessons and whitespace.
+Every other Rust package entry and whole programs/CI/scripts/TypeScript tree is
+identical to actual c7970229: retain its original1226 ALGOL/shared tests/docs,
+110 targets, eleven production commands/34 exact native controls/strict lint and
+31 Python controls at that original head, without relabeling execution. Existing
+compiler/lexical/CV validation remains attributed to its original source proofs.
+The final backlog-only head must retain seven complete source/config/lessons
+objects and receive exact-head independent review before non-force same-PR
+publication. Fresh required exact-head CI/whole Linux/macOS/Windows native logs
+remain PENDING; no prior-head/local acceptance replaces them. Auto-merge off
+until current clean/review/terminal checks, then actual main reachability/payload
+verification. Full Closure/CV04b/transformation/output contract remains OPEN.
+
+Full final-source Miri **DEFERRED/PENDING**, never passed; preserve frozen run,
+checkout/497 inputs/receipts without polling or termination. One active PR17288.
+
+### Historical edge-ID and document-contract delivery reconciliation
+
+Published predecessor 8c82b405 is superseded by this reviewed delivery candidate
+only after final-head security and non-force publication. Actual required CI
+38236024433 failed in document reconstruction because the new Mermaid shard
+omitted its heading digest. The original hosted/local failure logs are retained;
+the corrected 04480-UNRELEASED-1da42e1a.md identity is derived from its exact
+heading and verified by the shared helpers. The real reconstruction command
+passes; no CI or document contract is weakened.
+
+Main b1f4e459 adds edge IDs (#17337) and conditional quadruple-exp controls
+(#17336). Spec c71ea647 preceded reconciliation/tests. Independent P2
+[#17343](https://github.com/adhithyan15/coding-adventures/issues/17343) and native
+red a09d81cb demonstrate the admitted multibyte separator panic. Advance over
+the complete whitespace scalar, retaining the bounded styled-label cursor and
+pair-maximum index. Two-byte/three-byte public parser controls compare full edge
+metadata against no-ID controls; chains and absent IDs retain authored order.
+Duplicate constraints now carry distinct IDs and layout preserves each in order
+alongside exact original resource counts. Initial 0bcb full-cone fixture compile
+rejection is separate, with zero tests executed; it is never accepted as red or
+green. Original #17334/#17335 and other validation receipts retain their heads.
+
+Actual frozen source `c79702290e6d6db34f58a15a0166367887f5cbab` passes **740 diagram tests/docs across32
+targets**, **919 ALGOL/shared tests/docs across16 targets**, strict all-target
+lint over14 diagram plus4 ALGOL packages, eleven unchanged LANG production
+commands and34 individually exact native backend controls. Total executed
+suite rows excluding the separately repeated seven focused controls:
+**1966 passed/142 targets/0 failures/1 existing ignores**.
+Full unfiltered ALGOL matrix acceptance is not claimed; #12032 remains separately
+owned. Lesson validation, lesson tests, whitespace and complete document
+reconstruction pass. The final documentation-only head must retain all actual
+runtime/config/lesson object identities and receive independent exact-head
+security before publication. Required fresh exact-head CI, whole successful
+Linux/macOS/Windows jobs and actual Closurec completion logs remain PENDING.
+Auto-merge stays disabled until current conflict-free review-clean terminal
+acceptable checks, followed by actual fetched-main merge/payload verification.
+
+Full final-source Miri is **DEFERRED/PENDING**, never passed. Its original frozen
+checkout/run/497 inputs/receipts remain preserved without polling or termination.
+CV04b, source-bound inventories/ingestion reuse, composite lineage, remaining
+fold/rename/inline/motion/merge/deletion/output mappings and full Closure parity
+remain open. Keep one active shared PR #17288 and the completion heartbeat active.
+
+### Historical current-main resource review repair (2026-10-12)
+
+Published candidate `1180fe26ba82a68ba7a606a27dae552214b38319` is still the
+single active PR #17288. Its exact-head native CI run 38214542915 remains
+pending and not accepted; auto-merge is disabled. Actual frozen integration
+`c809ddccc820775067ee07c08f82d7107a465de2` passed **1,859 Rust tests/docs across
+135 targets plus 43 Python controls**, strict lint and independent review:
+eleven unchanged LANG production BUILD commands, 32 exact ALGOL controls and
+the rebuilt original #17313 CLI counterexample. #17313 is closed by #17317.
+The later Malayalam increment has independently reviewed seven-tree source
+equivalence, with no new execution or curriculum acceptance claimed.
+
+Swimlane minimum lengths on main e7fb8404 pass **728 tests/docs/32 targets** and
+strict lint at isolated `88e05ce57f47b4e0691f2a08344b5fe39d670821`, but independent
+security review is **NOT ACCEPTED**: valid duplicate edges cause new per-gap
+full-edge scans. Resource issue [#17334](https://github.com/adhithyan15/coding-adventures/issues/17334)
+requires a once-built canonical pair maximum index and actual operation-count
+controls. The DG04 work contract is committed before repair tests/source. Use
+the existing separate delivery-repair worktree and a separate Cargo target;
+retain frozen 88e/c809 receipts, published candidate and original Miri inputs.
+Spec commit `aec8c1b140` preceded red controls at `5a4fe979b5`: the actual
+layout visited **64,512** constraint edges for 64 nodes/512 duplicate edges,
+instead of 512, and a separate caller-owned integer gap sum overflowed. Original
+red failures and the rejected review are retained. Repair source
+`67f0f07cc3103667c446ff8742abe917a6a4c7b2` builds one borrowed canonical pair
+maximum index and accumulates geometric units without integer overflow. Actual
+full fourteen-package downstream execution passes **731 tests/docs/32 targets**,
+zero failures/ignores, strict all-target Clippy, whitespace checks and **1,056
+lesson shards/zero problems**. Four-direction controls check exactly 512 edge
+visits/126 indexed queries, reversed/default maxima and preserved edge metadata.
+The original other Rust package and runtime/config objects remain unchanged.
+Final-head independent security, same-PR publication and fresh exact-head CI
+are **PENDING**. No safety or production-limit tests, dependencies, owner decisions or full parity/lineage
+completion criteria are weakened. Full final-source Miri is **DEFERRED/PENDING**,
+never passed; its existing frozen run is neither polled nor terminated.
+
+### Shared-crate main reconciliation (2026-10-12)
+
+Historical head `d69e6113f6775ab10df5fd4145a80cd0699d74e1` was superseded by
+reviewed published 1180fe26; old CI run 38198479132 completed/cancelled and is
+**not accepted** for the new head. Current exact-head native CI remains pending.
+Upstream PREP01 octal stringizing made the C frontend changelog conflict.
+Isolated reconciliation `0e5438948841061d0d03577b7a549d2ef9dbebb6` has exact
+parents `[d69e6113, b163f876]` and retains both upstream octal and existing
+Windows native-conformance entries. Fifty of 52 candidate payload entries
+retain identical blob/type/mode; only the two C frontend documents combine
+both branches. All twenty protected compiler/lexical/ALGOL/Mermaid/TaskApp/CI
+source identities match the previously tested integration.
+
+The actual metadata-derived reverse dependency cone is only `c-to-semantic-ir`.
+It passes **127 tests/docs across four targets**, zero failures/ignores, strict
+all-target lint and independent bounded security review at actual source
+`0e5438948841061d0d03577b7a549d2ef9dbebb6`. Raw octal spelling, exact expansion
+ancestry and default/exact/cumulative/refusal bounds are retained. There are no
+new crates.io dependencies or weakened production limits. Final checkpoint
+documents follow this execution. Final 1180fe26 preserves all five complete
+runtime/config trees from that actual execution and passed independent final-head
+review before publication. Required native CI and the newer resource repair
+remain **PENDING**. No receipt is relabeled to a later head.
+
+Retained actual integrations: Mermaid **524/8** at
+`3306b2ba14a8f1471010605923fb4ca79298eb1e`; ALGOL **1,219/107**, all eleven
+unchanged production BUILD commands and 31 exact native controls, at
+`1aa64e76442a2979808e77743c8e075d04476584`; controlled TaskApp **636/27 plus
+43 Python tests**, strict lint/Ruff and a fresh documented bookmark profile,
+at `ec77f269e8949528ecc7af6d145cc38d90be9268`. Their independent reviews pass;
+prior failed/shared-profile receipts remain retained. Known generated Flutter
+helper defect [#17313](https://github.com/adhithyan15/coding-adventures/issues/17313)
+and generic current-main acceptance remain pending. Unfiltered LANG failures
+stay separately owned in #12032; no generic UI/Dart or curriculum acceptance
+is claimed. UI90 native-control decisions and PREP01 MacroNib/MacroOct consumer
+priority remain authoritative without expanding this Closure slice.
+
+Full final-source Miri is **DEFERRED/PENDING**, never passed. Preserve its frozen
+checkout/run/497 inputs and receipts without progress polling. Keep one active
+PR; require current exact-head terminal acceptable CI/reviews, conflict-free
+state and fetched-main merge/payload proof. CV04b, full parity and complete
+transformation/output-byte lineage remain open; heartbeat active.
+
+### Native CI disk-capacity follow-up (2026-10-12)
+
+Published CV04a candidate `f5389812a0469db06f4a7b8d09db48a63f12ce57`
+remains unmerged. Required Linux job 114607733873 in run 38184271841 failed
+with hosted-runner diagnostic `No space left on device`; the affected-package
+step is incomplete and is **not accepted**. Its existing reclaim step reported
+72 GiB free before later setup/build. A targeted rerun request was rejected
+while other native jobs remained active. The [capacity repair specification](CV04a-native-CI-disk-capacity.md)
+was committed before its implementation in a separate isolated checkout.
+The bounded repair omits Cargo dev/test debug information and incremental
+caches in both CI package steps while retaining codegen partitioning,
+assertions, overflow checks, production limits, package selection, native
+checks and lint. Actual local repair source `c6f042e5c0bea5a307e0eb5064e85cc0820fd394` passes the dev/test profile safety
+probes (debug assertions and arithmetic-overflow checks remain enabled), all
+**299 lexer/JavaScript-lexer/CV tests/docs across 14 targets** (three existing
+ignored docs), **1,085 Closurec tests/docs across 179 targets plus eight example
+tests across two targets**, strict all-target lint, **86 workflow-contract tests**,
+and **739 Go test-pass events across 15 package results** plus vet. The emitted
+production plan is non-force, classifies the workflow edit as Rust-scoped, and
+retains the actual Closurec command on Linux/macOS/Windows. All package/program,
+script and grammar trees match the earlier published source. Final docs are
+reconciled after this actual execution; no receipt is relabeled as later source.
+Final exact-head independent security/publication and new required native CI
+remain **PENDING**. No hosted disk saving or completed CI is claimed.
+
+Fresh audited main `5dffd891d6f0c2edc2988a059094edf1b3a55cf5` has separately
+tested/reviewed integrations: ALGOL **1,217/106** at `319593947890c40d36ccc7b4c164e2887410ffa4`
+(11 unchanged BUILD commands, 30 exact native controls); TaskApp/Venture
+**636/27 plus 42 Python** at `82f587ba9c1ba96a463d15142acc31965d91fc56`
+using a fresh supported bookmark profile after preserving the original failed
+shared-profile runs; diagrams **725/32** at `b27081bbf9f1f207b8ee9dcb622a628b6dad6ca2`.
+Strict lint and independent bounded reviews pass. All 49 prior payload modes/blobs
+are retained. Upstream TaskApp helper-definition defect [#17313](https://github.com/adhithyan15/coding-adventures/issues/17313)
+was reproduced by owned CLI generation and remains open; narrow execution/security
+reviews do not certify that generated-code issue or full current-main acceptance.
+
+Full final-source Miri remains **DEFERRED/PENDING**, never passed. Preserve its
+original frozen checkout/run/497 inputs and receipts. CV04b, full parity and
+transformation/output-byte provenance completion remain open; heartbeat active.
+
+### Latest native CI repair checkpoint
+
+Main `846a01d6116700be742a9d6dbef06ffc66b381d9` is reconciled in the isolated
+delivery checkout through `4652efc1d13ec73afa9a2df1dca365b761ac397d`. The later
+diagram suite actually passed **722 tests/docs across 32 targets** at
+`bb12b3a44a1b71c2c12a8aabcf5c557ae7322435`; ALGOL/LANG passed **1,211/104**,
+including 28 exact native regressions and all 11 unchanged BUILD commands,
+at `e373cd13118ac85b2efaf32b77225257dfb0e0a1`. Strict lint passed both cones.
+The Punjabi-only extension preserves their entire source trees; no new execution
+is inferred from source identity. Older receipts below retain historical heads.
+
+Required CI run 38169475256 at published `a46ca7ffb2087a80f55a1bd4f4b3cbe8ebfbf27d`
+**failed**: Windows completed Closurec but failed empty-host resolution and a
+Unix-only killed-child exit expectation; Linux lost hosted-runner communication
+with an incomplete package step. Neither job is accepted. Both Windows failures
+reproduce on unchanged integration source. The [bounded repair spec](CV04a-native-CI-portability-repair.md)
+was committed before tests and source. It rejects empty resolver hosts before OS
+lookup and requires exact Windows kill code 1/Unix signal status with every
+original supervisor bound retained. Downstream fixture repairs provision the
+required owner-only Windows KEK ACL, use a native absolute escaped broker path,
+and observe the Hue failure callback before stopping. Production permission,
+containment, scheduling and test assertions are retained; no new dependencies.
+
+Actual repaired source `47558e05196642ce2b83ee5eaa28321c9c3f4fb6` passes the complete
+12-package Chief reverse cone: **229 tests/docs across 30 targets, zero failures
+or ignores**, and strict all-target Clippy. The first attempt at `1e50936ae177`
+remains FAIL (220/9); seven CLI ACL failures and the daemon path failure also
+reproduce on unchanged source, while the Hue failure is a callback-observation
+race. Original CV04a lexer/compiler payload sources are identical. Final exact-head
+independent security and new required CI remain pending before pushing/merging
+the repair in the existing PR #17288. Auto-merge remains disabled. Full local
+Miri remains **DEFERRED / PENDING**, with the frozen run/497 inputs preserved.
+This checkpoint supersedes older current-main assumptions without relabeling
+historical execution. CV04b and full parity/lineage completion remain open.
+
+The human user explicitly authorized finishing Closure implementation and delivery
+first, then returning to local Miri. This overrides the historical local-Miri-before-
+push sequencing below. Full local Miri is **DEFERRED / PENDING**, never passed.
+The [delivery validation specification](CV04a-delivery-with-deferred-miri.md)
+preserves required CI, native/compiler/downstream tests, strict lint, exact-head
+independent security review, one active implementation PR, and current clean
+terminal-check/review/conflict evidence before squash merge.
+
+The running Miri checkout remains frozen at candidate `d7c8ae25ceaf` (tested source
+`b1dfc5bc242e`) with all 497 inputs and receipts preserved. Delivery continues in
+the separate `closurec-source-spans-delivery` managed worktree and separate Cargo
+target. Current-main reconciliation is committed at `535d53c47d1e`, retaining
+both standard range capture and the upstream division-only JavaScript API, plus
+the Windows conformance linking and all upstream PREP01 C changelog entries.
+Baseline isolated validation at actual tested source `3a9fe86b15bc1951b3cc9bd86cf1996fd3cf6e0e` passes:
+42 Cargo commands, 14,397 tests/docs across 819 targets, zero failures and 69
+existing ignores. This includes 194 shared packages, Closurec 1,093 tests,
+all 11 unchanged LANG-AOT BUILD commands, 26 exact native regressions and strict
+shared/compiler/LANG Clippy. Full Go build-tool tests (739 passing events), vet
+and rebuild pass. The complete unfiltered LANG-AOT failure remains in #12032;
+no original filters or assertions were weakened.
+
+Main `b0cd9e15aa467712fde66804071bec1b12fc0ed8` is reconciled at actual tested source `ff0aece78916375c6f0ab304b118594c3c6e22b3`. The five-package ALGOL/Python reverse-dependency cone passes 1,224 tests/docs across 106 targets, zero failures/1 existing ignores, including every 11 unchanged LANG-AOT BUILD command and 27 exact native ALGOL regressions; strict all-target Clippy passes for the complete affected cone. The earlier 14-package Mermaid/diagram suite passed 720 tests/docs at `d54f8a893e4790aa1ee758ef6fe0adc61174334b`; those package objects are unchanged. Rust changes since baseline remain confined to these seven newly validated upstream packages. Closurec, Go build-tool, CI definitions and Miri runner objects are unchanged from baseline. Actual non-forced production planning selects Closurec on all three native platforms; planning is not native CI. Receipts retain their real tested heads. The known complete unfiltered LANG-AOT failure remains in #12032; no production selections or assertions were weakened. Full local Miri remains **DEFERRED / PENDING**.
+
+Final exact-head independent security, required native CI, review-clean and
+conflict-free state remain delivery gates; current review/CI receipts are linked
+from [PR #17288](https://github.com/adhithyan15/coding-adventures/pull/17288) and the linked issues.
+It remains the sole active shared-stack implementation PR. Full local Miri stays
+**DEFERRED / PENDING**. Earlier receipts retain their actual tested heads and
+remain historical evidence; the fresh consumer receipt covers the changed sources.
+
+Each affected PR must state local Miri **DEFERRED / PENDING**. After implementation
+delivery, obtain genuine full acceptance against final delivered source, rerunning
+where intervening changes invalidate the old inputs. Do not terminate the existing
+run to implement this sequencing change. Do not weaken production-limit or safety
+assertions, bypass required CI, or ignore an applicable demonstrated UB failure.
+Keep #16970, provenance epic #15830, and the heartbeat open/active until their full
+contracts are achieved. Delivered implementation with deferred validation is not
+fully validated completion.
+
+## CV04a source capture progress (2026-10-07)
+
+Specification `3c8498f7f4` was committed before tests and source. Actual API-absent
+compile-red controls precede implementation. The source-bound snapshot now captures
+standard matcher/skip/fallback/EOF pieces and independent UTF8/scalar/UTF16
+coordinates. Its read-only detached-partition validator checks complete byte
+coverage, ordinals and coordinate replay; it does not authenticate source bytes,
+recognize Token versus Trivia or validate generic CV metadata. No required Token
+field or dependency was added.
+
+Initial local range controls pass: twelve generic tests and four real JavaScript
+tests, including all14 ECMAScript editions and nested template/regex/division
+modes. Existing lexer132 and JavaScript lexer25 tests plus both strict all-target
+Clippy checks pass. Independent security passed exact lexical candidate `aabf8c847d`, including
+1,555 independently checked coordinate strings, hostile usize offsets and
+capacity boundaries. The whole frozen candidate `774a8121eecd` subsequently
+passed independent final security review, including the spec-first two-helper
+Windows emitted-C repair. Its six original failures are green in the full C
+package (80 tests), with unchanged runtime equivalence. Full Closurec passes
+1,093 tests across181 targets with zero ignored and strict all-target Clippy.
+The uncontested 181-package shared rerun passes12,224 tests/docs across523 targets
+with68 existing ignores and strict all-target Clippy. The earlier shared-target
+rebuild invalidated rustdoc dependencies (E0460/E0463); its failed logs remain
+preserved and are excluded from acceptance.
+
+Fetched main `ebee9d93ba02` merged conflict-free. Latest Perl/Mermaid/paint
+consumers pass 479 tests/docs across10 targets with zero ignored; strict all-target
+Clippy passes those three plus ALGOL-IIR and LANG-AOT. The prior full five-consumer
+suite is retained as FAIL:1,844 passed/10 failed/1 existing ignored across68 targets.
+All ten failures belong to the already tracked ALGOL multidimensional capture
+cluster / JVM proven-column guard in [#12032](https://github.com/adhithyan15/coding-adventures/issues/12032).
+Clean main at `ebee9d93ba02`, without CV04a, independently reproduces representative
+cells474:NativeAot (BackendRefused) and473:Jvm (Stack size too large), as does the
+candidate. This verifies two cells, not every failing cell separately.
+
+The unchanged production LANG-AOT BUILD intentionally excludes the red unfiltered
+matrix/guard. All49 other explicit targets and all59 assertions selected by its10
+matrix filters actually ran successfully in the broad suite. No BUILD/assertion
+edits were made; the complete LANG-AOT package is not claimed green. Exact native
+baseline logs, source/cell/binary hashes and the full failed suite are preserved,
+with the existing issue updated. The temporary clean-main worktree is archived
+after its executable/receipts were saved outside the worktree; both its directory
+and Git registration are verified absent.
+
+Main `b490bcf88a0f` then merged after a conservative50-package dependency audit
+proved no Miri dependency overlap. Its changelog-only C conflict retains both
+PREP01 shifts and Windows linking entries; the automatically merged native helper
+retains the platform condition. Refreshed full C validation at merge candidate
+`5f817b375a71` passes82 tests across4 targets, zero ignored, and strict all-target
+Clippy. Neither lexical source nor Miri transitive source changed. Independent
+whole-diff security passed exact `31cb1127fc1c`; refreshed merge/docs review and
+final production planning remain pending. No accepted delivery is claimed.
+
+The first local Miri compiled lexer metadata before the final lexer source edit
+(22:36:27 versus22:38:21 UTC). Its stopped stale-source run is excluded. The full
+final-source script restarted at `0fb99935d187`, with correct23:04:34 lexer
+compilation and unchanged sources, but actually exited101 after7223.9 seconds.
+Runtime-core/dynval253 tests and four Twig doctests passed; Twig library aborted
+at host_read_byte_returns_value_in_dest because isolated Miri forbids reading
+stdin. This was an unsupported host operation, without a UB report. The complete
+failed log/receipt is preserved. A zero parsed failed-test count does not turn
+an aborted target or failed script into acceptance.
+
+[Runner specification](CV04a-miri-host-input-validation.md) at `130e0b72b4`
+precedes red recording-runner controls and the narrow repair. The exact existing
+host/read_byte test reproduces the isolation diagnostic and then passes with
+controlled EOF plus the supported host-access flag. No assertion or test filter
+changed. The canonical script now keeps runtime-core/dynval isolated and gives
+only Twig host access with stdin redirected from /dev/null; UB/aliasing/alignment/
+data-race checks remain enabled. All three runner controls and shell syntax pass;
+the test fixture's Ruff ordering was corrected. These controls are not actual
+full Miri acceptance. The former local pre-push requirement is superseded by
+the explicit October 11 deferral; final-source Miri remains a completion obligation.
+
+Current main `52b53049ecb3` is merged, preserving both C changelog entries and
+every upstream change through that base. At actual tested candidate
+`b1dfc5bc242e3518fd208e29dd862bb13a88c0fc`, all15 consolidated commands pass:
+1,818 tests/docs across83 targets, zero failures and one existing ignore. These
+include six full Perl/Mermaid/paint/ALGOL-IIR/C/Compose suites, every unchanged
+LANG-AOT production BUILD command, both new sqrt/entier and sqrt/nonnegative
+native regressions (exactly1 selected/pass each), and strict all-target Clippy
+for all seven consumers. The previous known LANG-AOT full FAIL and two exact
+old-base baseline cells remain retained. PROGRAMS insertions shift numeric cell
+indexes; new cell probes must rediscover actual source.
+
+Independent security passes exact `b1dfc5bc242e`. Its rebuilt actual Go tool
+passes12 CI-gate/toolchain fixture tests and vet; the non-forced production plan
+selects the real Closurec test command on all three native platforms. Planning
+does not establish native CI success. The corrected complete local Miri script
+is still running against that frozen candidate, with497 source/runner hashes
+unchanged. It passed the formerly aborting host-input test inside the actual
+full run, but its unfinished Twig library target is not accepted.
+
+Historically, main through audited `e71e05f3b839` was deferred until this run
+terminated. The October 11 priority override permits isolated reconciliation now.
+The conservative source audit detects the workspace Cargo.toml adding an
+unrelated member; do not bypass the merge guard or assume equivalent resolution.
+Fresh dependency/input evidence is required when reconciling main. Other newer
+Perl/Mermaid/diagram/C/JavaScript-IIR/ALGOL/native-emitter and Go selector changes
+require validation of their actual current consumers. Newly added ALGOL native
+controls and Go source-collection/graph-diff/resolution fixture tests must be
+selected explicitly; older passing counts do not cover them. Preserve all
+failure receipts, and refresh final-head review/planning after reconciliation.
+Full local Miri and native CI/actual merge acceptance remain pending.
+No source branch has been pushed and no CV04a PR exists. #16970 remains open
+through CV04b; these local results do not claim accepted delivery.
+
+The real ES2025 grammar rejects bare U+2028/U+2029 between tokens (`a<LS>b`,
+`a<PS>b`), although coordinate capture handles all four ECMAScript terminators in
+admitted matches. Capture preserves the legacy rejection and has an explicit
+negative control. Record this grammar parity gap for repair after the lexical
+source contract; coordinate support is not grammar parity. Per-edition string
+escape policy also varies, so raw-slice tests select actual String tokens rather
+than assuming a uniform processed value. This refinement is documented in a
+lesson without changing grammar or optimizer behavior.
+
+CV04b still requires serialized source/root identity and lexical inventory,
+source-domain import validation, ingestion token reuse through CLOC27 leaves,
+and real compiler-process JS/map/manifest neutrality. Composite/occurrence,
+remaining folds, mutating passes and output mapping remain later requirements.
 
 ## Recovery and provenance acceptance (2026-10-07)
 
@@ -228,6 +1561,47 @@ Build-tool uncached tests/vet and 18 Python CI gate contracts pass. Independent 
 remain pending. This chronology slice does not establish exact source/output coverage,
 all fold families, composite spans or provenance for every mutating pass.
 
+CV03 final acceptance supersedes its local checkpoints above.
+[#16964](https://github.com/adhithyan15/coding-adventures/pull/16964) merged at
+`b81127a2c4e2ca435c88830f19c4efe2404c66d2` after exact independently reviewed
+head `7be8e45623731acdc169061c4d036e0a0cdad0ea` had all 34 checks terminal and
+acceptable, both required gates successful and no change-request review.
+[CI 37692178935](https://github.com/adhithyan15/coding-adventures/actions/runs/37692178935)
+completed successfully. Actual compiler commands passed on Linux
+(job 113035624234), macOS (113035624277) and Windows (113035624352), with completed
+successful package steps and timestamped `rust/programs/closurec BUILT` rows.
+The current-head production plan selects the real command and Rust on all three
+platforms, including Windows general package testing. Books and CodeQL also
+succeeded. Aggregate native logs do not establish individual test counts.
+Fetched main contains the squash merge; all 46 reviewed file blobs/modes match.
+The tested binary and source/validation/native/merge receipts were preserved
+before managed archival; the old directory and Git registration are absent.
+This fulfills #16868's original compact/checked/canonical/chronology foundation;
+that issue is closed. Full provenance #15830 and compiler #15530 remain open.
+
+A refreshed current-head audit runs 28 native processes for seven seeds at
+SIMPLE/ADVANCED, with plain/traced JS/map bytes equal. All 14 sidecars pass both
+actual checked and compatibility Rust import with unchanged canonical re-export.
+Math.abs retains only its child unary fold. String-case conversion, array.join,
+Object.keys, array selection, logical selection and truthy conditional collapse
+retain no final `folded` fact. All 14 source-map mappings are empty. Static source
+also discards derived result IDs at array/logical/conditional selection sites.
+The 72 production recorder call sites (44 inside `fold_call`) are a syntactic
+index, not a complete semantic replacement-family inventory. Keep #16875 open.
+
+CV04 selects exact raw lexical intervals, bound buffer identity and explicit
+scalar/UTF16 coordinates and EOF/trivia/synthetic/preprocessing policy. The live
+CLOC27 path already stamps token CVs in `parse_javascript_typed_with_cv` and reads
+them in `convert_primary_token`; do not implement the stale no-leaf-CV audit.
+Two compiler tokenization routes need coverage: ingestion-derived token origins
+and the typed parser's newly created token roots. Their source/root linkage and
+actual buffer identity must be audited, rather than inferred from matching file
+names, token values or locations. A compatibility-safe generic lexer range API
+must capture acceptance boundaries before value transformations; it must not
+add a required field to every existing `Token` construction. Commit the detailed
+spec before tests/implementation. This source foundation does not itself deliver
+composite/occurrence ownership, all transformation lineage or emitted-byte joins.
+
 The remaining-fold inventory is
 [#16875](https://github.com/adhithyan15/coding-adventures/issues/16875).
 Actual SIMPLE/ADVANCED CLI probes fold Math.abs, string case conversion,
@@ -235,7 +1609,8 @@ array.join and Object.keys while losing final fold events; the Math.abs input
 retains only the unary child's history. All traced/untraced bytes match. These
 are initial cases requiring result-owned graph tests, not a complete inventory.
 
-Required next slices after CV03: audit remaining fold families; stable composite identities
+Required next slices: exact lexical source intervals and coordinate ownership;
+audit remaining fold families; stable composite identities
 and shared source spans on the canonical ESTree boundary; typed lineage events
 with complete source/node coverage; all mutating passes (inline/rename first),
 including one-to-many inlining, many-to-one merges, motion and deletion;
@@ -718,3 +2093,39 @@ into `tests/oracle/upstream-refusals-v20260915.json` and cross-checked by
 `oracle_manifest`; the recorded predicate is the narrow, re-runnable "refuses as
 invoked", not the hand-searched "no invocation could ever produce this", which
 stays on the issue where it can be argued with.
+
+## Latest main styled-label work repair (2026-10-12)
+
+Main `662e4ba520dd53a8c44ba4e5c317cdfcdbd94820` introduced independently confirmed P2 #17335 in styled
+label run discovery. Spec `074faa6960891201d00eec3170ad6440539a6028` preceded the
+actual original-scanner red tests at `3579cee268583fc61fecb87734be6330350043a7`: 16,772 predicates
+for a valid 128-dot label and 16,129 for absent terminators; both semantic
+controls passed. The earlier test-field compile failure is retained separately,
+not accepted as red evidence. Ordinary main integration `aceefd41df623d8fd3d3f061e0dd64fe4eeac7de`
+passed 526/eight but security remained REJECTED; successful native tests were
+never promoted over that finding.
+
+Actual corrected source `149bc895fa02cda07ad9390fc2df395ab41b39bf` passes **531 tests/docs/eight targets**, zero
+failures/ignores, five focused work/semantic controls (included in those 531),
+strict all-target Clippy, lesson and whitespace validation. One monotone cursor
+per fixed ASCII form counts maximal runs once with constant state; UTF-8 labels,
+first eligible run, empty-label refusal, prefix-inside-run suffixes, standard
+precedence, edge kinds, point markers and minimum lengths remain exact. The
+[work contract](DG04-mermaid-compatibility.md#swimlane-styled-label-discovery-work-contract)
+claims only local operator discovery, not whole-pipeline linearity. No grammar,
+production limit, dependency, unsafe code or assertion weakening was introduced.
+An earlier 531-test receipt failed strict lint; it remains distinct from this
+final-source rerun. Publication requires independent exact-final-head review
+and fresh required native CI; no current-head/actual merge acceptance is inferred.
+
+Retained bounded ALGOL source `c53c6aaf0ebc2fb16b5b95c66d753bcb562f480a` passed
+1,223 tests/docs/109 targets, all 11 production commands and 33 exact native
+controls, strict lint and independent final review. Later TaskApp/Sanskrit
+changes leave native sources equal; no UI/release/curriculum execution is claimed.
+The earlier duplicate-edge #17334 remains independently repaired at actual
+67f0f07cc3103667c446ff8742abe917a6a4c7b2, 731/32; its original rejected/red receipts
+are preserved. Keep sole PR #17288, terminal acceptable exact-head checks,
+review/conflict gates and actual fetched-main merge/payload proof before cleanup.
+Full final-source Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/497
+inputs/receipts preserved without polling or termination. CV04b, full Closure
+parity, output-byte maps and complete transformation lineage remain open.

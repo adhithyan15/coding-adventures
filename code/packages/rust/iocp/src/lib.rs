@@ -140,22 +140,7 @@ mod imp {
                 )
             };
             if ok == 0 {
-                let error = io::Error::last_os_error();
-                if error.raw_os_error() == Some(WAIT_TIMEOUT) {
-                    Err(io::Error::new(
-                        io::ErrorKind::TimedOut,
-                        "IOCP wait timed out",
-                    ))
-                } else if !overlapped.is_null() {
-                    Ok(CompletionPacket {
-                        bytes_transferred: bytes,
-                        completion_key: key,
-                        overlapped,
-                        error: error.raw_os_error(),
-                    })
-                } else {
-                    Err(error)
-                }
+                failed_packet(bytes, key, overlapped, io::Error::last_os_error())
             } else {
                 Ok(CompletionPacket {
                     bytes_transferred: bytes,
@@ -167,6 +152,32 @@ mod imp {
         }
     }
 
+    // FALSE with a pointer still dequeued a terminal operation packet. Its
+    // error belongs to that operation, even when numerically WAIT_TIMEOUT.
+    // Only a null pointer means no operation identity was returned.
+    fn failed_packet(
+        bytes: u32,
+        key: usize,
+        overlapped: *mut Overlapped,
+        error: io::Error,
+    ) -> io::Result<CompletionPacket> {
+        if !overlapped.is_null() {
+            Ok(CompletionPacket {
+                bytes_transferred: bytes,
+                completion_key: key,
+                overlapped,
+                error: error.raw_os_error(),
+            })
+        } else if error.raw_os_error() == Some(WAIT_TIMEOUT) {
+            Err(io::Error::new(
+                io::ErrorKind::TimedOut,
+                "IOCP wait timed out",
+            ))
+        } else {
+            Err(error)
+        }
+    }
+
     impl Drop for CompletionPort {
         fn drop(&mut self) {
             let _ = unsafe { CloseHandle(self.handle) };
@@ -175,7 +186,9 @@ mod imp {
 
     fn timeout_to_millis(timeout: Option<Duration>) -> Dword {
         match timeout {
-            Some(duration) => duration.as_millis().min(Dword::MAX as u128) as Dword,
+            // DWORD_MAX is INFINITE, not a finite saturation value. Preserve
+            // the caller's finite-wait contract even for very large durations.
+            Some(duration) => duration.as_millis().min((INFINITE - 1) as u128) as Dword,
             None => INFINITE,
         }
     }
@@ -184,6 +197,56 @@ mod imp {
     mod tests {
         use super::*;
         use std::ptr;
+
+        #[test]
+        fn finite_timeout_never_converts_to_infinite_sentinel() {
+            assert_eq!(timeout_to_millis(None), INFINITE);
+            for (duration, expected) in [
+                (Duration::ZERO, 0),
+                (Duration::from_millis(10), 10),
+                (Duration::from_millis((INFINITE - 1) as u64), INFINITE - 1),
+                (Duration::from_millis(INFINITE as u64), INFINITE - 1),
+                (Duration::MAX, INFINITE - 1),
+            ] {
+                assert_eq!(timeout_to_millis(Some(duration)), expected);
+            }
+        }
+
+        #[test]
+        fn failed_terminal_pointer_precedes_timeout_classification() {
+            let mut operation: Overlapped = unsafe { std::mem::zeroed() };
+            let pointer = &mut operation as *mut Overlapped;
+            for error in [WAIT_TIMEOUT, 995] {
+                let packet = failed_packet(7, 11, pointer, io::Error::from_raw_os_error(error))
+                    .expect("nonnull failed completion is terminal");
+                assert_eq!(
+                    packet,
+                    CompletionPacket {
+                        bytes_transferred: 7,
+                        completion_key: 11,
+                        overlapped: pointer,
+                        error: Some(error),
+                    }
+                );
+            }
+            assert_eq!(
+                failed_packet(
+                    0,
+                    0,
+                    ptr::null_mut(),
+                    io::Error::from_raw_os_error(WAIT_TIMEOUT)
+                )
+                .unwrap_err()
+                .kind(),
+                io::ErrorKind::TimedOut
+            );
+            assert_eq!(
+                failed_packet(0, 0, ptr::null_mut(), io::Error::from_raw_os_error(6))
+                    .unwrap_err()
+                    .raw_os_error(),
+                Some(6)
+            );
+        }
 
         #[test]
         fn posted_packet_round_trips() {

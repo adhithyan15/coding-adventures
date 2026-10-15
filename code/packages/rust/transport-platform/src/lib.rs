@@ -1991,7 +1991,7 @@ pub mod windows {
     /// posted completion packets, and stream reads/writes keep the same
     /// nonblocking contract that `stream-reactor` already consumes.
     pub struct WindowsTransportPlatform {
-        completion_port: iocp::CompletionPort,
+        completion_port: Arc<iocp::CompletionPort>,
         next_token: u64,
         listeners: BTreeMap<ListenerId, WindowsListenerState>,
         streams: BTreeMap<StreamId, WindowsStreamState>,
@@ -2000,6 +2000,47 @@ pub mod windows {
         resources: BTreeMap<u64, ResourceId>,
         accept_operations: BTreeMap<usize, Box<WindowsAcceptOperation>>,
         operations: BTreeMap<usize, Box<WindowsOverlappedOperation>>,
+    }
+
+    #[derive(Debug, PartialEq, Eq)]
+    enum TeardownOutcome {
+        Drained {
+            accepts: usize,
+            streams: usize,
+        },
+        Retained {
+            accepts: usize,
+            streams: usize,
+            error: Option<i32>,
+        },
+    }
+
+    // AcceptEx returns BOOL, unlike WSARecv/WSASend's SOCKET_ERROR convention.
+    // A FALSE nonpending failure submitted no work, hence owns no future packet.
+    fn check_accept_submission(result: i32, error: Option<i32>) -> Result<(), PlatformError> {
+        if result == 0 {
+            let error = error.expect("FALSE AcceptEx captures WSAGetLastError immediately");
+            if error != WSA_IO_PENDING {
+                return Err(PlatformError::from(io::Error::from_raw_os_error(error)));
+            }
+        }
+        Ok(())
+    }
+
+    impl Drop for WindowsTransportPlatform {
+        fn drop(&mut self) {
+            let port = Arc::clone(&self.completion_port);
+            if let TeardownOutcome::Retained { .. } =
+                self.cancel_and_drain(|| port.get(Some(Duration::from_millis(100))))
+            {
+                // No terminal proof: retain both buffers and a port reference.
+                // This exceptional leak is intentional. Moving the maps out is
+                // NOT cancellation success; never label this outcome Drained.
+                std::mem::forget(std::mem::take(&mut self.accept_operations));
+                std::mem::forget(std::mem::take(&mut self.operations));
+                std::mem::forget(port);
+            }
+        }
     }
 
     pub type IocpTransportPlatform = WindowsTransportPlatform;
@@ -2013,7 +2054,7 @@ pub mod windows {
             }
 
             Ok(Self {
-                completion_port: iocp::CompletionPort::new(0)?,
+                completion_port: Arc::new(iocp::CompletionPort::new(0)?),
                 next_token: 1,
                 listeners: BTreeMap::new(),
                 streams: BTreeMap::new(),
@@ -2023,6 +2064,51 @@ pub mod windows {
                 accept_operations: BTreeMap::new(),
                 operations: BTreeMap::new(),
             })
+        }
+
+        // Closing sockets requests cancellation, but kernel writes may still
+        // target their OVERLAPPED/buffer storage. Clear resource states first so
+        // teardown cannot adopt, rearm or deliver callbacks; then match actual
+        // terminal packet identities before releasing any operation allocation.
+        fn cancel_and_drain(
+            &mut self,
+            mut wait: impl FnMut() -> io::Result<iocp::CompletionPacket>,
+        ) -> TeardownOutcome {
+            for state in self.streams.values() {
+                let _ = state.socket.shutdown(Shutdown::Write);
+            }
+            self.streams.clear();
+            self.listeners.clear(); // also closes completed, unadopted sockets
+            for operation in self.accept_operations.values_mut() {
+                drop(operation.socket.take());
+            }
+            self.resources.clear();
+            self.timers.clear();
+            self.wakeups.clear();
+            let mut accepts = 0;
+            let mut streams = 0;
+            while !self.accept_operations.is_empty() || !self.operations.is_empty() {
+                match wait() {
+                    Ok(packet) if !packet.overlapped.is_null() => {
+                        let key = packet.overlapped as usize;
+                        if self.accept_operations.remove(&key).is_some() {
+                            accepts += 1;
+                        } else if self.operations.remove(&key).is_some() {
+                            streams += 1;
+                        }
+                    }
+                    Ok(_) => {} // wakeups and unknown identities discharge nothing
+                    Err(error) if error.kind() == ErrorKind::TimedOut => {}
+                    Err(error) => {
+                        return TeardownOutcome::Retained {
+                            accepts: self.accept_operations.len(),
+                            streams: self.operations.len(),
+                            error: error.raw_os_error(),
+                        }
+                    }
+                }
+            }
+            TeardownOutcome::Drained { accepts, streams }
         }
 
         fn alloc_token(&mut self) -> u64 {
@@ -2147,12 +2233,12 @@ pub mod windows {
                     &mut operation.overlapped,
                 )
             };
-            if result == SOCKET_ERROR {
-                let error = unsafe { WSAGetLastError() };
-                if error != WSA_IO_PENDING {
-                    return Err(PlatformError::from(io::Error::from_raw_os_error(error)));
-                }
-            }
+            let error = if result == 0 {
+                Some(unsafe { WSAGetLastError() })
+            } else {
+                None
+            };
+            check_accept_submission(result, error)?;
 
             let key = operation.key();
             self.accept_operations.insert(key, operation);
@@ -2933,6 +3019,190 @@ pub mod windows {
             offset: 0,
             offset_high: 0,
             h_event: ptr::null_mut(),
+        }
+    }
+    #[cfg(test)]
+    mod lifetime_tests {
+        use super::*;
+
+        #[test]
+        fn accept_submission_records_only_success_or_pending_bool() {
+            assert!(check_accept_submission(1, None).is_ok());
+            assert!(check_accept_submission(0, Some(WSA_IO_PENDING)).is_ok());
+            assert!(check_accept_submission(0, Some(10022)).is_err());
+            assert!(check_accept_submission(0, Some(10038)).is_err());
+        }
+
+        fn pending_provider() -> (WindowsTransportPlatform, TcpStream) {
+            let mut platform = WindowsTransportPlatform::new().unwrap();
+            platform
+                .bind_listener(
+                    BindAddress::Ip("127.0.0.1:0".parse().unwrap()),
+                    ListenerOptions {
+                        backlog: 3,
+                        ..ListenerOptions::default()
+                    },
+                )
+                .unwrap();
+            let external = TcpListener::bind("127.0.0.1:0").unwrap();
+            let client = TcpStream::connect(external.local_addr().unwrap()).unwrap();
+            let (server, _) = external.accept().unwrap();
+            let id = platform.adopt_stream(server.into()).unwrap();
+            platform
+                .set_stream_interest(id, StreamInterest::readable())
+                .unwrap();
+            assert_eq!(platform.accept_operations.len(), 3);
+            assert_eq!(platform.operations.len(), 1);
+            (platform, client)
+        }
+
+        #[test]
+        fn teardown_drains_actual_pending_accepts_and_read_after_socket_close() {
+            let (mut platform, _client) = pending_provider();
+            let stream = *platform.streams.keys().next().unwrap();
+            platform.close_stream(stream).unwrap();
+            assert_eq!(platform.operations.len(), 1, "close is not completion");
+            let port = Arc::clone(&platform.completion_port);
+            let result = platform.cancel_and_drain(|| port.get(Some(Duration::from_secs(1))));
+            assert_eq!(
+                result,
+                TeardownOutcome::Drained {
+                    accepts: 3,
+                    streams: 1
+                }
+            );
+            assert!(platform.operations.is_empty() && platform.accept_operations.is_empty());
+            assert!(platform.listeners.is_empty() && platform.streams.is_empty());
+        }
+
+        #[test]
+        fn fatal_wait_retains_exact_storage_until_real_terminal_drain() {
+            let (mut platform, _client) = pending_provider();
+            let accept_keys: Vec<_> = platform.accept_operations.keys().copied().collect();
+            let stream_keys: Vec<_> = platform.operations.keys().copied().collect();
+            let accept_buffers: Vec<_> = platform
+                .accept_operations
+                .values()
+                .map(|v| v.buffer.as_ptr())
+                .collect();
+            let stream_buffers: Vec<_> = platform
+                .operations
+                .values()
+                .map(|v| v.buffer.as_ptr())
+                .collect();
+            let result = platform.cancel_and_drain(|| Err(io::Error::from_raw_os_error(6)));
+            assert_eq!(
+                result,
+                TeardownOutcome::Retained {
+                    accepts: 3,
+                    streams: 1,
+                    error: Some(6)
+                }
+            );
+            assert_eq!(
+                platform
+                    .accept_operations
+                    .keys()
+                    .copied()
+                    .collect::<Vec<_>>(),
+                accept_keys
+            );
+            assert_eq!(
+                platform.operations.keys().copied().collect::<Vec<_>>(),
+                stream_keys
+            );
+            assert_eq!(
+                platform
+                    .accept_operations
+                    .values()
+                    .map(|v| v.buffer.as_ptr())
+                    .collect::<Vec<_>>(),
+                accept_buffers
+            );
+            assert_eq!(
+                platform
+                    .operations
+                    .values()
+                    .map(|v| v.buffer.as_ptr())
+                    .collect::<Vec<_>>(),
+                stream_buffers
+            );
+            assert!(platform
+                .accept_operations
+                .values()
+                .all(|v| v.socket.is_none()));
+            let port = Arc::clone(&platform.completion_port);
+            let mut waits = 0;
+            let result = platform.cancel_and_drain(|| {
+                waits += 1;
+                match waits {
+                    1 => Err(io::Error::new(ErrorKind::TimedOut, "injected timeout")),
+                    2 => Ok(iocp::CompletionPacket {
+                        bytes_transferred: 0,
+                        completion_key: 0,
+                        overlapped: ptr::null_mut(),
+                        error: None,
+                    }),
+                    3 => Ok(iocp::CompletionPacket {
+                        bytes_transferred: 0,
+                        completion_key: 0,
+                        overlapped: std::ptr::dangling_mut(),
+                        error: Some(995),
+                    }),
+                    _ => port.get(Some(Duration::from_secs(1))),
+                }
+            });
+            assert_eq!(
+                result,
+                TeardownOutcome::Drained {
+                    accepts: 3,
+                    streams: 1
+                }
+            );
+            assert!(
+                waits >= 7,
+                "timeout and unrelated packets discharge no operation"
+            );
+        }
+
+        #[test]
+        fn teardown_closes_completed_but_unadopted_accepts() {
+            let mut platform = WindowsTransportPlatform::new().unwrap();
+            let listener = platform
+                .bind_listener(
+                    BindAddress::Ip("127.0.0.1:0".parse().unwrap()),
+                    ListenerOptions {
+                        backlog: 1,
+                        ..ListenerOptions::default()
+                    },
+                )
+                .unwrap();
+            let mut client = TcpStream::connect(platform.local_addr(listener).unwrap()).unwrap();
+            client
+                .set_read_timeout(Some(Duration::from_secs(1)))
+                .unwrap();
+            let mut events = Vec::new();
+            assert!(platform
+                .wait_for_iocp_packet(Some(Duration::from_secs(1)), &mut events)
+                .unwrap());
+            assert_eq!(platform.listeners[&listener].completed_accepts.len(), 1);
+            assert!(platform.accept_operations.is_empty());
+            let result = platform.cancel_and_drain(|| panic!("no submitted operation remains"));
+            assert_eq!(
+                result,
+                TeardownOutcome::Drained {
+                    accepts: 0,
+                    streams: 0
+                }
+            );
+            let mut byte = [0];
+            match std::io::Read::read(&mut client, &mut byte) {
+                Ok(n) => assert_eq!(n, 0),
+                Err(e) => assert!(matches!(
+                    e.kind(),
+                    ErrorKind::ConnectionReset | ErrorKind::ConnectionAborted
+                )),
+            }
         }
     }
 }

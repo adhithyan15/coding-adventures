@@ -7,6 +7,10 @@
 
 ## Unreleased
 
+- Give the generated WinUI acceptance child a unique durable bookmark profile
+  inside its output directory. Repeated runs keep the exact one-entry catalog
+  assertions without reading or changing the user's persistent profile.
+
 - Map the shared Page Information event and disabled state through one typed
   retained-response snapshot for generated WinUI.
 

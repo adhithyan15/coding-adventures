@@ -601,3 +601,8 @@ The `.tw` extension is always appended.
 - `export_only_lists_declared_names` — compiler-level export filter check
 - `empty_module_no_panic`
 - `library_module_has_no_entry_point`
+
+Test fixtures keep canonical source identity while using joinable ordinary Windows
+disk/UNC paths when the self-hosted compiler appends slash-separated filenames.
+String escaping, atomic temporary directories and every self-compile/fixed-point
+assertion and stack/work bound remain required. Production resolution is unchanged.

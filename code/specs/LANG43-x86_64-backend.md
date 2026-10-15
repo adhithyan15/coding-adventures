@@ -399,11 +399,16 @@ call:
 The return value arrives in `RAX` and is stored to the destination
 slot.
 
-Beyond the per-ABI max → return `BackendRefused`.
-
-On Microsoft x64, the prologue already allocated the 32-byte shadow
-space; the call site itself emits only the argument moves + `CALL
-rel32` + return-value store.
+The bounded internal word-call convention supports up to eight arguments
+and formals on both ABIs; larger signatures return `BackendRefused`.
+Builtin marshalling retains its physical GPR bounds. For direct calls, reserve
+the maximum outgoing stack tail after shadow space in the fixed16-byte-aligned
+frame, below negative RBP locals. Extras move through RAX to
+`RSP + shadow + 8*index` before the GPR loads; the callee spills them from
+`RBP + 16 + shadow + 8*index`. Checked frame/displacement arithmetic rejects
+overflow or signed-displacement excess. See
+[CV04a native eight-word controls](CV04a-native-eight-stack-arguments.md)
+for exact stack/root/order/recursion/refusal and Windows execution evidence.
 
 ### Globals (matches LANG39 wave)
 

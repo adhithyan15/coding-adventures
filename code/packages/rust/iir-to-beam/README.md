@@ -443,3 +443,8 @@ and masking. The compact putchar reservation alone was insufficient for the
 Linux byte-sweep crash; this follow-up has deterministic root-tracking tests
 and requires fresh Linux CI validation. See the normal-X-prefix repair contract
 in `code/specs/BEAM-normal-x-prefix-gc-safety.md`.
+
+ASCII string constants reserve exactly two heap words per byte before list
+construction. The initialized normal-X register prefix remains rooted at this GC
+point. Empty strings stay nil without a reservation; byte order and validation
+remain unchanged. Long native strings and exact lowering shapes cover the guard.

@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Recover failed terminal completion identities before classifying timeout; reserve INFINITE exclusively for None. Add exact timeout/status boundary controls.
+- Final-source Miri **DEFERRED/PENDING**; native/hosted and whole-PR gates remain separately attributed.
+
 - Document the opaque-pointer Windows contracts and keep their safe wrappers
   clean under the Rust 1.97 Clippy raw-pointer lint.
 

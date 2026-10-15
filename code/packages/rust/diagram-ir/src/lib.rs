@@ -1864,6 +1864,8 @@ pub struct VennStyle {
 pub struct VennRegion { pub sets: Vec<String>, pub size: f64, pub label: Option<String>, pub style: VennStyle }
 #[derive(Clone, Debug, PartialEq)]
 pub struct VennText { pub sets: Vec<String>, pub id: String, pub label: Option<String>, pub style: VennStyle }
+/// Largest admitted Venn canvas scalar; this is not a renderer pixel-area budget.
+pub const MAX_VENN_CANVAS: f64 = 65_536.0;
 #[derive(Clone, Debug, PartialEq)]
 pub struct VennConfig { pub width: f64, pub height: f64, pub padding: f64, pub use_max_width: bool, pub use_debug_layout: bool, pub font_family: String, pub title_text_color: String, pub set_text_color: String, pub theme_colors: Vec<String> }
 impl Default for VennConfig { fn default() -> Self { Self { width: 800.0, height: 450.0, padding: 8.0, use_max_width: true, use_debug_layout: false, font_family: "sans-serif".into(), title_text_color: "#0f172a".into(), set_text_color: "#0f172a".into(), theme_colors: ["#60a5fa", "#f59e0b", "#34d399", "#f472b6", "#a78bfa", "#22d3ee", "#fb7185", "#a3e635"].into_iter().map(str::to_string).collect() } } }
@@ -2013,6 +2015,10 @@ impl Default for SwimlaneTheme {
         }
     }
 }
+/// Production spacing range shared by parsed and caller-constructed Swimlane IR.
+/// This explicit cap prevents finite input from overflowing derived geometry.
+pub const MAX_SWIMLANE_FLOWCHART_SPACING: f64 = 65_536.0;
+
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct SwimlaneFlowchartConfig {
     pub node_spacing: Option<f64>, pub rank_spacing: Option<f64>,
@@ -2078,6 +2084,9 @@ pub enum RailroadExpression {
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct RailroadRule { pub name: String, pub definition: RailroadExpression }
+/// Supported scalar spacing budget. Parsers and checked typed-IR layout share
+/// this boundary so finite source numbers cannot overflow downstream geometry.
+pub const MAX_RAILROAD_SPACING: f64 = 65_536.0;
 #[derive(Clone, Debug, PartialEq)]
 pub struct RailroadConfig {
     pub compact_mode: bool, pub padding: f64, pub vertical_separation: f64, pub horizontal_separation: f64, pub arc_radius: f64,

@@ -1,5 +1,9 @@
 # chief-of-staff-cli
 
+Native vault tests create the synthetic Windows KEK with the existing protected
+owner-only credential writer, then replace its fixture bytes while retaining
+the ACL. The real daemon secret loader and all vault controls remain active.
+
 Concrete `chief-of-staff` operator executable for D18. Help and version output
 remain local. Host lifecycle commands load the strict default configuration,
 acquire the owner-only local credential outside argv, connect to the configured

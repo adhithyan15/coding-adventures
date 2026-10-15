@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Bound pending socket adoption independently of the active connection cap. Keep reservations through drain/error/unwind; synchronize closure/admission and update setter policy. Close admission on stop/serve exit/Drop and before callbacks. Add actual error, callback panic and concurrent closure controls.
+- Final-source Miri **DEFERRED/PENDING**; native/hosted and whole-PR gates remain separately attributed.
+
 ### Fixed
 
 - A fan-out worker (`accept_connections: false`) now switches its listener's

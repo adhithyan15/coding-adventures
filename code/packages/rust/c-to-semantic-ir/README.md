@@ -111,3 +111,8 @@ Functions (with typed params), local declarations & assignments, typed `+`/`-`/
 `cc`) agree byte-for-byte with the C source's semantics — `(uint8_t)(200+100)==44`,
 `(int32_t)(2e9+2e9)==-294967296`.  Control flow, comparisons (C-vs-SIR
 truthiness), `/`/`%`/bitwise, pointers/structs are later milestones.
+
+Native conformance tests compile both reference and emitted C with the same
+platform math-library rule: Unix links `-lm`; Windows uses CRT math without
+requesting nonexistent `m.lib`. C99 compiler/run and C/Ruby output equivalence
+checks remain active on both routes when their toolchains are installed.

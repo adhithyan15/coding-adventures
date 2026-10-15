@@ -1,0 +1,1 @@
+echo "SKIP: tcp-reactor requires Unix-style file descriptors; Windows sockets are not supported"

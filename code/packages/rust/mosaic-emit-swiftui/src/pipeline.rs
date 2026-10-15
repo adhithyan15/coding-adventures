@@ -3199,6 +3199,16 @@ pub fn dropped_style_properties(
     style: &StyleDef,
     layout: &LayoutNode,
 ) -> Vec<DroppedStyleProperty> {
+    dropped_style_properties_with_elevation_probes(style, layout, || {})
+}
+
+// A private observer counts actual predicate visits in resource tests. The
+// public API uses a no-op; no test-only formula stands in for the real scan.
+fn dropped_style_properties_with_elevation_probes(
+    style: &StyleDef,
+    layout: &LayoutNode,
+    mut on_elevation_probe: impl FnMut(),
+) -> Vec<DroppedStyleProperty> {
     let part_styles = build_part_style_map(style);
     let consumed_gap = constructor_consuming_parts(layout, &part_styles, "gap");
     let consumed_align = constructor_consuming_parts(layout, &part_styles, "align");
@@ -3211,6 +3221,12 @@ pub fn dropped_style_properties(
         // reporter exists to catch. Emitter and report must read ONE value.
         let mut base = part.base.clone();
         expand_border_shorthand(&mut base);
+        // Repeated shadow declarations are valid authored input. Scan this
+        // expanded part once, rather than multiplying its length by its drops.
+        let has_native_elevation = base.iter().any(|prop| {
+            on_elevation_probe();
+            prop.name == "elevation" && swiftui_elevation_shadow(&prop.value).is_some()
+        });
         let (_, drops) = swiftui_modifier_chain_with_drops(&base, &[], &[], 0, None);
         for drop in drops {
             if lowered_solid_per_edge_style(&base, &drop.name, &drop.value) {
@@ -3227,9 +3243,7 @@ pub fn dropped_style_properties(
             // consumed. Standalone and inset shadows stay honest debt.
             if drop.name == "box-shadow"
                 && !drop.value.to_ascii_lowercase().contains("inset")
-                && base.iter().any(|prop| {
-                    prop.name == "elevation" && swiftui_elevation_shadow(&prop.value).is_some()
-                })
+                && has_native_elevation
             {
                 continue;
             }
@@ -16490,6 +16504,63 @@ mod tests {
             ("border-width", "1"),
         ]);
         assert!(drops.is_empty(), "got: {drops:?}");
+    }
+
+    fn assert_authored_elevation_scan_bound(n: usize, late_elevation: bool) {
+        let mut source = String::from("style Card { part root {");
+        source.push_str(&"box-shadow: none;".repeat(n));
+        if late_elevation { source.push_str("elevation: raised;"); }
+        source.push_str("} }");
+        let style = mosstyle_compiler::compile(&source, None).expect("valid repeated declarations").def;
+        assert_eq!(style.parts[0].base.len(), n + usize::from(late_elevation));
+        let mut visits = 0;
+        let drops = dropped_style_properties_with_elevation_probes(&style, &no_gap_layout(), || visits += 1);
+        assert_eq!(visits, n + usize::from(late_elevation), "one expanded-part scan, not one scan per shadow");
+        assert_eq!(drops, dropped_style_properties(&style, &no_gap_layout()));
+        assert_eq!(drops.len(), if late_elevation { 0 } else { n });
+        for drop in drops {
+            assert_eq!((&*drop.part, &*drop.name, &*drop.value), ("root", "box-shadow", "none"));
+            assert!(drop.reason.contains(".shadow"));
+        }
+    }
+
+    #[test]
+    fn elevation_report_work_without_elevation_is_bounded() {
+        for n in [32, 128] { assert_authored_elevation_scan_bound(n, false); }
+    }
+
+    #[test]
+    fn elevation_report_work_with_late_elevation_is_bounded() {
+        for n in [32, 128] { assert_authored_elevation_scan_bound(n, true); }
+    }
+
+    #[test]
+    fn elevation_report_preserves_inset_standalone_and_drop_order() {
+        let style = mosstyle_compiler::compile(
+            "style Card { part root { cursor: pointer; box-shadow: none; elevation: raised; box-shadow: \"INSET\"; } part other { box-shadow: none; cursor: pointer; } }",
+            None,
+        ).expect("valid supported elevation and two parts").def;
+        let drops = dropped_style_properties(&style, &no_gap_layout());
+        assert_eq!(drops.iter().map(|d| (&*d.part, &*d.name, &*d.value)).collect::<Vec<_>>(),
+            vec![("root", "cursor", "pointer"), ("root", "box-shadow", "INSET"),
+                 ("other", "box-shadow", "none"), ("other", "cursor", "pointer")]);
+        // Unsupported enum values are reachable through public IR, while the
+        // authored compiler correctly rejects them. Keep that boundary explicit.
+        assert!(mosstyle_compiler::compile("style Card { part root { elevation: floaty; } }", None).is_err());
+        let unsupported = StyleDef { component_name: "Card".into(), parts: vec![PartStyle {
+            name: "root".into(), base: vec![sp("box-shadow", "none"), sp("elevation", "floaty")],
+            transitions: vec![], states: vec![],
+        }] };
+        let drops = dropped_style_properties(&unsupported, &no_gap_layout());
+        assert_eq!(drops.iter().map(|d| (&*d.name, &*d.value)).collect::<Vec<_>>(),
+            vec![("box-shadow", "none"), ("elevation", "floaty")]);
+        let mut visits = 0;
+        assert_eq!(dropped_style_properties_with_elevation_probes(&unsupported, &no_gap_layout(), || visits += 1), drops);
+        assert_eq!(visits, 2, "unsupported public IR scans one whole base, preserving its ordered drops");
+        let mut visits = 0;
+        let expected = dropped_style_properties(&style, &no_gap_layout());
+        assert_eq!(dropped_style_properties_with_elevation_probes(&style, &no_gap_layout(), || visits += 1), expected);
+        assert_eq!(visits, 5, "three properties until root's elevation plus other's two properties");
     }
 
     #[test]

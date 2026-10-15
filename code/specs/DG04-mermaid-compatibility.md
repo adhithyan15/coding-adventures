@@ -752,9 +752,15 @@ stroke color, and stroke width continue to take precedence during Paint lowering
 Repeated `style` directives now cascade per property in source order for both set
 regions and attached text IDs, matching Mermaid's style-map merge behavior without
 discarding unrelated properties from earlier declarations.
-Venn style colors accept safe CSS names, hex values, and numeric color functions;
-unsafe functional payloads fail parsing. Stroke widths must be finite and
-non-negative, while fill opacity is constrained to the CSS range from zero to one.
+Recognized Venn style values use a bounded lexical color subset and reject
+unsafe functional payloads; this does not validate all CSS names, function
+arities or component ranges. Source token syntax remains narrower than the color
+helper (percent style values reject). Stroke widths must be finite/nonnegative
+without a new upper cap, and fill opacity must be finite within zero to one.
+Invalid recognized properties reject the whole parse before target resolution,
+including ignored targets or later repairing directives. Invalid theme fallback
+remains its distinct contract. Actual df058580 affected suites pass957/43 with
+strict14 and208 complete scene/query cases; full rendering parity stays open.
 
 ### Ishikawa Native Slice
 
@@ -911,8 +917,21 @@ sequence labels likewise retain semantic text while layout and Paint display
 the pinned `? text ?` decoration. Marker centers and connecting paths are
 explicit layout geometry rather than Paint-backend assumptions.
 
-This is intentionally partial. Comment styling and browser-exact text
-measurement remain unsupported rather than being counted as compatible.
+Explicit Railroad marker centers now agree with the actual root port in the
+authored controls. Rule-name boxes retain max(28,fontSize*1.15) with no-wrap
+shaping. The complete derived-layout gate checks both marker coordinates.
+Required marker fields change external Rust struct-literal construction.
+Large marker radii can reverse root connectors or extend outside the canvas;
+marker/stroke enclosure and arbitrary custom-font/long-label fitting remain
+open. The 192 new configurations compare glyphs, ordered font queries, declared
+coordinates and twelve metadata entries; broader style/path/order controls are
+retained separately. These bounded checks do not establish whole visual parity.
+
+This is intentionally partial. The circular-corner evidence is bounded to
+orthogonal generated routes and cubic control/command fixtures; arbitrary
+diagonal geometry and whole upstream/backend visual parity remain unvalidated.
+Comment styling and exact typography remain unsupported rather than being
+counted as compatible.
 
 ### Info Full Compatibility
 
@@ -1038,6 +1057,90 @@ the target backend.
 Full compatibility is achieved when every manifest family is Level 5 for the
 pinned Mermaid release and unsupported syntax fails explicitly rather than
 silently degrading.
+
+## Swimlane minimum-link work contract
+
+Resource repair [#17334](https://github.com/adhithyan15/coding-adventures/issues/17334)
+addresses the repeated edge scans introduced by #17326. Duplicate and reversed
+edges are valid authored input and must remain in rendered output, in their
+original order with all labels, kinds, markers and minimum lengths intact.
+For spacing, the maximum minimum length over either orientation of one endpoint
+pair wins; a missing pair or a zero caller-owned length reserves one gap unit.
+
+Construct one deterministic index of canonical unordered endpoint pairs before
+lane sizing. Borrow endpoint strings from the diagram, retain one maximum per
+distinct pair, and use that same index for lane sizing and node placement in all
+four directions. For E authored edges, Q distinct pairs and P adjacent lane
+pairs, constraint discovery visits E edges once and performs at most 2P indexed
+queries. A BTreeMap provides O((E + P) log(Q + 2)) comparisons, including the
+empty-index/default case, with identifier
+comparison costs explicit, and O(Q) extra storage without cloned endpoint IDs.
+Never rescan all E edges for each node gap. Existing node lookup costs and
+ordinary O(E) output-edge lowering remain separate; this is not a claim that
+the complete parser/layout/render pipeline has become linear or newly bounded.
+
+Accumulate geometric gap units as f64 rather than overflowing a usize sum.
+Keep parsed minimum lengths 1–3 and the grammar, nesting/safety controls,
+ordinary API and dependencies unchanged. Caller-owned usize lengths retain
+their maximum/default semantics without introducing integer wrap or debug
+overflow in lane sizing; this does not certify arbitrary downstream image
+allocations for caller-owned extreme geometry.
+
+Acceptance requires deterministic operation-count controls on the actual layout
+path with repeated edges, duplicate/reversed maximum constraints, absent/default
+constraints and every direction. Pin exact expected node spacing and preserved
+edge order/metadata, plus finite geometry for small caller-owned usize::MAX
+controls; do not substitute timing thresholds. Run the complete metadata-derived
+downstream cone and strict all-target lint. Independent exact-head security must
+accept the repair before delivery; passing the prior tests alone does not close
+the resource finding. Full final-source Miri remains DEFERRED/PENDING during
+Closure implementation delivery and must genuinely finish afterward.
+
+## Swimlane styled-label discovery work contract
+
+Issue [#17335](https://github.com/adhithyan15/coding-adventures/issues/17335)
+records quadratic work in the #17333 styled-inline-label admission. A valid flat
+label containing a long repeated-character run followed by a non-suffix scans
+every remaining suffix of that run before finding a later valid terminator.
+A recursion-depth guard does not bound this work; ordinary fixture passes do
+not establish a complexity contract.
+
+For each of the three existing labeled forms (`-- label -->`, `== label ==>`,
+`-. label .->`), discover maximal repeated-character runs with one monotone
+byte cursor. Advance candidate prefix positions in authored order and retain
+only the current eligible terminating run. Consume each run once, even when it
+is not followed by the required arrow suffix; never recount that run at each
+interior character or restart suffix discovery for every candidate prefix.
+The repeated characters and suffixes are fixed ASCII delimiters; source labels
+remain borrowed UTF-8 slices until one selected label is copied. No new run
+index, unbounded collection, input-length exception or grammar fallback is
+introduced. For B input bytes, run-character discovery is O(B) per labeled form
+with O(1) cursor state; the constant three eager forms preserve existing choice.
+This contract is scoped to labeled operator discovery, not a claim about all
+lexer regex matching, node lookup, layout, drawing allocation or the whole
+Mermaid pipeline.
+
+Preserve exact existing parser behavior: earliest admitted prefix, the first
+eligible terminating run after that prefix, maximum eligible run suffix length,
+empty-label refusal, standard-vs-labeled operator precedence, chain continuation,
+Unicode labels, all three edge kinds, point markers and minimum-length values.
+When a prefix ends inside a terminating run, consider only the remaining run
+suffix, as the original iterator does. Keep default/missing/zero-layout length
+semantics and the independent duplicate-edge layout index #17334 unchanged.
+
+Test-only counters observe actual repeated-character predicates in the real
+helper. First commit an instrumented original scanner and red tests for a valid
+dotted label with N nonterminating repeated dots followed by a later valid
+suffix. Pin complete semantic output and a linear work envelope at multiple
+N values; record the actual failing operation count instead of a timing limit.
+Add exact controls for all styles, nonterminating runs, prefixes within runs,
+empty labels, Unicode and competing standard/chain operators. Tests must exercise
+public parsing as well as the private scanner and preserve refusal behavior.
+Then replace the rescans, rerun those controls, the full metadata-derived
+Mermaid/diagram drawing consumer cone, strict lint and independent final-head
+security review. Preserve original red/rejected receipts. Required CI remains
+mandatory. Full final-source local Miri is DEFERRED/PENDING, never passed; its
+frozen checkout/run/inputs/receipts stay untouched during this delivery slice.
 
 ## Swimlane Partial Compatibility
 
@@ -1192,3 +1295,112 @@ Nodes outside an explicit top-level subgraph are assigned to Mermaid's unlabeled
 This is intentionally partial. The complete Flowchart shape
 and link catalog beyond the documented marker forms, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.
+
+
+### Swimlane edge identifier coordinate reconciliation
+
+Swimlane edge identifiers retain authored IDs, edge order, styles, markers,
+minimum lengths and labels when combined with the monotone styled-label scan.
+Identifier discovery must advance past the entire UTF-8 whitespace scalar,
+including multibyte separators already admitted by the line grammar. Every
+slice endpoint must be a valid UTF-8 boundary. Public parse controls must cover
+ASCII, two-byte and three-byte separators, standard and labeled operators,
+chained IDs and edges without IDs. Preserve existing operation-count bounds,
+empty-label refusal and first-terminator semantics. No grammar, dependencies,
+production limits or unrelated ALGOL ownership changes are introduced.
+
+
+### Identified Swimlane edge target work
+
+After all authored edges are parsed, build one deterministic ID-to-all-edge-
+indices lookup. Visit every edge once and skip absent IDs; retain duplicate-ID
+edges and authored index order. Class/style target resolution must query that
+lookup instead of scanning every unrelated edge per target, including existing
+node-only targets. Node/edge ID collisions still update both; unknown-target
+refusals, class deduplication, class-before-inline-style precedence and statement
+order stay exact. Owned keys may copy each distinct ID once, with O(E+Q+I)
+index storage for E authored edges, Q distinct IDs and I key bytes.
+Index construction costs O(E log(Q+2)) key comparisons plus key-byte work;
+target lookup costs O(log(Q+2)) key comparisons, then visits exactly its actual
+matching edges. Include real class/style application costs separately; repeated
+matching updates and existing node lookup/class merge costs are not claimed
+linear. Actual public-parser operation counters must distinguish one index build,
+lookups and matching visits. Repeated node-only class/style targets over many
+unidentified edges must retain O(E+D) new edge-discovery work, not E*D. Preserve
+prior delimiter/pair-index counts, UTF-8 boundaries and authored metadata.
+
+
+### Identified Swimlane animation target work
+
+The same authored edge-ID index must resolve animation configurations before
+class/style application. Build it once before all three target passes. Preserve
+all duplicate-ID updates, authored configuration order, last-configuration
+semantics, unknown-edge diagnostics and node/edge ID collision behavior.
+Configurations may update only actual matching edges; repeated configurations
+for one edge among E unrelated edges must not rescan E edges per directive.
+Count index visits, real lookups and actual matching updates separately; real
+repeated updates still cost their actual matching count. Retain the prior
+class/style work and metadata controls. Layout must preserve animate and exact
+optional slow/fast animation through the existing duplicate-gap fixture without
+weakening its ID/classes/style/labels/kinds/markers/lengths and spacing controls.
+No global pipeline linearity, animation execution, new input exception or new
+dependency claim follows from this local lookup repair.
+
+
+### Swimlane animation configuration context
+
+A standalone edge-ID animation configuration must not intercept an authored
+edge whose endpoint contains node-shape metadata, or node/edge labels containing
+literal @{...} text. Preserve complete existing node shape, label, lane and edge
+metadata. Edge-line lexical classification and semantic edge parsing precede
+standalone configuration handling. A metadata-looking substring inside a node
+description is not a standalone edge identifier. Existing valid animation
+configuration forms and malformed/unknown-target refusals remain required.
+Native public-parser controls must compare these contexts with the same complete
+ordinary diagram after replacing only the intended label or node shape.
+
+
+### Bounded Swimlane spacing delivery policy
+
+Swimlane flowchart spacing uses the own IR range0..=65536, with exact excessive
+value refusals and unchanged negative/nonfinite/precedence controls. This is a
+deliberate bounded policy, not unrestricted upstream parity. Checked hierarchy
+layout refuses invalid derived geometry; coincident centers have finite source
+right/target top boundary anchors. Complete default/ordinary scenes, work bounds
+and endpoint-bit/reference assertions remain required. See
+`CV04a-bounded-swimlane-spacing.md`. Checked direct-IR rank arithmetic now returns a typed overflow refusal.
+General floating work remains OPEN. Final-source Miri is DEFERRED/PENDING.
+
+
+Global flowchart curve configuration is tested against complete explicit-edge
+IR/layout/PaintScene references for all thirteen families/aliases and all four
+directions. Explicit edge curves win; absent and linear defaults retain full
+old scenes after only independently proven metadata normalization. Typed rank
+overflow propagates through the checked hierarchy API. Miri DEFERRED/PENDING;
+no unrestricted routing/device/full Closure acceptance is inferred.
+
+### Bounded Venn configuration admission
+
+Venn carries width, height, padding, `useMaxWidth` and `useDebugLayout` through
+owned semantic/layout types and five `venn.*` scene metadata entries. Defaults
+are 800/450/8/true/false. The two booleans are transport metadata in this partial
+implementation. Source dimensions admit finite(0,65536], padding finite[0,65536];
+an invalid field uses its own default. A closed single-line init object's direct
+`venn` object replaces front-matter config as a whole. Nested objects, quoted
+values and body/style text cannot supply its fields.
+
+`diagram_layout_geometric::try_layout_venn` checks caller-owned configuration
+before arithmetic and refuses nonfinite derived circle/label geometry with a
+typed `VennLayoutError`. The single-argument `layout_venn` wrapper panics for
+unsupported IR. Use the checked API for untrusted typed input. Placement clamps
+effective padding to each canvas quarter while retaining authored admitted
+padding in config/metadata. Supported placement arithmetic is unchanged.
+
+Exact two-set/union/text geometry and complete default/custom PaintScene,
+glyph vectors, ordered font queries, primitives, styles and metadata controls
+are portable tests. Finite geometry does not establish label/stroke enclosure,
+area-proportional overlap, theme/CSS parity, arbitrary font/style safety or a
+renderer pixel-area/resource budget. See
+[`CV04a-venn-config-main-reconciliation.md`](CV04a-venn-config-main-reconciliation.md).
+Full final-source Miri is **DEFERRED/PENDING**, never passed; compiler delivery
+and the full Closure parity/provenance objective remain separate gates.

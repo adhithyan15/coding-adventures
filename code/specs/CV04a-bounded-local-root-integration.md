@@ -1,0 +1,74 @@
+# CV04a — reconcile bounded local roots without stale assignment proofs
+
+Status: bounded conflict repair for sole shared PR #17288; provenance epic
+#15830/foundation #16970 remain open. Full local Miri **DEFERRED/PENDING**.
+
+Main `e18c68942668e04b1993c8b3a25d3be2085d9568` (#17352) extends nine bounded
+conditional result classifiers from selector-safe runtime-real expressions to
+selector-safe unaliased local roots. Published reviewed candidate
+`af3402db4f4b76afb30110171044041af19a5162` conflicts in adjacent compiler tests
+and two README descriptions. Resolve by retaining both upstream local-root
+behavior/tests/docs and the existing #17350 assignment guard: initial proof
+AND a fresh proof after RHS lowering, since selector by-name actuals can promote
+a root to shared storage. Do not discard either side's controls.
+
+Independent source inspection also found a second proof consumer: direct
+standard output caches `is_runtime_real_assignment_value(actual)` before
+`emit_expr(actual)` and passes it unchanged to the formatter. Probe the native
+compiler with direct real output (1.0 times a bounded entier result), a by-name
+selector that mutates a local root, and both root positions. If native evidence
+confirms admission, preserve the red and require initial output proof AND
+post-lowering proof before selecting the real formatter. The ownership contract
+requires conservative refusal; formatter admission alone is not numeric-error
+or UB evidence. Value-selector direct output must remain supported and execute
+distinct-root exact results across available standard backends.
+
+Actual first red `f6c2036e7622a0562ab4c501cac767fccb42e9f2` confirms the
+single-exponential by-name direct-output admission. The same run has0PASS/2FAIL:
+its value control fails later at depth4 because the extra sqrt/direct-output
+wrappers exceed the unchanged public135 nesting cap. Preserve this distinct
+test-input rejection; do not weaken the cap or call the value control passed.
+Use direct `1.0 * entier(ln(...))` for the four-exponential control so the
+supported form remains below that cap; retain the existing quadruple sqrt
+assignment/native2/3 controls. Re-execute the corrected red before repair.
+
+Actual repaired679 focused6 controls pass, but the full compiler/shared suite
+records927PASS/1FAIL across16 targets: the unchanged conditional user-defined
+abs/literal output test loses static Boolean tracking during the call, and the
+blanket post-assignment-proof check refuses the finite1.5 alternative. Retain
+that rejected whole-suite receipt and every old assertion. Refine only output's
+post-proof: ordinary runtime proof remains valid; a top-level conditional may
+also prove BOTH alternatives independently runtime-safe or procedure-free,
+context-free finite real arithmetic. The initial proof remains required. Do not
+reuse lost mutable selector facts, accept tracked/global variable values as
+context-free literals, or descend into multiplication/call wrappers to bypass
+the bounded local-root proof. Execute exact native mixed alternatives3/1.5 and
+rerun the full cone. Assignment's existing proof predicate remains unchanged.
+
+## Compatibility and validation
+
+Preserve the existing refusal diagnostic for shared/captured/by-name roots and
+all proof depth, built-in binding, finite-bound and output safety controls.
+Extend exact compiler controls to representative single/double/triple families
+in addition to the existing quadruple family, checking both root positions.
+By-name selector aliases must not retain assignment proof. Value selectors
+must preserve original roots, exactly one real formatter and no global root
+loads/stores. Full result correctness must execute native controls rather than
+being inferred from a formatter instruction. Use distinct -2.25/0.0 producers
+and exact selected true/false bounded-family sums5/2; retain the existing
+quadruple value-selector outputs2/3 and the new upstream native case.
+
+Run the metadata-derived compiler/shared cone and strict all-target lint with
+unknown-lint denial. Execute all11 unchanged LANG production BUILD selections
+and every prior/new exact native ALGOL regression, with actual counts/source
+heads and any failure retained. Original diagram752/32, lexical/compiler and
+controlledQt results require complete unchanged-source proofs; do not call
+retained execution fresh. Reconstruct documents, validate lessons and whitespace.
+
+Independent exact-final security review precedes non-force publication of the
+repaired same PR. Fresh exact-head required CI/whole3OS Closurec completion logs,
+clean reviews/conflict-free state precede auto-merge, then actual fetched-main
+merge and full payload identity before cleanup/CV04b. No new crates.io dependency,
+limit/assertion weakening, numeric/UB claim without applicable evidence, or
+frozen Miri run/input/receipt/target mutation. Full parity, ingestion, output maps
+and complete transformation lineage remain open.

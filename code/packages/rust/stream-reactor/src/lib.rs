@@ -7,7 +7,7 @@
 
 use std::collections::{BTreeMap, VecDeque};
 use std::net::SocketAddr;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use transport_platform::{
@@ -130,22 +130,59 @@ impl PartialEq for StreamReactorOptions {
 impl Eq for StreamReactorOptions {}
 
 #[derive(Clone)]
-pub struct StopHandle(Arc<AtomicBool>);
+pub struct StopHandle {
+    flag: Arc<AtomicBool>,
+    mailbox: StreamMailbox,
+}
 
 impl StopHandle {
     pub fn stop(&self) {
-        self.0.store(true, Ordering::SeqCst);
+        self.flag.store(true, Ordering::SeqCst);
+        self.mailbox.close_admission();
+        self.mailbox.wake();
     }
 }
 
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct StreamMailbox {
-    commands: Arc<Mutex<VecDeque<StreamMailboxCommand>>>,
+    state: Arc<Mutex<MailboxState>>,
     /// Optional cross-thread trigger that interrupts the owning reactor's `poll`
     /// the instant a command is enqueued, so an off-reactor write flushes without
     /// waiting for the poll timeout.  `None` on platforms whose wakeup primitive
     /// can't be shared across threads (the reactor then drains on its next poll).
     wake: Option<WakeHandle>,
+}
+
+struct MailboxState {
+    commands: VecDeque<StreamMailboxCommand>,
+    pending: Arc<AtomicUsize>,
+    limit: usize,
+    closed: bool,
+}
+
+// Reservation ownership follows the command, even outside the queue. In
+// particular, a drained iterator's unprocessed suffix releases on error/unwind.
+#[derive(Debug)]
+struct AdoptionReservation(Arc<AtomicUsize>);
+
+impl Drop for AdoptionReservation {
+    fn drop(&mut self) {
+        self.0.fetch_sub(1, Ordering::SeqCst);
+    }
+}
+
+impl Default for StreamMailbox {
+    fn default() -> Self {
+        Self::with_limit(DEFAULT_MAX_CONNECTIONS, None)
+    }
+}
+
+struct ServeAdmissionGuard(StreamMailbox);
+
+impl Drop for ServeAdmissionGuard {
+    fn drop(&mut self) {
+        self.0.close_admission();
+    }
 }
 
 impl StreamMailbox {
@@ -192,29 +229,79 @@ impl StreamMailbox {
     /// it has a wake handle), so the connection is adopted promptly rather than at
     /// the next poll timeout.
     pub fn adopt_connection(&self, fd: AdoptableFd, peer_addr: SocketAddr) {
-        self.push(StreamMailboxCommand::AdoptConnection { fd, peer_addr });
+        self.try_adopt_connection(fd, peer_addr);
+    }
+
+    fn with_limit(limit: usize, wake: Option<WakeHandle>) -> Self {
+        Self {
+            state: Arc::new(Mutex::new(MailboxState {
+                commands: VecDeque::new(),
+                pending: Arc::new(AtomicUsize::new(0)),
+                limit: limit.max(1),
+                closed: false,
+            })),
+            wake,
+        }
+    }
+
+    fn set_admission_limit(&self, limit: usize) {
+        self.state.lock().unwrap_or_else(|p| p.into_inner()).limit = limit.max(1);
+    }
+
+    fn try_adopt_connection(&self, fd: AdoptableFd, peer_addr: SocketAddr) -> bool {
+        let mut state = self.state.lock().unwrap_or_else(|p| p.into_inner());
+        // Closure and admission share this lock. Decrements can race safely:
+        // they only make the observed count conservative, never over-admit.
+        if state.closed || state.pending.load(Ordering::SeqCst) >= state.limit {
+            drop(state);
+            drop(fd);
+            return false;
+        }
+        state.pending.fetch_add(1, Ordering::SeqCst);
+        let reservation = AdoptionReservation(Arc::clone(&state.pending));
+        state
+            .commands
+            .push_back(StreamMailboxCommand::AdoptConnection {
+                fd,
+                peer_addr,
+                reservation,
+            });
+        drop(state);
+        self.wake();
+        true
+    }
+
+    fn close_admission(&self) {
+        let mut state = self.state.lock().unwrap_or_else(|p| p.into_inner());
+        state.closed = true;
+        let abandoned = std::mem::take(&mut state.commands);
+        drop(state);
+        drop(abandoned); // close sockets and release tickets outside the lock
     }
 
     fn push(&self, command: StreamMailboxCommand) {
-        // Enqueue *first*, then wake: the reactor, once interrupted, must already
-        // see the command in the queue.  (`serve` drains at both the top and
-        // bottom of every poll cycle, so a wake that races mid-cycle is still
-        // caught.)
-        self.commands
-            .lock()
-            .expect("stream mailbox mutex poisoned")
-            .push_back(command);
+        let mut state = self.state.lock().unwrap_or_else(|p| p.into_inner());
+        if state.closed {
+            drop(state);
+            drop(command);
+            return;
+        }
+        state.commands.push_back(command);
+        drop(state);
+        self.wake(); // enqueue before interrupting the owning poll
+    }
+
+    fn wake(&self) {
         if let Some(wake) = &self.wake {
-            // Best-effort: a failed wake just means the reactor flushes on its
-            // next poll timeout instead of immediately — never a lost command.
-            let _ = wake.wake();
+            let _ = wake.wake(); // bounded poll fallback on failure/unsupported
         }
     }
 
     fn drain(&self) -> Vec<StreamMailboxCommand> {
-        self.commands
+        self.state
             .lock()
-            .expect("stream mailbox mutex poisoned")
+            .unwrap_or_else(|p| p.into_inner())
+            .commands
             .drain(..)
             .collect()
     }
@@ -243,6 +330,7 @@ enum StreamMailboxCommand {
     AdoptConnection {
         fd: AdoptableFd,
         peer_addr: SocketAddr,
+        reservation: AdoptionReservation,
     },
 }
 
@@ -291,6 +379,14 @@ pub struct StreamReactor<P, S = ()> {
     state_init: StateInit<S>,
     handler: StatefulHandler<S>,
     on_close: CloseHandler<S>,
+}
+
+impl<P, S> Drop for StreamReactor<P, S> {
+    fn drop(&mut self) {
+        // Admission closes before field destruction, especially before the
+        // Windows platform's cancellation barrier can wait for kernel packets.
+        self.mailbox.close_admission();
+    }
 }
 
 impl<P: TransportPlatform> StreamReactor<P, ()> {
@@ -360,10 +456,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             Ok(wakeup) => platform.wake_handle(wakeup).ok(),
             Err(_) => None,
         };
-        let mailbox = StreamMailbox {
-            commands: Arc::new(Mutex::new(VecDeque::new())),
-            wake,
-        };
+        let mailbox = StreamMailbox::with_limit(options.max_connections, wake);
 
         Ok(Self {
             platform,
@@ -390,6 +483,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
 
     pub fn set_max_connections(&mut self, max_connections: usize) {
         self.max_connections = max_connections.max(1);
+        self.mailbox.set_admission_limit(self.max_connections);
     }
 
     pub fn set_max_pending_write_bytes(&mut self, max_pending_write_bytes: usize) {
@@ -401,7 +495,10 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
     }
 
     pub fn stop_handle(&self) -> StopHandle {
-        StopHandle(Arc::clone(&self.stop_flag))
+        StopHandle {
+            flag: Arc::clone(&self.stop_flag),
+            mailbox: self.mailbox.clone(),
+        }
     }
 
     pub fn mailbox(&self) -> StreamMailbox {
@@ -416,6 +513,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         // erased, leaving the loop running forever (observed via JNI, where the
         // caller can request stop before the background serve thread starts).
         // A `stop()` must never be lost, so the flag is honoured as-is.
+        let _admission_guard = ServeAdmissionGuard(self.mailbox.clone());
         let mut events = Vec::new();
         while !self.stop_flag.load(Ordering::SeqCst) {
             self.drain_mailbox()?;
@@ -554,7 +652,12 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                 StreamMailboxCommand::ResumeAllReads => self.resume_all_reads()?,
                 // Adoption mints a fresh connection, so it bypasses the
                 // ConnectionId-keyed `apply_mailbox_command` path entirely.
-                StreamMailboxCommand::AdoptConnection { fd, peer_addr } => {
+                StreamMailboxCommand::AdoptConnection {
+                    fd,
+                    peer_addr,
+                    reservation,
+                } => {
+                    let _reservation = reservation;
                     self.adopt_connection(fd, peer_addr)?
                 }
                 other => self.apply_mailbox_command(other)?,
@@ -868,6 +971,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
     }
 
     fn shutdown_all(&mut self) -> Result<(), PlatformError> {
+        self.mailbox.close_admission(); // before fallible/panicking callbacks
         let streams = self.connections.keys().copied().collect::<Vec<_>>();
         for stream in streams {
             self.close_connection(stream)?;
@@ -1754,5 +1858,442 @@ mod worker_listener_tests {
         let result = server.join().expect("server thread");
         assert!(result.is_ok(), "server should exit cleanly: {result:?}");
         assert_eq!(served.load(Ordering::SeqCst), 0, "the handler ran");
+    }
+    fn socket_pair() -> (AdoptableFd, TcpStream, SocketAddr) {
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let client = TcpStream::connect(listener.local_addr().unwrap()).unwrap();
+        client
+            .set_read_timeout(Some(Duration::from_secs(1)))
+            .unwrap();
+        let (server, peer) = listener.accept().unwrap();
+        (server.into(), client, peer)
+    }
+
+    fn pending(mailbox: &StreamMailbox) -> usize {
+        mailbox.state.lock().unwrap().pending.load(Ordering::SeqCst)
+    }
+
+    fn assert_closed(client: &mut TcpStream) {
+        let mut byte = [0];
+        match client.read(&mut byte) {
+            Ok(n) => assert_eq!(n, 0),
+            Err(e) => assert!(matches!(
+                e.kind(),
+                std::io::ErrorKind::ConnectionReset | std::io::ErrorKind::ConnectionAborted
+            )),
+        }
+    }
+
+    #[test]
+    fn pending_adoption_cap_survives_drain_and_closes_overflow_socket() {
+        let mailbox = StreamMailbox::with_limit(1, None);
+        let (fd, mut first, peer) = socket_pair();
+        assert!(mailbox.try_adopt_connection(fd, peer));
+        let drained = mailbox.drain();
+        assert_eq!(pending(&mailbox), 1, "draining retains reservation");
+        let (fd, mut refused, peer) = socket_pair();
+        assert!(!mailbox.try_adopt_connection(fd, peer));
+        assert_closed(&mut refused);
+        assert_eq!(pending(&mailbox), 1);
+        drop(drained);
+        assert_eq!(pending(&mailbox), 0);
+        assert_closed(&mut first);
+    }
+
+    #[test]
+    fn concurrent_admission_has_exact_cap_and_unwind_releases_drained_suffix() {
+        let mailbox = StreamMailbox::with_limit(3, None);
+        let joins: Vec<_> = (0..16)
+            .map(|_| {
+                let mailbox = mailbox.clone();
+                thread::spawn(move || {
+                    let (fd, client, peer) = socket_pair();
+                    (mailbox.try_adopt_connection(fd, peer), client)
+                })
+            })
+            .collect();
+        let clients: Vec<_> = joins.into_iter().map(|j| j.join().unwrap()).collect();
+        assert_eq!(clients.iter().filter(|(admitted, _)| *admitted).count(), 3);
+        assert_eq!(pending(&mailbox), 3);
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let mut drained = mailbox.drain().into_iter();
+            let _first = drained.next().unwrap();
+            assert_eq!(pending(&mailbox), 3);
+            panic!("controlled unwind retains and then drops every command");
+        }));
+        assert!(result.is_err());
+        assert_eq!(pending(&mailbox), 0);
+        for (_, mut client) in clients {
+            assert_closed(&mut client);
+        }
+    }
+
+    #[test]
+    fn setter_shrink_preserves_existing_reservations_and_stop_closes_admission() {
+        let mut reactor = StreamReactor::bind(
+            new_platform(),
+            BindAddress::Ip("127.0.0.1:0".parse().unwrap()),
+            StreamReactorOptions {
+                max_connections: 3,
+                accept_connections: false,
+                ..StreamReactorOptions::default()
+            },
+            |_, _| StreamHandlerResult::write(Vec::new()),
+        )
+        .unwrap();
+        let mailbox = reactor.mailbox();
+        let mut clients = Vec::new();
+        for _ in 0..3 {
+            let (fd, client, peer) = socket_pair();
+            assert!(mailbox.try_adopt_connection(fd, peer));
+            clients.push(client);
+        }
+        let mut drained = mailbox.drain();
+        reactor.set_max_connections(1);
+        assert_eq!(pending(&mailbox), 3);
+        let (fd, mut client, peer) = socket_pair();
+        assert!(!mailbox.try_adopt_connection(fd, peer));
+        assert_closed(&mut client);
+        drop(drained.pop());
+        drop(drained.pop());
+        assert_eq!(pending(&mailbox), 1);
+        let (fd, mut client, peer) = socket_pair();
+        assert!(!mailbox.try_adopt_connection(fd, peer));
+        assert_closed(&mut client);
+        reactor.set_max_connections(2);
+        let (fd, client, peer) = socket_pair();
+        assert!(mailbox.try_adopt_connection(fd, peer));
+        clients.push(client);
+        assert_eq!(pending(&mailbox), 2);
+        reactor.stop_handle().stop();
+        assert_eq!(
+            pending(&mailbox),
+            1,
+            "drained command still owns its ticket"
+        );
+        drop(drained);
+        assert_eq!(pending(&mailbox), 0);
+        let (fd, mut client, peer) = socket_pair();
+        assert!(!mailbox.try_adopt_connection(fd, peer));
+        assert_closed(&mut client);
+        reactor.serve().unwrap();
+        for mut client in clients {
+            assert_closed(&mut client);
+        }
+    }
+
+    #[test]
+    fn drop_closes_queued_adoptions_and_stale_cloned_handles() {
+        let reactor = StreamReactor::bind(
+            new_platform(),
+            BindAddress::Ip("127.0.0.1:0".parse().unwrap()),
+            StreamReactorOptions {
+                accept_connections: false,
+                ..StreamReactorOptions::default()
+            },
+            |_, _| StreamHandlerResult::write(Vec::new()),
+        )
+        .unwrap();
+        let mailbox = reactor.mailbox();
+        let (fd, mut client, peer) = socket_pair();
+        assert!(mailbox.try_adopt_connection(fd, peer));
+        drop(reactor);
+        assert_eq!(pending(&mailbox), 0);
+        assert_closed(&mut client);
+        let (fd, mut client, peer) = socket_pair();
+        assert!(!mailbox.try_adopt_connection(fd, peer));
+        assert_closed(&mut client);
+        mailbox.send(ConnectionId(1), vec![1, 2, 3]);
+        assert!(mailbox.drain().is_empty());
+    }
+    // Real provider/socket ownership, with deterministic Result failure injection
+    // only at the reactor seam. These are not OS fault reproduction claims.
+    struct FailingPlatform<P> {
+        inner: P,
+        registration_error: bool,
+        poll_error: bool,
+    }
+    impl<P: TransportPlatform> TransportPlatform for FailingPlatform<P> {
+        fn capabilities(&self) -> transport_platform::PlatformCapabilities {
+            self.inner.capabilities()
+        }
+        fn bind_listener(
+            &mut self,
+            address: BindAddress,
+            options: ListenerOptions,
+        ) -> Result<ListenerId, PlatformError> {
+            self.inner.bind_listener(address, options)
+        }
+        fn local_addr(&self, listener: ListenerId) -> Result<SocketAddr, PlatformError> {
+            self.inner.local_addr(listener)
+        }
+        fn set_listener_interest(
+            &mut self,
+            listener: ListenerId,
+            readable: bool,
+        ) -> Result<(), PlatformError> {
+            self.inner.set_listener_interest(listener, readable)
+        }
+        fn accept(
+            &mut self,
+            listener: ListenerId,
+        ) -> Result<Option<transport_platform::AcceptedStream>, PlatformError> {
+            self.inner.accept(listener)
+        }
+        fn adopt_stream(&mut self, fd: AdoptableFd) -> Result<StreamId, PlatformError> {
+            self.inner.adopt_stream(fd)
+        }
+        fn set_stream_interest(
+            &mut self,
+            stream: StreamId,
+            interest: StreamInterest,
+        ) -> Result<(), PlatformError> {
+            self.inner.set_stream_interest(stream, interest)
+        }
+        fn read(
+            &mut self,
+            stream: StreamId,
+            buffer: &mut [u8],
+        ) -> Result<ReadOutcome, PlatformError> {
+            self.inner.read(stream, buffer)
+        }
+        fn write(
+            &mut self,
+            stream: StreamId,
+            buffer: &[u8],
+        ) -> Result<WriteOutcome, PlatformError> {
+            self.inner.write(stream, buffer)
+        }
+        fn write_vectored(
+            &mut self,
+            stream: StreamId,
+            buffers: &[std::io::IoSlice<'_>],
+        ) -> Result<WriteOutcome, PlatformError> {
+            self.inner.write_vectored(stream, buffers)
+        }
+        fn shutdown_read(&mut self, stream: StreamId) -> Result<(), PlatformError> {
+            self.inner.shutdown_read(stream)
+        }
+        fn shutdown_write(&mut self, stream: StreamId) -> Result<(), PlatformError> {
+            self.inner.shutdown_write(stream)
+        }
+        fn close_stream(&mut self, stream: StreamId) -> Result<(), PlatformError> {
+            self.inner.close_stream(stream)
+        }
+        fn close_listener(&mut self, listener: ListenerId) -> Result<(), PlatformError> {
+            self.inner.close_listener(listener)
+        }
+        fn create_timer(&mut self) -> Result<transport_platform::TimerId, PlatformError> {
+            self.inner.create_timer()
+        }
+        fn arm_timer(
+            &mut self,
+            timer: transport_platform::TimerId,
+            deadline: std::time::Instant,
+        ) -> Result<(), PlatformError> {
+            self.inner.arm_timer(timer, deadline)
+        }
+        fn disarm_timer(
+            &mut self,
+            timer: transport_platform::TimerId,
+        ) -> Result<(), PlatformError> {
+            self.inner.disarm_timer(timer)
+        }
+        fn create_wakeup(&mut self) -> Result<transport_platform::WakeupId, PlatformError> {
+            self.inner.create_wakeup()
+        }
+        fn wake(&mut self, wakeup: transport_platform::WakeupId) -> Result<(), PlatformError> {
+            self.inner.wake(wakeup)
+        }
+        fn wake_handle(
+            &self,
+            wakeup: transport_platform::WakeupId,
+        ) -> Result<WakeHandle, PlatformError> {
+            self.inner.wake_handle(wakeup)
+        }
+        fn configure_stream(
+            &mut self,
+            stream: StreamId,
+            options: StreamOptions,
+        ) -> Result<(), PlatformError> {
+            if self.registration_error {
+                Err(PlatformError::ProviderFault(
+                    "controlled registration error".into(),
+                ))
+            } else {
+                self.inner.configure_stream(stream, options)
+            }
+        }
+        fn poll(
+            &mut self,
+            timeout: Option<Duration>,
+            output: &mut Vec<PlatformEvent>,
+        ) -> Result<(), PlatformError> {
+            if self.poll_error {
+                Err(PlatformError::ProviderFault("controlled poll error".into()))
+            } else {
+                self.inner.poll(timeout, output)
+            }
+        }
+    }
+
+    #[test]
+    fn actual_serve_result_errors_close_admission_with_reactor_retained() {
+        for registration_error in [false, true] {
+            let platform = FailingPlatform {
+                inner: new_platform(),
+                registration_error,
+                poll_error: !registration_error,
+            };
+            let mut reactor = StreamReactor::bind(
+                platform,
+                BindAddress::Ip("127.0.0.1:0".parse().unwrap()),
+                StreamReactorOptions {
+                    max_connections: 3,
+                    accept_connections: false,
+                    ..StreamReactorOptions::default()
+                },
+                |_, _| StreamHandlerResult::default(),
+            )
+            .unwrap();
+            let mailbox = reactor.mailbox();
+            let mut clients = Vec::new();
+            if registration_error {
+                for _ in 0..3 {
+                    let (fd, client, peer) = socket_pair();
+                    assert!(mailbox.try_adopt_connection(fd, peer));
+                    clients.push(client);
+                }
+            }
+            let error = reactor.serve().unwrap_err();
+            let expected = if registration_error {
+                "controlled registration error"
+            } else {
+                "controlled poll error"
+            };
+            assert!(
+                matches!(error, PlatformError::ProviderFault(ref message) if message == expected)
+            );
+            assert_eq!(
+                pending(&mailbox),
+                0,
+                "actual drained error drops current and suffix reservations"
+            );
+            let (fd, mut client, peer) = socket_pair();
+            assert!(!mailbox.try_adopt_connection(fd, peer));
+            assert_closed(&mut client);
+            drop(reactor);
+            for mut client in clients {
+                assert_closed(&mut client);
+            }
+        }
+    }
+
+    #[test]
+    fn actual_state_init_unwind_drops_drained_suffix_and_closes_admission() {
+        let mut reactor = StreamReactor::bind_with_state(
+            new_platform(),
+            BindAddress::Ip("127.0.0.1:0".parse().unwrap()),
+            StreamReactorOptions {
+                max_connections: 3,
+                accept_connections: false,
+                ..StreamReactorOptions::default()
+            },
+            |_| -> () {
+                panic!("controlled state initializer panic");
+            },
+            |_, _, _| StreamHandlerResult::default(),
+            |_, _| {},
+        )
+        .unwrap();
+        let mailbox = reactor.mailbox();
+        let mut clients = Vec::new();
+        for _ in 0..3 {
+            let (fd, client, peer) = socket_pair();
+            assert!(mailbox.try_adopt_connection(fd, peer));
+            clients.push(client);
+        }
+        assert!(
+            std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| reactor.serve())).is_err()
+        );
+        assert_eq!(pending(&mailbox), 0);
+        let (fd, mut client, peer) = socket_pair();
+        assert!(!mailbox.try_adopt_connection(fd, peer));
+        assert_closed(&mut client);
+        drop(reactor);
+        for mut client in clients {
+            assert_closed(&mut client);
+        }
+    }
+
+    #[test]
+    fn shutdown_closes_admission_before_on_close_panics_without_stop_request() {
+        let slot = Arc::new(std::sync::OnceLock::<StreamMailbox>::new());
+        let in_callback = Arc::clone(&slot);
+        let mut reactor = StreamReactor::bind_with_state(
+            new_platform(),
+            BindAddress::Ip("127.0.0.1:0".parse().unwrap()),
+            StreamReactorOptions {
+                accept_connections: false,
+                ..StreamReactorOptions::default()
+            },
+            |_| (),
+            |_, _, _| StreamHandlerResult::default(),
+            move |_, _| {
+                assert!(
+                    in_callback.get().unwrap().state.lock().unwrap().closed,
+                    "callback saw open admission"
+                );
+                panic!("controlled on-close panic");
+            },
+        )
+        .unwrap();
+        let mailbox = reactor.mailbox();
+        assert!(slot.set(mailbox.clone()).is_ok());
+        let (fd, mut active, peer) = socket_pair();
+        assert!(mailbox.try_adopt_connection(fd, peer));
+        reactor.drain_mailbox().unwrap();
+        assert_eq!(reactor.connections.len(), 1);
+        let (fd, mut queued, peer) = socket_pair();
+        assert!(mailbox.try_adopt_connection(fd, peer));
+        assert!(
+            std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| reactor.shutdown_all()))
+                .is_err()
+        );
+        assert_eq!(pending(&mailbox), 0);
+        assert_closed(&mut queued);
+        let (fd, mut client, peer) = socket_pair();
+        assert!(!mailbox.try_adopt_connection(fd, peer));
+        assert_closed(&mut client);
+        drop(reactor);
+        assert_closed(&mut active);
+    }
+
+    #[test]
+    fn concurrent_close_and_enqueue_leave_no_owned_queue_or_late_admission() {
+        let mailbox = StreamMailbox::with_limit(8, None);
+        let barrier = Arc::new(std::sync::Barrier::new(17));
+        let joins: Vec<_> = (0..16)
+            .map(|_| {
+                let mailbox = mailbox.clone();
+                let barrier = Arc::clone(&barrier);
+                thread::spawn(move || {
+                    let (fd, client, peer) = socket_pair();
+                    barrier.wait();
+                    mailbox.try_adopt_connection(fd, peer);
+                    client
+                })
+            })
+            .collect();
+        barrier.wait();
+        mailbox.close_admission();
+        for join in joins {
+            assert_closed(&mut join.join().unwrap());
+        }
+        assert_eq!(pending(&mailbox), 0);
+        assert!(mailbox.drain().is_empty());
+        let (fd, mut client, peer) = socket_pair();
+        assert!(!mailbox.try_adopt_connection(fd, peer));
+        assert_closed(&mut client);
     }
 }

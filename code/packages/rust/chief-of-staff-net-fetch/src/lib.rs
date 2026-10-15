@@ -617,10 +617,13 @@ pub struct SystemResolver;
 
 impl Resolver for SystemResolver {
     fn resolve(&self, host: &str, port: u16) -> std::io::Result<Vec<SocketAddr>> {
+        // An empty name has different OS meanings: Windows resolves it to
+        // the local host. Refuse it before the platform call so this public
+        // boundary cannot silently turn a missing destination into a lookup.
         if host.is_empty() {
             return Err(std::io::Error::new(
                 std::io::ErrorKind::InvalidInput,
-                "an empty host name",
+                "host must not be empty",
             ));
         }
         Ok((host, port).to_socket_addrs()?.collect())

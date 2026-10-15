@@ -351,6 +351,8 @@ const ARRAYLENGTH: u8 = 0xBE; // arrayref → length (int)
 /// Used in `__callClosure` to dispatch on the function index:
 ///   `lload fn_idx_slot; ldc2_w target_idx; lcmp; ifeq case_N`
 const LCMP: u8 = 0x94;
+const FCMPL: u8 = 0x95; // compare two floats → int -1/0/1 (NaN → -1)
+const FCMPG: u8 = 0x96; // compare two floats → int -1/0/1 (NaN → +1)
 const DCMPL: u8 = 0x97; // compare two doubles → int -1/0/1 (NaN → -1)
 const DCMPG: u8 = 0x98; // compare two doubles → int -1/0/1 (NaN → +1)
 
@@ -813,6 +815,7 @@ fn type_to_jvm_descriptor(hint: &str) -> &str {
         "str" => "Ljava/lang/String;",
         t if is_array_type(t) => match array_elem_type(t).as_deref() {
             Some("i64") | Some("u64") => "[J",
+            Some("f32") => "[F",
             Some("f64") => "[D",
             Some("str") => "[Ljava/lang/String;",
             _ => "[I",
@@ -1969,6 +1972,13 @@ fn collect_closure_dispatch(module: &IIRModule) -> HashMap<String, ClosureDispat
 ///
 /// The returned `JvmMethodInfo` has `access_flags = ACC_PUBLIC | ACC_STATIC`,
 /// because IIR functions are plain procedures with no object receiver.
+// Conservatively cover the reference conversions this backend can prove from
+// its declared descriptors. Every reference widens to Object; other hierarchy
+// conversions need an assignability engine, not a one-slot width comparison.
+fn reference_descriptor_assignable(actual: &str, expected: &str) -> bool {
+    actual == expected || (expected == "Ljava/lang/Object;" && (actual.starts_with('L') || actual.starts_with('[')))
+}
+
 fn lower_function(
     func: &IIRFunction,
     class_name: &str,
@@ -1979,9 +1989,44 @@ fn lower_function(
 ) -> Result<JvmMethodInfo, IIRJvmError> {
     let fname = &func.name;
 
+    // JVMS 4.3.3 limits static method descriptors to 255 parameter slots.
+    // Check before allocating locals: J/D use two, arrays/references one.
+    // A larger max_stack cannot make an oversized descriptor valid.
+    let mut parameter_slots = 0_u16;
+    for (_, ty) in &func.params {
+        let jtype = iir_type_to_jvm(ty).ok_or_else(|| IIRJvmError::InvalidOperand {
+            function: fname.clone(),
+            detail: format!("unsupported JVM parameter type {ty:?}"),
+        })?;
+        parameter_slots = parameter_slots.checked_add(jtype.slot_width())
+            .filter(|&n| n <= 255 && jtype != JvmType::Void)
+            .ok_or_else(|| IIRJvmError::InvalidOperand {
+                function: fname.clone(),
+                detail: "static method descriptor exceeds 255 parameter slots or has a void parameter".into(),
+            })?;
+    }
+
     // ── Pass 1: build type map and allocate slots ────────────────────────────
     let type_map = build_type_map(func);
     let slots = allocate_slots(func, &type_map);
+    // Ref is a load/store category, not a Java class. Retain the declared
+    // descriptor separately, indexed once under the same first-definition
+    // policy as build_type_map, to distinguish [J, [D and String at calls.
+    let mut reference_descriptors: HashMap<&str, &str> = HashMap::new();
+    for (name, ty) in &func.params {
+        if iir_type_to_jvm(ty) == Some(JvmType::Ref) {
+            reference_descriptors.insert(name, type_to_jvm_descriptor(ty));
+        }
+    }
+    for instr in &func.instructions {
+        if let Some(dest) = instr.dest.as_deref() {
+            if type_map.get(dest) == Some(&JvmType::Ref) {
+                reference_descriptors.entry(dest).or_insert(if instr.op == "alloc_closure" {
+                    "[J"
+                } else { type_to_jvm_descriptor(&instr.type_hint) });
+            }
+        }
+    }
 
     // Compute max_locals: the maximum slot index + width across all variables.
     // Use u32 arithmetic to avoid u16 overflow before the final bounds check.
@@ -2007,6 +2052,10 @@ fn lower_function(
 
     // ── Pass 2: emit bytecode ────────────────────────────────────────────────
     let mut code: Vec<u8> = Vec::new();
+    // Existing non-call emitters retain their conservative bound. Direct calls
+    // can push an arbitrary supported descriptor's arguments before invoking;
+    // derive that peak from the actual loads instead of a fixed arity guess.
+    let mut max_stack = 8_u16;
     let mut label_map: HashMap<String, u32> = HashMap::new(); // label → PC
     let mut fixups: Vec<Fixup> = Vec::new();
 
@@ -2802,25 +2851,31 @@ fn lower_function(
             "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
                 let (src0, src1) = two_srcs(func, instr, &slots)?;
 
-                if src0.1 == JvmType::Double {
-                    // Double comparison (LANG-FULL E3): dload both, `dcmpl`/`dcmpg`
-                    // to an int -1/0/1, then the same unary `ifXX` branch the long
-                    // path uses. Without this branch a `real` comparison fell into
-                    // the `else` int path, which `iload`ed a two-slot double as a
-                    // single int and used `if_icmpne` — the verifier rejected the
-                    // class (empty output). `dcmpg` is chosen for `>`/`>=` so a
-                    // NaN operand makes them false (NaN → +1); `dcmpl` for the
-                    // rest (NaN → -1) — matching javac's convention.
-                    emit_typed_load(&mut code, src0.0, JvmType::Double);
-                    emit_typed_load(&mut code, src1.0, JvmType::Double);
+                if matches!(src0.1, JvmType::Float | JvmType::Double)
+                    || matches!(src1.1, JvmType::Float | JvmType::Double) {
+                    if src0.1 != src1.1 {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("mixed floating comparison {:?} and {:?}", src0.1, src1.1),
+                        });
+                    }
+                    // fload/dload must agree with both operand slots. Integer
+                    // loads cannot read a float, even though each occupies one
+                    // slot. Both compare families produce the same int -1/0/1.
+                    let (cmpl, cmpg) = if src0.1 == JvmType::Float { (FCMPL, FCMPG) } else { (DCMPL, DCMPG) };
+                    emit_typed_load(&mut code, src0.0, src0.1);
+                    emit_typed_load(&mut code, src1.0, src1.1);
+                    // For lt/le, unordered must compare HIGH so >=/> skips
+                    // true. For gt/ge it must compare LOW so <=/< skips true.
+                    // Equality is false and inequality true for either NaN sign.
                     let (dcmp, branch) = match instr.op.as_str() {
-                        "cmp_eq" => (DCMPL, IFNE), // skip true when result ≠ 0
-                        "cmp_ne" => (DCMPL, IFEQ), // skip true when result = 0
-                        "cmp_lt" => (DCMPL, IFGE), // skip true when result ≥ 0
-                        "cmp_le" => (DCMPL, IFGT), // skip true when result > 0
-                        "cmp_gt" => (DCMPG, IFLE), // skip true when result ≤ 0
-                        "cmp_ge" => (DCMPG, IFLT), // skip true when result < 0
-                        _ => (DCMPL, IFNE),
+                        "cmp_eq" => (cmpl, IFNE), // skip true when result ≠ 0
+                        "cmp_ne" => (cmpl, IFEQ), // skip true when result = 0
+                        "cmp_lt" => (cmpg, IFGE), // skip true when result ≥ 0
+                        "cmp_le" => (cmpg, IFGT), // skip true when result > 0
+                        "cmp_gt" => (cmpl, IFLE), // skip true when result ≤ 0
+                        "cmp_ge" => (cmpl, IFLT), // skip true when result < 0
+                        _ => (cmpl, IFNE),
                     };
                     emit_double_compare(&mut code, dcmp, branch);
                 } else if src0.1 == JvmType::Long {
@@ -3688,16 +3743,25 @@ fn lower_function(
                 })?;
                 let descriptor = make_descriptor(&callee_fn.params, &callee_fn.return_type);
 
+                if instr.srcs.len() - 1 != callee_fn.params.len() {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: format!("call to {callee_name:?} has {} arguments, expected {}", instr.srcs.len() - 1, callee_fn.params.len()),
+                    });
+                }
+
                 // Push argument slots onto the JVM stack.
-                for arg in instr.srcs.iter().skip(1) {
-                    match arg {
+                let mut argument_slots = 0_u16;
+                for (arg, (_, parameter_type)) in instr.srcs.iter().skip(1).zip(&callee_fn.params) {
+                    let argument_type = match arg {
                         Operand::Var(n) => {
                             let (slot, jtype) = lookup_var(n)?;
                             emit_typed_load(&mut code, slot, jtype);
+                            jtype
                         }
-                        Operand::Int(v) => emit_iconst_cp(&mut code, cp, *v as i32),
-                        Operand::Bool(b) => emit_iconst(&mut code, if *b { 1 } else { 0 }),
-                        Operand::Float(f) => emit_fconst(&mut code, *f as f32),
+                        Operand::Int(v) => { emit_iconst_cp(&mut code, cp, *v as i32); JvmType::Int }
+                        Operand::Bool(b) => { emit_iconst(&mut code, if *b { 1 } else { 0 }); JvmType::Int }
+                        Operand::Float(f) => { emit_fconst(&mut code, *f as f32); JvmType::Float }
                         // LANG32: Str is a compile-time string literal — not
                         // a passable argument in V1; return an error.
                         Operand::Str(_) => {
@@ -3706,20 +3770,67 @@ fn lower_function(
                                 op: "call with Str argument — string args not yet supported".into(),
                             });
                         }
+                    };
+                    if Some(argument_type) != iir_type_to_jvm(parameter_type) {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("call to {callee_name:?} loads {argument_type:?} for parameter {parameter_type:?}"),
+                        });
                     }
+                    if argument_type == JvmType::Ref {
+                        let actual = match arg {
+                            Operand::Var(n) => reference_descriptors.get(n.as_str()).copied(),
+                            _ => None,
+                        };
+                        let expected = type_to_jvm_descriptor(parameter_type);
+                        if !actual.is_some_and(|d| reference_descriptor_assignable(d, expected)) {
+                            return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: format!("call to {callee_name:?} reference descriptor {actual:?} is not assignable to {expected:?}"),
+                            });
+                        }
+                    }
+                    argument_slots = argument_slots.checked_add(argument_type.slot_width())
+                        .filter(|&n| n <= 255)
+                        .ok_or_else(|| IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("call to {callee_name:?} exceeds 255 parameter slots"),
+                        })?;
                 }
+                max_stack = max_stack.max(argument_slots);
 
                 // Emit invokestatic with CP index for the Methodref.
                 let methodref_idx = cp.add_methodref(class_name, &callee_name, &descriptor);
                 code.push(INVOKESTATIC);
                 code.extend_from_slice(&methodref_idx.to_be_bytes());
 
-                // Store the return value if there is a dest.
-                if let Some(dest) = &instr.dest {
-                    let ret_type = iir_type_to_jvm(&callee_fn.return_type).unwrap_or(JvmType::Int);
-                    if ret_type != JvmType::Void {
-                        let (dest_slot, _) = lookup_var(dest)?;
+                // Each IIR call ends with an empty operand stack. Otherwise an
+                // ignored return survives into later calls, invalidating their
+                // argument-only peaks (and changing the stack at branch joins).
+                let ret_type = iir_type_to_jvm(&callee_fn.return_type).unwrap_or(JvmType::Int);
+                max_stack = max_stack.max(ret_type.slot_width());
+                if ret_type != JvmType::Void {
+                    if let Some(dest) = &instr.dest {
+                        let (dest_slot, dest_type) = lookup_var(dest)?;
+                        if dest_type != ret_type {
+                            return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: format!("call to {callee_name:?} return destination {dest:?} is {dest_type:?}, result is {ret_type:?}"),
+                            });
+                        }
+                        if ret_type == JvmType::Ref {
+                            let actual = type_to_jvm_descriptor(&callee_fn.return_type);
+                            let expected = reference_descriptors.get(dest.as_str()).copied();
+                            if !expected.is_some_and(|d| reference_descriptor_assignable(actual, d)) {
+                                return Err(IIRJvmError::InvalidOperand {
+                                    function: fname.clone(),
+                                    detail: format!("call to {callee_name:?} return destination reference descriptor {expected:?} cannot receive {actual:?}"),
+                                });
+                            }
+                        }
                         emit_typed_store(&mut code, dest_slot, ret_type);
+                    } else {
+                        code.push(if ret_type.slot_width() == 2 { 0x58 } else { 0x57 }); // pop2 / pop
                     }
                 }
             }
@@ -4605,10 +4716,8 @@ fn lower_function(
     // ── Build method descriptor ────────────────────────────────────────────
     let descriptor = make_descriptor(&func.params, &func.return_type);
 
-    // max_stack is the depth of the operand stack.  A conservative upper
-    // bound is 2 (for binary ops that push two values before a binary opcode).
-    // In practice our emit patterns never exceed a stack depth of ~4.
-    let max_stack: u16 = 8;
+    // max_stack includes the measured direct-call load peaks, while preserving
+    // the existing conservative bound for the other instruction emitters.
 
     let code_attribute = JvmCodeAttribute {
         name: "Code".to_string(),
@@ -5377,6 +5486,169 @@ mod tests {
             "void",
             vec![IIRInstr::new("ret_void", None, vec![], "void")],
         )
+    }
+
+    // Distinct widths expose a slot-count error that argument-count tests hide.
+    fn direct_call_slot_module(types: &[&str], ignored_returns: bool) -> IIRModule {
+        let params: Vec<_> = types.iter().enumerate().map(|(i, t)| (format!("p{i}"), (*t).to_string())).collect();
+        let mut args = vec![Operand::Var("callee".into())];
+        args.extend(params.iter().map(|(n, _)| Operand::Var(n.clone())));
+        let callee = if ignored_returns {
+            IIRFunction::new("callee", params.clone(), "i64", vec![
+                IIRInstr::new("const", Some("answer".into()), vec![Operand::Int(42)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("answer".into())], "i64"),
+            ])
+        } else { IIRFunction::new("callee", params.clone(), "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]) };
+        let mut body = vec![IIRInstr::new("call", None, args.clone(), if ignored_returns { "i64" } else { "void" })];
+        if ignored_returns { body.push(IIRInstr::new("call", None, args, "i64")); }
+        body.push(IIRInstr::new("ret_void", None, vec![], "void"));
+        let mut module = make_module(IIRFunction::new("caller", params, "void", body));
+        module.functions.push(callee);
+        module
+    }
+
+    #[test]
+    fn captured_array_direct_call_slot_width_and_descriptor_boundaries() {
+        let mixed = ["array<f64>", "i64", "f64", "i32", "f32", "str", "i64", "i64"];
+        for (types, expected) in [(mixed.to_vec(), 12), (vec!["i32"; 8], 8), (vec!["i32"; 255], 255), (vec!["i64"; 127], 254)] {
+            let class = lower_iir_to_jvm(&direct_call_slot_module(&types, false), &make_cfg()).unwrap();
+            let caller = class.methods.iter().find(|m| m.name == "caller").unwrap();
+            assert_eq!(caller.code_attribute().unwrap().max_stack, expected, "types={types:?}");
+        }
+        for types in [vec!["i32"; 256], vec!["i64"; 128]] {
+            let err = lower_iir_to_jvm(&direct_call_slot_module(&types, false), &make_cfg()).unwrap_err();
+            assert!(format!("{err:?}").contains("255 parameter slots"), "{err:?}");
+        }
+    }
+
+    #[test]
+    fn captured_array_direct_call_discards_ignored_wide_returns() {
+        let class = lower_iir_to_jvm(&direct_call_slot_module(&["i64"; 6], true), &make_cfg()).unwrap();
+        let caller = class.methods.iter().find(|m| m.name == "caller").unwrap();
+        let code = caller.code_attribute().unwrap();
+        assert_eq!(code.max_stack, 12);
+        // Decode these controlled load/invoke/pop sequences exactly. Every call
+        // must consume its unused two-slot return before the next call begins.
+        let mut cursor = 0;
+        for _ in 0..2 {
+            for slot in [0_u8, 2, 4, 6, 8, 10] {
+                assert_eq!(&code.code[cursor..cursor+2], &[0x16, slot]); cursor += 2;
+            }
+            assert_eq!(code.code[cursor], INVOKESTATIC); cursor += 3;
+            assert_eq!(code.code[cursor], 0x58); cursor += 1; // pop2
+        }
+        assert_eq!(&code.code[cursor..], &[RETURN]);
+    }
+
+    #[test]
+    fn captured_array_direct_call_rejects_malformed_invocations() {
+        for (srcs, detail) in [
+            (vec![Operand::Var("callee".into())], "arguments, expected"),
+            (vec![Operand::Var("callee".into()), Operand::Int(42)], "loads Int for parameter"),
+        ] {
+            let mut module = direct_call_slot_module(&["i64"], false);
+            module.functions[0].instructions[0].srcs = srcs;
+            let err = lower_iir_to_jvm(&module, &make_cfg()).unwrap_err();
+            assert!(format!("{err:?}").contains(detail), "{err:?}");
+        }
+        let mut module = direct_call_slot_module(&["i32"; 6], true);
+        let callee = &mut module.functions[1];
+        callee.return_type = "i32".into();
+        for instr in &mut callee.instructions { instr.type_hint = "i32".into(); }
+        for instr in &mut module.functions[0].instructions[..2] { instr.type_hint = "i32".into(); }
+        let class = lower_iir_to_jvm(&module, &make_cfg()).unwrap();
+        let code = class.methods.iter().find(|m| m.name == "caller").unwrap().code_attribute().unwrap();
+        assert_eq!(code.max_stack, 8);
+        // Six iloads (short form slots0..3), invokestatic, pop; repeated twice.
+        let mut cursor = 0;
+        for _ in 0..2 {
+            for slot in 0_u8..6 {
+                if slot <= 3 { assert_eq!(code.code[cursor], 0x1a + slot); cursor += 1; }
+                else { assert_eq!(&code.code[cursor..cursor+2], &[0x15, slot]); cursor += 2; }
+            }
+            assert_eq!(code.code[cursor], INVOKESTATIC); cursor += 3;
+            assert_eq!(code.code[cursor], 0x57); cursor += 1;
+        }
+        assert_eq!(&code.code[cursor..], &[RETURN]);
+    }
+
+    #[test]
+    fn captured_array_direct_call_rejects_reference_and_result_mismatches() {
+        for (argument, parameter) in [("array<i64>", "array<f64>"), ("str", "array<i64>"), ("ref<any>", "str")] {
+            let mut module = direct_call_slot_module(&[argument], false);
+            module.functions[1].params[0].1 = parameter.into();
+            let err = lower_iir_to_jvm(&module, &make_cfg()).unwrap_err();
+            assert!(format!("{err:?}").contains("reference descriptor"), "{err:?}");
+        }
+        let mut module = direct_call_slot_module(&["str"], false);
+        module.functions[1].params[0].1 = "ref<any>".into();
+        lower_iir_to_jvm(&module, &make_cfg()).expect("String safely widens to Object");
+        for hint in ["i32", "f64", "str"] {
+            let mut module = direct_call_slot_module(&["i64"], true);
+            module.functions[0].instructions[0].dest = Some("result".into());
+            module.functions[0].instructions[0].type_hint = hint.into();
+            let err = lower_iir_to_jvm(&module, &make_cfg()).unwrap_err();
+            assert!(format!("{err:?}").contains("return destination"), "{err:?}");
+        }
+        let mut module = direct_call_slot_module(&["array<i64>"], false);
+        module.functions[1].return_type = "array<i64>".into();
+        module.functions[1].instructions = vec![IIRInstr::new("ret", None, vec![Operand::Var("p0".into())], "array<i64>")];
+        module.functions[0].instructions[0].dest = Some("result".into());
+        module.functions[0].instructions[0].type_hint = "array<f64>".into();
+        let err = lower_iir_to_jvm(&module, &make_cfg()).unwrap_err();
+        assert!(format!("{err:?}").contains("return destination reference descriptor"), "{err:?}");
+    }
+
+    #[test]
+    fn captured_array_direct_call_float_descriptor_matches_local_allocation() {
+        let mut module = direct_call_slot_module(&["array<f32>"], false);
+        module.functions[0].params.clear();
+        module.functions[0].instructions = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<f32>"),
+            IIRInstr::new("call", None, vec![Operand::Var("callee".into()), Operand::Var("a".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ];
+        let class = lower_iir_to_jvm(&module, &make_cfg()).unwrap();
+        let caller = class.methods.iter().find(|m| m.name == "caller").unwrap();
+        let code = &caller.code_attribute().unwrap().code;
+        assert_eq!(&code[..9], &[0x04, 0x3b, 0x1a, 0xbc, 0x06, 0x3a, 0x01, 0x19, 0x01]);
+        assert_eq!(code[9], INVOKESTATIC);
+        assert_eq!(&code[12..], &[RETURN]);
+        assert_eq!(class.methods.iter().find(|m| m.name == "callee").unwrap().descriptor, "([F)V");
+        module.functions[1].params[0].1 = "array<i32>".into();
+        let err = lower_iir_to_jvm(&module, &make_cfg()).unwrap_err();
+        assert!(format!("{err:?}").contains("reference descriptor"), "{err:?}");
+    }
+
+    #[test]
+    fn float_comparison_typed_loads_and_unordered_branches() {
+        for ty in ["f32", "f64"] {
+            for (op, nan_high, branch) in [("cmp_eq", false, IFNE), ("cmp_ne", false, IFEQ), ("cmp_lt", true, IFGE), ("cmp_le", true, IFGT), ("cmp_gt", false, IFLE), ("cmp_ge", false, IFLT)] {
+                let function = IIRFunction::new("compare", vec![("a".into(), ty.into()), ("b".into(), ty.into())], "i32", vec![
+                    IIRInstr::new(op, Some("result".into()), vec![Operand::Var("a".into()), Operand::Var("b".into())], ty),
+                    IIRInstr::new("ret", None, vec![Operand::Var("result".into())], "i32"),
+                ]);
+                let class = lower_iir_to_jvm(&make_module(function), &make_cfg()).unwrap();
+                let code = &class.methods[0].code_attribute().unwrap().code;
+                let (load, second, cmp, store, reload) = if ty == "f32" {
+                    (0x17, 1, if nan_high { 0x96 } else { 0x95 }, vec![0x3d], vec![0x1c])
+                } else {
+                    (0x18, 2, if nan_high { 0x98 } else { 0x97 }, vec![0x36, 4], vec![0x15, 4])
+                };
+                let mut expected = vec![load, 0, load, second, cmp, branch, 0, 7, 0x04, 0xa7, 0, 4, 0x03];
+                expected.extend(store); expected.extend(reload); expected.push(0xac);
+                assert_eq!(*code, expected, "{ty} {op}");
+            }
+        }
+        for (left, right) in [("f32", "f64"), ("f64", "i32")] {
+            let function = IIRFunction::new("mixed", vec![("a".into(), left.into()), ("b".into(), right.into())], "i32", vec![
+                IIRInstr::new("cmp_eq", Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("b".into())], left),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+            ]);
+            let err = lower_iir_to_jvm(&make_module(function), &make_cfg()).unwrap_err();
+            assert!(format!("{err:?}").contains("mixed floating comparison"), "{err:?}");
+        }
     }
 
     fn make_cfg() -> IIRJvmConfig {

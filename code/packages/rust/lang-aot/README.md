@@ -1,5 +1,19 @@
 # lang-aot
 
+Owned conditional-unit programs assert exact stdout, normal exit and markers
+proving condition/selected-arm order and single evaluation. The eleven-unit
+group adds ten sources/60 actual cells, retaining all106 old sources/636 tuples.
+Its branch markers are CL10/CR12. Present tools returning no result fail.
+
+Actual source `f630e6ad` passed 2,765 tests across 120 targets, zero failures,
+one unchanged parent-only archive ignore, and strict all-target Clippy for all
+20 affected packages. Compiler884 and full unfiltered LANG500 passed. Focused
+runtime has 116 sources/696 actual cells on six available backends; all636 old
+tuples and106 old sources stay exact. CLR is unavailable and uncounted.
+Source/native-focused review19fd3975 and style-focused76b54bb9 passed; independent
+full terminal reviewac4a0fec passed. Hosted checks and publication remain separate.
+Final-source Miri **DEFERRED/PENDING**, never passed.
+
 ALGOL runtime real output now includes values migrated through provenance-tracked
 scalar slots: a real procedure result with zero parameters, value-mode scalar
 parameters, value/name array descriptor formals, a direct procedure formal, or
@@ -114,6 +128,11 @@ Across every bounded conditional family above, branch roots may be unaliased
 local real snapshots carrying runtime-real provenance across assignment;
 globals, captured locals, and by-name aliases remain gated across a selector
 call.
+Assignment provenance is checked before and after RHS lowering. A selector
+that promotes a branch root through a by-name actual invalidates the cached
+local proof; a value formal leaves its caller's snapshots unaliased.
+Direct real output uses the same pre-proof AND post-lowering proof rule, so
+selector promotion cannot retain a cached formatter admission (#17363).
 Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
@@ -1138,3 +1157,125 @@ CLR simulator. Acceptance depends on the actual IIR: dynamic helper boundaries,
 McCarthy `ref<any>` and Nib narrow types remain unsupported, and the CLR01
 out-of-i32 literal gate remains in force. No type inference or fallback occurs.
 The default encoded API, CLI and textual result ABI retain their behavior.
+
+CV04a bare-root integration controls preserve the ordinary call-selected local snapshot policy and both post-lowering alias-proof consumers. By-name mutation must refuse either promoted root; value-formal mutation retains distinct 2.25/3.5 snapshots through direct output and intermediate assignment. Full final-source local Miri remains **DEFERRED/PENDING**.
+
+Signed calling-selector controls pair default by-name refusal with value-formal
+snapshot acceptance at both direct and assigned output consumers. Sixteen
+cells cover both actuals, selector results and sign arrangements; native
+controls assert exact 2.25/3.5/-2.25/-3.5 output on every available standard
+backend. Existing alias-proof guards and production bounds remain required.
+
+Additive calling-selector controls pair default by-name refusal with value-formal
+snapshot acceptance at both direct and assigned output consumers. Sixteen
+cells cover both actuals, selector results and operand arrangements; native
+controls assert exact -1.25/1.5/3.25/5.5 output on every available standard
+backend. Existing alias-proof guards and production bounds remain required.
+
+Multiplicative calling-selector controls pair default by-name refusal with value-formal
+snapshot acceptance at both direct and assigned output consumers. Sixteen
+cells cover both actuals, selector results and operand arrangements; native
+controls assert exact -4.5/1.75/-4/7 output on every available standard
+backend. Existing alias-proof guards and production bounds remain required.
+
+The BEAM native regression set includes long string constants that exceed initial
+heap space while a separate string remains live, alongside original sparse array
+copies. Local OTP29 success does not replace current-head Linux CI acceptance.
+
+Powered calling-selector controls cover both actual roots, selector outcomes,
+direct/assigned output and base/exponent operand positions. Default name formals
+lose formatter admission after alias promotion; value formals retain one real
+formatter call and local snapshots. Sixteen complete native programs check exact
+4/9/4/8 stdout on every available standard backend. Both ^ and ** are covered;
+existing alias, finite-value and production-limit controls remain required.
+
+Computed name-actual branches carry proof on their materialized conditional
+result, established for both arms after selector effects. Later name captures
+cannot erase that scalar's provenance; a selector that promotes either root
+still refuses output. Paired direct/assigned name refusal and value controls
+check both actuals and outcomes, with exact -1/1 native stdout. Every earlier
+alias, shared-root, tracked-literal and production-limit control stays required.
+
+
+Sixth computed-name value snapshots have four assigned source controls: both
+mutated formal roots and both outcomes. A saved temporary preserves default
+main exit0, and each program requires actual execution on every available
+standard backend, exact9/1 stdout and successful termination. Actual receipt
+records24 zero-exit cells on NativeAot/LLVM/WASM/JVM/VM/JIT; CLR is unavailable
+and unvalidated. Matched stdout with missing/nonzero exit is rejected by a scoped
+adversarial control, while the existing intentional-return conformance helper
+and all earlier matrices remain unchanged. Miri is DEFERRED/PENDING.
+
+
+Sign-wrapped computed-name snapshots now have eight complete source controls
+covering both roots/outcomes and direct/assigned consumers. Every program needs
+actual execution, exact -1/1 and Some(0), retaining unavailable-backend and trap
+guards. Actual48 cells pass on NativeAot/LLVM/WASM/JVM/VM/JIT; CLR unavailable.
+The original intentional-return conformance helper remains unchanged.
+Final-source Miri is DEFERRED/PENDING; whole delivery gates remain open.
+
+
+## Native validation checkpoint
+
+Eight owned nested-entier name-actual sources prove true/false outcomes, either value-snapshot root and direct/saved output in 48 actual normally completed cells across six backends, with exact stdout and Some(0). The producer stdout-only test and shared helper remain intact. Broad source28ac validation separately failed ten captured-array NativeAOT/JVM cells; those are delivery blockers, not accepted skips.
+
+The 14-package safety run passed834 tests across32 targets, explicitly
+excluding only the new expected-red work test that was executed separately
+(Cargo101,1PASS/1FAIL). Strict15-package lint passed. This is scoped evidence;
+whole/downstream/hosted/merge acceptance remains withheld. Final-source Miri
+is **DEFERRED/PENDING**.
+
+
+## Captured-array JVM validation checkpoint
+
+The existing eight captured/forwarded array rows execute on the installed real JVM with Exit42. A new float-array allocation/store/call/load/return control computes42 and its descriptor-only [F to [I negative control is rejected by the verifier. A real JVM table checks84 finite/signed-zero/NaN comparisons across both widths and all six relations. Original rows, expected results and backend rosters are retained.
+
+Actual c5b00f83 validation completed: full JVM200 tests/docs across3 targets
+(69 library,124 integration,7 docs), the original8 real JVM rows, positive/
+negative float-array verification, real IEEE84 checks and strictJVM/LANG/Twig
+alltargets passed. Focused controls are included in200, not additive. Earlier
+source da45489b unfiltered LANG validation actually failed:463PASS9 native ABI
+refusals. Latest full/native/hosted/merge acceptance remains open, along with
+general-hop32/32 work failures. Miri **DEFERRED/PENDING**, never passed; frozen
+run/source/inputs/target/receipts preserved and unpolled. No new crates.io deps.
+
+## Bounded native word-call validation
+
+Internal integer-word direct calls and function parameters now support
+up to eight words on MsX64 and SysV. A fixed aligned outgoing tail follows
+shadow space and stays below all negative RBP locals; callee extras spill from
+RBP+16+shadow+8index. Frame/displacement arithmetic is checked; nine arguments
+or formals refuse. Builtin physical-register marshalling is unchanged. Exact
+both-ABI simulator controls check5/6/7/8 order, fullRAX, stackwords, shadow
+clobbering, preserved locals, alignment/restoration, recursion and refusal.
+Root metadata retainsp7 RBP-64 and actual external returnPC. Real Windows
+six/eight-position and eight original captured/forwarded array rows execute
+Exit42. Simulator evidence does not establish Linux/macOS hardware or forced
+GC execution, and this bounded internal convention does not claim arbitrary
+arity or native C floating argument interoperability.
+
+Actual isolated source316e7878 validation completed: nine affected packages
+1226PASS2FAIL1existingignore/81targets; only the obsolete five/seven-formal
+refusal oracles failed. Full unfiltered LANG476/0/0, strict nine-package
+alltargets, standalone Closure1093/0/0 across181targets and strict passed.
+Spec-first test-only correction7126217d retains those accepted counts and eight,
+adds exact ABI/got9/max8 plus public-refusal checks. New complete backend
+85/0/0 over2 targets and strict nine-package alltargets passed.
+Whole production prefix and every other Rust/instruction object remain exact;
+unchanged runtime evidence is explicitly attributed to316e. These counts are
+separate source receipts, not additive, and the original failed run stays failed.
+The prior5ba run exhausted disk before tests; its failed receipts are preserved.
+Retry disabled debug symbols/incremental compilation, preserving all inputs,
+assertions and limits. Registry376 tuples remain exact. Miri
+**DEFERRED/PENDING**, never passed; frozen run/input/target/receipts untouched.
+General-hop32 resource debt, hosted CI/conflict/review/merge, full Closure parity
+and output-source/full transformation lineage remain OPEN.
+
+Twelve owned unit-offset programs additionally distinguish direct and saved
+values, sign -1/0/+1, plus/minus units, and both selector outcomes. Their scoped
+runner requires exact stdout and normal Exit0 rather than stdout alone; every
+source requires an actual available-backend execution. At eb50f4f9 all72 runs
+across NativeAot/LLVM/WASM/JVM/VM/JIT pass; CLR is unavailable. Original matrix
+and unavailable-toolchain assertions remain unchanged. Full final-source
+unfiltered suites/strict and hosted acceptance remain required; the4a diagnostic
+baseline cancellation is preserved as incomplete. Miri **DEFERRED/PENDING**.

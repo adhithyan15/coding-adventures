@@ -1,5 +1,10 @@
 # chief-of-staff-daemon
 
+Broker fixture paths use native absolute spelling and owned string escaping.
+Worker failure fixtures observe the callback under a five-second deadline before
+requesting cooperative stop and checking the exact error. Production path checks
+and worker scheduling are retained.
+
 Concrete, dependency-free-at-runtime executable for the D18 Chief of Staff
 orchestrator. It composes the repository-owned configuration, credential,
 package trust, storage, process supervision, exact data-plane authorities,

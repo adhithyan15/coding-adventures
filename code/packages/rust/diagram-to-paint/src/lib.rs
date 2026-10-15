@@ -28,7 +28,9 @@
 
 pub const VERSION: &str = "0.75.0";
 
-use std::collections::HashMap;
+mod swimlane_hop_origin;
+
+use std::collections::{BTreeMap, HashMap};
 
 use diagram_ir::{
     ChartTextAnchor, ChartTextBaseline, DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
@@ -908,6 +910,7 @@ where
                 .unwrap_or(Color { r: 69, g: 90, b: 100, a: 255 }),
         ));
     }
+    let mut hop_crossings = SwimlaneHopCrossings::default();
     for (edge_index, edge) in diagram.edges.iter().enumerate() {
         if edge.kind == SwimlaneEdgeKind::Invisible {
             continue;
@@ -965,7 +968,10 @@ where
                     x: edge.to.x, y: edge.to.y,
                 },
             ];
-            (first, second)
+            (
+                swimlane_marker_reference(&edge.from, [&first, &second], &edge.to),
+                swimlane_marker_reference(&edge.to, [&second, &first], &edge.from),
+            )
         } else if edge.curve == Some(SwimlaneEdgeCurve::Rounded) {
             let horizontal = matches!(diagram.direction, DiagramDirection::Lr | DiagramDirection::Rl);
             let (first, second) = if horizontal {
@@ -979,7 +985,10 @@ where
                 &[edge.from.clone(), first, second, edge.to.clone()], 12.0,
             );
             path.commands = commands;
-            (start_previous, end_previous)
+            (
+                swimlane_marker_reference(&edge.from, [&start_previous], &edge.to),
+                swimlane_marker_reference(&edge.to, [&end_previous], &edge.from),
+            )
         } else if matches!(edge.curve,
             Some(SwimlaneEdgeCurve::Step | SwimlaneEdgeCurve::StepBefore | SwimlaneEdgeCurve::StepAfter)
         ) {
@@ -1004,7 +1013,10 @@ where
             path.commands = vec![PathCommand::MoveTo { x: edge.from.x, y: edge.from.y }];
             path.commands.extend(intermediates.iter().map(|point| PathCommand::LineTo { x: point.x, y: point.y }));
             path.commands.push(PathCommand::LineTo { x: edge.to.x, y: edge.to.y });
-            (intermediates[0].clone(), intermediates[intermediates.len() - 1].clone())
+            (
+                swimlane_marker_reference(&edge.from, intermediates.iter(), &edge.to),
+                swimlane_marker_reference(&edge.to, intermediates.iter().rev(), &edge.from),
+            )
         } else {
             (edge.to.clone(), edge.from.clone())
         };
@@ -1013,27 +1025,27 @@ where
             swimlane_line_hop_points(&diagram.direction, edge),
         ) {
             let mut crossings = Vec::new();
-            for other in &diagram.edges[..edge_index] {
-                if other.kind == SwimlaneEdgeKind::Invisible {
-                    continue;
-                }
-                let Some(other_points) = swimlane_line_hop_points(&diagram.direction, other) else {
-                    continue;
-                };
-                for (segment_index, segment) in points.windows(2).enumerate() {
-                    let segment_length = (segment[1].x - segment[0].x).hypot(segment[1].y - segment[0].y);
-                    for other_segment in other_points.windows(2) {
-                        if let Some((t, point)) = swimlane_line_crossing(
-                            &segment[0], &segment[1], &other_segment[0], &other_segment[1],
-                        ) {
-                            if t * segment_length > 6.0 && (1.0 - t) * segment_length > 6.0 {
-                                crossings.push((segment_index, t, point));
-                            }
-                        }
+            // Query every segment before inserting any segment of this edge:
+            // upstream crosses prior edges only, never an edge against itself.
+            for (segment_index, segment) in points.windows(2).enumerate() {
+                let length = (segment[1].x - segment[0].x).hypot(segment[1].y - segment[0].y);
+                for (t, point, other_edge, other_segment) in
+                    hop_crossings.prior_crossings(&segment[0], &segment[1])
+                {
+                    if t * length > 6.0 && (1.0 - t) * length > 6.0 {
+                        crossings.push((segment_index, t, point, other_edge, other_segment));
                     }
                 }
             }
-            crossings.sort_by(|left, right| left.0.cmp(&right.0).then_with(|| left.1.total_cmp(&right.1)));
+            crossings.sort_by(|left, right| left.0.cmp(&right.0)
+                .then_with(|| left.1.total_cmp(&right.1))
+                .then_with(|| left.3.cmp(&right.3))
+                .then_with(|| left.4.cmp(&right.4)));
+            for (segment_index, segment) in points.windows(2).enumerate() {
+                hop_crossings.insert_geometry(edge_index, segment_index, &segment[0], &segment[1]);
+            }
+            let crossings = crossings.into_iter().map(|(segment, t, point, _, _)| (segment, t, point))
+                .collect::<Vec<_>>();
             apply_swimlane_line_hops(&mut path, &points, &crossings, line_hops);
         }
         if let Some(stroke_dash) = &edge.style.stroke_dash {
@@ -1821,9 +1833,243 @@ fn swimlane_endpoint_marker(
     }
 }
 
+/// Count every new index traversal/refresh/eligibility/drop step in tests.
+/// Existing geometry-key lookup and rendering remain separate work.
+fn swimlane_hop_index_work() {
+    #[cfg(test)]
+    SWIMLANE_HOP_INDEX_WORK.with(|count| count.set(count.get().checked_add(1).expect("index work counter overflow")));
+}
+
+/// A private owned AVL tree: strict endpoint inversions are the only candidates
+/// on certified integer supports. Subtree extrema reject empty quadrants without
+/// walking every old geometry. Stable geometry IDs distinguish equal endpoints.
+struct SwimlaneHopEndpointNode {
+    key: (i64, usize),
+    second: i64,
+    height: usize,
+    min_first: i64,
+    max_first: i64,
+    min_second: i64,
+    max_second: i64,
+    left: Option<Box<Self>>,
+    right: Option<Box<Self>>,
+}
+
+impl Drop for SwimlaneHopEndpointNode {
+    fn drop(&mut self) { swimlane_hop_index_work(); }
+}
+
+impl SwimlaneHopEndpointNode {
+    fn height(node: &Option<Box<Self>>) -> usize { node.as_ref().map_or(0, |node| node.height) }
+
+    fn refresh(&mut self) {
+        swimlane_hop_index_work();
+        self.height = 1 + Self::height(&self.left).max(Self::height(&self.right));
+        self.min_first = self.key.0;
+        self.max_first = self.key.0;
+        self.min_second = self.second;
+        self.max_second = self.second;
+        for child in [&self.left, &self.right].into_iter().flatten() {
+            self.min_first = self.min_first.min(child.min_first);
+            self.max_first = self.max_first.max(child.max_first);
+            self.min_second = self.min_second.min(child.min_second);
+            self.max_second = self.max_second.max(child.max_second);
+        }
+    }
+
+    fn rotate_left(mut node: Box<Self>) -> Box<Self> {
+        let mut root = node.right.take().expect("AVL right child");
+        node.right = root.left.take();
+        node.refresh();
+        root.left = Some(node);
+        root.refresh();
+        root
+    }
+
+    fn rotate_right(mut node: Box<Self>) -> Box<Self> {
+        let mut root = node.left.take().expect("AVL left child");
+        node.left = root.right.take();
+        node.refresh();
+        root.right = Some(node);
+        root.refresh();
+        root
+    }
+
+    fn insert(tree: Option<Box<Self>>, key: (i64, usize), second: i64) -> Box<Self> {
+        swimlane_hop_index_work();
+        let Some(mut node) = tree else {
+            return Box::new(Self { key, second, height: 1, min_first: key.0, max_first: key.0, min_second: second, max_second: second, left: None, right: None });
+        };
+        if key < node.key { node.left = Some(Self::insert(node.left.take(), key, second)); }
+        else { node.right = Some(Self::insert(node.right.take(), key, second)); }
+        node.refresh();
+        if Self::height(&node.left) > Self::height(&node.right) + 1 {
+            let left = node.left.as_ref().expect("AVL left subtree");
+            if Self::height(&left.right) > Self::height(&left.left) {
+                node.left = Some(Self::rotate_left(node.left.take().expect("AVL left subtree")));
+            }
+            return Self::rotate_right(node);
+        }
+        if Self::height(&node.right) > Self::height(&node.left) + 1 {
+            let right = node.right.as_ref().expect("AVL right subtree");
+            if Self::height(&right.left) > Self::height(&right.right) {
+                node.right = Some(Self::rotate_right(node.right.take().expect("AVL right subtree")));
+            }
+            return Self::rotate_left(node);
+        }
+        node
+    }
+
+    fn inversions(&self, first: i64, second: i64, smaller_first: bool, output: &mut Vec<usize>) {
+        swimlane_hop_index_work();
+        if smaller_first {
+            if self.min_first >= first || self.max_second <= second { return; }
+        } else if self.max_first <= first || self.min_second >= second { return; }
+        if let Some(left) = &self.left { left.inversions(first, second, smaller_first, output); }
+        if (smaller_first && self.key.0 < first && self.second > second)
+            || (!smaller_first && self.key.0 > first && self.second < second) {
+            output.push(self.key.1);
+        }
+        if let Some(right) = &self.right { right.inversions(first, second, smaller_first, output); }
+    }
+}
+
+struct SwimlaneHopSupportCohort {
+    supports: [i64; 2],
+    tree: Option<Box<SwimlaneHopEndpointNode>>,
+}
+
+/// q=1 alone is certified here. All original coordinate differences/products/
+/// determinant and numerator subtractions are exact below 2^53. Other values
+/// keep the original predicate traversal rather than being rounded or refused.
+fn swimlane_hop_integer_supports(from: &Point, to: &Point, exchange: bool) -> Option<([i64; 2], i64, i64)> {
+    swimlane_hop_index_work();
+    let values = if exchange { [from.y, from.x, to.y, to.x] } else { [from.x, from.y, to.x, to.y] };
+    if !values.iter().all(|value| value.is_finite() && value.abs() <= 16_777_216.0 && value.fract() == 0.0) { return None; }
+    let [first, coordinate, last, end_coordinate] = values.map(|value| value as i64);
+    if first < last { Some(([first, last], coordinate, end_coordinate)) }
+    else if last < first { Some(([last, first], end_coordinate, coordinate)) }
+    else { None }
+}
+
+fn swimlane_hop_observe_cohort(cohort: &mut Option<SwimlaneHopSupportCohort>, first_geometry: bool, coordinates: Option<([i64; 2], i64, i64)>, geometry: usize) {
+    swimlane_hop_index_work();
+    if first_geometry {
+        *cohort = coordinates.map(|(supports, first, second)| SwimlaneHopSupportCohort { supports, tree: Some(SwimlaneHopEndpointNode::insert(None, (first, geometry), second)) });
+    } else if let Some(index) = cohort {
+        if let Some((supports, first, second)) = coordinates.filter(|(supports, _, _)| *supports == index.supports) {
+            debug_assert_eq!(supports, index.supports);
+            index.tree = Some(SwimlaneHopEndpointNode::insert(index.tree.take(), (first, geometry), second));
+        } else {
+            // Invalidate once; never rescan/rebuild the old oblique vector.
+            *cohort = None;
+        }
+    }
+}
+
+struct SwimlaneHopGeometry {
+    from: Point,
+    to: Point,
+    occurrences: Vec<(usize, usize)>,
+}
+
+/// Own each distinct directed segment because orthogonal route points are
+/// temporary. Keep occurrence edge/segment identities and expand them only
+/// after the original predicate succeeds. Same-axis cohorts cannot cross.
+/// Arbitrary distinct oblique work still requires separate review.
+#[derive(Default)]
+struct SwimlaneHopCrossings {
+    by_geometry: BTreeMap<[u64; 4], usize>,
+    geometries: Vec<SwimlaneHopGeometry>,
+    horizontal: Vec<usize>,
+    vertical: Vec<usize>,
+    oblique: Vec<usize>,
+    integer_x_cohort: Option<SwimlaneHopSupportCohort>,
+    integer_y_cohort: Option<SwimlaneHopSupportCohort>,
+    origin_x_cohort: Option<swimlane_hop_origin::Cohort>,
+    origin_y_cohort: Option<swimlane_hop_origin::Cohort>,
+}
+
+impl SwimlaneHopCrossings {
+    fn prior_crossings(&self, from: &Point, to: &Point) -> Vec<(f64, Point, usize, usize)> {
+        if from.x == to.x && from.y == to.y {
+            return Vec::new();
+        }
+        let horizontal_candidates: &[usize] = if from.y == to.y { &[] } else { &self.horizontal };
+        let vertical_candidates: &[usize] = if from.x == to.x { &[] } else { &self.vertical };
+        let mut crossings = Vec::new();
+        let indexed = self.integer_oblique_candidates(from, to);
+        let oblique_candidates = indexed.as_deref().unwrap_or(&self.oblique);
+        for &group_index in horizontal_candidates.iter().chain(vertical_candidates.iter()).chain(oblique_candidates.iter()) {
+            let other = &self.geometries[group_index];
+            if let Some((t, point)) = swimlane_line_crossing(from, to, &other.from, &other.to) {
+                crossings.extend(other.occurrences.iter().map(|&(edge, segment)| {
+                    swimlane_hop_origin::count(swimlane_hop_origin::Work::Occurrence);
+                    (t, point.clone(), edge, segment)
+                }));
+            }
+        }
+        crossings
+    }
+
+    fn integer_oblique_candidates(&self, from: &Point, to: &Point) -> Option<Vec<usize>> {
+        // Keep the original constant-size single-geometry/duplicate contract.
+        if self.oblique.len() < 2 { return None; }
+        for (exchange, cohort) in [(false, &self.integer_x_cohort), (true, &self.integer_y_cohort)] {
+            let Some(cohort) = cohort else { continue; };
+            let Some((supports, first, second)) = swimlane_hop_integer_supports(from, to, exchange) else { continue; };
+            if cohort.supports != supports { continue; }
+            let mut output = Vec::new();
+            if let Some(tree) = &cohort.tree {
+                tree.inversions(first, second, true, &mut output);
+                tree.inversions(first, second, false, &mut output);
+            }
+            return Some(output);
+        }
+        for (exchange, cohort) in [(false, &self.origin_x_cohort), (true, &self.origin_y_cohort)] {
+            let Some(cohort) = cohort else { continue; };
+            let Some(query) = swimlane_hop_origin::project(from, to, exchange) else { continue; };
+            if let Some(output) = cohort.candidates(query) { return Some(output); }
+        }
+        None
+    }
+
+    fn insert_geometry(&mut self, edge: usize, segment: usize, from: &Point, to: &Point) {
+        if from.x == to.x && from.y == to.y {
+            return;
+        }
+        let key = [from.x.to_bits(), from.y.to_bits(), to.x.to_bits(), to.y.to_bits()];
+        if let Some(&group_index) = self.by_geometry.get(&key) {
+            self.geometries[group_index].occurrences.push((edge, segment));
+        } else {
+            let group_index = self.geometries.len();
+            self.by_geometry.insert(key, group_index);
+            self.geometries.push(SwimlaneHopGeometry { from: from.clone(), to: to.clone(), occurrences: vec![(edge, segment)] });
+            if from.y == to.y { self.horizontal.push(group_index); }
+            else if from.x == to.x { self.vertical.push(group_index); }
+            else {
+                let first_geometry = self.oblique.is_empty();
+                swimlane_hop_observe_cohort(&mut self.integer_x_cohort, first_geometry, swimlane_hop_integer_supports(from, to, false), group_index);
+                swimlane_hop_observe_cohort(&mut self.integer_y_cohort, first_geometry, swimlane_hop_integer_supports(from, to, true), group_index);
+                swimlane_hop_origin::observe(&mut self.origin_x_cohort, first_geometry, swimlane_hop_origin::project(from, to, false), group_index);
+                swimlane_hop_origin::observe(&mut self.origin_y_cohort, first_geometry, swimlane_hop_origin::project(from, to, true), group_index);
+                self.oblique.push(group_index);
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+std::thread_local! {
+    static SWIMLANE_LINE_CROSSING_VISITS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+    static SWIMLANE_HOP_INDEX_WORK: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
 fn swimlane_line_crossing(
     from: &Point, to: &Point, other_from: &Point, other_to: &Point,
 ) -> Option<(f64, Point)> {
+    #[cfg(test)]
+    SWIMLANE_LINE_CROSSING_VISITS.with(|count| count.set(count.get() + 1));
     let dx = to.x - from.x;
     let dy = to.y - from.y;
     let other_dx = other_to.x - other_from.x;
@@ -2020,8 +2266,11 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     for rule in &diagram.rules {
         let mut rule_name_font = railroad_font.clone();
         rule_name_font.weight = 700;
-        text_children.push(text_node_no_wrap(&format!("{} =", rule.name), diagram.config.padding, rule.start_marker.y - 14.0,
-            rule.start_marker.x - diagram.config.padding, 28.0, rule_name_font, css_to_color(&diagram.config.rule_name_color)));
+        // Keep the declared rule-name box tall enough for valid large fonts,
+        // centered on the same root port as the explicit markers.
+        let name_height=28.0_f64.max(diagram.config.font_size*1.15);
+        text_children.push(text_node_no_wrap(&format!("{} =", rule.name), diagram.config.padding, rule.start_marker.y - name_height/2.0,
+            rule.start_marker.x - diagram.config.padding, name_height, rule_name_font, css_to_color(&diagram.config.rule_name_color)));
         if diagram.config.show_markers {
             for marker in [&rule.start_marker, &rule.end_marker] {
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: marker.x, cy: marker.y,
@@ -2048,9 +2297,12 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
                 width: element.width, height: element.height, fill: Some(fill.clone()), stroke: Some(stroke.clone()),
                 stroke_width: Some(diagram.config.stroke_width), corner_radius: Some(radius),
                 stroke_dash: (element.kind == RailroadElementKind::Special).then(|| vec![5.0, 3.0]), stroke_dash_offset: None }));
+            // Small accepted padding can make a leaf shorter than24px. Keep
+            // its declared label box inside the leaf before shaping glyphs.
+            let label_height=24.0_f64.max(diagram.config.font_size*1.15).min(element.height);
             text_children.push(text_node_no_wrap(&element.label, element.x + diagram.config.padding,
-                element.y + (element.height - 24.0) / 2.0,
-                (element.width - diagram.config.padding * 2.0).max(1.0), 24.0,
+                element.y + (element.height - label_height) / 2.0,
+                (element.width - diagram.config.padding * 2.0).max(1.0), label_height,
                 railroad_font.clone(), css_to_color(text_color)));
         }
     }
@@ -9235,6 +9487,19 @@ where
     }
 }
 
+/// Coincident controls have a zero first derivative. The next distinct control
+/// supplies the limiting endpoint direction; a step route similarly skips its
+/// zero-length first/last leg. Callers supply at most two points in route order.
+/// Entirely coincident routes retain their existing directionless behavior.
+fn swimlane_marker_reference<'a>(
+    tip: &Point,
+    candidates: impl IntoIterator<Item = &'a Point>,
+    opposite: &Point,
+) -> Point {
+    candidates.into_iter().find(|point| point.x != tip.x || point.y != tip.y)
+        .unwrap_or(opposite).clone()
+}
+
 fn simple_arrowhead(prev: &Point, tip: &Point, stroke: &str) -> PaintPath {
     let dx = tip.x - prev.x;
     let dy = tip.y - prev.y;
@@ -9274,6 +9539,13 @@ fn simple_arrowhead(prev: &Point, tip: &Point, stroke: &str) -> PaintPath {
 
 #[cfg(test)]
 mod tests {
+    mod common_origin;
+    mod subgraph_margin;
+    mod railroad_spacing;
+    mod railroad_style;
+    mod railroad_arc;
+    mod railroad_circular;
+    mod railroad_labels;
     use super::*;
     use diagram_ir::{
         DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, LayoutedGraphDiagram,
@@ -9430,6 +9702,1434 @@ mod tests {
             metrics,
             resolver,
         }
+    }
+
+    // Independent original full-cost algorithm, copied before the delta repair.
+    // Keep its seed, shuffle, strict comparison and tie behavior as the oracle.
+    mod lane_order_reference {
+        use std::collections::{BTreeMap, HashMap};
+        use diagram_ir::{SwimlaneDiagram, SwimlaneEdgeKind};
+        #[derive(Clone)]
+        struct WeightedSwimlaneEdge { a: String, b: String, weight: usize }
+
+        pub(super) fn optimize_swimlane_lane_order(diagram: &SwimlaneDiagram) -> Vec<&diagram_ir::SwimlaneLane> {
+            let source_order = diagram.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>();
+            if source_order.len() < 2 {
+                return diagram.lanes.iter().collect();
+            }
+            let source_index = source_order.iter().enumerate()
+                .map(|(index, lane)| (*lane, index)).collect::<HashMap<_, _>>();
+            let node_lanes = diagram.lanes.iter().flat_map(|lane|
+                lane.node_ids.iter().map(move |node| (node.as_str(), lane.id.as_str()))
+            ).collect::<HashMap<_, _>>();
+            let mut counts = BTreeMap::<(usize, usize), usize>::new();
+            for edge in &diagram.edges {
+                if edge.kind == SwimlaneEdgeKind::Invisible {
+                    continue;
+                }
+                let (Some(from_lane), Some(to_lane)) = (
+                    node_lanes.get(edge.from.as_str()), node_lanes.get(edge.to.as_str()),
+                ) else { continue };
+                if from_lane == to_lane {
+                    continue;
+                }
+                let (Some(&from_index), Some(&to_index)) = (
+                    source_index.get(from_lane), source_index.get(to_lane),
+                ) else { continue };
+                let pair = if from_index <= to_index {
+                    (from_index, to_index)
+                } else {
+                    (to_index, from_index)
+                };
+                *counts.entry(pair).or_default() += 1;
+            }
+            let weights = counts.into_iter().map(|((a, b), weight)| WeightedSwimlaneEdge {
+                a: source_order[a].to_string(), b: source_order[b].to_string(), weight,
+            }).collect::<Vec<_>>();
+            if weights.is_empty() {
+                return diagram.lanes.iter().collect();
+            }
+            let source = source_order.iter().map(|lane| (*lane).to_string()).collect::<Vec<_>>();
+            let source_positions = source.iter().enumerate()
+                .map(|(index, lane)| (lane.as_str(), index)).collect::<HashMap<_, _>>();
+            let mut best = greedy_swimlane_order(source.clone(), &weights, &source_positions);
+            for restart in 0..8 {
+                let mut candidate = source.clone();
+                deterministic_swimlane_shuffle(&mut candidate, swimlane_restart_seed(&source, &weights, restart));
+                let candidate = greedy_swimlane_order(candidate, &weights, &source_positions);
+                if candidate.1 < best.1 || (candidate.1 == best.1 && candidate.2 < best.2) {
+                    best = candidate;
+                }
+            }
+            best.0.iter().filter_map(|lane_id|
+                diagram.lanes.iter().find(|lane| lane.id == *lane_id)
+            ).collect()
+        }
+
+        fn swimlane_arrangement_cost(order: &[String], weights: &[WeightedSwimlaneEdge]) -> usize {
+            let positions = order.iter().enumerate().map(|(index, lane)| (lane.as_str(), index))
+                .collect::<HashMap<_, _>>();
+            weights.iter().map(|edge| edge.weight * positions[edge.a.as_str()].abs_diff(positions[edge.b.as_str()])).sum()
+        }
+
+        fn greedy_swimlane_order(
+            mut order: Vec<String>, weights: &[WeightedSwimlaneEdge], source: &HashMap<&str, usize>,
+        ) -> (Vec<String>, usize, usize) {
+            let mut cost = swimlane_arrangement_cost(&order, weights);
+            for _ in 0..order.len().max(1) {
+                let mut changed = false;
+                for index in 0..order.len().saturating_sub(1) {
+                    order.swap(index, index + 1);
+                    let next_cost = swimlane_arrangement_cost(&order, weights);
+                    if next_cost < cost {
+                        cost = next_cost;
+                        changed = true;
+                    } else {
+                        order.swap(index, index + 1);
+                    }
+                }
+                if !changed { break; }
+            }
+            let distance = order.iter().enumerate().map(|(index, lane)| index.abs_diff(source[lane.as_str()])).sum();
+            (order, cost, distance)
+        }
+
+        fn swimlane_restart_seed(source: &[String], weights: &[WeightedSwimlaneEdge], restart: usize) -> u32 {
+            let mut sorted_weights = weights.to_vec();
+            sorted_weights.sort_by(|left, right| left.a.cmp(&right.a).then_with(|| left.b.cmp(&right.b)));
+            let signature = sorted_weights.iter().map(|edge| format!("{}:{}:{}", edge.a, edge.b, edge.weight))
+                .collect::<Vec<_>>().join("|");
+            let input = format!("{}#{}#{restart}", source.join("|"), signature);
+            input.encode_utf16().fold(2_166_136_261_u32, |hash, unit|
+                (hash ^ u32::from(unit)).wrapping_mul(16_777_619)
+            )
+        }
+
+        fn deterministic_swimlane_shuffle(order: &mut [String], seed: u32) {
+            let mut state = seed;
+            for index in (1..order.len()).rev() {
+                state = state.wrapping_add(0x6d2b79f5);
+                let mut value = state;
+                value = (value ^ (value >> 15)).wrapping_mul(value | 1);
+                value ^= value.wrapping_add((value ^ (value >> 7)).wrapping_mul(value | 61));
+                let random = (value ^ (value >> 14)) as f64 / 4_294_967_296.0;
+                order.swap(index, (random * (index + 1) as f64).floor() as usize);
+            }
+        }
+
+    }
+
+    #[test]
+    fn authored_swimlane_ordering_preserves_complete_paint_scene_against_original() {
+        for direction in ["LR", "RL", "TB", "BT"] {
+            for hops in ["false", "arc", "gap"] {
+                for enabled in [false, true] {
+                    for edges in [
+                        "a --> a2\nb --> b2\nc --> c2\nd --> d2\na --> d2\na --> d2\nd2 --> a\nb --> c2\nb --> c2\na ~~~ b",
+                        "a --> b2\nb --> c2\nc --> d2\nd --> a2",
+                    ] {
+                        let source = format!("---\nconfig:\n  swimlane:\n    automaticLaneOrdering: {enabled}\n    lineHops: {hops}\n---\nswimlane-beta {direction}\nsubgraph Lé[Alpha]\na[A]\na2[A2]\nend\nsubgraph L🛰[Beta]\nb[B]\nb2[B2]\nend\nsubgraph Lane[Gamma]\nc[C]\nc2[C2]\nend\nsubgraph 中[Delta]\nd[D]\nd2[D2]\nend\n{edges}\n");
+                        let diagram = mermaid_parser::parse_swimlane(&source).expect("authored Unicode ordering fixture parses");
+                        assert_eq!(diagram.lanes.len(), 4);
+                        let actual_layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+                        let mut expected_input = diagram.clone();
+                        if enabled {
+                            expected_input.lanes = lane_order_reference::optimize_swimlane_lane_order(&diagram).into_iter().cloned().collect();
+                        }
+                        expected_input.automatic_lane_ordering = false;
+                        let mut expected_layout = diagram_layout_hierarchy::layout_swimlane(&expected_input);
+                        expected_layout.automatic_lane_ordering = enabled;
+                        assert_eq!(actual_layout, expected_layout);
+                        let options = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
+                        let actual = diagram_to_paint_swimlane(&actual_layout, &options);
+                        let expected = diagram_to_paint_swimlane(&expected_layout, &options);
+                        assert_eq!(actual, expected, "complete scene/metadata: {direction}, hops={hops}, enabled={enabled}, edges={edges}");
+                    }
+                }
+            }
+        }
+    }
+
+    fn spacing_control_source(direction: &str) -> String {
+        format!("swimlane-beta {direction}\nsubgraph L[One]\na[Alpha]\nb[Beta]\nend\nsubgraph R[Two]\nc[Gamma]\nd[Delta]\nend\na --> b\nc --> d\n")
+    }
+
+    #[test]
+    fn authored_swimlane_spacing_config_preserves_exact_layout_scene_and_defaults() {
+        for direction in ["LR", "RL", "TB", "BT"] {
+            let body = spacing_control_source(direction);
+            let bare = mermaid_parser::parse_swimlane(&body).expect("bare spacing control parses");
+            assert_eq!(bare.flowchart_config, diagram_ir::SwimlaneFlowchartConfig::default());
+            let baseline = diagram_layout_hierarchy::layout_swimlane(&bare);
+            let baseline_scene = diagram_to_paint_swimlane(&baseline, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+            for (node_spacing, rank_spacing, padding) in [(20.0, 30.0, 40.0), (0.0, 0.0, 0.0)] {
+                let source = format!("---\nconfig:\n  flowchart:\n    nodeSpacing: {node_spacing}\n    rankSpacing: {rank_spacing}\n    diagramPadding: {padding}\n---\n{body}");
+                let parsed = mermaid_parser::parse_swimlane(&source).expect("ordinary spacing parses");
+                let config = diagram_ir::SwimlaneFlowchartConfig { node_spacing: Some(node_spacing), rank_spacing: Some(rank_spacing), diagram_padding: Some(padding), wrapping_width: None, padding: None, title_top_margin: None, subgraph_title_margin_top: None, subgraph_title_margin_bottom: None, curve: None };
+                assert_eq!(parsed.flowchart_config, config);
+                let mut normalized = parsed.clone(); normalized.flowchart_config = Default::default();
+                assert_eq!(normalized, bare, "every non-config parser field remains exact");
+                let layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+                let mut expected = baseline.clone(); expected.flowchart_config = config;
+                let horizontal = matches!(direction, "LR" | "RL");
+                let zero = padding == 0.0;
+                let (width, height, lane_boxes, node_origins, endpoints) = if horizontal {
+                    if zero { (420.0, 316.0, [(0.0,16.0,420.0,150.0),(0.0,166.0,420.0,150.0)], [(58.0,64.0),(190.0,64.0),(58.0,214.0),(190.0,214.0)], [(190.0,91.0,190.0,91.0),(190.0,241.0,190.0,241.0)]) }
+                    else { (420.0,396.0,[(40.0,16.0,340.0,150.0),(40.0,186.0,340.0,150.0)],[(98.0,64.0),(260.0,64.0),(98.0,234.0),(260.0,234.0)],[(230.0,91.0,260.0,91.0),(230.0,261.0,260.0,261.0)]) }
+                } else if zero {
+                    (300.0,436.0,[(0.0,16.0,150.0,420.0),(150.0,16.0,150.0,420.0)],[(9.0,74.0),(9.0,128.0),(159.0,74.0),(159.0,128.0)],[(75.0,128.0,75.0,128.0),(225.0,128.0,225.0,128.0)])
+                } else {
+                    (380.0,436.0,[(40.0,16.0,150.0,380.0),(210.0,16.0,150.0,380.0)],[(49.0,74.0),(49.0,158.0),(219.0,74.0),(219.0,158.0)],[(115.0,128.0,115.0,158.0),(285.0,128.0,285.0,158.0)])
+                };
+                expected.width=width; expected.height=height;
+                assert_eq!(expected.lanes.len(),2); assert_eq!(expected.nodes.len(),4); assert_eq!(expected.edges.len(),2);
+                for (lane,(x,y,w,h)) in expected.lanes.iter_mut().zip(lane_boxes) { lane.x=x;lane.y=y;lane.width=w;lane.height=h; }
+                for (node,(x,y)) in expected.nodes.iter_mut().zip(node_origins) { node.x=x;node.y=y;node.width=132.0;node.height=54.0; }
+                let reverse = matches!(direction,"RL"|"BT");
+                assert_eq!(expected.nodes.iter().map(|node|node.id.as_str()).collect::<Vec<_>>(), if reverse {vec!["b","a","d","c"]} else {vec!["a","b","c","d"]});
+                for (edge,(x1,y1,x2,y2)) in expected.edges.iter_mut().zip(endpoints) {
+                    let (from,to)=if reverse {((x2,y2),(x1,y1))} else {((x1,y1),(x2,y2))};
+                    edge.from=diagram_ir::Point{x:from.0,y:from.1}; edge.to=diagram_ir::Point{x:to.0,y:to.1};
+                }
+                assert_eq!(layout,expected,"complete independent coordinate/layout oracle direction={direction},zero={zero}");
+                let scene=diagram_to_paint_swimlane(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                let expected_scene=diagram_to_paint_swimlane(&expected,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                assert_eq!(scene,expected_scene,"every paint route/marker/glyph/style/instruction follows the independently pinned layout");
+                let mut metadata=baseline_scene.metadata.clone().expect("complete default metadata");
+                metadata.insert("swimlane.flowchart.nodeSpacing".into(),node_spacing.to_string());
+                metadata.insert("swimlane.flowchart.rankSpacing".into(),rank_spacing.to_string());
+                metadata.insert("swimlane.flowchart.diagramPadding".into(),padding.to_string());
+                assert_eq!(scene.metadata.as_ref(),Some(&metadata),"complete expected metadata; no normalization of unknown keys");
+            }
+            let explicit_source=format!("---\nconfig:\n  flowchart:\n    nodeSpacing: 12\n    rankSpacing: 42\n    diagramPadding: 12\n---\n{body}");
+            let explicit=mermaid_parser::parse_swimlane(&explicit_source).unwrap();
+            let explicit_layout=diagram_layout_hierarchy::layout_swimlane(&explicit);
+            let mut normalized=explicit_layout.clone();normalized.flowchart_config=Default::default();
+            assert_eq!(normalized,baseline,"explicit defaults retain all baseline geometry and fields");
+            let mut scene=diagram_to_paint_swimlane(&explicit_layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+            let metadata=scene.metadata.as_mut().unwrap();
+            for (key,value) in [("nodeSpacing","12"),("rankSpacing","42"),("diagramPadding","12")] {
+                assert_eq!(metadata.remove(&format!("swimlane.flowchart.{key}")).as_deref(),Some(value));
+            }
+            assert_eq!(scene,baseline_scene,"remove only the three verified explicit-default entries; retain the complete scene");
+        }
+    }
+
+    #[test]
+    fn authored_swimlane_spacing_precedence_and_refusals_preserve_complete_ir() {
+        let body=spacing_control_source("LR");
+        let bare=mermaid_parser::parse_swimlane(&body).unwrap();
+        let source=format!("---\nconfig:\n  flowchart:\n    nodeSpacing: 96\n    rankSpacing: 28\n    diagramPadding: 32\n---\n%%{{init: {{\"flowchart\": {{\"nodeSpacing\": 72, \"rankSpacing\": 24, \"diagramPadding\": 18}}}}}}%%\n{body}");
+        let mut parsed=mermaid_parser::parse_swimlane(&source).unwrap();
+        assert_eq!(parsed.flowchart_config,diagram_ir::SwimlaneFlowchartConfig{node_spacing:Some(72.0),rank_spacing:Some(24.0),diagram_padding:Some(18.0),wrapping_width:None,padding:None,title_top_margin:None,subgraph_title_margin_top:None,subgraph_title_margin_bottom:None,curve:None});
+        parsed.flowchart_config=Default::default();assert_eq!(parsed,bare);
+        for field in ["nodeSpacing","rankSpacing","diagramPadding"] {
+            for value in ["-1","not-a-number","NaN","inf","-inf"] {
+                let source=format!("---\nconfig:\n  flowchart:\n    {field}: {value}\n---\n{body}");
+                let error=mermaid_parser::parse_swimlane(&source).expect_err("negative/nonnumeric/nonfinite spacing is refused");
+                assert_eq!(error.message,format!("Swimlane flowchart {field} must be a non-negative number"));
+                assert_eq!((error.line,error.col),(1,1));
+            }
+        }
+    }
+
+    #[test]
+    fn authored_global_curve_preserves_complete_ir_layout_and_scene_with_edge_override() {
+        use diagram_ir::SwimlaneEdgeCurve::*;
+        let cases = [
+            ("linear",Linear,"linear"), ("basis",Basis,"basis"), ("BASIS",Basis,"basis"),
+            ("bumpX",BumpX,"bumpX"), ("bump-x",BumpX,"bumpX"),
+            ("bumpY",BumpY,"bumpY"), ("bump-y",BumpY,"bumpY"),
+            ("cardinal",Cardinal,"cardinal"), ("catmullRom",CatmullRom,"catmullRom"), ("catmull-rom",CatmullRom,"catmullRom"),
+            ("monotoneX",MonotoneX,"monotoneX"), ("monotone-x",MonotoneX,"monotoneX"),
+            ("monotoneY",MonotoneY,"monotoneY"), ("monotone-y",MonotoneY,"monotoneY"),
+            ("natural",Natural,"natural"), ("rounded",Rounded,"rounded"), ("step",Step,"step"),
+            ("stepBefore",StepBefore,"stepBefore"), ("step-before",StepBefore,"stepBefore"),
+            ("stepAfter",StepAfter,"stepAfter"), ("step-after",StepAfter,"stepAfter"),
+        ];
+        for direction in ["LR","RL","TB","BT"] {
+            let body=format!("swimlane-beta {direction}\nsubgraph A\nfirst[First]\nsecond[Second]\nthird[Third]\nend\nfirst --> second\nsecond override@--> third\noverride@{{ curve: linear }}");
+            let bare=mermaid_parser::parse_swimlane(&body).unwrap();
+            assert_eq!(bare.flowchart_config.curve,None);
+            assert_eq!(bare.edges[0].curve,None); assert_eq!(bare.edges[1].curve,Some(Linear));
+            let compare = |parsed: diagram_ir::SwimlaneDiagram, curve, canonical: &str| {
+                assert_eq!(parsed.flowchart_config.curve,Some(curve));
+                assert_eq!(parsed.edges[0].curve,None); assert_eq!(parsed.edges[1].curve,Some(Linear));
+                let mut normalized=parsed.clone(); normalized.flowchart_config.curve=None;
+                assert_eq!(normalized,bare,"global parser config alone differs; all source fields retain identity");
+                let mut explicit=bare.clone(); explicit.edges[0].curve=Some(curve);
+                let expected=diagram_layout_hierarchy::try_layout_swimlane(&explicit).unwrap();
+                let actual=diagram_layout_hierarchy::try_layout_swimlane(&parsed).unwrap();
+                assert_eq!(actual.edges[0].curve,Some(curve)); assert_eq!(actual.edges[1].curve,Some(Linear));
+                let mut normalized=actual.clone(); normalized.flowchart_config.curve=None;
+                assert_eq!(normalized,expected,"complete geometry/fields equal explicit edge reference");
+                let mut scene=diagram_to_paint_swimlane(&actual,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                assert_eq!(scene.metadata.as_mut().unwrap().remove("swimlane.flowchart.curve").as_deref(),Some(canonical));
+                let expected_scene=diagram_to_paint_swimlane(&expected,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                assert_eq!(scene,expected_scene,"only proven global config entry differs; retain every route/marker/glyph/metadata field");
+                if curve==Linear {
+                    assert_eq!(scene.metadata.as_mut().unwrap().remove("swimlane.edge.0.curve").as_deref(),Some("linear"));
+                    assert_eq!(scene,diagram_to_paint_swimlane(&diagram_layout_hierarchy::layout_swimlane(&bare),&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver)),"explicit linear default preserves entire old scene");
+                }
+            };
+            for (value,curve,canonical) in cases {
+                let source=format!("---\nconfig:\n  flowchart:\n    curve: {value}\n---\n{body}");
+                compare(mermaid_parser::parse_swimlane(&source).unwrap(),curve,canonical);
+            }
+            let source=format!("---\nconfig:\n  flowchart:\n    curve: stepAfter\n---\n%%{{init: {{\"flowchart\": {{\"curve\": \"basis\"}}}}}}%%\n{body}");
+            compare(mermaid_parser::parse_swimlane(&source).unwrap(),Basis,"basis");
+            let source=format!("---\nconfig:\n  flowchart:\n    curve: unsupported\n---\n{body}");
+            let error=mermaid_parser::parse_swimlane(&source).unwrap_err();
+            assert_eq!(error.message,"unsupported Swimlane edge curve"); assert_eq!((error.line,error.col),(1,1));
+        }
+    }
+
+    #[test]
+    fn authored_swimlane_spacing_finite_input_requires_finite_nonnegative_layout() {
+        for direction in ["LR","RL","TB","BT"] {
+            for field in ["nodeSpacing","rankSpacing","diagramPadding"] {
+                let body=spacing_control_source(direction);
+                for value in ["1e308", "65537"] {
+                    let source=format!("---\nconfig:\n  flowchart:\n    {field}: {value}\n---\n{body}");
+                    let error=mermaid_parser::parse_swimlane(&source).expect_err("above production spacing bound is refused");
+                    assert_eq!(error.message,format!("Swimlane flowchart {field} must not exceed 65536"));
+                    assert_eq!((error.line,error.col),(1,1));
+                }
+                let bare = mermaid_parser::parse_swimlane(&body).unwrap();
+                for value in [-1.0, f64::NAN, f64::INFINITY, f64::NEG_INFINITY, 65537.0, 1e308] {
+                    let mut direct = bare.clone();
+                    match field {
+                        "nodeSpacing" => direct.flowchart_config.node_spacing=Some(value),
+                        "rankSpacing" => direct.flowchart_config.rank_spacing=Some(value),
+                        _ => direct.flowchart_config.diagram_padding=Some(value),
+                    }
+                    assert_eq!(diagram_layout_hierarchy::try_layout_swimlane(&direct),
+                        Err(diagram_layout_hierarchy::SwimlaneLayoutError::UnsupportedSpacing { field }));
+                }
+                for value in [0,65536] {
+                    let source=format!("---\nconfig:\n  flowchart:\n    {field}: {value}\n---\n{body}");
+                    let diagram=mermaid_parser::parse_swimlane(&source).expect("supported boundary source");
+                    let layout=diagram_layout_hierarchy::try_layout_swimlane(&diagram).expect("supported boundary geometry");
+                    assert_eq!(diagram_layout_hierarchy::layout_swimlane(&diagram),layout);
+                    assert!(layout.width.is_finite()&&layout.height.is_finite()&&layout.width>=0.0&&layout.height>=0.0,"accepted spacing must not produce nonfinite/negative extent");
+                    for lane in &layout.lanes {
+                        assert!([lane.x,lane.y,lane.width,lane.height].iter().all(|v|v.is_finite())&&lane.width>=0.0&&lane.height>=0.0,"accepted spacing must not produce nonfinite/negative lane");
+                    }
+                    for group in &layout.groups { assert!([group.x,group.y,group.width,group.height].iter().all(|v|v.is_finite())&&group.width>=0.0&&group.height>=0.0); }
+                    for node in &layout.nodes { assert!([node.x,node.y,node.width,node.height].iter().all(|v|v.is_finite())&&node.width>=0.0&&node.height>=0.0); }
+                    for edge in &layout.edges { assert!([edge.from.x,edge.from.y,edge.to.x,edge.to.y].iter().all(|v|v.is_finite())); }
+                    if field=="diagramPadding" && value==65536 {
+                        if matches!(direction,"LR"|"RL") { assert_eq!(layout.width,131072.0); assert!(layout.lanes.iter().all(|lane|lane.width==0.0)); }
+                        else { assert_eq!(layout.height,65552.0); assert!(layout.lanes.iter().all(|lane|lane.height==0.0)); }
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn caller_swimlane_invalid_derived_geometry_has_distinct_error_and_wrapper_panic() {
+        let mut diagram = mermaid_parser::parse_swimlane(&spacing_control_source("LR")).unwrap();
+        diagram.theme.font_size = Some(f64::NAN);
+        assert_eq!(diagram_layout_hierarchy::try_layout_swimlane(&diagram),
+            Err(diagram_layout_hierarchy::SwimlaneLayoutError::InvalidDerivedGeometry));
+        assert!(std::panic::catch_unwind(|| diagram_layout_hierarchy::layout_swimlane(&diagram)).is_err());
+    }
+
+    #[test]
+    fn authored_node_edge_theme_preserves_complete_ir_layout_scene_and_overrides() {
+        for direction in ["LR", "RL", "TB", "BT"] {
+            for mask in 0..8 {
+                for width in [0.0, 2.25, 65536.0] {
+                    for overrides in [false, true] {
+                        let mut body = format!("swimlane-beta {direction}\nsubgraph L\na[A]\nb[B]\nc[C]\nend\na <--> b\nb ==> c\nc styled@--> a\n");
+                        if overrides {
+                            body.push_str("style b color:#064e3b,stroke-width:5px\nclassDef custom stroke:#1d4ed8,stroke-width:4.25px\nclass styled custom\n");
+                        }
+                        let bare = mermaid_parser::parse_swimlane(&body).unwrap();
+                        let mut fields = String::new();
+                        if mask & 1 != 0 { fields.push_str("    nodeTextColor: '#78350f'\n"); }
+                        if mask & 2 != 0 { fields.push_str("    arrowheadColor: '#be123c'\n"); }
+                        if mask & 4 != 0 { fields.push_str(&format!("    strokeWidth: {width}\n")); }
+                        let source = if fields.is_empty() { body.clone() } else { format!("---\nconfig:\n  themeVariables:\n{fields}---\n{body}") };
+                        let parsed = mermaid_parser::parse_swimlane(&source).unwrap();
+                        assert_eq!(parsed.theme.node_text_color.as_deref(), (mask & 1 != 0).then_some("#78350f"));
+                        assert_eq!(parsed.theme.arrowhead_color.as_deref(), (mask & 2 != 0).then_some("#be123c"));
+                        assert_eq!(parsed.theme.stroke_width, (mask & 4 != 0).then_some(width));
+                        let mut normalized = parsed.clone();
+                        normalized.theme.node_text_color = None;
+                        normalized.theme.arrowhead_color = None;
+                        normalized.theme.stroke_width = None;
+                        assert_eq!(normalized,bare,"all other authored IR fields retain exact identity");
+                        let layout = diagram_layout_hierarchy::try_layout_swimlane(&parsed).unwrap();
+                        assert_eq!((layout.lanes.len(),layout.nodes.len(),layout.edges.len()),(1,3,3));
+                        let mut explicit = layout.clone();
+                        explicit.theme.node_text_color = None;
+                        explicit.theme.arrowhead_color = None;
+                        explicit.theme.stroke_width = None;
+                        assert_eq!(explicit,diagram_layout_hierarchy::try_layout_swimlane(&bare).unwrap(),"new paint theme fields do not alter any geometry or source identity");
+                        for node in &mut explicit.nodes {
+                            if node.style.text_color.is_none() && mask & 1 != 0 { node.style.text_color=Some("#78350f".into()); }
+                            if node.style.stroke_width.is_none() && mask & 4 != 0 { node.style.stroke_width=Some(width); }
+                        }
+                        for edge in &mut explicit.edges {
+                            if edge.style.stroke_width.is_none() && edge.kind!=SwimlaneEdgeKind::Thick && mask & 4 != 0 { edge.style.stroke_width=Some(width); }
+                        }
+                        let mut expected = diagram_to_paint_swimlane(&explicit,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                        // These exact instruction positions are the four triangle
+                        // markers for the three authored edges. Recolor only their
+                        // fill; every command/field/position remains in the oracle.
+                        for (position,tip,styled) in [(2,&layout.edges[0].from,false),(3,&layout.edges[0].to,false),(5,&layout.edges[1].to,false),(7,&layout.edges[2].to,overrides)] {
+                            let PaintInstruction::Path(marker)=&mut expected.instructions[position] else { panic!("marker position {position} must remain a path"); };
+                            assert_eq!(marker.commands.len(),4);
+                            let PathCommand::MoveTo{x,y}=marker.commands[0] else { panic!("marker starts at its exact directed tip"); };
+                            assert_eq!([x.to_bits(),y.to_bits()],[tip.x.to_bits(),tip.y.to_bits()]);
+                            assert_eq!(marker.fill.as_deref(),Some(if styled { "#1d4ed8" } else { "#455a64" }));
+                            assert!(marker.stroke.is_none() && marker.stroke_width.is_none());
+                            if !styled && mask & 2 != 0 { marker.fill=Some("#be123c".into()); }
+                        }
+                        for (position,expected_width) in [(1,if mask & 4 != 0 {width}else{1.8}),(4,3.5),(6,if overrides {4.25}else if mask & 4 != 0 {width}else{1.8})] {
+                            let PaintInstruction::Path(path)=&expected.instructions[position] else { panic!("edge position {position} must remain a path"); };
+                            assert_eq!(path.stroke_width,Some(expected_width));
+                        }
+                        let node_runs=expected.instructions.iter().filter_map(|instruction| match instruction {
+                            PaintInstruction::GlyphRun(run)=>Some((run.glyphs.iter().map(|glyph|char::from_u32(glyph.glyph_id).unwrap()).collect::<String>(),run.fill.as_deref())),_=>None
+                        }).collect::<Vec<_>>();
+                        for name in ["A","B","C"] {
+                            let runs=node_runs.iter().filter(|(label,_)|label==name).collect::<Vec<_>>();
+                            assert_eq!(runs.len(),1);
+                            assert_eq!(runs[0].1,Some(if overrides && name=="B" {"rgb(6, 78, 59)"}else if mask & 1 != 0 {"rgb(120, 53, 15)"}else{"rgb(13, 71, 161)"}));
+                        }
+                        let mut actual=diagram_to_paint_swimlane(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                        let metadata=actual.metadata.as_mut().unwrap();
+                        assert_eq!(metadata.remove("swimlane.theme.nodeTextColor").as_deref(),(mask & 1 != 0).then_some("#78350f"));
+                        assert_eq!(metadata.remove("swimlane.theme.arrowheadColor").as_deref(),(mask & 2 != 0).then_some("#be123c"));
+                        assert_eq!(metadata.remove("swimlane.theme.strokeWidth"),(mask & 4 != 0).then(||width.to_string()));
+                        assert_eq!(actual,expected,"all scene/marker/style/node/glyph/metadata fields: direction={direction},mask={mask},width={width},overrides={overrides}");
+                        for invalid in ["-1","NaN","inf","1e309"] {
+                            let source=format!("---\nconfig:\n  themeVariables:\n    strokeWidth: {invalid}\n---\n{body}");
+                            assert_eq!(mermaid_parser::parse_swimlane(&source).unwrap(),bare,"invalid theme widths retain default behavior: {invalid}");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn authored_cluster_theme_preserves_complete_ir_layout_scene_and_style_overrides() {
+        // The reference uses explicit existing styles and title options. Only
+        // the three independently pinned metadata keys are removed from output.
+        for direction in ["LR", "RL", "TB", "BT"] {
+            for mask in 0..8 {
+                for overrides in [false, true] {
+                    for themed_font in [false, true] {
+                        let mut body = format!("swimlane-beta {direction}\ntitle Headline\nsubgraph Review[Lane]\nsubgraph Approval[Group]\nrequest[Request]\ndone[Done]\nend\nend\nrequest --> done\n");
+                        if overrides {
+                            body.push_str("classDef phase fill:#ecfdf5,stroke:#047857,stroke-width:3px,color:#064e3b,font-size:17px,font-weight:bold,rx:12px,ry:12px\nclass Approval phase\nstyle Review fill:#dbeafe,stroke:#1d4ed8,stroke-width:2px,color:#1e3a8a,font-size:20px,rx:14px,ry:14px\n");
+                        }
+                        let source = |cluster: bool| {
+                            let mut fields = String::new();
+                            if themed_font { fields.push_str("    fontFamily: 'Theme Font'\n    fontSize: 16px\n"); }
+                            if cluster {
+                                for (bit, name, value) in [(1,"clusterBkg","#fef3c7"),(2,"clusterBorder","#b45309"),(4,"titleColor","#7c2d12")] {
+                                    if mask & bit != 0 { fields.push_str(&format!("    {name}: '{value}'\n")); }
+                                }
+                            }
+                            if fields.is_empty() { body.clone() } else { format!("---\nconfig:\n  themeVariables:\n{fields}---\n{body}") }
+                        };
+                        let bare = mermaid_parser::parse_swimlane(&source(false)).unwrap();
+                        let parsed = mermaid_parser::parse_swimlane(&source(true)).unwrap();
+                        let mut directive_fields = Vec::new();
+                        if themed_font { directive_fields.extend(["\"fontFamily\": \"Theme Font\"".to_string(), "\"fontSize\": \"16px\"".to_string()]); }
+                        for (bit,name,value) in [(1,"clusterBkg","#fef3c7"),(2,"clusterBorder","#b45309"),(4,"titleColor","#7c2d12")] {
+                            if mask & bit != 0 { directive_fields.push(format!("\"{name}\": \"{value}\"")); }
+                        }
+                        let directive_source = format!("---\nconfig:\n  themeVariables:\n    clusterBkg: '#ff0000'\n    clusterBorder: '#00ff00'\n    titleColor: '#0000ff'\n---\n%%{{init: {{\"themeVariables\": {{{}}}}}}}%%\n{body}", directive_fields.join(", "));
+                        let directive = mermaid_parser::parse_swimlane(&directive_source).unwrap();
+                        assert_eq!(directive, parsed, "the whole directive object overrides conflicting front matter, including absent-field defaults");
+                        assert_eq!(parsed.theme.cluster_background.as_deref(), (mask & 1 != 0).then_some("#fef3c7"));
+                        assert_eq!(parsed.theme.cluster_border.as_deref(), (mask & 2 != 0).then_some("#b45309"));
+                        assert_eq!(parsed.theme.title_color.as_deref(), (mask & 4 != 0).then_some("#7c2d12"));
+                        let mut normalized = parsed.clone();
+                        normalized.theme.cluster_background = None;
+                        normalized.theme.cluster_border = None;
+                        normalized.theme.title_color = None;
+                        assert_eq!(normalized, bare, "complete authored IR differs only in pinned theme fields");
+                        let layout = diagram_layout_hierarchy::try_layout_swimlane(&parsed).unwrap();
+                        assert_eq!((layout.lanes.len(), layout.groups.len()), (1,1));
+                        assert_eq!(layout, diagram_layout_hierarchy::try_layout_swimlane(&directive).unwrap());
+                        if overrides {
+                            assert_eq!(layout.lanes[0].style.fill.as_deref(), Some("#dbeafe"));
+                            assert_eq!(layout.groups[0].style.fill.as_deref(), Some("#ecfdf5"));
+                        }
+                        let mut normalized = layout.clone();
+                        normalized.theme.cluster_background = None;
+                        normalized.theme.cluster_border = None;
+                        normalized.theme.title_color = None;
+                        assert_eq!(normalized, diagram_layout_hierarchy::try_layout_swimlane(&bare).unwrap(), "all geometry, directed routes and source/style fields remain exact");
+                        let mut explicit = normalized;
+                        for style in explicit.lanes.iter_mut().map(|lane| &mut lane.style).chain(explicit.groups.iter_mut().map(|group| &mut group.style)) {
+                            if style.fill.is_none() && mask & 1 != 0 { style.fill = Some("#fef3c7".into()); }
+                            if style.stroke.is_none() && mask & 2 != 0 { style.stroke = Some("#b45309".into()); }
+                            if style.text_color.is_none() && mask & 4 != 0 { style.text_color = Some("#7c2d12".into()); }
+                        }
+                        let mut options = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
+                        if themed_font { options.title_font.size = 16.0; options.title_font.family = "Theme Font".into(); }
+                        let mut expected = diagram_to_paint_swimlane(&explicit, &options);
+                        let title_runs = expected.instructions.iter_mut().filter_map(|instruction| match instruction {
+                            PaintInstruction::GlyphRun(run) if run.glyphs.iter().map(|glyph| char::from_u32(glyph.glyph_id).unwrap()).collect::<String>() == "Headline" => Some(run),
+                            _ => None,
+                        }).collect::<Vec<_>>();
+                        assert_eq!(title_runs.len(), 1, "pin the exact unique title run before setting its independent color");
+                        for run in title_runs {
+                            assert_eq!(run.fill.as_deref(), Some("rgb(15, 23, 42)"));
+                            if mask & 4 != 0 { run.fill = Some("rgb(124, 45, 18)".into()); }
+                            if themed_font { assert_eq!(run.font_size, 16.0); }
+                        }
+                        let mut actual = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                        for (bit,key,value) in [(1,"swimlane.theme.clusterBkg","#fef3c7"),(2,"swimlane.theme.clusterBorder","#b45309"),(4,"swimlane.theme.titleColor","#7c2d12")] {
+                            assert_eq!(actual.metadata.as_mut().unwrap().remove(key).as_deref(), (mask & bit != 0).then_some(value));
+                        }
+                        assert_eq!(actual, expected, "complete paint oracle: direction={direction}, mask={mask}, overrides={overrides}, themed_font={themed_font}");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn authored_swimlane_edge_label_theme_preserves_complete_scene_queries_and_rectangles() {
+        struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
+        impl FontResolver for RecordingResolver {
+            type Handle = FakeHandle;
+            fn resolve(&self, query: &FontQuery) -> Result<FakeHandle, FontResolutionError> {
+                self.0.borrow_mut().push(query.clone()); Ok(FakeHandle)
+            }
+        }
+        let body = "swimlane-beta LR\nsubgraph L[Lane]\na[Source]\nb[Target]\nc[Other]\nend\na themed@-- themed --> b\nb styled@-- overridden --> c\nclassDef custom font-size:20px,font-weight:bold,font-style:italic,font-family:\"Edge Font\",color:#654321\nclass styled custom\n";
+        let prefix = "---\nconfig:\n  themeVariables:\n    textColor: '#123456'\n    fontFamily: 'Theme Font'\n    fontSize: 16px\n";
+        let baseline_source = format!("{prefix}---\n{body}");
+        let authored_source = format!("{prefix}    edgeLabelBackground: '#fedcba'\n---\n{body}");
+        let authored = mermaid_parser::parse_swimlane(&authored_source).expect("authored label theme parses");
+        let layout = diagram_layout_hierarchy::layout_swimlane(&authored);
+        assert_eq!(layout.edges.len(), 2);
+        assert_eq!(layout.theme.text_color, "#123456");
+        assert_eq!(layout.theme.edge_label_background.as_deref(), Some("#fedcba"));
+        let resolver = RecordingResolver(std::cell::RefCell::new(Vec::new()));
+        let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
+        let options = DiagramToPaintOptions { background: defaults.background, device_pixel_ratio: defaults.device_pixel_ratio,
+            label_font: defaults.label_font, title_font: defaults.title_font, shaper: &FakeShaper, metrics: &FakeMetrics, resolver: &resolver };
+        let mut scene = diagram_to_paint_swimlane(&layout, &options);
+        use text_interfaces::{FontStyle, FontWeight};
+        assert_eq!(*resolver.0.borrow(), vec![
+            FontQuery::named("Theme Font").with_weight(FontWeight(700)),
+            FontQuery::named("Theme Font"),
+            FontQuery::named("Edge Font").with_weight(FontWeight(700)).with_style(FontStyle::Italic),
+        ]);
+        let runs = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some((run.glyphs.iter().map(|glyph| char::from_u32(glyph.glyph_id).unwrap()).collect::<String>(), run.font_size, run.fill.as_deref(), run.font_ref.as_str())), _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(runs, vec![
+            ("Lane".into(), 16.0, Some("rgb(38, 50, 56)"), "fake:test"),
+            ("themed".into(), 16.0, Some("rgb(18, 52, 86)"), "fake:test"),
+            ("overridden".into(), 20.0, Some("rgb(101, 67, 33)"), "fake:test"),
+            ("Source".into(), 16.0, Some("rgb(13, 71, 161)"), "fake:test"),
+            ("Target".into(), 16.0, Some("rgb(13, 71, 161)"), "fake:test"),
+            ("Other".into(), 16.0, Some("rgb(13, 71, 161)"), "fake:test"),
+        ]);
+        let backgrounds = scene.instructions.iter().enumerate().filter_map(|(index, instruction)| match instruction {
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fedcba") => Some((index, rect.clone())), _ => None,
+        }).collect::<Vec<_>>();
+        let expected = layout.edges.iter().enumerate().map(|(index, edge)| (3 + index * 3, PaintRect {
+            base: PaintBase::default(), x: (edge.from.x + edge.to.x) / 2.0 - 52.0, y: (edge.from.y + edge.to.y) / 2.0 - 25.0,
+            width: 104.0, height: 22.0, fill: Some("#fedcba".into()), stroke: None, stroke_width: None,
+            corner_radius: Some(2.0), stroke_dash: None, stroke_dash_offset: None,
+        })).collect::<Vec<_>>();
+        assert_eq!(backgrounds, expected, "every background field and instruction position is exact");
+        for (index, _) in backgrounds.iter().rev() { scene.instructions.remove(*index); }
+        let metadata = scene.metadata.as_mut().expect("theme metadata");
+        assert_eq!(metadata.remove("swimlane.theme.edgeLabelBackground").as_deref(), Some("#fedcba"));
+        assert_eq!(metadata.get("swimlane.theme.textColor").map(String::as_str), Some("#123456"));
+        assert_eq!(metadata.get("swimlane.theme.fontFamily").map(String::as_str), Some("Theme Font"));
+        assert_eq!(metadata.get("swimlane.theme.fontSize").map(String::as_str), Some("16"));
+        let baseline = mermaid_parser::parse_swimlane(&baseline_source).expect("same font/color without background parses");
+        let baseline_layout = diagram_layout_hierarchy::layout_swimlane(&baseline);
+        assert!(baseline_layout.theme.edge_label_background.is_none());
+        let baseline_scene = diagram_to_paint_swimlane(&baseline_layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        assert_eq!(scene, baseline_scene, "all remaining glyph positions/styles/routes/markers/nodes/metadata match the complete authored baseline");
+        let default = mermaid_parser::parse_swimlane(body).expect("default label theme parses");
+        let default_layout = diagram_layout_hierarchy::layout_swimlane(&default);
+        assert_eq!(default_layout.theme.text_color, "#37474f"); assert!(default_layout.theme.edge_label_background.is_none());
+        let default_scene = diagram_to_paint_swimlane(&default_layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        assert!(!default_scene.metadata.as_ref().unwrap().contains_key("swimlane.theme.edgeLabelBackground"));
+        let default_runs = default_scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::GlyphRun(run) => Some((run.glyphs.iter().map(|glyph| char::from_u32(glyph.glyph_id).unwrap()).collect::<String>(), run.font_size, run.fill.as_deref(), run.font_ref.as_str())), _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(default_runs, vec![
+            ("Lane".into(), 18.0, Some("rgb(38, 50, 56)"), "fake:test"),
+            ("themed".into(), 14.0, Some("rgb(55, 71, 79)"), "fake:test"),
+            ("overridden".into(), 20.0, Some("rgb(101, 67, 33)"), "fake:test"),
+            ("Source".into(), 14.0, Some("rgb(13, 71, 161)"), "fake:test"),
+            ("Target".into(), 14.0, Some("rgb(13, 71, 161)"), "fake:test"),
+            ("Other".into(), 14.0, Some("rgb(13, 71, 161)"), "fake:test"),
+        ]);
+    }
+
+    #[test]
+    fn authored_swimlane_edge_typography_preserves_complete_query_and_glyph_trace() {
+        struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
+        impl FontResolver for RecordingResolver {
+            type Handle = FakeHandle;
+            fn resolve(&self, query: &FontQuery) -> Result<FakeHandle, FontResolutionError> {
+                self.0.borrow_mut().push(query.clone()); Ok(FakeHandle)
+            }
+        }
+        let source = r#"swimlane-beta LR
+subgraph Review
+  request[Request]
+  review[Review]
+  done[Done]
+end
+request submit@-- submit --> review release@-- release --> done
+classDef urgent font-size:22px,font-weight:bold,font-style:italic,font-family:"Helvetica Neue",color:#7c2d12
+class submit urgent
+style release font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d
+"#;
+        let diagram = mermaid_parser::parse_swimlane(source).expect("authored edge typography parses");
+        let layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+        let resolver = RecordingResolver(std::cell::RefCell::new(Vec::new()));
+        let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
+        let options = DiagramToPaintOptions {
+            background: defaults.background, device_pixel_ratio: defaults.device_pixel_ratio,
+            label_font: defaults.label_font, title_font: defaults.title_font,
+            shaper: &FakeShaper, metrics: &FakeMetrics, resolver: &resolver,
+        };
+        let scene = diagram_to_paint_swimlane(&layout, &options);
+        use text_interfaces::{FontStyle, FontWeight};
+        assert_eq!(*resolver.0.borrow(), vec![
+            FontQuery::named("Helvetica").with_weight(FontWeight(700)),
+            FontQuery::named("Helvetica Neue").with_weight(FontWeight(700)).with_style(FontStyle::Italic),
+            FontQuery::named("Helvetica").with_weight(FontWeight(500)),
+            FontQuery::named("Helvetica"),
+        ]);
+        let runs: Vec<_> = scene.instructions.iter().filter_map(|instruction| {
+            if let PaintInstruction::GlyphRun(run) = instruction {
+                let text: String = run.glyphs.iter().map(|glyph| char::from_u32(glyph.glyph_id).expect("fake glyph character")).collect();
+                Some((text, run.font_size, run.fill.as_deref(), run.font_ref.as_str()))
+            } else { None }
+        }).collect();
+        assert_eq!(runs, vec![
+            ("Review".to_owned(), 18.0, Some("rgb(38, 50, 56)"), "fake:test"),
+            ("submit".to_owned(), 22.0, Some("rgb(124, 45, 18)"), "fake:test"),
+            ("release".to_owned(), 18.0, Some("rgb(20, 83, 45)"), "fake:test"),
+            ("Request".to_owned(), 14.0, Some("rgb(13, 71, 161)"), "fake:test"),
+            ("Review".to_owned(), 14.0, Some("rgb(13, 71, 161)"), "fake:test"),
+            ("Done".to_owned(), 14.0, Some("rgb(13, 71, 161)"), "fake:test"),
+        ]);
+    }
+
+    #[test]
+    fn authored_swimlane_corner_styles_preserve_all_rectangle_fields_and_refusals() {
+        let source = "swimlane-beta LR\nsubgraph Review\n  rounded[Class rounded]\n  compact[Direct compact]\nend\nclassDef soft fill:#fef3c7,stroke:#b45309,rx:16px,ry:16px\nclass rounded soft\nstyle compact fill:#dcfce7,stroke:#166534,rx:4px,ry:4px\nrounded --> compact";
+        let diagram = mermaid_parser::parse_swimlane(source).expect("authored corners parse");
+        let layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+        assert_eq!((layout.nodes[0].style.corner_radius, layout.nodes[1].style.corner_radius), (Some(16.0), Some(4.0)));
+        let scene = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        let rectangles: Vec<_> = scene.instructions.iter().filter_map(|instruction| {
+            if let PaintInstruction::Rect(rectangle) = instruction { Some(rectangle.clone()) } else { None }
+        }).collect();
+        let lane = &layout.lanes[0];
+        let mut expected = vec![PaintRect {
+            base: PaintBase::default(), x: lane.x, y: lane.y, width: lane.width, height: lane.height,
+            fill: Some("#f8fafc".into()), stroke: Some("#78909c".into()), stroke_width: Some(1.5),
+            corner_radius: Some(8.0), stroke_dash: None, stroke_dash_offset: None,
+        }];
+        for (node, fill, stroke, radius) in [
+            (&layout.nodes[0], "#fef3c7", "#b45309", 16.0),
+            (&layout.nodes[1], "#dcfce7", "#166534", 4.0),
+        ] {
+            expected.push(PaintRect {
+                base: PaintBase::default(), x: node.x, y: node.y, width: node.width, height: node.height,
+                fill: Some(fill.into()), stroke: Some(stroke.into()), stroke_width: Some(2.0),
+                corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None,
+            });
+        }
+        assert_eq!(rectangles, expected, "every rectangle, in order, including defaults and all fields");
+        for (declarations, message) in [
+            ("rx:4px,ry:8px", "rx and ry must match"),
+            ("rx:-1px", "invalid Swimlane style number"),
+            ("rx:NaN", "invalid Swimlane style number"),
+            ("ry:inf", "invalid Swimlane style number"),
+        ] {
+            let invalid = format!("swimlane-beta LR\nsubgraph A\none[One]\nend\nstyle one {declarations}");
+            let error = mermaid_parser::parse_swimlane(&invalid).expect_err("invalid corner radius must be refused at its number/style boundary");
+            assert!(format!("{error:?}").contains(message), "{declarations}: {error:?}");
+        }
+    }
+
+    #[test]
+    fn authored_swimlane_typography_preserves_complete_query_and_glyph_trace() {
+        struct RecordingResolver(std::cell::RefCell<Vec<FontQuery>>);
+        impl FontResolver for RecordingResolver {
+            type Handle = FakeHandle;
+            fn resolve(&self, query: &FontQuery) -> Result<FakeHandle, FontResolutionError> {
+                self.0.borrow_mut().push(query.clone());
+                Ok(FakeHandle)
+            }
+        }
+        let source = r#"swimlane-beta LR
+subgraph Review
+  emphasized[Typographic approval step]
+  direct[Typographic delivery step]
+end
+classDef emphasis font-size:22px,font-weight:bold,font-style:italic,font-family:"Helvetica Neue",color:#7c2d12
+class emphasized emphasis
+style direct font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d
+emphasized --> direct
+"#;
+        let diagram = mermaid_parser::parse_swimlane(source).expect("authored typography parses");
+        let layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+        assert_eq!(layout.nodes.len(), 2);
+        assert_eq!(layout.nodes[0].width, 350.89230769230767);
+        assert_eq!(layout.nodes[1].width, 277.2307692307692);
+        let resolver = RecordingResolver(std::cell::RefCell::new(Vec::new()));
+        let defaults = make_opts(&FakeShaper, &FakeMetrics, &FakeResolver);
+        let options = DiagramToPaintOptions {
+            background: defaults.background, device_pixel_ratio: defaults.device_pixel_ratio,
+            label_font: defaults.label_font, title_font: defaults.title_font,
+            shaper: &FakeShaper, metrics: &FakeMetrics, resolver: &resolver,
+        };
+        let scene = diagram_to_paint_swimlane(&layout, &options);
+        use text_interfaces::{FontStyle, FontWeight};
+        assert_eq!(*resolver.0.borrow(), vec![
+            FontQuery::named("Helvetica").with_weight(FontWeight(700)),
+            FontQuery::named("Helvetica Neue").with_weight(FontWeight(700)).with_style(FontStyle::Italic),
+            FontQuery::named("Helvetica").with_weight(FontWeight(500)),
+        ]);
+        let runs: Vec<_> = scene.instructions.iter().filter_map(|instruction| {
+            if let PaintInstruction::GlyphRun(run) = instruction {
+                let text: String = run.glyphs.iter().map(|glyph| char::from_u32(glyph.glyph_id).expect("fake glyph is a character")).collect();
+                Some((text, run.font_size, run.fill.as_deref(), run.font_ref.as_str()))
+            } else { None }
+        }).collect();
+        assert_eq!(runs, vec![
+            ("Review".to_owned(), 18.0, Some("rgb(38, 50, 56)"), "fake:test"),
+            ("Typographic approval step".to_owned(), 22.0, Some("rgb(124, 45, 18)"), "fake:test"),
+            ("Typographic delivery step".to_owned(), 18.0, Some("rgb(20, 83, 45)"), "fake:test"),
+        ]);
+    }
+
+    // These are authored diagrams, so a valid parser/layout path must reach
+    // the marker check even when a curve's adjacent control equals its tip.
+    fn assert_aligned_swimlane_markers(direction: &str, curve: &str) {
+        let source = format!(
+            "swimlane-beta {direction}\nsubgraph L\na[A]\nb[B]\nend\na edge@<--> b\nedge@{{curve:{curve}}}"
+        );
+        let diagram = mermaid_parser::parse_swimlane(&source).expect("authored curve parses");
+        let layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+        assert_eq!(layout.edges.len(), 1);
+        let edge = &layout.edges[0];
+        assert_eq!((edge.start_marker, edge.end_marker), (EdgeMarker::Point, EdgeMarker::Point));
+        let (sx, sy, ex, ey) = match direction {
+            "LR" => (202.0, 91.0, 244.0, 91.0),
+            "TB" => (87.0, 128.0, 87.0, 170.0),
+            _ => panic!("fixture direction"),
+        };
+        assert_eq!((edge.from.x, edge.from.y, edge.to.x, edge.to.y), (sx, sy, ex, ey));
+        let scene = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        let metadata = scene.metadata.as_ref().expect("edge metadata");
+        assert_eq!(metadata.get("swimlane.edge.0.id").map(String::as_str), Some("edge"));
+        assert_eq!(metadata.get("swimlane.edge.0.curve").map(String::as_str), Some(curve));
+        let paths: Vec<_> = scene.instructions.iter().filter_map(|instruction| {
+            if let PaintInstruction::Path(path) = instruction { Some(path) } else { None }
+        }).collect();
+        assert_eq!(paths.len(), 3, "one route and two actual point markers");
+        let mut route = vec![PathCommand::MoveTo { x: sx, y: sy }];
+        match (direction, curve) {
+            ("LR", "bumpY") | ("TB", "bumpX") => route.push(PathCommand::CubicTo {
+                cx1: sx, cy1: sy, cx2: ex, cy2: ey, x: ex, y: ey,
+            }),
+            ("LR", "bumpX") => route.push(PathCommand::CubicTo {
+                cx1: 223.0, cy1: 91.0, cx2: 223.0, cy2: 91.0, x: ex, y: ey,
+            }),
+            ("TB", "bumpY") => route.push(PathCommand::CubicTo {
+                cx1: 87.0, cy1: 149.0, cx2: 87.0, cy2: 149.0, x: ex, y: ey,
+            }),
+            ("LR", "monotoneX" | "monotoneY" | "cardinal" | "catmullRom" | "natural") => route.push(PathCommand::CubicTo {
+                cx1: 216.0, cy1: 91.0, cx2: 230.0, cy2: 91.0, x: ex, y: ey,
+            }),
+            ("TB", "monotoneX" | "monotoneY" | "cardinal" | "catmullRom" | "natural") => route.push(PathCommand::CubicTo {
+                cx1: 87.0, cy1: 142.0, cx2: 87.0, cy2: 156.0, x: ex, y: ey,
+            }),
+            ("LR", "basis") => route.push(PathCommand::CubicTo {
+                cx1: sx + 42.0 * 0.4, cy1: sy, cx2: ex - 42.0 * 0.4, cy2: ey, x: ex, y: ey,
+            }),
+            ("TB", "basis") => route.push(PathCommand::CubicTo {
+                cx1: sx, cy1: sy + 42.0 * 0.4, cx2: ex, cy2: ey - 42.0 * 0.4, x: ex, y: ey,
+            }),
+            (_, "linear" | "rounded") => {},
+            ("LR", "step") => route.extend([
+                PathCommand::LineTo { x: 223.0, y: 91.0 }, PathCommand::LineTo { x: 223.0, y: 91.0 },
+            ]),
+            ("TB", "step") => route.extend([
+                PathCommand::LineTo { x: 87.0, y: 149.0 }, PathCommand::LineTo { x: 87.0, y: 149.0 },
+            ]),
+            (_, "stepBefore") => route.push(PathCommand::LineTo { x: sx, y: sy }),
+            (_, "stepAfter") => route.push(PathCommand::LineTo { x: ex, y: ey }),
+            _ => panic!("fixture curve"),
+        }
+        if !matches!(curve, "basis" | "bumpX" | "bumpY" | "monotoneX" | "monotoneY" | "cardinal" | "catmullRom" | "natural") {
+            route.push(PathCommand::LineTo { x: ex, y: ey });
+        }
+        assert_eq!(paths[0].commands, route, "authored curve coordinates stay exact");
+        let triangles = if direction == "LR" {
+            [[(sx, sy), (sx + 10.0, sy - 5.0), (sx + 10.0, sy + 5.0)],
+             [(ex, ey), (ex - 10.0, ey + 5.0), (ex - 10.0, ey - 5.0)]]
+        } else {
+            [[(sx, sy), (sx + 5.0, sy + 10.0), (sx - 5.0, sy + 10.0)],
+             [(ex, ey), (ex - 5.0, ey - 10.0), (ex + 5.0, ey - 10.0)]]
+        };
+        for (path, [tip, left, right]) in paths[1..].iter().zip(triangles) {
+            assert_eq!(path.commands, vec![
+                PathCommand::MoveTo { x: tip.0, y: tip.1 },
+                PathCommand::LineTo { x: left.0, y: left.1 },
+                PathCommand::LineTo { x: right.0, y: right.1 }, PathCommand::Close,
+            ], "{direction}/{curve}: endpoint direction must produce the exact visible triangle");
+            assert_eq!(((left.0-tip.0)*(right.1-tip.1)-(right.0-tip.0)*(left.1-tip.1)).abs()/2.0, 50.0);
+            assert_eq!(path.fill.as_deref(), Some("#455a64"));
+            assert_eq!(path.stroke, None);
+        }
+    }
+
+    #[test]
+    fn authored_bump_y_lr_marker_geometry() { assert_aligned_swimlane_markers("LR", "bumpY"); }
+
+    #[test]
+    fn authored_bump_x_tb_marker_geometry() { assert_aligned_swimlane_markers("TB", "bumpX"); }
+
+    #[test]
+    fn authored_aligned_step_marker_geometry() {
+        for direction in ["LR", "TB"] {
+            for curve in ["stepBefore", "stepAfter", "step"] {
+                assert_aligned_swimlane_markers(direction, curve);
+            }
+        }
+    }
+
+    #[test]
+    fn authored_nondegenerate_curve_marker_geometry() {
+        for (direction, curve) in [("LR", "bumpX"), ("TB", "bumpY"), ("LR", "basis"),
+            ("TB", "basis"), ("LR", "linear"), ("TB", "linear")] {
+            assert_aligned_swimlane_markers(direction, curve);
+        }
+    }
+
+    #[test]
+    fn authored_monotone_curve_marker_geometry() {
+        for direction in ["LR", "TB"] {
+            for curve in ["monotoneX", "monotoneY"] {
+                assert_aligned_swimlane_markers(direction, curve);
+            }
+        }
+    }
+
+    #[test]
+    fn authored_spline_curve_marker_geometry() {
+        // Two-point splines have collinear one-third/two-thirds controls.
+        // The shared authored helper asserts complete route commands, mode
+        // metadata and both exact marker triangles (including area and style).
+        for direction in ["LR", "TB"] {
+            for curve in ["cardinal", "catmullRom", "natural"] {
+                assert_aligned_swimlane_markers(direction, curve);
+            }
+        }
+    }
+
+    fn assert_rounded_lowering_fixture(
+        direction: &str,
+        end: Point,
+        route: Vec<PathCommand>,
+        triangles: [[(f64, f64); 3]; 2],
+        area: f64,
+    ) {
+        let source = format!("swimlane-beta {direction}\nsubgraph L\na[A]\nb[B]\nend\na edge@<--> b\nedge@{{curve:rounded}}");
+        let diagram = mermaid_parser::parse_swimlane(&source).expect("authored rounded curve parses");
+        assert_eq!(diagram.edges[0].curve, Some(SwimlaneEdgeCurve::Rounded));
+        let mut layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+        assert_eq!(layout.edges.len(), 1);
+        // Deliberate public-layout fixtures isolate routing and marker geometry
+        // from lane placement. Separate authored aligned controls keep real layout.
+        layout.edges[0].from = Point { x: 0.0, y: 0.0 };
+        layout.edges[0].to = end;
+        let scene = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        let metadata = scene.metadata.as_ref().expect("rounded metadata");
+        assert_eq!(metadata.get("swimlane.edge.0.curve").map(String::as_str), Some("rounded"));
+        assert_eq!(metadata.get("swimlane.edge.0.id").map(String::as_str), Some("edge"));
+        let paths: Vec<_> = scene.instructions.iter().filter_map(|instruction| {
+            if let PaintInstruction::Path(path) = instruction { Some(path) } else { None }
+        }).collect();
+        assert_eq!(paths.len(), 3, "complete route and both point markers");
+        assert_eq!(paths[0].commands, route, "{direction}: complete rounded route");
+        for (path, [tip, left, right]) in paths[1..].iter().zip(triangles) {
+            assert_eq!(path.commands, vec![
+                PathCommand::MoveTo { x: tip.0, y: tip.1 },
+                PathCommand::LineTo { x: left.0, y: left.1 },
+                PathCommand::LineTo { x: right.0, y: right.1 }, PathCommand::Close,
+            ], "{direction}: exact rounded endpoint triangle");
+            assert_eq!(((left.0-tip.0)*(right.1-tip.1)-(right.0-tip.0)*(left.1-tip.1)).abs()/2.0, area);
+            assert_eq!(path.fill.as_deref(), Some("#455a64"));
+            assert_eq!(path.stroke, None);
+        }
+    }
+
+    #[test]
+    fn authored_rounded_aligned_marker_geometry() {
+        for direction in ["LR", "TB"] {
+            assert_aligned_swimlane_markers(direction, "rounded");
+        }
+    }
+
+    #[test]
+    fn rounded_long_and_short_route_commands_and_markers_are_exact() {
+        // Fixed golden cuts: radius12 for 60x80; half-segment4 for 16x8.
+        // Direction transforms only rotate/reflect these independently chosen
+        // coordinates; they do not compute corner lengths or call path helpers.
+        for (ex, ey, before, first_after, second_before, after) in [
+            (60.0, 80.0, 18.0, 12.0, 68.0, 42.0),
+            (16.0, 8.0, 4.0, 4.0, 4.0, 12.0),
+        ] {
+            for (direction, vertical, sign) in [("LR", false, 1.0), ("RL", false, -1.0), ("TB", true, 1.0), ("BT", true, -1.0)] {
+                let xy = |x: f64, y: f64| if vertical { (y*sign, x*sign) } else { (x*sign, y*sign) };
+                let point = |x, y| { let (x, y) = xy(x, y); Point { x, y } };
+                let line = |x, y| { let (x, y) = xy(x, y); PathCommand::LineTo { x, y } };
+                let quad = |cx, cy, x, y| { let (cx, cy) = xy(cx, cy); let (x, y) = xy(x, y); PathCommand::QuadTo { cx, cy, x, y } };
+                let mut triangles = [
+                    [xy(0.0, 0.0), xy(10.0, -5.0), xy(10.0, 5.0)],
+                    [xy(ex, ey), xy(ex-10.0, ey+5.0), xy(ex-10.0, ey-5.0)],
+                ];
+                if vertical { for triangle in &mut triangles { triangle.swap(1, 2); } }
+                assert_rounded_lowering_fixture(direction, point(ex, ey), vec![
+                    PathCommand::MoveTo { x: 0.0, y: 0.0 }, line(before, 0.0),
+                    quad(ex/2.0, 0.0, ex/2.0, first_after), line(ex/2.0, second_before),
+                    quad(ex/2.0, ey, after, ey), line(ex, ey),
+                ], triangles, 50.0);
+            }
+        }
+    }
+
+    #[test]
+    fn rounded_collapsed_perpendicular_routes_keep_visible_markers() {
+        assert_rounded_lowering_fixture("LR", Point { x: 0.0, y: 42.0 }, vec![
+            PathCommand::MoveTo { x: 0.0, y: 0.0 }, PathCommand::LineTo { x: 0.0, y: 42.0 },
+        ], [[(0.0,0.0),(5.0,10.0),(-5.0,10.0)],[(0.0,42.0),(-5.0,32.0),(5.0,32.0)]], 50.0);
+        assert_rounded_lowering_fixture("TB", Point { x: 42.0, y: 0.0 }, vec![
+            PathCommand::MoveTo { x: 0.0, y: 0.0 }, PathCommand::LineTo { x: 42.0, y: 0.0 },
+        ], [[(0.0,0.0),(10.0,-5.0),(10.0,5.0)],[(42.0,0.0),(32.0,5.0),(32.0,-5.0)]], 50.0);
+    }
+
+    #[test]
+    fn rounded_zero_length_keeps_existing_degenerate_marker_contract() {
+        for direction in ["LR", "RL", "TB", "BT"] {
+            assert_rounded_lowering_fixture(direction, Point { x: 0.0, y: 0.0 }, vec![
+                PathCommand::MoveTo { x: 0.0, y: 0.0 }, PathCommand::LineTo { x: 0.0, y: 0.0 },
+            ], [[(0.0,0.0);3];2], 0.0);
+        }
+    }
+
+    #[test]
+    fn line_hops_public_layout_has_exact_sorted_commands_and_markers() {
+        for (config, mode) in [("arc", Some(SwimlaneLineHops::Arc)), ("gap", Some(SwimlaneLineHops::Gap)), ("false", None)] {
+            let source = format!("---\nconfig:\n  swimlane:\n    lineHops: {config}\n---\nswimlane-beta LR\nsubgraph L\na[A]\nb[B]\nc[C]\nd[D]\ne[E]\nf[F]\nend\na first@<--> b\nc second@<--> d\ne last@<--> f");
+            let diagram = mermaid_parser::parse_swimlane(&source).expect("authored hop configuration parses");
+            assert_eq!(diagram.line_hops, mode);
+            let mut layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+            assert_eq!(layout.line_hops, mode);
+            assert_eq!(layout.edges.len(), 3);
+            // Earlier edges deliberately arrive in reverse crossing order.
+            for (edge, (sx, sy, ex, ey)) in layout.edges.iter_mut().zip([
+                (60.0,-50.0,60.0,50.0), (20.0,-50.0,20.0,50.0), (0.0,0.0,100.0,0.0),
+            ]) {
+                edge.from = Point { x: sx, y: sy };
+                edge.to = Point { x: ex, y: ey };
+            }
+            let scene = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+            let metadata = scene.metadata.as_ref().expect("hop metadata");
+            assert_eq!(metadata.get("swimlane.lineHops").map(String::as_str), mode.map(|value| match value { SwimlaneLineHops::Arc => "arc", SwimlaneLineHops::Gap => "gap" }));
+            for (index, id) in ["first", "second", "last"].iter().enumerate() {
+                assert_eq!(metadata.get(&format!("swimlane.edge.{index}.id")).map(String::as_str), Some(*id));
+            }
+            let paths: Vec<_> = scene.instructions.iter().filter_map(|instruction| {
+                if let PaintInstruction::Path(path) = instruction { Some(path) } else { None }
+            }).collect();
+            assert_eq!(paths.len(), 9, "three complete routes and six point markers");
+            for (index, x) in [(0,60.0),(3,20.0)] {
+                assert_eq!(paths[index].commands, vec![PathCommand::MoveTo { x, y:-50.0 },PathCommand::LineTo { x,y:50.0 }]);
+            }
+            let mut expected=vec![PathCommand::MoveTo { x:0.0,y:0.0 }];
+            if let Some(mode)=mode {
+                // Fixed six-unit cuts around two independent golden crossings.
+                for (before, crossing, after) in [(14.0,20.0,26.0),(54.0,60.0,66.0)] {
+                    expected.push(PathCommand::LineTo { x:before,y:0.0 });
+                    expected.push(match mode {
+                        SwimlaneLineHops::Arc => PathCommand::QuadTo { cx:crossing,cy:12.0,x:after,y:0.0 },
+                        SwimlaneLineHops::Gap => PathCommand::MoveTo { x:after,y:0.0 },
+                    });
+                }
+            }
+            expected.push(PathCommand::LineTo { x:100.0,y:0.0 });
+            assert_eq!(paths[6].commands,expected,"{config}: crossing order and full commands");
+            let triangles=[
+                (1,[(60.0,-50.0),(65.0,-40.0),(55.0,-40.0)]),
+                (2,[(60.0,50.0),(55.0,40.0),(65.0,40.0)]),
+                (4,[(20.0,-50.0),(25.0,-40.0),(15.0,-40.0)]),
+                (5,[(20.0,50.0),(15.0,40.0),(25.0,40.0)]),
+                (7,[(0.0,0.0),(10.0,-5.0),(10.0,5.0)]),
+                (8,[(100.0,0.0),(90.0,5.0),(90.0,-5.0)]),
+            ];
+            for (index,[tip,left,right]) in triangles {
+                assert_eq!(paths[index].commands,vec![PathCommand::MoveTo { x:tip.0,y:tip.1 },PathCommand::LineTo { x:left.0,y:left.1 },PathCommand::LineTo { x:right.0,y:right.1 },PathCommand::Close]);
+                assert_eq!(((left.0-tip.0)*(right.1-tip.1)-(right.0-tip.0)*(left.1-tip.1)).abs()/2.0,50.0);
+                assert_eq!(paths[index].fill.as_deref(),Some("#455a64"));
+                assert_eq!(paths[index].stroke,None);
+            }
+        }
+    }
+
+    fn assert_authored_parallel_hop_work(source: &str, edge_count: usize, direction: &str) {
+        let parsed = mermaid_parser::parse_swimlane(source).expect("authored parallel workload");
+        let mut layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+        assert_eq!(layout.edges.len(), edge_count);
+        assert!(layout.edges.iter().all(|edge| if direction == "LR" {
+            edge.from.y == edge.to.y && edge.from.x != edge.to.x
+        } else {
+            edge.from.x == edge.to.x && edge.from.y != edge.to.y
+        }));
+        SWIMLANE_LINE_CROSSING_VISITS.with(|count| count.set(0));
+        let enabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        let visits = SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get);
+        let mode = layout.line_hops.expect("enabled authored mode");
+        assert_eq!(enabled.metadata.as_ref().unwrap().get("swimlane.lineHops").map(String::as_str),
+            Some(match mode { SwimlaneLineHops::Arc => "arc", SwimlaneLineHops::Gap => "gap" }));
+        layout.line_hops = None;
+        let disabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        assert_eq!(enabled.instructions, disabled.instructions, "all original routes, markers and styles survive");
+        assert_eq!(visits, 0, "same-axis authored edges require no crossing predicates; {edge_count} retained edges");
+    }
+
+    #[test]
+    fn line_hop_work_duplicate_parallel_edges_preserve_all_output() {
+        for direction in ["LR", "TB"] {
+            for mode in ["arc", "gap"] {
+                for count in [64, 128] {
+                    let source = format!("---\nconfig:\n  swimlane:\n    lineHops: {mode}\n---\nswimlane-beta {direction}\nsubgraph L\na[A]\nb[B]\n{}end\n", "a --> b\n".repeat(count));
+                    assert_authored_parallel_hop_work(&source, count, direction);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn line_hop_work_unique_cartesian_parallel_edges_preserve_all_output() {
+        for direction in ["LR", "TB"] {
+            for mode in ["arc", "gap"] {
+                for size in [8, 16] {
+                    let mut source = format!("---\nconfig:\n  swimlane:\n    lineHops: {mode}\n---\nswimlane-beta {direction}\nsubgraph L\n");
+                    for prefix in ["a", "b"] {
+                        for index in 0..size { source.push_str(&format!("{prefix}{index}[{prefix}{index}]\n")); }
+                    }
+                    let group = |prefix| (0..size).map(|index| format!("{prefix}{index}")).collect::<Vec<_>>().join(" & ");
+                    source.push_str(&format!("{} --> {}\nend\n", group('a'), group('b')));
+                    let diagram = mermaid_parser::parse_swimlane(&source).unwrap();
+                    let layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+                    let geometries = layout.edges.iter().map(|edge| [edge.from.x.to_bits(), edge.from.y.to_bits(), edge.to.x.to_bits(), edge.to.y.to_bits()]).collect::<std::collections::BTreeSet<_>>();
+                    assert_eq!(geometries.len(), size * size, "every Cartesian geometry is distinct");
+                    assert_authored_parallel_hop_work(&source, size * size, direction);
+                }
+            }
+        }
+    }
+
+    fn varied_support_empty_hop_evidence(context: &str) -> Vec<(usize, bool, usize, usize)> {
+        // Direct caller-layout inputs: the parser supplies the ordinary edge
+        // style/marker template, while these exact endpoints are test-authored.
+        let mut evidence = Vec::new();
+        for count in [32usize, 64] {
+            for nonparallel in [false, true] {
+                for mode in [SwimlaneLineHops::Arc, SwimlaneLineHops::Gap] {
+                    for exchange_axes in [false, true] {
+                        for reverse in [false, true] {
+                            let parsed = mermaid_parser::parse_swimlane("swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na --> b").unwrap();
+                            let mut layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+                            let template = layout.edges[0].clone();
+                            let span = (4 * count) as f64;
+                            let mut route_width = span + count as f64 + 2.0;
+                            let mut route_height = span + (3 * count) as f64 + 2.0;
+                            if exchange_axes { std::mem::swap(&mut route_width, &mut route_height); }
+                            layout.width = layout.width.max(route_width);
+                            layout.height = layout.height.max(route_height);
+                            let mut expected_bits = Vec::new();
+                            layout.edges = (0..count).map(|index| {
+                                let mut edge = template.clone();
+                                edge.id = Some(format!("varied-support-{index}"));
+                                edge.curve = Some(SwimlaneEdgeCurve::Linear);
+                                let mut from = Point { x: 0.0, y: index as f64 };
+                                let mut to = Point { x: span + index as f64, y: span + ((if nonparallel { 3 } else { 2 }) * index) as f64 };
+                                if exchange_axes { std::mem::swap(&mut from.x, &mut from.y); std::mem::swap(&mut to.x, &mut to.y); }
+                                if reverse { std::mem::swap(&mut from, &mut to); }
+                                expected_bits.push([from.x.to_bits(), from.y.to_bits(), to.x.to_bits(), to.y.to_bits()]);
+                                edge.from = from;
+                                edge.to = to;
+                                edge
+                            }).collect();
+                            assert_eq!(layout.edges.len(), count);
+                            assert_eq!(expected_bits.iter().copied().collect::<std::collections::BTreeSet<_>>().len(), count);
+                            let mut index = SwimlaneHopCrossings::default();
+                            for (ordinal, edge) in layout.edges.iter().enumerate() {
+                                assert_eq!(edge.id.as_deref(), Some(format!("varied-support-{ordinal}").as_str()));
+                                assert_eq!([edge.from.x.to_bits(),edge.from.y.to_bits(),edge.to.x.to_bits(),edge.to.y.to_bits()], expected_bits[ordinal]);
+                                assert_eq!(edge.curve, Some(SwimlaneEdgeCurve::Linear));
+                                assert!([edge.from.x,edge.to.x].iter().all(|&x| x >= 0.0 && x <= layout.width));
+                                assert!([edge.from.y,edge.to.y].iter().all(|&y| y >= 0.0 && y <= layout.height));
+                                for earlier in &layout.edges[..ordinal] {
+                                    assert!(swimlane_line_crossing(&edge.from,&edge.to,&earlier.from,&earlier.to).is_none(), "pin the unchanged rounded predicate, not only analytic geometry");
+                                }
+                                index.insert_geometry(ordinal, 0, &edge.from, &edge.to);
+                            }
+                            assert!(index.integer_x_cohort.is_none() && index.integer_y_cohort.is_none(), "different endpoint spans invalidate both old support cohorts");
+                            drop(index);
+                            layout.line_hops = Some(mode);
+                            let frozen = layout.clone();
+                            SWIMLANE_LINE_CROSSING_VISITS.with(|value| value.set(0));
+                            SWIMLANE_HOP_INDEX_WORK.with(|value| value.set(0));
+                            let mut enabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                            let predicates = SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get);
+                            let work = SWIMLANE_HOP_INDEX_WORK.with(std::cell::Cell::get);
+                            assert_eq!(layout, frozen, "rendering preserves every occurrence and endpoint bit");
+                            assert_eq!(enabled.metadata.as_mut().unwrap().remove("swimlane.lineHops").as_deref(), Some(match mode { SwimlaneLineHops::Arc => "arc", SwimlaneLineHops::Gap => "gap" }));
+                            layout.line_hops = None;
+                            let disabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+                            assert_eq!(enabled, disabled, "complete scene: count={count}, nonparallel={nonparallel}, mode={mode:?}, axes={exchange_axes}, reverse={reverse}");
+                            assert!(work > 0, "existing eligibility/insertion/drop counter remains active");
+                            eprintln!("varied-support empty: context={context} count={count} nonparallel={nonparallel} mode={mode:?} axes={exchange_axes} reverse={reverse} predicates={predicates} existing_index_work={work}");
+                            evidence.push((count,nonparallel,predicates,work));
+                        }
+                    }
+                }
+            }
+        }
+        assert_eq!(evidence.len(), 32);
+        evidence
+    }
+
+    #[test]
+    fn line_hop_varied_support_empty_complete_scene_equivalence() {
+        let _ = varied_support_empty_hop_evidence("equivalence");
+    }
+
+    #[test]
+    fn line_hop_varied_support_empty_discovery_work_bound() {
+        let evidence = varied_support_empty_hop_evidence("work");
+        let failures = evidence.iter().filter(|&&(count,_,predicates,work)| {
+            let levels = (usize::BITS - count.leading_zeros()) as usize + 1;
+            predicates > 2 * count * levels || work > 64 * count * levels
+        }).collect::<Vec<_>>();
+        assert!(failures.is_empty(), "varied-support empty discovery exceeds the committed predicate/index bounds in {}/32 cases: {failures:?}", failures.len());
+    }
+
+    #[test]
+    fn line_hop_integer_two_support_empty_work_preserves_complete_scene() {
+        for count in [32usize, 64, 256, 512, 4096, 8192] {
+            for mode in [SwimlaneLineHops::Arc, SwimlaneLineHops::Gap] {
+                for exchange_axes in [false, true] {
+                    for reverse in [false, true] {
+                        let parsed = mermaid_parser::parse_swimlane("swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na --> b").unwrap();
+                        let mut layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+                        let template = layout.edges[0].clone();
+                        let span = (4 * count) as f64;
+                        layout.width = span + 2.0;
+                        layout.height = span + (2 * count) as f64 + 2.0;
+                        layout.edges = (0..count).map(|index| {
+                            let mut edge = template.clone();
+                            edge.id = Some(format!("unique-oblique-{index}"));
+                            edge.curve = Some(SwimlaneEdgeCurve::Linear);
+                            let mut from = Point { x: 0.0, y: index as f64 };
+                            let mut to = Point { x: span, y: span + (2 * index) as f64 };
+                            if exchange_axes { std::mem::swap(&mut from.x, &mut from.y); std::mem::swap(&mut to.x, &mut to.y); }
+                            if reverse { std::mem::swap(&mut from, &mut to); }
+                            edge.from = from;
+                            edge.to = to;
+                            edge
+                        }).collect();
+                        assert_eq!(layout.edges.len(), count);
+                        let geometries = layout.edges.iter().map(|edge| [edge.from.x.to_bits(), edge.from.y.to_bits(), edge.to.x.to_bits(), edge.to.y.to_bits()]).collect::<std::collections::BTreeSet<_>>();
+                        assert_eq!(geometries.len(), count);
+                        layout.line_hops = Some(mode);
+                        SWIMLANE_LINE_CROSSING_VISITS.with(|value| value.set(0));
+                        SWIMLANE_HOP_INDEX_WORK.with(|value| value.set(0));
+                        let mut enabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                        let predicates = SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get);
+                        let work = SWIMLANE_HOP_INDEX_WORK.with(std::cell::Cell::get);
+                        let metadata = enabled.metadata.as_mut().expect("metadata retained");
+                        assert_eq!(metadata.remove("swimlane.lineHops").as_deref(), Some(match mode { SwimlaneLineHops::Arc => "arc", SwimlaneLineHops::Gap => "gap" }));
+                        layout.line_hops = None;
+                        let disabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                        assert_eq!(enabled, disabled, "all scene/style/marker/glyph/metadata fields survive: count={count}, exchanged={exchange_axes}, reverse={reverse}");
+                        assert!(predicates <= 1, "empty distinct oblique work must not scan prior geometries: count={count}, predicates={predicates}");
+                        assert!(work > 0, "the index instrumentation must observe actual eligibility/insertion/query work");
+                        let budget = 64 * count * ((usize::BITS - count.leading_zeros()) as usize + 1);
+                        assert!(work <= budget, "count={count}, index work={work}, unchanged bound={budget}");
+                        eprintln!("two-support empty: count={count} exchanged={exchange_axes} reverse={reverse} predicates={predicates} index_work={work} bound={budget}");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn line_hop_integer_two_support_authored_parallel_work_preserves_complete_scene() {
+        for count in [32usize, 64, 256] {
+            for mode in ["arc", "gap"] {
+                let mut source = format!("---\nconfig:\n  swimlane:\n    lineHops: {mode}\n    automaticLaneOrdering: false\n    ignoreCrossLaneEdges: true\n    optimizeRanksByCrossings: false\n---\nswimlane-beta LR\nsubgraph A\n");
+                for index in 0..count { source.push_str(&format!("a{index}[A]\n")); }
+                source.push_str("end\nsubgraph B\npad[P]\n");
+                for index in 0..count { source.push_str(&format!("b{index}[B]\n")); }
+                source.push_str("end\n");
+                for index in 0..count { source.push_str(&format!("a{index} --> b{index}\n")); }
+                let diagram = mermaid_parser::parse_swimlane(&source).expect("flat authored oblique family parses");
+                let mut layout = diagram_layout_hierarchy::layout_swimlane(&diagram);
+                assert_eq!(layout.edges.len(), count);
+                for (index, edge) in layout.edges.iter().enumerate() {
+                    assert_eq!(edge.from, Point { x: 165.0 + 174.0 * index as f64, y: 118.0 });
+                    assert_eq!(edge.to, Point { x: 281.0 + 174.0 * index as f64, y: 226.0 });
+                }
+                SWIMLANE_LINE_CROSSING_VISITS.with(|value| value.set(0));
+                SWIMLANE_HOP_INDEX_WORK.with(|value| value.set(0));
+                let mut enabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                let predicates = SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get);
+                let work = SWIMLANE_HOP_INDEX_WORK.with(std::cell::Cell::get);
+                assert_eq!(enabled.metadata.as_mut().unwrap().remove("swimlane.lineHops").as_deref(), Some(mode));
+                let theme_metadata = HashMap::from([
+                    ("swimlane.theme.mainBkg".into(), "#ffffff".into()),
+                    ("swimlane.theme.nodeBorder".into(), "#1565c0".into()),
+                    ("swimlane.theme.lineColor".into(), "#455a64".into()),
+                    ("swimlane.theme.primaryTextColor".into(), "#0d47a1".into()),
+                    ("swimlane.theme.textColor".into(), "#37474f".into()),
+                ]);
+                assert_eq!(enabled.metadata.as_ref(), Some(&theme_metadata), "retain every default theme field after removing only the hop flag");
+                layout.line_hops = None;
+                let disabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                assert_eq!(disabled.metadata.as_ref(), Some(&theme_metadata), "the disabled authored scene retains every default theme field");
+                assert_eq!(enabled, disabled, "all authored nodes, labels, paths, markers and metadata survive");
+                assert!(predicates <= 1, "authored count={count}, predicates={predicates}");
+                let budget = 64 * count * ((usize::BITS - count.leading_zeros()) as usize + 1);
+                assert!(work > 0 && work <= budget, "authored count={count}, work={work}, bound={budget}");
+                eprintln!("authored two-support: count={count} mode={mode} predicates={predicates} index_work={work} bound={budget}");
+            }
+        }
+    }
+
+    #[test]
+    fn line_hop_integer_two_support_tree_and_original_predicate_agree() {
+        type EndpointEntry = ((i64, usize), i64);
+        fn validate(node: &SwimlaneHopEndpointNode) -> (usize, Vec<EndpointEntry>) {
+            let (left_height, mut left) = node.left.as_ref().map_or((0, Vec::new()), |child| validate(child));
+            let (right_height, right) = node.right.as_ref().map_or((0, Vec::new()), |child| validate(child));
+            assert!(left.iter().all(|(key, _)| *key < node.key));
+            assert!(right.iter().all(|(key, _)| *key > node.key));
+            assert!(left_height.abs_diff(right_height) <= 1, "AVL balance comes from actual recursive leaf heights");
+            let height = 1 + left_height.max(right_height);
+            assert_eq!(node.height, height);
+            left.push((node.key, node.second));
+            left.extend(right);
+            assert_eq!(node.min_first, left.iter().map(|(key, _)| key.0).min().unwrap());
+            assert_eq!(node.max_first, left.iter().map(|(key, _)| key.0).max().unwrap());
+            assert_eq!(node.min_second, left.iter().map(|(_, value)| *value).min().unwrap());
+            assert_eq!(node.max_second, left.iter().map(|(_, value)| *value).max().unwrap());
+            (height, left)
+        }
+        fn signature(mut values: Vec<(f64, Point, usize, usize)>) -> Vec<(usize, usize, u64, u64, u64)> {
+            values.sort_by_key(|(_, _, edge, segment)| (*edge, *segment));
+            values.into_iter().map(|(t, point, edge, segment)| (edge, segment, t.to_bits(), point.x.to_bits(), point.y.to_bits())).collect()
+        }
+        for exchange in [false, true] {
+            for order in 0..4 {
+                let mut index = SwimlaneHopCrossings::default();
+                let mut original: Vec<(Point, Point)> = Vec::new();
+                for step in 0..40 {
+                    let position = match order { 0 => step, 1 => 39-step, 2 => (step*17)%40, _ => (step*23)%40 };
+                    let mut from = Point { x: 0.0, y: ((position % 9) * 12) as f64 };
+                    let mut to = Point { x: 200.0, y: ((39-position) * 7) as f64 };
+                    if exchange { std::mem::swap(&mut from.x, &mut from.y); std::mem::swap(&mut to.x, &mut to.y); }
+                    if step % 2 == 1 { std::mem::swap(&mut from, &mut to); }
+                    let expected = original.iter().enumerate().filter_map(|(edge, (start, end))| swimlane_line_crossing(&from, &to, start, end).map(|(t, point)| (t, point, edge, edge % 3))).collect();
+                    assert_eq!(signature(index.prior_crossings(&from, &to)), signature(expected), "unchanged original directed predicate/occurrence collector: exchange={exchange}, order={order}, step={step}");
+                    index.insert_geometry(step, step % 3, &from, &to);
+                    original.push((from, to));
+                    for cohort in [&index.integer_x_cohort, &index.integer_y_cohort].into_iter().flatten() {
+                        let (_, leaves) = validate(cohort.tree.as_ref().unwrap());
+                        assert_eq!(leaves.len(), index.oblique.len());
+                        let mut ids = leaves.iter().map(|(key, _)| key.1).collect::<Vec<_>>();
+                        ids.sort_unstable();
+                        assert_eq!(ids, index.oblique);
+                    }
+                }
+                // Duplicate occurrences retain distinct edge/segment identities.
+                let (from, to) = original[0].clone();
+                index.insert_geometry(40, 7, &from, &to);
+                original.push((from, to));
+                // A fractional coordinate permanently invalidates the cohort.
+                let outside = (Point { x: 0.5, y: 2.0 }, Point { x: 200.0, y: 91.0 });
+                index.insert_geometry(41, 2, &outside.0, &outside.1);
+                original.push(outside);
+                assert!(index.integer_x_cohort.is_none() && index.integer_y_cohort.is_none());
+                let from = Point { x: 0.0, y: 80.0 };
+                let to = Point { x: 200.0, y: 10.0 };
+                let expected = original.iter().enumerate().filter_map(|(edge, (start, end))| swimlane_line_crossing(&from, &to, start, end).map(|(t, point)| (t, point, edge, if edge == 40 { 7 } else if edge == 41 { 2 } else { edge % 3 }))).collect();
+                assert_eq!(signature(index.prior_crossings(&from, &to)), signature(expected), "fallback keeps duplicate multiplicity and directed floating results");
+                index.insert_geometry(42, 0, &from, &to);
+                assert!(index.integer_x_cohort.is_none() && index.integer_y_cohort.is_none(), "no rebuilding/rescanning a disqualified cohort");
+            }
+        }
+        for value in [16_777_216.5, 16_777_217.0, -16_777_217.0, f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+            assert!(swimlane_hop_integer_supports(&Point { x: value, y: 0.0 }, &Point { x: 100.0, y: 80.0 }, false).is_none());
+        }
+        assert!(swimlane_hop_integer_supports(&Point { x: -16_777_216.0, y: -0.0 }, &Point { x: 16_777_216.0, y: 16_777_216.0 }, false).is_some());
+    }
+
+    #[test]
+    fn line_hop_work_oblique_duplicates_inspect_one_prior_geometry() {
+        let source = format!("---\nconfig:\n  swimlane:\n    lineHops: arc\n---\nswimlane-beta LR\nsubgraph L\na[A]\nb[B]\n{}end\n", "a --> b\n".repeat(128));
+        let parsed = mermaid_parser::parse_swimlane(&source).unwrap();
+        let mut layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+        for edge in &mut layout.edges {
+            edge.from = Point { x: 0.0, y: 0.0 };
+            edge.to = Point { x: 100.0, y: 100.0 };
+        }
+        SWIMLANE_LINE_CROSSING_VISITS.with(|count| count.set(0));
+        let enabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        assert_eq!(SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get), 127);
+        layout.line_hops = None;
+        let disabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+        assert_eq!(enabled.instructions, disabled.instructions);
+    }
+
+    #[test]
+    fn line_hop_work_duplicate_crossings_keep_exact_multiplicity_and_styles() {
+        for mode in ["arc", "gap"] {
+            let source = format!("---\nconfig:\n  swimlane:\n    lineHops: {mode}\n---\nswimlane-beta LR\nsubgraph L\na[A]\nb[B]\nc[C]\nd[D]\ne[E]\nf[F]\nend\na first@<--> b\nc second@<--> d\na duplicate@<--> b\ne last@<--> f\ne again@<--> f");
+            let parsed = mermaid_parser::parse_swimlane(&source).unwrap();
+            let mut layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+            for (edge, (sx, sy, ex, ey)) in layout.edges.iter_mut().zip([
+                (20.0,-50.0,20.0,50.0), (60.0,-50.0,60.0,50.0),
+                (20.0,-50.0,20.0,50.0), (0.0,0.0,100.0,0.0), (0.0,0.0,100.0,0.0),
+            ]) {
+                edge.from = Point { x:sx, y:sy }; edge.to = Point { x:ex, y:ey };
+            }
+            layout.edges[2].style.stroke = Some("#ff0000".into());
+            SWIMLANE_LINE_CROSSING_VISITS.with(|count| count.set(0));
+            let scene = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+            assert_eq!(SWIMLANE_LINE_CROSSING_VISITS.with(std::cell::Cell::get), 4, "two unique vertical geometries for each horizontal occurrence");
+            let paths = scene.instructions.iter().filter_map(|instruction| if let PaintInstruction::Path(path)=instruction {Some(path)} else {None}).collect::<Vec<_>>();
+            assert_eq!(paths.len(),15, "all five routes and ten markers retained");
+            assert_eq!(paths[6].stroke.as_deref(),Some("#ff0000"));
+            assert_eq!(paths[7].fill.as_deref(),Some("#ff0000"));
+            assert_eq!(paths[8].fill.as_deref(),Some("#ff0000"));
+            let mut commands=vec![PathCommand::MoveTo {x:0.0,y:0.0}];
+            for x in [20.0,20.0,60.0] {
+                commands.push(PathCommand::LineTo {x:x-6.0,y:0.0});
+                commands.push(if mode=="arc" {PathCommand::QuadTo {cx:x,cy:12.0,x:x+6.0,y:0.0}} else {PathCommand::MoveTo {x:x+6.0,y:0.0}});
+            }
+            commands.push(PathCommand::LineTo {x:100.0,y:0.0});
+            assert_eq!(paths[9].commands,commands);
+            assert_eq!(paths[12].commands,commands);
+            let metadata=scene.metadata.as_ref().unwrap();
+            for (index,id) in ["first","second","duplicate","last","again"].iter().enumerate() {
+                assert_eq!(metadata.get(&format!("swimlane.edge.{index}.id")).map(String::as_str),Some(*id));
+            }
+        }
+    }
+
+    #[test]
+    fn line_hops_crossing_filter_and_ineligible_edges_keep_exact_routes() {
+        let from=Point { x:0.0,y:0.0 };
+        let to=Point { x:100.0,y:0.0 };
+        assert_eq!(swimlane_line_crossing(&from,&to,&Point { x:50.0,y:-50.0 },&Point { x:50.0,y:50.0 }),Some((0.5,Point { x:50.0,y:0.0 })));
+        for (a,b) in [(Point { x:0.0,y:1.0 },Point { x:100.0,y:1.0 }), (Point { x:0.0,y:-50.0 },Point { x:0.0,y:50.0 }), (Point { x:150.0,y:-50.0 },Point { x:150.0,y:50.0 }), (Point { x:50.0,y:0.0 },Point { x:50.0,y:50.0 })] {
+            assert_eq!(swimlane_line_crossing(&from,&to,&a,&b),None);
+        }
+        assert_eq!(swimlane_line_crossing(&from,&from,&Point { x:50.0,y:-50.0 },&Point { x:50.0,y:50.0 }),None);
+        let source="---\nconfig:\n  swimlane:\n    lineHops: arc\n---\nswimlane-beta LR\nsubgraph L\na[A]\nb[B]\nc[C]\nd[D]\nend\na first@--> b\nc last@--> d";
+        let parsed=mermaid_parser::parse_swimlane(source).expect("authored exclusion fixture");
+        for (invisible,curved_previous,curved_later) in [(true,false,false),(false,true,false),(false,false,true)] {
+            let mut layout=diagram_layout_hierarchy::layout_swimlane(&parsed);
+            layout.edges[0].from=Point { x:50.0,y:-50.0 }; layout.edges[0].to=Point { x:50.0,y:50.0 };
+            layout.edges[1].from=from.clone(); layout.edges[1].to=to.clone();
+            if invisible { layout.edges[0].kind=SwimlaneEdgeKind::Invisible; }
+            if curved_previous { layout.edges[0].curve=Some(SwimlaneEdgeCurve::Basis); }
+            if curved_later { layout.edges[1].curve=Some(SwimlaneEdgeCurve::Basis); }
+            let enabled=diagram_to_paint_swimlane(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+            layout.line_hops=None;
+            let disabled=diagram_to_paint_swimlane(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+            assert_eq!(enabled.instructions,disabled.instructions,"excluded crossings must not change routes or markers");
+        }
+    }
+
+    #[test]
+    fn orthogonal_hops_preserve_exact_segment_commands_and_all_other_output() {
+        let curves = [None, Some(SwimlaneEdgeCurve::Linear), Some(SwimlaneEdgeCurve::Rounded),
+            Some(SwimlaneEdgeCurve::Step), Some(SwimlaneEdgeCurve::StepBefore), Some(SwimlaneEdgeCurve::StepAfter)];
+        for mode in ["arc", "gap"] {
+            let source = format!("---\nconfig:\n  swimlane:\n    lineHops: {mode}\n---\nswimlane-beta LR\nsubgraph L\na[A]\nb[B]\nc[C]\nd[D]\nend\na first@--> b\nc last@--> d");
+            let parsed = mermaid_parser::parse_swimlane(&source).unwrap();
+            for previous in curves {
+                for later in curves {
+                    let mut layout = diagram_layout_hierarchy::layout_swimlane(&parsed);
+                    layout.edges[0].from = Point { x: 20.0, y: -50.0 };
+                    layout.edges[0].to = Point { x: 20.0, y: 50.0 };
+                    layout.edges[0].curve = previous;
+                    layout.edges[1].from = Point { x: 0.0, y: 0.0 };
+                    layout.edges[1].to = Point { x: 100.0, y: 0.0 };
+                    layout.edges[1].curve = later;
+                    let enabled = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                    layout.line_hops = None;
+                    let mut expected = diagram_to_paint_swimlane(&layout, &make_opts(&FakeShaper, &FakeMetrics, &FakeResolver));
+                    let mut commands = vec![PathCommand::MoveTo { x: 0.0, y: 0.0 }, PathCommand::LineTo { x: 14.0, y: 0.0 }];
+                    commands.push(if mode == "arc" {
+                        PathCommand::QuadTo { cx: 20.0, cy: 12.0, x: 26.0, y: 0.0 }
+                    } else { PathCommand::MoveTo { x: 26.0, y: 0.0 } });
+                    if matches!(later, Some(SwimlaneEdgeCurve::Rounded | SwimlaneEdgeCurve::Step)) {
+                        commands.push(PathCommand::LineTo { x: 50.0, y: 0.0 });
+                    }
+                    commands.push(PathCommand::LineTo { x: 100.0, y: 0.0 });
+                    let paths = expected.instructions.iter_mut().filter_map(|instruction|
+                        if let PaintInstruction::Path(path) = instruction { Some(path) } else { None }
+                    ).collect::<Vec<_>>();
+                    assert_eq!(paths.len(), 4, "two routes and two unchanged markers");
+                    paths.into_iter().nth(2).unwrap().commands = commands;
+                    expected.metadata.as_mut().unwrap().insert("swimlane.lineHops".into(), mode.into());
+                    assert_eq!(enabled, expected, "mode={mode}, previous={previous:?}, later={later:?}: exact scene including styles, markers, glyphs and metadata");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn marker_reference_preserves_control_order_and_zero_length_routes() {
+        let tip = Point { x: 3.0, y: 4.0 };
+        let first = Point { x: 6.0, y: 4.0 };
+        let second = Point { x: 6.0, y: 9.0 };
+        let opposite = Point { x: 12.0, y: 14.0 };
+        assert_eq!(swimlane_marker_reference(&tip, [&first, &second], &opposite), first);
+        assert_eq!(swimlane_marker_reference(&tip, [&tip, &second], &opposite), second);
+        assert_eq!(swimlane_marker_reference(&tip, [&tip, &tip], &opposite), opposite);
+        let reference = swimlane_marker_reference(&tip, [&tip, &tip], &tip);
+        assert_eq!(reference, tip);
+        assert_eq!(simple_arrowhead(&reference, &tip, "#455a64").commands, vec![
+            PathCommand::MoveTo { x: 3.0, y: 4.0 },
+            PathCommand::LineTo { x: 3.0, y: 4.0 },
+            PathCommand::LineTo { x: 3.0, y: 4.0 }, PathCommand::Close,
+        ]);
     }
 
     fn default_style() -> ResolvedDiagramStyle {
@@ -11431,6 +13131,213 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Rect(rect) if rect.stroke.as_deref() == Some("#008080")
                 && rect.stroke_dash.as_deref() == Some(&[2.0, 1.5]))));
+    }
+
+    #[test]
+    fn venn_complete_scene_and_config_metadata_are_independent() {
+        use std::cell::RefCell;
+        struct RecordingResolver(RefCell<Vec<FontQuery>>);
+        impl FontResolver for RecordingResolver {
+            type Handle = FakeHandle;
+            fn resolve(&self, q: &FontQuery) -> Result<FakeHandle, FontResolutionError> {
+                self.0.borrow_mut().push(q.clone()); Ok(FakeHandle)
+            }
+        }
+        for config in [diagram_ir::VennConfig::default(), diagram_ir::VennConfig {
+            width:400.0,height:300.0,padding:25.0,..Default::default() }] {
+            for max_width in [false,true] { for debug in [false,true] { for titled in [false,true] {
+                let config=diagram_ir::VennConfig { use_max_width:max_width,use_debug_layout:debug,..config.clone() };
+                let special=diagram_ir::VennStyle {fill:Some("#ff0000".into()),stroke:Some("#123456".into()),
+                    stroke_width:Some(3.0),fill_opacity:Some(0.5),text_color:Some("#ff0000".into())};
+                let layout=LayoutedVennDiagram {width:config.width,height:config.height,title:titled.then(|| "T".into()),config:config.clone(),
+                    circles:vec![diagram_ir::LayoutedVennCircle {id:"a".into(),label:"A".into(),cx:240.0,cy:150.0,radius:62.5,style:special.clone()},
+                        diagram_ir::LayoutedVennCircle {id:"b".into(),label:"B".into(),cx:160.0,cy:150.0,radius:62.5,style:Default::default()}],
+                    labels:vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:276.25,y:150.0,style:special},
+                        diagram_ir::LayoutedVennLabel {text:"B".into(),x:123.75,y:150.0,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:150.0,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:170.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
+                let resolver=RecordingResolver(RefCell::new(Vec::new()));
+                let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
+                let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,
+                    label_font:defaults.label_font,title_font:defaults.title_font,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
+                let actual=diagram_to_paint_venn(&layout,&options);
+                let mut instructions=vec![PaintInstruction::Ellipse(PaintEllipse {base:PaintBase::default(),cx:240.0,cy:150.0,rx:62.5,ry:62.5,
+                    fill:Some("rgba(255,0,0,0.5)".into()),stroke:Some("#123456".into()),stroke_width:Some(3.0),stroke_dash:None,stroke_dash_offset:None}),
+                    PaintInstruction::Ellipse(PaintEllipse {base:PaintBase::default(),cx:160.0,cy:150.0,rx:62.5,ry:62.5,
+                    fill:Some("rgba(245,158,11,0.38)".into()),stroke:Some("#334155".into()),stroke_width:Some(2.0),stroke_dash:None,stroke_dash_offset:None})];
+                let glyph=|c:char,x,y,size,fill:&str| PaintInstruction::GlyphRun(PaintGlyphRun {base:PaintBase::default(),
+                    glyphs:vec![GlyphPosition {glyph_id:c as u32,x,y}],font_ref:"fake:test".into(),font_size:size,fill:Some(fill.into())});
+                if titled {instructions.push(glyph('T',config.width/2.0-4.5,19.4,18.0,"rgb(15, 23, 42)"));}
+                for (c,x,y,color) in [('A',272.75,150.0,"rgb(255, 0, 0)"),('B',120.25,150.0,"rgb(15, 23, 42)"),
+                    ('U',196.5,150.0,"rgb(15, 23, 42)"),('N',196.5,170.0,"rgb(15, 23, 42)")] {
+                    instructions.push(glyph(c,x,y-12.0+11.2,14.0,color));
+                }
+                let mut expected=PaintScene {width:config.width,height:config.height,background:"rgb(255,255,255)".into(),instructions,id:None,
+                    metadata:Some(HashMap::from([("venn.width".into(),config.width.to_string()),("venn.height".into(),config.height.to_string()),
+                    ("venn.padding".into(),config.padding.to_string()),("venn.useMaxWidth".into(),max_width.to_string()),("venn.useDebugLayout".into(),debug.to_string()),("venn.fontFamily".into(),"sans-serif".into()),
+                    ("venn.titleTextColor".into(),"#0f172a".into()),("venn.setTextColor".into(),"#0f172a".into())]))};
+                for (i,color) in ["#60a5fa","#f59e0b","#34d399","#f472b6","#a78bfa","#22d3ee","#fb7185","#a3e635"].iter().enumerate() {
+                    expected.metadata.as_mut().unwrap().insert(format!("venn.themeColor{}",i+1),(*color).into());
+                }
+                let actual=restore_reviewed_venn_defaults(actual,&layout);
+                assert_eq!(actual,expected,"whole scene, every primitive/glyph/style/order/config field");
+                let mut queries=Vec::new();
+                if titled {queries.push(FontQuery::named("sans-serif").with_weight(text_interfaces::FontWeight(700)));}
+                queries.push(FontQuery::named("sans-serif"));
+                assert_eq!(*resolver.0.borrow(),queries,"all ordered resolver calls");
+            }}}
+        }
+    }
+
+    include!("venn_palette_contract_tests.rs");
+    include!("venn_debug_paint_contract.rs");
+    include!("venn_cascade_paint_contract.rs");
+    include!("venn_rgba_paint_contract.rs");
+
+    #[test]
+    fn venn_theme_source_to_complete_scene_and_ordered_font_queries() {
+        use std::cell::RefCell;
+        struct RecordingResolver(RefCell<Vec<FontQuery>>);
+        impl FontResolver for RecordingResolver {
+            type Handle = FakeHandle;
+            fn resolve(&self, q: &FontQuery) -> Result<FakeHandle, FontResolutionError> {
+                self.0.borrow_mut().push(q.clone()); Ok(FakeHandle)
+            }
+        }
+        // Sixteen independent cells: both families, palette precedence, title,
+        // and an authored label override. Expected primitives are tabulated;
+        // neither production lowering nor actual layout supplies the oracle.
+        for family in ["Georgia", "Times New Roman"] { for specific in [false,true] {
+            for titled in [false,true] { for authored in [false,true] {
+                let palette=if specific {"  titleColor: red\n  textColor: blue\n  vennTitleTextColor: '#112233'\n  vennSetTextColor: '#445566'"}
+                    else {"  titleColor: '#112233'\n  textColor: '#445566'"};
+                let source=format!("---\nconfig:\n  venn:\n    width: 400\n    height: 300\n    padding: 25\nthemeVariables:\n  fontFamily: {family}\n{palette}\n---\nvenn-beta\n{}set a[\"A\"]: 1\nset b[\"B\"]: 1\nunion a,b[\"U\"]: 0.5\ntext note[\"N\"]\nstyle a fill:#ff0000,stroke:#123456,stroke-width:3,fill-opacity:0.5{}",
+                    if titled {"title T\n"} else {""}, if authored {",color:#ff0000"} else {""});
+                let config=diagram_ir::VennConfig {width:400.0,height:300.0,padding:25.0,use_max_width:true,use_debug_layout:false,
+                    font_family:family.into(),title_text_color:"#112233".into(),set_text_color:"#445566".into(),theme_colors:["#60a5fa","#f59e0b","#34d399","#f472b6","#a78bfa","#22d3ee","#fb7185","#a3e635"].into_iter().map(str::to_string).collect()};
+                let parsed=mermaid_parser::parse_venn(&source).unwrap();
+                assert_eq!(parsed.config,config,"complete source config: {source}");
+                let actual_layout=diagram_layout_geometric::try_layout_venn(&parsed).unwrap();
+                let (cx_a,cx_b,cy,radius,label_a,label_b)=if titled {(234.56,165.44,167.0,54.0,265.88,134.12)}
+                    else {(240.0,160.0,150.0,62.5,276.25,123.75)};
+                let special=diagram_ir::VennStyle {fill:Some("#ff0000".into()),stroke:Some("#123456".into()),
+                    stroke_width:Some(3.0),fill_opacity:Some(0.5),text_color:authored.then(|| "#ff0000".into())};
+                let layout=LayoutedVennDiagram {width:config.width,height:config.height,title:titled.then(|| "T".into()),config:config.clone(),
+                    circles:vec![diagram_ir::LayoutedVennCircle {id:"a".into(),label:"A".into(),cx:cx_a,cy,radius,style:special.clone()},
+                        diagram_ir::LayoutedVennCircle {id:"b".into(),label:"B".into(),cx:cx_b,cy,radius,style:Default::default()}],
+                    labels:vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:label_a,y:cy,style:special},
+                        diagram_ir::LayoutedVennLabel {text:"B".into(),x:label_b,y:cy,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:cy,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
+                assert_eq!(actual_layout,layout,"complete checked layout transport");
+                let resolver=RecordingResolver(RefCell::new(Vec::new()));
+                let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
+                let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,
+                    label_font:FontSpec {family:"Caller Font".into(),weight:600,italic:true,stretch:FontStretch::Condensed,..defaults.label_font},
+                    title_font:FontSpec {family:"Caller Title".into(),weight:800,italic:true,stretch:FontStretch::Expanded,..defaults.title_font},shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
+                let actual=diagram_to_paint_venn(&actual_layout,&options);
+                let mut instructions=vec![PaintInstruction::Ellipse(PaintEllipse {base:PaintBase::default(),cx:cx_a,cy,rx:radius,ry:radius,
+                    fill:Some("rgba(255,0,0,0.5)".into()),stroke:Some("#123456".into()),stroke_width:Some(3.0),stroke_dash:None,stroke_dash_offset:None}),
+                    PaintInstruction::Ellipse(PaintEllipse {base:PaintBase::default(),cx:cx_b,cy,rx:radius,ry:radius,
+                    fill:Some("rgba(245,158,11,0.38)".into()),stroke:Some("#334155".into()),stroke_width:Some(2.0),stroke_dash:None,stroke_dash_offset:None})];
+                let glyph=|c:char,x,y,size,fill:&str| PaintInstruction::GlyphRun(PaintGlyphRun {base:PaintBase::default(),
+                    glyphs:vec![GlyphPosition {glyph_id:c as u32,x,y}],font_ref:"fake:test".into(),font_size:size,fill:Some(fill.into())});
+                if titled {instructions.push(glyph('T',config.width/2.0-4.5,19.4,18.0,"rgb(17, 34, 51)"));}
+                for (c,x,y,color) in [('A',label_a-3.5,cy,if authored {"rgb(255, 0, 0)"} else {"rgb(68, 85, 102)"}),
+                    ('B',label_b-3.5,cy,"rgb(68, 85, 102)"),('U',196.5,cy,"rgb(68, 85, 102)"),('N',196.5,cy+20.0,"rgb(68, 85, 102)")] {
+                    instructions.push(glyph(c,x,y-12.0+11.2,14.0,color));
+                }
+                let mut expected=PaintScene {width:config.width,height:config.height,background:"rgb(255,255,255)".into(),instructions,id:None,
+                    metadata:Some(HashMap::from([("venn.width".into(),config.width.to_string()),("venn.height".into(),config.height.to_string()),
+                    ("venn.padding".into(),config.padding.to_string()),("venn.useMaxWidth".into(),"true".into()),("venn.useDebugLayout".into(),"false".into()),("venn.fontFamily".into(),family.into()),
+                    ("venn.titleTextColor".into(),"#112233".into()),("venn.setTextColor".into(),"#445566".into())]))};
+                for (i,color) in ["#60a5fa","#f59e0b","#34d399","#f472b6","#a78bfa","#22d3ee","#fb7185","#a3e635"].iter().enumerate() {
+                    expected.metadata.as_mut().unwrap().insert(format!("venn.themeColor{}",i+1),(*color).into());
+                }
+                let actual=restore_reviewed_venn_defaults(actual,&layout);
+                assert_eq!(actual,expected,"whole scene, every primitive/glyph/style/order/config field");
+                let mut queries=Vec::new();
+                if titled {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(800)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Expanded));}
+                queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(600)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Condensed));
+                assert_eq!(*resolver.0.borrow(),queries,"all ordered resolver calls");
+            }}}}
+    }
+
+    #[test]
+    fn venn_palette_source_to_complete_scene_and_ordered_font_queries() {
+        use std::cell::RefCell;
+        struct RecordingResolver(RefCell<Vec<FontQuery>>);
+        impl FontResolver for RecordingResolver {
+            type Handle = FakeHandle;
+            fn resolve(&self, q: &FontQuery) -> Result<FakeHandle, FontResolutionError> {
+                self.0.borrow_mut().push(q.clone()); Ok(FakeHandle)
+            }
+        }
+        // Forty-eight palette cells: every original typography/title/style cell
+        // and an authored label override. Expected primitives are tabulated;
+        // neither production lowering nor actual layout supplies the oracle.
+        for (extra,first,second,first_rgb,second_rgb) in [
+            ("  venn1: '#010203'\n  venn2: '#040506'","#010203","#040506","1,2,3","4,5,6"),
+            ("  venn1: 'url(evil)'\n  venn2: '#040506'","#60a5fa","#040506","96,165,250","4,5,6"),
+            ("  venn1: '#010203'\n  venn2: 'url(evil)'","#010203","#f59e0b","1,2,3","245,158,11"),
+        ] {
+        let colors:Vec<String>=[first,second,"#34d399","#f472b6","#a78bfa","#22d3ee","#fb7185","#a3e635"].into_iter().map(str::to_string).collect();
+        for family in ["Georgia", "Times New Roman"] { for specific in [false,true] {
+            for titled in [false,true] { for authored in [false,true] {
+                let palette=if specific {"  titleColor: red\n  textColor: blue\n  vennTitleTextColor: '#112233'\n  vennSetTextColor: '#445566'"}
+                    else {"  titleColor: '#112233'\n  textColor: '#445566'"};
+                let authored_fill=if authored {"fill:#ff0000,"} else {""};
+                let source=format!("---\nconfig:\n  venn:\n    width: 400\n    height: 300\n    padding: 25\nthemeVariables:\n  fontFamily: {family}\n{palette}\n{extra}\n---\nvenn-beta\n{}set a[\"A\"]: 1\nset b[\"B\"]: 1\nunion a,b[\"U\"]: 0.5\ntext note[\"N\"]\nstyle a {authored_fill}stroke:#123456,stroke-width:3,fill-opacity:0.5{}",
+                    if titled {"title T\n"} else {""}, if authored {",color:#ff0000"} else {""});
+                let config=diagram_ir::VennConfig {width:400.0,height:300.0,padding:25.0,use_max_width:true,use_debug_layout:false,
+                    font_family:family.into(),title_text_color:"#112233".into(),set_text_color:"#445566".into(),theme_colors:colors.clone()};
+                let parsed=mermaid_parser::parse_venn(&source).unwrap();
+                assert_eq!(parsed.config,config,"complete source config: {source}");
+                let actual_layout=diagram_layout_geometric::try_layout_venn(&parsed).unwrap();
+                let (cx_a,cx_b,cy,radius,label_a,label_b)=if titled {(234.56,165.44,167.0,54.0,265.88,134.12)}
+                    else {(240.0,160.0,150.0,62.5,276.25,123.75)};
+                let special=diagram_ir::VennStyle {fill:authored.then(||"#ff0000".into()),stroke:Some("#123456".into()),
+                    stroke_width:Some(3.0),fill_opacity:Some(0.5),text_color:authored.then(|| "#ff0000".into())};
+                let layout=LayoutedVennDiagram {width:config.width,height:config.height,title:titled.then(|| "T".into()),config:config.clone(),
+                    circles:vec![diagram_ir::LayoutedVennCircle {id:"a".into(),label:"A".into(),cx:cx_a,cy,radius,style:special.clone()},
+                        diagram_ir::LayoutedVennCircle {id:"b".into(),label:"B".into(),cx:cx_b,cy,radius,style:Default::default()}],
+                    labels:vec![diagram_ir::LayoutedVennLabel {text:"A".into(),x:label_a,y:cy,style:special},
+                        diagram_ir::LayoutedVennLabel {text:"B".into(),x:label_b,y:cy,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {text:"U".into(),x:200.0,y:cy,style:Default::default()},
+                        diagram_ir::LayoutedVennLabel {text:"N".into(),x:200.0,y:cy+20.0,style:Default::default()}],debug_circles:vec![],debug_cells:vec![]};
+                assert_eq!(actual_layout,layout,"complete checked layout transport");
+                let resolver=RecordingResolver(RefCell::new(Vec::new()));
+                let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
+                let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,
+                    label_font:FontSpec {family:"Caller Font".into(),weight:600,italic:true,stretch:FontStretch::Condensed,..defaults.label_font},
+                    title_font:FontSpec {family:"Caller Title".into(),weight:800,italic:true,stretch:FontStretch::Expanded,..defaults.title_font},shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&resolver};
+                let actual=diagram_to_paint_venn(&actual_layout,&options);
+                let mut instructions=vec![PaintInstruction::Ellipse(PaintEllipse {base:PaintBase::default(),cx:cx_a,cy,rx:radius,ry:radius,
+                    fill:Some(if authored {"rgba(255,0,0,0.5)".into()} else {format!("rgba({first_rgb},0.5)")}),stroke:Some("#123456".into()),stroke_width:Some(3.0),stroke_dash:None,stroke_dash_offset:None}),
+                    PaintInstruction::Ellipse(PaintEllipse {base:PaintBase::default(),cx:cx_b,cy,rx:radius,ry:radius,
+                    fill:Some(format!("rgba({second_rgb},0.38)")),stroke:Some("#334155".into()),stroke_width:Some(2.0),stroke_dash:None,stroke_dash_offset:None})];
+                let glyph=|c:char,x,y,size,fill:&str| PaintInstruction::GlyphRun(PaintGlyphRun {base:PaintBase::default(),
+                    glyphs:vec![GlyphPosition {glyph_id:c as u32,x,y}],font_ref:"fake:test".into(),font_size:size,fill:Some(fill.into())});
+                if titled {instructions.push(glyph('T',config.width/2.0-4.5,19.4,18.0,"rgb(17, 34, 51)"));}
+                for (c,x,y,color) in [('A',label_a-3.5,cy,if authored {"rgb(255, 0, 0)"} else {"rgb(68, 85, 102)"}),
+                    ('B',label_b-3.5,cy,"rgb(68, 85, 102)"),('U',196.5,cy,"rgb(68, 85, 102)"),('N',196.5,cy+20.0,"rgb(68, 85, 102)")] {
+                    instructions.push(glyph(c,x,y-12.0+11.2,14.0,color));
+                }
+                let mut expected=PaintScene {width:config.width,height:config.height,background:"rgb(255,255,255)".into(),instructions,id:None,
+                    metadata:Some(HashMap::from([("venn.width".into(),config.width.to_string()),("venn.height".into(),config.height.to_string()),
+                    ("venn.padding".into(),config.padding.to_string()),("venn.useMaxWidth".into(),"true".into()),("venn.useDebugLayout".into(),"false".into()),("venn.fontFamily".into(),family.into()),
+                    ("venn.titleTextColor".into(),"#112233".into()),("venn.setTextColor".into(),"#445566".into())]))};
+                for (i,color) in colors.iter().enumerate() {
+                    expected.metadata.as_mut().unwrap().insert(format!("venn.themeColor{}",i+1),color.clone());
+                }
+                let actual=restore_reviewed_venn_defaults(actual,&layout);
+                assert_eq!(actual,expected,"whole source palette scene, including exact metadata/config");
+                let mut queries=Vec::new();
+                if titled {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(800)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Expanded));}
+                queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(600)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Condensed));
+                assert_eq!(*resolver.0.borrow(),queries,"all ordered resolver calls");
+            }}}}
+        }
     }
 
     #[test]

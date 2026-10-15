@@ -1,5 +1,21 @@
 # algol-iir-compiler
 
+The bounded outer-`entier` proof admits at most eleven cumulative absolute
+canonical literal units around one unshadowed direct `sign` root, bounded within
+[-12,12]. Parentheses/unary/abs/entier never reset the budget; conditional arms
+prove it independently. The legacy entry, shared exp/log/folding, exact read-once,
+pre/post effect/alias and8192 discovery guards remain unchanged. General floating
+folding and arbitrary wrapper composition are outside this dedicated proof.
+
+Actual source `f630e6ad` passed 2,765 tests across 120 targets, zero failures,
+one unchanged parent-only archive ignore, and strict all-target Clippy for all
+20 affected packages. Compiler884 and full unfiltered LANG500 passed. Focused
+runtime has 116 sources/696 actual cells on six available backends; all636 old
+tuples and106 old sources stay exact. CLR is unavailable and uncounted.
+Source/native-focused review19fd3975 and style-focused76b54bb9 passed; independent
+full terminal reviewac4a0fec passed. Hosted checks and publication remain separate.
+Final-source Miri **DEFERRED/PENDING**, never passed.
+
 Rust frontend for compiling a conservative ALGOL 60 scalar subset into the
 shared LANG VM `interpreter_ir::IIRModule`.
 
@@ -348,6 +364,11 @@ Across every bounded conditional family above, branch roots may be unaliased
 local real snapshots carrying runtime-real provenance across assignment;
 globals, captured locals, and by-name aliases remain gated across a selector
 call.
+Assignment provenance is checked before and after RHS lowering. A selector
+that promotes a branch root through a by-name actual invalidates the cached
+local proof; a value formal leaves its caller's snapshots unaliased.
+Direct real output uses the same pre-proof AND post-lowering proof rule, so
+selector promotion cannot retain a cached formatter admission (#17363).
 Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
@@ -558,3 +579,85 @@ Unsupported ALGOL 60 features — arrays outside the supported integer/real/
 boolean/string element set, dynamic string variables, call-by-name array or
 string formals, and recursive name-formal dispatch — return explicit compiler
 errors.
+
+CV04a bare-root integration controls preserve the ordinary call-selected local snapshot policy and both post-lowering alias-proof consumers. By-name mutation must refuse either promoted root; value-formal mutation retains distinct 2.25/3.5 snapshots through direct output and intermediate assignment. Full final-source local Miri remains **DEFERRED/PENDING**.
+
+Signed calling-selector controls pair default by-name refusal with value-formal
+snapshot acceptance at both direct and assigned output consumers. Sixteen
+cells cover both actuals, selector results and sign arrangements; native
+controls assert exact 2.25/3.5/-2.25/-3.5 output on every available standard
+backend. Existing alias-proof guards and production bounds remain required.
+
+Additive calling-selector controls pair default by-name refusal with value-formal
+snapshot acceptance at both direct and assigned output consumers. Sixteen
+cells cover both actuals, selector results and operand arrangements; native
+controls assert exact -1.25/1.5/3.25/5.5 output on every available standard
+backend. Existing alias-proof guards and production bounds remain required.
+
+Multiplicative calling-selector controls pair default by-name refusal with value-formal
+snapshot acceptance at both direct and assigned output consumers. Sixteen
+cells cover both actuals, selector results and operand arrangements; native
+controls assert exact -4.5/1.75/-4/7 output on every available standard
+backend. Existing alias-proof guards and production bounds remain required.
+
+Powered calling-selector controls cover both actual roots, selector outcomes,
+direct/assigned output and base/exponent operand positions. Default name formals
+lose formatter admission after alias promotion; value formals retain one real
+formatter call and local snapshots. Sixteen complete native programs check exact
+4/9/4/8 stdout on every available standard backend. Both ^ and ** are covered;
+existing alias, finite-value and production-limit controls remain required.
+
+Computed name-actual branches carry proof on their materialized conditional
+result, established for both arms after selector effects. Later name captures
+cannot erase that scalar's provenance; a selector that promotes either root
+still refuses output. Paired direct/assigned name refusal and value controls
+check both actuals and outcomes, with exact -1/1 native stdout. Every earlier
+alias, shared-root, tracked-literal and production-limit control stays required.
+
+Refusal-path classifier controls count actual entries for the computed-name
+selector matrix, with a per-program limit of 8192. Zero-token grammar wrappers
+take the same single-child fallback before alternative proofs repeat it; typed
+call/variable nodes, operator tokens and standard-call depth keep their guards.
+This bounds the tested refusal family without claiming whole-compiler linearity.
+
+
+Selector depth boundary controls distinguish source parsing from the public AST
+compiler contract. Five supported standard wrappers around the same proven
+entier/sign name actual compile through both consumers. Under the imported
+six-layer policy, assigned sixth-layer source also compiles; direct sixth and
+seventh source retain the parser nesting limit135. Paired public AST controls
+verify sixth admission and seventh semantic refusal through both consumers,
+with exact wrapper/root counts and original inputs retained. Cloned positions
+do not establish a new source map. Existing computed-name controls cover both
+roots/outcomes/consumers. Sixth computed-name AST controls retain exactly both
+original arguments inside one extra abs, all wrapper/root order and the original
+parsed tree. Value-copy selectors keep one formatter; by-name promotion is
+refused under the unchanged classifier cap. Direct sixth source retains Parse135;
+four assigned native programs produce9/1 with verified zero exits. Cloned AST
+positions remain excluded from mapping/lineage evidence.
+
+
+Sign-wrapped computed-name controls pair alias refusal and value snapshots
+across both roots, outcomes and output/assignment consumers. The unchanged8192
+classifier budget and real formatter error remain checked; admitted value
+programs retain one formatter. Eight native source programs verify exact -1/1
+and normal exit0 on six available backends. CLR is unvalidated. Final-source
+Miri remains DEFERRED/PENDING; these controls do not establish Closure lineage.
+
+## Outer-entier unit-offset isolation
+
+One flat exact +/-1 term may accompany a narrow sign-rooted operand at the four
+outer-entier admission sites. Parentheses and unary signs do not reset the
+offset budget: nested or builtin-wrapped inner shifts are refused by the
+unchanged narrow operand classifier. Exp/log range consumers retain their old
+helper semantics. Overridden builtin identities, selector snapshots, alias
+guards and existing work limits remain required. Generic Boolean formatter
+composition still lacks general range/proof-kind tracking and remains separate.
+
+Spec-first controls reproduced five wrongly admitted forms, then pass after
+source7d8cec34. All849 compiler library tests pass, including existing work and
+selector controls. Twelve owned LANG programs complete72 actual backend runs
+with exact stdout and Exit0 at eb50f4f9; these are separate source-attributed
+receipts. Full final affected suites/strict and hosted acceptance remain
+required. The cancelled4a diagnostic baseline is incomplete, never passed.
+Final-source Miri remains **DEFERRED/PENDING**.

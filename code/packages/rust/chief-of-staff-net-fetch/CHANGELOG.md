@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Reject an empty `SystemResolver` host with `InvalidInput` before the OS
+  resolver. Windows previously interpreted it as a local-host lookup. Keep
+  localhost and public-address safety controls; no dependency or limit change.
+
 - `SystemResolver` refuses an empty host name itself. Windows'
   `getaddrinfo` answered one with the machine's own addresses where glibc
   and macOS fail, so `the_system_resolver_answers_from_the_host_table`

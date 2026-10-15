@@ -163,6 +163,9 @@ use Backend::{Beam, Clr, Jit, Jvm, Llvm, NativeAot, Vm, Wasm};
 /// called from here (the module's own runner is McCarthy-specific dead code).
 #[path = "clr_support/mod.rs"]
 mod clr_support;
+
+#[path = "unit_offset_runtime/mod.rs"]
+mod unit_offset_runtime;
 mod common;
 
 /// The cross-language battery. Each program is deliberately tiny but exercises real
@@ -10299,7 +10302,7 @@ fn erl_ok() -> bool {
 /// variant now needs exactly one edit here.
 fn toolchain_available(backend: Backend) -> bool {
     match backend {
-        NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+        NativeAot => native_linker_ok(),
         Llvm => clang_ok(),
         Wasm | Vm | Jit => true,
         Jvm => java_ok(),
@@ -14501,6 +14504,33 @@ fn algol_conditional_nonpositive_quadruple_exp_result_widening_runs_on_every_ava
 }
 
 #[test]
+fn algol_conditional_local_value_selector_proof_runs_on_every_available_standard_backend() {
+    // Assigning the value formal changes its private copy, preserving both
+    // branch snapshots. Distinct roots execute both selected arms with exact
+    // outputs 2 and 3; a private-copy write cannot change the caller's root.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure pick; pick := 2.25; real procedure zero; zero := 0.0; real left, right, x; left := pick(); right := zero(); x := entier(sqrt(ln(if choose(left) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end", "2"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure pick; pick := 2.25; real procedure zero; zero := 0.0; real left, right, x; left := pick(); right := zero(); x := entier(sqrt(ln(if choose(right) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(x) end", "3"),
+    ] {
+        let program = Prog {
+            lang: Language::Algol60,
+            ext: "alg",
+            src: source,
+            expect: Expect::Stdout(expected),
+            backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        };
+        for &backend in program.backends {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} is present but value-selector proof did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+#[test]
 fn algol_sqrt_conditional_nonpositive_quadruple_exp_result_widening_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -14527,6 +14557,67 @@ fn algol_sqrt_conditional_nonpositive_quadruple_exp_result_widening_runs_on_ever
     }
 }
 
+#[test]
+fn algol_conditional_override_literal_output_runs_on_every_available_standard_backend() {
+    for (source, expected) in [
+        ("begin real procedure abs(x); value x; real x; abs := x + 1.0; boolean flag; flag := true; print(if flag then abs(2.0) else 1.5) end", "3"),
+        ("begin real procedure abs(x); value x; real x; abs := x + 1.0; boolean flag; flag := false; print(if flag then abs(2.0) else 1.5) end", "1.5"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but conditional override/literal output did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+#[test]
+fn algol_direct_value_selector_proof_runs_on_every_available_standard_backend() {
+    // Value-formal mutation leaves the distinct producer roots intact. Both
+    // selected arms execute the direct real-output proof consumer on each engine.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose(left) then exp(abs(sign(left))) else exp(abs(sign(right))))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose(right) then exp(abs(sign(left))) else exp(abs(sign(right))))))) end", "0"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose(left) then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right)))))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose(right) then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right)))))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose(left) then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right))))))))) end", "3"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(sqrt(ln(if choose(right) then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right))))))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(ln(if choose(left) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right; left := leftvalue(); right := rightvalue(); output(1.0 * entier(ln(if choose(right) then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))) end", "15"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but direct value-selector output did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+#[test]
+fn algol_bounded_conditional_local_root_selected_sums_run_on_every_available_standard_backend() {
+    for (source, expected) in [
+        ("begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))) + entier(sqrt(ln(if choose() then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right))))))) + entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right)))))))); output(result) end", "5"),
+        ("begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))) + entier(sqrt(ln(if choose() then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right))))))) + entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right)))))))); output(result) end", "2"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but selected bounded-family sum did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
 #[test]
 fn algol_local_runtime_real_roots_cross_all_bounded_conditional_result_widening_on_every_available_standard_backend() {
     let program = PROGRAMS
@@ -23920,5 +24011,598 @@ fn portable_text_stdout_cobol_region_intersection() {
             }
             None => eprintln!("SKIP VM058 region intersection: {backend:?} runtime unavailable"),
         }
+    }
+}
+
+#[test]
+fn algol_bare_selector_value_snapshots_run_on_every_available_standard_backend() {
+    // Eight exact cells cover both actuals, both selected arms and both proof
+    // consumers. Value mutation must preserve the distinct 2.25/3.5 snapshots.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then left else right) end", "2.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then left else right; output(result) end", "2.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then left else right) end", "3.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then left else right; output(result) end", "3.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then left else right) end", "2.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then left else right; output(result) end", "2.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then left else right) end", "3.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then left else right; output(result) end", "3.5"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but bare value-selector snapshot control did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+#[test]
+fn algol_signed_selector_value_snapshots_run_on_every_available_standard_backend() {
+    // Sixteen static cells cover both actuals, selected arms, consumers and
+    // sign arrangements. Formal mutation preserves each distinct snapshot.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then -left else +right) end", "2.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then +left else -right) end", "-2.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then -left else +right; output(result) end", "2.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then +left else -right; output(result) end", "-2.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then -left else +right) end", "3.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then +left else -right) end", "-3.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then -left else +right; output(result) end", "3.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then +left else -right; output(result) end", "-3.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then -left else +right) end", "2.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then +left else -right) end", "-2.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then -left else +right; output(result) end", "2.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then +left else -right; output(result) end", "-2.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then -left else +right) end", "3.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then +left else -right) end", "-3.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then -left else +right; output(result) end", "3.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then +left else -right; output(result) end", "-3.5"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but signed value-selector snapshot control did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+#[test]
+fn algol_additive_selector_value_snapshots_run_on_every_available_standard_backend() {
+    // Sixteen static cells cover both actuals, selected arms, consumers and
+    // operand arrangements. Formal mutation preserves each distinct snapshot.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then left + 1.0 else right - 2.0) end", "-1.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then 1.0 - left else 2.0 + right) end", "3.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then left + 1.0 else right - 2.0; output(result) end", "-1.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then 1.0 - left else 2.0 + right; output(result) end", "3.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then left + 1.0 else right - 2.0) end", "1.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then 1.0 - left else 2.0 + right) end", "5.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then left + 1.0 else right - 2.0; output(result) end", "1.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then 1.0 - left else 2.0 + right; output(result) end", "5.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then left + 1.0 else right - 2.0) end", "-1.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then 1.0 - left else 2.0 + right) end", "3.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then left + 1.0 else right - 2.0; output(result) end", "-1.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then 1.0 - left else 2.0 + right; output(result) end", "3.25"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then left + 1.0 else right - 2.0) end", "1.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then 1.0 - left else 2.0 + right) end", "5.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then left + 1.0 else right - 2.0; output(result) end", "1.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then 1.0 - left else 2.0 + right; output(result) end", "5.5"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but signed value-selector snapshot control did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+#[test]
+fn algol_multiplicative_selector_value_snapshots_run_on_every_available_standard_backend() {
+    // Sixteen static cells cover both actuals, selected arms, consumers and
+    // operand arrangements. Formal mutation preserves each distinct snapshot.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then left * 2.0 else right / 2.0) end", "-4.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then 9.0 / left else 2.0 * right) end", "-4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then left * 2.0 else right / 2.0; output(result) end", "-4.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then 9.0 / left else 2.0 * right; output(result) end", "-4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then left * 2.0 else right / 2.0) end", "1.75"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then 9.0 / left else 2.0 * right) end", "7"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then left * 2.0 else right / 2.0; output(result) end", "1.75"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then 9.0 / left else 2.0 * right; output(result) end", "7"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then left * 2.0 else right / 2.0) end", "-4.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then 9.0 / left else 2.0 * right) end", "-4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then left * 2.0 else right / 2.0; output(result) end", "-4.5"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then 9.0 / left else 2.0 * right; output(result) end", "-4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then left * 2.0 else right / 2.0) end", "1.75"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then 9.0 / left else 2.0 * right) end", "7"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then left * 2.0 else right / 2.0; output(result) end", "1.75"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then 9.0 / left else 2.0 * right; output(result) end", "7"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but multiplicative value-selector snapshot control did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+#[test]
+fn algol_powered_selector_value_snapshots_run_on_every_available_standard_backend() {
+    // Sixteen complete programs expose either actual, both selector outcomes,
+    // direct/assigned output, both power spellings and base/exponent roots.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then left ^ 2 else right ** 2) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then 2 ^ left else 2 ** right) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then left ^ 2 else right ** 2; output(result) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then 2 ^ left else 2 ** right; output(result) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then left ^ 2 else right ** 2) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then 2 ^ left else 2 ** right) end", "8"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then left ^ 2 else right ** 2; output(result) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then 2 ^ left else 2 ** right; output(result) end", "8"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then left ^ 2 else right ** 2) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then 2 ^ left else 2 ** right) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then left ^ 2 else right ** 2; output(result) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then 2 ^ left else 2 ** right; output(result) end", "4"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then left ^ 2 else right ** 2) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then 2 ^ left else 2 ** right) end", "8"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then left ^ 2 else right ** 2; output(result) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := 2.0; real procedure rightvalue; rightvalue := 3.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then 2 ^ left else 2 ** right; output(result) end", "8"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but powered value-selector control did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+#[test]
+fn algol_computed_name_selector_value_snapshots_run_on_every_available_standard_backend() {
+    // Exact signed results expose either stale root or a swapped selected arm.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(entier(sign(left))) else relay(entier(sign(right)))) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(entier(sign(left))) else relay(entier(sign(right)))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(entier(sign(left))) else relay(entier(sign(right)))) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(entier(sign(left))) else relay(entier(sign(right)))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end", "1"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but computed-name selector control did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+#[test]
+fn algol_quadruple_computed_name_selector_value_snapshots_run_on_every_available_standard_backend() {
+    // Exact signed results expose either stale root or a swapped selected arm.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))))) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))))); output(result) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))))); output(result) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))))) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))))); output(result) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))))); output(result) end", "1"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but computed-name selector control did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+#[test]
+fn algol_quintuple_computed_name_selector_value_snapshots_run_on_every_available_standard_backend() {
+    // Exact signed results expose either stale root or a swapped selected arm.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0)))))) else relay(abs(abs(abs(sqrt(abs(entier(sign(right))))))))) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then relay(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0)))))) else relay(abs(abs(abs(sqrt(abs(entier(sign(right)))))))); output(result) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0)))))) else relay(abs(abs(abs(sqrt(abs(entier(sign(right))))))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(left) then relay(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0)))))) else relay(abs(abs(abs(sqrt(abs(entier(sign(right)))))))); output(result) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0)))))) else relay(abs(abs(abs(sqrt(abs(entier(sign(right))))))))) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then relay(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0)))))) else relay(abs(abs(abs(sqrt(abs(entier(sign(right)))))))); output(result) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0)))))) else relay(abs(abs(abs(sqrt(abs(entier(sign(right))))))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose(right) then relay(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0)))))) else relay(abs(abs(abs(sqrt(abs(entier(sign(right)))))))); output(result) end", "1"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but computed-name selector control did not complete");
+                continue;
+            };
+            assert_cell(backend, &program, result);
+        }
+    }
+}
+
+// This scoped proof requires successful termination as well as stdout.
+// The shared helper also serves programs with intentional nonzero returns.
+fn assert_sextuple_native_completed(backend: Backend, program: &Prog, result: RunResult) {
+    match &result {
+        RunResult::Completed { code, stdout } => {
+            assert_eq!(*code, Some(0), "{backend:?} sixth native source must terminate normally: {stdout:?}; source: {}", program.src);
+        }
+        RunResult::Trapped => panic!("{backend:?} sixth native source must not trap: {}", program.src),
+    }
+    assert_cell(backend, program, result);
+}
+
+#[test]
+fn sextuple_native_stdout_rejects_abnormal_completion() {
+    for stdout in ["9", "1"] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: "begin output(9) end", expect: Expect::Stdout(stdout), backends: &[NativeAot] };
+        for code in [None, Some(1), Some(-1)] {
+            let rejected = std::panic::catch_unwind(|| assert_sextuple_native_completed(NativeAot, &program, RunResult::Completed { code, stdout: stdout.to_owned() }));
+            assert!(rejected.is_err(), "matching stdout cannot conceal abnormal termination: {stdout:?}/{code:?}");
+        }
+        assert_sextuple_native_completed(NativeAot, &program, RunResult::Completed { code: Some(0), stdout: stdout.to_owned() });
+    }
+}
+
+#[test]
+fn algol_sextuple_computed_name_assigned_value_snapshots_run_on_every_available_standard_backend() {
+    // Four complete source programs distinguish either captured root and
+    // both selected outcomes. Direct source has a separate parser135 oracle.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(left) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(saved) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(left) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(saved) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(right) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(saved) end", "9"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(right) then relay(abs(abs(abs(abs(sqrt(abs(entier(sign(left)) + 82.0))))))) else relay(abs(abs(abs(abs(sqrt(abs(entier(sign(right))))))))); output(saved) end", "1"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        let mut completed = 0;
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but sixth assigned computed-name selector control did not complete");
+                continue;
+            };
+            if let RunResult::Completed { code, stdout } = &result {
+                eprintln!("sixth native observed backend={backend:?} expected={expected:?} code={code:?} stdout={stdout:?}");
+            }
+            assert_sextuple_native_completed(backend, &program, result);
+            completed += 1;
+        }
+        assert!(completed > 0, "sixth native program needs at least one actual completed backend: {source}");
+    }
+}
+
+#[test]
+fn algol_sign_wrapped_computed_name_value_snapshots_with_normal_exits() {
+    // Preserve both roots/outcomes/consumers and verify normal completion,
+    // separately from the existing intentional-result-return programs.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right))))) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(left) then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right)))); output(saved) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(left) then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right)))); output(saved) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right))))) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(right) then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right)))); output(saved) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(right) then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right)))); output(saved) end", "1"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        let mut completed = 0;
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but sign computed-name snapshot did not complete");
+                continue;
+            };
+            if let RunResult::Completed { code, stdout } = &result {
+                eprintln!("sign native observed backend={backend:?} expected={expected:?} code={code:?} stdout={stdout:?}");
+            }
+            assert_sextuple_native_completed(backend, &program, result);
+            completed += 1;
+        }
+        assert!(completed > 0, "sign native program requires an actual completed backend: {source}");
+    }
+}
+
+#[test]
+fn algol_entier_nested_name_actual_both_branches_complete_normally() {
+    // Eight owned sources keep the result convention at default zero while
+    // proving both outcomes, either captured name root, and direct/saved output.
+    for (source, expected) in [
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right))))) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(left) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(saved) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); output(if choose(left) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(left) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(saved) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right))))) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := true end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(right) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(saved) end", "-1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); output(if choose(right) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right))))) end", "1"),
+        ("begin boolean procedure choose(t); value t; real t; begin t := 0.0; choose := false end; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := if choose(right) then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(saved) end", "1"),
+    ] {
+        let program = Prog { lang: Language::Algol60, ext: "alg", src: source, expect: Expect::Stdout(expected), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] };
+        let mut completed = 0;
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let available = toolchain_available(backend);
+            let Some(result) = run(backend, &program) else {
+                assert!(!available, "{backend:?} available but nested entier name-actual control did not run: {source}");
+                eprintln!("entier native unavailable backend={backend:?} source={source:?}");
+                continue;
+            };
+            if let RunResult::Completed { code, stdout } = &result {
+                eprintln!("entier native observed backend={backend:?} expected={expected:?} code={code:?} stdout={stdout:?} source={source:?}");
+            }
+            assert_sextuple_native_completed(backend, &program, result);
+            completed += 1;
+        }
+        assert!(completed > 0, "each entier source needs an actual normally completed backend: {source}");
+    }
+}
+
+// Inspect the exact existing failed matrix rows, without changing their Exit42
+// expectation or backend roster. This diagnostic records emitted descriptors
+// and Code attributes; it does not claim runtime acceptance of these rows.
+#[test]
+fn captured_array_exact_iir_and_jvm_signature_diagnostic() {
+    let programs: Vec<_> = PROGRAMS.iter().filter(|p| {
+        (p.src.contains("procedure populate") || p.src.contains("procedure seed"))
+            && (p.src.contains("array flags[-1:0, 2:3, 5:6")
+                || p.src.contains("array values[-1:0, 2:3, 5:6")
+                || p.src.contains("array words[-1:0, 4:5, 7:8"))
+    }).collect();
+    assert_eq!(programs.len(), 8);
+    for (case, program) in programs.iter().enumerate() {
+        let module = lang_aot::compile_source_to_iir(program.lang, program.src, "Main").unwrap();
+        for function in &module.functions {
+            let calls: Vec<_> = function.instructions.iter().filter(|i| i.op == "call").map(|i| &i.srcs).collect();
+            eprintln!("case={case} IIR function={} params={:?} calls={calls:?}", function.name, function.params);
+        }
+        let class = lang_aot::compile_source_to_jvm_class(program.lang, program.src, "Main").unwrap();
+        for method in &class.methods {
+            if let Some(code) = method.code_attribute() {
+                eprintln!("case={case} JVM method={} descriptor={} max_stack={} max_locals={}", method.name, method.descriptor, code.max_stack, code.max_locals);
+            }
+        }
+    }
+}
+
+#[test]
+fn captured_array_jvm_direct_call_slot_runtime_regression() {
+    if !toolchain_available(Jvm) {
+        eprintln!("UNAVAILABLE: real JVM captured-array runtime control");
+        return;
+    }
+    let programs: Vec<_> = PROGRAMS.iter().filter(|p| {
+        (p.src.contains("procedure populate") || p.src.contains("procedure seed"))
+            && (p.src.contains("array flags[-1:0, 2:3, 5:6")
+                || p.src.contains("array values[-1:0, 2:3, 5:6")
+                || p.src.contains("array words[-1:0, 4:5, 7:8"))
+    }).collect();
+    assert_eq!(programs.len(), 8);
+    for (case, program) in programs.iter().enumerate() {
+        eprintln!("JVM exact original array row {case}: {}", program.src);
+        let result = run(Jvm, program).expect("installed JVM must execute every selected array row");
+        assert_cell(Jvm, program, result);
+    }
+}
+
+#[test]
+fn captured_array_jvm_float_descriptor_runtime_regression() {
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+    use jvm_class_file::{JvmCodeAttribute, JvmConstantPoolEntry as Cp, JvmMethodAttribute, JvmMethodInfo, ACC_PUBLIC, ACC_STATIC};
+    if !java_ok() {
+        eprintln!("UNAVAILABLE: real JVM float-array descriptor control");
+        return;
+    }
+    let var = |name: &str| Operand::Var(name.into());
+    let main = IIRFunction::new("main", vec![], "i32", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(1)], "i32"),
+        IIRInstr::new("const", Some("zero".into()), vec![Operand::Int(0)], "i32"),
+        IIRInstr::new("const", Some("one".into()), vec![Operand::Float(1.0)], "f32"),
+        IIRInstr::new("alloc_array", Some("a".into()), vec![var("n")], "array<f32>"),
+        IIRInstr::new("array_set", None, vec![var("a"), var("zero"), var("one")], "f32"),
+        IIRInstr::new("call", Some("value".into()), vec![var("read"), var("a")], "f32"),
+        IIRInstr::new("cmp_eq", Some("same".into()), vec![var("value"), var("one")], "f32"),
+        IIRInstr::new("jmp_if_false", None, vec![var("same"), var("bad")], "void"),
+        IIRInstr::new("const", Some("answer".into()), vec![Operand::Int(42)], "i32"),
+        IIRInstr::new("ret", None, vec![var("answer")], "i32"),
+        IIRInstr::new("label", None, vec![var("bad")], "void"),
+        IIRInstr::new("ret", None, vec![var("zero")], "i32"),
+    ]);
+    let read = IIRFunction::new("read", vec![("a".into(), "array<f32>".into())], "f32", vec![
+        IIRInstr::new("const", Some("zero".into()), vec![Operand::Int(0)], "i32"),
+        IIRInstr::new("array_get", Some("value".into()), vec![var("a"), var("zero")], "f32"),
+        IIRInstr::new("ret", None, vec![var("value")], "f32"),
+    ]);
+    let module = IIRModule { name: "float_array_control".into(), functions: vec![main, read], entry_point: Some("main".into()), language: "test".into(), exports: vec![], imports: vec![] };
+    let mut class = iir_to_jvm_class_file::lower_iir_to_jvm(&module, &iir_to_jvm_class_file::IIRJvmConfig::new("Main")).unwrap();
+    fn append(cp: &mut Vec<Option<Cp>>, entry: Cp) -> u16 {
+        let index = u16::try_from(cp.len()).unwrap(); cp.push(Some(entry)); index
+    }
+    let cp = &mut class.constant_pool;
+    let cname = append(cp, Cp::Utf8("Main".into()));
+    let owner = append(cp, Cp::Class { name_index: cname });
+    let name = append(cp, Cp::Utf8("main".into()));
+    let descriptor = append(cp, Cp::Utf8("()I".into()));
+    let nat = append(cp, Cp::NameAndType { name_index: name, descriptor_index: descriptor });
+    let method = append(cp, Cp::Methodref { class_index: owner, name_and_type_index: nat });
+    append(cp, Cp::Utf8("([Ljava/lang/String;)V".into()));
+    // main(String[]) calls main()I and accepts only42. An incorrect answer
+    // throws (aconst_null; athrow), so process success proves the computation.
+    // if_icmpeq at PC5 targets return at PC10: offset5, stack empty on both arms.
+    let [hi, lo] = method.to_be_bytes();
+    class.methods.push(JvmMethodInfo { access_flags: ACC_PUBLIC | ACC_STATIC, name: "main".into(), descriptor: "([Ljava/lang/String;)V".into(), attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute { name: "Code".into(), max_stack: 2, max_locals: 1, code: vec![0xb8, hi, lo, 0x10, 42, 0x9f, 0, 5, 0x01, 0xbf, 0xb1], nested_attributes: vec![] })] });
+    let bytes = iir_to_jvm_class_file::serialize_jvm_class_file(&class);
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(dir.path().join("Main.class"), bytes).unwrap();
+    let output = Command::new("java").arg("-Xverify:all").arg("-cp").arg(dir.path()).arg("Main").output().expect("execute installed JVM float-array control");
+    assert!(output.status.success(), "JVM float array: {}", String::from_utf8_lossy(&output.stderr));
+    assert!(output.stdout.is_empty());
+    eprintln!("EXECUTED: real JVM float-array allocation/store/call/load/return verified; computed42; process0");
+    // Recreate the former descriptor-only defect in the emitted class while
+    // preserving NEWARRAY T_FLOAT/FALOAD and every program instruction. The
+    // verifier must reject it, independently of the positive execution above.
+    let mut bad = class.clone();
+    bad.methods.iter_mut().find(|m| m.name == "read").unwrap().descriptor = "([I)F".into();
+    for entry in bad.constant_pool.iter_mut().flatten() {
+        if let Cp::Utf8(value) = entry {
+            if value == "([F)F" { *value = "([I)F".into(); }
+        }
+    }
+    std::fs::write(dir.path().join("Main.class"), iir_to_jvm_class_file::serialize_jvm_class_file(&bad)).unwrap();
+    let rejected = Command::new("java").arg("-Xverify:all").arg("-cp").arg(dir.path()).arg("Main").output().expect("execute descriptor-only negative JVM control");
+    assert!(!rejected.status.success());
+    let detail = String::from_utf8_lossy(&rejected.stderr);
+    assert!(detail.contains("VerifyError"), "descriptor-only control: {detail}");
+    eprintln!("EXECUTED: descriptor-only [F-> [I mutation rejected by real verifier: {detail}");
+}
+
+#[test]
+fn jvm_float_comparison_real_verifier_table() {
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+    use jvm_class_file::{JvmCodeAttribute, JvmConstantPoolEntry as Cp, JvmMethodAttribute, JvmMethodInfo, ACC_PUBLIC, ACC_STATIC};
+    if !java_ok() { eprintln!("UNAVAILABLE: real JVM IEEE float comparison table"); return; }
+    let ops = ["cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge"];
+    let mut functions = Vec::new();
+    for ty in ["f32", "f64"] {
+        for op in ops {
+            functions.push(IIRFunction::new(format!("{ty}_{op}"), vec![("a".into(), ty.into()), ("b".into(), ty.into())], "i32", vec![
+                IIRInstr::new(op, Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("b".into())], ty),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+            ]));
+        }
+    }
+    let module = IIRModule { name: "IEEE".into(), functions, entry_point: Some("f32_cmp_eq".into()), language: "test".into(), exports: vec![], imports: vec![] };
+    let mut class = iir_to_jvm_class_file::lower_iir_to_jvm(&module, &iir_to_jvm_class_file::IIRJvmConfig::new("Main")).unwrap();
+    fn append(cp: &mut Vec<Option<Cp>>, entry: Cp) -> u16 { let index = u16::try_from(cp.len()).unwrap(); cp.push(Some(entry)); index }
+    fn push_number(code: &mut Vec<u8>, double: bool, value: f64) {
+        let zero = if double { 0x0e } else { 0x0b };
+        let one = if double { 0x0f } else { 0x0c };
+        if value.is_nan() { code.extend([zero, zero, if double { 0x6f } else { 0x6e }]); }
+        else if value == 0.0 { code.push(zero); if value.is_sign_negative() { code.push(if double { 0x77 } else { 0x76 }); } }
+        else if value == 1.0 { code.push(one); }
+        else if double { code.extend([one, one, 0x63]); }
+        else { assert_eq!(value, 2.0); code.push(0x0d); }
+    }
+    let cp = &mut class.constant_pool;
+    let cname = append(cp, Cp::Utf8("Main".into()));
+    let owner = append(cp, Cp::Class { name_index: cname });
+    append(cp, Cp::Utf8("main".into())); append(cp, Cp::Utf8("([Ljava/lang/String;)V".into()));
+    let mut code = Vec::new();
+    let cases = [(1.0, 2.0), (2.0, 1.0), (1.0, 1.0), (0.0, -0.0), (-0.0, 0.0), (f64::NAN, 1.0), (1.0, f64::NAN)];
+    let mut checks = 0;
+    for ty in ["f32", "f64"] {
+        for op in ops {
+            let name = append(cp, Cp::Utf8(format!("{ty}_{op}")));
+            let descriptor = append(cp, Cp::Utf8(if ty == "f64" { "(DD)I" } else { "(FF)I" }.into()));
+            let nat = append(cp, Cp::NameAndType { name_index: name, descriptor_index: descriptor });
+            let method = append(cp, Cp::Methodref { class_index: owner, name_and_type_index: nat });
+            for (a, b) in cases {
+                let expected = match op { "cmp_eq" => a == b, "cmp_ne" => a != b, "cmp_lt" => a < b, "cmp_le" => a <= b, "cmp_gt" => a > b, "cmp_ge" => a >= b, _ => unreachable!() };
+                push_number(&mut code, ty == "f64", a); push_number(&mut code, ty == "f64", b);
+                let [hi, lo] = method.to_be_bytes();
+                code.extend([0xb8, hi, lo, if expected { 0x04 } else { 0x03 }, 0x9f, 0, 5, 0x01, 0xbf]);
+                checks += 1;
+            }
+        }
+    }
+    code.push(0xb1);
+    // The largest transient is an existing double argument (2 slots) plus
+    // 0D/0D while constructing the second NaN (4 slots), hence max_stack6.
+    class.methods.push(JvmMethodInfo { access_flags: ACC_PUBLIC | ACC_STATIC, name: "main".into(), descriptor: "([Ljava/lang/String;)V".into(), attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute { name: "Code".into(), max_stack: 6, max_locals: 1, code, nested_attributes: vec![] })] });
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(dir.path().join("Main.class"), iir_to_jvm_class_file::serialize_jvm_class_file(&class)).unwrap();
+    let output = Command::new("java").arg("-Xverify:all").arg("-cp").arg(dir.path()).arg("Main").output().expect("execute real JVM IEEE table");
+    assert!(output.status.success(), "IEEE table: {}", String::from_utf8_lossy(&output.stderr));
+    assert_eq!(checks, 84); assert!(output.stdout.is_empty());
+    eprintln!("EXECUTED: real JVM IEEE table84checks,2widths,6relations,7operand pairs; process0");
+}
+
+#[test]
+fn captured_array_native_stack_argument_runtime_regression() {
+    if !toolchain_available(NativeAot) { eprintln!("UNAVAILABLE: native captured-array ABI control"); return; }
+    let programs: Vec<_> = PROGRAMS.iter().filter(|p| {
+        (p.src.contains("procedure populate") || p.src.contains("procedure seed"))
+            && (p.src.contains("array flags[-1:0, 2:3, 5:6")
+                || p.src.contains("array values[-1:0, 2:3, 5:6")
+                || p.src.contains("array words[-1:0, 4:5, 7:8"))
+    }).collect();
+    assert_eq!(programs.len(), 8);
+    for (case, program) in programs.iter().enumerate() {
+        let result = run(NativeAot, program).expect("available native toolchain must execute each original array row");
+        assert_cell(NativeAot, program, result);
+        eprintln!("EXECUTED: native original captured/forwarded array row{case}, Exit42");
+    }
+}
+
+#[test]
+fn native_six_and_eight_distinct_word_arguments_really_execute() {
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+    if !toolchain_available(NativeAot) { eprintln!("UNAVAILABLE: native distinct word-call ABI control"); return; }
+    for count in [6, 8] {
+        let values = [3_i64, 5, 7, 11, 13, 17, 19, 23];
+        let var = |name: &str| Operand::Var(name.into());
+        let mut caller: Vec<_> = values[..count].iter().enumerate().map(|(i, value)| IIRInstr::new("const", Some(format!("v{i}")), vec![Operand::Int(*value)], "i64")).collect();
+        let mut args = vec![var("ordered")]; args.extend((0..count).map(|i| var(&format!("v{i}"))));
+        caller.push(IIRInstr::new("call", Some("answer".into()), args, "i64"));
+        caller.push(IIRInstr::new("ret", None, vec![var("answer")], "i64"));
+        let mut body = Vec::new();
+        for (i, value) in values[..count].iter().enumerate() {
+            body.push(IIRInstr::new("const", Some(format!("expected{i}")), vec![Operand::Int(*value)], "i64"));
+            body.push(IIRInstr::new("cmp_eq", Some(format!("same{i}")), vec![var(&format!("p{i}")), var(&format!("expected{i}"))], "i64"));
+            body.push(IIRInstr::new("jmp_if_false", None, vec![var(&format!("same{i}")), var("bad")], "void"));
+        }
+        body.extend([
+            IIRInstr::new("const", Some("yes".into()), vec![Operand::Int(42)], "i64"),
+            IIRInstr::new("ret", None, vec![var("yes")], "i64"),
+            IIRInstr::new("label", None, vec![var("bad")], "void"),
+            IIRInstr::new("const", Some("no".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("ret", None, vec![var("no")], "i64"),
+        ]);
+        let module = IIRModule { name: "word_order".into(), functions: vec![
+            IIRFunction::new("main", vec![], "i64", caller),
+            IIRFunction::new("ordered", (0..count).map(|i| (format!("p{i}"), "i64".into())).collect(), "i64", body),
+        ], entry_point: Some("main".into()), language: "test".into(), exports: vec![], imports: vec![] };
+        let dir = tempfile::tempdir().unwrap();
+        let exe = dir.path().join(if cfg!(windows) { "word_order.exe" } else { "word_order" });
+        #[cfg(target_os = "windows")]
+        twig_aot::compile_module_to_windows_executable(&module, &exe).expect("compile real MS x64 word-order executable");
+        #[cfg(target_os = "linux")]
+        twig_aot::compile_module_to_linux_executable(&module, &exe).expect("compile real native Linux word-order executable");
+        #[cfg(target_os = "macos")]
+        twig_aot::compile_module_to_macos_executable(&module, &exe).expect("compile real native macOS word-order executable");
+        let output = Command::new(&exe).output().expect("execute native word-order control");
+        assert_eq!(output.status.code(), Some(42), "native {count}-argument order: {}", String::from_utf8_lossy(&output.stderr));
+        assert!(output.stdout.is_empty());
+        eprintln!("EXECUTED: native{count} distinct ordered word arguments, all positions checked, Exit42");
     }
 }

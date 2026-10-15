@@ -5485,29 +5485,176 @@ pub fn parse_venn(source: &str) -> Result<VennDiagram, ParseError> {
     Ok(diagram)
 }
 
+// The shared directive reader predates Venn and searches whole source text.
+// Venn admits only closed single-line init objects: quoted names and style
+// values in the semantic body must never become canvas configuration.
+fn venn_object_end(source: &str) -> Option<usize> {
+    if !source.starts_with('{') { return None; }
+    let (mut depth, mut quote, mut escaped) = (0usize, None, false);
+    for (index, c) in source.char_indices() {
+        if let Some(active) = quote {
+            if escaped { escaped = false; }
+            else if c == '\\' { escaped = true; }
+            else if c == active { quote = None; }
+        } else { match c {
+            '\'' | '"' => quote = Some(c),
+            '{' => depth += 1,
+            '}' => { depth -= 1; if depth == 0 { return Some(index); } },
+            _ => (),
+        }}
+    }
+    None
+}
+
+// Return a direct member's value, skipping quoted strings and nested containers.
+// Both the init object and its selected Venn object use this boundary: a nested
+// lookalike must not supply an absent field or precede an authored direct field.
+fn venn_object_member<'a>(source: &'a str, key: &str) -> Option<&'a str> {
+    let bytes = source.as_bytes(); let (mut i, mut depth) = (0, 0usize);
+    while i < bytes.len() {
+        let q = bytes[i];
+        if q == b'{' || q == b'[' { depth += 1; }
+        if q == b'}' || q == b']' { depth = depth.saturating_sub(1); }
+        if q != b'\'' && q != b'"' { i += 1; continue; }
+        let start = i; i += 1; let content = i;
+        while i < bytes.len() && bytes[i] != q {
+            if bytes[i] == b'\\' { i += 1; }
+            i += 1;
+        }
+        if i >= bytes.len() { return None; }
+        let is_key = depth == 1 && source[content..i] == *key
+            && source[..start].trim_end().ends_with(['{', ',']);
+        i += 1;
+        if is_key {
+            if let Some(value) = source[i..].trim_start().strip_prefix(':') { return Some(value.trim_start()); }
+        }
+    }
+    None
+}
+
+fn venn_init_object<'a>(source: &'a str, key: &str) -> Option<&'a str> {
+    // Match the semantic preparation envelope. Init-looking literal content in
+    // the leading YAML document is data, even if its line has directive syntax.
+    let mut lines = source.lines().peekable();
+    while lines.peek().is_some_and(|line| line.trim().is_empty()) { lines.next(); }
+    if lines.peek().is_some_and(|line| line.trim() == "---") {
+        lines.next();
+        for line in lines.by_ref() { if line.trim() == "---" { break; } }
+    }
+    lines.find_map(|line| {
+        let directive = line.trim().strip_prefix("%%{")?.strip_suffix("}%%")?.trim();
+        let payload = directive.strip_prefix("init")?.trim_start().strip_prefix(':')?.trim();
+        let end = venn_object_end(payload)?;
+        if !payload[end + 1..].trim().is_empty() { return None; }
+        let value = venn_object_member(payload, key)?;
+        let end = venn_object_end(value)?;
+        Some(&value[1..end])
+    })
+}
+
+// Preserve parent indentation for this flat Venn config subset. The older
+// shared helper intentionally remains unchanged for all other dialects; its
+// flattened output cannot distinguish direct fields from nested lookalikes.
+fn venn_front_matter_fields(source: &str, path: &[&str]) -> Option<String> {
+    let mut lines = source.lines().skip_while(|line| line.trim().is_empty());
+    if lines.next()?.trim() != "---" { return None; }
+    let mut parents: Vec<(usize, &str, bool)> = Vec::new();
+    let mut output = String::new();
+    for line in lines {
+        let trimmed = line.trim();
+        if trimmed == "---" { break; }
+        if trimmed.is_empty() || trimmed.starts_with('#') { continue; }
+        let indent = line.len() - line.trim_start().len();
+        while parents.last().is_some_and(|(parent, _, _)| indent <= *parent) { parents.pop(); }
+        let Some((key, value)) = trimmed.split_once(':') else {
+            // A bare sequence item is still a parent. Dropping it would lift
+            // its mapping descendants into the surrounding Venn/config scope.
+            parents.push((indent, "", false)); continue;
+        };
+        if parents.len() == path.len() && parents.iter().zip(path)
+            .all(|((_, name, mapping), expected)| *mapping && name == expected)
+            && !value.trim().is_empty() {
+            output.push_str(trimmed); output.push('\n');
+        }
+        // Keep every parent, including unknown maps, arrays and scalar/block
+        // keys. Their descendants cannot masquerade as direct Venn members.
+        parents.push((indent, key.trim(), value.trim().is_empty()));
+    }
+    (!output.is_empty()).then_some(output)
+}
+
+// Keep the established numeric readers' entry points and predicates intact.
+fn venn_init_config(source: &str) -> Option<&str> { venn_init_object(source, "venn") }
+fn venn_front_matter_config(source: &str) -> Option<String> {
+    venn_front_matter_fields(source, &["config", "venn"])
+}
+
+// Decode only the active quote and backslash. A malformed PRESENT value is a
+// sentinel rejected by both existing sanitizers: it cannot reveal a generic
+// fallback or fabricate a valid prefix. Other quote characters are data.
+fn venn_theme_string(value: &str, object_member: bool) -> String {
+    let value = value.trim();
+    let invalid = || "\0".to_string();
+    let Some(quote) = value.chars().next().filter(|c| *c == '\'' || *c == '"') else {
+        return if object_member {
+            value.split([',', '}']).next().unwrap_or("").trim().to_string()
+        } else { value.to_string() };
+    };
+    let mut output = String::new();
+    let mut chars = value[1..].char_indices();
+    while let Some((offset, c)) = chars.next() {
+        if c == quote {
+            let tail = value[offset + 1 + c.len_utf8()..].trim_start();
+            return if tail.is_empty() || (object_member && tail.starts_with([',', '}'])) {
+                output
+            } else { invalid() };
+        }
+        if c == '\\' {
+            match chars.next() {
+                Some((_, escaped)) if escaped == quote || escaped == '\\' => output.push(escaped),
+                _ => return invalid(),
+            }
+        } else { output.push(c); }
+    }
+    invalid()
+}
+
 fn parse_venn_config(source: &str) -> VennConfig {
     let defaults = VennConfig::default();
-    let front_matter = mermaid_front_matter_section(source, &["config", "venn"]);
-    let config = mermaid_directive_object(source, "venn").or(front_matter.as_deref()).unwrap_or("");
+    let front_matter = venn_front_matter_config(source);
+    let config = venn_init_config(source).or(front_matter.as_deref()).unwrap_or("");
     let value = |name: &str| {
-        quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+        // Add a synthetic opening brace because selected config is its interior.
+        let object = format!("{{{config}}}");
+        venn_object_member(&object, name).and_then(|value| {
+            if let Some(q) = value.chars().next().filter(|c| *c == '\'' || *c == '"') {
+                value[1..].find(q).map(|end| value[1..end + 1].to_string())
+            } else { Some(value.split([',', '}', ' ', '\n', '\r']).next()?.trim().to_string()) }
+        }).or_else(|| config.lines().find_map(|line| {
             let (key, value) = line.trim().split_once(':')?;
             (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
         }))
     };
     let positive = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
-        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+        .filter(|value| value.is_finite() && *value > 0.0 && *value <= diagram_ir::MAX_VENN_CANVAS).unwrap_or(fallback);
     let non_negative = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
-        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+        .filter(|value| value.is_finite() && (0.0..=diagram_ir::MAX_VENN_CANVAS).contains(value)).unwrap_or(fallback);
     let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
         "true" => Some(true), "false" => Some(false), _ => None,
     }).unwrap_or(fallback);
-    let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
-    let theme = mermaid_directive_object(source, "themeVariables").or(theme_front.as_deref()).unwrap_or("");
-    let theme_value = |name: &str| quadrant_directive_value(theme, name).or_else(|| theme.lines().find_map(|line| {
-        let (key, value) = line.trim().split_once(':')?;
-        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
-    }));
+    let theme_front = venn_front_matter_fields(source, &["themeVariables"]);
+    let theme_init = venn_init_object(source, "themeVariables");
+    let theme_object = theme_init.map(|interior| format!("{{{interior}}}"));
+    let theme_value = |name: &str| {
+        if let Some(object) = &theme_object {
+            venn_object_member(object, name).map(|value| venn_theme_string(value, true))
+        } else {
+            theme_front.as_deref().unwrap_or("").lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name).then(|| venn_theme_string(value, false))
+            })
+        }
+    };
     let title_text_color = sanitize_railroad_color(
         theme_value("vennTitleTextColor").or_else(|| theme_value("titleColor")).as_deref(), &defaults.title_text_color);
     let set_text_color = sanitize_railroad_color(
@@ -6426,10 +6573,6 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             pending_link_styles.push(parse_swimlane_link_style(value, line_number)?);
             continue;
         }
-        if let Some(config) = parse_swimlane_edge_config(line, line_number)? {
-            pending_edge_configs.push(config);
-            continue;
-        }
         if is_edge {
             last_edge_targets = Some(parse_swimlane_edge_chain(
                 line,
@@ -6439,6 +6582,10 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                 last_edge_targets.as_deref(),
                 &mut diagram,
             )?);
+            continue;
+        }
+        if let Some(config) = parse_swimlane_edge_config(line, line_number)? {
+            pending_edge_configs.push(config);
             continue;
         }
         let node = parse_swimlane_node(
@@ -6471,9 +6618,15 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             return Err(swimlane_error(1, format!("Swimlane callback references unknown node {:?}", callback.node_id)));
         }
     }
+    // One authored ID index serves configurations, classes and inline styles;
+    // repeated directives visit only the edges they actually update.
+    let edge_targets = swimlane_edge_target_index(&diagram.edges);
     for config in pending_edge_configs {
         let mut matched = false;
-        for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(config.id.as_str())) {
+        for &edge_index in swimlane_edge_target_indices(&edge_targets, &config.id) {
+            #[cfg(test)]
+            SWIMLANE_TARGET_MATCH_VISITS.with(|count| count.set(count.get() + 1));
+            let edge = &mut diagram.edges[edge_index];
             matched = true;
             if let Some(animate) = config.animate {
                 edge.animate = animate;
@@ -6497,6 +6650,11 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             merge_state_style(&mut node.style, style);
         }
     }
+    // All authored edges now exist. One ordered lookup keeps node-only targets
+    // from repeatedly scanning unrelated edges. Keys own each distinct ID once,
+    // so later class/style mutation cannot invalidate borrowed string keys.
+    // Duplicate IDs retain every authored index; real matching updates still
+    // cost work and are accounted separately from target discovery.
     for (node_ids, classes, line) in pending_classes {
         for class in &classes {
             if !class_styles.contains_key(class) {
@@ -6529,7 +6687,10 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
                     }
                 }
             }
-            for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(target_id.as_str())) {
+            for &edge_index in swimlane_edge_target_indices(&edge_targets, &target_id) {
+                #[cfg(test)]
+                SWIMLANE_TARGET_MATCH_VISITS.with(|count| count.set(count.get() + 1));
+                let edge = &mut diagram.edges[edge_index];
                 matched = true;
                 for class in &classes {
                     if !edge.classes.contains(class) {
@@ -6588,7 +6749,10 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             matched = true;
             merge_state_style(&mut group.style, &style);
         }
-        for edge in diagram.edges.iter_mut().filter(|edge| edge.id.as_deref() == Some(target_id.as_str())) {
+        for &edge_index in swimlane_edge_target_indices(&edge_targets, &target_id) {
+            #[cfg(test)]
+            SWIMLANE_TARGET_MATCH_VISITS.with(|count| count.set(count.get() + 1));
+            let edge = &mut diagram.edges[edge_index];
             matched = true;
             merge_state_style(&mut edge.style, &style);
         }
@@ -6642,6 +6806,10 @@ fn parse_swimlane_flowchart_config(source: &str) -> Result<diagram_ir::SwimlaneF
         if !parsed.is_finite() || parsed < 0.0 {
             return Err(swimlane_error(1,
                 format!("Swimlane flowchart {name} must be a non-negative number")));
+        }
+        if parsed > diagram_ir::MAX_SWIMLANE_FLOWCHART_SPACING {
+            return Err(swimlane_error(1,
+                format!("Swimlane flowchart {name} must not exceed 65536")));
         }
         Ok(Some(parsed))
     };
@@ -6782,6 +6950,34 @@ fn parse_swimlane_optimize_ranks_by_crossings(source: &str) -> Result<bool, Pars
 }
 
 enum SwimlaneInteraction { Link(GraphLink), Callback(GraphCallback) }
+
+#[cfg(test)]
+std::thread_local! {
+    static SWIMLANE_TARGET_EDGE_VISITS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+    static SWIMLANE_TARGET_LOOKUPS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+    static SWIMLANE_TARGET_MATCH_VISITS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
+fn swimlane_edge_target_index(edges: &[SwimlaneEdge]) -> std::collections::BTreeMap<String, Vec<usize>> {
+    let mut targets = std::collections::BTreeMap::<String, Vec<usize>>::new();
+    for (index, edge) in edges.iter().enumerate() {
+        #[cfg(test)]
+        SWIMLANE_TARGET_EDGE_VISITS.with(|count| count.set(count.get() + 1));
+        let Some(id) = edge.id.as_deref() else { continue; };
+        if let Some(indices) = targets.get_mut(id) {
+            indices.push(index);
+        } else {
+            targets.insert(id.to_string(), vec![index]);
+        }
+    }
+    targets
+}
+
+fn swimlane_edge_target_indices<'a>(targets: &'a std::collections::BTreeMap<String, Vec<usize>>, target: &str) -> &'a [usize] {
+    #[cfg(test)]
+    SWIMLANE_TARGET_LOOKUPS.with(|count| count.set(count.get() + 1));
+    targets.get(target).map_or(&[], Vec::as_slice)
+}
 
 struct SwimlaneEdgeConfig {
     id: String,
@@ -6938,6 +7134,14 @@ fn parse_swimlane_edge_config(
     let Some((id, attributes)) = value.split_once("@{") else {
         return Ok(None);
     };
+    let id = id.trim();
+    // Only a standalone identifier can introduce an edge configuration.
+    // Metadata-looking text inside a node label belongs to its node parser.
+    if id.is_empty() || !id.chars().all(|character|
+        character.is_ascii_alphanumeric() || matches!(character, '_' | '-')
+    ) {
+        return Ok(None);
+    }
     let Some(body) = attributes.strip_suffix('}') else {
         return Err(swimlane_error(line, "unterminated Swimlane edge configuration"));
     };
@@ -6948,12 +7152,6 @@ fn parse_swimlane_edge_config(
     }).collect::<Result<Vec<_>, ParseError>>()?;
     if !fields.iter().any(|(key, _)| matches!(key.as_str(), "animate" | "animation" | "curve")) {
         return Ok(None);
-    }
-    let id = id.trim();
-    if id.is_empty() || !id.chars().all(|character|
-        character.is_ascii_alphanumeric() || matches!(character, '_' | '-')
-    ) {
-        return Err(swimlane_error(line, "invalid Swimlane edge configuration id"));
     }
     let mut animate = None;
     let mut animation = None;
@@ -7350,7 +7548,11 @@ fn swimlane_operator_with_id(value: &str, mut operator: SwimlaneOperator) -> Swi
     if !prefix.ends_with('@') {
         return operator;
     }
-    let token_start = prefix.rfind(char::is_whitespace).map_or(0, |index| index + 1);
+    // Character indices are byte offsets. Advance over the complete separator,
+    // so an admitted multibyte whitespace scalar cannot split the ID slice.
+    let token_start = prefix.char_indices().rev()
+        .find(|(_, character)| character.is_whitespace())
+        .map_or(0, |(index, character)| index + character.len_utf8());
     let id = &prefix[token_start..prefix.len() - 1];
     if id.is_empty() || !id.chars().all(|character|
         character.is_ascii_alphanumeric() || matches!(character, '_' | '-')
@@ -7361,6 +7563,21 @@ fn swimlane_operator_with_id(value: &str, mut operator: SwimlaneOperator) -> Swi
     operator.at = token_start;
     operator.id = Some(id.to_string());
     operator
+}
+
+
+// These counters observe the actual scanner predicate. They are absent in
+// production, so the red phase leaves the original discovery algorithm intact.
+#[cfg(test)]
+thread_local! {
+    static SWIMLANE_LABEL_RUN_PREDICATES: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
+#[inline]
+fn swimlane_label_run_matches(candidate: char, repeated: char) -> bool {
+    #[cfg(test)]
+    SWIMLANE_LABEL_RUN_PREDICATES.with(|count| count.set(count.get().checked_add(1).expect("bounded test counter")));
+    candidate == repeated
 }
 
 fn labeled_swimlane_operator_family(
@@ -7384,38 +7601,76 @@ fn labeled_swimlane_operator(
     suffix: &str,
     kind: SwimlaneEdgeKind,
 ) -> Option<SwimlaneOperator> {
-    value.match_indices(start).find_map(|(at, _)| {
-        let tail = &value[at + start.len()..];
-        let (end_at, run) = tail.char_indices().find_map(|(end_at, character)| {
-            if character != repeated {
-                return None;
+    // A maximal run is counted once, even if its following text is not the
+    // required suffix. The prefix iterator and this independent cursor both
+    // move forward; retaining the current valid run avoids restarting suffix
+    // discovery for later prefixes. Only fixed ASCII delimiters use byte
+    // positions. Labels still borrow UTF-8 slices at delimiter boundaries.
+    debug_assert!(repeated.is_ascii() && minimum_run > 0);
+    let bytes = value.as_bytes();
+    let mut cursor = 0usize;
+    let mut ending: Option<(usize, usize)> = None;
+    for (at, _) in value.match_indices(start) {
+        let label_start = at + start.len();
+        loop {
+            if let Some((run_start, run_end)) = ending {
+                // A prefix can end inside a valid run. The old scanner starts
+                // there, so only that remaining suffix may terminate a label.
+                let label_end = run_start.max(label_start);
+                if label_end <= run_end && run_end - label_end >= minimum_run {
+                    let label = value[label_start..label_end].trim();
+                    if label.is_empty() {
+                        // Preserve the original first-run empty-label refusal;
+                        // try the next prefix, not a later run for this prefix.
+                        break;
+                    }
+                    return Some(SwimlaneOperator {
+                        at,
+                        len: run_end + suffix.len() - at,
+                        kind,
+                        start_marker: match start.chars().next() {
+                            Some('<') => EdgeMarker::Point,
+                            Some('o') => EdgeMarker::Circle,
+                            Some('x') => EdgeMarker::Cross,
+                            _ => EdgeMarker::None,
+                        },
+                        end_marker: match suffix.chars().last() {
+                            Some('o') => EdgeMarker::Circle,
+                            Some('x') => EdgeMarker::Cross,
+                            Some('>') => EdgeMarker::Point,
+                            _ => EdgeMarker::None,
+                        },
+                        label: Some(label.to_string()),
+                        min_length: run_end - label_end - minimum_run + 1,
+                        id: None,
+                    });
+                }
             }
-            let run = tail[end_at..].chars().take_while(|candidate| *candidate == repeated).count();
-            let suffix_at = end_at + run;
-            (run >= minimum_run && tail[suffix_at..].starts_with(suffix)).then_some((end_at, run))
-        })?;
-        let label = tail[..end_at].trim();
-        (!label.is_empty()).then(|| SwimlaneOperator {
-            at,
-            len: start.len() + end_at + run + suffix.len(),
-            kind,
-            start_marker: match start.chars().next() {
-                Some('<') => EdgeMarker::Point,
-                Some('o') => EdgeMarker::Circle,
-                Some('x') => EdgeMarker::Cross,
-                _ => EdgeMarker::None,
-            },
-            end_marker: match suffix.chars().last() {
-                Some('o') => EdgeMarker::Circle,
-                Some('x') => EdgeMarker::Cross,
-                Some('>') => EdgeMarker::Point,
-                _ => EdgeMarker::None,
-            },
-            label: Some(label.to_string()),
-            min_length: run - minimum_run + 1,
-            id: None,
-        })
-    })
+            ending = None;
+            while cursor < bytes.len() {
+                if !swimlane_label_run_matches(char::from(bytes[cursor]), repeated) {
+                    cursor += 1;
+                    continue;
+                }
+                let run_start = cursor;
+                cursor += 1; // the first successful predicate was already counted
+                while cursor < bytes.len()
+                    && swimlane_label_run_matches(char::from(bytes[cursor]), repeated)
+                {
+                    cursor += 1;
+                }
+                // A maximal ASCII run ends on a UTF-8 boundary. The suffix
+                // check also proves the final operator length is in the input.
+                if cursor - run_start >= minimum_run && value[cursor..].starts_with(suffix) {
+                    ending = Some((run_start, cursor));
+                    break;
+                }
+            }
+            // No later prefix can gain an ending beyond this exhausted cursor.
+            ending?;
+        }
+    }
+    None
 }
 
 fn parse_swimlane_node(
@@ -7782,11 +8037,11 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
     let parse = |name: &str, default: f64| -> Result<f64, ParseError> {
         let Some(value) = value(name) else { return Ok(default); };
         let parsed = value.parse::<f64>().map_err(|_| ParseError {
-            message: format!("Mermaid Railroad {name} must be a non-negative number"), line: 1, col: 1,
+            message: format!("Mermaid Railroad {name} must be finite and in 0..=65536"), line: 1, col: 1,
         })?;
-        if !parsed.is_finite() || parsed < 0.0 {
+        if !parsed.is_finite() || !(0.0..=diagram_ir::MAX_RAILROAD_SPACING).contains(&parsed) {
             return Err(ParseError {
-                message: format!("Mermaid Railroad {name} must be a non-negative number"), line: 1, col: 1,
+                message: format!("Mermaid Railroad {name} must be finite and in 0..=65536"), line: 1, col: 1,
             });
         }
         Ok(parsed)
@@ -7812,6 +8067,14 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
         .filter(|value| value.is_finite() && *value > 0.0)
         .unwrap_or(defaults.font_size);
     let font_size = parse("fontSize", theme_font_size)?;
+    // The explicit parser checks supplied values, but a theme fallback takes
+    // its missing-value return path. Validate the selected effective value so
+    // inherited font sizes obey the same boundary after explicit precedence.
+    if !font_size.is_finite() || !(0.0..=diagram_ir::MAX_RAILROAD_SPACING).contains(&font_size) {
+        return Err(ParseError {
+            message: "Mermaid Railroad fontSize must be finite and in 0..=65536".into(), line: 1, col: 1,
+        });
+    }
     if font_size <= 0.0 {
         return Err(ParseError {
             message: "Mermaid Railroad fontSize must be a positive number".into(), line: 1, col: 1,
@@ -18451,5 +18714,148 @@ mod tests {
         src.push('\n');
         let diagram = parse_to_diagram(&src).expect("wide edge chain must not trip the cap");
         assert_eq!(diagram.edges.len(), 5000);
+    }
+}
+
+
+#[cfg(test)]
+mod edge_target_work_tests;
+
+#[cfg(test)]
+mod styled_label_work_tests {
+    use super::*;
+
+    #[test]
+    fn edge_ids_after_unicode_whitespace_preserve_public_parse_semantics() {
+        for separator in ['\u{00a0}', '\u{2003}', '\u{3000}'] {
+            for operator in ["-->", "-- café --->", "== café ===>", "-. café ...->"] {
+                let source = format!("swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na{separator}handoff@{operator} b");
+                let plain = source.replace("handoff@", "");
+                let expected = parse_swimlane(&plain).expect("admitted separator without ID");
+                let actual = parse_swimlane(&source).expect("same separator with ID");
+                assert_eq!(actual.edges.len(), 1);
+                let mut edge = actual.edges[0].clone();
+                assert_eq!(edge.id.take().as_deref(), Some("handoff"));
+                assert_eq!(edge, expected.edges[0], "separator={separator:?}, operator={operator}");
+                assert_eq!(actual.nodes, expected.nodes);
+                assert_eq!(actual.lanes, expected.lanes);
+            }
+        }
+    }
+
+    #[test]
+    fn ascii_ids_chains_and_absent_ids_preserve_authored_order() {
+        let source = "swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nc[C]\nd[D]\nend\na first@--> b second@==> c --> d";
+        let actual = parse_swimlane(source).expect("ASCII identifiers and no identifier");
+        let plain = source.replace("first@", "").replace("second@", "");
+        let expected = parse_swimlane(&plain).expect("same authored edges without IDs");
+        assert_eq!(actual.edges.len(), 3);
+        for (mut edge, (expected, id)) in actual.edges.into_iter().zip(expected.edges.into_iter().zip([Some("first"), Some("second"), None])) {
+            assert_eq!(edge.id.take().as_deref(), id);
+            assert_eq!(edge, expected);
+        }
+    }
+
+    fn reset_predicates() {
+        SWIMLANE_LABEL_RUN_PREDICATES.with(|count| count.set(0));
+    }
+
+    fn predicates() -> usize {
+        SWIMLANE_LABEL_RUN_PREDICATES.with(std::cell::Cell::get)
+    }
+
+    #[test]
+    fn nonterminating_dotted_label_runs_have_linear_public_parse_work() {
+        // The long dot run is label text, not a long arrow. A later one-dot
+        // terminator makes this valid authored input without huge geometry.
+        for dots in [128, 512] {
+            let label = format!("{}x", ".".repeat(dots));
+            let source = format!("swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nend\na -. {label} .-> b");
+            reset_predicates();
+            let diagram = parse_swimlane(&source).expect("valid dotted label");
+            assert_eq!(diagram.edges.len(), 1);
+            let edge = &diagram.edges[0];
+            assert_eq!((edge.from.as_str(), edge.to.as_str()), ("a", "b"));
+            assert_eq!(edge.label.as_deref(), Some(label.as_str()));
+            assert_eq!(edge.kind, SwimlaneEdgeKind::Dotted);
+            assert_eq!(edge.start_marker, EdgeMarker::None);
+            assert_eq!(edge.end_marker, EdgeMarker::Point);
+            assert_eq!(edge.min_length, 1);
+            let actual = predicates();
+            assert!(actual <= 12 * source.len(), "dots={dots}, actual run predicates={actual}, admitted linear bound={}", 12 * source.len());
+        }
+    }
+
+    #[test]
+    fn every_styled_form_skips_nonterminating_runs_with_linear_work() {
+        for (prefix, repeated, suffix, kind, minimum) in [
+            ("--", '-', ">", SwimlaneEdgeKind::Directed, 2),
+            ("==", '=', ">", SwimlaneEdgeKind::Thick, 2),
+            ("-.", '.', "->", SwimlaneEdgeKind::Dotted, 1),
+        ] {
+            for count in [32, 128, 512] {
+                let label = format!("{}x🛰", repeated.to_string().repeat(count));
+                let ending = repeated.to_string().repeat(minimum + 2);
+                let value = format!("a {prefix} {label} {ending}{suffix} b");
+                reset_predicates();
+                let operator = labeled_swimlane_operator(&value, prefix, repeated, minimum, suffix, kind).expect("later valid ending");
+                assert_eq!(operator.at, 2);
+                assert_eq!(operator.len, value.len() - 4);
+                assert_eq!(operator.label.as_deref(), Some(label.as_str()));
+                assert_eq!(operator.kind, kind);
+                assert_eq!(operator.min_length, 3);
+                assert_eq!((operator.start_marker, operator.end_marker), (EdgeMarker::None, EdgeMarker::Point));
+                assert!(predicates() <= 2 * value.len(), "form={prefix}, count={count}, actual predicates={}", predicates());
+            }
+        }
+    }
+
+    #[test]
+    fn absent_terminators_do_not_restart_suffix_discovery_for_each_prefix() {
+        for repetitions in [128, 512] {
+            let value = "-.".repeat(repetitions);
+            reset_predicates();
+            assert!(labeled_swimlane_operator(&value, "-.", '.', 1, "->", SwimlaneEdgeKind::Dotted).is_none());
+            assert!(predicates() <= 2 * value.len(), "absent suffix repetitions={repetitions}, actual predicates={}", predicates());
+        }
+    }
+
+    #[test]
+    fn styled_labels_preserve_exact_semantics_and_standard_precedence() {
+        let source = "swimlane-beta LR\nsubgraph L\na[A]\nb[B]\nc[C]\nd[D]\nend\na -- first ---> b == café🛰 ===> c -. third ...-> d";
+        let diagram = parse_swimlane(source).expect("all styled labels and Unicode");
+        assert_eq!(diagram.edges.len(), 3);
+        for (edge, (from, to, label, kind, length)) in diagram.edges.iter().zip([
+            ("a", "b", "first", SwimlaneEdgeKind::Directed, 2),
+            ("b", "c", "café🛰", SwimlaneEdgeKind::Thick, 2),
+            ("c", "d", "third", SwimlaneEdgeKind::Dotted, 3),
+        ]) {
+            assert_eq!((edge.from.as_str(), edge.to.as_str()), (from, to));
+            assert_eq!(edge.label.as_deref(), Some(label));
+            assert_eq!(edge.kind, kind);
+            assert_eq!(edge.min_length, length);
+            assert_eq!((edge.start_marker, edge.end_marker), (EdgeMarker::None, EdgeMarker::Point));
+        }
+        let operator = next_swimlane_operator("a --> b == later ==> c").expect("standard earliest arrow");
+        assert_eq!((operator.at, operator.len, operator.min_length), (2, 3, 1));
+        assert_eq!(operator.kind, SwimlaneEdgeKind::Directed);
+        assert_eq!(operator.label, None);
+    }
+
+    #[test]
+    fn first_eligible_run_empty_labels_and_prefixes_inside_runs_stay_exact() {
+        for (value, at, length, label) in [
+            ("a -- ok ---> b", 2, 10, "ok"),
+            ("---> x --> b", 0, 10, "-> x"),
+            ("-- --> -- label --> b", 3, 16, "> -- label"),
+        ] {
+            let operator = labeled_swimlane_operator(value, "--", '-', 2, ">", SwimlaneEdgeKind::Directed).expect("original prefix/suffix contract");
+            assert_eq!((operator.at, operator.len), (at, length), "{value}");
+            assert_eq!(operator.label.as_deref(), Some(label), "{value}");
+            assert_eq!(operator.min_length, if value == "a -- ok ---> b" { 2 } else { 1 });
+        }
+        assert!(labeled_swimlane_operator("a --  ---> b", "--", '-', 2, ">", SwimlaneEdgeKind::Directed).is_none());
+        assert!(labeled_swimlane_operator("a == ==> b", "==", '=', 2, ">", SwimlaneEdgeKind::Thick).is_none());
+        assert!(labeled_swimlane_operator("a -. .-> b", "-.", '.', 1, "->", SwimlaneEdgeKind::Dotted).is_none());
     }
 }

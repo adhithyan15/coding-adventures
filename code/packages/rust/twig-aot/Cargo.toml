@@ -40,3 +40,6 @@ cc = "1"
 # `pub const`s and constructors, so the two implementations cannot silently
 # drift.  Dev-only — the AOT binary itself never links the Rust crate.
 dynval-runtime    = { path = "../dynval-runtime" }
+
+# Exact frontend-produced captured-array ABI diagnostics (CV04a).
+algol-iir-compiler = { path = "../algol-iir-compiler" }
