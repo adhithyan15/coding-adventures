@@ -1,0 +1,23 @@
+{
+  "chapter": 268,
+  "title": "Four services on one small map",
+  "label": "ch:sa-service-locations",
+  "canDo": "I can ask where four familiar public services are and answer here or there.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "SA-C268-service-location-retrieval",
+    "kind": "production",
+    "summary": "Complete chapter 268 by independently asking and answering where four familiar service referents are.",
+    "assesses": [
+      "SA-LEX-C120-THINGS120-02",
+      "SA-LEX-C268-SERVICE-01",
+      "SA-LEX-C84-PLACES-02",
+      "SA-LEX-C238-PPL238-04",
+      "SA-LEX-C14-DEIXIS-06",
+      "SA-LEX-ASTI",
+      "SA-PATTERN-C268-SERVICE-LOCATION-02"
+    ]
+  }
+}

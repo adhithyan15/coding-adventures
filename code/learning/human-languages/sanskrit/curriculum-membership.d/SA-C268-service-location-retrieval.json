@@ -1,0 +1,11 @@
+{
+  "id": "SA-C268-service-location-retrieval",
+  "pathSegment": "SA-PATH-268-SERVICE268",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-268-SERVICE268",
+      "order": 5
+    }
+  ]
+}

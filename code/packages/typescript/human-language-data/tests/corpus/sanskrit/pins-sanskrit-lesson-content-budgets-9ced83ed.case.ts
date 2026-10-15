@@ -142,7 +142,10 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 1428 -> 1434: chapter 267 retrieves already-owned school language, adds
     // one school-plan frame, then closes with two model-free school-day plans.
     // It adds no idiom, sense, or culture claim.
-    lessons: 1434,
+    // 1434 -> 1440: chapter 268 adds one sourced financial-bank word, joins
+    // four service referents to the known location question, and retrieves the
+    // exchange twice without a model.
+    lessons: 1440,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

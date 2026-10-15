@@ -7879,6 +7879,7 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
     let theme_rule_name = sanitize_railroad_color(
         Some(&theme_string("titleColor", Some("textColor"), &defaults.rule_name_color)), &defaults.rule_name_color);
     Ok(RailroadConfig {
+        compact_mode: parse_bool("compactMode", defaults.compact_mode)?,
         padding: parse("padding", 10.0)?,
         vertical_separation: parse("verticalSeparation", 8.0)?,
         horizontal_separation: parse("horizontalSeparation", 10.0)?,

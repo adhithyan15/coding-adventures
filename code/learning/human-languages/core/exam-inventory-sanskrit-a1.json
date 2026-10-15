@@ -3264,7 +3264,15 @@
       "id": "SA-A1-M-08",
       "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
       "label": "services: post, bank, health service, police",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C120-THINGS120-02",
+        "SA-LEX-C268-SERVICE-01",
+        "SA-LEX-C84-PLACES-02",
+        "SA-LEX-C238-PPL238-04",
+        "SA-LEX-C14-DEIXIS-06",
+        "SA-LEX-ASTI",
+        "SA-PATTERN-C268-SERVICE-LOCATION-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -3277,7 +3285,7 @@
         "A1-NE11-03",
         "A1-NE11-04"
       ],
-      "note": "UNCOVERED, four proxy points, nothing in the corpus."
+      "note": "COVERED by chapter 268 as one bounded four-service location exchange: previously owned post office, hospital, policeman, and location-question atoms join one explicitly sourced financial-bank lexeme, with two model-free retrieval rounds. This does not claim directions, service transactions, emergency communication, police-station vocabulary, institutional knowledge, human validation, learner attainment, or exam readiness."
     },
     {
       "id": "SA-A1-M-09",

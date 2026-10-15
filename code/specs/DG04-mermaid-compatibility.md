@@ -879,10 +879,12 @@ values continue through layout and backend-neutral PaintScene lowering.
 Color and font-family options now follow the pinned Mermaid allowlists before
 entering semantic IR: supported CSS colors and portable family lists survive,
 while unsafe or malformed values fall back to the resolved theme defaults.
+The `compactMode` option is retained as typed semantic configuration and
+PaintScene metadata. Mermaid 11.16.1's pinned Railroad renderer does not branch
+on this value, so native geometry intentionally remains unchanged.
 
 This is intentionally partial. Upstream curve geometry, comment styling,
-compact mode, and exact typography remain
-unsupported rather than being counted as compatible.
+and exact typography remain unsupported rather than being counted as compatible.
 
 ### Info Full Compatibility
 

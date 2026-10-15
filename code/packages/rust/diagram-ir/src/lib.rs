@@ -2079,7 +2079,7 @@ pub struct RailroadRule { pub name: String, pub definition: RailroadExpression }
 pub const MAX_RAILROAD_SPACING: f64 = 65_536.0;
 #[derive(Clone, Debug, PartialEq)]
 pub struct RailroadConfig {
-    pub padding: f64, pub vertical_separation: f64, pub horizontal_separation: f64, pub arc_radius: f64,
+    pub compact_mode: bool, pub padding: f64, pub vertical_separation: f64, pub horizontal_separation: f64, pub arc_radius: f64,
     pub font_size: f64, pub font_family: String,
     pub terminal_fill: String, pub terminal_stroke: String, pub terminal_text_color: String,
     pub non_terminal_fill: String, pub non_terminal_stroke: String, pub non_terminal_text_color: String,
@@ -2090,7 +2090,7 @@ pub struct RailroadConfig {
 impl Default for RailroadConfig {
     fn default() -> Self {
         Self {
-            padding: 10.0, vertical_separation: 8.0, horizontal_separation: 10.0, arc_radius: 10.0,
+            compact_mode: false, padding: 10.0, vertical_separation: 8.0, horizontal_separation: 10.0, arc_radius: 10.0,
             font_size: 14.0, font_family: "monospace".into(),
             terminal_fill: "#FFFFC0".into(), terminal_stroke: "#000000".into(), terminal_text_color: "#000000".into(),
             non_terminal_fill: "#FFFFFF".into(), non_terminal_stroke: "#000000".into(), non_terminal_text_color: "#000000".into(),

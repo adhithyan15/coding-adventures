@@ -1,0 +1,11 @@
+{
+  "id": "SA-C268-bank-police-location",
+  "pathSegment": "SA-PATH-268-SERVICE268",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-268-SERVICE268",
+      "order": 3
+    }
+  ]
+}
