@@ -145,6 +145,9 @@ class MacosHaskellToolchainTests(unittest.TestCase):
         root, github_env, receipt, commands = self.run_mock_bootstrap()
         self.assertTrue(receipt["success"])
         self.assertEqual(16, len(commands))
+        self.assertIn("main-is: Main.hs", (root / "output/cabal-probe/ci-toolchain-probe.cabal").read_text(encoding="utf-8"))
+        self.assertTrue((root / "output/cabal-probe/Main.hsc").is_file())
+        self.assertFalse((root / "output/cabal-probe/Main.hs").exists())
         self.assertEqual("EXISTING=retained\nCABAL_CONFIG=" + str(root / "output/cabal.config") + "\n", github_env.read_text(encoding="utf-8"))
         for command, options in commands:
             self.assertIsInstance(command, list)
