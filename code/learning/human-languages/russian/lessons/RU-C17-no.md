@@ -11,7 +11,7 @@ concept_tag: RU-JOIN-BUT
 romanization: no
 prerequisites: [RU-C16-tozhe]
 sounds: []
-roots: [pie-uncertain]
+roots: [slavic-nu]
 etymology_hook: "но goes back to a bare Slavic particle, and the histories do not agree on where that came from — one of the few joining words with no secure English cousin"
 duration:
   max_seconds: 250

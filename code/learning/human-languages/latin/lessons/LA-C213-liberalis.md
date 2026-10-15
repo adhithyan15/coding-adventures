@@ -13,7 +13,7 @@ gloss: "generous"
 concept_tag: LA-QUAL213-LIBERALIS
 prerequisites: [LA-C213-probus, LA-C213-patiens]
 sounds: []
-roots: [liberalis-latin, liber-latin]
+roots: [liberalis-latin, liber-free-latin]
 etymology_hook: "līberālis 'generous' — built on līber 'free': fit for a free person"
 duration:
   max_seconds: 200

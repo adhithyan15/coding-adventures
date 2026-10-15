@@ -14,7 +14,7 @@ romanization: "kale"
 concept_tag: KA-VASTU226-KALE
 prerequisites: [KA-C225-kabbu, KA-C225-pataki]
 sounds: []
-roots: [sanskrit-kala]
+roots: [sanskrit-kala-art]
 etymology_hook: "kale ← Sanskrit kalā 'any practical art', a tatsama (CDIAL 2927)"
 duration:
   max_seconds: 200

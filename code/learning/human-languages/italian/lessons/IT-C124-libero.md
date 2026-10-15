@@ -13,7 +13,7 @@ gloss: "free"
 concept_tag: IT-QUALITA124-LIBERO
 prerequisites: [IT-C123-carino, IT-C124-occupato]
 sounds: []
-roots: [liber-latin]
+roots: [liber-free-latin]
 etymology_hook: "libero ← Latin liber 'free', a learned word — English liberty shares it"
 duration:
   max_seconds: 200

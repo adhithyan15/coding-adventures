@@ -14,7 +14,7 @@ romanization: "kālapaṭṭika"
 concept_tag: TE-CADUVU156-KALAPATTIKA
 prerequisites: [TE-C155-ashincu, TE-C155-edurucudu]
 sounds: []
-roots: [sanskrit-kaala-time, sanskrit-patta-slab]
+roots: [sanskrit-kaala-time, sanskrit-pattika]
 etymology_hook: "kālapaṭṭika: Sanskrit kāla 'time' (CDIAL 3084) + paṭṭikā 'slab, tablet' (CDIAL 7699)"
 duration:
   max_seconds: 200

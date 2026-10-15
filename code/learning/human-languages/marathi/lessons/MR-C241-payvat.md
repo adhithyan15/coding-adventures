@@ -14,7 +14,7 @@ romanization: "pāyvāṭ"
 concept_tag: MR-VASTU241-PAYVAT
 prerequisites: [MR-C241-khod, MR-C241-hirval]
 sounds: []
-roots: [sanskrit-pada, sanskrit-vartman]
+roots: [sanskrit-pada-foot, sanskrit-vartman]
 etymology_hook: "pāyvāṭ: pāy 'foot' ← pāda (CDIAL 8056) + vāṭ 'path' ← vartman (CDIAL 11366)"
 duration:
   max_seconds: 200

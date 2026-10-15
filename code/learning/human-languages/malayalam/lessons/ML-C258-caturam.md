@@ -14,7 +14,7 @@ romanization: "caturaṁ"
 concept_tag: ML-VASTU258-CATURAM
 prerequisites: [ML-C258-akrti, ML-C258-vrttam]
 sounds: []
-roots: [sanskrit-catura]
+roots: [sanskrit-catura-square]
 etymology_hook: "caturaṁ ← Sanskrit catura 'square', a tatsama (CDIAL 4595)"
 duration:
   max_seconds: 200

@@ -14,8 +14,8 @@ romanization: "harā"
 concept_tag: HI-COLOUR-GREEN-YELLOW
 prerequisites: [HI-C23-billi-history]
 sounds: [retroflex-l, vowel-length-aa]
-roots: [pie-ghelh3-shine, sanskrit-pita-drunk]
-etymology_hook: "हरा (harā, 'green') ← Sanskrit हरित (harita, 'green, yellowish, tawny'), from Proto-Indo-European *ǵʰelh₃-, 'to shine' — the SAME confirmed ancient root behind German's gelb, meaning Hindi's word for GREEN is a genuine cousin of German's word for YELLOW (French's jaune is usually traced to this same family too, via Latin galbinus, though that particular link is less secure than the others); पीला (pīlā, 'yellow') ← Prakrit पीअल (pīala) ← Sanskrit पीतल (pītala), from पीत (pīta) — which also literally means 'drunk, quaffed' — though the exact semantic chain connecting 'drink' to 'yellow' is explicitly flagged by sources as uncertain"
+roots: [pie-ghelh3-shine]
+etymology_hook: "harā ← Sanskrit harita 'green, yellowish, tawny', from PIE *ǵʰelh₃- 'to shine', the root of German gelb"
 duration:
   max_seconds: 190
 requires:
@@ -75,5 +75,5 @@ German's *gelb*? (***\*ǵʰelh₃-***, "to shine" — Hindi's GREEN word is a
 genuine cousin of German's YELLOW word; French's *jaune* is usually placed
 in this family too, though that link is less secure.) Why can one root yield
 green and yellow words? (It once covered a broader **shining yellow-to-green
-zone**.) Next: the yellow word whose sound history is clear but meaning history
-is not.
+zone**.) Next: the yellow word, whose sound history is clear, and the Sanskrit
+look-alike to keep apart from it.

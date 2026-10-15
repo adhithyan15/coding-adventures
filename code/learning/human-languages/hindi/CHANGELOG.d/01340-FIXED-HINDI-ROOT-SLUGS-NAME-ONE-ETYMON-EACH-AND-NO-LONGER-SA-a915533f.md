@@ -1,0 +1,10 @@
+## Fixed — Hindi root slugs name one etymon each, and पीला no longer says pīta "drunk" is the same word
+
+- **HI-C269-koyla** moves from `sanskrit-kokila` to `sanskrit-kokila-coal`, the slug Bengali and Marwadi *koylā* use. *Koylā* is *kōkila²* "charcoal" (CDIAL 3484); `sanskrit-kokila` is *kōkilá¹* "cuckoo" (CDIAL 3483).
+- **HI-C200-rajdhani** moves from `sanskrit-dhana` to `sanskrit-dhani`, the slug the Marathi and Sanskrit *rājadhānī* lessons use. MW gives *dhānī* "seat, receptacle", not *dhana* "wealth".
+- **HI-C51-garland** moves from `sanskrit-mala` to `sanskrit-mala-garland` (*mālā*, CDIAL 10092). Bare `sanskrit-mala` also named *mala* "dirt", and no lesson uses it any more.
+- **HI-C21-numbers-6-10** and **HI-C21-six-nine-ten-history** move from `sanskrit-nava` to `sanskrit-nava-nine`: *nau* is *náva²* "nine" (CDIAL 6984), not *náva¹* "new" (CDIAL 6983).
+- **HI-C76-ninth** moves from `sanskrit-nava` to `sanskrit-navama`, the slug its own hook names (*navamá* "ninth", CDIAL 7006, which lists the Hindi form) and the Gujarati and Sanskrit ordinal lessons use.
+- **HI-C82-patlaa** moves from `sanskrit-patra` to `sanskrit-pattrala`, the slug Gujarati, Marathi and Marwadi "thin" use. Its hook derives *patlā* from *pattralá* "leafy" (CDIAL 7736), not *páttra* "leaf" (CDIAL 7733).
+- **HI-C24-pila-history** moves from `sanskrit-pita-drunk` to `sanskrit-pitala`, the slug the Gujarati, Marwadi, Punjabi and Urdu yellow lessons use (*pītala*, CDIAL 8233). The lesson said one word *pīta* meant both "yellow" and "drunk" and called the link an unsolved mystery. CDIAL gives *pītá¹* "drunk" (8229) and *pīta²* "yellow" (8230) separate entries, and MW lists them as separate homonyms. The gloss, title, warm-up, chain block, practice line, recall and hook now say they are two words that sound alike.
+- **HI-C24-hara-pila** drops `sanskrit-pita-drunk`. The lesson teaches *harā* "green", and its body never names *pīlā*. Its 637-character hook, which repeated the "yellow and drunk" claim, is now 103 characters about *harā*, matching the body.

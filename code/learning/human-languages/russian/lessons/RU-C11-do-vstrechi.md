@@ -11,7 +11,7 @@ concept_tag: FAREWELL-LATER
 romanization: da fstréchi
 prerequisites: [RU-C11-do-zavtra]
 sounds: []
-roots: [pie-uncertain]
+roots: [slavic-sreti]
 etymology_hook: "до встречи is до plus the genitive of встреча ('a meeting'), built from prefixes в- ('into') and с- ('with') on an old root with no secure English cousin — closer in feel to English 'meet' than any word this book has yet had to say so about"
 duration:
   max_seconds: 250

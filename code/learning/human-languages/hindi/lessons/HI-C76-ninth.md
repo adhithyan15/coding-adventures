@@ -14,7 +14,7 @@ romanization: "nauvā̃ / nauvī̃"
 concept_tag: HI-ORDINAL-NINTH
 prerequisites: [HI-C76-eighth, HI-C75-fourth, HI-C69-verb-last, HI-C69-ticket, HI-C21-six-nine-ten-history, HI-C31-suprabhat]
 sounds: []
-roots: [sanskrit-nava]
+roots: [sanskrit-navama]
 etymology_hook: "nauvāṁ ← Sanskrit navama 'ninth', a tadbhava (CDIAL 7006)"
 duration:
   max_seconds: 240

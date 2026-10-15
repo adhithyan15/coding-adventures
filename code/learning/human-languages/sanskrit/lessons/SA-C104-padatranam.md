@@ -14,7 +14,7 @@ romanization: "pādatrāṇam"
 concept_tag: SA-THINGS104-PADATRANAM
 prerequisites: [SA-C103-uttariyam, SA-C104-satika]
 sounds: []
-roots: [sanskrit-pada]
+roots: [sanskrit-pada-foot]
 etymology_hook: "pādatrāṇa ← pāda 'foot' + trāṇa 'protection': 'foot-guard', a shoe (MW; CDIAL 8060)"
 duration:
   max_seconds: 200

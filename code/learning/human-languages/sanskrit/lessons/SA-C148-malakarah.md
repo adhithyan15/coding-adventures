@@ -14,7 +14,7 @@ romanization: "mālākāraḥ"
 concept_tag: SA-PPL148-MALAKARAH
 prerequisites: [SA-C148-napitah, SA-C148-pacakah]
 sounds: []
-roots: [sanskrit-mala, sanskrit-malakara]
+roots: [sanskrit-mala-garland, sanskrit-malakara]
 etymology_hook: "mālākāra ← mālā 'garland' + kāra 'maker' (√kṛ): 'garland-maker', so 'gardener' (CDIAL 10093)"
 duration:
   max_seconds: 200

@@ -9,12 +9,12 @@ sequence: 750
 chapter: 24
 type: etymology
 headword: पीला
-gloss: yellow — a clear sound-history chain built on a Sanskrit word that also means drunk
+gloss: yellow — a clear sound-history chain, and a Sanskrit look-alike that means drunk
 romanization: "pīlā"
 prerequisites: [HI-C24-hara-pila]
 sounds: [retroflex-l, vowel-length-i]
-roots: [sanskrit-pita-drunk]
-etymology_hook: "pīta → pītala → pīala → pīlā is secure sound history; why pīta means both yellow and drunk remains explicitly uncertain"
+roots: [sanskrit-pitala]
+etymology_hook: "pīlā ← pītala ← pīta 'yellow' (CDIAL 8233, 8230); pīta 'drunk' is a separate word that only sounds alike"
 duration:
   max_seconds: 180
 requires:
@@ -31,31 +31,33 @@ variety: standard-hindi
 reviews_of: [HI-C24-hara-pila]
 ---
 
-# पीला — clear sounds, uncertain meaning
+# पीला — clear sounds, and a look-alike to keep apart
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] *Harā* gave a secure ancient color family. Hindi's yellow word gives
-a secure sound chain wrapped around an unsolved semantic mystery.
+a secure sound chain, and a Sanskrit look-alike to keep out of it.
 
 ## You'll want to know — The chain
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C24-PILA-HISTORY-01]; assesses=[] -->
 
 **पीला** (*pīlā*, "yellow") traces through Prakrit **पीअल** (*pīala*) to
-Sanskrit **पीतल** (*pītala*), built on **पीत** (*pīta*).
+Sanskrit **पीतल** (*pītala*), built on **पीत** (*pīta*), "yellow" (CDIAL 8233,
+8230).
 
-*Pīta* means "yellow," but also literally **"drunk, quaffed,"** from a root
-meaning "to drink." Why do "yellow" and "drunk" share a word? The connection is
-**not settled**. One proposed path runs "drink" → "become full or swell" → "the
-color of fat" → "yellow," but sources flag that mechanism as uncertain.
+Sanskrit also has a *pīta* that means **"drunk, quaffed,"** from the root *pā-*,
+"to drink." It is a different word. Monier-Williams lists the two as separate
+headwords, and CDIAL gives them separate entries (8229 and 8230): they only
+sound alike. MW suggests "yellow" may come from a root meaning "to swell," after
+the colour of butter and oil, and marks that as possible, not settled.
 
 What is solid is the ordinary sound history:
 
 > ***pīta* → *pītala* → *pīala* → *pīlā***
 
-Keep the evidence levels separate: trust the forms; label the semantic bridge a
-hypothesis.
+Keep the evidence levels separate: trust the forms; do not let the look-alike
+into the chain.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C24-PILA-HISTORY-01] -->
@@ -63,11 +65,11 @@ hypothesis.
 [PAUSE 1s]
 - [YOU SAY: "pīlā" — yellow]
 - [YOU TRACE: "pīta · pītala · pīala · pīlā"]
-- [YOU QUALIFY: "drink → yellow is uncertain"]
+- [YOU QUALIFY: "pīta, drunk, is a different word"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C24-PILA-HISTORY-01] -->
 
-[PAUSE 3s] What does **pīta** also mean? (**Drunk, quaffed**.) Is the bridge
-from drinking to yellow settled? (**No**.) What part is secure? (The sound chain
-*pīta* → *pītala* → *pīala* → *pīlā*.)
+[PAUSE 3s] Say whether *pīta* "drunk" is the word behind **pīlā**. (**No**: it
+is a separate word that only sounds like *pīta* "yellow".) Then name the part
+that is secure. (The sound chain *pīta* → *pītala* → *pīala* → *pīlā*.)

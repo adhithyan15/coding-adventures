@@ -14,7 +14,7 @@ romanization: "pādaḥ"
 concept_tag: SA-BODY-FOOT
 prerequisites: [SA-C25-hand, SA-C23-mother, SA-C24-rice]
 sounds: []
-roots: [sanskrit-pada]
+roots: [sanskrit-pada-foot]
 etymology_hook: "pāda 'foot' is inherited, the same word as Latin pēs, Greek pous and English foot (CDIAL 8056)"
 duration:
   max_seconds: 210

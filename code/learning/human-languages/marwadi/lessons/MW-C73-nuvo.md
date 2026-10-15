@@ -14,7 +14,7 @@ romanization: "nuvo"
 concept_tag: MW-ADJ73-NUVO
 prerequisites: [MW-C72-baro, MW-C72-chhoto]
 sounds: []
-roots: [sanskrit-nava]
+roots: [sanskrit-nava-new]
 etymology_hook: "nuvo ← Sanskrit nava 'new, young', a tadbhava (CDIAL 6983, Marwari row)"
 duration:
   max_seconds: 200

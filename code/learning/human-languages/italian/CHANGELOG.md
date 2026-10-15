@@ -1,5 +1,9 @@
 # Changelog
 
+## Fixed — libero uses the root slug for Latin līber "free"
+
+- **IT-C124-libero** moves from `liber-latin` to `liber-free-latin`, the slug Portuguese *livre* and Spanish *libre* use. `liber-latin` also named *liber* "bark, book", a different Latin word (EtymDB lists the two as separate entries); it now names only that one.
+
 ## Fixed — every taken-apart block now says where its word comes from
 
 Seven Italian word lessons had a "taken apart" block that split the word into parts, or explained its grammar, and never said where it came from (human-language-data `hasEmptyEtymologyBlock`, HL24 §9.4). Each block now says it. Source: EtymDB 2.1 (Fourrier & Sagot 2020, CC BY-SA 4.0), read locally; every line is our own sentence. Empty etymology blocks 7 → 0.
