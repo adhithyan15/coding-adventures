@@ -742,6 +742,10 @@ title and region glyph runs. Per-region authored text colors retain precedence.
 The Mermaid `venn1` through `venn8` theme palette likewise survives semantic IR
 and layout before PaintScene lowering selects set fills. Explicit set fills retain
 precedence, and invalid theme colors fall back independently to the native palette.
+When `useDebugLayout` is enabled, layout applies Mermaid 11.16.1's text-area
+radius and grid-cell equations to the native deterministic centers and records
+explicit debug IR. Paint lowering emits portable dashed purple circles and teal
+cells without backend-specific logic.
 
 ### Ishikawa Native Slice
 
