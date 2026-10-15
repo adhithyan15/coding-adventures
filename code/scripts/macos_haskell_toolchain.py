@@ -145,7 +145,7 @@ def write_hsc_driver(output: Path, real_hsc2hs: str, clang: str, ld: str, sdk: s
               "--cflag=-DCI_TOOLCHAIN_HSC=1"]
     driver = output / "hsc2hs-driver.py"
     (output / "hsc2hs-driver.json").write_text(json.dumps({"real_hsc2hs": real_hsc2hs, "forced": forced}), encoding="utf-8")
-    driver.write_text("import json, os, sys\nfrom pathlib import Path\np=Path(__file__)\nc=json.loads(p.with_suffix('.json').read_text(encoding='utf-8'))\na=[c['real_hsc2hs'],*sys.argv[1:],*c['forced']]\nwith (p.parent/'hsc2hs-invocations.jsonl').open('a',encoding='utf-8') as f:\n f.write(json.dumps({'argv':a})+'\\n')\nos.execv(c['real_hsc2hs'],a)\n", encoding="utf-8")
+    driver.write_text("import json, os, sys, subprocess, signal\nfrom pathlib import Path\np=Path(__file__)\nc=json.loads(p.with_suffix('.json').read_text(encoding='utf-8'))\na=[c['real_hsc2hs'],*sys.argv[1:],*c['forced']]\nwith (p.parent/'hsc2hs-invocations.jsonl').open('a',encoding='utf-8') as f:\n f.write(json.dumps({'argv':a})+'\\n')\nr=subprocess.run(a,check=False)\nif r.returncode<0:\n sig=-r.returncode\n if sig not in {getattr(signal,'SIGKILL',None),getattr(signal,'SIGSTOP',None)}: signal.signal(sig,signal.SIG_DFL)\n os.kill(os.getpid(),sig)\nraise SystemExit(r.returncode)\n", encoding="utf-8")
     wrapper = output / "hsc2hs"
     wrapper.write_text("#!/bin/sh\nexec " + shlex.quote(sys.executable) + " " + shlex.quote(str(driver)) + ' "$@"\n', encoding="utf-8")
     wrapper.chmod(0o700)
