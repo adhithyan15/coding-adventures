@@ -15,10 +15,10 @@ fn railroad_labels_four_dialects_keep_exact_fonts_glyphs_ports_and_metadata() {
     use diagram_ir::RailroadExpression as E;
     let mut cells=0;
     for (body,semantic,display) in [
-        ("railroad-beta\nlong_rule = special(\"C\");",E::Special("C".into()),"? C ?"),
-        ("railroad-ebnf-beta\nlong_rule = ?C?;",E::Special("C".into()),"? C ?"),
-        ("railroad-abnf-beta\nlong_rule = B;",E::NonTerminal("B".into()),"B"),
-        ("railroad-peg-beta\nlong_rule <- .;",E::Special(".".into()),"? . ?"),
+        ("railroad-beta\nlongrulex = special(\"C\");",E::Special("C".into()),"? C ?"),
+        ("railroad-ebnf-beta\nlongrulex = ?C?;",E::Special("C".into()),"? C ?"),
+        ("railroad-abnf-beta\nlongrulex = B;",E::NonTerminal("B".into()),"B"),
+        ("railroad-peg-beta\nlongrulex <- .;",E::Special(".".into()),"? . ?"),
     ] {for theme in [false,true] {for font_size in [0.5,64.0] {
         for compact in [false,true] {for markers in [false,true] {for radius in [0.0,100.0,65536.0] {
             let typography=if theme {format!("themeVariables:\n  fontSize: '{font_size}px'\n  fontFamily: Courier New\n")}
@@ -53,14 +53,14 @@ fn railroad_labels_four_dialects_keep_exact_fonts_glyphs_ports_and_metadata() {
             let mut normal=base.label_font.clone();normal.family="Courier New".into();normal.size=font_size;
             let mut bold=normal.clone();bold.weight=700;
             let name_height=28.0_f64.max(font_size*1.15);let leaf_height=24.0_f64.max(font_size*1.15).min(height);
-            let children=vec![text_node_no_wrap("long_rule =",10.0,center-name_height/2.0,name_width,name_height,bold,Color{r:0,g:0,b:102,a:255}),
+            let children=vec![text_node_no_wrap("longrulex =",10.0,center-name_height/2.0,name_width,name_height,bold,Color{r:0,g:0,b:102,a:255}),
                 text_node_no_wrap(display,origin+10.0,36.0+(height-leaf_height)/2.0,width-20.0,leaf_height,normal,Color{r:0,g:0,b:0,a:255})];
             let expected=layout_to_paint(&PositionedNode{x:0.0,y:0.0,width:layout.width,height:layout.height,id:None,content:None,children,ext:HashMap::new()},
                 &LayoutToPaintOptions{width:layout.width,height:layout.height,background:Color{r:0,g:0,b:0,a:0},device_pixel_ratio:1.0,shaper:&FakeShaper,metrics:&FakeMetrics,resolver:&FakeResolver});
             let glyphs=|instructions:&[PaintInstruction]|instructions.iter().filter_map(|p|if let PaintInstruction::GlyphRun(g)=p{Some(g.clone())}else{None}).collect::<Vec<_>>();
             let actual=glyphs(&scene.instructions);assert_eq!(actual,glyphs(&expected.instructions),"{source}");
             assert_eq!(actual.len(),2);
-            for (run,text) in actual.iter().zip(["long_rule =",display]) {
+            for (run,text) in actual.iter().zip(["longrulex =",display]) {
                 assert_eq!(run.glyphs.iter().map(|g|g.glyph_id).collect::<Vec<_>>(),text.chars().map(|c|c as u32).collect::<Vec<_>>());
             }
             assert_eq!(scene.metadata,Some(HashMap::from([
