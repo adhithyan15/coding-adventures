@@ -109,7 +109,7 @@ def overlay_config(source: str, clang: str, ld: str, sdk: str,
             raise ValueError("unsupported managed Cabal section syntax")
     for section, managed in fields.items():
         starts = [i for i, line in enumerate(lines)
-                  if line and not line[0].isspace() and line.strip().casefold() == section]
+                  if line and not line[0].isspace() and unquoted_config_text(line).strip().casefold() == section]
         if len(starts) > 1:
             raise ValueError("duplicate active Cabal section: " + section)
         if starts:
