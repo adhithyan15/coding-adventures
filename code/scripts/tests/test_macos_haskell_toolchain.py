@@ -93,7 +93,7 @@ class MacosHaskellToolchainTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     toolchain.overlay_config(source, CLANG, LD, SDK)
 
-    def run_mock_bootstrap(self, failed_stage=None, wrong_output=False, wrong_stage=None, ignore_refusal=False, omit_hsc_trace=False, bad_hsc_trace=False, wrong_refusal_cause=False):
+    def run_mock_bootstrap(self, failed_stage=None, wrong_output=False, wrong_stage=None, ignore_refusal=False, omit_hsc_trace=False, bad_hsc_trace=False, wrong_refusal_cause=False, failure_payload="intentional failure", error_sink=None):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         root = Path(temporary.name).resolve()
@@ -107,7 +107,7 @@ class MacosHaskellToolchainTests(unittest.TestCase):
             commands.append((command, kwargs))
             stage = len(commands)
             if stage == failed_stage:
-                return subprocess.CompletedProcess(command, 7, "", "intentional failure")
+                return subprocess.CompletedProcess(command, 7, "", failure_payload)
             child_config = Path(kwargs["env"].get("CABAL_CONFIG", ""))
             if "v2-build" in command and child_config.name.startswith("refuse-"):
                 missing = child_config.parent / ("missing-" + child_config.stem.removeprefix("refuse-"))
@@ -142,7 +142,9 @@ class MacosHaskellToolchainTests(unittest.TestCase):
         with mock.patch.object(toolchain.shutil, "which", side_effect=lambda name, **_: "/tools/" + name):
             try:
                 receipt = toolchain.bootstrap(root / "output", github_env, env, runner=runner)
-            except RuntimeError:
+            except RuntimeError as error:
+                if error_sink is not None:
+                    error_sink.append(str(error))
                 receipt = None
         self.assertEqual(original, config.read_text(encoding="utf-8"))
         self.assertEqual({"CABAL_CONFIG": str(config), "PATH": "/tools", "UNCHANGED": "retained"}, env)
@@ -263,6 +265,46 @@ class MacosHaskellToolchainTests(unittest.TestCase):
             with self.subTest(options=options):
                 _, github_env, receipt, _ = self.run_mock_bootstrap(**options)
                 self.assertIsNone(receipt)
+                self.assertEqual("EXISTING=retained\n", github_env.read_text(encoding="utf-8"))
+
+    def test_failed_children_keep_bounded_json_diagnostics_without_publishing(self):
+        # The real macOS job lost its captured Cabal diagnostic. Exercise the
+        # bootstrap error paths, including a wrong refusal whose stdout contains
+        # the expected path: diagnostic visibility must not establish admission.
+        for payload in ["", "ordinary failure", "private-prefix\n" + "x" * 5000 + "\n::error::literal\r\n\0\t\u2028\U0001f642tail"]:
+            with self.subTest(payload_size=len(payload)):
+                errors = []
+                root, github_env, receipt, commands = self.run_mock_bootstrap(
+                    failed_stage=1, failure_payload=payload, error_sink=errors)
+                self.assertIsNone(receipt)
+                self.assertEqual(1, len(commands))
+                self.assertEqual(1, len(errors))
+                prefix, marker, encoded = errors[0].rpartition("diagnostic_tail=")
+                self.assertEqual("diagnostic_tail=", marker)
+                self.assertIn("discover-clang failed (7)", prefix)
+                self.assertEqual(payload[-4096:], json.loads(encoded))
+                self.assertTrue(encoded.isascii())
+                self.assertFalse(any(ord(c) < 32 for c in encoded))
+                log = root / "output/discover-clang.log"
+                self.assertEqual(payload, log.read_bytes().decode("utf-8").replace("\r\r\n", "\r\n"))
+                saved = json.loads((root / "output/receipt.json").read_text(encoding="utf-8"))
+                self.assertFalse(saved["success"])
+                self.assertEqual("EXISTING=retained\n", github_env.read_text(encoding="utf-8"))
+        for wrong in [True, "prefix"]:
+            with self.subTest(wrong_refusal=wrong):
+                errors = []
+                root, github_env, receipt, commands = self.run_mock_bootstrap(
+                    wrong_refusal_cause=wrong, error_sink=errors)
+                self.assertIsNone(receipt)
+                self.assertEqual(12, len(commands))
+                self.assertEqual(1, len(errors))
+                prefix, marker, encoded = errors[0].rpartition("diagnostic_tail=")
+                self.assertEqual("diagnostic_tail=", marker)
+                self.assertIn("cabal-refuse-pgmc did not prove", prefix)
+                missing = root / "output/missing-pgmc"
+                failed = str(missing) + "-other" if wrong == "prefix" else "/unexpected/tool"
+                self.assertEqual("flags contain " + str(missing) + "ghc: could not execute: " + failed,
+                                 json.loads(encoded))
                 self.assertEqual("EXISTING=retained\n", github_env.read_text(encoding="utf-8"))
 
 
