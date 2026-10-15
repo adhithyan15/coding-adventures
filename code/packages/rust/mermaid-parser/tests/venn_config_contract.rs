@@ -113,3 +113,15 @@ fn venn_front_matter_sequence_items_cannot_promote_descendants() {
         assert_eq!(config(front),expected,"{front}");
     }
 }
+
+#[test]
+fn venn_init_looking_front_matter_literals_are_not_directives() {
+    for marker in ["|", ">", "|-"] {
+        let front=format!("\n---\nnote: {marker}\n  %%{{init: {{'venn':{{'width':640}}}}}}%%\n---");
+        assert_eq!(config(&front),VennConfig::default(),"{front}");
+        assert_eq!(config(&format!("{front}\n%%{{init: {{'venn':{{'width':720}}}}}}%%")),
+            VennConfig {width:720.0,..Default::default()},"real directive after header wins");
+    }
+    let front="---\nconfig:\n  venn:\n    height: 360\nnote: |\n  %%{init: {'venn':{'width':640}}}%%\n---";
+    assert_eq!(config(front),VennConfig {height:360.0,..Default::default()});
+}
