@@ -138,3 +138,32 @@ NaN/infinite/negative debug dimensions are currently admitted by that old
 predicate; then extend only its debug fields. Finite negative coordinates and
 zero radii/dimensions remain allowed. This is not a checked-paint API or broader
 layout admission refactor. Keep the scalar entry checks and every old term.
+
+## Actual repaired-source checkpoint (2026-10-15)
+
+Closed raw merge9a72bef7 and schema-only e78b42cb preserve their actual compile/
+behavioral failures. Tests-first26506686 reproduced NUL group loss, 188 visits
+for eight groups and admitted forged debug NaN before repair. Source74bc2b0d
+repairs structural grouping/indexing and adds only debug result predicate terms.
+The initial legacy width table failed one paint case;58a7862f corrects the table
+from the actual typed default800 and adds independent800/1600 complete scenes.
+Both failed adapter attempts and their lessons are retained, never passed.
+
+Actual58a7862f full14 suites:943 passed/0 failed/0 ignored across41 targets;
+strict all-target warnings/unknown-lints denial exit0. Focused parser18/paint9/
+geometry15 passed. All104 old scene/query oracles reverse exactly;56 typed and16
+source cells add complete ordered styles, debug geometry, glyphs and query traces.
+The observer bounds actual indexed preparation/emission visits for8/32/128 groups,
+not all string hashing/centroid work. No new production cap or dependency.
+Full receipt CV04a-venn-debug-delivery-58a7862f-validation.json preserves actual
+source, commands and log hashes. Native166/2841 retain f949 source attribution
+except four named Markdown paths; Closure36/3705 exact316e. Registry376 unchanged.
+
+Live audit164039 finds main0e703237 with newer Venn cascade1014bb86, ALGOL
+eleven-unit c08387e8 and Sanskrit content. These are not imported or accepted by
+the58 receipt. Sole published PR17288 stays8d73f88f, CONFLICTING, autoOFF. Actual
+macOS job116532526128 failed the portable test's unresolved temporary-path oracle
+before production probes: /var versus /private/var. Preserve raw log SHA256
+7bf5f038b375d4b4ac0183d55cf0b504b38bb9a8b0c175b0b95d9e236f157f7e.
+Bounded fixture repair and next-main reconciliation precede publication; source/
+terminal/carrier reviews remain required. Miri DEFERRED/PENDING; full goal OPEN.
