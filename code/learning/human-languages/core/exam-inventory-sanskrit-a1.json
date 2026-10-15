@@ -2247,7 +2247,18 @@
       "id": "SA-A1-EV-02",
       "category": "Evaluative notions",
       "label": "value and price",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C74-MARKET-01",
+        "SA-LEX-C74-MARKET-02",
+        "SA-LEX-C74-MARKET-03",
+        "SA-LEX-C87-NUMBERS-03",
+        "SA-LEX-C138-ACT138-01",
+        "SA-LEX-C185-WHY185-01",
+        "SA-LEX-C215-QUAL215-05",
+        "SA-LEX-C248-THG248-03",
+        "SA-VERB-C266-KRINAMI-01",
+        "SA-PATTERN-C266-MARKET-EXCHANGE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "SA-CORPUS",
@@ -2258,7 +2269,7 @@
         "A1-NE12-03",
         "A1-NE15-01"
       ],
-      "note": "UNCOVERED. No word for money, price, cost, buying or selling appears in the track. A whole transactional field is absent."
+      "note": "Covered by composing the already-owned money, price, buying, selling, number, value and rupee vocabulary with chapter 266's first-person buyer form and independently retrieved price exchange. This is a small A1 transaction, not complete commerce or currency coverage."
     },
     {
       "id": "SA-A1-EV-03",
@@ -3255,7 +3266,23 @@
       "id": "SA-A1-M-09",
       "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
       "label": "shopping: the shop, the shopkeeper, buying",
-      "probe": null,
+      "probe": [
+        "SA-LEX-C74-MARKET-01",
+        "SA-LEX-C74-MARKET-03",
+        "SA-LEX-C74-MARKET-04",
+        "SA-LEX-C74-MARKET-05",
+        "SA-LEX-C24-ASK-03",
+        "SA-LEX-C87-NUMBERS-03",
+        "SA-LEX-C185-WHY185-01",
+        "SA-LEX-C222-THG222-03",
+        "SA-LEX-C222-THG222-04",
+        "SA-LEX-C248-THG248-03",
+        "SA-LEX-DHANYAVADA",
+        "SA-GRAMMAR-C265-DADATU-01",
+        "SA-PATTERN-C265-POLITE-ORDER-02",
+        "SA-VERB-C266-KRINAMI-01",
+        "SA-PATTERN-C266-MARKET-EXCHANGE-02"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "CEFR-CV",
@@ -3266,7 +3293,7 @@
         "A1-NE12-01",
         "A1-NE15-02"
       ],
-      "note": "UNCOVERED. No verb of buying or selling and no word for a shop. See also SA-A1-EV-02 for price."
+      "note": "Covered by composing the already-owned shop, market, shopkeeper, goods, rupee, fruit, number and courtesy vocabulary with chapter 266's first-person buyer form, price turn and previously taught polite request. This is one small A1 shopping exchange, not bargaining or consumer-rights coverage."
     },
     {
       "id": "SA-A1-M-10",

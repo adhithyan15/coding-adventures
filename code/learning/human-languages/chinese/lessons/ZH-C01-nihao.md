@@ -11,8 +11,8 @@ gloss: hello (literally "you good")
 concept_tag: GREETING-HELLO
 prerequisites: [ZH-C01-hao]
 sounds: [tone-3, pinyin-n, pinyin-h, pinyin-ao]
-roots: []
-etymology_hook: 你好 is two whole characters, "you" plus "good" — a Chinese word is counted in characters, not letters.
+roots: [middle-chinese-xawx]
+etymology_hook: "nǐ hǎo: a Chinese compound of nǐ 'you' and hǎo 'good', both inherited; hǎo is Middle Chinese xawX"
 duration:
   max_seconds: 200
 requires:
@@ -80,6 +80,13 @@ course teaches it first. But it is worth knowing that it is used less freely
 than English "hello". Between people who already know each other, a Mandarin
 speaker is more likely to open with a small situational remark than with
 **你好** at all. Reserve it for meeting someone, and you will sound right.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**你好** is a Chinese compound of two inherited words: *hǎo*, "good", from
+Middle Chinese *xawX*, and *nǐ*, "you", usually traced to the older
+second-person word *nyeX* (Guangyun, in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAO, ZH-GRAMMAR-COMPOUND-WORD, ZH-LEX-NI, ZH-LEX-HAO] -->

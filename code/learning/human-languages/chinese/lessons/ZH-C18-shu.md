@@ -11,8 +11,8 @@ romanization: shū
 gloss: book, recovered without pinyin
 prerequisites: [ZH-W18-shu-delayed]
 sounds: [tone-1]
-roots: []
-etymology_hook: The four-stroke written form now carries the level-tone noun shū.
+roots: [middle-chinese-syo]
+etymology_hook: "shū 'book': inherited, from Middle Chinese syo 'writing'; 'book' grew from it"
 duration:
   max_seconds: 140
 requires:
@@ -44,6 +44,9 @@ reviews_of: [ZH-C18-hear-shu, ZH-W18-shu-delayed]
 [YOU COVER: the pinyin]
 
 [YOU READ: 书, hold the level first tone, then give its meaning]
+
+**书** is inherited from Middle Chinese *syo*, "writing" (Guangyun, in Baxter's
+transcription); "book" grew from it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-SHU-01] -->

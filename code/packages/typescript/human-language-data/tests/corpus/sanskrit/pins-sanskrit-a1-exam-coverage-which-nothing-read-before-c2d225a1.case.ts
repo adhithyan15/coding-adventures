@@ -49,8 +49,11 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // drink, courtesy, recipient, and giving atoms, adds only dadātu and the
   // complete polite-order frame, then retrieves the request twice without a
   // visible Sanskrit model before SA-A1-M-02 closes.
-  expect(coverage.covered).toBe(147);
-  expect(coverage.unmapped).toBe(17);
+  // 147 -> 149: chapter 266 composes the already-owned market vocabulary with
+  // one first-person buyer form and one price turn, then independently
+  // retrieves the exchange twice before SA-A1-EV-02 and SA-A1-M-09 close.
+  expect(coverage.covered).toBe(149);
+  expect(coverage.unmapped).toBe(15);
   expect(coverage.partial).toBe(0);
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
@@ -58,15 +61,15 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // denominator is the smallest of the twenty-five. 86% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 147/164 points covered (90%)",
+    "sanskrit A1 (partial inventory): 149/164 points covered (91%)",
   );
-  // Where the 17 gaps actually are, named rather than counted. Two columns hold
-  // 13 of them, and they are the two an editorially derived A1 inventory is
+  // Where the 15 gaps actually are, named rather than counted. Two columns hold
+  // 11 of them, and they are the two an editorially derived A1 inventory is
   // bound to strain on: the revival vocabulary a classical corpus never had,
   // and the orthography beyond the characters the script ladder teaches.
   expect(coverage.byCategory[
     "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]!).toEqual({ enumerated: 15, covered: 6 });
+  ]!).toEqual({ enumerated: 15, covered: 7 });
   expect(coverage.byCategory["Lipi — the script and its orthography"]!).toEqual({
     enumerated: 10,
     covered: 7,

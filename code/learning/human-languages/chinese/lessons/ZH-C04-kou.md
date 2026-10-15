@@ -11,8 +11,8 @@ gloss: mouth
 concept_tag: ZH-WORD-KOU
 prerequisites: [ZH-W04-kou]
 sounds: [tone-3, tone-lexical]
-roots: []
-etymology_hook: 口 is a picture of an open mouth, and it is the piece hiding inside a great many characters about speaking and eating.
+roots: [middle-chinese-khuwx]
+etymology_hook: "kǒu 'mouth': inherited, from Middle Chinese khuwX; the mouth picture is the character's history"
 duration:
   max_seconds: 200
 requires:
@@ -64,6 +64,13 @@ corner.
 That is worth more than the word itself. You are not going to memorise five
 thousand characters as pictures; you are going to learn a few hundred pieces and
 read the rest as combinations. 口 is one of the commonest pieces there is.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**口** *kǒu* is inherited from Middle Chinese *khuwX*, "mouth" (Guangyun, in
+Baxter's transcription). The open-mouth picture is the history of the character;
+the word is the inherited one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KOU, ZH-SCRIPT-KOU] -->

@@ -14,6 +14,7 @@ ma — the question particle.
 Say it light, short and flat. It carries no tone, which makes it the first syllable in this book with none — every earlier one has been first, second, third or fourth. Give it none at all, and no stress either.
 It also carries no meaning on its own. There is nothing to translate. What it does is turn the sentence in front of it into a question, and it does that without moving a single other word.
 Hear kàn shū and then kàn shū ma. The words are identical and in the same order; only the light syllable at the end is new, and only the second one is asking.
+Ma is usually explained as coming from Middle Chinese mju, "not have", said at the end of a question; the account is not settled.
 
 Wrap-up Recall.
 Source: Official HSK 3.0 syllabus, Level 1 vocabulary.
@@ -106,6 +107,7 @@ The word, taken apart.
 吗 — ma — the question particle.
 [once you have stopped driving — cover: the pinyin]
 [once you have stopped driving — read: 吗 (ma), give it no tone at all, then say what it does rather than what it means]
+吗 (ma) is usually explained as coming from Middle Chinese mju, "not have" (Guangyun, in Baxter's transcription), tagged onto the end of a question, and later written with this character for its sound. The account is common but not settled.
 
 Grammar lens — one character, every statement.
 Put 吗 (ma) at the end of a statement and the statement becomes a yes-or-no question. Nothing else changes:
@@ -137,6 +139,7 @@ You'll want to know.
 nǐ hǎo ma — how are you?
 The very first thing this book taught you, with the very newest thing on the end of it. No new word arrives here at all.
 Two third tones in a row still slide the first one up, exactly as they do in nǐ hǎo on its own — the light ma on the end changes nothing about that.
+Nǐ hǎo ma is the greeting with the question particle added; hǎo is inherited from Middle Chinese xawX, "good".
 
 Wrap-up Recall.
 Source: Official HSK 3.0 syllabus, Level 1 vocabulary.
@@ -158,6 +161,7 @@ The word, taken apart.
 [once you have stopped driving — read: the three known shapes from left to right]
 They are 你, 好, and the new 吗 (ma) on the end. Every one of them is a character you have already written.
 That is the whole of what 吗 (ma) buys you. The book has been able to write 你好 since its first page and has never once been able to ask anything. One character, six strokes, and the greeting turns into a question.
+Chinese built it from 你好 and 吗 (ma): hǎo is inherited from Middle Chinese xawX (Guangyun, in Baxter's transcription), and 吗 (ma) is usually traced, with some doubt, to mju, "not have".
 
 Guided Practice.
 [once you have stopped driving — write: one copy of 你好吗 (nǐ hǎo ma) — keep the three characters the same size]
@@ -199,6 +203,7 @@ shì ma — is that so? really?
 Two syllables: the verb to be, falling hard, then the light question syllable. Nothing else.
 This is the move you make when somebody tells you something and you want to show you heard it and to invite them to go on. English spends a whole phrase on it — is that so, really, oh yes? — and Mandarin spends two syllables, one of which you learned yesterday.
 Say it with the voice going down on shì and staying light on ma. Said flat it checks a fact; said with the fall exaggerated it registers surprise.
+Shì ma is built from shì, from Middle Chinese dzyeX, and the question particle ma.
 
 Wrap-up Recall.
 Source: Official HSK 3.0 syllabus, Level 1 vocabulary.
@@ -218,6 +223,7 @@ The word, taken apart.
 是吗 — shì ma — is that so? really?
 Two known shapes, in the order you hear them: the nine-stroke 是, then the six-stroke 吗 (ma).
 It is the shortest sentence in the book and it is a complete turn in a conversation. Somebody says something; you say 是吗 (shì ma); they keep going. Nothing about it is a fixed phrase to memorise — it is the yes-or-no rule applied to a one-word sentence.
+Chinese built it from 是, inherited from Middle Chinese dzyeX (Guangyun, in Baxter's transcription), and the question particle 吗 (ma), whose origin is not settled.
 
 Guided Practice.
 [once you have stopped driving — write: one copy of 是吗 (shì ma) — leave a clear boundary between the two characters, and keep 是 the wider of the pair]
@@ -240,6 +246,7 @@ Three syllables and no new word in any of them: good, not, good.
 This is Mandarin's second way of asking a yes-or-no question, and it is completely unlike the first. Where ma adds a syllable that means nothing, this one says the word, then denies it, then says it again — and hands the listener both possible answers so they can pick one.
 The bu in the middle goes light and toneless when it is caught between two copies of the same word. Say hǎo-bu-hǎo with the stress on the first and last and the middle syllable almost swallowed.
 Both questions ask the same thing. ma is the neutral one; this one presses a little harder for a decision, which is why it is the one you hear at the end of a suggestion.
+Hǎo bu hǎo is built from two words inherited from Middle Chinese: xawX, "good", and pjut, "not".
 
 Wrap-up Recall.
 Source: Official HSK 3.0 syllabus, Level 1 vocabulary.
@@ -267,6 +274,9 @@ Mandarin now gives you two ways to ask a yes-or-no question, and this book hands
 看不看书 — the word, denied, and said again.
 They mean the same thing. Neither moves a word, and neither borrows a helper verb the way English does.
 Both would be written with a question mark of Chinese's own at the end. That mark is not taught yet, so it is left off here.
+
+The word, taken apart.
+好不好 (hǎo bu hǎo) is a Chinese pattern, not a borrowing: both words are inherited from Middle Chinese, xawX, "good", and pjut, "not" (Guangyun, in Baxter's transcription).
 
 Guided Practice.
 [once you have stopped driving — write: one copy of 好不好 (hǎo bu hǎo), then one more of your own — take a word you can write, put 不 in the middle, and write it again]

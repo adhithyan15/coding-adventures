@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 25,
-  "sourceHash": "fnv1a64:7c1b25af45700785",
+  "sourceHash": "fnv1a64:cbb14f992c573a64",
   "lessonIds": [
     "ZH-W25-le",
     "ZH-C25-le-dongci",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch25.txt",
   "json": "chinese/narration/ch25.json",
-  "textHash": "fnv1a64:2c9c8a9e3d5a6509",
-  "jsonHash": "fnv1a64:eb2289dfe70c8d04",
+  "textHash": "fnv1a64:ccff98e6279227b1",
+  "jsonHash": "fnv1a64:3d9d9eb8f25b9fe4",
   "findings": []
 }

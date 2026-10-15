@@ -11,8 +11,8 @@ gloss: classmate; schoolmate
 concept_tag: ZH-SCHOOL-CLASSMATE
 prerequisites: [ZH-C15-zhongxuesheng]
 sounds: [tone-2]
-roots: []
-etymology_hook: Together with study names a classmate, but the meaning arrives before the unfamiliar first character.
+roots: [middle-chinese-duwng-same, middle-chinese-haewk]
+etymology_hook: "tóngxué: built from Middle Chinese duwng 'same, together' and haewk 'to learn'"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-C15-zhongxuesheng, ZH-C13-xue]
 
 Let both syllables rise: *tóng-xué*. Keep working only with sound and meaning.
 The first character comes next.
+
+*Tóngxué* is built from Middle Chinese *duwng*, "same, together", and *haewk*,
+"to learn".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-TONGXUE-01] -->

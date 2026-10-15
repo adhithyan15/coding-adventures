@@ -1,0 +1,34 @@
+{
+  "chapter": 266,
+  "title": "A small market exchange",
+  "label": "ch:sa-small-market-exchange",
+  "canDo": "I can choose a familiar item, ask its price, request it, and close politely.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "SA-C266-market-transaction-retrieval",
+    "kind": "production",
+    "summary": "Complete chapter 266 by independently choosing a familiar item and completing a small market transaction.",
+    "assesses": [
+      "SA-LEX-C74-MARKET-01",
+      "SA-LEX-C74-MARKET-02",
+      "SA-LEX-C74-MARKET-03",
+      "SA-LEX-C87-NUMBERS-03",
+      "SA-LEX-C138-ACT138-01",
+      "SA-LEX-C185-WHY185-01",
+      "SA-LEX-C215-QUAL215-05",
+      "SA-LEX-C248-THG248-03",
+      "SA-VERB-C266-KRINAMI-01",
+      "SA-PATTERN-C266-MARKET-EXCHANGE-02",
+      "SA-LEX-C74-MARKET-04",
+      "SA-LEX-C74-MARKET-05",
+      "SA-LEX-C24-ASK-03",
+      "SA-LEX-C222-THG222-03",
+      "SA-LEX-C222-THG222-04",
+      "SA-LEX-DHANYAVADA",
+      "SA-GRAMMAR-C265-DADATU-01",
+      "SA-PATTERN-C265-POLITE-ORDER-02"
+    ]
+  }
+}

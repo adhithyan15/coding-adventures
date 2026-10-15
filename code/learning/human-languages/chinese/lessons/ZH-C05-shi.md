@@ -11,8 +11,8 @@ gloss: to be — and how Mandarin says yes
 concept_tag: RESPONSE-YES
 prerequisites: [ZH-W05-shi]
 sounds: [tone-4, tone-lexical]
-roots: []
-etymology_hook: 是 is the closest Mandarin has to a word for yes, and it gets there by being the word you echo back.
+roots: [middle-chinese-dzyex]
+etymology_hook: "shì 'to be': inherited, from Middle Chinese dzyeX; once a word for 'this', it became the copula later"
 duration:
   max_seconds: 240
 requires:
@@ -67,6 +67,13 @@ worth holding onto, because it is the shape of a great many Mandarin answers:
 **the reply is the question's own word, kept or turned.** You have the keeping
 half now; the turning half is the next lesson, and you already own the character
 it needs.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**是** *shì* is inherited from Middle Chinese *dzyeX* (Guangyun, in Baxter's
+transcription). In the oldest texts it meant "this"; its use as "to be" came
+later, and Unihan still lists both senses.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHI] -->

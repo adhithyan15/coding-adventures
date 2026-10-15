@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-266-MARKET266",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can choose a familiar item, ask its price, request it, and close politely.",
+  "prerequisites": [
+    "SA-EXT-265-ORDER265"
+  ]
+}

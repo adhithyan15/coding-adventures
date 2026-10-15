@@ -16,6 +16,9 @@ Hear the rising tone first. Say rén.
 [once you have stopped driving — read: the character you already know]
 The meaning is singular here: one person. Number comes from context or another word; the character itself does not grow a plural ending.
 
+The word, taken apart.
+人 rén is inherited from Middle Chinese nyin, "person" (Guangyun, in Baxter's transcription). Its ny became the Mandarin r, as in rì.
+
 Guided Practice.
 Say person in Mandarin.
 [once you have stopped driving — read: 人 (rén)]
@@ -39,6 +42,9 @@ You'll want to know.
 女 — nǚ — female; woman.
 Say it low: nǚ. The rounded vowel is the same written ü you met in the character lesson. On its own, 女 labels female gender; it is not a polite way to call out to a woman. Here you are learning the word for reading and building.
 
+The word, taken apart.
+女 nǚ is inherited from Middle Chinese nrjoX, "woman" (Guangyun, in Baxter's transcription).
+
 Guided Practice.
 [once you have stopped driving — read: 女 (nǚ), then cover it]
 [once you have stopped driving — write: the character, from the meaning cue female]
@@ -58,6 +64,7 @@ Say person, then female.
 You'll want to know.
 érzi — son.
 Hear two beats: rising ér, then a short, light zi. Say the whole word once from the meaning. Keep the characters covered; the new first shape comes next.
+Érzi is built from Middle Chinese nye, "infant", and tsiX, "offspring".
 
 Wrap-up Recall.
 Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 48.
@@ -101,6 +108,7 @@ Say son.
 The word, taken apart.
 儿子 — érzi — son.
 The first syllable rises. The second is light. Both characters carry child meanings, but the whole word—not either character alone—is the ordinary kinship word son.
+Both are inherited from Middle Chinese: nye, "infant", and tsiX, "offspring" (Guangyun, in Baxter's transcription).
 
 Guided Practice.
 [once you have stopped driving — write: one copy of 儿子 (érzi), while saying ér-zi]
@@ -121,6 +129,7 @@ Say female, then son.
 You'll want to know.
 nǚ'ér — daughter.
 Say two clear syllables: low nǚ, rising ér. The apostrophe only keeps the vowel boundary visible in pinyin. It is not a pause and not part of the Chinese writing.
+Nǚ'ér is built from Middle Chinese nrjoX, "woman", and nye, "infant".
 
 Wrap-up Recall.
 Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 153.
@@ -141,6 +150,7 @@ Say daughter, then write 女 (nǚ) and 儿 (ér) separately.
 The word, taken apart.
 女儿 — nǚ'ér — daughter.
 Nothing is hidden: 女 (nǚ) gives female and 儿 (ér) gives child. Read the two characters without the pinyin, then say the whole word without a pause.
+Both are inherited from Middle Chinese: nrjoX, "woman", and nye, "infant" (Guangyun, in Baxter's transcription).
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -162,6 +172,7 @@ Say daughter, then son.
 You'll want to know.
 jiā — home; family.
 Hold the pitch high and level: jiā. The word can name the household place or the family belonging to it. Keep the character covered; it has ten strokes, and the next lesson gives them to you in two familiar-sized pieces.
+Jiā is inherited from Middle Chinese kae, "dwelling".
 
 Wrap-up Recall.
 Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 86.
@@ -207,6 +218,7 @@ The word, taken apart.
 家 — jiā — home; family.
 [once you have stopped driving — read: 家 (jiā) once without pinyin]
 The high line over ā records first tone; the character records no tone mark at all.
+家 (jiā) is inherited from Middle Chinese kae, "dwelling" (Guangyun, in Baxter's transcription); Mandarin softened its k to j.
 
 Guided Practice.
 [once you have stopped driving — write: one copy of 家 (jiā), from the model — name the roof before you write the lower body]
@@ -226,6 +238,7 @@ Say home or family, then person.
 You'll want to know.
 jiārén — family members; family.
 You already own both sounds: jiā + rén. The compound names the people of the home. Say it once from the meaning before looking at either character.
+Jiārén is built from Middle Chinese kae, "dwelling", and nyin, "person".
 
 Wrap-up Recall.
 Source: Official HSK 3.0 syllabus, Level 1 vocabulary entry 87.
@@ -246,6 +259,7 @@ Say family members, then write 家 (jiā) and 人 (rén) separately.
 The word, taken apart.
 家人 — jiārén — family members; family.
 Read from the characters: home + person. The word is plural by meaning here, but Mandarin adds no plural ending to 人 (rén).
+Both are inherited from Middle Chinese, kae and nyin (Guangyun, in Baxter's transcription), and the pair is old: it names a hexagram in the Book of Changes.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.

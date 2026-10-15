@@ -11,8 +11,8 @@ romanization: zhōngwén
 gloss: Chinese; the Chinese language
 prerequisites: [ZH-W17-wen-delayed]
 sounds: [tone-1, tone-2]
-roots: []
-etymology_hook: China or the middle realm plus writing or language makes 中文.
+roots: [middle-chinese-trjuwng, middle-chinese-mjun-writing]
+etymology_hook: "zhōngwén: 'middle' + 'writing', from Middle Chinese trjuwng and mjun"
 duration:
   max_seconds: 155
 requires:
@@ -49,6 +49,9 @@ Finally say **Chinese language** as *zhōngwén*.
 > **中文**
 
 It joins China or middle + writing or language: *zhōngwén*, **Chinese**.
+
+Both are inherited from Middle Chinese: *trjuwng*, "middle", and *mjun*,
+"writing" (Guangyun, in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGWEN-01] -->

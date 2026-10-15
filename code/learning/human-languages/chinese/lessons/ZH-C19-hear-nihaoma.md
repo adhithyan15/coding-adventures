@@ -10,8 +10,8 @@ romanization: nǐ hǎo ma
 gloss: how are you, heard as the greeting you already own with one syllable added
 prerequisites: [ZH-C19-ma]
 sounds: [tone-3, tone-neutral]
-roots: []
-etymology_hook: The first greeting in the book becomes the first question in the book without a single new word.
+roots: [middle-chinese-xawx]
+etymology_hook: "nǐ hǎo ma: nǐ hǎo + ma; hǎo is Middle Chinese xawX, and ma is usually traced to mju 'not have'"
 duration:
   max_seconds: 120
 requires:
@@ -46,6 +46,9 @@ of it. No new word arrives here at all.
 
 Two third tones in a row still slide the first one up, exactly as they do in
 *nǐ hǎo* on its own — the light *ma* on the end changes nothing about that.
+
+*Nǐ hǎo ma* is the greeting with the question particle added; *hǎo* is inherited
+from Middle Chinese *xawX*, "good".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAOMA-01, ZH-LEX-NIHAO] -->

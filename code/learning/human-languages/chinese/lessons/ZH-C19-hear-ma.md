@@ -11,7 +11,7 @@ gloss: the question particle, heard first as a neutral-tone syllable at the end 
 prerequisites: [ZH-C18-practice]
 sounds: [tone-neutral]
 roots: []
-etymology_hook: The only syllable in this book so far that carries no tone of its own and no meaning of its own.
+etymology_hook: "ma: usually traced, with some doubt, to Middle Chinese mju 'not have' at the end of a question"
 duration:
   max_seconds: 120
 requires:
@@ -52,6 +52,9 @@ without moving a single other word.
 Hear *kàn shū* and then *kàn shū ma*. The words are identical and in the same
 order; only the light syllable at the end is new, and only the second one is
 asking.
+
+*Ma* is usually explained as coming from Middle Chinese *mju*, "not have", said
+at the end of a question; the account is not settled.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-MA-01] -->

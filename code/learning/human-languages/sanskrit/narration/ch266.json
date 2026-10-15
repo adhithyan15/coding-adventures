@@ -1,0 +1,628 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 266,
+  "title": "A small market exchange",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:0040c334a926b3e8",
+  "lessons": [
+    {
+      "id": "SA-C266-market-recall",
+      "sequence": 15760,
+      "title": "Bring the market words back together",
+      "headword": "(recall the market words)",
+      "romanization": "",
+      "gloss": "retrieve the known people, places, actions, and value words of a small market exchange",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efcd465d58f43fe8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “a stake,” then choose the correct two-person object form, then say the request form “please give.” (Paṇaḥ; the taught dual object form; dadātu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "buys; sells — krīṇāti; vikrīṇāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: buys; sells — *krīṇāti; vikrīṇāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "money; a price; valuable — धनम्; मूल्यम्; मूल्यवान् — dhanam; mūlyam; mūlyavān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: money; a price; valuable — **धनम्; मूल्यम्; मूल्यवान्** — *dhanam; mūlyam; mūlyavān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "a shop; a market — आपणः; विपणिः — āpaṇaḥ; vipaṇiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: a shop; a market — **आपणः; विपणिः** — *āpaṇaḥ; vipaṇiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "goods for sale; a shopkeeper — पण्यम्; आपणिकः — paṇyam; āpaṇikaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: goods for sale; a shopkeeper — **पण्यम्; आपणिकः** — *paṇyam; āpaṇikaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "a rupee — rūpyakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: a rupee — *rūpyakam*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already own the people, places, actions, and value words. The next step is to make them carry one whole exchange."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say four pieces without looking: buys, a price, a shop, a shopkeeper. (Krīṇāti; mūlyam; āpaṇaḥ; āpaṇikaḥ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C266-krinami",
+      "sequence": 15770,
+      "title": "क्रीणामि (krīṇāmi) — I buy",
+      "headword": "क्रीणामि",
+      "romanization": "krīṇāmi",
+      "gloss": "I buy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13e1d6331a49c91c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “a fee,” then “us” as an object, then make one complete polite request for a familiar item. (Śulkam; asmān; the frame ending in dadātu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the buyer speaks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You know क्रीणाति (krīṇāti), “he or she buys.” When the buyer speaks for themselves, keep the whole new form together:"
+            },
+            {
+              "kind": "speech",
+              "text": "अहं फलं क्रीणामि। Ahaṃ phalaṃ krīṇāmi. I buy fruit."
+            },
+            {
+              "kind": "speech",
+              "text": "Here क्रीणामि (krīṇāmi) is the first-person singular present. The final -मि (-mi) points to the speaker, as it does in forms you already know. Both checked-in A1 mocks use this complete form. This is not a complete present paradigm: the other persons, numbers, and class-nine forms wait for later."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "buys; I buy — krīṇāti; krīṇāmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: buys; I buy — *krīṇāti; krīṇāmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“I buy fruit” — ahaṃ phalaṃ krīṇāmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “I buy fruit” — *ahaṃ phalaṃ krīṇāmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the buyer form once more — krīṇāmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the buyer form once more — *krīṇāmi*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Change क्रीणाति, “buys,” into the one taught speaker form. (क्रीणामि (krīṇāmi).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C266-ask-and-hear-price",
+      "sequence": 15780,
+      "title": "Ask the price and hear the answer",
+      "headword": "(ask and hear one price)",
+      "romanization": "",
+      "gloss": "ask how much an item costs and understand a short answer in rupees",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cd5059b447a03b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “news,” then “you two” as an object. (Vārtā; yuṣmān.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one price turn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put two known words together to ask the question used in the A1 mocks:"
+            },
+            {
+              "kind": "speech",
+              "text": "मूल्यं कियत्? Mūlyaṃ kiyat? How much is the price?"
+            },
+            {
+              "kind": "speech",
+              "text": "One short answer is:"
+            },
+            {
+              "kind": "speech",
+              "text": "विंशतिः रूप्यकाणि। Viṃśatiḥ rūpyakāṇi. Twenty rupees."
+            },
+            {
+              "kind": "speech",
+              "text": "You already know रूप्यकम्, one rupee. Keep रूप्यकाणि together inside this useful price answer. This small exchange does not teach the complete neuter plural system or every way to state a price."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask the price — mūlyaṃ kiyat?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask the price — *mūlyaṃ kiyat?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer “twenty rupees” — viṃśatiḥ rūpyakāṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer “twenty rupees” — *viṃśatiḥ rūpyakāṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question and answer as one turn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question and answer as one turn]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask one price, then answer with twenty rupees."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C266-complete-transaction",
+      "sequence": 15790,
+      "title": "Complete one small transaction",
+      "headword": "(complete one small transaction)",
+      "romanization": "",
+      "gloss": "choose, buy, ask a price, request the item, and close politely",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb031564b49e7c39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “a drama,” then explain how the taught object forms change for person and number. (Nāṭakam; use the object-person-and-number contrast.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: five turns",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Build the exchange one complete turn at a time:"
+            },
+            {
+              "kind": "speech",
+              "text": "अहं फलं क्रीणामि। — Ahaṃ phalaṃ krīṇāmi. — I buy fruit."
+            },
+            {
+              "kind": "speech",
+              "text": "मूल्यं कियत्? — Mūlyaṃ kiyat? — How much is the price?"
+            },
+            {
+              "kind": "speech",
+              "text": "विंशतिः रूप्यकाणि। — Viṃśatiḥ rūpyakāṇi. — Twenty rupees."
+            },
+            {
+              "kind": "speech",
+              "text": "कृपया मह्यं फलं ददातु। — Kṛpayā mahyaṃ phalaṃ dadātu. — Please give me fruit."
+            },
+            {
+              "kind": "speech",
+              "text": "धन्यवादः। — Dhanyavādaḥ. — Thank you."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the five turns once without breaking the exchange apart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The vocabulary was already yours. Now it carries one complete A1 transaction."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the five jobs in order: choose and buy, ask the price, hear the price, request the item, close politely."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C266-mixed-market-practice",
+      "sequence": 15800,
+      "title": "Choose and complete the exchange",
+      "headword": "(choose and complete a market exchange)",
+      "romanization": "",
+      "gloss": "independently complete a familiar-item transaction in a shop or market",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c0ba86fd1f6fae4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “a poem.” (Kāvyam.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: independent round one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No Sanskrit model is shown before you answer."
+            },
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You are speaking to a shopkeeper at a market. Choose one familiar item. Say that you buy it. Ask the price. The shopkeeper says that the price is twenty rupees. Request the item politely, then close with thanks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built: check after speaking",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One complete answer with fruit is अहं फलं क्रीणामि (krīṇāmi)। मूल्यं कियत्? विंशतिः रूप्यकाणि। कृपया मह्यं फलं ददातु। धन्यवादः। Your item may differ; the five jobs must remain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two new pieces held the old vocabulary together? (The buyer form क्रीणामि (krīṇāmi) and the price-exchange pattern.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C266-market-transaction-retrieval",
+      "sequence": 15810,
+      "title": "Retrieve the whole market transaction",
+      "headword": "(retrieve the whole market transaction)",
+      "romanization": "",
+      "gloss": "independently choose a setting and complete a second familiar-item transaction",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a96fa77a91b53701",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “a film,” then “I will go.” (Citrapaṭaḥ; gamiṣyāmi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: independent round two",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No Sanskrit model is shown before you answer."
+            },
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Choose a shop or market and a different familiar item. Say that you buy it. Ask its price. The shopkeeper says that the price is twenty rupees. Request the item politely and close with thanks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built: check after speaking",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A complete answer still has five jobs: say what you buy; ask the price; hear the rupee amount; request the item; thank the shopkeeper. Your chosen item may differ from the first round."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall: boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now complete one small A1 market exchange with familiar language. This is not complete commerce, currency, bargaining, consumer-rights, or present paradigm coverage, and it is not evidence of exam readiness or learner success."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

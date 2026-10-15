@@ -11,8 +11,8 @@ romanization: kànjiàn
 gloss: to see or catch sight of
 prerequisites: [ZH-C18-hear-kanjian]
 sounds: [tone-4]
-roots: []
-etymology_hook: Two known characters compose transparently: 看, look, plus 见, perceive.
+roots: [middle-chinese-khanh, middle-chinese-kenh]
+etymology_hook: "kànjiàn: 'look' + 'see', from Middle Chinese khanH and kenH"
 duration:
   max_seconds: 145
 requires:
@@ -46,6 +46,9 @@ reviews_of: [ZH-C18-hear-kanjian, ZH-C18-kan, ZH-W06-jian]
 [YOU READ: the two known shapes from left to right]
 
 看 supplies looking; 见 marks the perceived result.
+
+Both are inherited from Middle Chinese: *khanH*, "look", and *kenH*, "see"
+(Guangyun, in Baxter's transcription).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-KANJIAN-01] -->

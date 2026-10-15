@@ -11,8 +11,8 @@ gloss: "eight — first tone, and the luckiest number in the language"
 concept_tag: ZH-NUMBER-EIGHT
 prerequisites: [ZH-W20-ba]
 sounds: [tone-1, tone-lexical]
-roots: []
-etymology_hook: "ba is first tone and sounds close to fa, to prosper, which is why eight is the number Chinese speakers pay extra for on a number plate."
+roots: [middle-chinese-peat]
+etymology_hook: "bā 'eight': inherited, from Middle Chinese peat; its luck rests on a likeness to fā, not on its origin"
 duration:
   max_seconds: 255
 requires:
@@ -59,6 +59,10 @@ eighth day of the eighth month.
 
 A number can carry that much only in a language where numbers sound like other
 words, and this is the clearest case of it a beginner will meet.
+
+The word itself is inherited from Middle Chinese *peat*, "eight" (Guangyun, in
+Baxter's transcription); the luck rests on a likeness of sound, not on where the
+word comes from.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-BA, ZH-CULTURE-BA-LUCKY, ZH-LEX-NUM-LIU] -->

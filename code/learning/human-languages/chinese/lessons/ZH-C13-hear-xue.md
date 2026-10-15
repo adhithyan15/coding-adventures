@@ -11,8 +11,8 @@ gloss: study; learn
 concept_tag: ZH-SCHOOL-STUDY
 prerequisites: [ZH-C13-dajia]
 sounds: [tone-2]
-roots: []
-etymology_hook: Study arrives as a rising syllable before its eight-stroke character.
+roots: [middle-chinese-haewk]
+etymology_hook: "xué 'to learn': inherited, from Middle Chinese haewk"
 duration:
   max_seconds: 120
 requires:
@@ -43,6 +43,8 @@ reviews_of: [ZH-C13-dajia]
 
 Begin low enough to rise clearly through *xué*. Stay with sound and meaning;
 the eight-stroke character comes next in small groups.
+
+*Xué* is inherited from Middle Chinese *haewk*, "to learn".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUE-01] -->

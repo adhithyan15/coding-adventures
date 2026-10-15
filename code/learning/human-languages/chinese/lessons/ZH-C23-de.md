@@ -12,7 +12,7 @@ concept_tag: ZH-PARTICLE-DE
 prerequisites: [ZH-W23-de, ZH-C22-buyizhi, ZH-C19-hear-ma, ZH-W19-ma-observe, ZH-C17-hear-zhongwen, ZH-C15-shangxue]
 sounds: [tone-neutral]
 roots: []
-etymology_hook: "Mandarin does not inflect a possessive, does not agree it, and does not distinguish one owner from several: it puts 的 between them and stops."
+etymology_hook: "de: a borrowed spelling; the particle is usually traced to a Tang-era particle read tejX, not settled"
 duration:
   max_seconds: 220
 requires:
@@ -78,6 +78,14 @@ had nothing to own until now.
 One habit worth learning early: with family and with very close things, Mandarin
 **drops** 的 — a speaker says 我家, not 我的家. The closer the tie, the likelier
 the 的 falls away.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**的** is a borrowed spelling. The character's own Middle Chinese reading is
+*tek*, "bright; a target"; the particle is usually traced to a Tang-period
+particle written with another character, read *tejX*. The details are not
+settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DE-01, ZH-GRAMMAR-DE-POSSESSION-01] -->
