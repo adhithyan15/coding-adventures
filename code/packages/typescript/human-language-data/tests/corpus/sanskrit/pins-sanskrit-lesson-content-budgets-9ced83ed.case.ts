@@ -145,7 +145,9 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 1434 -> 1440: chapter 268 adds one sourced financial-bank word, joins
     // four service referents to the known location question, and retrieves the
     // exchange twice without a model.
-    lessons: 1440,
+    // 1440 -> 1446: chapter 269 recalls four owned media words, adds two
+    // sourced modern meanings, and retrieves the six-word field twice.
+    lessons: 1446,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

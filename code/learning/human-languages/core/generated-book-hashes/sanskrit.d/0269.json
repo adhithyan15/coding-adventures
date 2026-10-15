@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:14dd18c8db566524",
+  "lessonIds": [
+    "SA-C269-media-recall",
+    "SA-C269-akasavani",
+    "SA-C269-antarjalam",
+    "SA-C269-six-channel-practice",
+    "SA-C269-media-first-retrieval",
+    "SA-C269-media-final-retrieval"
+  ],
+  "tex": "sanskrit/book/chapters/ch269-six-communication-words-gently-joined.tex"
+}

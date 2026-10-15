@@ -1,0 +1,605 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 269,
+  "title": "Six communication words, gently joined",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:76b1e45af84eb066",
+  "lessons": [
+    {
+      "id": "SA-C269-media-recall",
+      "sequence": 15940,
+      "title": "Four communication words are already yours",
+      "headword": "(media-word recall)",
+      "romanization": "",
+      "gloss": "retrieve four familiar media and communication words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b0a2143099f5800",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for a newspaper or magazine, then a telephone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "पत्रिका — patrikā — a newspaper or magazine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **पत्रिका** — *patrikā* — a newspaper or magazine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "दूरभाषः — dūrabhāṣaḥ — a telephone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **दूरभाषः** — *dūrabhāṣaḥ* — a telephone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "दूरदर्शनम् — dūradarśanam — a television",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **दूरदर्शनम्** — *dūradarśanam* — a television]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "लेखः — lekhaḥ — a letter or article",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **लेखः** — *lekhaḥ* — a letter or article]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These four meanings were already in the book. Radio and internet are the two missing members of this small lexical field."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the four familiar words again without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C269-akasavani",
+      "sequence": 15950,
+      "title": "आकाशवाणी (ākāśavāṇī) — radio",
+      "headword": "आकाशवाणी",
+      "romanization": "ākāśavāṇī",
+      "gloss": "radio — only the sourced modern meaning in this tranche",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbd4b8af75dafbb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the four familiar words from the previous lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आकाशवाणी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आकाशवाणी — ākāśavāṇī — “radio.” The Kosha Sanskrit Today radio entry explicitly attests this modern use. This tranche teaches only the modern radio meaning. It does not ask you to generalise from the word's older “voice from the sky” sense."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आकाश means “sky,” and वाणी means “voice.” That shape can help you remember the sourced modern word, but the one meaning to retrieve here is “radio.”"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "आकाशवाणी (ākāśavāṇī) — radio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **आकाशवाणी** — radio]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "आकाशवाणी (ākāśavāṇī) — radio; दूरभाषः — telephone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **आकाशवाणी** — radio; **दूरभाषः** — telephone]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the sourced modern radio word in this lesson?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C269-antarjalam",
+      "sequence": 15960,
+      "title": "अन्तर्जालम् (antarjālam) — the internet",
+      "headword": "अन्तर्जालम्",
+      "romanization": "antarjālam",
+      "gloss": "the internet — the sourced modern computing term",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:149e70064dd85aaa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the new radio word once from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अन्तर्जालम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अन्तर्जालम् — antarjālam — “the internet.” The modern computing term is explicitly attested in the Kosha Sanskrit Today internet entry and its Computer — Internet glossary. This lesson owns only that sourced modern meaning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अन्तर् gives the idea “between” or “inter-,” and जाल means “net.” The transparent “inter-net” shape is a memory hook, not a lesson in using the internet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "अन्तर्जालम् (antarjālam) — the internet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **अन्तर्जालम्** — the internet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "आकाशवाणी (ākāśavāṇī) — radio; अन्तर्जालम् (antarjālam) — internet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **आकाशवाणी** — radio; **अन्तर्जालम्** — internet]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the internet word once more without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C269-six-channel-practice",
+      "sequence": 15970,
+      "title": "Six words, one small field",
+      "headword": "(six media and communication words)",
+      "romanization": "",
+      "gloss": "distinguish and retrieve the six meanings in one guided round",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e856c4fb0f8fd871",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “radio,” then “internet.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": true,
+              "source": "[PAUSE 3s each]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve each word before checking:"
+            },
+            {
+              "kind": "speech",
+              "text": "press: पत्रिका — patrikā."
+            },
+            {
+              "kind": "speech",
+              "text": "telephone: दूरभाषः — dūrabhāṣaḥ."
+            },
+            {
+              "kind": "speech",
+              "text": "radio: आकाशवाणी — ākāśavāṇī."
+            },
+            {
+              "kind": "speech",
+              "text": "television: दूरदर्शनम् — dūradarśanam."
+            },
+            {
+              "kind": "speech",
+              "text": "internet: अन्तर्जालम् — antarjālam."
+            },
+            {
+              "kind": "speech",
+              "text": "letter or article: लेखः — lekhaḥ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now distinguish six meanings in one compact lexical field. This is word retrieval, not evidence that you can use devices, follow news, write correspondence, broadcast, or navigate online."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two words were new in this chapter?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C269-media-first-retrieval",
+      "sequence": 15980,
+      "title": "Independent media words: round one",
+      "headword": "(independent media retrieval, first round)",
+      "romanization": "",
+      "gloss": "independently retrieve six media and communication words without a visible model",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:187a41bb79c5634c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall which two meanings entered in this chapter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: six English cues",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No Sanskrit model is shown before you answer."
+            },
+            {
+              "kind": "pause",
+              "seconds": 14,
+              "perItem": false,
+              "source": "[PAUSE 14s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for these six meanings, in order: press, telephone, radio, television, internet, and a letter or article."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built: boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have completed one independent six-word retrieval. That does not yet show device use, news comprehension, correspondence, broadcasting, internet navigation, or digital literacy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve radio and internet once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C269-media-final-retrieval",
+      "sequence": 15990,
+      "title": "Independent media words: round two",
+      "headword": "(independent media retrieval, second round)",
+      "romanization": "",
+      "gloss": "independently retrieve the same six meanings in a different order",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aebdc5aef55f54cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the two written-media meanings: press, then a letter or article."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: a fresh order",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No Sanskrit model is shown before you answer."
+            },
+            {
+              "kind": "pause",
+              "seconds": 14,
+              "perItem": false,
+              "source": "[PAUSE 14s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for these meanings in a new order: internet, a letter or article, television, press, radio, and telephone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built: boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can retrieve six media and communication meanings twice without a visible model. This closes one editorial inventory point. It is not evidence of device use, news comprehension, correspondence, broadcasting, online navigation, digital literacy, human validation, learner attainment, or exam readiness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the six meanings that belong to this bounded field."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
