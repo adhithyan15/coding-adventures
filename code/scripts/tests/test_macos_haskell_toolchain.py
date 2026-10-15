@@ -80,6 +80,9 @@ class MacosHaskellToolchainTests(unittest.TestCase):
     def test_normalized_managed_names_and_unsupported_section_syntax(self):
         for source in [
             "program-default-options\n  GHC-OPTIONS: -pgmc /custom/clang\n",
+            "program-default-options -- retained header comment\n  GHC-OPTIONS: -pgmc /custom/clang\n",
+            "PROGRAM-LOCATIONS -- retained header comment\n  GCC-LOCATION: /custom/clang\n",
+            "program-locations -- first\nPROGRAM-LOCATIONS -- second\n",
             "PROGRAM-LOCATIONS\n  GCC-LOCATION: /custom/clang\n",
             "program-locations\nPROGRAM-LOCATIONS\n",
             "program-default-options { ghc-options: -v }\n",
