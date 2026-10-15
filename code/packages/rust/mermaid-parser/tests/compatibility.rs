@@ -427,6 +427,10 @@ fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
             assert_eq!(diagram.config.fill_color, "#abcdef");
             assert_eq!(diagram.config.text_color, "#654321");
         }
+        if name == "deep-long-labels" {
+            assert_eq!(diagram.causes.iter().map(|cause| cause.depth).max(), Some(3));
+            assert!(diagram.causes.iter().any(|cause| cause.label == "Legal approval queues delay publication"));
+        }
     }
 }
 
