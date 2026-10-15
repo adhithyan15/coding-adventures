@@ -3,43 +3,50 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a Venn config integration checkpoint -->
-Local native10 source `f94949663ffe49794f85402d5580e8cf6b246c81`
-reconciles inspected main2f through closed merge1728af66: nine incoming paths,
-four pure imports, five bounded reconstructions; complete 225,520-entry tree
-verified. Actual raw baseline876P2F/incoming0P1F and tests-first red retained.
-Only four dedicated canonical outer-entier edits admit ten units/range[-11,11];
-all other owned pre-test compiler bytes match cdca2e11.
+Published candidate `8d73f88f3b2d120aaa8d7f3209c3c22524db36d3` is Git/API verified on the sole implementation
+PR #17288; unmerged, auto-merge **OFF**. Current main is `be0384cc230b960790cbe3b5593b51601192e662`;
+its Venn debug/default changes remain unintegrated. No exact-current-head hosted
+acceptance is inferred from local gates, an empty rollup or mergeability.
 
-Focused actual36/compiler881/incoming runtime1/owned runtime11 passed. Six
-available backends executed 106 owned sources/636 cells: 576 old tuples exact
-plus60 new normal-exit/output/order cells, CLR unavailable and uncounted.
-Independent source/focused security5c9af2bd PASSED. Full metadata-derived
-six-package strict lint exited0; unfiltered compiler/LANG/downstream suites are
-RUNNING in isolated R2 at frozen f949/ordering target (session18492/PID46560).
-No full native10 terminal acceptance, publication, merge or hosted claim yet.
+| Scope | Actual evidence |
+| --- | --- |
+| Native/compiler/downstream | Tested source `f9494966`: 1,814 passed, zero failed, one unchanged parent-only archive ignore over 78 targets; strict lint passed. Compiler 881 and full unfiltered LANG 498 passed. |
+| Runtime output/order | 106 owned sources / 636 actual cells on six available backends; all 576 earlier tuples exact, 60 new normal-exit/stdout/order cells. Unavailable CLR is uncounted. |
+| Diagram/parser/paint/downstream | Tested `55afa2b5`: actual 932/41 + strict, 104 complete scenes/query traces. Fifty-package inputs retained except eight named Markdown paths; no new style execution claim. |
+| Standalone Closure attribution | Corrected 36 manifest roots / 3,705 objects retain historical `316e7878` inputs. Exact source attribution, no new execution claim. |
+| Documentation carrier | Exactly six named Markdown files over tested `f9494966`; documentation, lessons and whitespace gates passed. Runtime/test/config inputs unchanged. |
+| Current-main plan | Exact candidate unforced plan exited0 against `be0384cc230b960790cbe3b5593b51601192e662`. SHA256 `2fefc6c8a5ea2c698f7c6a6d5912c0b3014d31e88ac4b4300ec4921aea681889`. Package selection is not hosted execution. |
 
-Accepted style55afa2b5 remains actual932P0F/41targets+strict/104completecells;
-its50-package inputs match except eight named Markdown paths. Closure36/3705
-retains316e inputs; CI/helper319 and Windows reactor7e retained. Registry376
-exact, local lock only six expected version changes. No new crates.io dependency.
+Native source/focused independent review `5c9af2bd` and terminal review
+`446f5f4f` passed. Exact-carrier review
+`09887cec` passed for this candidate.
+The closed native10 merge accounts for all225,520 entries; only four dedicated
+canonical outer-entier budget/comment edits change the owned production prefix.
+Shared exp/log/folding, aliases/effects, formatter/conversion and8192 controls
+remain exact. Registry376 tuples exact; only six expected local lock versions
+changed, no new crates.io dependency. Style/CI attribution retains its own reviews.
 
-Live main advanced to e0ada264 (Venn debug #17575), eight producer files saved.
-Incoming audit identified quadratic group rescanning and NUL-delimited grouping
-collisions; static findings are not executed UB claims. Next isolated R1 branch
-codex/closurec-venn-debug-integration-20261015 commits spec9d28d044 before any
-debug import/test/implementation/Cargo. Preserve structural grouping, first
-authored order, duplicate lookup semantics, complete scenes and numeric guards.
-Consume R2 terminal before native10 docs/terminal/carrier review and same-PR
-delivery; retain R2 HEAD/source/index/target until then.
+Windows reactor selection is explicitly Unix-only, not Windows socket support.
+Mac helper319 retains actual portable/local Cabal controls; actual macOS3.10
+toolchain/link probes and all required hosted checks remain mandatory.
 
-Published sole PR#17288 remains372ba713, conflicting/unmerged, autoOFF with no
-current-head hosted acceptance. Required actual macOS/Windows/other hosted checks,
-fresh-main unforced plan, exact-carrier review and fetched merge reachability
-remain gates. Frozen Miri checkout/process/inputs/target/receipts untouched and
-unpolled, no duplicate/termination. Final-source Miri DEFERRED/PENDING, never
-passed: implementation delivery first, then genuine final-source Miri.
+Next R1 branch codex/closurec-venn-debug-integration-20261015 contains committed
+spec/backlog/lesson only. Incoming debug e0 reviewab9dc255 WITHHELD raw integration
+for quadratic rescanning, NUL structural-group collisions and new derived-field
+checks. Incoming defaultsa7 reviewf980cebc requires no additional production
+repair for the three defaults alone; combined integration is still WITHHELD
+until closed merge, bounded repairs and exact whole-scene adapters/tests.
+No debug/default import/tests/implementation/Cargo has occurred. Merge this
+native10 documentation carrier into R1 by complete named-path proof first.
+
+Final-source Miri **DEFERRED/PENDING, never passed**. Frozen checkout/process/
+inputs/target/receipts untouched/unpolled, no duplicate or termination. Deliver
+implementation first, then obtain genuine final-source Miri. Auto-merge requires
+current conflict-free, review-clean exact-head terminal acceptable required checks;
+actual fetched merge reachability must precede cleanup. No CI waiver.
 Full Closure parity/output-byte-source/stableIDs/pass-sweep/all transformation
-lineage objective OPEN; heartbeat ACTIVE, base ESTree/owned types retained.
+lineage objective OPEN; heartbeat ACTIVE. Base ESTree, owned types and unrelated
+local edits retained.
 <!-- /CV04a Venn config integration checkpoint -->
 
 <!-- CV04a pathwise pending checkpoint -->
