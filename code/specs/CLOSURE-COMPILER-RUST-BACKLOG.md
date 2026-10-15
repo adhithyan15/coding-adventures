@@ -2,6 +2,29 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04a native14 current checkpoint -->
+Latest inspected main47ee139e (#17596) adds9 native14 compiler/LANG paths after
+integrated020c. Raw incoming security5172625c WITHHOLDS integration:3 shared
+helper widenings retain exp/log scope leakage and folded-f64 integer budget
+errors. Manifest3691841f covers18slots/16realblobs/2absent parents. No unsafe/
+dependency/new production-limit change; static evidence gives no native14 run.
+Remote then advanced during push to6c4e482c (#17599),12 Wardley shared diagram/
+config paths after47ee; static audit and bounded style integration remain PENDING.
+Published solePR17288 e16c carries accepted native13 actual18f1830/78/strict6
+and boxed65de968/44/strict14 with complete source-bound reports; native14 remains
+PENDING. AutoOFF/unmerged; current conflict/review/terminal requiredCI and actual
+macOS phase-refusal cause remain OPEN. New spec precedes tests/import/repair in
+isolated R1 branch, preserving native13 branch/receipts. Keep all136 old runtime
+sources/816 actual tuples,37 Ishi/232 Venn/67 IR controls and all proof/limit
+guards. Owned reverse6/forward166 must not shrink to rawmain4/160.
+Next testfirst semanticred, closed9path reconstruction restoring owned whole
+production, then ONLY4 dedicated canonical cap/domain/list/budget edits13→14;
+run affected full6/strict, source/carrier review and actual delivery gates.
+Miri DEFERRED/PENDING, never passed; frozen run/source/inputs/target/receipts
+untouched/unpolled, no duplicate/termination. Full Closure parity/full output
+lineage/stableIDs/spans/pass-sweep/CV04b remain OPEN; heartbeat ACTIVE.
+<!-- /CV04a native14 current checkpoint -->
+
 <!-- CV04a native13 current checkpoint -->
 Native13 actual acceptance
 
