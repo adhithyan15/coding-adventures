@@ -7728,7 +7728,7 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
     let string = |name: &str, default: &str| value(name).unwrap_or_else(|| default.to_string());
     let theme_string = |primary: &str, secondary: Option<&str>, default: &str| {
         theme_value(primary)
-            .or_else(|| secondary.and_then(&theme_value))
+            .or_else(|| secondary.and_then(theme_value))
             .unwrap_or_else(|| default.to_string())
     };
     let theme_font_size = theme_value("fontSize")
