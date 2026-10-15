@@ -6,7 +6,7 @@ sequence: 3270
 chapter: 283
 type: word
 headword: disculpe
-gloss: excuse me — from culpa, fault: literally, take the fault off me
+gloss: 'excuse me — from culpa, fault: literally, take the fault off me'
 concept_tag: ES-COURTESY-EXCUSE
 prerequisites: [ES-C282-invitado]
 sounds: [k-hard, vowel-i]

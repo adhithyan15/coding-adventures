@@ -1,0 +1,11 @@
+{
+  "id": "SA-C273-reflexive-first-retrieval",
+  "pathSegment": "SA-PATH-273-REFLEXIVE273",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-273-REFLEXIVE273",
+      "order": 1
+    }
+  ]
+}

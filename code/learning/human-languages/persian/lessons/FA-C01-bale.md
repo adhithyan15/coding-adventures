@@ -7,7 +7,7 @@ chapter: 1
 type: word
 headword: بله
 romanization: bale
-gloss: yes
+gloss: 'yes'
 concept_tag: RESPONSE-YES
 prerequisites: [FA-C01-mamnoon]
 sounds: [rtl, short-vowels-unwritten]

@@ -6,7 +6,7 @@ sequence: 3240
 chapter: 282
 type: word
 headword: el abrazo
-gloss: a hug — from bracchium, the arm: the word says what the body does
+gloss: 'a hug — from bracchium, the arm: the word says what the body does'
 concept_tag: ES-GREET-HUG
 prerequisites: [ES-C282-saludo]
 sounds: [r-tap, z-as-th-or-s]

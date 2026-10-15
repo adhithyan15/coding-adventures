@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 224,
-  "sourceHash": "fnv1a64:c45c12e8e2e96a77",
+  "sourceHash": "fnv1a64:dba3529b6e5a9ec8",
   "lessonIds": [
     "ML-C224-kalarttuka",
     "ML-C224-vilambuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch224.txt",
   "json": "malayalam/narration/ch224.json",
-  "textHash": "fnv1a64:8e57395e1618a897",
-  "jsonHash": "fnv1a64:ed49245e8cdee849",
+  "textHash": "fnv1a64:238a9686deb9d2a7",
+  "jsonHash": "fnv1a64:48eb08d6330497b9",
   "findings": []
 }

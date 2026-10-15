@@ -7,7 +7,7 @@ chapter: 17
 type: writing
 delivery: script
 headword: の
-romanization: no
+romanization: 'no'
 gloss: the hiragana sign for the mora no — one stroke, and the last sign this chapter buys
 prerequisites: [JA-C17-yattsu, JA-C15-nana, JA-C10-itte-kudasai]
 sounds: [mora]

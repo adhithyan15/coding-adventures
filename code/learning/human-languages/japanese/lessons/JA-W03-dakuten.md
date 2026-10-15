@@ -12,7 +12,7 @@ gloss: two small marks that voice a sign — か becomes ga, こ becomes go
 prerequisites: [JA-W03-ka]
 sounds: [mora]
 roots: []
-etymology_hook: The dakuten is the cheapest thing in Japanese writing: two ticks, and a sign you already know becomes a second one.
+etymology_hook: 'The dakuten is the cheapest thing in Japanese writing: two ticks, and a sign you already know becomes a second one.'
 duration:
   max_seconds: 190
 requires:

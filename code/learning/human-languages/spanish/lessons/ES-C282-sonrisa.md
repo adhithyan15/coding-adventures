@@ -6,7 +6,7 @@ sequence: 3250
 chapter: 282
 type: word
 headword: la sonrisa
-gloss: a smile — subridere, to laugh slightly: a laugh with the volume turned down
+gloss: 'a smile — subridere, to laugh slightly: a laugh with the volume turned down'
 concept_tag: ES-GREET-SMILE
 prerequisites: [ES-C282-abrazo]
 sounds: [vowel-i, s-clear]

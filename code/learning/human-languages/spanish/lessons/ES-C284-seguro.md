@@ -6,7 +6,7 @@ sequence: 3330
 chapter: 284
 type: word
 headword: seguro
-gloss: sure — se- without plus cura, care: free from care, and so reliable
+gloss: 'sure — se- without plus cura, care: free from care, and so reliable'
 concept_tag: ES-REPLY-SURE
 prerequisites: [ES-C284-de-acuerdo]
 sounds: [g-hard, vowel-u]

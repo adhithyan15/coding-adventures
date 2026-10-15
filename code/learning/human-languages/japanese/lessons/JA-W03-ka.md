@@ -12,7 +12,7 @@ gloss: the hiragana sign for the mora ka — three strokes, and the base of anot
 prerequisites: [JA-W03-ri]
 sounds: [mora]
 roots: []
-etymology_hook: か is the base of が: the same shape with a mark added, which is the next lesson's whole idea.
+etymology_hook: 'か is the base of が: the same shape with a mark added, which is the next lesson''s whole idea.'
 duration:
   max_seconds: 180
 requires:

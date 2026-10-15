@@ -11,7 +11,7 @@ concept_tag: GREETING-DAY
 prerequisites: [GE-C01-gut, GE-C01-tag]
 sounds: [vowel-u-german]
 roots: [godaz, dagaz]
-etymology_hook: Guten Tag is a frozen accusative: the -en is the masculine object ending, left behind by the fuller wish it was cut from
+etymology_hook: 'Guten Tag is a frozen accusative: the -en is the masculine object ending, left behind by the fuller wish it was cut from'
 duration:
   max_seconds: 240
 requires:

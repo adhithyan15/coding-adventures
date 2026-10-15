@@ -6,7 +6,7 @@ sequence: 460
 chapter: 12
 type: word
 headword: diciassette — venti
-gloss: 17–20 — Italian flips the order at 17: the ten jumps to the FRONT
+gloss: '17–20 — Italian flips the order at 17: the ten jumps to the FRONT'
 concept_tag: IT-NUM-17-20
 prerequisites: [IT-C12-numeri-11-16]
 sounds: [double-ss, c-soft-dici]

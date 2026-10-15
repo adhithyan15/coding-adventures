@@ -6,7 +6,7 @@ sequence: 2050
 chapter: 167
 type: word
 headword: luego
-gloss: then, next — a word you already own from hasta luego, now doing a second job: joining two events in order
+gloss: 'then, next — a word you already own from hasta luego, now doing a second job: joining two events in order'
 concept_tag: CONNECTIVE-THEN
 prerequisites: [ES-C05-hasta-luego, ES-C37-sentarse, ES-C37-levantarse]
 sounds: [g-soft-gw, diphthong-ue]

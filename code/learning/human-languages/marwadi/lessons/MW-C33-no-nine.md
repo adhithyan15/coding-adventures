@@ -6,7 +6,7 @@ sequence: 2790
 chapter: 33
 type: word
 headword: नो
-romanization: no
+romanization: 'no'
 gloss: nine, on the page — the same two-sign shape as two, with a different consonant
 concept_tag: MW-NUMBER-NINE-WRITTEN
 prerequisites: [MW-C33-hear-no-nine]

@@ -6,7 +6,7 @@ sequence: 2343
 chapter: 45
 type: review
 headword: (two letters)
-gloss: second pass: the same two letters, from the word back to the letter
+gloss: 'second pass: the same two letters, from the word back to the letter'
 romanization: "be akshar"
 concept_tag: GU-LETTERS-FROM-WORDS
 prerequisites: [GU-W45-gha, GU-W45-ai-sign]

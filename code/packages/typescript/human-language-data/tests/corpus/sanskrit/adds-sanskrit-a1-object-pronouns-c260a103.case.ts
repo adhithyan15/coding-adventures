@@ -146,13 +146,13 @@ it("adds the Sanskrit A1 object-pronoun series one number at a time", () => {
     // media words, 152 -> 153 from modern-technology retrieval, 153 -> 154
     // from spoken requests, and 154 -> 155 from the bounded condolence; this
     // test still pins the exact object-pronoun probe.
-    covered: 155,
-    unmapped: 9,
+    covered: 156,
+    unmapped: 8,
     partial: 0,
   });
   expect(coverage.byCategory["Sarvanāma — the pronoun"]).toEqual({
     enumerated: 8,
-    covered: 7,
+    covered: 8,
   });
   expect(coverage.points.find((point) => point.id === "SA-A1-PRON-03")).toMatchObject({
     covered: true,

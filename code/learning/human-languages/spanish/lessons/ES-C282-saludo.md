@@ -6,7 +6,7 @@ sequence: 3230
 chapter: 282
 type: word
 headword: el saludo
-gloss: a greeting — from salutem, health: to greet was to wish someone their health
+gloss: 'a greeting — from salutem, health: to greet was to wish someone their health'
 concept_tag: ES-GREET-GREETING
 prerequisites: [ES-C282-bienvenido]
 sounds: [vowel-a, d-soft]

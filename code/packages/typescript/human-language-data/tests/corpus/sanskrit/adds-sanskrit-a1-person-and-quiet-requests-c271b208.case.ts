@@ -191,8 +191,8 @@ it("asks for a person and requests quiet twice in Sanskrit A1", () => {
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   expect(coverage).toMatchObject({
     enumerated: 164,
-    covered: 155,
-    unmapped: 9,
+    covered: 156,
+    unmapped: 8,
     partial: 0,
   });
   expect(coverage.byCategory["Structuring the exchange"]).toEqual({

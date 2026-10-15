@@ -6,7 +6,7 @@ sequence: 5130
 chapter: 99
 type: review
 headword: (two letters)
-gloss: second pass: the same two letters, from the word back to the letter
+gloss: 'second pass: the same two letters, from the word back to the letter'
 romanization: "do harf"
 concept_tag: UR-LETTERS-FROM-WORDS
 prerequisites: [UR-W99-ze, UR-W99-toe]

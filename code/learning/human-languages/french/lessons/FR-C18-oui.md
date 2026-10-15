@@ -6,7 +6,7 @@ sequence: 740
 chapter: 22
 type: word
 headword: oui
-gloss: yes
+gloss: 'yes'
 concept_tag: RESPONSE-YES
 prerequisites: [FR-C01-bonjour]
 sounds: [semivowel-w, vowel-i]

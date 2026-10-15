@@ -6,7 +6,7 @@ sequence: 3010
 chapter: 65
 type: review
 headword: (one letter)
-gloss: second pass: the same one letter, from the word back to the letter
+gloss: 'second pass: the same one letter, from the word back to the letter'
 romanization: "ekam akṣaram"
 concept_tag: SA-LETTERS-FROM-WORDS
 prerequisites: [SA-W65-letter-nga]
