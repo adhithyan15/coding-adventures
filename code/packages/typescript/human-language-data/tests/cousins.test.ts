@@ -9,6 +9,11 @@ import { ROMANCE_COUSINS, buildCousinIndex, cousinsFor } from "../src/cousins.js
 import { loadEverything } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
 
+// Whole-corpus loading belongs at module import, outside Vitest's per-test
+// timeout. The corpus grows with every content tranche; paying this parse cost
+// inside the assertion eventually made an otherwise stable test cross 30s.
+const realCorpusLessons = loadEverything().lessons;
+
 function lesson(options: {
   id: string;
   headword: string;
@@ -161,7 +166,7 @@ describe("the real corpus", () => {
     // to show is not worth a rendering change. This is the honest ceiling the
     // feature is designed against, and it moves only when a track gains a
     // `roots:` slug another Romance track already carries.
-    const { lessons } = loadEverything();
+    const lessons = realCorpusLessons;
     const index = buildCousinIndex(lessons);
     const spanish = lessons.filter((entry) => entry.language === "spanish");
     const withCousins = spanish.filter((entry) => cousinsFor(index, entry).length > 0);
