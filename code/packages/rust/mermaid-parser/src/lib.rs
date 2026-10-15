@@ -5553,7 +5553,11 @@ fn venn_front_matter_config(source: &str) -> Option<String> {
         if trimmed.is_empty() || trimmed.starts_with('#') { continue; }
         let indent = line.len() - line.trim_start().len();
         while parents.last().is_some_and(|(parent, _, _)| indent <= *parent) { parents.pop(); }
-        let Some((key, value)) = trimmed.split_once(':') else { continue; };
+        let Some((key, value)) = trimmed.split_once(':') else {
+            // A bare sequence item is still a parent. Dropping it would lift
+            // its mapping descendants into the surrounding Venn/config scope.
+            parents.push((indent, "", false)); continue;
+        };
         if parents.len() == 2 && parents[0].1 == "config" && parents[0].2
             && parents[1].1 == "venn" && parents[1].2 && !value.trim().is_empty() {
             output.push_str(trimmed); output.push('\n');
