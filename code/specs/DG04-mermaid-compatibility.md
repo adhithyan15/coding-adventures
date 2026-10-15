@@ -1417,3 +1417,9 @@ scalar lookalikes do not supply them. Actual source3e729cea passes966/44 and
 strict14 with67 complete IR controls and21 complete source-to-scene/query cells.
 This does not establish full CSS/font/sizing/visual or hosted Apple parity;
 final-source Miri remains DEFERRED/PENDING.
+
+Source65de6163 boxed-label integration: unfiltered14 packages968P0F0I/44targets
+and strict14 actual0;37 complete Ishi scene/query cells,232 Venn fixtures and67
+IR controls retained. Independent source28381ad7/terminal8c5fbbe6 PASS. This is
+a bounded partial layout: arbitrary containment/font fitting/visual parity and
+current-head hosted acceptance remain OPEN. Miri DEFERRED/PENDING.

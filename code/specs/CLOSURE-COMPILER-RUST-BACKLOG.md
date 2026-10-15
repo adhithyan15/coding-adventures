@@ -3,35 +3,90 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a native13 current checkpoint -->
-Native13 exact18f40528: actual unfiltered six-package Cargo1830P/0F/1existing
-archive ignore/78targets, compiler891/fullLANG504, strict all-target0 PASS.
-Sourcef6fa29b6/terminal7905fdb8 plus clarification70623dcf independent PASS.
-Full test loga571ee55, strict50b1cbf5; reconciled terminal receiptc2dfb5d8.
-Original Python wrapper actually exited1 on stale expectedLANG503 after Cargo0;
-original incomplete receipt remains unchanged. All78 actual count vectors equal
-old0cc except887→891 and502→504: four compiler tests plus incoming/owned LANG
-tests. Read-only reconciliation verifies complete source/log/command/input
-bindings; no command is relabeled and no test rerun is inferred.
-Only four dedicated canonical budget/comment/list/cap edits12→13; shared exp/
-legacy/identity/effect/value/conversion/trap/work bytes exact8837. Preserve old
-structural13 conditional refusal. All126 old runtime sources/756 events exact,
-ten new/60 yield136/816 actual six-backend cells, unavailableCLR uncounted.
-Native166/2850 objects,1457 rawRust/TOML,21 external static resources/registry376
-verified. Style3e966/44+strict and Closure36/3705+3static remain prior-source
-attribution, not new execution/dynamic closure. Native source18f unchanged.
-Latest inspected main42a2ac10 includes boxed Ishikawa262a and Sanskrit after
-human snapshotfcd. Native source18f does not integrate those increments.
-Box-label spec46b2b53d committed in separate idle railroad worktree before any
-tests/import; lessonseb47 record count-guard and incoming-audit assumptions.
-Full Venn232/owned Ishikawa21 source/layout/scene/query oracles must be retained
-with explicit intended box/dimension/text-frame migration; no dropped cases or
-numeric tolerance change. New style validation and current-main carrier remain
-PENDING. SolePR17288 published8837 UNMERGED/AUTOOFF; real macOS phase-refusal
-root cause/required exact-head CI/current conflict/review/merge gates OPEN.
-Miri **DEFERRED/PENDING**, never passed; frozen run/source/inputs/target/receipts
-untouched/unpolled/no duplicate/termination. Delivery first then genuine final-
-source Miri. Full Closure parity/output-byte-source/stableIDs/spans/pass-sweep/
-fold/rename/inline/motion/merge/delete lineage/CV04b remain OPEN; heartbeatACTIVE.
+Native13 actual acceptance
+
+The dedicated canonical outer-entier proof admits cumulative exact offsets
+through thirteen and range[-14,14]. Four dedicated budget/comment/list/cap edits
+implement the boundary. Shared folded-f64/exp/log, legacy, root identity,
+read-once, alias/effect/value, rounding, post-lowering, traps and8192 production-
+work controls retain their owned semantics. The old structural13 conditional
+refusal stays required; the new14 limit and true14/f64-fold13 rounding witness
+also refuse. No new dependency or general proof/resource cap is introduced.
+
+Actual source18f40528: strict six-package all-target warnings/unknown-lints denial
+exits0; full unfiltered1830P/0F/1unchanged archive ignore across78 targets exits0,
+compiler891/fullLANG504. Focused136 source programs supply816 actual six-backend
+cells (all126/756 prior sources/events exact plus10/60), including CL12/CR14
+ordering and normal Exit0. NativeAot/LLVM/WASM/JVM/VM/JIT executed; absent CLR
+is uncounted. Sourcef6fa29b6 and terminal7905fdb8/clarification70623dcf independent
+reviews PASS. Original wrapper1 on stale expectedLANG503 after actual Cargo0
+remains failed; read-only reconciliationc2dfb5d8 proves the whole78-target vector
+with only compiler887→891 and LANG502→504. Logsa571ee55/strict50b1cbf5 retain
+exact18f source attribution. Carrier changes to named documentation are recorded
+separately from the2850 native input identities and21 external static resources.
+
+Hosted exact-head CI/conflict/review/merge acceptance remains a separate gate.
+Full Closure parity and output-byte/source/full transformation lineage remain
+OPEN. Final-source Miri **DEFERRED/PENDING**, never passed; frozen run/checkout/
+inputs/target/receipts stay untouched/unpolled, no duplicate or termination.
+Implementation delivery first, then genuine final-source Miri.
+
+Boxed-label actual acceptance
+
+Ishikawa bones carry required label width/height. Width is7 times the Unicode
+scalar count plus20, clamped72..180; height28. Canvas height is the greater of
+the previous width-based rule and260+70 times declared maximum depth (default1).
+Nested label offsets are18. Paint emits each bone, then its configured-fill/
+line rectangle (stroke1/radius4), before the effect box and glyphs. Text uses
+the declared6/2 inset. Font family/config theme transport preserves caller
+weight/italic/stretch and all six scene metadata fields.
+
+Settings still require direct root themeVariables/config.ishikawa mapping
+ancestry or direct fields in a closed init object. Init replaces the mapping
+wholesale, including empty mappings. Nested/array/sequence/block-scalar/literal
+lookalikes cannot supply fields; complete active-quoted values precede lexical
+sanitization. All67 owned causal IR controls and232 complete Venn fixtures remain
+intact. The21 existing whole Ishi source/IR/layout/scene/glyph/metadata/ordered
+font-query cases migrate only required dimensions, new rectangle and text frame;
+their reverse migration reproduces both complete prior oracle files. Sixteen
+new whole cells (eight cases/two font families) plus five depth controls retain
+their numeric tables specified before import. There are37 complete Ishi cells,
+not37 extra Cargo tests. General canvas containment, font fit, collision handling,
+arbitrary typed/extreme layouts, deep nesting and complete visual parity remain
+OPEN; the specified long nested case can place a label outside the canvas.
+
+Spec46b2 precedes testfirst17f (actual0P2F101). Closed import6bcdc and ABI bridge
+a9d preserve the owned parser helpers; serial new controls pass before the exact
+old21 migration65de. Actual source65de6163: focused paint5/geometry1/parser4 PASS;
+full unfiltered14 packages968P0F0I/44targets and strict all-target warnings/
+unknown-lints denial both exit0. Source28381ad7/terminal8c5fbbe6 independent
+reviews PASS; tests a249a8a2, strict30407c3a. All1458 raw Rust/TOML inputs match
+committed bytes; reverse14/forward50/819 style input objects, registry376 and
+resource maps are verified. The initial full preflight1 on three CRLF working
+files, normalization-helper1/stale-stat1/query1 are retained separately. Exact
+backups normalize to whole committedLF bytes; the same65de source/index then
+passed unchanged raw-byte guards. No failed command is relabeled.
+
+Native execution retains actual18f40528:1830P0F1existingignore/78targets,
+compiler891/fullLANG504 plus strict6 and136sources/816 actual six-backend cells.
+Whole2850 native objects and21 static resources are exact apart from named
+carrier Markdown exceptions. Historical Closure36/3705 and3 conservative static
+includes retain316e attribution; no fresh Closure execution or dynamic/toolchain/
+OS resource closure is inferred. Incoming262→020c human-language main contributes
+exact195 reviewed pure paths (including13 Sanskrit corpus tests); no TS/book/
+curriculum runtime or linguistic-correctness acceptance is claimed. Final carrier
+checks bind the complete current tree and named documentation changes separately.
+
+No new crates.io dependency; base ESTree canonical serialized boundary/own types
+remain owner decisions. Actual macOS phase-refusal root cause and required
+current-head hosted CI/conflict/review/merge acceptance remain OPEN. Full Closure
+parity/output-byte-source/full transformation lineage/stable IDs/spans/pass-sweep
+and CV04b remain OPEN. Miri **DEFERRED/PENDING**, never passed; frozen run/checkout/
+inputs/target/receipts untouched/unpolled, no duplicate or termination. Delivery
+first, then genuine final-source Miri; heartbeat stays ACTIVE.
+
+SolePR17288 published8837 remains UNMERGED/autoOFF; current-main carrier update
+and required exact-head CI/review/conflict/actual merge gates remain pending.
 <!-- /CV04a native13 current checkpoint -->
 
 <!-- CV04a Venn config integration checkpoint -->

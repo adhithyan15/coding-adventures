@@ -506,60 +506,56 @@ Required hosted checks and actual merge remain separate. Final-source Miri
 **DEFERRED/PENDING**, never passed; full Closure/visual/provenance completion
 remains OPEN.
 
-## Bounded Ishikawa configuration and theme transport
+## Bounded Ishikawa label boxes and validated integration
 
-Ishikawa semantic and resolved layout types carry required `IshikawaConfig`:
-padding20, useMaxWidthfalse, sans-serif, line/text #333333 and fill #ffffff.
-Layout retains the prior fishbone arithmetic and clones the complete config.
-Paint uses line color for spine/bones/effect stroke, fill for the effect box,
-text color for all labels, and source font family while retaining caller sizes,
-weight, italic and stretch. Six exact scene metadata entries carry the config;
-useMaxWidth is transported and does not establish complete sizing behavior.
+Ishikawa bones carry required label width/height. Width is7 times the Unicode
+scalar count plus20, clamped72..180; height28. Canvas height is the greater of
+the previous width-based rule and260+70 times declared maximum depth (default1).
+Nested label offsets are18. Paint emits each bone, then its configured-fill/
+line rectangle (stroke1/radius4), before the effect box and glyphs. Text uses
+the declared6/2 inset. Font family/config theme transport preserves caller
+weight/italic/stretch and all six scene metadata fields.
 
-Only direct root themeVariables fields and direct config.ishikawa fields in
-leading YAML mapping ancestry can supply settings. A closed single-line init
-object after that header replaces its corresponding mapping wholesale, including
-empty objects. Nested objects/arrays, unrelated ancestors, sequence/block-scalar
-descendants and init-looking YAML literal text cannot supply fields. The active
-quote decoder preserves opposite quotes and rejects malformed present values
-before the existing lexical sanitizers see them. It does not admit a valid
-prefix from a longer invalid value. Source padding retains finite nonnegative
-admission without a new upper cap; shared/Venn readers and sanitizers are exact.
+Settings still require direct root themeVariables/config.ishikawa mapping
+ancestry or direct fields in a closed init object. Init replaces the mapping
+wholesale, including empty mappings. Nested/array/sequence/block-scalar/literal
+lookalikes cannot supply fields; complete active-quoted values precede lexical
+sanitization. All67 owned causal IR controls and232 complete Venn fixtures remain
+intact. The21 existing whole Ishi source/IR/layout/scene/glyph/metadata/ordered
+font-query cases migrate only required dimensions, new rectangle and text frame;
+their reverse migration reproduces both complete prior oracle files. Sixteen
+new whole cells (eight cases/two font families) plus five depth controls retain
+their numeric tables specified before import. There are37 complete Ishi cells,
+not37 extra Cargo tests. General canvas containment, font fit, collision handling,
+arbitrary typed/extreme layouts, deep nesting and complete visual parity remain
+OPEN; the specified long nested case can place a label outside the canvas.
 
-Actual source `3e729cea`: full14-package unfiltered suites passed966 tests
-across44 targets with zero failures/ignores, plus strict all-target warnings/
-unknown-lints denial. Four parser tests assert67 whole causal IR cases. Twenty-
-one complete source IR/layout/PaintScene/glyph/metadata/ordered font-query cells
-cover16 custom cases and5 literal default/fallback/header/empty-replacement
-companions. All232 previous Venn complete scene/query cells and their numeric/
-work/style guards remain intact. Tests-first sourceee8 produced1P/3F for nested
-origins, opposite-quote truncation and malformed numeric tails; its16 custom
-scene cells already passed. The b8 source's965/44 run remains separate; review
-withheld spec-complete acceptance until the five companions were added.
-Independent exact sourceed49e961 and terminalfcd6517b reviews passed.
+Spec46b2 precedes testfirst17f (actual0P2F101). Closed import6bcdc and ABI bridge
+a9d preserve the owned parser helpers; serial new controls pass before the exact
+old21 migration65de. Actual source65de6163: focused paint5/geometry1/parser4 PASS;
+full unfiltered14 packages968P0F0I/44targets and strict all-target warnings/
+unknown-lints denial both exit0. Source28381ad7/terminal8c5fbbe6 independent
+reviews PASS; tests a249a8a2, strict30407c3a. All1458 raw Rust/TOML inputs match
+committed bytes; reverse14/forward50/819 style input objects, registry376 and
+resource maps are verified. The initial full preflight1 on three CRLF working
+files, normalization-helper1/stale-stat1/query1 are retained separately. Exact
+backups normalize to whole committedLF bytes; the same65de source/index then
+passed unchanged raw-byte guards. No failed command is relabeled.
 
-Native execution remains actual0cc8fef6:1824P/0F/1unchanged archive ignore over78
-targets, compiler887/fullLANG502 plus strict6, and126 focused sources/756 actual
-six-backend cells (696 prior exact+60 new; unavailable CLR uncounted). Native166/
-2847 input identities retain that source except four named Markdown paths;
-21 mapped external static resources remain exact. Historical Closure36/3705
-and three conservative static includes retain316e attribution. These input
-proofs do not imply new native/Closure execution or a dynamic/toolchain/OS
-resource closure. Latest inspected main e6aa15c0 separately raises the native
-ALGOL boundary to thirteen; that incoming change remains pending its own bounded
-reconstruction/tests/full native validation. These receipts retain their actual
-twelve-unit source and557 diagram integration frame. A fresh plan against latest
-main is selection only; an unmerged PR update does not establish latest-main
-native acceptance or permit merging. Registry376 identities/checksums remain exact; only four local
-package versions change in this slice, with no new crates.io dependencies.
+Native execution retains actual18f40528:1830P0F1existingignore/78targets,
+compiler891/fullLANG504 plus strict6 and136sources/816 actual six-backend cells.
+Whole2850 native objects and21 static resources are exact apart from named
+carrier Markdown exceptions. Historical Closure36/3705 and3 conservative static
+includes retain316e attribution; no fresh Closure execution or dynamic/toolchain/
+OS resource closure is inferred. Incoming262→020c human-language main contributes
+exact195 reviewed pure paths (including13 Sanskrit corpus tests); no TS/book/
+curriculum runtime or linguistic-correctness acceptance is claimed. Final carrier
+checks bind the complete current tree and named documentation changes separately.
 
-Color sanitizers retain their bounded lexical subset, not complete CSS semantics.
-Real font fitting, arbitrary forged typed layout/styles, extreme canvas/depth
-and general visual parity remain open. The actual hosted macOS compiler-phase
-failure remains OPEN; diagnostic4ab4 has13 portable tests/Ruff/review500a passing
-and preserves quoted bounded diagnostics only. Required current-head hosted
-CI/review/conflict checks and actual fetched merge/payload proof remain delivery
-gates. Final-source Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/
-inputs/target/receipts stay untouched/unpolled, no duplicate or termination.
-Implementation delivery precedes genuine final-source Miri; full Closure parity,
-output-source/full transformation lineage/stable IDs/spans/pass-sweep remain OPEN.
+No new crates.io dependency; base ESTree canonical serialized boundary/own types
+remain owner decisions. Actual macOS phase-refusal root cause and required
+current-head hosted CI/conflict/review/merge acceptance remain OPEN. Full Closure
+parity/output-byte-source/full transformation lineage/stable IDs/spans/pass-sweep
+and CV04b remain OPEN. Miri **DEFERRED/PENDING**, never passed; frozen run/checkout/
+inputs/target/receipts untouched/unpolled, no duplicate or termination. Delivery
+first, then genuine final-source Miri; heartbeat stays ACTIVE.

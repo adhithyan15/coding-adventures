@@ -64,3 +64,23 @@ Preserve that actual failed preflight and the original3P/2F red log. Execute
 only the two new passing controls with one test thread to obtain an intact
 16-cell/5-height receipt before oracle migration; do not invent a missing event
 or weaken the exact event inventory. Production and oracle bytes stay fixed.
+
+Raw working-byte validation must compare actual canonical checkout bytes, not a
+normalized proxy. Three unchanged railroad test files had CRLF despite committed
+LF and eol=lf attributes; the full preflight correctly refused before Cargo.
+Preserve original raw backups and failed receipts, prove whole-file CRLF→LF
+equals the committed blobs, then normalize only those exact files. The helper's
+final status assertion and index-stat refresh can still exit1 on stale metadata:
+verify content diff0, staged diff0 and exact HEAD/index tree independently; do
+not relabel those exits. Quote PowerShell revision braces or use structured Git
+argv. The corrected unchanged validator subsequently passed all1458 raw files.
+
+Incoming pure-path scope guards must match the complete reviewed manifests. A
+195-path human merge also contains13 Sanskrit corpus tests outside the learning
+tree; an all-learning prefix guard correctly stopped before index/HEAD mutation.
+Retain that failed preflight and admit only the exact195 manifest union, still
+requiring every owned-before entry and whole index/commit tree identity. Read
+Unicode JSON with explicit UTF-8 on Windows; use simple statements rather than
+an invalid assignment expression inside a comprehension iterable. Resolve real
+package paths before file reads and bound glob inventories instead of dumping
+hundreds of historical shards. These diagnostic failures give no test acceptance.
