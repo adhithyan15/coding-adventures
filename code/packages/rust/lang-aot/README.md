@@ -2,11 +2,12 @@
 
 Owned conditional-unit programs require exact stdout and normal exit,
 including markers proving the condition and chosen branch execute once.
-Six locally available backends executed all 66 owned sources (396 cells),
-including ten new six-unit programs; the previous 56 sources and 336 cells
-remain exact. CLR execution is not inferred. Complete six-package native/
-compiler/downstream validation passed 1,794 tests over 78 targets, with one
-existing ignored test, plus strict lint; full unfiltered LANG passed 490.
+Six locally available backends executed all 76 owned sources (456 cells),
+including ten new seven-unit programs; the previous 66 sources and 396 cells
+remain exact. Ordered branch markers are CL6/CR8; CLR execution is not inferred.
+Complete six-package native/compiler/downstream validation passed 1,799
+tests over 78 targets with one existing ignored test, plus strict lint;
+full unfiltered LANG passed 492. Hosted CI remains a separate gate.
 Final-source Miri remains **DEFERRED/PENDING**, never passed, under the
 user-authorized delivery-first sequencing.
 

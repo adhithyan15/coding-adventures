@@ -888,6 +888,16 @@ sequence labels likewise retain semantic text while layout and Paint display
 the pinned `? text ?` decoration. Marker centers and connecting paths are
 explicit layout geometry rather than Paint-backend assumptions.
 
+Explicit Railroad marker centers now agree with the actual root port in the
+authored controls. Rule-name boxes retain max(28,fontSize*1.15) with no-wrap
+shaping. The complete derived-layout gate checks both marker coordinates.
+Required marker fields change external Rust struct-literal construction.
+Large marker radii can reverse root connectors or extend outside the canvas;
+marker/stroke enclosure and arbitrary custom-font/long-label fitting remain
+open. The 192 new configurations compare glyphs, ordered font queries, declared
+coordinates and twelve metadata entries; broader style/path/order controls are
+retained separately. These bounded checks do not establish whole visual parity.
+
 This is intentionally partial. The circular-corner evidence is bounded to
 orthogonal generated routes and cubic control/command fixtures; arbitrary
 diagonal geometry and whole upstream/backend visual parity remain unvalidated.

@@ -1,5 +1,13 @@
 # diagram-layout-hierarchy
 
+Railroad reserves deterministic width for the displayed `name =` label and
+records explicit start/end marker points on the actual root port. Special
+expressions display `? text ?` without changing the semantic input label.
+Root connectors use the declared marker radii. The complete derived geometry
+gate checks both new marker points as well as all prior boxes and path points;
+numeric admission limits remain unchanged. Large marker radii can extend beyond
+the canvas or reverse a root connector; general clearance is still unproven.
+
 Railroad layout retains `compact_mode` with the complete typed configuration.
 The flag introduces no layout or geometry branch; all existing numeric, font,
 spacing, arc and derived-geometry checks remain. Configuration preservation is
@@ -17,7 +25,8 @@ their main ports on the containing box's center through nested sequences and
 choices. Independent wrapper geometry and complete path goldens cover zero,
 tiny, default and nondefault radii. Checked derived coordinates remain finite
 and rectangle sizes nonnegative; no global derived-layout cap is introduced.
-The inherited 4px rule-marker/root-port mismatch remains open.
+Explicit marker centers now match the root port exactly in the authored
+controls; this does not establish general marker/stroke enclosure.
 
 `try_layout_railroad` checks each finite0..65536 spacing setting before
 arithmetic and returns a typed field error or derived-geometry refusal.

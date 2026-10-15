@@ -1,5 +1,12 @@
 # diagram-ir
 
+`LayoutedRailroadRule` now carries required `start_marker` and `end_marker`
+points. External Rust struct literals must provide both fields; this is a source
+compatibility change. Semantic rule names and expression labels remain intact;
+the layout layer derives the `name =` and `? text ?` display labels separately.
+The checked layout boundary verifies both coordinates of each marker are finite.
+Marker enclosure and arbitrary forged layout safety remain separate limits.
+
 `RailroadConfig.compact_mode` preserves authored `compactMode` as a bool,
 defaulting to false. Layout retains that configuration and PaintScene exports
 its normalized string in `railroad.compactMode`. This is configuration transport;

@@ -1,13 +1,23 @@
 # diagram-to-paint
 
+Railroad paints rule labels as bold `name =` and specials as `? text ?`.
+Real font resolution requests the bold rule font and caches the distinct normal
+leaf font. Rule-name boxes retain max(28, fontSize * 1.15), centered on the
+explicit root port, and all labels retain no-wrap behavior. Declared marker
+points drive ellipse centers. The new 192 four-dialect configurations compare
+complete glyph vectors, ordered font queries, layout/marker coordinates and all
+twelve metadata entries. Separate retained style controls cover wider primitive,
+path and drawing-order behavior. Full affected fourteen-package validation
+passed 902 tests over 38 targets and strict lint. Miri is DEFERRED/PENDING.
+
 Railroad scenes retain `railroad.compactMode` as normalized true/false metadata.
 All 196 previous complete metadata cells keep their eleven original fields and
 add the false default key. Forty compacttrue controls retain bounded primitive,
 style, glyph, path, marker, order and actual font-query expectations; some
 geometry expectations use actual layout fields. They are not independent
 absolute-layout goldens or direct whole-scene mode-equivalence tests. Separately,
-layout production remains byte-exact. The subsequent circular-corner change
-below intentionally changes Railroad paint path commands.
+the compact flag adds no layout branch. Subsequent circular-corner changes and
+new display labels intentionally update the documented path and label geometry.
 
 Railroad paints resolved portable styles and scales declared leaf/rule-name
 text boxes with font size. Portable controls preserve 40 explicit-style scenes,
@@ -20,13 +30,15 @@ radial samples each; eight authored choice/bypass/repetition scenes have
 absolute coordinate/control/command goldens and full 12-key metadata across
 both compact values. Five public short/collinear/reversal cases retain their
 commands. Four old positive corner cells intentionally change quadratic to
-cubic; the other six arc cells and all other style/glyph/marker/font-query
-oracles remain. Swimlane and other diagram lowering are unchanged. This is
+cubic; the other six arc cells remain. Display-label reconciliation updates
+only documented label, font-query and marker semantics in prior scene oracles.
+Swimlane and other diagram lowering are unchanged. This is
 bounded portable evidence, not full Mermaid geometry/backend visual parity
 or arbitrary nonfinite/extreme/oblique caller-forged layout safety.
-Marker/stroke enclosure, the inherited 4px rule-marker/root-port mismatch,
-fixed rule-name columns, typed-empty/large-font fitting, arbitrary custom-font
-and long-label fitting remain open. Apple raster execution is a separate gate.
+Explicit marker centers now meet the root port in authored controls and name
+columns reserve the display-label estimate. Marker/stroke enclosure, reversed
+connectors for large radii, general empty/large-font fitting, arbitrary custom-
+font and long-label fitting remain open. Apple raster execution is a separate gate.
 
 Railroad leaves with zero/small padding keep their declared text box inside the
 leaf before glyph shaping. Complete ordered default-font glyph traces and

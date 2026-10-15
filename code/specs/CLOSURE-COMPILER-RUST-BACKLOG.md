@@ -3,107 +3,49 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a pathwise pending checkpoint -->
+Delivery candidate from source61c5c0da retains currentmain1455d78b.
+Sole PR17288 and epic15830 track publication/hosted state. Auto OFF at
+carrier preparation; actual publication/merge is not inferred. Re-audit before push.
+Specd34aa2e2 precedes closed mergece283d14 (3663incoming/3653pure/
+10reconstructed overlaps/221728retained), then39pure Sanskrit paths in431baea3.
+Failed generic DG04 framing proof preserved; explicit complete recipe passes.
 
-Labels2bbd129c focused16layout/13paint PASS (192new complete glyph/marker cells,
-12nonfinite marker controls). All5 prior oracle files reconstruct exactly after
-explicit semantic changes; complete hierarchy/paint production differs only by
-private gate extraction+finite markers/scaled name height. Full14 strict stopped
-on one test-only x=-1.0 spacing lint BEFORE full tests; failed receipt retained.
-This successor fixes whitespace only, with unchanged values/assertions/limits;
-new exact-source focus/full strict/tests and independent review still pending.
-Canonical native166roots/2830objects equal b7686f69; its fullnative session7516
-still RUNNING separately, no terminal acceptance inferred. Miri DEFERRED/PENDING.
+Nativeb7686f69: only four canonical budget/comment lines6→7, range[-8,8];
+whole shared exp/log/legacy/readonce/effect/conversion prefix exact1c14ad3a.
+Raw867P2F/incoming0P1F; tests4203 focus24P3F/library868P4F/incoming0P1F/
+owned7P1F preserved. Actualfocus27/library872/incoming1/owned8 PASS;66old
+sources/396exact executed cells +10new/60 =>76/456, sixavailable backends,
+CL6/CR8 normal exits; absentCLR notcounted. Fullsixpackage1799/0/
+1existingignore/78 and unfilteredLANG492/0, strict0 PASS.
+Native tests SHA998299573c5282cf7850b31ee4b765bb46b91c53f6ca8801aa2995ca40394202.
+Independent native terminal PASS SHA56958bcb842ee6e73a98bf1e9d053101ff83c584d3b902d9bd93a5cf0b3bb3f1.
 
-October15 labels source pending: R1 retains main1455d78b via exact39-path pure
-Sanskrit merge431baea3, with native sources unchanged fromb7686f69. Native actual
-focus27/library872/incoming1/owned8 PASS; full six-package strict/unfiltered
-session7516 remains RUNNING, no terminal native acceptance. Label rawc163b7d0
-layout13P2F and paint missing2marker constructors preserved. Tests4206b9f0 had
-typed FontWeight compilation failure before paint execution; corrected9b8654c2
-layout15/0,paint8P5F. e558d4a8 derived-gate/font tests actual layout15P1F,
-paint8P5F, including font64 wrong name baseline and nonfinite marker admission.
-Repair restores metric-scaled name height centered on explicit root port and
-checks both marker coordinates; new focused/full style acceptance pending.
-Exact authored circular control values retained with independently specified
-origin130→76.6 translation and changed root ports. Complete old glyph/style/
-font-query/metadata controls retained, with documented label semantics and
-constructor migration; new four-dialect label test executes192 configurations.
-Large-marker reversal/clearance, custom-font/long-label fitting remain debt.
-Miri DEFERRED/PENDING, neverpassed; fullobjective OPEN, heartbeat ACTIVE.
+Labels61c5: actual focus16layout/13paint and full14package902/0/0/38,
+strict0 PASS. Tests SHAe21b090dacbc30e7b4a03fdf41e452e7f4bc871c7b60bbb83545a6934d6da72f.
+Independent labels terminal PASS SHA686d7c47fce740e1a18fb4d1114c567e5bd6a41f587b8de67da1ba197234192b.
+192new configurations compare full glyph vectors/ordered font queries,
+single-leaf coordinates/marker geometry/all12metadata. Four retained40-cell
+blocks separately cover broader shape/style/path/order. Twelve nonfinite
+marker controls; scaled name height restored around explicit rootport; noWrap
+and effectivefontcap retained. Five prior oracle files reconstruct exactly;
+circular numeric controls retained with origin130→76.6 translation/new root
+ports independently specified, no tolerance change. Failed constructor/typed
+query/runtime/cross-dialect fixture/strict-spacing receipts remain preserved.
 
-October15 pending seven-unit/display-label reconciliation: sole PR17288 currently
-publishes1c14ad3a; auto OFF, conflicted against main4a721b2c. Specd34aa2e2
-precedes mergece283d14 (3663incoming/3653pure/10reconstructed overlaps/
-221728retained). Complete merge proof passes; failed generic DG04 conflict
-reconstruction proof remains preserved with its explicit corrected recipe.
-Native raw baseline867P2F/incoming0P1F; tests-first4203e959 focus24P3F,
-library868P4F/incoming0P1F/owned7P1F. This pending repair changes only four
-canonical budget/comment lines6→7, range[-8,8]; shared exp/log/legacy stays
-exact. New focused/full native acceptance has NOT yet been obtained. Existing
-native1794/style899 receipts remain specific to earlier sources. Incoming labels
-and explicit marker points require new exact glyph/geometry/font-query tests,
-constructor migration, scaled name-box restoration and checked finite points.
-Large-marker clearance/reversed connectors remain explicit debt. Miri remains
-DEFERRED/PENDING, frozen inputs untouched; full objective OPEN, heartbeat ACTIVE.
-
-Previous source-specific checkpoint (superseded publication status):
-LOCAL/UNPUBLISHED combined source30dd82c6 includes current relevant mainb8638ea6
-(#17556 circular Railroad) and0bb3f690 (#17553 six-unit ALGOL). Sole PR17288
-still publishes0d316837; auto OFF. Reviewed compact0b publication stopped
-BEFORE PUSH when main advanced. Re-audit currentmain/openPR/backlog/epic/head.
-
-Native: specac12f1ac before closed mergec1822c61 (446incoming/441pure/
-5reconstructed overlaps/224928retained). Owned shared production retained;
-only dedicated canonical literal/absolute budget5→6 and comment[-7,7] change.
-Shared exp/log, legacy entry, readonce/effects/conversions/aliases and8192
-controls remain exact. Raw864P2F/incoming0P1F, tests-first8f9f736b focus21P3F,
-library865P4F/incoming0P1F/owned6P1F preserved. Source3a732fe7 actualfocus24/0,
-library869/0/incoming1/0/owned7/0. Preserve56old sources/336exact cells plus
-10new/60:66sources/396actual normalExit0 cells on six available backends,
-orderedCL5/CR7; absentCLR notcounted. Boundary-only6→7 moves include both local
-conditional roots, with matching positives, true7-rounds6 and retained older
-rounding/exp/log/shadow/alias/resource refusals. Actualfullsixpackage1794/0/
-1existingignore/78, unfilteredLANG490/0 and strict0 PASS. TestSHAa630d9f2ac83c5084b137c07f9c435fd7fcc34fa90825b19e9584e7133732737.
-Independent native terminal PASS SHAd369db1728339cc4f13da928d033e235711b0ff9e73d8c3b00e1b5444052485f.
-
-Circular: spece308cd5e before auto mergeabd6a9bb (4incoming/1pure/3automatic
-overlaps/225372retained). New helper+call confined to Railroad; no extra
-production repair, Swimlane/other lowering exact. Raw9parser/14layout/paint7P1F
-preserved. Old10arc cells:4intentionalQ→C,6unchanged; reverse substitutions
-recover all oldoraclebytes. New24orientation/clamp numeric+65radialsamples,
-5publicshort/straight/Uturn and8authoredchoice/bypass/loopback absolute-command
-scenes retain complete12-key metadata for compactfalse/true. All other style,
-glyph/marker/order/fontquery oracles retained. Initial3efocus passed but strict
-failed6decimal literals beforefulltests;30dd corrects their spelling with
-identicalf64 values/unchanged1e-12 tolerance andlesson, no productionchange.
-Actualfocus25/14/12 and full14package899/0/0/38+strict0 PASS.
-TestSHAcd69d9275ab8130f97ade36dd95baab57bad598285e22c1e41bc86d5a8e42321.
-Independent circular terminal PASS SHAe101fd3ba9f7ca112e3f6306f873b2596197e565f05327d21d927383b84958f1.
-
-Before final docs, complete native166roots/2825objects/563edges equal3a exactly.
-Final docs-only carrier requires explicit named native/style document exceptions,
-correctedClosure36/3705 historicalcompiler1093/181+strict attribution, registry376
-exact tuples/no new crates.io dependencies, actual checker/lessons/whitespace,
-fresh unforced currentmain plan and independent exact-head review before samePR
-fastforward push. Earlier3699 Closure inventory remains superseded by resolved
-manifest-path audit2091, including librarygrammar-tools rather than program.
-Lexical style filters do not prove full CSS/fontgrammar; custom/long-label/
-large-layout fitting, marker/root-port mismatch, forged/extreme/oblique IR,
-typography/comment styling and backend visual/upstream geometry remain OPEN.
-Circular cubics approximate bounded orthogonal arcs; they do not prove parity.
-
-Published0d Unicode17 Elixir job116286299314 failed pinned source HTTPread
-IncompleteRead383931 before conformance; exact logs/classification retained.
-Re-audit terminalworkflow/currenthead before one boundedtargetedretry; preserve
-strict pinned-origin/size/hash checks. Current conflictfree/reviewclean exacthead
-terminalacceptable required/native hostedchecks gate squashauto; actual fetched
-main merge reachability gates reconciliation/cleanup/nextboundedCV04b.
-Base ESTree/ownedtypes retained; CLOC27 leafprovenance is real, epicallNone stale.
-Full Closure parity, outputbyte/source joins, stable IDs/spans, pass/sweep order,
-and allfold/rename/inline/motion/merge/delete lineage/CV04b remain OPEN.
-Miri DEFERRED/PENDING, neverpassed; frozencheckout/target/process/inputs/receipts
-untouched/unpolled. Finish implementation delivery then genuinefinalsourceMiri.
-Full objective OPEN; heartbeat ACTIVE.
+Entire native166roots/2830objects equal testedb768 before this docs carrier;
+final docs require exact named native/style exceptions, correctedClosure36/
+3705 exact316e historicalcompiler1093/181+strict attribution, registry376,
+actual checker/lessons/diff, fresh unforced mainplan and independent finalhead
+review. Hosted exacthead terminal acceptable conflictfree/reviewclean checks
+gate squashauto; actual fetchedmain merge reachability gates cleanup/nextslice.
+Marker reversal/clearance, arbitrarycustom/long-font fitting/forged/extreme/
+oblique layout/backendvisual parity remain OPEN. Circular curves are bounded
+orthogonal cubic approximations. Base ESTree/ownedtypes/no new crates.io deps
+remain. CLOC27 leafprovenance real; epicallNone stale. Fullparity/outputbyte/
+source/stableIDs/passorder/allfold/rename/inline/motion/merge/delete lineage/
+CV04b OPEN. Miri DEFERRED/PENDING, neverpassed; frozencheckout/process/target/
+inputs/receipts untouched/unpolled. Deliver first then genuinefinalsourceMiri.
+Fullobjective OPEN; heartbeat ACTIVE.
 <!-- /CV04a pathwise pending checkpoint -->
 
 <!-- CV04a active delivery checkpoint -->
