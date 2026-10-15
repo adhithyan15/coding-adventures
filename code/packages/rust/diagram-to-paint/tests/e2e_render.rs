@@ -4555,6 +4555,9 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.themeColor1")), Some(&"#0f766e".to_string()));
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))).count(), 5);
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 3);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(ellipse)
+            if ellipse.fill.as_deref() == Some("rgba(15,118,110,0.1)")
+                && ellipse.stroke.as_deref() == Some("#0f766e") && ellipse.stroke_width == Some(2.25))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_venn_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
