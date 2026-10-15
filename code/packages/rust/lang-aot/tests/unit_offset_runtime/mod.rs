@@ -4,6 +4,32 @@
 use super::*;
 
 #[test]
+fn five_unit_offsets_preserve_exact_stdout_normal_exit_and_selected_order() {
+    for (case,(source,expected)) in [
+        ("begin real procedure pick; pick := -2.25; real saved; saved := entier(sign(pick()) + 5); output(saved) end","4"),
+        ("begin real procedure pick; pick := -2.25; real saved; saved := entier(sign(pick()) - 5); output(saved) end","-6"),
+        ("begin real procedure pick; pick := 0.0; real saved; saved := entier(sign(pick()) + 5); output(saved) end","5"),
+        ("begin real procedure pick; pick := 0.0; real saved; saved := entier(sign(pick()) - 5); output(saved) end","-5"),
+        ("begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 5); output(saved) end","6"),
+        ("begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) - 5); output(saved) end","-4"),
+        ("begin real procedure pick; pick := -2.25; real saved; saved := entier(abs((sign(pick()) + 1) + 4)); output(saved) end","4"),
+        ("begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 4); output(saved) end","6"),
+        ("begin boolean procedure choose; begin output('C'); choose := true end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 5) else ((entier(sign(rightvalue())) + 1) + 4))); output(saved) end","CL4"),
+        ("begin boolean procedure choose; begin output('C'); choose := false end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 5) else ((entier(sign(rightvalue())) + 1) + 4))); output(saved) end","CR6"),
+    ].into_iter().enumerate() {
+        let program=Prog{lang:Language::Algol60,ext:"alg",src:source,expect:Expect::Stdout(expected),backends:&[NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit]};
+        let mut completed=0;
+        for backend in [NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit] {
+            let available=toolchain_available(backend);let Some(result)=run(backend,&program) else {assert!(!available,"{backend:?} present but five-unit case{case} did not execute");continue;};
+            match &result {RunResult::Completed{code,stdout}=>{assert_eq!(*code,Some(0),"five-unit{case} {backend:?}: {stdout:?}");assert_eq!(stdout.trim(),expected,"five-unit{case} {backend:?}");},RunResult::Trapped=>panic!("five-unit{case} {backend:?} trapped")}
+            assert_cell(backend,&program,result);completed+=1;
+            eprintln!("five-unit EXECUTED case={case} backend={backend:?} expected={expected} Exit0");
+        }
+        assert!(completed>0,"five-unit case{case} needs actual backend execution");
+    }
+}
+
+#[test]
 fn four_unit_offsets_preserve_exact_stdout_normal_exit_and_selected_order() {
     for (case,(source,expected)) in [
         ("begin real procedure pick; pick := -2.25; real saved; saved := entier(sign(pick()) + 4); output(saved) end","3"),
