@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 38,
-  "sourceHash": "fnv1a64:3bf377687c9bd77d",
+  "sourceHash": "fnv1a64:e4bcd82a0c20a032",
   "lessonIds": [
     "LA-C38-cogito",
     "LA-C38-lego",
@@ -13,6 +13,6 @@
   "text": "latin/narration/ch38.txt",
   "json": "latin/narration/ch38.json",
   "textHash": "fnv1a64:14a6092186419df1",
-  "jsonHash": "fnv1a64:50f654e7d47bf3f7",
+  "jsonHash": "fnv1a64:8cb63fec246b506f",
   "findings": []
 }

@@ -6,7 +6,7 @@ sequence: 740
 chapter: 38
 type: word
 headword: intellegō, intellegere
-gloss: "I understand" — literally *inter* plus *legō*, "to read between", and the ancestor of intellect and intelligence
+gloss: '"I understand" — literally *inter* plus *legō*, "to read between", and the ancestor of intellect and intelligence'
 concept_tag: VERB-UNDERSTAND
 prerequisites: [LA-C38-lego]
 sounds: [macron-none-short-vowel, g-as-hard]

@@ -7,7 +7,7 @@ chapter: 25
 type: word
 headword: يوم
 romanization: "yawm"
-gloss: "day" — a true pan-Semitic word, cognate with Hebrew yom (as in Yom Kippur)
+gloss: '"day" — a true pan-Semitic word, cognate with Hebrew yom (as in Yom Kippur)'
 concept_tag: TIME-DAY
 prerequisites: [AR-C08-al-ahad-al-khamis]
 sounds: [waw-glide, meem]

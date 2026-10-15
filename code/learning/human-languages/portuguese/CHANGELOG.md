@@ -1,5 +1,9 @@
 # Changelog
 
+## Fixed — the PT-C05-falo-portugues gloss is valid YAML
+
+- PT-C05-falo-portugues had a `gloss:` that opened with a quoted English word and went on past the closing quote (`gloss: "day" — …`), which a strict YAML parser rejects. Each is now one single-quoted scalar, with an apostrophe written `''`. The wording is unchanged. The repository's reader returns the same text as before.
+
 ## Fixed — osso uses the Latin os "bone" root slug
 
 - **PT-C211-osso** moves from `ossum-latin` to `os-latin`, the slug LA-C136-os and IT-C151-osso use. *Ossum* is a collateral form of *os, ossis* "bone" (Lewis & Short), one word, so the Portuguese, Italian and Latin bone lessons now join. Text unchanged.

@@ -6,7 +6,7 @@ sequence: 730
 chapter: 39
 type: grammar
 headword: hablan
-gloss: "they speak" — and, across most of the Spanish-speaking world, "you all speak"
+gloss: '"they speak" — and, across most of the Spanish-speaking world, "you all speak"'
 concept_tag: ES-GRAMMAR-AR-PRESENT-PLURAL
 prerequisites: [ES-C07-hablamos]
 sounds: []

@@ -6,7 +6,7 @@ sequence: 530
 chapter: 23
 type: word
 headword: ദിവസം
-gloss: "day" — everyday Sanskrit divasaṁ beside the more literary Sanskrit dinam
+gloss: '"day" — everyday Sanskrit divasaṁ beside the more literary Sanskrit dinam'
 romanization: "divasaṁ"
 concept_tag: TIME-DAY
 prerequisites: [ML-C04-naale-kaanaam, ML-C17-paathira, ML-C18-mani]

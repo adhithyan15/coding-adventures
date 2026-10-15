@@ -6,7 +6,7 @@ sequence: 890
 chapter: 33
 type: word
 headword: قهوة
-gloss: "coffee" — the chapter's payoff, where the tied tāʾ finally earns its keep as Arabic's visible gender marker, and where you can order everything the chapter taught
+gloss: '"coffee" — the chapter''s payoff, where the tied tāʾ finally earns its keep as Arabic''s visible gender marker, and where you can order everything the chapter taught'
 concept_tag: AR-DRINK-COFFEE
 romanization: qahwa
 prerequisites: [AR-C33-sukkar, AR-W11-ha-and-ta-marbuta, AR-C04-al-salama, AR-C23-afwan]

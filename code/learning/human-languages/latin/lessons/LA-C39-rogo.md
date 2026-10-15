@@ -6,7 +6,7 @@ sequence: 770
 chapter: 39
 type: word
 headword: rogō, rogāre
-gloss: "I ask" — a verb probably built on "stretching straight out", and a cousin of regal, direct and right
+gloss: '"I ask" — a verb probably built on "stretching straight out", and a cousin of regal, direct and right'
 concept_tag: VERB-ASK
 prerequisites: [LA-C39-capio, LA-C37-dico]
 sounds: [macron-long-vowel, g-as-hard]

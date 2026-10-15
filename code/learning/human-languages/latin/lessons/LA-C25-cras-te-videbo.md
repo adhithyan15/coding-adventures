@@ -6,7 +6,7 @@ sequence: 490
 chapter: 25
 type: phrase
 headword: crās tē vidēbō
-gloss: "see you tomorrow" — built from two genuinely classical pieces (crās, "tomorrow," and vidēbō, already met last lesson) using the exact same pattern as the attested propediem tē vidēbō, though this specific combination isn't itself pulled from one surviving letter
+gloss: '"see you tomorrow" — built from two genuinely classical pieces (crās, "tomorrow," and vidēbō, already met last lesson) using the exact same pattern as the attested propediem tē vidēbō, though this specific combination isn''t itself pulled from one surviving letter'
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [LA-C24-propediem-te-videbo]
 sounds: [macron-long-vowel, future-tense-bo]

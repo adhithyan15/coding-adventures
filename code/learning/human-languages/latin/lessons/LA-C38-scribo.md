@@ -6,7 +6,7 @@ sequence: 750
 chapter: 38
 type: word
 headword: scrībō, scrībere
-gloss: "I write" — a verb whose root means "to scratch", and the fourth of this chapter's four
+gloss: '"I write" — a verb whose root means "to scratch", and the fourth of this chapter''s four'
 concept_tag: VERB-WRITE
 prerequisites: [LA-C38-intellego]
 sounds: [macron-long-vowel, c-as-k]

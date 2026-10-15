@@ -6,7 +6,7 @@ sequence: 940
 chapter: 35
 type: word
 headword: جار
-gloss: "neighbour" — the person you introduce most often, built on a hollow root whose middle letter hides exactly as qāla's does
+gloss: '"neighbour" — the person you introduce most often, built on a hollow root whose middle letter hides exactly as qāla''s does'
 concept_tag: AR-PERSON-NEIGHBOUR
 romanization: jār
 prerequisites: [AR-C34-taam, AR-W07-hook-family-ha-kha]

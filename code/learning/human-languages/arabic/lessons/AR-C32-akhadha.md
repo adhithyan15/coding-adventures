@@ -6,7 +6,7 @@ sequence: 820
 chapter: 32
 type: word
 headword: أخذ
-gloss: "he took" — the last plain-shaped verb in the book, kept as the control against the three rebuilt verbs that follow, with a Hebrew twin reached by two regular consonant swaps
+gloss: '"he took" — the last plain-shaped verb in the book, kept as the control against the three rebuilt verbs that follow, with a Hebrew twin reached by two regular consonant swaps'
 concept_tag: VERB-TAKE
 romanization: ʾakhadha
 prerequisites: [AR-C31-kataba]

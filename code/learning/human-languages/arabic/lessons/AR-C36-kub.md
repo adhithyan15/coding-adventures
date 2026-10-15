@@ -6,7 +6,7 @@ sequence: 980
 chapter: 36
 type: word
 headword: كوب
-gloss: "a cup" — the word that opens Arabic's broken plural, where more than one is not made by adding anything but by re-pouring the word into a new shape
+gloss: '"a cup" — the word that opens Arabic''s broken plural, where more than one is not made by adding anything but by re-pouring the word into a new shape'
 concept_tag: AR-OBJECT-CUP
 romanization: kūb
 prerequisites: [AR-C36-zayt, AR-C23-afwan]

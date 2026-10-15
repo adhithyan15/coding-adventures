@@ -6,7 +6,7 @@ sequence: 790
 chapter: 31
 type: word
 headword: قرأ
-gloss: "he read, he recited" — hamza's three seats sorted out at last, and the one root in this chapter that really did give English a word
+gloss: '"he read, he recited" — hamza''s three seats sorted out at last, and the one root in this chapter that really did give English a word'
 concept_tag: VERB-READ
 romanization: qaraʾa
 prerequisites: [AR-C31-fahima]

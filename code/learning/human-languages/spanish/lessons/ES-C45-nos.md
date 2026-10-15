@@ -6,7 +6,7 @@ sequence: 1226
 chapter: 88
 type: word
 headword: nos
-gloss: "us" — the object pronoun that speaks for more than one person
+gloss: '"us" — the object pronoun that speaks for more than one person'
 concept_tag: ES-PRONOUN-NOS
 prerequisites: [ES-C42-sintesis-decirlo-una-vez, ES-C13-plurales-cambio, ES-C11-querer]
 sounds: []

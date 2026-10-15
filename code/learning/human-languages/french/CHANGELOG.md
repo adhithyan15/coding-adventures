@@ -1,5 +1,9 @@
 # Changelog
 
+## Fixed — two glosses are valid YAML
+
+- FR-C05-je-parle-francais and FR-C08-il-est had a `gloss:` that opened with a quoted English word and went on past the closing quote (`gloss: "day" — …`), which a strict YAML parser rejects. Each is now one single-quoted scalar, with an apostrophe written `''`. The wording is unchanged. The repository's reader returns the same text as before.
+
 ## Fixed — libre and livrer use the root slug for Latin līber "free"
 
 - **FR-C131-libre** and **FR-C150-livrer** move from `liber-latin` to `liber-free-latin`, the slug Portuguese *livre* and Spanish *libre* and *libertad* use. `liber-latin` also named *liber* "bark, book", a different Latin word (EtymDB lists Latin *liber* "free" and *liber* "book" as two entries; the "book" one is a cousin of English *leaf*). It now names only that word, in ES-C43-libro and PT-C227-livraria.

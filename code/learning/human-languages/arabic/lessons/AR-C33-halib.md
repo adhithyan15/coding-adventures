@@ -6,7 +6,7 @@ sequence: 870
 chapter: 33
 type: word
 headword: حليب
-gloss: "milk" — the opposite case to shāy: a home-grown noun sitting straight on the verb for milking, and a Hebrew twin that is the same word
+gloss: '"milk" — the opposite case to shāy: a home-grown noun sitting straight on the verb for milking, and a Hebrew twin that is the same word'
 concept_tag: AR-DRINK-MILK
 romanization: ḥalīb
 prerequisites: [AR-C33-shay, AR-W07-hook-family-ha-kha]

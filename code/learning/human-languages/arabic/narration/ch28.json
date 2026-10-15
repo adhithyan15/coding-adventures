@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Going and Coming",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:43f0fd1ccb495a7c",
+  "sourceHash": "fnv1a64:e588637e449a66f4",
   "lessons": [
     {
       "id": "AR-C28-dhahaba",
@@ -12,14 +12,14 @@
       "title": "ذهب (dhahaba) — \"he went,\" and the engine under every Arabic word",
       "headword": "ذهب",
       "romanization": "dhahaba",
-      "gloss": "he went\" — the track's first verb, and the clearest possible view of the root-and-pattern engine, since the same three consonants also give \"gold\" and \"a school of law",
+      "gloss": "\"he went\" — the track's first verb, and the clearest possible view of the root-and-pattern engine, since the same three consonants also give \"gold\" and \"a school of law\"",
       "script": "arabic",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86295e5a58d88893",
+      "sourceHash": "fnv1a64:08cd1cf16bfe296b",
       "notice": null,
       "blocks": [
         {

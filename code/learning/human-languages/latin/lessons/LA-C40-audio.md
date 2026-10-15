@@ -6,7 +6,7 @@ sequence: 800
 chapter: 40
 type: word
 headword: audiō, audīre
-gloss: "I hear" — the verb inside audio, audience and audit, and, less obviously, inside obey
+gloss: '"I hear" — the verb inside audio, audience and audit, and, less obviously, inside obey'
 concept_tag: VERB-HEAR
 prerequisites: [LA-C39-amo, LA-C39-rogo]
 sounds: [macron-long-vowel, macron-none-short-vowel]

@@ -6,7 +6,7 @@ sequence: 1215
 chapter: 83
 type: word
 headword: lo
-gloss: "it" — a word you have been saying since your fourth chapter, in a job you have not met yet
+gloss: '"it" — a word you have been saying since your fourth chapter, in a job you have not met yet'
 concept_tag: ES-PRONOUN-LO
 prerequisites: [ES-C43-comida]
 sounds: []

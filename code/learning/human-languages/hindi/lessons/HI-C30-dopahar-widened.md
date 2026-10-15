@@ -9,7 +9,7 @@ sequence: 810
 chapter: 30
 type: word
 headword: दोपहर
-gloss: "afternoon" — the same word already met meaning precisely "noon" (two pahars after sunrise, HI-C17), now widened in modern everyday usage to cover the whole afternoon stretch, not just the exact midday moment
+gloss: '"afternoon" — the same word already met meaning precisely "noon" (two pahars after sunrise, HI-C17), now widened in modern everyday usage to cover the whole afternoon stretch, not just the exact midday moment'
 romanization: "dopahar"
 concept_tag: TIME-AFTERNOON
 prerequisites: [HI-S150-vowel-sign-o, HI-C17-dopahar-aadhi-raat, HI-C29-shaam]

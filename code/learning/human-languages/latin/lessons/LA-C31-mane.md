@@ -6,7 +6,7 @@ sequence: 550
 chapter: 31
 type: word
 headword: māne
-gloss: "morning, early" — the word already hiding inside dē māne (the source of French demain, Italian domani, and Catalan demà, all rebuilt "tomorrow" from this phrase) and, without the dē-, the direct base of Spanish mañana too, now standing alone
+gloss: '"morning, early" — the word already hiding inside dē māne (the source of French demain, Italian domani, and Catalan demà, all rebuilt "tomorrow" from this phrase) and, without the dē-, the direct base of Spanish mañana too, now standing alone'
 concept_tag: TIME-MORNING
 prerequisites: [LA-C25-cras-te-videbo]
 sounds: [macron-long-vowel]

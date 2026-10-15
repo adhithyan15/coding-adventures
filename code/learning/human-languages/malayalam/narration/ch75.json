@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "When, and If",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ea8f045edb0cfeeb",
+  "sourceHash": "fnv1a64:b420db62864d90c5",
   "lessons": [
     {
       "id": "ML-C75-eppol",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0770303f40c41d4",
+      "sourceHash": "fnv1a64:d20b2c2d97f10c68",
       "notice": null,
       "blocks": [
         {
@@ -252,7 +252,7 @@
             },
             {
               "kind": "speech",
-              "text": "The ം that ends വരും is an m. When a letter follows it, that m is written joined to what comes next — മ്പ, the same shape you already read in ഒമ്പത് (ombatŭ), \"nine\"."
+              "text": "The ം that ends വരും is an m. When a letter follows it, that m is written joined to what comes next — മ്പ, the same shape you already read in ഒമ്പത് (ompatŭ), \"nine\"."
             },
             {
               "kind": "speech",

@@ -6,7 +6,7 @@ sequence: 530
 chapter: 22
 type: word
 headword: español
-gloss: "Spanish" — the language, the people, and the Roman name for the peninsula underneath it
+gloss: '"Spanish" — the language, the people, and the Roman name for the peninsula underneath it'
 concept_tag: ES-WORD-ESPANOL
 prerequisites: [ES-C06-estudiar, ES-W02-enye-formas]
 sounds: [enye-ny]

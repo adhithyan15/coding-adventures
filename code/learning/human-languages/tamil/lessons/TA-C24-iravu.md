@@ -6,7 +6,7 @@ sequence: 760
 chapter: 24
 type: word
 headword: இரவு
-gloss: "night" — native Dravidian, already used standalone inside "midnight" (naḷḷiravu); a Sanskrit loan alternative, rāttiri, also exists — and per at least one dictionary source, rāttiri may actually be the MORE common word in everyday spoken Tamil, the opposite direction from நாள்'s story last lesson
+gloss: '"night" — native Dravidian, already used standalone inside "midnight" (naḷḷiravu); a Sanskrit loan alternative, rāttiri, also exists — and per at least one dictionary source, rāttiri may actually be the MORE common word in everyday spoken Tamil, the opposite direction from நாள்''s story last lesson'
 romanization: "iravu"
 concept_tag: TIME-NIGHT
 prerequisites: [TA-C17-transparent-middle-synonyms, TA-C23-day-family-register]

@@ -9,7 +9,7 @@ sequence: 780
 chapter: 27
 type: phrase
 headword: शुभ रात्रि
-gloss: "good night" — literally "auspicious night," using the formal literary raatri, not the everyday raat just taught, plus shubh, an "auspicious" word that started life meaning "shining"
+gloss: '"good night" — literally "auspicious night," using the formal literary raatri, not the everyday raat just taught, plus shubh, an "auspicious" word that started life meaning "shining"'
 romanization: "śubh rātri"
 concept_tag: GREETING-GOODNIGHT
 prerequisites: [HI-C26-raat]

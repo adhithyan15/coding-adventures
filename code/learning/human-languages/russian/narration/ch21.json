@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Excuse Me, and Say It Again",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fef024d14f338887",
+  "sourceHash": "fnv1a64:8c6dc00c3346604a",
   "lessons": [
     {
       "id": "RU-C21-izvinite",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e558e6ebefff5a2",
+      "sourceHash": "fnv1a64:c85108dcb6d6dfce",
       "notice": null,
       "blocks": [
         {

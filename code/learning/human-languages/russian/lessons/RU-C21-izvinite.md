@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [RU-LEX-IZVINITE-01, RU-ETYMON-IZVINIT-VINA, RU-LEX-POZHALUYSTA, RU-LEX-SPASIBO, RU-GRAMMAR-TY-VY-REGISTER, RU-GRAMMAR-CHTOBY-01, RU-ETYMON-PONIMAT-TAKE-HOLD, RU-LEX-PONIMAT, RU-LEX-NO-01, RU-ETYMON-NO-NO-COUSIN, RU-ETYMON-KHOTET-NO-COUSIN, RU-LEX-NADO-01, RU-GRAMMAR-NADO-IMPERSONAL-01, RU-LEX-KHOTET-01]
+  knowledge: [RU-LEX-IZVINITE-01, RU-ETYMON-IZVINIT-VINA, RU-LEX-POZHALUYSTA, RU-LEX-SPASIBO, RU-GRAMMAR-TY-VY-REGISTER, RU-GRAMMAR-CHTOBY-01, RU-ETYMON-PONIMAT-TAKE-HOLD, RU-LEX-PONIMAT, RU-LEX-NO-01, RU-ETYMON-NO-NU, RU-ETYMON-KHOTET-NO-COUSIN, RU-LEX-NADO-01, RU-GRAMMAR-NADO-IMPERSONAL-01, RU-LEX-KHOTET-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [RU-C20-chtoby, RU-C04-ponimat, RU-C01-pozhaluysta]
 # извините — the word the book has been missing since page one
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-PONIMAT, RU-ETYMON-PONIMAT-TAKE-HOLD, RU-GRAMMAR-CHTOBY-01, RU-LEX-SPASIBO, RU-LEX-NO-01, RU-ETYMON-NO-NO-COUSIN, RU-ETYMON-KHOTET-NO-COUSIN, RU-LEX-NADO-01, RU-GRAMMAR-NADO-IMPERSONAL-01, RU-LEX-KHOTET-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-PONIMAT, RU-ETYMON-PONIMAT-TAKE-HOLD, RU-GRAMMAR-CHTOBY-01, RU-LEX-SPASIBO, RU-LEX-NO-01, RU-ETYMON-NO-NU, RU-ETYMON-KHOTET-NO-COUSIN, RU-LEX-NADO-01, RU-GRAMMAR-NADO-IMPERSONAL-01, RU-LEX-KHOTET-01] -->
 
 [PAUSE 2s] The two courtesy words you have had since the first chapter, and a
 verb.

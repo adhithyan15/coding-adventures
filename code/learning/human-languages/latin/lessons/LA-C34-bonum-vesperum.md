@@ -6,7 +6,7 @@ sequence: 590
 chapter: 34
 type: phrase
 headword: bonum vesperum
-gloss: "good evening" — a modern, pedagogical phrase (not classically attested), but unlike bonum māne, this one CAN show the real Accusative-of-Exclamation grammar again, since vesper is masculine, not neuter
+gloss: '"good evening" — a modern, pedagogical phrase (not classically attested), but unlike bonum māne, this one CAN show the real Accusative-of-Exclamation grammar again, since vesper is masculine, not neuter'
 concept_tag: GREETING-EVENING
 prerequisites: [LA-C33-vesper-afterlives, LA-C30-bonam-noctem, LA-C32-bonum-mane]
 sounds: [macron-none-short-vowel, accusative-am-em]

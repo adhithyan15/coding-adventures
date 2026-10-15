@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [RU-LEX-A-01, RU-GRAMMAR-NO-VS-A-01, RU-LEX-NO-01, RU-ETYMON-NO-NO-COUSIN, RU-LEX-I-01, RU-GRAMMAR-I-TWO-CLAUSES-01, RU-SCRIPT-A-01, RU-ETYMON-CHAI-ROUTE, RU-LEX-CHAI, RU-ETYMON-KHLEB-LOAF, RU-SCRIPT-KHA, RU-LEX-KHLEB]
+  knowledge: [RU-LEX-A-01, RU-GRAMMAR-NO-VS-A-01, RU-LEX-NO-01, RU-ETYMON-NO-NU, RU-LEX-I-01, RU-GRAMMAR-I-TWO-CLAUSES-01, RU-SCRIPT-A-01, RU-ETYMON-CHAI-ROUTE, RU-LEX-CHAI, RU-ETYMON-KHLEB-LOAF, RU-SCRIPT-KHA, RU-LEX-KHLEB]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [RU-C17-no, RU-C16-i-predlozheniya, RU-C06-chai, RU-C06-khleb]
 # а — the other "but," and the one English does not have
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NO-01, RU-ETYMON-NO-NO-COUSIN, RU-LEX-I-01, RU-GRAMMAR-I-TWO-CLAUSES-01, RU-LEX-CHAI, RU-ETYMON-CHAI-ROUTE, RU-SCRIPT-KHA, RU-ETYMON-KHLEB-LOAF] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NO-01, RU-ETYMON-NO-NU, RU-LEX-I-01, RU-GRAMMAR-I-TWO-CLAUSES-01, RU-LEX-CHAI, RU-ETYMON-CHAI-ROUTE, RU-SCRIPT-KHA, RU-ETYMON-KHLEB-LOAF] -->
 
 [PAUSE 2s] Two words from the food chapter, and the two joiners you already own.
 

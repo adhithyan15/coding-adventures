@@ -6,7 +6,7 @@ sequence: 175
 chapter: 5
 type: word
 headword: vos
-gloss: "you" across a large part of the Spanish-speaking world — to recognise, not to say
+gloss: '"you" across a large part of the Spanish-speaking world — to recognise, not to say'
 concept_tag: ES-PRONOUN-VOS
 prerequisites: [ES-C03-tu-usted-register]
 sounds: [vowel-o]

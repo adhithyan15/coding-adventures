@@ -6,7 +6,7 @@ sequence: 750
 chapter: 29
 type: word
 headword: رأى
-gloss: "he saw" — the dotless alif maqṣūra named at last, and a root whose seeing turns into opinion and into the word for a mirror
+gloss: '"he saw" — the dotless alif maqṣūra named at last, and a root whose seeing turns into opinion and into the word for a mirror'
 concept_tag: VERB-SEE
 romanization: raʾā
 prerequisites: [AR-C29-qala]
