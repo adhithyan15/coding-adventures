@@ -15,13 +15,14 @@ precedence, arc geometry, font queries, marker/style ordering and resource
 controls. No new crates.io dependencies, owned types and base ESTree remain.
 
 Run baseline parser/layout/paint controls against the raw integration. The
-three existing complete scene oracles require one explicit new false metadata
-key; record their real failures rather than deleting whole-map assertions.
+existing complete scene oracles require one explicit new false metadata key;
+record their real failures rather than deleting whole-map assertions. The
+retained total is196 cells:120 style,66 spacing/source-glyph and10 arc-command.
 Before changes add parser controls across four dialects and three source forms
 for absence/defaultfalse, case-insensitive true/false and malformed present
 values with exact message/line/column. Compare complete configuration objects,
 including independent showMarkers and retained numeric/style fields.
-Update only the newly added false metadata entry in all120 prior scene cells;
+Update only the newly added false metadata entry in all196 prior scene cells;
 preserve every other source/oracle byte. Add40 explicit compacttrue scenes
 using the same independently specified full shape/glyph/path/marker/style/font
 query and metadata expectations, with the sole configuration/metadata switch.
