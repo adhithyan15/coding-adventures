@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 27,
-  "sourceHash": "fnv1a64:d7c6516e39fa0db6",
+  "sourceHash": "fnv1a64:592c06d602f7ef7e",
   "lessonIds": [
     "PT-C27-primeiro",
     "PT-C27-segundo",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "portuguese/narration/ch27.txt",
   "json": "portuguese/narration/ch27.json",
-  "textHash": "fnv1a64:5e059a805644fcee",
-  "jsonHash": "fnv1a64:d44f22235056d224",
+  "textHash": "fnv1a64:df5d990ecde601ff",
+  "jsonHash": "fnv1a64:d605f80a3c7ef4fe",
   "findings": []
 }

@@ -47,7 +47,7 @@ reviews_of: [TA-C83-eighth, TA-C82-fourth, TA-C78-for-the-sake-of, TA-W23-read-s
 and nothing else changes.
 
 **ஒன்பது** was already a built word when you learned it: an old **ஒன்**, one,
-in front of **பது**, ten — one short of ten. The ordinal ending goes on top of
+in front of **பது**, ten — usually read as one short of ten. The ordinal ending goes on top of
 that, and none of the machinery underneath reacts to it.
 
 ## The word, taken apart
@@ -66,7 +66,7 @@ that, and none of the machinery underneath reacts to it.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C83-ORDINAL-04, TA-LEX-C83-ORDINAL-03, TA-LEX-C82-ORDINAL-07] -->
 
-[PAUSE 3s] What two numbers are inside ஒன்பது? (**One** and **ten** — nine is one short of ten.)
+[PAUSE 3s] What two numbers are inside ஒன்பது? (**One** and **ten** — usually read as one short of ten.)
 
 
 Source: [learntamil.com, Ordinal Numbers / Dates](https://www.learntamil.com/part1/ch02/ordinal-numbers-dates/).

@@ -55,7 +55,7 @@ mean cheerful? (An old theory about blood.)
 **el remedio** — "the remedy," the cure, the way out of a trouble.
 
 Two pieces. **Re-**, again or back, which you have seen doing this work before.
-And **mederi**, Latin for to heal or to look after. A *remedium* is a putting-back
+And **mederi**, Latin for to heal or to look after. *Remedio* ← Latin *remedium*, a putting-back
 of health.
 
 *Mederi* is one of the more productive roots English has. **Medicine** is the

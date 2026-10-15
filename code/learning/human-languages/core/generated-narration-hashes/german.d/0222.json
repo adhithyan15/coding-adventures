@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 222,
-  "sourceHash": "fnv1a64:88ffe4bae1afec3a",
+  "sourceHash": "fnv1a64:5ff8783ba9611c9d",
   "lessonIds": [
     "GE-C222-sparsam",
     "GE-C222-sportlich",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch222.txt",
   "json": "german/narration/ch222.json",
-  "textHash": "fnv1a64:d67437ee9c3306a0",
-  "jsonHash": "fnv1a64:21908cea6cdd7bb3",
+  "textHash": "fnv1a64:4c80e01476b827c2",
+  "jsonHash": "fnv1a64:3f0b6f57c256c4d6",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 124,
   "title": "Baker, Student, Driver, Lawyer, Engineer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a2f12f74e3e98005",
+  "sourceHash": "fnv1a64:d84226293379fa5f",
   "lessons": [
     {
       "id": "FR-C124-boulanger",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:033c946cd644ec33",
+      "sourceHash": "fnv1a64:7f958edab8563a3f",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "étudiant is the present participle of étudier, \"to study\", used as a noun: one who is studying."
+              "text": "étudiant is the present participle of étudier, \"to study\", used as a noun: one who is studying. Étudier from Old French estudier, from the Latin family of studium, \"eagerness, study\" (EtymDB 2.1)."
             }
           ]
         },

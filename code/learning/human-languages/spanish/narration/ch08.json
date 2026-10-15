@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "How Are You",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3168bd907ed9a629",
+  "sourceHash": "fnv1a64:6f6ead8179d650ad",
   "lessons": [
     {
       "id": "ES-C04-estar",
@@ -314,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:982fefe7578c1419",
+      "sourceHash": "fnv1a64:196b79e69af13cfb",
       "notice": null,
       "blocks": [
         {
@@ -354,6 +354,10 @@
             {
               "kind": "speech",
               "text": "usted = the formal \"you\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cómo from Latin quōmodo and estar from Latin stāre, \"to stand\", both inherited (EtymDB 2.1); usted is vuestra merced, \"your grace\", worn down."
             },
             {
               "kind": "speech",

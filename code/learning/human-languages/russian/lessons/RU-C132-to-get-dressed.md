@@ -47,7 +47,7 @@ reviews_of: [RU-C131-to-drive]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**одеваться** is *о-*, "around", with *девать*, "to put", and *-ся*, "oneself": to put clothes around yourself. The root *де-*, "to put", is in *одеяло*, "blanket".
+**одеваться** is *о-*, "around", with *девать*, "to put", and *-ся*, "oneself": to put clothes around yourself. The root *де-*, "to put", is in *одеяло*, "blanket". Vasmer sets that root beside Greek *títhēmi*, "I put", and Latin *faciō*, "I make".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

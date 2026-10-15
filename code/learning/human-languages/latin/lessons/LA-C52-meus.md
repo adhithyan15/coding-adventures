@@ -66,6 +66,9 @@ That is the opposite of English, where *my* never changes. It matches French *mo
 livre / ma lettre* and Spanish *mi* only in part — Spanish flattened the gender out
 of *mi* and kept it in *mío*.
 
+*Meus* is built on the stem of *mē*, "me", inherited from Proto-Indo-European
+*\*(e)me-* (EtymDB 2.1).
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C52-ASK-01, LA-LEX-C52-ASK-02, LA-LEX-C52-ASK-03, LA-LEX-C52-ASK-04] -->
 

@@ -4,7 +4,7 @@
   "chapter": 437,
   "title": "Decidir, Coincidir, Equivocarse",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:474c1c861f0d61fa",
+  "sourceHash": "fnv1a64:e66c73aade5600bc",
   "lessons": [
     {
       "id": "ES-C437-decidir",
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85fa7e66bfc3c995",
+      "sourceHash": "fnv1a64:c79edd6179bb9871",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "aequus equal, plus vox voice. Equal voice — two things that sound the same and get taken for each other."
+              "text": "Late Latin aequivocāre (EtymDB 2.1): aequus equal, plus vox voice. Equal voice — two things that sound the same and get taken for each other."
             },
             {
               "kind": "speech",

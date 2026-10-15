@@ -4,7 +4,7 @@
   "chapter": 201,
   "title": "Earth, Mud, Dust, Smoke, Flame",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ff4cdaf48d14af6c",
+  "sourceHash": "fnv1a64:ddf251635b56b72a",
   "lessons": [
     {
       "id": "FR-C201-terre",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e7771e09940533f",
+      "sourceHash": "fnv1a64:5532d0bbfb23c7e5",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "fumée is the past participle of fumer, \"to smoke\", used as a noun: what is smoked out."
+              "text": "fumée is the past participle of fumer, \"to smoke\", used as a noun: what is smoked out. Fumer from Latin fūmāre, \"to smoke\" (EtymDB 2.1)."
             }
           ]
         },

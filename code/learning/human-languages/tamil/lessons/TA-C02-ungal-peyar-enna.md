@@ -46,7 +46,8 @@ variety: standard-colloquial
 > **உங்கள் பெயர் என்ன?** = literally "**your name what?**" = "what's your name?"
 
 Three words, **no verb** — the zero copula holds for questions too. Tamil never
-adds an "is."
+adds an "is." All three words are native Dravidian: *uṅgaḷ* (DEDR 3688), *peyar*
+(DEDR 4410) and *eṉṉa* (DEDR 5151).
 
 ## Grammar Lens: answer, and the familiar version
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

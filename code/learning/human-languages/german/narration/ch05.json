@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 15,
-  "sourceHash": "fnv1a64:9684181b90ce6800",
+  "sourceHash": "fnv1a64:abe0313039d65f55",
   "lessons": [
     {
       "id": "GE-C05-wohnen",
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9652670c8aae38d7",
+      "sourceHash": "fnv1a64:bb79f03214d889db",
       "notice": null,
       "blocks": [
         {
@@ -370,6 +370,10 @@
                 "Article: die. Pronoun: sie. English: she.",
                 "Article: das. Pronoun: es. English: it."
               ]
+            },
+            {
+              "kind": "speech",
+              "text": "All three pronouns are inherited. Es is kin to English it, and sie is usually linked to English she, whose own history is disputed."
             }
           ]
         },
@@ -615,7 +619,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40416a37a9457b24",
+      "sourceHash": "fnv1a64:8ff25971b7b55b1c",
       "notice": null,
       "blocks": [
         {
@@ -680,6 +684,10 @@
                 "one person. Informal: du. Formal: Sie.",
                 "several people. Informal: ihr. Formal: Sie."
               ]
+            },
+            {
+              "kind": "speech",
+              "text": "Ihr from Old High German ir from Proto-Germanic jīz (EtymDB 2.1), the same word as English ye."
             }
           ]
         },

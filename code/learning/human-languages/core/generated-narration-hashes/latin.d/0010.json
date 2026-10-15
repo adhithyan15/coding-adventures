@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 10,
-  "sourceHash": "fnv1a64:3d7d0a5a4374dd30",
+  "sourceHash": "fnv1a64:8de5e33eac9ab524",
   "lessonIds": [
     "LA-C10-aqua-vinum",
     "LA-C10-panis"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "latin/narration/ch10.txt",
   "json": "latin/narration/ch10.json",
-  "textHash": "fnv1a64:b3b40303206f885e",
-  "jsonHash": "fnv1a64:5434d1f0413bf5eb",
+  "textHash": "fnv1a64:ae2827b8cea9fa8f",
+  "jsonHash": "fnv1a64:79e04e0d7c768eb1",
   "findings": []
 }

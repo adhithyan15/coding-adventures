@@ -47,7 +47,7 @@ without naming who is at fault.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C437-PLAN-03] -->
 
-**aequus** equal, plus **vox** voice. *Equal voice* — two things that sound the
+Late Latin *aequivocāre* (EtymDB 2.1): **aequus** equal, plus **vox** voice. *Equal voice* — two things that sound the
 same and get taken for each other.
 
 That is a precise picture of what a mistake is, and the same two pieces give you

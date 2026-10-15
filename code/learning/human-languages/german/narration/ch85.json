@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Ice, Hill, Desert, Horse, Cow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7063fd6add3bbb5b",
+  "sourceHash": "fnv1a64:ae336cbfee149f53",
   "lessons": [
     {
       "id": "GE-C85-eis",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b6a8a41b44cc10f",
+      "sourceHash": "fnv1a64:ad81f744516a3479",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hügel spread into standard German from central German dialects. It is a diminutive of Middle High German houc, \"hill\", related to the word for \"high\"; compare Old Norse haugr, \"mound\"."
+              "text": "Hügel spread into standard German from central German dialects. It is built from Middle High German houc, \"hill\", as a diminutive, related to the word for \"high\"; compare Old Norse haugr, \"mound\"."
             }
           ]
         },

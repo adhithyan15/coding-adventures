@@ -51,7 +51,8 @@ reviews_of: [FR-C14-as, FR-C01-le-la]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **a** is the form for **il** (he) and **elle** (she), and it is a single letter
-carrying an entire verb.
+carrying an entire verb. It goes back to Latin *habet*, "has", worn down to one
+letter; *avoir* is inherited from *habēre* (EtymDB 2.1).
 
 You already know the two pronouns from the articles: **le** and **la** split the
 world into masculine and feminine, and **il** and **elle** do the same for

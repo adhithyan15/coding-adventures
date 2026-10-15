@@ -74,11 +74,11 @@ wish. Not a synonym: **பிடிக்கும்** is taste, which you had 
 ## The word, taken apart - a catch, and a Kannada h
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-DATIVE-SUBJECT-FAMILY-01, TA-ETYMON-NUMBERS-6-10-FAMILY-02, TA-LEX-PIDI-01, TA-GRAMMAR-PIDI-02, TA-LEX-VIRUMBU-03, TA-ETYMON-UTAVU-02] -->
 
-The grasp-verb is old and shared: Malayalam **പിടിക്കുക** (*piṭikkuka*) and
+The grasp-verb is native and shared (DEDR 4148): Malayalam **പിടിക്കുക** (*piṭikkuka*) and
 Telugu **పట్టు** (*paṭṭu*) both mean "catch, hold." Kannada's is **ಹಿಡಿ**
 (*hiḍi*) — not a different word: Old Kannada wrote *piḍi*, and the **p → h**
 shift behind *pattu / hattu* and *pāl / hālu* turned it into *hiḍi*. A third
-instance of a rule you have already met.
+instance of a rule you know.
 
 The wider point: Spanish says *me gusta*, Italian *mi piace*, Hindi *mujhe
 pasand hai* — each putting the liker in the dative and the liked thing in the

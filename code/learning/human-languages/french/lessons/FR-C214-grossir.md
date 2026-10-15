@@ -46,7 +46,7 @@ reviews_of: [FR-C214-exprimer]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**grossir** — *gros*, "fat", with the verb ending *-ir*: to grow fat.
+**grossir** — *gros*, "fat", with the verb ending *-ir*: to grow fat. *Gros* ← Late Latin *grossus*, "thick" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 192,
-  "sourceHash": "fnv1a64:2232d4a8aaee2109",
+  "sourceHash": "fnv1a64:e1f9cb1117a72d3e",
   "lessonIds": [
     "RU-C192-gazeta",
     "RU-C192-zhurnal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch192.txt",
   "json": "russian/narration/ch192.json",
-  "textHash": "fnv1a64:0ddeea1705a92443",
-  "jsonHash": "fnv1a64:a5c29cca590afecf",
+  "textHash": "fnv1a64:ee3fe4e7c2767588",
+  "jsonHash": "fnv1a64:67dd02e52d3b82db",
   "findings": []
 }

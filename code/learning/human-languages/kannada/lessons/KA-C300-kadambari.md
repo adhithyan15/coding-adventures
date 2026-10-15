@@ -47,7 +47,7 @@ reviews_of: [KA-C300-dharavahi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಕಾದಂಬರಿ** (*kādambari*) is the title of a famous Sanskrit prose romance, Bāṇa's *Kādambarī*. Its name came to mean any novel.
+**ಕಾದಂಬರಿ** (*kādambari*) is the title of a famous Sanskrit prose romance, Bāṇa's *Kādambarī*. The word comes from that title, which came to mean any novel.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

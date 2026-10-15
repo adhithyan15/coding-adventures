@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 227,
-  "sourceHash": "fnv1a64:ccbeb2ce79e676e2",
+  "sourceHash": "fnv1a64:f3d003eb6db1353a",
   "lessonIds": [
     "ES-C60-bastante"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch227.txt",
   "json": "spanish/narration/ch227.json",
-  "textHash": "fnv1a64:80b4a5d1b81a931e",
-  "jsonHash": "fnv1a64:e65e9c43b963dc86",
+  "textHash": "fnv1a64:cc144ba60326ab03",
+  "jsonHash": "fnv1a64:309b8ddc5f64245f",
   "findings": []
 }

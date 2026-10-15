@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 135,
-  "sourceHash": "fnv1a64:35025df3c30ed0b3",
+  "sourceHash": "fnv1a64:e9831dbf6dbe8a83",
   "lessonIds": [
     "FR-C135-seconde",
     "FR-C135-monnaie",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch135.txt",
   "json": "french/narration/ch135.json",
-  "textHash": "fnv1a64:ebf5256ba7649ac1",
-  "jsonHash": "fnv1a64:2b68d38056579ef4",
+  "textHash": "fnv1a64:3fa6110534761b17",
+  "jsonHash": "fnv1a64:f72409010d4817e5",
   "findings": []
 }

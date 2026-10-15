@@ -46,7 +46,7 @@ reviews_of: [FR-C163-appartement]
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**salle à manger** — "room for eating": *salle*, "a room", *à*, "for", and *manger*, "to eat".
+**salle à manger** — "room for eating": *salle*, "a room", *à*, "for", and *manger*, "to eat". *Salle* ← Frankish *sal*, "hall", *à* ← Latin *ad*, and *manger* ← Latin *manducāre*, "to chew" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

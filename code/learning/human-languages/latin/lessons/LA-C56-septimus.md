@@ -50,7 +50,8 @@ reviews_of: [LA-C56-sextus, LA-C55-secundus]
 
 **septimus, septima, septimum** — "**seventh**."
 
-*Septem* is **seven**. Put the ending on and the vowel in the middle goes quiet:
+*Septem* is **seven**, inherited, a cousin of English *seven* (EtymDB 2.1). Put
+the ending on and the vowel in the middle goes quiet:
 *septem* → *septimus*, with *e* worn down to *i* because nothing is leaning on
 it. Latin does that to unstressed middles constantly, and once you have heard it
 here you will hear it everywhere.

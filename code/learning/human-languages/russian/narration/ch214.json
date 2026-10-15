@@ -4,7 +4,7 @@
   "chapter": 214,
   "title": "From here, Back, Forward, Up, Down",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b74a40293b82b9d2",
+  "sourceHash": "fnv1a64:e0b1fb387a513174",
   "lessons": [
     {
       "id": "RU-C214-otsyuda",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ead24072a5c0994",
+      "sourceHash": "fnv1a64:7418efeb457a113a",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "назад (nazád) is на, \"onto\", with зад, \"the back, the rear\": backwards."
+              "text": "назад (nazád) is на, \"onto\", with зад, \"the back, the rear\": backwards. Vasmer reports the usual comparison of зад with Greek chódanos, \"rump\"."
             }
           ]
         },

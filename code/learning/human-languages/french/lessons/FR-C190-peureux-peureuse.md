@@ -46,7 +46,7 @@ reviews_of: [FR-C190-courageux-courageuse]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**peureux** — *peur*, "fear", with *-eux*, "full of".
+**peureux** — *peur*, "fear", with *-eux*, "full of". *Peur* ← Latin *pavor*, "fear" (EtymDB 2.1), and *-eux* ← Latin *-ōsus*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -47,7 +47,7 @@ You'll want to know: die Krankenschwester.
 die Krankenschwester — "a nurse".
 
 The word, taken apart.
-Krankenschwester is krank, "ill", + Schwester, "sister": the sister who tends the sick, a title from nursing orders.
+Krankenschwester is krank, "ill", + Schwester, "sister": the sister who tends the sick, a title from nursing orders. Schwester from Proto-Germanic swestēr (EtymDB 2.1), the same word as English sister; krank from Old High German krank.
 
 What you've built.
 One more word for this chapter.

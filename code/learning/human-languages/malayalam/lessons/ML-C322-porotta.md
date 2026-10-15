@@ -47,7 +47,7 @@ reviews_of: [ML-C322-cappatti]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**പൊറോട്ട** (*poṟōṭṭa*) is the Hindustani *parāṭhā*, a layered flatbread, reshaped in the mouth.
+**പൊറോട്ട** (*poṟōṭṭa*) comes from Hindustani *parāṭhā*, a layered flatbread, reshaped in the mouth.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

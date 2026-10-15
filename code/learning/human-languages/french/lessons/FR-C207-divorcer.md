@@ -46,7 +46,7 @@ reviews_of: [FR-C207-epouser]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**divorcer** — formed from the noun for "a divorce", the noun behind *divorcé*.
+**divorcer** — formed from the noun for "a divorce", the noun behind *divorcé*. *Divorce* comes from Latin *dīvortium*, "a separation".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

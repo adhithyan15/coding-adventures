@@ -4,7 +4,7 @@
   "chapter": 193,
   "title": "Sheet, Drawer, Armchair, Saucepan, Frying pan",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:25d60977259e617a",
+  "sourceHash": "fnv1a64:13d1a911d08ac1b8",
   "lessons": [
     {
       "id": "FR-C193-drap",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e410d472be59ca81",
+      "sourceHash": "fnv1a64:6e7adb3f235f4ae1",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "tiroir — tirer, \"to pull\", with -oir, \"a thing for\": the thing you pull out."
+              "text": "tiroir — tirer, \"to pull\", with -oir, \"a thing for\": the thing you pull out. Tirer is of uncertain origin; EtymDB 2.1 points to a Gothic verb, \"to tear away\"."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 132,
   "title": "To get dressed, To wash, To get up, To sit down, To fall",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:89e42478e9b4c75b",
+  "sourceHash": "fnv1a64:999e44e3894483aa",
   "lessons": [
     {
       "id": "RU-C132-to-get-dressed",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1628553e4ae2f4c8",
+      "sourceHash": "fnv1a64:173681daaacc0dbc",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "одеваться (odevátsya) is о-, \"around\", with девать, \"to put\", and -ся, \"oneself\": to put clothes around yourself. The root де-, \"to put\", is in одеяло, \"blanket\"."
+              "text": "одеваться (odevátsya) is о-, \"around\", with девать, \"to put\", and -ся, \"oneself\": to put clothes around yourself. The root де-, \"to put\", is in одеяло, \"blanket\". Vasmer sets that root beside Greek títhēmi, \"I put\", and Latin faciō, \"I make\"."
             }
           ]
         },
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b0d2687e31a0b11",
+      "sourceHash": "fnv1a64:64acdc5b69869b45",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "умываться (umyvátsya) is у- with мыть, \"to wash\", and -ся, \"oneself\": to wash your own face and hands."
+              "text": "умываться (umyvátsya) is у- with мыть, \"to wash\", and -ся, \"oneself\": to wash your own face and hands. Мыть from Proto-Slavic myti — inherited; Vasmer relates it to Lithuanian máudyti, \"to bathe\"."
             }
           ]
         },

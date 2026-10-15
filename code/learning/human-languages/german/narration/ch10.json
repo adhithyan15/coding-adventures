@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "The Gods of the Week",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:a97d93262228b13d",
+  "sourceHash": "fnv1a64:2373365800a201bf",
   "lessons": [
     {
       "id": "GE-C07-tag-muster",
@@ -840,7 +840,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6429150d1548c7b9",
+      "sourceHash": "fnv1a64:6740d39e68b119b7",
       "notice": null,
       "blocks": [
         {
@@ -886,7 +886,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The goddess is Frija — Frigg in the Norse — and she stood in for Venus. English named the day for her too: Friday."
+              "text": "The goddess is Frija — Frigg in the Norse — and she stood in for Venus. English named the day for her too: Friday. Freitag from Old High German frīatag, \"Frija's day\" (EtymDB 2.1)."
             },
             {
               "kind": "speech",

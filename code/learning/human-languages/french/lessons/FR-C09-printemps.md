@@ -51,7 +51,7 @@ things**. Here is the first thing.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[FR-ETYMON-PRINTEMPS-PRIMUM-02]; assesses=[] -->
 
-**printemps** is two words fused: **prīmum tempus**, "the **first time**."
+**printemps** is two Latin words fused: **prīmum tempus**, "the **first time**."
 
 > **prin-** = *prīmum*, "first" — English **prime**, **primary**, **premier**
 > **-temps** = *tempus*, "time, season" — English **temporal**, **tempo**

@@ -47,7 +47,7 @@ reviews_of: [RU-C84-at-night]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**послезавтра** is *после*, "after", with *завтра*, "tomorrow", itself *за*, "after", with *утро*, "morning".
+**послезавтра** is *после*, "after", with *завтра*, "tomorrow", itself *за*, "after", with *утро*, "morning". Where *утро* comes from is uncertain (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

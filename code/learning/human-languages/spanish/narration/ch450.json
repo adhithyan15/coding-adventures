@@ -4,7 +4,7 @@
   "chapter": 450,
   "title": "El césped y el patio",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:80347c021fe8ea18",
+  "sourceHash": "fnv1a64:d1468e747623ec7f",
   "lessons": [
     {
       "id": "ES-C450-patio",
@@ -667,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68bb2d7f547de2ad",
+      "sourceHash": "fnv1a64:5bf85d47ca625255",
       "notice": null,
       "blocks": [
         {
@@ -746,7 +746,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "French entraîner, to drag along — and inside it the same traîner that gave Spanish el tren."
+              "text": "Borrowed from French entraîner, to drag along — and inside it the same traîner that gave Spanish el tren."
             },
             {
               "kind": "speech",

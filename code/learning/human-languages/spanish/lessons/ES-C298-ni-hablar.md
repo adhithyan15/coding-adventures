@@ -55,7 +55,7 @@ What is inside *dubitare*? (*Duo*, two.) And does *en efecto* soften or confirm?
 
 **ni hablar** — "out of the question," "no chance."
 
-Again, nothing new. *Ni* is "nor, not even." *Hablar* is to speak. Together:
+Nothing new. *Ni* ← Latin *nec*, "nor, not even." *Hablar* ← *fābulārī*, to speak. Together:
 "not even speaking of it." The refusal is not of the request — it is of the
 conversation about the request, which is a good deal more final.
 

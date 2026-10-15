@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 473,
-  "sourceHash": "fnv1a64:fe0c5aed33f6c6fe",
+  "sourceHash": "fnv1a64:a0efa2007056ff61",
   "lessonIds": [
     "ES-C473-aconsejar",
     "ES-C473-recomendar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch473.txt",
   "json": "spanish/narration/ch473.json",
-  "textHash": "fnv1a64:99d3dcb16f9c4127",
-  "jsonHash": "fnv1a64:7c653be38d44b1d2",
+  "textHash": "fnv1a64:b9d2d7c555044e10",
+  "jsonHash": "fnv1a64:c08ae310347868db",
   "findings": []
 }

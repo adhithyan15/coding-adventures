@@ -46,7 +46,7 @@ reviews_of: [FR-C156-encore]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**au-dessus** — *au*, "at the", and *dessus*, "on top".
+**au-dessus** — *au*, "at the", and *dessus*, "on top". *Dessus* is *de* with Old French *sus*, "above", from Latin *sursum*, "upward".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

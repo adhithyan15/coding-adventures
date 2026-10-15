@@ -11,7 +11,7 @@ concept_tag: VERB-CAN
 prerequisites: [FR-C33-vouloir]
 sounds: []
 roots: [potere-latin]
-etymology_hook: "pouvoir is how French asks somebody else to do something, which is why it matters more to a beginner than its dictionary gloss 'to be able' suggests."
+etymology_hook: "pouvoir ← Old French povoir, from Vulgar Latin *potēre, a remake of Latin posse 'to be able'"
 duration:
   max_seconds: 240
 requires:
@@ -41,7 +41,8 @@ reviews_of: [FR-C33-vouloir]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[FR-LEX-POUVOIR-02]; assesses=[FR-LEX-VOULOIR-01] -->
 
-**pouvoir** — **to be able**, and in practice **can**. The singular:
+**pouvoir** — **to be able**, and in practice **can**. It comes from Old French
+*povoir* (EtymDB 2.1), from Vulgar Latin *\*potēre*. The singular:
 
 Same chant, three beats:
 
@@ -51,8 +52,7 @@ Same chant, three beats:
 alike**, and the pronoun carries the person.
 
 That final *t* is silent — until you invert. **Peut-il ?** wakes it, and needs no
-added *-t-* the way *parle-t-il* did, because this verb already has one. *Peux, peux, peut* — and note it rhymes with nothing in *vouloir*,
-but behaves identically.
+added *-t-* the way *parle-t-il* did, because this verb already has one.
 
 What follows *pouvoir* is a **plain, unchanged verb**:
 

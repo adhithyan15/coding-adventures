@@ -47,7 +47,7 @@ reviews_of: [RU-C150-kazhdyy]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**сначала** is *с*, "from", with *начала*, a form of *начало*, "the beginning": "from the start".
+**сначала** is *с*, "from", with *начала*, a form of *начало*, "the beginning": "from the start". *Начало* comes from *начать*, "to begin", which Vasmer puts in one family with *конец*, "end".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

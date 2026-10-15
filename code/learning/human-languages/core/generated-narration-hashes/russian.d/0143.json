@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 143,
-  "sourceHash": "fnv1a64:d4b01380776bcea4",
+  "sourceHash": "fnv1a64:a5a6f1229268ca59",
   "lessonIds": [
     "RU-C143-letat",
     "RU-C143-yezdit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch143.txt",
   "json": "russian/narration/ch143.json",
-  "textHash": "fnv1a64:fc3e7c46da4f7d70",
-  "jsonHash": "fnv1a64:d3f9413a888cb911",
+  "textHash": "fnv1a64:6223ccdea3d886e0",
+  "jsonHash": "fnv1a64:342f24b3b64adcc0",
   "findings": []
 }

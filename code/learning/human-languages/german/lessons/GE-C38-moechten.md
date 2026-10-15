@@ -67,7 +67,8 @@ English runs the identical trick and nobody notices:
 
 A past-shaped verb standing in the present puts a little distance between the
 speaker and the demand. Both languages found the same politeness strategy, and
-German marks it with two dots.
+German marks it with two dots. *Mögen* ← Old High German *mugan* ←
+Proto-Germanic *\*maganą* (EtymDB 2.1), the same verb as English *may*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MOECHTEN-01, GE-LEX-KOENNEN-01, GE-LEX-BITTE-PLEASE-02, GE-LEX-KAFFEE-02, GE-LEX-TEE-02, GE-LEX-WASSER-01, GE-LEX-BROT-01, GE-LEX-EINEN-01, GE-LEX-MOEGEN-LIEBEN-09] -->

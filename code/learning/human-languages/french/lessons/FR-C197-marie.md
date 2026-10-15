@@ -46,7 +46,7 @@ reviews_of: [FR-C196-ouvrier]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**marié** — the adjective *marié*, "married", used as a noun: the man being married.
+**marié** — the adjective *marié*, "married", used as a noun: the man being married. *Marier* ← Latin *marītāre*, "to wed" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

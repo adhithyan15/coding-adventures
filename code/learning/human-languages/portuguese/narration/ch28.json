@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Sexto ao Decimo",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:23c65f037b13b6d0",
+  "sourceHash": "fnv1a64:162672948162a2b9",
   "lessons": [
     {
       "id": "PT-C28-sexto",
@@ -215,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2354bcc2ca902710",
+      "sourceHash": "fnv1a64:3d75e16c9bcdd7a0",
       "notice": null,
       "blocks": [
         {
@@ -329,6 +329,10 @@
             {
               "kind": "speech",
               "text": "Décimo, three lessons ahead, carries the accent for the same reason."
+            },
+            {
+              "kind": "speech",
+              "text": "Sétimo comes from Latin septimus, \"seventh\", which Latin built on septem, \"seven\" (EtymDB 2.1)."
             }
           ]
         },

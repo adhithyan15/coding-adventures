@@ -11,7 +11,7 @@ concept_tag: VERB-WANT
 prerequisites: [FR-C32-quel]
 sounds: []
 roots: [latin-volere]
-etymology_hook: "vouloir is the first verb in this book whose plain present tense is the wrong thing to say to a stranger, so the polite form has to arrive with it."
+etymology_hook: "vouloir ← Vulgar Latin *volēre, a remake of Latin velle 'to want'"
 duration:
   max_seconds: 250
 requires:
@@ -42,8 +42,8 @@ Hold that; you will need it in a moment.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[FR-LEX-VOULOIR-01]; assesses=[] -->
 
-**vouloir** — **to want**. Here are the singular forms, which is what you need
-first:
+**vouloir** — **to want**. It comes from Latin *velle*, through Vulgar Latin
+*\*volēre* (EtymDB 2.1). The singular forms first:
 
 Say it as a chant, three beats:
 
@@ -55,7 +55,7 @@ identical**.
 That is why French keeps the subject pronoun in front: without *je* or *tu*,
 nothing tells a listener who wants what.
 
-Then a *want* needs something wanted, and it follows directly:
+A *want* needs something wanted:
 
 - **Je veux un café.** — I want a coffee.
 - **Tu veux le pain ?** — Do you want the bread?

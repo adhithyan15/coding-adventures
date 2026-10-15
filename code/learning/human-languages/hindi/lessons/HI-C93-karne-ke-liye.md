@@ -70,7 +70,8 @@ The reason it can bend like a noun is that in Hindi it **is** one. **करन�
 both *to do* and *the doing*, which is why it could already sit where a noun
 sits. A word that behaves like a noun bends like a noun.
 
-**लिए** is usually explained as a form of **लेना**, "to take".
+**करना** goes back to Sanskrit *karoti*, "does" (CDIAL 2814). **लिए** is
+usually explained as a form of **लेना**, "to take".
 
 ## Grammar Lens: where the purpose goes
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-07, HI-LEX-C90-ROUT-04] -->

@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "All the Way Up, and First in Time",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:53a3aa5c9bcd25ce",
+  "sourceHash": "fnv1a64:905b67c471838005",
   "lessons": [
     {
       "id": "ML-C68-sixth",
@@ -502,7 +502,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3ffd58454c74be1",
+      "sourceHash": "fnv1a64:b62760d7f47eb16d",
       "notice": null,
       "blocks": [
         {
@@ -565,7 +565,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഒമ്പത് was already a built word when you learned it: an old word for one plus pathŭ, ten — one short of ten, with the n turning to m before the p. The ordinal ending goes on top of that, and none of the machinery underneath reacts to it."
+              "text": "ഒമ്പത് was already a built word when you learned it: an old word for one plus pathŭ, ten — usually read as one short of ten, with the n turning to m before the p. The ordinal ending goes on top of that, and none of the machinery underneath reacts to it."
             },
             {
               "kind": "speech",

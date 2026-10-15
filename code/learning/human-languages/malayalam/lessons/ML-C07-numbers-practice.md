@@ -51,7 +51,7 @@ Now check against **൧ ൨ ൩ ൪ ൫ ൬ ൭ ൮ ൯ ൰**.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03] -->
 
 - Which word preserves the rare *zh*? (**ഏഴ്**, *ēḻŭ*, seven.)
-- Which word means one short of ten? (**ഒമ്പത്**, *ombatŭ*, nine.)
+- Which word is usually read as one short of ten? (**ഒമ്പത്**, *ombatŭ*, nine.)
 - Which first-five word shifted furthest from older *aintu*? (**അഞ്ച്**, *añcŭ*.)
 
 ## Writing — independent dictation

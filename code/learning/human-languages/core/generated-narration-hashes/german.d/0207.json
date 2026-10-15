@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 207,
-  "sourceHash": "fnv1a64:03de398409be3ee9",
+  "sourceHash": "fnv1a64:3b4597ad947c1456",
   "lessonIds": [
     "GE-C207-krankenwagen",
     "GE-C207-feuerwehr",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch207.txt",
   "json": "german/narration/ch207.json",
-  "textHash": "fnv1a64:18c85787fe3c75e7",
-  "jsonHash": "fnv1a64:d08e0bf39cf2cd54",
+  "textHash": "fnv1a64:edc6f73ff0e3de36",
+  "jsonHash": "fnv1a64:f44bd34651733082",
   "findings": []
 }

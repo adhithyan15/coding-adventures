@@ -46,7 +46,7 @@ reviews_of: [GE-C211-anstrengend]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**aufgeregt** is the past participle of *auf* + an old verb meaning "to stir, to move": stirred up.
+**aufgeregt** is the past participle of *auf* + an old verb meaning "to stir, to move": stirred up. *Auf* ← Proto-Germanic *\*upp* (EtymDB 2.1), the same word as English *up*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

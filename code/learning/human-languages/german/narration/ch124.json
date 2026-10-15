@@ -4,7 +4,7 @@
   "chapter": 124,
   "title": "Yoghurt, Nurse, Cook, Police officer, Shop assistant",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a619384b709b7b9d",
+  "sourceHash": "fnv1a64:17a6e233b01b0779",
   "lessons": [
     {
       "id": "GE-C124-joghurt",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf6f22f6acb6fa26",
+      "sourceHash": "fnv1a64:e1346e295a1ca9ba",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Krankenschwester is krank, \"ill\", + Schwester, \"sister\": the sister who tends the sick, a title from nursing orders."
+              "text": "Krankenschwester is krank, \"ill\", + Schwester, \"sister\": the sister who tends the sick, a title from nursing orders. Schwester from Proto-Germanic swestēr (EtymDB 2.1), the same word as English sister; krank from Old High German krank."
             }
           ]
         },

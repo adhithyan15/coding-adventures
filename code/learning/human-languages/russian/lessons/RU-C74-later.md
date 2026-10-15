@@ -47,7 +47,7 @@ reviews_of: [RU-C74-now]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**потом** is *по*, "after", with *том*, a form of *тот*, "that": "after that".
+**потом** is *по*, "after", with *том*, a form of *тот*, "that": "after that". Vasmer traces *тот* to Proto-Slavic *\*tŭ*, kin to Lithuanian *tàs*, "that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

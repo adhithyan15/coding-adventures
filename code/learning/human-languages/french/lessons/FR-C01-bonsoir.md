@@ -50,7 +50,7 @@ this is nearly free.
 
 **bonsoir** = **bon** ("good") + **soir** ("evening") = "good evening." *bon*
 stays masculine because *soir* is masculine — same as *bonjour*, no new
-agreement to learn. Said *bõ- swahr*.
+agreement to learn. Said *bõ- swahr*. *Soir* ← Latin *sērō*, "late", from *sērus* (EtymDB 2.1).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

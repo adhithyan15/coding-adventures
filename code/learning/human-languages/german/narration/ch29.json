@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "The Past That Takes To Be",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:82794eb98b6800b9",
+  "sourceHash": "fnv1a64:d220914eb38d2ca3",
   "lessons": [
     {
       "id": "GE-C16-perfekt-sein",
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7741dcbc219960e",
+      "sourceHash": "fnv1a64:f9cbe44afa761a1e",
       "notice": null,
       "blocks": [
         {
@@ -606,7 +606,7 @@
             },
             {
               "kind": "speech",
-              "text": "So werden means \"to turn into,\" and every time you say toward you are using the same root without knowing it."
+              "text": "So werden means \"to turn into,\" and every time you say toward you are using the same root without knowing it. Werden from Old High German werdan, \"to turn\" (EtymDB 2.1)."
             }
           ]
         },

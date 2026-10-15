@@ -52,8 +52,8 @@ will naturally hear before **bitte**.
 ## The word, taken apart: a request inside please
 <!-- hl-knowledge: introduces=[GE-ETYMON-BITTE-04]; assesses=[GE-ETYMON-BITTE-BITTEN-02] -->
 
-**Bitte** is the request form of **bitten**, “to ask, request, pray.” Its English
-cousins are **bid**—as in “I bid you welcome”—and **bead**, whose oldest meaning
+**Bitte** is the request form of **bitten**, “to ask, request, pray.” Its cousins in
+English are **bid**—as in “I bid you welcome”—and **bead**, whose oldest meaning
 was a prayer. A prayer bead was first the object used to count those requests.
 
 So when you add **bitte**, the word itself is already doing the asking.

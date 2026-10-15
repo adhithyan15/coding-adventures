@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 124,
-  "sourceHash": "fnv1a64:a2f12f74e3e98005",
+  "sourceHash": "fnv1a64:d84226293379fa5f",
   "lessonIds": [
     "FR-C124-boulanger",
     "FR-C124-etudiant",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch124.txt",
   "json": "french/narration/ch124.json",
-  "textHash": "fnv1a64:26c3fcc985ec778b",
-  "jsonHash": "fnv1a64:5e403f4e5c1bf208",
+  "textHash": "fnv1a64:ca9832f67d5909fe",
+  "jsonHash": "fnv1a64:1e94fa4365a3a1bc",
   "findings": []
 }

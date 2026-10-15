@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:10b80a26eb75b140",
+  "sourceHash": "fnv1a64:17b4d7ff6bba79b4",
   "lessons": [
     {
       "id": "TA-C33-ninai",
@@ -749,7 +749,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:40a2bee2e924af04",
+      "sourceHash": "fnv1a64:ccfcb20e26c9db24",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -838,7 +838,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "எழுது (eḻudu) looks like எழு (eḻu), \"to rise,\" but the Dravidian etymological dictionary keeps them as separate entries. Native, unlike paḍi's open question. Beside it sits எழுத்தாளர் (eḻuttāḷar), a writer."
+              "text": "எழுது (eḻudu) looks like எழு (eḻu), \"to rise,\" but DEDR keeps them as separate entries. Native Dravidian (DEDR 853), unlike paḍi's open question. Beside it sits எழுத்தாளர் (eḻuttāḷar), a writer."
             },
             {
               "kind": "speech",

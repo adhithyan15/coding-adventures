@@ -50,7 +50,8 @@ reviews_of: [LA-C55-tertius, LA-C54-auris]
 **quārtus, quārta, quārtum** — "**fourth**."
 
 *Quattuor* is **four**, and *quārtus* is *quattuor* with the middle squeezed out
-and an ending put on. After the odd pair at the front, that is the shape the
+and an ending put on. *Quattuor* is inherited, a cousin of English *four*
+(EtymDB 2.1). After the odd pair at the front, that is the shape the
 series keeps: the number you already know, wearing an ending, behaving like a
 describing word and agreeing with whatever it counts.
 

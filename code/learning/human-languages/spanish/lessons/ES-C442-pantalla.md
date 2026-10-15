@@ -70,7 +70,8 @@ an old one, and the chain is short enough to hold in your head.
 
 It does not come apart, and its history is unsettled. Dictionaries reach for a
 crossing of two older words and do not commit further; no derivation has carried
-the field.
+the field. EtymDB 2.1 records a loan from Catalan *pantalla*, which moves the
+question back a step.
 
 That makes three now — **el andén**, **tirar** and **la pantalla** — and it is
 the same honest answer each time. You met the piece-test in the chapter on the

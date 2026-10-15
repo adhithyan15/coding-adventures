@@ -49,7 +49,8 @@ you are following a rule.
 | **diecinueve** | *diez y nueve*, "ten and nine" |
 
 No fusion. You can hear **diez** plainly at the front of every one, and the
-number you already know sitting right behind it.
+number you already know sitting right behind it. Every piece is inherited:
+*diez* ← Latin *decem*, *seis* ← *sex*, and the rest likewise (EtymDB 2.1).
 
 ## Grammar Lens: a formula, not a list
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-NUMBER-FORMATION-04]; assesses=[] -->

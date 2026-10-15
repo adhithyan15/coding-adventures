@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Ubi, Cur, Quia, Meus, Tuus",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:81df81b2909de671",
+  "sourceHash": "fnv1a64:bc2386c828f012d6",
   "lessons": [
     {
       "id": "LA-C52-ubi",
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e124da2ed49a896b",
+      "sourceHash": "fnv1a64:f0b463c0540ac68f",
       "notice": null,
       "blocks": [
         {
@@ -445,6 +445,10 @@
             {
               "kind": "speech",
               "text": "Latin has three words here and they are not quite the same: quia states a plain cause, quod states one the hearer already accepts, and quoniam (\"since now\") states one both parties take for granted. A reader meets all three. Start with quia."
+            },
+            {
+              "kind": "speech",
+              "text": "Quia is built on the stem of quis, \"who, what\", inherited from Proto-Indo-European kʷis (EtymDB 2.1); the exact form behind it is disputed."
             }
           ]
         },
@@ -511,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4f1cd9a02df7d17",
+      "sourceHash": "fnv1a64:7a7a5b5bf35fc1b7",
       "notice": null,
       "blocks": [
         {
@@ -609,6 +613,10 @@
             {
               "kind": "speech",
               "text": "That is the opposite of English, where my never changes. It matches French mon livre / ma lettre and Spanish mi only in part — Spanish flattened the gender out of mi and kept it in mío."
+            },
+            {
+              "kind": "speech",
+              "text": "Meus is built on the stem of mē, \"me\", inherited from Proto-Indo-European (e)me- (EtymDB 2.1)."
             }
           ]
         },

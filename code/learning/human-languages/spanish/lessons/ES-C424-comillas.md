@@ -54,7 +54,8 @@ The outermost pair is the angular one. Nesting works from the outside in, so the
 English-looking pair appears **inside** the Spanish-looking one, rather than
 first.
 
-*Comillas* is *coma*, "comma", with the small-ending *-illa*: little commas.
+*Comillas* is *coma*, "comma", with the small-ending *-illa*: little commas. *Coma* is borrowed from Latin
+*comma*, itself from Greek (EtymDB 2.1).
 
 ## Grammar Lens: what they are actually for
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C424-05, ES-ORTH-C424-04] -->

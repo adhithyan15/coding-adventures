@@ -46,7 +46,7 @@ reviews_of: [FR-C201-poussiere]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**fumée** is the past participle of *fumer*, "to smoke", used as a noun: what is smoked out.
+**fumée** is the past participle of *fumer*, "to smoke", used as a noun: what is smoked out. *Fumer* ← Latin *fūmāre*, "to smoke" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -68,6 +68,9 @@ English has no separate word here and never did. It says *but* both times and
 lets the tone do the work. German marks the difference, and it marks it a second
 time with **doch** in answers, so the pattern is one you have already met.
 
+The word ← Old High German *suntar*, "apart" (EtymDB 2.1), the same family as
+English *sunder*.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SONDERN-01, GE-LEX-ABER-01, GE-LEX-NICHT-01, GE-LEX-KEIN-01, GE-LEX-KEINEN-01, GE-LEX-SCHWARZ-01, GE-LEX-WEISS-01, GE-LEX-ROT-01, GE-LEX-KAFFEE-02, GE-LEX-TEE-02, GE-PRAGMATICS-DOCH-05] -->
 

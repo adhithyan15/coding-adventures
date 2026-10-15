@@ -4,7 +4,7 @@
   "chapter": 192,
   "title": "Newspaper, Magazine, Dictionary, Ruler, Folder",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2232d4a8aaee2109",
+  "sourceHash": "fnv1a64:e1f9cb1117a72d3e",
   "lessons": [
     {
       "id": "RU-C192-gazeta",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa6201b3f96a8b26",
+      "sourceHash": "fnv1a64:85e3f8ade1eaeae2",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "словарь (slovár) is слово, \"a word\", with -арь, a suffix for a thing or keeper: a book of words."
+              "text": "словарь (slovár) is слово, \"a word\", with -арь, a suffix for a thing or keeper: a book of words. Слово from Proto-Slavic slovo — inherited; Vasmer relates it to Sanskrit śrávas, \"fame\"."
             }
           ]
         },

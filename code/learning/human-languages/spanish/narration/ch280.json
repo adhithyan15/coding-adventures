@@ -4,7 +4,7 @@
   "chapter": 280,
   "title": "Four Things You Buy --- Cheese, Egg, Apple, Money",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1c512fe978f4e7be",
+  "sourceHash": "fnv1a64:f5864e063fa9b11f",
   "lessons": [
     {
       "id": "ES-C280-queso",
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:134f0cb69c3f50cc",
+      "sourceHash": "fnv1a64:e709d20d01945cbe",
       "notice": null,
       "blocks": [
         {
@@ -392,7 +392,7 @@
             },
             {
               "kind": "speech",
-              "text": "Gaius Matius was a Roman of the first century before our era, a friend of Julius Caesar, and a writer on cooking and gardening. A kind of apple carried his name: mala Mattiana, the Matian apples. That phrase wore down — mattiana into manzana — and along the way the adjective swallowed the noun. The variety name became the word for the fruit, and the man vanished inside it."
+              "text": "Gaius Matius was a Roman of the first century before our era, a friend of Julius Caesar, and a writer on cooking and gardening. A kind of apple carried his name: mala Mattiana, the Matian apples. That phrase wore down — manzana comes from mattiana — and along the way the adjective swallowed the noun. The variety name became the word for the fruit, and the man vanished inside it."
             },
             {
               "kind": "speech",

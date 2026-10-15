@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Police officer, Shop assistant, Farmer, Baker, Driver",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ad18c9aed517875d",
+  "sourceHash": "fnv1a64:f95311375201d16a",
   "lessons": [
     {
       "id": "RU-C108-police-officer",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00fb784b2ec67606",
+      "sourceHash": "fnv1a64:f9ec53165ef989c4",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "продавец (prodavéts) is продавать, \"to sell\", with -ец, \"one who does it\". The verb is про- with давать, \"to give\"."
+              "text": "продавец (prodavéts) is продавать, \"to sell\", with -ец, \"one who does it\". The verb is про- with давать, \"to give\". Vasmer takes давать from дать, \"to give\", kin to Lithuanian dovanà, \"a gift\"."
             }
           ]
         },

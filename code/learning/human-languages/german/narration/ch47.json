@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Which One, and the Form the Book Owed You",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:386efe24d42208de",
+  "sourceHash": "fnv1a64:7e2518faa5976a7d",
   "lessons": [
     {
       "id": "GE-C34-welcher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2c4ffc8fb5b7e62",
+      "sourceHash": "fnv1a64:b0c555395a61b0be",
       "notice": null,
       "blocks": [
         {
@@ -78,11 +78,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "welcher is two ancient pieces: hwa- — the what you already meet at the front of every W-word — and -lîk, \"like, bodily form\", the ancestor of English -ly and of the word like itself. What-like."
+              "text": "welcher from Proto-Germanic hwilīkaz (EtymDB 2.1), two ancient pieces: hwa- — the what at the front of every W-word — and -lîk, \"like, bodily form\", the ancestor of English -ly and of the word like itself. What-like."
             },
             {
               "kind": "speech",
-              "text": "English built its own word out of the very same two: hwā + līc gave hwilc, which wore down to which. So both languages ask \"which one\" by asking \"what kind\", and the shared seam is still visible if you set wel-cher beside wh-ich."
+              "text": "English built its own word out of the very same two: hwā + līc gave hwilc, which wore down to which. So both languages ask \"which one\" by asking \"what kind\", and the seam shows if you set wel-cher beside wh-ich."
             }
           ]
         },

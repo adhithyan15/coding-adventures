@@ -4,7 +4,7 @@
   "chapter": 143,
   "title": "To fly, To ride, To walk, To come, To leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d4b01380776bcea4",
+  "sourceHash": "fnv1a64:a5a6f1229268ca59",
   "lessons": [
     {
       "id": "RU-C143-letat",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b1c314b3b904111",
+      "sourceHash": "fnv1a64:bbbde0604dc2c28b",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "приходить (prikhodít) is при-, \"to, toward\", with ходить (khodít), \"to walk\": to come to a place."
+              "text": "приходить (prikhodít) is при-, \"to, toward\", with ходить (khodít), \"to walk\": to come to a place. Vasmer ties ход to the Indo-European root sed-, \"to sit\", its х grown from an s after prefixes."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e542db09c9ed617",
+      "sourceHash": "fnv1a64:38d66117956fb019",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "уходить (ukhodít) is у-, \"away\", with ходить (khodít), \"to walk\": to go away."
+              "text": "уходить (ukhodít) is у-, \"away\", with ходить (khodít), \"to walk\": to go away. Vasmer ties ход to the Indo-European root sed-, \"to sit\", its х grown from an s after prefixes."
             }
           ]
         },

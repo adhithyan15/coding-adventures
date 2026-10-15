@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 50,
-  "sourceHash": "fnv1a64:bafd74c2695b9a0e",
+  "sourceHash": "fnv1a64:b780709bcd461acf",
   "lessonIds": [
     "LA-C50-hic",
     "LA-C50-iste",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch50.txt",
   "json": "latin/narration/ch50.json",
-  "textHash": "fnv1a64:04cff0f152556f00",
-  "jsonHash": "fnv1a64:f2bc466e0911019c",
+  "textHash": "fnv1a64:2c7c5f28552db059",
+  "jsonHash": "fnv1a64:3e44bf5db45cd659",
   "findings": []
 }

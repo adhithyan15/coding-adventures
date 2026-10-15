@@ -54,7 +54,7 @@ reviews_of: [ES-C301-cesta]
 
 **el papel** — "the paper."
 
-Behind it is **papyrus**, the Egyptian reed whose pith was beaten flat and written
+It comes from **papyrus**, the Egyptian reed whose pith was beaten flat and written
 on for three thousand years. English **paper** is the same reed. So is the
 **papyrus** in a museum case, which is the word arriving a second time, unworn,
 to name the original thing.

@@ -47,7 +47,7 @@ reviews_of: [RU-C148-ustalyy]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**полчаса** is *пол-*, "half", with *часа*, a form of *час*, "hour".
+**полчаса** is *пол-*, "half", with *часа*, a form of *час*, "hour". Vasmer traces *час* to Proto-Slavic *\*časŭ* and thinks *пол-* probably kin to Albanian *palë*, "side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

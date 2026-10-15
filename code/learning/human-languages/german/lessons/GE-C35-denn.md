@@ -62,7 +62,8 @@ survivor at all.
 
 You can still hear the join. *"It rained, then I stayed home"* and *"It rained,
 so I stayed home"* are nearly the same sentence, and a reason is very often a
-*before* wearing different clothes.
+*before* wearing different clothes. *Dann* ← Old High German *danne* ←
+Proto-Germanic *\*þan*, "then" (EtymDB 2.1), and *denn* split off from it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-DENN-01, GE-LEX-UND-01, GE-LEX-ODER-01, GE-LEX-ABER-01, GE-LEX-SONDERN-01, GE-GRAMMAR-VERB-SECOND-02, GE-LEX-MUEDE-01, GE-LEX-KEINE-01, GE-LEX-ZEIT-01, GE-LEX-LERNEN-01, GE-LEX-DEUTSCH-01, GE-LEX-GELERNT-01, GE-GRAMMAR-PERFEKT-ICH-01, GE-LEX-WARUM-01, GE-ETYMON-WARUM-WAR-UM-02, GE-LEX-WER-01, GE-ETYMON-WER-WHO-02, GE-LEX-WANN-01, GE-ETYMON-WANN-WHEN-02] -->

@@ -4,7 +4,7 @@
   "chapter": 225,
   "title": "Leafy greens, Spinach, Papaya, Watermelon, Cashew nuts",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a8cc5da60ec1b218",
+  "sourceHash": "fnv1a64:5f1678b3b4c8a540",
   "lessons": [
     {
       "id": "TE-C225-akukura",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e70bbdbbf1fcd500",
+      "sourceHash": "fnv1a64:87a8a02dd169b0f8",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "బొప్పాయి (boppāyi) is a form of the fruit's name papaya, which came to India with the fruit. DEDR and CDIAL do not list it."
+              "text": "బొప్పాయి (boppāyi) is a form of the fruit's name papaya, borrowed when the fruit reached India. DEDR and CDIAL do not list it."
             }
           ]
         },

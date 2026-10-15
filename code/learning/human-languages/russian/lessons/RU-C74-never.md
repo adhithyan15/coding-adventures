@@ -47,7 +47,7 @@ reviews_of: [RU-C74-sometimes]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**никогда** is *ни*, "not even", with *когда*, "when": "at no time". Its *к-* is the old question stem of *кто*, "who".
+**никогда** is *ни*, "not even", with *когда*, "when": "at no time". Its *к-* is the old question stem of *кто*, "who". Vasmer sets *ни* beside Latin *nī* and Gothic *nei*, "not".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

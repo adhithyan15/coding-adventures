@@ -47,6 +47,8 @@ reviews_of: [PT-C217-gordo-gorda]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **pequeno-almoço** is "little lunch": *pequeno*, "small", and *almoço*, "lunch".
+Both are inherited through Old Portuguese, *pequeno* unchanged and *almoço* from
+*almorço* (EtymDB 2.1); where *pequeno* came from before that is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

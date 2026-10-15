@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 204,
-  "sourceHash": "fnv1a64:4ea5e50a3a64b965",
+  "sourceHash": "fnv1a64:86457888dd9b0486",
   "lessonIds": [
     "GE-C204-leder",
     "GE-C204-holz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch204.txt",
   "json": "german/narration/ch204.json",
-  "textHash": "fnv1a64:857c5f85bb3241bd",
-  "jsonHash": "fnv1a64:ddd59e18ec63cf85",
+  "textHash": "fnv1a64:de69fac8706a971e",
+  "jsonHash": "fnv1a64:3c5613f14ad90ed0",
   "findings": []
 }

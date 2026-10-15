@@ -81,7 +81,7 @@ Behind **நண்பன்** is **நண்பு** (*naṇbu*), "friendship, c
 to the root family of **நண்ணு** (*naṇṇu*), "**to draw near**." A friend, in
 Tamil's own accounting, is someone who came close.
 
-Be precise. The Dravidian dictionary files *naṇbu* and *naṇbaṉ* in the same
+Be precise. DEDR 3588 files *naṇbu* and *naṇbaṉ* in the same
 entry as *naṇṇu*; the Tamil lexicon prefers **நள்-**, making them siblings
 rather than parent and child. They differ on the line of descent, not on the
 household.

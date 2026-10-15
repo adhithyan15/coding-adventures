@@ -4,7 +4,7 @@
   "chapter": 189,
   "title": "Someone else's, Native, Local, Foreign, Russian",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:382bff2b5d7a73af",
+  "sourceHash": "fnv1a64:152819b1bfc88caa",
   "lessons": [
     {
       "id": "RU-C189-chuzhoy",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7490bcf75e08de65",
+      "sourceHash": "fnv1a64:9404093efc5ef481",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "местный (méstnyy) is место, \"a place\", with -ный: \"of the place\"."
+              "text": "местный (méstnyy) is место, \"a place\", with -ный: \"of the place\". Vasmer relates место to Lithuanian mìsti, \"to feed oneself\", despite a mismatch in accent."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61557a417e464736",
+      "sourceHash": "fnv1a64:b8d67664933933f6",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "иностранный (inostránnyy) is иной, \"other\", with страна, \"a country\", the Church Slavonic shape of сторона, \"side\": \"of another land\"."
+              "text": "иностранный (inostránnyy) is иной, \"other\", with страна, \"a country\", the Church Slavonic shape of сторона, \"side\": \"of another land\". Vasmer confirms страна as borrowed from Church Slavonic, and relates иной to Latin ūnus, \"one\"."
             }
           ]
         },

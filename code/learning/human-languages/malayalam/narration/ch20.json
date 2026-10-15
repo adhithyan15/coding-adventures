@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cd9c87d021b396db",
+  "sourceHash": "fnv1a64:0175bf9922cad120",
   "lessons": [
     {
       "id": "ML-C20-pathinonnu-irupathu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86450fdeba14259e",
+      "sourceHash": "fnv1a64:6d90f9436686790a",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഇരുപത് (irupatŭ, \"twenty\") = ഇരു (iru, an older word for \"two\") + പത്ത് (pattŭ, \"ten\") — still fully visible as \"two-tens\" today. This matches Tamil's own irupatu almost letter-for-letter, both languages having kept this compound transparent — unlike Telugu's iravai, which most likely continues the same underlying pattern but has worn down past the point of visibly splitting apart."
+              "text": "ഇരുപത് (irupatŭ, \"twenty\") = ഇരു (iru, an older word for \"two\") + പത്ത് (pattŭ, \"ten\") — still fully visible as \"two-tens\" today. This matches Tamil's own irupatu almost letter-for-letter, both languages having kept this compound transparent — unlike Telugu's iravai, which most likely continues the same underlying pattern but has worn down past the point of visibly splitting apart. Both parts are native Dravidian (DEDR 474, 3918)."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 246,
-  "sourceHash": "fnv1a64:be867d838115fbf9",
+  "sourceHash": "fnv1a64:3f32a9025347f840",
   "lessonIds": [
     "FR-C246-genereux-genereuse",
     "FR-C246-paresseux-paresseuse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch246.txt",
   "json": "french/narration/ch246.json",
-  "textHash": "fnv1a64:3c63ee3ea8af83e8",
-  "jsonHash": "fnv1a64:c9af9f1a7838068b",
+  "textHash": "fnv1a64:8206e0b9578b05f2",
+  "jsonHash": "fnv1a64:d41d9a98dd722b02",
   "findings": []
 }

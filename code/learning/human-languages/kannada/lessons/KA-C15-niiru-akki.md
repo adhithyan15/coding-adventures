@@ -42,14 +42,15 @@ surprising break from the pack.
 
 **ನೀರು** (*nīru*) = "**water**" — matching Tamil's **நீர்** (*nīr*, the
 root inside *taṇṇīr*) closely. Kannada didn't make Malayalam's switch to
-the *veḷ-* "bright/white" root.
+the *veḷ-* "bright/white" root. *Nīru* and *nīr* are one native Dravidian
+word (DEDR 3690).
 
 ## The word, taken apart: ಅಕ್ಕಿ, ಅನ್ನ — rice, raw and cooked
 <!-- hl-knowledge: introduces=[KA-ETYMON-C15-NIIRU-AKKI-02]; assesses=[] -->
 
-- **ಅಕ್ಕಿ** (*akki*) = "**rice**" (raw grain).
-- **ಅನ್ನ** (*anna*) = "**cooked rice**" (the meal) — likely Sanskrit-
-  influenced, the same general idea as Tamil's *sātam*.
+- **ಅಕ್ಕಿ** (*akki*) = "**rice**" (raw grain) — native Dravidian (DEDR 215).
+- **ಅನ್ನ** (*anna*) = "**cooked rice**" (the meal) — borrowed from Sanskrit
+  *anna*, "food, cooked rice" (CDIAL 395), the same general idea as Tamil's *sātam*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02] -->

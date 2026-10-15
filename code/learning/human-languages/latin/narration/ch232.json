@@ -4,7 +4,7 @@
   "chapter": 232,
   "title": "To steal, To uncover, To seem, To serve, To suffer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fb6f9cdf857bce9f",
+  "sourceHash": "fnv1a64:fb02ac842296bcc7",
   "lessons": [
     {
       "id": "LA-C232-furor",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74f3767cd16e01f4",
+      "sourceHash": "fnv1a64:2baa3bdb5387cc5a",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "videor is the passive of videō, \"to see\": to be seen, so to seem."
+              "text": "videor is the passive of videō, \"to see\": to be seen, so to seem. Videō is inherited from Proto-Indo-European weyd-, \"to see, to know\" (EtymDB 2.1)."
             }
           ]
         },

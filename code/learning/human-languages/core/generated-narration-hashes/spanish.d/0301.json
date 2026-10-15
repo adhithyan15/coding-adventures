@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 301,
-  "sourceHash": "fnv1a64:b76599eb30393d2b",
+  "sourceHash": "fnv1a64:2be3aa70f704909f",
   "lessonIds": [
     "ES-C301-cuerda",
     "ES-C301-aguja",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch301.txt",
   "json": "spanish/narration/ch301.json",
-  "textHash": "fnv1a64:356093d1171c0ea9",
-  "jsonHash": "fnv1a64:1009248f912f7f74",
+  "textHash": "fnv1a64:fbd33e14c51b193a",
+  "jsonHash": "fnv1a64:97a6d2f9ca90d77a",
   "findings": []
 }

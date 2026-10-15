@@ -54,7 +54,7 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**वहाँ** (*vahāṁ*) pairs the stem of **वह**, "that", with the same place ending *-hāṁ* that **यहाँ**, "here", has. CDIAL has no entry for it, so its older history is left open here.
+**वहाँ** (*vahāṁ*) pairs the stem of **वह**, "that", with the same place ending *-hāṁ* that **यहाँ**, "here", has. CDIAL has no entry for it, so its older history is uncertain.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-04, HI-CONCEPT-C38-PAIR-01, HI-CONCEPT-C38-PAIR-02] -->

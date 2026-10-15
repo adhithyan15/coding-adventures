@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:550c93deb9d36026",
+  "sourceHash": "fnv1a64:2cb8f377448cfad6",
   "lessons": [
     {
       "id": "TE-C12-kutumbam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2fc8e3de92c8c0c",
+      "sourceHash": "fnv1a64:aa8703489cd97f60",
       "notice": null,
       "blocks": [
         {
@@ -77,7 +77,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the system — four words, split by relative age rather than just gender — is shared across Tamil, Kannada, and Telugu. But the exact words aren't identical everywhere: Telugu keeps its own నాన్న for father and చెల్లి for \"younger sister,\" even while three of the six words line up closely with its cousins."
+              "text": "So the system — four words, split by relative age rather than just gender — is shared across Tamil, Kannada, and Telugu. But the exact words aren't identical everywhere: Telugu keeps its own నాన్న for father and చెల్లి for \"younger sister,\" even while three of the six words line up closely with its cousins. All four sibling words are native Dravidian: anna, tammuḍu and akka share entries with their cousins (DEDR 131, 3085, 23), and DEDR 2783 files celli with celi, \"female companion\"."
             }
           ]
         },

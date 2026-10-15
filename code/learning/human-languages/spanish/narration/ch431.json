@@ -4,7 +4,7 @@
   "chapter": 431,
   "title": "El Pedido Y La Devolución",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:56ce5c4294843eb5",
+  "sourceHash": "fnv1a64:6dd43fbdfb0f2b18",
   "lessons": [
     {
       "id": "ES-C431-pedido",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:011d571d9b007634",
+      "sourceHash": "fnv1a64:4693937fc3d8dc0e",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "el pedido is the past participle of pedir, to ask for, used as a noun. What was asked for. Spanish does this constantly, and once you see it you will see it everywhere:"
+              "text": "el pedido is the past participle of pedir, to ask for, used as a noun. Pedir from Latin petere, \"to seek\" (EtymDB 2.1). What was asked for. Spanish does this constantly, and once you see it you will see it everywhere:"
             },
             {
               "kind": "table",
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c557138b4c2897e",
+      "sourceHash": "fnv1a64:4e54b5c791bd07ee",
       "notice": null,
       "blocks": [
         {
@@ -197,7 +197,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "de- back, plus volver, to turn. To turn a thing back."
+              "text": "de- back, plus volver, to turn. To turn a thing back. Volver from Latin volvere, \"to roll, to turn\" (EtymDB 2.1)."
             },
             {
               "kind": "speech",

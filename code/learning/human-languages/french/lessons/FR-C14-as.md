@@ -61,7 +61,8 @@ almost dead in the mouth. It is why the pronoun is not optional — *as* on its 
 would tell a listener nothing about who has something.
 
 Keep that in mind as the paradigm fills in. You are learning six written forms
-and rather fewer sounds.
+and rather fewer sounds. *Avoir* itself is inherited from Latin *habēre*, "to
+have" (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-VERB-AVOIR-AS-02] -->

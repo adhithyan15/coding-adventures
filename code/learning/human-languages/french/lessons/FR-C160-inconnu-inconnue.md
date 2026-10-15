@@ -46,7 +46,7 @@ reviews_of: [FR-C160-bas-basse]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**inconnu** — *in-*, "not", and *connu*, the past participle of *connaître*: not known.
+**inconnu** — *in-*, "not", and *connu*, the past participle of *connaître*: not known. *Connaître* ← Latin *cognōscere*, "to get to know" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

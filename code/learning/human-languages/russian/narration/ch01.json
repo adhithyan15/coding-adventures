@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and courtesy",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:fc3d29150b12d50c",
+  "sourceHash": "fnv1a64:0a249068986e3173",
   "lessons": [
     {
       "id": "RU-C01-privet",
@@ -986,7 +986,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:63595f85b31f2e38",
+      "sourceHash": "fnv1a64:a690711a73654a02",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1061,7 +1061,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "пожалуйста (pozhálusta) is пожалуй + a softening tag -ста. пожалуй is the command form of the old verb zhálovat', \"to grant, to bestow a favour\" — from the root жал-, the same root as zhal' (\"a pity\") and zhalet' (\"to feel for someone\")."
+              "text": "пожалуйста (pozhálusta) is пожалуй + a softening tag -ста. пожалуй is either the command form of the old verb zhálovat', \"to grant, to bestow a favour\", or a worn-down pozhálu(yu), \"I grant\" (Vasmer gives both) — on the root жал-, often linked to zhal', \"a pity\"."
             },
             {
               "kind": "speech",
@@ -1069,7 +1069,7 @@
             },
             {
               "kind": "speech",
-              "text": "It also does a job English splits off: the reply to thanks. Where English needs a separate \"you're welcome,\" Russian answers spasíbo with пожалуйста (pozhálusta) — \"[it was] a favour freely given.\""
+              "text": "It also does a job English splits off: the reply to thanks. Where English needs a separate \"you're welcome,\" Russian answers spasíbo with пожалуйста (pozhálusta)."
             }
           ]
         },
@@ -1177,7 +1177,7 @@
             },
             {
               "kind": "speech",
-              "text": "What favour-root hides inside it? (zhálovat', \"to grant a favour\" — cousin of zhal', \"pity.\") What two English phrases does this one word cover? (\"please\" and \"you're welcome.\") What sound does ж make? (zh, as in measure.)"
+              "text": "What favour-root hides inside it? (zhálovat', \"to grant a favour\" — linked to zhal', \"pity.\") What two English phrases does this one word cover? (\"please\" and \"you're welcome.\") What sound does ж make? (zh, as in measure.)"
             }
           ]
         }

@@ -46,7 +46,7 @@ reviews_of: [TE-C92-medicine]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ఆసుపత్రి** (*āsupatri*) is usually explained as a reshaping of English *hospital*. Neither DEDR nor CDIAL records it.
+**ఆసుపత్రి** (*āsupatri*) is usually traced to English *hospital*, reshaped. Neither DEDR nor CDIAL records it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -61,7 +61,8 @@ so the length is not decoration.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **ஆம்** (*ām*) is the plain “yes.” Doubled for emphasis it becomes
-*āmām*, “yes, indeed.”
+*āmām*, “yes, indeed.” It is native Dravidian, worn down from *ākum*, “it will
+be” (DEDR 333).
 
 ## Grammar lens
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

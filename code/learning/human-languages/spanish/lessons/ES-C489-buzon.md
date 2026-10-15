@@ -47,7 +47,7 @@ reviews_of: [ES-C489-ayuntamiento]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**buzón** has no settled origin. The accounts that dictionaries offer do not agree, and none has won.
+**buzón** is of uncertain origin. The accounts that dictionaries offer do not agree, and none has won.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

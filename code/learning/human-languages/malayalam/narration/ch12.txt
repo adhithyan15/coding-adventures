@@ -20,6 +20,7 @@ The word, taken apart.
 ചേച്ചി (cēcci) means older sister.
 അനിയത്തി (aniyatti) means younger sister.
 Notice these don't closely match Tamil/Kannada/Telugu's aṇṇaṉ/anna, tambi/tammuḍu, akkā/akka, or tangai/celli — Malayalam built its own set of sibling words. But the structure is identical: four words, not two, split by whether the sibling is older or younger than you — the same signature pattern you've now seen across all four Dravidian languages, even where the specific words diverge.
+DEDR has no entry for these four. Cēṭṭan and cēcci are usually linked to Prakrit jeṭṭha, "eldest, elder brother" (CDIAL 5286); where aniyan and aniyatti come from is uncertain.
 
 Guided Practice.
 [pause 1 second]

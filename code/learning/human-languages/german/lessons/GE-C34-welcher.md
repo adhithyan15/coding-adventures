@@ -58,13 +58,13 @@ Said *VEL-cher*, with the soft ich-sound of *ich* and *nicht* in the middle.
 ## The word, taken apart: what-like
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WELCHER-01, GE-LEX-WAS-01, GE-ETYMON-WER-WHO-02] -->
 
-**welcher** is two ancient pieces: ***hwa-*** — the *what* you already meet at
-the front of every W-word — and ***-lîk***, "like, bodily form", the ancestor of
+**welcher** ← Proto-Germanic *\*hwilīkaz* (EtymDB 2.1), two ancient pieces:
+***hwa-*** — the *what* at the front of every W-word — and ***-lîk***, "like, bodily form", the ancestor of
 English **-ly** and of the word **like** itself. *What-like.*
 
 English built its own word out of the very same two: *hwā* + *līc* gave
 **hwilc**, which wore down to **which**. So both languages ask "which one" by
-asking "what kind", and the shared seam is still visible if you set *wel-cher*
+asking "what kind", and the seam shows if you set *wel-cher*
 beside *wh-ich*.
 
 ## Guided Practice

@@ -11,7 +11,7 @@ You already know that Tamil's noon and afternoon boundaries can blur. Now learn 
 
 The word, taken apart - மதிய வணக்கம் — confirmed, with a flexible boundary.
 மதிய வணக்கம் (matiya vaṇakkam) — "good afternoon" — is confirmed, by two independently-fetched sources, as Tamil's afternoon greeting, used roughly "noon to around 4 PM." A third source, already used for the morning and evening greetings, doesn't list a distinct afternoon greeting at all — it only covers "before noon" and "after noon through evening," implicitly treating those two as bookending the whole day. This is an honest extension of TA-C28's own noon/afternoon boundary-blur into the greeting layer, not a new problem to worry about.
-Use மதிய வணக்கம் (matiya vaṇakkam) when that afternoon slot fits the people and setting around you. Treat "noon to 4" as a useful learning window, not as a universal clock rule.
+Use மதிய வணக்கம் (matiya vaṇakkam) when that afternoon slot fits the people and setting around you. Treat "noon to 4" as a useful learning window, not as a universal clock rule. The two words come from different places: matiya from Sanskrit madhya, "middle" (CDIAL 9804), and vaṇakkam, native, from the verb "to bow" (DEDR 5236).
 
 Guided Practice.
 [pause 1 second]

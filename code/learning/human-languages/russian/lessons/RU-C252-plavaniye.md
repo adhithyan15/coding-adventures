@@ -47,7 +47,7 @@ reviews_of: [RU-C252-beg]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**плавание** is a noun from *плавать*, "to swim", on the root of *плыть*, "to float".
+**плавание** is a noun from *плавать*, "to swim", on the root of *плыть*, "to float". Vasmer relates *плыть* to Sanskrit *plávatē*, "floats", and Greek *pléō*, "I sail".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

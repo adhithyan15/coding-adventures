@@ -48,7 +48,8 @@ reviews_of: [ES-C402-costar, ES-C402-camisa, ES-C402-camiseta]
 
 The noun belongs to **tallar**, "to cut or shape." A garment is cut to a
 measure, and that cut becomes its **talla**. In a shop, **¿Qué talla?** asks
-"What size?"
+"What size?" Both go back to Latin *talea*, "a cutting"; EtymDB 2.1 routes
+*talla* through French *taille*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COSTAR, ES-LEX-CAMISA, ES-LEX-CAMISETA, ES-LEX-TALLA] -->

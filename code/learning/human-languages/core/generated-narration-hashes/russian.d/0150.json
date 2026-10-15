@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 150,
-  "sourceHash": "fnv1a64:f5aec8732d0ebd82",
+  "sourceHash": "fnv1a64:a1158ae6f7d0b6e5",
   "lessonIds": [
     "RU-C150-redko",
     "RU-C150-kazhdyy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch150.txt",
   "json": "russian/narration/ch150.json",
-  "textHash": "fnv1a64:a93ffee9ca77964a",
-  "jsonHash": "fnv1a64:b887d00782c22ebf",
+  "textHash": "fnv1a64:0d1aaa046711196e",
+  "jsonHash": "fnv1a64:74886034a858b5ce",
   "findings": []
 }

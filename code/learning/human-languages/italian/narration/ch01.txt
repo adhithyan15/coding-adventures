@@ -185,6 +185,7 @@ Put the two pieces together into the polite, all-purpose hello.
 
 The word, taken apart.
 buon ("good") + giorno ("day").
+Both halves are inherited from Latin: buon from bonus, "good", and giorno from diurnum, "daytime" (EtymDB 2.1).
 buongiorno = "good day," one word.
 
 Why it's said this way.
