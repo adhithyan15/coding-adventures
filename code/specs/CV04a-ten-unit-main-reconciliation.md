@@ -65,3 +65,13 @@ receipts untouched/unpolled, no duplicate/termination. Deliver implementation
 first then genuine final-source Miri. Full Closure parity/output-byte-source/
 all transformation lineage/stable IDs/pass-sweep order/objective OPEN; heartbeat
 ACTIVE. Canonical base ESTree boundary, own types and owner decisions preserved.
+
+## Publication checkpoint before any native10 implementation
+
+R1 candidate372ba713 is now Git/API-verified published to the existing PR17288;
+exact carrier reviewab08e371 and its current2f unforced plan/docs gates passed.
+The PR is still conflicting/unmerged, autoOFF, with no hosted acceptance. R2's
+documentation-only mergeb2f123eb retains published372 plus only this spec and
+the saved-helper lesson. Incoming2f auditd782c1ca WITHHELD its raw shared widening;
+use the bounded four-edit canonical repair above. No native10 import, tests,
+implementation or Cargo execution has occurred. Miri remains DEFERRED/PENDING.

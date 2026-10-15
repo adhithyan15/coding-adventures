@@ -3,39 +3,52 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a Venn config integration checkpoint -->
-October15 LOCAL/UNPUBLISHED Venn palette source55afa2b5305bed31afcbd39bf0d267c44db08dbd;
-this documentation carrier retains that tested source's execution inputs.
-Spec2c05 precedes testsc7bfb2a6/72257 and
-closed main mergea20a6e1e:225512whole-tree entries,299pureincoming/7recipes/
-225206retained. Singlebasecd617 and incomingda0db47e. Owned Venn parser helpers,
-numeric admission and checked geometry retained; only bounded eight-slot palette
-selection/transport and paint cycling/metadata added. Registry376 exact;
-local Cargo lock deltas are exactly four palette package versions, outside native.
-Tests-first absent-schema/resolver-fixture compile failures retained as failures,
-never behavioral red acceptance. Actuala20 parser18/geo7 PASS, paint3P2F on old
-eight-vs-sixteen metadata oracle; reversible adapter preserves both old16-cell
-whole-scene bodies except eight explicit metadata additions. New48source->IR->
-checkedlayout->wholeScene/orderedFontQuery cells and24typedwholeScene cells,
-including0/1/2/8/10/defaultpalette, empty/11circles, authoredfills/globalordinal,
-exact8+Pmetadata. Total104completecells retain32old oracles. All8slot source
-controls include lexicalfallback/header/nested/sequence/quote/directmembers and
-empty-init no-inheritance. Focus actual18parser/6painttests/7geometric PASS.
-Full affected14 strict0; fullunfiltered suite: ACTUAL932P0F0ignored/41targets +strict0; logSHA85f3529c055186f1d94483c23da58725fc53fa16391b09f68f683a82cc3b24d6.
-Source/focused security: PASSf3864892 (exact source/focused scope); terminal: PASS88f8ef5b (exact full-suite/input scope).
-Native166/2838 inputs exactcdca2e11 except4namedMD; its actual1809P0F1existing
-ignored/78+strict0/source19eb92d9/terminalc45bd727 PASS remain scoped. Closure36/
-3705 exacthistorical316e. No new native/Closure execution claimed. CI/helper
-exact319dc1fe (reviewa0e1cf4b), Windows selection7e (review848edc05); actualMac3.10/
-fullhosted acceptancePENDING. Combinedpredecessor8d carrier review9b48a9f8 PASS.
-Latest remote main 2f160fa40c8b3a85f10beb91bfe1948152c57044; re-audit open shared/Closure heads before delivery.
-Sole implementation PR17288 still publishesd4004fe5, conflicting, autoOFF;
-publishedMacWindowsfailed/CIgatepending. Finaldocs/readmes/changelogs/backlog/
-issues/current-mainunforcedplan/exactcarrierreview/requiredhostedchecks and actual
-merge reachability remain required; no push/merge/cleanup or CIwaiver.
-Miri DEFERRED/PENDING, never passed; frozen checkout/process/inputs/target/receipts
-untouched/unpolled, no duplicate/termination. Deliver first then genuinefinalsource
-Miri. Full Closure parity/output-byte-source/fulltransformation lineage/objective
-OPEN; heartbeatACTIVE. BaseESTree/ownedtypes/no new crates.io dependencies.
+Published candidate `372ba7139f2d1bf453f90e43ead1ae4ee6429493` is Git/API verified on the sole implementation
+PR #17288; it is **unmerged**, conflicting with current main `2f160fa40c8b3a85f10beb91bfe1948152c57044`,
+and auto-merge is **OFF**. The first exact-head snapshot has no checks; no required
+hosted acceptance is inferred. The macOS and Windows repairs are published for
+validation, not reported as hosted successes.
+
+| Scope | Actual evidence |
+| --- | --- |
+| Native/compiler/downstream | Source `cdca2e11`: 1,809 passed over 78 targets, one unchanged ignore, strict lint passed; compiler 878 and unfiltered LANG 496. |
+| Runtime output | 96 owned sources / 576 actual cells on six available backends; all 516 prior tuples retained. Unavailable CLR is not counted. |
+| Diagram/parser/paint/downstream | Source `55afa2b5`: 932 passed over 41 targets, zero failures/ignores, strict lint passed. Venn checks 104 complete scenes/query traces: 32 retained oracles, 48 source-to-checked-layout cases, 24 typed empty/cycle/override cases. |
+| Standalone Closure attribution | Corrected 36 manifest roots / 3,705 objects retain the named historical `316e7878` test/lint inputs. This is exact source attribution, not a new execution claim. |
+| Documentation carrier | Published `372ba713` differs from tested `55afa2b5` at exactly eleven named Markdown paths. Document checker, 1,291 lesson shards and whitespace gates passed; runtime/config/test inputs are unchanged. |
+| Build plan | Exact `372ba713` unforced plan against main `2f160fa4` exited 0, selecting Closure on Linux/macOS/Windows and the Windows OS suites. Plan SHA256 `eab596f164394e957c6f9b7f55e711fe8c0a36bb9d690b437c7cc48a203b65d5`. Selection is not hosted execution. |
+
+Independent palette source review `f3864892`, terminal review `88f8ef5b` and
+exact published-carrier security review `ab08e371` passed. Complete main/palette
+merge proof accounts for all 225,512 entries; old parser/numeric/geometry guards
+and both old sixteen-cell scene bodies are retained with the declared metadata
+adapter. Registry tuples remain exactly 376, with no new crates.io dependency.
+
+Windows `tcp-reactor` now has an explicit Unix-only build selection; its Rust
+source and Unix Cargo tests are retained. This does not add Windows socket
+support. The macOS helper pins the reviewed GHC, scopes compiler/linker/SDK
+selection to an isolated Cabal config, and requires real phase-refusal and
+C/GHC/hsc2hs/Cabal link/run probes before publishing it. Eleven portable controls
+and real local Windows Cabal controls passed; actual macOS Cabal 3.10 and all
+required current-head hosted checks remain pending.
+
+Main advanced after the validated palette merge: ten-unit ALGOL #17574 is not
+yet reconciled. Its raw shared widening is WITHHELD by incoming review
+`d782c1ca`; no execution or UB finding is inferred from the static witness.
+Next isolated branch `codex/closurec-ten-unit-integration-20261015`, head
+`b2f123eb9c55ad7c4270822c22b80cfa00406094`, contains only the committed spec/lesson over this published
+candidate. Its nine producer blobs and safe four-edit canonical repair contract
+are saved; no native10 implementation or Cargo execution has occurred. Native10
+106-source/636-cell totals are prospective, never acceptance.
+
+Final-source Miri is **DEFERRED/PENDING, never passed**, under the authorized
+delivery-first order. Frozen checkout/process/inputs/target/receipts remain
+untouched and unpolled; no duplicate or termination. Current conflict-free,
+review-clean exact-head terminal acceptable required checks must precede
+auto-merge, and fetched merge reachability must precede cleanup. No CI waiver.
+Full Closure parity, output-byte/source joins, stable IDs, pass/sweep ordering
+and folding/renaming/inlining/motion/merging/deletion lineage remain OPEN;
+heartbeat ACTIVE. ESTree boundary, owned types and unrelated local work retained.
 <!-- /CV04a Venn config integration checkpoint -->
 
 <!-- CV04a pathwise pending checkpoint -->
