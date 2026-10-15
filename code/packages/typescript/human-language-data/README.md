@@ -231,6 +231,12 @@ Other package link-rejection fixtures likewise use junctions for directory
 links on Windows. File-link checks are separate: they run when Windows grants
 that capability and remain mandatory on Linux CI.
 
+`tests/root-homonym-regressions.test.ts` pins the corrected real-corpus root
+slugs for cross-track homonyms and checks the cousin join on representative
+positive and negative pairs (nine/new, garland/dirt, black/art, free/book).
+It reads only the named lessons, so the regression stays fast as the full
+curriculum grows.
+
 Exact script-inventory evidence is partitioned by ownership under
 `tests/script-inventories/`. A stable glob in `tests/integration.test.ts`
 discovers those evidence modules while loading the corpus once. Japanese, Urdu,
