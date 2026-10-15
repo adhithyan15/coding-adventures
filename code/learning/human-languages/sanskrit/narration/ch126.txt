@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for clean, then the Sanskrit for dirty.
 You'll want to know: विस्तृतः.
 विस्तृतः — vistṛtaḥ — "wide".
 
+The word, taken apart.
+vistṛta is the past participle of vi-√stṛ "spread out", the root √stṛ "strew, spread" with vi- "apart" (CDIAL 12011): "spread out, wide" (MW).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for dirty, then the Sanskrit for wide.
 
 You'll want to know: संकीर्णः.
 संकीर्णः — saṅkīrṇaḥ — "narrow".
+
+The word, taken apart.
+saṅkīrṇa comes from sam-√kṝ, the root √kṝ "pour out, scatter" with sam "together" (MW). As a past participle it means "poured together, crowded", and from that "narrow, cramped".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for wide, then the Sanskrit for narrow.
 You'll want to know: गभीरः.
 गभीरः — gabhīraḥ — "deep".
 
+The word, taken apart.
+gabhīra "deep" is old, in the Rigveda, and is inherited from Indo-European (EtymDB); Persian žarf "deep" is a cousin. It lives on as Hindi gahrā "deep" (CDIAL 4024).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for narrow, then the Sanskrit for deep.
 You'll want to know: आर्द्रः.
 आर्द्रः — ārdraḥ — "wet".
 
+The word, taken apart.
+ārdra "wet, moist, fresh" is old, in the Rigveda; MW cites only a grammarians' root √ard for it, so its origin is uncertain. It lives on as Hindi ālā "damp" (CDIAL 1340), and ārdraka "ginger" is built on it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for deep, then the Sanskrit for wet.
 
 You'll want to know: शुष्कः.
 शुष्कः — śuṣkaḥ — "dry".
+
+The word, taken apart.
+śuṣka comes from the root √śuṣ "become dry" (CDIAL 12548), which MW sets beside Latin siccus "dry", and EtymDB counts as inherited from Indo-European. It lives on as Hindi sūkhā "dry" (CDIAL 12548).
 
 What you've built.
 One more word for this chapter.

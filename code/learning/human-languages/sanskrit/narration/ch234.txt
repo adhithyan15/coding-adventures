@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for follows, then the Sanskrit for goes out
 You'll want to know: शुष्यति.
 शुष्यति — śuṣyati — "dries up".
 
+The word, taken apart.
+śuṣyati is the present of the root √śuṣ, "to dry, wither" (MW). MW thinks the root was first suṣ, and compares Greek auō, "I dry", and Lithuanian sausas, "dry", so it is inherited from Indo-European.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for goes out, then the Sanskrit for dries u
 
 You'll want to know: प्लवते.
 प्लवते — plavate — "floats".
+
+The word, taken apart.
+plavate is the present of the root √plu, "to float, swim" (MW), a Rigvedic verb (CDIAL 9024). The root is inherited from Indo-European: MW compares Greek pleō, "I sail", and Latin pluit, "it rains".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for dries up, then the Sanskrit for floats.
 You'll want to know: आरभते.
 आरभते — ārabhate — "begins".
 
+The word, taken apart.
+ārabhate is built on ā- and the root √rabh, "to take hold of" (MW), which MW connects with √labh, "to obtain". In the Rigveda it means "seizes", and from the Śatapatha Brāhmaṇa "undertakes, begins" (CDIAL 1305): to begin is to take hold of a task.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for floats, then the Sanskrit for begins.
 You'll want to know: समापयति.
 समापयति — samāpayati — "finishes".
 
+The word, taken apart.
+samāpayati is the causative of sam-āp, "to obtain completely", from the root √āp, "to reach, obtain" (MW). It first meant "causes to gain completely" and then "finishes" (CDIAL 13216). MW compares √āp with Latin apīscor, "I reach", and aptus, "fitted".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for begins, then the Sanskrit for finishes.
 
 You'll want to know: प्रयच्छति.
 प्रयच्छति — prayacchati — "hands over, gives".
+
+The word, taken apart.
+prayacchati is built on pra, "forth", and the root √yam, whose present is yacchati, "holds" (MW). To hold something out towards someone is to hand it over, so MW gives both "stretches forth" and "offers, gives".
 
 What you've built.
 One more word for this chapter.

@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "Pomegranate, Grapes, Jackfruit, Lemon, Cake",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:eff7510b963c8472",
+  "sourceHash": "fnv1a64:b50f78135d69a77c",
   "lessons": [
     {
       "id": "SA-C109-dadimam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4080e4cf01024671",
+      "sourceHash": "fnv1a64:feaef735953df966",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dāḍima \"the pomegranate\" appears from the Mahābhārata on (MW), and neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Hindi dāṛim and Bengali dālim (CDIAL 6254)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:086009468a094a2a",
+      "sourceHash": "fnv1a64:ad451d42bc6be89f",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "EtymDB sets drākṣā \"vine, grape\" beside Latin frāgum \"strawberry\" and an Albanian word for the same fruit, but MW and CDIAL give no such link, so it is uncertain. It lives on as Hindi and Punjabi dākh \"grape, raisin\" (CDIAL 6628)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:368ba5ca3ce264c9",
+      "sourceHash": "fnv1a64:2d61c30e83a6f315",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "panasa \"the jackfruit tree and its fruit\" is probably borrowed from Dravidian: CDIAL 7781 says so after EWA, and DEDR 3988 sets it beside a Dravidian family of jackfruit names. It lives on as Hindi panas and Marathi phaṇas (CDIAL 7781)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53f5b55b704237fe",
+      "sourceHash": "fnv1a64:93e6304ded01ace2",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nimbūka, beside nimbū, is \"the lime\" in the old word lists (MW), and CDIAL 7247, after EWA, takes it as borrowed from Austroasiatic. It lives on as Hindi nimbū \"lime, lemon\" (CDIAL 7247)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14d57e505f394a9e",
+      "sourceHash": "fnv1a64:70ef259c7e5c8f65",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "apūpa \"a cake of flour\" is old, in the Rigveda (MW), but its origin is uncertain: CDIAL 491 reports Charpentier's view that it was borrowed from Dravidian, comparing Tamil appam. It lives on as Hindi pūā, a sweet fried cake (CDIAL 491)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

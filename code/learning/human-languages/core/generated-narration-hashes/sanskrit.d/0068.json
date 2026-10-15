@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 68,
-  "sourceHash": "fnv1a64:5ed6a97f78026db0",
+  "sourceHash": "fnv1a64:9b5ca2900cf55fc2",
   "lessonIds": [
     "SA-C68-sorrow",
     "SA-C68-fear",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch68.txt",
   "json": "sanskrit/narration/ch68.json",
-  "textHash": "fnv1a64:f2157a3c57441f40",
-  "jsonHash": "fnv1a64:8064ce62fdc9d004",
+  "textHash": "fnv1a64:30fa0add8efcf1bd",
+  "jsonHash": "fnv1a64:27537d2c1587cab5",
   "findings": []
 }

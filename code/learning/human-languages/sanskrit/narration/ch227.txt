@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a creature, then the Sanskrit for a win
 You'll want to know: पक्षः.
 पक्षः — pakṣaḥ — "a wing".
 
+The word, taken apart.
+pakṣa is a Rigvedic word for "wing, feather, side" (CDIAL 7627). From the side of a body came the side of an argument and a party, and also each half of the lunar month. It lives on as Hindi pākh, "wing of a bird".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a winged creature, a bird, then the San
 
 You'll want to know: पुच्छः.
 पुच्छः — pucchaḥ — "a tail".
+
+The word, taken apart.
+puccha is the tail or hinder part, a word of the Atharvaveda (CDIAL 8249). MW gives no derivation, and CDIAL only compares piccha, "tail feather", so its origin is uncertain. It lives on as Gujarati pũch, "tail".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a wing, then the Sanskrit for a tail.
 You'll want to know: शृंगम्.
 शृंगम् — śṛṅgam — "a horn".
 
+The word, taken apart.
+śṛṅga is the horn of an animal, and also a mountain peak (MW). MW suggests it may be connected with śiras, "head", and compares Latin cornū and English horn.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a tail, then the Sanskrit for a horn.
 You'll want to know: चञ्चुः.
 चञ्चुः — cañcuḥ — "a beak".
 
+The word, taken apart.
+cañcu is probably borrowed from Dravidian: CDIAL 4569 follows Mayrhofer in taking it from a Dravidian source. It lives on as Bengali cãuc, "beak".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a horn, then the Sanskrit for a beak.
 
 You'll want to know: गृध्रः.
 गृध्रः — gṛdhraḥ — "a vulture".
+
+The word, taken apart.
+gṛdhra is built on the root √gṛdh, "to be greedy" (MW): the vulture is the greedy bird. Both senses are in the Rigveda (CDIAL 4233), and it lives on as Hindi gīdh, "vulture".
 
 What you've built.
 One more word for this chapter.

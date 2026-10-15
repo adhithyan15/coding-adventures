@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 208,
-  "sourceHash": "fnv1a64:33cba7e3dd30585b",
+  "sourceHash": "fnv1a64:96ecf874ce4afd5f",
   "lessonIds": [
     "SA-C208-parivarah",
     "SA-C208-bandhuh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch208.txt",
   "json": "sanskrit/narration/ch208.json",
-  "textHash": "fnv1a64:f26ef9ef4e98da6f",
-  "jsonHash": "fnv1a64:68442118a91c415b",
+  "textHash": "fnv1a64:b39b66eabe96c0d0",
+  "jsonHash": "fnv1a64:621508b0dafcef49",
   "findings": []
 }

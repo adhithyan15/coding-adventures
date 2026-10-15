@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for tired, then the Sanskrit for hungry.
 You'll want to know: लेखनी.
 लेखनी — lekhanī — "a pen".
 
+The word, taken apart.
+lekhanī is built from the root √likh "scratch, write" with the instrument suffix -anī: "the writing tool", a reed-pen or brush (MW). lekha "a writing, a letter" comes from the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for hungry, then the Sanskrit for a pen.
 
 You'll want to know: मसी.
 मसी — masī — "ink".
+
+The word, taken apart.
+masī, which MW writes maṣī, means "black powder, lampblack, ink". CDIAL 9920 takes it as borrowed from Dravidian, comparing Tamil mai "ink, lampblack" (DEDR 5101).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a pen, then the Sanskrit for ink.
 You'll want to know: पट्टिका.
 पट्टिका — paṭṭikā — "a slate, a tablet".
 
+The word, taken apart.
+paṭṭikā is the feminine small form of paṭṭa "a slab, a tablet for writing on" (MW; CDIAL 7699). CDIAL calls the derivation of paṭṭa from pattra "leaf" very doubtful, so its origin is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for ink, then the Sanskrit for a slate.
 You'll want to know: दीपिका.
 दीपिका — dīpikā — "a small lamp".
 
+The word, taken apart.
+dīpikā is dīpa "a lamp", from the root √dīp "blaze, shine" (MW), with the small-thing suffix -ikā: "a little lamp". dīpa lives on as Hindi dīyā "lamp" (CDIAL 6348).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a slate, then the Sanskrit for a small 
 
 You'll want to know: कपाटम्.
 कपाटम् — kapāṭam — "a door panel, a shutter".
+
+The word, taken apart.
+kapāṭa, also kavāṭa, "the leaf or panel of a door" is perhaps borrowed from Dravidian, as CDIAL 2963 reports after EWA. It lives on as Marathi kavāḍ "door" and Punjabi kavāṛ (CDIAL 2963).
 
 What you've built.
 One more word for this chapter.

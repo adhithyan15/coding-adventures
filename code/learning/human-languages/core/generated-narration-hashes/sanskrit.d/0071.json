@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 71,
-  "sourceHash": "fnv1a64:7be708c78e1a091d",
+  "sourceHash": "fnv1a64:154e24bbdaeed419",
   "lessonIds": [
     "SA-C71-runs",
     "SA-C71-walks",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch71.txt",
   "json": "sanskrit/narration/ch71.json",
-  "textHash": "fnv1a64:50af497045a6e557",
-  "jsonHash": "fnv1a64:189778472e949ebe",
+  "textHash": "fnv1a64:e02eba4baacf23ba",
+  "jsonHash": "fnv1a64:64e81705528532de",
   "findings": []
 }

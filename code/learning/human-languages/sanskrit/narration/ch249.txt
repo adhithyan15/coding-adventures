@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a stake, then the Sanskrit for a fee.
 You'll want to know: वार्ता.
 वार्ता — vārtā — "news".
 
+The word, taken apart.
+vārtā is built on vṛtti, "way of life, conduct", from the root √vṛt, "to turn, proceed" (MW). It first meant "livelihood, business", then "tidings" (CDIAL 11564), and it lives on as Hindi bāt, "talk, matter".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a fee, then the Sanskrit for news.
 
 You'll want to know: नाटकम्.
 नाटकम् — nāṭakam — "a drama, a play".
+
+The word, taken apart.
+nāṭaka is built on naṭa, "dancer, actor", from √naṭ, which MW calls a Prakrit form of √nṛt, "to dance". It first meant "actor" (CDIAL 7045), then the play itself.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for news, then the Sanskrit for a drama.
 You'll want to know: काव्यम्.
 काव्यम् — kāvyam — "a poem, poetry".
 
+The word, taken apart.
+kāvya is built on kavi, "seer, poet", which you have already met, with the suffix -ya and a lengthened first vowel (MW): "coming from a poet", and so poetry.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a drama, then the Sanskrit for a poem.
 You'll want to know: चित्रपटः.
 चित्रपटः — citrapaṭaḥ — "a film, a painted cloth".
 
+The word, taken apart.
+citrapaṭa is a compound of citra, "picture", and paṭa, "woven cloth" (MW): a painting on cloth. CDIAL 7692 thinks paṭa is probably borrowed, like karpāsa, "cotton". The sense "film" is modern.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a poem, then the Sanskrit for a film.
 
 You'll want to know: खेला.
 खेला — khelā — "a game".
+
+The word, taken apart.
+khelā, "sport, play" (MW), is the noun of khelati, "plays", which you have already met; MW's first sense of the root √khel is "to shake". CDIAL 3918 says these forms may be connected with the group behind Hindi khel, "game", whose origin is uncertain, perhaps non-Aryan.
 
 What you've built.
 One more word for this chapter.

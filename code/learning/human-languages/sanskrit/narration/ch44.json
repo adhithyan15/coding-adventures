@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Colours",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d75a34e72d3b7bda",
+  "sourceHash": "fnv1a64:1af1d2f0513205bd",
   "lessons": [
     {
       "id": "SA-C44-white",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb0770946c714092",
+      "sourceHash": "fnv1a64:fc8f8228e3990e69",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Śveta is built on the root √śvit, \"to be bright, white\" (MW, CDIAL 12774). It is inherited: MW compares Gothic hweits, the cousin of English white."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5887c3a4d070a6bb",
+      "sourceHash": "fnv1a64:9990b410f14ca015",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Śyāma is already in the Atharvaveda. MW reports a traditional link with the root √śyai, and CDIAL 12664 compares śyāva, \"dark brown\", but its source is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c11322974ec0d20",
+      "sourceHash": "fnv1a64:8a3d2c217956bf92",
       "notice": null,
       "blocks": [
         {
@@ -342,7 +364,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its older force is \"made yellow\", so a पीतम् वस्त्रम् is a cloth that has been dyed rather than one that grew that colour."
+              "text": "Its shape looks like a past participle, but which verb it would belong to is not settled. A पीतम् वस्त्रम् is a yellow cloth."
             },
             {
               "kind": "speech",
@@ -352,17 +374,28 @@
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Yellow, understood as a thing that was dyed."
+              "text": "MW suggests that pīta \"yellow\" may come from the root √pyai, \"to swell, be fat\", after the colour of butter and oil; that derivation is not settled, and CDIAL 8230 sends the reader to pitta, \"bile\", instead. Hindi pīlā comes from its longer form pītala (CDIAL 8233)."
             }
           ]
         },
         {
           "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Yellow, and a word whose history is still open."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c353771bf3041914",
+      "sourceHash": "fnv1a64:71cf49a82750989f",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +529,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Harita is built on hari, \"yellowish, tawny\" (MW). It is inherited: MW compares Latin helvus, \"honey-yellow\", and English yellow. It lives on as Hindi harā, \"green\" (CDIAL 13985)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +550,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +608,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c82c888f19a89b6",
+      "sourceHash": "fnv1a64:1c2b52c77c7ec36f",
       "notice": null,
       "blocks": [
         {

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for blunt, then the Sanskrit for valuable.
 You'll want to know: कुशलः.
 कुशलः — kuśalaḥ — "able, well".
 
+The word, taken apart.
+kuśala is the word behind kuśalam, "well-being", from your first greetings, and its origin is not settled (CDIAL 3365 judges the one modern derivation it cites "very doubtful"). A popular explanation takes it from kuśa, the sacred grass, with a root of cutting, "skilled at cutting the grass", but no dictionary we checked (MW, Apte, CDIAL) supports it. MW gives both "well, healthy" and "competent, skilful".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for valuable, then the Sanskrit for able.
 
 You'll want to know: निपुणः.
 निपुणः — nipuṇaḥ — "expert".
+
+The word, taken apart.
+nipuṇa means "clever, adroit, skilful" (MW). MW says it is "said to be from a √puṇ" with ni-, and only reports that view, so its origin is uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for able, then the Sanskrit for expert.
 You'll want to know: अज्ञः.
 अज्ञः — ajñaḥ — "ignorant".
 
+The word, taken apart.
+ajña is a-, "not", with jña, "knowing", from the root √jñā, "to know" (MW; CDIAL 160). √jñā is the root of jānāti, "knows", which you have already met.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for expert, then the Sanskrit for ignorant.
 You'll want to know: विज्ञः.
 विज्ञः — vijñaḥ — "wise, knowing".
 
+The word, taken apart.
+vijña is built on vi-, "apart", and jña, "knowing", from the root √jñā, "to know" (MW): one who knows things apart, wise. It is the opposite of ajña, and vijñāna, "science", is built the same way.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for ignorant, then the Sanskrit for wise.
 
 You'll want to know: बुद्धिमान्.
 बुद्धिमान् — buddhimān — "intelligent".
+
+The word, taken apart.
+buddhimān is the nominative of buddhimat, buddhi, "intelligence", with the suffix -mat, "having" (MW). Buddhi is built on the root √budh, "to wake, notice". Hindi and Bengali took the word over as buddhimān.
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for lightning, then the Sanskrit for thunde
 You'll want to know: वात्या.
 वात्या — vātyā — "a storm".
 
+The word, taken apart.
+vātyā "a strong wind, a gale" is built on vāta "wind" (CDIAL 11505), from the root √vā "blow". MW sets √vā beside Latin ventus and English wind: an inherited Indo-European root.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for thunder, then the Sanskrit for a storm.
 
 You'll want to know: नीहारः.
 नीहारः — nīhāraḥ — "mist, fog".
+
+The word, taken apart.
+nīhāra "mist, fog, hoar-frost" is old, in the Rigveda. MW splits it as nī- "down" + hāra, pointing to the verb ni-√hṛ, but does not explain the sense, so its formation is uncertain. Hindi kept it as nīhār "fog, mist" (CDIAL 7574).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a storm, then the Sanskrit for mist.
 You'll want to know: शाखा.
 शाखा — śākhā — "a branch".
 
+The word, taken apart.
+śākhā "a branch" is inherited from Indo-European (EtymDB). Its cousins include Lithuanian šakà "branch" and Persian shākh "branch, horn" (EtymDB), and Pali kept it as sākhā (CDIAL 12376).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for mist, then the Sanskrit for a branch.
 You'll want to know: पर्णम्.
 पर्णम् — parṇam — "a leaf".
 
+The word, taken apart.
+parṇa first meant "a feather, a wing", and then "a leaf", the plumage of a tree (MW). It is inherited from Indo-European, and English fern is a cousin (EtymDB). It lives on as Hindi pān "leaf, betel leaf" (CDIAL 7918).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a branch, then the Sanskrit for a leaf.
 
 You'll want to know: कुसुमम्.
 कुसुमम् — kusumam — "a flower".
+
+The word, taken apart.
+kusuma "a flower" appears from Manu on; MW cites only a grammarians' root √kus for it, so its origin is uncertain. Pali kept it unchanged as kusuma (CDIAL 3377).
 
 What you've built.
 One more word for this chapter.

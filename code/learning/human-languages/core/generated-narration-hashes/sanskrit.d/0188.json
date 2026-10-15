@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 188,
-  "sourceHash": "fnv1a64:a31e469de3c7ec7c",
+  "sourceHash": "fnv1a64:0350001af71ef8e0",
   "lessonIds": [
     "SA-C188-trsitah",
     "SA-C188-sajjah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch188.txt",
   "json": "sanskrit/narration/ch188.json",
-  "textHash": "fnv1a64:cc392da3ab2e5901",
-  "jsonHash": "fnv1a64:a8b8fb58ba1b9a60",
+  "textHash": "fnv1a64:3880105da720ec43",
+  "jsonHash": "fnv1a64:bcc9d40d0c65f6ec",
   "findings": []
 }

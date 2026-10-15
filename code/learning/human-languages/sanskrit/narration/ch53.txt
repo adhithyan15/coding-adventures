@@ -17,6 +17,9 @@ The deixis lesson taught you that Sanskrit points with three initial letters. �
 Nothing else about the word is new. Its -ः ending is the masculine ending you have read on नरः, बालः and मार्गः since the place words, and it agrees exactly as those do.
 Say the four together, because from here on they behave as one family: अ-, त-, क-, य-.
 
+The word, taken apart.
+Yaḥ is built on the relative base ya-, which is inherited: MW compares the Greek relative hos. It lives on as Hindi jo, "who, which" (CDIAL 10391).
+
 What you've built.
 The missing fourth leg of a system you already half knew.
 
@@ -45,6 +48,9 @@ You'll want to know: सः.
 You have known तत् since the deixis lesson — the t- word that points at something over there. सः (saḥ) is the same pointing word for a masculine person or thing: that man, he, that one.
 The odd part is the स-. Everywhere else in this family the far-pointer is त-: तत्, तत्र, and every other form of the word. Only the masculine and feminine nominative singulars break out and begin with स- — सः (saḥ) and सा. It is one of the oldest irregularities in the language, and it is inherited rather than invented: Greek's article does exactly the same thing, with ho and hē beside a t- everywhere else.
 So the rule to hold is small and strange: the word is a t- word that starts with स- only when it is the subject.
+
+The word, taken apart.
+Saḥ is the inherited pointing pronoun whose other forms run on ta-: MW compares Avestan hō and the Greek article ho, which keep the same s- or h- in the same two forms.
 
 What you've built.
 The pointer that will answer यः (yaḥ) in the next lesson.

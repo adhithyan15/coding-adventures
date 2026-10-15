@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for sends, then the Sanskrit for searches.
 You'll want to know: शिक्षते.
 शिक्षते — śikṣate — "learns".
 
+The word, taken apart.
+śikṣate comes from the desiderative of the root √śak "be able" (MW): "wishes to be able", and so "learns". It lives on as Hindi sīkhnā "to learn" (CDIAL 12430).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for searches, then the Sanskrit for learns.
 
 You'll want to know: पाठयति.
 पाठयति — pāṭhayati — "teaches".
+
+The word, taken apart.
+pāṭhayati is the causative of the root √paṭh "read aloud, recite" (CDIAL 8037): "makes someone recite", and so "teaches". It is the causing form of paṭhati "reads", and Sindhi kept it as pāṛhaṇu "to teach" (CDIAL 8037).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for learns, then the Sanskrit for teaches.
 You'll want to know: विस्मरति.
 विस्मरति — vismarati — "forgets".
 
+The word, taken apart.
+vismarati comes from vi "away, apart" and the root √smṛ "remember" (CDIAL 12021): "remembers away", forgets. MW compares √smṛ with Latin memor "mindful", the source of English memory; it lives on as Hindi bisarnā "to forget" (CDIAL 12021).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for teaches, then the Sanskrit for forgets.
 You'll want to know: आरोहति.
 आरोहति — ārohati — "climbs".
 
+The word, taken apart.
+ārohati comes from ā "onto, up to" and the root √ruh "climb, rise, grow" (MW; CDIAL 1335): "climbs up, mounts". It lives on as Hindi arohnā "to mount, ride" (CDIAL 1335).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for forgets, then the Sanskrit for climbs.
 
 You'll want to know: अवरोहति.
 अवरोहति — avarohati — "climbs down".
+
+The word, taken apart.
+avarohati comes from ava "down" and the root √ruh "climb, rise" (MW; CDIAL 817): "climbs down, descends", the mirror of ārohati. Pali wore it down to orohati "descends" (CDIAL 817).
 
 What you've built.
 One more word for this chapter.

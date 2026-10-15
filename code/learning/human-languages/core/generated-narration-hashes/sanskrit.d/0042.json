@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 42,
-  "sourceHash": "fnv1a64:17e16fc0d4f27c02",
+  "sourceHash": "fnv1a64:6ea37ce9cde52820",
   "lessonIds": [
     "SA-C42-sometimes",
     "SA-C42-suddenly",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch42.txt",
   "json": "sanskrit/narration/ch42.json",
-  "textHash": "fnv1a64:25168d4411b10507",
-  "jsonHash": "fnv1a64:f9c421e2a5b62ce0",
+  "textHash": "fnv1a64:61ca7a9f2f24e0a6",
+  "jsonHash": "fnv1a64:385b145e1bd9962a",
   "findings": []
 }

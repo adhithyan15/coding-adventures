@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "People --- and the Four Noun Endings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:93ba87b4581c2dbe",
+  "sourceHash": "fnv1a64:f583ad528934e5d1",
   "lessons": [
     {
       "id": "SA-C20-man",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:faad2423d02303bb",
+      "sourceHash": "fnv1a64:adff245644cb3470",
       "notice": null,
       "blocks": [
         {
@@ -70,6 +70,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nara is built on the older stem nṛ, \"man, hero\", and it is inherited: MW compares Avestan nar and Greek anēr. It lives on as Hindi nar, \"man\" (CDIAL 6970)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -80,7 +91,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -138,7 +149,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -170,7 +181,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ba0718067338beb2",
+      "sourceHash": "fnv1a64:9f1d732c800bfc96",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -221,6 +232,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nārī is built from the stem of nara, \"man\", with the feminine ending -ī (MW). It is already in the Rigveda and lives on as Hindi nār, \"woman\" (CDIAL 7078)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -231,7 +253,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -280,7 +302,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -311,7 +333,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:746114c19d71964d",
+      "sourceHash": "fnv1a64:1f2757be7dd86c3e",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +374,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bāla \"young\" has several proposed etymologies and none is settled. CDIAL 9216 tentatively puts it in a set of words for a defect of body or mind, whose source may be Munda or Dravidian (CDIAL 9124). It lives on as Hindi bāl and bālā, \"child\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e6b56aa6d8ae8d0",
+      "sourceHash": "fnv1a64:9172d12b4f984134",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +529,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vṛddha is the past participle of the root √vṛdh, \"to grow, increase\": \"grown\", and so \"grown old\" (MW, CDIAL 12073)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +550,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +608,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86870c0f12af2c39",
+      "sourceHash": "fnv1a64:18c0e9d0d564efa6",
       "notice": null,
       "blocks": [
         {
@@ -626,7 +670,7 @@
             },
             {
               "kind": "speech",
-              "text": "From the root √जन् (jan), \"to be born, to beget\" — the same root behind janma, \"birth.\" Its Latin cousin is gens (\"clan, people\") and genus, and through them English has genus, gene, generate, genesis and nation (from natio, \"a being born\")."
+              "text": "From the root √जन् (jan), \"to be born, to beget\" — the same root behind janma, \"birth.\" Its Latin cousins are gens (\"clan, people\") and genus, and through them and their Greek kin English has genus, gene, generate, genesis and nation (from natio, \"a being born\")."
             },
             {
               "kind": "speech",
@@ -636,6 +680,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Jana is built on the root √jan, \"to be born, beget\", which MW compares with Greek gignomai and Latin gignō. It lives on as Hindi janā, \"a person\" (CDIAL 5098)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -646,7 +701,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -695,7 +750,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice — man, woman, child",
           "segments": [
@@ -744,7 +799,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 174,
-  "sourceHash": "fnv1a64:f8deeb773572941d",
+  "sourceHash": "fnv1a64:1bb4fc3513d26a10",
   "lessonIds": [
     "SA-C174-corayati",
     "SA-C174-bhaksayati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch174.txt",
   "json": "sanskrit/narration/ch174.json",
-  "textHash": "fnv1a64:5925424a4f4d26d3",
-  "jsonHash": "fnv1a64:21a560ea85b2e938",
+  "textHash": "fnv1a64:36bc638c0ff0730a",
+  "jsonHash": "fnv1a64:63a68c7d9857bba0",
   "findings": []
 }

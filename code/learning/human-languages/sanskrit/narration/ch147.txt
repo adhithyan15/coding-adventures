@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a maternal grandfather, then the Sanskr
 You'll want to know: स्वामी.
 स्वामी — svāmī — "a master, an owner".
 
+The word, taken apart.
+svāmī is the nominative of svāmin, built from sva "own" with the suffix -min (MW; CDIAL 13930): "one who has property", an owner, a master. MW sets sva beside Latin suus "his own".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a father's brother, then the Sanskrit f
 
 You'll want to know: सेवकः.
 सेवकः — sevakaḥ — "a servant, an attendant".
+
+The word, taken apart.
+sevaka is built from the root √sev "attend on, serve" with the agent suffix -aka (CDIAL 13592): "one who attends", a servant. MW keeps it apart from a rare sevaka "one who sews", from √siv.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a master, then the Sanskrit for a serva
 You'll want to know: राज्ञी.
 राज्ञी — rājñī — "a queen".
 
+The word, taken apart.
+rājñī is the feminine of rājan "king" (MW), already in the Vājasaneyi Saṃhitā. It lives on as Hindi rānī "queen" (CDIAL 10692).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a servant, then the Sanskrit for a quee
 You'll want to know: मन्त्री.
 मन्त्री — mantrī — "a minister".
 
+The word, taken apart.
+mantrī is the nominative of mantrin "wise; a counsellor", built on mantra "counsel, sacred text" (CDIAL 9838). mantra comes from the root √man "think", which MW sets beside Latin monere "warn" and English mean.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a queen, then the Sanskrit for a minist
 
 You'll want to know: सेनापतिः.
 सेनापतिः — senāpatiḥ — "a general".
+
+The word, taken apart.
+senāpati is built from senā "army" and pati "lord, master" (CDIAL 13589), already in the Aitareya Brāhmaṇa. MW sets pati beside Greek posis "husband" and Latin potis "able".
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 33,
-  "sourceHash": "fnv1a64:b8b7cef16a647c9e",
+  "sourceHash": "fnv1a64:f926f947d6734a82",
   "lessonIds": [
     "SA-C33-river",
     "SA-C33-bridge",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch33.txt",
   "json": "sanskrit/narration/ch33.json",
-  "textHash": "fnv1a64:15c755f2481ee2ad",
-  "jsonHash": "fnv1a64:4423fd841caa5938",
+  "textHash": "fnv1a64:5c7265e9788b015b",
+  "jsonHash": "fnv1a64:04558e079da5f805",
   "findings": []
 }

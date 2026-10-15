@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a mat, then the Sanskrit for a carpet.
 You'll want to know: माषः.
 माषः — māṣaḥ — "black gram".
 
+The word, taken apart.
+māṣa is already in the Rigveda as "bean" (CDIAL 10097), and later names black gram in particular (MW). MW gives no derivation for it, so its origin is uncertain. The same word also named a small weight of gold.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a carpet, then the Sanskrit for black g
 
 You'll want to know: यवः.
 यवः — yavaḥ — "barley".
+
+The word, taken apart.
+yava is an inherited grain word: MW compares Avestan yava and Greek zeia, a kind of wheat, and says it first meant any grain. It lives on as Hindi jau, "barley" (CDIAL 10431).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for black gram, then the Sanskrit for barle
 You'll want to know: खर्जूरम्.
 खर्जूरम् — kharjūram — "a date palm's fruit".
 
+The word, taken apart.
+kharjūra names the date palm as early as the Taittirīya Saṃhitā, and its fruit later (CDIAL 3828). MW offers no derivation, and its origin is uncertain. It lives on as Hindi khajūr.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for barley, then the Sanskrit for a date pa
 You'll want to know: आमलकम्.
 आमलकम् — āmalakam — "an amla, gooseberry".
 
+The word, taken apart.
+āmalaka names the emblic tree and its sour fruit, already in the Chāndogya Upaniṣad (CDIAL 1247). MW gives no derivation, so its origin is uncertain. CDIAL lists Punjabi āmlā among its descendants.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a date palm's fruit, then the Sanskrit 
 
 You'll want to know: जम्बूफलम्.
 जम्बूफलम् — jambūphalam — "a rose apple".
+
+The word, taken apart.
+jambūphala is a compound of jambū, "the rose-apple tree" (MW), and phala, "fruit": the tree's fruit. Jambū lives on as Hindi jām (CDIAL 5131).
 
 What you've built.
 One more word for this chapter.

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for the shoulder, then the Sanskrit for the
 You'll want to know: धावति.
 धावति (dhāvati) — "(he, she) runs". It ends in -ति like गच्छति: one person, doing it now.
 
+The word, taken apart.
+Dhāvati is the present of the root √dhāv, "to run, flow", already in the Rigveda (MW). CDIAL 6802 follows it into Hindi dhāwnā, "to run".
+
 What you've built.
 A verb in the frame you know.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for the lip, then the Sanskrit for he runs.
 
 You'll want to know: चलति.
 चलति (calati) — "(he, she) moves, walks".
+
+The word, taken apart.
+Calati is the present of the root √cal, "to stir, move" (MW). It lives on as Hindi calnā, "to move, walk" (CDIAL 4715).
 
 What you've built.
 The slower way to go.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for he runs, then the Sanskrit for he walks
 You'll want to know: उपविशति.
 उपविशति (upaviśati) — "(he, she) sits down", often on an आसनम्.
 
+The word, taken apart.
+Upaviśati is built from upa, "near", and the root √viś, "to enter, settle" (MW). It lives on as Hindi baiṭhnā, "to sit" (CDIAL 2245).
+
 What you've built.
 What a guest does first.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for he walks, then the Sanskrit for he sits
 You'll want to know: उत्तिष्ठति.
 उत्तिष्ठति (uttiṣṭhati) — "(he, she) gets up": उत्, "up", with तिष्ठति, "stands", which you know.
 
+The word, taken apart.
+Uttiṣṭhati is built from ud, "up", and tiṣṭhati, "stands", from the root √sthā (CDIAL 1793).
+
 What you've built.
 Up plus stand.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for he sits down, then the Sanskrit for he 
 
 You'll want to know: पतति.
 पतति (patati) — "(he, she, it) falls". A leaf, a पत्रम्, पतति.
+
+The word, taken apart.
+Patati is the present of the root √pat, which first meant "to fly" and then "to fall" (CDIAL 7722). It is inherited: MW compares Greek petomai, "I fly". It lives on as Hindi paṛnā, "to fall".
 
 What you've built.
 What leaves and rain do.

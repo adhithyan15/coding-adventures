@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 256,
-  "sourceHash": "fnv1a64:f46fd4f68eac28bc",
+  "sourceHash": "fnv1a64:e6d6881de9409222",
   "lessonIds": [
     "SA-C256-prasiksanam",
     "SA-C256-sammelanam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch256.txt",
   "json": "sanskrit/narration/ch256.json",
-  "textHash": "fnv1a64:c58f1295de90799e",
-  "jsonHash": "fnv1a64:98a4902a2fd86080",
+  "textHash": "fnv1a64:70b4b428520225d7",
+  "jsonHash": "fnv1a64:6a73c29e9e25a277",
   "findings": []
 }

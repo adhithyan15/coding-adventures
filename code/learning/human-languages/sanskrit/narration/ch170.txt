@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a dictionary, then the Sanskrit for wri
 You'll want to know: कार्यम्.
 कार्यम् — kāryam — "work, a task".
 
+The word, taken apart.
+kārya is the gerundive of the root √kṛ "do, make" (CDIAL 3078): "to be done", and so "a task, work, business" (MW). It lives on as Hindi and Bengali kāj "work" (CDIAL 3078).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for writing, then the Sanskrit for work.
 
 You'll want to know: कर्म.
 कर्म — karma — "an action, work".
+
+The word, taken apart.
+karma is the nominative of karman "act, action, work", from the root √kṛ "do, make" (MW; CDIAL 2892). It wore down into Hindi kām "work" (CDIAL 2892), and it is the karma that English has borrowed.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for work, then the Sanskrit for an action.
 You'll want to know: उद्योगः.
 उद्योगः — udyogaḥ — "an occupation, industry".
 
+The word, taken apart.
+udyoga comes from ud-√yuj "exert oneself, set to work", the root √yuj "yoke, join" with ud "up" (MW; CDIAL 2055): "exertion, persevering effort", and so "an occupation, industry".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for an action, then the Sanskrit for an occ
 You'll want to know: वृत्तिः.
 वृत्तिः — vṛttiḥ — "a livelihood".
 
+The word, taken apart.
+vṛtti comes from the root √vṛt "turn, proceed, live" (CDIAL 12070): "the way one goes on", a mode of life, a livelihood. MW sets √vṛt beside Latin vertere "turn" and the English -ward of toward.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for an occupation, then the Sanskrit for a 
 
 You'll want to know: सेवा.
 सेवा — sevā — "service".
+
+The word, taken apart.
+sevā comes from the root √sev "attend on, serve, frequent" (CDIAL 13595): "attendance, homage, service". sevaka "a servant" and sevate "serves" come from the same root.
 
 What you've built.
 One more word for this chapter.

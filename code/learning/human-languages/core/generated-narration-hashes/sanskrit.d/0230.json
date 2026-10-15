@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 230,
-  "sourceHash": "fnv1a64:1be342d739cff1c2",
+  "sourceHash": "fnv1a64:7d450620c861bd64",
   "lessonIds": [
     "SA-C230-saphalata",
     "SA-C230-viphalata",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch230.txt",
   "json": "sanskrit/narration/ch230.json",
-  "textHash": "fnv1a64:fb423db6d763666f",
-  "jsonHash": "fnv1a64:0ef22291499e8a5d",
+  "textHash": "fnv1a64:ca1d3598723a47c1",
+  "jsonHash": "fnv1a64:a44c7f5c4f1e4273",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Sound and Song",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0d09608e31ed1293",
+  "sourceHash": "fnv1a64:fcdb7a34a4063455",
   "lessons": [
     {
       "id": "SA-C50-sound",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13ace63e24fa4376",
+      "sourceHash": "fnv1a64:1c1cf7edc0921f40",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Śabda is already in the Śatapatha Brāhmaṇa. MW suggests a link with the root √śap, and CDIAL 12298 marks the same root with a question mark, so its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cfe7c995617fe47",
+      "sourceHash": "fnv1a64:76001dfb11f8db79",
       "notice": null,
       "blocks": [
         {
@@ -307,7 +318,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:766dee4f92e304dc",
+      "sourceHash": "fnv1a64:0aaae39f767411ae",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +363,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vāṇī is already in the Rigveda (MW). CDIAL 11490 compares the grammarians' root vaṇ, \"to sound\", and possibly varṇa, but its source is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +384,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +442,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +473,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a02803a5fe86917c",
+      "sourceHash": "fnv1a64:b64e8e306374849f",
       "notice": null,
       "blocks": [
         {
@@ -490,12 +512,23 @@
             },
             {
               "kind": "speech",
-              "text": "No secure western cousin has been agreed for it, but it kept its ground at home: Hindi gīt and Bengali gīt are still the everyday word for a song. Neuter, ending in -अम्."
+              "text": "No secure western cousin has been agreed for it, but it kept its ground at home: Hindi and Punjabi gīt are still the everyday word for a song. Neuter, ending in -अम्."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gīta is the past participle of the root √gai, \"to sing\": \"what is sung\" (MW, CDIAL 4167)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +539,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +597,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +628,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:669c0dda760e6280",
+      "sourceHash": "fnv1a64:86effcc736665545",
       "notice": null,
       "blocks": [
         {
@@ -640,6 +673,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Śloka first meant a sound, then what is heard of a person, and then a stanza; MW and CDIAL 12748 connect it with the root √śru, \"to hear\". The Rāmāyaṇa's story that it began as śoka, \"grief\", is one MW calls fanciful."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +694,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +752,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

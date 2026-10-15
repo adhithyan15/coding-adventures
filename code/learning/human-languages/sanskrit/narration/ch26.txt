@@ -77,8 +77,11 @@ Say "people." (Janaḥ, from the root jan "to be born.") A king rules over them.
 
 You'll want to know: राजा.
 राजा (rājā) — "a king".
-राजा (rājā) is a king, and it belongs to the same -ṛ-shaped family as पिता and माता — the stem is rājan-.
+राजा (rājā) is a king, and its nominative ends in -ā like पिता and माता, but it belongs to another family: the stem is rājan-.
 Its cousin in Rome is rēx, in its other forms rēgem: regal, royal, regent, rex. In Gaul, chieftains' names ended in -rīx — Vercingetorix. English borrowed raj and maharaja back from India in the nineteenth century, so the word has now entered English twice, three thousand years apart, by two different doors.
+
+The word, taken apart.
+Rājan is built on the root √rāj, "to rule" (MW, CDIAL 10679). It is inherited: MW compares Latin rēx, Gothic reiks "ruler" and English rich, which first meant "powerful".
 
 What you've built.
 One word, two arrivals in English, with millennia between them.
@@ -89,7 +92,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: it once more, slowly]
 [pause 8 seconds for the answer]
-[your turn — say: rājā, then pitā, and name the family both stems share]
+[your turn — say: rājā, then pitā, and name the stem behind each (rājan-, pitṛ-)]
 [pause 8 seconds for the answer]
 [your turn — recall: say phalam]
 [pause 8 seconds for the answer]
@@ -111,8 +114,11 @@ Ask a guest "from where?" and "how?" (Kutaḥ? Katham?) — two more of the k- q
 
 You'll want to know: अतिथिः.
 अतिथिः (atithiḥ) — "a guest".
-अतिथिः (atithiḥ) is a guest. Tradition reads the word as a-tithi, "one without a date" — the visitor who arrives unannounced, on no appointed day, and must be fed anyway. Linguists prefer a root meaning "to wander" and derive it as "the wanderer".
+अतिथिः (atithiḥ) is a guest. Tradition reads the word as a-tithi, "one without a date" — the visitor who arrives unannounced, on no appointed day, and must be fed anyway. MW also gives a root meaning "to wander", which would make it "the wanderer".
 Keep the traditional reading; keep also the fact that it is a reading. Either way the famous line अतिथिदेवो भव — "be one to whom the guest is a god" — tells you how much weight the word carries.
+
+The word, taken apart.
+MW gives both accounts of atithi: the root √at, "to wander", or a-tithi, "one who has no fixed day for coming". Which one is right is not settled.
 
 What you've built.
 Four roles, and one of them arrives without warning.
@@ -144,7 +150,7 @@ Before the last word of this run: what did atithiḥ mean, and what did śiṣya
 You'll want to know: वैद्यः.
 वैद्यः (vaidyaḥ) — "a physician".
 वैद्यः (vaidyaḥ) is a physician — literally one who has the knowledge, built on vidyā, knowledge, from a root vid, "to know".
-That root is one of the great travellers: Latin vidēre, "to see" — video, evident; Greek idea; English wit, wise, wisdom. And Sanskrit already gave you a second knowing-verb, जानाति, from a different root altogether. Sanskrit keeps two ways of knowing apart, and वैद्यः (vaidyaḥ) belongs to the one that also means seeing — the doctor as the one who has looked.
+That root is one of the great travellers: Latin vidēre, "to see" — video, evident; Greek idea; English wit, wise, wisdom. And Sanskrit already gave you a second knowing-verb, जानाति, from a different root altogether. Sanskrit keeps two ways of knowing apart, and वैद्यः (vaidyaḥ) belongs to the one whose cousins elsewhere mean seeing — the doctor as the one who has looked.
 
 What you've built.
 Five roles: teacher, student, king, guest, physician.

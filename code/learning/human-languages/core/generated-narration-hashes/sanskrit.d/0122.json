@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 122,
-  "sourceHash": "fnv1a64:5d2629c373631799",
+  "sourceHash": "fnv1a64:db9ce1668a5c8946",
   "lessonIds": [
     "SA-C122-rajatam",
     "SA-C122-kacah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch122.txt",
   "json": "sanskrit/narration/ch122.json",
-  "textHash": "fnv1a64:be49d8df23573214",
-  "jsonHash": "fnv1a64:2d945d611638c22f",
+  "textHash": "fnv1a64:4f2f8de2d179b78d",
+  "jsonHash": "fnv1a64:532b02a22cdcdd07",
   "findings": []
 }

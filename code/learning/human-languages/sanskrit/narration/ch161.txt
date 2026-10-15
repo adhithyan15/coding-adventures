@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for eating, then the Sanskrit for a small p
 You'll want to know: शंखः.
 शंखः — śaṅkhaḥ — "a conch".
 
+The word, taken apart.
+śaṅkha "a conch-shell" is old, in the Atharvaveda, and is inherited from Indo-European: MW sets it beside Greek konchē and Latin concha "shell", and EtymDB agrees. It lives on as Hindi saṅkh "conch" (CDIAL 12263).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a small pitcher, then the Sanskrit for 
 
 You'll want to know: वेणुः.
 वेणुः — veṇuḥ — "a flute".
+
+The word, taken apart.
+veṇu first meant "a bamboo, a reed" in the Rigveda and later "a flute" (MW). MW thinks it probably comes from the root √ve "weave", but CDIAL 12096 finds its connections unclear, so its origin is uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a conch, then the Sanskrit for a flute.
 You'll want to know: मृदंगः.
 मृदंगः — mṛdaṅgaḥ — "a mridanga drum".
 
+The word, taken apart.
+MW explains mṛdaṅga "a drum" as probably mṛdam + -ga, "going about while being beaten", from the root √mṛd "press, beat". CDIAL 10289 compares mardala, another drum, so the formation is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a flute, then the Sanskrit for a mridan
 You'll want to know: नूपुरम्.
 नूपुरम् — nūpuram — "an anklet".
 
+The word, taken apart.
+nūpura "an anklet" has an uncertain origin: CDIAL 7577 reports both a Middle Indic form reshaped after keyūra "armlet" and Kuiper's non-Aryan account, comparing Santali lipur. It lives on as Hindi and Punjabi neur "anklet" (CDIAL 7577).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a mridanga drum, then the Sanskrit for 
 
 You'll want to know: कुण्डलम्.
 कुण्डलम् — kuṇḍalam — "an earring".
+
+The word, taken apart.
+kuṇḍala "a ring, an earring" is taken to be borrowed from Dravidian, after Burrow (CDIAL 3268; EWA). It lives on as Punjabi kuṇḍal "coil, earring" (CDIAL 3268).
 
 What you've built.
 One more word for this chapter.

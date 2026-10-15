@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:018553a2755ee4a3",
+  "sourceHash": "fnv1a64:bb25d81c139943a7",
   "lessons": [
     {
       "id": "SA-C05-vadami",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b29a6b8c7dba9688",
+      "sourceHash": "fnv1a64:4337011c1c165f5d",
       "notice": null,
       "blocks": [
         {
@@ -58,6 +58,10 @@
             {
               "kind": "speech",
               "text": "vadāmi (\"I speak\") is from the root vad (\"to speak, to say\") — the very root of vāda (\"a saying\") inside Chapter 1's dhanyavādaḥ (\"thank you\"). The present tense is stem + person- ending: vad-ā-mi, where -mi means \"I\" — the same -mi you can see in asmi (\"I am\")."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is built on √vad, which MW compares with Lithuanian vadinti, \"to call\"."
             }
           ]
         },
@@ -368,7 +372,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce79dcd9efdfad5d",
+      "sourceHash": "fnv1a64:833b34c46ea4cadf",
       "notice": null,
       "blocks": [
         {
@@ -406,7 +410,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ahaṁ saṁskṛtaṁ vadāmi = aham (\"I\") + saṁskṛtam (the object) + vadāmi (\"speak\") — \"I Sanskrit speak,\" the verb last (as in every daughter language). The name saṁskṛta means \"put together, refined, perfected\" — from sam- (\"together,\" cousin of English same, Greek syn-) + kṛta (\"made, done,\" from the root kṛ you met in namaskāra). So \"Sanskrit\" literally means \"the perfected [language],\" named in contrast to prākṛta (\"natural, raw\" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend)."
+              "text": "ahaṁ saṁskṛtaṁ vadāmi = aham (\"I\") + saṁskṛtam (the object) + vadāmi (\"speak\") — \"I Sanskrit speak,\" the verb last (as in every daughter language). The name saṁskṛta means \"put together, refined, perfected\" — from sam- (\"together,\" cousin of English same) + kṛta (\"made, done,\" from the root kṛ you met in namaskāra). So \"Sanskrit\" literally means \"the perfected [language],\" named in contrast to prākṛta (\"natural, raw\" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend)."
             }
           ]
         },
@@ -493,7 +497,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:482aa6cb910add4d",
+      "sourceHash": "fnv1a64:dcb0c807964eaa07",
       "notice": null,
       "blocks": [
         {
@@ -541,7 +545,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vasāmi (\"I dwell, I live\") is from the root vas (\"to dwell, to stay, to abide\"), from Proto-Indo-European wes- (\"to dwell, to be\") — the ancestor of English was and were (the past of \"to be\" began as \"to dwell/remain\"). So Sanskrit's \"I dwell\" and English's \"was\" are, at the root, one word. From vas come vāsa (\"a dwelling\"), nivāsa (\"a residence\"), and names like Vārāṇasī. \"I live in the city\" is ahaṁ nagare vasāmi."
+              "text": "vasāmi (\"I dwell, I live\") is from the root vas (\"to dwell, to stay, to abide\"), from Proto-Indo-European wes- (\"to dwell, to be\") — the ancestor of English was and were (the past of \"to be\" began as \"to dwell/remain\"). So Sanskrit's \"I dwell\" and English's \"was\" are, at the root, one word. From vas come vāsa (\"a dwelling\") and nivāsa (\"a residence\"). \"I live in the city\" is ahaṁ nagare vasāmi."
             }
           ]
         },
@@ -552,7 +556,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "nagare (\"in the city\") = nagara (\"city\") in the locative case (-e, \"in / at\"). Sanskrit has no separate word for \"in\" — it is folded into the noun's ending, the ancestor of the postpositions Hindi and Bengali use. This is your second case, after Chapter 4's dative."
+              "text": "nagare (\"in the city\") = nagara (\"city\") in the locative case (-e, \"in / at\"). Sanskrit has no separate word for \"in\" — it is folded into the noun's ending, where Hindi puts a separate word after the noun (meṃ, \"in\"). This is your second case, after Chapter 4's dative."
             }
           ]
         },
@@ -1001,7 +1005,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:511a4847f301ecfe",
+      "sourceHash": "fnv1a64:7b10cda3cd0d93ea",
       "notice": null,
       "blocks": [
         {

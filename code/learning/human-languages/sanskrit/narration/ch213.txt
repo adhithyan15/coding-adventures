@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a dream, then the Sanskrit for satisfac
 You'll want to know: सद्यः.
 सद्यः — sadyaḥ — "at once".
 
+The word, taken apart.
+sadyaḥ is built on sa-, "same", and dyu, "day" (MW; CDIAL 13123): "on the same day", and so "at once". It is already in the Rigveda.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for satisfaction, then the Sanskrit for at 
 
 You'll want to know: तत्क्षणम्.
 तत्क्षणम् — tatkṣaṇam — "instantly".
+
+The word, taken apart.
+tatkṣaṇam is built on tat, "that", and kṣaṇa, "moment" (MW): "at that very moment". CDIAL 5640 traces Hindi takhan, "then", to it, and CDIAL 3642 links kṣaṇa to akṣi, "eye", as the twinkling of an eye.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for at once, then the Sanskrit for instantl
 You'll want to know: प्राक्.
 प्राक् — prāk — "formerly, before".
 
+The word, taken apart.
+prāk is a form of prāñc, "turned forward, facing", built on pra, "forth", and √añc, "to bend, turn" (MW). What lies forward is "before" in time and, facing the sunrise, the east.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for instantly, then the Sanskrit for former
 You'll want to know: अनन्तरम्.
 अनन्तरम् — anantaram — "afterwards, next".
 
+The word, taken apart.
+anantaram is built on an-, "not", and antara, "interval" (MW): "with no interval", and so "immediately after" (CDIAL 287). CDIAL lists Marathi nãtar, "afterwards", under it, asking whether Marathi took it from Sanskrit.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for formerly, then the Sanskrit for afterwa
 
 You'll want to know: यावत्.
 यावत् — yāvat — "as long as, until".
+
+The word, taken apart.
+yāvat is built on the relative stem ya-, "which" (MW), and MW pairs it with its correlative tāvat, "so long". It is a Rigvedic word for "as long as, until" (CDIAL 10474).
 
 What you've built.
 One more word for this chapter.

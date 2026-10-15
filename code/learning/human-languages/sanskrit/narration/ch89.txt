@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a son, then the Sanskrit for a daughter
 You'll want to know: सुन्दरः.
 सुन्दरः (sundaraḥ) — "beautiful". सुन्दरः मयूरः — "a beautiful peacock".
 
+The word, taken apart.
+The origin of sundara is not settled. MW suggests su-nara, and CDIAL 13474 asks whether it is a Middle Indo-Aryan form of Rigvedic sūnara, "excellent", with an inserted d.
+
 What you've built.
 Before the noun, and it agrees.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a daughter, then the Sanskrit for beaut
 
 You'll want to know: दूरम्.
 दूरम् (dūram) — "far". विद्यालयः दूरम् — "the school is far".
+
+The word, taken apart.
+Dūra is a Rigvedic word for "distant", which MW derives, probably, from a root √du, "to go" (CDIAL 6495). It lives on as Hindi dūr, "far".
 
 What you've built.
 How far away it is.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for beautiful, then the Sanskrit for far.
 You'll want to know: समीपम्.
 समीपम् (samīpam) — "near", the opposite of दूरम् (dūram).
 
+The word, taken apart.
+MW takes samīpa as probably sam + ap, "water", formed like dvīpa, "island", and CDIAL 13226 agrees that its -īpa was taken from such words.
+
 What you've built.
 The other side of far.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for far, then the Sanskrit for near.
 You'll want to know: कठिनः.
 कठिनः (kaṭhinaḥ) — "hard", both to touch and to do. कठिनः पाठः — "a hard lesson".
 
+The word, taken apart.
+Kaṭhina may be borrowed from Dravidian: CDIAL 2650 reports that Mayrhofer groups it with Tamil kaṭṭu, "hardness", and similar words as a loan.
+
 What you've built.
 What a hard lesson is.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for near, then the Sanskrit for hard.
 
 You'll want to know: मधुरः.
 मधुरः (madhuraḥ) — "sweet", from मधु, "honey". मधुरम् आम्रम् — "a sweet mango".
+
+The word, taken apart.
+Madhura is built from madhu, "honey, sweet" (MW, CDIAL 9793), the inherited word whose English cousin is mead.
 
 What you've built.
 Honey, as a describing word.

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 166,
-  "sourceHash": "fnv1a64:0cb4d412f6424705",
+  "sourceHash": "fnv1a64:92f6e44eede51266",
   "lessonIds": [
     "SA-C166-asvatthah",
     "SA-C166-nimbah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch166.txt",
   "json": "sanskrit/narration/ch166.json",
-  "textHash": "fnv1a64:3b50f0b72c572f22",
-  "jsonHash": "fnv1a64:91ead89b521952f3",
+  "textHash": "fnv1a64:59f502512bc69595",
+  "jsonHash": "fnv1a64:9afb84864e2aee1f",
   "findings": []
 }

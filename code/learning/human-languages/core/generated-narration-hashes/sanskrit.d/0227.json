@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 227,
-  "sourceHash": "fnv1a64:b0c0215561f266c1",
+  "sourceHash": "fnv1a64:bd62093ab78900e0",
   "lessonIds": [
     "SA-C227-paksah",
     "SA-C227-pucchah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch227.txt",
   "json": "sanskrit/narration/ch227.json",
-  "textHash": "fnv1a64:fb83f2cf6c54d39e",
-  "jsonHash": "fnv1a64:626e3141320094ae",
+  "textHash": "fnv1a64:160f62c5b7b8024f",
+  "jsonHash": "fnv1a64:75862986500a47f4",
   "findings": []
 }

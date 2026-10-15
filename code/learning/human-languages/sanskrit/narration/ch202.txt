@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a problem, then the Sanskrit for a solu
 You'll want to know: पथिकः.
 पथिकः — pathikaḥ — "a wayfarer".
 
+The word, taken apart.
+pathika is pathin, "path, road", with the suffix -ika (MW): one who is on the road (CDIAL 7745). Pathin is an inherited Indo-European word: MW compares Greek patos, "path", and Latin pōns, "bridge".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a solution, then the Sanskrit for a way
 
 You'll want to know: दिशा.
 दिशा — diśā — "a direction".
+
+The word, taken apart.
+diśā is a later form of diś, "direction, quarter" (CDIAL 6339), built on the root √diś, "to point out, show" (MW): a direction is where you point. MW compares the root with Greek deiknymi, "I show", and Latin dīcere.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a wayfarer, then the Sanskrit for a dir
 You'll want to know: पूर्वा.
 पूर्वा — pūrvā — "the east".
 
+The word, taken apart.
+pūrva means "in front, former, first" (CDIAL 8343), and MW connects it with purā, "before", and pra, "forth". Facing the sunrise, the east is the direction in front of you, so pūrvā (diś) is the east.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a direction, then the Sanskrit for the 
 You'll want to know: पश्चिमा.
 पश्चिमा — paścimā — "the west".
 
+The word, taken apart.
+paścima is built on paścā, "behind, after" (MW; CDIAL 8007): facing the sunrise, the west is behind you, so paścimā is the west. Pali has it as pacchima, "western, last".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for the east, then the Sanskrit for the wes
 
 You'll want to know: उत्तरा.
 उत्तरा — uttarā — "the north".
+
+The word, taken apart.
+uttara is the comparative of ud, "up": "higher, upper" (MW; CDIAL 1767). MW explains "northern" as the higher part of India, and also as the left hand when you face the sunrise. The same word also means "answer".
 
 What you've built.
 One more word for this chapter.

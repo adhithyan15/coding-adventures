@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 117,
-  "sourceHash": "fnv1a64:a4cccb71328db602",
+  "sourceHash": "fnv1a64:6c23f9ac986d9792",
   "lessonIds": [
     "SA-C117-angusthah",
     "SA-C117-vaksah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch117.txt",
   "json": "sanskrit/narration/ch117.json",
-  "textHash": "fnv1a64:5f09f4d2bf4dd73d",
-  "jsonHash": "fnv1a64:0d4977428fe32d61",
+  "textHash": "fnv1a64:6270681b22f70a28",
+  "jsonHash": "fnv1a64:7f287f0b97ee7437",
   "findings": []
 }

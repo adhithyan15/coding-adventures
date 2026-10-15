@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a lemon, then the Sanskrit for a cake.
 You'll want to know: गिरिः.
 गिरिः — giriḥ — "a mountain, a hill".
 
+The word, taken apart.
+giri "a mountain, a hill" is inherited from Indo-European (EtymDB). MW sets it beside Avestan gairi "mountain", and Old Church Slavonic gora "mountain", still the Russian word, is a cousin (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a cake, then the Sanskrit for a mountai
 
 You'll want to know: प्रपातः.
 प्रपातः — prapātaḥ — "a waterfall".
+
+The word, taken apart.
+prapāta comes from pra-√pat "fly forth, fall down", the root √pat "fall, fly" with pra "forth" (MW): "a fall, a precipice" (CDIAL 8682), and so a waterfall.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a mountain, then the Sanskrit for a wat
 You'll want to know: तरंगः.
 तरंगः — taraṅgaḥ — "a wave".
 
+The word, taken apart.
+taraṅga is built from taram "across", from the root √tṝ "cross", and -ga "going": MW explains it as "the across-goer", a wave. Punjabi kept it as taraṅg "wave" (CDIAL 5699).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a waterfall, then the Sanskrit for a wa
 You'll want to know: विद्युत्.
 विद्युत् — vidyut — "lightning".
 
+The word, taken apart.
+vidyut comes from vi-√dyut "flash forth", the root √dyut "shine" with vi- "out, apart" (MW): "the flashing one", lightning (CDIAL 11742). It lives on as Marathi and Gujarati vīj "lightning" (CDIAL 11742).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a wave, then the Sanskrit for lightning
 
 You'll want to know: गर्जनम्.
 गर्जनम् — garjanam — "thunder".
+
+The word, taken apart.
+garjana "roaring, thundering" comes from the root √garj "roar, growl" (CDIAL 4047), which MW compares with Latin garrire "chatter", the source of English garrulous. It lives on as Hindi gājan "thunder" (CDIAL 4047).
 
 What you've built.
 One more word for this chapter.

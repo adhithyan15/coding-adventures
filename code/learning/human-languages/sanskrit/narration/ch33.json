@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "The River and the Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b8b7cef16a647c9e",
+  "sourceHash": "fnv1a64:f926f947d6734a82",
   "lessons": [
     {
       "id": "SA-C33-river",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a6a1a837e3a566e",
+      "sourceHash": "fnv1a64:d445fe8b5b06cf9b",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nadī is built on the root √nad, \"to roar, sound\" (MW, CDIAL 6943): the river is named as the roaring one."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -70,7 +81,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,7 +139,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -159,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:323023704108c391",
+      "sourceHash": "fnv1a64:be8f216b8f1d1a45",
       "notice": null,
       "blocks": [
         {
@@ -200,6 +211,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Setu is built on the root √si, \"to bind, tie\" (MW, CDIAL 13585), which MW compares with German Seil, \"rope\". It first meant a bond, then a dam or a bridge."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -210,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -268,7 +290,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -299,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f19070913cda112",
+      "sourceHash": "fnv1a64:1f5aae87285bf708",
       "notice": null,
       "blocks": [
         {
@@ -334,12 +356,23 @@
             },
             {
               "kind": "speech",
-              "text": "Hindi, Marathi and Nepali keep parvat. You met one range of them last chapter, in the snow."
+              "text": "Hindi, Marathi and Nepali keep parvat. You met one range of them earlier, in the snow."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Parvata is formed from parvan, \"knot, joint\": first \"knotty, rugged\", then \"mountain\" (MW, CDIAL 7945)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -350,7 +383,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -408,7 +441,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -439,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9107449f2cb3860",
+      "sourceHash": "fnv1a64:0feefd4a5f668c04",
       "notice": null,
       "blocks": [
         {
@@ -490,6 +523,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pura goes back to Vedic pur, \"stronghold\" (CDIAL 8278), and MW compares Greek polis, \"city\". It lives on in the -pur of North Indian place names."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -500,7 +544,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -558,7 +602,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -589,7 +633,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:babacacd1627bf0a",
+      "sourceHash": "fnv1a64:bf47a5775250ca02",
       "notice": null,
       "blocks": [
         {

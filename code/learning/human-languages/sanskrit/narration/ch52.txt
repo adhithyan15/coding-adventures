@@ -17,6 +17,9 @@ One syllable, and until this lesson the track had no way to put two things in on
 English puts and in the gap. Sanskrit puts च (ca) at the end and leaves the gap empty. Say the phrase again and notice that nothing sits between the two nouns at all: they stand side by side, and च (ca) at the back is what tells you they were a pair.
 च (ca) can never begin a sentence. A word that must lean on the word before it is called an enclitic, and this is Sanskrit's commonest one.
 
+The word, taken apart.
+Ca is inherited: MW compares Latin -que and Greek te, which also stand after the word they join (CDIAL 4533).
+
 What you've built.
 Two things in one sentence, for the first time.
 
@@ -51,6 +54,9 @@ So the two words share one slot, and swapping them swaps the meaning of the whol
 पानीयं क्षीरं च (ca) — water and milk पानीयं क्षीरं वा (vā) — water or milk.
 That is worth pausing on. In English and and or are two different words in the same middle position. In Sanskrit they are two different words in the same final position, and the sentence around them does not shift at all.
 
+The word, taken apart.
+Vā is inherited too: MW compares Latin -ve, "or", which is also an enclitic and never opens a sentence (CDIAL 11466).
+
 What you've built.
 Both halves of the joining pair: च (ca) for both, वा (vā) for either.
 
@@ -82,6 +88,9 @@ Look at it before you use it. It is किम् — the question word you have 
 And here is the thing that matters for using it: किन्तु (kintu) is not an enclitic. Unlike च (ca) and वा (vā) it does not lean backwards. It stands at the front of the clause it contradicts.
 बालः गच्छति किन्तु गुरुः न गच्छति bālaḥ gacchati kintu guruḥ na gacchati the boy goes, but the teacher does not go.
 Three joining words, two different habits. Say the rule to yourself once: च (ca) and वा (vā) go last, किन्तु (kintu) goes first.
+
+The word, taken apart.
+Kintu is built from kim, "what", and the particle tu, "but"; MW lists kiṃ-tu under kim as "but, however, nevertheless".
 
 What you've built.
 Three joins: add, offer, contradict.

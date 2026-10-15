@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for although, then the Sanskrit for or else
 You'll want to know: नूतनः.
 नूतनः — nūtanaḥ — "fresh, new".
 
+The word, taken apart.
+nūtana is built from nū, nu "now" (MW; CDIAL 7575): "belonging to now", so "new, fresh". MW sets nu beside Greek nyn, Latin nunc and English now. Pali kept it as nūtana "recent, new" (CDIAL 7575).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for or else, then the Sanskrit for fresh.
 
 You'll want to know: जीर्णः.
 जीर्णः — jīrṇaḥ — "worn out, old".
+
+The word, taken apart.
+jīrṇa is the past participle of the root √jṝ "grow old, decay, be digested" (CDIAL 5237): "worn out, old", and also "digested". The root is inherited from Indo-European (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for fresh, then the Sanskrit for worn out.
 You'll want to know: उष्णः.
 उष्णः — uṣṇaḥ — "hot".
 
+The word, taken apart.
+uṣṇa "hot, warm" comes from the root √uṣ "burn" (MW; CDIAL 2389), already in the Rigveda. It is inherited from Indo-European, and Latin ussī "I burned" is a cousin (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for worn out, then the Sanskrit for hot.
 You'll want to know: शीतः.
 शीतः — śītaḥ — "chilly, cold".
 
+The word, taken apart.
+śīta "cold, chilly" comes from the root √śyai "congeal, freeze" (MW; CDIAL 12485), already in the Rigveda. śītala "cool" is built on it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for hot, then the Sanskrit for chilly.
 
 You'll want to know: कठोरः.
 कठोरः — kaṭhoraḥ — "harsh, rough".
+
+The word, taken apart.
+kaṭhora "hard, stiff, harsh" belongs with kaṭhina "hard" (CDIAL 2651), and CDIAL 2650, after EWA, groups both as perhaps borrowed from Dravidian, comparing Tamil kaṭṭu "hardness".
 
 What you've built.
 One more word for this chapter.

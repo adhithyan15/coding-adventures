@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 91,
-  "sourceHash": "fnv1a64:7fd3ad4210b70376",
+  "sourceHash": "fnv1a64:ee3f8b64af0ebe24",
   "lessonIds": [
     "SA-C91-prabhatam",
     "SA-C91-sandhya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch91.txt",
   "json": "sanskrit/narration/ch91.json",
-  "textHash": "fnv1a64:93a701a105bfc854",
-  "jsonHash": "fnv1a64:fbaccd3b506be59e",
+  "textHash": "fnv1a64:3d4261757dd11aeb",
+  "jsonHash": "fnv1a64:7369785b018c325b",
   "findings": []
 }

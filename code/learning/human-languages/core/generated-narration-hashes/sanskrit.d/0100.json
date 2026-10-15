@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 100,
-  "sourceHash": "fnv1a64:9d74ca13816a2466",
+  "sourceHash": "fnv1a64:009354d431a0d0ba",
   "lessonIds": [
     "SA-C100-kilah",
     "SA-C100-mudgarah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch100.txt",
   "json": "sanskrit/narration/ch100.json",
-  "textHash": "fnv1a64:36076c6bbd5e8b64",
-  "jsonHash": "fnv1a64:1075890e8faefdb6",
+  "textHash": "fnv1a64:127fe34fdd8ad3fa",
+  "jsonHash": "fnv1a64:372ce12df34fc522",
   "findings": []
 }

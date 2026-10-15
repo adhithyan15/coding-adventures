@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 79,
-  "sourceHash": "fnv1a64:01921e3ae54705cb",
+  "sourceHash": "fnv1a64:9fc7d0f013124a4b",
   "lessonIds": [
     "SA-C79-elephant",
     "SA-C79-horse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch79.txt",
   "json": "sanskrit/narration/ch79.json",
-  "textHash": "fnv1a64:e0c162c82f2abfa9",
-  "jsonHash": "fnv1a64:5450c8cfaf8e7b17",
+  "textHash": "fnv1a64:d55b9f1dc459aca9",
+  "jsonHash": "fnv1a64:1517250aaf7200d4",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 192,
-  "sourceHash": "fnv1a64:d34c0194377f4011",
+  "sourceHash": "fnv1a64:2ce08a8955e26c85",
   "lessonIds": [
     "SA-C192-harah",
     "SA-C192-mukutam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch192.txt",
   "json": "sanskrit/narration/ch192.json",
-  "textHash": "fnv1a64:b768c3cc8d8f803d",
-  "jsonHash": "fnv1a64:50d5ff0f389137d1",
+  "textHash": "fnv1a64:d69554ec8e522412",
+  "jsonHash": "fnv1a64:d96485be15629d5b",
   "findings": []
 }

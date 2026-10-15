@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for trusts, then the Sanskrit for is ashame
 You'll want to know: मातुलानी.
 मातुलानी — mātulānī — "a mother's brother's wife".
 
+The word, taken apart.
+mātulānī is the feminine of mātula, "mother's brother", which MW files under mātṛ, "mother". The ending -ānī makes "the uncle's wife" (CDIAL 10012), and Marathi keeps it as māvḷaṇ.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for is ashamed, then the Sanskrit for a mot
 
 You'll want to know: श्वशुरः.
 श्वशुरः — śvaśuraḥ — "a father-in-law".
+
+The word, taken apart.
+śvaśura is an inherited Indo-European kin word: MW compares Latin socer and Greek hekyros, both "father-in-law". It lives on as Hindi sasur (CDIAL 12753).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a mother's brother's wife, then the San
 You'll want to know: श्वश्रूः.
 श्वश्रूः — śvaśrūḥ — "a mother-in-law".
 
+The word, taken apart.
+śvaśrū is the feminine partner of śvaśura, "father-in-law" (MW). It is inherited too: MW compares Latin socrus and German Schwieger-, both "mother-in-law". It lives on as Hindi sās (CDIAL 12759).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a father-in-law, then the Sanskrit for 
 You'll want to know: जामाता.
 जामाता — jāmātā — "a son-in-law".
 
+The word, taken apart.
+jāmātā is the nominative of the stem jāmātṛ. MW explains it as jā- "offspring" with -mātṛ, a "maker of new offspring", and offers that only as an explanation. It lives on as Hindi jamāī and jawāī (CDIAL 5198).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a mother-in-law, then the Sanskrit for 
 
 You'll want to know: स्नुषा.
 स्नुषा — snuṣā — "a daughter-in-law".
+
+The word, taken apart.
+snuṣā is an inherited Indo-European kin word: MW compares Latin nurus and Greek nyos, both "daughter-in-law". It lives on as Marathi sūn and Punjabi nũh (CDIAL 13801).
 
 What you've built.
 One more word for this chapter.

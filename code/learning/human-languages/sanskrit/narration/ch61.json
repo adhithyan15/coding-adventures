@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "The Turning Season",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:43040dbf6086e550",
+  "sourceHash": "fnv1a64:cd004d8f14ab1d51",
   "lessons": [
     {
       "id": "SA-C61-rtu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2b34d938cf6da88",
+      "sourceHash": "fnv1a64:9af2561cd379c29e",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "The far end of that family reaches English. From the same root, through Latin rītus, comes English rite — a thing done at its proper turn. And ars, \"art\", is a cousin: skill as things fitted together in their proper order."
+              "text": "The far end of that family reaches Latin artus, \"a joint\", which EtymDB lists as a cousin of ऋतुः (ṛtuḥ) — a thing fitted in its proper place."
             },
             {
               "kind": "prompt",

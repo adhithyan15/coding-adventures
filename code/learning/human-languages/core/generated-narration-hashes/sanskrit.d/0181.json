@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 181,
-  "sourceHash": "fnv1a64:9f85d1e149b72095",
+  "sourceHash": "fnv1a64:0d1cadf2c1ddadee",
   "lessonIds": [
     "SA-C181-dantapida",
     "SA-C181-pratisyayah",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch181.txt",
   "json": "sanskrit/narration/ch181.json",
-  "textHash": "fnv1a64:3fbaf8c9a6ee4ff0",
-  "jsonHash": "fnv1a64:2df969c97e489737",
+  "textHash": "fnv1a64:b1096228a8af4e70",
+  "jsonHash": "fnv1a64:7392610aa6213d42",
   "findings": []
 }

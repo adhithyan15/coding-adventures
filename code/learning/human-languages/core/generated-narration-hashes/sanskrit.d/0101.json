@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 101,
-  "sourceHash": "fnv1a64:cc860892e543dff4",
+  "sourceHash": "fnv1a64:313a0de643e81ae7",
   "lessonIds": [
     "SA-C101-kankatika",
     "SA-C101-phenakam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch101.txt",
   "json": "sanskrit/narration/ch101.json",
-  "textHash": "fnv1a64:7c3f269ba530b67a",
-  "jsonHash": "fnv1a64:5286ff469562bde7",
+  "textHash": "fnv1a64:fd117db6e50f8419",
+  "jsonHash": "fnv1a64:cef17cfe22ed09c1",
   "findings": []
 }

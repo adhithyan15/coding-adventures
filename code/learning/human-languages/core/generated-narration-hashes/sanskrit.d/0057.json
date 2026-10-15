@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 57,
-  "sourceHash": "fnv1a64:7cade919f51450c9",
+  "sourceHash": "fnv1a64:96fe082be159def0",
   "lessonIds": [
     "SA-C57-shaknoti",
     "SA-C57-icchati"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "sanskrit/narration/ch57.txt",
   "json": "sanskrit/narration/ch57.json",
-  "textHash": "fnv1a64:fbf55dd818cd068a",
-  "jsonHash": "fnv1a64:4e7d124f57fb4710",
+  "textHash": "fnv1a64:5c08e586dcf17ef5",
+  "jsonHash": "fnv1a64:67af54f88bc84f09",
   "findings": []
 }

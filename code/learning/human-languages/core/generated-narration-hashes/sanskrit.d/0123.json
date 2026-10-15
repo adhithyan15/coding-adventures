@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 123,
-  "sourceHash": "fnv1a64:8ef7c836a73ff73e",
+  "sourceHash": "fnv1a64:21ae7b94c4baf5b2",
   "lessonIds": [
     "SA-C123-pitham",
     "SA-C123-dvicakrika",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch123.txt",
   "json": "sanskrit/narration/ch123.json",
-  "textHash": "fnv1a64:c71494236551b3c4",
-  "jsonHash": "fnv1a64:6201b54490e81e8a",
+  "textHash": "fnv1a64:63105746de566da8",
+  "jsonHash": "fnv1a64:faa7097bc4481109",
   "findings": []
 }

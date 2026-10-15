@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a bangle, then the Sanskrit for a shawl
 You'll want to know: शाटिका.
 शाटिका — śāṭikā — "a sari".
 
+The word, taken apart.
+śāṭikā is śāṭī "a strip of cloth, a garment" (MW) with the suffix -kā; MW takes śāṭa from a root √śaṭ with a query, so the deeper source is uncertain. śāṭī wore down into Hindi sāṛī (CDIAL 12381), the source of English sari (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a shawl, then the Sanskrit for a sari.
 
 You'll want to know: पादत्राणम्.
 पादत्राणम् — pādatrāṇam — "a shoe".
+
+The word, taken apart.
+pādatrāṇa is built from pāda "foot" and trāṇa "protection" (MW): "foot-guard". The pair is old, already in Suśruta (CDIAL 8060), and pāda is the inherited word for "foot" that MW sets beside Latin pes and English foot.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a sari, then the Sanskrit for a shoe.
 You'll want to know: उष्णीषम्.
 उष्णीषम् — uṣṇīṣam — "a turban".
 
+The word, taken apart.
+uṣṇīṣa "anything wound round the head, a turban" is old, already in the Atharvaveda. The grammarians quoted by MW read it as uṣṇa "heat" and īṣ "ward off", "what keeps off the heat", but that is a learned guess, and its origin is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a shoe, then the Sanskrit for a turban.
 You'll want to know: कञ्चुकः.
 कञ्चुकः — kañcukaḥ — "a shirt, a blouse".
 
+The word, taken apart.
+kañcuka "a close-fitting jacket, a bodice; a snake's slough" is possibly borrowed from Munda: CDIAL 2626 gives that view after Kuiper and EWA, while MW suggests a root √kañc with a query. The origin is uncertain; Pali kept it as kañcuka (CDIAL 2626).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a turban, then the Sanskrit for a shirt
 
 You'll want to know: दूरभाषः.
 दूरभाषः — dūrabhāṣaḥ — "a telephone".
+
+The word, taken apart.
+dūrabhāṣa is built from dūra "far" and bhāṣa "speech", from the root √bhāṣ "speak" (MW): "far-speech". It is a modern coinage, made the way English telephone was made from Greek tele "far" + phōnē "voice".
 
 What you've built.
 One more word for this chapter.

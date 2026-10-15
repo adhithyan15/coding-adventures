@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a fan, then the Sanskrit for a box.
 You'll want to know: रज्जुः.
 रज्जुः — rajjuḥ — "a rope".
 
+The word, taken apart.
+rajju "rope" is inherited from PIE résgus (EtymDB), and MW compares Lithuanian rezgù "I plait"; Latin restis "rope" is a cousin. It lives on as Hindi lej "rope" (CDIAL 10582).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a box, then the Sanskrit for a rope.
 
 You'll want to know: गोधूमः.
 गोधूमः — godhūmaḥ — "wheat".
+
+The word, taken apart.
+MW reads godhūma "wheat" as go "earth, cow" + dhūma "smoke", "earth-smoke", but the word has no sure origin. It is old, in the Vājasaneyi Saṃhitā, and lives on as Hindi gehūṁ and Gujarati ghaũ "wheat" (CDIAL 4287).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a rope, then the Sanskrit for wheat.
 You'll want to know: तण्डुलः.
 तण्डुलः — taṇḍulaḥ — "rice (uncooked)".
 
+The word, taken apart.
+taṇḍula "grain after threshing, rice" is old, in the Atharvaveda (MW), and its origin is uncertain: CDIAL 5637 thinks it perhaps non-Aryan, after Bloch from Dravidian or, less probably, after Chatterji from Austroasiatic. Pali kept it as taṇḍula (CDIAL 5637).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for wheat, then the Sanskrit for rice.
 You'll want to know: मुद्गः.
 मुद्गः — mudgaḥ — "mung beans".
 
+The word, taken apart.
+mudga "the mung bean" is old, in the Vājasaneyi Saṃhitā; the grammarians quoted by MW derive it from √mud "be glad", a learned guess, so its origin is uncertain. It lives on as Hindi mūg and Gujarati mag (CDIAL 10198).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for rice, then the Sanskrit for mung beans.
 
 You'll want to know: सूपः.
 सूपः — sūpaḥ — "dal, soup".
+
+The word, taken apart.
+MW calls sūpa "sauce, soup, broth" of doubtful derivation; the grammarians tie it to √su "distil", so its origin is uncertain. Pali kept it as sūpa "broth, curry" (CDIAL 13571).
 
 What you've built.
 One more word for this chapter.

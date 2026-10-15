@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a stream, a river, then the Sanskrit fo
 You'll want to know: वेणुवनम्.
 वेणुवनम् — veṇuvanam — "a bamboo grove".
 
+The word, taken apart.
+veṇuvana is a compound of veṇu, "bamboo, reed" (CDIAL 12096), and vana, "forest" (MW). Vana lives on as Hindi ban, "forest" (CDIAL 11258).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a cave, then the Sanskrit for a bamboo 
 
 You'll want to know: इन्द्रधनुः.
 इन्द्रधनुः — indradhanuḥ — "a rainbow".
+
+The word, taken apart.
+indradhanus is built from Indra, the god of thunder and rain, and dhanus, "bow" (MW): the rainbow is Indra's bow. Hindi and Telugu took the compound over unchanged.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a bamboo grove, then the Sanskrit for a
 You'll want to know: करका.
 करका — karakā — "hail".
 
+The word, taken apart.
+MW lists karaka as "hail", and CDIAL 2782 knows the word only from the old lexicons. Its origin is uncertain, but it lives on as Gujarati karā, "hail"; CDIAL also lists Marathi gārā, with a query.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a rainbow, then the Sanskrit for hail.
 You'll want to know: अवश्यायः.
 अवश्यायः — avaśyāyaḥ — "dew".
 
+The word, taken apart.
+avaśyāya is built on ava-, "down", and the root √śyai, "to congeal" (CDIAL 855): dew and hoar-frost settle and freeze. Its twin avaśyā lives on as Hindi os, "dew".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for hail, then the Sanskrit for dew.
 
 You'll want to know: ज्योत्स्ना.
 ज्योत्स्ना — jyotsnā — "moonlight".
+
+The word, taken apart.
+jyotsnā is filed by MW under the root √jyut, "to shine". It first meant "a moonlit night" and then "moonlight" (CDIAL 5301), and lives on as Hindi junhāī.
 
 What you've built.
 One more word for this chapter.

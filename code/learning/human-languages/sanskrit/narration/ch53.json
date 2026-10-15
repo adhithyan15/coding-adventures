@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "Which One, That One",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b5259b3dd7ef9916",
+  "sourceHash": "fnv1a64:56d86d7704a6d397",
   "lessons": [
     {
       "id": "SA-C53-yah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b2548810ac0e09c",
+      "sourceHash": "fnv1a64:138a386f06167eb1",
       "notice": null,
       "blocks": [
         {
@@ -72,6 +72,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Yaḥ is built on the relative base ya-, which is inherited: MW compares the Greek relative hos. It lives on as Hindi jo, \"who, which\" (CDIAL 10391)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -82,7 +93,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,7 +133,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -153,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d79deb7cba4ecf45",
+      "sourceHash": "fnv1a64:ecd2100a9500bbbb",
       "notice": null,
       "blocks": [
         {
@@ -198,6 +209,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Saḥ is the inherited pointing pronoun whose other forms run on ta-: MW compares Avestan hō and the Greek article ho, which keep the same s- or h- in the same two forms."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -208,7 +230,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -248,7 +270,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

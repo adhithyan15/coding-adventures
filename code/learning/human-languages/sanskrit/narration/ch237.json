@@ -4,7 +4,7 @@
   "chapter": 237,
   "title": "Potter, Goldsmith, Blacksmith, Weaver, Washerman",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:42f958cb94b4eebc",
+  "sourceHash": "fnv1a64:f26e23fd865931ae",
   "lessons": [
     {
       "id": "SA-C237-kumbhakarah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb0b4f7a6347c371",
+      "sourceHash": "fnv1a64:8784d85c6b8606ca",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kumbhakāra is a compound of kumbha, \"pot\", which you have already met, and kāra, \"maker\", from the root √kṛ (MW). It lives on as Hindi kumhār, \"potter\" (CDIAL 3310)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cd57fb6ad456d53",
+      "sourceHash": "fnv1a64:951f75539f804796",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "svarṇakāra is a compound of svarṇa, \"gold\", which MW calls a contraction of suvarṇa, \"of fine colour\", and kāra, \"maker\" (MW). Its fuller form suvarṇakāra lives on as Hindi sonār, \"goldsmith\" (CDIAL 13520)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d8382f05a9972b6",
+      "sourceHash": "fnv1a64:5cd4edda760f8826",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lohakāra is a compound of loha, first \"red, copper\", later \"iron\" (CDIAL 11158), and kāra, \"maker\" (MW). MW derives loha from a root meaning \"to be red\". It lives on as Hindi lohār, \"blacksmith\" (CDIAL 11159)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11f72e354ec6a49c",
+      "sourceHash": "fnv1a64:7c2b7a4b65d1d7d1",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tantuvāya is a compound of tantu, \"thread, warp\", from the root √tan, \"to stretch, spin out\", and vāya, \"weaver\", from √ve, \"to weave\" (MW; CDIAL 5662). A weaver is a thread-weaver; the same word also names the spider."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19c6dd1054e58bea",
+      "sourceHash": "fnv1a64:684d75dd7f5d1ea8",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rajaka is built on the root √rañj, \"to colour, dye\" (MW; CDIAL 10575), the root of rakta, \"red\", which you have already met. MW explains the name from his cleaning or whitening clothes; dyeing and washing went together."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

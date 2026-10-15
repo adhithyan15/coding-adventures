@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Taking Your Leave",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b158a2bd4901e7f9",
+  "sourceHash": "fnv1a64:594b012f8393b3f6",
   "lessons": [
     {
       "id": "SA-C28-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e11f51af97abc683",
+      "sourceHash": "fnv1a64:3b0a8eb32b09fc7f",
       "notice": null,
       "blocks": [
         {
@@ -64,12 +64,23 @@
             },
             {
               "kind": "speech",
-              "text": "It is built on the near-pointing stem you met with एतत्, \"this one\". The pointing system runs a- / t- / k-, and इदानीम् (idānīm) is the near end of it applied to time rather than to place: this-time. गच्छामि इदानीम् (idānīm) — \"I am going now\" — is a way to take your leave that reuses the verb you learned for exactly that purpose."
+              "text": "It is built on a near-pointing stem, i-, a neighbour of the e- you met with एतत्, \"this one\". The pointing system runs a- / t- / k-, and इदानीम् (idānīm) is the near end of it applied to time rather than to place: this-time. गच्छामि इदानीम् (idānīm) — \"I am going now\" — is a way to take your leave that reuses the verb you learned for exactly that purpose."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Idānīm is built on the near pronoun base i-, \"this\" (MW, CDIAL 1567), the base of idam, \"this\". It is already in the Rigveda."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -80,7 +91,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -138,7 +149,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -169,7 +180,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a17cc22ded211244",
+      "sourceHash": "fnv1a64:d68067eae1f07655",
       "notice": null,
       "blocks": [
         {
@@ -204,12 +215,23 @@
             },
             {
               "kind": "speech",
-              "text": "English needs four words for this and Sanskrit needs one, because para — \"beyond, further\" — can be bolted onto the front of a time word. The same trick runs backwards from ह्यः, yesterday, to give the day before it. So this is not really a new word to memorise; it is one you can assemble, which is the cheapest kind of vocabulary there is."
+              "text": "English needs four words for this and Sanskrit needs one, because para — \"beyond, further\" — can be bolted onto the front of a time word. So this is not really a new word to memorise; it is one you can assemble, which is the cheapest kind of vocabulary there is."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Paraśvas is a compound of para, \"beyond, further\", and śvas, \"tomorrow\" (MW). It lives on as Hindi parsoṃ and Bengali parsu, which mean both the day after tomorrow and the day before yesterday (CDIAL 7799j)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -220,7 +242,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -278,7 +300,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -494,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:056cc9bf411723aa",
+      "sourceHash": "fnv1a64:d9c3df2765a1f59c",
       "notice": null,
       "blocks": [
         {
@@ -535,6 +557,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Yātrā is built on the root √yā, \"to go, travel\", with the noun suffix -trā (MW, CDIAL 10456). Punjabi jātrā, \"pilgrimage\", may show it worn down, though CDIAL allows that it was borrowed back from Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -545,7 +578,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +636,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -634,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0c5dff9da9118af",
+      "sourceHash": "fnv1a64:17b946356f5a1cae",
       "notice": null,
       "blocks": [
         {
@@ -675,6 +708,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Śubha is built on the root √śubh, \"to shine, be beautiful\" (MW, CDIAL 12532): first \"bright\", then \"auspicious\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -685,7 +729,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -743,7 +787,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -774,7 +818,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe4441d8b4186a79",
+      "sourceHash": "fnv1a64:04c614c6a5db507e",
       "notice": null,
       "blocks": [
         {
@@ -815,6 +859,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Svasti is a compound of su, \"well\", and asti, \"is\", from the root √as (CDIAL 13915). It is already in the Rigveda (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -825,7 +880,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -883,7 +938,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

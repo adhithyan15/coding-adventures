@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 244,
-  "sourceHash": "fnv1a64:85f8604d4835b9e6",
+  "sourceHash": "fnv1a64:c1a3e490ce22fc4b",
   "lessonIds": [
     "SA-C244-ucitah",
     "SA-C244-anucitah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch244.txt",
   "json": "sanskrit/narration/ch244.json",
-  "textHash": "fnv1a64:7892b7f04986309c",
-  "jsonHash": "fnv1a64:a4586eb0704b2101",
+  "textHash": "fnv1a64:30697ff761125cd9",
+  "jsonHash": "fnv1a64:2a06ed66f64dade0",
   "findings": []
 }

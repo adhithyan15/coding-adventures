@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 153,
-  "sourceHash": "fnv1a64:6a42c1cbbb68c0ba",
+  "sourceHash": "fnv1a64:43962c0b3f3cbacc",
   "lessonIds": [
     "SA-C153-itah",
     "SA-C153-tatah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch153.txt",
   "json": "sanskrit/narration/ch153.json",
-  "textHash": "fnv1a64:700557c8bad23044",
-  "jsonHash": "fnv1a64:61a3711a6b4603b9",
+  "textHash": "fnv1a64:86a333297077eb80",
+  "jsonHash": "fnv1a64:5f72c5e01e7560ff",
   "findings": []
 }
