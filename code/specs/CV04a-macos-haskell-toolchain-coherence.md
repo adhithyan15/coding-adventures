@@ -121,3 +121,9 @@ compiler must also be pinned using top-level with-compiler, after refusing the
 original selector. A rendered ghc-location is not compiler-discovery evidence.
 Require executable missing with-compiler refusal and exact overlay path controls
 before accepting this successor. Exact macOS3.10 remains hosted PENDING.
+
+Top-level with-compiler is a raw path field, unlike program argument tokens:
+the local3.16 probe retained JSON quotes/backslashes literally (receipt5c6e0745),
+so write the validated path verbatim after the colon and newline. Prove both an
+absent path refusal and an actual selected installed compiler build/run; do not
+accept a quoted-path parse failure as the intended missing-compiler control.
