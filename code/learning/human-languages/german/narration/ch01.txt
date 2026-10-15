@@ -211,7 +211,7 @@ You'll want to know first.
 gut, Tag.
 
 The word, taken apart — by assembling it.
-Guten Tag = gut ("good") + Tag ("day") = "good day," the neutral polite "hello" for daytime. Said GOO-ten tahk.
+Guten Tag = gut ("good") + Tag ("day") = "good day," the neutral polite "hello" for daytime. Said GOO-ten tahk. Both words are inherited: gut from Old High German guot, and Tag from Proto-Germanic dagaz, the same word as English day (EtymDB 2.1).
 
 Grammar Lens: why guten, not gut?
 Like every Germanic and Romance adjective, German gut agrees with its noun — but German adjectives agree in more dimensions than Spanish or French: not only gender and number, but case (the noun's job in the sentence). Guten Tag is a frozen piece of a longer wish — "I wish you a good day" — and in that fuller thought, "a good day" is the object of the wishing (the accusative case). For a masculine noun in that role, gut takes the ending -en: guten. The rest of the wish fell away and left the ending behind.
@@ -272,7 +272,7 @@ You'll want to know first.
 Guten Tag, Morgen.
 
 The word, taken apart — by assembling it.
-Guten Morgen = gut ("good") + Morgen ("morning") = "good morning." Morgen is masculine, exactly like Tag, so gut takes the same -en: guten — no new agreement to learn. Said GOO-ten MOR-gen.
+Guten Morgen = gut ("good") + Morgen ("morning") = "good morning." Morgen is masculine, exactly like Tag, so gut takes the same -en: guten — no new agreement to learn. Said GOO-ten MOR-gen. Morgen from Old High German morgan (EtymDB 2.1), kin to English morn.
 Used in the morning (roughly until midday); after that, German switches to Guten Tag. You will build the evening greeting next, from the same familiar pattern.
 
 Guided Practice.
@@ -331,7 +331,7 @@ Guten Tag, Abend.
 
 The word, taken apart — by assembling it.
 Guten Abend = gut + Abend (masculine) = "good evening," GOO-ten AH-bent. guten again — the third masculine day-part in a row.
-You now have the daytime arc: Guten Morgen (morning) becomes Guten Tag (midday/afternoon) becomes Guten Abend (evening). All guten, all masculine. Only bedtime is left — and it breaks the pattern.
+You now have the daytime arc: Guten Morgen (morning) becomes Guten Tag (midday/afternoon) becomes Guten Abend (evening). All guten, all masculine. Only bedtime is left — and it breaks the pattern. Abend from Old High German āband (EtymDB 2.1), kin to the even of English evening.
 
 Guided Practice.
 [pause 1 second]
@@ -394,7 +394,7 @@ You'll want to know first.
 gut, Nacht.
 
 The word, taken apart — by assembling it.
-Gute Nacht = gut ("good") + Nacht ("night") = "good night," GOO-te nahkht.
+Gute Nacht = gut ("good") + Nacht ("night") = "good night," GOO-te nahkht. Nacht from Proto-Germanic nahts, the same word as English night (EtymDB 2.1).
 
 Grammar Lens: gute, not guten.
 Three greetings in a row were guten (Tag, Morgen, Abend — all masculine). This one is gute. The reason is the one you set up: Nacht is feminine, and a feminine noun in the "(I wish you a) good ___" accusative takes the ending -e, not -en. So the endings line up:

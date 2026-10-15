@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Hablais --- the Form Spain Keeps",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d196d993a7097acf",
+  "sourceHash": "fnv1a64:9805f8a13910cd90",
   "lessons": [
     {
       "id": "ES-C07-hablais",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40c4b4dc994796d9",
+      "sourceHash": "fnv1a64:a3d08e673c0d378b",
       "notice": null,
       "blocks": [
         {
@@ -73,7 +73,7 @@
             },
             {
               "kind": "speech",
-              "text": "That drift left Spain with a problem. If vos was being used for one polite person, what was left for an actual group? Spaniards added a word to disambiguate: vos + otros, \"you others\" — hence vosotros, and its feminine vosotras."
+              "text": "That drift left Spain with a problem. If vos was being used for one polite person, what was left for an actual group? Spaniards added a word to disambiguate: vos + otros (otro from Latin alter), \"you others\" — hence vosotros, and its feminine vosotras."
             },
             {
               "kind": "speech",

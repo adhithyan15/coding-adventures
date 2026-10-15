@@ -59,7 +59,9 @@ So the *system* — four words, split by relative age rather than just
 gender — is shared across Tamil, Kannada, and Telugu. But the exact words
 aren't identical everywhere: Telugu keeps its own **నాన్న** for father and
 **చెల్లి** for "younger sister," even while three of the six words line up
-closely with its cousins.
+closely with its cousins. All four sibling words are native Dravidian: *anna*,
+*tammuḍu* and *akka* share entries with their cousins (DEDR 131, 3085, 23), and
+DEDR 2783 files *celli* with *celi*, "female companion".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C11-RANGULU-01, TE-ETYMON-C11-RANGULU-02, TE-LEX-C12-KUTUMBAM-01, TE-ETYMON-C12-KUTUMBAM-02] -->

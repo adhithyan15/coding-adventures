@@ -4,7 +4,7 @@
   "chapter": 301,
   "title": "Five More Things You Ask For --- Rope, Needle, Thread, Basket, Paper",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b76599eb30393d2b",
+  "sourceHash": "fnv1a64:2be3aa70f704909f",
   "lessons": [
     {
       "id": "ES-C301-cuerda",
@@ -643,7 +643,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7735586cca1e9645",
+      "sourceHash": "fnv1a64:634ec0e8e8b776d5",
       "notice": null,
       "blocks": [
         {
@@ -700,7 +700,7 @@
             },
             {
               "kind": "speech",
-              "text": "Behind it is papyrus, the Egyptian reed whose pith was beaten flat and written on for three thousand years. English paper is the same reed. So is the papyrus in a museum case, which is the word arriving a second time, unworn, to name the original thing."
+              "text": "It comes from papyrus, the Egyptian reed whose pith was beaten flat and written on for three thousand years. English paper is the same reed. So is the papyrus in a museum case, which is the word arriving a second time, unworn, to name the original thing."
             },
             {
               "kind": "speech",

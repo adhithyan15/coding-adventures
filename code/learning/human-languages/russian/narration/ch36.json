@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Children, a Child, Aunt, Grandchildren",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:68dadf840c777cd9",
+  "sourceHash": "fnv1a64:740c0e1187c6a7f4",
   "lessons": [
     {
       "id": "RU-C36-children",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f229dbac758e1c94",
+      "sourceHash": "fnv1a64:94a7dfe147f53fcc",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "внучка (vnúchka) is внук (vnuk), \"grandson\", with -ка, which makes the female word; к turns to ч before it, as in рука, \"hand\", and ручка, \"a little hand; a pen\"."
+              "text": "внучка (vnúchka) is внук (vnuk), \"grandson\", with -ка, which makes the female word; к turns to ч before it, as in рука, \"hand\", and ручка, \"a little hand; a pen\". Vasmer traces внук (vnuk) to Proto-Slavic vŭnukŭ and tentatively links it with an old nursery word for an elder, kept in Latin anus, \"old woman\"."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Pain, Illness, Medicine, Doctor",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:74f6611d9a162605",
+  "sourceHash": "fnv1a64:bdc9224522e2b933",
   "lessons": [
     {
       "id": "RU-C32-pain",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:857a036f4903ec15",
+      "sourceHash": "fnv1a64:08d89decbaaa5799",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "больница (bolnítsa) is больной, \"sick; a patient\", with -ница, a suffix that names places: a place for the sick. The root is that of боль (bol), \"pain\"."
+              "text": "больница (bolnítsa) is больной, \"sick; a patient\", with -ница, a suffix that names places: a place for the sick. The root is that of боль (bol), \"pain\". Vasmer relates боль (bol) to Old English bealu, \"harm\"."
             }
           ]
         },

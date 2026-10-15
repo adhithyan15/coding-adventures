@@ -47,7 +47,7 @@ reviews_of: [RU-C134-to-tidy-up]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**находить** is *на-*, "onto", with *ходить*, "to walk": to find is to come upon a thing.
+**находить** is *на-*, "onto", with *ходить*, "to walk": to find is to come upon a thing. Vasmer ties *ход* to the Indo-European root *\*sed-*, "to sit", its *х* grown from an *s* after prefixes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

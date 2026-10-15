@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 12,
-  "sourceHash": "fnv1a64:4f537984278eb3b6",
+  "sourceHash": "fnv1a64:c26cf6ee78fbc244",
   "lessonIds": [
     "ML-C12-kudumbam"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch12.txt",
   "json": "malayalam/narration/ch12.json",
-  "textHash": "fnv1a64:81af0ba9e54a91d4",
-  "jsonHash": "fnv1a64:ffffa661647db711",
+  "textHash": "fnv1a64:66eca23b11566194",
+  "jsonHash": "fnv1a64:84f48fd32f10c351",
   "findings": []
 }

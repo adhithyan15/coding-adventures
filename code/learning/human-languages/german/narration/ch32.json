@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5d55573be48fb0a1",
+  "sourceHash": "fnv1a64:63da205f28e3600f",
   "lessons": [
     {
       "id": "GE-C19-bitte-requests",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18b1a32c63c2243c",
+      "sourceHash": "fnv1a64:688ede97d0568424",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Bitte is the request form of bitten, “to ask, request, pray.” Its English cousins are bid—as in “I bid you welcome”—and bead, whose oldest meaning was a prayer. A prayer bead was first the object used to count those requests."
+              "text": "Bitte is the request form of bitten, “to ask, request, pray.” Its cousins in English are bid—as in “I bid you welcome”—and bead, whose oldest meaning was a prayer. A prayer bead was first the object used to count those requests."
             },
             {
               "kind": "speech",

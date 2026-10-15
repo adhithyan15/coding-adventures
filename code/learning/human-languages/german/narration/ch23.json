@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "The Wrapped Participle",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:57431d104ad133bb",
+  "sourceHash": "fnv1a64:f076e7c926d6e53f",
   "lessons": [
     {
       "id": "GE-C15-sagen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c103c3bfcc52c5b8",
+      "sourceHash": "fnv1a64:c9721b6e1cc41c22",
       "notice": null,
       "blocks": [
         {
@@ -80,7 +80,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Sagen and English say are the same word. Germanic sagjaną went to both, and then English quietly dropped the g out of the middle:"
+              "text": "Sagen is the same word as English say. Germanic sagjaną went to both, and then English quietly dropped the g out of the middle:"
             },
             {
               "kind": "table",
@@ -745,7 +745,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c372656e1cbe8bb",
+      "sourceHash": "fnv1a64:5f319545d819b145",
       "notice": null,
       "blocks": [
         {
@@ -823,7 +823,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two languages split one word between them — Germany took the address and England took the habit."
+              "text": "Two languages split one word between them — Germany took the address and England took the habit. Wohnen from Old High German wonēn from Proto-Germanic wunjaną, \"to be wont; to dwell\" (EtymDB 2.1)."
             }
           ]
         },

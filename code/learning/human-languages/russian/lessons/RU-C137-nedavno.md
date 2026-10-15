@@ -47,7 +47,7 @@ reviews_of: [RU-C136-zachem]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**недавно** is *не*, "not", with *давно*, "long ago": not long ago. *давно* goes with old *даве*, "earlier".
+**недавно** is *не*, "not", with *давно*, "long ago": not long ago. *давно* goes with old *даве*, "earlier". Vasmer relates *даве* to Latin *dūdum*, "a while ago", and Greek *dēn*, "long".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

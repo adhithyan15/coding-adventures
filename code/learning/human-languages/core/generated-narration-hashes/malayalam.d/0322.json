@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 322,
-  "sourceHash": "fnv1a64:c286b38075601e4b",
+  "sourceHash": "fnv1a64:42f6daa0ff0c8477",
   "lessonIds": [
     "ML-C322-biriyani",
     "ML-C322-cappatti",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch322.txt",
   "json": "malayalam/narration/ch322.json",
-  "textHash": "fnv1a64:2f0587b13491cca8",
-  "jsonHash": "fnv1a64:13d088c111539aa2",
+  "textHash": "fnv1a64:16229d2bc0e40904",
+  "jsonHash": "fnv1a64:1d925020c5ba39bb",
   "findings": []
 }

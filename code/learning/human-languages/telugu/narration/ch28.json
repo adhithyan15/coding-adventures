@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bc9bacbd61c667ec",
+  "sourceHash": "fnv1a64:3b50717649208f50",
   "lessons": [
     {
       "id": "TE-C28-madhyahnam-widened",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e95800e95f927a76",
+      "sourceHash": "fnv1a64:ed8df334a0836d96",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Telugu also has అపరాహ్నం (aparāhnam), from the same classical five-part Sanskrit day division already found behind Kannada's అపరాహ్న — prāta/udaya (sunrise), saṅgava, madhyāhna (noon), aparāhna (\"later afternoon\" specifically), sāyāhna (evening). Be honest about the sourcing here, echoing the same hedge already applied to Kannada's aparāhna: thin, informal evidence — a native-speaker forum discussion, general dictionary usage notes — points toward మధ్యాహ్నం (madhyāhnam) winning colloquially, with అపరాహ్నం staying the more formally precise term. Real, but not corpus-linguistics-grade sourcing — treat it the same cautious way Kannada's own equivalent finding was treated, not as fully settled."
+              "text": "Telugu also has అపరాహ్నం (aparāhnam), a tatsama from the same classical five-part Sanskrit day division already found behind Kannada's అపరాహ్న — prāta/udaya (sunrise), saṅgava, madhyāhna (noon), aparāhna (\"later afternoon\" specifically), sāyāhna (evening). Be honest about the sourcing here, echoing the same hedge already applied to Kannada's aparāhna: thin, informal evidence — a native-speaker forum discussion, general dictionary usage notes — points toward మధ్యాహ్నం (madhyāhnam) winning colloquially, with అపరాహ్నం staying the more formally precise term. Real, but not corpus-linguistics-grade sourcing — treat it the same cautious way Kannada's own equivalent finding was treated, not as fully settled."
             }
           ]
         },

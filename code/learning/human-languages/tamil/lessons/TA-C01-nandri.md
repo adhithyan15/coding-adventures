@@ -66,9 +66,9 @@ these three letters in the next lesson.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*Naṉṟi* grows from the root *nal*, “good” —
-so it literally means **“goodness.”** To thank, in Tamil, is to name the
-good someone did you.
+*Naṉṟi* grows from the root *nal* (DEDR 3610), “good” —
+so it literally means **“goodness.”** To thank, in Tamil, is naming the
+good done to you.
 
 ## Grammar lens
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

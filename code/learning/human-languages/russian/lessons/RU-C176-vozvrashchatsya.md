@@ -47,7 +47,7 @@ reviews_of: [RU-C175-zazhigat]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**возвращаться** is *воз-*, "back", with *вращать*, "to turn", and *-ся*: to turn yourself back. *вращать* is the Church Slavonic shape of native *ворочать*, on the root of *вертеть*, "to turn".
+**возвращаться** is *воз-*, "back", with *вращать*, "to turn", and *-ся*: to turn yourself back. *вращать* is the Church Slavonic shape of native *ворочать* (Vasmer), on the root of *вертеть*, "to turn".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

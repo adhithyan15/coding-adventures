@@ -47,7 +47,7 @@ reviews_of: [RU-C189-rodnoy]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**местный** is *место*, "a place", with *-ный*: "of the place".
+**местный** is *место*, "a place", with *-ный*: "of the place". Vasmer relates *место* to Lithuanian *mìsti*, "to feed oneself", despite a mismatch in accent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

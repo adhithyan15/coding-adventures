@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2c4f5bb1639015c5",
+  "sourceHash": "fnv1a64:bffc64371a32f75c",
   "lessons": [
     {
       "id": "KA-C34-tegeduko",
@@ -204,7 +204,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5b60e1c5888acc2",
+      "sourceHash": "fnv1a64:1659c197be1eb1f4",
       "notice": null,
       "blocks": [
         {
@@ -276,7 +276,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Not a Kannada quirk. The Dravidian dictionaries reconstruct the root with both senses at once — \"to hear, to ask\" — and the sisters carry the pair: Tamil கேள் (kēḷ), Malayalam കേൾക്കുക (kēḷkkuka), Tulu kēṇuni."
+              "text": "Not a Kannada quirk. DEDR 2017 lists the root with both senses at once — \"to hear, to ask\" — and the sisters carry the pair: Tamil கேள் (kēḷ), Malayalam കേൾക്കുക (kēḷkkuka), Tulu kēṇuni."
             },
             {
               "kind": "speech",

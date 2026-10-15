@@ -4,7 +4,7 @@
   "chapter": 189,
   "title": "Despite, Unfortunately, Luckily, Certainly, Really",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1e761465afcf590c",
+  "sourceHash": "fnv1a64:85577bb995bbedfb",
   "lessons": [
     {
       "id": "FR-C189-malgre",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf0293d3d440cb47",
+      "sourceHash": "fnv1a64:90bb07d7305614e1",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "malheureusement — heureux, \"lucky\", with mal-, \"badly\", in front and the adverb ending -ment: unluckily."
+              "text": "malheureusement — heureux, \"lucky\", with mal-, \"badly\", in front and the adverb ending -ment: unluckily. Heureux is built on Old French eur, \"luck\", from Latin augurium, \"an omen\", and mal- from Latin male, \"badly\" (EtymDB 2.1)."
             }
           ]
         },
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3cfb8ea1d418343",
+      "sourceHash": "fnv1a64:cd29165f33de696d",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "heureusement — heureux, \"lucky\", with the adverb ending -ment."
+              "text": "heureusement — heureux, \"lucky\", with the adverb ending -ment. Heureux is built on Old French eur, \"luck\", from Latin augurium, \"an omen\" (EtymDB 2.1)."
             }
           ]
         },

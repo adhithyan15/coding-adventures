@@ -49,7 +49,8 @@ command.
 <!-- hl-knowledge: introduces=[LA-ETYMON-VALE-02]; assesses=[] -->
 
 *Valē* (singular) / *valēte* (plural) is the imperative of *valēre*, "to be
-strong, to be well." So goodbye in Latin literally wishes you **strength**. The
+strong, to be well." So goodbye in Latin literally wishes you **strength**. *Valēre* is inherited, usually traced to
+Proto-Indo-European *\*walh₂-*, "to be strong" (EtymDB 2.1). The
 root is an English gold mine: **value, valid, valiant, valour, valence, prevail,
 convalesce, ambivalent** ("strong both ways"). And the Romance children carry
 *valēre* as their verb "to be worth": Spanish *valer*, Italian *valere*, French

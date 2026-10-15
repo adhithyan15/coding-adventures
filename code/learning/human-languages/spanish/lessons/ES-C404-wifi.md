@@ -50,7 +50,7 @@ precise duration to the Alliance's marketing line. -->
 
 **el wifi** — “the Wi-Fi” or “Wi-Fi.”
 
-The name was coined to sound like **Hi-Fi**. The phrase **Wireless Fidelity**
+Spanish borrowed it from English *Wi-Fi*. The name was coined to sound like **Hi-Fi**. The phrase **Wireless Fidelity**
 was attached afterward as marketing by the industry alliance and was later
 dropped. That history is why treating the phrase as the name's simple original
 expansion is misleading, while pretending the Alliance never used it also goes

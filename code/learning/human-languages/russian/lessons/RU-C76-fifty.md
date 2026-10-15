@@ -47,7 +47,7 @@ reviews_of: [RU-C76-forty]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**пятьдесят** is *пять*, "five", with *десят*, an old form of *десять*, "ten": five tens.
+**пятьдесят** is *пять*, "five", with *десят*, an old form of *десять*, "ten": five tens. Both are inherited: Proto-Slavic *\*pętĭ*, kin to Greek *pénte*, and *\*desętĭ* (Vasmer).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

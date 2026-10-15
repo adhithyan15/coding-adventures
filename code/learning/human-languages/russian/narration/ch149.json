@@ -4,7 +4,7 @@
   "chapter": 149,
   "title": "Half an hour, Quarter, Day and a night, Dawn, Sunset",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cf86ac28605e0b56",
+  "sourceHash": "fnv1a64:9e0ff91e7853f2ae",
   "lessons": [
     {
       "id": "RU-C149-polchasa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7c0f95c74707806",
+      "sourceHash": "fnv1a64:789139ba5df5b3a6",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "полчаса (polchasá) is пол-, \"half\", with часа, a form of час, \"hour\"."
+              "text": "полчаса (polchasá) is пол-, \"half\", with часа, a form of час, \"hour\". Vasmer traces час to Proto-Slavic časŭ and thinks пол- probably kin to Albanian palë, \"side\"."
             }
           ]
         },

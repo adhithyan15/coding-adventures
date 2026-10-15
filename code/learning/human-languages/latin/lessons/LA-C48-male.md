@@ -53,7 +53,8 @@ a word far enough back that saying it is work.
 
 The *bene* lesson gave you **bene**, "well," and left you with half a scale. This is the
 other half, and it is built the same way: an adverb ending in **-e**, formed from
-an adjective.
+an adjective: *malus*, "bad", inherited from Proto-Italic *\*malos* (EtymDB 2.1),
+whose origin further back is uncertain.
 
 > **Valeō.** — I fare well.
 > **Male valeō.** — I fare badly. (Or, more usually: **nōn valeō**.)

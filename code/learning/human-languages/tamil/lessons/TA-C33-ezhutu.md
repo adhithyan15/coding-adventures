@@ -76,8 +76,8 @@ go; **Tamil and Malayalam kept it.**
 ## The word, taken apart - two entries, not one
 <!-- hl-knowledge: introduces=[TA-ETYMON-EZHUTU-03]; assesses=[TA-ETYMON-PADI-02] -->
 
-**எழுது** looks like **எழு** (*eḻu*), "**to rise**," but the Dravidian
-etymological dictionary keeps them as **separate entries**. Native, unlike
+**எழுது** looks like **எழு** (*eḻu*), "**to rise**," but DEDR keeps them
+as **separate entries**. Native Dravidian (DEDR 853), unlike
 *paḍi*'s open question. Beside it sits **எழுத்தாளர்** (*eḻuttāḷar*), a
 writer.
 

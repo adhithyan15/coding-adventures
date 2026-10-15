@@ -4,7 +4,7 @@
   "chapter": 300,
   "title": "Photo, Camera, Programme, TV serial, Novel",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6bc40b1ee49af5d3",
+  "sourceHash": "fnv1a64:933f9dd57e4b1422",
   "lessons": [
     {
       "id": "KA-C300-photo",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9373e321f56a1b10",
+      "sourceHash": "fnv1a64:98eecb1b12577f50",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಕಾದಂಬರಿ (kādambari) is the title of a famous Sanskrit prose romance, Bāṇa's Kādambarī. Its name came to mean any novel."
+              "text": "ಕಾದಂಬರಿ (kādambari) is the title of a famous Sanskrit prose romance, Bāṇa's Kādambarī. The word comes from that title, which came to mean any novel."
             }
           ]
         },

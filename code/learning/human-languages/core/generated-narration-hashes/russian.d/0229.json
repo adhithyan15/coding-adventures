@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 229,
-  "sourceHash": "fnv1a64:b7575a52f35408ba",
+  "sourceHash": "fnv1a64:2465d6e57d024ef7",
   "lessonIds": [
     "RU-C229-sekretar",
     "RU-C229-bukhgalter",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch229.txt",
   "json": "russian/narration/ch229.json",
-  "textHash": "fnv1a64:9d57b54054a0e25f",
-  "jsonHash": "fnv1a64:68a4aff296670ace",
+  "textHash": "fnv1a64:6600b5fbe791e81f",
+  "jsonHash": "fnv1a64:2cfb88a51499efa8",
   "findings": []
 }

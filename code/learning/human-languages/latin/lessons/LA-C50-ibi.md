@@ -62,7 +62,7 @@ which is the whole argument for writing macrons, made once more.
 
 *Ibi* survives into Italian *ivi* and, worn down almost to nothing, into the French
 **y** of *il y a* — "there is." A single letter of modern French is this Latin
-word.
+word. *Ibi* is built on the pronoun stem of *is*, "he, that" (Lewis & Short).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C50-POINT-01, LA-LEX-C50-POINT-02, LA-LEX-C50-POINT-03, LA-LEX-C50-POINT-04, LA-LEX-C50-POINT-05] -->

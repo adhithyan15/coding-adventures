@@ -51,7 +51,8 @@ reviews_of: [LA-C55-quartus, LA-C54-pes]
 **quīntus, quīnta, quīntum** — "**fifth**."
 
 *Quīnque* is **five**; *quīntus* is that number with the ending on it, exactly
-as *quārtus* was. Two in a row now behave the same way.
+as *quārtus* was. Two in a row now behave the same way. *Quīnque* is inherited,
+a cousin of English *five* (EtymDB 2.1).
 
 And here is where the series pays back something you were already told. The
 month lesson listed **Quīntīlis** among the twelve and translated it "the

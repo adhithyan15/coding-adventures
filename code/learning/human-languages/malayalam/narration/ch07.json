@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a6cd6bdf34c96fbc",
+  "sourceHash": "fnv1a64:ec95dbb42b4e6c4d",
   "lessons": [
     {
       "id": "ML-C07-numbers-1-5",
@@ -714,7 +714,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c6c1d6c9eaa6b05",
+      "sourceHash": "fnv1a64:02ce920e95737da3",
       "notice": null,
       "blocks": [
         {
@@ -784,7 +784,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Ompathu grew from an old word for one plus pattŭ, ten: one short of ten. Before p, the older n becomes m. Say on-pattŭ slowly, then let it settle into ombatŭ."
+              "text": "Ompathu is usually read as an old word for one plus pattŭ, ten: one short of ten. It is native Dravidian (DEDR 1025), but how it was built is uncertain: DEDR sets it beside both \"one\" and an older word for nine. Before p, the older n becomes m. Say on-pattŭ slowly, then let it settle into ombatŭ."
             }
           ]
         },
@@ -1405,7 +1405,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:518728d01b5615da",
+      "sourceHash": "fnv1a64:b3f9d5f4cb3838dc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1465,7 +1465,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which word means one short of ten? (ഒമ്പത്, ombatŭ, nine.)"
+              "text": "Which word is usually read as one short of ten? (ഒമ്പത്, ombatŭ, nine.)"
             },
             {
               "kind": "speech",

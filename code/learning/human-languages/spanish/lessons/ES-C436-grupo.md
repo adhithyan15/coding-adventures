@@ -47,7 +47,7 @@ Tuesday group.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C436-GENTE-02, ES-LEX-C436-GENTE-01] -->
 
-This one does not come apart. It arrived whole, by way of Italian *gruppo*, and there is
+This one does not come apart. It arrived whole, borrowed from Italian *gruppo*, and there is
 no Spanish piece inside it to recognise.
 
 That is the second thing this run has taught you about long-versus-short words:

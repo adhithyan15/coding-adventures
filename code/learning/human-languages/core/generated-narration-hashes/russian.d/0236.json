@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 236,
-  "sourceHash": "fnv1a64:b754c10890f29beb",
+  "sourceHash": "fnv1a64:00af9967a862be04",
   "lessonIds": [
     "RU-C236-schitat",
     "RU-C236-izmeryat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch236.txt",
   "json": "russian/narration/ch236.json",
-  "textHash": "fnv1a64:13ff61c57a9f4a65",
-  "jsonHash": "fnv1a64:87d2744b634d6f38",
+  "textHash": "fnv1a64:874ada6d2bc1c653",
+  "jsonHash": "fnv1a64:61b735f68ca9379e",
   "findings": []
 }

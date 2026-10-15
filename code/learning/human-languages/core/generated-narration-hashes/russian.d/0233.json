@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 233,
-  "sourceHash": "fnv1a64:f6e9f50e783738a0",
+  "sourceHash": "fnv1a64:8e75a56cfcf0aac3",
   "lessonIds": [
     "RU-C233-reshat",
     "RU-C233-vybirat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch233.txt",
   "json": "russian/narration/ch233.json",
-  "textHash": "fnv1a64:9bfc07a4cc45b9ba",
-  "jsonHash": "fnv1a64:50d1238bafbca51f",
+  "textHash": "fnv1a64:a2e6c177f84d04c7",
+  "jsonHash": "fnv1a64:08a58863929fb943",
   "findings": []
 }

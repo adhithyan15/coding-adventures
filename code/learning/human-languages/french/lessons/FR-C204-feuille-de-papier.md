@@ -46,7 +46,7 @@ reviews_of: [FR-C204-telephone-portable]
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**feuille de papier** — *feuille*, "a leaf, a sheet", *de*, "of", and *papier*, "paper".
+**feuille de papier** — *feuille*, "a leaf, a sheet", *de*, "of", and *papier*, "paper". *Feuille* ← Latin *folia*, "leaves", and *papier* ← Latin *papyrus* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

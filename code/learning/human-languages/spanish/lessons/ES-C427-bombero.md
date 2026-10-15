@@ -60,7 +60,8 @@ attaches to **things** rather than to verbs:
 So Spanish has **-dor** for *the one who does the action* and **-ero** for *the
 one who works with the thing*.
 
-*Bomba* is usually taken to imitate the sound of a boom.
+*Bomba* is usually taken to imitate the sound of a boom, through Latin *bombus*,
+"a booming noise", from Greek (EtymDB 2.1).
 
 ## Grammar Lens: three endings, three logics
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C427-AGENT-04, ES-LEX-C427-AGENT-01, ES-LEX-C427-AGENT-03] -->

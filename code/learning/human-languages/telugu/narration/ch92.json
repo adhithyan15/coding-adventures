@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "At the Doctor",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7390289d5b1e84a8",
+  "sourceHash": "fnv1a64:d60a69036d869fcd",
   "lessons": [
     {
       "id": "TE-C92-cold-illness",
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2b010a2a6fac53a",
+      "sourceHash": "fnv1a64:b584d264b0cac138",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ఆసుపత్రి (āsupatri) is usually explained as a reshaping of English hospital. Neither DEDR nor CDIAL records it."
+              "text": "ఆసుపత్రి (āsupatri) is usually traced to English hospital, reshaped. Neither DEDR nor CDIAL records it."
             }
           ]
         },

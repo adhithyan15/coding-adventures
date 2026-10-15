@@ -4,7 +4,7 @@
   "chapter": 208,
   "title": "Finally, Lastly, On the spot, Formerly, Long since",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:be95cfe60dc99c8b",
+  "sourceHash": "fnv1a64:1f99d726e64faf69",
   "lessons": [
     {
       "id": "LA-C208-denique",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:993564eee659b457",
+      "sourceHash": "fnv1a64:86890cffcdf0ebad",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "illicō is usually explained as in locō, \"on the spot\", run together."
+              "text": "illicō is usually explained as in locō, \"on the spot\", run together (Lewis & Short, which prefers the spelling īlicō)."
             }
           ]
         },

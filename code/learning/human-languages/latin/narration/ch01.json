@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2c43f068b646677f",
+  "sourceHash": "fnv1a64:94bcb7066831c2b6",
   "lessons": [
     {
       "id": "LA-C01-salve",
@@ -541,7 +541,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00b8f270c3248612",
+      "sourceHash": "fnv1a64:47ff7cf1e7c594b2",
       "notice": null,
       "blocks": [
         {
@@ -579,7 +579,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Valē (singular) / valēte (plural) is the imperative of valēre, \"to be strong, to be well.\" So goodbye in Latin literally wishes you strength. The root is an English gold mine: value, valid, valiant, valour, valence, prevail, convalesce, ambivalent (\"strong both ways\"). And the Romance children carry valēre as their verb \"to be worth\": Spanish valer, Italian valere, French valoir."
+              "text": "Valē (singular) / valēte (plural) is the imperative of valēre, \"to be strong, to be well.\" So goodbye in Latin literally wishes you strength. Valēre is inherited, usually traced to Proto-Indo-European walh₂-, \"to be strong\" (EtymDB 2.1). The root is an English gold mine: value, valid, valiant, valour, valence, prevail, convalesce, ambivalent (\"strong both ways\"). And the Romance children carry valēre as their verb \"to be worth\": Spanish valer, Italian valere, French valoir."
             }
           ]
         },

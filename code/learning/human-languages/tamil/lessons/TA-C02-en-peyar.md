@@ -47,6 +47,8 @@ English needs that Tamil doesn't.
 
 *Eṉ peyar Arun.* → "My name is Arun."
 
+Both words are native Dravidian: *eṉ* (DEDR 5160) and *peyar* (DEDR 4410).
+
 ## Grammar Lens: Tamil has no word for "is" here
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 

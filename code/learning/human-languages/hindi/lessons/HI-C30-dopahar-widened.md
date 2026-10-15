@@ -65,8 +65,9 @@ treat the exact pahar-count as the general shape of the story rather
 than a precisely dated fact. Either way, the **word's job** in the
 language has moved on well past that etymology. This kind of drift — a word for one precise instant loosening
 into a name for a whole surrounding stretch of time — isn't unique to
-Hindi, but here it's especially visible because Chapter 17 showed you
-exactly how tight the original math was.
+Hindi, but here it's visible because Chapter 17 showed you
+exactly how tight the original math was. **पहर** is Sanskrit *prahara*,
+"a watch" (CDIAL 8900), perhaps itself from Persian *pahra*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02] -->

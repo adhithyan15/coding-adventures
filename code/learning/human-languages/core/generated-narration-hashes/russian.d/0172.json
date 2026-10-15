@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 172,
-  "sourceHash": "fnv1a64:da0f1df1bb5c9ccc",
+  "sourceHash": "fnv1a64:fa152d22754c697a",
   "lessonIds": [
     "RU-C172-rezyume",
     "RU-C172-karyera",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch172.txt",
   "json": "russian/narration/ch172.json",
-  "textHash": "fnv1a64:16dca6b25ba9ba32",
-  "jsonHash": "fnv1a64:3e62b6a0282d1349",
+  "textHash": "fnv1a64:65980e9e2ea15587",
+  "jsonHash": "fnv1a64:e856f937e1ead84c",
   "findings": []
 }

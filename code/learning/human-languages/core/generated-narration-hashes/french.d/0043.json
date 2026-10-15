@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 43,
-  "sourceHash": "fnv1a64:1d4dd120a761df3a",
+  "sourceHash": "fnv1a64:fc4710d85b5be712",
   "lessonIds": [
     "FR-C39-qui",
     "FR-C39-que",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "french/narration/ch43.txt",
   "json": "french/narration/ch43.json",
-  "textHash": "fnv1a64:ac6fba3127681da5",
-  "jsonHash": "fnv1a64:72af9c2ad9258253",
+  "textHash": "fnv1a64:81ae77bf7e1b10d5",
+  "jsonHash": "fnv1a64:d6123567ef90386c",
   "findings": []
 }

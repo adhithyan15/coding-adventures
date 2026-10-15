@@ -4,7 +4,7 @@
   "chapter": 324,
   "title": "True, False, and Not Even",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dbc9bfedfc8063e8",
+  "sourceHash": "fnv1a64:8474259bedcfd3d4",
   "lessons": [
     {
       "id": "ES-C324-verdad",
@@ -623,7 +623,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9133a7a8cd71ed5b",
+      "sourceHash": "fnv1a64:1175a6a7a393e703",
       "notice": null,
       "blocks": [
         {
@@ -688,7 +688,7 @@
             },
             {
               "kind": "speech",
-              "text": "The Latin underneath quiera is quaerere, to seek, and English kept the seeking rather than the wanting: to query is to seek an answer, to acquire is to seek toward, an inquest is a seeking-into, and a quest is the bare verb standing alone."
+              "text": "Quiera comes from Latin quaerere, to seek, and English kept the seeking rather than the wanting: to query is to seek an answer, to acquire is to seek toward, an inquest is a seeking-into, and a quest is the bare verb standing alone."
             },
             {
               "kind": "speech",

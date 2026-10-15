@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d54fc8a4bda45f3b",
+  "sourceHash": "fnv1a64:b8e7b4bf03997327",
   "lessons": [
     {
       "id": "GE-C01-hallo",
@@ -816,7 +816,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73113b87304e94e1",
+      "sourceHash": "fnv1a64:52578d2950a8b163",
       "notice": null,
       "blocks": [
         {
@@ -854,7 +854,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Guten Tag = gut (\"good\") + Tag (\"day\") = \"good day,\" the neutral polite \"hello\" for daytime. Said GOO-ten tahk."
+              "text": "Guten Tag = gut (\"good\") + Tag (\"day\") = \"good day,\" the neutral polite \"hello\" for daytime. Said GOO-ten tahk. Both words are inherited: gut from Old High German guot, and Tag from Proto-Germanic dagaz, the same word as English day (EtymDB 2.1)."
             }
           ]
         },
@@ -1067,7 +1067,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d2ce3a544236e4a",
+      "sourceHash": "fnv1a64:1820e95bceb142f0",
       "notice": null,
       "blocks": [
         {
@@ -1105,7 +1105,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Guten Morgen = gut (\"good\") + Morgen (\"morning\") = \"good morning.\" Morgen is masculine, exactly like Tag, so gut takes the same -en: guten — no new agreement to learn. Said GOO-ten MOR-gen."
+              "text": "Guten Morgen = gut (\"good\") + Morgen (\"morning\") = \"good morning.\" Morgen is masculine, exactly like Tag, so gut takes the same -en: guten — no new agreement to learn. Said GOO-ten MOR-gen. Morgen from Old High German morgan (EtymDB 2.1), kin to English morn."
             },
             {
               "kind": "speech",
@@ -1307,7 +1307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70257f3eb780342c",
+      "sourceHash": "fnv1a64:1fe22ad662f702ba",
       "notice": null,
       "blocks": [
         {
@@ -1349,7 +1349,7 @@
             },
             {
               "kind": "speech",
-              "text": "You now have the daytime arc: Guten Morgen (morning) becomes Guten Tag (midday/afternoon) becomes Guten Abend (evening). All guten, all masculine. Only bedtime is left — and it breaks the pattern."
+              "text": "You now have the daytime arc: Guten Morgen (morning) becomes Guten Tag (midday/afternoon) becomes Guten Abend (evening). All guten, all masculine. Only bedtime is left — and it breaks the pattern. Abend from Old High German āband (EtymDB 2.1), kin to the even of English evening."
             }
           ]
         },
@@ -1563,7 +1563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2382887aa223c8d2",
+      "sourceHash": "fnv1a64:26464cd2ced7d2ce",
       "notice": null,
       "blocks": [
         {
@@ -1601,7 +1601,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Gute Nacht = gut (\"good\") + Nacht (\"night\") = \"good night,\" GOO-te nahkht."
+              "text": "Gute Nacht = gut (\"good\") + Nacht (\"night\") = \"good night,\" GOO-te nahkht. Nacht from Proto-Germanic nahts, the same word as English night (EtymDB 2.1)."
             }
           ]
         },

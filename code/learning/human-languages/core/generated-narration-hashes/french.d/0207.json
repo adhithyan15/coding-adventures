@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 207,
-  "sourceHash": "fnv1a64:680eef5400a31f05",
+  "sourceHash": "fnv1a64:04ad5d20cbad4b86",
   "lessonIds": [
     "FR-C207-naitre",
     "FR-C207-mourir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch207.txt",
   "json": "french/narration/ch207.json",
-  "textHash": "fnv1a64:90297481fcec2247",
-  "jsonHash": "fnv1a64:72375c47a88ac1ae",
+  "textHash": "fnv1a64:2317b3942ea3c3c8",
+  "jsonHash": "fnv1a64:020b73ed73a360c3",
   "findings": []
 }

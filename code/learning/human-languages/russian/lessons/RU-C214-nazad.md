@@ -47,7 +47,7 @@ reviews_of: [RU-C214-otsyuda]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**назад** is *на*, "onto", with *зад*, "the back, the rear": backwards.
+**назад** is *на*, "onto", with *зад*, "the back, the rear": backwards. Vasmer reports the usual comparison of *зад* with Greek *chódanos*, "rump".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

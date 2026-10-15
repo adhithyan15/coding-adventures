@@ -46,7 +46,7 @@ reviews_of: [FR-C217-presque]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**environ** — *en*, "in", and Old French *viron*, "a circuit", from the verb for "to turn": in the round of.
+**environ** — *en*, "in", and Old French *viron*, "a circuit", from the verb for "to turn": in the round of. *En* ← Latin *in*; the verb behind *viron* is of uncertain origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

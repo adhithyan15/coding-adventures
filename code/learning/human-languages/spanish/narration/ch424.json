@@ -4,7 +4,7 @@
   "chapter": 424,
   "title": "The Marks Themselves",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:2c8ea66df6e95e28",
+  "sourceHash": "fnv1a64:d702c4c2e918eab1",
   "lessons": [
     {
       "id": "ES-C424-punto",
@@ -639,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e1931a4ffc650c8",
+      "sourceHash": "fnv1a64:49959043fe8ece36",
       "notice": null,
       "blocks": [
         {
@@ -693,7 +693,7 @@
             },
             {
               "kind": "speech",
-              "text": "Comillas is coma, \"comma\", with the small-ending -illa: little commas."
+              "text": "Comillas is coma, \"comma\", with the small-ending -illa: little commas. Coma is borrowed from Latin comma, itself from Greek (EtymDB 2.1)."
             }
           ]
         },

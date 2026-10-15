@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:545171f0ee08ff61",
+  "sourceHash": "fnv1a64:d88cd54d53d43415",
   "lessons": [
     {
       "id": "FR-C01-salut",
@@ -1117,7 +1117,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27c4aa3b1a1953c3",
+      "sourceHash": "fnv1a64:bcec675f2f81fefd",
       "notice": null,
       "blocks": [
         {
@@ -1155,7 +1155,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bonjour = bon (\"good\") + jour (\"day\") = \"good day.\" One written word, said bõ- zhoor. bon is masculine because jour is masculine — the agreement from the bon lesson, quietly at work."
+              "text": "bonjour = bon (\"good\") + jour (\"day\") = \"good day.\" One written word, said bõ- zhoor. bon is masculine because jour is masculine — the agreement from the bon lesson, quietly at work. Both are inherited: bon from Latin bonus, jour from Latin diurnum, \"daytime\" (EtymDB 2.1)."
             }
           ]
         },
@@ -1386,7 +1386,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:266ef53e0228c479",
+      "sourceHash": "fnv1a64:329c25bf7f3bc60d",
       "notice": null,
       "blocks": [
         {
@@ -1424,7 +1424,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bonsoir = bon (\"good\") + soir (\"evening\") = \"good evening.\" bon stays masculine because soir is masculine — same as bonjour, no new agreement to learn. Said bõ- swahr."
+              "text": "bonsoir = bon (\"good\") + soir (\"evening\") = \"good evening.\" bon stays masculine because soir is masculine — same as bonjour, no new agreement to learn. Said bõ- swahr. Soir from Latin sērō, \"late\", from sērus (EtymDB 2.1)."
             }
           ]
         },

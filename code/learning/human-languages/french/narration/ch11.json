@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The Four Seasons",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f503eadf2fed0371",
+  "sourceHash": "fnv1a64:7758bbb51bc4defe",
   "lessons": [
     {
       "id": "FR-C09-printemps",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f15f90b0c7cc9218",
+      "sourceHash": "fnv1a64:0e491a1d38433d9c",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "printemps is two words fused: prīmum tempus, \"the first time.\""
+              "text": "printemps is two Latin words fused: prīmum tempus, \"the first time.\""
             },
             {
               "kind": "speech",

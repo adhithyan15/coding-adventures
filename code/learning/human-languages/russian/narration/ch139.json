@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "A Timetable, an Advert, an Entrance, an Exit, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:42f3225b5bfe68fe",
+  "sourceHash": "fnv1a64:12486a1064632774",
   "lessons": [
     {
       "id": "RU-C139-raspisaniye",
@@ -460,7 +460,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0daf989847150355",
+      "sourceHash": "fnv1a64:58fbbd9a5c2dfc07",
       "notice": null,
       "blocks": [
         {
@@ -511,7 +511,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "выход (výkhod) is вы-, \"out\", with ход, \"a going\": the way out."
+              "text": "выход (výkhod) is вы-, \"out\", with ход, \"a going\": the way out. Vasmer ties ход to the Indo-European root sed-, \"to sit\", its х grown from an s after prefixes."
             }
           ]
         },

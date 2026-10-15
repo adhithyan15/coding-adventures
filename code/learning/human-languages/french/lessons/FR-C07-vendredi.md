@@ -49,7 +49,7 @@ for a goddess.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**vendredi** is **Veneris diēs**, "the day of **Venus**" — goddess of love and
+**vendredi** is Latin **Veneris diēs**, "the day of **Venus**" — goddess of love and
 the brightest thing in the sky after the Sun and Moon. Her name is still in
 English **venerate**, "to hold in reverence."
 

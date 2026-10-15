@@ -44,6 +44,8 @@ identical.
 - **ಅಪ್ಪ** (*appa*) = "**father**" — matches Tamil *appā* closely.
 - **ಅಮ್ಮ** (*amma*) = "**mother**" — matches Tamil *ammā* closely.
 
+Both are native Dravidian words (DEDR 156, 183).
+
 ## The word, taken apart: Four sibling words, age before gender
 <!-- hl-knowledge: introduces=[KA-ETYMON-C12-KUTUMBA-02]; assesses=[] -->
 
@@ -53,6 +55,8 @@ identical.
 | **ತಮ್ಮ** (*tamma*) | **younger** brother | *tambi* — near match |
 | **ಅಕ್ಕ** (*akka*) | **older** sister | *akkā* — near match |
 | **ತಂಗಿ** (*tangi*) | **younger** sister | *tangai* — near match |
+
+All four are native Dravidian, each with its own entry (DEDR 131, 3085, 23, 3015).
 
 Just like Tamil, Kannada has **no single word** that simply means "brother"
 or "sister" — you name the sibling's **relative age** every time, not just

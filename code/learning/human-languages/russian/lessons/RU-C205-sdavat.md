@@ -47,7 +47,7 @@ reviews_of: [RU-C205-prepodavat]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**сдавать** is *с-*, "off, over", with *давать*, "to give": to hand in, and so to take an exam.
+**сдавать** is *с-*, "off, over", with *давать*, "to give": to hand in, and so to take an exam. Vasmer takes *давать* from *дать*, "to give", kin to Lithuanian *dovanà*, "a gift".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

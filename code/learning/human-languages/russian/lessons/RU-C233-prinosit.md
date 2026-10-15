@@ -47,7 +47,7 @@ reviews_of: [RU-C233-pokazyvat]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**приносить** is *при-*, "to, toward", with *носить*, "to carry": to carry to someone.
+**приносить** is *при-*, "to, toward", with *носить*, "to carry": to carry to someone. *Носить* goes with *нести*, "to carry", which Vasmer relates to Lithuanian *nèšti*, "to carry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

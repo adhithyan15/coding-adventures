@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b645848022d13730",
+  "sourceHash": "fnv1a64:9dcf57dfabda88b1",
   "lessons": [
     {
       "id": "PT-C01-ola",
@@ -702,7 +702,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59d9babc7295c6eb",
+      "sourceHash": "fnv1a64:ba32c44c7363e4f7",
       "notice": null,
       "blocks": [
         {
@@ -730,6 +730,10 @@
             {
               "kind": "speech",
               "text": "bom (\"good\") + dia (\"day\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are inherited from Latin: bom from bonus, \"good\", and dia from diēs, \"day\" (EtymDB 2.1)."
             },
             {
               "kind": "speech",

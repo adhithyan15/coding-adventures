@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 189,
-  "sourceHash": "fnv1a64:1e761465afcf590c",
+  "sourceHash": "fnv1a64:85577bb995bbedfb",
   "lessonIds": [
     "FR-C189-malgre",
     "FR-C189-malheureusement",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch189.txt",
   "json": "french/narration/ch189.json",
-  "textHash": "fnv1a64:32278847c19b9e4b",
-  "jsonHash": "fnv1a64:8189e8c3588235cd",
+  "textHash": "fnv1a64:4d5560753c2e9d12",
+  "jsonHash": "fnv1a64:3b1dbb4944e940ad",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 114,
-  "sourceHash": "fnv1a64:6c66210752f08cad",
+  "sourceHash": "fnv1a64:e72fd86da5884f29",
   "lessonIds": [
     "FR-C114-dentifrice",
     "FR-C114-shampooing",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch114.txt",
   "json": "french/narration/ch114.json",
-  "textHash": "fnv1a64:55c2a7b5d9313fc9",
-  "jsonHash": "fnv1a64:9ef7de476b43b4e3",
+  "textHash": "fnv1a64:f702ceeef633e218",
+  "jsonHash": "fnv1a64:d8ad389061042b9f",
   "findings": []
 }

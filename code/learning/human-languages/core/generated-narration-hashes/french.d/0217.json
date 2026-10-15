@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 217,
-  "sourceHash": "fnv1a64:82022cad6c1f225e",
+  "sourceHash": "fnv1a64:4385e0d9766bcee1",
   "lessonIds": [
     "FR-C217-presque",
     "FR-C217-environ",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch217.txt",
   "json": "french/narration/ch217.json",
-  "textHash": "fnv1a64:fef2b7b1bf9d0152",
-  "jsonHash": "fnv1a64:749df5fd5d5b3d59",
+  "textHash": "fnv1a64:821d49dab16502a9",
+  "jsonHash": "fnv1a64:94b3eca9fb851d4c",
   "findings": []
 }

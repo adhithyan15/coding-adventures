@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "The House, and Who Is Inside It",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:05c646f6bc9674d8",
+  "sourceHash": "fnv1a64:34cfc75cde610c61",
   "lessons": [
     {
       "id": "LA-C44-domus",
@@ -239,7 +239,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce13638e51457519",
+      "sourceHash": "fnv1a64:75d5b8805a6a6c3d",
       "notice": null,
       "blocks": [
         {
@@ -274,7 +274,7 @@
             },
             {
               "kind": "speech",
-              "text": "English has one word for both and has to add an adjective — city wall, interior wall. That is a small, ordinary example of something this book will show you again and again: a language's vocabulary records what its speakers needed to tell apart."
+              "text": "English has one word for both and has to add an adjective — city wall, interior wall. That is a small, ordinary example of something this book will show you again and again: a language's vocabulary records what its speakers needed to tell apart. Mūrus is inherited: Old Latin spelled it moerus, and Lewis & Short links it with moenia, \"city walls\"."
             },
             {
               "kind": "speech",

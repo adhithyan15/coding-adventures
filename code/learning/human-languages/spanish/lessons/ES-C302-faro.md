@@ -56,8 +56,8 @@ What is under the *h* of *huella*? (An *f*.) And what does *ob portum* describe?
 
 There is no root to take apart, because this word was a place. **Pharos** was a
 small island off Alexandria, and on it the Ptolemies built a tower with a fire at
-the top that stood for some sixteen hundred years. Sailors called any such tower
-a *pharos* after it, and the name swallowed the object: French *phare*, Italian
+the top that stood for some sixteen hundred years. The Greek word *pharos* came
+to mean any such tower, and the name swallowed the object: French *phare*, Italian
 *faro*, Spanish *faro*.
 
 The tower fell in an earthquake and the island is now joined to the mainland.

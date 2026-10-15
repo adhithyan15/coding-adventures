@@ -46,7 +46,7 @@ reviews_of: [LA-C231-queror]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**dēsum** is *dē*, "away from", with *sum*, "to be": to be away, to be missing.
+**dēsum** is *dē*, "away from", with *sum*, "to be": to be away, to be missing. *Sum* is inherited from Proto-Indo-European *\*h₁es-*, "to be" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

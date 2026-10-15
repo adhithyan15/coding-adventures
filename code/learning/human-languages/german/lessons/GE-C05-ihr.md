@@ -65,6 +65,9 @@ German never lost the distinction, so it needs no invention:
 | one person | *du* | *Sie* |
 | several people | *ihr* | *Sie* |
 
+*Ihr* ← Old High German *ir* ← Proto-Germanic *\*jīz* (EtymDB 2.1), the same word
+as English *ye*.
+
 ## Grammar Lens: ihr takes -t
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-IHR-T-02]; assesses=[GE-LEX-IHR-01, GE-GRAMMAR-THIRD-PERSON-T-03, GE-LEX-WOHNEN-01] -->
 

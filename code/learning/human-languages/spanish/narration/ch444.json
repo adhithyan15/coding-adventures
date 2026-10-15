@@ -4,7 +4,7 @@
   "chapter": 444,
   "title": "La Casa Por Fuera",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:28f6083c62ec6753",
+  "sourceHash": "fnv1a64:6271ba6c0dca6ffb",
   "lessons": [
     {
       "id": "ES-C444-calefaccion",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dacd171b1d9189af",
+      "sourceHash": "fnv1a64:b2f2a0c3d347645d",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two pieces, and you own both."
+              "text": "Two pieces, and you own both. The word is borrowed from Latin calefactiō, \"a heating\" (EtymDB 2.1)."
             },
             {
               "kind": "table",

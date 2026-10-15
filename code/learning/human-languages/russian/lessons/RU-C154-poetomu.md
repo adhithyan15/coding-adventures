@@ -47,7 +47,7 @@ reviews_of: [RU-C153-fontan]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**поэтому** is *по*, "by, after", with *этому*, a form of *этот*, "this": "for this reason".
+**поэтому** is *по*, "by, after", with *этому*, a form of *этот*, "this": "for this reason". Vasmer builds *этот* from a pointing *э* and the old *\*tŭ* of *тот*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

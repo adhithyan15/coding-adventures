@@ -46,7 +46,7 @@ reviews_of: [FR-C239-habituer]
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**se rendre compte** — "to render oneself an account": *rendre*, "to give back", and *compte*, "an account".
+**se rendre compte** — "to render oneself an account": *rendre*, "to give back", and *compte*, "an account". *Rendre* ← Latin *reddere*, "to give back", and *compte* ← Latin *computus*, "a reckoning" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

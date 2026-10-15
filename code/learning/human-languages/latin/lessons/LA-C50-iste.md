@@ -62,7 +62,8 @@ Then the words moved. Spanish **este** ("this") is from *iste*, not from *hic* â
 the middle term slid down into the near slot when *hic* dropped out, and *ipse*
 slid in behind it to make *ese*. So Spanish still points three ways and does it
 with a different three words, which is a good demonstration that a SYSTEM can
-outlive every word in it.
+outlive every word in it. *Iste* itself is built from *is*, "he, that", with a
+pointing ending *-te* (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C50-POINT-01, LA-LEX-C50-POINT-02] -->

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:61ce273da096fa28",
+  "sourceHash": "fnv1a64:5106fff1c19c6521",
   "lessons": [
     {
       "id": "TA-C02-peyar",
@@ -242,7 +242,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbcd18e8a7d6054a",
+      "sourceHash": "fnv1a64:31b13c744794b772",
       "notice": null,
       "blocks": [
         {
@@ -278,6 +278,10 @@
             {
               "kind": "speech",
               "text": "Eṉ peyar Arun. becomes \"My name is Arun.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Both words are native Dravidian: eṉ (DEDR 5160) and peyar (DEDR 4410)."
             }
           ]
         },
@@ -554,7 +558,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3658b4529ab7f95",
+      "sourceHash": "fnv1a64:0ea986d57ae3db87",
       "notice": null,
       "blocks": [
         {
@@ -589,7 +593,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three words, no verb — the zero copula holds for questions too. Tamil never adds an \"is.\""
+              "text": "Three words, no verb — the zero copula holds for questions too. Tamil never adds an \"is.\" All three words are native Dravidian: uṅgaḷ (DEDR 3688), peyar (DEDR 4410) and eṉṉa (DEDR 5151)."
             }
           ]
         },

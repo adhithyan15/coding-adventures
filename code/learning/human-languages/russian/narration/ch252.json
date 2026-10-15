@@ -4,7 +4,7 @@
   "chapter": 252,
   "title": "Hockey, Tennis, Basketball, Running, Swimming",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7bee3b3dc16894e1",
+  "sourceHash": "fnv1a64:7ae0bfbadcfcdce2",
   "lessons": [
     {
       "id": "RU-C252-khokkey",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82e17c807e3b5d7b",
+      "sourceHash": "fnv1a64:3ead64126ca6e74f",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "плавание (plávaniye) is a noun from плавать, \"to swim\", on the root of плыть, \"to float\"."
+              "text": "плавание (plávaniye) is a noun from плавать, \"to swim\", on the root of плыть, \"to float\". Vasmer relates плыть to Sanskrit plávatē, \"floats\", and Greek pléō, \"I sail\"."
             }
           ]
         },

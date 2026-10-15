@@ -56,7 +56,7 @@ else touched.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**keinen** is a form of *kein*, which grew out of Old High German *nihein*, "not one": the word for "one" with a negative fused on the front.
+**keinen** is a form of *kein*, which grew from Old High German *nihein*, "not one": the word for "one" with a negative fused on the front.
 
 ## Grammar Lens: three shapes, and the one that moves
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-KEINEN-01, GE-LEX-KEIN-01, GE-LEX-KEINE-01, GE-LEX-HUND-02, GE-LEX-SCHWESTER-01, GE-LEX-BROT-01] -->

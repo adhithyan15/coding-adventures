@@ -4,7 +4,7 @@
   "chapter": 263,
   "title": "Next day, Meanwhile, At some time, For a long time, Shortly",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1dbc4e6e4967b7cb",
+  "sourceHash": "fnv1a64:4980d35ea4839744",
   "lessons": [
     {
       "id": "LA-C263-postridie",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4cd6452f2a2bece5",
+      "sourceHash": "fnv1a64:3c66d8b597855ea1",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "brevī is the ablative of brevis, \"short\", with tempore, \"in a time\", understood: in a short time."
+              "text": "brevī is the ablative of brevis, \"short\", with tempore, \"in a time\", understood: in a short time. Brevis is inherited, usually traced to a Proto-Indo-European word for \"short\" (EtymDB 2.1)."
             }
           ]
         },

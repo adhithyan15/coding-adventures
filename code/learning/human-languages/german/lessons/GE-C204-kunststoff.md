@@ -46,7 +46,7 @@ reviews_of: [GE-C204-metall]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Kunststoff** is the word for "art, skill" + *Stoff*, "material": material made by skill, not found in nature.
+**Kunststoff** is the word for "art, skill" + *Stoff*, "material": material made by skill, not found in nature. *Kunst* is built on *können*, "to be able", inherited from Proto-Germanic *\*kunnaną* (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

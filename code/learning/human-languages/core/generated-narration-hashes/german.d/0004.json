@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 4,
-  "sourceHash": "fnv1a64:2f96aea8f874f9be",
+  "sourceHash": "fnv1a64:d52a9083b341e76f",
   "lessonIds": [
     "GE-C04-sehen",
     "GE-C04-wieder",
@@ -24,7 +24,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch04.txt",
   "json": "german/narration/ch04.json",
-  "textHash": "fnv1a64:4ac6365800e10cd8",
-  "jsonHash": "fnv1a64:9fb625b20ad43fd1",
+  "textHash": "fnv1a64:fbf2f44468d37b6d",
+  "jsonHash": "fnv1a64:be1db5db4b885044",
   "findings": []
 }

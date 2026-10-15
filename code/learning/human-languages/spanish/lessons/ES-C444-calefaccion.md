@@ -48,7 +48,8 @@ calefacción* — to put the heating on.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C444-CASA-01, ES-LEX-C334-BODY-34] -->
 
-Two pieces, and you own both.
+Two pieces, and you own both. The word is borrowed from Latin *calefactiō*,
+"a heating" (EtymDB 2.1).
 
 | piece | where you have it |
 |---|---|

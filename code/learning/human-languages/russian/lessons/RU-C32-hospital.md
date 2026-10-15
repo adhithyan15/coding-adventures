@@ -47,7 +47,7 @@ reviews_of: [RU-C32-doctor]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**больница** is *больной*, "sick; a patient", with *-ница*, a suffix that names places: a place for the sick. The root is that of *боль*, "pain".
+**больница** is *больной*, "sick; a patient", with *-ница*, a suffix that names places: a place for the sick. The root is that of *боль*, "pain". Vasmer relates *боль* to Old English *bealu*, "harm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

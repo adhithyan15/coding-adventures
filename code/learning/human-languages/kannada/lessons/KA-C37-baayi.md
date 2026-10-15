@@ -50,7 +50,7 @@ Four body words now: *tale*, *kai*, *kaṇṇu*, *kivi*, *mūgu*, *bāyi* — si
 ## The word, taken apart: the third proof of a law you already know
 <!-- hl-knowledge: introduces=[KA-ETYMON-C37-BAAYI-02]; assesses=[] -->
 
-**ಬಾಯಿ** answers Tamil **வாய்** (*vāy*), "mouth," through the exact law
+**ಬಾಯಿ** answers Tamil **வாய்** (*vāy*), "mouth" (native Dravidian, DEDR 5352), through the exact law
 Chapter 32 gave you: word-initial Tamil *v-* becomes Kannada *b-*. You have
 already seen this pair once, sitting quietly inside Chapter 32's etymology
 note for **ಬಾ**, and again inside Chapter 33's for **ಬರೆ** — both times as a

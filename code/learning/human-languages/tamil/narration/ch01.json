@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4c8d2f47a2a6cf57",
+  "sourceHash": "fnv1a64:9c56275313089d94",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23b554d3923d5cba",
+      "sourceHash": "fnv1a64:3c9e06808586b632",
       "notice": null,
       "blocks": [
         {
@@ -449,7 +449,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ஆம் (ām) is the plain “yes.” Doubled for emphasis it becomes āmām, “yes, indeed.”"
+              "text": "ஆம் (ām) is the plain “yes.” Doubled for emphasis it becomes āmām, “yes, indeed.” It is native Dravidian, worn down from ākum, “it will be” (DEDR 333)."
             }
           ]
         },
@@ -684,7 +684,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:619f107885a0994d",
+      "sourceHash": "fnv1a64:c229a0b975889db1",
       "notice": null,
       "blocks": [
         {
@@ -745,7 +745,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Naṉṟi grows from the root nal, “good” — so it literally means “goodness.” To thank, in Tamil, is to name the good someone did you."
+              "text": "Naṉṟi grows from the root nal (DEDR 3610), “good” — so it literally means “goodness.” To thank, in Tamil, is naming the good done to you."
             }
           ]
         },

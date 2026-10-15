@@ -47,7 +47,7 @@ reviews_of: [RU-C189-mestnyy]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**иностранный** is *иной*, "other", with *страна*, "a country", the Church Slavonic shape of *сторона*, "side": "of another land".
+**иностранный** is *иной*, "other", with *страна*, "a country", the Church Slavonic shape of *сторона*, "side": "of another land". Vasmer confirms *страна* as borrowed from Church Slavonic, and relates *иной* to Latin *ūnus*, "one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

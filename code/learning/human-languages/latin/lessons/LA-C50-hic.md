@@ -66,6 +66,9 @@ French and Portuguese all collapsed to two. So a Spanish speaker meeting *hic,
 iste, ille* is meeting the shape of their own grammar in its original three
 pieces.
 
+*Hic* itself is inherited, usually traced to a Proto-Indo-European pointing word
+for "this, here" (EtymDB 2.1).
+
 English **ad hoc** is *hoc*, "for this"; a **hic jacet** is what an old gravestone
 says: "here lies."
 

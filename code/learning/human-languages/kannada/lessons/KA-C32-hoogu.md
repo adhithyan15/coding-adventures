@@ -52,7 +52,7 @@ exactly the machine *iru* just handed you. The bare stem is already a command:
 <!-- hl-knowledge: introduces=[KA-ETYMON-C32-HOOGU-02]; assesses=[] -->
 
 Tamil's word for "go" is **போ** / **போகு** (*pō* / *pōgu*). Kannada's is
-*hōgu*, and that *h* is **not** a different root. Around a thousand years ago
+*hōgu*: the same native Dravidian root (DEDR 4572). Around a thousand years ago
 Kannada softened every old word-initial ***p-*** to **h-** — and Kannada is the
 **only** one of the four literary Dravidian languages that did it.
 

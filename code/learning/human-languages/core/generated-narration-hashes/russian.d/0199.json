@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 199,
-  "sourceHash": "fnv1a64:e20721e15316a28a",
+  "sourceHash": "fnv1a64:3758c407836dce42",
   "lessonIds": [
     "RU-C199-molodyozh",
     "RU-C199-grazhdanin",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch199.txt",
   "json": "russian/narration/ch199.json",
-  "textHash": "fnv1a64:b95118e74725ed98",
-  "jsonHash": "fnv1a64:57e37f2724604d30",
+  "textHash": "fnv1a64:06842089da337c39",
+  "jsonHash": "fnv1a64:de4445181bc2a12d",
   "findings": []
 }

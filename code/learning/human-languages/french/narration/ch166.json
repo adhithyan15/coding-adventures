@@ -4,7 +4,7 @@
   "chapter": 166,
   "title": "Photographer, Journalist, Architect, Dentist, Pharmacist",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d014da3f0a7a9024",
+  "sourceHash": "fnv1a64:19d98698a8714371",
   "lessons": [
     {
       "id": "FR-C166-photographe",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15de4c22a921fded",
+      "sourceHash": "fnv1a64:e903b5d132d7d36f",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dentiste — dent, \"tooth\", with -iste, \"one who works with\"."
+              "text": "dentiste — dent, \"tooth\", with -iste, \"one who works with\". Dent from Latin dentem, \"tooth\" (EtymDB 2.1)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbe36d3b15ec98d2",
+      "sourceHash": "fnv1a64:5de97dd19729cff8",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pharmacien — pharmacie with -ien, \"one who works in\"."
+              "text": "pharmacien — pharmacie with -ien, \"one who works in\". Pharmacie from Medieval Latin pharmacia, from Greek (EtymDB 2.1)."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "Beside, Around, Inside, Outside, Behind",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4a166edf329ce6d7",
+  "sourceHash": "fnv1a64:d865288778000fc6",
   "lessons": [
     {
       "id": "RU-C152-okolo",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:036d959d1f7fac84",
+      "sourceHash": "fnv1a64:c8b731bc4c5944c0",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "вокруг (vokrúg) is в, \"in\", with круг, \"a circle\": \"in a ring around\"."
+              "text": "вокруг (vokrúg) is в, \"in\", with круг, \"a circle\": \"in a ring around\". Vasmer relates круг to Old Norse hringr, \"a ring\"."
             }
           ]
         },

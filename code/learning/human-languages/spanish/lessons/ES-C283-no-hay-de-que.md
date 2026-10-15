@@ -56,7 +56,9 @@ thousand.) And what did *amabilis* mean? (Loveable.)
 
 Every piece is already yours. **No**, **hay**, **de**, **qué** — nothing new in
 the list. What is new is the assembly: literally "there is nothing of which," with
-the thing not worth mentioning left out of the sentence entirely.
+the thing not worth mentioning left out of the sentence entirely. The pieces are all inherited: *no* ← Latin
+*nōn*, *de* ← *dē*, *qué* ← *quid*, and *hay* is Old Spanish *ha i*, "it has
+there" (EtymDB 2.1).
 
 Spanish already gave you **de nada**, "of nothing," for the same moment. The two
 are one idea built twice: whatever you are thanking me for, there was nothing in

@@ -46,7 +46,7 @@ reviews_of: [FR-C216-banlieue]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**presque** — *près*, "near", and *que*, "that": nearly.
+**presque** — *près*, "near", and *que*, "that": nearly. *Près* ← Latin *presse*, "closely" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

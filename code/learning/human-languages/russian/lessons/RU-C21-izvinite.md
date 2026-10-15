@@ -74,7 +74,7 @@ ending on the end.
 
 So the word literally asks the other person to take you **out of the blame** —
 which is a real picture, still visible in the Russian, and one English threw away
-when *excuse* stopped meaning anything at all on its own.
+when *excuse* stopped meaning anything at all on its own. **вина** is inherited; Vasmer relates it to Latvian *vaina*, "guilt".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-IZVINITE-01, RU-ETYMON-IZVINIT-VINA, RU-LEX-POZHALUYSTA] -->

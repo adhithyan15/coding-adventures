@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Forty, Fifty, Ninety, a Thousand, a Country",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d0a7d25c313ec596",
+  "sourceHash": "fnv1a64:ebfc457e21a2312d",
   "lessons": [
     {
       "id": "RU-C76-forty",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aebf1d2274ffea21",
+      "sourceHash": "fnv1a64:3f2426c795b3237f",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "пятьдесят (pyatdesyát) is пять, \"five\", with десят, an old form of десять, \"ten\": five tens."
+              "text": "пятьдесят (pyatdesyát) is пять, \"five\", with десят, an old form of десять, \"ten\": five tens. Both are inherited: Proto-Slavic pętĭ, kin to Greek pénte, and desętĭ (Vasmer)."
             }
           ]
         },

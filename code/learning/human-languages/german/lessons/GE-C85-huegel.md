@@ -46,7 +46,7 @@ reviews_of: [GE-C85-eis]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Hügel** spread into standard German from central German dialects. It is a diminutive of Middle High German *houc*, "hill", related to the word for "high"; compare Old Norse *haugr*, "mound".
+**Hügel** spread into standard German from central German dialects. It is built from Middle High German *houc*, "hill", as a diminutive, related to the word for "high"; compare Old Norse *haugr*, "mound".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

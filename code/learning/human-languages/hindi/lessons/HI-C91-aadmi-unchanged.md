@@ -66,7 +66,7 @@ This is worth expecting rather than being surprised by, because a reading paper
 will give you an unchanged noun and ask you to count. **The number lives in the
 sentence, not always in the word.**
 
-**आदमी** is the Arabic loan *ādamī*, "human".
+**आदमी** is an Arabic word, *ādamī*, "human", borrowed through Persian.
 
 ## Grammar Lens: the whole plural system, now complete
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C91-NOUN-04, HI-LEX-C91-NOUN-03, HI-LEX-C91-NOUN-01] -->

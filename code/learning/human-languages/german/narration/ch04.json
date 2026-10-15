@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2f96aea8f874f9be",
+  "sourceHash": "fnv1a64:d52a9083b341e76f",
   "lessons": [
     {
       "id": "GE-C04-sehen",
@@ -178,7 +178,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec7f95aafc0ab1f4",
+      "sourceHash": "fnv1a64:b7ac18446fdd46d8",
       "notice": null,
       "blocks": [
         {
@@ -240,7 +240,7 @@
             },
             {
               "kind": "speech",
-              "text": "That older sense is exactly what wieder still carries: back, again. So when a German says wieder, they are saying the with- of withdraw."
+              "text": "That older sense is exactly what wieder still carries: back, again. So when a German says wieder, they are saying the with- of withdraw. It comes from Old High German widar, \"against\" (EtymDB 2.1)."
             }
           ]
         },
@@ -1531,7 +1531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:287d6d466c122025",
+      "sourceHash": "fnv1a64:79e6acbefd674631",
       "notice": null,
       "blocks": [
         {
@@ -1621,7 +1621,7 @@
             },
             {
               "kind": "speech",
-              "text": "And English did it too, then half forgot: morrow meant morning, and tomorrow is literally to (the) morrow. So bis morgen is \"see you on the morrow,\" almost word for word."
+              "text": "And English did it too, then half forgot: morrow meant morning, and tomorrow is literally to (the) morrow. German morgen from Old High German morgan (EtymDB 2.1), the same word as English morrow. So bis morgen is \"see you on the morrow,\" almost word for word."
             }
           ]
         },
@@ -1850,7 +1850,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:eaf018862cd6e8f2",
+      "sourceHash": "fnv1a64:2bf8747cd5b47648",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1903,7 +1903,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ß is a letter, not a word: in the old German hand a long s joined to a following s or z fused into one shape, which is why it is called Es-zett, \"s-z\"."
+              "text": "ß is a letter, not a word: it comes from a long s joined to a following s or z in the old German hand, which is why it is called Es-zett, \"s-z\"."
             }
           ]
         },

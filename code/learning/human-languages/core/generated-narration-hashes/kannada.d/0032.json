@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 32,
-  "sourceHash": "fnv1a64:a5503b2ccfaca847",
+  "sourceHash": "fnv1a64:e2d7a4dd87a85d24",
   "lessonIds": [
     "KA-C32-iru",
     "KA-C32-hoogu",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "kannada/narration/ch32.txt",
   "json": "kannada/narration/ch32.json",
-  "textHash": "fnv1a64:06f1e31be9dd33fa",
-  "jsonHash": "fnv1a64:0d3457a85368f524",
+  "textHash": "fnv1a64:623c6c184e27de6b",
+  "jsonHash": "fnv1a64:168b73252740379e",
   "findings": []
 }

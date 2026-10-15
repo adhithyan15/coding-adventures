@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Not One, Not a Scrap",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:b11d109f4e4aecb1",
+  "sourceHash": "fnv1a64:84239c64c45c51bc",
   "lessons": [
     {
       "id": "GE-C32-kein",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c22061322ab1ee26",
+      "sourceHash": "fnv1a64:37b49dd6ad859dc6",
       "notice": null,
       "blocks": [
         {
@@ -86,7 +86,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "kein is Old High German nihein, which is ni (\"not\") plus ein (\"one\"). Not one. The ni- wore down to nothing over a thousand years and left the k that had crept in beside it, and the modern word no longer looks like its own parts."
+              "text": "kein comes from Old High German nihein, which is ni (\"not\") plus ein (\"one\"). Not one. The ni- wore down to nothing over a thousand years and left the k that had crept in beside it, and the modern word no longer looks like its own parts."
             },
             {
               "kind": "speech",
@@ -210,7 +210,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d0edd8b710aa1e6",
+      "sourceHash": "fnv1a64:9d0da765cfb246c8",
       "notice": null,
       "blocks": [
         {
@@ -268,7 +268,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "keine is a form of kein, which grew out of Old High German nihein, \"not one\": a negative fused onto the word for \"one\", later worn down to kein."
+              "text": "keine is a form of kein, which grew from Old High German nihein, \"not one\": a negative fused onto the word for \"one\", later worn down to kein."
             }
           ]
         },
@@ -403,7 +403,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d49cd053095f325",
+      "sourceHash": "fnv1a64:b4be51ed025fd18d",
       "notice": null,
       "blocks": [
         {
@@ -449,7 +449,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "keinen is a form of kein, which grew out of Old High German nihein, \"not one\": the word for \"one\" with a negative fused on the front."
+              "text": "keinen is a form of kein, which grew from Old High German nihein, \"not one\": the word for \"one\" with a negative fused on the front."
             }
           ]
         },

@@ -47,7 +47,7 @@ reviews_of: [RU-C143-prikhodit]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**уходить** is *у-*, "away", with *ходить*, "to walk": to go away.
+**уходить** is *у-*, "away", with *ходить*, "to walk": to go away. Vasmer ties *ход* to the Indo-European root *\*sed-*, "to sit", its *х* grown from an *s* after prefixes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

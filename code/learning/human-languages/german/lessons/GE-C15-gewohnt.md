@@ -69,7 +69,8 @@ English kept the same word and only the old meaning:
 | English **wont** | accustomed, as in *he was wont to sing* |
 
 Two languages split one word between them — Germany took the address and
-England took the habit.
+England took the habit. *Wohnen* ← Old High German *wonēn* ← Proto-Germanic
+*\*wunjaną*, "to be wont; to dwell" (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GEWOHNT-01, GE-LEX-GELERNT-01] -->

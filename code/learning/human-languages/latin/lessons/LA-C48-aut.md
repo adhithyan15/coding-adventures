@@ -56,7 +56,8 @@ The word that lets you offer a choice, which until now you could not do:
 > **Aquam aut vīnum?** — Water or wine?
 
 Latin has **two** words here and they are not interchangeable. **Aut** offers an
-**exclusive** choice: one or the other, not both. **Vel** offers an
+**exclusive** choice: one or the other, not both. It is inherited, usually traced
+to Proto-Indo-European *\*h₂ewti*, "on the other hand" (EtymDB 2.1). **Vel** offers an
 **indifferent** one: either will do. *Vel* is literally an old command form of
 the verb "to want" — "choose, if you like" — and that verb is the next
 chapter's.

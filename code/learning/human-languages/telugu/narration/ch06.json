@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:80800a2f7a1969c4",
+  "sourceHash": "fnv1a64:6e3f38e4961ba4d0",
   "lessons": [
     {
       "id": "TE-C06-dative-ku",
@@ -510,7 +510,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea0900ad7d7e9e5a",
+      "sourceHash": "fnv1a64:be528af7f6e80974",
       "notice": null,
       "blocks": [
         {
@@ -611,7 +611,7 @@
             },
             {
               "kind": "speech",
-              "text": "One construction across four languages, with four suffixes that are visibly the same suffix — -ku / -ukku / -ge / -ikku. The Dravidian family showing its bones, just as blanc/bianco/branco did for Romance."
+              "text": "One construction across four languages, with four suffixes that are the same suffix — -ku / -ukku / -ge / -ikku. Native Dravidian bones, like vaccu, \"comes\" (DEDR 5270) — as blanc/bianco/branco were for Romance."
             }
           ]
         },
