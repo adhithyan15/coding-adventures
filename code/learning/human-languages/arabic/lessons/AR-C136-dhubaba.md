@@ -14,7 +14,8 @@ romanization: "dhubāba"
 concept_tag: AR-THINGS136-DHUBABA
 prerequisites: [AR-C136-timsah, AR-C136-bauda]
 sounds: []
-roots: []
+roots: [dh-b-b]
+etymology_hook: "dhubāba: one fly of dhubāb, on dh-b-b 'to drive away' (Lane); Hebrew zevuv, heard in Beelzebub, is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C136-bauda]
 <!-- hl-knowledge: introduces=[AR-LEX-C136-THINGS136-03]; assesses=[] -->
 
 **ذبابة** — *dhubāba* — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ذبابة** (*dhubāba*) is built on the native Arabic root *dh-b-b*, "to drive away" (Lane), said above all of flies; *dhubāba* is one fly of *dhubāb*. Hebrew *zevuv*, "fly", heard in the name Beelzebub, is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

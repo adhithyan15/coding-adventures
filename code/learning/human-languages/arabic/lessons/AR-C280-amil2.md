@@ -14,7 +14,8 @@ romanization: "ʿamīl"
 concept_tag: AR-AMAL280-AMIL2
 prerequisites: [AR-C279-sharit, AR-C279-ghira]
 sounds: []
-roots: []
+roots: [ʿ-m-l]
+etymology_hook: "ʿamīl: built on the root ʿ-m-l, 'to work, to do' (Lane); ʿamīl is 'one who acts for another', an agent, a client"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C279-ghira]
 <!-- hl-knowledge: introduces=[AR-LEX-C280-AMAL280-01]; assesses=[] -->
 
 **عميل** — *ʿamīl* — "a client".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عميل** (*ʿamīl*) is built on the native Arabic root *ʿ-m-l*, "to work, to do" (Lane). *ʿAmīl* is "one who acts for another", an agent, a client.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

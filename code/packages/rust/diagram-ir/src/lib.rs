@@ -2080,10 +2080,24 @@ pub const MAX_RAILROAD_SPACING: f64 = 65_536.0;
 #[derive(Clone, Debug, PartialEq)]
 pub struct RailroadConfig {
     pub padding: f64, pub vertical_separation: f64, pub horizontal_separation: f64,
+    pub font_size: f64, pub font_family: String,
+    pub terminal_fill: String, pub terminal_stroke: String, pub terminal_text_color: String,
+    pub non_terminal_fill: String, pub non_terminal_stroke: String, pub non_terminal_text_color: String,
+    pub line_color: String, pub stroke_width: f64, pub marker_fill: String,
+    pub special_fill: String, pub special_stroke: String, pub rule_name_color: String,
+    pub show_markers: bool, pub marker_radius: f64,
 }
 impl Default for RailroadConfig {
     fn default() -> Self {
-        Self { padding: 10.0, vertical_separation: 8.0, horizontal_separation: 10.0 }
+        Self {
+            padding: 10.0, vertical_separation: 8.0, horizontal_separation: 10.0,
+            font_size: 14.0, font_family: "monospace".into(),
+            terminal_fill: "#FFFFC0".into(), terminal_stroke: "#000000".into(), terminal_text_color: "#000000".into(),
+            non_terminal_fill: "#FFFFFF".into(), non_terminal_stroke: "#000000".into(), non_terminal_text_color: "#000000".into(),
+            line_color: "#000000".into(), stroke_width: 2.0, marker_fill: "#000000".into(),
+            special_fill: "#F0E0FF".into(), special_stroke: "#8800CC".into(), rule_name_color: "#000066".into(),
+            show_markers: true, marker_radius: 5.0,
+        }
     }
 }
 #[derive(Clone, Debug, PartialEq)]

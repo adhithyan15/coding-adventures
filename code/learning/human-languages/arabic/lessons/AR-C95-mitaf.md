@@ -14,7 +14,8 @@ romanization: "miʿṭaf"
 concept_tag: AR-CLOTHES95-MITAF
 prerequisites: [AR-C95-qubbaa, AR-C95-hidha]
 sounds: []
-roots: []
+roots: [ʿ-ṭ-f]
+etymology_hook: "miʿṭaf: built on the root ʿ-ṭ-f, 'to bend, to incline' (Lane); Lane's miʿṭaf is a cloak, the same as ʿiṭāf"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C95-hidha]
 <!-- hl-knowledge: introduces=[AR-LEX-C95-CLOTHES95-05]; assesses=[] -->
 
 **معطف** — *miʿṭaf* — "a coat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**معطف** (*miʿṭaf*) is built on the native Arabic root *ʿ-ṭ-f*, "to bend, to incline" (Lane). Lane's *miʿṭaf* is a cloak, the same as *ʿiṭāf*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

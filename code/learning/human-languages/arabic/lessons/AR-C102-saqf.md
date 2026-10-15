@@ -14,7 +14,8 @@ romanization: "saqf"
 concept_tag: AR-LOC102-SAQF
 prerequisites: [AR-C102-sath, AR-C102-daraj, AR-C01-sabah-al-khayr, AR-C01-sabah-al-khayr]
 sounds: []
-roots: []
+roots: [s-q-f]
+etymology_hook: "saqf: an old native noun listed by Lane under s-q-f, beside a verb meaning 'to roof a house'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C102-daraj]
 <!-- hl-knowledge: introduces=[AR-LEX-C102-LOC102-03]; assesses=[] -->
 
 **سقف** — *saqf* — "a ceiling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سقف** (*saqf*), "a roof, a ceiling", is an old native noun, listed under the root *s-q-f* (Lane) beside a verb meaning "to roof a house".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,7 @@ concept_tag: GREETING-PEACE
 prerequisites: []
 sounds: [s-l-m, long-a]
 roots: [s-l-m]
+etymology_hook: "salām: built on the root s-l-m 'to be safe, whole' (Lane); Hebrew shalom is its cousin; English salaam comes from it"
 duration:
   max_seconds: 240
 requires:

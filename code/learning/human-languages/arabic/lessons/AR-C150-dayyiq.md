@@ -14,7 +14,8 @@ romanization: "ḍayyiq"
 concept_tag: AR-QUAL150-DAYYIQ
 prerequisites: [AR-C150-murtafi, AR-C150-arid]
 sounds: []
-roots: []
+roots: [ḍ-y-q]
+etymology_hook: "ḍayyiq: built on the root ḍ-y-q, 'to be narrow' (Lane); the word ḍayyiq is the adjective, 'narrow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C150-arid]
 <!-- hl-knowledge: introduces=[AR-LEX-C150-QUAL150-05]; assesses=[] -->
 
 **ضيق** — *ḍayyiq* — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضيق** (*ḍayyiq*) is built on the native Arabic root *ḍ-y-q*, "to be narrow" (Lane). The word *ḍayyiq* is the adjective, "narrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

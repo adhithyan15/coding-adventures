@@ -14,7 +14,8 @@ romanization: "waqafa"
 concept_tag: AR-VERB-WAQAFA
 prerequisites: [AR-C61-arsala, AR-C61-qataa]
 sounds: []
-roots: []
+roots: [w-q-f]
+etymology_hook: "waqafa: built on the root w-q-f, 'to stand still, to stop' (Lane); the same root gives mawqif, 'a stopping place'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C61-qataa]
 <!-- hl-knowledge: introduces=[AR-LEX-C62-VERBS62-01]; assesses=[] -->
 
 **وقف** — *waqafa* — "to stop (he stopped)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وقف** (*waqafa*) is built on the native Arabic root *w-q-f*, "to stand still, to stop" (Lane). The same root gives *mawqif*, "a stopping place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

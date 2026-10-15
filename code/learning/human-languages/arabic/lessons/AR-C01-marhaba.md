@@ -11,6 +11,7 @@ concept_tag: GREETING-HELLO
 prerequisites: [AR-W00-alif-mim-salam]
 sounds: [m-r-h-b, emphatic-h]
 roots: [r-ḥ-b]
+etymology_hook: "marḥaban: built on the root r-ḥ-b 'to be wide, roomy' (Lane): 'you have come to a roomy place'"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +54,8 @@ clarity matters more than force.
 The root **r–ḥ–b** carries spaciousness: *raḥb* is roomy. So *marḥaban* is not
 an empty signal. It suggests, “There is room for you here.” A warm reply is
 *marḥabtayn* — literally, “two welcomes.”
+
+*Marḥaban* is built on the native root *r-ḥ-b*, "to be wide, roomy" (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-C01-MARHABA-05] -->

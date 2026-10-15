@@ -14,7 +14,8 @@ romanization: "jawāb"
 concept_tag: AR-SCHOOL74-JAWAB
 prerequisites: [AR-C74-kharita, AR-C74-dars]
 sounds: []
-roots: []
+roots: [j-w-b]
+etymology_hook: "jawāb: built on the root j-w-b, 'to cut through, to traverse' (Lane); jawāb is the answer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C74-dars]
 <!-- hl-knowledge: introduces=[AR-LEX-C74-SCHOOL74-05]; assesses=[] -->
 
 **جواب** — *jawāb* — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جواب** (*jawāb*) is built on the native Arabic root *j-w-b*, "to cut through, to traverse; to answer" (Lane). *Jawāb* is the answer; Lane also gives *jawwāb*, "a traverser of countries".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

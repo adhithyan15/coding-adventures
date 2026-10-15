@@ -14,7 +14,8 @@ romanization: "nakhla"
 concept_tag: AR-SHAY247-NAKHLA
 prerequisites: [AR-C247-mawja, AR-C247-ward]
 sounds: []
-roots: []
+roots: [n-kh-l]
+etymology_hook: "nakhla: one tree of nakhl 'palm trees', root n-kh-l; Lane's short article gives nakhala 'to sift'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C247-ward]
 <!-- hl-knowledge: introduces=[AR-LEX-C247-SHAY247-04]; assesses=[] -->
 
 **نخلة** — *nakhla* — "a palm tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نخلة** (*nakhla*) is one palm tree of *nakhl*, "palm trees", built on the native Arabic root *n-kh-l*. Lane's short article on this root gives *nakhala*, "to sift", and *nakhlī*, "a cultivator of palm-trees".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

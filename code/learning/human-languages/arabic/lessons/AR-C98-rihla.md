@@ -14,7 +14,8 @@ romanization: "riḥla"
 concept_tag: AR-WORLD98-RIHLA
 prerequisites: [AR-C98-lawn, AR-C98-ughniya]
 sounds: []
-roots: []
+roots: [r-ḥ-l]
+etymology_hook: "riḥla: built on the root r-ḥ-l, 'to saddle a camel' (Lane); riḥla is a single journey"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C98-ughniya]
 <!-- hl-knowledge: introduces=[AR-LEX-C98-WORLD98-03]; assesses=[] -->
 
 **رحلة** — *riḥla* — "a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رحلة** (*riḥla*) is built on the native Arabic root *r-ḥ-l*, "to saddle a camel; to set off" (Lane). *Riḥla* is a single journey.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

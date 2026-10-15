@@ -14,7 +14,8 @@ romanization: "dalla"
 concept_tag: AR-VERB-DALLA2
 prerequisites: [AR-C195-qabala, AR-C195-dalla]
 sounds: []
-roots: []
+roots: [d-l-l]
+etymology_hook: "dalla: built on the root d-l-l, 'to guide, to direct' (Lane); dalla is the plain verb, 'he showed the way'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C195-dalla]
 <!-- hl-knowledge: introduces=[AR-LEX-C195-ACT195-05]; assesses=[] -->
 
 **دل** — *dalla* — "to show the way, to direct".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دل** (*dalla*) is built on the native Arabic root *d-l-l*, "to guide, to direct" (Lane). *Dalla* is the plain verb, "he showed the way".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

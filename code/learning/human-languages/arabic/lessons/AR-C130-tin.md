@@ -14,7 +14,8 @@ romanization: "tīn"
 concept_tag: AR-THINGS130-TIN
 prerequisites: [AR-C129-tuffah, AR-C129-tamr]
 sounds: []
-roots: []
+roots: [t-y-n]
+etymology_hook: "tīn: built on the root t-y-n, 'figs' (Lane); Hebrew teʾenah, 'fig', is usually counted a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C129-tamr]
 <!-- hl-knowledge: introduces=[AR-LEX-C130-THINGS130-01]; assesses=[] -->
 
 **تين** — *tīn* — "figs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تين** (*tīn*) is built on the native Arabic root *t-y-n*, "figs" (Lane). Hebrew *teʾenah*, "fig", is usually counted a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

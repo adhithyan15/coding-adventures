@@ -14,7 +14,8 @@ romanization: "fariḥa"
 concept_tag: AR-VERB-FARIHA
 prerequisites: [AR-C257-rafada, AR-C257-takharraja]
 sounds: []
-roots: []
+roots: [f-r-ḥ]
+etymology_hook: "fariḥa: built on the root f-r-ḥ, 'to be glad' (Lane); fariḥa is the plain verb, 'he rejoiced'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C257-takharraja]
 <!-- hl-knowledge: introduces=[AR-LEX-C257-ACT257-03]; assesses=[] -->
 
 **فرح** — *fariḥa* — "to be glad, to rejoice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فرح** (*fariḥa*) is built on the native Arabic root *f-r-ḥ*, "to be glad" (Lane). *Fariḥa* is the plain verb, "he rejoiced".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

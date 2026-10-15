@@ -14,7 +14,8 @@ romanization: "idhā"
 concept_tag: AR-SABAB207-IDHA
 prerequisites: [AR-C207-jiddan, AR-C207-hatta]
 sounds: []
-roots: []
+roots: [idha-if]
+etymology_hook: "idhā: an old particle of time and condition, kin to idh 'when'; deeper origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C207-hatta]
 <!-- hl-knowledge: introduces=[AR-LEX-C207-SABAB207-04]; assesses=[] -->
 
 **إذا** — *idhā* — "if".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إذا** (*idhā*) is an old particle of time and condition, kin to *idh*, "when". It is not built on a three-letter root, and its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

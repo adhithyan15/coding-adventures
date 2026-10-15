@@ -14,7 +14,8 @@ romanization: "istayqaẓa"
 concept_tag: AR-VERB-ISTAYQAZA
 prerequisites: [AR-C158-ilan, AR-C158-isal]
 sounds: []
-roots: []
+roots: [y-q-ẓ]
+etymology_hook: "istayqaẓa: built on the root y-q-ẓ, 'to be awake' (Lane); istayqaẓa is Form X, 'to wake up'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C158-isal]
 <!-- hl-knowledge: introduces=[AR-LEX-C159-ACT159-01]; assesses=[] -->
 
 **استيقظ** — *istayqaẓa* — "to wake up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استيقظ** (*istayqaẓa*) is built on the native Arabic root *y-q-ẓ*, "to be awake" (Lane). *Istayqaẓa* is Form X, "to wake up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

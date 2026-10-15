@@ -14,7 +14,8 @@ romanization: "taṣālaḥa"
 concept_tag: AR-VERB-TASALAHA
 prerequisites: [AR-C227-taarrafa, AR-C227-tashajara]
 sounds: []
-roots: []
+roots: [ṣ-l-ḥ]
+etymology_hook: "taṣālaḥa: built on the root ṣ-l-ḥ, 'to be good, to be sound' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C227-tashajara]
 <!-- hl-knowledge: introduces=[AR-LEX-C227-ACT227-05]; assesses=[] -->
 
 **تصالح** — *taṣālaḥa* — "to make up, to reconcile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تصالح** (*taṣālaḥa*) is built on the native Arabic root *ṣ-l-ḥ*, "to be good, to be sound" (Lane). *Taṣālaḥa* is Form VI, "to make peace with one another".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

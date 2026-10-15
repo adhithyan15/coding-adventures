@@ -14,7 +14,8 @@ romanization: "istamaʿa"
 concept_tag: AR-VERB-ISTAMAA
 prerequisites: [AR-C227-tasalaha, AR-C228-shahada]
 sounds: []
-roots: []
+roots: [s-m-ʿ]
+etymology_hook: "istamaʿa: built on the root s-m-ʿ, 'to hear' (Lane); istamaʿa is Form VIII, 'to listen'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C228-shahada]
 <!-- hl-knowledge: introduces=[AR-LEX-C228-ACT228-02]; assesses=[] -->
 
 **استمع** — *istamaʿa* — "to listen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استمع** (*istamaʿa*) is built on the native Arabic root *s-m-ʿ*, "to hear" (Lane). *Istamaʿa* is Form VIII, "to listen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

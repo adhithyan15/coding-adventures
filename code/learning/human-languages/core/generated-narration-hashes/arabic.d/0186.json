@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 186,
-  "sourceHash": "fnv1a64:c4257c4709655827",
+  "sourceHash": "fnv1a64:ac337c40ce9b0651",
   "lessonIds": [
     "AR-C186-hiwaya",
     "AR-C186-shitranj",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch186.txt",
   "json": "arabic/narration/ch186.json",
-  "textHash": "fnv1a64:0c6d96010d04dd37",
-  "jsonHash": "fnv1a64:8f1dedd5d4a0b5b7",
+  "textHash": "fnv1a64:49d9e1b718108cfc",
+  "jsonHash": "fnv1a64:bbaaaf9fc95ec85f",
   "findings": []
 }

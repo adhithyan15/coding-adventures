@@ -14,7 +14,8 @@ romanization: "ṣadāqa"
 concept_tag: AR-SABAB175-SADAQA
 prerequisites: [AR-C174-idhan, AR-C174-kay]
 sounds: []
-roots: []
+roots: [s-d-q]
+etymology_hook: "ṣadāqa: built on the root ṣ-d-q, 'to be truthful, sincere' (Lane); ṣadāqa is friendship, sincere affection"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C174-kay]
 <!-- hl-knowledge: introduces=[AR-LEX-C175-SABAB175-01]; assesses=[] -->
 
 **صداقة** — *ṣadāqa* — "friendship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صداقة** (*ṣadāqa*) is built on the native Arabic root *ṣ-d-q*, "to be truthful, sincere" (Lane). *Ṣadāqa* is friendship, sincere affection.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

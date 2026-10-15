@@ -14,7 +14,8 @@ romanization: "mimḥāh"
 concept_tag: AR-THINGS143-MIMHAH
 prerequisites: [AR-C142-masna, AR-C142-saha]
 sounds: []
-roots: []
+roots: [m-ḥ-w]
+etymology_hook: "mimḥāh: built on the root m-ḥ-w, 'to efface, to erase' (Lane); mimḥāh is an instrument noun, 'a thing for erasing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C142-saha]
 <!-- hl-knowledge: introduces=[AR-LEX-C143-THINGS143-01]; assesses=[] -->
 
 **ممحاة** — *mimḥāh* — "an eraser".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ممحاة** (*mimḥāh*) is built on the native Arabic root *m-ḥ-w*, "to efface, to erase" (Lane). *Mimḥāh* is an instrument noun, "a thing for erasing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

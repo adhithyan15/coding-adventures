@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 258,
-  "sourceHash": "fnv1a64:d6e73b60cf0dc83d",
+  "sourceHash": "fnv1a64:4e60e5b0b6643d08",
   "lessonIds": [
     "AR-C258-ihtarama",
     "AR-C258-samaha2",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch258.txt",
   "json": "arabic/narration/ch258.json",
-  "textHash": "fnv1a64:3ceca28587f2b67a",
-  "jsonHash": "fnv1a64:adfdecb39f560bd9",
+  "textHash": "fnv1a64:ab6cc7538acd5adb",
+  "jsonHash": "fnv1a64:a7ed698bf5d6d704",
   "findings": []
 }

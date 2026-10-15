@@ -14,7 +14,8 @@ romanization: "istamarra"
 concept_tag: AR-VERB-ISTAMARRA
 prerequisites: [AR-C165-badaa, AR-C165-intaha]
 sounds: []
-roots: []
+roots: [m-r-r]
+etymology_hook: "istamarra: built on the root m-r-r, 'to pass, to go by' (Lane); istamarra is Form X, 'to keep on passing', to continue"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C165-intaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C165-ACT165-04]; assesses=[] -->
 
 **استمر** — *istamarra* — "to continue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استمر** (*istamarra*) is built on the native Arabic root *m-r-r*, "to pass, to go by" (Lane). *Istamarra* is Form X, "to keep on passing", to continue.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

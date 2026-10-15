@@ -14,7 +14,8 @@ romanization: "bahja"
 concept_tag: AR-SABAB206-BAHJA
 prerequisites: [AR-C206-mushkila, AR-C206-hall]
 sounds: []
-roots: []
+roots: [b-h-j]
+etymology_hook: "bahja: built on the root b-h-j, 'to be beautiful, to gladden' (Lane); bahja is joy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C206-hall]
 <!-- hl-knowledge: introduces=[AR-LEX-C206-SABAB206-04]; assesses=[] -->
 
 **بهجة** — *bahja* — "joy, delight".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بهجة** (*bahja*) is built on the native Arabic root *b-h-j*, "to be beautiful, to gladden" (Lane). *Bahja* is joy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mizāj"
 concept_tag: AR-SIHHA169-MIZAJ
 prerequisites: [AR-C168-halq, AR-C168-suda]
 sounds: []
-roots: []
+roots: [m-z-j]
+etymology_hook: "mizāj: built on the root m-z-j, 'to mix' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C168-suda]
 <!-- hl-knowledge: introduces=[AR-LEX-C169-SIHHA169-01]; assesses=[] -->
 
 **مزاج** — *mizāj* — "a mood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مزاج** (*mizāj*) is built on the native Arabic root *m-z-j*, "to mix" (Lane). Lane's *mizāj* is a mixture, the blend of humours that makes a temperament; "mood" grew from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

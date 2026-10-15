@@ -14,7 +14,8 @@ romanization: "mutaʾakhkhiran"
 concept_tag: AR-WAQT170-MUTAAKHKHIRAN
 prerequisites: [AR-C170-yawmiyyan, AR-C170-takhir]
 sounds: []
-roots: []
+roots: [ʾ-kh-r]
+etymology_hook: "mutaʾakhkhiran: built on the root ʾ-kh-r, 'to come after, to be late' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C170-takhir]
 <!-- hl-knowledge: introduces=[AR-LEX-C170-WAQT170-04]; assesses=[] -->
 
 **متأخرا** — *mutaʾakhkhiran* — "late".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**متأخرا** (*mutaʾakhkhiran*) is built on the native Arabic root *ʾ-kh-r*, "to come after, to be late" (Lane). *Mutaʾakhkhiran* is the Form V participle, "lagging behind", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

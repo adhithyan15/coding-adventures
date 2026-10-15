@@ -14,7 +14,8 @@ romanization: "ḥattā"
 concept_tag: AR-SABAB207-HATTA
 prerequisites: [AR-C207-faqat, AR-C207-jiddan]
 sounds: []
-roots: []
+roots: [hatta-until]
+etymology_hook: "ḥattā: an old particle of limit (Lane); no three-letter root; deeper origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C207-jiddan]
 <!-- hl-knowledge: introduces=[AR-LEX-C207-SABAB207-03]; assesses=[] -->
 
 **حتى** — *ḥattā* — "even; until".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حتى** (*ḥattā*) is an old particle that marks the end of an extent; Lane describes its three uses. It is not built on a three-letter root, and its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

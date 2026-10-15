@@ -14,7 +14,8 @@ romanization: "sakana"
 concept_tag: AR-VERB-SAKANA
 prerequisites: [AR-C64-kharaja, AR-C64-amila]
 sounds: []
-roots: []
+roots: [s-k-n]
+etymology_hook: "sakana: built on the root s-k-n, 'to be still' (Lane); Lane's first sense is being still"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C64-amila]
 <!-- hl-knowledge: introduces=[AR-LEX-C64-VERBS64-03]; assesses=[] -->
 
 **سكن** — *sakana* — "to live (he lived)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سكن** (*sakana*) is built on the native Arabic root *s-k-n*, "to be still; to dwell" (Lane). Lane's first sense is being still; dwelling is resting in a place.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

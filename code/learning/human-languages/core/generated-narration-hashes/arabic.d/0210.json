@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 210,
-  "sourceHash": "fnv1a64:5642949050a10f74",
+  "sourceHash": "fnv1a64:bdbdc528a8738d0b",
   "lessonIds": [
     "AR-C210-mubashir",
     "AR-C210-karim",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch210.txt",
   "json": "arabic/narration/ch210.json",
-  "textHash": "fnv1a64:b53fea95d79a54de",
-  "jsonHash": "fnv1a64:83761b7e180b5845",
+  "textHash": "fnv1a64:695fae7ee8603e59",
+  "jsonHash": "fnv1a64:05fb87d4204977ac",
   "findings": []
 }

@@ -12,7 +12,7 @@ romanization: jār
 prerequisites: [AR-C34-taam, AR-W07-hook-family-ha-kha]
 sounds: [jim, hollow-root-alif, rtl-known-letters]
 roots: [j-w-r]
-etymology_hook: "جار (jār, 'neighbour') is the hollow root ج-و-ر, whose و hides inside a long alif exactly as ق-و-ل hides its و inside قال (qāla, 'he said'); the root's verb جاوَرَ (jāwara) is 'he lived alongside', its plural is جيران (jīrān) where the hidden و resurfaces, and Hebrew's גֵּר (ger, 'a resident outsider') comes from the same Semitic root for dwelling alongside — while English neighbour is Germanic, the near-dweller, an unrelated word built on the identical idea"
+etymology_hook: "jār: root j-w-r 'to dwell beside' (Lane); Hebrew gēr 'resident outsider' is a cousin"
 duration:
   max_seconds: 240
 requires:

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 71,
-  "sourceHash": "fnv1a64:ce921457d98b7a5f",
+  "sourceHash": "fnv1a64:355274d2d130d04c",
   "lessonIds": [
     "AR-C71-mirah",
     "AR-C71-misbah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch71.txt",
   "json": "arabic/narration/ch71.json",
-  "textHash": "fnv1a64:f588ce9c1a0e7a99",
-  "jsonHash": "fnv1a64:b6f68734e8c7fcea",
+  "textHash": "fnv1a64:f9cd0c563e52b907",
+  "jsonHash": "fnv1a64:3a1dcc5046de6c05",
   "findings": []
 }

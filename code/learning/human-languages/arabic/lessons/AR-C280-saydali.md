@@ -14,7 +14,8 @@ romanization: "ṣaydalī"
 concept_tag: AR-AMAL280-SAYDALI
 prerequisites: [AR-C280-muhami, AR-C280-tayyar]
 sounds: []
-roots: []
+roots: [saydalani]
+etymology_hook: "ṣaydalī: from ṣaydalānī, whose source Lane's authorities dispute; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C280-tayyar]
 <!-- hl-knowledge: introduces=[AR-LEX-C280-AMAL280-05]; assesses=[] -->
 
 **صيدلي** — *ṣaydalī* — "a pharmacist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صيدلي** (*ṣaydalī*) is the druggist, from *ṣaydalānī*. Lane's sources derive that word from a place called Ṣaydalān, or from *ṣaydal*, or call it a Persian word arabicized. Lane also records the by-form *ṣandalānī*, which points to *ṣandal*, "sandalwood"; the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

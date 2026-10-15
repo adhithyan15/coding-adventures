@@ -12,7 +12,7 @@ romanization: jāʾa
 prerequisites: [AR-C28-dhahaba]
 sounds: [jim, hamza-final, long-vowel-alif]
 roots: [j-y-a]
-etymology_hook: "جاء (jāʾa, 'he came') is built on ج-ي-أ, but the middle ي is a WEAK letter: the expected faʿala shape jayaʾa collapses into jāʾa, a long ā swallowing the ي — and the ي walks straight back out in مَجِيء (majīʾ, 'an arrival'), proving the skeleton was intact all along; the everyday spoken imperative تعال (taʿāl, 'come here!') is not from this root at all"
+etymology_hook: "jāʾa: root j-y-ʾ 'to come' (Lane), its weak y returning in majīʾ 'an arrival'"
 duration:
   max_seconds: 240
 requires:

@@ -12,7 +12,7 @@ concept_tag: FAREWELL
 prerequisites: [AR-C04-al-salama, AR-C04-maa-with]
 sounds: [sun-letter-assimilation, ayn-throat]
 roots: [semitic-s-l-m]
-etymology_hook: "the greeting (as-salāmu ʿalaykum) and the farewell (maʿa s-salāma) are built from the SAME root s-l-m — Arabic opens and closes a conversation with one idea; and English 'goodbye' is worn down from 'God be WITH ye', so both languages hinge their farewell on the word 'with'"
+etymology_hook: "maʿa s-salāma: maʿa 'with' + as-salāma 'safety', root s-l-m 'to be safe' (Lane): 'with safety'"
 duration:
   max_seconds: 240
 requires:

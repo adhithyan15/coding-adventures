@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Taking, Thinking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:36caac1db34fa947",
+  "sourceHash": "fnv1a64:b1b339d5bf318523",
   "lessons": [
     {
       "id": "AR-C32-akhadha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:68e8fd25049e5a21",
+      "sourceHash": "fnv1a64:46aef2c5e2d292cc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:12bb9b41f2ad1575",
+      "sourceHash": "fnv1a64:100f7baded7cf7c8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -281,6 +281,10 @@
             {
               "kind": "speech",
               "text": "No English cousin here, and no Hebrew twin worth the claim."
+            },
+            {
+              "kind": "speech",
+              "text": "Fakkara is built on this native root (Lane)."
             }
           ]
         },
@@ -374,7 +378,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:74fa4cca878f7ecf",
+      "sourceHash": "fnv1a64:ba95777440aa42b7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -552,7 +556,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ae54d0f31f44dddc",
+      "sourceHash": "fnv1a64:560d1aa208579e4a",
       "notice": {
         "modality": "sight",
         "needs": [

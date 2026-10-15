@@ -14,7 +14,8 @@ romanization: "sammāʿa"
 concept_tag: AR-SHAY217-SAMMAA
 prerequisites: [AR-C217-janah, AR-C217-kamira]
 sounds: []
-roots: []
+roots: [s-m-ʿ]
+etymology_hook: "sammāʿa: built on the root s-m-ʿ, 'to hear' (Lane); sammāʿa is a modern faʿʿāla word, 'the hearer': headphones"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C217-kamira]
 <!-- hl-knowledge: introduces=[AR-LEX-C217-SHAY217-04]; assesses=[] -->
 
 **سماعة** — *sammāʿa* — "headphones, a speaker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سماعة** (*sammāʿa*) is built on the native Arabic root *s-m-ʿ*, "to hear" (Lane). *Sammāʿa* is a modern *faʿʿāla* word, "the hearer": headphones.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tawābil"
 concept_tag: AR-SHAY273-TAWABIL
 prerequisites: [AR-C273-makaruna, AR-C273-daqiq]
 sounds: []
-roots: []
+roots: [aramaic-tabla]
+etymology_hook: "tawābil: plural of tābal 'seasoning', said to be arabicized (Lane); from Aramaic tablā 'spice' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C273-daqiq]
 <!-- hl-knowledge: introduces=[AR-LEX-C273-SHAY273-05]; assesses=[] -->
 
 **توابل** — *tawābil* — "spices".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**توابل** (*tawābil*) is the plural of *tābal*, seeds for seasoning food such as cumin and coriander, which Lane lists under *t-b-l* and notes is said to be arabicized. EtymDB derives it from Aramaic *tablā*, "spice".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

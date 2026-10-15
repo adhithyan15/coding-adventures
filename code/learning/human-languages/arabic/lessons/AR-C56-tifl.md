@@ -14,7 +14,8 @@ romanization: "ṭifl"
 concept_tag: AR-FAMILY56-TIFL
 prerequisites: [AR-C55-zawj, AR-C55-zawja]
 sounds: []
-roots: []
+roots: [ṭ-f-l]
+etymology_hook: "ṭifl: built on the root ṭ-f-l, 'a child, an infant' (Lane); ṭifl is Lane's word for a young child"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C55-zawja]
 <!-- hl-knowledge: introduces=[AR-LEX-C56-FAMILY56-01]; assesses=[] -->
 
 **طفل** — *ṭifl* — "a child".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طفل** (*ṭifl*) is built on the native Arabic root *ṭ-f-l*, "a child, an infant" (Lane). *Ṭifl* is Lane's word for a young child.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "wajh"
 concept_tag: AR-BODY52-WAJH
 prerequisites: [AR-C51-katif, AR-C51-raqaba]
 sounds: []
-roots: []
+roots: [w-j-h]
+etymology_hook: "wajh: built on the root w-j-h, 'the face' (Lane); the same root gives ittijāh, 'a direction', the way one faces"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C51-raqaba]
 <!-- hl-knowledge: introduces=[AR-LEX-C52-BODY52-01]; assesses=[] -->
 
 **وجه** — *wajh* — "a face".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وجه** (*wajh*) is built on the native Arabic root *w-j-h*, "the face; to face toward" (Lane). The same root gives *ittijāh*, "a direction", the way one faces.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

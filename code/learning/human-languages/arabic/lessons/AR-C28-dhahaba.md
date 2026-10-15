@@ -12,7 +12,7 @@ romanization: dhahaba
 prerequisites: [AR-C27-tusbih-ala-khayr]
 sounds: [dhal, non-joiner, rtl-known-letters]
 roots: [dh-h-b]
-etymology_hook: "ذهب (dhahaba, 'he went') is built on the bare consonant skeleton ذ-ه-ب; pour different vowels between the same three consonants and you get ذَهَب (dhahab, 'gold') and مَذْهَب (madhhab, 'a way one goes' = a school of Islamic law) — the same place-noun pattern family that gave English mosque (مسجد masjid, 'place of prostration') and Maghreb (مغرب maghrib, 'place of sunset')"
+etymology_hook: "dhahaba: root dh-h-b 'to go' (Lane), which also gives dhahab 'gold' and madhhab 'a way'"
 duration:
   max_seconds: 240
 requires:

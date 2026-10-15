@@ -12,7 +12,7 @@ concept_tag: AR-COLOUR-RED-BLUE
 prerequisites: [AR-C09-aswad-abyad]
 sounds: [hamza-variants, feminine-alif-hamza-ending]
 roots: [hamar-red, zaraq-blue]
-etymology_hook: "أحمر ahmar / حمراء hamraa' (red) and أزرق azraq / زرقاء zarqaa' (blue) confirm the pattern — Arabic's CLASSIC colors all follow the same masc. أ... / fem. ...اء template"
+etymology_hook: "aḥmar on the root ḥ-m-r 'red', azraq on z-r-q 'blue-grey' (Lane), both in the afʿal colour shape"
 duration:
   max_seconds: 240
 requires:
@@ -53,6 +53,11 @@ pattern, several colors. (Newer colors like brown, gray, purple, orange, and
 pink use a **different** pattern entirely, borrowed from nouns — so "every
 color" would overstate it; this template belongs specifically to Arabic's
 oldest, core color set.)
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أحمر** (*aḥmar*) and **أزرق** (*azraq*) are colour words in the *afʿal* shape on native roots: *aḥmar* on *ḥ-m-r*, "red", and *azraq* on *z-r-q*, "blue, blue-grey" (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C09-AHMAR-AZRAQ-01, AR-CONCEPT-C09-AHMAR-AZRAQ-02] -->

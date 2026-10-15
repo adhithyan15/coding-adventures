@@ -14,7 +14,8 @@ romanization: "raghma"
 concept_tag: AR-SABAB175-RAGHMA
 prerequisites: [AR-C175-mujtama, AR-C175-diyafa]
 sounds: []
-roots: []
+roots: [r-gh-m]
+etymology_hook: "raghma: built on the root r-gh-m, 'dust' (Lane); Lane's raghm is the nose cleaving to the dust, abasement"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C175-diyafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C175-SABAB175-04]; assesses=[] -->
 
 **رغم** — *raghma* — "despite, in spite of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رغم** (*raghma*) is built on the native Arabic root *r-gh-m*, "dust; to be abased" (Lane). Lane's *raghm* is the nose cleaving to the dust, abasement; *raghma*, "despite", grew from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

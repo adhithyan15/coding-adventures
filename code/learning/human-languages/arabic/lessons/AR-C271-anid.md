@@ -14,7 +14,8 @@ romanization: "ʿanīd"
 concept_tag: AR-SIFA271-ANID
 prerequisites: [AR-C270-duwali, AR-C270-mahalli]
 sounds: []
-roots: []
+roots: [ʿ-n-d]
+etymology_hook: "ʿanīd: built on the root ʿ-n-d, 'to deviate, to oppose' (Lane); ʿanīd is 'obstinate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C270-mahalli]
 <!-- hl-knowledge: introduces=[AR-LEX-C271-SIFA271-01]; assesses=[] -->
 
 **عنيد** — *ʿanīd* — "stubborn".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عنيد** (*ʿanīd*) is built on the native Arabic root *ʿ-n-d*, "to deviate, to oppose" (Lane). *ʿAnīd* is "obstinate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

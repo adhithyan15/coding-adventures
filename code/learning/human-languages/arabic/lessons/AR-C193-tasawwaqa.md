@@ -14,7 +14,8 @@ romanization: "tasawwaqa"
 concept_tag: AR-VERB-TASAWWAQA
 prerequisites: [AR-C193-qasa, AR-C193-sawama]
 sounds: []
-roots: []
+roots: [s-w-q]
+etymology_hook: "tasawwaqa: built on the root s-w-q, 'to drive (cattle)' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C193-sawama]
 <!-- hl-knowledge: introduces=[AR-LEX-C193-ACT193-05]; assesses=[] -->
 
 **تسوق** — *tasawwaqa* — "to go shopping".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تسوق** (*tasawwaqa*) is built on the native Arabic root *s-w-q*, "to drive (cattle)" (Lane). *Tasawwaqa* is Form V, built from *sūq*, "a market": "to go to market".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

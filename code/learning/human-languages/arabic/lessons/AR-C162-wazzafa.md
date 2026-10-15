@@ -14,7 +14,8 @@ romanization: "waẓẓafa"
 concept_tag: AR-VERB-WAZZAFA
 prerequisites: [AR-C162-intaqala, AR-C162-sajjala]
 sounds: []
-roots: []
+roots: [w-ẓ-f]
+etymology_hook: "waẓẓafa: built on the root w-ẓ-f, 'a daily allowance' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C162-sajjala]
 <!-- hl-knowledge: introduces=[AR-LEX-C162-ACT162-05]; assesses=[] -->
 
 **وظف** — *waẓẓafa* — "to employ, to hire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وظف** (*waẓẓafa*) is built on the native Arabic root *w-ẓ-f*, "a daily allowance" (Lane). *Waẓẓafa* is Form II, "to assign a fixed portion", hence "to employ".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

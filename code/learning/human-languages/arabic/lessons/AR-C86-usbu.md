@@ -14,7 +14,8 @@ romanization: "usbūʿ"
 concept_tag: AR-ADJ86-USBU
 prerequisites: [AR-C86-jamil, AR-C86-bunni]
 sounds: []
-roots: []
+roots: [s-b-ʿ]
+etymology_hook: "usbūʿ: built on the root s-b-ʿ, 'seven' (Lane); usbūʿ is a set of seven days"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C86-bunni]
 <!-- hl-knowledge: introduces=[AR-LEX-C86-ADJ86-03]; assesses=[] -->
 
 **أسبوع** — *usbūʿ* — "a week".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أسبوع** (*usbūʿ*) is built on the native Arabic root *s-b-ʿ*, "seven" (Lane). *Usbūʿ* is a set of seven days.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

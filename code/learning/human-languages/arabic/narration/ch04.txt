@@ -162,7 +162,7 @@ It is a preposition, and unlike الـ (al-) or بـ (bi-) from Chapter 3, it is
 So Arabic has two words touching on "with": the one-letter بـ (bi-, "in/by means of," as in bi-khayr) and the full word مع (maʿa, "accompanied by"). Bi-khayr is "in goodness"; maʿa is standing next to something.
 
 Why it's said this way — The Semitic cousin.
-maʿa from Semitic ʿimma, and its Hebrew cousin is עִם (ʿim), "with." The same pairing you met with salām / shalom in Chapter 1 and ism / shem in Chapter 2. Three chapters, three cousins — the family resemblance is systematic, not a coincidence.
+maʿa is usually set beside Hebrew עִם (ʿim), "with", though how the two are linked is debated. Compare the sure pairings you met with salām / shalom in Chapter 1 and ism / shem in Chapter 2: there the family resemblance is systematic, not a coincidence.
 
 Guided Practice.
 [pause 1 second]
@@ -204,6 +204,9 @@ Same three consonants, one new shape, a new but related word. This is the engine
 You'll want to know — Two small rules, both already learned.
 1. The sun letter. S (س) is a sun letter, so the l of al- assimilates to it: written الس, but said as-salāma, not al-salāma. The same thing happens in السلام عليكم — the greeting you have said since Chapter 1.
 2. The feminine ة. Tāʾ marbūṭa marks salāma as feminine. Arabic abstract nouns very often are.
+
+The word, taken apart.
+السلامة (as-salāma) is salāma, "safety, soundness", built on the native root s-l-m, "to be safe, whole" (Lane), with the article al-.
 
 Guided Practice.
 [pause 1 second]

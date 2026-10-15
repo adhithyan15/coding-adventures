@@ -14,7 +14,8 @@ romanization: "ḥarāra"
 concept_tag: AR-SIHHA262-HARARA
 prerequisites: [AR-C261-wazzaa, AR-C262-isaf]
 sounds: []
-roots: []
+roots: [ḥ-r-r]
+etymology_hook: "ḥarāra: built on the root ḥ-r-r, 'to be hot' (Lane); ḥarāra is heat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C262-isaf]
 <!-- hl-knowledge: introduces=[AR-LEX-C262-SIHHA262-02]; assesses=[] -->
 
 **حرارة** — *ḥarāra* — "temperature".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حرارة** (*ḥarāra*) is built on the native Arabic root *ḥ-r-r*, "to be hot" (Lane). *Ḥarāra* is heat.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

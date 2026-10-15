@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 177,
-  "sourceHash": "fnv1a64:b077ec7c6ac75aa9",
+  "sourceHash": "fnv1a64:b392091248824e4b",
   "lessonIds": [
     "AR-C177-mukallif",
     "AR-C177-majjani",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch177.txt",
   "json": "arabic/narration/ch177.json",
-  "textHash": "fnv1a64:a8e69f27abb87ddd",
-  "jsonHash": "fnv1a64:6a2dcae96d723f93",
+  "textHash": "fnv1a64:bf3ce6baf9f3a12f",
+  "jsonHash": "fnv1a64:40b1d325a85091b4",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 171,
-  "sourceHash": "fnv1a64:e831b3f100a6b49c",
+  "sourceHash": "fnv1a64:99306d3b999ce9ed",
   "lessonIds": [
     "AR-C171-mustaqbal",
     "AR-C171-mudda",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch171.txt",
   "json": "arabic/narration/ch171.json",
-  "textHash": "fnv1a64:1437c9d4d9ab1d9e",
-  "jsonHash": "fnv1a64:6678b034993c580e",
+  "textHash": "fnv1a64:9239292d913e38b3",
+  "jsonHash": "fnv1a64:4b4f9db04c11fb64",
   "findings": []
 }

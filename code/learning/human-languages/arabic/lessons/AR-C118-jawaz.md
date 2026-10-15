@@ -14,7 +14,8 @@ romanization: "jawāz"
 concept_tag: AR-THINGS118-JAWAZ
 prerequisites: [AR-C118-hadiyya, AR-C118-tadhkira]
 sounds: []
-roots: []
+roots: [j-w-z]
+etymology_hook: "jawāz: built on the root j-w-z, 'to pass, to be allowed' (Lane); jawāz is a passing, leave to pass"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C118-tadhkira]
 <!-- hl-knowledge: introduces=[AR-LEX-C118-THINGS118-03]; assesses=[] -->
 
 **جواز** — *jawāz* — "a passport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جواز** (*jawāz*) is built on the native Arabic root *j-w-z*, "to pass, to be allowed" (Lane). *Jawāz* is a passing, leave to pass; the passport, *jawāz safar*, is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

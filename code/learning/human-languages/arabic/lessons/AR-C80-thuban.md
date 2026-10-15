@@ -14,7 +14,8 @@ romanization: "thuʿbān"
 concept_tag: AR-ANIMALS80-THUBAN
 prerequisites: [AR-C80-fil, AR-C80-qird]
 sounds: []
-roots: []
+roots: [th-ʿ-b]
+etymology_hook: "thuʿbān: built on the root th-ʿ-b, 'to make water flow' (Lane); Lane's thuʿbān is a large serpent"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C80-qird]
 <!-- hl-knowledge: introduces=[AR-LEX-C80-ANIMALS80-04]; assesses=[] -->
 
 **ثعبان** — *thuʿbān* — "a snake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثعبان** (*thuʿbān*) is built on the native Arabic root *th-ʿ-b*, "to make water flow" (Lane). Lane's *thuʿbān* is a large serpent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

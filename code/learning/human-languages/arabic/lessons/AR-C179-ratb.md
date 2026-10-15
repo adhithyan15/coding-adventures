@@ -14,7 +14,8 @@ romanization: "raṭb"
 concept_tag: AR-SIFA179-RATB
 prerequisites: [AR-C179-dhahabi, AR-C179-samik]
 sounds: []
-roots: []
+roots: [r-ṭ-b]
+etymology_hook: "raṭb: built on the root r-ṭ-b, 'to be moist' (Lane); Lane's raṭb is moist, fresh and juicy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C179-samik]
 <!-- hl-knowledge: introduces=[AR-LEX-C179-SIFA179-04]; assesses=[] -->
 
 **رطب** — *raṭb* — "humid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رطب** (*raṭb*) is built on the native Arabic root *r-ṭ-b*, "to be moist" (Lane). Lane's *raṭb* is moist, fresh and juicy.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

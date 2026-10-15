@@ -14,7 +14,8 @@ romanization: "sharaḥa"
 concept_tag: AR-VERB-SHARAHA
 prerequisites: [AR-C256-rasaba, AR-C256-ijtaza]
 sounds: []
-roots: []
+roots: [sh-r-ḥ]
+etymology_hook: "sharaḥa: built on the root sh-r-ḥ, 'to open, to lay open' (Lane); sharaḥa is 'to lay open', to explain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C256-ijtaza]
 <!-- hl-knowledge: introduces=[AR-LEX-C256-ACT256-03]; assesses=[] -->
 
 **شرح** — *sharaḥa* — "to explain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شرح** (*sharaḥa*) is built on the native Arabic root *sh-r-ḥ*, "to open, to lay open" (Lane). *Sharaḥa* is "to lay open", to explain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

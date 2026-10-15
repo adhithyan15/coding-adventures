@@ -14,7 +14,8 @@ romanization: "muḥāmī"
 concept_tag: AR-AMAL280-MUHAMI
 prerequisites: [AR-C280-amil2, AR-C280-muhandis]
 sounds: []
-roots: []
+roots: [ḥ-m-y]
+etymology_hook: "muḥāmī: built on the root ḥ-m-y, 'to protect, to defend' (Lane); muḥāmī is the Form III participle, 'one who defends'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C280-muhandis]
 <!-- hl-knowledge: introduces=[AR-LEX-C280-AMAL280-03]; assesses=[] -->
 
 **محامي** — *muḥāmī* — "a lawyer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محامي** (*muḥāmī*) is built on the native Arabic root *ḥ-m-y*, "to protect, to defend" (Lane). *Muḥāmī* is the Form III participle, "one who defends"; the lawyer is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

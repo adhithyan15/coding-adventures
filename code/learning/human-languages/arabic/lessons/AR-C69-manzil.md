@@ -14,7 +14,8 @@ romanization: "manzil"
 concept_tag: AR-FOOD69-MANZIL
 prerequisites: [AR-C69-asir, AR-C69-dajaj]
 sounds: []
-roots: []
+roots: [n-z-l]
+etymology_hook: "manzil: built on the root n-z-l, 'to come down, to alight' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C69-dajaj]
 <!-- hl-knowledge: introduces=[AR-LEX-C69-FOOD69-03]; assesses=[] -->
 
 **منزل** — *manzil* — "a house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منزل** (*manzil*) is built on the native Arabic root *n-z-l*, "to come down, to alight" (Lane). *Manzil* is the *ma-* place noun, "a place of alighting, a lodging".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

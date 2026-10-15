@@ -14,7 +14,8 @@ romanization: "maqhā"
 concept_tag: AR-MAKAN172-MAQHA
 prerequisites: [AR-C172-sala, AR-C172-makhbaz]
 sounds: []
-roots: []
+roots: [q-h-w]
+etymology_hook: "maqhā: place noun from qahwa, an old word for wine that Lane notes was later the name of coffee"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C172-makhbaz]
 <!-- hl-knowledge: introduces=[AR-LEX-C172-MAKAN172-03]; assesses=[] -->
 
 **مقهى** — *maqhā* — "a café".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مقهى** (*maqhā*) is a place noun made from *qahwa*, "coffee". In Lane *qahwa* is an old word for wine, and he notes that coffee is now called by it; his lexicon has no article on *q-h-w* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

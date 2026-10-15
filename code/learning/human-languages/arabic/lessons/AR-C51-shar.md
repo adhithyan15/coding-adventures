@@ -14,7 +14,8 @@ romanization: "shaʿr"
 concept_tag: AR-BODY51-SHAR
 prerequisites: [AR-C50-fam, AR-C50-sinn]
 sounds: []
-roots: []
+roots: [sh-ʿ-r]
+etymology_hook: "shaʿr: built on the root sh-ʿ-r, 'hair' (Lane); the same root gives shiʿr, 'poetry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C50-sinn]
 <!-- hl-knowledge: introduces=[AR-LEX-C51-BODY51-01]; assesses=[] -->
 
 **شعر** — *shaʿr* — "hair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شعر** (*shaʿr*) is built on the native Arabic root *sh-ʿ-r*, "hair; to perceive" (Lane). The same root gives *shiʿr*, "poetry"; Hebrew *seʿar*, "hair", is usually counted a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

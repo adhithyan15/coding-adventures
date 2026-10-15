@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 256,
-  "sourceHash": "fnv1a64:a837cec677a2ce1f",
+  "sourceHash": "fnv1a64:c935bb7e7faada2d",
   "lessonIds": [
     "AR-C256-rasaba",
     "AR-C256-ijtaza",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch256.txt",
   "json": "arabic/narration/ch256.json",
-  "textHash": "fnv1a64:a62d0bd043905a65",
-  "jsonHash": "fnv1a64:ca2c809131a84380",
+  "textHash": "fnv1a64:4b46293d2b7bf205",
+  "jsonHash": "fnv1a64:6fe6ee9a6ab348e9",
   "findings": []
 }

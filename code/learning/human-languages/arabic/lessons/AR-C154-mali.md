@@ -14,7 +14,8 @@ romanization: "malīʾ"
 concept_tag: AR-QUAL154-MALI
 prerequisites: [AR-C153-tazaj, AR-C153-nadij]
 sounds: []
-roots: []
+roots: [m-l-ʾ]
+etymology_hook: "malīʾ: built on the root m-l-ʾ, 'to fill' (Lane); malīʾ is the faʿīl adjective, 'full'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C153-nadij]
 <!-- hl-knowledge: introduces=[AR-LEX-C154-QUAL154-01]; assesses=[] -->
 
 **مليء** — *malīʾ* — "full".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مليء** (*malīʾ*) is built on the native Arabic root *m-l-ʾ*, "to fill" (Lane). *Malīʾ* is the *faʿīl* adjective, "full".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

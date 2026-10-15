@@ -14,7 +14,8 @@ romanization: "sabbūra"
 concept_tag: AR-SHAY274-SABBURA
 prerequisites: [AR-C274-tabia2, AR-C274-hibr]
 sounds: []
-roots: []
+roots: [sabbura-board]
+etymology_hook: "sabbūra: a modern word for a blackboard, not in Lane; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C274-hibr]
 <!-- hl-knowledge: introduces=[AR-LEX-C274-SHAY274-03]; assesses=[] -->
 
 **سبورة** — *sabbūra* — "a blackboard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سبورة** (*sabbūra*) is a modern word for a blackboard; it has no entry in Lane, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 85,
-  "sourceHash": "fnv1a64:f591c858c55a908f",
+  "sourceHash": "fnv1a64:e53522e7cc2974b6",
   "lessonIds": [
     "AR-C85-khafif",
     "AR-C85-thaqil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch85.txt",
   "json": "arabic/narration/ch85.json",
-  "textHash": "fnv1a64:f2a015fedfbf985d",
-  "jsonHash": "fnv1a64:4b93f7ed99aca27c",
+  "textHash": "fnv1a64:9405cbadda47ebba",
+  "jsonHash": "fnv1a64:97240fcb4b2fe9c7",
   "findings": []
 }

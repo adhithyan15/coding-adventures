@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "The Tense That Was Missing",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cbb4cb159f56eb6b",
+  "sourceHash": "fnv1a64:776b1dc52db530d7",
   "lessons": [
     {
       "id": "AR-C37-present",
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc0d508487edaf4c",
+      "sourceHash": "fnv1a64:e47df274fb8c20d1",
       "notice": null,
       "blocks": [
         {
@@ -252,6 +252,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لا أفهم (lā afham) is built from lā, \"not\", an inherited negative, and afham, \"I understand\", the present tense of fahima on the native root f-h-m (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -291,7 +302,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

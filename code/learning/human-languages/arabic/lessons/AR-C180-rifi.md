@@ -14,7 +14,8 @@ romanization: "rīfī"
 concept_tag: AR-SIFA180-RIFI
 prerequisites: [AR-C179-mumtir, AR-C180-musab]
 sounds: []
-roots: []
+roots: [r-y-f]
+etymology_hook: "rīfī: built on the root r-y-f, 'cultivated land by water' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C180-musab]
 <!-- hl-knowledge: introduces=[AR-LEX-C180-SIFA180-02]; assesses=[] -->
 
 **ريفي** — *rīfī* — "rural, country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ريفي** (*rīfī*) is built on the native Arabic root *r-y-f*, "cultivated land by water" (Lane). *Rīfī* is *rīf*, "the countryside", with the adjective ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

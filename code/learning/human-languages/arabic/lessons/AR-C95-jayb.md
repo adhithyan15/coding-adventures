@@ -14,7 +14,8 @@ romanization: "jayb"
 concept_tag: AR-CLOTHES95-JAYB
 prerequisites: [AR-C94-sirwal, AR-C94-jawrab]
 sounds: []
-roots: []
+roots: [j-y-b]
+etymology_hook: "jayb: root j-y-b, which Lane treats under j-w-b 'to cut through'; first a shirt's neck-opening, later a pocket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C94-jawrab]
 <!-- hl-knowledge: introduces=[AR-LEX-C95-CLOTHES95-01]; assesses=[] -->
 
 **جيب** — *jayb* — "a pocket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جيب** (*jayb*) is built on the native Arabic root *j-y-b*, which Lane treats under *j-w-b*, "to cut through, to hollow out". Lane's *jayb* is the opening at the neck and bosom of a shirt; "pocket" came later. The usual account is that medieval Latin translators read the Arabic word for a sine, a loan from Sanskrit *jyā*, as this word and rendered it *sinus*, the source of English *sine*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

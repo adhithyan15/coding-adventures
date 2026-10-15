@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "The People You Introduce",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:068fb7f0f5b1255b",
+  "sourceHash": "fnv1a64:3a370885780ee086",
   "lessons": [
     {
       "id": "AR-C35-jar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c2d4044b096a36ad",
+      "sourceHash": "fnv1a64:2100a4c7476e2700",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -211,7 +211,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2bb0e643c6c47499",
+      "sourceHash": "fnv1a64:7d3532db95aaff23",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -399,7 +399,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ece1a6377115b154",
+      "sourceHash": "fnv1a64:395d7c08091a9a00",
       "notice": {
         "modality": "sight",
         "needs": [

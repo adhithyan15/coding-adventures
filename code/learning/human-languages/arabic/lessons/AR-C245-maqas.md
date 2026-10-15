@@ -14,7 +14,8 @@ romanization: "maqās"
 concept_tag: AR-SHAY245-MAQAS
 prerequisites: [AR-C244-lawz, AR-C245-qilada]
 sounds: []
-roots: []
+roots: [q-y-s]
+etymology_hook: "maqās: built on the root q-y-s, 'to measure' (Lane); maqās is a modern noun of measure, 'a size'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C245-qilada]
 <!-- hl-knowledge: introduces=[AR-LEX-C245-SHAY245-02]; assesses=[] -->
 
 **مقاس** — *maqās* — "a size (of clothes)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مقاس** (*maqās*) is built on the native Arabic root *q-y-s*, "to measure" (Lane). *Maqās* is a modern noun of measure, "a size".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

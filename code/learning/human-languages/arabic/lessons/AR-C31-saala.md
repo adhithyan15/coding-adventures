@@ -12,7 +12,7 @@ romanization: saʾala
 prerequisites: [AR-C31-qaraa]
 sounds: [hamza-medial, hamza-seats, rtl-known-letters]
 roots: [s-a-l]
-etymology_hook: "سأل (saʾala, 'he asked') sits on س-أ-ل and shows hamza changing seats without changing sound — سَأَلَ on alif, سُؤال (suʾāl, 'a question') on wāw, سائِل (sāʾil, 'an asker') on dotless yāʾ; the ma- shapes give مَسْأَلة (masʾala, 'a matter, a problem') and مَسْؤول (masʾūl), literally 'asked-of' and so 'responsible'; the Hebrew twin שָׁאַל (shaʾal) carries the same s-against-sh swap as salām and shalom, and its participle is the name שָׁאוּל, English Saul, 'asked for'"
+etymology_hook: "saʾala: root s-ʾ-l 'to ask' (Lane); Hebrew shāʾal is its cousin, and the name Saul means 'asked for'"
 duration:
   max_seconds: 240
 requires:

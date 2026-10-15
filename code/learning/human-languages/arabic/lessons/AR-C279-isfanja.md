@@ -14,7 +14,8 @@ romanization: "isfanja"
 concept_tag: AR-SHAY279-ISFANJA
 prerequisites: [AR-C279-mustatil, AR-C279-mishjab]
 sounds: []
-roots: []
+roots: [greek-spongia]
+etymology_hook: "isfanja: a loan from Greek spongia 'sponge', perhaps through Latin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C279-mishjab]
 <!-- hl-knowledge: introduces=[AR-LEX-C279-SHAY279-03]; assesses=[] -->
 
 **إسفنجة** — *isfanja* — "a sponge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إسفنجة** (*isfanja*) is a loan from Greek *spongia*, "sponge", perhaps through Latin; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

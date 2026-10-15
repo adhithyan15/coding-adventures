@@ -14,7 +14,8 @@ romanization: "ghayyara"
 concept_tag: AR-VERB-GHAYYARA
 prerequisites: [AR-C224-iqtarada, AR-C224-aqrada]
 sounds: []
-roots: []
+roots: [gh-y-r]
+etymology_hook: "ghayyara: built on the root gh-y-r, 'other' (Lane); ghayyara is Form II, built on ghayr, 'other': to make other"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C224-aqrada]
 <!-- hl-knowledge: introduces=[AR-LEX-C224-ACT224-04]; assesses=[] -->
 
 **غير** — *ghayyara* — "to change".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غير** (*ghayyara*) is built on the native Arabic root *gh-y-r*, "other; to change" (Lane). *Ghayyara* is Form II, built on *ghayr*, "other": to make other.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

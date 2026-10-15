@@ -14,7 +14,8 @@ romanization: "dabbāsa"
 concept_tag: AR-AMAL253-DABBASA
 prerequisites: [AR-C253-mibrah, AR-C253-tabashir]
 sounds: []
-roots: []
+roots: [persian-dabbus]
+etymology_hook: "dabbāsa: built on dabbūs 'pin'; Lane's dabbūs, a mace, is arabicized from Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C253-tabashir]
 <!-- hl-knowledge: introduces=[AR-LEX-C253-AMAL253-05]; assesses=[] -->
 
 **دباسة** — *dabbāsa* — "a stapler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دباسة** (*dabbāsa*) is a modern word built on *dabbūs*, "pin". Lane's *dabbūs* is a mace, which his sources call arabicized from Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

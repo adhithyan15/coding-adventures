@@ -14,7 +14,8 @@ romanization: "kharṭūm"
 concept_tag: AR-SHAY219-KHARTUM
 prerequisites: [AR-C218-qita, AR-C218-wazn]
 sounds: []
-roots: []
+roots: [kh-r-ṭ-m]
+etymology_hook: "kharṭūm: built on the root kh-r-ṭ-m, 'the fore part of the nose' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C218-wazn]
 <!-- hl-knowledge: introduces=[AR-LEX-C219-SHAY219-01]; assesses=[] -->
 
 **خرطوم** — *kharṭūm* — "a hose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خرطوم** (*kharṭūm*) is built on the native Arabic root *kh-r-ṭ-m*, "the fore part of the nose; a trunk" (Lane). Lane's *kharṭūm* is the fore part of the nose, and an elephant's trunk; the hose is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

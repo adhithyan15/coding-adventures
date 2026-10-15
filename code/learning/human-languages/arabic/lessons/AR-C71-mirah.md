@@ -14,7 +14,8 @@ romanization: "mirʾāh"
 concept_tag: AR-HOME71-MIRAH
 prerequisites: [AR-C70-sarir, AR-C70-ard]
 sounds: []
-roots: []
+roots: [r-a-y]
+etymology_hook: "mirʾāh: built on the root r-ʾ-y, 'to see' (Lane); mirʾāh is an instrument noun, 'a thing to see with'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C70-ard]
 <!-- hl-knowledge: introduces=[AR-LEX-C71-HOME71-01]; assesses=[] -->
 
 **مرآة** — *mirʾāh* — "a mirror".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مرآة** (*mirʾāh*) is built on the native Arabic root *r-ʾ-y*, "to see" (Lane). *Mirʾāh* is an instrument noun, "a thing to see with".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

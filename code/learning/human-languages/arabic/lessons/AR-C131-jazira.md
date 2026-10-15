@@ -14,7 +14,8 @@ romanization: "jazīra"
 concept_tag: AR-THINGS131-JAZIRA
 prerequisites: [AR-C131-jidhr, AR-C131-ghusn]
 sounds: []
-roots: []
+roots: [j-z-r]
+etymology_hook: "jazīra: built on the root j-z-r, 'to cut' (Lane); Lane's jazīra is land the water has left or surrounds"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C131-ghusn]
 <!-- hl-knowledge: introduces=[AR-LEX-C131-THINGS131-05]; assesses=[] -->
 
 **جزيرة** — *jazīra* — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جزيرة** (*jazīra*) is built on the native Arabic root *j-z-r*, "to cut; to ebb" (Lane). Lane's *jazīra* is land the water has left or surrounds; the name Algeria comes from *al-Jazāʾir*, "the islands".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḍarar"
 concept_tag: AR-SABAB269-DARAR
 prerequisites: [AR-C269-fashal, AR-C269-khutwa]
 sounds: []
-roots: []
+roots: [ḍ-r-r]
+etymology_hook: "ḍarar: built on the root ḍ-r-r, 'to harm' (Lane); the word ḍarar is harm"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C269-khutwa]
 <!-- hl-knowledge: introduces=[AR-LEX-C269-SABAB269-03]; assesses=[] -->
 
 **ضرر** — *ḍarar* — "harm, damage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضرر** (*ḍarar*) is built on the native Arabic root *ḍ-r-r*, "to harm" (Lane). The word *ḍarar* is harm.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

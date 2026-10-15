@@ -14,7 +14,8 @@ romanization: "ghurfa"
 concept_tag: AR-FOOD69-GHURFA
 prerequisites: [AR-C69-dajaj, AR-C69-manzil]
 sounds: []
-roots: []
+roots: [gh-r-f]
+etymology_hook: "ghurfa: built on the root gh-r-f, 'to ladle out water with the hand' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C69-manzil]
 <!-- hl-knowledge: introduces=[AR-LEX-C69-FOOD69-04]; assesses=[] -->
 
 **غرفة** — *ghurfa* — "a room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غرفة** (*ghurfa*) is built on the native Arabic root *gh-r-f*, "to ladle out water with the hand" (Lane). Lane gives *ghurfa* as a handful of water, and also as an upper chamber, the sense that became "a room".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

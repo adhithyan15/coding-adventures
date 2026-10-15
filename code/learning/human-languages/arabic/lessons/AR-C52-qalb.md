@@ -14,7 +14,8 @@ romanization: "qalb"
 concept_tag: AR-BODY52-QALB
 prerequisites: [AR-C52-rukba, AR-C52-zahr]
 sounds: []
-roots: []
+roots: [q-l-b]
+etymology_hook: "qalb: built on the root q-l-b, 'to turn over' (Lane); the heart is said to be named for its turning about"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C52-zahr]
 <!-- hl-knowledge: introduces=[AR-LEX-C52-BODY52-05]; assesses=[] -->
 
 **قلب** — *qalb* — "the heart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قلب** (*qalb*) is built on the native Arabic root *q-l-b*, "to turn over, to turn about" (Lane). Lane reports that the heart is said to be named for its turning about; both are under *q-l-b*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

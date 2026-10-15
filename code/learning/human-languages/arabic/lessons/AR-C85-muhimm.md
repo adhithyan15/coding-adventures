@@ -14,7 +14,8 @@ romanization: "muhimm"
 concept_tag: AR-ADJ85-MUHIMM
 prerequisites: [AR-C85-sahih, AR-C85-khata]
 sounds: []
-roots: []
+roots: [h-m-m]
+etymology_hook: "muhimm: built on the root h-m-m, 'to concern, to make anxious' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C85-khata]
 <!-- hl-knowledge: introduces=[AR-LEX-C85-ADJ85-05]; assesses=[] -->
 
 **مهم** — *muhimm* — "important".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مهم** (*muhimm*) is built on the native Arabic root *h-m-m*, "to concern, to make anxious" (Lane). *Muhimm* is the Form IV participle, "that which concerns".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

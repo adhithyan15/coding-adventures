@@ -14,7 +14,8 @@ romanization: "quwwa"
 concept_tag: AR-CAN108-QUWWA
 prerequisites: [AR-C108-yumkin, AR-C108-lada]
 sounds: []
-roots: []
+roots: [q-w-y]
+etymology_hook: "quwwa: built on the root q-w-y, 'to be strong' (Lane); quwwa is the noun, 'strength'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C108-lada]
 <!-- hl-knowledge: introduces=[AR-LEX-C108-CAN108-03]; assesses=[] -->
 
 **قوة** — *quwwa* — "strength".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قوة** (*quwwa*) is built on the native Arabic root *q-w-y*, "to be strong" (Lane). *Quwwa* is the noun, "strength".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

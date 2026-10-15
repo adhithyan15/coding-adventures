@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 30,
-  "sourceHash": "fnv1a64:b920c9c43b2204e9",
+  "sourceHash": "fnv1a64:e1124bbfdde46532",
   "lessonIds": [
     "AR-C30-arafa",
     "AR-C30-akala"
@@ -11,6 +11,6 @@
   "text": "arabic/narration/ch30.txt",
   "json": "arabic/narration/ch30.json",
   "textHash": "fnv1a64:35efe80a27c166f3",
-  "jsonHash": "fnv1a64:61dc0ece918d15a4",
+  "jsonHash": "fnv1a64:5df0b5b757c6d724",
   "findings": []
 }

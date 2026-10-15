@@ -14,7 +14,8 @@ romanization: "fārigh"
 concept_tag: AR-ADJ84-FARIGH
 prerequisites: [AR-C83-sab, AR-C83-rakhis]
 sounds: []
-roots: []
+roots: [f-r-gh]
+etymology_hook: "fārigh: built on the root f-r-gh, 'to be empty, to be free' (Lane); fārigh is the active participle, 'empty, vacant'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C83-rakhis]
 <!-- hl-knowledge: introduces=[AR-LEX-C84-ADJ84-01]; assesses=[] -->
 
 **فارغ** — *fārigh* — "empty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فارغ** (*fārigh*) is built on the native Arabic root *f-r-gh*, "to be empty, to be free" (Lane). *Fārigh* is the active participle, "empty, vacant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

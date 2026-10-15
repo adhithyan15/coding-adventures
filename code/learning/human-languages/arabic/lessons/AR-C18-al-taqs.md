@@ -12,7 +12,7 @@ concept_tag: AR-WEATHER
 prerequisites: [AR-C17-kam-umruka]
 sounds: [arabic-emphatic-taa, arabic-feminine-dummy-pronoun]
 roots: [arabic-taqs-weather-rite]
-etymology_hook: "الطقس (aṭ-ṭaqs, 'weather') shares its root ط-ق-س with طقوس (ṭuqūs), 'rites, religious ceremonies' — weather and ritual sharing one root; الجو حار/بارد ('it's hot/cold') are verbless, like كم عمرك, but rain gets its OWN personal verb: إنها تمطر, 'she/it is raining'"
+etymology_hook: "aṭ-ṭaqs: usually traced through Syriac ṭeksā to Greek taxis 'order' (EtymDB); its plural ṭuqūs means 'rites'"
 duration:
   max_seconds: 240
 requires:
@@ -71,6 +71,11 @@ dummy pronoun**, *innahā* ("she/it"), standing in as the subject.
 So within Arabic's own weather vocabulary, hot/cold stay verbless while rain
 gets a real, conjugated verb — echoing the same "rain behaves differently
 from other weather" pattern Latin shows in its dedicated *pluit*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**الطقس** (*aṭ-ṭaqs*) is not a native root word: *ṭaqs* is usually traced through Syriac *ṭeksā* to Greek *taxis*, "order, arrangement" (EtymDB), which is why its plural *ṭuqūs* still means "rites", ordered ceremony.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C18-AL-TAQS-01, AR-CONCEPT-C18-AL-TAQS-02] -->

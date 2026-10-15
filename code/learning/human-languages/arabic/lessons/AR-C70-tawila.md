@@ -14,7 +14,8 @@ romanization: "ṭāwila"
 concept_tag: AR-HOME70-TAWILA
 prerequisites: [AR-C69-nafidha, AR-C70-kursi]
 sounds: []
-roots: []
+roots: [italian-tavola]
+etymology_hook: "ṭāwila: usually traced to Italian tavola 'table' (EtymDB), from Latin tabula 'plank'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C70-kursi]
 <!-- hl-knowledge: introduces=[AR-LEX-C70-HOME70-02]; assesses=[] -->
 
 **طاولة** — *ṭāwila* — "a table".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طاولة** (*ṭāwila*) is usually traced to Italian *tavola*, "table" (EtymDB), which goes back to Latin *tabula*, "plank, board". It has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

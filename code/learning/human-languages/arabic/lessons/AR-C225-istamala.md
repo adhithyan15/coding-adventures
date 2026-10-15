@@ -14,7 +14,8 @@ romanization: "istaʿmala"
 concept_tag: AR-VERB-ISTAMALA
 prerequisites: [AR-C225-haddara, AR-C225-aslaha]
 sounds: []
-roots: []
+roots: [ʿ-m-l]
+etymology_hook: "istaʿmala: built on the root ʿ-m-l, 'to work, to do' (Lane); istaʿmala is Form X, 'to put to work', to use"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C225-aslaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C225-ACT225-04]; assesses=[] -->
 
 **استعمل** — *istaʿmala* — "to use".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استعمل** (*istaʿmala*) is built on the native Arabic root *ʿ-m-l*, "to work, to do" (Lane). *Istaʿmala* is Form X, "to put to work", to use.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

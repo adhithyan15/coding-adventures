@@ -14,7 +14,8 @@ romanization: "ʿādī"
 concept_tag: AR-SIFA211-ADI
 prerequisites: [AR-C211-mushabih, AR-C211-nadir]
 sounds: []
-roots: []
+roots: [ʿ-w-d]
+etymology_hook: "ʿādī: built on the root ʿ-w-d, 'to return' (Lane); ʿādī is ʿāda, 'custom', with the adjective ending -ī: 'customary'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C211-nadir]
 <!-- hl-knowledge: introduces=[AR-LEX-C211-SIFA211-05]; assesses=[] -->
 
 **عادي** — *ʿādī* — "ordinary, normal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عادي** (*ʿādī*) is built on the native Arabic root *ʿ-w-d*, "to return" (Lane). *ʿĀdī* is *ʿāda*, "custom", with the adjective ending *-ī*: "customary".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

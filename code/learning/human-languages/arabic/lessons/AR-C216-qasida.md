@@ -14,7 +14,8 @@ romanization: "qaṣīda"
 concept_tag: AR-SHAY216-QASIDA
 prerequisites: [AR-C215-shahin, AR-C215-taksi]
 sounds: []
-roots: []
+roots: [q-ṣ-d]
+etymology_hook: "qaṣīda: built on the root q-ṣ-d, 'to aim at' (Lane); qaṣīda is a poem"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C215-taksi]
 <!-- hl-knowledge: introduces=[AR-LEX-C216-SHAY216-01]; assesses=[] -->
 
 **قصيدة** — *qaṣīda* — "a poem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قصيدة** (*qaṣīda*) is built on the native Arabic root *q-ṣ-d*, "to aim at" (Lane). *Qaṣīda* is a poem; the root's verb *qaṣada* means "to aim at".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

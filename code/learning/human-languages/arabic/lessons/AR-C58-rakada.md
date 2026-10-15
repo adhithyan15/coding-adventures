@@ -14,7 +14,8 @@ romanization: "rakaḍa"
 concept_tag: AR-VERB-RAKADA
 prerequisites: [AR-C58-qama, AR-C58-masha]
 sounds: []
-roots: []
+roots: [r-k-ḍ]
+etymology_hook: "rakaḍa: built on the root r-k-ḍ, 'to strike with the foot' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C58-masha]
 <!-- hl-knowledge: introduces=[AR-LEX-C58-VERBS58-03]; assesses=[] -->
 
 **ركض** — *rakaḍa* — "to run (he ran)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ركض** (*rakaḍa*) is built on the native Arabic root *r-k-ḍ*, "to strike with the foot; to run" (Lane). Lane's first sense is striking with the foot, as in urging on a horse; "to run" grew from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

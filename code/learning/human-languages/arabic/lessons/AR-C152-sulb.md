@@ -14,7 +14,8 @@ romanization: "ṣulb"
 concept_tag: AR-QUAL152-SULB
 prerequisites: [AR-C152-murr, AR-C152-naim]
 sounds: []
-roots: []
+roots: [ṣ-l-b]
+etymology_hook: "ṣulb: built on the root ṣ-l-b, 'to be hard' (Lane); ṣulb is 'hard, solid'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C152-naim]
 <!-- hl-knowledge: introduces=[AR-LEX-C152-QUAL152-04]; assesses=[] -->
 
 **صلب** — *ṣulb* — "hard, solid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صلب** (*ṣulb*) is built on the native Arabic root *ṣ-l-b*, "to be hard" (Lane). *Ṣulb* is "hard, solid".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

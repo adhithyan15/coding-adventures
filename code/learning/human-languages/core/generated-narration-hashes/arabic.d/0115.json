@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 115,
-  "sourceHash": "fnv1a64:5c76c7d55e75697c",
+  "sourceHash": "fnv1a64:eee40ef1f75796bb",
   "lessonIds": [
     "AR-C115-qarar",
     "AR-C115-ikhtara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch115.txt",
   "json": "arabic/narration/ch115.json",
-  "textHash": "fnv1a64:6e6cc07135a9c5d4",
-  "jsonHash": "fnv1a64:b346bedfcb7e43a7",
+  "textHash": "fnv1a64:056b94c583775db8",
+  "jsonHash": "fnv1a64:7125c6921e9c3c6b",
   "findings": []
 }

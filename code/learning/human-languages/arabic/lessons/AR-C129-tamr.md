@@ -14,7 +14,8 @@ romanization: "tamr"
 concept_tag: AR-THINGS129-TAMR
 prerequisites: [AR-C129-khiyar, AR-C129-tuffah, AR-C31-qaraa]
 sounds: []
-roots: []
+roots: [t-m-r]
+etymology_hook: "tamr: built on the root t-m-r, 'dates' (Lane); Hebrew tamar, 'date palm', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ Where does the hamza sit? (On an *alif* seat, **أ**, closing the word:
 <!-- hl-knowledge: introduces=[AR-LEX-C129-THINGS129-05]; assesses=[] -->
 
 **تمر** — *tamr* — "dates".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تمر** (*tamr*) is built on the native Arabic root *t-m-r*, "dates" (Lane). Hebrew *tamar*, "date palm", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "dhahabī"
 concept_tag: AR-SIFA179-DHAHABI
 prerequisites: [AR-C178-mujtahid, AR-C179-ramadi]
 sounds: []
-roots: []
+roots: [dh-h-b]
+etymology_hook: "dhahabī: built on the root dh-h-b, 'to go' (Lane); dhahabī is dhahab, 'gold', with the adjective ending -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C179-ramadi]
 <!-- hl-knowledge: introduces=[AR-LEX-C179-SIFA179-02]; assesses=[] -->
 
 **ذهبي** — *dhahabī* — "golden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ذهبي** (*dhahabī*) is built on the native Arabic root *dh-h-b*, "to go; gold" (Lane). *Dhahabī* is *dhahab*, "gold", with the adjective ending *-ī*; Lane lists gold under the same root as *dhahaba*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shawā"
 concept_tag: AR-VERB-SHAWA
 prerequisites: [AR-C253-dabbasa, AR-C254-qala]
 sounds: []
-roots: []
+roots: [sh-w-y]
+etymology_hook: "shawā: built on the root sh-w-y, 'to roast' (Lane); shawā is the plain verb, 'he roasted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C254-qala]
 <!-- hl-knowledge: introduces=[AR-LEX-C254-ACT254-02]; assesses=[] -->
 
 **شوى** — *shawā* — "to grill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شوى** (*shawā*) is built on the native Arabic root *sh-w-y*, "to roast" (Lane). *Shawā* is the plain verb, "he roasted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

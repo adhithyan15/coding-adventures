@@ -14,7 +14,8 @@ romanization: "taqlīdī"
 concept_tag: AR-SIFA180-TAQLIDI
 prerequisites: [AR-C180-musab, AR-C180-rifi]
 sounds: []
-roots: []
+roots: [q-l-d]
+etymology_hook: "taqlīdī: built on the root q-l-d, 'to hang on the neck' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C180-rifi]
 <!-- hl-knowledge: introduces=[AR-LEX-C180-SIFA180-03]; assesses=[] -->
 
 **تقليدي** — *taqlīdī* — "traditional".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تقليدي** (*taqlīdī*) is built on the native Arabic root *q-l-d*, "to hang on the neck; to follow another" (Lane). *Taqlīdī* is *taqlīd*, "following another's lead, tradition", with the adjective ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "qaṣīr"
 concept_tag: AR-ADJ82-QASIR
 prerequisites: [AR-C82-jayyid, AR-C82-tawil]
 sounds: []
-roots: []
+roots: [q-ṣ-r]
+etymology_hook: "qaṣīr: built on the root q-ṣ-r, 'to be short' (Lane); qaṣīr is the faʿīl adjective, 'short'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C82-tawil]
 <!-- hl-knowledge: introduces=[AR-LEX-C82-ADJ82-05]; assesses=[] -->
 
 **قصير** — *qaṣīr* — "short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قصير** (*qaṣīr*) is built on the native Arabic root *q-ṣ-r*, "to be short" (Lane). *Qaṣīr* is the *faʿīl* adjective, "short".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

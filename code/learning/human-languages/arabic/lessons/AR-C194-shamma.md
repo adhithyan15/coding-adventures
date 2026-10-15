@@ -14,7 +14,8 @@ romanization: "shamma"
 concept_tag: AR-VERB-SHAMMA
 prerequisites: [AR-C194-madagha, AR-C194-lamasa]
 sounds: []
-roots: []
+roots: [sh-m-m]
+etymology_hook: "shamma: built on the root sh-m-m, 'to smell' (Lane); shamma is the plain verb, 'he smelled'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C194-lamasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C194-ACT194-04]; assesses=[] -->
 
 **شم** — *shamma* — "to smell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شم** (*shamma*) is built on the native Arabic root *sh-m-m*, "to smell" (Lane). *Shamma* is the plain verb, "he smelled".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

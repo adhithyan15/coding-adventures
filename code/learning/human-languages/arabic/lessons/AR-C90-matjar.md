@@ -14,7 +14,8 @@ romanization: "matjar"
 concept_tag: AR-PLACE90-MATJAR
 prerequisites: [AR-C90-hunaka, AR-C90-yamin]
 sounds: []
-roots: []
+roots: [t-j-r]
+etymology_hook: "matjar: built on the root t-j-r, 'to trade' (Lane); matjar is the ma- noun of trading, 'a place of trade'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C90-yamin]
 <!-- hl-knowledge: introduces=[AR-LEX-C90-PLACE90-04]; assesses=[] -->
 
 **متجر** — *matjar* — "a shop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**متجر** (*matjar*) is built on the native Arabic root *t-j-r*, "to trade" (Lane). *Matjar* is the *ma-* noun of trading, "a place of trade".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "fuṭūr"
 concept_tag: AR-FOOD68-FUTUR
 prerequisites: [AR-C68-bayd, AR-C68-basal]
 sounds: []
-roots: []
+roots: [f-ṭ-r]
+etymology_hook: "fuṭūr: built on the root f-ṭ-r, 'to cleave' (Lane); Lane gives fuṭūr as the food or drink with which a fast is broken"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C68-basal]
 <!-- hl-knowledge: introduces=[AR-LEX-C68-FOOD68-05]; assesses=[] -->
 
 **فطور** — *fuṭūr* — "breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فطور** (*fuṭūr*) is built on the native Arabic root *f-ṭ-r*, "to cleave; to break a fast" (Lane). Lane gives *fuṭūr* as the food or drink with which a fast is broken.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

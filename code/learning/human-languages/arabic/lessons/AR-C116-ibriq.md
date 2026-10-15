@@ -14,7 +14,8 @@ romanization: "ibrīq"
 concept_tag: AR-THINGS116-IBRIQ
 prerequisites: [AR-C115-talaba, AR-C115-niyya, AR-C16-al-saa, AR-C16-al-saa]
 sounds: []
-roots: []
+roots: [persian-abriz]
+etymology_hook: "ibrīq: Lane's sources call it a Persian word, arabicized, from āb-rīz 'water-pourer'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C115-niyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C116-THINGS116-01]; assesses=[] -->
 
 **إبريق** — *ibrīq* — "a jug, a teapot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إبريق** (*ibrīq*) is a loan: Lane's sources call it a Persian word, arabicized, from *āb-rīz*, "water-pourer"; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

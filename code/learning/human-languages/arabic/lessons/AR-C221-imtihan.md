@@ -14,7 +14,8 @@ romanization: "imtiḥān"
 concept_tag: AR-AMAL221-IMTIHAN
 prerequisites: [AR-C221-ijtima, AR-C221-aqd]
 sounds: []
-roots: []
+roots: [m-ḥ-n]
+etymology_hook: "imtiḥān: built on the root m-ḥ-n, 'to try, to test' (Lane); imtiḥān is the verbal noun of Form VIII, 'testing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C221-aqd]
 <!-- hl-knowledge: introduces=[AR-LEX-C221-AMAL221-04]; assesses=[] -->
 
 **امتحان** — *imtiḥān* — "an exam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**امتحان** (*imtiḥān*) is built on the native Arabic root *m-ḥ-n*, "to try, to test" (Lane). *Imtiḥān* is the verbal noun of Form VIII, "testing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

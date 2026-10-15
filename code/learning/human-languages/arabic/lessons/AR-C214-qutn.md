@@ -14,7 +14,8 @@ romanization: "quṭn"
 concept_tag: AR-SHAY214-QUTN
 prerequisites: [AR-C214-sandal, AR-C214-qumash]
 sounds: []
-roots: []
+roots: [q-ṭ-n]
+etymology_hook: "quṭn: cotton, an old native noun Lane files under q-ṭ-n; English cotton comes from quṭn through French"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C214-qumash]
 <!-- hl-knowledge: introduces=[AR-LEX-C214-SHAY214-04]; assesses=[] -->
 
 **قطن** — *quṭn* — "cotton".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قطن** (*quṭn*), "cotton", is an old native noun, filed under the root *q-ṭ-n* (Lane). English *cotton* comes from *quṭn* through French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

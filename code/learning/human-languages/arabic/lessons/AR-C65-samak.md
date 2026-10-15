@@ -14,7 +14,8 @@ romanization: "samak"
 concept_tag: AR-VERBS65-SAMAK
 prerequisites: [AR-C65-faza, AR-C65-nazala]
 sounds: []
-roots: []
+roots: [s-m-k]
+etymology_hook: "samak: an old noun for fish, listed by Lane under s-m-k, beside samaka 'to rise, to be high'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C65-nazala]
 <!-- hl-knowledge: introduces=[AR-LEX-C65-VERBS65-05]; assesses=[] -->
 
 **سمك** — *samak* — "fish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سمك** (*samak*), "fish", is an old native noun, filed under the root *s-m-k* (Lane), beside the verb *samaka*, "to rise, to be high".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mamarr"
 concept_tag: AR-LOC100-MAMARR
 prerequisites: [AR-C99-qissa, AR-C100-misad]
 sounds: []
-roots: []
+roots: [m-r-r]
+etymology_hook: "mamarr: built on the root m-r-r, 'to pass, to go by' (Lane); mamarr is the ma- place noun, 'a place of passing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C100-misad]
 <!-- hl-knowledge: introduces=[AR-LEX-C100-LOC100-02]; assesses=[] -->
 
 **ممر** — *mamarr* — "a corridor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ممر** (*mamarr*) is built on the native Arabic root *m-r-r*, "to pass, to go by" (Lane). *Mamarr* is the *ma-* place noun, "a place of passing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

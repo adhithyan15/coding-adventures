@@ -14,7 +14,8 @@ romanization: "baṭīʾ"
 concept_tag: AR-ADJ83-BATI
 prerequisites: [AR-C82-tawil, AR-C82-qasir]
 sounds: []
-roots: []
+roots: [b-ṭ-ʾ]
+etymology_hook: "baṭīʾ: built on the root b-ṭ-ʾ, 'to be slow' (Lane); baṭīʾ is the faʿīl adjective, 'slow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C82-qasir]
 <!-- hl-knowledge: introduces=[AR-LEX-C83-ADJ83-01]; assesses=[] -->
 
 **بطيء** — *baṭīʾ* — "slow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بطيء** (*baṭīʾ*) is built on the native Arabic root *b-ṭ-ʾ*, "to be slow" (Lane). *Baṭīʾ* is the *faʿīl* adjective, "slow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

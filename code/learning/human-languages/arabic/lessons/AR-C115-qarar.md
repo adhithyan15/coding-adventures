@@ -14,7 +14,8 @@ romanization: "qarār"
 concept_tag: AR-WANT115-QARAR
 prerequisites: [AR-C114-ihtaja, AR-C114-tamanna]
 sounds: []
-roots: []
+roots: [q-r-r]
+etymology_hook: "qarār: built on the root q-r-r, 'to settle, to be still' (Lane); qarār is a settling, hence a settled decision"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C114-tamanna]
 <!-- hl-knowledge: introduces=[AR-LEX-C115-WANT115-01]; assesses=[] -->
 
 **قرار** — *qarār* — "a decision".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قرار** (*qarār*) is built on the native Arabic root *q-r-r*, "to settle, to be still" (Lane). *Qarār* is a settling, hence a settled decision.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

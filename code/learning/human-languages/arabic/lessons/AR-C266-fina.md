@@ -14,7 +14,8 @@ romanization: "fināʾ"
 concept_tag: AR-MAKAN266-FINA
 prerequisites: [AR-C266-ataba, AR-C266-siyaj]
 sounds: []
-roots: []
+roots: [f-n-y]
+etymology_hook: "fināʾ: listed by Lane under f-n-y, beside faniya 'to pass away'; Lane's fināʾ is the court before a house"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C266-siyaj]
 <!-- hl-knowledge: introduces=[AR-LEX-C266-MAKAN266-05]; assesses=[] -->
 
 **فناء** — *fināʾ* — "a courtyard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فناء** (*fināʾ*) is an old native noun, filed under the root *f-n-y* (Lane), beside the verb *faniya*, "to pass away". Lane's *fināʾ* is the open court before a house.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "istarāḥa"
 concept_tag: AR-VERB-ISTARAHA
 prerequisites: [AR-C161-tanaffasa, AR-C161-kasara]
 sounds: []
-roots: []
+roots: [r-w-ḥ]
+etymology_hook: "istarāḥa: built on the root r-w-ḥ, 'rest' (Lane); istarāḥa is Form X, 'to take one's rest'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C161-kasara]
 <!-- hl-knowledge: introduces=[AR-LEX-C161-ACT161-04]; assesses=[] -->
 
 **استراح** — *istarāḥa* — "to rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استراح** (*istarāḥa*) is built on the native Arabic root *r-w-ḥ*, "rest; wind" (Lane). *Istarāḥa* is Form X, "to take one's rest".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

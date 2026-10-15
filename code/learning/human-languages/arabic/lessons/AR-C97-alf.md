@@ -14,7 +14,8 @@ romanization: "alf"
 concept_tag: AR-NUMBERS97-ALF
 prerequisites: [AR-C97-arbaun, AR-C97-khamsun]
 sounds: []
-roots: []
+roots: [ʾ-l-f]
+etymology_hook: "alf: built on the root ʾ-l-f, 'a thousand' (Lane); Hebrew elef, 'thousand', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C97-khamsun]
 <!-- hl-knowledge: introduces=[AR-LEX-C97-NUMBERS97-05]; assesses=[] -->
 
 **ألف** — *alf* — "a thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ألف** (*alf*) is built on the native Arabic root *ʾ-l-f*, "a thousand; to be familiar with" (Lane). Hebrew *elef*, "thousand", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

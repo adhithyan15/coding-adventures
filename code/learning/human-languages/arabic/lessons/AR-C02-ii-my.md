@@ -11,7 +11,8 @@ gloss: my (possessive suffix -ī)
 concept_tag: PRONOUN-MY
 prerequisites: [AR-C02-ism]
 sounds: [yaa-suffix]
-roots: []
+roots: [semitic-i-my]
+etymology_hook: "-ī: the 'my' ending, inherited from the Semitic parent language; Hebrew has the same -ī, as in ʾēlī 'my God'"
 duration:
   max_seconds: 180
 requires:
@@ -52,6 +53,8 @@ Arabic builds "my" by **suffix**, not a separate word: **اسم** (*ism*, "name"
 **ي** (*-ī*, "my") = **اسمي** (*ismī*, "my name"). This is the same trick as the
 attached **al-** ("the") from Chapter 1 — Arabic loves to fasten little pieces
 onto a word rather than string separate words together.
+
+The ending *-ī* is inherited from the Semitic parent language: Hebrew marks "my" with the same *-ī*, as in *ʾēlī*, "my God".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-II-MY-01, AR-CONCEPT-C02-II-MY-02] -->

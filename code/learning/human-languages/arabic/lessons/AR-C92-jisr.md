@@ -14,7 +14,8 @@ romanization: "jisr"
 concept_tag: AR-TOWN92-JISR
 prerequisites: [AR-C91-hafila, AR-C92-qitar]
 sounds: []
-roots: []
+roots: [j-s-r]
+etymology_hook: "jisr: built on the root j-s-r, 'a bridge' (Lane); an old noun"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C92-qitar]
 <!-- hl-knowledge: introduces=[AR-LEX-C92-TOWN92-02]; assesses=[] -->
 
 **جسر** — *jisr* — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جسر** (*jisr*) is built on the native Arabic root *j-s-r*, "a bridge; to be bold" (Lane). An old noun; Lane lists it under *j-s-r*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

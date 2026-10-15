@@ -14,7 +14,8 @@ romanization: "aḥassa"
 concept_tag: AR-VERB-AHASSA
 prerequisites: [AR-C161-kasara, AR-C161-istaraha]
 sounds: []
-roots: []
+roots: [ḥ-s-s]
+etymology_hook: "aḥassa: built on the root ḥ-s-s, 'to perceive' (Lane); aḥassa is Form IV, 'to perceive, to feel'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C161-istaraha]
 <!-- hl-knowledge: introduces=[AR-LEX-C161-ACT161-05]; assesses=[] -->
 
 **أحس** — *aḥassa* — "to feel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أحس** (*aḥassa*) is built on the native Arabic root *ḥ-s-s*, "to perceive" (Lane). *Aḥassa* is Form IV, "to perceive, to feel".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

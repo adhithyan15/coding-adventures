@@ -14,7 +14,8 @@ romanization: "alṣaqa"
 concept_tag: AR-VERB-ALSAQA
 prerequisites: [AR-C260-rashsha, AR-C260-taraqa]
 sounds: []
-roots: []
+roots: [l-ṣ-q]
+etymology_hook: "alṣaqa: built on the root l-ṣ-q, 'to cleave, to stick' (Lane); alṣaqa is Form IV, 'to make stick'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C260-taraqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C260-ACT260-03]; assesses=[] -->
 
 **ألصق** — *alṣaqa* — "to stick, to glue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ألصق** (*alṣaqa*) is built on the native Arabic root *l-ṣ-q*, "to cleave, to stick" (Lane). *Alṣaqa* is Form IV, "to make stick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tashājara"
 concept_tag: AR-VERB-TASHAJARA
 prerequisites: [AR-C227-qaliqa, AR-C227-taarrafa]
 sounds: []
-roots: []
+roots: [sh-j-r]
+etymology_hook: "tashājara: built on the root sh-j-r, 'to be intertwined' (Lane); Lane gives the root's sense of things intertwined"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C227-taarrafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C227-ACT227-04]; assesses=[] -->
 
 **تشاجر** — *tashājara* — "to quarrel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تشاجر** (*tashājara*) is built on the native Arabic root *sh-j-r*, "to be intertwined; trees" (Lane). Lane gives the root's sense of things intertwined; *tashājara*, Form VI, is to quarrel, and *shajar*, "trees", is on the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

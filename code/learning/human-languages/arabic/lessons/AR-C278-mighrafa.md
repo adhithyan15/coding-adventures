@@ -14,7 +14,8 @@ romanization: "mighrafa"
 concept_tag: AR-SHAY278-MIGHRAFA
 prerequisites: [AR-C278-siniyya, AR-C278-misfah]
 sounds: []
-roots: []
+roots: [gh-r-f]
+etymology_hook: "mighrafa: built on the root gh-r-f, 'to ladle out water with the hand' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C278-misfah]
 <!-- hl-knowledge: introduces=[AR-LEX-C278-SHAY278-04]; assesses=[] -->
 
 **مغرفة** — *mighrafa* — "a ladle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مغرفة** (*mighrafa*) is built on the native Arabic root *gh-r-f*, "to ladle out water with the hand" (Lane). *Mighrafa* is an instrument noun, "a thing for ladling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

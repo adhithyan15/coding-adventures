@@ -14,7 +14,8 @@ romanization: "taʿarrafa"
 concept_tag: AR-VERB-TAARRAFA
 prerequisites: [AR-C227-khajila, AR-C227-qaliqa]
 sounds: []
-roots: []
+roots: [a-r-f]
+etymology_hook: "taʿarrafa: built on the root ʿ-r-f, 'to know, to recognise' (Lane); taʿarrafa is Form V, 'to get to know'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C227-qaliqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C227-ACT227-03]; assesses=[] -->
 
 **تعرف** — *taʿarrafa* — "to get to know (someone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تعرف** (*taʿarrafa*) is built on the native Arabic root *ʿ-r-f*, "to know, to recognise" (Lane). *Taʿarrafa* is Form V, "to get to know".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

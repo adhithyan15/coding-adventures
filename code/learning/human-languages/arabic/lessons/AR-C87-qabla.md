@@ -14,7 +14,8 @@ romanization: "qabla"
 concept_tag: AR-TIME87-QABLA
 prerequisites: [AR-C87-alan, AR-C87-ahyanan]
 sounds: []
-roots: []
+roots: [q-b-l]
+etymology_hook: "qabla: built on the root q-b-l, 'to face, to be in front' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C87-ahyanan]
 <!-- hl-knowledge: introduces=[AR-LEX-C87-TIME87-05]; assesses=[] -->
 
 **قبل** — *qabla* — "before".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قبل** (*qabla*) is built on the native Arabic root *q-b-l*, "to face, to be in front" (Lane). The same root gives *qibla*, the direction one faces in prayer.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

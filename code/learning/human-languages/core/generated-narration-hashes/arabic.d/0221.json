@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 221,
-  "sourceHash": "fnv1a64:3f1eb6651cd50f14",
+  "sourceHash": "fnv1a64:fd2340c6e5774195",
   "lessonIds": [
     "AR-C221-taqrir",
     "AR-C221-ijtima",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch221.txt",
   "json": "arabic/narration/ch221.json",
-  "textHash": "fnv1a64:3cdc0ba81250013a",
-  "jsonHash": "fnv1a64:5289e4a26101d9bd",
+  "textHash": "fnv1a64:3b2a1ab8cc9c221e",
+  "jsonHash": "fnv1a64:140a2178658c4156",
   "findings": []
 }

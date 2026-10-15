@@ -14,7 +14,8 @@ romanization: "arnab"
 concept_tag: AR-THINGS134-ARNAB
 prerequisites: [AR-C134-zalam, AR-C134-ghayma, AR-C42-first-passage, AR-C42-lines]
 sounds: []
-roots: []
+roots: [r-n-b]
+etymology_hook: "arnab: built on the root r-n-b, 'a hare' (Lane); Lane lists arnab under r-n-b"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C134-ghayma]
 <!-- hl-knowledge: introduces=[AR-LEX-C134-THINGS134-05]; assesses=[] -->
 
 **أرنب** — *arnab* — "a rabbit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أرنب** (*arnab*) is built on the native Arabic root *r-n-b*, "a hare" (Lane). Lane lists *arnab* under *r-n-b*; Hebrew *arnevet*, "hare", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bayna"
 concept_tag: AR-LOC102-BAYNA
 prerequisites: [AR-C102-saqf, AR-C102-khalfa]
 sounds: []
-roots: []
+roots: [b-y-n]
+etymology_hook: "bayna: built on the root b-y-n, 'to be separate, to be distinct' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C102-khalfa]
 <!-- hl-knowledge: introduces=[AR-LEX-C102-LOC102-05]; assesses=[] -->
 
 **بين** — *bayna* — "between".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بين** (*bayna*) is built on the native Arabic root *b-y-n*, "to be separate, to be distinct" (Lane). *Bayna* is "between", the space that parts two things; Hebrew *bēn*, "between", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

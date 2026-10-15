@@ -14,7 +14,8 @@ romanization: "imraʾa"
 concept_tag: AR-FAMILY56-IMRAA
 prerequisites: [AR-C56-walad, AR-C56-rajul]
 sounds: []
-roots: []
+roots: [m-r-ʾ]
+etymology_hook: "imraʾa: the feminine of imruʾ, marʾ 'a man', an old noun listed by Lane under the native Arabic root m-r-ʾ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C56-rajul]
 <!-- hl-knowledge: introduces=[AR-LEX-C56-FAMILY56-04]; assesses=[] -->
 
 **امرأة** — *imraʾa* — "a woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**امرأة** (*imraʾa*) is the feminine of *imruʾ*, *marʾ*, "a man", an old native noun, filed under the root *m-r-ʾ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

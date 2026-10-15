@@ -14,7 +14,8 @@ romanization: "tamāman"
 concept_tag: AR-SABAB238-TAMAMAN
 prerequisites: [AR-C237-shakhsiyya, AR-C238-mithl]
 sounds: []
-roots: []
+roots: [t-m-m]
+etymology_hook: "tamāman: built on the root t-m-m, 'to be complete' (Lane); tamāman is tamām, 'completeness', with the adverb ending -an"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C238-mithl]
 <!-- hl-knowledge: introduces=[AR-LEX-C238-SABAB238-02]; assesses=[] -->
 
 **تماما** — *tamāman* — "completely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تماما** (*tamāman*) is built on the native Arabic root *t-m-m*, "to be complete" (Lane). *Tamāman* is *tamām*, "completeness", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

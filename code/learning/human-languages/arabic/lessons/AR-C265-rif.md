@@ -14,7 +14,8 @@ romanization: "rīf"
 concept_tag: AR-MAKAN265-RIF
 prerequisites: [AR-C265-nadi, AR-C265-mazraa]
 sounds: []
-roots: []
+roots: [r-y-f]
+etymology_hook: "rīf: built on the root r-y-f, 'cultivated land by water' (Lane); rīf is farmland by the water, the countryside"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C265-mazraa]
 <!-- hl-knowledge: introduces=[AR-LEX-C265-MAKAN265-05]; assesses=[] -->
 
 **ريف** — *rīf* — "the countryside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ريف** (*rīf*) is built on the native Arabic root *r-y-f*, "cultivated land by water" (Lane). *Rīf* is farmland by the water, the countryside.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

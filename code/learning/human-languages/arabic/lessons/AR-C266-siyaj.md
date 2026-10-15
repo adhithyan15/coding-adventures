@@ -14,7 +14,8 @@ romanization: "siyāj"
 concept_tag: AR-MAKAN266-SIYAJ
 prerequisites: [AR-C266-midkhana, AR-C266-ataba]
 sounds: []
-roots: []
+roots: [s-w-j]
+etymology_hook: "siyāj: an old noun listed by Lane under s-w-j as an enclosure of thorns set round a vineyard"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C266-ataba]
 <!-- hl-knowledge: introduces=[AR-LEX-C266-MAKAN266-04]; assesses=[] -->
 
 **سياج** — *siyāj* — "a fence".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سياج** (*siyāj*) is an old native noun, filed under the root *s-w-j* (Lane) as an enclosure of thorns set round a vineyard; a fence is the same idea.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

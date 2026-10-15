@@ -14,7 +14,8 @@ romanization: "sajjāda"
 concept_tag: AR-THINGS126-SAJJADA
 prerequisites: [AR-C125-sunduq, AR-C126-shama]
 sounds: []
-roots: []
+roots: [s-j-d]
+etymology_hook: "sajjāda: built on the root s-j-d, 'to bow down, to prostrate oneself' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C126-shama]
 <!-- hl-knowledge: introduces=[AR-LEX-C126-THINGS126-02]; assesses=[] -->
 
 **سجادة** — *sajjāda* — "a carpet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سجادة** (*sajjāda*) is built on the native Arabic root *s-j-d*, "to bow down, to prostrate oneself" (Lane). *Sajjāda* is a prayer mat, a thing to prostrate on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

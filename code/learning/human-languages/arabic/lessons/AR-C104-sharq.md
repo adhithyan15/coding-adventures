@@ -14,7 +14,8 @@ romanization: "sharq"
 concept_tag: AR-LOC104-SHARQ
 prerequisites: [AR-C103-shamal, AR-C104-janub]
 sounds: []
-roots: []
+roots: [sh-r-q]
+etymology_hook: "sharq: built on the root sh-r-q, 'to rise (of the sun)' (Lane); sharq is where the sun rises: the east"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C104-janub]
 <!-- hl-knowledge: introduces=[AR-LEX-C104-LOC104-02]; assesses=[] -->
 
 **شرق** — *sharq* — "east".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شرق** (*sharq*) is built on the native Arabic root *sh-r-q*, "to rise (of the sun)" (Lane). *Sharq* is where the sun rises: the east.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

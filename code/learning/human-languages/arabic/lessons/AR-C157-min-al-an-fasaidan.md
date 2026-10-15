@@ -14,7 +14,8 @@ romanization: "min al-ān fa-ṣāʿidan"
 concept_tag: AR-MUSTAQBAL157-MIN-AL-AN-FASAIDAN
 prerequisites: [AR-C156-qada, AR-C157-al-qadim]
 sounds: []
-roots: []
+roots: [ṣ-ʿ-d]
+etymology_hook: "min al-ān fa-ṣāʿidan: min 'from' + al-ān 'now' + fa-ṣāʿidan 'and upward', root ṣ-ʿ-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C157-al-qadim]
 <!-- hl-knowledge: introduces=[AR-LEX-C157-MUSTAQBAL157-02]; assesses=[] -->
 
 **من الآن فصاعدا** — *min al-ān fa-ṣāʿidan* — "from now on". **من الآن فصاعدا سأمشي كل يوم** — *min al-ān fa-ṣāʿidan sa-amshī kulla yawm* — "From now on I will walk every day."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**من الآن فصاعدا** (*min al-ān fa-ṣāʿidan*) is built from *min*, "from", *al-ān*, "now", and *fa-ṣāʿidan*, "and upward", the active participle of *ṣ-ʿ-d*, "to go up" (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

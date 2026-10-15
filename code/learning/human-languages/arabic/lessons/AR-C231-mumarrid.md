@@ -14,7 +14,8 @@ romanization: "mumarriḍ"
 concept_tag: AR-SIHHA231-MUMARRID
 prerequisites: [AR-C231-iyada, AR-C231-saydaliyya]
 sounds: []
-roots: []
+roots: [m-r-ḍ]
+etymology_hook: "mumarriḍ: built on the root m-r-ḍ, 'to be ill' (Lane); mumarriḍ is the Form II participle, 'one who nurses the sick'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C231-saydaliyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C231-SIHHA231-05]; assesses=[] -->
 
 **ممرض** — *mumarriḍ* — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ممرض** (*mumarriḍ*) is built on the native Arabic root *m-r-ḍ*, "to be ill" (Lane). *Mumarriḍ* is the Form II participle, "one who nurses the sick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

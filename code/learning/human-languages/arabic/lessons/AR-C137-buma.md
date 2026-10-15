@@ -14,7 +14,8 @@ romanization: "būma"
 concept_tag: AR-THINGS137-BUMA
 prerequisites: [AR-C137-dik, AR-C137-qitta]
 sounds: []
-roots: []
+roots: [b-w-m]
+etymology_hook: "būma: built on the root b-w-m, 'owls' (Lane); būma is one owl"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C137-qitta]
 <!-- hl-knowledge: introduces=[AR-LEX-C137-THINGS137-04]; assesses=[] -->
 
 **بومة** — *būma* — "an owl".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بومة** (*būma*) is built on the native Arabic root *b-w-m*, "owls" (Lane). *Būma* is one owl.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

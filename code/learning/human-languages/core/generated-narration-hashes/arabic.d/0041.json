@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 41,
-  "sourceHash": "fnv1a64:7079056eff432917",
+  "sourceHash": "fnv1a64:3c68eba53d9b74f1",
   "lessonIds": [
     "AR-C41-ya",
     "AR-C41-karrir",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "arabic/narration/ch41.txt",
   "json": "arabic/narration/ch41.json",
-  "textHash": "fnv1a64:7ce92a32f7423741",
-  "jsonHash": "fnv1a64:8a4d851b7a7bd02b",
+  "textHash": "fnv1a64:f213e4e2d0591231",
+  "jsonHash": "fnv1a64:a3ed01f9e0cb400e",
   "findings": []
 }

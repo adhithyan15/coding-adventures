@@ -14,7 +14,8 @@ romanization: "akhīran"
 concept_tag: AR-WAQT203-AKHIRAN
 prerequisites: [AR-C202-lahza, AR-C203-sabiqan]
 sounds: []
-roots: []
+roots: [ʾ-kh-r]
+etymology_hook: "akhīran: built on the root ʾ-kh-r, 'to come after, to be late' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C203-sabiqan]
 <!-- hl-knowledge: introduces=[AR-LEX-C203-WAQT203-02]; assesses=[] -->
 
 **أخيرا** — *akhīran* — "finally, at last".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أخيرا** (*akhīran*) is built on the native Arabic root *ʾ-kh-r*, "to come after, to be late" (Lane). *Akhīran* is *akhīr*, "last", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

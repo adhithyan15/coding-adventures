@@ -14,7 +14,8 @@ romanization: "maqlī"
 concept_tag: AR-SIFA177-MAQLI
 prerequisites: [AR-C177-nay, AR-C177-matbukh]
 sounds: []
-roots: []
+roots: [q-l-y]
+etymology_hook: "maqlī: built on the root q-l-y, 'to fry' (Lane); maqlī is the passive participle, 'fried'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C177-matbukh]
 <!-- hl-knowledge: introduces=[AR-LEX-C177-SIFA177-05]; assesses=[] -->
 
 **مقلي** — *maqlī* — "fried".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مقلي** (*maqlī*) is built on the native Arabic root *q-l-y*, "to fry" (Lane). *Maqlī* is the passive participle, "fried".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

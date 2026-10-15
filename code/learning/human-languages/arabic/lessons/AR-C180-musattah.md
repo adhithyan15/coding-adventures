@@ -14,7 +14,8 @@ romanization: "musaṭṭaḥ"
 concept_tag: AR-SIFA180-MUSATTAH
 prerequisites: [AR-C180-taqlidi, AR-C180-ajnabi]
 sounds: []
-roots: []
+roots: [s-ṭ-ḥ]
+etymology_hook: "musaṭṭaḥ: built on the root s-ṭ-ḥ, 'to spread out flat' (Lane); musaṭṭaḥ is the Form II passive participle, 'made flat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C180-ajnabi]
 <!-- hl-knowledge: introduces=[AR-LEX-C180-SIFA180-05]; assesses=[] -->
 
 **مسطح** — *musaṭṭaḥ* — "flat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسطح** (*musaṭṭaḥ*) is built on the native Arabic root *s-ṭ-ḥ*, "to spread out flat" (Lane). *Musaṭṭaḥ* is the Form II passive participle, "made flat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

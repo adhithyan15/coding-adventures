@@ -14,7 +14,8 @@ romanization: "qabīḥ"
 concept_tag: AR-QUAL155-QABIH
 prerequisites: [AR-C154-daif, AR-C155-daruri]
 sounds: []
-roots: []
+roots: [q-b-ḥ]
+etymology_hook: "qabīḥ: built on the root q-b-ḥ, 'to be ugly' (Lane); qabīḥ is the faʿīl adjective, 'ugly'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C155-daruri]
 <!-- hl-knowledge: introduces=[AR-LEX-C155-QUAL155-02]; assesses=[] -->
 
 **قبيح** — *qabīḥ* — "ugly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قبيح** (*qabīḥ*) is built on the native Arabic root *q-b-ḥ*, "to be ugly" (Lane). *Qabīḥ* is the *faʿīl* adjective, "ugly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

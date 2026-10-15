@@ -14,7 +14,8 @@ romanization: "hātif"
 concept_tag: AR-SHAY245-HATIF
 prerequisites: [AR-C245-qilada, AR-C245-maqas]
 sounds: []
-roots: []
+roots: [h-t-f]
+etymology_hook: "hātif: built on the root h-t-f, 'to call out'; hātif is the active participle, 'one who calls out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C245-maqas]
 <!-- hl-knowledge: introduces=[AR-LEX-C245-SHAY245-03]; assesses=[] -->
 
 **هاتف** — *hātif* — "a telephone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هاتف** (*hātif*) is built on the native Arabic root *h-t-f*, "to call out". Lane's lexicon has no article on this root. *Hātif* is the active participle, "one who calls out"; the telephone is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

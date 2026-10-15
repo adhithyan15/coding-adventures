@@ -14,7 +14,8 @@ romanization: "ẓahr"
 concept_tag: AR-BODY52-ZAHR
 prerequisites: [AR-C52-dam, AR-C52-rukba]
 sounds: []
-roots: []
+roots: [zahara-appear]
+etymology_hook: "ẓahr: built on the root ẓ-h-r, 'the back' (Lane); the same root gives ẓuhr, 'noon', when the sun stands out plainly"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C52-rukba]
 <!-- hl-knowledge: introduces=[AR-LEX-C52-BODY52-04]; assesses=[] -->
 
 **ظهر** — *ẓahr* — "the back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ظهر** (*ẓahr*) is built on the native Arabic root *ẓ-h-r*, "the back; to appear, to be outward" (Lane). The same root gives *ẓuhr*, "noon", when the sun stands out plainly.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

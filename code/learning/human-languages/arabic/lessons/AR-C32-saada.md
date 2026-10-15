@@ -12,7 +12,7 @@ romanization: sāʿada
 prerequisites: [AR-C32-fakkara]
 sounds: [ayn-pharyngeal, long-vowel-alif, non-joiner, rtl-known-letters]
 roots: [s-a-d]
-etymology_hook: "ساعد (sāʿada, 'he helped') is root س-ع-د — which by itself means good fortune, giving سَعيد (saʿīd, 'happy', the name Saeed) and سَعادة (saʿāda, 'happiness') — stretched into فاعَلَ, Form III, the shape that aims a root at another person; hence مُساعَدة (musāʿada, 'help') and مُساعِد (musāʿid, 'an assistant') on the same mu- doer as mufakkir; the family name آل سُعود (Āl Saʿūd) is what English spells in Saudi Arabia, and Hebrew's סָעַד (saʿad, 'to sustain') is the twin, whose מִסְעָדָה is a restaurant"
+etymology_hook: "sāʿada: Form III of the root s-ʿ-d 'good fortune' (Lane); Hebrew sāʿad 'to sustain' is a cousin"
 duration:
   max_seconds: 240
 requires:

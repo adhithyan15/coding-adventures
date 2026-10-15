@@ -14,7 +14,8 @@ romanization: "ʿulba"
 concept_tag: AR-SHAY181-ULBA
 prerequisites: [AR-C181-ghassala, AR-C181-mukayyif]
 sounds: []
-roots: []
+roots: [ʿ-l-b]
+etymology_hook: "ʿulba: an old native noun Lane files under ʿ-l-b; Lane's ʿulba is a milking vessel of skin or wood"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C181-mukayyif]
 <!-- hl-knowledge: introduces=[AR-LEX-C181-SHAY181-03]; assesses=[] -->
 
 **علبة** — *ʿulba* — "a tin, a can".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**علبة** (*ʿulba*), "a milking vessel", is an old native noun, filed under the root *ʿ-l-b* (Lane). Lane's *ʿulba* is a milking vessel of skin or wood; the tin can is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

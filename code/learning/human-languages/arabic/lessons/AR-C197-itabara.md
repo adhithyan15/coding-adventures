@@ -14,7 +14,8 @@ romanization: "iʿtabara"
 concept_tag: AR-VERB-ITABARA
 prerequisites: [AR-C197-lahaza, AR-C197-intabaha]
 sounds: []
-roots: []
+roots: [ʿ-b-r]
+etymology_hook: "iʿtabara: built on the root ʿ-b-r, 'to cross' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C197-intabaha]
 <!-- hl-knowledge: introduces=[AR-LEX-C197-ACT197-05]; assesses=[] -->
 
 **اعتبر** — *iʿtabara* — "to consider, to regard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اعتبر** (*iʿtabara*) is built on the native Arabic root *ʿ-b-r*, "to cross" (Lane). *Iʿtabara* is Form VIII, "to pass from one thing to another in thought", to consider.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

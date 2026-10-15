@@ -12,7 +12,7 @@ romanization: raʾā
 prerequisites: [AR-C29-qala]
 sounds: [alif-maqsura, hamza-medial, rtl-known-letters]
 roots: [r-a-y]
-etymology_hook: "رأى (raʾā, 'he saw') is the root ر-أ-ي with its weak letter LAST, surfacing as the dotless ى (alif maqṣūra); the same skeleton gives رَأْي (raʾy, 'an opinion' — literally a seeing, the same metaphor as English 'in my view'), مِرْآة (mirʾāh, 'a mirror', from the instrument pattern 'the thing you see with'), and رُؤْيا (ruʾyā, 'a vision, a dream')"
+etymology_hook: "raʾā: root r-ʾ-y 'to see' (Lane), giving raʾy 'opinion' and mirʾāh 'mirror'; Hebrew rāʾā is a cousin"
 duration:
   max_seconds: 240
 requires:
@@ -76,6 +76,8 @@ The family this root grows is the good part:
 
 Seeing, opinion, mirror, vision: four words, one skeleton, no memorising
 four unrelated forms.
+
+*Raʾā* is built on this native root (Lane); Hebrew *rāʾā*, "he saw", is its cousin.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C29-RAA-01, AR-CONCEPT-C29-RAA-02, AR-CONCEPT-C29-QALA-02] -->

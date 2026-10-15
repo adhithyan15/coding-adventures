@@ -14,7 +14,8 @@ romanization: "taqwīm"
 concept_tag: AR-WAQT234-TAQWIM
 prerequisites: [AR-C234-qariban, AR-C234-munabbih]
 sounds: []
-roots: []
+roots: [q-w-m]
+etymology_hook: "taqwīm: built on the root q-w-m, 'to stand' (Lane); taqwīm is the verbal noun of Form II, 'setting right, reckoning'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C234-munabbih]
 <!-- hl-knowledge: introduces=[AR-LEX-C234-WAQT234-05]; assesses=[] -->
 
 **تقويم** — *taqwīm* — "a calendar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تقويم** (*taqwīm*) is built on the native Arabic root *q-w-m*, "to stand; to set right" (Lane). *Taqwīm* is the verbal noun of Form II, "setting right, reckoning".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

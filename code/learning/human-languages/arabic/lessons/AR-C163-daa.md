@@ -14,7 +14,8 @@ romanization: "daʿā"
 concept_tag: AR-VERB-DAA
 prerequisites: [AR-C162-wazzafa, AR-C163-ihtafala]
 sounds: []
-roots: []
+roots: [d-ʿ-w]
+etymology_hook: "daʿā: built on the root d-ʿ-w, 'to call' (Lane); daʿā is the plain verb, 'he called'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C163-ihtafala]
 <!-- hl-knowledge: introduces=[AR-LEX-C163-ACT163-02]; assesses=[] -->
 
 **دعا** — *daʿā* — "to invite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دعا** (*daʿā*) is built on the native Arabic root *d-ʿ-w*, "to call" (Lane). *Daʿā* is the plain verb, "he called".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

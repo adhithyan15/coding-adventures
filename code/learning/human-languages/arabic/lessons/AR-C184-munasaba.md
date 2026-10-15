@@ -14,7 +14,8 @@ romanization: "munāsaba"
 concept_tag: AR-SHAY184-MUNASABA
 prerequisites: [AR-C184-mahrajan, AR-C184-dawa]
 sounds: []
-roots: []
+roots: [n-s-b]
+etymology_hook: "munāsaba: built on the root n-s-b, 'to be related, to be suitable' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C184-dawa]
 <!-- hl-knowledge: introduces=[AR-LEX-C184-SHAY184-03]; assesses=[] -->
 
 **مناسبة** — *munāsaba* — "an occasion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مناسبة** (*munāsaba*) is built on the native Arabic root *n-s-b*, "to be related, to be suitable" (Lane). *Munāsaba* is the verbal noun of Form III, "fitness"; the occasion is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

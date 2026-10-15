@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 97,
-  "sourceHash": "fnv1a64:09be74e336515e58",
+  "sourceHash": "fnv1a64:d1c7dedc471aff76",
   "lessonIds": [
     "AR-C97-ashara",
     "AR-C97-thalathun",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch97.txt",
   "json": "arabic/narration/ch97.json",
-  "textHash": "fnv1a64:c7cfc62a8dca4b59",
-  "jsonHash": "fnv1a64:4e63e91d77206792",
+  "textHash": "fnv1a64:7efd1487c9f60768",
+  "jsonHash": "fnv1a64:6b77218f3380d012",
   "findings": []
 }

@@ -246,8 +246,9 @@ fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
         RailroadExpression::Terminal(label) | RailroadExpression::NonTerminal(label) | RailroadExpression::Special(label) => {
             let kind = match expr { RailroadExpression::Terminal(_) => RailroadElementKind::Terminal,
                 RailroadExpression::NonTerminal(_) => RailroadElementKind::NonTerminal, _ => RailroadElementKind::Special };
-            let width = (label.chars().count() as f64 * 8.5).clamp(44.0, 192.0) + config.padding * 2.0;
-            let height = 16.0 + config.padding * 2.0;
+            let text_width = label.chars().count() as f64 * config.font_size * 0.61;
+            let width = text_width.clamp(config.font_size * 3.15, config.font_size * 13.72) + config.padding * 2.0;
+            let height = config.font_size * 1.15 + config.padding * 2.0;
             elements.push(LayoutedRailroadElement { kind, label: label.clone(), x, y, width, height }); (width, height)
         }
         RailroadExpression::Sequence(items) => {
@@ -300,8 +301,9 @@ fn layout_railroad_expression(expr: &RailroadExpression, x: f64, y: f64,
 fn measure_railroad_expression(expr: &RailroadExpression, config: &diagram_ir::RailroadConfig) -> (f64, f64) {
     match expr {
         RailroadExpression::Terminal(label) | RailroadExpression::NonTerminal(label) | RailroadExpression::Special(label) => {
-            ((label.chars().count() as f64 * 8.5).clamp(44.0, 192.0) + config.padding * 2.0,
-                16.0 + config.padding * 2.0)
+            let text_width = label.chars().count() as f64 * config.font_size * 0.61;
+            (text_width.clamp(config.font_size * 3.15, config.font_size * 13.72) + config.padding * 2.0,
+                config.font_size * 1.15 + config.padding * 2.0)
         }
         RailroadExpression::Sequence(items) => {
             let sizes: Vec<_> = items.iter().map(|item| measure_railroad_expression(item, config)).collect();
@@ -2188,12 +2190,12 @@ mod tests {
         ]);
         let compact = layout_railroad(&RailroadDiagram {
             title: None, accessibility_title: None, accessibility_description: None,
-            config: RailroadConfig { padding: 4.0, vertical_separation: 2.0, horizontal_separation: 3.0 },
+            config: RailroadConfig { padding: 4.0, vertical_separation: 2.0, horizontal_separation: 3.0, ..Default::default() },
             rules: vec![RailroadRule { name: "value".into(), definition: expression.clone() }],
         });
         let spacious = layout_railroad(&RailroadDiagram {
             title: None, accessibility_title: None, accessibility_description: None,
-            config: RailroadConfig { padding: 30.0, vertical_separation: 40.0, horizontal_separation: 50.0 },
+            config: RailroadConfig { padding: 30.0, vertical_separation: 40.0, horizontal_separation: 50.0, ..Default::default() },
             rules: vec![RailroadRule { name: "value".into(), definition: expression }],
         });
         assert!(spacious.width > compact.width);

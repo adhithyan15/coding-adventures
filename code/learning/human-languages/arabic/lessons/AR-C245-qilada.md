@@ -14,7 +14,8 @@ romanization: "qilāda"
 concept_tag: AR-SHAY245-QILADA
 prerequisites: [AR-C244-ananas, AR-C244-lawz]
 sounds: []
-roots: []
+roots: [q-l-d]
+etymology_hook: "qilāda: built on the root q-l-d, 'to hang on the neck' (Lane); qilāda is a thing hung on the neck"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C244-lawz]
 <!-- hl-knowledge: introduces=[AR-LEX-C245-SHAY245-01]; assesses=[] -->
 
 **قلادة** — *qilāda* — "a necklace".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قلادة** (*qilāda*) is built on the native Arabic root *q-l-d*, "to hang on the neck" (Lane). *Qilāda* is a thing hung on the neck.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

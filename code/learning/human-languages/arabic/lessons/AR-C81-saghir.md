@@ -14,7 +14,8 @@ romanization: "ṣaghīr"
 concept_tag: AR-ANIMALS81-SAGHIR
 prerequisites: [AR-C81-dajaja, AR-C81-kabir]
 sounds: []
-roots: []
+roots: [ṣ-gh-r]
+etymology_hook: "ṣaghīr: built on the root ṣ-gh-r, 'to be small' (Lane); ṣaghīr is the faʿīl adjective, 'small'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C81-kabir]
 <!-- hl-knowledge: introduces=[AR-LEX-C81-ANIMALS81-05]; assesses=[] -->
 
 **صغير** — *ṣaghīr* — "small".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صغير** (*ṣaghīr*) is built on the native Arabic root *ṣ-gh-r*, "to be small" (Lane). *Ṣaghīr* is the *faʿīl* adjective, "small".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

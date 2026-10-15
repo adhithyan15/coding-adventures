@@ -12,7 +12,7 @@ concept_tag: AR-SEASONS
 prerequisites: [AR-C11-yad]
 sounds: [ayn-sound, hamza-final, arabic-rtl]
 roots: [rabii-spring, sayf-summer, khariif-autumn, shitaa-winter]
-etymology_hook: "ربيع rabii' 'spring' is also the name of two Islamic calendar months (Rabi' al-Awwal, Rabi' al-Thani) — the season-word and the month-names share one root, a reminder that the lunar Islamic calendar and the solar seasons are two separate systems"
+etymology_hook: "rabīʿ, ṣayf, kharīf, shitāʾ: native nouns on r-b-ʿ, ṣ-y-f, kh-r-f, sh-t-w (Lane); rabīʿ once named autumn"
 duration:
   max_seconds: 240
 requires:
@@ -70,6 +70,11 @@ strict four-way split maps onto lived experience less cleanly than it does
 further north. The four words above are the standard Modern Standard Arabic
 vocabulary, useful and real, but not necessarily the only or most natural
 way every Arabic-speaking region actually experiences the year.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The four season names are native nouns on their roots (Lane): *rabīʿ* on *r-b-ʿ*, *ṣayf* on *ṣ-y-f*, *kharīf* on *kh-r-f*, "to gather fruit", and *shitāʾ* on *sh-t-w*. Lane notes that the desert Arabs once gave *rabīʿ* to the season of autumn rains.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C12-AL-FUSUL-01, AR-CONCEPT-C12-AL-FUSUL-02] -->

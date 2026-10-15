@@ -14,7 +14,8 @@ romanization: "ḥudūd"
 concept_tag: AR-MAKAN205-HUDUD
 prerequisites: [AR-C205-turab, AR-C205-tin]
 sounds: []
-roots: []
+roots: [ḥ-d-d]
+etymology_hook: "ḥudūd: built on the root ḥ-d-d, 'to sharpen' (Lane); ḥudūd is the plural of ḥadd, 'a limit, a boundary'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C205-tin]
 <!-- hl-knowledge: introduces=[AR-LEX-C205-MAKAN205-04]; assesses=[] -->
 
 **حدود** — *ḥudūd* — "borders".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حدود** (*ḥudūd*) is built on the native Arabic root *ḥ-d-d*, "to sharpen; a limit" (Lane). *Ḥudūd* is the plural of *ḥadd*, "a limit, a boundary".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

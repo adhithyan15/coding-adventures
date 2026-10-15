@@ -14,7 +14,8 @@ romanization: "daftar"
 concept_tag: AR-SCHOOL73-DAFTAR
 prerequisites: [AR-C72-hadiqa, AR-C73-kitab]
 sounds: []
-roots: []
+roots: [greek-diphthera]
+etymology_hook: "daftar: Persian, arabicized (Lane); usually traced to Greek diphthera 'prepared hide, parchment'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C73-kitab]
 <!-- hl-knowledge: introduces=[AR-LEX-C73-SCHOOL73-02]; assesses=[] -->
 
 **دفتر** — *daftar* — "a notebook".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دفتر** (*daftar*) came into Arabic from Persian. Lane calls it a Persian word, arabicized, and quotes Ibn Durayd calling its derivation unknown. The Persian word is usually traced to Greek *diphthera*, "prepared hide, parchment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

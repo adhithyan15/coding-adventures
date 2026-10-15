@@ -14,7 +14,8 @@ romanization: "ḥaṣada"
 concept_tag: AR-VERB-HASADA
 prerequisites: [AR-C199-nafakha, AR-C199-hamasa]
 sounds: []
-roots: []
+roots: [ḥ-ṣ-d]
+etymology_hook: "ḥaṣada: built on the root ḥ-ṣ-d, 'to reap' (Lane); ḥaṣada is the plain verb, 'he reaped'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C199-hamasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C199-ACT199-05]; assesses=[] -->
 
 **حصد** — *ḥaṣada* — "to harvest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حصد** (*ḥaṣada*) is built on the native Arabic root *ḥ-ṣ-d*, "to reap" (Lane). *Ḥaṣada* is the plain verb, "he reaped".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

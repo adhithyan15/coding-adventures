@@ -14,7 +14,8 @@ romanization: "ijtāza"
 concept_tag: AR-VERB-IJTAZA
 prerequisites: [AR-C255-fahasa, AR-C256-rasaba]
 sounds: []
-roots: []
+roots: [j-w-z]
+etymology_hook: "ijtāza: built on the root j-w-z, 'to pass, to be allowed' (Lane); ijtāza is Form VIII, 'to pass through'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C256-rasaba]
 <!-- hl-knowledge: introduces=[AR-LEX-C256-ACT256-02]; assesses=[] -->
 
 **اجتاز** — *ijtāza* — "to pass (an exam)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اجتاز** (*ijtāza*) is built on the native Arabic root *j-w-z*, "to pass, to be allowed" (Lane). *Ijtāza* is Form VIII, "to pass through".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

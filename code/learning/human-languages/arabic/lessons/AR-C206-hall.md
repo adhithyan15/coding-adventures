@@ -14,7 +14,8 @@ romanization: "ḥall"
 concept_tag: AR-SABAB206-HALL
 prerequisites: [AR-C206-rubbama, AR-C206-mushkila]
 sounds: []
-roots: []
+roots: [ḥ-l-l]
+etymology_hook: "ḥall: built on the root ḥ-l-l, 'to untie' (Lane); ḥall is 'untying', hence 'a solution'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C206-mushkila]
 <!-- hl-knowledge: introduces=[AR-LEX-C206-SABAB206-03]; assesses=[] -->
 
 **حل** — *ḥall* — "a solution".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حل** (*ḥall*) is built on the native Arabic root *ḥ-l-l*, "to untie; to alight" (Lane). *Ḥall* is "untying", hence "a solution".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

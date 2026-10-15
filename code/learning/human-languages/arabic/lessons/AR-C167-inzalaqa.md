@@ -14,7 +14,8 @@ romanization: "inzalaqa"
 concept_tag: AR-VERB-INZALAQA
 prerequisites: [AR-C166-khabbaa, AR-C167-taaththara]
 sounds: []
-roots: []
+roots: [z-l-q]
+etymology_hook: "inzalaqa: built on the root z-l-q, 'to slip' (Lane); inzalaqa is Form VII, 'to slip'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C167-taaththara]
 <!-- hl-knowledge: introduces=[AR-LEX-C167-ACT167-02]; assesses=[] -->
 
 **انزلق** — *inzalaqa* — "to slip".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انزلق** (*inzalaqa*) is built on the native Arabic root *z-l-q*, "to slip" (Lane). *Inzalaqa* is Form VII, "to slip".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

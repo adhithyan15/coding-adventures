@@ -14,7 +14,8 @@ romanization: "biṭāqa"
 concept_tag: AR-AMAL220-BITAQA
 prerequisites: [AR-C219-nuhas, AR-C219-harir]
 sounds: []
-roots: []
+roots: [greek-pittakion]
+etymology_hook: "biṭāqa: Lane, after Freytag, thinks it probably comes from Greek pittakion 'label'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C219-harir]
 <!-- hl-knowledge: introduces=[AR-LEX-C220-AMAL220-01]; assesses=[] -->
 
 **بطاقة** — *biṭāqa* — "a card".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بطاقة** (*biṭāqa*) is listed by Lane under *b-ṭ-q*. He reports a native explanation that his sources already rejected, and suggests, after Freytag, that it probably comes from Greek *pittakion*, "label, ticket".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

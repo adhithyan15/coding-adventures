@@ -14,7 +14,8 @@ romanization: "khayṭ"
 concept_tag: AR-THINGS124-KHAYT
 prerequisites: [AR-C124-miqass, AR-C124-ibra]
 sounds: []
-roots: []
+roots: [kh-y-ṭ]
+etymology_hook: "khayṭ: built on the root kh-y-ṭ, 'to sew' (Lane); khayṭ is a thread"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C124-ibra]
 <!-- hl-knowledge: introduces=[AR-LEX-C124-THINGS124-03]; assesses=[] -->
 
 **خيط** — *khayṭ* — "a thread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خيط** (*khayṭ*) is built on the native Arabic root *kh-y-ṭ*, "to sew" (Lane). *Khayṭ* is a thread.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shāriʿ"
 concept_tag: AR-PLACE90-SHARI
 prerequisites: [AR-C90-yamin, AR-C90-matjar]
 sounds: []
-roots: []
+roots: [sh-r-ʿ]
+etymology_hook: "shāriʿ: built on the root sh-r-ʿ, 'to enter upon, to open a way' (Lane); Lane's shāriʿ is an open road"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C90-matjar]
 <!-- hl-knowledge: introduces=[AR-LEX-C90-PLACE90-05]; assesses=[] -->
 
 **شارع** — *shāriʿ* — "a street".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شارع** (*shāriʿ*) is built on the native Arabic root *sh-r-ʿ*, "to enter upon, to open a way" (Lane). Lane's *shāriʿ* is an open road; the same root gives *sharīʿa*, "a path, a law".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

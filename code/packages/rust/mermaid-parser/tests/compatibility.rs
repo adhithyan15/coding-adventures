@@ -2846,6 +2846,27 @@ fn railroad_preserves_layout_spacing_config_for_every_notation() {
 }
 
 #[test]
+fn railroad_preserves_backend_neutral_style_config() {
+    let diagram = parse_railroad(
+        "---\nconfig:\n  railroad:\n    fontSize: 18\n    fontFamily: Courier New\n    terminalFill: '#dcfce7'\n    terminalStroke: '#166534'\n    terminalTextColor: '#14532d'\n    nonTerminalFill: '#dbeafe'\n    nonTerminalStroke: '#1d4ed8'\n    nonTerminalTextColor: '#172554'\n    lineColor: '#dc2626'\n    strokeWidth: 3\n    markerFill: '#7c2d12'\n    specialFill: '#fef3c7'\n    specialStroke: '#b45309'\n    ruleNameColor: '#581c87'\n    showMarkers: false\n    markerRadius: 8\n---\nrailroad-beta\nvalue = sequence(terminal(\"x\"), nonterminal(\"item\"), special(\"end\"));",
+    ).expect("Railroad style config should parse");
+    assert_eq!(diagram.config.font_size, 18.0);
+    assert_eq!(diagram.config.font_family, "Courier New");
+    assert_eq!(diagram.config.terminal_fill, "#dcfce7");
+    assert_eq!(diagram.config.non_terminal_stroke, "#1d4ed8");
+    assert_eq!(diagram.config.line_color, "#dc2626");
+    assert_eq!(diagram.config.stroke_width, 3.0);
+    assert_eq!(diagram.config.marker_fill, "#7c2d12");
+    assert_eq!(diagram.config.special_stroke, "#b45309");
+    assert_eq!(diagram.config.rule_name_color, "#581c87");
+    assert!(!diagram.config.show_markers);
+    assert_eq!(diagram.config.marker_radius, 8.0);
+    assert!(parse_railroad(
+        "%%{init: {\"railroad\": {\"showMarkers\": \"sometimes\"}}}%%\nrailroad-beta\nvalue = terminal(\"x\");",
+    ).is_err());
+}
+
+#[test]
 fn info_dispatches_to_dedicated_version_ir() {
     match parse_any_mermaid("info showInfo").expect("info should parse") {
         mermaid_parser::MermaidDiagram::Info(diagram) => assert_eq!(diagram.version, "11.16.1"),

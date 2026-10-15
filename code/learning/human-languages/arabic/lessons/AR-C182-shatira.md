@@ -14,7 +14,8 @@ romanization: "shaṭīra"
 concept_tag: AR-SHAY182-SHATIRA
 prerequisites: [AR-C181-raff, AR-C182-salsa]
 sounds: []
-roots: []
+roots: [sh-ṭ-r]
+etymology_hook: "shaṭīra: built on the root sh-ṭ-r, 'half' (Lane); shaṭīra is a modern word for a sandwich, 'the halved one'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C182-salsa]
 <!-- hl-knowledge: introduces=[AR-LEX-C182-SHAY182-02]; assesses=[] -->
 
 **شطيرة** — *shaṭīra* — "a sandwich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شطيرة** (*shaṭīra*) is built on the native Arabic root *sh-ṭ-r*, "half; to halve" (Lane). *Shaṭīra* is a modern word for a sandwich, "the halved one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jarrāḥ"
 concept_tag: AR-SIHHA232-JARRAH
 prerequisites: [AR-C232-duwar, AR-C232-marham]
 sounds: []
-roots: []
+roots: [j-r-ḥ]
+etymology_hook: "jarrāḥ: built on the root j-r-ḥ, 'to wound' (Lane); jarrāḥ is the faʿʿāl trade noun, 'one who treats wounds'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C232-marham]
 <!-- hl-knowledge: introduces=[AR-LEX-C232-SIHHA232-03]; assesses=[] -->
 
 **جراح** — *jarrāḥ* — "a surgeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جراح** (*jarrāḥ*) is built on the native Arabic root *j-r-ḥ*, "to wound" (Lane). *Jarrāḥ* is the *faʿʿāl* trade noun, "one who treats wounds".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hunā"
 concept_tag: AR-PLACE90-HUNA
 prerequisites: [AR-C89-amama, AR-C89-waraa]
 sounds: []
-roots: []
+roots: [huna-here]
+etymology_hook: "hunā: an old pointing word of place with no three-letter root; Hebrew hēnnā 'hither' is compared"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C89-waraa]
 <!-- hl-knowledge: introduces=[AR-LEX-C90-PLACE90-01]; assesses=[] -->
 
 **هنا** — *hunā* — "here".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هنا** (*hunā*) is an old Arabic pointing word of place. It is not built on a three-letter root; Hebrew *hēnnā*, "hither", is often compared.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

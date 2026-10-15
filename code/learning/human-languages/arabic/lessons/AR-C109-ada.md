@@ -14,7 +14,8 @@ romanization: "ʿāda"
 concept_tag: AR-CAN109-ADA
 prerequisites: [AR-C109-tharwa, AR-C109-khibra]
 sounds: []
-roots: []
+roots: [ʿ-w-d]
+etymology_hook: "ʿāda: built on the root ʿ-w-d, 'to return' (Lane); Lane gives ʿāda as a custom, what one returns to again and again"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C109-khibra]
 <!-- hl-knowledge: introduces=[AR-LEX-C109-CAN109-03]; assesses=[] -->
 
 **عادة** — *ʿāda* — "a habit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عادة** (*ʿāda*) is built on the native Arabic root *ʿ-w-d*, "to return" (Lane). Lane gives *ʿāda* as a custom, what one returns to again and again.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

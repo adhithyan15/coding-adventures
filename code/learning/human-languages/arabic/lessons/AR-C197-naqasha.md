@@ -14,7 +14,8 @@ romanization: "nāqasha"
 concept_tag: AR-VERB-NAQASHA
 prerequisites: [AR-C196-hannaa, AR-C196-wathiqa2]
 sounds: []
-roots: []
+roots: [n-q-sh]
+etymology_hook: "nāqasha: built on the root n-q-sh, 'to engrave' (Lane); nāqasha is Form III, 'to debate'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C196-wathiqa2]
 <!-- hl-knowledge: introduces=[AR-LEX-C197-ACT197-01]; assesses=[] -->
 
 **ناقش** — *nāqasha* — "to discuss".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناقش** (*nāqasha*) is built on the native Arabic root *n-q-sh*, "to engrave; to question closely" (Lane). *Nāqasha* is Form III, "to debate".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

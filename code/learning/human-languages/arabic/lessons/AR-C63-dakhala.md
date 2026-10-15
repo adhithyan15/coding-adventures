@@ -14,7 +14,8 @@ romanization: "dakhala"
 concept_tag: AR-VERB-DAKHALA
 prerequisites: [AR-C63-sabaha, AR-C63-sanaa]
 sounds: []
-roots: []
+roots: [d-kh-l]
+etymology_hook: "dakhala: built on the root d-kh-l, 'to enter' (Lane); dakhala is the plain verb, 'he entered'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C63-sanaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C63-VERBS63-05]; assesses=[] -->
 
 **دخل** — *dakhala* — "to enter (he entered)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دخل** (*dakhala*) is built on the native Arabic root *d-kh-l*, "to enter" (Lane). *Dakhala* is the plain verb, "he entered".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

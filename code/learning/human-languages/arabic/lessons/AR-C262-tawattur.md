@@ -14,7 +14,8 @@ romanization: "tawattur"
 concept_tag: AR-SIHHA262-TAWATTUR
 prerequisites: [AR-C262-dimada, AR-C262-hadith2]
 sounds: []
-roots: []
+roots: [w-t-r]
+etymology_hook: "tawattur: built on the root w-t-r, 'a bowstring' (Lane); tawattur is the verbal noun of Form V, 'being strung tight'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C262-hadith2]
 <!-- hl-knowledge: introduces=[AR-LEX-C262-SIHHA262-05]; assesses=[] -->
 
 **توتر** — *tawattur* — "stress, tension".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**توتر** (*tawattur*) is built on the native Arabic root *w-t-r*, "a bowstring; to be tense" (Lane). *Tawattur* is the verbal noun of Form V, "being strung tight".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

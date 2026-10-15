@@ -14,7 +14,8 @@ romanization: "khaṭīr"
 concept_tag: AR-QUAL146-KHATIR
 prerequisites: [AR-C145-mashhur, AR-C146-mufid]
 sounds: []
-roots: []
+roots: [kh-ṭ-r]
+etymology_hook: "khaṭīr: built on the root kh-ṭ-r, 'to be weighty' (Lane); khaṭīr is 'weighty, grave', hence 'dangerous'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C146-mufid]
 <!-- hl-knowledge: introduces=[AR-LEX-C146-QUAL146-02]; assesses=[] -->
 
 **خطير** — *khaṭīr* — "dangerous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خطير** (*khaṭīr*) is built on the native Arabic root *kh-ṭ-r*, "to be weighty; danger" (Lane). *Khaṭīr* is "weighty, grave", hence "dangerous".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

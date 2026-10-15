@@ -14,7 +14,8 @@ romanization: "istaqāla"
 concept_tag: AR-VERB-ISTAQALA
 prerequisites: [AR-C194-shamma, AR-C194-amsaka]
 sounds: []
-roots: []
+roots: [q-y-l]
+etymology_hook: "istaqāla: built on the root q-y-l, 'to cancel a bargain' (Lane); istaqāla is Form X, 'to ask to be released'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C194-amsaka]
 <!-- hl-knowledge: introduces=[AR-LEX-C195-ACT195-01]; assesses=[] -->
 
 **استقال** — *istaqāla* — "to resign".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استقال** (*istaqāla*) is built on the native Arabic root *q-y-l*, "to cancel a bargain" (Lane). *Istaqāla* is Form X, "to ask to be released".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

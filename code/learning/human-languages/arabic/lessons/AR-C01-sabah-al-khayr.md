@@ -12,6 +12,7 @@ concept_tag: GREETING-MORNING
 prerequisites: [AR-C01-al]
 sounds: [sad-emphatic, kha]
 roots: [ṣ-b-ḥ, kh-y-r]
+etymology_hook: "ṣabāḥ al-khayr: ṣabāḥ 'morning' (root ṣ-b-ḥ) + al-khayr 'the good' (root kh-y-r), native words (Lane)"
 reviews_of: [AR-C01-al, AR-C01-salam]
 duration:
   max_seconds: 246
@@ -60,6 +61,8 @@ With the rest known, read **صباح** (*ṣabāḥ*, "morning") and **خير** 
 become / reach morning"). **خير** (*khayr*, "good, goodness"), root **kh–y–r**.
 Together **صباح الخير** = "**morning of the goodness**." Note *al-khayr* keeps
 its *l* — **خ** is a *moon letter* — a clean contrast with *as-salām*.
+
+Both words are native Arabic, built on these roots (Lane).
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[AR-CULTURE-SABAH-REPLY-16]; assesses=[] -->

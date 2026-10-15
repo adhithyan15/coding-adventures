@@ -14,7 +14,8 @@ romanization: "maḥjūz"
 concept_tag: AR-SIFA270-MAHJUZ
 prerequisites: [AR-C269-miza, AR-C270-mumill]
 sounds: []
-roots: []
+roots: [ḥ-j-z]
+etymology_hook: "maḥjūz: built on the root ḥ-j-z, 'to separate, to hold back' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C270-mumill]
 <!-- hl-knowledge: introduces=[AR-LEX-C270-SIFA270-02]; assesses=[] -->
 
 **محجوز** — *maḥjūz* — "booked, reserved".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محجوز** (*maḥjūz*) is built on the native Arabic root *ḥ-j-z*, "to separate, to hold back" (Lane). *Maḥjūz* is the passive participle, "held back", hence "reserved".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ʿamm"
 concept_tag: AR-FAMILY55-AMM
 prerequisites: [AR-C54-jadd, AR-C55-jadda]
 sounds: []
-roots: []
+roots: [ʿ-m-m]
+etymology_hook: "ʿamm: an old noun for the father's brother, listed by Lane under ʿ-m-m, 'to be general'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C55-jadda]
 <!-- hl-knowledge: introduces=[AR-LEX-C55-FAMILY55-02]; assesses=[] -->
 
 **عم** — *ʿamm* — "an uncle (father's brother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عم** (*ʿamm*), the father's brother, is an old native noun, filed under the root *ʿ-m-m* (Lane), "to be general, to include all".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

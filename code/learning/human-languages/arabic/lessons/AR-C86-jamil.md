@@ -14,7 +14,8 @@ romanization: "jamīl"
 concept_tag: AR-ADJ86-JAMIL
 prerequisites: [AR-C85-khata, AR-C85-muhimm]
 sounds: []
-roots: []
+roots: [j-m-l]
+etymology_hook: "jamīl: built on the root j-m-l, 'to be beautiful' (Lane); jamīl is the faʿīl adjective, 'beautiful'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C85-muhimm]
 <!-- hl-knowledge: introduces=[AR-LEX-C86-ADJ86-01]; assesses=[] -->
 
 **جميل** — *jamīl* — "beautiful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جميل** (*jamīl*) is built on the native Arabic root *j-m-l*, "to be beautiful" (Lane). *Jamīl* is the *faʿīl* adjective, "beautiful".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

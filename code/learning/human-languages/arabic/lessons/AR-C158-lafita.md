@@ -14,7 +14,8 @@ romanization: "lāfita"
 concept_tag: AR-QIRAA158-LAFITA
 prerequisites: [AR-C157-nawa, AR-C158-jadwal]
 sounds: []
-roots: []
+roots: [l-f-t]
+etymology_hook: "lāfita: built on the root l-f-t, 'to turn (the face)' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [AR-C158-jadwal]
 
 The sign says **مغلق يوم الجمعة** — *mughlaq yawm al-jumʿa* — "Closed on
 Friday." Come on another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لافتة** (*lāfita*) is built on the native Arabic root *l-f-t*, "to turn (the face)" (Lane). *Lāfita* is the feminine active participle, "one that turns (the eye)"; the placard is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

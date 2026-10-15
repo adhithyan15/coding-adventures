@@ -12,6 +12,7 @@ concept_tag: PRONOUN-YOU
 prerequisites: [AR-C02-ism]
 sounds: [alif-hamza, taa]
 roots: []
+etymology_hook: "anta, anti: the old Semitic 'you', keeping the n that Hebrew ʾattā assimilated; -a and -i mark gender"
 duration:
   max_seconds: 240
 requires:

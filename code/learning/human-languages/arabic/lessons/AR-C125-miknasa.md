@@ -14,7 +14,8 @@ romanization: "miknasa"
 concept_tag: AR-THINGS125-MIKNASA
 prerequisites: [AR-C124-mismar, AR-C125-dalw]
 sounds: []
-roots: []
+roots: [k-n-s]
+etymology_hook: "miknasa: built on the root k-n-s, 'to sweep' (Lane); miknasa is an instrument noun, 'a thing for sweeping'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C125-dalw]
 <!-- hl-knowledge: introduces=[AR-LEX-C125-THINGS125-02]; assesses=[] -->
 
 **مكنسة** — *miknasa* — "a broom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مكنسة** (*miknasa*) is built on the native Arabic root *k-n-s*, "to sweep" (Lane). *Miknasa* is an instrument noun, "a thing for sweeping".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

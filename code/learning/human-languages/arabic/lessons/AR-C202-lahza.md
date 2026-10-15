@@ -14,7 +14,8 @@ romanization: "laḥẓa"
 concept_tag: AR-WAQT202-LAHZA
 prerequisites: [AR-C202-lahiqan, AR-C202-tarikh]
 sounds: []
-roots: []
+roots: [l-ḥ-ẓ]
+etymology_hook: "laḥẓa: built on the root l-ḥ-ẓ, 'to look with the corner of the eye' (Lane); laḥẓa is one glance, a moment"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C202-tarikh]
 <!-- hl-knowledge: introduces=[AR-LEX-C202-WAQT202-05]; assesses=[] -->
 
 **لحظة** — *laḥẓa* — "a moment".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لحظة** (*laḥẓa*) is built on the native Arabic root *l-ḥ-ẓ*, "to look with the corner of the eye" (Lane). *Laḥẓa* is one glance, a moment.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

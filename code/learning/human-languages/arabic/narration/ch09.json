@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Four Core Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5e0cbf97013d8736",
+  "sourceHash": "fnv1a64:0505b21ca68ca755",
   "lessons": [
     {
       "id": "AR-C09-aswad-abyad",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30146b53158b2242",
+      "sourceHash": "fnv1a64:bd826b2d1c04ca77",
       "notice": null,
       "blocks": [
         {
@@ -60,6 +60,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أسود (aswad) and أبيض (abyaḍ) are colour words in the afʿal shape on native roots: aswad on s-w-d, \"black\", and abyaḍ on b-y-ḍ, \"white\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,7 +110,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -130,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b744fcdd1b1cf0a",
+      "sourceHash": "fnv1a64:2389ef1e7a8f403f",
       "notice": null,
       "blocks": [
         {
@@ -171,6 +182,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أحمر (aḥmar) and أزرق (azraq) are colour words in the afʿal shape on native roots: aḥmar on ḥ-m-r, \"red\", and azraq on z-r-q, \"blue, blue-grey\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -210,7 +232,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "ghāba"
 concept_tag: AR-NATURE76-GHABA
 prerequisites: [AR-C75-zahra, AR-C75-jabal]
 sounds: []
-roots: []
+roots: [gh-y-b]
+etymology_hook: "ghāba: built on the root gh-y-b, 'to be absent, to be hidden' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C75-jabal]
 <!-- hl-knowledge: introduces=[AR-LEX-C76-NATURE76-01]; assesses=[] -->
 
 **غابة** — *ghāba* — "a forest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غابة** (*ghāba*) is built on the native Arabic root *gh-y-b*, "to be absent, to be hidden" (Lane). Lane gives *ghāba* as a bed of reeds, a thicket or wood.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

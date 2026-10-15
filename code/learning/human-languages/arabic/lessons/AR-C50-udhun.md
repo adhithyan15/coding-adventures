@@ -14,7 +14,8 @@ romanization: "udhun"
 concept_tag: AR-BODY50-UDHUN
 prerequisites: [AR-C40-hinama, AR-C50-ayn]
 sounds: []
-roots: []
+roots: [ʾ-dh-n]
+etymology_hook: "udhun: built on the root ʾ-dh-n, 'the ear' (Lane); the call to prayer, adhān, is built on the same root"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C50-ayn]
 <!-- hl-knowledge: introduces=[AR-LEX-C50-BODY50-02]; assesses=[] -->
 
 **أذن** — *udhun* — "an ear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أذن** (*udhun*) is built on the native Arabic root *ʾ-dh-n*, "the ear; to listen" (Lane). The call to prayer, *adhān*, is built on the same root; Hebrew *ʾozen*, "ear", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

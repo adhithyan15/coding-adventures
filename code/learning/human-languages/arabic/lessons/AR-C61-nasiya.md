@@ -14,7 +14,8 @@ romanization: "nasiya"
 concept_tag: AR-VERB-NASIYA
 prerequisites: [AR-C60-raqasa, AR-C61-taallama]
 sounds: []
-roots: []
+roots: [n-s-y]
+etymology_hook: "nasiya: built on the root n-s-y, 'to forget' (Lane); nasiya is the plain verb, 'he forgot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C61-taallama]
 <!-- hl-knowledge: introduces=[AR-LEX-C61-VERBS61-02]; assesses=[] -->
 
 **نسي** — *nasiya* — "to forget (he forgot)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نسي** (*nasiya*) is built on the native Arabic root *n-s-y*, "to forget" (Lane). *Nasiya* is the plain verb, "he forgot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

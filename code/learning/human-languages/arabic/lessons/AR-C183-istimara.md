@@ -14,7 +14,8 @@ romanization: "istimāra"
 concept_tag: AR-SHAY183-ISTIMARA
 prerequisites: [AR-C183-tard, AR-C183-shik]
 sounds: []
-roots: []
+roots: [istimara-form]
+etymology_hook: "istimāra: a modern administrative word for a form; not in Lane; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C183-shik]
 <!-- hl-knowledge: introduces=[AR-LEX-C183-SHAY183-04]; assesses=[] -->
 
 **استمارة** — *istimāra* — "a form (to fill in)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استمارة** (*istimāra*) is a modern administrative word for a form; it has no entry in Lane, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 218,
-  "sourceHash": "fnv1a64:0d237cfe5e8038b7",
+  "sourceHash": "fnv1a64:371f67f4bf401297",
   "lessonIds": [
     "AR-C218-mitraqa",
     "AR-C218-mawdu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch218.txt",
   "json": "arabic/narration/ch218.json",
-  "textHash": "fnv1a64:f0e9bc7af10730c8",
-  "jsonHash": "fnv1a64:6c00d87d34a0b1d7",
+  "textHash": "fnv1a64:e6bd3bec4d2e0011",
+  "jsonHash": "fnv1a64:d593d66239bb9478",
   "findings": []
 }

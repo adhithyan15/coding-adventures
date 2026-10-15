@@ -14,7 +14,8 @@ romanization: "saḥāba"
 concept_tag: AR-NATURE77-SAHABA
 prerequisites: [AR-C76-haql, AR-C77-najm]
 sounds: []
-roots: []
+roots: [s-ḥ-b]
+etymology_hook: "saḥāba: built on the root s-ḥ-b, 'to drag, to draw along' (Lane); saḥāba is one cloud of saḥāb, 'clouds'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C77-najm]
 <!-- hl-knowledge: introduces=[AR-LEX-C77-NATURE77-02]; assesses=[] -->
 
 **سحابة** — *saḥāba* — "a cloud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سحابة** (*saḥāba*) is built on the native Arabic root *s-ḥ-b*, "to drag, to draw along" (Lane). *Saḥāba* is one cloud of *saḥāb*, "clouds".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

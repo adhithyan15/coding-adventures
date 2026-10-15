@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 259,
-  "sourceHash": "fnv1a64:abb6689420900ef8",
+  "sourceHash": "fnv1a64:d79b6932f37f97eb",
   "lessonIds": [
     "AR-C259-nashara",
     "AR-C259-baththa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch259.txt",
   "json": "arabic/narration/ch259.json",
-  "textHash": "fnv1a64:4ec6a0b2981fafab",
-  "jsonHash": "fnv1a64:a26f2bc25484c49e",
+  "textHash": "fnv1a64:0ed1e89f7ab40547",
+  "jsonHash": "fnv1a64:6128d22b5600cb5f",
   "findings": []
 }

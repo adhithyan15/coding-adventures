@@ -14,7 +14,8 @@ romanization: "ṭāra"
 concept_tag: AR-VERB-TARA
 prerequisites: [AR-C62-taraka, AR-C63-rama]
 sounds: []
-roots: []
+roots: [ṭ-y-r]
+etymology_hook: "ṭāra: built on the root ṭ-y-r, 'to fly' (Lane); the same root gives ṭāʾir, 'a bird', and maṭār, 'an airport'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C63-rama]
 <!-- hl-knowledge: introduces=[AR-LEX-C63-VERBS63-02]; assesses=[] -->
 
 **طار** — *ṭāra* — "to fly (he flew)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طار** (*ṭāra*) is built on the native Arabic root *ṭ-y-r*, "to fly" (Lane). The same root gives *ṭāʾir*, "a bird", and *maṭār*, "an airport".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

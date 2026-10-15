@@ -14,7 +14,8 @@ romanization: "ṭamāṭim"
 concept_tag: AR-FOOD67-TAMATIM
 prerequisites: [AR-C66-mawz, AR-C66-batatis]
 sounds: []
-roots: []
+roots: [spanish-tomate]
+etymology_hook: "ṭamāṭim: modern loan from a European tomato word such as Spanish tomate, from Nahuatl tomatl"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C66-batatis]
 <!-- hl-knowledge: introduces=[AR-LEX-C67-FOOD67-01]; assesses=[] -->
 
 **طماطم** — *ṭamāṭim* — "tomatoes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طماطم** (*ṭamāṭim*) is a modern loan from a European name of the tomato, such as Spanish *tomate*, which goes back to Nahuatl *tomatl*. It has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

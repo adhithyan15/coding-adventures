@@ -14,7 +14,8 @@ romanization: "ʿaḍḍa"
 concept_tag: AR-VERB-ADDA
 prerequisites: [AR-C198-hafara, AR-C199-hazza]
 sounds: []
-roots: []
+roots: [ʿ-ḍ-ḍ]
+etymology_hook: "ʿaḍḍa: built on the root ʿ-ḍ-ḍ, 'to bite' (Lane); ʿaḍḍa is the plain verb, 'he bit'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C199-hazza]
 <!-- hl-knowledge: introduces=[AR-LEX-C199-ACT199-02]; assesses=[] -->
 
 **عض** — *ʿaḍḍa* — "to bite".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عض** (*ʿaḍḍa*) is built on the native Arabic root *ʿ-ḍ-ḍ*, "to bite" (Lane). *ʿAḍḍa* is the plain verb, "he bit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

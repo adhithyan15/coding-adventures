@@ -14,7 +14,8 @@ romanization: "bāb"
 concept_tag: AR-HOME72-BAB
 prerequisites: [AR-C72-shawka, AR-C72-zujaja]
 sounds: []
-roots: []
+roots: [b-w-b]
+etymology_hook: "bāb: built on the root b-w-b, 'a door, a gate' (Lane); Aramaic bābā and Akkadian bābu, 'gate', are related forms"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C72-zujaja]
 <!-- hl-knowledge: introduces=[AR-LEX-C72-HOME72-03]; assesses=[] -->
 
 **باب** — *bāb* — "a door".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**باب** (*bāb*) is built on the native Arabic root *b-w-b*, "a door, a gate" (Lane). Aramaic *bābā* and Akkadian *bābu*, "gate", are related forms.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

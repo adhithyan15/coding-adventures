@@ -14,7 +14,8 @@ romanization: "mutāḥ"
 concept_tag: AR-SIFA270-MUTAH
 prerequisites: [AR-C270-mumill, AR-C270-mahjuz]
 sounds: []
-roots: []
+roots: [t-y-ḥ]
+etymology_hook: "mutāḥ: built on the root t-y-ḥ, 'to be destined' (Lane); mutāḥ is the Form IV passive participle, 'made available'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C270-mahjuz]
 <!-- hl-knowledge: introduces=[AR-LEX-C270-SIFA270-03]; assesses=[] -->
 
 **متاح** — *mutāḥ* — "available".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**متاح** (*mutāḥ*) is built on the native Arabic root *t-y-ḥ*, "to be destined" (Lane). *Mutāḥ* is the Form IV passive participle, "made available".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

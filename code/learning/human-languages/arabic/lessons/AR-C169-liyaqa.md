@@ -14,7 +14,8 @@ romanization: "liyāqa"
 concept_tag: AR-SIHHA169-LIYAQA
 prerequisites: [AR-C169-mizaj, AR-C169-tamrin]
 sounds: []
-roots: []
+roots: [l-y-q]
+etymology_hook: "liyāqa: built on the root l-y-q, 'to befit, to suit' (Lane); liyāqa is fitness"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C169-tamrin]
 <!-- hl-knowledge: introduces=[AR-LEX-C169-SIHHA169-03]; assesses=[] -->
 
 **لياقة** — *liyāqa* — "fitness".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لياقة** (*liyāqa*) is built on the native Arabic root *l-y-q*, "to befit, to suit" (Lane). *Liyāqa* is fitness.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

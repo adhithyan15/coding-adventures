@@ -14,7 +14,8 @@ romanization: "faṣl"
 concept_tag: AR-WAQT264-FASL
 prerequisites: [AR-C263-ibham, AR-C263-adala]
 sounds: []
-roots: []
+roots: [f-ṣ-l]
+etymology_hook: "faṣl: built on the root f-ṣ-l, 'to separate' (Lane); faṣl is a division: a season, a chapter"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C263-adala]
 <!-- hl-knowledge: introduces=[AR-LEX-C264-WAQT264-01]; assesses=[] -->
 
 **فصل** — *faṣl* — "a season".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فصل** (*faṣl*) is built on the native Arabic root *f-ṣ-l*, "to separate" (Lane). *Faṣl* is a division: a season, a chapter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

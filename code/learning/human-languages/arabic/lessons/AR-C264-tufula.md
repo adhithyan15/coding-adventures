@@ -14,7 +14,8 @@ romanization: "ṭufūla"
 concept_tag: AR-WAQT264-TUFULA
 prerequisites: [AR-C263-adala, AR-C264-fasl]
 sounds: []
-roots: []
+roots: [ṭ-f-l]
+etymology_hook: "ṭufūla: built on the root ṭ-f-l, 'a child, an infant' (Lane); ṭufūla is the state of a child"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C264-fasl]
 <!-- hl-knowledge: introduces=[AR-LEX-C264-WAQT264-02]; assesses=[] -->
 
 **طفولة** — *ṭufūla* — "childhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طفولة** (*ṭufūla*) is built on the native Arabic root *ṭ-f-l*, "a child, an infant" (Lane). *Ṭufūla* is the state of a child.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "fam"
 concept_tag: AR-BODY50-FAM
 prerequisites: [AR-C50-udhun, AR-C50-anf]
 sounds: []
-roots: []
+roots: [f-w-h]
+etymology_hook: "fam: built on the root f-w-h, 'the mouth' (Lane); Lane gives fam as the short form of fūh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C50-anf]
 <!-- hl-knowledge: introduces=[AR-LEX-C50-BODY50-04]; assesses=[] -->
 
 **فم** — *fam* — "a mouth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فم** (*fam*) is built on the native Arabic root *f-w-h*, "the mouth" (Lane). Lane gives *fam* as the short form of *fūh*; Hebrew *pe*, "mouth", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tadhakkara"
 concept_tag: AR-VERB-TADHAKKARA
 prerequisites: [AR-C164-mazaha, AR-C164-itaqada]
 sounds: []
-roots: []
+roots: [dh-k-r]
+etymology_hook: "tadhakkara: built on the root dh-k-r, 'to remember' (Lane); tadhakkara is Form V, 'to call to mind'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C164-itaqada]
 <!-- hl-knowledge: introduces=[AR-LEX-C164-ACT164-05]; assesses=[] -->
 
 **تذكر** — *tadhakkara* — "to remember".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تذكر** (*tadhakkara*) is built on the native Arabic root *dh-k-r*, "to remember" (Lane). *Tadhakkara* is Form V, "to call to mind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

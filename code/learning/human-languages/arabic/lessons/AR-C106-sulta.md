@@ -14,7 +14,8 @@ romanization: "sulṭa"
 concept_tag: AR-CAN106-SULTA
 prerequisites: [AR-C105-inda, AR-C106-imkaniyya, AR-C01-masa-al-khayr]
 sounds: []
-roots: []
+roots: [s-l-ṭ]
+etymology_hook: "sulṭa: built on the root s-l-ṭ, 'to have mastery' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C106-imkaniyya]
 <!-- hl-knowledge: introduces=[AR-LEX-C106-CAN106-02]; assesses=[] -->
 
 **سلطة** — *sulṭa* — "authority".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سلطة** (*sulṭa*) is built on the native Arabic root *s-l-ṭ*, "to have mastery" (Lane). The same root gives *sulṭān*, "power, ruler", the source of English *sultan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

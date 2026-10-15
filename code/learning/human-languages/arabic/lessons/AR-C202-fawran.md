@@ -14,7 +14,8 @@ romanization: "fawran"
 concept_tag: AR-WAQT202-FAWRAN
 prerequisites: [AR-C201-maghas, AR-C202-ghaliban]
 sounds: []
-roots: []
+roots: [f-w-r]
+etymology_hook: "fawran: built on the root f-w-r, 'to boil, to gush' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C202-ghaliban]
 <!-- hl-knowledge: introduces=[AR-LEX-C202-WAQT202-02]; assesses=[] -->
 
 **فورا** — *fawran* — "immediately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فورا** (*fawran*) is built on the native Arabic root *f-w-r*, "to boil, to gush" (Lane). *Fawran* is *fawr*, "the first moment of boiling", with the adverb ending *-an*: "at once".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

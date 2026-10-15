@@ -14,7 +14,8 @@ romanization: "maʿkarūna"
 concept_tag: AR-SHAY273-MAKARUNA
 prerequisites: [AR-C273-shukulata, AR-C273-halwa]
 sounds: []
-roots: []
+roots: [italian-maccheroni]
+etymology_hook: "maʿkarūna: a modern loan from Italian maccheroni"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C273-halwa]
 <!-- hl-knowledge: introduces=[AR-LEX-C273-SHAY273-03]; assesses=[] -->
 
 **معكرونة** — *maʿkarūna* — "pasta".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**معكرونة** (*maʿkarūna*) is a modern loan from Italian *maccheroni*; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "mudhish"
 concept_tag: AR-SIFA272-MUDHISH
 prerequisites: [AR-C271-wardi, AR-C271-banafsaji]
 sounds: []
-roots: []
+roots: [d-h-sh]
+etymology_hook: "mudhish: built on the root d-h-sh, 'to be astonished' (Lane); mudhish is the Form IV participle, 'astonishing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C271-banafsaji]
 <!-- hl-knowledge: introduces=[AR-LEX-C272-SIFA272-01]; assesses=[] -->
 
 **مدهش** — *mudhish* — "amazing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مدهش** (*mudhish*) is built on the native Arabic root *d-h-sh*, "to be astonished" (Lane). *Mudhish* is the Form IV participle, "astonishing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

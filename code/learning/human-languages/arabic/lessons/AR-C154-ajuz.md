@@ -14,7 +14,8 @@ romanization: "ʿajūz"
 concept_tag: AR-QUAL154-AJUZ
 prerequisites: [AR-C154-mali, AR-C154-shabb]
 sounds: []
-roots: []
+roots: [ʿ-j-z]
+etymology_hook: "ʿajūz: built on the root ʿ-j-z, 'to be weak, to be unable' (Lane); Lane's ʿajūz is an old woman, one grown weak"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C154-shabb]
 <!-- hl-knowledge: introduces=[AR-LEX-C154-QUAL154-03]; assesses=[] -->
 
 **عجوز** — *ʿajūz* — "old (of a person)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عجوز** (*ʿajūz*) is built on the native Arabic root *ʿ-j-z*, "to be weak, to be unable" (Lane). Lane's *ʿajūz* is an old woman, one grown weak; it now says "old" of any person.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
