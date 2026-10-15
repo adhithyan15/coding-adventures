@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Thinking, Reading, Writing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3bf377687c9bd77d",
+  "sourceHash": "fnv1a64:e4bcd82a0c20a032",
   "lessons": [
     {
       "id": "LA-C38-cogito",
@@ -12,14 +12,14 @@
       "title": "cōgitō — thinking as driving things together",
       "headword": "cōgitō, cōgitāre",
       "romanization": "cōgitō, cōgitāre",
-      "gloss": "I think\" — the verb of cōgitō ergō sum, built from a word meaning \"to shake together",
+      "gloss": "\"I think\" — the verb of cōgitō ergō sum, built from a word meaning \"to shake together\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58c09d900e83da9e",
+      "sourceHash": "fnv1a64:0615b6c26cf887a2",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "But, Twice Over",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:75119a1b01abd155",
+  "sourceHash": "fnv1a64:39f477c698348f39",
   "lessons": [
     {
       "id": "RU-C17-no",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02372ceb1973346f",
+      "sourceHash": "fnv1a64:e8fd84d492daa665",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55bc7cf3337323f5",
+      "sourceHash": "fnv1a64:187fecaff1041d5b",
       "notice": null,
       "blocks": [
         {

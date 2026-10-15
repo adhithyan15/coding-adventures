@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 28,
-  "sourceHash": "fnv1a64:43f0fd1ccb495a7c",
+  "sourceHash": "fnv1a64:e588637e449a66f4",
   "lessonIds": [
     "AR-C28-dhahaba",
     "AR-C28-jaa"
@@ -11,6 +11,6 @@
   "text": "arabic/narration/ch28.txt",
   "json": "arabic/narration/ch28.json",
   "textHash": "fnv1a64:2b8be6701f57fd53",
-  "jsonHash": "fnv1a64:87a54790620bfd06",
+  "jsonHash": "fnv1a64:65ea04eb496d3008",
   "findings": []
 }
