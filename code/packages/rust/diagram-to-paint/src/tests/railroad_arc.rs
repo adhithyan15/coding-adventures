@@ -28,6 +28,7 @@ fn railroad_arc_emits_exact_portable_commands_styles_order_and_metadata() {
             stroke_dash:loopback.then(||vec![4.0,3.0]),stroke_dash_offset:None};
         assert_eq!(scene.instructions[0],PaintInstruction::Path(expected));
         assert_eq!(scene.metadata,Some(HashMap::from([
+            ("railroad.compactMode".into(),"false".into()),
             ("railroad.padding".into(),"10".into()),("railroad.verticalSeparation".into(),"8".into()),
             ("railroad.horizontalSeparation".into(),"10".into()),("railroad.arcRadius".into(),radius.to_string()),
             ("railroad.fontSize".into(),"14".into()),("railroad.fontFamily".into(),"monospace".into()),

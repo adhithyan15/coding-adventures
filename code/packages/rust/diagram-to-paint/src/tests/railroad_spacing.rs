@@ -61,6 +61,7 @@ fn railroad_source_dialects_keep_complete_ordered_glyphs_and_config_metadata() {
         let options=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
         let scene=diagram_to_paint_railroad(&layout,&options);assert_eq!(layout,original);
         assert_eq!(scene.metadata,Some(HashMap::from([
+            ("railroad.compactMode".into(),"false".into()),
             ("railroad.padding".into(),padding.to_string()),("railroad.verticalSeparation".into(),"8".into()),
             ("railroad.horizontalSeparation".into(),"10".into()),
             ("railroad.arcRadius".into(),"10".into()),
