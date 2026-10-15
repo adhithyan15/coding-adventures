@@ -1912,12 +1912,20 @@ pub struct WardleyLink { pub source: String, pub target: String }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyEvolution { pub component: String, pub target: f64 }
 #[derive(Clone, Debug, PartialEq)]
+pub struct WardleyTheme { pub background_color: String, pub axis_color: String, pub axis_text_color: String,
+    pub grid_color: String, pub component_fill: String, pub component_stroke: String,
+    pub component_label_color: String, pub link_stroke: String, pub evolution_stroke: String }
+impl Default for WardleyTheme { fn default() -> Self { Self { background_color: "#ffffff".into(), axis_color: "#000000".into(),
+    axis_text_color: "#222222".into(), grid_color: "rgba(100, 100, 100, 0.2)".into(), component_fill: "#ffffff".into(),
+    component_stroke: "#000000".into(), component_label_color: "#222222".into(), link_stroke: "#000000".into(),
+    evolution_stroke: "#dc3545".into() } } }
+#[derive(Clone, Debug, PartialEq)]
 pub struct WardleyConfig { pub width: f64, pub height: f64, pub padding: f64, pub node_radius: f64,
     pub node_label_offset: f64, pub axis_font_size: f64, pub label_font_size: f64,
-    pub show_grid: bool, pub use_max_width: bool }
+    pub show_grid: bool, pub use_max_width: bool, pub theme: WardleyTheme }
 impl Default for WardleyConfig { fn default() -> Self { Self { width: 900.0, height: 600.0, padding: 48.0,
     node_radius: 6.0, node_label_offset: 8.0, axis_font_size: 12.0, label_font_size: 10.0,
-    show_grid: false, use_max_width: true } } }
+    show_grid: false, use_max_width: true, theme: WardleyTheme::default() } } }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyDiagram { pub title: Option<String>, pub config: WardleyConfig, pub stages: Vec<String>,
     pub nodes: Vec<WardleyNode>, pub links: Vec<WardleyLink>, pub evolves: Vec<WardleyEvolution> }
