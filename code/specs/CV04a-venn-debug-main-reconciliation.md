@@ -17,13 +17,22 @@ even when typed config is false; retain that behavior without a second flag gate
 Seed R1 at native10 source `f94949663ffe49794f85402d5580e8cf6b246c81`.
 Its actual focused 36/compiler 881/incoming runtime 1/owned runtime 11 passed;
 636 runtime cells equal 576 exact older tuples plus 60 new tuples. Independent
-source/focused security `5c9af2bd` passed. Full six-package validation is still
-RUNNING in R2 against frozen f949/ordering target; strict exited 0 but the
-unfiltered suite has no terminal acceptance yet. Do not mutate R2 HEAD, source,
-index or target, start another Cargo consumer there, or relabel focused evidence
-as full-suite acceptance. Native10 documentation/terminal/carrier review and
-same-PR delivery remain required. Merge its eventual documentation carrier into
-this branch with a complete named-path proof before debug implementation.
+source/focused security `5c9af2bd` passed. Full six-package validation completed:
+actual 1,814 passed/zero failed/one unchanged ignore over78 targets, strict0,
+compiler881 and unfiltered LANG498. Terminal review446f5f4f and exact six-MD
+carrier review09887cec passed. Candidate8d73f88f is Git/API verified published on
+sole PR17288, autoOFF/unmerged, required hosted checks pending. R2 stays at that
+published carrier with its native receipts. R1 merged its six documentation
+files by closed proof f2369243: five incomingMD exact and newer owned published
+backlog retained, all225,523 entries exact. This branch remains code-identical
+to published8d except three named Markdown files before debug import.
+
+Fresh mainbe0384cc includes the audited e0debug/a7defaults changes plus308
+human-language paths:306 curriculum/generated files and two TS test/changelog
+paths. These do not modify compiler/native/style/CI/build-tool or reused checker
+implementation inputs. Preserve them exactly as pure incoming entries; no
+curriculum correctness or test acceptance is inferred. Re-audit the actual
+remote again before import; this snapshot is not a permanent active head.
 
 Use idle R1 and its separate railroad-integration target. Preserve its prior
 palette receipts by exact inputs only: source `55afa2b5`, actual 932/41 + strict,
