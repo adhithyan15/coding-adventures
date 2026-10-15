@@ -7725,7 +7725,6 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
             }),
         }
     };
-    let string = |name: &str, default: &str| value(name).unwrap_or_else(|| default.to_string());
     let theme_string = |primary: &str, secondary: Option<&str>, default: &str| {
         theme_value(primary)
             .or_else(|| secondary.and_then(theme_value))
@@ -7741,28 +7740,75 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
             message: "Mermaid Railroad fontSize must be a positive number".into(), line: 1, col: 1,
         });
     }
+    let theme_font_family = sanitize_railroad_font_family(
+        Some(&theme_string("fontFamily", None, &defaults.font_family)), &defaults.font_family);
+    let theme_terminal_fill = sanitize_railroad_color(
+        Some(&theme_string("secondBkg", Some("secondaryColor"), &defaults.terminal_fill)), &defaults.terminal_fill);
+    let theme_terminal_stroke = sanitize_railroad_color(
+        Some(&theme_string("secondaryBorderColor", Some("lineColor"), &defaults.terminal_stroke)), &defaults.terminal_stroke);
+    let theme_terminal_text = sanitize_railroad_color(
+        Some(&theme_string("secondaryTextColor", Some("textColor"), &defaults.terminal_text_color)), &defaults.terminal_text_color);
+    let theme_non_terminal_fill = sanitize_railroad_color(
+        Some(&theme_string("mainBkg", Some("background"), &defaults.non_terminal_fill)), &defaults.non_terminal_fill);
+    let theme_non_terminal_stroke = sanitize_railroad_color(
+        Some(&theme_string("primaryBorderColor", Some("lineColor"), &defaults.non_terminal_stroke)), &defaults.non_terminal_stroke);
+    let theme_non_terminal_text = sanitize_railroad_color(
+        Some(&theme_string("primaryTextColor", Some("textColor"), &defaults.non_terminal_text_color)), &defaults.non_terminal_text_color);
+    let theme_line = sanitize_railroad_color(
+        Some(&theme_string("lineColor", None, &defaults.line_color)), &defaults.line_color);
+    let theme_special_fill = sanitize_railroad_color(
+        Some(&theme_string("tertiaryColor", Some("secondaryColor"), &defaults.special_fill)), &defaults.special_fill);
+    let theme_special_stroke = sanitize_railroad_color(
+        Some(&theme_string("tertiaryBorderColor", Some("secondaryBorderColor"), &defaults.special_stroke)), &defaults.special_stroke);
+    let theme_rule_name = sanitize_railroad_color(
+        Some(&theme_string("titleColor", Some("textColor"), &defaults.rule_name_color)), &defaults.rule_name_color);
     Ok(RailroadConfig {
         padding: parse("padding", 10.0)?,
         vertical_separation: parse("verticalSeparation", 8.0)?,
         horizontal_separation: parse("horizontalSeparation", 10.0)?,
         arc_radius: parse("arcRadius", defaults.arc_radius)?,
         font_size,
-        font_family: string("fontFamily", &theme_string("fontFamily", None, &defaults.font_family)),
-        terminal_fill: string("terminalFill", &theme_string("secondBkg", Some("secondaryColor"), &defaults.terminal_fill)),
-        terminal_stroke: string("terminalStroke", &theme_string("secondaryBorderColor", Some("lineColor"), &defaults.terminal_stroke)),
-        terminal_text_color: string("terminalTextColor", &theme_string("secondaryTextColor", Some("textColor"), &defaults.terminal_text_color)),
-        non_terminal_fill: string("nonTerminalFill", &theme_string("mainBkg", Some("background"), &defaults.non_terminal_fill)),
-        non_terminal_stroke: string("nonTerminalStroke", &theme_string("primaryBorderColor", Some("lineColor"), &defaults.non_terminal_stroke)),
-        non_terminal_text_color: string("nonTerminalTextColor", &theme_string("primaryTextColor", Some("textColor"), &defaults.non_terminal_text_color)),
-        line_color: string("lineColor", &theme_string("lineColor", None, &defaults.line_color)),
+        font_family: sanitize_railroad_font_family(value("fontFamily").as_deref(), &theme_font_family),
+        terminal_fill: sanitize_railroad_color(value("terminalFill").as_deref(), &theme_terminal_fill),
+        terminal_stroke: sanitize_railroad_color(value("terminalStroke").as_deref(), &theme_terminal_stroke),
+        terminal_text_color: sanitize_railroad_color(value("terminalTextColor").as_deref(), &theme_terminal_text),
+        non_terminal_fill: sanitize_railroad_color(value("nonTerminalFill").as_deref(), &theme_non_terminal_fill),
+        non_terminal_stroke: sanitize_railroad_color(value("nonTerminalStroke").as_deref(), &theme_non_terminal_stroke),
+        non_terminal_text_color: sanitize_railroad_color(value("nonTerminalTextColor").as_deref(), &theme_non_terminal_text),
+        line_color: sanitize_railroad_color(value("lineColor").as_deref(), &theme_line),
         stroke_width: parse("strokeWidth", defaults.stroke_width)?,
-        marker_fill: string("markerFill", &theme_string("lineColor", None, &defaults.marker_fill)),
-        special_fill: string("specialFill", &theme_string("tertiaryColor", Some("secondaryColor"), &defaults.special_fill)),
-        special_stroke: string("specialStroke", &theme_string("tertiaryBorderColor", Some("secondaryBorderColor"), &defaults.special_stroke)),
-        rule_name_color: string("ruleNameColor", &theme_string("titleColor", Some("textColor"), &defaults.rule_name_color)),
+        marker_fill: sanitize_railroad_color(value("markerFill").as_deref(), &theme_line),
+        special_fill: sanitize_railroad_color(value("specialFill").as_deref(), &theme_special_fill),
+        special_stroke: sanitize_railroad_color(value("specialStroke").as_deref(), &theme_special_stroke),
+        rule_name_color: sanitize_railroad_color(value("ruleNameColor").as_deref(), &theme_rule_name),
         show_markers: parse_bool("showMarkers", defaults.show_markers)?,
         marker_radius: parse("markerRadius", defaults.marker_radius)?,
     })
+}
+
+fn sanitize_railroad_color(value: Option<&str>, fallback: &str) -> String {
+    let Some(value) = value.map(str::trim) else { return fallback.to_string(); };
+    let hex = value.strip_prefix('#').is_some_and(|digits| {
+        matches!(digits.len(), 3 | 4 | 6 | 8) && digits.chars().all(|character| character.is_ascii_hexdigit())
+    });
+    let named = !value.is_empty() && value.chars().all(|character| character.is_ascii_alphabetic());
+    let lowercase = value.to_ascii_lowercase();
+    let function = ["rgb", "rgba", "hsl", "hsla", "hwb", "lab", "lch", "oklab", "oklch"]
+        .iter().any(|name| lowercase.strip_prefix(name).and_then(|inner| inner.strip_prefix('('))
+            .and_then(|inner| inner.strip_suffix(')')).is_some_and(|inner| !inner.is_empty()
+                && inner.chars().all(|character| character.is_ascii_digit()
+                    || character.is_ascii_whitespace() || "%+,./-".contains(character))));
+    if hex || named || function { value.to_string() } else { fallback.to_string() }
+}
+
+fn sanitize_railroad_font_family(value: Option<&str>, fallback: &str) -> String {
+    let Some(value) = value.map(str::trim) else { return fallback.to_string(); };
+    if !value.is_empty() && value.chars().all(|character| character.is_ascii_alphanumeric()
+        || character == '_' || " \"',.-".contains(character)) {
+        value.to_string()
+    } else {
+        fallback.to_string()
+    }
 }
 
 fn parse_railroad_ebnf_prepared(source: &str) -> Result<RailroadDiagram, ParseError> {
