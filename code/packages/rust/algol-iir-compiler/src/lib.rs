@@ -13468,6 +13468,7 @@ mod tests {
     mod eight_unit_offset;
     mod nine_unit_offset;
     mod ten_unit_offset;
+    mod eleven_unit_offset;
     use super::*;
 
     fn run_i64(source: &str) -> i64 {
