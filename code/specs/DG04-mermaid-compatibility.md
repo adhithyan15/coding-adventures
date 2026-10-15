@@ -776,10 +776,10 @@ and glyph runs, with native Metal-to-PNG validation. Non-negative `diagramPaddin
 and boolean `useMaxWidth` values from Mermaid init directives or YAML front matter
 survive causal IR and layout. Root `fontFamily`, `lineColor`, `mainBkg`, and
 `textColor` theme variables also flow through typed configuration into
-backend-neutral Paint instructions and metadata. Exact upstream sizing behavior,
-remaining configuration parity, adaptive collision avoidance for very wide or deeply
-nested trees, and interactive behavior remain unsupported at the partial
-level.
+backend-neutral Paint instructions and metadata. Cause labels lower as bounded,
+width-aware theme boxes, and deeply nested trees expand the canvas vertically before
+Paint lowering. Exact upstream sizing and collision behavior, remaining
+configuration parity, and interactive behavior remain unsupported at the partial level.
 
 ### Wardley Native Slice
 

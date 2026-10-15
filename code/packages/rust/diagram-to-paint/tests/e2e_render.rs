@@ -4590,6 +4590,8 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef")
                 && rect.stroke.as_deref() == Some("#123456"))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef"))).count(), diagram.causes.len() + 1);
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.useMaxWidth")), Some(&"true".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontFamily")), Some(&"Georgia".to_string()));
         let pixels = render(&scene);

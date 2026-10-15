@@ -2411,8 +2411,14 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         instructions.push(PaintInstruction::Path(line_path(
             &[bone.from.clone(), bone.to.clone()], &stroke, if bone.depth == 1 { 2.5 } else { 1.5 },
         )));
-        text_children.push(text_node(&bone.label, bone.label_position.x - 55.0, bone.label_position.y - 10.0,
-            110.0, 24.0, label_font.clone(), text_color));
+        let label_x = bone.label_position.x - bone.label_width / 2.0;
+        let label_y = bone.label_position.y - bone.label_height / 2.0;
+        instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: label_x, y: label_y,
+            width: bone.label_width, height: bone.label_height, fill: Some(diagram.config.fill_color.clone()),
+            stroke: Some(stroke.clone()), stroke_width: Some(1.0), corner_radius: Some(4.0),
+            stroke_dash: None, stroke_dash_offset: None }));
+        text_children.push(text_node(&bone.label, label_x + 6.0, label_y + 2.0,
+            bone.label_width - 12.0, bone.label_height - 4.0, label_font.clone(), text_color));
     }
     instructions.push(PaintInstruction::Rect(PaintRect {
         base: PaintBase::default(), x: diagram.effect_x, y: diagram.effect_y, width: diagram.effect_width,
@@ -13373,7 +13379,7 @@ emphasized --> direct
             spine_from: Point { x: 30.0, y: 180.0 }, spine_to: Point { x: 430.0, y: 180.0 },
             bones: vec![diagram_ir::LayoutedIshikawaBone { from: Point { x: 100.0, y: 80.0 },
                 to: Point { x: 180.0, y: 180.0 }, label: "People".into(),
-                label_position: Point { x: 100.0, y: 68.0 }, depth: 1 }], };
+                label_position: Point { x: 100.0, y: 68.0 }, label_width: 80.0, label_height: 28.0, depth: 1 }], };
         let scene = diagram_to_paint_ishikawa(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
@@ -13381,6 +13387,8 @@ emphasized --> direct
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef")
                 && rect.stroke.as_deref() == Some("#123456"))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef"))).count(), 2);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(101, 67, 33)"))));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontFamily")), Some(&"Georgia".to_string()));
