@@ -28,6 +28,10 @@ class MacosHaskellToolchainTests(unittest.TestCase):
             xdg.parent.mkdir(parents=True)
             xdg.write_text("", encoding="utf-8")
             self.assertEqual(xdg, toolchain.locate_config({}, home))
+            custom = home / "xdg/cabal/config"
+            self.assertEqual(legacy / "config", toolchain.locate_config({"XDG_CONFIG_HOME": str(home / "xdg")}, home))
+            custom.parent.mkdir(parents=True)
+            custom.write_text("", encoding="utf-8")
             for env, expected in [({"CABAL_CONFIG": str(home / "explicit")}, home / "explicit"),
                                   ({"CABAL_DIR": str(home / "dir")}, home / "dir/config"),
                                   ({"XDG_CONFIG_HOME": str(home / "xdg")}, home / "xdg/cabal/config")]:
@@ -72,7 +76,7 @@ class MacosHaskellToolchainTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     toolchain.phase_options(path, SDK)
 
-    def run_mock_bootstrap(self, failed_stage=None, wrong_output=False):
+    def run_mock_bootstrap(self, failed_stage=None, wrong_output=False, wrong_stage=None):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         root = Path(temporary.name)
@@ -99,6 +103,8 @@ class MacosHaskellToolchainTests(unittest.TestCase):
                 result = "42"
             else:
                 result = ""
+            if stage == wrong_stage:
+                result = "unexpected"
             return subprocess.CompletedProcess(command, 0, result + "\n", "")
         env = {"CABAL_CONFIG": str(config), "PATH": "/tools", "UNCHANGED": "retained"}
         with mock.patch.object(toolchain.shutil, "which", side_effect=lambda name, **_: "/tools/" + name):
@@ -135,6 +141,11 @@ class MacosHaskellToolchainTests(unittest.TestCase):
         _, github_env, receipt, _ = self.run_mock_bootstrap(wrong_output=True)
         self.assertIsNone(receipt)
         self.assertEqual("EXISTING=retained\n", github_env.read_text(encoding="utf-8"))
+        for stage in [5, 6, 9, 11, 13]:
+            with self.subTest(wrong_output_stage=stage):
+                _, github_env, receipt, _ = self.run_mock_bootstrap(wrong_stage=stage)
+                self.assertIsNone(receipt)
+                self.assertEqual("EXISTING=retained\n", github_env.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
