@@ -3,6 +3,21 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a pathwise pending checkpoint -->
+Publication of reviewed compact carrier0b5886c6 stopped BEFORE PUSH when main
+advanced to0bb3f690 (#17553). Sole PR17288 still publishes0d316837; auto-merge OFF.
+Specac12f1ac precedes complete-tree mergedc1822c61:446 incoming paths,
+441 pure incoming,5 reconstructed overlaps,224928 retained objects. All shared
+production proof bytes remain owned; only the dedicated canonical outer-entier
+budget advances5 to6 (range[-7,7]). Raw integrated baseline864P2F and incoming
+runtime0P1F are preserved. Tests-first8f9f736b reproduces focused21P3F,
+library865P4F, incoming0P1F and owned runtime6P1F. Preserve56 old sources/336 cells;
+ten new six-unit runtime sources and all boundary/rounding/alias/resource
+controls require genuine execution. Focused/full native suites, strict lint,
+docs/checker/lessons/current plan and independent final-head security remain
+PENDING. Earlier native1789/78 and style894/38 remain source-specific accepted
+receipts. Miri DEFERRED/PENDING, never passed; frozen run untouched/unpolled.
+Full Closure parity/lineage/CV04b remain OPEN; heartbeat ACTIVE.
+
 LOCAL/UNPUBLISHED compact source8163246c integrates current relevant main1e5622e0
 (#17552) and unrelated Sanskrit40208c11 (#17550). Sole PR17288 still publishes
 0d316837; auto-merge OFF. No hosted acceptance transfers between source heads.
