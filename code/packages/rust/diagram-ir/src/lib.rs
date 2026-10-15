@@ -2102,7 +2102,7 @@ pub struct LayoutedRailroadElement { pub kind: RailroadElementKind, pub label: S
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedRailroadPath { pub points: Vec<Point>, pub loopback: bool }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedRailroadRule { pub name: String, pub y: f64, pub height: f64, pub elements: Vec<LayoutedRailroadElement>, pub paths: Vec<LayoutedRailroadPath> }
+pub struct LayoutedRailroadRule { pub name: String, pub y: f64, pub height: f64, pub start_marker: Point, pub end_marker: Point, pub elements: Vec<LayoutedRailroadElement>, pub paths: Vec<LayoutedRailroadPath> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedRailroadDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub config: RailroadConfig, pub rules: Vec<LayoutedRailroadRule> }
 

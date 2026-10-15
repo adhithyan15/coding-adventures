@@ -4408,10 +4408,18 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Ellipse(marker) if marker.fill.as_deref() == Some("#7c2d12") && marker.rx == 8.0)));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(marker) if marker.cx == layout.rules[0].start_marker.x
+                && marker.cy == layout.rules[0].start_marker.y)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(marker) if marker.cx == layout.rules[2].end_marker.x
+                && marker.cy == layout.rules[2].end_marker.y)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dcfce7") && rect.stroke.as_deref() == Some("#166534"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::GlyphRun(run) if run.font_size == 18.0
                 && run.fill.as_deref() == Some("rgb(20, 83, 45)"))));
+        assert!(layout.rules[2].elements.iter().any(|element|
+            element.kind == diagram_ir::RailroadElementKind::Special && element.label == "? integer ?"));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_railroad_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
