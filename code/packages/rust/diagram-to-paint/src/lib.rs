@@ -13120,6 +13120,8 @@ emphasized --> direct
         }
     }
 
+    include!("venn_palette_contract_tests.rs");
+
     #[test]
     fn venn_theme_source_to_complete_scene_and_ordered_font_queries() {
         use std::cell::RefCell;
