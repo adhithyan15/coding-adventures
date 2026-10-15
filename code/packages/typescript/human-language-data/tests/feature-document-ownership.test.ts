@@ -179,9 +179,23 @@ describe("Human Language Data feature-document ownership", () => {
       expect(() => discoverOwners(root)).toThrow(/must be a regular file/);
       rmSync(resolve(root, "nested.md"), { recursive: true });
 
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a symbolic-link child", (ctx) => {
+    const root = mkdtempSync(resolve(tmpdir(), "human-language-feature-linked-child-"));
+    try {
       const target = resolve(root, "target");
       writeFileSync(target, "# Target\n");
-      symlinkSync(target, resolve(root, "linked.md"));
+      try {
+        symlinkSync(target, resolve(root, "linked.md"), "file");
+      } catch (error) {
+        if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+        ctx.skip();
+        return;
+      }
       expect(() => discoverOwners(root)).toThrow(/must not be a symbolic link/);
     } finally {
       rmSync(root, { recursive: true, force: true });
@@ -195,7 +209,7 @@ describe("Human Language Data feature-document ownership", () => {
       mkdirSync(target);
       writeFileSync(resolve(target, "source.md"), "# Source\n");
       const linkedRoot = resolve(parent, "linked-root");
-      symlinkSync(target, linkedRoot);
+      symlinkSync(target, linkedRoot, process.platform === "win32" ? "junction" : "dir");
       expect(() => discoverOwners(linkedRoot)).toThrow(
         /owner directory must not be a symbolic link/,
       );

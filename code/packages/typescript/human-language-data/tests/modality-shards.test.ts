@@ -221,18 +221,11 @@ describe("modality direct owners", () => {
     expect(() => readOwners(root)).toThrow(/canonical/i);
   });
 
-  it("rejects nesting, symlinks, non-regular owners, and reserved names", () => {
+  it("rejects nesting, non-regular owners, and reserved names", () => {
     const nested = temporaryRoot();
     writeOwners(nested);
     mkdirSync(owner(nested, "spanish", "nested"));
     expect(() => readOwners(nested)).toThrow(/direct|nested|unexpected|regular/i);
-
-    const linked = temporaryRoot();
-    writeOwners(linked);
-    const linkedOwner = owner(linked, "spanish", "ES-C01-hola.json");
-    rmSync(linkedOwner);
-    symlinkSync(owner(linked, "spanish", "ES-C01-adios.json"), linkedOwner);
-    expect(() => readOwners(linked)).toThrow(/symbolic link|regular|direct/i);
 
     const nonregular = temporaryRoot();
     writeOwners(nonregular);
@@ -245,6 +238,21 @@ describe("modality direct owners", () => {
     writeOwners(reserved);
     writeFileSync(owner(reserved, "spanish", "con.json"), "{}\n", "utf8");
     expect(() => readOwners(reserved)).toThrow(/reserved|unexpected|unsafe|extra/i);
+  });
+
+  it("rejects a symlinked modality owner", (ctx) => {
+    const linked = temporaryRoot();
+    writeOwners(linked);
+    const linkedOwner = owner(linked, "spanish", "ES-C01-hola.json");
+    rmSync(linkedOwner);
+    try {
+      symlinkSync(owner(linked, "spanish", "ES-C01-adios.json"), linkedOwner, "file");
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+      ctx.skip();
+      return;
+    }
+    expect(() => readOwners(linked)).toThrow(/symbolic link|regular|direct/i);
   });
 
   it("rejects case-fold collisions and dangerous identities", () => {

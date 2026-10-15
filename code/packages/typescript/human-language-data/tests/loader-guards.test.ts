@@ -201,7 +201,8 @@ describe("the three guards the bare reads had been skipping", () => {
     const link = join(root, "data", "scripts", "latin.json");
     try {
       symlinkSync(secret, link, "file");
-    } catch {
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
       ctx.skip();
       return;
     }
@@ -402,8 +403,9 @@ describe("a track that cannot be loaded must not simply not exist", () => {
     mkdirSync(join(elsewhere, "lessons"), { recursive: true });
     writeFileSync(join(elsewhere, "lessons", "01-x.md"), "# x\n", "utf8");
     try {
-      symlinkSync(elsewhere, join(root, "spanish"), "dir");
-    } catch {
+      symlinkSync(elsewhere, join(root, "spanish"), process.platform === "win32" ? "junction" : "dir");
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
       ctx.skip();
       return;
     }

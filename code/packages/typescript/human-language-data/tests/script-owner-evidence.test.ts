@@ -136,22 +136,31 @@ describe("per-owner script inventory evidence", () => {
   });
 
   it.skipIf(process.platform !== "linux")(
-    "rejects case-fold collisions and symlinked evidence without opening targets",
+    "rejects case-fold collisions without opening targets",
     () => {
       withFixture((root) => {
         cpSync(evidence(root), join(root, "data", "script-owner-evidence", "japanese", "letters", "u-3042.json"));
         expect(() => checkScriptOwnerEvidence(root, { language: "japanese", script: "japanese" }))
           .toThrow(/case-fold collision/);
       });
-      withFixture((root) => {
-        const target = join(root, "outside.json");
-        cpSync(evidence(root), target);
-        symlinkSync(target, join(root, "data", "script-owner-evidence", "japanese", "letters", "U-20000.json"));
-        expect(() => checkScriptOwnerEvidence(root, { language: "japanese", script: "japanese" }))
-          .toThrow(/real direct-child regular file/);
-      });
     },
   );
+
+  it("rejects symlinked evidence without opening targets", (ctx) => {
+    withFixture((root) => {
+      const target = join(root, "outside.json");
+      cpSync(evidence(root), target);
+      try {
+        symlinkSync(target, join(root, "data", "script-owner-evidence", "japanese", "letters", "U-20000.json"), "file");
+      } catch (error) {
+        if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+        ctx.skip();
+        return;
+      }
+      expect(() => checkScriptOwnerEvidence(root, { language: "japanese", script: "japanese" }))
+        .toThrow(/real direct-child regular file/);
+    });
+  });
 
   it("gives two same-script additions disjoint evidence paths", () => {
     expect(scriptOwnerEvidenceRelativePath("tamil", "letter", "ஶ"))

@@ -227,6 +227,9 @@ platform. Windows uses a directory junction when native symlink privilege is
 unavailable; Linux CI still exercises the real file-symlink case. The test
 asserts that each fixture is actually a link before checking the loader's
 refusal, so a missing link capability cannot silently turn this guard green.
+Other package link-rejection fixtures likewise use junctions for directory
+links on Windows. File-link checks are separate: they run when Windows grants
+that capability and remain mandatory on Linux CI.
 
 Exact script-inventory evidence is partitioned by ownership under
 `tests/script-inventories/`. A stable glob in `tests/integration.test.ts`
