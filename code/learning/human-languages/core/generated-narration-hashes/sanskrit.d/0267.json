@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:8b10a8add5d29007",
+  "lessonIds": [
+    "SA-C267-school-recall",
+    "SA-C267-exam-time",
+    "SA-C267-homework-plan",
+    "SA-C267-complete-school-plan",
+    "SA-C267-mixed-school-practice",
+    "SA-C267-school-plan-retrieval"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch267.txt",
+  "json": "sanskrit/narration/ch267.json",
+  "textHash": "fnv1a64:9d11875349e8224b",
+  "jsonHash": "fnv1a64:aa99e4aabc8c8e4e",
+  "findings": []
+}
