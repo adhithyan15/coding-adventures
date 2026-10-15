@@ -28,9 +28,25 @@ pub fn layout_venn(diagram: &VennDiagram) -> LayoutedVennDiagram {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum VennLayoutError { Width, Height, Padding, DerivedGeometry }
 
-/// Checked entry point for caller-owned IR. Validation is added after red controls.
+/// Checked entry point for caller-owned IR. Check scalars before even the empty
+/// diagram path: finite inputs alone can still overflow later reductions.
 pub fn try_layout_venn(diagram: &VennDiagram) -> Result<LayoutedVennDiagram, VennLayoutError> {
-    Ok(layout_venn_supported(diagram))
+    let supported = |v: f64, zero: bool| v.is_finite() && if zero {
+        (0.0..=diagram_ir::MAX_VENN_CANVAS).contains(&v)
+    } else { v > 0.0 && v <= diagram_ir::MAX_VENN_CANVAS };
+    if !supported(diagram.config.width, false) { return Err(VennLayoutError::Width); }
+    if !supported(diagram.config.height, false) { return Err(VennLayoutError::Height); }
+    if !supported(diagram.config.padding, true) { return Err(VennLayoutError::Padding); }
+    let layout = layout_venn_supported(diagram);
+    // Caller-owned region sizes can produce NaN radii even after config passes.
+    // Keep the original placement arithmetic and refuse any invalid result.
+    let non_negative = |v: f64| v.is_finite() && v >= 0.0;
+    if !non_negative(layout.width) || !non_negative(layout.height)
+        || layout.circles.iter().any(|c| !c.cx.is_finite() || !c.cy.is_finite() || !non_negative(c.radius))
+        || layout.labels.iter().any(|l| !l.x.is_finite() || !l.y.is_finite()) {
+        return Err(VennLayoutError::DerivedGeometry);
+    }
+    Ok(layout)
 }
 
 fn layout_venn_supported(diagram: &VennDiagram) -> LayoutedVennDiagram {

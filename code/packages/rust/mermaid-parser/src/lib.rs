@@ -5480,20 +5480,82 @@ pub fn parse_venn(source: &str) -> Result<VennDiagram, ParseError> {
     Ok(diagram)
 }
 
+// The shared directive reader predates Venn and searches whole source text.
+// Venn admits only closed single-line init objects: quoted names and style
+// values in the semantic body must never become canvas configuration.
+fn venn_object_end(source: &str) -> Option<usize> {
+    if !source.starts_with('{') { return None; }
+    let (mut depth, mut quote, mut escaped) = (0usize, None, false);
+    for (index, c) in source.char_indices() {
+        if let Some(active) = quote {
+            if escaped { escaped = false; }
+            else if c == '\\' { escaped = true; }
+            else if c == active { quote = None; }
+        } else { match c {
+            '\'' | '"' => quote = Some(c),
+            '{' => depth += 1,
+            '}' => { depth -= 1; if depth == 0 { return Some(index); } },
+            _ => (),
+        }}
+    }
+    None
+}
+
+// Return the value after an actual quoted member key, skipping entire quoted
+// strings (including escapes) instead of searching inside their contents.
+fn venn_object_member<'a>(source: &'a str, key: &str) -> Option<&'a str> {
+    let bytes = source.as_bytes(); let mut i = 0;
+    while i < bytes.len() {
+        let q = bytes[i];
+        if q != b'\'' && q != b'"' { i += 1; continue; }
+        let start = i; i += 1; let content = i;
+        while i < bytes.len() && bytes[i] != q {
+            if bytes[i] == b'\\' { i += 1; }
+            i += 1;
+        }
+        if i >= bytes.len() { return None; }
+        let is_key = source[content..i] == *key
+            && source[..start].trim_end().ends_with(['{', ',']);
+        i += 1;
+        if is_key {
+            if let Some(value) = source[i..].trim_start().strip_prefix(':') { return Some(value.trim_start()); }
+        }
+    }
+    None
+}
+
+fn venn_init_config(source: &str) -> Option<&str> {
+    source.lines().find_map(|line| {
+        let directive = line.trim().strip_prefix("%%{")?.strip_suffix("}%%")?.trim();
+        let payload = directive.strip_prefix("init")?.trim_start().strip_prefix(':')?.trim();
+        let end = venn_object_end(payload)?;
+        if !payload[end + 1..].trim().is_empty() { return None; }
+        let value = venn_object_member(payload, "venn")?;
+        let end = venn_object_end(value)?;
+        Some(&value[1..end])
+    })
+}
+
 fn parse_venn_config(source: &str) -> VennConfig {
     let defaults = VennConfig::default();
     let front_matter = mermaid_front_matter_section(source, &["config", "venn"]);
-    let config = mermaid_directive_object(source, "venn").or(front_matter.as_deref()).unwrap_or("");
+    let config = venn_init_config(source).or(front_matter.as_deref()).unwrap_or("");
     let value = |name: &str| {
-        quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+        // Add a synthetic opening brace because selected config is its interior.
+        let object = format!("{{{config}}}");
+        venn_object_member(&object, name).and_then(|value| {
+            if let Some(q) = value.chars().next().filter(|c| *c == '\'' || *c == '"') {
+                value[1..].find(q).map(|end| value[1..end + 1].to_string())
+            } else { Some(value.split([',', '}', ' ', '\n', '\r']).next()?.trim().to_string()) }
+        }).or_else(|| config.lines().find_map(|line| {
             let (key, value) = line.trim().split_once(':')?;
             (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
         }))
     };
     let positive = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
-        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+        .filter(|value| value.is_finite() && *value > 0.0 && *value <= diagram_ir::MAX_VENN_CANVAS).unwrap_or(fallback);
     let non_negative = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
-        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+        .filter(|value| value.is_finite() && (0.0..=diagram_ir::MAX_VENN_CANVAS).contains(value)).unwrap_or(fallback);
     let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
         "true" => Some(true), "false" => Some(false), _ => None,
     }).unwrap_or(fallback);
