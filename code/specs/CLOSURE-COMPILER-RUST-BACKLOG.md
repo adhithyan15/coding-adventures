@@ -3,32 +3,36 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a Venn config integration checkpoint -->
-October15 LOCAL/UNPUBLISHED: native9 source cdca2e1154a59dfdfe534c6f0891f299a453c09f
-passed full six-package strict lint and actual1809P0F1existingignored/78targets
-(logSHA9c9d75867e6350060bd952085de8e4ad95f0f2f6374e721bb42ce5d64e7dea45).
-Focused compiler878/incoming1/owned10 and576 actual runtime cells passed;
-independent source/focused and terminal review PASS (c45bd727). Native8 and
-Venn theme prior terminal/carrier PASS remain scoped to their reviewed inputs.
-Windows Unix-only tcp-reactor BUILD_windows selection repair7e725952 passed
-local Go discovery/plan/vet/build and independent review; hosted retry PENDING.
-Mac SDK/toolchain helper edeb5c88 local10controls/Ruff/parser/docs/lessons/diff
-passed; independent edeb review WITHHELD on Cabal effective compiler identity.
-Successor319dc1fe pins raw top-level with-compiler and refuses competing compiler,
-flavor and package-tool selectors. Spec/test-first7+7+1+1 refusal witnesses are
-retained; local11controls/Ruff/parser/docs/lessons/diff PASS. Actual Cabal3.16
-ignored ghc-location-only and treated quoted top-level paths literally; both
-failures retained. Raw-path local missing-compiler refusal1, selected installed
-compiler build0/run0 exact42 passed. Independent successor review PASSa0e1cf4b;
-do not infer macOS3.10 acceptance from Windows controls. R1 currentHEAD ad12c32d5026043ac82f64e8e1d2413c01efe16b.
-Actual macOS GHC9.4.8/Cabal3.10 link/run and hosted checks remain PENDING.
-Latest remote main da0db47ecd52a0c1ecb1f22a3ac6c56ef6700759; re-audit all current shared/Closure PR overlap before
-integration. Sole implementation PR17288 still published d4004fe5, conflicting,
-autoOFF. R1 CI changes and R2 native9 require a combined exact-input carrier,
-fresh unforced plan/docs/security and all required terminal hosted checks.
-No push/merge/cleanup or hosted acceptance claimed.
+October15 LOCAL/UNPUBLISHED combined carrier 8d550dd045051017f08a8a735004f1f82f976b2a.
+Specad12c32d precedes the complete independently reconstructed merge of R1 CI
+and R2 native9/docs04474103:225502paths,224988same/18left-only/496right-only,
+no double changes. Combined helper11controls/Ruff/docs/lessons/diff actualPASS;
+complete Rust tree differs from testedcdca only seven explicitly named files
+(sixMD plus Unix-only tcp-reactor BUILD_windows). No new Cargo execution or
+ignored-lock acceptance claimed. Combined independent review: bounded source/document/control PASS9b48a9f8; hosted/current-main acceptance still PENDING.
+Native sourcecdca2e11 actual1809P0F1existingignored/78+strict0, compiler878,
+LANG496;96sources/576actualcells retain516oldexact. Source19eb92d9 and terminal
+c45bd727 PASS. Native docs04474103 fiveMD/documentchecker/lessons/diff PASS.
+Windows7e725952 local Go/discovery/plan/vet/build and review848edc05 PASS;
+this is explicit Unix-only build selection, not Windows reactor support.
+Mac319dc1fe elevencontrols/Ruff/parser/docs/lessons/diff and independent
+source/control reviewa0e1cf4b PASS. Effective raw with-compiler pin and competing
+compiler/flavor/package-tool refusals close prior edeb WITHHELD findings.
+Real local Cabal3.16 missingselectedcompiler refused1; installed selectedGHC
+build0/run0 exact42. Retain failed ghc-location-only and quoted-path probes.
+Actual macOS3.10 compile/link/run and all required hosted acceptance PENDING.
+Latest remote main da0db47ecd52a0c1ecb1f22a3ac6c56ef6700759: Venn palette17572 merged; open ALGOLten17574 and
+Venndebug17575 require fresh exacthead audit before import. Next bounded slice
+is palette reconciliation preserving scopedparser/whole-scene oracles, eight
+color cycle/metadata, authoredfills, emptytypedpalette and invalid/decoy fallbacks.
+Incoming palette independent review ACTIVE with security_selector_review.
+SolePR17288 still publishes d4004fe5, CONFLICTING, autoOFF; publishedMacWindows
+failed, CIgatepending. Current-main integration/unforcedplan/finalcarrier/hosted
+checks/actualmerge reachability remain OPEN; no push/merge/cleanup or CIwaiver.
 Miri DEFERRED/PENDING, never passed; frozen checkout/process/inputs/target/receipts
-untouched/unpolled, no duplicate/termination. Deliver first, then genuine final-source
-Miri. Full parity/output-byte-source/transformation lineage/objectiveOPEN; heartbeatACTIVE.
+untouched/unpolled, no duplicate/termination. Deliver first then genuinefinalsource
+Miri. Full Closure parity/output-byte-source/fulltransformation lineage/objective
+OPEN; heartbeatACTIVE. BaseESTree/ownedtypes/no new crates.io dependencies.
 <!-- /CV04a Venn config integration checkpoint -->
 
 <!-- CV04a pathwise pending checkpoint -->
