@@ -12,7 +12,7 @@ concept_tag: MR-BODY-EYE
 prerequisites: [MR-C11-bahin]
 sounds: [retroflex-la]
 roots: [sanskrit-dola-swing]
-etymology_hook: "डोळा continues Maharastri Prakrit ḍola, \"eye,\" from Sanskrit दोल dola, \"a swing, swinging\" — NOT from the old Indo-Aryan eye-word akṣi/akṣa (PIE *h₃ekʷ-, cousin of Latin oculus and English eye) that Hindi's आँख continues; Marathi replaced that inherited word with a completely different one"
+etymology_hook: "डोळा ← Prakrit ḍola ← Sanskrit dola 'a swing'; not the old eye-word akṣi that Hindi आँख continues"
 duration:
   max_seconds: 280
 requires:

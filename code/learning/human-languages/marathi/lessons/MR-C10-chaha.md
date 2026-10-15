@@ -12,7 +12,7 @@ concept_tag: MR-FOOD-TEA
 prerequisites: [MR-C10-paani]
 sounds: []
 roots: [chinese-cha, overland-route]
-etymology_hook: "चहा is a loanword from Mandarin cha, reaching Marathi (like Hindi's chai, Bengali's cha, and Persian's chay) by the overland route through Persian and Turkic trade, the same word that reached Western Europe by sea through Hokkien te and became English tea — two words, one Chinese plant"
+etymology_hook: "चहा is a loan from Mandarin cha, reaching Marathi overland through Persian; English tea came by sea"
 duration:
   max_seconds: 250
 requires:

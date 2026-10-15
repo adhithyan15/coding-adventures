@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 14,
-  "sourceHash": "fnv1a64:10ed439d2b67fb7a",
+  "sourceHash": "fnv1a64:6219bf7d4977e139",
   "lessonIds": [
     "MR-C07-asne",
     "MR-C07-jane",
@@ -15,6 +15,6 @@
   "text": "marathi/narration/ch14.txt",
   "json": "marathi/narration/ch14.json",
   "textHash": "fnv1a64:20b703ff16022ca0",
-  "jsonHash": "fnv1a64:e4e474ad8144d091",
+  "jsonHash": "fnv1a64:ec05ce5823f15baf",
   "findings": []
 }

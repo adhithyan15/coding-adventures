@@ -11,7 +11,7 @@ gloss: my name is ...
 concept_tag: INTRO-MY-NAME-IS
 prerequisites: [UR-C01-nahin]
 sounds: [rtl, long-vowels, hai-diphthong]
-roots: [indo-aryan-main, indo-european-name]
+roots: [ma-first-person, indo-european-name]
 etymology_hook: "nām goes back to Sanskrit nāman 'name', kin to English name; CDIAL lists merā under the base ma- (9691)"
 duration:
   max_seconds: 240

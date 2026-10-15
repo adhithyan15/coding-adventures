@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 36,
-  "sourceHash": "fnv1a64:60ff0364899daf5b",
+  "sourceHash": "fnv1a64:307bcc6f8959c6d8",
   "lessonIds": [
     "MR-C36-jevha",
     "MR-C36-lyaavar",
@@ -13,6 +13,6 @@
   "text": "marathi/narration/ch36.txt",
   "json": "marathi/narration/ch36.json",
   "textHash": "fnv1a64:427395b09154e26a",
-  "jsonHash": "fnv1a64:84798a991680955f",
+  "jsonHash": "fnv1a64:41b7214d4a2624af",
   "findings": []
 }

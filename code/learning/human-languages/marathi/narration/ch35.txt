@@ -16,7 +16,7 @@ That is the trick worth seeing: you do not need a new grammar to report a though
 मला माहीत आहे की (kī) चहा आहे. — I know that there is tea.
 Negate the outer half and the inner clause survives untouched: मला माहीत नाही की (kī) चहा आहे — I don't know whether there is tea. Only the main verb was denied.
 कारण and की (kī) are cousins in shape and different in job: कारण puts a clause underneath as a REASON, की (kī) puts one underneath as the CONTENT. Both keep the main clause first, which is Marathi's steady habit.
-की (kī) comes from the same Sanskrit question stem क- that gave you का and काय. Persian does exactly the same thing with its own ke, and for the same reason: a question word is already a placeholder, so it is the natural thing to put where a whole sentence is about to arrive.
+की (kī) looks like का and काय, but it is a loan. CDIAL, following Bloch, keeps it apart from the native kī̃, "or" (from Sanskrit kím), and takes it from Hindi ki, which Hindi had from Persian ke (CDIAL 3164). Persian uses ke for exactly this job, and the word travelled with the job.
 
 Guided Practice.
 [pause 1 second]

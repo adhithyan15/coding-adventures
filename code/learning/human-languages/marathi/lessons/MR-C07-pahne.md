@@ -12,7 +12,7 @@ concept_tag: VERB-SEE
 prerequisites: [MR-C07-khane]
 sounds: [matra-aa, retroflex-na]
 roots: [sanskrit-pashyati-see, pie-spek-look]
-etymology_hook: "पाहणे goes back to Sanskrit prapaśyati, on the root paś- — the same ancient spek- that Latin turned into speciō, giving English spectacle, inspect, species and spy"
+etymology_hook: "पाहणे is often tied to prapaśyati, root paś- (PIE *spek-), but CDIAL files it under *pracāh 'look for' (8492)"
 duration:
   max_seconds: 250
 requires:

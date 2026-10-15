@@ -346,10 +346,17 @@ describe("the live corpus", () => {
     // lessons tagging it `ananda-sanskrit`, so the Marathi etymology review
     // moved it onto the tagged slug.
     //
+    // 77 -> 76: `s-l-m` against `semitic-s-l-m`. Both spelled the one Arabic
+    // root s-l-m 'to be safe' (Lane): the bare slug on AR-C01's salām and
+    // AR-C192's istalama, the tagged one on AR-C04's salāma and the AR-W00/W12
+    // writing lessons that spell the same greeting. The etymology-hygiene pass
+    // moved the six tagged Arabic lessons onto the bare slug that Arabic,
+    // Persian and Urdu already share, so the split is gone.
+    //
     // THIS NUMBER MAY ONLY FALL.
     const baselineFile = loadRootSlugBaseline(defaultCurriculumRoot());
-    expect(baselineFile.splits).toHaveLength(77);
-    expect(findRootSlugSplits()).toHaveLength(77);
+    expect(baselineFile.splits).toHaveLength(76);
+    expect(findRootSlugSplits()).toHaveLength(76);
     expect(findRootSlugSplits().every((split) => split.kind === "bare-vs-tagged")).toBe(true);
   });
 });

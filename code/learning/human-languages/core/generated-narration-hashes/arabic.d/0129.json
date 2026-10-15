@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 129,
-  "sourceHash": "fnv1a64:ee9b5d46a90b5c4d",
+  "sourceHash": "fnv1a64:869153c9d090b37f",
   "lessonIds": [
     "AR-C129-ful",
     "AR-C129-thum",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch129.txt",
   "json": "arabic/narration/ch129.json",
-  "textHash": "fnv1a64:9cb782fa48711137",
-  "jsonHash": "fnv1a64:358aac59025b6bd7",
+  "textHash": "fnv1a64:33728198cd000703",
+  "jsonHash": "fnv1a64:f199a9eebb3a51e0",
   "findings": []
 }

@@ -11,7 +11,7 @@ gloss: to be — and the neuter ending that names every Gujarati verb
 concept_tag: VERB-BE
 prerequisites: [GU-C02-chhe]
 sounds: [ha, o-sign, u-nasal]
-roots: [sanskrit-bhu, pie-bheu, sanskrit-akseti]
+roots: [sanskrit-bhu, pie-bheu, sanskrit-akseti, sanskrit-bhavati]
 etymology_hook: hovũ from Sanskrit bhavati, root bhu-, PIE *bheu- — English be, build, future, physics
 duration:
   max_seconds: 285

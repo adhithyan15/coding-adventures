@@ -12,7 +12,7 @@ concept_tag: VERB-UNDERSTAND
 prerequisites: [MR-C08-vichar-karne]
 sounds: [inherent-a, retroflex-na]
 roots: [sanskrit-sambudhyate-understand, sanskrit-budh-awake, pie-bhewdh-wake]
-etymology_hook: "समजणे comes through Prakrit saṁbujjhaï from Sanskrit sambudhyate, सम् 'together' on the root बुध् budh- 'to wake up' — the root that named the Buddha, 'the awakened one', and that reached English as bid"
+etymology_hook: "समजणे ← Prakrit saṁbujjhaï ← Sanskrit sambudhyate, root budh- 'to wake', the root that named the Buddha"
 duration:
   max_seconds: 285
 requires:

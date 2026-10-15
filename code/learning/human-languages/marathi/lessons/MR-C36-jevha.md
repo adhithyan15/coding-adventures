@@ -12,7 +12,7 @@ concept_tag: MR-JOIN-JEVHA
 prerequisites: [MR-R35-inside]
 sounds: [ja-dza, halant-conjunct, matra-aa]
 roots: []
-etymology_hook: "जेव्हा and तेव्हा are built on the ancient relative stem ज- (ya-) and the demonstrative stem त- (ta-) — the same pair that English shows in when/then and Latin in cum/tum; Marathi keeps the two halves visible, so the shape of the sentence tells you which is which"
+etymology_hook: "जेव्हा and तेव्हा rest on the relative stem ज- (Sanskrit ya-) and the demonstrative त- (ta-)"
 duration:
   max_seconds: 220
 requires:

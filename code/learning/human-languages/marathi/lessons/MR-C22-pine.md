@@ -12,7 +12,7 @@ concept_tag: VERB-DRINK
 prerequisites: [MR-C22-dene]
 sounds: [matra-i, retroflex-na]
 roots: [sanskrit-pa-drink, pie-peh3-drink]
-etymology_hook: "पिणे continues Sanskrit पिबति pibati, on the root पा pā- \"to drink,\" from Indo-European *peh3(i)- — the same root already standing inside पाणी, and so inside English potion, poison and symposium"
+etymology_hook: "पिणे ← Sanskrit pibati, root pā- 'to drink', PIE *peh₃(i)-, the root inside पाणी and English potion"
 duration:
   max_seconds: 240
 requires:

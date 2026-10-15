@@ -4,7 +4,7 @@
   "chapter": 147,
   "title": "Hard-working, Honest, Kind, Miserly, Good-natured",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d40e5afe3d8d248e",
+  "sourceHash": "fnv1a64:6195f700a49a97c5",
   "lessons": [
     {
       "id": "MW-C147-mehanti",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79ad496e4f82b127",
+      "sourceHash": "fnv1a64:d19202a07bc15e56",
       "notice": null,
       "blocks": [
         {
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b734217ca8da6ed",
+      "sourceHash": "fnv1a64:20fa0fddef5fe22a",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +516,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The origin of कंजूस (kañjūs) is not settled. CDIAL, searched by form and by meaning, has no entry for it; it is often said to come from Persian."
+              "text": "कंजूस (kañjūs) is usually traced to Persian kanjūs, \"miserly\". CDIAL, searched by form and by meaning, has no entry for it."
             }
           ]
         },

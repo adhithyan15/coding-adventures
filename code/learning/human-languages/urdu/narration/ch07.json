@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:58f6021de1d5e6c0",
+  "sourceHash": "fnv1a64:b3d9a20d5b303225",
   "lessons": [
     {
       "id": "UR-C07-sochna",
@@ -777,7 +777,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8f5d186f44f69602",
+      "sourceHash": "fnv1a64:024a03506f8e31ea",
       "notice": {
         "modality": "sight",
         "needs": [

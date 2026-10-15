@@ -10,7 +10,7 @@ gloss: hear the full greeting, write it without a model, then repair
 romanization: as-salāmu ʿalaykum
 prerequisites: [AR-W00-kaf-waw-alaykum, AR-C01-kukh]
 sounds: [arabic-greeting-dictation]
-roots: [semitic-s-l-m]
+roots: [s-l-m]
 duration:
   max_seconds: 180
 requires:

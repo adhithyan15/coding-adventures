@@ -12,7 +12,7 @@ concept_tag: BN-NUMBERS-1-5
 prerequisites: [BN-C01-nomoshkar, BN-W02-chandrabindu]
 sounds: [long-aa, chandrabindu-nasal, i-sign]
 roots: [sanskrit-dvi, sanskrit-panca, sanskrit-eka, sanskrit-trini, sanskrit-catvari]
-etymology_hook: "Bengali দুই dui keeps a trace of the vowel following the old dv- that Hindi and Marathi flattened into do/don — which is why it has two syllables where they have one; it shares this with Assamese, Odia and Nepali, and is unusual only among the four languages compared here"
+etymology_hook: "All five are inherited from Sanskrit; dui ← dva 'two' (CDIAL 6648) has two syllables where Hindi do has one"
 duration:
   max_seconds: 290
 requires:

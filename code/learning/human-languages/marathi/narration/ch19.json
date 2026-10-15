@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Eye, Ear, Mouth, and Nose",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fd01428da1034c4a",
+  "sourceHash": "fnv1a64:7ce2810fb042f578",
   "lessons": [
     {
       "id": "MR-C12-dola",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d23979b65f211399",
+      "sourceHash": "fnv1a64:8e16e235c6b66f21",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:35746beb47413228",
+      "sourceHash": "fnv1a64:41a9183c2b1bf2cc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:99fafdbc80a14674",
+      "sourceHash": "fnv1a64:679635a30f8c7b1a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1af3fe99d6ea1595",
+      "sourceHash": "fnv1a64:024510d8e1231c63",
       "notice": {
         "modality": "sight",
         "needs": [

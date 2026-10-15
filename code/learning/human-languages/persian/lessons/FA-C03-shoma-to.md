@@ -12,7 +12,7 @@ concept_tag: PRONOUN-YOU
 prerequisites: [FA-C02-esm-e-man]
 sounds: [rtl, long-a, short-vowels-unwritten]
 roots: [indo-iranian-tu]
-etymology_hook: Persian to and English thou continue the old Indo-European familiar-you word; shomâ also uses plural as respect, like Russian vy and French vous.
+etymology_hook: "to and English thou continue the Indo-European familiar 'you'; shomâ uses the plural for respect, like vous"
 duration:
   max_seconds: 240
 requires:

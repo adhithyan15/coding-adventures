@@ -11,7 +11,7 @@ romanization: as-salāma
 concept_tag: AR-WORD-SALAMA
 prerequisites: [AR-C04-maa-with, AR-C01-salam, AR-C01-al]
 sounds: [sun-letter-assimilation, ta-marbuta]
-roots: [semitic-s-l-m]
+roots: [s-l-m]
 etymology_hook: "as-salāma: salāma 'safety, soundness', root s-l-m 'to be safe' (Lane), with the article al-"
 duration:
   max_seconds: 240

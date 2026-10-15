@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fa3d3c6533b04ba3",
+  "sourceHash": "fnv1a64:5257556345bc3274",
   "lessons": [
     {
       "id": "FA-C05-khoda",
@@ -314,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:149a9ca8f08b10ef",
+      "sourceHash": "fnv1a64:3cbd7df495ca0b24",
       "notice": null,
       "blocks": [
         {

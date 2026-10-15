@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b9f3f8575b3ca614",
+  "sourceHash": "fnv1a64:0f675d98a430a823",
   "lessons": [
     {
       "id": "AR-C01-salam",
@@ -310,7 +310,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:ad3aa5c456a26ab2",
+      "sourceHash": "fnv1a64:53a3a35ea43c7f51",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1557,7 +1557,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b936cd0f30dfdeb9",
+      "sourceHash": "fnv1a64:8ccd17337029fbfa",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1666,7 +1666,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:dda282ebb991b146",
+      "sourceHash": "fnv1a64:963b48e4aa6c70c9",
       "notice": {
         "modality": "pen",
         "needs": [

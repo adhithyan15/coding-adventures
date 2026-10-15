@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Numbers One to Five",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2f13d1737d0c17a3",
+  "sourceHash": "fnv1a64:8d3eb497fcbd3630",
   "lessons": [
     {
       "id": "BN-C06-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be84587c8892d942",
+      "sourceHash": "fnv1a64:148890ab8edee8f9",
       "notice": null,
       "blocks": [
         {

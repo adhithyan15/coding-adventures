@@ -14,7 +14,7 @@ romanization: "pīlā"
 concept_tag: PA-ADJ84-PILA
 prerequisites: [PA-C83-zaruri, PA-C83-hara]
 sounds: []
-roots: [sanskrit-pita-drunk]
+roots: [sanskrit-pitala]
 etymology_hook: "pīlā ← Sanskrit pītala 'yellow', a tadbhava (CDIAL 8233)"
 duration:
   max_seconds: 200

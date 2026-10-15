@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Spoon, Knife, Bottle, Door, Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b545b846549143b5",
+  "sourceHash": "fnv1a64:adbbbc858f77eea4",
   "lessons": [
     {
       "id": "PA-C70-chamcha",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41f6773877b9f4a0",
+      "sourceHash": "fnv1a64:44b786a63d98b49b",
       "notice": null,
       "blocks": [
         {

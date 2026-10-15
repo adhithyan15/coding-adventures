@@ -4,7 +4,7 @@
   "chapter": 84,
   "title": "Yellow, Red, Blue, Black, White",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5836504e49118952",
+  "sourceHash": "fnv1a64:d22c8faa4d386d30",
   "lessons": [
     {
       "id": "PA-C84-pila",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16b0ec56938c97c1",
+      "sourceHash": "fnv1a64:3c938fd8a9c2a0e9",
       "notice": null,
       "blocks": [
         {
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6e6d2dc77d005a8",
+      "sourceHash": "fnv1a64:83ab353dcabd2b4e",
       "notice": null,
       "blocks": [
         {

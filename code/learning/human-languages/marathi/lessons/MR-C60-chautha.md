@@ -12,7 +12,7 @@ concept_tag: MR-ORDINAL-FOURTH
 prerequisites: [MR-C60-pahila, MR-C59-rupaya, MR-C56-bara, MR-C41-oblique]
 sounds: [matra-au]
 roots: [sanskrit-caturtha]
-etymology_hook: "Molesworth marks चौथा with a bare '(चतुर्थ S)' -- straight from the Sanskrit fourth, which is why चार is only half visible in it"
+etymology_hook: "Molesworth derives चौथा from Sanskrit चतुर्थ 'fourth', so चार is only half visible in it"
 duration:
   max_seconds: 235
 requires:

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d7bfd32c5223e950",
+  "sourceHash": "fnv1a64:d9d48ebf281eb443",
   "lessons": [
     {
       "id": "UR-C04-kaise-kaisi",
@@ -509,7 +509,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c4a6dbdbcb012b7",
+      "sourceHash": "fnv1a64:0d3a7a099ef5b1e6",
       "notice": null,
       "blocks": [
         {

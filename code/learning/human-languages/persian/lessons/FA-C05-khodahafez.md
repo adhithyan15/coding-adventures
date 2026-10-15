@@ -12,7 +12,7 @@ concept_tag: FAREWELL
 prerequisites: [FA-C05-hafez]
 sounds: [rtl, kh, long-a, short-vowels-unwritten]
 roots: [middle-persian-xwaday, arabic-h-f-z]
-etymology_hook: The standard farewell joins inherited Persian khodâ with Arabic-rooted hâfez in a compact protective wish; Persian normally writes the two spoken pieces together as خداحافظ.
+etymology_hook: "khodâ hâfez: inherited khodâ, Middle Persian xwadāy 'lord', + Arabic ḥāfiẓ 'guardian' (Lane, ḥ-f-ẓ)"
 duration:
   max_seconds: 220
 requires:

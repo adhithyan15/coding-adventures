@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 17,
-  "sourceHash": "fnv1a64:957bcd535bfa1faf",
+  "sourceHash": "fnv1a64:67ffac3ac88d9dc4",
   "lessonIds": [
     "MR-C10-paani",
     "MR-C10-chaha",
@@ -13,6 +13,6 @@
   "text": "marathi/narration/ch17.txt",
   "json": "marathi/narration/ch17.json",
   "textHash": "fnv1a64:5ca87e79cd7f93db",
-  "jsonHash": "fnv1a64:5de26a74b1a552a4",
+  "jsonHash": "fnv1a64:1b7f50418afa9c71",
   "findings": []
 }

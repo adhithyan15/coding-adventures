@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 97,
-  "sourceHash": "fnv1a64:42b89d8d1a4545f9",
+  "sourceHash": "fnv1a64:f4ff07f78d4e5193",
   "lessonIds": [
     "BN-C97-lobh",
     "BN-C97-pochhondo",
@@ -14,6 +14,6 @@
   "text": "bengali/narration/ch97.txt",
   "json": "bengali/narration/ch97.json",
   "textHash": "fnv1a64:f051dd96c15242ae",
-  "jsonHash": "fnv1a64:f3044b5d255732f3",
+  "jsonHash": "fnv1a64:f246e0d765347fa8",
   "findings": []
 }

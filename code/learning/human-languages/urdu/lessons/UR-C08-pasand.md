@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: [UR-SENSE-PASAND-PLEASING-LIKE-01]
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-PASAND, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-MADAD-KARNA, UR-GRAMMAR-CONJUNCT-VERB, UR-ETYMON-MADAD-EXTEND, UR-LEX-PUCHHNA, UR-LEX-LENA, UR-LEX-PARHNA, UR-LEX-LIKHNA, UR-LEX-SOCHNA, UR-LEX-MAIN, UR-SCRIPT-MAIN-HUN, UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-ETYMON-KHUSH-PERSIAN, UR-REGISTER-INDO-ARYAN-CORE, UR-SCRIPT-KAISE-KAISI, UR-GRAMMAR-COPULA-FINAL, UR-SCRIPT-DO-CHASHMI-HE]
+  knowledge: [UR-LEX-PASAND, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-MADAD-KARNA, UR-GRAMMAR-CONJUNCT-VERB, UR-ETYMON-MADAD-EXTEND, UR-LEX-PUCHHNA, UR-LEX-LENA, UR-LEX-PARHNA, UR-LEX-LIKHNA, UR-LEX-SOCHNA, UR-LEX-MAIN, UR-SCRIPT-MAIN-HUN, UR-LEX-ANA, UR-ETYMON-ANA-APAYATI, UR-ETYMON-KHUSH-PERSIAN, UR-REGISTER-INDO-ARYAN-CORE, UR-SCRIPT-KAISE-KAISI, UR-GRAMMAR-COPULA-FINAL, UR-SCRIPT-DO-CHASHMI-HE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -77,7 +77,7 @@ Bengali *āmār bhālo lāge*, “good sticks to me.” Three families borrowing
 from each other, each deciding liking happens to you.
 
 ## The word, taken apart — a Persian word doing a verb's job
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-PASAND, UR-ETYMON-KHUSH-PERSIAN, UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-REGISTER-INDO-ARYAN-CORE, UR-ETYMON-MADAD-EXTEND] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-PASAND, UR-ETYMON-KHUSH-PERSIAN, UR-LEX-ANA, UR-ETYMON-ANA-APAYATI, UR-REGISTER-INDO-ARYAN-CORE, UR-ETYMON-MADAD-EXTEND] -->
 
 **پسند** is not a verb. It is **Persian**, from **پسندیدن** *pasandīdan*, “to
 approve, to find pleasing” — *pati-*, “towards,” plus *sand*, “to look good.” It

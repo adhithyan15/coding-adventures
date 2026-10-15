@@ -12,7 +12,7 @@ concept_tag: VERB-EAT
 prerequisites: [MR-C07-yene, MR-C02-majhe, MR-C01-baram]
 sounds: [matra-aa, retroflex-na, aspirated-kha]
 roots: [sanskrit-khadati-eat]
-etymology_hook: "खाणे is both to eat and the eating — every -णे infinitive is a neuter noun, and neuter is the third gender Marathi kept where Hindi is down to two"
+etymology_hook: "खाणे ← Sanskrit khādati 'chews, eats' (CDIAL 3865); like every -णे infinitive, it is a neuter noun too"
 duration:
   max_seconds: 250
 requires:

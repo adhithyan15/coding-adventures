@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "People You'd Introduce",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a9d13b48848239de",
+  "sourceHash": "fnv1a64:9de17ade83e46e14",
   "lessons": [
     {
       "id": "UR-C09-bhai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8007235fd6b85a9f",
+      "sourceHash": "fnv1a64:807a31ac8503c566",
       "notice": {
         "modality": "sight",
         "needs": [
