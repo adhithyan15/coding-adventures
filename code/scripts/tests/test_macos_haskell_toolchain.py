@@ -114,7 +114,8 @@ class MacosHaskellToolchainTests(unittest.TestCase):
                 if ignore_refusal:
                     return subprocess.CompletedProcess(command, 0, "42\n", "")
                 if wrong_refusal_cause:
-                    return subprocess.CompletedProcess(command, 1, "flags contain " + str(missing), "ghc: could not execute: /unexpected/tool")
+                    failed = str(missing) + "-other" if wrong_refusal_cause == "prefix" else "/unexpected/tool"
+                    return subprocess.CompletedProcess(command, 1, "flags contain " + str(missing), "ghc: could not execute: " + failed)
                 return subprocess.CompletedProcess(command, 1, "", "ghc: could not execute: " + str(missing))
             if "v2-build" in command and not omit_hsc_trace:
                 route = json.loads((root / "output/hsc2hs-driver.json").read_text(encoding="utf-8"))
@@ -208,7 +209,7 @@ class MacosHaskellToolchainTests(unittest.TestCase):
             self.assertEqual(1, toolchain.verify_hsc_route(root, sys.executable, forced))
 
     def test_ignored_phase_refusal_and_missing_or_wrong_hsc_route_publish_nothing(self):
-        for options in [{"ignore_refusal": True}, {"omit_hsc_trace": True}, {"bad_hsc_trace": True}, {"wrong_refusal_cause": True}]:
+        for options in [{"ignore_refusal": True}, {"omit_hsc_trace": True}, {"bad_hsc_trace": True}, {"wrong_refusal_cause": True}, {"wrong_refusal_cause": "prefix"}]:
             with self.subTest(options=options):
                 _, github_env, receipt, _ = self.run_mock_bootstrap(**options)
                 self.assertIsNone(receipt)
