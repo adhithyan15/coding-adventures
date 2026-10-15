@@ -1,6 +1,5 @@
 import {
   lstatSync,
-  readFileSync,
   readdirSync,
   realpathSync,
 } from "node:fs";
@@ -9,7 +8,7 @@ import type {
   CurriculumExtensionMembership,
   CurriculumLessonMembership,
 } from "./curriculum-membership.js";
-import { isAbsentErrno, readLedgerFile } from "./shard.js";
+import { isAbsentErrno, readLedgerFileWithSource } from "./shard.js";
 
 export const CURRICULUM_MEMBERSHIP_DIRECTORY = "curriculum-membership.d";
 export const CURRICULUM_MEMBERSHIP_META_OWNER = "_meta.json";
@@ -225,7 +224,8 @@ export function readCurriculumMembershipOwners(
   }
 
   const metaPath = join(directory, CURRICULUM_MEMBERSHIP_META_OWNER);
-  const meta = object(readLedgerFile(metaPath), CURRICULUM_MEMBERSHIP_META_OWNER);
+  const metaSource = readLedgerFileWithSource(metaPath);
+  const meta = object(metaSource.value, CURRICULUM_MEMBERSHIP_META_OWNER);
   exactKeys(meta, ["version", "language"], CURRICULUM_MEMBERSHIP_META_OWNER);
   if (meta.version !== 1 || meta.language !== language) {
     throw new Error(
@@ -233,7 +233,7 @@ export function readCurriculumMembershipOwners(
         `version 1 and language '${language}'`,
     );
   }
-  if (options.requireCanonicalBytes !== false && readFileSync(metaPath, "utf8") !== canonical(meta)) {
+  if (options.requireCanonicalBytes !== false && metaSource.text !== canonical(meta)) {
     throw new Error(
       `curriculum membership owner '${CURRICULUM_MEMBERSHIP_META_OWNER}' is not canonical`,
     );
@@ -241,8 +241,10 @@ export function readCurriculumMembershipOwners(
 
   const actualNames = names.filter((name) => name !== CURRICULUM_MEMBERSHIP_META_OWNER);
   const expectedNames = identities.ids.map((id) => `${id}.json`);
-  const missing = expectedNames.filter((name) => !actualNames.includes(name));
-  const extra = actualNames.filter((name) => !expectedNames.includes(name));
+  const actualNameSet = new Set(actualNames);
+  const expectedNameSet = new Set(expectedNames);
+  const missing = expectedNames.filter((name) => !actualNameSet.has(name));
+  const extra = actualNames.filter((name) => !expectedNameSet.has(name));
   if (missing.length > 0 || extra.length > 0) {
     throw new Error(
       `curriculum membership owners do not match lesson files` +
@@ -254,9 +256,10 @@ export function readCurriculumMembershipOwners(
   const owners = expectedNames.map((name) => {
     const id = basename(name, ".json");
     const path = join(directory, name);
-    const raw = readLedgerFile(path);
+    const source = readLedgerFileWithSource(path);
+    const raw = source.value;
     const owner = parseOwner(raw, name, id);
-    if (options.requireCanonicalBytes !== false && readFileSync(path, "utf8") !== canonical(raw)) {
+    if (options.requireCanonicalBytes !== false && source.text !== canonical(raw)) {
       throw new Error(`curriculum membership owner '${name}' is not canonical`);
     }
     return owner;
