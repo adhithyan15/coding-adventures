@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-269-MEDIA269",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve six familiar media and communication words from meaning.",
+  "prerequisites": [
+    "SA-EXT-268-SERVICE268"
+  ]
+}
