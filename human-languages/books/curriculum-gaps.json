@@ -219413,7 +219413,7 @@
         "revisits": 2
       },
       {
-        "atom": "MR-ETYMON-PASH-SPEK",
+        "atom": "MR-ETYMON-PAHNE-PRACAH",
         "language": "marathi",
         "introducedBy": "MR-C07-pahne",
         "introducedAt": 122,
@@ -219435,7 +219435,7 @@
         "revisits": 2
       },
       {
-        "atom": "MR-ETYMON-SANGNE-KENS",
+        "atom": "MR-ETYMON-SANGNE-SAMKHYA",
         "language": "marathi",
         "introducedBy": "MR-C24-sangne",
         "introducedAt": 216,
@@ -454700,13 +454700,13 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 21733,
-    "underspent": 20651,
-    "neverSpent": 16450,
+    "roots": 21732,
+    "underspent": 20650,
+    "neverSpent": 16445,
     "payoffDistribution": {
-      "0": 16450,
-      "1": 3055,
-      "2": 1146,
+      "0": 16445,
+      "1": 3058,
+      "2": 1147,
       "3": 518,
       "4": 252,
       "5": 123,
@@ -454760,33 +454760,33 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 29237,
-    "usesBeforeIntroduction": 55647,
-    "technicalUsesBeforeIntroduction": 9632,
-    "technicalLessons": 6460,
+    "usesBeforeIntroduction": 55659,
+    "technicalUsesBeforeIntroduction": 9641,
+    "technicalLessons": 6465,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 3601
+        "lessons": 3603
       },
       {
         "term": "noun",
-        "lessons": 2046
+        "lessons": 2048
       },
       {
         "term": "participle",
-        "lessons": 546
+        "lessons": 547
       },
       {
         "term": "adjective",
         "lessons": 496
       },
       {
-        "term": "pronoun",
-        "lessons": 318
+        "term": "case",
+        "lessons": 319
       },
       {
-        "term": "case",
-        "lessons": 316
+        "term": "pronoun",
+        "lessons": 318
       }
     ]
   },
