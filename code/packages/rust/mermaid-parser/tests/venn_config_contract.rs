@@ -78,3 +78,18 @@ fn venn_nested_keys_and_quoted_field_names_are_decoys() {
         "%%{init: {'venn':{'width':640}} trailing}%%",
     ] { assert_eq!(config(prefix),VennConfig::default(),"{prefix}"); }
 }
+
+#[test]
+fn venn_front_matter_preserves_direct_parent_indentation() {
+    for nested in ["    other:\n      width: 640", "    other:\n      - width: 640",
+        "    other:\n      - nested:\n          width: 640"] {
+        let front=format!("---\nconfig:\n  venn:\n{nested}\n    height: 360\n---");
+        assert_eq!(config(&front),VennConfig {height:360.0,..Default::default()},"{front}");
+        let front=format!("---\nconfig:\n  venn:\n{nested}\n    width: 720\n    height: 360\n---");
+        assert_eq!(config(&front),VennConfig {width:720.0,height:360.0,..Default::default()},"{front}");
+    }
+    for front in ["---\nconfig:\n  other:\n    venn:\n      width: 640\n---",
+        "---\nother:\n  config:\n    venn:\n      width: 640\n---"] {
+        assert_eq!(config(front),VennConfig::default(),"{front}");
+    }
+}
