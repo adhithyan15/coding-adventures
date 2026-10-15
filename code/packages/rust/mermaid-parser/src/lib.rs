@@ -600,7 +600,7 @@ use diagram_ir::{
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram,
-    WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewConfig, TreeViewDiagram, TreeViewNode,
+    WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind, TreeViewTheme,
 };
 
@@ -5687,14 +5687,15 @@ fn indentation_width(line: &str) -> usize {
 
 /// Parse the coordinate-based core of Mermaid 11.16.1 Wardley maps.
 pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
+    let config = parse_wardley_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_wardley(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(WARDLEY_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse wardley.grammar: {error}"));
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
-    let mut diagram = WardleyDiagram { title: None, width: 1100.0, height: 600.0,
-        stages: vec!["Genesis".into(), "Custom".into(), "Product".into(), "Commodity".into()],
+    let mut diagram = WardleyDiagram { title: None, config,
+        stages: vec!["Genesis".into(), "Custom Built".into(), "Product".into(), "Commodity".into()],
         nodes: Vec::new(), links: Vec::new(), evolves: Vec::new() };
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
@@ -5704,7 +5705,7 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         if let Some(value) = line.strip_prefix("size ") {
             let (width, height) = parse_wardley_coordinates(value, line_number)?;
             if width <= 0.0 || height <= 0.0 { return Err(wardley_error(line_number, "size must be positive")); }
-            diagram.width = width; diagram.height = height; continue;
+            diagram.config.width = width; diagram.config.height = height; continue;
         }
         if let Some(value) = line.strip_prefix("evolution ") {
             let stages: Vec<_> = value.split("->").map(|stage| stage.trim().split('@').next().unwrap_or("").trim().trim_matches('"').to_string()).collect();
@@ -5736,6 +5737,52 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         return Err(wardley_error(1, format!("unknown evolved component {}", evolve.component)));
     }
     Ok(diagram)
+}
+
+fn parse_wardley_config(source: &str) -> WardleyConfig {
+    let defaults = WardleyConfig::default();
+    let front_matter = mermaid_front_matter_section(source, &["config", "wardley-beta"]);
+    let config = mermaid_directive_object(source, "wardley-beta").or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    }));
+    let positive = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+    let non_negative = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+    let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
+        "true" => Some(true), "false" => Some(false), _ => None,
+    }).unwrap_or(fallback);
+    WardleyConfig { width: positive("width", defaults.width), height: positive("height", defaults.height),
+        padding: non_negative("padding", defaults.padding), node_radius: positive("nodeRadius", defaults.node_radius),
+        node_label_offset: non_negative("nodeLabelOffset", defaults.node_label_offset),
+        axis_font_size: positive("axisFontSize", defaults.axis_font_size),
+        label_font_size: positive("labelFontSize", defaults.label_font_size),
+        show_grid: boolean("showGrid", defaults.show_grid), use_max_width: boolean("useMaxWidth", defaults.use_max_width),
+        theme: parse_wardley_theme(source) }
+}
+
+fn parse_wardley_theme(source: &str) -> WardleyTheme {
+    let defaults = WardleyTheme::default();
+    let root_front = mermaid_front_matter_section(source, &["config", "themeVariables"]);
+    let root = mermaid_directive_object(source, "themeVariables").or(root_front.as_deref()).unwrap_or("");
+    let nested_front = mermaid_front_matter_section(source, &["config", "themeVariables", "wardley"]);
+    let nested = mermaid_directive_object(root, "wardley").or(nested_front.as_deref()).unwrap_or("");
+    let value = |section: &str, name: &str| quadrant_directive_value(section, name).or_else(|| section.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    }));
+    let color = |name: &str, fallback: &str| sanitize_railroad_color(value(nested, name).as_deref(), fallback);
+    let background = sanitize_railroad_color(value(root, "background").as_deref(), &defaults.background_color);
+    let primary_text = sanitize_railroad_color(value(root, "primaryTextColor").as_deref(), &defaults.axis_text_color);
+    WardleyTheme { background_color: color("backgroundColor", &background), axis_color: color("axisColor", &defaults.axis_color),
+        axis_text_color: color("axisTextColor", &primary_text), grid_color: color("gridColor", &defaults.grid_color),
+        component_fill: color("componentFill", &defaults.component_fill),
+        component_stroke: color("componentStroke", &defaults.component_stroke),
+        component_label_color: color("componentLabelColor", &primary_text),
+        link_stroke: color("linkStroke", &defaults.link_stroke),
+        evolution_stroke: color("evolutionStroke", &defaults.evolution_stroke) }
 }
 
 fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
