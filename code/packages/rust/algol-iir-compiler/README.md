@@ -239,12 +239,12 @@ already integral `-1`, `0`, or `1`; unrestricted runtime `entier` remains gated.
 Unary `+` and `-` around the built-in `sign` result preserve the same bound.
 Built-in integer `abs` may also map that bounded result to exact `0` or `1`
 before `entier`; a user-declared `abs` remains conservative.
-Variable-free exact additive zero terms and up to twelve exact offset units may
+Variable-free exact additive zero terms and up to thirteen exact offset units may
 surround that bounded result before `entier`; larger and dynamic additive terms
-remain conservative. The twelve-unit cap accepts one exact `12` term or a checked
-sum of exact `1` through `11` terms and is preserved through parentheses,
+remain conservative. The thirteen-unit cap accepts one exact `13` term or a checked
+sum of exact `1` through `12` terms and is preserved through parentheses,
 supported standard-function wrappers, and runtime conditional branches; each
-conditional path receives its own twelve-unit budget.
+conditional path receives its own thirteen-unit budget.
 Variable-free exact multiplicative unit factors may likewise surround it;
 non-unit or variable factors remain conservative.
 Exact unit division is also permitted when the bounded result is the numerator;
