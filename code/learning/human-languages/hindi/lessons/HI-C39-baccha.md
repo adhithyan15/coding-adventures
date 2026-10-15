@@ -15,7 +15,7 @@ concept_tag: HI-PERSON-CHILD
 prerequisites: [HI-C39-dost, HI-C12-pitaa-maataa, HI-C19-age-grammar]
 sounds: [geminate-cca, devanagari-long-aa]
 roots: [persian-bacca, vatsa-sanskrit]
-etymology_hook: "बच्चा (bacchā) is the Persian بچه bacca, and Persian bacca is NOT descended from Sanskrit वत्स vatsa — the two are sister reflexes of one Indo-Iranian word, so the loan landed on top of a cousin Hindi had already inherited as बछड़ा bachṛā 'calf'; behind both stands PIE *wet- 'year', which also gives Latin vitulus 'calf' and vetus 'old' and English wether, so a child is literally a yearling"
+etymology_hook: "bacchā: usually Persian bacca, a sister of Sanskrit vatsa; CDIAL 424 offers inherited apatya 'offspring' instead"
 duration:
   max_seconds: 245
 requires:
@@ -38,15 +38,14 @@ reviews_of: [HI-C39-dost, HI-C36-kursi, HI-C12-pitaa-maataa, HI-C19-umr, HI-C19-
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C12-PITAA-MAATAA-01, HI-CONCEPT-C39-DOST-01] -->
 
 [PAUSE 2s] You have **पिता** and **माता**. Here is the third person at that
-table — and this word finally lets the masculine and feminine forms stand side
-by side.
+table.
 
 ## Grammar Lens: a pair you can see
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C39-BACCHA-01]; assesses=[HI-CONCEPT-C36-KURSI-03, HI-CONCEPT-C36-DARVAAZA-01, HI-CONCEPT-C19-AGE-GRAMMAR-01] -->
 
 **बच्चा** (*bacchā*) = "**child**," **masculine** — **मेरा बच्चा**.
 
-Here the lean does real work at last. Swap the final **-ा** for **-ी** and you
+Swap the final **-ा** for **-ी** and you
 get **बच्ची** (*bacchī*), a girl child, **feminine** — **मेरी बच्ची**.
 
 This is what **दरवाज़ा** and **कुर्सी** only hinted at: for *this* class of noun
@@ -59,23 +58,25 @@ years someone *is of*, rather than how many they *have*.
 ## The word, taken apart: बच्चा
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C39-BACCHA-02]; assesses=[HI-CONCEPT-C39-BACCHA-01, HI-CONCEPT-C39-DOST-02, HI-CONCEPT-C39-DOST-03, HI-CONCEPT-C12-PITAA-MAATAA-02] -->
 
-**बच्चा** is **Persian**, **بچه** (*bacca*) — and the obvious story is wrong.
+**बच्चा** is usually traced to **Persian**, **بچه** (*bacca*), and the obvious story about it is wrong.
 
-Persian *bacca* did **not** come from Sanskrit **वत्स** (*vatsa*), "calf, young
-one." The two are **sisters**: one Indo-Iranian word inherited down two separate
-branches. Centuries later the Persian one was borrowed into Hindi — which had
+Persian *bacca* did **not** come from Sanskrit **वत्स** (*vatsa*), "calf." They
+are **sisters**, one Indo-Iranian word down two branches, and Hindi had
 *already* inherited the Sanskrit one as **बछड़ा** (*bachṛā*), "calf."
 
-So Hindi holds both, the same ancient word by two roads — the pattern
-**दरवाज़ा** and **द्वार** showed you, running again, and the same Persian relay
-that brought **दोस्त**.
+So Hindi holds both, one word by two roads, as with **दरवाज़ा** and
+**द्वार**, through the Persian relay that brought **दोस्त**.
 
-Behind both stands ***wet-***, "**year**." Latin **vetus**, "old," is from it —
-English **veteran** — and so are Latin **vitulus**, "calf," and English
-**wether**, a yearling sheep.
+Behind both stands ***wet-***, "**year**": Latin **vetus**, "old," and
+**vitulus**, "calf," and English **wether**, a yearling sheep.
 
-A child, at the root, is a **yearling**. **पिता** and **माता** are named by
-relationship; **बच्चा** is named by age.
+CDIAL offers another road: it sets Panjabi *baccā*, "child", under Sanskrit
+*apatya*, "offspring" (CDIAL 424), and its addenda beside Persian *bača*
+(CDIAL 14226). Hindi is listed in neither, so the Persian road is usual, not
+settled.
+
+On that road, a child is a **yearling**, named by age, where **पिता** and
+**माता** are named by relationship.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C39-BACCHA-01, HI-CONCEPT-C39-BACCHA-02, HI-CONCEPT-C39-DOST-01, HI-CONCEPT-C12-PITAA-MAATAA-01, HI-CONCEPT-C19-AGE-GRAMMAR-01] -->

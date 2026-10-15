@@ -47,7 +47,7 @@ reviews_of: [HI-C223-sauq]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**सपना** (*sapnā*) goes back to Sanskrit *svapna*, "sleep, dream" (CDIAL 13904), though CDIAL does not list the Hindi form.
+**सपना** (*sapnā*) goes back to Sanskrit *svapna*, "sleep, dream" (CDIAL 13904), though CDIAL does not list the Hindi form. The dream-words of the sister languages, such as Gujarati *samṇũ*, sit under a separate form *\*supna*, "dream" (CDIAL 13481), and Hindi is not among them either.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

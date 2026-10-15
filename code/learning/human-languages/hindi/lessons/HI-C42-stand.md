@@ -14,8 +14,8 @@ romanization: "khaṛā honā"
 concept_tag: HI-VERB-STAND
 prerequisites: [HI-C42-sit]
 sounds: []
-roots: [indo-aryan-khadati, sanskrit-bhavati]
-etymology_hook: "khaṛā ← *khaḍati 'stands' (CDIAL 3784); honā ← Sanskrit bhavati 'becomes, is' (CDIAL 9416)"
+roots: [sanskrit-khadaka, sanskrit-bhavati]
+etymology_hook: "khaṛā ← Sanskrit khaḍaka 'post', which CDIAL takes to have meant 'erect' (3784); honā ← bhavati 'is' (9416)"
 duration:
   max_seconds: 210
 requires:
@@ -49,7 +49,7 @@ Two words: an adjective *khaṛā*, 'upright', plus *honā*, 'to be'. Hindi buil
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**खड़ा होना** (*khaṛā honā*) is two inherited words. **खड़ा** (*khaṛā*), "standing", is listed by CDIAL under *\*khaḍati*, "stands", a form it reconstructs beside Sanskrit *khaḍaka*, "post" (CDIAL 3784). **होना** (*honā*), "to be, to become", comes from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416).
+**खड़ा होना** (*khaṛā honā*) is two inherited words. **खड़ा** (*khaṛā*), "standing", is listed by CDIAL under Sanskrit *khaḍaka*, "a bolt, a post", for which it sets up an older sense "erect" (CDIAL 3784). The same entry reconstructs a verb *\*khaḍati*, "stands", but lists only a few hill-dialect verbs under it; *khaṛā* sits with the post. **होना** (*honā*), "to be, to become", comes from Sanskrit *bhavati*, "becomes, is" (CDIAL 9416).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

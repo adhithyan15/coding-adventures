@@ -11,7 +11,7 @@ gloss: "first — the one word in the set with no number inside it at all"
 concept_tag: MR-ORDINAL-FIRST
 prerequisites: [MR-C60-tisra, MR-C59-paise, MR-C56-akra, MR-C41-kholi]
 sounds: []
-roots: [sanskrit-prathama]
+roots: [sanskrit-prathama, indo-aryan-prathila]
 etymology_hook: "pahilā ← *prathilla 'first', a form CDIAL builds on Sanskrit prathama 'first' (CDIAL 8652)"
 duration:
   max_seconds: 280

@@ -15,7 +15,7 @@ concept_tag: UR-CHIZ207-ILAICHI
 prerequisites: [UR-C206-tufan, UR-C207-laung]
 sounds: []
 roots: [sanskrit-ela]
-etymology_hook: "ilāichī: usually linked with Sanskrit elā 'cardamom', which CDIAL takes from Dravidian (CDIAL 2522)"
+etymology_hook: "ilāichī: often linked with Sanskrit elā 'cardamom' (CDIAL 2522), but CDIAL lists no ilāichī and its shape is unexplained"
 duration:
   max_seconds: 200
 requires:

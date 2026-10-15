@@ -15,7 +15,7 @@ concept_tag: HI-THG249-EKSATH
 prerequisites: [HI-C248-acanak, HI-C249-sath]
 sounds: []
 roots: [sanskrit-eka, sanskrit-sartha]
-etymology_hook: "ek ← eka 'one' (CDIAL 2462); sāth ← sārtha 'company' (CDIAL 13364)"
+etymology_hook: "ek ← eka 'one' (CDIAL 2462); sāth ← sārthena 'in company with', from sārtha 'company' (CDIAL 13364)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C249-sath]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**एक साथ** (*ek sāth*) is *ek*, "one", from Sanskrit *eka* (CDIAL 2462), and *sāth*, "with", from *sārtha*, "company" (CDIAL 13364).
+**एक साथ** (*ek sāth*) is *ek*, "one", from Sanskrit *eka* (CDIAL 2462), and *sāth*, "with", from *sārthena*, "in company with", a case form of *sārtha*, "company" (CDIAL 13364).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

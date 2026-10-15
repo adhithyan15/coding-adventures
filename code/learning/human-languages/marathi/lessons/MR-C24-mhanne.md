@@ -16,14 +16,14 @@ etymology_hook: "म्हणणे ← Prakrit bhaṇai ← Sanskrit bhaṇati 
 duration:
   max_seconds: 250
 requires:
-  knowledge: [MR-LEX-SANGNE, MR-ETYMON-SANGNE-KENS, MR-SCRIPT-NAMASKAR-READ-01, MR-SCRIPT-RA-01]
+  knowledge: [MR-LEX-SANGNE, MR-ETYMON-SANGNE-SAMKHYA, MR-SCRIPT-NAMASKAR-READ-01, MR-SCRIPT-RA-01]
 introduces:
   knowledge: [MR-LEX-MHANNE, MR-ETYMON-MHANNE-BHAN]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-LEX-MHANNE, MR-ETYMON-MHANNE-BHAN, MR-LEX-SANGNE, MR-ETYMON-SANGNE-KENS, MR-SCRIPT-NAMASKAR-READ-01, MR-SCRIPT-RA-01]
+  knowledge: [MR-LEX-MHANNE, MR-ETYMON-MHANNE-BHAN, MR-LEX-SANGNE, MR-ETYMON-SANGNE-SAMKHYA, MR-SCRIPT-NAMASKAR-READ-01, MR-SCRIPT-RA-01]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -63,17 +63,17 @@ The same verb gives **म्हणून** *mhaṇūn*, "therefore" — literall
 that*, which is how a good many Marathi sentences turn a corner.
 
 ## The word, taken apart — a b that became an m
-<!-- hl-knowledge: introduces=[MR-ETYMON-MHANNE-BHAN]; assesses=[MR-ETYMON-SANGNE-KENS] -->
+<!-- hl-knowledge: introduces=[MR-ETYMON-MHANNE-BHAN]; assesses=[MR-ETYMON-SANGNE-SAMKHYA] -->
 
 **म्हणणे** comes through Prakrit **bhaṇai** from Sanskrit **भणति** *bhaṇati*,
 "speaks." The opening **भ** *bh-* did something Marathi is fond of: it shifted
 to the **म्ह** *mh-* cluster, breath and nasal at once. Hindi kept a plainer
-descendant in *bhannā*. Set beside *sāṅgṇe*, which came from a root for
-proclaiming, Marathi ended up with one verb for reciting outward and one for
+descendant in *bhannā*. Set beside *sāṅgṇe*, which CDIAL traces to a verb for
+counting, Marathi ended up with one verb for reciting outward and one for
 plain uttering.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MHANNE, MR-ETYMON-MHANNE-BHAN, MR-LEX-SANGNE, MR-ETYMON-SANGNE-KENS, MR-SCRIPT-NAMASKAR-READ-01, MR-SCRIPT-RA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MHANNE, MR-ETYMON-MHANNE-BHAN, MR-LEX-SANGNE, MR-ETYMON-SANGNE-SAMKHYA, MR-SCRIPT-NAMASKAR-READ-01, MR-SCRIPT-RA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: **mhaṇṇe** — to say]

@@ -15,7 +15,7 @@ concept_tag: HI-THG181-MOR
 prerequisites: [HI-C181-naqsa, HI-C181-rasta]
 sounds: []
 roots: [sanskrit-mutati]
-etymology_hook: "moṛ ← Sanskrit muṭati 'twists', a tadbhava (CDIAL 10186)"
+etymology_hook: "moṛ: the noun of moṛnā, which CDIAL lists under mōṭati, a form beside Sanskrit muṭati 'twists' (10186)"
 duration:
   max_seconds: 200
 requires:
@@ -47,7 +47,7 @@ reviews_of: [HI-C181-rasta]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**मोड़** (*moṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *muṭati*, "twists" (CDIAL 10186). *moṛ*, "a turn", is the noun of *moṛnā*, "to twist, bend".
+**मोड़** (*moṛ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. *moṛ*, "a turn", is the noun of *moṛnā*, "to twist, bend". CDIAL lists *moṛnā* under *mōṭati*, the second form in its entry for Sanskrit *muṭati*, "twists" (CDIAL 10186), and gives Panjabi *moṛ*, "a turn in a road", from the same form.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
