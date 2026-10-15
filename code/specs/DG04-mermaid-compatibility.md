@@ -1409,3 +1409,11 @@ renderer pixel-area/resource budget. See
 [`CV04a-venn-config-main-reconciliation.md`](CV04a-venn-config-main-reconciliation.md).
 Full final-source Miri is **DEFERRED/PENDING**, never passed; compiler delivery
 and the full Closure parity/provenance objective remain separate gates.
+
+Ishikawa source admission is bounded separately from the older shared settings
+readers: direct semantic init objects/root mapping ancestry and complete active-
+quoted values determine the six configuration fields. Nested/literal/sequence/
+scalar lookalikes do not supply them. Actual source3e729cea passes966/44 and
+strict14 with67 complete IR controls and21 complete source-to-scene/query cells.
+This does not establish full CSS/font/sizing/visual or hosted Apple parity;
+final-source Miri remains DEFERRED/PENDING.

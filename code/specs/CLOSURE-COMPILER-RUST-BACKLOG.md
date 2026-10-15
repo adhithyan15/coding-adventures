@@ -3,56 +3,51 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a Venn config integration checkpoint -->
-Current-main drift after local acceptance: main557693e4 (#17592) adds twelve
-Ishikawa theme paths over9ea. Local carrier729cb245 passed source/docs/plan
-review7cc7166e only in the9ea frame; no publication attempted or acceptance
-transferred to557. Incoming24 blobs/12paths verified manifest64d69e99;
-independent audit2f77b81b WITHHOLDS integration for direct-member/source-origin
-and active-quote defects in the new settings. Spec606c2d52 precedes import/tests/
-repair: CV04a-ishikawa-theme-main-reconciliation.md. Keep shared/Venn helpers,
-232 full scene/query cells and native inputs unchanged. Next bounded slice:
-closed whole-tree import, actual new-field red controls, Ishikawa-only reader
-repair, complete IR/layout/scene/query oracles, affected14 execution/review,
-new final docs/current-main plan/carrier review before normal solePR17288 push.
-Existing a786/729 publisher/gates must not be relabeled for this new source.
-Current published8f remains unmerged/autoOFF with actual macOS failure OPEN.
+Local Ishikawa source3e729cea reconciles inspected main557693e4 through exact
+whole225621-entry merge708c1c30:12incoming/5pure/seven three-way paths. Owned
+Venn checked/indexed/width-relative typography and232complete scene/query cells
+remain exact. One Ishikawa settings function reuses unchanged owned semantic/
+direct-member/indentation/active-quote helpers; all other parser bytes exact.
+Actual full14 966P/0F/0I/44targets plus strict all-target warning/unknown-lint
+denial PASS; sourceed49e961 and terminalfcd6517b independent reviews PASS.
+Full receiptCV04a-ishikawa-theme-delivery-3e729cea.json:
+strict670b892f, tests066872a2. Tests-first ee8 parser1P3F red retained;
+new67wholeIR controls and21wholeIR/layout/scene/query cells (16custom+5actual
+default/fallback companions), full glyph vectors/metadata/full ordered queries.
+Earlier b8 source965/44/strict passes but reviewdf840 withheld spec-complete
+acceptance until default companions; older a786 docs failure remains failed,
+corrected729 historical9ea doc/plan/carrier7cc PASS not relabeled as557.
 
-Current local typography source04712174 retains closed main9ea15c06 through
-whole225617-entry merge0f328cef:313incoming/308pure/five reconstructed paths.
-Entire checked/indexed production retained with declared typography hunks and
-one finite/nonnegative derived-font predicate. Actual full14 960P/0F/0ignored/
-43targets plus strict all-target warning/unknown-lint denial PASS.
-Sourceef46d50b and terminal3acfd915 independent reviews PASS.
-Tests-first font and forged-font reds retained;31 constructor fields inventoried;
-208 prior complete scene/query cells retain original non-font oracles after
-checking new sizes/glyphs, plus24 new whole-scene/query cases. Old918 exact
-style errors/342positiveIR/percent/cascade guards remain. Parser/grammar exact
-prior accepted source; no CSS/rendering/general font-fit parity inferred.
-ReceiptCV04a-venn-typography-delivery-04712174.json:
-strict3bdacf6c, tests9186053e.
+Actual native0cc:1824P0F1unchangedarchiveignore/78targets, compiler887/fullLANG502,
+strict6;126sources/756actualsix-backend cells=696oldexact+60new, absentCLR
+uncounted. Independent sourceefda/terminalb617 PASS. Native166/2847 differs only
+four namedMD;21external-native static resources exact. HistoricalClosure36/3705
+and3static includes retain316e attribution; no new native/Closure execution or
+blanket dynamic/toolchain/OS closure. Registry376 exact, four local versions only.
+No new crates.io dependencies; base ESTree canonical/own types retained.
 
-Native actual source0cc8fef6:fullsix1824P/0F/1unchangedarchiveignore/78targets,
-compiler887/fullLANG502 plus strict6.126sources/756actualsix-backend cells
-(696prior exact+60new, CLR absent/uncounted). Dedicated canonical12 only; shared
-exp/log/folded-f64 and8192/effect/alias/rounding controls retained. Independent
-sourceefda5353 and terminalb617c791 PASS. All166/2847 native inputs and21external
-static resources exact at047; final named Markdown exceptions inventoried.
-No new native execution or blanket dynamic/toolchain/OS closure claim.
-HistoricalClosure36/3705 plus3static paths retains316e attribution. Registry376
-exact; only local versions change. Base ESTree canonical/own types retained.
+Latest inspected main e6aa15c0 (#17591) adds nine native13 compiler/LANG paths
+after557. Incoming native13 reconstruction/actual validation remain PENDING;
+current local diagram/native receipts retain exact557/0cc frames. Normal solePR
+updates may carry reviewed bounded progress with autoOFF; they do not establish
+current-main native/CI/merge acceptance. Fresh current-main unforced planning is
+required, selection only; all conflict/review/exact-head terminal required CI
+gates remain mandatory before squashauto/merge. Next native13 slice must retain
+all prior source/tuple/refusal/resource controls through its own tests and run.
 
-Published8f macOS job116607025275 passed12portable fixtures then failed the real
-cabal-refuse-pgmc phase proof. Root cause/hosted acceptance OPEN. Diagnostic4ab4
-adds only4096-character JSON-quoted tails to two failure branches, preserving
-all exact refusal/route/config-export checks;13portable/Ruff/review500a PASS.
-Candidate requires doc/lesson/diff gates, exact final carrier review, fresh
-main/openPR/epic audit/unforced plan and verified normal same solePR17288 push.
-AutoOFF until current conflict-free/review-clean exact-head terminal acceptable
-requiredCI; fetched actualmerge/payload proof before cleanup/CV04b. Full parity/
-output-byte-source/stableIDs/spans/pass-sweep/all transform lineage remain OPEN.
+Actual published8f macOS job116607025275 passed12portable tests then failed real
+cabal-refuse-pgmc proof. Root cause/hosted acceptance OPEN. Diagnostic4ab4 adds
+only4096-character JSON-quoted child-output tails;13portable/Ruff/review500a PASS,
+exact refusal/route/export guards retained. Final docs/checker/lessons/diff,
+fresh main/openPR/backlog/epic audit/unforced plan and exact carrier review
+precede verified normal solePR17288 update. AutoOFF until current conflict-free/
+review-clean exact-head terminal acceptable requiredCI; fetched actual merge/
+payload before cleanup/CV04b. CSS/font-fit/extreme typed/depth/visual parity OPEN.
 Miri **DEFERRED/PENDING**, never passed; frozen run/source/inputs/target/receipts
-untouched/unpolled/no duplicate/termination. Deliver first then genuine final-source
-Miri acceptance. Fullobjective OPEN; heartbeatACTIVE.
+untouched/unpolled/no duplicate/termination. Deliver first then genuine final-
+source Miri. FullClosure parity/output-byte-source/stableIDs/spans/pass-sweep/
+folding/renaming/inlining/motion/merging/deletion lineage/fullgoal OPEN; heartbeat
+ACTIVE. No whole objective or actual merge acceptance inferred.
 <!-- /CV04a Venn config integration checkpoint -->
 
 <!-- CV04a pathwise pending checkpoint -->
