@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 23,
-  "sourceHash": "fnv1a64:c6a9e9810877229c",
+  "sourceHash": "fnv1a64:6735395ad624f900",
   "lessonIds": [
     "KA-C23-dina",
     "KA-C23-kathe",
@@ -12,6 +12,6 @@
   "text": "kannada/narration/ch23.txt",
   "json": "kannada/narration/ch23.json",
   "textHash": "fnv1a64:5b8373af1359c5d6",
-  "jsonHash": "fnv1a64:12f17ee026b40058",
+  "jsonHash": "fnv1a64:de24af3cb35f63e0",
   "findings": []
 }

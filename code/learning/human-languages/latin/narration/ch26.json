@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "How",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:07d728b1bc02c892",
+  "sourceHash": "fnv1a64:6e75e24bc016baf9",
   "lessons": [
     {
       "id": "LA-C26-quomodo",
@@ -12,14 +12,14 @@
       "title": "quōmodo — the real word behind \"how,\" in three Romance languages at once",
       "headword": "quōmodo",
       "romanization": "quōmodo",
-      "gloss": "how, in what way\" — the genuine classical word behind Italian come, Spanish cómo, and French comment, which went one step further and double-marked \"manner",
+      "gloss": "\"how, in what way\" — the genuine classical word behind Italian come, Spanish cómo, and French comment, which went one step further and double-marked \"manner\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41f6002dc3b38e5a",
+      "sourceHash": "fnv1a64:560e2f671cc2e57e",
       "notice": null,
       "blocks": [
         {

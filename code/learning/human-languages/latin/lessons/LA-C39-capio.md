@@ -6,7 +6,7 @@ sequence: 760
 chapter: 39
 type: word
 headword: capiō, capere
-gloss: "I take" — the verb the habeō lesson promised, and the true relative of English have
+gloss: '"I take" — the verb the habeō lesson promised, and the true relative of English have'
 concept_tag: VERB-TAKE
 prerequisites: [LA-C38-scribo, LA-C37-habeo]
 sounds: [macron-none-short-vowel, c-as-k]

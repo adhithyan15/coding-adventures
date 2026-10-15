@@ -6,7 +6,7 @@ sequence: 690
 chapter: 37
 type: word
 headword: videō, vidēre
-gloss: "I see" — the widest root in this chapter, because seeing and knowing were once one idea
+gloss: '"I see" — the widest root in this chapter, because seeing and knowing were once one idea'
 concept_tag: VERB-SEE
 prerequisites: [LA-C37-dico, LA-C25-cras-te-videbo]
 sounds: [macron-long-vowel, v-as-w]

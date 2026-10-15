@@ -6,7 +6,7 @@ sequence: 440
 chapter: 21
 type: phrase
 headword: volup est convēnisse
-gloss: "it is a pleasure to have met you" — an attested Plautine phrase that can fill a conversational slot for which Classical Latin has no single fixed idiom
+gloss: '"it is a pleasure to have met you" — an attested Plautine phrase that can fill a conversational slot for which Classical Latin has no single fixed idiom'
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [LA-C20-name-case-variation]
 sounds: [macron-long-vowel, perfect-infinitive]

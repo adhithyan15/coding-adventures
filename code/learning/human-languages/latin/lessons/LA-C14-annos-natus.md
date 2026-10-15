@@ -6,7 +6,7 @@ sequence: 340
 chapter: 14
 type: phrase
 headword: vīgintī annōs nātus sum
-gloss: "I am twenty years old" — literally "I am, having been born, twenty years [so far]"; NEITHER Romance's "have" NOR Germanic's "be my years" — Latin used a THIRD construction, later abandoned
+gloss: '"I am twenty years old" — literally "I am, having been born, twenty years [so far]"; NEITHER Romance''s "have" NOR Germanic''s "be my years" — Latin used a THIRD construction, later abandoned'
 concept_tag: LA-AGE
 prerequisites: [LA-C13-hora]
 sounds: [macron-long-vowel, accusative-duration]

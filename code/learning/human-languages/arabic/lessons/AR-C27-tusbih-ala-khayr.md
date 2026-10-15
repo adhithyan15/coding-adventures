@@ -6,7 +6,7 @@ sequence: 710
 chapter: 27
 type: phrase
 headword: تصبح على خير
-gloss: "good night" — but honestly, it doesn't wish you a good NIGHT at all; it wishes you a good morning, reusing both roots from ṣabāḥ al-khayr and masāʾ al-khayr
+gloss: '"good night" — but honestly, it doesn''t wish you a good NIGHT at all; it wishes you a good morning, reusing both roots from ṣabāḥ al-khayr and masāʾ al-khayr'
 concept_tag: GREETING-GOODNIGHT
 romanization: tuṣbiḥ ʿalā khayr
 prerequisites: [AR-C01-sabah-al-khayr, AR-C01-masa-al-khayr, AR-C26-layl]

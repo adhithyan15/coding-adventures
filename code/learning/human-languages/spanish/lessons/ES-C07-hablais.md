@@ -6,7 +6,7 @@ sequence: 750
 chapter: 40
 type: grammar
 headword: habláis
-gloss: "you all speak" in Spain — a whole form that half the Spanish world does not use
+gloss: '"you all speak" in Spain — a whole form that half the Spanish world does not use'
 concept_tag: ES-GRAMMAR-AR-PRESENT-PLURAL
 prerequisites: [ES-C07-hablan]
 sounds: []

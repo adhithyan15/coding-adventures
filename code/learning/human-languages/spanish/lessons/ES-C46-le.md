@@ -6,7 +6,7 @@ sequence: 1232
 chapter: 93
 type: word
 headword: le
-gloss: "to him, to her, to you" — a Latin case Spanish kept and English threw away
+gloss: '"to him, to her, to you" — a Latin case Spanish kept and English threw away'
 concept_tag: ES-PRONOUN-LE
 prerequisites: [ES-C45-sintesis-sin-repetir, ES-C12-decir]
 sounds: []

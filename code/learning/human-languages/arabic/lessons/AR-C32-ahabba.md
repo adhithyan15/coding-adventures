@@ -6,7 +6,7 @@ sequence: 850
 chapter: 32
 type: word
 headword: أحبّ
-gloss: "he loved" — the chapter's payoff, closing the ladder of four verb shapes, and the root behind the ḥabībī of every second Arabic song
+gloss: '"he loved" — the chapter''s payoff, closing the ladder of four verb shapes, and the root behind the ḥabībī of every second Arabic song'
 concept_tag: VERB-LIKE-LOVE
 romanization: ʾaḥabba
 prerequisites: [AR-C32-saada]

@@ -6,7 +6,7 @@ sequence: 1233
 chapter: 94
 type: grammar
 headword: les
-gloss: "to them" — and the discovery that a whole second system costs exactly two new words
+gloss: '"to them" — and the discovery that a whole second system costs exactly two new words'
 concept_tag: ES-GRAMMAR-INDIRECT-OBJECT-PLURAL
 prerequisites: [ES-C46-le, ES-C12-decir]
 sounds: [s-final]

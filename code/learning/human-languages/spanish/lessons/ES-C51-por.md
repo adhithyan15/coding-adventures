@@ -6,7 +6,7 @@ sequence: 2192
 chapter: 177
 type: word
 headword: por
-gloss: "for" pointing back or through — at a cause, a route, an exchange; and you have been saying it since your first page
+gloss: '"for" pointing back or through — at a cause, a route, an exchange; and you have been saying it since your first page'
 concept_tag: ES-PREPOSITION-POR
 prerequisites: [ES-C51-para]
 sounds: []

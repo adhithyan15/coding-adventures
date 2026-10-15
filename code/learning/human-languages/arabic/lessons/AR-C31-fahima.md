@@ -6,7 +6,7 @@ sequence: 780
 chapter: 31
 type: word
 headword: فهم
-gloss: "he understood" — the first verb whose middle vowel is not an a, marking it a state rather than a deed, and the done-to shape that turns it into the word for a concept
+gloss: '"he understood" — the first verb whose middle vowel is not an a, marking it a state rather than a deed, and the done-to shape that turns it into the word for a concept'
 concept_tag: VERB-UNDERSTAND
 romanization: fahima
 prerequisites: [AR-C30-akala]

@@ -6,7 +6,7 @@ sequence: 890
 chapter: 42
 type: word
 headword: accipiō, obtineō
-gloss: "I get" — two verbs, each one a prefix bolted onto a verb you already know, and each one bent out of shape by the join
+gloss: '"I get" — two verbs, each one a prefix bolted onto a verb you already know, and each one bent out of shape by the join'
 concept_tag: VERB-GET
 prerequisites: [LA-C42-fero, LA-C39-capio, LA-C39-adiuvo]
 sounds: [macron-none-short-vowel, macron-long-vowel]

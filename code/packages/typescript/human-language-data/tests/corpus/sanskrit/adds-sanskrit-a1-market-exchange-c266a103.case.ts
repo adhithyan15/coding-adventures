@@ -138,8 +138,8 @@ it("turns owned Sanskrit market words into a gentle A1 price exchange", () => {
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   expect(coverage).toMatchObject({
     enumerated: 164,
-    covered: 154,
-    unmapped: 10,
+    covered: 155,
+    unmapped: 9,
     partial: 0,
   });
   expect(coverage.byCategory["Evaluative notions"]).toEqual({ enumerated: 4, covered: 4 });

@@ -6,7 +6,7 @@ sequence: 770
 chapter: 30
 type: word
 headword: أكل
-gloss: "he ate" — no new letters, no English cousin, and a Hebrew twin close enough to hear; the sixth verb, closing the set
+gloss: '"he ate" — no new letters, no English cousin, and a Hebrew twin close enough to hear; the sixth verb, closing the set'
 concept_tag: VERB-EAT
 romanization: akala
 prerequisites: [AR-C30-arafa]

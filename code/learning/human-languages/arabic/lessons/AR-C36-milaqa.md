@@ -6,7 +6,7 @@ sequence: 1000
 chapter: 36
 type: word
 headword: ملعقة
-gloss: "a spoon" — the closing payoff, where the mi- tool shape stands beside the ma- place shape you already own, and where sound and broken plurals finally sort themselves out
+gloss: '"a spoon" — the closing payoff, where the mi- tool shape stands beside the ma- place shape you already own, and where sound and broken plurals finally sort themselves out'
 concept_tag: AR-OBJECT-SPOON
 romanization: milʿaqa
 prerequisites: [AR-C36-tabaq, AR-W11-ha-and-ta-marbuta]

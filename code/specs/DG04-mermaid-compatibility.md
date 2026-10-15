@@ -762,6 +762,10 @@ including ignored targets or later repairing directives. Invalid theme fallback
 remains its distinct contract. Actual df058580 affected suites pass957/43 with
 strict14 and208 complete scene/query cases; full rendering parity stays open.
 
+Venn title, set/intersection, and attached-text typography now uses Mermaid's
+width-relative 32, 48, and 40 reference-unit scales. Resolved label sizes live in
+layout IR and reach glyph runs without backend-specific typography decisions.
+
 ### Ishikawa Native Slice
 
 The initial Mermaid 11.16.1 Ishikawa slice recognizes `ishikawa` and

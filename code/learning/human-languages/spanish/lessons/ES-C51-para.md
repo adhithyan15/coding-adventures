@@ -6,7 +6,7 @@ sequence: 2191
 chapter: 176
 type: word
 headword: para
-gloss: "for" pointing forward — at a destination, a purpose, a deadline, a person meant to receive something
+gloss: '"for" pointing forward — at a destination, a purpose, a deadline, a person meant to receive something'
 concept_tag: ES-PREPOSITION-PARA
 prerequisites: [ES-C41-explicar, ES-C43-comida]
 sounds: [r-tap]

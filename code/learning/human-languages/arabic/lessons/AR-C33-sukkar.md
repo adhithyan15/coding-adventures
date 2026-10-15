@@ -6,7 +6,7 @@ sequence: 880
 chapter: 33
 type: word
 headword: سكر
-gloss: "sugar" — a word that crossed Asia and Europe, and the one that shows Arabic's own al- fused onto the front of a Spanish noun
+gloss: '"sugar" — a word that crossed Asia and Europe, and the one that shows Arabic''s own al- fused onto the front of a Spanish noun'
 concept_tag: AR-DRINK-SUGAR
 romanization: sukkar
 prerequisites: [AR-C33-halib, AR-W08-kaf-and-ra]

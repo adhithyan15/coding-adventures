@@ -6,7 +6,7 @@ sequence: 990
 chapter: 36
 type: word
 headword: طبق
-gloss: "a plate" — a second broken plural in the very same shape as akwāb, which turns a surprise into a pattern, and a root whose other child is a storey of a building
+gloss: '"a plate" — a second broken plural in the very same shape as akwāb, which turns a surprise into a pattern, and a root whose other child is a storey of a building'
 concept_tag: AR-OBJECT-PLATE
 romanization: ṭabaq
 prerequisites: [AR-C36-kub]

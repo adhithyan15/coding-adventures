@@ -6,7 +6,7 @@ sequence: 540
 chapter: 25
 type: phrase
 headword: ಶುಭ ರಾತ್ರಿ
-gloss: "good night" — literally "auspicious night," pairing rātri (already met) with shubha, a word that started life meaning "to be beautiful"
+gloss: '"good night" — literally "auspicious night," pairing rātri (already met) with shubha, a word that started life meaning "to be beautiful"'
 romanization: "śubha rātri"
 concept_tag: GREETING-GOODNIGHT
 prerequisites: [KA-C24-ratri]

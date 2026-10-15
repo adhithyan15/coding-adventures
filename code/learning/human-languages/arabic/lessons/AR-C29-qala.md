@@ -6,7 +6,7 @@ sequence: 740
 chapter: 29
 type: word
 headword: قال
-gloss: "he said" — the letter qāf finally named, and one root that yields a saying, an article, a speaker and a spoken thing
+gloss: '"he said" — the letter qāf finally named, and one root that yields a saying, an article, a speaker and a spoken thing'
 concept_tag: VERB-SAY
 romanization: qāla
 prerequisites: [AR-C28-jaa]

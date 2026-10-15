@@ -6,7 +6,7 @@ sequence: 480
 chapter: 24
 type: phrase
 headword: propediem tē vidēbō
-gloss: "see you later/soon" — a genuine change of pace from the last few lessons: this one IS solidly attested, twice, in Cicero's own letters
+gloss: '"see you later/soon" — a genuine change of pace from the last few lessons: this one IS solidly attested, twice, in Cicero''s own letters'
 concept_tag: FAREWELL-LATER
 prerequisites: [LA-C05-dies-lunae-veneris, LA-C01-vale, LA-C01-gratias]
 sounds: [macron-long-vowel, future-tense-bo]

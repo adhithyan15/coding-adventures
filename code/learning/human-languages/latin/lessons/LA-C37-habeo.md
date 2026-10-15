@@ -6,7 +6,7 @@ sequence: 650
 chapter: 37
 type: word
 headword: habeō, habēre
-gloss: "I have" — a verb that looks exactly like its English translation and is not related to it at all
+gloss: '"I have" — a verb that looks exactly like its English translation and is not related to it at all'
 concept_tag: VERB-HAVE
 prerequisites: [LA-C37-sum]
 sounds: [macron-long-vowel, h-aspirate]

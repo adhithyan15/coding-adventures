@@ -6,7 +6,7 @@ sequence: 130
 chapter: 3
 type: phrase
 headword: es geht
-gloss: "it goes" — the German shrug, and what saying nothing extra means
+gloss: '"it goes" — the German shrug, and what saying nothing extra means'
 concept_tag: WORD-SOSO
 prerequisites: [GE-C01-gut, GE-C03-gehen, GE-C03-es, GE-C03-wie-geht-es, GE-C03-sehr, GE-C03-nicht, GE-C03-so-lala]
 sounds: []

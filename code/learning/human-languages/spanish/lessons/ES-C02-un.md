@@ -6,7 +6,7 @@ sequence: 122
 chapter: 3
 type: grammar
 headword: un
-gloss: "a" — and it is the number one, worn down, in Spanish and in English alike
+gloss: '"a" — and it is the number one, worn down, in Spanish and in English alike'
 concept_tag: ES-GRAMMAR-INDEFINITE-ARTICLE
 prerequisites: [ES-C02-concordancia]
 sounds: []

@@ -6,7 +6,7 @@ sequence: 900
 chapter: 34
 type: word
 headword: ملح
-gloss: "salt" — a plain Semitic word whose root also gives Arabic its sailor and its word for handsome, and which shows ḥāʾ in its final shape
+gloss: '"salt" — a plain Semitic word whose root also gives Arabic its sailor and its word for handsome, and which shows ḥāʾ in its final shape'
 concept_tag: AR-FOOD-SALT
 romanization: milḥ
 prerequisites: [AR-C33-qahwa, AR-W07-hook-family-ha-kha]

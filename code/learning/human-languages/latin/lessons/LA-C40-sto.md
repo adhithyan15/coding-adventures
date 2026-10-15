@@ -6,7 +6,7 @@ sequence: 830
 chapter: 40
 type: word
 headword: stō, stāre
-gloss: "I stand" — the shortest verb in the chapter and the most productive in English, and the fourth of four
+gloss: '"I stand" — the shortest verb in the chapter and the most productive in English, and the fourth of four'
 concept_tag: VERB-STAND
 prerequisites: [LA-C40-sedeo, LA-C37-sum, LA-C37-eo]
 sounds: [macron-long-vowel, macron-none-short-vowel]

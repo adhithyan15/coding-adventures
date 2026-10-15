@@ -6,7 +6,7 @@ sequence: 840
 chapter: 32
 type: word
 headword: ساعد
-gloss: "he helped" — a root that means good fortune, stretched by one long vowel into a verb aimed at somebody else, and the family name behind the word Saudi
+gloss: '"he helped" — a root that means good fortune, stretched by one long vowel into a verb aimed at somebody else, and the family name behind the word Saudi'
 concept_tag: VERB-HELP
 romanization: sāʿada
 prerequisites: [AR-C32-fakkara]

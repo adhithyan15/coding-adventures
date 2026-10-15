@@ -6,7 +6,7 @@ sequence: 2203
 chapter: 188
 type: grammar
 headword: lo que
-gloss: "what" — two words you already own, put together to name a thing you cannot name
+gloss: '"what" — two words you already own, put together to name a thing you cannot name'
 concept_tag: ES-GRAMMAR-LO-QUE
 prerequisites: [ES-C53-que-no-se-cae]
 sounds: []

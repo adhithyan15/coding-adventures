@@ -6,7 +6,7 @@ sequence: 910
 chapter: 34
 type: word
 headword: لحم
-gloss: "meat" — one Semitic root that Arabic settled on meat and Hebrew settled on bread, with Bethlehem sitting on the seam between them
+gloss: '"meat" — one Semitic root that Arabic settled on meat and Hebrew settled on bread, with Bethlehem sitting on the seam between them'
 concept_tag: AR-FOOD-MEAT
 romanization: laḥm
 prerequisites: [AR-C34-milh, AR-W07-hook-family-ha-kha]

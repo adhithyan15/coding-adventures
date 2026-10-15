@@ -69,6 +69,7 @@ fn layout_venn_supported(diagram: &VennDiagram) -> LayoutedVennDiagram {
     let center_x = width / 2.0;
     let center_y = title_offset + (height - title_offset) / 2.0;
     let count = sets.len().max(1) as f64;
+    let scale = width / 1600.0;
     let circles: Vec<_> = sets.iter().enumerate().map(|(index, region)| {
         let angle = if sets.len() == 2 { std::f64::consts::PI * index as f64 } else {
             -std::f64::consts::FRAC_PI_2 + std::f64::consts::TAU * index as f64 / count
@@ -89,16 +90,17 @@ fn layout_venn_supported(diagram: &VennDiagram) -> LayoutedVennDiagram {
         };
         labels.push(LayoutedVennLabel { text: circle.label.clone(),
             x: circle.cx + angle.cos() * circle.radius * 0.58,
-            y: circle.cy + angle.sin() * circle.radius * 0.58, style: circle.style.clone() });
+            y: circle.cy + angle.sin() * circle.radius * 0.58, font_size: 48.0 * scale, style: circle.style.clone() });
     }
     for region in diagram.regions.iter().filter(|region| region.sets.len() > 1) {
         if let (Some(label), Some((x, y))) = (&region.label, centroid(&region.sets, &centers)) {
-            labels.push(LayoutedVennLabel { text: label.clone(), x, y, style: region.style.clone() });
+            labels.push(LayoutedVennLabel { text: label.clone(), x, y, font_size: 48.0 * scale, style: region.style.clone() });
         }
     }
     for text in &diagram.texts {
         if let Some((x, y)) = centroid(&text.sets, &centers) {
-            labels.push(LayoutedVennLabel { text: text.label.clone().unwrap_or_else(|| text.id.clone()), x, y: y + 20.0, style: text.style.clone() });
+            labels.push(LayoutedVennLabel { text: text.label.clone().unwrap_or_else(|| text.id.clone()), x, y: y + 20.0,
+                font_size: 40.0 * scale, style: text.style.clone() });
         }
     }
     let (debug_circles, debug_cells) = if diagram.config.use_debug_layout {
@@ -508,6 +510,7 @@ mod tests {
         assert_eq!(first, layout_venn(&diagram));
         assert!(first.circles[0].radius > first.circles[1].radius);
         assert!(first.labels.iter().any(|label| label.text == "AB"));
+        assert!(first.labels.iter().all(|label| label.font_size == 18.0));
         assert_eq!((first.width, first.height, first.config.padding), (600.0, 360.0, 20.0));
         assert_eq!(first.config.theme_colors, diagram.config.theme_colors);
         assert!(first.circles.iter().all(|circle| circle.cx - circle.radius >= 20.0

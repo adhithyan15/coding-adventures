@@ -136,8 +136,8 @@ it("turns owned Sanskrit school words into a gentle A1 school-day plan", () => {
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   expect(coverage).toMatchObject({
     enumerated: 164,
-    covered: 154,
-    unmapped: 10,
+    covered: 155,
+    unmapped: 9,
     partial: 0,
   });
   expect(coverage.byCategory[

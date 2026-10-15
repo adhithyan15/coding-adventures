@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a66731e521b2874f",
+  "sourceHash": "fnv1a64:fe7a03103f860c4a",
   "lessons": [
     {
       "id": "HI-C27-shubh-raatri",
@@ -12,14 +12,14 @@
       "title": "शुभ रात्रि (śubh rātri) — \"good night,\" the formal doublet in action",
       "headword": "शुभ रात्रि",
       "romanization": "śubh rātri",
-      "gloss": "good night\" — literally \"auspicious night,\" using the formal literary raatri, not the everyday raat just taught, plus shubh, an \"auspicious\" word that started life meaning \"shining",
+      "gloss": "\"good night\" — literally \"auspicious night,\" using the formal literary raatri, not the everyday raat just taught, plus shubh, an \"auspicious\" word that started life meaning \"shining\"",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7b6f8251de3925c",
+      "sourceHash": "fnv1a64:28aedcb9f9105b30",
       "notice": null,
       "blocks": [
         {

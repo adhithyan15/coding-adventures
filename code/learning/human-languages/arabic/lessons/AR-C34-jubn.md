@@ -6,7 +6,7 @@ sequence: 920
 chapter: 34
 type: word
 headword: جبن
-gloss: "cheese" — and an honest limit on the root system, because the very same three letters also spell cowardice and the two are not one idea
+gloss: '"cheese" — and an honest limit on the root system, because the very same three letters also spell cowardice and the two are not one idea'
 concept_tag: AR-FOOD-CHEESE
 romanization: jubn
 prerequisites: [AR-C34-lahm, AR-W07-hook-family-ha-kha]

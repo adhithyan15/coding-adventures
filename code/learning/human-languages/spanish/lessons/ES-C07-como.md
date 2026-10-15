@@ -6,7 +6,7 @@ sequence: 623
 chapter: 34
 type: grammar
 headword: como
-gloss: "I eat" — the form you can already build, and the word that does three jobs
+gloss: '"I eat" — the form you can already build, and the word that does three jobs'
 concept_tag: ES-GRAMMAR-ER-PRESENT
 prerequisites: [ES-C07-comer]
 sounds: [vowel-o]

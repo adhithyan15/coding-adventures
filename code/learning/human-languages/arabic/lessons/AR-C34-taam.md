@@ -6,7 +6,7 @@ sequence: 930
 chapter: 34
 type: word
 headword: طعام
-gloss: "food" — the chapter's payoff, where a root you have never met hands you the word for restaurant free of charge, because you already own the pattern
+gloss: '"food" — the chapter''s payoff, where a root you have never met hands you the word for restaurant free of charge, because you already own the pattern'
 concept_tag: AR-FOOD-GENERAL
 romanization: ṭaʿām
 prerequisites: [AR-C34-jubn]

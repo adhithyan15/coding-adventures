@@ -6,7 +6,7 @@ sequence: 790
 chapter: 39
 type: word
 headword: amō, amāre
-gloss: "I love" — the chapter's fourth verb, the first thing generations of pupils ever chanted, and the word inside enemy
+gloss: '"I love" — the chapter''s fourth verb, the first thing generations of pupils ever chanted, and the word inside enemy'
 concept_tag: VERB-LIKE-LOVE
 prerequisites: [LA-C39-adiuvo]
 sounds: [macron-long-vowel, macron-none-short-vowel]

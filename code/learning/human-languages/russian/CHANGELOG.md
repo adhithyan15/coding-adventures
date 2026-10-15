@@ -1,5 +1,9 @@
 # Changelog — Russian track
 
+## Changed — the но etymon atom is RU-ETYMON-NO-NU
+
+- **`RU-ETYMON-NO-NO-COUSIN` is renamed `RU-ETYMON-NO-NU`.** The old id said *но* has no English cousin, which RU-C17-no no longer claims: it now follows Vasmer in relating Old Russian *nŭ* to the old word for "now". The new id names the etymon without taking a side. RU-C17-no (which introduces it), RU-C17-a, RU-C18-chto-vopros and RU-C21-izvinite are updated in their `requires`, `introduces` and `practises` lists and their `hl-knowledge` comments; no chapter, curriculum or assessment file named the atom. Earlier entries below keep the old id as history.
+
 ## Fixed — нет and ни … ни use the pie-ne root slug
 
 - **RU-C01-net** and **RU-C16-ni-ni** move from bare `ne` to `pie-ne`. RU-C01-net's hook traces не to PIE *\*ne*, and RU-C16-ni-ni's ни is that не; HI-C07-nahin and GE-C18-nein already tag the same PIE *\*ne* `pie-ne`. This resolves the `ne|` entry of the root-slug split baseline (76 → 75).

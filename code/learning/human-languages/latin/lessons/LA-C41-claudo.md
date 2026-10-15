@@ -6,7 +6,7 @@ sequence: 870
 chapter: 41
 type: word
 headword: claudō, claudere
-gloss: "I close" — the word English calls *close*, and the fourth of four
+gloss: '"I close" — the word English calls *close*, and the fourth of four'
 concept_tag: VERB-CLOSE
 prerequisites: [LA-C41-aperio, LA-C39-capio, LA-C38-intellego]
 sounds: [macron-none-short-vowel, c-as-k]

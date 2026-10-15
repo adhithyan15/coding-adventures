@@ -150,7 +150,9 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 1446 -> 1448: chapter 270 retrieves computer and internet twice.
     // 1448 -> 1452: chapter 271 composes two bounded spoken requests and then
     // retrieves both twice. It adds no idiom, sense, or culture claim.
-    lessons: 1452,
+    // 1452 -> 1455: chapter 272 teaches one attested condolence as a whole
+    // formula and retrieves it twice. It adds no idiom, sense, or culture claim.
+    lessons: 1455,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

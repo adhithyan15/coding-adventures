@@ -8,7 +8,7 @@ type: word
 headword: но
 gloss: "but — the flat contradiction, one of two words English hides under a single but"
 concept_tag: RU-JOIN-BUT
-romanization: no
+romanization: 'no'
 prerequisites: [RU-C16-tozhe]
 sounds: []
 roots: [slavic-nu]
@@ -18,12 +18,12 @@ duration:
 requires:
   knowledge: [RU-LEX-I-01, RU-LEX-TOZHE-01, RU-LEX-LYUBIT, RU-LEX-KOFE]
 introduces:
- knowledge: [RU-LEX-NO-01, RU-ETYMON-NO-NO-COUSIN]
+ knowledge: [RU-LEX-NO-01, RU-ETYMON-NO-NU]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [RU-LEX-NO-01, RU-ETYMON-NO-NO-COUSIN, RU-LEX-TOZHE-01, RU-GRAMMAR-TOZHE-NE-01, RU-LEX-I-01, RU-ETYMON-I-POINTING-STEM, RU-GRAMMAR-L-EPENTHESIS, RU-ETYMON-LYUBIT-LOVE, RU-LEX-LYUBIT, RU-ETYMON-KOFE-ROUTE, RU-LEX-KOFE, RU-SCRIPT-FE]
+  knowledge: [RU-LEX-NO-01, RU-ETYMON-NO-NU, RU-LEX-TOZHE-01, RU-GRAMMAR-TOZHE-NE-01, RU-LEX-I-01, RU-ETYMON-I-POINTING-STEM, RU-GRAMMAR-L-EPENTHESIS, RU-ETYMON-LYUBIT-LOVE, RU-LEX-LYUBIT, RU-ETYMON-KOFE-ROUTE, RU-LEX-KOFE, RU-SCRIPT-FE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -64,7 +64,7 @@ the first joining word in the book that has asked for one — **и** did not.
 denies it, and nothing softer is meant.
 
 ## The word, taken apart — a probable cousin of now
-<!-- hl-knowledge: introduces=[RU-ETYMON-NO-NO-COUSIN]; assesses=[RU-LEX-NO-01] -->
+<!-- hl-knowledge: introduces=[RU-ETYMON-NO-NU]; assesses=[RU-LEX-NO-01] -->
 
 **но** goes back to Old Russian *nŭ*, a bare Slavic particle. Vasmer finds it
 probably related to an ancient word for "now": Lithuanian, Sanskrit and Gothic
@@ -85,7 +85,7 @@ because they are too short to leave much evidence behind.
 - [YOU BUILD: two things you do, the second one denied, with **но не**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NO-01, RU-ETYMON-NO-NO-COUSIN, RU-LEX-TOZHE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-NO-01, RU-ETYMON-NO-NU, RU-LEX-TOZHE-01] -->
 
 [PAUSE 3s] Say "but." (That is **но**.) Does a comma go in front of it?
 (**Yes** — always.) Did **и** want one? (**No**.) Does **но** have an

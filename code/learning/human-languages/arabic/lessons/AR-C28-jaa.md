@@ -6,7 +6,7 @@ sequence: 730
 chapter: 28
 type: word
 headword: جاء
-gloss: "he came" — the partner of dhahaba, and the first root whose middle letter is weak enough to vanish, showing that even Arabic's irregularities are patterned
+gloss: '"he came" — the partner of dhahaba, and the first root whose middle letter is weak enough to vanish, showing that even Arabic''s irregularities are patterned'
 concept_tag: VERB-COME
 romanization: jāʾa
 prerequisites: [AR-C28-dhahaba]

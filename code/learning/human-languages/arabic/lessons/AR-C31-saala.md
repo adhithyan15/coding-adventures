@@ -6,7 +6,7 @@ sequence: 800
 chapter: 31
 type: word
 headword: سأل
-gloss: "he asked" — one root that builds a question, a problem, an asker and the word for being answerable, plus the Hebrew twin hiding inside the name Saul
+gloss: '"he asked" — one root that builds a question, a problem, an asker and the word for being answerable, plus the Hebrew twin hiding inside the name Saul'
 concept_tag: VERB-ASK
 romanization: saʾala
 prerequisites: [AR-C31-qaraa]

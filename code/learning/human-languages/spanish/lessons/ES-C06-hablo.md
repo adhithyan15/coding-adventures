@@ -6,7 +6,7 @@ sequence: 514
 chapter: 16
 type: grammar
 headword: hablo
-gloss: "I speak" — your first verb form, and the one ending that means "I"
+gloss: '"I speak" — your first verb form, and the one ending that means "I"'
 concept_tag: ES-GRAMMAR-AR-PRESENT
 prerequisites: [ES-C06-hablar]
 sounds: [vowel-o]
