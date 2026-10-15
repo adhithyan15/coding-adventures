@@ -3,6 +3,17 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a pathwise pending checkpoint -->
+
+Labels2bbd129c focused16layout/13paint PASS (192new complete glyph/marker cells,
+12nonfinite marker controls). All5 prior oracle files reconstruct exactly after
+explicit semantic changes; complete hierarchy/paint production differs only by
+private gate extraction+finite markers/scaled name height. Full14 strict stopped
+on one test-only x=-1.0 spacing lint BEFORE full tests; failed receipt retained.
+This successor fixes whitespace only, with unchanged values/assertions/limits;
+new exact-source focus/full strict/tests and independent review still pending.
+Canonical native166roots/2830objects equal b7686f69; its fullnative session7516
+still RUNNING separately, no terminal acceptance inferred. Miri DEFERRED/PENDING.
+
 October15 labels source pending: R1 retains main1455d78b via exact39-path pure
 Sanskrit merge431baea3, with native sources unchanged fromb7686f69. Native actual
 focus27/library872/incoming1/owned8 PASS; full six-package strict/unfiltered

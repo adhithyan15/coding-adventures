@@ -50,6 +50,6 @@ fn railroad_explicit_marker_points_cross_the_complete_derived_geometry_gate() {
     assert_eq!(cells,12);
     // A negative finite marker coordinate is separate visual-clearance debt;
     // the gate promises finite points, not arbitrary marker enclosure.
-    let mut finite=layout.clone();finite.rules[0].start_marker.x=-1.0;
+    let mut finite=layout.clone();finite.rules[0].start_marker.x= -1.0;
     assert!(railroad_geometry_is_valid(&finite));
 }
