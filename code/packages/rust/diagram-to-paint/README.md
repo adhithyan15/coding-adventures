@@ -1,9 +1,17 @@
 # diagram-to-paint
 
+Railroad scenes retain `railroad.compactMode` as normalized true/false metadata.
+All 196 previous complete metadata cells keep their eleven original fields and
+add the false default key. Forty compacttrue controls retain bounded primitive,
+style, glyph, path, marker, order and actual font-query expectations; some
+geometry expectations use actual layout fields. They are not independent
+absolute-layout goldens or direct whole-scene mode-equivalence tests. Separately,
+layout and geometry production remains byte-exact; no tighter geometry is promised.
+
 Railroad paints resolved portable styles and scales declared leaf/rule-name
 text boxes with font size. Portable controls preserve 40 explicit-style scenes,
 40 theme-fallback scenes and 40 sanitized-style scenes with complete ordered
-glyph/path/shape/marker traces, real font queries and all eleven metadata keys.
+glyph/path/shape/marker traces, real font queries and all twelve metadata keys.
 Arc radius zero retains straight polylines; positive radius uses quadratic
 corners bounded by adjacent segment lengths, with independent complete goldens.
 Marker/stroke enclosure, the inherited 4px rule-marker/root-port mismatch,

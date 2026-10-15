@@ -51,3 +51,11 @@ target, process and receipts remain untouched and unpolled. Full Closure
 parity, byte/source joins, stable IDs, pass/sweep order and complete folding,
 renaming, inlining, motion, merging/deletion lineage remain OPEN. Deliver
 implementation before genuine final-source Miri. Heartbeat ACTIVE.
+
+Implemented evidence scope: two historical byte-identity comments are qualified
+for the added default metadata entry. New true controls retain the existing
+bounded oracles, some relative to actual layout fields; they are not absolute
+LayoutedRailroad goldens or direct whole-scene false/true equivalence tests.
+Unchanged geometry production is independently checked as a separate proof.
+No extra production repair was required. Actual focused25/14/7 and full14
+894/0/0/38+strict0 passed; raw metadata-map failure receipts remain preserved.

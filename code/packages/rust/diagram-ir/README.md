@@ -1,5 +1,10 @@
 # diagram-ir
 
+`RailroadConfig.compact_mode` preserves authored `compactMode` as a bool,
+defaulting to false. Layout retains that configuration and PaintScene exports
+its normalized string in `railroad.compactMode`. This is configuration transport;
+it introduces no compact-specific layout or geometry branch.
+
 Railroad configuration carries `arc_radius` (authored `arcRadius`, default 10)
 alongside font family/size, portable colors, stroke width and marker settings.
 Numeric fields share the finite 65536 cap with spacing; font size is strictly

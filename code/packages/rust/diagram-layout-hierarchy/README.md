@@ -1,5 +1,10 @@
 # diagram-layout-hierarchy
 
+Railroad layout retains `compact_mode` with the complete typed configuration.
+The flag introduces no layout or geometry branch; all existing numeric, font,
+spacing, arc and derived-geometry checks remain. Configuration preservation is
+separate from the still-open visual and resource limits documented below.
+
 `try_layout_railroad` validates all seven numeric spacing/style values before
 font clamp or derived arithmetic, including empty diagrams. Invalid font size,
 stroke width, marker radius or arc radius returns `UnsupportedStyle`; spacing

@@ -3,57 +3,52 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a pathwise pending checkpoint -->
-LOCAL/UNPUBLISHED five-unit source223f13ac integrates main da3cf782 (#17549)
-into published9d787797. Sole PR17288; auto-merge OFF. Published9d still has
-main conflicts and recorded setup-go bootstrap failures, not compiler failures.
-CodeQL attempt3 on9d actually passed; no hosted acceptance transfers to a new
-head. Current main/openPR/backlog/epic and exact head must be re-audited.
+LOCAL/UNPUBLISHED compact source8163246c integrates current relevant main1e5622e0
+(#17552) and unrelated Sanskrit40208c11 (#17550). Sole PR17288 still publishes
+0d316837; auto-merge OFF. No hosted acceptance transfers between source heads.
+Specs6cb10563/46a6be93 precede closed mergecc7a01e5:49incoming/43pure/6automatic
+reconstructed overlaps/225308 retained objects. Production adds only typed
+compact bool/default/parser assignment/metadata; no additional repair. Layout/
+geometry production exact. All prior numeric/effective-font/lexical/arc/style/
+resource controls retained. Incoming static review PASS1c69718c9f94d5f2b3ffb26051b162a045473767dfacb9f525c8a7e25e4b49b9
+is scoped to no blocking production issue, not execution acceptance.
+Rawbaseline parser9/layout14 PASS,paint1/5 FAILED: five whole-map oracles needed
+the new default metadata field. Final tests816 preserve196 old scene cells
+(120style/66spacing-glyph/10arc) with only false metadata entry plus2 qualified
+comments. Add40 compacttrue bounded primitive/style/glyph/path/marker/order/
+actual font-query controls. Some geometry expectations use actual layout;
+do not claim independent absolute-layout or direct whole-scene mode equality.
+Separate byte-exact geometry production evidence remains the no-edit proof.
+Whole-config parser controls:96 default/empty/casefold/bare-bool cases,84 exact
+typed malformed errors,12 whole-object directive precedence cases, four dialects
+and three source forms. Actual focused parser25/layout14/paint7 PASS.
+Full14 style/downstream ACTUAL894/0/0/38 targets, strict0 PASS.
+Tests SHA256 8d262928417ce81cddf40670c82783be9fdbf7879a32fd67fb2ee8ec61a37551.
+Strict SHA256 7b5321adac6623c46fbfd855d20a849335b1f23550dd316354e28bc5539ceedc.
+Independent exact-source/focused/terminal style security PASS SHA256 bf83f36bfa189ef7cf1156939da76a111ccbca9644716a0c83480c6ad8438738.
 
-Spec cf6f907 precedes closed merge466eb9ef:9 incoming paths,4 pure,5 exactly
-reconstructed overlaps,225314 retained objects. Incoming review withheld
-shared exp/log widening and f64 integer-offset undercount; both kept outside
-the new proof. Production differs from retained9d only in three dedicated
-canonical literal/budget cases4→5 and range comment[-6,6]. Shared/legacy/
-read-once/effects/conversions bytes exact. Wrapper budgets never reset; one
-conditional front checks disjoint arms. Existing resource/safety controls stay.
-Raw baseline861/2 and incomingruntime0/1 failed; tests-firstd8cae7b2 focus18/3,
-library862/4,incoming0/1,owned5/1 failed. Final source223f focused21/0,
-library866/0,incoming1/0,owned6/0 PASS. Preserve46 old sources/276 exact cells
-plus10 new sources/60 cells:56/336 actual normal-exit cells on six backends,
-orderedCL4/CR6; unavailable CLR not counted. Only obsolete five-unit boundary
-refusals moved to six, including both local conditional arms; matching newly
-admitted positives and true6-rounds5 refusal retain exact behavior evidence.
-Full6 unfiltered native/compiler/downstream ACTUAL1789/0/1existingignore/78
-targets, LANG488/0, strict0 PASS. Native tests SHA256 403b369c48c37cd20998632ce6b3ac5513741f7914585e156bfaabd97f92d104.
-Native strict SHA256 b161b7560f941c073d7c37b0c76181005aac32f7519b499979480130cf49b15c.
-Scoped source/focused review PASS1151d9572ad7d65924a4e310dcc595c52e1672cbfcb61988af462105b7009259.
-Independent native terminal extension PASS SHA256 285ee4bf5e948ba5ca619ae771cef8f99246ded2367303d86efb36f3d31dbd97.
-
-Retained style971 actual890/0/0/37+strict PASS (14 affected packages);
-complete canonical50-package inputs remain identical except4 named prior
-README/changelog documents. No new style execution claimed. Tests SHA256
-cd0a53ead9e239167ce3e8b50de438749ef98ece9a3acf7a6f506fe1116f9558. Independent style source/terminal PASSb6d2ec9433407a40bb8462a401d8328f73038790170b3628747006242d59dbb3.
-Selected finite font cap, producer lexical string policy and fallback order,
-all prior numeric/arc/resource/style controls and120 complete portable scenes
-remain retained. Lexical filters do not certify complete CSS/color/font grammar
-or caller-forged typed IR. Visual/resource debts remain OPEN.
-
-Final documentation carrier changes6 Markdown paths only. Actual checker,
-lessons, whitespace, canonical native166 input attribution with4 named docs,
-corrected Closure36/3705 inputs, fresh unforced plan and independent exact-head
-carrier review remain gates before fast-forward push to this same PR. Registry
-376 identity/version/source/checksum tuples exact; no new crates.io dependencies.
-Closure attribution carries only actual historical compiler1093/181+strict;
-it is not new execution. Earlier incorrect3699 attribution remains superseded
-by manifest-path audit2091; do not revive package-name fallback collisions.
-Only current conflict-free/review-clean terminal acceptable required/native
-hosted checks permit squash auto-merge. Verify actual fetched-main merge
-reachability before issue reconciliation/cleanup/next bounded CV04b.
-Base ESTree/owned types retained. CLOC27 leaf provenance is real; the stale
-allNone epic audit is not the implementation scope. Full Closure parity,
-byte/source joins, stable IDs, pass/sweep ordering and all fold/rename/inline/
-motion/merge/delete lineage/CV04b remain OPEN. Miri DEFERRED/PENDING, never
-passed; frozen497 inputs/checkout/target/run/receipts untouched and unpolled.
+Canonical166 native inputs retain actual223f1789/0/1existingignore/78+strict0
+and unfilteredLANG488, with ONLY4 prior named README/changelog exceptions:
+2820 source objects/2822 current. Native terminal review PASS285ee4bf5e948ba5ca619ae771cef8f99246ded2367303d86efb36f3d31dbd97.
+No new native execution claimed. Dedicated canonical five-unit proof and all
+shared/legacy/read-once/effect/alias/conversion/resource guards stay exact.
+Registry376 identity/version/source/checksum tuples unchanged; no new crates.io
+dependencies. Final carrier changes10 Markdown README/changelog/backlog/spec
+paths only. Actual docs/lessons/whitespace, complete canonical native/style
+attribution, corrected Closure36/3705 historical compiler1093/181+strict inputs,
+fresh unforced current-main plan and independent exact-head carrier review
+remain gates before same-PR fast-forward push. Historical3699 attribution is
+superseded by manifest-path audit2091; do not revive duplicate-name fallback.
+Current conflict-free/review-clean terminal acceptable native/required hosted
+checks gate squash auto-merge. Verify fetched-main actual merge reachability
+before issue reconciliation/cleanup/next boundedCV04b. Preserve historic
+setup-go failures and actual CodeQL successes on their own heads.
+Base ESTree/own types retained. CLOC27 leaf provenance exists; stale allNone
+epic text is not the scope. Full Closure parity/byte-source/stable IDs/pass-
+sweep order and all fold/rename/inline/motion/merge/delete lineage/CV04b OPEN.
+Inherited custom-font/marker/root-port/typed-empty/large-font/long-label/
+forged-layout/resource/visual debts remain OPEN. Miri DEFERRED/PENDING, never
+passed; frozen497 source/inputs/target/run/receipts untouched and unpolled.
 Deliver implementation then genuine final-source Miri. Full objective OPEN;
 heartbeat ACTIVE.
 <!-- /CV04a pathwise pending checkpoint -->

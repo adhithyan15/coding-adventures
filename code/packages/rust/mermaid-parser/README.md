@@ -1,5 +1,12 @@
 # mermaid-parser
 
+Railroad `compactMode` accepts case-insensitive true/false through the existing
+boolean parser; absence or an empty extracted value defaults to false. Other
+present values have an exact typed error. An init directive selects the whole
+Railroad object before front matter, so a missing directive field uses its
+default rather than merging a front-matter field. Compact state and showMarkers
+remain independent. All four dialects retain the complete configuration.
+
 All four Railroad dialects resolve themeVariables from init directives or
 top-level/config YAML front matter before explicit Railroad overrides. The
 selected effective font size must be finite and in (0,65536], including theme
