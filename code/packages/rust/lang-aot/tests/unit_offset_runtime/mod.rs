@@ -4,6 +4,32 @@
 use super::*;
 
 #[test]
+fn two_unit_offsets_preserve_exact_stdout_normal_exit_and_selected_order() {
+    for (case,(source,expected)) in [
+        ("begin real procedure pick; pick := -2.25; real saved; saved := entier(sign(pick()) + 2); output(saved) end","1"),
+        ("begin real procedure pick; pick := -2.25; real saved; saved := entier(sign(pick()) - 2); output(saved) end","-3"),
+        ("begin real procedure pick; pick := 0.0; real saved; saved := entier(sign(pick()) + 2); output(saved) end","2"),
+        ("begin real procedure pick; pick := 0.0; real saved; saved := entier(sign(pick()) - 2); output(saved) end","-2"),
+        ("begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 2); output(saved) end","3"),
+        ("begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) - 2); output(saved) end","-1"),
+        ("begin real procedure pick; pick := -2.25; real saved; saved := entier(abs((sign(pick()) + 1) + 1)); output(saved) end","1"),
+        ("begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 1); output(saved) end","3"),
+        ("begin boolean procedure choose; begin output('C'); choose := true end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 2) else ((entier(sign(rightvalue())) + 1) + 1))); output(saved) end","CL1"),
+        ("begin boolean procedure choose; begin output('C'); choose := false end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 2) else ((entier(sign(rightvalue())) + 1) + 1))); output(saved) end","CR3"),
+    ].into_iter().enumerate() {
+        let program=Prog{lang:Language::Algol60,ext:"alg",src:source,expect:Expect::Stdout(expected),backends:&[NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit]};
+        let mut completed=0;
+        for backend in [NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit] {
+            let available=toolchain_available(backend);let Some(result)=run(backend,&program) else {assert!(!available,"{backend:?} present but two-unit case{case} did not execute");continue;};
+            match &result {RunResult::Completed{code,stdout}=>{assert_eq!(*code,Some(0),"two-unit{case} {backend:?}: {stdout:?}");assert_eq!(stdout.trim(),expected,"two-unit{case} {backend:?}");},RunResult::Trapped=>panic!("two-unit{case} {backend:?} trapped")}
+            assert_cell(backend,&program,result);completed+=1;
+            eprintln!("two-unit EXECUTED case={case} backend={backend:?} expected={expected} Exit0");
+        }
+        assert!(completed>0,"two-unit case{case} needs actual backend execution");
+    }
+}
+
+#[test]
 fn identity_conditional_evaluates_condition_and_selected_branch_once() {
     for (condition, source, expected) in [
         ("true", "begin boolean procedure choose; begin output('C'); choose := true end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 1) else (entier(sign(rightvalue())) + 1))); output(saved) end", "CL0"),
