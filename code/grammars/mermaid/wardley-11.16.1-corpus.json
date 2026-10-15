@@ -4,6 +4,7 @@
   "fixtures": [
     {"name":"basic","source":"wardley-beta\ntitle Tea Shop\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61]\ncomponent Kettle [0.43, 0.35]\nBusiness -> Cup of Tea\nCup of Tea -> Kettle"},
     {"name":"size-and-evolution","source":"wardley-beta\nsize [800, 500]\nevolution Genesis -> Custom -> Product -> Commodity\ncomponent API [0.6, 0.7]\ncomponent Database [0.4, 0.5]\nAPI -> Database"},
-    {"name":"quoted-and-evolve","source":"wardley-beta\ncomponent \"Mobile App\" [0.8, 0.85]\ncomponent API [0.6, 0.65]\n\"Mobile App\" -> API\nevolve API 0.82"}
+    {"name":"quoted-and-evolve","source":"wardley-beta\ncomponent \"Mobile App\" [0.8, 0.85]\ncomponent API [0.6, 0.65]\n\"Mobile App\" -> API\nevolve API 0.82"},
+    {"name":"renderer-config","source":"%%{init: {\"wardley-beta\": {\"width\": 760, \"height\": 480, \"padding\": 36, \"nodeRadius\": 9, \"nodeLabelOffset\": 12, \"axisFontSize\": 15, \"labelFontSize\": 13, \"showGrid\": true, \"useMaxWidth\": false}}}%%\nwardley-beta\ntitle Configured Map\nanchor User [0.9, 0.2]\ncomponent API [0.6, 0.7]\nUser -> API"}
   ]
 }

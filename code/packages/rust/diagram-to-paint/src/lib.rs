@@ -2448,36 +2448,58 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
 /// Lower a Wardley strategic map into backend-neutral paths, ellipses, and glyph runs.
 pub fn diagram_to_paint_wardley<S, M, R>(diagram: &LayoutedWardleyDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
-    let left = 62.0; let right = diagram.width - 28.0; let top = if diagram.title.is_some() { 48.0 } else { 24.0 }; let bottom = diagram.height - 52.0;
+    let left = diagram.config.padding.min(diagram.width / 3.0); let right = diagram.width - left;
+    let top = diagram.config.padding.min(diagram.height / 3.0); let bottom = diagram.height - top;
     let mut instructions = vec![PaintInstruction::Path(line_path(&[Point { x: left, y: top }, Point { x: left, y: bottom }, Point { x: right, y: bottom }], "#475569", 2.0))];
     let mut text_children = Vec::new();
     if let Some(title) = &diagram.title {
-        text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0, options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+        text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0,
+            font_with_size(&options.title_font, Some(diagram.config.axis_font_size * 1.05)), Color { r: 15, g: 23, b: 42, a: 255 }));
+    }
+    if diagram.config.show_grid {
+        for step in 1..5 {
+            let ratio = step as f64 / 5.0;
+            let x = left + (right - left) * ratio; let y = bottom - (bottom - top) * ratio;
+            let mut vertical = line_path(&[Point { x, y: top }, Point { x, y: bottom }], "rgba(100, 100, 100, 0.2)", 1.0);
+            vertical.stroke_dash = Some(vec![2.0, 6.0]); instructions.push(PaintInstruction::Path(vertical));
+            let mut horizontal = line_path(&[Point { x: left, y }, Point { x: right, y }], "rgba(100, 100, 100, 0.2)", 1.0);
+            horizontal.stroke_dash = Some(vec![2.0, 6.0]); instructions.push(PaintInstruction::Path(horizontal));
+        }
     }
     for (index, stage) in diagram.stages.iter().enumerate() {
         let x = left + (right - left) * index as f64 / (diagram.stages.len().saturating_sub(1).max(1)) as f64;
         if index > 0 { instructions.push(PaintInstruction::Path(line_path(&[Point { x, y: top }, Point { x, y: bottom }], "#cbd5e1", 1.0))); }
-        text_children.push(text_node(stage, (x - 45.0).clamp(2.0, diagram.width - 92.0), bottom + 8.0, 90.0, 24.0, options.label_font.clone(), Color { r: 71, g: 85, b: 105, a: 255 }));
+        text_children.push(text_node(stage, (x - 45.0).clamp(2.0, diagram.width - 92.0), bottom + 8.0, 90.0, 24.0,
+            font_with_size(&options.label_font, Some(diagram.config.axis_font_size - 2.0)), Color { r: 71, g: 85, b: 105, a: 255 }));
     }
     for link in &diagram.links { instructions.push(PaintInstruction::Path(line_path(&[link.from.clone(), link.to.clone()], "#64748b", 1.5))); }
     for evolution in &diagram.evolves { instructions.push(PaintInstruction::Path(line_path(&[evolution.from.clone(), evolution.to.clone()], "#dc2626", 2.0))); }
     for node in &diagram.nodes {
-        let radius = if node.anchor { 8.0 } else { 6.0 };
+        let radius = if node.anchor { diagram.config.node_radius * 1.35 } else { diagram.config.node_radius };
         instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: node.position.x, cy: node.position.y,
             rx: radius, ry: radius, fill: Some(if node.anchor { "#0f172a" } else { "#ffffff" }.into()), stroke: Some("#0f172a".into()),
             stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None }));
-        text_children.push(text_node(&node.label, node.position.x + 9.0, node.position.y - 16.0, 150.0, 24.0,
-            options.label_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+        text_children.push(text_node(&node.label, node.position.x + diagram.config.node_label_offset, node.position.y - 16.0, 150.0, 24.0,
+            font_with_size(&options.label_font, Some(diagram.config.label_font_size)), Color { r: 15, g: 23, b: 42, a: 255 }));
     }
-    text_children.push(text_node("Visibility", 2.0, top, 56.0, 24.0, options.label_font.clone(), Color { r: 71, g: 85, b: 105, a: 255 }));
+    text_children.push(text_node("Visibility", 2.0, top, 56.0, 24.0,
+        font_with_size(&options.label_font, Some(diagram.config.axis_font_size)), Color { r: 71, g: 85, b: 105, a: 255 }));
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
         id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
         width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
         shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
     });
     instructions.extend(text_scene.instructions);
+    let mut metadata = HashMap::new();
+    metadata.insert("wardley.padding".into(), diagram.config.padding.to_string());
+    metadata.insert("wardley.nodeRadius".into(), diagram.config.node_radius.to_string());
+    metadata.insert("wardley.nodeLabelOffset".into(), diagram.config.node_label_offset.to_string());
+    metadata.insert("wardley.axisFontSize".into(), diagram.config.axis_font_size.to_string());
+    metadata.insert("wardley.labelFontSize".into(), diagram.config.label_font_size.to_string());
+    metadata.insert("wardley.showGrid".into(), diagram.config.show_grid.to_string());
+    metadata.insert("wardley.useMaxWidth".into(), diagram.config.use_max_width.to_string());
     PaintScene { width: diagram.width, height: diagram.height,
-        background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b), instructions, id: None, metadata: None }
+        background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b), instructions, id: None, metadata: Some(metadata) }
 }
 
 /// Lower Cynefin domains and transitions into backend-neutral geometry and glyphs.
@@ -13398,13 +13420,17 @@ emphasized --> direct
     #[test]
     fn wardley_lowers_to_backend_neutral_paths_ellipses_and_glyphs() {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver; let opts = make_opts(&shaper, &metrics, &resolver);
-        let layout = LayoutedWardleyDiagram { width: 500.0, height: 320.0, title: Some("Map".into()), stages: vec!["Genesis".into(), "Commodity".into()],
+        let layout = LayoutedWardleyDiagram { width: 500.0, height: 320.0, title: Some("Map".into()),
+            config: diagram_ir::WardleyConfig { show_grid: true, ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()],
             nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true }],
             links: vec![], evolves: vec![] };
         let scene = diagram_to_paint_wardley(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[2.0, 6.0]))));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.showGrid")), Some(&"true".to_string()));
     }
 
 

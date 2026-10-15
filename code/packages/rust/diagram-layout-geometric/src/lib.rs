@@ -223,8 +223,9 @@ fn ishikawa_label_width(label: &str) -> f64 {
 
 /// Map Wardley visibility/evolution coordinates onto a deterministic Cartesian canvas.
 pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
-    let width = diagram.width.max(420.0); let height = diagram.height.max(300.0);
-    let left = 62.0; let right = 28.0; let top = if diagram.title.is_some() { 48.0 } else { 24.0 }; let bottom = 52.0;
+    let width = diagram.config.width.max(420.0); let height = diagram.config.height.max(300.0);
+    let left = diagram.config.padding.min(width / 3.0); let right = left;
+    let top = diagram.config.padding.min(height / 3.0); let bottom = top;
     let point = |visibility: f64, evolution: f64| Point {
         x: left + evolution * (width - left - right), y: top + (1.0 - visibility) * (height - top - bottom),
     };
@@ -238,7 +239,8 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
         let node = diagram.nodes.iter().find(|node| node.label == evolve.component)?;
         Some(LayoutedWardleyEvolution { from: positions.get(node.label.as_str())?.clone(), to: point(node.visibility, evolve.target) })
     }).collect();
-    LayoutedWardleyDiagram { width, height, title: diagram.title.clone(), stages: diagram.stages.clone(), nodes, links, evolves }
+    LayoutedWardleyDiagram { width, height, title: diagram.title.clone(), config: diagram.config.clone(),
+        stages: diagram.stages.clone(), nodes, links, evolves }
 }
 
 /// Place the four Cynefin quadrants and central confusion domain deterministically.
@@ -579,13 +581,15 @@ mod tests {
 
     #[test]
     fn wardley_layout_maps_visibility_up_and_evolution_right() {
-        let diagram = WardleyDiagram { title: None, width: 600.0, height: 400.0, stages: vec!["Genesis".into(), "Commodity".into()],
+        let diagram = WardleyDiagram { title: None, config: diagram_ir::WardleyConfig { width: 600.0, height: 400.0,
+            padding: 40.0, ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()],
             nodes: vec![diagram_ir::WardleyNode { id: "a".into(), label: "A".into(), visibility: 0.8, evolution: 0.2, anchor: false },
                 diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false }],
             links: vec![], evolves: vec![] };
         let layout = layout_wardley(&diagram);
         assert!(layout.nodes[0].position.y < layout.nodes[1].position.y);
         assert!(layout.nodes[0].position.x < layout.nodes[1].position.x);
+        assert_eq!(layout.nodes[0].position.x, 144.0);
     }
 
 

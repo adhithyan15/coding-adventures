@@ -1914,7 +1914,15 @@ pub struct WardleyLink { pub source: String, pub target: String }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyEvolution { pub component: String, pub target: f64 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct WardleyDiagram { pub title: Option<String>, pub width: f64, pub height: f64, pub stages: Vec<String>, pub nodes: Vec<WardleyNode>, pub links: Vec<WardleyLink>, pub evolves: Vec<WardleyEvolution> }
+pub struct WardleyConfig { pub width: f64, pub height: f64, pub padding: f64, pub node_radius: f64,
+    pub node_label_offset: f64, pub axis_font_size: f64, pub label_font_size: f64,
+    pub show_grid: bool, pub use_max_width: bool }
+impl Default for WardleyConfig { fn default() -> Self { Self { width: 900.0, height: 600.0, padding: 48.0,
+    node_radius: 6.0, node_label_offset: 8.0, axis_font_size: 12.0, label_font_size: 10.0,
+    show_grid: false, use_max_width: true } } }
+#[derive(Clone, Debug, PartialEq)]
+pub struct WardleyDiagram { pub title: Option<String>, pub config: WardleyConfig, pub stages: Vec<String>,
+    pub nodes: Vec<WardleyNode>, pub links: Vec<WardleyLink>, pub evolves: Vec<WardleyEvolution> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyNode { pub id: String, pub label: String, pub position: Point, pub anchor: bool }
 #[derive(Clone, Debug, PartialEq)]
@@ -1922,7 +1930,8 @@ pub struct LayoutedWardleyLink { pub from: Point, pub to: Point }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyEvolution { pub from: Point, pub to: Point }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub stages: Vec<String>, pub nodes: Vec<LayoutedWardleyNode>, pub links: Vec<LayoutedWardleyLink>, pub evolves: Vec<LayoutedWardleyEvolution> }
+pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub config: WardleyConfig,
+    pub stages: Vec<String>, pub nodes: Vec<LayoutedWardleyNode>, pub links: Vec<LayoutedWardleyLink>, pub evolves: Vec<LayoutedWardleyEvolution> }
 
 // SENSE-MAKING FAMILY
 #[derive(Clone, Debug, Eq, PartialEq)]

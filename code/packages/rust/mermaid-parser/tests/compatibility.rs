@@ -406,6 +406,12 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
         let diagram = parse_wardley(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("wardley fixture {name} failed: {error}"));
         assert!(!diagram.nodes.is_empty());
+        if name == "renderer-config" {
+            assert_eq!((diagram.config.width, diagram.config.height, diagram.config.padding), (760.0, 480.0, 36.0));
+            assert_eq!((diagram.config.node_radius, diagram.config.node_label_offset), (9.0, 12.0));
+            assert_eq!((diagram.config.axis_font_size, diagram.config.label_font_size), (15.0, 13.0));
+            assert!(diagram.config.show_grid); assert!(!diagram.config.use_max_width);
+        }
     }
 }
 
@@ -1432,6 +1438,8 @@ fn wardley_dispatches_to_dedicated_strategic_map_ir() {
         _ => panic!("wardley should lower to dedicated strategic map IR"),
     }
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nAPI -> Missing").is_err());
+    let sized = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 700, \"height\": 420}}}%%\nwardley-beta\nsize [640, 360]\ncomponent API [0.6, 0.5]").unwrap();
+    assert_eq!((sized.config.width, sized.config.height), (640.0, 360.0));
 }
 
 #[test]
