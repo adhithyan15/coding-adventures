@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:12d5a63f6072078c",
+  "lessonIds": [
+    "SA-C266-market-recall",
+    "SA-C266-krinami",
+    "SA-C266-ask-and-hear-price",
+    "SA-C266-complete-transaction",
+    "SA-C266-mixed-market-practice",
+    "SA-C266-market-transaction-retrieval"
+  ],
+  "tex": "sanskrit/book/chapters/ch266-a-small-market-exchange.tex"
+}
