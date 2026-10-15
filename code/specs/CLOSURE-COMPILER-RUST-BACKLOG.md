@@ -3,44 +3,32 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a Venn config integration checkpoint -->
-October15 LOCAL/UNPUBLISHED combined source05e612289e4f4b959fe04361d1f6f2865b8a85a1.
-Venn theme spec0f983 precedes closed mergeca2c5baf; complete recursive two-base
-proof independently reconstructs12 recipes/the whole tree. Native166 execution
-inputs exactly668954e8 with four named documentation exceptions. Closure36/
-3705 inputs remain historical316e; registry376 exact, no new crates.io deps.
-Actual executable parser red2f1f263b13P4F closes after Venn-only post-header/
-direct-depth/mapping/sequence/activequote/present-invalid repairs. Compile
-failures ae41/7f58/753 and invalid lexer fixturecfd remain failed receipts, not
-behavioral acceptance. Existing numeric predicates/shared dialect helpers and
-checked geometry are exact. Old16 complete scenes invert to the previous
-oracles after only declared sans-serif/three-metadata adaptation. New16 full
-source→config→checkedlayout→scene/query cells cover family/palette/title/style
-and all eight metadata entries. Focus17parser/7layout/3paint PASS.
-Full14-package ACTUAL925P0F0ignored/40targets and strictalltargets EXIT0.
-TestsSHA81277110ca24b0a40037d8d521400626d5d98c2dd93d42da7fae10efe7658dbf;
-strictSHA1ea40480755ea1cfa6bee343ee3ccf3e37fdb0396343ed082d43d4d605ab727f.
-Independent source/focused PASS69728c64aaacd99c78edaae7e2fa2b83e7f9bd4b839824f18f466bccf6e78c73;
-terminal/docs-carrier independent review still required. Physical font fitting,
-rasterization, full CSS/theme/palette and resource/area parity remain OPEN.
-
-Native8 source668954e8 focused875compiler/incoming1/owned9 PASS,516 actualcells
-(456 retained +60 new) on six available backends; absentCLR notcounted.
-Canonical budget/comment only7→8/range[-9,9]; shared exp/log/legacy/effects/
-readonce/conversion/resource8192 guards preserved. Fullsix strict0; actual unfiltered
-session51969 EXIT0:1804P0F/1existingignored/78targets, testsSHA695d00e73451dd1812ec1899cd575e3e34306c6b3959e776100ea0acbb6b0e44.
-Source review0654acee PASS; independent terminal review pending. R2 remains fixed668.
-
-12:58 live maincd617cd4 includes native9#17569, Vennpalette#17572 open;
-dynamic exact-head overlap audit/spec-first reconciliation still required.
-SolePR17288 publishes d4004fe5, CONFLICTING, autoOFF. macOS HaskellGHC9.4.8/
-MacOSX27 arm64e.x1 link failure capturedSHAadcd75e5; Windows Unix-onlytcp-reactor
-compile failure capturedSHA42cfd967. Actual CI repairs/hosted required checks,
-current-main unforced plan, docs/input/carrier review and merge reachability
-remain OPEN. No push/merge/cleanup or waived gate. BaseESTree/ownedtypes retained.
-Full Closure parity/output-byte-source/stableIDs/pass-sweep order/allfold/
-rename/inline/motion/merge/delete lineage/CV04b/whole objective OPEN.
-Miri **DEFERRED/PENDING**, never passed; frozen run/checkout/inputs/target/receipts
-untouched/unpolled. Deliver first then genuine final-source Miri. HeartbeatACTIVE.
+October15 LOCAL/UNPUBLISHED: native9 source cdca2e1154a59dfdfe534c6f0891f299a453c09f
+passed full six-package strict lint and actual1809P0F1existingignored/78targets
+(logSHA9c9d75867e6350060bd952085de8e4ad95f0f2f6374e721bb42ce5d64e7dea45).
+Focused compiler878/incoming1/owned10 and576 actual runtime cells passed;
+independent source/focused and terminal review PASS (c45bd727). Native8 and
+Venn theme prior terminal/carrier PASS remain scoped to their reviewed inputs.
+Windows Unix-only tcp-reactor BUILD_windows selection repair7e725952 passed
+local Go discovery/plan/vet/build and independent review; hosted retry PENDING.
+Mac SDK/toolchain helper edeb5c88 local10controls/Ruff/parser/docs/lessons/diff
+passed; independent edeb review WITHHELD on Cabal effective compiler identity.
+Successor319dc1fe pins raw top-level with-compiler and refuses competing compiler,
+flavor and package-tool selectors. Spec/test-first7+7+1+1 refusal witnesses are
+retained; local11controls/Ruff/parser/docs/lessons/diff PASS. Actual Cabal3.16
+ignored ghc-location-only and treated quoted top-level paths literally; both
+failures retained. Raw-path local missing-compiler refusal1, selected installed
+compiler build0/run0 exact42 passed. Independent successor review PASSa0e1cf4b;
+do not infer macOS3.10 acceptance from Windows controls. R1 currentHEAD ad12c32d5026043ac82f64e8e1d2413c01efe16b.
+Actual macOS GHC9.4.8/Cabal3.10 link/run and hosted checks remain PENDING.
+Latest remote main da0db47ecd52a0c1ecb1f22a3ac6c56ef6700759; re-audit all current shared/Closure PR overlap before
+integration. Sole implementation PR17288 still published d4004fe5, conflicting,
+autoOFF. R1 CI changes and R2 native9 require a combined exact-input carrier,
+fresh unforced plan/docs/security and all required terminal hosted checks.
+No push/merge/cleanup or hosted acceptance claimed.
+Miri DEFERRED/PENDING, never passed; frozen checkout/process/inputs/target/receipts
+untouched/unpolled, no duplicate/termination. Deliver first, then genuine final-source
+Miri. Full parity/output-byte-source/transformation lineage/objectiveOPEN; heartbeatACTIVE.
 <!-- /CV04a Venn config integration checkpoint -->
 
 <!-- CV04a pathwise pending checkpoint -->
