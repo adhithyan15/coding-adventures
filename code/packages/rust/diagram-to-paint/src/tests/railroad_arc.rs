@@ -3,13 +3,13 @@ use super::*;
 use diagram_ir::{RailroadConfig,LayoutedRailroadDiagram,LayoutedRailroadRule,LayoutedRailroadPath};
 #[test]
 fn railroad_arc_emits_exact_portable_commands_styles_order_and_metadata() {
-    use PathCommand::{MoveTo as M,LineTo as L,QuadTo as Q};
+    use PathCommand::{MoveTo as M,LineTo as L,CubicTo as C};
     let normal=vec![Point{x:0.0,y:0.0},Point{x:20.0,y:0.0},Point{x:20.0,y:20.0},Point{x:40.0,y:20.0}];
     let duplicate=vec![Point{x:0.0,y:0.0},Point{x:0.0,y:0.0},Point{x:1e-300,y:0.0}];
     let cases=vec![
         (0.0,normal.clone(),vec![M{x:0.0,y:0.0},L{x:20.0,y:0.0},L{x:20.0,y:20.0},L{x:40.0,y:20.0}]),
-        (5.0,normal.clone(),vec![M{x:0.0,y:0.0},L{x:15.0,y:0.0},Q{cx:20.0,cy:0.0,x:20.0,y:5.0},L{x:20.0,y:15.0},Q{cx:20.0,cy:20.0,x:25.0,y:20.0},L{x:40.0,y:20.0}]),
-        (100.0,normal,vec![M{x:0.0,y:0.0},L{x:10.0,y:0.0},Q{cx:20.0,cy:0.0,x:20.0,y:10.0},L{x:20.0,y:10.0},Q{cx:20.0,cy:20.0,x:30.0,y:20.0},L{x:40.0,y:20.0}]),
+        (5.0,normal.clone(),vec![M{x:0.0,y:0.0},L{x:15.0,y:0.0},C{cx1:15.0+5.0*0.552_284_749_830_793_6,cy1:0.0,cx2:20.0,cy2:5.0-5.0*0.552_284_749_830_793_6,x:20.0,y:5.0},L{x:20.0,y:15.0},C{cx1:20.0,cy1:15.0+5.0*0.552_284_749_830_793_6,cx2:25.0-5.0*0.552_284_749_830_793_6,cy2:20.0,x:25.0,y:20.0},L{x:40.0,y:20.0}]),
+        (100.0,normal,vec![M{x:0.0,y:0.0},L{x:10.0,y:0.0},C{cx1:10.0+10.0*0.552_284_749_830_793_6,cy1:0.0,cx2:20.0,cy2:10.0-10.0*0.552_284_749_830_793_6,x:20.0,y:10.0},L{x:20.0,y:10.0},C{cx1:20.0,cy1:10.0+10.0*0.552_284_749_830_793_6,cx2:30.0-10.0*0.552_284_749_830_793_6,cy2:20.0,x:30.0,y:20.0},L{x:40.0,y:20.0}]),
         (0.0,duplicate.clone(),vec![M{x:0.0,y:0.0},L{x:0.0,y:0.0},L{x:1e-300,y:0.0}]),
         (5.0,duplicate,vec![M{x:0.0,y:0.0},L{x:1e-300,y:0.0}]),
     ];
