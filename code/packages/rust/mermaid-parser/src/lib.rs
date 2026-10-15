@@ -7844,6 +7844,14 @@ fn parse_railroad_config(source: &str) -> Result<RailroadConfig, ParseError> {
         .filter(|value| value.is_finite() && *value > 0.0)
         .unwrap_or(defaults.font_size);
     let font_size = parse("fontSize", theme_font_size)?;
+    // The explicit parser checks supplied values, but a theme fallback takes
+    // its missing-value return path. Validate the selected effective value so
+    // inherited font sizes obey the same boundary after explicit precedence.
+    if !font_size.is_finite() || !(0.0..=diagram_ir::MAX_RAILROAD_SPACING).contains(&font_size) {
+        return Err(ParseError {
+            message: "Mermaid Railroad fontSize must be finite and in 0..=65536".into(), line: 1, col: 1,
+        });
+    }
     if font_size <= 0.0 {
         return Err(ParseError {
             message: "Mermaid Railroad fontSize must be a positive number".into(), line: 1, col: 1,
