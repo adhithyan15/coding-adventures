@@ -37,6 +37,9 @@ a bounded flat configuration reader, not full YAML scalar/schema support.
 Both target sections must be empty-valued mapping keys. In particular `venn: |`
 or `config: >` block scalars cannot introduce configuration members even when
 their contents resemble mapping lines; preserve executable target-section decoys.
+Init selection must skip the leading front-matter envelope, matching semantic
+line preparation. An init-looking line inside a YAML literal is data; a real
+post-header directive still replaces the front-matter Venn object as a whole.
 
 Finite alone is insufficient for this new text-reachable canvas path. The
 incoming width=height=1e308 with four equal sets and a labeled union can overflow
