@@ -1,15 +1,14 @@
 # diagram-to-paint
 
 Railroad paints resolved portable styles and scales declared leaf/rule-name
-text boxes with font size. Arc radius zero retains straight polylines; positive
-radius uses quadratic corners bounded by adjacent segment lengths. Ten
-independently calculated complete command/style/order goldens cover tiny and
-duplicate segments, corner clamping and dashed loopbacks. Portable controls
-retain complete glyph/path vectors, geometry/styles, all eleven metadata keys,
-actual cached font queries and instruction-kind order. Marker/stroke enclosure,
-the inherited 4px rule-marker/root-port mismatch, fixed rule-name columns and
-typed-empty/large-font fitting remain limitations; arbitrary custom-font and
-long-label fitting remain open.
+text boxes with font size. Portable controls preserve 40 explicit-style scenes,
+40 theme-fallback scenes and 40 sanitized-style scenes with complete ordered
+glyph/path/shape/marker traces, real font queries and all eleven metadata keys.
+Arc radius zero retains straight polylines; positive radius uses quadratic
+corners bounded by adjacent segment lengths, with independent complete goldens.
+Marker/stroke enclosure, the inherited 4px rule-marker/root-port mismatch,
+fixed rule-name columns, typed-empty/large-font fitting, arbitrary custom-font
+and long-label fitting remain open. Apple raster execution is a separate gate.
 
 Railroad leaves with zero/small padding keep their declared text box inside the
 leaf before glyph shaping. Complete ordered default-font glyph traces and

@@ -1,12 +1,18 @@
 # mermaid-parser
 
-All four Railroad dialects retain style configuration through init directives
-and YAML front matter. Font size must be finite and in (0,65536]; stroke width,
-marker radius and arc radius must be finite and in [0,65536]. Zero font size
-retains its positive-number error. The existing parser helper already enforces
-the new `arcRadius` field's bounds; no parser-production repair was needed.
-Controls verify 56 exact arc refusals and 56 accepted complete configurations,
-alongside preserved font/style/spacing admission matrices and default radius 10.
+All four Railroad dialects resolve themeVariables from init directives or
+top-level/config YAML front matter before explicit Railroad overrides. The
+selected effective font size must be finite and in (0,65536], including theme
+fallbacks; a valid explicit size overrides an excessive theme size. Unparseable,
+nonfinite and nonpositive theme numbers retain the producer's default fallback.
+Explicit-field numeric error domains and precedence remain unchanged.
+
+Authored color and font-family strings use the producer's trimmed lexical
+allowlists. A selected theme primary/secondary/default is sanitized against the
+field default, then an invalid explicit value uses that sanitized theme. An
+invalid selected primary does not retry secondary. Marker fallback follows the
+theme line independently of an explicit line override. These filters do not
+certify complete CSS/color/font grammar or sanitization of caller-forged typed IR.
 
 All four Railroad dialects preserve padding and vertical/horizontal separation
 from init directives or YAML front matter. Every setting must be finite and in

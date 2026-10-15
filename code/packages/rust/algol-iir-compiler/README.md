@@ -1,14 +1,13 @@
 # algol-iir-compiler
 
-The bounded outer-`entier` proof accepts cumulative offsets of at most three
+The bounded outer-`entier` proof accepts cumulative offsets of at most four
 absolute units around one unshadowed direct `sign` call, including supported
-unary `abs`/`entier` wrappers. New offsets use canonical literal values 0, 1, 2
-and 3; wrappers never reset the checked budget. The legacy one-unit proof is
+unary `abs`/`entier` wrappers. New offsets use canonical literal values 0, 1, 2,
+3 and 4; wrappers never reset the checked budget. The legacy one-unit proof is
 retained at the entry. One conditional front checks each branch independently.
-An exact Real procedure with one name formal and only `relay := x` reads its
-actual once; name writes still invalidate either branch root. The shared
-`exp`/`ln` range classifier remains narrower. General constant-fold, recursive
-conditional and arbitrary bounded-function composition remain open.
+Exact read-once Real name identity lowering and alias/effect invalidation are
+retained; the shared `exp`/`ln` range classifier remains narrower. General
+constant-fold, recursive conditional and arbitrary-function composition stay open.
 
 Rust frontend for compiling a conservative ALGOL 60 scalar subset into the
 shared LANG VM `interpreter_ir::IIRModule`.
