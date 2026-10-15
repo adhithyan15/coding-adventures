@@ -48,7 +48,7 @@ fn validate_venn_geometry(layout: &LayoutedVennDiagram) -> Result<(), VennLayout
     let non_negative = |v: f64| v.is_finite() && v >= 0.0;
     if !non_negative(layout.width) || !non_negative(layout.height)
         || layout.circles.iter().any(|c| !c.cx.is_finite() || !c.cy.is_finite() || !non_negative(c.radius))
-        || layout.labels.iter().any(|l| !l.x.is_finite() || !l.y.is_finite())
+        || layout.labels.iter().any(|l| !l.x.is_finite() || !l.y.is_finite() || !non_negative(l.font_size))
         || layout.debug_circles.iter().any(|c| !c.cx.is_finite() || !c.cy.is_finite() || !non_negative(c.radius))
         || layout.debug_cells.iter().any(|c| !c.x.is_finite() || !c.y.is_finite() || !non_negative(c.width) || !non_negative(c.height)) {
         return Err(VennLayoutError::DerivedGeometry);
