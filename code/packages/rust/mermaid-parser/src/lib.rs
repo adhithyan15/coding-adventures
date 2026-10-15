@@ -5539,9 +5539,34 @@ fn venn_init_config(source: &str) -> Option<&str> {
     })
 }
 
+// Preserve parent indentation for this flat Venn config subset. The older
+// shared helper intentionally remains unchanged for all other dialects; its
+// flattened output cannot distinguish direct fields from nested lookalikes.
+fn venn_front_matter_config(source: &str) -> Option<String> {
+    let mut lines = source.lines().skip_while(|line| line.trim().is_empty());
+    if lines.next()?.trim() != "---" { return None; }
+    let mut parents: Vec<(usize, &str)> = Vec::new();
+    let mut output = String::new();
+    for line in lines {
+        let trimmed = line.trim();
+        if trimmed == "---" { break; }
+        if trimmed.is_empty() || trimmed.starts_with('#') { continue; }
+        let indent = line.len() - line.trim_start().len();
+        while parents.last().is_some_and(|(parent, _)| indent <= *parent) { parents.pop(); }
+        let Some((key, value)) = trimmed.split_once(':') else { continue; };
+        if parents.len() == 2 && parents[0].1 == "config" && parents[1].1 == "venn" && !value.trim().is_empty() {
+            output.push_str(trimmed); output.push('\n');
+        }
+        // Keep every parent, including unknown maps, arrays and scalar/block
+        // keys. Their descendants cannot masquerade as direct Venn members.
+        parents.push((indent, key.trim()));
+    }
+    (!output.is_empty()).then_some(output)
+}
+
 fn parse_venn_config(source: &str) -> VennConfig {
     let defaults = VennConfig::default();
-    let front_matter = mermaid_front_matter_section(source, &["config", "venn"]);
+    let front_matter = venn_front_matter_config(source);
     let config = venn_init_config(source).or(front_matter.as_deref()).unwrap_or("");
     let value = |name: &str| {
         // Add a synthetic opening brace because selected config is its interior.
