@@ -14,7 +14,8 @@ romanization: "kālaḥ"
 concept_tag: SA-TIME152-KALAH
 prerequisites: [SA-C151-matsarah, SA-C151-garvah]
 sounds: []
-roots: []
+roots: [sanskrit-kala-time]
+etymology_hook: "kāla 'time' (AV), from √kal 'calculate' (MW); CDIAL 3084 keeps it apart from kāla 'black'; Hindi kāl"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C151-garvah]
 <!-- hl-knowledge: introduces=[SA-LEX-C152-TIME152-01]; assesses=[] -->
 
 **कालः** — *kālaḥ* — "a period, time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kāla* "time" is old, in the Atharvaveda, and MW derives it from the root √kal "calculate, count". CDIAL 3084 keeps it apart from *kāla* "black" (CDIAL 3083), and it lives on as Hindi *kāl* "time, fate" (CDIAL 3084).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

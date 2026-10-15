@@ -14,7 +14,8 @@ romanization: "janaḥ"
 concept_tag: SA-NOUN-PEOPLE
 prerequisites: [SA-C20-old-person, SA-C19-ten]
 sounds: []
-roots: []
+roots: [sanskrit-jana]
+etymology_hook: "jana 'person, people' ← the root √jan 'be born'; MW compares Latin gignō; Hindi janā (CDIAL 5098)"
 duration:
   max_seconds: 210
 requires:
@@ -44,12 +45,19 @@ reviews_of: [SA-C20-old-person]
 **जनः** (*janaḥ*) — "people, folk, a person, a race."
 
 From the root **√जन्** (*jan*), "to be born, to beget" — the same root behind
-*janma*, "birth." Its Latin cousin is *gens* ("clan, people") and *genus*, and
-through them English has **genus**, **gene**, **generate**, **genesis** and
-**nation** (from *natio*, "a being born").
+*janma*, "birth." Its Latin cousins are *gens* ("clan, people") and *genus*, and
+through them and their Greek kin English has **genus**, **gene**, **generate**,
+**genesis** and **nation** (from *natio*, "a being born").
 
 So जनः does not mean a crowd. It means *those who were born* — kinship rather
 than quantity.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Jana* is built on the root √jan, "to be born, beget", which MW compares with
+Greek *gignomai* and Latin *gignō*. It lives on as Hindi *janā*, "a person" (CDIAL
+5098).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

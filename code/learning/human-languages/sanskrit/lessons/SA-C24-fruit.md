@@ -14,7 +14,8 @@ romanization: "phalam"
 concept_tag: SA-NOUN-FRUIT
 prerequisites: [SA-C24-rice, SA-C22-play, SA-C23-son]
 sounds: []
-roots: []
+roots: [sanskrit-phala]
+etymology_hook: "phala 'fruit': MW files it under √phal 'burst'; CDIAL 9051 and DEDR 4004 compare Dravidian words"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,13 @@ reviews_of: [SA-C24-rice]
 **फलम्** is the fruit on the tree. It is also, in the same breath and with no metaphor felt, the fruit of an action — the result, the reward, the yield. A Sanskrit sentence about the *phalam* of your work is not reaching for a poetic image; it has one word where English has two.
 
 The root behind it means "to burst, to bear fruit", which is the fruit split open at the moment it is ripe. Neuter **-अम्**, like जलम् and अन्नम् before it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Phala* is Rigvedic. MW files it under the root √phal, "to burst, split", while
+CDIAL 9051 and DEDR 4004 compare Tamil words for ripening, so its origin is not
+settled. It lives on as Hindi *phal* (CDIAL 9051).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

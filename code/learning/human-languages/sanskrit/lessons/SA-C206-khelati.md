@@ -14,7 +14,8 @@ romanization: "khelati"
 concept_tag: SA-VERB-KHELATI
 prerequisites: [SA-C206-majjati, SA-C206-snati]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khelati 'shakes, plays' goes with the 'play' words of CDIAL 3918, whose origin is uncertain; Hindi khelnā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C206-snati]
 <!-- hl-knowledge: introduces=[SA-LEX-C206-ACT206-03]; assesses=[] -->
 
 **खेलति** — *khelati* — "frolics, plays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khelati* first means "shakes, moves to and fro" (MW), and later "plays". CDIAL 3918 says it may go with a family of "play" words that are perhaps non-Aryan; their origin is uncertain. Hindi *khelnā*, "to play", belongs to that family.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

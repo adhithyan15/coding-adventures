@@ -14,7 +14,8 @@ romanization: "āhāraḥ"
 concept_tag: SA-THG160-AHARAH
 prerequisites: [SA-C160-bhojanam, SA-C160-vyanjanam]
 sounds: []
-roots: []
+roots: [sanskrit-ahara]
+etymology_hook: "āhāra ← ā-√hṛ 'bring near, fetch': 'fetching', then 'taking food, food' (CDIAL 1544)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C160-vyanjanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C160-THG160-03]; assesses=[] -->
 
 **आहारः** — *āhāraḥ* — "food, diet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āhāra* comes from *ā-√hṛ* "bring near, fetch", the root √hṛ "carry" with *ā* "toward" (CDIAL 1544): first "fetching", then "taking food", and so "food, diet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

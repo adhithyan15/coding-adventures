@@ -14,7 +14,8 @@ romanization: "anubhavaḥ"
 concept_tag: SA-WRK230-ANUBHAVAH
 prerequisites: [SA-C230-prayatnah, SA-C230-avasarah]
 sounds: []
-roots: []
+roots: [sanskrit-anubhava, sanskrit-bhu]
+etymology_hook: "anubhava ← anu 'after, along' + √bhū 'be, become': 'perception', experience (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C230-avasarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C230-WRK230-05]; assesses=[] -->
 
 **अनुभवः** — *anubhavaḥ* — "experience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*anubhava* is built on *anu*, "after, along", and the root √bhū, "to be, become" (MW): to be along with something is to perceive it. MW glosses it "perception, understanding", and the root is the one MW compares with English *be*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

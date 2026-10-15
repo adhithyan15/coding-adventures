@@ -14,7 +14,8 @@ romanization: "elā"
 concept_tag: SA-THG245-ELA
 prerequisites: [SA-C245-phalarasah, SA-C245-lavangam]
 sounds: []
-roots: []
+roots: [sanskrit-ela]
+etymology_hook: "elā 'cardamom', borrowed from Dravidian according to Mayrhofer (CDIAL 2522); Marathi eḷā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C245-lavangam]
 <!-- hl-knowledge: introduces=[SA-LEX-C245-THG245-05]; assesses=[] -->
 
 **एला** — *elā* — "cardamom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*elā* is probably borrowed from Dravidian: CDIAL 2522 follows Mayrhofer in taking it from a Dravidian source. It lives on as Marathi *eḷā*, "cardamom".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

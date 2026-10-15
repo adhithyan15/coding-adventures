@@ -14,7 +14,8 @@ romanization: "duḥkham"
 concept_tag: SA-FEEL-SORROW
 prerequisites: [SA-C67-rest, SA-C67-ease]
 sounds: []
-roots: []
+roots: [sanskrit-duhkha]
+etymology_hook: "duḥkha 'pain, sorrow' was formed after sukha 'ease' (CDIAL 6375); it lives on as Hindi dukh"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,13 @@ reviews_of: [SA-C67-ease]
 
 **दुःखम्** (*duḥkham*) — "sorrow", the opposite of **सुखम्**. The two words share
 their ending.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL 6375 says *duḥkha* was formed after *sukha*, with *duḥ-* "bad" in place of
+*su-* "good"; MW also suggests a Prakrit form of *duḥ-stha*. It lives on as Hindi
+*dukh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

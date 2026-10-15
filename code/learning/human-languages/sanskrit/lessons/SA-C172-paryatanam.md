@@ -14,7 +14,8 @@ romanization: "paryaṭanam"
 concept_tag: SA-TRV172-PARYATANAM
 prerequisites: [SA-C172-yanapatram, SA-C172-bhramanam]
 sounds: []
-roots: []
+roots: [sanskrit-paryatana]
+etymology_hook: "paryaṭana ← pari-√aṭ 'roam about' (MW): 'wandering about'; 'tourism' is a modern use"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C172-bhramanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C172-TRV172-04]; assesses=[] -->
 
 **पर्यटनम्** — *paryaṭanam* — "tourism".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paryaṭana* comes from *pari-√aṭ* "roam about, travel over", the root √aṭ "wander" with *pari* "around" (MW): "wandering about". Using it for tourism is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "drākṣā"
 concept_tag: SA-THINGS109-DRAKSA
 prerequisites: [SA-C108-narikelam, SA-C109-dadimam]
 sounds: []
-roots: []
+roots: [sanskrit-draksha]
+etymology_hook: "drākṣā 'vine, grape'; EtymDB links it to Latin frāgum 'strawberry', but that is uncertain; Hindi dākh (CDIAL 6628)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C109-dadimam]
 <!-- hl-knowledge: introduces=[SA-LEX-C109-THINGS109-02]; assesses=[] -->
 
 **द्राक्षा** — *drākṣā* — "grapes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+EtymDB sets *drākṣā* "vine, grape" beside Latin *frāgum* "strawberry" and an Albanian word for the same fruit, but MW and CDIAL give no such link, so it is uncertain. It lives on as Hindi and Punjabi *dākh* "grape, raisin" (CDIAL 6628).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

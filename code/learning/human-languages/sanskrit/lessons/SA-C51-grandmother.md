@@ -14,7 +14,8 @@ romanization: "mātāmahī"
 concept_tag: SA-KIN-MATAMAHI
 prerequisites: [SA-C51-grandfather, SA-C49-again-and-again, SA-C50-song]
 sounds: []
-roots: []
+roots: [sanskrit-matr, sanskrit-maha]
+etymology_hook: "mātāmahī 'maternal grandmother' ← mātā 'mother' + mahī, the feminine of maha 'great' (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C51-grandfather]
 It is built exactly as पितामहः is, with माता standing in front instead of पिता. Having watched the joining once, you can read this one before it is explained.
 
 The pair also shows the line Sanskrit draws down the middle of a family: one word for each side, and no word covering both. Feminine, ending in *-ī*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mātāmahī* is built from *mātā*, "mother", and *mahī*, the feminine of *maha*,
+"great" (MW), exactly as *pitāmaha* is.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

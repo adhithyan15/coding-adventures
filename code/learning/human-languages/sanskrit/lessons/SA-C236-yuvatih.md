@@ -14,7 +14,8 @@ romanization: "yuvatiḥ"
 concept_tag: SA-PPL236-YUVATIH
 prerequisites: [SA-C236-kumarah, SA-C236-kumari]
 sounds: []
-roots: []
+roots: [sanskrit-yuvan]
+etymology_hook: "yuvati 'young woman' ← yuvan 'young'; MW compares Latin iuvenis, English young (CDIAL 10504)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C236-kumari]
 <!-- hl-knowledge: introduces=[SA-LEX-C236-PPL236-04]; assesses=[] -->
 
 **युवतिः** — *yuvatiḥ* — "a young woman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yuvati* is the feminine of *yuvan*, "young" (MW), a Rigvedic word (CDIAL 10504). The stem is inherited from Indo-European: MW compares Latin *iuvenis* and English *young*. Hindi *joī*, "wife", comes from *yuvati*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

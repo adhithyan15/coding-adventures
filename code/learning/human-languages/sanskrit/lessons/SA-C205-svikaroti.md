@@ -14,7 +14,8 @@ romanization: "svīkaroti"
 concept_tag: SA-VERB-SVIKAROTI
 prerequisites: [SA-C205-nindati, SA-C205-prasamsati]
 sounds: []
-roots: []
+roots: [sanskrit-sva, kr-do]
+etymology_hook: "svīkaroti = sva 'own' + √kṛ 'make': 'makes one's own', so 'accepts' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C205-prasamsati]
 <!-- hl-knowledge: introduces=[SA-LEX-C205-ACT205-04]; assesses=[] -->
 
 **स्वीकरोति** — *svīkaroti* — "accepts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*svīkaroti* is built on *sva*, "own", and *karoti*, "makes", from the root √kṛ (MW): to accept something is to make it your own. *Sva* is inherited from Indo-European; MW compares Latin *suus*, "his own".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

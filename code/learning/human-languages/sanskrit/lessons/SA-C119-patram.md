@@ -14,7 +14,8 @@ romanization: "pātram"
 concept_tag: SA-THINGS119-PATRAM
 prerequisites: [SA-C119-darvi, SA-C119-katahah]
 sounds: []
-roots: []
+roots: [sanskrit-patra-vessel]
+etymology_hook: "pātra 'drinking vessel' ← √pā 'drink' + -tra 'tool' (CDIAL 8055); cousin of Latin pōculum 'cup' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C119-katahah]
 <!-- hl-knowledge: introduces=[SA-LEX-C119-THINGS119-03]; assesses=[] -->
 
 **पात्रम्** — *pātram* — "a vessel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pātra* comes from the root √pā "drink" with the tool suffix *-tra* (CDIAL 8055): "the thing to drink from". It is inherited from Indo-European, a cousin of Latin *pōculum* "cup" (EtymDB), and lives on as Punjabi *pātar* "vessel" (CDIAL 8055).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

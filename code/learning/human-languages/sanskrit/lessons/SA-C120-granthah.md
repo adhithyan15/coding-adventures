@@ -14,7 +14,8 @@ romanization: "granthaḥ"
 concept_tag: SA-THINGS120-GRANTHAH
 prerequisites: [SA-C120-patralayah, SA-C120-lekhah]
 sounds: []
-roots: []
+roots: [sanskrit-grantha]
+etymology_hook: "grantha 'knot', then 'book' ← √granth 'tie, string together' (CDIAL 4350): a book is lines strung together"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C120-lekhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C120-THINGS120-04]; assesses=[] -->
 
 **ग्रन्थः** — *granthaḥ* — "a book, a text".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*grantha* comes from the root √granth "tie, string together" (CDIAL 4350): it first meant "a knot", and later "a book", a composition strung together. Sinhala kept it as *gata* "book" (CDIAL 4350).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

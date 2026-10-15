@@ -14,7 +14,8 @@ romanization: "paridhānam"
 concept_tag: SA-THG192-PARIDHANAM
 prerequisites: [SA-C192-mukutam, SA-C192-adhovastram]
 sounds: []
-roots: []
+roots: [sanskrit-paridhana]
+etymology_hook: "paridhāna ← pari 'around' + √dhā 'put': 'what is put round' (MW); CDIAL 7838 traces Hindi pahirnā to it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C192-adhovastram]
 <!-- hl-knowledge: introduces=[SA-LEX-C192-THG192-04]; assesses=[] -->
 
 **परिधानम्** — *paridhānam* — "clothing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paridhāna* is built on *pari*, "around", and the root √dhā, "to put, place" (MW): clothing is what is put round you. MW compares √dhā with English *do*, and CDIAL 7838 traces Hindi *pahirnā*, "clothes", to *paridhāna*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "pṛṣṭhataḥ"
 concept_tag: SA-LOC94-PRSTHATAH
 prerequisites: [SA-C94-adhah, SA-C94-agre]
 sounds: []
-roots: []
+roots: [sanskrit-prshtha]
+etymology_hook: "pṛṣṭhataḥ ← pṛṣṭha 'back' + -tas 'from'; MW takes pṛṣṭha as probably pra-stha 'standing out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C94-agre]
 <!-- hl-knowledge: introduces=[SA-LEX-C94-LOC94-05]; assesses=[] -->
 
 **पृष्ठतः** — *pṛṣṭhataḥ* — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pṛṣṭhataḥ* is built from *pṛṣṭha* "back" and the ending *-tas* "from, on the side of": "from the back" (MW). MW takes *pṛṣṭha* as probably *pra-stha* "standing out", the back being the part of an animal that stands out. *pṛṣṭha* lives on as Kumaoni *pūṭh* "back" (CDIAL 8371).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

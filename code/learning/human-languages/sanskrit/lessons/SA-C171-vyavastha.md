@@ -14,7 +14,8 @@ romanization: "vyavasthā"
 concept_tag: SA-WRK171-VYAVASTHA
 prerequisites: [SA-C171-sandesah, SA-C171-suvidha]
 sounds: []
-roots: []
+roots: [sanskrit-vyavastha]
+etymology_hook: "vyavasthā ← vi-ava-√sthā 'stand apart, settle' (MW): 'distinction, settlement', so 'arrangement'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C171-suvidha]
 <!-- hl-knowledge: introduces=[SA-LEX-C171-WRK171-03]; assesses=[] -->
 
 **व्यवस्था** — *vyavasthā* — "an arrangement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vyavasthā* comes from *vi-ava-√sthā* "stand apart, be settled, be arranged", the root √sthā "stand" with *vi* and *ava* (MW): "a settled order, an arrangement".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

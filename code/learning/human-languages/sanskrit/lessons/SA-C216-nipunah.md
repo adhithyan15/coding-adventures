@@ -14,7 +14,8 @@ romanization: "nipuṇaḥ"
 concept_tag: SA-QUAL216-NIPUNAH
 prerequisites: [SA-C215-mulyavan, SA-C216-kusalah]
 sounds: []
-roots: []
+roots: [sanskrit-nipuna]
+etymology_hook: "nipuṇa 'clever, skilful', said to come from a root √puṇ (MW); origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C216-kusalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C216-QUAL216-02]; assesses=[] -->
 
 **निपुणः** — *nipuṇaḥ* — "expert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nipuṇa* means "clever, adroit, skilful" (MW). MW says it is "said to be from a √puṇ" with *ni-*, and only reports that view, so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

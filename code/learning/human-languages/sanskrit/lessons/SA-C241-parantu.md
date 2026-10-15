@@ -14,7 +14,8 @@ romanization: "parantu"
 concept_tag: SA-WHY241-PARANTU
 prerequisites: [SA-C241-tena, SA-C241-yat]
 sounds: []
-roots: []
+roots: [sanskrit-parantu]
+etymology_hook: "parantu = param 'further, but' + tu 'but' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C241-yat]
 <!-- hl-knowledge: introduces=[SA-LEX-C241-WHY241-05]; assesses=[] -->
 
 **परन्तु** — *parantu* — "however, but".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*parantu* is built on *param*, "beyond, further, but", from *para*, "far, other", and *tu*, "but, on the other hand" (MW). Two words for "but" joined into one.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "cet"
 concept_tag: SA-WHY154-CET
 prerequisites: [SA-C153-samantatah, SA-C154-yadi]
 sounds: []
-roots: []
+roots: [sanskrit-ced]
+etymology_hook: "cet ← ca 'and' + id, an emphatic particle (MW): first 'and', then 'when', then 'if'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C154-yadi]
 <!-- hl-knowledge: introduces=[SA-LEX-C154-WHY154-02]; assesses=[] -->
 
 **चेत्** — *cet* — "provided that, if".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cet* is *ced*, built from *ca* "and" + *id*, an emphatic particle, as the Vedic word-by-word text splits it (MW). It first meant "and" and "when", and later "if"; like *ca*, it follows the first word of its clause.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

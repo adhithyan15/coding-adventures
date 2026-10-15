@@ -14,7 +14,8 @@ romanization: "gūhati"
 concept_tag: SA-VERB-GUHATI
 prerequisites: [SA-C137-sivyati, SA-C137-jayati]
 sounds: []
-roots: []
+roots: [sanskrit-guhati]
+etymology_hook: "gūhati ← √guh 'hide' (MW), inherited from Indo-Iranian, cf. Avestan (EtymDB); guhā 'cave' is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C137-jayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C137-ACT137-03]; assesses=[] -->
 
 **गूहति** — *gūhati* — "hides".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gūhati* comes from the root √guh "hide, conceal" (MW), inherited from Indo-Iranian, with cousins in Avestan and Old Persian (EtymDB). *guhā* "a hiding place, a cave" comes from the same root (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "avaśyam"
 concept_tag: SA-WHY185-AVASYAM
 prerequisites: [SA-C185-hi, SA-C185-nunam]
 sounds: []
-roots: []
+roots: [sanskrit-avashyam]
+etymology_hook: "avaśyam ← a- 'not' + vaśa 'will, control': 'not subject to one's will', so 'inevitably' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C185-nunam]
 <!-- hl-knowledge: introduces=[SA-LEX-C185-WHY185-05]; assesses=[] -->
 
 **अवश्यम्** — *avaśyam* — "certainly, necessarily".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*avaśyam* is built on *a-*, "not", and *vaśa*, "will, control" (MW): what is not under anyone's control is inevitable, so "necessarily, certainly". MW sets it beside *āvaśyaka*, "necessary".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

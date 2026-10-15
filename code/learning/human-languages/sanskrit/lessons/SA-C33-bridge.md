@@ -14,7 +14,8 @@ romanization: "setuḥ"
 concept_tag: SA-LAND-SETU
 prerequisites: [SA-C33-river, SA-C31-moon, SA-C32-leaf]
 sounds: []
-roots: []
+roots: [sanskrit-setu]
+etymology_hook: "setu 'bond, dam, bridge' ← the root √si 'bind'; MW compares German Seil 'rope' (CDIAL 13585)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,13 @@ reviews_of: [SA-C33-river]
 **सेतुः** is literally "the binding", from a root meaning "to bind, to tie". A bridge is what ties two banks to each other, and Sanskrit names it for the tying rather than for the crossing.
 
 The causeway between India and Lanka is the *Rāma-setu*, and that is this word, unchanged, on a modern map. Ends in *-uḥ*, like **तरुः**, **वायुः** and **गुरुः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Setu* is built on the root √si, "to bind, tie" (MW, CDIAL 13585), which MW
+compares with German *Seil*, "rope". It first meant a bond, then a dam or a
+bridge.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

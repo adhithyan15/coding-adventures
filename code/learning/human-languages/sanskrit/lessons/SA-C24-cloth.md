@@ -14,7 +14,8 @@ romanization: "vastram"
 concept_tag: SA-NOUN-CLOTH
 prerequisites: [SA-C24-fruit, SA-C22-burn, SA-C23-daughter]
 sounds: []
-roots: []
+roots: [sanskrit-vastra]
+etymology_hook: "vastra 'garment' ← the root √vas 'wear'; MW compares Latin vestis and English wear (CDIAL 11450)"
 duration:
   max_seconds: 210
 requires:

@@ -14,7 +14,8 @@ romanization: "panasam"
 concept_tag: SA-THINGS109-PANASAM
 prerequisites: [SA-C109-dadimam, SA-C109-draksa]
 sounds: []
-roots: []
+roots: [sanskrit-panasa]
+etymology_hook: "panasa 'jackfruit' is probably borrowed from Dravidian (CDIAL 7781, after EWA; DEDR 3988); Hindi panas"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C109-draksa]
 <!-- hl-knowledge: introduces=[SA-LEX-C109-THINGS109-03]; assesses=[] -->
 
 **पनसम्** — *panasam* — "a jackfruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*panasa* "the jackfruit tree and its fruit" is probably borrowed from Dravidian: CDIAL 7781 says so after EWA, and DEDR 3988 sets it beside a Dravidian family of jackfruit names. It lives on as Hindi *panas* and Marathi *phaṇas* (CDIAL 7781).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

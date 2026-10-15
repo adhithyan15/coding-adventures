@@ -14,7 +14,8 @@ romanization: "nīcaḥ"
 concept_tag: SA-QUAL133-NICAH
 prerequisites: [SA-C132-purnah, SA-C132-riktah]
 sounds: []
-roots: []
+roots: [sanskrit-nica]
+etymology_hook: "nīca 'low' ← ni 'down' + √añc 'bend, turn' (MW; CDIAL 7540): 'turned down'; Hindi nīcā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C132-riktah]
 <!-- hl-knowledge: introduces=[SA-LEX-C133-QUAL133-01]; assesses=[] -->
 
 **नीचः** — *nīcaḥ* — "low".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nīca* is built from *ni* "down" and the root √añc "bend, turn" (MW; CDIAL 7540): "turned downward", so "low". It lives on as Hindi and Punjabi *nīcā* "low" (CDIAL 7540).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "caṇḍaḥ"
 concept_tag: SA-QUAL156-CANDAH
 prerequisites: [SA-C156-apriyah, SA-C156-santah]
 sounds: []
-roots: []
+roots: [sanskrit-canda]
+etymology_hook: "caṇḍa 'fierce' is perhaps from candra 'glowing' (MW; CDIAL 4584 says 'perh.'); origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C156-santah]
 <!-- hl-knowledge: introduces=[SA-LEX-C156-QUAL156-04]; assesses=[] -->
 
 **चण्डः** — *caṇḍaḥ* — "fierce".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*caṇḍa* "fierce, violent, passionate" is perhaps from *candra* "glowing, bright", glowing with passion, as MW and CDIAL 4584 both suggest, but neither is sure, so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

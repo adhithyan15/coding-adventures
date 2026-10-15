@@ -14,7 +14,8 @@ romanization: "bāṇaḥ"
 concept_tag: SA-THG247-BANAH
 prerequisites: [SA-C246-ksaudram, SA-C246-mistannam]
 sounds: []
-roots: []
+roots: [sanskrit-bana]
+etymology_hook: "bāṇa 'reed-shaft, arrow' (CDIAL 9203); an Austroasiatic source has been proposed; Hindi bān"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C246-mistannam]
 <!-- hl-knowledge: introduces=[SA-LEX-C247-THG247-01]; assesses=[] -->
 
 **बाणः** — *bāṇaḥ* — "an arrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bāṇa* is a reed-shaft and so an arrow, already in the Rigveda (CDIAL 9203). Its origin is uncertain: CDIAL reports proposed Austroasiatic sources without accepting one. It lives on as Hindi *bān*, "arrow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

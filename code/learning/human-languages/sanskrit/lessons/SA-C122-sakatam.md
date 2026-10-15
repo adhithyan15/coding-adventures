@@ -14,7 +14,8 @@ romanization: "śakaṭam"
 concept_tag: SA-THINGS122-SAKATAM
 prerequisites: [SA-C122-rajatam, SA-C122-kacah]
 sounds: []
-roots: []
+roots: [sanskrit-shakata]
+etymology_hook: "śakaṭa 'cart' is of doubtful derivation (MW), perhaps √śak (CDIAL 12236 queries it); Hindi chakṛā 'cart'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C122-kacah]
 <!-- hl-knowledge: introduces=[SA-LEX-C122-THINGS122-03]; assesses=[] -->
 
 **शकटम्** — *śakaṭam* — "a cart".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śakaṭa* "a cart, a waggon" appears from the Śrauta Sūtras on, and MW calls it of doubtful derivation; CDIAL 12236 suggests the root √śak with a query mark, so its origin is uncertain. It lives on as Hindi and Punjabi *chakṛā* "bullock-cart" (CDIAL 12236).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

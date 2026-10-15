@@ -14,7 +14,8 @@ romanization: "āśā"
 concept_tag: SA-WEL239-ASA
 prerequisites: [SA-C238-araksakah, SA-C238-calakah]
 sounds: []
-roots: []
+roots: [sanskrit-asha]
+etymology_hook: "āśā 'wish, hope' ← ā- + √śaṃs 'wish, praise' (MW); Hindi ās 'hope' (CDIAL 1456)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C238-calakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C239-WEL239-01]; assesses=[] -->
 
 **आशा** — *āśā* — "hope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āśā* is built on *ā-* and the root √śaṃs, "to recite, praise; to wish" (MW; CDIAL 1456). It lives on as Hindi *ās*, "hope".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

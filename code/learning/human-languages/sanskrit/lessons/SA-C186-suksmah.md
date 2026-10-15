@@ -14,7 +14,8 @@ romanization: "sūkṣmaḥ"
 concept_tag: SA-QUAL186-SUKSMAH
 prerequisites: [SA-C186-vamanah, SA-C186-visalah]
 sounds: []
-roots: []
+roots: [sanskrit-sukshma]
+etymology_hook: "sūkṣma 'fine, minute', probably connected with sūci 'needle' (MW; CDIAL 13546)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C186-visalah]
 <!-- hl-knowledge: introduces=[SA-LEX-C186-QUAL186-04]; assesses=[] -->
 
 **सूक्ष्मः** — *sūkṣmaḥ* — "fine, subtle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sūkṣma* is probably connected with *sūci*, "needle", MW says: fine as a needle's point. CDIAL 13546 lists it with Pali *sukhuma*, "subtle, minute".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "śītam"
 concept_tag: SA-WEATHER-COLD
 prerequisites: [SA-C75-enters, SA-C76-rain]
 sounds: []
-roots: []
+roots: [sanskrit-shita]
+etymology_hook: "śīta 'cold' ← the root √śyai 'congeal' (MW; CDIAL 12485)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C76-rain]
 <!-- hl-knowledge: introduces=[SA-LEX-C76-WEATHER-02]; assesses=[] -->
 
 **शीतम्** (*śītam*) — "cold". **शीतम् अस्ति** — "it is cold".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Śīta* is built on the root √śyai, "to congeal, freeze" (MW, CDIAL 12485), and is
+already in the Rigveda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

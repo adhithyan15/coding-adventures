@@ -14,7 +14,8 @@ romanization: "sopānam"
 concept_tag: SA-DWELL-SOPANA
 prerequisites: [SA-C47-window, SA-C45-evening, SA-C46-light]
 sounds: []
-roots: []
+roots: [sanskrit-sopana]
+etymology_hook: "sopāna 'stairs': perhaps sa + upāyana 'approach' (MW); CDIAL 13606 marks this with a question"
 duration:
   max_seconds: 210
 requires:
@@ -44,9 +45,15 @@ reviews_of: [SA-C47-window]
 
 **सोपानम्** is a stair, a flight of steps.
 
-The usual way of taking it apart reads it as "the means of going up" — a small joining word in front, and behind it the sense of rising. The word carries its purpose on its face, the way वातायनम् does.
+One way of taking it apart reads it as "the approach" — a small joining word in front, and behind it a word for coming near. If that is right, the word carries its purpose on its face, the way वातायनम् does.
 
 It stayed home and stayed itself: Hindi and Marathi both keep *sopān* for a stair. Neuter, ending in **-अम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW suggests *sopāna* may be contracted from *sa* + *upāyana*, "approach", and
+CDIAL 13606 repeats this with a question mark, so it is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

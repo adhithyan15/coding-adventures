@@ -14,7 +14,8 @@ romanization: "pustakālayaḥ"
 concept_tag: SA-LOC96-PUSTAKALAYAH
 prerequisites: [SA-C96-catuspathah, SA-C96-konah]
 sounds: []
-roots: []
+roots: [sanskrit-pustaka, sanskrit-alaya]
+etymology_hook: "pustakālaya ← pustaka 'book' (from Iranian, CDIAL 8413) + ālaya 'dwelling'; a modern pairing"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C96-konah]
 <!-- hl-knowledge: introduces=[SA-LEX-C96-LOC96-04]; assesses=[] -->
 
 **पुस्तकालयः** — *pustakālayaḥ* — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pustakālaya* is a compound of *pustaka* "book" and *ālaya* "dwelling, house" (MW); the pairing for a library is modern. *pustaka* was borrowed from Iranian: CDIAL 8413 compares Sogdian *pwstk* "book" and Persian *pōst* "skin".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

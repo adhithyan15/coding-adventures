@@ -14,7 +14,8 @@ romanization: "mātāmahaḥ"
 concept_tag: SA-PPL146-MATAMAHAH
 prerequisites: [SA-C146-pautri, SA-C146-pitamahi]
 sounds: []
-roots: []
+roots: [sanskrit-matr]
+etymology_hook: "mātāmaha ← mātā 'mother' + maha 'great': the mother's father (MW); mātṛ is English mother's cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C146-pitamahi]
 <!-- hl-knowledge: introduces=[SA-LEX-C146-PPL146-04]; assesses=[] -->
 
 **मातामहः** — *mātāmahaḥ* — "a maternal grandfather".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mātāmaha* is built from *mātā* "mother" and *maha* "great" (MW): the mother's father. MW sets *mātṛ* "mother" beside Latin *mater* and English *mother*: one inherited Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "laśunam"
 concept_tag: SA-THINGS107-LASUNAM
 prerequisites: [SA-C107-haridra, SA-C107-ardrakam]
 sounds: []
-roots: []
+roots: [sanskrit-lasuna]
+etymology_hook: "laśuna 'garlic' (Gautama) has no derivation in MW; origin uncertain; Hindi lahsun (CDIAL 10990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C107-ardrakam]
 <!-- hl-knowledge: introduces=[SA-LEX-C107-THINGS107-05]; assesses=[] -->
 
 **लशुनम्** — *laśunam* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*laśuna* "garlic" appears from the law books of Gautama on, also spelt *lasuna* and *rasuna* (MW). MW gives no derivation beyond the grammarians, so its origin is uncertain. It lives on as Hindi *lahsun* "garlic" (CDIAL 10990).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

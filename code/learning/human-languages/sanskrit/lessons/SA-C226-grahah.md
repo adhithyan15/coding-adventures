@@ -14,7 +14,8 @@ romanization: "grahaḥ"
 concept_tag: SA-THG226-GRAHAH
 prerequisites: [SA-C225-kunjah, SA-C225-sadvalam]
 sounds: []
-roots: []
+roots: [sanskrit-graha, grah-seize]
+etymology_hook: "graha 'seizer', so 'planet' ← root √grah 'seize' (MW; CDIAL 4363)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C225-sadvalam]
 <!-- hl-knowledge: introduces=[SA-LEX-C226-THG226-01]; assesses=[] -->
 
 **ग्रहः** — *grahaḥ* — "a planet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*graha* is built on the root √grah, "to seize" (MW), which you met in *gṛhṇāti*: a planet is a "seizer", believed to grip people's fortunes. In the Rigveda it means "as much as can be taken" (CDIAL 4363), and Punjabi *garauh* is "the influence of the planets".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sadā"
 concept_tag: SA-ADV-ALWAYS
 prerequisites: [SA-C17-yesterday]
 sounds: []
-roots: []
+roots: [sanskrit-sada]
+etymology_hook: "sadā 'always': MW connects it with sa- 'with, together'; its exact formation is not settled"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,12 @@ Always is the whole of time taken at once.
 Where the other four words in this chapter point at one particular time, सदा
 refuses to. That is what makes it useful with the verbs you already have: सदा
 पठति, "he reads always."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Sadā* is an old Rigvedic adverb (MW). MW connects it with the prefix *sa-*
+"with, together", but its exact formation is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

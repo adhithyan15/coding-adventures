@@ -14,7 +14,8 @@ romanization: "snehaḥ"
 concept_tag: SA-WEL239-SNEHAH
 prerequisites: [SA-C239-asa, SA-C239-prema]
 sounds: []
-roots: []
+roots: [sanskrit-sneha, snih-stick]
+etymology_hook: "sneha 'oil', then 'love' ← root √snih 'be sticky' (MW; CDIAL 13802)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C239-prema]
 <!-- hl-knowledge: introduces=[SA-LEX-C239-WEL239-03]; assesses=[] -->
 
 **स्नेहः** — *snehaḥ* — "affection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sneha* is built on the root √snih, "to be sticky, oily" (MW), which you met in *snihyati*. It first meant "grease, oiliness" and then "love" (CDIAL 13802): affection is what sticks. Sindhi *nehu*, "affection", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

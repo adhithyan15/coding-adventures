@@ -14,7 +14,8 @@ romanization: "aśvatthaḥ"
 concept_tag: SA-THG166-ASVATTHAH
 prerequisites: [SA-C165-angarah, SA-C165-lauham]
 sounds: []
-roots: []
+roots: [sanskrit-ashvattha]
+etymology_hook: "aśvattha 'sacred fig': MW reads aśva-stha 'where horses stand'; EWA calls it non-Aryan (CDIAL 922); disputed"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C165-lauham]
 <!-- hl-knowledge: introduces=[SA-LEX-C166-THG166-01]; assesses=[] -->
 
 **अश्वत्थः** — *aśvatthaḥ* — "a sacred fig tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aśvattha* "the sacred fig tree" has a disputed origin: MW reads it as *aśva* "horse" + *-stha* "standing", "the tree horses stand under", but CDIAL 922 reports Mayrhofer's view that it is non-Aryan and unconnected with *aśva*. It is old, in the Atharvaveda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ekādaśa"
 concept_tag: SA-NUMBER-ELEVEN
 prerequisites: [SA-C86-time, SA-C86-moment, SA-C19-number-family]
 sounds: []
-roots: []
+roots: [sanskrit-ekadasha]
+etymology_hook: "ekādaśa 'eleven' ← eka 'one' + daśa 'ten' (MW); it lives on as Hindi igārah, gyārah (CDIAL 2485)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,12 @@ reviews_of: [SA-C86-moment]
 <!-- hl-knowledge: introduces=[SA-LEX-C87-NUMBERS-01]; assesses=[] -->
 
 **एकादश** (*ekādaśa*) — "eleven": **एक**, "one", with **दश**, "ten". One and ten.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Ekādaśa* is built from *eka*, "one", and *daśa*, "ten", both inherited numerals
+(MW). It lives on as Hindi *igārah*, "eleven" (CDIAL 2485).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

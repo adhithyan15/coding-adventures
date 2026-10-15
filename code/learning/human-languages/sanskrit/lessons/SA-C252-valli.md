@@ -14,7 +14,8 @@ romanization: "vallī"
 concept_tag: SA-THG252-VALLI
 prerequisites: [SA-C251-prakrtih, SA-C251-pankah]
 sounds: []
-roots: []
+roots: [sanskrit-valli]
+etymology_hook: "vallī 'creeper', possibly borrowed from Dravidian, as Tamil vaḷḷi (CDIAL 11429; DEDR 5316)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C251-pankah]
 <!-- hl-knowledge: introduces=[SA-LEX-C252-THG252-01]; assesses=[] -->
 
 **वल्ली** — *vallī* — "a vine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vallī* may be borrowed from Dravidian: CDIAL 11429 says "possibly", comparing Tamil *vaḷḷi*, "creeper", and DEDR 5316 sets the Dravidian words beside it. The goddess Vaḷḷi of Tamil tradition bears the same name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

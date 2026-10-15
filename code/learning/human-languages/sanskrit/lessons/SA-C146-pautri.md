@@ -14,7 +14,8 @@ romanization: "pautrī"
 concept_tag: SA-PPL146-PAUTRI
 prerequisites: [SA-C145-jalpati, SA-C146-pautrah]
 sounds: []
-roots: []
+roots: [sanskrit-pautra]
+etymology_hook: "pautrī 'granddaughter' is the feminine of pautra 'grandson' ← putra 'son' (MW; CDIAL 8417)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C146-pautrah]
 <!-- hl-knowledge: introduces=[SA-LEX-C146-PPL146-02]; assesses=[] -->
 
 **पौत्री** — *pautrī* — "a granddaughter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pautrī* is the feminine of *pautra* "grandson", which is built from *putra* "son" (MW; CDIAL 8417): a son's daughter. Hindi *potī* "granddaughter" belongs with it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "tailam"
 concept_tag: SA-FOOD-OIL
 prerequisites: [SA-C78-mango, SA-C78-banana]
 sounds: []
-roots: []
+roots: [sanskrit-taila]
+etymology_hook: "taila 'sesame oil, oil' ← tila 'sesame' (MW); it lives on as Hindi tel 'oil' (CDIAL 5958)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C78-banana]
 <!-- hl-knowledge: introduces=[SA-LEX-C78-FOOD-03]; assesses=[] -->
 
 **तैलम्** (*tailam*) — "oil", for cooking and for the **दीपः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Taila* is built from *tila*, "sesame": oil was first sesame oil (MW, CDIAL 5958).
+It lives on as Hindi *tel*, "oil".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

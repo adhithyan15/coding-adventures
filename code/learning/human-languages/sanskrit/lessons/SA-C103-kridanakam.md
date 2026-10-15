@@ -14,7 +14,8 @@ romanization: "krīḍanakam"
 concept_tag: SA-THINGS103-KRIDANAKAM
 prerequisites: [SA-C102-vartika, SA-C103-kandukah]
 sounds: []
-roots: []
+roots: [sanskrit-kridana]
+etymology_hook: "krīḍanaka 'plaything' ← krīḍana 'playing' ← √krīḍ 'play' (MW; CDIAL 3593)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C103-kandukah]
 <!-- hl-knowledge: introduces=[SA-LEX-C103-THINGS103-02]; assesses=[] -->
 
 **क्रीडनकम्** — *krīḍanakam* — "a toy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*krīḍanaka* is built from *krīḍana* "playing" (CDIAL 3593), from the root √krīḍ "play, sport", with the suffix *-ka*: "a plaything" (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

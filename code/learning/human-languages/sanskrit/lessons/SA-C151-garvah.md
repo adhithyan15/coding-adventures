@@ -14,7 +14,8 @@ romanization: "garvaḥ"
 concept_tag: SA-WEL151-GARVAH
 prerequisites: [SA-C151-alasyam, SA-C151-matsarah]
 sounds: []
-roots: []
+roots: [sanskrit-garva]
+etymology_hook: "garva 'pride, arrogance' (Rāmāyaṇa); MW compares Lithuanian garbė 'honour'; origin uncertain (CDIAL 4064)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C151-matsarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C151-WEL151-05]; assesses=[] -->
 
 **गर्वः** — *garvaḥ* — "pride".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*garva* "pride, arrogance" appears from the Rāmāyaṇa on (CDIAL 4064). MW compares Lithuanian *garbė* "honour, glory", but that is not taken further, so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

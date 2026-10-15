@@ -14,7 +14,8 @@ romanization: "krandati"
 concept_tag: SA-VERB-KRANDATI
 prerequisites: [SA-C144-yojayati, SA-C145-nandati]
 sounds: []
-roots: []
+roots: [sanskrit-krandati]
+etymology_hook: "krandati ← √krand 'roar, wail' (CDIAL 3574), which MW sets beside Gothic grētan 'lament'; Bengali kāṁdā 'cry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C145-nandati]
 <!-- hl-knowledge: introduces=[SA-LEX-C145-ACT145-02]; assesses=[] -->
 
 **क्रन्दति** — *krandati* — "cries out, wails".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*krandati* comes from the root √krand "roar, neigh, lament" (CDIAL 3574), which MW sets beside Gothic *grētan* "lament". It lives on as Bengali *kāṁdā* "to cry" (CDIAL 3574).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

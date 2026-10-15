@@ -14,7 +14,8 @@ romanization: "nīhāraḥ"
 concept_tag: SA-THINGS111-NIHARAH
 prerequisites: [SA-C110-garjanam, SA-C111-vatya]
 sounds: []
-roots: []
+roots: [sanskrit-nihara]
+etymology_hook: "nīhāra 'mist, fog' (RV); MW splits it as nī + hāra, but the formation is uncertain; Hindi nīhār (CDIAL 7574)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C111-vatya]
 <!-- hl-knowledge: introduces=[SA-LEX-C111-THINGS111-02]; assesses=[] -->
 
 **नीहारः** — *nīhāraḥ* — "mist, fog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nīhāra* "mist, fog, hoar-frost" is old, in the Rigveda. MW splits it as *nī-* "down" + *hāra*, pointing to the verb *ni-√hṛ*, but does not explain the sense, so its formation is uncertain. Hindi kept it as *nīhār* "fog, mist" (CDIAL 7574).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

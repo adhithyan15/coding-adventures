@@ -14,7 +14,8 @@ romanization: "sevā"
 concept_tag: SA-WRK170-SEVA
 prerequisites: [SA-C170-udyogah, SA-C170-vrttih]
 sounds: []
-roots: []
+roots: [sanskrit-seva]
+etymology_hook: "sevā 'attendance, service' ← √sev 'attend on, serve' (CDIAL 13595); sevaka and sevate are kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C170-vrttih]
 <!-- hl-knowledge: introduces=[SA-LEX-C170-WRK170-05]; assesses=[] -->
 
 **सेवा** — *sevā* — "service".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sevā* comes from the root √sev "attend on, serve, frequent" (CDIAL 13595): "attendance, homage, service". *sevaka* "a servant" and *sevate* "serves" come from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

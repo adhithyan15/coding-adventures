@@ -14,7 +14,8 @@ romanization: "adhikāraḥ"
 concept_tag: SA-SCH229-ADHIKARAH
 prerequisites: [SA-C229-dharmah, SA-C229-kartavyam]
 sounds: []
-roots: []
+roots: [sanskrit-adhikara, kr-do]
+etymology_hook: "adhikāra ← adhi 'over' + √kṛ 'do, put': putting at the head, so 'authority' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C229-kartavyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C229-SCH229-04]; assesses=[] -->
 
 **अधिकारः** — *adhikāraḥ* — "authority, a right".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*adhikāra* is built on *adhi*, "over", and the root √kṛ, "to do, make" (MW). The verb means "to place at the head, appoint", so the noun means "authority", and then a right that someone holds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

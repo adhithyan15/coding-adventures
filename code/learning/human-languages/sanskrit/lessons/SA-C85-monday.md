@@ -14,7 +14,8 @@ romanization: "somavāsaraḥ"
 concept_tag: SA-WEEK-MONDAY
 prerequisites: [SA-C84-merchant, SA-C85-week]
 sounds: []
-roots: []
+roots: [sanskrit-soma, sanskrit-vasara]
+etymology_hook: "somavāsara ← soma 'Soma, the moon' + vāsara 'day' (MW records the compound)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C85-week]
 <!-- hl-knowledge: introduces=[SA-LEX-C85-WEEK-02]; assesses=[] -->
 
 **सोमवासरः** (*somavāsaraḥ*) — "Monday": **सोम**, "the moon", with **वासरः**, "day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Somavāsara* is built from *soma*, the pressed drink and the moon, and *vāsara*,
+"day", a word MW derives from the root √vas, "to shine". MW records the compound
+as "Monday".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

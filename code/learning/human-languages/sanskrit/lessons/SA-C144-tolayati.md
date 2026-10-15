@@ -14,7 +14,8 @@ romanization: "tolayati"
 concept_tag: SA-VERB-TOLAYATI
 prerequisites: [SA-C143-dhyayati, SA-C144-bhajati]
 sounds: []
-roots: []
+roots: [sanskrit-tolayati]
+etymology_hook: "tolayati ← √tul 'lift, weigh', which MW sets beside Latin tuli 'I bore'; tulā 'balance'; Hindi tolnā (CDIAL 5979)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C144-bhajati]
 <!-- hl-knowledge: introduces=[SA-LEX-C144-ACT144-02]; assesses=[] -->
 
 **तोलयति** — *tolayati* — "weighs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tolayati* comes from the root √tul "lift up, weigh by lifting" (MW; CDIAL 5979), which MW sets beside Latin *tuli* "I carried" and Greek *tlēnai* "endure". It lives on as Hindi *tolnā* "to weigh" (CDIAL 5979).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

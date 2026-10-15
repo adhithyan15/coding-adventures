@@ -14,7 +14,8 @@ romanization: "upari"
 concept_tag: SA-LOC94-UPARI
 prerequisites: [SA-C93-antah, SA-C94-bahih]
 sounds: []
-roots: []
+roots: [sanskrit-upari]
+etymology_hook: "upari ← upa 'up to, near'; MW compares Greek hyper, Latin super, English over; Marathi var (CDIAL 2218)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C94-bahih]
 <!-- hl-knowledge: introduces=[SA-LEX-C94-LOC94-02]; assesses=[] -->
 
 **उपरि** — *upari* — "above".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*upari* is built on *upa* "near, up to" (CDIAL 2218), and MW sets it beside Greek *hyper*, Latin *super* and English *over*: one inherited Indo-European word. Marathi *var* "on" comes from it (CDIAL 2218).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

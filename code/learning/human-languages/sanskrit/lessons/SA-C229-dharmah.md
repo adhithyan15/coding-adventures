@@ -14,7 +14,8 @@ romanization: "dharmaḥ"
 concept_tag: SA-SCH229-DHARMAH
 prerequisites: [SA-C228-citrakala, SA-C229-niyamah]
 sounds: []
-roots: []
+roots: [sanskrit-dharma]
+etymology_hook: "dharma 'what is established' ← root √dhṛ 'hold, support'; MW compares Latin firmus (CDIAL 6753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C229-niyamah]
 <!-- hl-knowledge: introduces=[SA-LEX-C229-SCH229-02]; assesses=[] -->
 
 **धर्मः** — *dharmaḥ* — "righteousness, duty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dharma* is built on the root √dhṛ, "to hold, support" (MW): "that which is established", a law or duty (CDIAL 6753). MW compares Latin *firmus*, "firm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

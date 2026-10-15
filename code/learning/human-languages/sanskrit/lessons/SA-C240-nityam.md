@@ -14,7 +14,8 @@ romanization: "nityam"
 concept_tag: SA-TIME240-NITYAM
 prerequisites: [SA-C240-pratidinam, SA-C240-pratyaham]
 sounds: []
-roots: []
+roots: [sanskrit-nitya]
+etymology_hook: "nitya 'innate, perpetual', from ni 'in' (MW); nityam 'always' is in the Rigveda (CDIAL 7190)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C240-pratyaham]
 <!-- hl-knowledge: introduces=[SA-LEX-C240-TIME240-05]; assesses=[] -->
 
 **नित्यम्** — *nityam* — "constantly, always".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nityam* is the adverb of *nitya*, which MW derives from *ni*, "in, into": first "innate, one's own", then "continual, eternal". The Rigveda already uses *nityam* for "always" (CDIAL 7190).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

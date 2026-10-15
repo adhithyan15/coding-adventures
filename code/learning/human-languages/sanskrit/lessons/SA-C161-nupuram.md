@@ -14,7 +14,8 @@ romanization: "nūpuram"
 concept_tag: SA-THG161-NUPURAM
 prerequisites: [SA-C161-venuh, SA-C161-mrdangah]
 sounds: []
-roots: []
+roots: [sanskrit-nupura]
+etymology_hook: "nūpura 'anklet' (MBh) is perhaps of non-Aryan origin, cf. Santali lipur (CDIAL 7577); Hindi neur"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C161-mrdangah]
 <!-- hl-knowledge: introduces=[SA-LEX-C161-THG161-04]; assesses=[] -->
 
 **नूपुरम्** — *nūpuram* — "an anklet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nūpura* "an anklet" has an uncertain origin: CDIAL 7577 reports both a Middle Indic form reshaped after *keyūra* "armlet" and Kuiper's non-Aryan account, comparing Santali *lipur*. It lives on as Hindi and Punjabi *neur* "anklet" (CDIAL 7577).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

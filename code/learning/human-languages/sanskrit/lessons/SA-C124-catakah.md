@@ -14,7 +14,8 @@ romanization: "cāṭakaḥ"
 concept_tag: SA-THINGS124-CATAKAH
 prerequisites: [SA-C124-naditiram, SA-C124-kokilah]
 sounds: []
-roots: []
+roots: [sanskrit-cataka]
+etymology_hook: "cāṭaka: MW has the sparrow as caṭaka, an imitative word (CDIAL 4571); Hindi ciṛiyā 'bird'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C124-kokilah]
 <!-- hl-knowledge: introduces=[SA-LEX-C124-THINGS124-05]; assesses=[] -->
 
 **चाटकः** — *cāṭakaḥ* — "a sparrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW and Apte record the sparrow as *caṭaka*, with a short *a*, and CDIAL 4571 calls it imitative of the bird's call, with similar words in Dravidian and Munda. It lives on as Hindi *ciṛā* "sparrow" and *ciṛiyā* "bird" (CDIAL 4571).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

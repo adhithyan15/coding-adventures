@@ -14,7 +14,8 @@ romanization: "saphalatā"
 concept_tag: SA-WRK230-SAPHALATA
 prerequisites: [SA-C229-adhikarah, SA-C229-prasnapatram]
 sounds: []
-roots: []
+roots: [sanskrit-saphala, sanskrit-phala]
+etymology_hook: "saphalatā = sa 'with' + phala 'fruit' + -tā '-ness': 'fruitfulness', success (MW; CDIAL 13166)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C229-prasnapatram]
 <!-- hl-knowledge: introduces=[SA-LEX-C230-WRK230-01]; assesses=[] -->
 
 **सफलता** — *saphalatā* — "success".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*saphalatā* is built on *saphala*, "with fruit, fruitful" (CDIAL 13166), from *sa-*, "with", and *phala*, "fruit", with *-tā*, "-ness" (MW). Success is bearing fruit. CDIAL 9051 compares *phala* with Dravidian words for ripe fruit.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

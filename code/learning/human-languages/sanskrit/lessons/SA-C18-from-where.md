@@ -14,7 +14,8 @@ romanization: "kutaḥ"
 concept_tag: SA-Q-FROM-WHERE
 prerequisites: [SA-C18-how-many, SA-C14-where]
 sounds: []
-roots: []
+roots: [ka-interrogative]
+etymology_hook: "kutas 'from where' ← the question base ku- + the ablative suffix -tas 'from' (MW; CDIAL 3271)"
 duration:
   max_seconds: 210
 requires:
@@ -52,6 +53,12 @@ You already have **कुत्र** (*kutra*), "where?" Now compare the two end
 The *-tas* ending means "from," and Sanskrit uses it far beyond question words.
 English once had this distinction too and has mostly lost it: *where* against
 *whence*, *there* against *thence*. Sanskrit keeps them working.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kutaḥ* is built from the question base *ku-* with the ending *-tas*, "from"
+(MW, CDIAL 3271).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

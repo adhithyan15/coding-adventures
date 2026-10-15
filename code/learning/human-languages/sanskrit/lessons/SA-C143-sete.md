@@ -14,7 +14,8 @@ romanization: "śete"
 concept_tag: SA-VERB-SETE
 prerequisites: [SA-C142-pujayati, SA-C143-pratyagacchati]
 sounds: []
-roots: []
+roots: [sanskrit-sete]
+etymology_hook: "śete 'lies down' ← √śī 'lie, rest' (MW; CDIAL 12605), already in the Rigveda"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C143-pratyagacchati]
 <!-- hl-knowledge: introduces=[SA-LEX-C143-ACT143-02]; assesses=[] -->
 
 **शेते** — *śete* — "lies down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śete* comes from the root √śī "lie, rest, sleep" (MW; CDIAL 12605), already in the Rigveda, with the vowel strengthened to *e* throughout the present. *śayana* "bed, lying down" comes from the same root (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "saṅkīrṇaḥ"
 concept_tag: SA-QUAL126-SANKIRNAH
 prerequisites: [SA-C125-malinah, SA-C126-vistrtah]
 sounds: []
-roots: []
+roots: [sanskrit-sankirna]
+etymology_hook: "saṅkīrṇa ← sam-√kṝ 'pour together' (MW): 'crowded, packed', so 'narrow'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C126-vistrtah]
 <!-- hl-knowledge: introduces=[SA-LEX-C126-QUAL126-02]; assesses=[] -->
 
 **संकीर्णः** — *saṅkīrṇaḥ* — "narrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*saṅkīrṇa* comes from *sam-√kṝ*, the root √kṝ "pour out, scatter" with *sam* "together" (MW). As a past participle it means "poured together, crowded", and from that "narrow, cramped".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

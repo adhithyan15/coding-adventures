@@ -14,7 +14,8 @@ romanization: "sthānam"
 concept_tag: SA-TRV231-STHANAM
 prerequisites: [SA-C230-anubhavah, SA-C231-manacitram]
 sounds: []
-roots: []
+roots: [sanskrit-sthana]
+etymology_hook: "sthāna ← root √sthā 'stand'; MW compares Latin stāre, English stand; Hindi thānā (CDIAL 13753)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C231-manacitram]
 <!-- hl-knowledge: introduces=[SA-LEX-C231-TRV231-02]; assesses=[] -->
 
 **स्थानम्** — *sthānam* — "a place".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sthāna* is built on the root √sthā, "to stand" (MW): a place is where something stands. MW compares √sthā with Latin *stāre* and English *stand*. It lives on as Hindi *thānā*, "place, police station" (CDIAL 13753).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

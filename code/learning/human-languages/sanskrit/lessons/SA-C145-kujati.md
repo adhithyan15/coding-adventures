@@ -14,7 +14,8 @@ romanization: "kūjati"
 concept_tag: SA-VERB-KUJATI
 prerequisites: [SA-C145-krandati, SA-C145-garjati]
 sounds: []
-roots: []
+roots: [sanskrit-kujati]
+etymology_hook: "kūjati 'coos, warbles' ← √kūj 'make an inarticulate sound' (MW); MW gives no outside cousins"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C145-garjati]
 <!-- hl-knowledge: introduces=[SA-LEX-C145-ACT145-04]; assesses=[] -->
 
 **कूजति** — *kūjati* — "coos, warbles".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kūjati* comes from the root √kūj "make an inarticulate sound, coo, warble" (MW), used of birds such as the pigeon and the cuckoo. MW gives no outside cousins for it, so its source is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

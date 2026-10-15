@@ -14,7 +14,8 @@ romanization: "sandeśaḥ"
 concept_tag: SA-WRK171-SANDESAH
 prerequisites: [SA-C170-vrttih, SA-C170-seva]
 sounds: []
-roots: []
+roots: [sanskrit-sandesha]
+etymology_hook: "sandeśa 'message' ← sam-√diś 'point out, direct' (MW): what is pointed out to someone"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C170-seva]
 <!-- hl-knowledge: introduces=[SA-LEX-C171-WRK171-01]; assesses=[] -->
 
 **सन्देशः** — *sandeśaḥ* — "a message".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sandeśa* comes from *sam-√diś* "point out, direct, send word", the root √diś "point, show" with *sam* "together" (MW): "a communication, a message, an errand".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gamiṣyati"
 concept_tag: SA-FUT139-GAMISYATI
 prerequisites: [SA-C139-agami, SA-C139-bhavisyati]
 sounds: []
-roots: []
+roots: [gam-go, pie-gwem]
+etymology_hook: "gamiṣyati ← √gam 'go' + future -iṣya- (MW); √gam is English come's cousin (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C139-bhavisyati]
 <!-- hl-knowledge: introduces=[SA-LEX-C139-FUT139-05]; assesses=[] -->
 
 **गमिष्यति** — *gamiṣyati* — "will go". You met **अगच्छत्**, "he went"; this is the same verb looking forward: **परश्वः सः आपणं गमिष्यति।** — "The day after tomorrow he will go to the shop."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gamiṣyati* is built from the root √gam "go" with the future marker *-iṣya-* (MW). MW sets √gam beside Greek *bainō* and English *come*: an inherited Indo-European root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

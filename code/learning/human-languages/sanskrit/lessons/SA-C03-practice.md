@@ -64,7 +64,7 @@ variety: classical
 - [YOU SAY: the stem *katham* shares with *kim*, and its western cousins (*ka-*, PIE *\*kʷo-*; English *wh-*, Latin *qu-*)]
 - [YOU SAY: the cousins of *aham* (Latin *ego*, English **I**)]
 - [YOU SAY: why *aham* is often left out, and the ending that marks "I" (*asmi* already means "I am"; *-mi*)]
-- [YOU SAY: the surprising source of *kuśalam* (*kuśa*, the sacred grass → "skilled" → "well")]
+- [YOU SAY: whether the origin of *kuśalam* is known (not settled; the *kuśa*-grass story is only a popular explanation)]
 - [YOU SAY: what *cintā* is, and its root (anxious thought; *cint*, "to think")]
 
 ## Script — the chapter's two shapes

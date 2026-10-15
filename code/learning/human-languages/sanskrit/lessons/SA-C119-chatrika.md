@@ -14,7 +14,8 @@ romanization: "chatrikā"
 concept_tag: SA-THINGS119-CHATRIKA
 prerequisites: [SA-C119-patram, SA-C119-kupi]
 sounds: []
-roots: []
+roots: [sanskrit-chattra]
+etymology_hook: "chatrikā ← chattra 'parasol' ← √chad 'cover' (CDIAL 4972) + -ikā 'small'; Hindi chātā 'umbrella'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C119-kupi]
 <!-- hl-knowledge: introduces=[SA-LEX-C119-THINGS119-05]; assesses=[] -->
 
 **छत्रिका** — *chatrikā* — "a small umbrella".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chatrikā* is *chattra* "a parasol" with the small-thing suffix *-ikā*, and *chattra* comes from the root √chad "cover" (CDIAL 4972). It lives on as Hindi *chātā* and Punjabi *chatrī* "umbrella" (CDIAL 4972).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

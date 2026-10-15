@@ -14,7 +14,8 @@ romanization: "suvidhā"
 concept_tag: SA-WRK171-SUVIDHA
 prerequisites: [SA-C170-seva, SA-C171-sandesah]
 sounds: []
-roots: []
+roots: [sanskrit-suvidha]
+etymology_hook: "suvidhā ← su 'good' + vidhā 'arrangement' (vi-√dhā 'arrange'); not in MW, a modern formation"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C171-sandesah]
 <!-- hl-knowledge: introduces=[SA-LEX-C171-WRK171-02]; assesses=[] -->
 
 **सुविधा** — *suvidhā* — "a convenience, a facility".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*suvidhā* is built from *su* "good, well" and *vidhā* "arrangement, manner", from *vi-√dhā* "arrange, distribute", the root √dhā "put, place". MW does not list the word, so it is a modern formation.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

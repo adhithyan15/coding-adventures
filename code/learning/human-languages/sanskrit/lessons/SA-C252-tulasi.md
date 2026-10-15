@@ -14,7 +14,8 @@ romanization: "tulasī"
 concept_tag: SA-THG252-TULASI
 prerequisites: [SA-C252-kalika, SA-C252-mallika]
 sounds: []
-roots: []
+roots: [sanskrit-tulasi]
+etymology_hook: "tulasī 'holy basil' (CDIAL 5885); DEDR 3357 says Dravidian forms were partly reborrowed from it; Hindi tulsī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C252-mallika]
 <!-- hl-knowledge: introduces=[SA-LEX-C252-THG252-05]; assesses=[] -->
 
 **तुलसी** — *tulasī* — "holy basil".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tulasī* is the holy basil, first in the Bhāgavata Purāṇa (CDIAL 5885). DEDR 3357 sets Tamil *tuḷaci* beside it and says some Dravidian forms were borrowed back from Sanskrit; its first origin is uncertain. It lives on as Hindi *tulsī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

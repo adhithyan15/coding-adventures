@@ -14,7 +14,8 @@ romanization: "āśīrvādaḥ"
 concept_tag: SA-COURTESY-ASHIRVADA
 prerequisites: [SA-C37-congratulations, SA-C35-bed, SA-C36-rightly]
 sounds: []
-roots: []
+roots: [sanskrit-ashirvada, vada]
+etymology_hook: "āśīrvāda 'benediction' ← āśis 'wish, prayer' + vāda 'speaking', from √vad (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C37-congratulations]
 **आशीर्वादः** is a blessing spoken aloud: *āśis*, "a wish, a prayer", joined to *vāda*, "a speaking".
 
 That second piece is the one inside **धन्यवादः**, the thanks you learned on your very first page — thanks is a speaking too. An elder gives **आशीर्वादः**; you answer with **धन्यवादः**; and the two are built the same way, out of a wish and a word for saying it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Āśīrvāda* is built from *āśis*, "a wish, prayer", and *vāda*, "a speaking", from
+the root √vad (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

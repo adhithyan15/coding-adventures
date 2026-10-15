@@ -14,7 +14,8 @@ romanization: "adhyāyaḥ"
 concept_tag: SA-SCH168-ADHYAYAH
 prerequisites: [SA-C167-asva, SA-C168-kaksa]
 sounds: []
-roots: []
+roots: [sanskrit-adhyaya]
+etymology_hook: "adhyāya ← adhi-√i 'go over, study' (MW; CDIAL 279): 'reading', then 'a lesson, a chapter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C168-kaksa]
 <!-- hl-knowledge: introduces=[SA-LEX-C168-SCH168-02]; assesses=[] -->
 
 **अध्यायः** — *adhyāyaḥ* — "a chapter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*adhyāya* comes from *adhi-√i* "go over, study", the root √i "go" with *adhi* "over" (MW; CDIAL 279): "reading", and then "a lesson, a chapter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

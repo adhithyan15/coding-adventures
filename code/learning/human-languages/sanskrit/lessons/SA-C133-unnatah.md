@@ -14,7 +14,8 @@ romanization: "unnataḥ"
 concept_tag: SA-QUAL133-UNNATAH
 prerequisites: [SA-C132-riktah, SA-C133-nicah]
 sounds: []
-roots: []
+roots: [sanskrit-unnata, sanskrit-nam-bend]
+etymology_hook: "unnata ← ud-√nam 'bend upward, rise' (MW; CDIAL 2099); √nam 'bend, bow' is the root of namaste"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C133-nicah]
 <!-- hl-knowledge: introduces=[SA-LEX-C133-QUAL133-02]; assesses=[] -->
 
 **उन्नतः** — *unnataḥ* — "high, tall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*unnata* is the past participle of *ud-√nam* "bend upward, rise", the root √nam "bend, bow" with *ud* "up" (MW; CDIAL 2099): "raised, high, tall". It is the same root as *namas* in *namaste*, the greeting you already know.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "paścimā"
 concept_tag: SA-TRV202-PASCIMA
 prerequisites: [SA-C202-disa, SA-C202-purva]
 sounds: []
-roots: []
+roots: [sanskrit-pashcima]
+etymology_hook: "paścima 'behind, later', so 'western' ← paścā 'behind' (MW; CDIAL 8007)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C202-purva]
 <!-- hl-knowledge: introduces=[SA-LEX-C202-TRV202-04]; assesses=[] -->
 
 **पश्चिमा** — *paścimā* — "the west".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paścima* is built on *paścā*, "behind, after" (MW; CDIAL 8007): facing the sunrise, the west is behind you, so *paścimā* is the west. Pali has it as *pacchima*, "western, last".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

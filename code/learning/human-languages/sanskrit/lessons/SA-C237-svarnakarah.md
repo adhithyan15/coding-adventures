@@ -14,7 +14,8 @@ romanization: "svarṇakāraḥ"
 concept_tag: SA-PPL237-SVARNAKARAH
 prerequisites: [SA-C236-purusah, SA-C237-kumbhakarah]
 sounds: []
-roots: []
+roots: [sanskrit-svarnakara, sanskrit-svarna]
+etymology_hook: "svarṇakāra = svarṇa 'gold' (from su-varṇa 'fine colour') + kāra 'maker'; Hindi sonār (CDIAL 13520)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C237-kumbhakarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C237-PPL237-02]; assesses=[] -->
 
 **स्वर्णकारः** — *svarṇakāraḥ* — "a goldsmith".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*svarṇakāra* is a compound of *svarṇa*, "gold", which MW calls a contraction of *suvarṇa*, "of fine colour", and *kāra*, "maker" (MW). Its fuller form *suvarṇakāra* lives on as Hindi *sonār*, "goldsmith" (CDIAL 13520).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

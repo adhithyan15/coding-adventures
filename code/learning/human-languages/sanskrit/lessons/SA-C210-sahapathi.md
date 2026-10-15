@@ -14,7 +14,8 @@ romanization: "sahapāṭhī"
 concept_tag: SA-PPL210-SAHAPATHI
 prerequisites: [SA-C210-pradhanacaryah, SA-C210-vidyarthi]
 sounds: []
-roots: []
+roots: [sanskrit-saha, path-recite]
+etymology_hook: "sahapāṭhin = saha 'with' + pāṭhin 'student', from √paṭh 'read'; the pairing for a classmate is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C210-vidyarthi]
 <!-- hl-knowledge: introduces=[SA-LEX-C210-PPL210-04]; assesses=[] -->
 
 **सहपाठी** — *sahapāṭhī* — "a classmate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sahapāṭhī* is built on *saha*, "with", and *pāṭhin*, "one who has studied, a student", from the root √paṭh, "to read, recite" (CDIAL 8039). MW does not list the compound, so the pairing for a classmate is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "bhramaraḥ"
 concept_tag: SA-THINGS114-BHRAMARAH
 prerequisites: [SA-C114-ulukah, SA-C114-bakah]
 sounds: []
-roots: []
+roots: [sanskrit-bhramara]
+etymology_hook: "bhramara 'black bee' is filed by MW under √bhram 'wander, whirl, hum'; Hindi bhaũrā (CDIAL 9651)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C114-bakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C114-THINGS114-05]; assesses=[] -->
 
 **भ्रमरः** — *bhramaraḥ* — "a bee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhramara* "a large black bee" is filed by MW under the root √bhram "wander, whirl", which MW compares with Greek *bremō* and Latin *fremere* "roar, hum" (EtymDB gives an Indo-European root "make noise"). It lives on as Hindi *bhaũrā* "black bee" (CDIAL 9651).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

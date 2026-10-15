@@ -14,7 +14,8 @@ romanization: "āpaṇikaḥ"
 concept_tag: SA-THG222-APANIKAH
 prerequisites: [SA-C222-bharah, SA-C222-panyam]
 sounds: []
-roots: []
+roots: [sanskrit-apana]
+etymology_hook: "āpaṇika ← āpaṇa 'market, shop', from ā + √paṇ 'trade' (MW; CDIAL 1192)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C222-panyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C222-THG222-04]; assesses=[] -->
 
 **आपणिकः** — *āpaṇikaḥ* — "a shopkeeper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āpaṇika* is built on *āpaṇa*, "market, shop", from *ā-* with the root √paṇ, "to barter" (MW), and the suffix *-ika*: "one of the market", a trader (CDIAL 1192).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

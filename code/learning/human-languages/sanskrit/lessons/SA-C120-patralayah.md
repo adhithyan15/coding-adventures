@@ -14,7 +14,8 @@ romanization: "patrālayaḥ"
 concept_tag: SA-THINGS120-PATRALAYAH
 prerequisites: [SA-C119-chatrika, SA-C120-mudra]
 sounds: []
-roots: []
+roots: [sanskrit-patra, sanskrit-alaya]
+etymology_hook: "patrālaya ← patra 'leaf, letter' + ālaya 'dwelling': 'house of letters'; the pairing for a post office is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C120-mudra]
 <!-- hl-knowledge: introduces=[SA-LEX-C120-THINGS120-02]; assesses=[] -->
 
 **पत्रालयः** — *patrālayaḥ* — "a post office".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*patrālaya* is built from *patra* "a leaf, a letter" (MW) and *ālaya* "dwelling, house": "the house of letters". The pairing for a post office is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

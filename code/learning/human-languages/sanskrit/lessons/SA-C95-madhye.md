@@ -14,7 +14,8 @@ romanization: "madhye"
 concept_tag: SA-LOC95-MADHYE
 prerequisites: [SA-C94-agre, SA-C94-prsthatah]
 sounds: []
-roots: []
+roots: [sanskrit-madhya]
+etymology_hook: "madhye, locative of madhya 'middle'; MW compares Latin medius, English mid; Hindi meṁ 'in' (CDIAL 9804)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C94-prsthatah]
 <!-- hl-knowledge: introduces=[SA-LEX-C95-LOC95-01]; assesses=[] -->
 
 **मध्ये** — *madhye* — "in the middle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*madhye* is the locative, "in the middle", of *madhya* "middle" (MW). MW sets *madhya* beside Latin *medius*, Greek *mesos* and English *mid*: one inherited Indo-European word. This very locative wore down into Hindi *meṁ* "in" (CDIAL 9804).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

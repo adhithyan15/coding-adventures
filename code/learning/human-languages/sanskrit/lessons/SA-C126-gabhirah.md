@@ -14,7 +14,8 @@ romanization: "gabhīraḥ"
 concept_tag: SA-QUAL126-GABHIRAH
 prerequisites: [SA-C126-vistrtah, SA-C126-sankirnah]
 sounds: []
-roots: []
+roots: [sanskrit-gabhira]
+etymology_hook: "gabhīra 'deep' is inherited from Indo-European (EtymDB), cousin of Persian žarf 'deep'; Hindi gahrā (CDIAL 4024)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C126-sankirnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C126-QUAL126-03]; assesses=[] -->
 
 **गभीरः** — *gabhīraḥ* — "deep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gabhīra* "deep" is old, in the Rigveda, and is inherited from Indo-European (EtymDB); Persian *žarf* "deep" is a cousin. It lives on as Hindi *gahrā* "deep" (CDIAL 4024).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

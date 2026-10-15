@@ -14,7 +14,8 @@ romanization: "grāmaḥ"
 concept_tag: SA-NOUN-VILLAGE
 prerequisites: [SA-C16-house, SA-C05-vasami]
 sounds: []
-roots: []
+roots: [sanskrit-grama]
+etymology_hook: "grāma 'troop, village' is Rigvedic (MW); it lives on as Gujarati gām and Sinhala gama (CDIAL 4368)"
 duration:
   max_seconds: 210
 requires:
@@ -45,15 +46,22 @@ reviews_of: [SA-C16-house]
 
 **ग्रामः** (*grāmaḥ*) — "village."
 
-Its oldest sense is not "village" but **"a collection, a troop"** — a gathering of
-people considered as one body. The settlement took its name from the group, not
-the group from the settlement, which tells you how the word's first speakers saw
-the place: people first, buildings after.
+In the Rigveda it already means both the settlement and **"a collection, a
+troop"**, a gathering of people considered as one body (MW). One word holds the
+people and the place together, which tells you how its first speakers saw a
+village: people and buildings as one thing.
 
 Notice the ending. गृहम् ends in *-am*; ग्रामः ends in *-aḥ*. Sanskrit
 sorts its nouns into families, and that final syllable is the badge. You do not
 need the system yet — only the observation that the endings differ, and that the
 difference is not random.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Grāma* is an old Rigvedic word for a troop or community (MW), and its deeper
+origin is not settled. It lives on as
+Gujarati *gām* and Sinhala *gama*, "village" (CDIAL 4368).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -72,5 +80,5 @@ and the *-aḥ* ending, sitting side by side.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-01, SA-LEX-C16-PLACE-02] -->
 
-[PAUSE 3s] What did ग्रामः mean before it meant "village"? (A collection, a troop.) Which
+[PAUSE 3s] Besides "village", what else did ग्रामः mean in the Rigveda? (A collection, a troop.) Which
 two endings have you now seen? (*-am* and *-aḥ*.)

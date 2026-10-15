@@ -14,7 +14,8 @@ romanization: "kadācit"
 concept_tag: SA-REPLY-KADACIT
 prerequisites: [SA-C41-parasol, SA-C40-curd, SA-C41-wheel]
 sounds: []
-roots: []
+roots: [sanskrit-kadacit, ka-interrogative]
+etymology_hook: "kadācit 'at some time' ← kadā 'when' + the indefinite particle cit (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C41-parasol]
 Both pieces are yours already: कदा, the *when* you ask questions with, and a small *cit* fastened on the end. **कदाचित्** is *when* gone vague — at some time or other, and no promise which.
 
 It is also the polite way to leave a door open: not yes, not no, perhaps sometimes.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kadācit* is built from *kadā*, "when", and the particle *cit*, which turns a
+question word into an indefinite one (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

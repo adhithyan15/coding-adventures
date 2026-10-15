@@ -14,7 +14,8 @@ romanization: "kañcukaḥ"
 concept_tag: SA-THINGS104-KANCUKAH
 prerequisites: [SA-C104-padatranam, SA-C104-usnisam]
 sounds: []
-roots: []
+roots: [sanskrit-kancuka]
+etymology_hook: "kañcuka 'jacket, bodice' is possibly borrowed from Munda (CDIAL 2626, after Kuiper); the origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C104-usnisam]
 <!-- hl-knowledge: introduces=[SA-LEX-C104-THINGS104-04]; assesses=[] -->
 
 **कञ्चुकः** — *kañcukaḥ* — "a shirt, a blouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kañcuka* "a close-fitting jacket, a bodice; a snake's slough" is possibly borrowed from Munda: CDIAL 2626 gives that view after Kuiper and EWA, while MW suggests a root √kañc with a query. The origin is uncertain; Pali kept it as *kañcuka* (CDIAL 2626).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

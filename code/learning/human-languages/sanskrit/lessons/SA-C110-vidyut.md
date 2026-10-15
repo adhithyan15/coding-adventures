@@ -14,7 +14,8 @@ romanization: "vidyut"
 concept_tag: SA-THINGS110-VIDYUT
 prerequisites: [SA-C110-prapatah, SA-C110-tarangah]
 sounds: []
-roots: []
+roots: [sanskrit-vidyut]
+etymology_hook: "vidyut ← vi-√dyut 'flash forth', on √dyut 'shine' (MW; CDIAL 11742); Marathi vīj 'lightning'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C110-tarangah]
 <!-- hl-knowledge: introduces=[SA-LEX-C110-THINGS110-04]; assesses=[] -->
 
 **विद्युत्** — *vidyut* — "lightning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vidyut* comes from *vi-√dyut* "flash forth", the root √dyut "shine" with *vi-* "out, apart" (MW): "the flashing one", lightning (CDIAL 11742). It lives on as Marathi and Gujarati *vīj* "lightning" (CDIAL 11742).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

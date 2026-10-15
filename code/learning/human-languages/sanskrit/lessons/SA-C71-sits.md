@@ -14,7 +14,8 @@ romanization: "upaviśati"
 concept_tag: SA-VERB-SIT
 prerequisites: [SA-C71-runs, SA-C71-walks]
 sounds: []
-roots: []
+roots: [sanskrit-upavishati]
+etymology_hook: "upaviśati 'sits down' ← upa + the root √viś 'enter'; Hindi baiṭhnā 'to sit' (CDIAL 2245)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C71-walks]
 <!-- hl-knowledge: introduces=[SA-LEX-C71-MOVE-03]; assesses=[] -->
 
 **उपविशति** (*upaviśati*) — "(he, she) sits down", often on an **आसनम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Upaviśati* is built from *upa*, "near", and the root √viś, "to enter, settle"
+(MW). It lives on as Hindi *baiṭhnā*, "to sit" (CDIAL 2245).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

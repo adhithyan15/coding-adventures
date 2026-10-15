@@ -14,7 +14,8 @@ romanization: "lokaḥ"
 concept_tag: SA-THG251-LOKAH
 prerequisites: [SA-C251-prthivi, SA-C251-jagat]
 sounds: []
-roots: []
+roots: [sanskrit-loka]
+etymology_hook: "loka 'free space, world', then 'people'; MW compares Latin lūcus 'clearing'; Hindi loī 'people' (CDIAL 11119)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C251-jagat]
 <!-- hl-knowledge: introduces=[SA-LEX-C251-THG251-03]; assesses=[] -->
 
 **लोकः** — *lokaḥ* — "the world, people".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*loka* is a Rigvedic word for "free space, the world", and later "people" (CDIAL 11119). MW compares Latin *lūcus*, first "a clearing in a forest". Hindi *loī*, "people", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

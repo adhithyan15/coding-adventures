@@ -14,7 +14,8 @@ romanization: "āsanam"
 concept_tag: SA-WELCOME-SEAT
 prerequisites: [SA-C30-door, SA-C28-day-after, SA-C29-pardon]
 sounds: []
-roots: []
+roots: [sanskrit-asana]
+etymology_hook: "āsana 'seat' ← the root √ās 'sit'; MW compares Greek hēmai 'I sit'; Hindi āsan (CDIAL 1484)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,13 @@ reviews_of: [SA-C30-door]
 Having met the guest at the door, you offer an **आसनम्** — a seat. The root means "to sit", and the ending makes it the thing you sit on.
 
 English borrowed the word without the furniture: an *āsana* in yoga is a posture, a way of being seated. Both senses live in the one Sanskrit word, and the ordinary one is the older. Neuter **-अम्**, like द्वारम् before it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Āsana* is built on the root √ās, "to sit", with the suffix *-ana* that names the
+act or its place (MW). MW compares Greek *hēmai*, "I sit". It lives on as Hindi
+*āsan* (CDIAL 1484).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "netram"
 concept_tag: SA-BODY-EYE-NETRAM
 prerequisites: [SA-C68-shyness, SA-C68-joy]
 sounds: []
-roots: []
+roots: [sanskrit-netra]
+etymology_hook: "netra 'eye', traditionally 'the guide' from √nī 'lead' (MW); CDIAL 7587 reports doubt; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C68-joy]
 <!-- hl-knowledge: introduces=[SA-LEX-C69-BODY-01]; assesses=[] -->
 
 **नेत्रम्** (*netram*) — "an eye", the word of poems, beside the everyday **अक्षि**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Netra* is traditionally read as "the guide", from the root √nī, "to lead" (MW),
+but CDIAL 7587 reports that this link has been doubted, so its origin is not
+settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

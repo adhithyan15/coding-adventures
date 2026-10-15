@@ -14,7 +14,8 @@ romanization: "plavate"
 concept_tag: SA-VERB-PLAVATE
 prerequisites: [SA-C233-nirgacchati, SA-C234-susyati]
 sounds: []
-roots: []
+roots: [sanskrit-plavate]
+etymology_hook: "plavate ← root √plu 'float, swim'; MW compares Greek pleō 'I sail' and Latin pluit 'it rains' (CDIAL 9024)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C234-susyati]
 <!-- hl-knowledge: introduces=[SA-LEX-C234-ACT234-02]; assesses=[] -->
 
 **प्लवते** — *plavate* — "floats".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*plavate* is the present of the root √plu, "to float, swim" (MW), a Rigvedic verb (CDIAL 9024). The root is inherited from Indo-European: MW compares Greek *pleō*, "I sail", and Latin *pluit*, "it rains".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

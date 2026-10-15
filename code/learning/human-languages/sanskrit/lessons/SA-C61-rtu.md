@@ -14,7 +14,8 @@ romanization: "ṛtuḥ"
 concept_tag: SA-LEX-RTU-SEASON
 prerequisites: [SA-C60-danda, SA-C45-month, SA-C17-day]
 sounds: []
-roots: []
+roots: [sanskrit-rtu]
+etymology_hook: "ṛtu 'fixed time, season' ← the root √ṛ 'go, move' (MW); ṛta 'cosmic order' shares the root"
 duration:
   max_seconds: 260
 requires:
@@ -54,9 +55,8 @@ most important words in the whole language: **ऋतम्** (*ṛtam*), the fix
 things, the way the world turns as it should. A season is one turn of that
 order.
 
-The far end of that family reaches English. From the same root, through Latin
-*rītus*, comes English **rite** — a thing done at its proper turn. And *ars*,
-"art", is a cousin: skill as things fitted together in their proper order.
+The far end of that family reaches Latin *artus*, "a joint", which EtymDB lists
+as a cousin of **ऋतुः** — a thing fitted in its proper place.
 
 [YOU LOOK: at the first letter.] **ऋ** is the independent vowel *ṛ* — and it is the
 first word in this book that begins with it. You have written its small form,

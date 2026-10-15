@@ -14,7 +14,8 @@ romanization: "dātram"
 concept_tag: SA-THG218-DATRAM
 prerequisites: [SA-C218-khanitram, SA-C218-halam]
 sounds: []
-roots: []
+roots: [sanskrit-datra]
+etymology_hook: "dātra 'sickle' ← root √do 'cut' (CDIAL 6260); a different word from dātra 'gift'; Hindi dā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C218-halam]
 <!-- hl-knowledge: introduces=[SA-LEX-C218-THG218-05]; assesses=[] -->
 
 **दात्रम्** — *dātram* — "a sickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dātra* is built on the root √do, "to cut", with the instrument suffix *-tra* (CDIAL 6260): "the cutter", a sickle. It is a different word from *dātra*, "gift", from √dā, "to give". Hindi *dā*, "sickle, chopper", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jñānam"
 concept_tag: SA-SCH255-JNANAM
 prerequisites: [SA-C254-pakvannam, SA-C255-siksa]
 sounds: []
-roots: []
+roots: [sanskrit-jnana, sanskrit-jna]
+etymology_hook: "jñāna ← root √jñā 'know' (MW; CDIAL 5281); Hindi took it as jñān and gyān"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C255-siksa]
 <!-- hl-knowledge: introduces=[SA-LEX-C255-SCH255-02]; assesses=[] -->
 
 **ज्ञानम्** — *jñānam* — "knowledge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jñāna* is built on the root √jñā, "to know" (MW), the root of *jānāti*, "knows": "knowing, knowledge" (CDIAL 5281). Hindi uses it as *jñān*, said *gyān*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "āmram"
 concept_tag: SA-FOOD-MANGO
 prerequisites: [SA-C77-roof, SA-C77-key]
 sounds: []
-roots: []
+roots: [sanskrit-amra]
+etymology_hook: "āmra 'mango tree, mango' is in the Śatapatha Brāhmaṇa; origin unclear; it lives on as Hindi ām (CDIAL 1268)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C77-key]
 <!-- hl-knowledge: introduces=[SA-LEX-C78-FOOD-01]; assesses=[] -->
 
 **आम्रम्** (*āmram*) — "a mango", the **फलम्** of summer.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Āmra* is already in the Śatapatha Brāhmaṇa, but its origin is unclear: MW gives
+no root for it. It lives on as Hindi *ām*, "mango" (CDIAL 1268).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

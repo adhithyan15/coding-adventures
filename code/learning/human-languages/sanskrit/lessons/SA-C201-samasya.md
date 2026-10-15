@@ -14,7 +14,8 @@ romanization: "samasyā"
 concept_tag: SA-WRK201-SAMASYA
 prerequisites: [SA-C201-laksyam, SA-C201-upayah]
 sounds: []
-roots: []
+roots: [sanskrit-samasya]
+etymology_hook: "samasyā ← sam 'together' + √as 'throw, put': 'putting together'; a verse part set to complete (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C201-upayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C201-WRK201-04]; assesses=[] -->
 
 **समस्या** — *samasyā* — "a problem".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*samasyā* is built on *sam*, "together", and the root √as, "to throw, put" (MW): first "joining together". MW gives a second sense, part of a verse handed to someone else to complete, and the puzzle to be completed became the modern sense "problem".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

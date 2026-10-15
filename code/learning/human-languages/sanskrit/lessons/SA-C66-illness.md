@@ -14,7 +14,8 @@ romanization: "rogaḥ"
 concept_tag: SA-UNWELL-ILLNESS
 prerequisites: [SA-C66-cough, SA-C66-pain]
 sounds: []
-roots: []
+roots: [sanskrit-roga]
+etymology_hook: "roga 'disease' ← the root √ruj 'break': 'breaking up of strength' (MW; CDIAL 10829)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C66-pain]
 <!-- hl-knowledge: introduces=[SA-LEX-C66-UNWELL-04]; assesses=[] -->
 
 **रोगः** (*rogaḥ*) — "an illness", the general word under **ज्वरः** and **कासः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Roga* is built on the root √ruj, "to break"; MW glosses it "breaking up of
+strength" (CDIAL 10829). It is already in the Atharvaveda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vivāhaḥ"
 concept_tag: SA-THG163-VIVAHAH
 prerequisites: [SA-C163-dyutam, SA-C163-utsavah]
 sounds: []
-roots: []
+roots: [sanskrit-vivaha]
+etymology_hook: "vivāha ← vi-√vah 'lead away': leading the bride from her father's house (MW; CDIAL 11920); Hindi byāh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C163-utsavah]
 <!-- hl-knowledge: introduces=[SA-LEX-C163-THG163-04]; assesses=[] -->
 
 **विवाहः** — *vivāhaḥ* — "a wedding".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vivāha* comes from *vi-√vah* "carry away, lead away", the root √vah "carry" with *vi* "away" (MW; CDIAL 11920): leading the bride away from her father's house. MW sets √vah beside Latin *vehere* (English *vehicle*), and it lives on as Hindi *byāh* "marriage" (CDIAL 11920).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

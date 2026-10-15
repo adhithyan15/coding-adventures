@@ -14,7 +14,8 @@ romanization: "aśanam"
 concept_tag: SA-THG160-ASANAM
 prerequisites: [SA-C160-vyanjanam, SA-C160-aharah]
 sounds: []
-roots: []
+roots: [sanskrit-ashana]
+etymology_hook: "aśana 'eating' ← √aś 'eat' (MW's second √aś; CDIAL 909), already in the Śatapatha Brāhmaṇa"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C160-aharah]
 <!-- hl-knowledge: introduces=[SA-LEX-C160-THG160-04]; assesses=[] -->
 
 **अशनम्** — *aśanam* — "eating, a meal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aśana* comes from the root √aś "eat, consume" (MW's second √aś; CDIAL 909): "eating, food", already in the Śatapatha Brāhmaṇa. It is not the same word as *āsana* "seat", from √ās "sit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

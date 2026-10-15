@@ -14,7 +14,8 @@ romanization: "rātriḥ"
 concept_tag: SA-NOUN-NIGHT
 prerequisites: [SA-C17-day]
 sounds: []
-roots: []
+roots: [sanskrit-ratri]
+etymology_hook: "rātri 'night': origin not settled, MW guesses √rā 'give' or √ram 'rest'; Hindi rāt (CDIAL 10702)"
 duration:
   max_seconds: 210
 requires:
@@ -51,6 +52,13 @@ The ending here is *-iḥ*, which is neither of the two you have met. Sanskrit h
 more than two families, and this is your first sight of a third. You do not need
 it yet — only the honest note that the system is bigger than the part you have
 seen.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Rātri* is an old Rigvedic word whose origin is not settled: MW offers two
+guesses, the root √rā "give" ("the bestower") or √ram "rest". It lives on
+as Hindi *rāt*, "night" (CDIAL 10702).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

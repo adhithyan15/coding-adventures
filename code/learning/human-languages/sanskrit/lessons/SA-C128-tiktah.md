@@ -14,7 +14,8 @@ romanization: "tiktaḥ"
 concept_tag: SA-QUAL128-TIKTAH
 prerequisites: [SA-C128-katuh, SA-C128-amlah]
 sounds: []
-roots: []
+roots: [sanskrit-tikta]
+etymology_hook: "tikta 'bitter, pungent' ← √tij 'be sharp' (CDIAL 5806), which MW compares with Greek stizō 'prick'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C128-amlah]
 <!-- hl-knowledge: introduces=[SA-LEX-C128-QUAL128-05]; assesses=[] -->
 
 **तिक्तः** — *tiktaḥ* — "bitter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tikta* "bitter, pungent" comes from the root √tij "be sharp" (CDIAL 5806): bitterness as a sharp taste. MW compares √tij with Greek *stizō* "prick" and Latin *distinguo*, and it lives on as Bengali *titā* "bitter" (CDIAL 5806).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

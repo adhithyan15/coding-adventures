@@ -14,7 +14,8 @@ romanization: "tīram"
 concept_tag: SA-WATER-SHORE
 prerequisites: [SA-C82-pond, SA-C82-island]
 sounds: []
-roots: []
+roots: [sanskrit-tira]
+etymology_hook: "tīra 'shore, bank' ← the root √tṝ 'cross over' (MW); it lives on as Hindi tīr 'bank' (CDIAL 5842)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C82-island]
 <!-- hl-knowledge: introduces=[SA-LEX-C82-WATER-05]; assesses=[] -->
 
 **तीरम्** (*tīram*) — "a bank", "a shore", the edge of a **नदी** or the **समुद्रः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Tīra* is built on the root √tṝ, "to cross over" (MW): the bank is where a
+crossing ends. It lives on as Hindi *tīr*, "bank" (CDIAL 5842).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

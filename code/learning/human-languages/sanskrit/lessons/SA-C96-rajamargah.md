@@ -14,7 +14,8 @@ romanization: "rājamārgaḥ"
 concept_tag: SA-LOC96-RAJAMARGAH
 prerequisites: [SA-C95-anyatra, SA-C95-vithi]
 sounds: []
-roots: []
+roots: [sanskrit-raja, sanskrit-marga]
+etymology_hook: "rājamārga ← rājan 'king' + mārga 'road': 'the king's highway' (MW); mārga is from mṛga 'game' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C95-vithi]
 <!-- hl-knowledge: introduces=[SA-LEX-C96-LOC96-01]; assesses=[] -->
 
 **राजमार्गः** — *rājamārgaḥ* — "a main road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rājamārga* is a compound of *rājan* "king" and *mārga* "road": "the king's highway", a main street wide enough for horses and elephants (MW). *mārga* comes from *mṛga* "deer, game" (MW), and one of its senses is the track of a wild animal.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

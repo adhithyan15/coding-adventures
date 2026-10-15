@@ -14,7 +14,8 @@ romanization: "jayati"
 concept_tag: SA-VERB-JAYATI
 prerequisites: [SA-C136-badhnati, SA-C137-sivyati]
 sounds: []
-roots: []
+roots: [sanskrit-jayati]
+etymology_hook: "jayati ← √ji 'conquer, win' (CDIAL 5143), inherited from Indo-European (EtymDB); jaya 'victory' is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C137-sivyati]
 <!-- hl-knowledge: introduces=[SA-LEX-C137-ACT137-02]; assesses=[] -->
 
 **जयति** — *jayati* — "wins".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jayati* comes from the root √ji "conquer, win" (CDIAL 5143), inherited from Indo-European (EtymDB). The noun *jaya* "victory" comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

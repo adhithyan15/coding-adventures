@@ -14,7 +14,8 @@ romanization: "namati"
 concept_tag: SA-VERB-BOW
 prerequisites: [SA-C73-cries, SA-C73-calls]
 sounds: []
-roots: []
+roots: [sanskrit-nam-bend]
+etymology_hook: "namati 'bends, bows' ← the root √nam 'bend', the root of namas and namaste (MW; CDIAL 6956)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,12 @@ reviews_of: [SA-C73-calls]
 
 **नमति** (*namati*) — "(he, she) bows". It is the verb inside **नमस्ते** and
 **प्रणामः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Namati* is the present of the root √nam, "to bend, bow" (MW, CDIAL 6956): the
+root inside *namas* and *namaste*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

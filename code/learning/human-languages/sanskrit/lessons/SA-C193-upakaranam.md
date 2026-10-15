@@ -14,7 +14,8 @@ romanization: "upakaraṇam"
 concept_tag: SA-THG193-UPAKARANAM
 prerequisites: [SA-C193-vastu, SA-C193-padarthah]
 sounds: []
-roots: []
+roots: [sanskrit-upakarana, kr-do]
+etymology_hook: "upakaraṇa ← upa- + √kṛ 'do': 'doing a service', then 'an implement' (MW; CDIAL 2138)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C193-padarthah]
 <!-- hl-knowledge: introduces=[SA-LEX-C193-THG193-05]; assesses=[] -->
 
 **उपकरणम्** — *upakaraṇam* — "a tool, an instrument".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*upakaraṇa* is built on *upa-*, "towards", and the root √kṛ, "to do" (MW). It means both "doing someone a service" and "an implement", the thing that does the work for you (CDIAL 2138).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

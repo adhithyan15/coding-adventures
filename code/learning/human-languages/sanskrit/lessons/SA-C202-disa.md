@@ -14,7 +14,8 @@ romanization: "diśā"
 concept_tag: SA-TRV202-DISA
 prerequisites: [SA-C201-samadhanam, SA-C202-pathikah]
 sounds: []
-roots: []
+roots: [sanskrit-dish]
+etymology_hook: "diśā ← diś 'direction', from √diś 'point out'; MW compares Latin dīcere and Greek deiknymi (CDIAL 6339)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C202-pathikah]
 <!-- hl-knowledge: introduces=[SA-LEX-C202-TRV202-02]; assesses=[] -->
 
 **दिशा** — *diśā* — "a direction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*diśā* is a later form of *diś*, "direction, quarter" (CDIAL 6339), built on the root √diś, "to point out, show" (MW): a direction is where you point. MW compares the root with Greek *deiknymi*, "I show", and Latin *dīcere*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

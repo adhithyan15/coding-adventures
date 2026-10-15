@@ -14,7 +14,8 @@ romanization: "mālā"
 concept_tag: SA-WELCOME-GARLAND
 prerequisites: [SA-C30-flower, SA-C28-auspicious, SA-C29-favour]
 sounds: []
-roots: []
+roots: [sanskrit-mala-garland]
+etymology_hook: "mālā 'garland' is taken as borrowed from Dravidian, cf. Tamil mālai (CDIAL 10092; DEDR 4827)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C30-flower]
 Threaded, the flowers become a **माला** — a garland, put over the head of a guest of honour, and also the string of beads counted through in prayer. English borrowed the second sense as *mala*.
 
 Its own history is unsettled: no agreed cousin outside India, like केशः and अलम् before it. Feminine, ending in **-आ**, like यात्रा and माता.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mālā* is often taken to be borrowed from Dravidian: CDIAL 10092 and DEDR 4827
+compare Tamil *mālai*, "garland". It lives on as Hindi *māl*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

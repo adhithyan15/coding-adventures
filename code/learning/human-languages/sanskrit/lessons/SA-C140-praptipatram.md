@@ -14,7 +14,8 @@ romanization: "prāptipatram"
 concept_tag: SA-READ140-PRAPTIPATRAM
 prerequisites: [SA-C140-vijnapanam, SA-C140-deyakam]
 sounds: []
-roots: []
+roots: [sanskrit-prapti, sanskrit-patra]
+etymology_hook: "prāptipatra ← prāpti 'receiving' (pra-√āp 'obtain') + patra 'leaf, document'; a modern coinage"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [SA-C140-deyakam]
 
 The receipt says **प्रकोष्ठः — मूल्यम् — सहस्रम्।** The thousand for the room is
 paid: keep it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prāptipatra* is built from *prāpti* "obtaining, receiving", from *pra-√āp* "obtain" (MW), and *patra* "a leaf, a written document": "the paper of receiving". The pairing for a receipt is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

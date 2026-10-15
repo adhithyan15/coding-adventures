@@ -14,7 +14,8 @@ romanization: "sūciḥ"
 concept_tag: SA-THINGS100-SUCIH
 prerequisites: [SA-C100-mudgarah, SA-C100-kartari]
 sounds: []
-roots: []
+roots: [sanskrit-suci]
+etymology_hook: "sūci 'needle', which MW links with sūtra and √siv 'sew'; CDIAL 13551 notes doubts; Hindi sūī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C100-kartari]
 <!-- hl-knowledge: introduces=[SA-LEX-C100-THINGS100-04]; assesses=[] -->
 
 **सूचिः** — *sūciḥ* — "a needle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW connects *sūci* "needle" with *sūtra* "thread" and the root √siv "sew", though CDIAL 13551 notes that some forms point to an older *śūci-*, so the link is not settled. It lives on as Hindi *sūī* and Bengali *sui* "needle" (CDIAL 13551).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "jvalati"
 concept_tag: SA-VERB-JVALATI
 prerequisites: [SA-C137-guhati, SA-C137-raksati]
 sounds: []
-roots: []
+roots: [sanskrit-jvalati]
+etymology_hook: "jvalati ← √jval 'blaze, glow' (CDIAL 5306), inherited from Indo-European (EtymDB); Hindi jalnā 'to burn'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C137-raksati]
 <!-- hl-knowledge: introduces=[SA-LEX-C137-ACT137-05]; assesses=[] -->
 
 **ज्वलति** — *jvalati* — "burns".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jvalati* comes from the root √jval "blaze, glow, burn brightly" (CDIAL 5306), inherited from Indo-European (EtymDB). It lives on as Hindi *jalnā* "to burn" (CDIAL 5306).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

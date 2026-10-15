@@ -14,7 +14,8 @@ romanization: "citrapataṅgaḥ"
 concept_tag: SA-THINGS115-CITRAPATANGAH
 prerequisites: [SA-C115-masakah, SA-C115-pipilika]
 sounds: []
-roots: []
+roots: [sanskrit-citra, sanskrit-patanga]
+etymology_hook: "citrapataṅga ← citra 'bright, many-coloured' + pataṅga 'flying insect' (√pat 'fly'); a later pairing"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C115-pipilika]
 <!-- hl-knowledge: introduces=[SA-LEX-C115-THINGS115-04]; assesses=[] -->
 
 **चित्रपतंगः** — *citrapataṅgaḥ* — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*citrapataṅga* is built from *citra* "bright, many-coloured" and *pataṅga* "a flying insect, a butterfly or moth", from the root √pat "fly" (MW): "the many-coloured flier". MW does not list the pair, so it is a later coinage.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

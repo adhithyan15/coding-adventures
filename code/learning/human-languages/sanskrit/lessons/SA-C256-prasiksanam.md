@@ -14,7 +14,8 @@ romanization: "praśikṣaṇam"
 concept_tag: SA-WRK256-PRASIKSANAM
 prerequisites: [SA-C255-grhakaryam, SA-C255-uttaram]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "praśikṣaṇa = pra + śikṣaṇa 'teaching, learning', from śikṣ 'learn'; MW lacks the compound, so it is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C255-uttaram]
 <!-- hl-knowledge: introduces=[SA-LEX-C256-WRK256-01]; assesses=[] -->
 
 **प्रशिक्षणम्** — *praśikṣaṇam* — "training".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*praśikṣaṇa* is built on *pra-* and *śikṣaṇa*, "learning; teaching, instruction" (MW), from *śikṣ*, the desiderative of √śak, "to be able". MW does not list *praśikṣaṇa*, so the word for training is a modern coinage.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

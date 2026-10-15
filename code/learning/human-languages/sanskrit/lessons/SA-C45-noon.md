@@ -14,7 +14,8 @@ romanization: "madhyāhnaḥ"
 concept_tag: SA-DAYTIME-MADHYAHNA
 prerequisites: [SA-C45-morning, SA-C43-conduct, SA-C44-dark]
 sounds: []
-roots: []
+roots: [sanskrit-madhya]
+etymology_hook: "madhyāhna 'midday' ← madhya 'middle' + ahan 'day'; MW compares Latin medius and English mid (CDIAL 9818)"
 duration:
   max_seconds: 210
 requires:
@@ -44,9 +45,15 @@ reviews_of: [SA-C45-morning]
 
 **मध्याह्नः** is midday, the sun at the top of its climb.
 
-It is two pieces joined: *madhya*, "middle", and *ahan*, a day. Sanskrit keeps more than one word for a day, and this is the other one — दिनम् is the day you count, *ahan* the day you are standing in. English *mid* is *madhya*'s own worn-down cousin.
+It is two pieces joined: *madhya*, "middle", and *ahan*, a day. Sanskrit keeps more than one word for a day, and this is the other one, beside दिनम्. English *mid* is *madhya*'s own worn-down cousin.
 
 So noon is the middle of the day said in one breath, which is what noon is in most languages once you take the word apart.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Madhyāhna* is a compound of *madhya*, "middle", and *ahan*, "day" (MW, CDIAL
+9818). *Madhya* is inherited: MW compares Latin *medius* and English **mid**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

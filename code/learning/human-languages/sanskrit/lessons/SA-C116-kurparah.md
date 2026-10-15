@@ -14,7 +14,8 @@ romanization: "kūrparaḥ"
 concept_tag: SA-THINGS116-KURPARAH
 prerequisites: [SA-C116-kapolah, SA-C116-cibukam]
 sounds: []
-roots: []
+roots: [sanskrit-kurpara]
+etymology_hook: "kūrpara 'elbow' (Suśruta) has no derivation in MW or CDIAL; origin uncertain; Marathi kopar (CDIAL 3413)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C116-cibukam]
 <!-- hl-knowledge: introduces=[SA-LEX-C116-THINGS116-04]; assesses=[] -->
 
 **कूर्परः** — *kūrparaḥ* — "an elbow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kūrpara* "the elbow" appears in the medical writer Suśruta, and neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Marathi *kopar* "elbow" (CDIAL 3413).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

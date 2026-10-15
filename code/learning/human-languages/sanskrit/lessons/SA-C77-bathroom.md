@@ -14,7 +14,8 @@ romanization: "snānagṛham"
 concept_tag: SA-HOME-BATHROOM
 prerequisites: [SA-C77-room, SA-C77-kitchen]
 sounds: []
-roots: []
+roots: [sanskrit-snana, grha-sanskrit]
+etymology_hook: "snānagṛha 'bath-house' ← snāna 'bathing' (from √snā) + gṛha 'house'; MW finds it in the Mahābhārata"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,13 @@ reviews_of: [SA-C77-kitchen]
 
 **स्नानगृहम्** (*snānagṛham*) — "the bathroom": **स्नान**, "bathing", with **गृहम्**,
 "house", which you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Snānagṛha* is built from *snāna*, "bathing", from the root √snā, and *gṛha*,
+"house". It is not a modern coinage: MW records it as "bathing-house, bath-room"
+in the Mahābhārata.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

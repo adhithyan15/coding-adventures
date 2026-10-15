@@ -14,7 +14,8 @@ romanization: "abhiyantā"
 concept_tag: SA-PPL238-ABHIYANTA
 prerequisites: [SA-C237-rajakah, SA-C238-paricarika]
 sounds: []
-roots: []
+roots: [sanskrit-yantra]
+etymology_hook: "abhiyantā, a modern coinage: abhi + √yam 'hold, control' + agent -tṛ, the root of yantra 'machine'; not in MW"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C238-paricarika]
 <!-- hl-knowledge: introduces=[SA-LEX-C238-PPL238-02]; assesses=[] -->
 
 **अभियन्ता** — *abhiyantā* — "an engineer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*abhiyantā* is a modern coinage, not in MW, built on *abhi-* and the root √yam, "to hold, control", with the agent ending *-tṛ*. √yam is also the root of *yantra*, "device, machine" (CDIAL 10412), so the engineer is the one who controls the machines.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

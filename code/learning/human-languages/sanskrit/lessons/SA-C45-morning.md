@@ -14,7 +14,8 @@ romanization: "prātaḥ"
 concept_tag: SA-DAYTIME-PRATAH
 prerequisites: [SA-C44-blue, SA-C43-hospitality, SA-C44-white]
 sounds: []
-roots: []
+roots: [sanskrit-pratar]
+etymology_hook: "prātar 'early' is inherited: MW compares Greek prōi 'early' and German früh"
 duration:
   max_seconds: 210
 requires:

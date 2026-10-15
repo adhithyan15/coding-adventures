@@ -14,7 +14,8 @@ romanization: "pratiyogitā"
 concept_tag: SA-WRK171-PRATIYOGITA
 prerequisites: [SA-C171-vyavastha, SA-C171-karyakramah]
 sounds: []
-roots: []
+roots: [sanskrit-pratiyogita]
+etymology_hook: "pratiyogitā ← pratiyogin 'counterpart' (prati-√yuj 'fasten against') + -tā '-ness'; 'competition' is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C171-karyakramah]
 <!-- hl-knowledge: introduces=[SA-LEX-C171-WRK171-05]; assesses=[] -->
 
 **प्रतियोगिता** — *pratiyogitā* — "a competition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pratiyogitā* is built from *pratiyogin* "counterpart, rival", from *prati-√yuj* "fasten against", with the abstract suffix *-tā* "-ness" (MW). MW gives it as "correlation" in philosophy; "competition" is a modern use.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sakhī"
 concept_tag: SA-PEOPLE-FRIEND-F
 prerequisites: [SA-C88-girl, SA-C88-youngman]
 sounds: []
-roots: []
+roots: [sanskrit-sakhi]
+etymology_hook: "sakhī 'female friend' ← sakhi 'companion', filed under √sac 'follow'; Hindi sahelī (CDIAL 13074)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C88-youngman]
 <!-- hl-knowledge: introduces=[SA-LEX-C88-PEOPLE-03]; assesses=[] -->
 
 **सखी** (*sakhī*) — "a friend", said of a woman or a girl; **मित्रम्** is any friend.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Sakhī* is the feminine of *sakhi*, "companion", which MW files under the root
+√sac, "to follow, accompany", and compares Latin *socius*, "companion". It lives on as
+Hindi *sahelī*, "a woman's friend" (CDIAL 13074).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

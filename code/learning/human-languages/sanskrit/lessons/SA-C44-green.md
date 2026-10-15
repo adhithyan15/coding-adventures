@@ -14,7 +14,8 @@ romanization: "haritaḥ"
 concept_tag: SA-COLOUR-HARITA
 prerequisites: [SA-C44-yellow, SA-C42-a-little, SA-C43-trust]
 sounds: []
-roots: []
+roots: [sanskrit-harita]
+etymology_hook: "harita 'yellowish, green' ← hari; MW compares Latin helvus and English yellow; Hindi harā (CDIAL 13985)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,13 @@ reviews_of: [SA-C44-yellow]
 English *yellow* and *gold* are its cousins, from **\*ǵhel-**, a root that runs across the whole band from green to yellow. One family, one word, two colours pulled apart by different daughters.
 
 तृणम् is **हरितम्**, and so is a young पत्रम् on a तरुः.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Harita* is built on *hari*, "yellowish, tawny" (MW). It is inherited: MW compares
+Latin *helvus*, "honey-yellow", and English **yellow**. It lives on as Hindi
+*harā*, "green" (CDIAL 13985).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

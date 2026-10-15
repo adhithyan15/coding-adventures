@@ -14,7 +14,8 @@ romanization: "lekhanī"
 concept_tag: SA-THG158-LEKHANI
 prerequisites: [SA-C157-srantah, SA-C157-ksudhitah]
 sounds: []
-roots: []
+roots: [sanskrit-lekhani, sanskrit-lekha]
+etymology_hook: "lekhanī 'pen, brush' ← √likh 'scratch, write' + -anī 'instrument' (MW); lekha 'writing' is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C157-ksudhitah]
 <!-- hl-knowledge: introduces=[SA-LEX-C158-THG158-01]; assesses=[] -->
 
 **लेखनी** — *lekhanī* — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lekhanī* is built from the root √likh "scratch, write" with the instrument suffix *-anī*: "the writing tool", a reed-pen or brush (MW). *lekha* "a writing, a letter" comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

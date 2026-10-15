@@ -14,7 +14,8 @@ romanization: "tiṣṭhati"
 concept_tag: SA-VERB-STAND
 prerequisites: [SA-C21-laugh, SA-C19-nine]
 sounds: []
-roots: []
+roots: [sanskrit-tishthati]
+etymology_hook: "tiṣṭhati ← the root √sthā 'stand', inherited: MW compares Latin stāre and English stand (CDIAL 5837)"
 duration:
   max_seconds: 210
 requires:
@@ -43,7 +44,7 @@ reviews_of: [SA-C21-laugh]
 
 **तिष्ठति** (*tiṣṭhati*) — "he, she or it stands".
 
-From **√स्था** (*sthā*), 'to stand' — the same root as Latin *stare* and English **stand**, **stable**, **status**. The *ti-* at the front is reduplication again, exactly as in *nṛtyati*.
+From **√स्था** (*sthā*), 'to stand' — the same root as Latin *stare* and English **stand**, **stable**, **status**. The *ti-* at the front is reduplication: the root's first sound, doubled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

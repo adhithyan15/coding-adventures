@@ -14,7 +14,8 @@ romanization: "pārśve"
 concept_tag: SA-LOC95-PARSVE
 prerequisites: [SA-C94-prsthatah, SA-C95-madhye]
 sounds: []
-roots: []
+roots: [sanskrit-parshva]
+etymology_hook: "pārśve, locative of pārśva 'side', from parśu 'rib' (MW); Hindi pās 'near' (CDIAL 8118)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C95-madhye]
 <!-- hl-knowledge: introduces=[SA-LEX-C95-LOC95-02]; assesses=[] -->
 
 **पार्श्वे** — *pārśve* — "beside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pārśve* is the locative, "at the side", of *pārśva* "side, flank", which MW derives from *parśu* "rib": the side is the region of the ribs. *pārśva* lives on as Hindi *pās* "near" (CDIAL 8118).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "vipaṇiḥ"
 concept_tag: SA-MARKET-MARKET
 prerequisites: [SA-C74-price, SA-C74-shop]
 sounds: []
-roots: []
+roots: [sanskrit-vipani, sanskrit-panate]
+etymology_hook: "vipaṇi 'sale; market-place' ← vi + the root √paṇ 'barter, buy' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C74-shop]
 <!-- hl-knowledge: introduces=[SA-LEX-C74-MARKET-05]; assesses=[] -->
 
 **विपणिः** (*vipaṇiḥ*) — "a market", many **आपणः** together in a **नगरम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vipaṇi* is built from *vi* and the root √paṇ, "to barter, buy", the root of
+*āpaṇa* (MW): first a sale, then a market-place.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

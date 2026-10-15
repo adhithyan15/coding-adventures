@@ -14,7 +14,8 @@ romanization: "mandaḥ"
 concept_tag: SA-QUAL215-MANDAH
 prerequisites: [SA-C214-prati, SA-C215-calah]
 sounds: []
-roots: []
+roots: [sanskrit-manda]
+etymology_hook: "manda 'slow, dull', of uncertain origin: CDIAL 9754 groups it with other words for defects"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C215-calah]
 <!-- hl-knowledge: introduces=[SA-LEX-C215-QUAL215-02]; assesses=[] -->
 
 **मन्दः** — *mandaḥ* — "slow, dull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*manda* means "slow, sluggish, weak, faint" (MW). Its origin is uncertain: CDIAL 9754 groups it with *manthara*, "slow, bent", and other words for defects whose source is unclear.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

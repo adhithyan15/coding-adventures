@@ -14,7 +14,8 @@ romanization: "nikṣipati"
 concept_tag: SA-VERB-NIKSIPATI
 prerequisites: [SA-C144-tolayati, SA-C144-utpatati]
 sounds: []
-roots: []
+roots: [sanskrit-nikshipati, sanskrit-kshipati]
+etymology_hook: "nikṣipati ← ni 'down, in' + √kṣip 'throw' (MW; CDIAL 7153): 'throws down, puts in, deposits'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C144-utpatati]
 <!-- hl-knowledge: introduces=[SA-LEX-C144-ACT144-04]; assesses=[] -->
 
 **निक्षिपति** — *nikṣipati* — "puts in, deposits".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nikṣipati* comes from *ni* "down, into" and the root √kṣip "throw, cast" (MW; CDIAL 7153): "throws down, puts in", so "deposits".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

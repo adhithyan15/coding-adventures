@@ -14,7 +14,8 @@ romanization: "madhu"
 concept_tag: SA-HOUSE-MADHU
 prerequisites: [SA-C35-milk, SA-C33-bridge, SA-C34-neck]
 sounds: []
-roots: []
+roots: [sanskrit-madhu]
+etymology_hook: "madhu 'honey, sweet' is inherited: MW compares Greek methu and English mead (CDIAL 9784)"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,7 @@ reviews_of: [SA-C35-milk]
 
 **मधु** is honey, and sweetness in general.
 
-Almost nothing in this book has cousins this far-flung. English *mead* is the same word; Greek *methu* is wine, and *amethyst* — *a-methustos*, "not drunk" — is the stone that was thought to keep you sober; Lithuanian *medus* and Old Irish *mid* are honey and mead again. Even Chinese *mì*, "honey", was borrowed from an early Indo-European neighbour. Ends in short *-u*, like **साधु** and **दारु**.
+Almost nothing in this book has cousins this far-flung. English *mead* is the same word; Greek *methu* is wine, and *amethyst* — *a-methustos*, "not drunk" — is the stone that was thought to keep you sober; Lithuanian *medus* and Old Irish *mid* are honey and mead again. Even Chinese *mì*, "honey", is widely thought to have been borrowed from an early Indo-European neighbour. Ends in short *-u*, like **साधु** and **दारु**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "upakāraḥ"
 concept_tag: SA-COURTESY-FAVOUR
 prerequisites: [SA-C29-bow, SA-C27-true, SA-C28-auspicious, SA-C09-sahayyam-karoti]
 sounds: []
-roots: []
+roots: [sanskrit-upakara, kr-do]
+etymology_hook: "upakāra 'help, favour' ← upa 'toward' + kāra 'doing', from √kṛ 'do' (MW; CDIAL 2141)"
 duration:
   max_seconds: 210
 requires:
@@ -48,6 +49,12 @@ reviews_of: [SA-C29-bow]
 **उपकारः** is a favour — something done for someone. Take it apart: *upa*, "near, toward", plus *kāra*, "a doing", from the root behind **करोमि**, "I do".
 
 So a favour is *a doing-toward*. And you have already seen *kāra* once, in नमस्कारः, "the making of a bow" — the same piece, in a word you have said since the first chapter. Prefixes and pieces are how Sanskrit builds, and by now you can watch it happen.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Upakāra* is built from the prefix *upa*, "toward", and *kāra*, "a doing", from
+the root √kṛ (MW, CDIAL 2141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

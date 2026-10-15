@@ -14,7 +14,8 @@ romanization: "cañcuḥ"
 concept_tag: SA-THG227-CANCUH
 prerequisites: [SA-C227-pucchah, SA-C227-srngam]
 sounds: []
-roots: []
+roots: [sanskrit-cancu]
+etymology_hook: "cañcu 'beak', taken from Dravidian by Mayrhofer (CDIAL 4569); Bengali cãuc"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C227-srngam]
 <!-- hl-knowledge: introduces=[SA-LEX-C227-THG227-04]; assesses=[] -->
 
 **चञ्चुः** — *cañcuḥ* — "a beak".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cañcu* is probably borrowed from Dravidian: CDIAL 4569 follows Mayrhofer in taking it from a Dravidian source. It lives on as Bengali *cãuc*, "beak".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "kākaḥ"
 concept_tag: SA-ANIMAL-CROW
 prerequisites: [SA-C79-mouse, SA-C79-cat]
 sounds: []
-roots: []
+roots: [sanskrit-kaka]
+etymology_hook: "kāka 'crow' imitates the bird's cawing (MW; CDIAL 2993); it lives on as Hindi kauā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C79-cat]
 <!-- hl-knowledge: introduces=[SA-LEX-C80-BIRDS-01]; assesses=[] -->
 
 **काकः** (*kākaḥ*) — "a crow", a black **विहगः**. Say it and hear its call.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kāka* is an imitation of the crow's call (MW, CDIAL 2993). It lives on as Hindi
+*kauā*, "crow".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

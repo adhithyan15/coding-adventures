@@ -14,7 +14,8 @@ romanization: "makṣikā"
 concept_tag: SA-THINGS115-MAKSIKA
 prerequisites: [SA-C114-bakah, SA-C114-bhramarah]
 sounds: []
-roots: []
+roots: [sanskrit-makshika]
+etymology_hook: "makṣikā 'fly, bee' ← makṣ 'fly' (RV; MW) + -ikā; Hindi makkhī 'fly' (CDIAL 9696)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C114-bhramarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C115-THINGS115-01]; assesses=[] -->
 
 **मक्षिका** — *makṣikā* — "a fly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*makṣikā* "a fly, a bee" is built on the Rigvedic *makṣ* "fly" with the suffix *-ikā* (MW). It lives on as Hindi *makkhī* "fly" (CDIAL 9696).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

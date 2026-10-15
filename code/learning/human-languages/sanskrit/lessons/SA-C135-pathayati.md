@@ -14,7 +14,8 @@ romanization: "pāṭhayati"
 concept_tag: SA-VERB-PATHAYATI
 prerequisites: [SA-C134-anvisyati, SA-C135-siksate]
 sounds: []
-roots: []
+roots: [sanskrit-pathati]
+etymology_hook: "pāṭhayati 'makes read, teaches' is the causative of √paṭh 'read aloud' (CDIAL 8037)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C135-siksate]
 <!-- hl-knowledge: introduces=[SA-LEX-C135-ACT135-02]; assesses=[] -->
 
 **पाठयति** — *pāṭhayati* — "teaches".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pāṭhayati* is the causative of the root √paṭh "read aloud, recite" (CDIAL 8037): "makes someone recite", and so "teaches". It is the causing form of *paṭhati* "reads", and Sindhi kept it as *pāṛhaṇu* "to teach" (CDIAL 8037).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

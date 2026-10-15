@@ -14,7 +14,8 @@ romanization: "sūtram"
 concept_tag: SA-THINGS100-SUTRAM
 prerequisites: [SA-C100-kartari, SA-C100-sucih]
 sounds: []
-roots: []
+roots: [sanskrit-sutra]
+etymology_hook: "sūtra 'thread' ← √siv 'sew' (MW), an inherited Indo-European root (EtymDB), cf. English sew; Hindi sūt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C100-sucih]
 <!-- hl-knowledge: introduces=[SA-LEX-C100-THINGS100-05]; assesses=[] -->
 
 **सूत्रम्** — *sūtram* — "thread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sūtra* "thread" comes from the root √siv "sew" (MW), an Indo-European root (EtymDB) that also gave English *sew* and Latin *suere*. It lives on as Hindi *sūt* "thread" (CDIAL 13561), and a *sūtra* of rules is a "thread" of short lines.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

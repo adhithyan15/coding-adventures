@@ -14,7 +14,8 @@ romanization: "rajakaḥ"
 concept_tag: SA-PPL237-RAJAKAH
 prerequisites: [SA-C237-lohakarah, SA-C237-tantuvayah]
 sounds: []
-roots: []
+roots: [sanskrit-rajaka]
+etymology_hook: "rajaka 'washerman' ← root √rañj 'colour, dye' (MW; CDIAL 10575)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C237-tantuvayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C237-PPL237-05]; assesses=[] -->
 
 **रजकः** — *rajakaḥ* — "a washerman".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rajaka* is built on the root √rañj, "to colour, dye" (MW; CDIAL 10575), the root of *rakta*, "red", which you have already met. MW explains the name from his cleaning or whitening clothes; dyeing and washing went together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

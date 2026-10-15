@@ -14,7 +14,8 @@ romanization: "vijñānam"
 concept_tag: SA-SCH199-VIJNANAM
 prerequisites: [SA-C199-vyakaranam, SA-C199-ganitam]
 sounds: []
-roots: []
+roots: [sanskrit-vijnana, sanskrit-jna]
+etymology_hook: "vijñāna ← vi- + √jñā 'know': 'discernment', then 'science' (MW; CDIAL 11707)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C199-ganitam]
 <!-- hl-knowledge: introduces=[SA-LEX-C199-SCH199-05]; assesses=[] -->
 
 **विज्ञानम्** — *vijñānam* — "science".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vijñāna* is built on *vi-* and the root √jñā, "to know" (MW), the root of *jānāti*, "knows". It first meant "the act of discerning" (CDIAL 11707), and later "science".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

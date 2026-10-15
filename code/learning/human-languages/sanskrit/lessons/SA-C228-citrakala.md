@@ -14,7 +14,8 @@ romanization: "citrakalā"
 concept_tag: SA-SCH228-CITRAKALA
 prerequisites: [SA-C228-sangitam, SA-C228-nrtyam]
 sounds: []
-roots: []
+roots: [sanskrit-citra, sanskrit-kala-art]
+etymology_hook: "citrakalā = citra 'picture' + kalā 'art', which CDIAL 2927 takes from Dravidian; the pairing is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C228-nrtyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C228-SCH228-05]; assesses=[] -->
 
 **चित्रकला** — *citrakalā* — "painting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*citrakalā* is a compound of *citra*, "picture", and *kalā*, "practical art". MW calls *kalā* of doubtful etymology, and CDIAL 2927 takes it in this sense from Dravidian. MW does not list the compound, so the pairing for painting is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "hemantaḥ"
 concept_tag: SA-TIME91-HEMANTAH
 prerequisites: [SA-C91-prabhatam, SA-C91-sandhya]
 sounds: []
-roots: []
+roots: [sanskrit-hemanta, sanskrit-hima]
+etymology_hook: "hemanta 'winter' ← heman 'in winter', related to hima 'cold, snow' (MW; CDIAL 14164)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C91-sandhya]
 <!-- hl-knowledge: introduces=[SA-LEX-C91-TIME91-03]; assesses=[] -->
 
 **हेमन्तः** — *hemantaḥ* — "early winter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Hemanta* is a Rigvedic word built on *heman*, "in winter", which MW files beside
+*hima*, "cold, snow" (CDIAL 14164).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

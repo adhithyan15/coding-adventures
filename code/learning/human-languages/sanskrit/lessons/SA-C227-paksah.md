@@ -14,7 +14,8 @@ romanization: "pakṣaḥ"
 concept_tag: SA-THG227-PAKSAH
 prerequisites: [SA-C226-jantuh, SA-C226-paksi]
 sounds: []
-roots: []
+roots: [sanskrit-paksha]
+etymology_hook: "pakṣa 'wing, side' (CDIAL 7627); Hindi pākh 'wing'; the 'side, party' sense grows from it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C226-paksi]
 <!-- hl-knowledge: introduces=[SA-LEX-C227-THG227-01]; assesses=[] -->
 
 **पक्षः** — *pakṣaḥ* — "a wing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pakṣa* is a Rigvedic word for "wing, feather, side" (CDIAL 7627). From the side of a body came the side of an argument and a party, and also each half of the lunar month. It lives on as Hindi *pākh*, "wing of a bird".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

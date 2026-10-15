@@ -14,7 +14,8 @@ romanization: "karma"
 concept_tag: SA-WRK170-KARMA
 prerequisites: [SA-C169-lekhanam, SA-C170-karyam]
 sounds: []
-roots: []
+roots: [sanskrit-karman]
+etymology_hook: "karma ← karman 'act, work' ← √kṛ 'do' (CDIAL 2892); Hindi kām 'work'; English karma"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C170-karyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C170-WRK170-02]; assesses=[] -->
 
 **कर्म** — *karma* — "an action, work".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*karma* is the nominative of *karman* "act, action, work", from the root √kṛ "do, make" (MW; CDIAL 2892). It wore down into Hindi *kām* "work" (CDIAL 2892), and it is the *karma* that English has borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

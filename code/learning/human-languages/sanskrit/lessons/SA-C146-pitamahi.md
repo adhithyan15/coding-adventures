@@ -14,7 +14,8 @@ romanization: "pitāmahī"
 concept_tag: SA-PPL146-PITAMAHI
 prerequisites: [SA-C146-pautrah, SA-C146-pautri]
 sounds: []
-roots: []
+roots: [sanskrit-pitr]
+etymology_hook: "pitāmahī ← pitā 'father' + mahī 'great': 'the father's great one' (MW); pitṛ is English father's cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C146-pautri]
 <!-- hl-knowledge: introduces=[SA-LEX-C146-PPL146-03]; assesses=[] -->
 
 **पितामही** — *pitāmahī* — "a paternal grandmother".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pitāmahī* is built from *pitā* "father" and *mahī* "great" (MW): the father's mother. MW sets *pitṛ* "father" beside Latin *pater* and English *father*: one inherited Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

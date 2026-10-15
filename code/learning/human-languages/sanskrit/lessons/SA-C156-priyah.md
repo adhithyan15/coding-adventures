@@ -14,7 +14,8 @@ romanization: "priyaḥ"
 concept_tag: SA-QUAL156-PRIYAH
 prerequisites: [SA-C155-sitah, SA-C155-kathorah]
 sounds: []
-roots: []
+roots: [sanskrit-priya, pie-priHos]
+etymology_hook: "priya 'dear' ← √prī 'please, love', inherited, cousin of English friend (EtymDB; CDIAL 8974)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C155-kathorah]
 <!-- hl-knowledge: introduces=[SA-LEX-C156-QUAL156-01]; assesses=[] -->
 
 **प्रियः** — *priyaḥ* — "dear, beloved".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*priya* "dear, beloved" comes from the root √prī "please, love" (CDIAL 8974), inherited from Indo-European: Gothic *frijōnds* and Old English *frēond*, the ancestor of *friend*, are its cousins (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

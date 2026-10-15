@@ -14,7 +14,8 @@ romanization: "hrasvaḥ"
 concept_tag: SA-THINGS125-HRASVAH
 prerequisites: [SA-C124-catakah, SA-C125-nakulah]
 sounds: []
-roots: []
+roots: [sanskrit-hrasva]
+etymology_hook: "hrasva 'short' is inherited from Indo-Iranian (EtymDB); MW sets it with √hras 'become short'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C125-nakulah]
 <!-- hl-knowledge: introduces=[SA-LEX-C125-THINGS125-02]; assesses=[] -->
 
 **ह्रस्वः** — *hrasvaḥ* — "short".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hrasva* "short, small" is inherited from Indo-Iranian (EtymDB), and MW sets it beside the root √hras "become short, lessen". In grammar it also names a short vowel (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

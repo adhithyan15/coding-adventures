@@ -14,7 +14,8 @@ romanization: "sarvatra"
 concept_tag: SA-LOC95-SARVATRA
 prerequisites: [SA-C95-madhye, SA-C95-parsve]
 sounds: []
-roots: []
+roots: [sanskrit-sarva]
+etymology_hook: "sarvatra ← sarva 'all' + -tra 'in, at' (MW); MW compares Greek holos, Latin salvus; Pali sabbattha"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C95-parsve]
 <!-- hl-knowledge: introduces=[SA-LEX-C95-LOC95-03]; assesses=[] -->
 
 **सर्वत्र** — *sarvatra* — "everywhere".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sarvatra* is built from *sarva* "all" and the place ending *-tra* "in, at" (MW). MW compares *sarva* with Greek *holos* "whole" and Latin *salvus* "safe". Pali wore *sarvatra* down to *sabbattha* (CDIAL 13278), and *sarva* itself became Hindi *sab* "all" (CDIAL 13276).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

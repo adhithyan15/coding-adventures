@@ -14,7 +14,8 @@ romanization: "prakoṣṭhaḥ"
 concept_tag: SA-HOME-ROOM
 prerequisites: [SA-C76-spring, SA-C76-summer]
 sounds: []
-roots: []
+roots: [sanskrit-prakoshtha]
+etymology_hook: "prakoṣṭha ← pra + koṣṭha 'enclosure'; MW gives 'forearm' and 'a court in a house' (CDIAL 8450)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C76-summer]
 <!-- hl-knowledge: introduces=[SA-LEX-C77-HOME-01]; assesses=[] -->
 
 **प्रकोष्ठः** (*prakoṣṭhaḥ*) — "a room" of a **गृहम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Prakoṣṭha* is built from *pra* and *koṣṭha*, "an enclosure, an inner part" (MW).
+MW records it as a court in a house and as a room by a palace gate, as well as
+"forearm" (CDIAL 8450); the plain sense "room" grew out of these.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

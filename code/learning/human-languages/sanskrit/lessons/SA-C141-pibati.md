@@ -14,7 +14,8 @@ romanization: "pibati"
 concept_tag: SA-VERB-PIBATI
 prerequisites: [SA-C140-deyakam, SA-C140-praptipatram]
 sounds: []
-roots: []
+roots: [sanskrit-pibati, pa-drink]
+etymology_hook: "pibati ← √pā 'drink', inherited, cousin of Latin bibo, Greek pinō (EtymDB; MW); Hindi pīnā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C140-praptipatram]
 <!-- hl-knowledge: introduces=[SA-LEX-C141-ACT141-01]; assesses=[] -->
 
 **पिबति** — *pibati* — "drinks".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pibati* comes from the root √pā "drink", with its reduplicated present stem *piba-* (MW). It is inherited from Indo-European: Latin *bibo* "I drink" and Greek *pinō* are its cousins (EtymDB). It lives on as Hindi *pīnā* "to drink" (CDIAL 8209).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

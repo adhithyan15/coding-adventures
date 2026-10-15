@@ -14,7 +14,8 @@ romanization: "ānayati"
 concept_tag: SA-VERB-BRING
 prerequisites: [SA-C72-sleeps, SA-C72-washes]
 sounds: []
-roots: []
+roots: [sanskrit-anayati, sanskrit-nayati]
+etymology_hook: "ānayati 'brings' ← ā 'toward' + nayati 'leads', from √nī; Hindi ānnā 'to bring' (CDIAL 1174)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,12 @@ reviews_of: [SA-C72-washes]
 
 **आनयति** (*ānayati*) — "(he, she) brings": **आ-**, "towards", with **नयति**, "leads",
 which you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Ānayati* is built from *ā*, "toward", and *nayati*, "leads", from the root √nī:
+to bring is to lead toward. CDIAL 1174 lists Hindi *ānnā*, "to bring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

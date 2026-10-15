@@ -14,7 +14,8 @@ romanization: "śiraḥ"
 concept_tag: SA-BODY-HEAD
 prerequisites: [SA-C25-foot, SA-C23-son, SA-C24-fruit]
 sounds: []
-roots: []
+roots: [sanskrit-shiras]
+etymology_hook: "śiras 'head' is inherited: MW compares Greek kara, Latin cerebrum and English horn; Hindi sir (CDIAL 12452)"
 duration:
   max_seconds: 210
 requires:

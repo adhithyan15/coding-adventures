@@ -14,7 +14,8 @@ romanization: "karomi"
 concept_tag: SA-VERB-KR
 prerequisites: [SA-C05-vadami, SA-C05-aham-samskritam-vadami, SA-C01-namaskara]
 sounds: [inherent-a, long-o]
-roots: [kr-do]
+roots: [kr-do, sanskrit-karoti]
+etymology_hook: "karomi ← the root √kṛ 'do, make'; its 3sg karoti lives on as Hindi karnā 'to do' (CDIAL 2814)"
 reviews_of: [SA-C05-vadami, SA-C05-vasami]
 duration:
   max_seconds: 210

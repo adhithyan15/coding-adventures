@@ -14,7 +14,8 @@ romanization: "śiśuḥ"
 concept_tag: SA-PPL236-SISUH
 prerequisites: [SA-C235-alingati, SA-C235-cumbati]
 sounds: []
-roots: []
+roots: [sanskrit-shishu]
+etymology_hook: "śiśu 'young, child', which MW derives from √śū 'swell'; Hindi sisu (CDIAL 12476)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C235-cumbati]
 <!-- hl-knowledge: introduces=[SA-LEX-C236-PPL236-01]; assesses=[] -->
 
 **शिशुः** — *śiśuḥ* — "a baby, an infant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śiśu* is a Rigvedic word for "the young of an animal, a child" (CDIAL 12476). MW derives it from √śū, "to swell", that is, to grow. It lives on as Hindi *sisu*, "infant".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

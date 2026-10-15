@@ -14,7 +14,8 @@ romanization: "āśramaḥ"
 concept_tag: SA-THG223-ASRAMAH
 prerequisites: [SA-C223-margadarsakah, SA-C223-tirtham]
 sounds: []
-roots: []
+roots: [sanskrit-ashrama, sanskrit-shrama]
+etymology_hook: "āśrama ← ā- + √śram 'toil, exert oneself': a place of religious effort (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C223-tirtham]
 <!-- hl-knowledge: introduces=[SA-LEX-C223-THG223-04]; assesses=[] -->
 
 **आश्रमः** — *āśramaḥ* — "a hermitage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āśrama* is built on *ā-* and the root √śram, "to toil, exert oneself" (MW), the root of *śrama*, "toil": a hermitage is a place of religious exertion. It also names the four stages of a life.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

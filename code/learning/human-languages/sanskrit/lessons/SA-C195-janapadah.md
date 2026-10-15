@@ -14,7 +14,8 @@ romanization: "janapadaḥ"
 concept_tag: SA-THG195-JANAPADAH
 prerequisites: [SA-C195-pattanam, SA-C195-rajadhani]
 sounds: []
-roots: []
+roots: [sanskrit-janapada, sanskrit-pada]
+etymology_hook: "janapada = jana 'people' + pada 'foot, place': 'a people', then 'a country' (CDIAL 5101)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C195-rajadhani]
 <!-- hl-knowledge: introduces=[SA-LEX-C195-THG195-03]; assesses=[] -->
 
 **जनपदः** — *janapadaḥ* — "a district, a region".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*janapada* is a compound of *jana*, "people", and *pada*, "footing, place" (MW). In the Śatapatha Brāhmaṇa it means "a people", and in the Mahābhārata "a country" (CDIAL 5101).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

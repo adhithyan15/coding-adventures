@@ -14,7 +14,8 @@ romanization: "sarvam"
 concept_tag: SA-REPLY-SARVA
 prerequisites: [SA-C36-also, SA-C34-neck, SA-C35-honey]
 sounds: []
-roots: []
+roots: [sanskrit-sarva]
+etymology_hook: "sarva 'whole, all': MW compares Greek holos and Latin salvus; it lives on as Hindi sab (CDIAL 13276)"
 duration:
   max_seconds: 210
 requires:

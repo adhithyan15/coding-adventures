@@ -14,7 +14,8 @@ romanization: "śuṣkaḥ"
 concept_tag: SA-QUAL126-SUSKAH
 prerequisites: [SA-C126-gabhirah, SA-C126-ardrah]
 sounds: []
-roots: []
+roots: [sanskrit-shushka]
+etymology_hook: "śuṣka 'dried' ← √śuṣ 'dry' (CDIAL 12548), an Indo-European root, cf. Latin siccus (MW); Hindi sūkhā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C126-ardrah]
 <!-- hl-knowledge: introduces=[SA-LEX-C126-QUAL126-05]; assesses=[] -->
 
 **शुष्कः** — *śuṣkaḥ* — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śuṣka* comes from the root √śuṣ "become dry" (CDIAL 12548), which MW sets beside Latin *siccus* "dry", and EtymDB counts as inherited from Indo-European. It lives on as Hindi *sūkhā* "dry" (CDIAL 12548).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

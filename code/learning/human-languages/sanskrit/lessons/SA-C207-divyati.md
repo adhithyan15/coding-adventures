@@ -14,7 +14,8 @@ romanization: "dīvyati"
 concept_tag: SA-VERB-DIVYATI
 prerequisites: [SA-C206-nimilayati, SA-C206-unmilayati]
 sounds: []
-roots: []
+roots: [sanskrit-divyati]
+etymology_hook: "dīvyati ← root √div 'cast dice, play, gamble' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C206-unmilayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C207-ACT207-01]; assesses=[] -->
 
 **दीव्यति** — *dīvyati* — "gambles, plays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dīvyati* comes from the root √div, "to cast dice, play, gamble" (MW), as its present. MW keeps this √div apart from *div*, "sky, heaven", the word behind the god Dyaus.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

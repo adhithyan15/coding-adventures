@@ -14,7 +14,8 @@ romanization: "sukham"
 concept_tag: SA-NEEDS-EASE
 prerequisites: [SA-C67-thirst, SA-C67-rest]
 sounds: []
-roots: []
+roots: [sukha-sanskrit]
+etymology_hook: "sukha 'easy, happy': said to be su + kha 'good axle-hole', or a Prakrit form of su-stha (MW; CDIAL 13451)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C67-rest]
 <!-- hl-knowledge: introduces=[SA-LEX-C67-NEEDS-05]; assesses=[] -->
 
 **सुखम्** (*sukham*) — "ease", "happiness". **सुखम् अस्ति** — "all is well".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Sukha* first described a chariot running easily. MW reports the old reading *su*
++ *kha*, "having a good axle-hole", and also suggests a Prakrit form of *su-stha*,
+"standing well"; the question is not settled (CDIAL 13451).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

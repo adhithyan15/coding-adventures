@@ -14,7 +14,8 @@ romanization: "paṭaḥ"
 concept_tag: SA-THINGS124-PATAH
 prerequisites: [SA-C123-nauyanam, SA-C123-dhumayanam]
 sounds: []
-roots: []
+roots: [sanskrit-pata-cloth]
+etymology_hook: "paṭa 'woven cloth' is probably borrowed from Austroasiatic, after Przyluski; less likely Dravidian (CDIAL 7692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C123-dhumayanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C124-THINGS124-01]; assesses=[] -->
 
 **पटः** — *paṭaḥ* — "a cloth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paṭa* "woven cloth, a garment" is probably borrowed from Austroasiatic: CDIAL 7692 follows Przyluski in grouping it with *karpāsa* "cotton", and thinks a Dravidian source less likely. Pali kept it as *paṭa* "cloth" (CDIAL 7692).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

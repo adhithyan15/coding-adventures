@@ -14,7 +14,8 @@ romanization: "jihvā"
 concept_tag: SA-BODY-TONGUE
 prerequisites: [SA-C69-belly, SA-C69-forehead]
 sounds: []
-roots: []
+roots: [sanskrit-jihva]
+etymology_hook: "jihvā 'tongue' is inherited: MW compares Latin lingua and Gothic tuggō; Hindi jībh (CDIAL 5228)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C69-forehead]
 <!-- hl-knowledge: introduces=[SA-LEX-C69-BODY-05]; assesses=[] -->
 
 **जिह्वा** (*jihvā*) — "the tongue", inside the **मुखम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Jihvā* is inherited: MW compares Latin *lingua* and Gothic *tuggō*, the cousin of
+English **tongue**. It lives on as Hindi *jībh* (CDIAL 5228).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

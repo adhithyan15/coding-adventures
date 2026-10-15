@@ -14,7 +14,8 @@ romanization: "lavaṇam"
 concept_tag: SA-HOUSE-LAVANA
 prerequisites: [SA-C35-honey, SA-C33-mountain, SA-C34-bone]
 sounds: []
-roots: []
+roots: [sanskrit-lavana]
+etymology_hook: "lavaṇa 'salt': derivation doubtful (MW); it lives on as Hindi lon and Gujarati luṇ (CDIAL 10978)"
 duration:
   max_seconds: 210
 requires:
@@ -50,7 +51,7 @@ Here Sanskrit went its own way: Latin *sal* and English *salt* come from a diffe
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Salt, and a word with no European relatives at all.
+Salt, and a word with no known European relatives.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03, SA-LEX-C33-LAND-03, SA-LEX-C34-LIMB-03] -->

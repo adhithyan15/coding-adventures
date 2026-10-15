@@ -14,7 +14,8 @@ romanization: "vyajanam"
 concept_tag: SA-THINGS105-VYAJANAM
 prerequisites: [SA-C105-sanganakam, SA-C105-yantram]
 sounds: []
-roots: []
+roots: [sanskrit-vyajana]
+etymology_hook: "vyajana 'fan' ← √vīj, vyaj 'to fan' (MW; CDIAL 12043); Hindi bījnā, Gujarati vijṇo 'fan'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C105-yantram]
 <!-- hl-knowledge: introduces=[SA-LEX-C105-THINGS105-04]; assesses=[] -->
 
 **व्यजनम्** — *vyajanam* — "a fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vyajana* "a fan" comes from the root √vīj, also written *vyaj*, "to fan, to cool by fanning" (MW; CDIAL 12043). Its twin *vījana* lives on as Hindi *bījnā* "fan" (CDIAL 12043).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

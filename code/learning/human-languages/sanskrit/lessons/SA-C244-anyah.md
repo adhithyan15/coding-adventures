@@ -14,7 +14,8 @@ romanization: "anyaḥ"
 concept_tag: SA-QUAL244-ANYAH
 prerequisites: [SA-C244-anucitah, SA-C244-avasyakah]
 sounds: []
-roots: []
+roots: [sanskrit-anya]
+etymology_hook: "anya 'other', inherited: EtymDB sets it beside Avestan anya 'other' (CDIAL 399)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C244-avasyakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C244-QUAL244-04]; assesses=[] -->
 
 **अन्यः** — *anyaḥ* — "other".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*anya* is an inherited word for "other" (CDIAL 399), and EtymDB sets it beside Avestan *anya*, "other". Hindi and Gujarati *ān*, "other", come from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

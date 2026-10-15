@@ -14,7 +14,8 @@ romanization: "mallikā"
 concept_tag: SA-THG252-MALLIKA
 prerequisites: [SA-C252-kantakah, SA-C252-kalika]
 sounds: []
-roots: []
+roots: [sanskrit-mallika]
+etymology_hook: "mallikā 'jasmine'; CDIAL 9913 compares Tamil mullai, and DEDR 4987 sets them side by side; Hindi mallī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C252-kalika]
 <!-- hl-knowledge: introduces=[SA-LEX-C252-THG252-04]; assesses=[] -->
 
 **मल्लिका** — *mallikā* — "jasmine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mallikā* names the Arabian jasmine (MW). CDIAL 9913 compares Tamil *mullai*, "jasmine", and DEDR 4987 sets the Dravidian words beside it, so a Dravidian source is possible but not settled. Hindi *mallī*, "jasmine", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

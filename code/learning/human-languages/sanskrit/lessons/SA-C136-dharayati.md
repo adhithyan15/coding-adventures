@@ -14,7 +14,8 @@ romanization: "dhārayati"
 concept_tag: SA-VERB-DHARAYATI
 prerequisites: [SA-C135-avarohati, SA-C136-prapnoti]
 sounds: []
-roots: []
+roots: [sanskrit-dharayati]
+etymology_hook: "dhārayati 'holds, bears' ← √dhṛ 'hold' (CDIAL 6791), an Indo-European root (EtymDB); dharma is its kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C136-prapnoti]
 <!-- hl-knowledge: introduces=[SA-LEX-C136-ACT136-02]; assesses=[] -->
 
 **धारयति** — *dhārayati* — "wears, holds".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhārayati* is the causative form of the root √dhṛ "hold, bear, support", and in practice the usual present (MW; CDIAL 6791). The root is inherited from Indo-European (EtymDB), and *dharma*, "what holds things up", comes from it too. Hindi kept it as *dhārnā* "to hold, owe" (CDIAL 6791).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

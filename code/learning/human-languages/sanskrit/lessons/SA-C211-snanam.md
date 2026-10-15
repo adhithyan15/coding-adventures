@@ -14,7 +14,8 @@ romanization: "snānam"
 concept_tag: SA-WEL211-SNANAM
 prerequisites: [SA-C211-sramah, SA-C211-klantih]
 sounds: []
-roots: []
+roots: [sanskrit-snana, sanskrit-snati]
+etymology_hook: "snāna ← root √snā 'bathe'; MW compares Latin nāre 'to swim'; Hindi nahān (CDIAL 13789)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C211-klantih]
 <!-- hl-knowledge: introduces=[SA-LEX-C211-WEL211-05]; assesses=[] -->
 
 **स्नानम्** — *snānam* — "a bath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*snāna* is built on the root √snā, "to bathe" (MW), the root of *snāti*, "bathes", which you have already met. It lives on as Hindi *nahān*, "bathing" (CDIAL 13789).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

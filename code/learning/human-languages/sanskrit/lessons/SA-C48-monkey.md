@@ -14,7 +14,8 @@ romanization: "vānaraḥ"
 concept_tag: SA-BEAST-VANARA
 prerequisites: [SA-C48-goat, SA-C46-shade, SA-C47-pillar]
 sounds: []
-roots: []
+roots: [sanskrit-vanara]
+etymology_hook: "vānara 'monkey' ← vanar- 'forest', the forest animal (MW; CDIAL 11515); some read vana-nara"
 duration:
   max_seconds: 210
 requires:
@@ -44,9 +45,16 @@ reviews_of: [SA-C48-goat]
 
 **वानरः** is a monkey.
 
-Two words you own are sitting inside it: वनम्, the forest, and नरः, the man. Sanskrit's own commentators read **वानरः** as the forest-man, and that reading has held for two thousand years, whatever later scholars have made of it.
+Two words you own seem to sit inside it: वनम्, the forest, and नरः, the man. Some have read **वानरः** as the forest-man, *vana* + *nara*; MW prefers an old word for forest, *vanar-*, so the forest is in it either way.
 
 So the word costs you one new shape and pays back two old ones. Ends in **-अः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW and CDIAL 11515 derive *vānara* from *vanar-*, an old word for forest: the
+forest animal. The reading *vana-nara*, "forest man", is one MW reports from
+others. It lives on as Hindi *bandar*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

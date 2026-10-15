@@ -14,7 +14,8 @@ romanization: "mañcaḥ"
 concept_tag: SA-THINGS99-MANCAH
 prerequisites: [SA-C98-tadartham, SA-C98-yasmat]
 sounds: []
-roots: []
+roots: [sanskrit-manca]
+etymology_hook: "mañca 'platform, bed' is of unclear origin; CDIAL 9715 queries a root √mac; Punjabi mañjā 'cot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C98-yasmat]
 <!-- hl-knowledge: introduces=[SA-LEX-C99-THINGS99-01]; assesses=[] -->
 
 **मञ्चः** — *mañcaḥ* — "a bed, a platform".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mañca* "a stage, a platform, a bed" is of unclear origin: CDIAL 9715 suggests a root √mac with a query mark, and MW equates √mac with a twin √mañc that it calls probably artificial. It lives on as Punjabi *mañjā* "bed, cot" and Hindi *māñcā* "platform" (CDIAL 9715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

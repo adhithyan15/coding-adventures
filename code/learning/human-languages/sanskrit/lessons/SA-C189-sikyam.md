@@ -14,7 +14,8 @@ romanization: "śikyam"
 concept_tag: SA-THG189-SIKYAM
 prerequisites: [SA-C188-ujjvalah, SA-C189-manjusa]
 sounds: []
-roots: []
+roots: [sanskrit-shikya]
+etymology_hook: "śikya 'rope sling, hanging basket', origin uncertain (no derivation in MW or CDIAL); Hindi chīkā (CDIAL 12427)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C189-manjusa]
 <!-- hl-knowledge: introduces=[SA-LEX-C189-THG189-02]; assesses=[] -->
 
 **शिक्यम्** — *śikyam* — "a hanging basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śikya* is a rope loop hung from a pole or yoke to carry a load (MW), and so a hanging basket. Neither MW nor CDIAL 12427 gives a derivation, so its origin is uncertain; CDIAL compares *śic*, "sling, net". It lives on as Hindi *chīkā*, "hanging net".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

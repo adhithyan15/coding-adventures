@@ -14,7 +14,8 @@ romanization: "pratyāgacchati"
 concept_tag: SA-VERB-PRATYAGACCHATI
 prerequisites: [SA-C142-darsayati, SA-C142-pujayati]
 sounds: []
-roots: []
+roots: [sanskrit-pratyagacchati, gam-come]
+etymology_hook: "pratyāgacchati ← prati 'back' + ā 'toward' + √gam 'go': 'comes back' (MW); √gam is English come's cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C142-pujayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C143-ACT143-01]; assesses=[] -->
 
 **प्रत्यागच्छति** — *pratyāgacchati* — "comes back, returns".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pratyāgacchati* is built from *prati* "back, against", *ā* "toward" and the root √gam "go", whose present stem is *gaccha-* (MW): "comes back, returns". It is *āgacchati* "comes" with *prati* in front, and MW sets √gam beside English *come*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

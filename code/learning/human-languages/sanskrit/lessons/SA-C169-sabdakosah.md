@@ -14,7 +14,8 @@ romanization: "śabdakośaḥ"
 concept_tag: SA-SCH169-SABDAKOSAH
 prerequisites: [SA-C169-ankah, SA-C169-sreni]
 sounds: []
-roots: []
+roots: [sanskrit-shabda, sanskrit-kosha]
+etymology_hook: "śabdakośa ← śabda 'sound, word' + kośa 'store, treasury': 'word-store', a title in MW"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C169-sreni]
 <!-- hl-knowledge: introduces=[SA-LEX-C169-SCH169-04]; assesses=[] -->
 
 **शब्दकोशः** — *śabdakośaḥ* — "a dictionary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śabdakośa* is built from *śabda* "sound, word" and *kośa* "a vessel, a store, a treasury" (MW): "the word-store". MW already records it as the name of a dictionary, and *kośa* "treasury" is the usual Sanskrit word for a lexicon.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

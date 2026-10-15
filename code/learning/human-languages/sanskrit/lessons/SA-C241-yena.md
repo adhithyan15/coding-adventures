@@ -14,7 +14,8 @@ romanization: "yena"
 concept_tag: SA-WHY241-YENA
 prerequisites: [SA-C240-nityam, SA-C241-krte]
 sounds: []
-roots: []
+roots: [sanskrit-ya-relative]
+etymology_hook: "yena 'by which' is the instrumental of the relative stem ya- 'which' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C241-krte]
 <!-- hl-knowledge: introduces=[SA-LEX-C241-WHY241-02]; assesses=[] -->
 
 **येन** — *yena* — "by which, so that".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yena* comes from the relative pronoun stem *ya-*, "which", as its instrumental (MW): "by which", and so "so that". It pairs with *tena*, "by that", from the next lesson.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

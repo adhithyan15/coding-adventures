@@ -14,7 +14,8 @@ romanization: "tṛptiḥ"
 concept_tag: SA-WEL212-TRPTIH
 prerequisites: [SA-C212-atma, SA-C212-svapnah]
 sounds: []
-roots: []
+roots: [sanskrit-trpti]
+etymology_hook: "tṛpti ← root √tṛp 'be satisfied, pleased' (MW; CDIAL 5931)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C212-svapnah]
 <!-- hl-knowledge: introduces=[SA-LEX-C212-WEL212-05]; assesses=[] -->
 
 **तृप्तिः** — *tṛptiḥ* — "satisfaction".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tṛpti* is built on the root √tṛp, "to be satisfied", with the noun suffix *-ti* (MW). It is a Rigvedic word (CDIAL 5931), and Tamil borrowed it as *tirupti*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

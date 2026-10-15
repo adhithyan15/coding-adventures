@@ -14,7 +14,8 @@ romanization: "nāṭakam"
 concept_tag: SA-THG249-NATAKAM
 prerequisites: [SA-C248-sulkam, SA-C249-varta]
 sounds: []
-roots: []
+roots: [sanskrit-nataka, sanskrit-nrtyati]
+etymology_hook: "nāṭaka ← naṭa 'actor', from √naṭ, a Prakrit form of √nṛt 'dance' (MW; CDIAL 7045)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C249-varta]
 <!-- hl-knowledge: introduces=[SA-LEX-C249-THG249-02]; assesses=[] -->
 
 **नाटकम्** — *nāṭakam* — "a drama, a play".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nāṭaka* is built on *naṭa*, "dancer, actor", from √naṭ, which MW calls a Prakrit form of √nṛt, "to dance". It first meant "actor" (CDIAL 7045), then the play itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

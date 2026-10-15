@@ -14,7 +14,8 @@ romanization: "godhā"
 concept_tag: SA-THG253-GODHA
 prerequisites: [SA-C253-luta, SA-C253-vrscikah]
 sounds: []
-roots: []
+roots: [sanskrit-godha]
+etymology_hook: "godhā 'big lizard', probably borrowed from Dravidian and reshaped (CDIAL 4286); Hindi goh"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C253-vrscikah]
 <!-- hl-knowledge: introduces=[SA-LEX-C253-THG253-04]; assesses=[] -->
 
 **गोधा** — *godhā* — "a lizard".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*godhā* is a big lizard, the monitor, in the Vājasaneyi Saṃhitā. CDIAL 4286 thinks it probably came from Dravidian and was reshaped by folk etymology to look like *go*, "cow", and it points to Mayrhofer for an Indo-European account, so the question is not settled. It lives on as Hindi *goh*, "iguana".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

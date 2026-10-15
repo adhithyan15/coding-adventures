@@ -14,7 +14,8 @@ romanization: "viphalatā"
 concept_tag: SA-WRK230-VIPHALATA
 prerequisites: [SA-C229-prasnapatram, SA-C230-saphalata]
 sounds: []
-roots: []
+roots: [sanskrit-viphala, sanskrit-phala]
+etymology_hook: "viphalatā = vi 'without' + phala 'fruit' + -tā: 'fruitlessness' (MW; CDIAL 11803)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C230-saphalata]
 <!-- hl-knowledge: introduces=[SA-LEX-C230-WRK230-02]; assesses=[] -->
 
 **विफलता** — *viphalatā* — "failure".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*viphalatā* is built on *viphala*, "bearing no fruit, useless" (CDIAL 11803), from *vi-*, "without", and *phala*, "fruit" (MW). MW lists *viphalatā* itself as "fruitlessness", the mirror of *saphalatā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

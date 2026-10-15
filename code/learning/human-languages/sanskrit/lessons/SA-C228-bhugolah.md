@@ -14,7 +14,8 @@ romanization: "bhūgolaḥ"
 concept_tag: SA-SCH228-BHUGOLAH
 prerequisites: [SA-C227-grdhrah, SA-C228-itihasah]
 sounds: []
-roots: []
+roots: [sanskrit-bhu, sanskrit-gola]
+etymology_hook: "bhūgola = bhū 'earth' + gola 'ball': MW's 'earth-ball', the globe; the 'geography' sense is modern"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C228-itihasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C228-SCH228-02]; assesses=[] -->
 
 **भूगोलः** — *bhūgolaḥ* — "geography".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhūgola* is a compound of *bhū*, "earth", and *gola*, "ball" (MW): the "earth-ball", the globe. Its use for geography as a subject is modern. *Gola* lives on as Hindi *gol*, "round" (CDIAL 4321).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

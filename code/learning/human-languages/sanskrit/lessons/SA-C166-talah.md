@@ -14,7 +14,8 @@ romanization: "tālaḥ"
 concept_tag: SA-THG166-TALAH
 prerequisites: [SA-C166-amravrksah, SA-C166-vatah]
 sounds: []
-roots: []
+roots: [sanskrit-tala-palm]
+etymology_hook: "tāla 'fan-palm' (Manu; CDIAL 5750); DEDR 3180 sets it beside Dravidian palm names; direction not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C166-vatah]
 <!-- hl-knowledge: introduces=[SA-LEX-C166-THG166-05]; assesses=[] -->
 
 **तालः** — *tālaḥ* — "a palm tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tāla* "the palmyra, the fan-palm" appears from Manu on (CDIAL 5750). DEDR 3180 sets it beside Dravidian words for the palm, noting that some of those may be borrowed from Indo-Aryan, so the direction is not settled. Punjabi kept it as *tāṛ* "fan-palm" (CDIAL 5750).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
