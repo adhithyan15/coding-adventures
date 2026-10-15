@@ -1427,3 +1427,10 @@ and strict14 actual0;37 complete Ishi scene/query cells,232 Venn fixtures and67
 IR controls retained. Independent source28381ad7/terminal8c5fbbe6 PASS. This is
 a bounded partial layout: arbitrary containment/font fitting/visual parity and
 current-head hosted acceptance remain OPEN. Miri DEFERRED/PENDING.
+
+Bounded Wardley config source1b216e6b: full affected14 packages981P0F0I/47targets
+and strict14 actual0;94 complete IR/2 body errors/271 geometry events/8 complete
+scene-query cells. Preserve13 Venn files/232complete cells,37 Ishi and67 IR.
+Later main987 Wardley themes are NOT integrated or validated by this receipt.
+General visual/fontfit/containment and hosted current-head acceptance remain
+OPEN. Final-source Miri DEFERRED/PENDING.

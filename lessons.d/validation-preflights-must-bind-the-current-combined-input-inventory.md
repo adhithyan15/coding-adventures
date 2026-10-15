@@ -102,3 +102,11 @@ assignment and unary minus with whitespace, retaining the exact negative fixture
 and all assertions; rerun strict and the complete affected suite at the new
 source. Keep fixture file counts distinct from complete semantic cells: the
 retained Venn evidence is13 files containing232 complete scene/query cells.
+
+UTF-8 file reads do not change the Windows stdout codepage: a diagnostic README
+tail print failed on an arrow under cp1252. Preserve that diagnostic exit and use
+`py -3.13 -X utf8` for Unicode output; it supplies no product/test acceptance.
+The pending-main static audit also correctly refused an assumed learning-backlog
+changelog prefix: the actual ninth human path is a named HLD changelog shard.
+Retain that failure and the subsequent failed inline shell-quoting attempt; use
+a saved Python helper and the exact nine-path manifest, not a relaxed guard.

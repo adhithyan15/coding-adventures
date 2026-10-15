@@ -3,41 +3,97 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a Wardley current checkpoint -->
-Latest main6c4e Wardley12paths/24blobs rawintegration WITHHELD by static225cc760,
-manifestbce452cf: derived numeric overflow, axis1 stagefont-1, unsound quoted/
-nested config and typed/body-size admission. Spec committed before tests/import/
-repair in separate R2 branch from native14e3. R1e3 fullnative38995/source/HEAD/
-index/target stay FROZEN; strict6/focus50/1/1 pass/source2cc7257b, fullterminal
-PENDING. Wardley tests/implementation have NOT started; own checked typed/local
-source adapter and independent whole-scene oracles must precede acceptance.
-Preserve37Ishi/232Venn/67IR, native6/166 and prior failure/receipt/source identities.
-SolePR17288 publishede16c UNMERGED/CONFLICTING/AUTOOFF; hosted currenthead gates,
-actual macOS rootcause, native14 fullcarrier/Wardley/Miri remain OPEN.
-Miri DEFERRED/PENDING, frozen run/source/inputs/target/receipts untouched/unpolled,
-no duplicate/termination. FullClosure/outputbyte/full lineage/CV04b OPEN.
+## Bounded Wardley configuration and checked geometry
+
+Wardley source configuration uses direct owned mapping ancestry or a closed init
+object; an init object replaces the mapping wholesale, including empty objects.
+Nested/sequence/block-scalar/quoted-tail decoys cannot supply a direct field.
+Width/height/radius are finite positive values at most65536; padding/label offset
+are finite nonnegative values through65536; configured fonts are1..65536.
+Invalid source settings use field defaults. Body size uses the same finite cap,
+with a named source error for positive over-cap values.
+
+The checked typed route `try_layout_wardley` rejects invalid configuration,
+non-normalized node/evolution coordinates and unknown references before mapping,
+and rejects nonfinite derived geometry. Compatibility `layout_wardley` refuses
+unsupported typed values. Ordinary default/minimum/cap layouts remain literal
+whole-layout controls. Stage fonts use max(axisFontSize-2,1); title fonts use
+axisFontSize*1.05. Grid paths, node/anchor radii, source precedence, all glyphs,
+seven metadata fields and ordered cached font queries have exact whole-scene
+oracles. General font fitting, containment, area/node-count resource guarantees
+and caller-forged resolved Paint layouts remain outside this bounded contract.
+
+Spec3b6e precedes closed incoming6c merge8f43 and test-first source/typed/Paint
+controls. Semantic reds parser2P3F101/geometry1P3F101/paint0P1F101 are retained.
+Actual3600 full strict101/wrapper1 stopped before full tests on negative-fixture
+assignment formatting;1b216e6b changes only Rust whitespace plus documentation,
+preserving every assertion and independently specified numeric table.
+
+Actual tested1b216e6b: focused5parser/8geometry/2paint PASS;94 complete IR cells,
+2 exact size errors,271 geometry events and8 complete source/IR/layout/PaintScene/
+glyph/metadata/ordered-query cells. Full affected14 packages981P0F0I/47targets
+and strict all-target warnings/unknown-lints denial both exit0. Tests02de82c1/
+strict54460559 and independent source/terminal reviews bind that exact source.
+All1464 raw Rust/TOML inputs, reverse14/forward50/style827 objects, native2853,
+registry376, only4 local style-version changes and resources21+3 are verified.
+The13 retained Venn fixture files contain232 complete scene/query cells;
+37 complete Ishikawa cells and67 causal parser IR controls remain exact.
+
+Native execution is independently attributed to actuale3e1106c1836/78,
+compiler895/fullLANG506/strict6 and146sources/876 six-backend cells. Historical
+Closure36/3705+3 conservative static inputs retain316e attribution; no fresh
+Closure execution or dynamic/toolchain/OS resource closure is inferred.
+Integrated main6c4e is an ancestor. Later inspected main987ab434 Wardley theme
+and e0724e0 human-language snapshot changes are NOT integrated/validated here.
+This is local bounded acceptance and unmerged progress, with current-main/
+hosted exact-head CI/conflict/review/actual merge gates and the actual macOS
+phase-refusal root cause OPEN. No TS/book runtime or general visual-parity claim.
+
+Base ESTree canonical/own types/no new crates.io dependencies remain owner
+decisions. Full Closure parity/output-byte-source/full transformation lineage/
+stable IDs/spans/pass-sweep/CV04b remain OPEN. Miri **DEFERRED/PENDING**, never
+passed; frozen run/checkout/inputs/target/receipts untouched/unpolled, no duplicate
+or termination. Delivery first, genuine final-source Miri before full completion
+or disabling the ACTIVE heartbeat.
+
 <!-- /CV04a Wardley current checkpoint -->
 
 <!-- CV04a native14 current checkpoint -->
-Latest inspected main47ee139e (#17596) adds9 native14 compiler/LANG paths after
-integrated020c. Raw incoming security5172625c WITHHOLDS integration:3 shared
-helper widenings retain exp/log scope leakage and folded-f64 integer budget
-errors. Manifest3691841f covers18slots/16realblobs/2absent parents. No unsafe/
-dependency/new production-limit change; static evidence gives no native14 run.
-Remote then advanced during push to6c4e482c (#17599),12 Wardley shared diagram/
-config paths after47ee; static audit and bounded style integration remain PENDING.
-Published solePR17288 e16c carries accepted native13 actual18f1830/78/strict6
-and boxed65de968/44/strict14 with complete source-bound reports; native14 remains
-PENDING. AutoOFF/unmerged; current conflict/review/terminal requiredCI and actual
-macOS phase-refusal cause remain OPEN. New spec precedes tests/import/repair in
-isolated R1 branch, preserving native13 branch/receipts. Keep all136 old runtime
-sources/816 actual tuples,37 Ishi/232 Venn/67 IR controls and all proof/limit
-guards. Owned reverse6/forward166 must not shrink to rawmain4/160.
-Next testfirst semanticred, closed9path reconstruction restoring owned whole
-production, then ONLY4 dedicated canonical cap/domain/list/budget edits13→14;
-run affected full6/strict, source/carrier review and actual delivery gates.
-Miri DEFERRED/PENDING, never passed; frozen run/source/inputs/target/receipts
-untouched/unpolled, no duplicate/termination. Full Closure parity/full output
-lineage/stableIDs/spans/pass-sweep/CV04b remain OPEN; heartbeat ACTIVE.
+## Reviewed fourteen-unit canonical offsets
+
+The dedicated canonical outer-entier proof admits cumulative exact offsets
+through fourteen and the range[-15,15]. Four dedicated domain/comment/list/cap
+edits implement the boundary. Shared folded-f64/exp/log and legacy helpers,
+identity/read-once/alias/effect/rounding/trap checks and8192 production-work
+controls retain their owned behavior. Structural13/14 and incoming15 refusals
+remain required; the true15/f64-fold14 rounding witness also refuses. Opposite
+signs cannot cancel the absolute-unit budget. No new dependency or general
+proof/resource cap is introduced.
+
+Actual tested sourcee3e1106c: strict six-package all-target warnings/unknown-lints
+denial0; full unfiltered1836P/0F/1unchanged archive ignore across78 targets0,
+compiler895/fullLANG506. Old136 runtime sources/816 actual six-backend cells
+remain byte-exact to18f;10 new sources/60 actual normalExit0 cells give146/876.
+NativeAot/LLVM/WASM/JVM/VM/JIT execute the exact stdout and ordering controls,
+including CL13/CR15; absent CLR is uncounted. Source/focused review2cc7257b and
+independent terminal review bind the complete input and78-target inventories.
+Tests3097e0fe/strictd76f2fdf retain source-specific log attribution.
+
+Spec21ff precedes testfirsta5 and closed main47ee merge02baaf9f. Focused5b27
+actually failed49P1F101 because three old signed/wrapped expressions now consume
+the admitted14 budget. Correctede3 migrates only those refusals to15 and adds
+their exact old forms as positive formatter/read-once controls, with production
+unchanged. The failed receipt is retained; corrected focus50/1incoming/1owned
+and the full suites pass. Whole native2853 inputs and21 external resources are
+carried separately from named documentation changes. Source acceptance does
+not establish current-head hosted CI, conflict/review or merge acceptance.
+
+Base ESTree canonical serialized boundary/own types/no new crates.io dependencies
+remain owner decisions. Full Closure parity/output-byte-source/full transformation
+lineage/stable IDs/spans/pass-sweep/CV04b remain OPEN. Final-source Miri
+**DEFERRED/PENDING**, never passed; frozen run/checkout/inputs/target/receipts
+untouched/unpolled, no duplicate/termination. Delivery first, genuine Miri later.
+
 <!-- /CV04a native14 current checkpoint -->
 
 <!-- CV04a native13 current checkpoint -->
