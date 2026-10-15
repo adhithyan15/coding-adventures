@@ -18,12 +18,12 @@ duration:
 requires:
   knowledge: [UR-GRAMMAR-NA-INFINITIVE, UR-LEX-JANA, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS]
 introduces:
-  knowledge: [UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO]
+  knowledge: [UR-LEX-ANA, UR-ETYMON-ANA-APAYATI]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-GRAMMAR-NA-INFINITIVE, UR-LEX-JANA, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN]
+  knowledge: [UR-GRAMMAR-NA-INFINITIVE, UR-LEX-JANA, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-ANA, UR-ETYMON-ANA-APAYATI, UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -50,7 +50,7 @@ long *ā* at the start of a word. It opens *āp* too, which you will be able to
 spell out once pe arrives. Strip the **-nā** and the stem is **ā-**.
 
 ## The word, taken apart — a verb of reaching
-<!-- hl-knowledge: introduces=[UR-ETYMON-ANA-TOWARD-GO]; assesses=[] -->
+<!-- hl-knowledge: introduces=[UR-ETYMON-ANA-APAYATI]; assesses=[] -->
 
 **ānā** is inherited. CDIAL lists it under Sanskrit *āpayati*, “causes to reach”, beside the older *āpa*, “came towards”, through Prakrit *āvaï*, “comes” (CDIAL 1200). So the Urdu verb for *coming* is, underneath, a verb of *reaching*: to come is to arrive where the speaker is.
 
@@ -59,7 +59,7 @@ It is tempting to take **ānā** from *āyāti*, “comes near”, *ā-* “towa
 The root *āp-*, “reach, obtain”, is usually compared with Latin *apīscī*, “to reach”, whose participle *aptus*, “fitted”, gave English **apt** and **adapt**.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-LEX-JANA, UR-GRAMMAR-NA-INFINITIVE, UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-ANA, UR-ETYMON-ANA-APAYATI, UR-LEX-JANA, UR-GRAMMAR-NA-INFINITIVE, UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN] -->
 
 - [YOU SAY: **ānā** — to come]
 - [YOU PAIR: **jānā** away, **ānā** toward]
@@ -68,7 +68,7 @@ The root *āp-*, “reach, obtain”, is usually compared with Latin *apīscī*,
 - [YOU RECALL: say *khudā*]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-LEX-JANA, UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-ANA, UR-ETYMON-ANA-APAYATI, UR-LEX-JANA, UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS] -->
 
 [PAUSE 3s] Which Sanskrit verb of reaching stands behind *ānā*? (*Āpayati*, “causes to reach.”) Does **jānā** come from the same verb? (No: **jānā** comes from *yāti*, “goes.”) And what does the
 stem become once **-nā** comes off? (**Ā-**.)

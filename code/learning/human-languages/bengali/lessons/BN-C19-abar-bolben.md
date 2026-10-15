@@ -11,7 +11,7 @@ gloss: please say it again — two words this book taught fourteen chapters apar
 concept_tag: BN-FUNC-REPEAT-REQUEST
 prerequisites: [BN-C19-jokhon, BN-C04-abar, BN-C05-bola, BN-C13-maf-korben]
 sounds: []
-roots: [indo-aryan-bolla]
+roots: [bol-speak]
 etymology_hook: "bôlben, from bôlā ← *bōll 'speak' (CDIAL 9321); ābār: origin not settled, no CDIAL entry"
 duration:
   max_seconds: 245

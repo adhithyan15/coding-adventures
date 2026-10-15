@@ -14,7 +14,7 @@ romanization: "kāḷo"
 concept_tag: GU-COLOUR1-BLACK
 prerequisites: [GU-C70-green, GU-C70-blue]
 sounds: []
-roots: [sanskrit-kala]
+roots: [sanskrit-kala-black]
 etymology_hook: "kāḷo ← Sanskrit kāla 'black, dark-blue'; CDIAL reports a view that it came from Dravidian (CDIAL 3083)"
 duration:
   max_seconds: 200

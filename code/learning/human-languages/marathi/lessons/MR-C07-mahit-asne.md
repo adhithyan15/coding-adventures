@@ -12,7 +12,7 @@ concept_tag: VERB-KNOW
 prerequisites: [MR-C07-pahne]
 sounds: [matra-aa, matra-ii, retroflex-na]
 roots: [persian-mahiyat-particulars, sanskrit-jnaa-know]
-etymology_hook: "Marathi does not say I know: it says मला माहीत आहे, to-me known is — the knower sits in the dative and the inherited verb जाणणे, cousin of English know, keeps to the formal register"
+etymology_hook: "माहीत is Arabic māhiyat, through Persian; inherited जाणणे, root jñā-, is a cousin of English know"
 duration:
   max_seconds: 260
 requires:

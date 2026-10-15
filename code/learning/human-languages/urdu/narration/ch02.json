@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Give your name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a710de2feb7f17c4",
+  "sourceHash": "fnv1a64:71d47fd0584b83d5",
   "lessons": [
     {
       "id": "UR-C02-mera-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6652429b9edf61b2",
+      "sourceHash": "fnv1a64:aa68020d903c04ef",
       "notice": null,
       "blocks": [
         {

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 84,
-  "sourceHash": "fnv1a64:5836504e49118952",
+  "sourceHash": "fnv1a64:d22c8faa4d386d30",
   "lessonIds": [
     "PA-C84-pila",
     "PA-C84-lal",
@@ -14,6 +14,6 @@
   "text": "punjabi/narration/ch84.txt",
   "json": "punjabi/narration/ch84.json",
   "textHash": "fnv1a64:f0ec6d4d38cb7e24",
-  "jsonHash": "fnv1a64:185053cad94bc16b",
+  "jsonHash": "fnv1a64:0b86f5ab17f32361",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 12,
-  "sourceHash": "fnv1a64:2f13d1737d0c17a3",
+  "sourceHash": "fnv1a64:8d3eb497fcbd3630",
   "lessonIds": [
     "BN-C06-numbers-1-5",
     "BN-C06-numbers-1-5-dui"
@@ -11,6 +11,6 @@
   "text": "bengali/narration/ch12.txt",
   "json": "bengali/narration/ch12.json",
   "textHash": "fnv1a64:e76d6d50931f6bc0",
-  "jsonHash": "fnv1a64:4d44656d885df383",
+  "jsonHash": "fnv1a64:a7bc76e357178ce0",
   "findings": []
 }

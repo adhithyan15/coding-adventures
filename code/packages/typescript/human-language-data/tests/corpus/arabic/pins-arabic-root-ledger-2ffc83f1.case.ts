@@ -24,10 +24,16 @@ it("pins Arabic's root ledger", () => {
     // The independent review then moved two lessons off native-root slugs:
     // miqlama joins qalam on greek-kalamos (one more payoff), and tawabil
     // takes aramaic-tabla, so 943 -> 942 roots.
-    roots: 942,
-    underspent: 914,
+    //
+    // The etymology-hygiene pass unified two spellings of one root: the six
+    // lessons on `semitic-s-l-m` (AR-C04's salāma and the AR-W00/W12 greeting
+    // writing lessons) moved onto the bare `s-l-m` that AR-C01-salam already
+    // introduced. 942 -> 941 roots; the root's payoffs go 2 + 5 -> 8 in one
+    // entry, which is the reuse the split had been hiding.
+    roots: 941,
+    underspent: 913,
     neverSpent: 695,
-    payoffDistribution: { "0": 695, "1": 166, "2": 53, "3": 19, "4": 7, "5": 1, "6": 1 },
+    payoffDistribution: { "0": 695, "1": 166, "2": 52, "3": 19, "4": 7, "6": 1, "8": 1 },
     underspentPercent: 97,
   });
 });

@@ -12,7 +12,7 @@ concept_tag: MR-JOIN-AANI
 prerequisites: [MR-C10-chaha, MR-C10-dudh, MR-C09-avadne]
 sounds: [matra-aa, retroflex-na, matra-i]
 roots: []
-etymology_hook: "आणि descends from Sanskrit अन्य (anya, 'other') through the Prakrit अण्ण- family — the word for adding one more thing began as the word for the OTHER thing, which is the same move English makes when an other becomes another"
+etymology_hook: "आणि ← Sanskrit anya 'other' through Prakrit aṇṇa (CDIAL 399): 'and' began as 'the other'"
 duration:
   max_seconds: 200
 requires:

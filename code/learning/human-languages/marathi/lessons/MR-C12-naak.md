@@ -12,7 +12,7 @@ concept_tag: MR-BODY-NOSE
 prerequisites: [MR-C12-tond]
 sounds: []
 roots: [prakrit-nakka, sanskrit-nas, pie-nehas-nose]
-etymology_hook: "नाक continues Prakrit णक्क ṇakka, \"nose,\" built on Sanskrit नस् nas- \"nose\" plus a Middle Indo-Aryan -ka suffix, a different route to the same Indo-European *neh₂s- that gave English nose directly, rather than through the more often-cited नासिका nāsikā"
+etymology_hook: "नाक ← *nakka 'nose' (CDIAL 6909), Prakrit ṇakka, on Sanskrit nas-; PIE *neh₂s- gave English nose"
 duration:
   max_seconds: 280
 requires:

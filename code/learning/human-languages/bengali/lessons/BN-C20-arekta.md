@@ -12,7 +12,7 @@ concept_tag: BN-LEX-AREKTA
 prerequisites: [BN-C20-ekta, BN-C17-ar, BN-C10-cha, BN-C14-lal]
 sounds: []
 roots: [sanskrit-apara, sanskrit-eka]
-etymology_hook: "আরেক is আর and এক run together, which is why it means and-one-more rather than merely another: the joiner is still audible inside the word, and a Bengali speaker hears it."
+etymology_hook: "আরেক: আর ← Sanskrit apara 'other' (CDIAL 434) + এক ← ēka 'one' (CDIAL 2462), run together"
 duration:
   max_seconds: 240
 requires:

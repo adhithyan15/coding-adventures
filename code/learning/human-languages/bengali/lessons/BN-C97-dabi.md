@@ -14,7 +14,7 @@ romanization: "dābi"
 concept_tag: BN-WANT97-DABI
 prerequisites: [BN-C97-shokh, BN-C97-abdar, BN-C40-prothom-path]
 sounds: []
-roots: [arabic-dawa]
+roots: [arabic-dawa-claim]
 etymology_hook: "dābi ← Arabic daʿwā 'claim, lawsuit', through Persian"
 duration:
   max_seconds: 200

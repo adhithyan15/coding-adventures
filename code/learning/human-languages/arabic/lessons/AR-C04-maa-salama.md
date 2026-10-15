@@ -11,7 +11,7 @@ romanization: maʿa s-salāma
 concept_tag: FAREWELL
 prerequisites: [AR-C04-al-salama, AR-C04-maa-with]
 sounds: [sun-letter-assimilation, ayn-throat]
-roots: [semitic-s-l-m]
+roots: [s-l-m]
 etymology_hook: "maʿa s-salāma: maʿa 'with' + as-salāma 'safety', root s-l-m 'to be safe' (Lane): 'with safety'"
 duration:
   max_seconds: 240

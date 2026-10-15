@@ -12,7 +12,7 @@ concept_tag: FA-HOUSEHOLD-KEY
 prerequisites: [FA-C09-chay]
 sounds: [rtl, long-i, short-vowels-unwritten]
 roots: [greek-kleidion, middle-persian-klid]
-etymology_hook: kelid is borrowed from Greek kleidion, "little key," a loan Persian has carried since the Hellenistic centuries after Alexander; the same Indo-European root gave Latin claudere, "to close," and through it English close, conclude, and exclude.
+etymology_hook: "kelid ← Greek kleidíon 'little key', an old loan; kleís shares a root with Latin claudere 'to close'"
 duration:
   max_seconds: 280
 requires:

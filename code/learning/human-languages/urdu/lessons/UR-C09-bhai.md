@@ -23,7 +23,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-PASAND, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER, UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-LEX-BOLNA, UR-SCRIPT-BE-LETTER, UR-REGISTER-INDO-ARYAN-CORE]
+  knowledge: [UR-LEX-PASAND, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER, UR-LEX-ANA, UR-ETYMON-ANA-APAYATI, UR-LEX-BOLNA, UR-SCRIPT-BE-LETTER, UR-REGISTER-INDO-ARYAN-CORE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -82,7 +82,7 @@ Sanskrit and English are both Indo-European, so *bhāī* and *brother* are
 real relatives, not two languages landing on the same idea by accident.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-ANA, UR-ETYMON-ANA-TOWARD-GO, UR-LEX-BOLNA, UR-SCRIPT-BE-LETTER, UR-REGISTER-INDO-ARYAN-CORE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-ANA, UR-ETYMON-ANA-APAYATI, UR-LEX-BOLNA, UR-SCRIPT-BE-LETTER, UR-REGISTER-INDO-ARYAN-CORE] -->
 
 - [YOU SAY: **bhāī** — brother; then **merā bhāī**]
 - [YOU NAME: the fourth *ye* shape — hamza above, between two vowels]

@@ -11,7 +11,7 @@ gloss: black — inherited, but from a root borrowed into Sanskrit itself, and t
 concept_tag: UR-BLACK
 prerequisites: [UR-C13-safed, UR-C05-khuda-hafiz-more]
 sounds: [rtl, long-a]
-roots: [sanskrit-kala, proto-dravidian-kar]
+roots: [sanskrit-kala-black, proto-dravidian-kar]
 etymology_hook: "kālā ← Sanskrit kāla 'black, dark' (CDIAL 3083), which CDIAL takes from Dravidian"
 duration:
   max_seconds: 280

@@ -12,7 +12,7 @@ concept_tag: VERB-LEARN
 prerequisites: [MR-C24-mhanne]
 sounds: [matra-i, retroflex-na]
 roots: [sanskrit-shiksh-learn, sanskrit-shak-be-able]
-etymology_hook: "शिकणे continues Sanskrit शिक्षते shikshate, which is the desiderative of शक् shak- \"to be able\" — so learning is grammatically wanting-to-be-able, and शक्ति shakti, \"power,\" stands on the same root"
+etymology_hook: "शिकणे ← Sanskrit śikṣate, the desiderative of śak- 'to be able': to learn is to want to be able"
 duration:
   max_seconds: 250
 requires:

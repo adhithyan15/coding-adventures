@@ -4,7 +4,7 @@
   "chapter": 127,
   "title": "Curtain, Lock, Handkerchief, Bracelet, Earring",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f538678a65680442",
+  "sourceHash": "fnv1a64:fbf929e4746237b3",
   "lessons": [
     {
       "id": "AR-C127-sitara",
@@ -143,9 +143,9 @@
     {
       "id": "AR-C127-qifl",
       "sequence": 5560,
-      "title": "قفل (qifl) — a lock",
+      "title": "قفل (qufl) — a lock",
       "headword": "قفل",
-      "romanization": "qifl",
+      "romanization": "qufl",
       "gloss": "a lock",
       "script": "arabic",
       "modality": "voice",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1eb8cf48f38e1069",
+      "sourceHash": "fnv1a64:f9b0d920768a78cd",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +199,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "قفل — qifl — \"a lock\"."
+              "text": "قفل — qufl — \"a lock\"."
             }
           ]
         },
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "قفل (qifl) is built on the native Arabic root q-f-l, \"to return; to lock\" (Lane). Lane lists qufl, \"a lock\", under q-f-l; the same root gives qāfila, \"a caravan\"."
+              "text": "قفل (qufl) is built on the native Arabic root q-f-l, \"to return; to lock\" (Lane), and Lane lists qufl, \"a lock\", under it. The same root gives qāfila, \"a caravan\"."
             }
           ]
         },
@@ -239,38 +239,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "qifl",
+              "instruction": "qufl",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *qifl*]"
+              "source": "[YOU SAY: *qufl*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "qifl, once more",
+              "instruction": "qufl, once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *qifl*, once more]"
+              "source": "[YOU SAY: *qufl*, once more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "say qifl",
+              "instruction": "say qufl",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: say *qifl*]"
+              "source": "[YOU SAY: say *qufl*]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Arabic for a fridge, then the Arabic for a curtain, then say qifl again",
+              "instruction": "say the Arabic for a fridge, then the Arabic for a curtain, then say qufl again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Arabic for a fridge, then the Arabic for a curtain, then say *qifl* again]"
+              "source": "[YOU RECALL: say the Arabic for a fridge, then the Arabic for a curtain, then say *qufl* again]"
             }
           ]
         },
@@ -287,7 +287,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does قفل (qifl) mean? (\"A lock\".) Say it once more."
+              "text": "What does قفل (qufl) mean? (\"A lock\".) Say it once more."
             }
           ]
         }

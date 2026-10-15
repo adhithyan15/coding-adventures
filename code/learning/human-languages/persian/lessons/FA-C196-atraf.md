@@ -14,7 +14,7 @@ romanization: "atrâf"
 concept_tag: FA-MAKAN196-ATRAF
 prerequisites: [FA-C196-navdan, FA-C196-sotun]
 sounds: []
-roots: [arabic-atraf]
+roots: [arabic-taraf]
 etymology_hook: "atrâf ← Arabic aṭrāf 'ends, sides', root ṭ-r-f (Lane)"
 duration:
   max_seconds: 200

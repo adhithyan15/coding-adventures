@@ -11,7 +11,7 @@ gloss: to speak — the plain Indo-Aryan verb under Urdu's Persian and Arabic fi
 concept_tag: VERB-SPEAK
 prerequisites: [UR-C06-ana]
 sounds: [rtl, long-u, be-vs-pe-dots]
-roots: [indo-aryan-bolla, persian-guftan, bol-speak]
+roots: [persian-guftan, bol-speak]
 etymology_hook: "bolnā ← *boll- 'speak', reconstructed behind Prakrit bollaï (CDIAL 9321); its source beyond is not settled"
 duration:
   max_seconds: 275

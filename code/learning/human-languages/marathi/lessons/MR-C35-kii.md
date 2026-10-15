@@ -12,7 +12,7 @@ concept_tag: MR-JOIN-KII
 prerequisites: [MR-R34-reasons, MR-C23-vatne]
 sounds: [matra-ii]
 roots: []
-etymology_hook: "की is the same Sanskrit interrogative stem क- (ka-) that gave का and काय, re-used as a linker; Indo-Iranian did this twice over, and Persian ke does the identical job, which is why Marathi की and Persian ke behave alike inside a reported thought"
+etymology_hook: "की is the Sanskrit question stem ka- again, reused as a linker, like Persian ke"
 duration:
   max_seconds: 220
 requires:

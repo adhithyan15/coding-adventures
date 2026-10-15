@@ -11,7 +11,7 @@ gloss: to read — and to study, and to recite, because it never meant reading s
 concept_tag: VERB-READ
 prerequisites: [UR-C07-samajhna]
 sounds: [rtl, retroflex-flap-rre, do-chashmi-he, be-vs-pe-dots]
-roots: [sanskrit-path, arabic-hfz, sanskrit-pathati]
+roots: [sanskrit-path, arabic-h-f-z, sanskrit-pathati]
 etymology_hook: "paṛhnā ← Sanskrit paṭhati 'repeats aloud, reads', through Prakrit paḍhaï (CDIAL 7712)"
 duration:
   max_seconds: 291

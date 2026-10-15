@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "A Sentence Inside a Sentence",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:be7da779dd1df240",
+  "sourceHash": "fnv1a64:ecd696342da91ea7",
   "lessons": [
     {
       "id": "MR-C35-kii",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f641853c40036f4",
+      "sourceHash": "fnv1a64:0bb3447a535cd648",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +169,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9de8f2b432e98693",
+      "sourceHash": "fnv1a64:0febf0141bce0fe5",
       "notice": null,
       "blocks": [
         {

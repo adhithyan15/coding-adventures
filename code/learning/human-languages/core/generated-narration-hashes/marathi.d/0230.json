@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 230,
-  "sourceHash": "fnv1a64:0d5892b4c6bef3bd",
+  "sourceHash": "fnv1a64:aae385c56bf935bf",
   "lessonIds": [
     "MR-C230-suruvat",
     "MR-C230-mudat",
@@ -14,6 +14,6 @@
   "text": "marathi/narration/ch230.txt",
   "json": "marathi/narration/ch230.json",
   "textHash": "fnv1a64:c9c491c35e727a5b",
-  "jsonHash": "fnv1a64:b8cd55b3cf016e3a",
+  "jsonHash": "fnv1a64:eb3910c28ee81d9f",
   "findings": []
 }

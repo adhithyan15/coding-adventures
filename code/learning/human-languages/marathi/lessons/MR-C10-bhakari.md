@@ -12,7 +12,7 @@ concept_tag: MR-FOOD-BHAKARI
 prerequisites: [MR-C10-dudh]
 sounds: []
 roots: [proto-indo-aryan-bhakkaras-lump]
-etymology_hook: "भाकरी is inherited from Old Marathi bhākarī, from Proto-Indo-Aryan *bʰakkaras, \"heap, pile, lump\" — a word whose own root beyond Proto-Indo-Aryan is not established, so this lesson claims none further, and a word Hindi does not share at all: Hindi asks for रोटी, an unrelated root"
+etymology_hook: "भाकरी ← Old Marathi bhākarī; CDIAL files bhākar 'lump of bread' under *bhakkha 'lump' (9330)"
 duration:
   max_seconds: 280
 requires:

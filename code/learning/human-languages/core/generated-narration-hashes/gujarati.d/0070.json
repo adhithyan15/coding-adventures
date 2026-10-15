@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 70,
-  "sourceHash": "fnv1a64:0a22622c99899521",
+  "sourceHash": "fnv1a64:0a80b15f0e2a2ddd",
   "lessonIds": [
     "GU-C70-red",
     "GU-C70-yellow",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch70.txt",
   "json": "gujarati/narration/ch70.json",
   "textHash": "fnv1a64:24763aa8a0c6b593",
-  "jsonHash": "fnv1a64:20d8ca8c8ce61930",
+  "jsonHash": "fnv1a64:25c98e200be89c0f",
   "findings": []
 }

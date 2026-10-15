@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "What Passes Between Two People",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4aa577f7606ae7f4",
+  "sourceHash": "fnv1a64:cd965384e30fa32f",
   "lessons": [
     {
       "id": "MR-C24-sangne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:315afbd74119e137",
+      "sourceHash": "fnv1a64:b566b29c721d1275",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c601b47c95bf0ef5",
+      "sourceHash": "fnv1a64:7cbc149324853c9b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3e8b43fa725e8893",
+      "sourceHash": "fnv1a64:43d7a9953ee90edb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -510,7 +510,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aa76a3873903bc94",
+      "sourceHash": "fnv1a64:e87d32ee8d88c150",
       "notice": {
         "modality": "sight",
         "needs": [

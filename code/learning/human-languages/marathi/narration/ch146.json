@@ -4,7 +4,7 @@
   "chapter": 146,
   "title": "Thumb, Fingernail, Back, Waist, Chest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:02082b00093e7dda",
+  "sourceHash": "fnv1a64:3bf2dce81a24286a",
   "lessons": [
     {
       "id": "MR-C146-angtha",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbf0913f4bb83e77",
+      "sourceHash": "fnv1a64:0787749f493bd30f",
       "notice": null,
       "blocks": [
         {

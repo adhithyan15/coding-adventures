@@ -12,7 +12,7 @@ concept_tag: BN-FUNC-AGREE
 prerequisites: [BN-C18-kintu, BN-C16-noy, BN-C06-numbers-1-5]
 sounds: []
 roots: [sanskrit-eka, sanskrit-mata]
-etymology_hook: "একমত is এক ('one') plus মত ('opinion, view'), a Sanskrit compound the reader can take apart with vocabulary already in the book: the numeral was taught in chapter twelve, and the shape 'one-minded' is the same one English reaches for in unanimous, from Latin unus animus"
+etymology_hook: "একমত: Sanskrit ēka 'one' (CDIAL 2462) + mata 'opinion', a tatsama; English unanimous is 'one-minded' too"
 duration:
   max_seconds: 235
 requires:

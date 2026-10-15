@@ -11,7 +11,7 @@ gloss: me, to me — the "I" you already say, with the postposition of the last 
 concept_tag: PRONOUN-ME
 prerequisites: [PA-W09-aara]
 sounds: [dulavan-ai, bindi-nasal]
-roots: [ma-first-person, sanskrit-lagna-nu]
+roots: [ma-first-person]
 etymology_hook: "maiṁ ← base ma- (CDIAL 9691) + nūṁ, whose origin is not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 280
