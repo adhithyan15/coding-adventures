@@ -96,7 +96,7 @@ class MacosHaskellToolchainTests(unittest.TestCase):
     def run_mock_bootstrap(self, failed_stage=None, wrong_output=False, wrong_stage=None, ignore_refusal=False, omit_hsc_trace=False, bad_hsc_trace=False, wrong_refusal_cause=False):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
-        root = Path(temporary.name)
+        root = Path(temporary.name).resolve()
         config = root / "original.config"
         original = "repository hackage.haskell.org\n  url: https://hackage.haskell.org/\n  secure: True\n"
         config.write_text(original, encoding="utf-8")
