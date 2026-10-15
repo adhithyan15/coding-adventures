@@ -883,8 +883,11 @@ The `compactMode` option is retained as typed semantic configuration and
 PaintScene metadata. Mermaid 11.16.1's pinned Railroad renderer does not branch
 on this value, so native geometry intentionally remains unchanged.
 
-This is intentionally partial. Comment styling and exact typography remain
-unsupported rather than being counted as compatible.
+This is intentionally partial. The circular-corner evidence is bounded to
+orthogonal generated routes and cubic control/command fixtures; arbitrary
+diagonal geometry and whole upstream/backend visual parity remain unvalidated.
+Comment styling and exact typography remain unsupported rather than being
+counted as compatible.
 
 ### Info Full Compatibility
 

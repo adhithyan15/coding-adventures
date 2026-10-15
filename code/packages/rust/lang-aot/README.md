@@ -1,13 +1,14 @@
 # lang-aot
 
-Owned conditional-unit programs verify exact stdout and normal exit,
-including ordered markers proving the condition and chosen branch execute
-once. Six locally available backends executed all 56 owned sources (336 cells),
-including ten new five-unit programs; the previous 46 sources and 276 cells
+Owned conditional-unit programs require exact stdout and normal exit,
+including markers proving the condition and chosen branch execute once.
+Six locally available backends executed all 66 owned sources (396 cells),
+including ten new six-unit programs; the previous 56 sources and 336 cells
 remain exact. CLR execution is not inferred. Complete six-package native/
-compiler/downstream validation passed 1,789 tests over 78 targets, with one
-existing ignored test, plus strict lint; full LANG passed 488. Final-source
-Miri remains **DEFERRED/PENDING**, never passed, under delivery-first sequencing.
+compiler/downstream validation passed 1,794 tests over 78 targets, with one
+existing ignored test, plus strict lint; full unfiltered LANG passed 490.
+Final-source Miri remains **DEFERRED/PENDING**, never passed, under the
+user-authorized delivery-first sequencing.
 
 ALGOL runtime real output now includes values migrated through provenance-tracked
 scalar slots: a real procedure result with zero parameters, value-mode scalar

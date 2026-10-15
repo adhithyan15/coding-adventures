@@ -6,14 +6,24 @@ add the false default key. Forty compacttrue controls retain bounded primitive,
 style, glyph, path, marker, order and actual font-query expectations; some
 geometry expectations use actual layout fields. They are not independent
 absolute-layout goldens or direct whole-scene mode-equivalence tests. Separately,
-layout and geometry production remains byte-exact; no tighter geometry is promised.
+layout production remains byte-exact. The subsequent circular-corner change
+below intentionally changes Railroad paint path commands.
 
 Railroad paints resolved portable styles and scales declared leaf/rule-name
 text boxes with font size. Portable controls preserve 40 explicit-style scenes,
 40 theme-fallback scenes and 40 sanitized-style scenes with complete ordered
 glyph/path/shape/marker traces, real font queries and all twelve metadata keys.
-Arc radius zero retains straight polylines; positive radius uses quadratic
-corners bounded by adjacent segment lengths, with independent complete goldens.
+Arc radius zero retains straight polylines; positive radius lowers orthogonal
+Railroad corners to cubic approximations of circular arcs, clamped to half the
+adjacent lengths. Numeric controls cover 24 orientation/radius cases and 65
+radial samples each; eight authored choice/bypass/repetition scenes have
+absolute coordinate/control/command goldens and full 12-key metadata across
+both compact values. Five public short/collinear/reversal cases retain their
+commands. Four old positive corner cells intentionally change quadratic to
+cubic; the other six arc cells and all other style/glyph/marker/font-query
+oracles remain. Swimlane and other diagram lowering are unchanged. This is
+bounded portable evidence, not full Mermaid geometry/backend visual parity
+or arbitrary nonfinite/extreme/oblique caller-forged layout safety.
 Marker/stroke enclosure, the inherited 4px rule-marker/root-port mismatch,
 fixed rule-name columns, typed-empty/large-font fitting, arbitrary custom-font
 and long-label fitting remain open. Apple raster execution is a separate gate.
