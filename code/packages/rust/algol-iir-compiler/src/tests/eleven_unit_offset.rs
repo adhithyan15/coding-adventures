@@ -55,13 +55,13 @@ fn canonical_eleven_unit_forms_have_typed_output_routes_and_independent_arms() {
 }
 
 #[test]
-fn eleven_unit_proofs_refuse_thirteen_units_rounding_traps_and_exp_widening() {
+fn eleven_unit_proofs_refuse_fourteen_units_rounding_traps_and_exp_widening() {
     for expression in [
-        "entier(sign(pick()) + 13)",
-        "entier((sign(pick()) + 6) + 7)",
-        "entier(1 + (12 + sign(pick())))",
-        "entier(entier(sign(pick()) + 1) + 12)",
-        "entier(abs(sign(pick()) + 2) + 11)",
+        "entier(sign(pick()) + 14)",
+        "entier((sign(pick()) + 7) + 7)",
+        "entier(1 + (13 + sign(pick())))",
+        "entier(entier(sign(pick()) + 1) + 13)",
+        "entier(abs(sign(pick()) + 2) + 12)",
         "entier(sign(pick()) + 11.5)",
         "entier(sign(pick()) + sign(pick()) + 5 + 6)",
         "entier(sign(pick()) + ((9007199254740993 - 9007199254740992) + 11))",
