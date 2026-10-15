@@ -36,9 +36,9 @@ fn railroad_spacing_encloses_all_constructor_geometry_at_supported_boundaries() 
         E::Repetition{element:Box::new(a.clone()),min:0,max:None},
         E::Repetition{element:Box::new(a),min:1,max:None}];
     let mut cells=0;
-    for config in [RailroadConfig{padding:0.0,vertical_separation:0.0,horizontal_separation:0.0},
-        RailroadConfig{padding:0.1,vertical_separation:0.5,horizontal_separation:0.3},
-        RailroadConfig::default(),RailroadConfig{padding:65536.0,vertical_separation:65536.0,horizontal_separation:65536.0}] {
+    for config in [RailroadConfig{padding:0.0,vertical_separation:0.0,horizontal_separation:0.0,..Default::default()},
+        RailroadConfig{padding:0.1,vertical_separation:0.5,horizontal_separation:0.3,..Default::default()},
+        RailroadConfig::default(),RailroadConfig{padding:65536.0,vertical_separation:65536.0,horizontal_separation:65536.0,..Default::default()}] {
         for expression in &expressions {for title in [false,true] {
             let diagram=input(expression.clone(),config.clone(),title);
             let layout=try_layout_railroad(&diagram).unwrap();
@@ -62,7 +62,7 @@ fn railroad_spacing_encloses_all_constructor_geometry_at_supported_boundaries() 
 #[test]
 fn railroad_singleton_and_empty_sequence_have_exact_exit_geometry() {
     for padding in [0.0,0.1,0.5,10.0,65536.0] {for gap in [0.0,0.3,10.0,65536.0] {
-        let config=RailroadConfig{padding,vertical_separation:8.0,horizontal_separation:gap};
+        let config=RailroadConfig{padding,vertical_separation:8.0,horizontal_separation:gap,..Default::default()};
         for empty in [false,true] {
             let expression=E::Sequence(if empty{vec![]}else{vec![E::Terminal("A".into())]});
             let layout=try_layout_railroad(&input(expression,config.clone(),false)).unwrap();
@@ -78,9 +78,9 @@ fn railroad_singleton_and_empty_sequence_have_exact_exit_geometry() {
 
 #[test]
 fn railroad_sequences_preserve_complete_ordered_leaf_connector_and_exit_geometry() {
-    for config in [RailroadConfig{padding:0.0,vertical_separation:0.0,horizontal_separation:0.0},
-        RailroadConfig::default(),RailroadConfig{padding:0.1,vertical_separation:0.5,horizontal_separation:0.3},
-        RailroadConfig{padding:65536.0,vertical_separation:65536.0,horizontal_separation:65536.0}] {
+    for config in [RailroadConfig{padding:0.0,vertical_separation:0.0,horizontal_separation:0.0,..Default::default()},
+        RailroadConfig::default(),RailroadConfig{padding:0.1,vertical_separation:0.5,horizontal_separation:0.3,..Default::default()},
+        RailroadConfig{padding:65536.0,vertical_separation:65536.0,horizontal_separation:65536.0,..Default::default()}] {
         let p=config.padding;let gap=config.horizontal_separation;let width=44.0+2.0*p;
         let height=16.0+2.0*p;let sequence_height=height.max(36.0);
         let origin=p+130.0;let content_y=16.0+2.0*p;
