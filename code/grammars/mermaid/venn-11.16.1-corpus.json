@@ -13,6 +13,10 @@
     {
       "name": "three-sets-and-styles",
       "source": "venn-beta\nset A:20\nset B:18\nset C:16\nunion A,B,C[\"All\"]:2\nstyle A fill:#ff6b6b, stroke:#991b1b\nstyle A,B color:#333"
+    },
+    {
+      "name": "configured-canvas",
+      "source": "---\nconfig:\n  venn:\n    width: 640\n    height: 360\n    padding: 24\n    useMaxWidth: false\n    useDebugLayout: true\n---\nvenn-beta\nset A\nset B\nunion A,B"
     }
   ]
 }

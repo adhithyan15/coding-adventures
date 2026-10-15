@@ -4538,14 +4538,17 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_venn_to_png() {
-        let diagram = parse_venn("venn-beta\ntitle Product Skills\nset Design[\"Design\"]:20\n  text research[\"Research\"]\nset Engineering[\"Engineering\"]:18\n  text systems[\"Systems\"]\nunion Design,Engineering[\"Product\"]:6\n  text shared[\"Prototyping\"]").expect("venn parse failed");
-        let layout = layout_venn(&diagram, 720.0);
+        let diagram = parse_venn("---\nconfig:\n  venn:\n    width: 720\n    height: 420\n    padding: 24\n    useMaxWidth: false\n---\nvenn-beta\ntitle Product Skills\nset Design[\"Design\"]:20\n  text research[\"Research\"]\nset Engineering[\"Engineering\"]:18\n  text systems[\"Systems\"]\nunion Design,Engineering[\"Product\"]:6\n  text shared[\"Prototyping\"]").expect("venn parse failed");
+        let layout = layout_venn(&diagram);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_venn(&layout, &DiagramToPaintOptions {
             background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
             label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
+        assert_eq!((scene.width, scene.height), (720.0, 420.0));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.padding")), Some(&"24".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.useMaxWidth")), Some(&"false".to_string()));
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))).count(), 2);
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_venn_e2e.png").expect("PNG write failed");

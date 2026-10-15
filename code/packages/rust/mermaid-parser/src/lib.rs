@@ -597,7 +597,7 @@ use diagram_ir::{
     GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralPort,
     StructuralRelationship, StructuralRouting, TaskEnd, TaskStart, TemporalBody, TemporalDiagram,
     TemporalKind, TimelineDiagram, TimelineDirection,
-    TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
+    TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaDiagram,
     WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewConfig, TreeViewDiagram, TreeViewNode,
@@ -5423,6 +5423,7 @@ fn merge_treemap_node_style(target: &mut DiagramStyle, source: &DiagramStyle) {
 
 /// Parse Mermaid 11.16.1 Venn declarations into dedicated set IR.
 pub fn parse_venn(source: &str) -> Result<VennDiagram, ParseError> {
+    let config = parse_venn_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_venn(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(VENN_PARSER_GRAMMAR_SOURCE)
@@ -5430,7 +5431,7 @@ pub fn parse_venn(source: &str) -> Result<VennDiagram, ParseError> {
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
 
-    let mut diagram = VennDiagram::default();
+    let mut diagram = VennDiagram { config, ..Default::default() };
     let mut known_sets = std::collections::HashSet::new();
     let mut current_sets: Option<Vec<String>> = None;
     let mut pending_styles = Vec::<(Vec<String>, VennStyle)>::new();
@@ -5477,6 +5478,28 @@ pub fn parse_venn(source: &str) -> Result<VennDiagram, ParseError> {
     }
     if diagram.regions.iter().all(|region| region.sets.len() != 1) { return Err(venn_error(1, "venn requires at least one set")); }
     Ok(diagram)
+}
+
+fn parse_venn_config(source: &str) -> VennConfig {
+    let defaults = VennConfig::default();
+    let front_matter = mermaid_front_matter_section(source, &["config", "venn"]);
+    let config = mermaid_directive_object(source, "venn").or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        }))
+    };
+    let positive = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+    let non_negative = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+    let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
+        "true" => Some(true), "false" => Some(false), _ => None,
+    }).unwrap_or(fallback);
+    VennConfig { width: positive("width", defaults.width), height: positive("height", defaults.height),
+        padding: non_negative("padding", defaults.padding), use_max_width: boolean("useMaxWidth", defaults.use_max_width),
+        use_debug_layout: boolean("useDebugLayout", defaults.use_debug_layout) }
 }
 
 fn strip_keyword_ci<'a>(line: &'a str, keyword: &str) -> Option<&'a str> {
