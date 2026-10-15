@@ -46,9 +46,12 @@ fn venn_configuration_requires_a_real_init_object_key() {
         "%%{init: {'venn':{'width':640}}}",
         "%% init: {'venn':{'width':640}}",
     ] { assert_eq!(config(prefix),VennConfig::default(),"{prefix}"); }
-    let d=parse_venn("venn-beta\nset \"venn\"\nstyle \"venn\" fill:{\"width\":640}").unwrap();
+    let error=parse_venn("venn-beta\nset \"venn\"\nstyle \"venn\" fill:{\"width\":640}").unwrap_err();
+    assert_eq!((error.message.as_str(),error.line,error.col),("invalid Venn fill color",3,1));
+    let d=parse_venn("venn-beta\nset \"venn\"[{\"width\":640}]\nstyle \"venn\" fill:red").unwrap();
     assert_eq!(d.config,VennConfig::default());
-    assert_eq!(d.regions[0].style.fill.as_deref(),Some("{\"width\":640}"));
+    assert_eq!(d.regions[0].label.as_deref(),Some("{\"width\":640}"));
+    assert_eq!(d.regions[0].style.fill.as_deref(),Some("red"));
     assert_eq!(config(r#"%%{ init : {"note":"venn","other":{},"venn":{"width":640}} }%%"#).width,640.0);
 }
 

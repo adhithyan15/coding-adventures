@@ -116,3 +116,26 @@ fn venn_style_numeric_endpoints_and_existing_quote_unit_conventions_keep_complet
         assert_eq!(mermaid_parser::parse_venn(&source).unwrap(), expected(style, text_target), "{source}");
     } }
 }
+
+#[test]
+fn venn_style_external_corpus_fixture_has_complete_expected_style_and_target_semantics() {
+    let corpus: serde_json::Value = serde_json::from_str(include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/venn-11.16.1-corpus.json"))).unwrap();
+    assert_eq!(corpus["upstream"], "mermaid@11.16.1");
+    assert_eq!(corpus["scope"], "native set subset");
+    let fixtures = corpus["fixtures"].as_array().unwrap();
+    assert_eq!(fixtures.len(), 4);
+    assert_eq!(fixtures.iter().map(|fixture| fixture["name"].as_str().unwrap()).collect::<Vec<_>>(),
+        ["basic-labelled-overlap", "quoted-identifiers-and-text", "three-sets-and-styles", "configured-canvas"]);
+    let source = fixtures[2]["source"].as_str().unwrap();
+    assert_eq!(source, "venn-beta\nset A:20\nset B:18\nset C:16\nunion A,B,C[\"All\"]:2\nstyle A fill:rgba(255, 107, 107, 0.8)\nstyle A stroke:#991b1b\nstyle A,B color:#333\nstyle A,B fill-opacity:0.25");
+    let expected = VennDiagram { title: None, config: VennConfig::default(), regions: vec![
+        VennRegion { sets: vec!["A".into()], size: 20.0, label: None,
+            style: VennStyle { fill: Some("rgba(255, 107, 107, 0.8)".into()), stroke: Some("#991b1b".into()), ..Default::default() } },
+        VennRegion { sets: vec!["B".into()], size: 18.0, label: None, style: Default::default() },
+        VennRegion { sets: vec!["C".into()], size: 16.0, label: None, style: Default::default() },
+        VennRegion { sets: vec!["A".into(), "B".into(), "C".into()], size: 2.0, label: Some("All".into()), style: Default::default() },
+    ], texts: vec![] };
+    // The valid A,B directives have no matching union; they must not style ABC.
+    assert_eq!(mermaid_parser::parse_venn(source).unwrap(), expected);
+}

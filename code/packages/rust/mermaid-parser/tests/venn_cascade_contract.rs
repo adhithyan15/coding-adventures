@@ -10,8 +10,8 @@ fn style(fill: &str, stroke: &str, width: f64, color: &str, opacity: f64) -> Ven
 fn venn_cascade_complete_ir_preserves_property_order_target_priority_and_absence() {
     // Three ingress forms, two directive orders and both union key orders.
     // Duplicate text/region keys expose the established first-match policy;
-    // a text named A must not outrank the set named A. Invalid numeric values
-    // produce None overlays and must retain a preceding authored zero.
+    // a text named A must not outrank the set named A. Original invalid numeric
+    // fixtures now reject; their valid companions retain the complete oracle.
     for ingress in 0..3 { for reversed in [false, true] { for union in ["A,B", "B,A"] {
         let prefix = match ingress {
             0 => "",
@@ -37,6 +37,16 @@ fn venn_cascade_complete_ir_preserves_property_order_target_priority_and_absence
             VennText { sets: vec!["A".into(), "B".into()], id: "pair".into(), label: Some("P".into()), style: style("#bbccdd", "#99aabb", 2.0, "#ccddee", 0.7) },
             VennText { sets: vec!["A".into(), "B".into()], id: "note".into(), label: Some("Q".into()), style: Default::default() },
         ] };
+        let error = mermaid_parser::parse_venn(&source).expect_err(&source);
+        assert_eq!((error.message.as_str(), error.line, error.col),
+            ("invalid Venn stroke-width", [12, 13, 19][ingress], 1), "{source}");
+        // Reverse only the two declared invalid directives. Every original
+        // expected field and all other authored source remain unchanged.
+        let invalid_region = "style A stroke-width:nope,fill-opacity:nope\n";
+        let invalid_text = "style note stroke-width:nope,fill-opacity:nope\n";
+        assert_eq!(source.matches(invalid_region).count(), 1);
+        assert_eq!(source.matches(invalid_text).count(), 1);
+        let source = source.replace(invalid_region, "").replace(invalid_text, "");
         assert_eq!(mermaid_parser::parse_venn(&source).unwrap(), expected, "{source}");
     } } }
 }

@@ -47,9 +47,12 @@ fn venn_theme_requires_real_post_header_closed_init() {
         r##"%%{init: {"note":"themeVariables","other":{"fontFamily":"Georgia"}}}%%"##,
         r##"%%{init: {"note":"\"themeVariables\":{\"fontFamily\":\"Georgia\"}"}}%%"##,
     ] {assert_eq!(config(prefix),baseline(),"{prefix}");}
-    let d=parse_venn("venn-beta\nset \"themeVariables\"\nstyle \"themeVariables\" fill:{\"fontFamily\":\"Georgia\"}").unwrap();
+    let error=parse_venn("venn-beta\nset \"themeVariables\"\nstyle \"themeVariables\" fill:{\"fontFamily\":\"Georgia\"}").unwrap_err();
+    assert_eq!((error.message.as_str(),error.line,error.col),("invalid Venn fill color",3,1));
+    let d=parse_venn("venn-beta\nset \"themeVariables\"[{\"fontFamily\":\"Georgia\"}]\nstyle \"themeVariables\" fill:red").unwrap();
     assert_eq!(d.config,baseline());
-    assert_eq!(d.regions[0].style.fill.as_deref(),Some("{\"fontFamily\":\"Georgia\"}"));
+    assert_eq!(d.regions[0].label.as_deref(),Some("{\"fontFamily\":\"Georgia\"}"));
+    assert_eq!(d.regions[0].style.fill.as_deref(),Some("red"));
 }
 
 #[test]
