@@ -231,6 +231,7 @@ fn railroad_geometry_is_valid(layout:&LayoutedRailroadDiagram)->bool {
     let rectangle=|x:f64,y:f64,w:f64,h:f64| [x,y,w,h].iter().all(|v|v.is_finite())&&w>=0.0&&h>=0.0;
     rectangle(0.0,0.0,layout.width,layout.height) && !layout.rules.iter().any(|rule|
         !rectangle(0.0,rule.y,layout.width,rule.height)
+        || [&rule.start_marker,&rule.end_marker].iter().any(|p|!p.x.is_finite()||!p.y.is_finite())
         || rule.elements.iter().any(|e|!rectangle(e.x,e.y,e.width,e.height))
         || rule.paths.iter().flat_map(|p|&p.points).any(|p|!p.x.is_finite()||!p.y.is_finite()))
 }

@@ -2266,8 +2266,11 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     for rule in &diagram.rules {
         let mut rule_name_font = railroad_font.clone();
         rule_name_font.weight = 700;
-        text_children.push(text_node_no_wrap(&format!("{} =", rule.name), diagram.config.padding, rule.start_marker.y - 14.0,
-            rule.start_marker.x - diagram.config.padding, 28.0, rule_name_font, css_to_color(&diagram.config.rule_name_color)));
+        // Keep the declared rule-name box tall enough for valid large fonts,
+        // centered on the same root port as the explicit markers.
+        let name_height=28.0_f64.max(diagram.config.font_size*1.15);
+        text_children.push(text_node_no_wrap(&format!("{} =", rule.name), diagram.config.padding, rule.start_marker.y - name_height/2.0,
+            rule.start_marker.x - diagram.config.padding, name_height, rule_name_font, css_to_color(&diagram.config.rule_name_color)));
         if diagram.config.show_markers {
             for marker in [&rule.start_marker, &rule.end_marker] {
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: marker.x, cy: marker.y,

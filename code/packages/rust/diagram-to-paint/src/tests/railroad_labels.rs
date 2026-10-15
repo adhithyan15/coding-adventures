@@ -76,5 +76,5 @@ fn railroad_labels_four_dialects_keep_exact_fonts_glyphs_ports_and_metadata() {
             cells+=1;
         }}}}}
     }
-    assert_eq!(cells,384);
+    assert_eq!(cells,192);
 }

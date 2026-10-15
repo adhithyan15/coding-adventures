@@ -3,6 +3,23 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a pathwise pending checkpoint -->
+October15 labels source pending: R1 retains main1455d78b via exact39-path pure
+Sanskrit merge431baea3, with native sources unchanged fromb7686f69. Native actual
+focus27/library872/incoming1/owned8 PASS; full six-package strict/unfiltered
+session7516 remains RUNNING, no terminal native acceptance. Label rawc163b7d0
+layout13P2F and paint missing2marker constructors preserved. Tests4206b9f0 had
+typed FontWeight compilation failure before paint execution; corrected9b8654c2
+layout15/0,paint8P5F. e558d4a8 derived-gate/font tests actual layout15P1F,
+paint8P5F, including font64 wrong name baseline and nonfinite marker admission.
+Repair restores metric-scaled name height centered on explicit root port and
+checks both marker coordinates; new focused/full style acceptance pending.
+Exact authored circular control values retained with independently specified
+origin130→76.6 translation and changed root ports. Complete old glyph/style/
+font-query/metadata controls retained, with documented label semantics and
+constructor migration; new four-dialect label test executes192 configurations.
+Large-marker reversal/clearance, custom-font/long-label fitting remain debt.
+Miri DEFERRED/PENDING, neverpassed; fullobjective OPEN, heartbeat ACTIVE.
+
 October15 pending seven-unit/display-label reconciliation: sole PR17288 currently
 publishes1c14ad3a; auto OFF, conflicted against main4a721b2c. Specd34aa2e2
 precedes mergece283d14 (3663incoming/3653pure/10reconstructed overlaps/
