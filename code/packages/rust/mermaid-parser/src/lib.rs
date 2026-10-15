@@ -5800,25 +5800,32 @@ pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
 
 fn parse_ishikawa_config(source: &str) -> IshikawaConfig {
     let defaults = IshikawaConfig::default();
-    let front_matter = mermaid_front_matter_section(source, &["config", "ishikawa"]);
-    let config = mermaid_directive_object(source, "ishikawa")
-        .or(front_matter.as_deref())
-        .unwrap_or("");
-    let value = |name: &str| quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
-        let (key, value) = line.trim().split_once(':')?;
-        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
-    }));
+    // Borrow the established owned source boundaries without changing their
+    // readers or the other dialects. A selected init object replaces its YAML
+    // object, even when empty; nested/literal values cannot supply direct fields.
+    // The active-quote decoder consumes the complete value before sanitizing:
+    // O'Reilly remains data, and a malformed "80"junk is not the number80.
+    let front_matter = venn_front_matter_fields(source, &["config", "ishikawa"]);
+    let config_object = venn_init_object(source, "ishikawa").map(|value| format!("{{{value}}}"));
+    let field = |object: &Option<String>, front: &Option<String>, name: &str| {
+        if let Some(object) = object {
+            venn_object_member(object, name).map(|value| venn_theme_string(value, true))
+        } else {
+            front.as_deref().unwrap_or("").lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name).then(|| venn_theme_string(value, false))
+            })
+        }
+    };
+    let value = |name: &str| field(&config_object, &front_matter, name);
     let diagram_padding = value("diagramPadding").and_then(|value| value.parse::<f64>().ok())
         .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(defaults.diagram_padding);
     let use_max_width = value("useMaxWidth").and_then(|value| match value.to_ascii_lowercase().as_str() {
         "true" => Some(true), "false" => Some(false), _ => None,
     }).unwrap_or(defaults.use_max_width);
-    let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
-    let theme = mermaid_directive_object(source, "themeVariables").or(theme_front.as_deref()).unwrap_or("");
-    let theme_value = |name: &str| quadrant_directive_value(theme, name).or_else(|| theme.lines().find_map(|line| {
-        let (key, value) = line.trim().split_once(':')?;
-        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
-    }));
+    let theme_front = venn_front_matter_fields(source, &["themeVariables"]);
+    let theme_object = venn_init_object(source, "themeVariables").map(|value| format!("{{{value}}}"));
+    let theme_value = |name: &str| field(&theme_object, &theme_front, name);
     IshikawaConfig { diagram_padding, use_max_width,
         font_family: sanitize_railroad_font_family(theme_value("fontFamily").as_deref(), &defaults.font_family),
         line_color: sanitize_railroad_color(theme_value("lineColor").as_deref(), &defaults.line_color),
