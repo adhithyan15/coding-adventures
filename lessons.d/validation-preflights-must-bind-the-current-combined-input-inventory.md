@@ -25,3 +25,11 @@ must retain exactly one level-2 heading: append validation under level3 rather
 than treating a shard like an aggregate changelog. Preserve the failed actual
 doc-shards receipt/log and rerun the real checker on the corrected carrier.
 Rust source/test acceptance does not imply documentation acceptance.
+
+Two alternative custom palettes do not establish default or rejected-value
+fallback rendering. Independent review of the sixteen Ishikawa whole-scene
+cells found this gap against the declared specification. After consuming the
+fixed-source965-test run, add five literal default/fallback/header-literal/empty-
+replacement whole-IR/layout/scene/query companions without changing production
+or dropping the original sixteen custom cases. Revalidate the changed test
+source and retain both source-specific receipts.
