@@ -4,7 +4,8 @@
 
 <!-- CV04a Venn config integration checkpoint -->
 October15 LOCAL/UNPUBLISHED Venn palette source55afa2b5305bed31afcbd39bf0d267c44db08dbd;
-current doc/source carrier 55afa2b5305bed31afcbd39bf0d267c44db08dbd. Spec2c05 precedes testsc7bfb2a6/72257 and
+this documentation carrier retains that tested source's execution inputs.
+Spec2c05 precedes testsc7bfb2a6/72257 and
 closed main mergea20a6e1e:225512whole-tree entries,299pureincoming/7recipes/
 225206retained. Singlebasecd617 and incomingda0db47e. Owned Venn parser helpers,
 numeric admission and checked geometry retained; only bounded eight-slot palette
