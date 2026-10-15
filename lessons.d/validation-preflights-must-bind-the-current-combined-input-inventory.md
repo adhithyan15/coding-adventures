@@ -40,3 +40,19 @@ stopped at actual2 for two compiler production conflicts. Preserve its failed
 receipt; record stdout/stderr and require each positive conflict count to equal
 the complete marker inventory before independently reconstructing owned bytes.
 No compiler, source, index or HEAD changed during that failed preflight.
+
+The thirteen-unit full Cargo command actually finished1830P/0F/1existingignore
+over78 targets, but the wrapper's final count guard expected LANG503 instead
+of504 and exited1. The producer adds a new LANG test; the owned runtime adds
+another, so502 becomes504 while compiler887 becomes891. Preserve the original
+incomplete receipt and failed wrapper exit. Reconcile only after rehashing the
+complete source/command-bound actual0 logs, proving every other target count
+unchanged, rechecking fixed inputs and obtaining independent terminal review.
+Never relabel a failed wrapper as0 or rerun a long passing suite solely to hide
+a bookkeeping assertion failure.
+
+An incoming changelog audit assumed a basename digest must equal the raw
+heading's freshly computed digest. The existing reader checks strict basename
+form and heading structure, not that equality. Preserve the failed static audit
+and record both actual fingerprints; inspect the real checker contract before
+inventing a new admission requirement or rewriting pure incoming bytes.
