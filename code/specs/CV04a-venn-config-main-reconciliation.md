@@ -29,6 +29,11 @@ objects/arrays and quoted field-name values are decoys, not fallback fields.
 Independent fb7f review found nested member scanning still ambiguous after the
 first repair. Preserve its913-pass full receipt, then add executable nested
 decoy controls before the depth repair and repeat affected acceptance.
+Preserve indentation in a Venn-only front-matter reader as well: only direct
+scalar fields under root `config` / direct `venn` supply values. Nested maps,
+arrays and unrelated root/section names must not flatten into those fields.
+The shared front-matter reader remains byte-exact for other dialects. This is
+a bounded flat configuration reader, not full YAML scalar/schema support.
 
 Finite alone is insufficient for this new text-reachable canvas path. The
 incoming width=height=1e308 with four equal sets and a labeled union can overflow
