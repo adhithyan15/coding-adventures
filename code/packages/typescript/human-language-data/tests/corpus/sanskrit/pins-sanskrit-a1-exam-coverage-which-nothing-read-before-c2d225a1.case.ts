@@ -69,18 +69,21 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   // 154 -> 155: chapter 272 teaches one attested condolence as a whole social
   // formula, distinguishes it from tribute, and retrieves it twice before
   // SA-A1-F-19 closes.
-  expect(coverage.covered).toBe(155);
-  expect(coverage.unmapped).toBe(9);
+  // 155 -> 156: chapter 273 preserves one complete attested sentence whose
+  // object points back to the first-person subject, then retrieves it twice
+  // before SA-A1-PRON-05 closes.
+  expect(coverage.covered).toBe(156);
+  expect(coverage.unmapped).toBe(8);
   expect(coverage.partial).toBe(0);
   // The highest percentage in the corpus, and the reason is worth stating so it
   // is not read as the track being furthest along: this inventory is DERIVED
   // from the Spanish A1 point set and drops what Sanskrit has not got, so its
-  // denominator is the smallest of the twenty-five. 93% of 164 is not
+  // denominator is the smallest of the twenty-five. 95% of 164 is not
   // comparable with 84% of 273.
   expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 155/164 points covered (95%)",
+    "sanskrit A1 (partial inventory): 156/164 points covered (95%)",
   );
-  // Where the nine gaps actually are, named rather than counted. Two columns hold
+  // Where the eight gaps actually are, named rather than counted. Two columns hold
   // seven of them, and they are the two an editorially derived A1 inventory is
   // bound to strain on: the revival vocabulary a classical corpus never had,
   // and the orthography beyond the characters the script ladder teaches.
@@ -101,7 +104,7 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
   expect(coverage.byCategory["Ṣaṣṭhī — possession"]!).toEqual({ enumerated: 3, covered: 3 });
   expect(coverage.byCategory["Sarvanāma — the pronoun"]!).toEqual({
     enumerated: 8,
-    covered: 7,
+    covered: 8,
   });
   expect(coverage.byCategory["Likes, wishes and feelings"]!).toEqual({
     enumerated: 2,

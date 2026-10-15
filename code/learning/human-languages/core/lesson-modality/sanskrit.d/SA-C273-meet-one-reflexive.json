@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C273-meet-one-reflexive",
+    "language": "sanskrit",
+    "chapter": 273,
+    "sequence": 16090,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:26ead343776cccc6"
+  },
+  "findings": []
+}

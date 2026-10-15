@@ -152,7 +152,10 @@ it("pins Sanskrit lesson-content budgets", () =>
     // retrieves both twice. It adds no idiom, sense, or culture claim.
     // 1452 -> 1455: chapter 272 teaches one attested condolence as a whole
     // formula and retrieves it twice. It adds no idiom, sense, or culture claim.
-    lessons: 1455,
+    // 1455 -> 1458: chapter 273 teaches one attested reflexive relation as a
+    // whole sentence and retrieves it twice. It adds no idiom, sense, or
+    // culture claim.
+    lessons: 1458,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

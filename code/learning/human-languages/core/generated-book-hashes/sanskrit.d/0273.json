@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:7d07862c0470960a",
+  "lessonIds": [
+    "SA-C273-meet-one-reflexive",
+    "SA-C273-reflexive-first-retrieval",
+    "SA-C273-reflexive-final-retrieval"
+  ],
+  "tex": "sanskrit/book/chapters/ch273-one-reflexive-relation-held-as-a-whole.tex"
+}
