@@ -5600,9 +5600,20 @@ fn parse_venn_config(source: &str) -> VennConfig {
     let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
         "true" => Some(true), "false" => Some(false), _ => None,
     }).unwrap_or(fallback);
+    let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme = mermaid_directive_object(source, "themeVariables").or(theme_front.as_deref()).unwrap_or("");
+    let theme_value = |name: &str| quadrant_directive_value(theme, name).or_else(|| theme.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    }));
+    let title_text_color = sanitize_railroad_color(
+        theme_value("vennTitleTextColor").or_else(|| theme_value("titleColor")).as_deref(), &defaults.title_text_color);
+    let set_text_color = sanitize_railroad_color(
+        theme_value("vennSetTextColor").or_else(|| theme_value("textColor")).as_deref(), &defaults.set_text_color);
+    let font_family = sanitize_railroad_font_family(theme_value("fontFamily").as_deref(), &defaults.font_family);
     VennConfig { width: positive("width", defaults.width), height: positive("height", defaults.height),
         padding: non_negative("padding", defaults.padding), use_max_width: boolean("useMaxWidth", defaults.use_max_width),
-        use_debug_layout: boolean("useDebugLayout", defaults.use_debug_layout) }
+        use_debug_layout: boolean("useDebugLayout", defaults.use_debug_layout), font_family, title_text_color, set_text_color }
 }
 
 fn strip_keyword_ci<'a>(line: &'a str, keyword: &str) -> Option<&'a str> {

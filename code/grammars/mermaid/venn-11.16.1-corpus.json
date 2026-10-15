@@ -16,7 +16,7 @@
     },
     {
       "name": "configured-canvas",
-      "source": "---\nconfig:\n  venn:\n    width: 640\n    height: 360\n    padding: 24\n    useMaxWidth: false\n    useDebugLayout: true\n---\nvenn-beta\nset A\nset B\nunion A,B"
+      "source": "---\nthemeVariables:\n  fontFamily: Georgia\n  vennTitleTextColor: '#123456'\n  vennSetTextColor: '#654321'\nconfig:\n  venn:\n    width: 640\n    height: 360\n    padding: 24\n    useMaxWidth: false\n    useDebugLayout: true\n---\nvenn-beta\nset A\nset B\nunion A,B"
     }
   ]
 }

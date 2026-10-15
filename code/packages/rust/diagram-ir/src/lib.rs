@@ -1867,8 +1867,8 @@ pub struct VennText { pub sets: Vec<String>, pub id: String, pub label: Option<S
 /// Largest admitted Venn canvas scalar; this is not a renderer pixel-area budget.
 pub const MAX_VENN_CANVAS: f64 = 65_536.0;
 #[derive(Clone, Debug, PartialEq)]
-pub struct VennConfig { pub width: f64, pub height: f64, pub padding: f64, pub use_max_width: bool, pub use_debug_layout: bool }
-impl Default for VennConfig { fn default() -> Self { Self { width: 800.0, height: 450.0, padding: 8.0, use_max_width: true, use_debug_layout: false } } }
+pub struct VennConfig { pub width: f64, pub height: f64, pub padding: f64, pub use_max_width: bool, pub use_debug_layout: bool, pub font_family: String, pub title_text_color: String, pub set_text_color: String }
+impl Default for VennConfig { fn default() -> Self { Self { width: 800.0, height: 450.0, padding: 8.0, use_max_width: true, use_debug_layout: false, font_family: "sans-serif".into(), title_text_color: "#0f172a".into(), set_text_color: "#0f172a".into() } } }
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct VennDiagram { pub title: Option<String>, pub config: VennConfig, pub regions: Vec<VennRegion>, pub texts: Vec<VennText> }
 #[derive(Clone, Debug, PartialEq)]
