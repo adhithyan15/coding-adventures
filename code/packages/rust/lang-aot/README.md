@@ -2,11 +2,11 @@
 
 Owned conditional-unit programs verify exact stdout and normal exit,
 including ordered markers proving the condition and chosen branch execute
-once. Six locally available backends executed all 46 owned sources (276 cells),
-including ten new four-unit programs; the previous 36 sources and 216 cells
+once. Six locally available backends executed all 56 owned sources (336 cells),
+including ten new five-unit programs; the previous 46 sources and 276 cells
 remain exact. CLR execution is not inferred. Complete six-package native/
-compiler/downstream validation passed 1,784 tests over 78 targets, with one
-existing ignored test, plus strict lint; full LANG passed 486. Final-source
+compiler/downstream validation passed 1,789 tests over 78 targets, with one
+existing ignored test, plus strict lint; full LANG passed 488. Final-source
 Miri remains **DEFERRED/PENDING**, never passed, under delivery-first sequencing.
 
 ALGOL runtime real output now includes values migrated through provenance-tracked

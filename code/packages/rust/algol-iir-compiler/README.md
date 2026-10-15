@@ -1,10 +1,10 @@
 # algol-iir-compiler
 
-The bounded outer-`entier` proof accepts cumulative offsets of at most four
+The bounded outer-`entier` proof accepts cumulative offsets of at most five
 absolute units around one unshadowed direct `sign` call, including supported
 unary `abs`/`entier` wrappers. New offsets use canonical literal values 0, 1, 2,
-3 and 4; wrappers never reset the checked budget. The legacy one-unit proof is
-retained at the entry. One conditional front checks each branch independently.
+3, 4 and 5; wrappers never reset the checked budget. The legacy one-unit proof
+is retained at the entry. One conditional front checks each branch independently.
 Exact read-once Real name identity lowering and alias/effect invalidation are
 retained; the shared `exp`/`ln` range classifier remains narrower. General
 constant-fold, recursive conditional and arbitrary-function composition stay open.
