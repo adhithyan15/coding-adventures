@@ -76,6 +76,19 @@ class MacosHaskellToolchainTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     toolchain.phase_options(path, SDK)
 
+    def test_normalized_managed_names_and_unsupported_section_syntax(self):
+        for source in [
+            "program-default-options\n  GHC-OPTIONS: -pgmc /custom/clang\n",
+            "PROGRAM-LOCATIONS\n  GCC-LOCATION: /custom/clang\n",
+            "program-locations\nPROGRAM-LOCATIONS\n",
+            "program-default-options { ghc-options: -v }\n",
+            "  program-locations\n    gcc-location: /custom/clang\n",
+            "program-default-options\n  { happy-options: -a }\n",
+        ]:
+            with self.subTest(source=source):
+                with self.assertRaises(ValueError):
+                    toolchain.overlay_config(source, CLANG, LD, SDK)
+
     def run_mock_bootstrap(self, failed_stage=None, wrong_output=False, wrong_stage=None):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
