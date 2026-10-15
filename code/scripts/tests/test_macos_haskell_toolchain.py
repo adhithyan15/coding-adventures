@@ -156,6 +156,13 @@ class MacosHaskellToolchainTests(unittest.TestCase):
             "{ with-compiler: /other/ghc }\n",
             "program-locations\n  ghc-location: /other/ghc\n",
             "PROGRAM-LOCATIONS -- retained comment\n  GHC-LOCATION: /other/ghc\n",
+            "compiler: ghcjs\n",
+            "COMPILER: ghc\n",
+            "{ compiler: ghcjs }\n",
+            "with-hc-pkg: /other/ghc-pkg\n",
+            "WITH-HC-PKG: /other/ghc-pkg\n",
+            "program-locations\n  ghc-pkg-location: /other/ghc-pkg\n",
+            "PROGRAM-LOCATIONS\n  GHC-PKG-LOCATION: /other/ghc-pkg\n",
         ]:
             with self.subTest(source=source):
                 with self.assertRaises(ValueError):

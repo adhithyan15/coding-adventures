@@ -109,3 +109,8 @@ subsequent builds. Preserve commented selectors and all unrelated configuration.
 Commit executable refusal and exact-path tests before this repair; repeat local
 checks and independent exact-source review. Hosted macOS acceptance remains
 PENDING; native9 is separately terminal1809P0F1existingignored/78 plus strict0.
+
+Refuse active compiler-flavor `compiler` fields and package-tool selectors
+`with-hc-pkg` / `ghc-pkg-location` as well. Cabal must infer the companion tool
+from the pinned GHC rather than preserve a competing tool/flavor. Comments and
+quoted unrelated values remain intact. These controls precede their behavior.
