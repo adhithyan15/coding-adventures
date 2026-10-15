@@ -86,6 +86,6 @@ further and hid the seam; English's is still visible.
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WARUM-01, GE-ETYMON-WARUM-WAR-UM-02, GE-LEX-WER-01, GE-LEX-WANN-01, GE-LEX-ICH-LERNE-DEUTSCH-01] -->
 
 [PAUSE 3s] Which syllable of *warum* is stressed? (**The second** — *va-ROOM*.)
-What two words are welded inside it? (An old **was** and **um**, "about".) Which
+What two words are welded inside it? (An old **wo**, "where", and **um**, "about".) Which
 English word was built the same way? (***Wherefore*** — *where* plus *for*.) Say
 all six W-words. Next: the chapter, run cold.

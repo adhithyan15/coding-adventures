@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Numbers One to Ten",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2a86a03a293a5dc9",
+  "sourceHash": "fnv1a64:184ad265e8b268c9",
   "lessons": [
     {
       "id": "LA-C02-numbers-1-5",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40d522f3819bc761",
+      "sourceHash": "fnv1a64:a959c4a8516c1e19",
       "notice": null,
       "blocks": [
         {
@@ -284,7 +284,7 @@
             },
             {
               "kind": "speech",
-              "text": "All five are cousins of English six to ten (EtymDB 2.1)."
+              "text": "All five numbers are cousins of English six to ten (EtymDB 2.1)."
             }
           ]
         },

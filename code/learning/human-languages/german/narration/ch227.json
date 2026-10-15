@@ -4,7 +4,7 @@
   "chapter": 227,
   "title": "An application, A relationship, An impression, Admission, An admission ticket",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:65ebcb217c77eebc",
+  "sourceHash": "fnv1a64:fe4fb83515cee441",
   "lessons": [
     {
       "id": "GE-C227-bewerbung",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27a4a5942869a124",
+      "sourceHash": "fnv1a64:0caca063006938ac",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Eintrittskarte is Eintritt, \"entry\", + -s- + Karte, \"card\": a card that lets you step in. Karte is borrowed from Latin charta, \"paper\", itself from Greek (EtymDB 2.1)."
+              "text": "Eintrittskarte is Eintritt, \"entry\", + -s- + Karte, \"card\": a card that lets you step in. Karte goes back to Latin charta, \"paper\", itself from Greek (EtymDB 2.1)."
             }
           ]
         },

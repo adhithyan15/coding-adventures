@@ -21,7 +21,7 @@ It is mich's partner exactly: ich becomes mich, du becomes dich. One vowel apart
 The word, taken apart.
 English once had this whole row and let it collapse. Thou was the doer, thee was both the done-to and the to-whom, thine the possessive. German kept four distinct shapes where English kept three and then lost all of them:
 du, dich, dir, dein.
-Every one begins with the d that was English th, so the row is predictable from a rule you have had since the second chapter. Du and English thou are one inherited Germanic word; EtymDB 2.1 has no row tracing either further.
+Every one begins with the d that was English th, so the row is predictable from a rule you have had since the second chapter. Du and English thou are one inherited word, Proto-Germanic þū (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]
@@ -58,7 +58,7 @@ Sie and es do not move at all — the die row and the das row stand still here e
 
 The word, taken apart.
 English him looks like a translation of ihn and is not the same form. Him was originally the to-whom shape, and it swallowed the done-to shape hine somewhere in the Middle Ages. German never let that merger happen, which is why it still has ihn for the done-to and ihm for the to-whom.
-English lost the distinction; German lost nothing. Ihn is inherited, though EtymDB 2.1 has no row for it; it traces him to Proto-Germanic himmai.
+English lost the distinction; German lost nothing. Ihn from Old High German inan; him is from another stem, Proto-Germanic himmai (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]

@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "The One It Happens To",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:694631caed40ca30",
+  "sourceHash": "fnv1a64:4deb53f96f744132",
   "lessons": [
     {
       "id": "GE-C37-dich",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f99bf120c4ddb41",
+      "sourceHash": "fnv1a64:5a57bffa03b1d919",
       "notice": null,
       "blocks": [
         {
@@ -90,7 +90,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every one begins with the d that was English th, so the row is predictable from a rule you have had since the second chapter. Du and English thou are one inherited Germanic word; EtymDB 2.1 has no row tracing either further."
+              "text": "Every one begins with the d that was English th, so the row is predictable from a rule you have had since the second chapter. Du and English thou are one inherited word, Proto-Germanic þū (EtymDB 2.1)."
             }
           ]
         },
@@ -184,7 +184,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad661e7a0563685f",
+      "sourceHash": "fnv1a64:31fa5facd43ea637",
       "notice": null,
       "blocks": [
         {
@@ -246,7 +246,7 @@
             },
             {
               "kind": "speech",
-              "text": "English lost the distinction; German lost nothing. Ihn is inherited, though EtymDB 2.1 has no row for it; it traces him to Proto-Germanic himmai."
+              "text": "English lost the distinction; German lost nothing. Ihn from Old High German inan; him is from another stem, Proto-Germanic himmai (EtymDB 2.1)."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 188,
   "title": "Near to, Far from, At the bottom, On the right, On the left",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e6050c20660d22a7",
+  "sourceHash": "fnv1a64:ae42a3683cde28cf",
   "lessons": [
     {
       "id": "FR-C188-pres-de",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7dabe07b14e51e6",
+      "sourceHash": "fnv1a64:b266d5c33e56765c",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "à droite — à, \"on\", and droite, \"the right\". Droite from Latin dīrēctus, \"straight\", through Old French dreit (EtymDB 2.1); à from Latin ad."
+              "text": "à droite — à, \"on\", and droite, \"the right\". Droite from Latin dīrēctus, \"straight\" (Lewis & Short), through Old French dreit; à from Latin ad."
             }
           ]
         },

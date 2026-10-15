@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and courtesy",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a03f2fa284f8dacc",
+  "sourceHash": "fnv1a64:0a249068986e3173",
   "lessons": [
     {
       "id": "RU-C01-privet",
@@ -986,7 +986,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a27f3919bccabec6",
+      "sourceHash": "fnv1a64:a690711a73654a02",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1177,7 +1177,7 @@
             },
             {
               "kind": "speech",
-              "text": "What favour-root hides inside it? (zhálovat', \"to grant a favour\" — cousin of zhal', \"pity.\") What two English phrases does this one word cover? (\"please\" and \"you're welcome.\") What sound does ж make? (zh, as in measure.)"
+              "text": "What favour-root hides inside it? (zhálovat', \"to grant a favour\" — linked to zhal', \"pity.\") What two English phrases does this one word cover? (\"please\" and \"you're welcome.\") What sound does ж make? (zh, as in measure.)"
             }
           ]
         }

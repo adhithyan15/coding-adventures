@@ -46,7 +46,7 @@ reviews_of: [ML-C68-eighth, ML-C67-fourth, ML-C64-only, ML-C52-flower]
 **ഒമ്പതാം** (*ompathāṁ*) — "**ninth**".
 
 **ഒമ്പത്** was already a built word when you learned it: an old word for **one**
-plus *pathŭ*, **ten** — one short of ten, with the *n* turning to *m* before the
+plus *pathŭ*, **ten** — usually read as one short of ten, with the *n* turning to *m* before the
 *p*. The ordinal ending goes on top of that, and none of the machinery
 underneath reacts to it.
 

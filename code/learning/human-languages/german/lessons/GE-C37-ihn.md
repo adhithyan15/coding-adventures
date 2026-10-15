@@ -67,8 +67,8 @@ English **him** looks like a translation of *ihn* and is not the same form.
 *hine* somewhere in the Middle Ages. German never let that merger happen, which
 is why it still has **ihn** for the done-to and **ihm** for the to-whom.
 
-English lost the distinction; German lost nothing. *Ihn* is inherited, though
-EtymDB 2.1 has no row for it; it traces *him* to Proto-Germanic *\*himmai*.
+English lost the distinction; German lost nothing. *Ihn* ← Old High German
+*inan*; *him* is from another stem, Proto-Germanic *\*himmai* (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-IHN-01, GE-LEX-DICH-01, GE-LEX-MICH-01, GE-LEX-DEN-01, GE-LEX-HUND-02, GE-LEX-KAFFEE-02, GE-LEX-WEIN-01, GE-LEX-SEHEN-01, GE-LEX-HOEREN-09, GE-LEX-SIE-SHE-02, GE-LEX-KATZE-04] -->

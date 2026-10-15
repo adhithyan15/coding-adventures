@@ -82,7 +82,7 @@ front, the names never moved. Rome renumbered the calendar and forgot to rename 
 - *decem* → **decimal**, and — via *duodecim* "twelve" — **dozen** (its Greek
   cousin *dekás* "group of ten" adds **decade**)
 
-All five are cousins of English *six* to *ten* (EtymDB 2.1).
+All five numbers are cousins of English *six* to *ten* (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-NUMBERS-1-5-01, LA-ETYMON-NUMBERS-1-5-02, LA-GRAMMAR-NUMBERS-1-5-03, LA-LEX-NUMBERS-6-10-01, LA-LEX-NUMBERS-6-10-02, LA-ETYMON-NUMBERS-6-10-03] -->

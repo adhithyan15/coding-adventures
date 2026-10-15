@@ -4,7 +4,7 @@
   "chapter": 203,
   "title": "Defeat, Championship, Player, Coach, Connection",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:433826d041f23ae6",
+  "sourceHash": "fnv1a64:e057816abbefed8e",
   "lessons": [
     {
       "id": "FR-C203-defaite",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbdc464b80661587",
+      "sourceHash": "fnv1a64:86650c6545acc5fb",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "joueur — jouer, \"to play\", with -eur, \"one who\". Jouer from Latin iocārī, \"to joke\" (EtymDB 2.1), and -eur from Latin -or."
+              "text": "joueur — jouer, \"to play\", with -eur, \"one who\". Jouer from Vulgar Latin iocāre, \"to joke\" (EtymDB 2.1), and -eur from Latin -or."
             }
           ]
         },

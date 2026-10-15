@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 203,
-  "sourceHash": "fnv1a64:433826d041f23ae6",
+  "sourceHash": "fnv1a64:e057816abbefed8e",
   "lessonIds": [
     "FR-C203-defaite",
     "FR-C203-championnat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch203.txt",
   "json": "french/narration/ch203.json",
-  "textHash": "fnv1a64:84ff0b35c930116b",
-  "jsonHash": "fnv1a64:85de39bcdcf7d88a",
+  "textHash": "fnv1a64:81e9d5ad6d6a65fa",
+  "jsonHash": "fnv1a64:a90f6af2b271afdd",
   "findings": []
 }

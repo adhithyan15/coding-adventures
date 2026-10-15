@@ -73,7 +73,7 @@ earlier, had already been expanded from ten months to twelve by adding
 
 *Quīntīlis* ("the fifth") and *Sextīlis* ("the sixth") already existed as
 ordinary, plainly-numbered months, right alongside *September* through
-*December*. Long after Julius Caesar's death, the Senate simply **renamed**
+*December*. In 44 BC, the year Julius Caesar was killed, Rome **renamed**
 *Quīntīlis* to **Iūlius** in his honor; decades later, Augustus received
 the same honor, and *Sextīlis* became **Augustus**. No months were
 created — two old, numbered ones just got new names, and Latin's fifth and

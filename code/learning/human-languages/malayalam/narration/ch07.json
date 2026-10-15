@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:123207bd39cfa4aa",
+  "sourceHash": "fnv1a64:ec95dbb42b4e6c4d",
   "lessons": [
     {
       "id": "ML-C07-numbers-1-5",
@@ -1405,7 +1405,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:518728d01b5615da",
+      "sourceHash": "fnv1a64:b3f9d5f4cb3838dc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1465,7 +1465,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which word means one short of ten? (ഒമ്പത്, ombatŭ, nine.)"
+              "text": "Which word is usually read as one short of ten? (ഒമ്പത്, ombatŭ, nine.)"
             },
             {
               "kind": "speech",

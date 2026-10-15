@@ -109,6 +109,6 @@ does.
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POZHALUYSTA] -->
 
 [PAUSE 3s] [YOU READ: **пожалуйста**] What favour-root hides inside it? (*zhálovat'*,
-"to grant a favour" — cousin of *zhal'*, "pity.") What two English phrases does
+"to grant a favour" — linked to *zhal'*, "pity.") What two English phrases does
 this one word cover? ("please" **and** "you're welcome.") What sound does ж
 make? (*zh*, as in *measure*.)
