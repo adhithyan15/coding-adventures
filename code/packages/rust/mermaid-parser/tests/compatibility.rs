@@ -420,7 +420,12 @@ fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
         assert!(!diagram.effect.is_empty());
         assert!(!diagram.causes.is_empty());
         if name == "diagram-padding-config" {
-            assert_eq!(diagram.diagram_padding, 64.0);
+            assert_eq!(diagram.config.diagram_padding, 64.0);
+            assert!(diagram.config.use_max_width);
+            assert_eq!(diagram.config.font_family, "Georgia");
+            assert_eq!(diagram.config.line_color, "#123456");
+            assert_eq!(diagram.config.fill_color, "#abcdef");
+            assert_eq!(diagram.config.text_color, "#654321");
         }
     }
 }
@@ -1401,10 +1406,14 @@ fn ishikawa_dispatches_to_dedicated_causal_tree_ir() {
     assert_eq!(indented_effect.causes[1].parent_id.as_deref(), Some("cause-1"));
 
     let configured = parse_ishikawa(
-        "---\nconfig:\n  ishikawa:\n    diagramPadding: 52\n---\nishikawa\nFailure\n  People",
+        "---\nconfig:\n  ishikawa:\n    diagramPadding: 52\n    useMaxWidth: true\nthemeVariables:\n  fontFamily: Georgia\n  lineColor: '#123456'\n  mainBkg: '#abcdef'\n  textColor: '#654321'\n---\nishikawa\nFailure\n  People",
     )
     .unwrap();
-    assert_eq!(configured.diagram_padding, 52.0);
+    assert_eq!(configured.config.diagram_padding, 52.0);
+    assert!(configured.config.use_max_width);
+    assert_eq!((&configured.config.font_family, &configured.config.line_color, &configured.config.fill_color,
+        &configured.config.text_color), (&"Georgia".to_string(), &"#123456".to_string(),
+        &"#abcdef".to_string(), &"#654321".to_string()));
 }
 
 #[test]
