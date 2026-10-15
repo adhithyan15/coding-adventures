@@ -9453,6 +9453,7 @@ mod tests {
     mod common_origin;
     mod subgraph_margin;
     mod railroad_spacing;
+    mod railroad_style;
     use super::*;
     use diagram_ir::{
         DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, LayoutedGraphDiagram,
