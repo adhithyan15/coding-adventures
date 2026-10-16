@@ -1,4 +1,4 @@
-# Authored native table row names
+### Authored native table row names
 
 - Use the authored row-header text in cell automation names, fixing virtual
   windows that incorrectly restarted names at row 1 (#14278).
