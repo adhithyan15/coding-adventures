@@ -15,3 +15,8 @@ status controls, retain-level root order/slot controls and fingerprint-failure
 prefix rollback. Add them before production. Derive literal small-catalog replay
 accounting and UTF8/NUL/hash-block boundary fingerprints independently; the gate's
 own counter and short Name-only fingerprints cannot establish complete charging.
+
+The successor review recomputed the explicit source-1 schedule and caught an
+arithmetic typo: 3010, not 3110, before original/replay fingerprint costs. Keep
+the expanded additive expression beside the literal oracle and reconcile the
+spec before production; an independently written constant can still be wrong.

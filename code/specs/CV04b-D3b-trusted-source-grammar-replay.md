@@ -177,8 +177,11 @@ cover bounded numeric/text/field scans, not arbitrary ordinary metadata.
 Independent examples: one unavailable NUL input, root1 and path input-0.js has
 43 retain work +11 census +512 root +41 compact +90 path +26 inventory-event
 +130 source-hash +1 capture =854 total. One available source "1", same path,
-Number+EOF, has3110 total plus twice the independently framed original Token
+Number+EOF, has3010 total plus twice the independently framed original Token
 fingerprint costs. These schedules exclude separate generic/shape/lexical work.
+The3010 sum is43 retention +35 census +512 root +41 compact +90 path
++26 event +130 hash +1 capture +2*(1024+3*14) pieces. Independent review
+caught the earlier3110 arithmetic typo before real replay implementation.
 Test them literally and require exact/one-less behavior. In compiler sentinel
 tests, a work threshold equal to independently derived complete retention cost
 must permit retention yet refuse at FINAL replay, so deleting the final gate
