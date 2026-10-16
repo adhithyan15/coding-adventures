@@ -82,7 +82,7 @@ Case{name:"minimum-positive-fonts",source:"%%{init: {\"wardley-beta\":{\"width\"
         ("wardley.componentLabelColor".into(),c.config.theme.component_label_color.clone()),
         ("wardley.linkStroke".into(),c.config.theme.link_stroke.clone()),
         ("wardley.evolutionStroke".into(),c.config.theme.evolution_stroke.clone()),
-        ("wardley.noteCount".into(),"0".into())])),instructions};
+        ("wardley.noteCount".into(),"0".into()),("wardley.annotationCount".into(),"0".into())])),instructions};
     let resolver=VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
     let options=DiagramToPaintOptions {background:Color{r:3,g:5,b:7,a:255},device_pixel_ratio:1.0,
       label_font:FontSpec{family:family.into(),size:4.0,weight:600,italic:true,stretch:FontStretch::Condensed,..defaults.label_font},
