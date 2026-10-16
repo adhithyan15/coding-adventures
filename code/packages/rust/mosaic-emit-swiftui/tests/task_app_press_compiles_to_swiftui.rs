@@ -43,6 +43,30 @@ fn resolve_packages(layout: &mut moslayout_compiler::LayoutDef) {
 }
 
 #[test]
+fn task_app_milestones_preserve_degree_rotations_in_both_themes() {
+    let root = task_app_src_root();
+    let interface = mosmodel_compiler::compile(
+        &fs::read_to_string(root.join("TaskApp.mil")).unwrap(),
+    ).unwrap();
+    let mut layout = moslayout_compiler::compile(
+        &fs::read_to_string(root.join("TaskApp.mll")).unwrap(),
+        Some(&interface.descriptor_json),
+    ).unwrap();
+    resolve_packages(&mut layout.def);
+    for theme in ["TaskApp.light.msl", "TaskApp.dark.msl"] {
+        let style = mosstyle_compiler::compile(
+            &fs::read_to_string(root.join(theme)).unwrap(), Some(&layout.part_map_json),
+        ).unwrap();
+        let output = mosaic_emit_swiftui::from_pipeline(
+            &interface.component, &layout.def, &style.def,
+        ).unwrap().output;
+        assert_eq!(output.matches(".rotationEffect(.degrees(45))").count(), 2, "{theme}");
+        assert!(mosaic_emit_swiftui::pipeline::dropped_style_properties(&style.def, &layout.def.root)
+            .iter().all(|drop| drop.name != "transform"), "{theme}");
+    }
+}
+
+#[test]
 fn task_app_pressed_state_lowers_to_native_swiftui_press_state() {
     let root = task_app_src_root();
     let mil = fs::read_to_string(root.join("TaskApp.mil")).expect("read TaskApp.mil");

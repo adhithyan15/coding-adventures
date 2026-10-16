@@ -268,6 +268,27 @@ fn the_emitted_xaml_host_answers_effects() {
         );
         assert!(output.contains("case passed"));
     }
+    let props_profile = project.join("props-profile.jsonl");
+    let output = run(
+        Command::new("dotnet")
+            .current_dir(&project)
+            .args(["run", "--no-build"])
+            .env("MOSAIC_APP_LIBRARY", &runtime)
+            .env("MOSAIC_PROBE_CASE", "props-batch")
+            .env("MOSAIC_PROFILE_PATH", &props_profile)
+            .env("MOSAIC_APP_STATE_PATH", project.join("props-profile-state.json")),
+        "profiled props success and failure paths",
+    );
+    assert!(output.contains("case passed"));
+    let output = run(
+        Command::new("dotnet")
+            .current_dir(&project)
+            .args(["run", "--no-build"])
+            .env("MOSAIC_PROBE_CASE", "props-profile-validate")
+            .env("MOSAIC_PROFILE_PATH", &props_profile),
+        "validate props profiling phases",
+    );
+    assert!(output.contains("case passed"));
     let samples = std::fs::read_to_string(profile_path).unwrap();
     assert_eq!(samples.lines().count(), 4096);
     let _ = std::fs::remove_dir_all(&project);

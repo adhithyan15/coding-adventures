@@ -7,6 +7,22 @@ drop into a Windows App SDK project.
 
 See `code/specs/mosaic-emit-xaml.md` for the design.
 
+## Projection updates
+
+Generated `For` bindings retain their ItemsSource collection and reconcile rows
+by position. Equal inputs (including nested list values) reuse the existing VM;
+changed positions replace their VM, while growth and shrinkage use collection
+notifications. This is positional identity, not keyed reconciliation.
+
+Retained VMs refresh owner-dependent computed properties only when their observed
+value changes, and propagate refreshes through nested projections. This preserves
+selection styling without replacing the entire table on every runtime update.
+Native cell lookup also stops at the first coordinate match rather than allocating
+a list of all table descendants.
+See `code/specs/mosaic-xaml-projection-identity-20261011.md` for tests and native
+profiling evidence. Large-viewport work and persistence stalls remain open in
+#16865; this optimization is not a native release acceptance claim.
+
 ## Status
 
 The backend covers the structural kernel, control flow, native Host controls,
@@ -247,3 +263,26 @@ GitHub-hosted Windows CI is the final compiler gate for generated WinUI project
 shells. A local or self-hosted Windows runner with an interactive desktop remains
 the launch/interaction gate; portable tests validate the IR-to-XAML structure and
 package fixtures on every platform.
+
+Queued table focus validates retained cells against their current coordinates
+and table ancestry before reuse, falling back to tree lookup after replacement
+or reparenting. This avoids repeated whole-prefix walks for unchanged cells.
+
+## Native row-window tables
+
+Canonical HostTable layouts can emit `onViewportRows` and `onViewportShift`, each
+with one numeric `rows` payload. Shifting requires numeric `viewport-offset` and
+`total-rows` slots. Invalid declarations and unsupported table shapes produce a
+compiler diagnostic. Renamed emits dispatch through the component's typed union.
+
+The native table queues deduplicated capacity reports after layout, measures
+visible uniform-row pitch, and drops callbacks from a detached generation.
+Unmeasurable or nonuniform visible rows retain their existing capacity. Virtual
+windows remove the nested vertical scroll viewer, anchor at the top, and convert
+vertical wheel deltas into bounded row shifts; horizontal wheels and embedded
+editors keep their own input. Exact `flex: 1` on Row/Column children now uses the
+existing star-track lowering; other flex shorthand forms remain unsupported.
+
+See `code/specs/mosaic-xaml-table-viewport-20261012.md` for executed native evidence
+and outstanding performance/accessibility acceptance. This is not native release
+acceptance.
