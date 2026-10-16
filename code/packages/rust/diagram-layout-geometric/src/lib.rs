@@ -471,9 +471,28 @@ fn wardley_node_paint_geometry_finite(node:&LayoutedWardleyNode,c:&diagram_ir::W
         (node.position.x+node.label_offset_x.unwrap_or(c.node_label_offset+strategy_spacing),
          node.position.y+node.label_offset_y.unwrap_or(-c.node_label_offset-strategy_spacing)-8.0)
     };
-    let extent=c.node_radius*4.0+25.0;
-    x.is_finite()&&y.is_finite()&&extent.is_finite()
-        &&[node.position.x-extent,node.position.x+extent,node.position.y-extent,node.position.y+extent].into_iter().all(f64::is_finite)
+    // Ordinary circles emit a finite center/radius, not a bounding rectangle.
+    // Only enabled decorations introduce these additional paint parameters.
+    let strategy_finite=if let Some(strategy)=node.source_strategy {
+        let ring=c.node_radius*2.0;
+        ring.is_finite() && ring>0.0 && if strategy==diagram_ir::WardleySourceStrategy::Market {
+            let triangle=c.node_radius*1.2;let dot=c.node_radius*0.7;
+            let half_angle=std::f64::consts::PI/6.0;
+            [triangle,dot,node.position.y-triangle,
+                node.position.x-triangle*half_angle.cos(),node.position.x+triangle*half_angle.cos(),
+                node.position.y+triangle*half_angle.sin()].into_iter().all(f64::is_finite)
+                && triangle>0.0 && dot>0.0
+        } else {true}
+    } else {true};
+    let inertia_finite=if node.inertia {
+        let square=c.node_radius*1.6;
+        let mut offset=if node.pipeline_parent {square/2.0+15.0} else {c.node_radius+15.0};
+        if node.source_strategy.is_some() {offset+=c.node_radius+10.0;}
+        let height=if node.pipeline_parent {square} else {c.node_radius*2.0};
+        [offset,height,node.position.x+offset,node.position.y-height/2.0,node.position.y+height/2.0]
+            .into_iter().all(f64::is_finite) && height>0.0
+    } else {true};
+    x.is_finite()&&y.is_finite()&&strategy_finite&&inertia_finite
 }
 
 /// Map already-admitted coordinates with the preserved ordinary arithmetic.
