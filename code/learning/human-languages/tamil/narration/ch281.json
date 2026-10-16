@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 281,
+  "title": "A controlled Tamil location question",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:d5e3990bb3bbe6ca",
+  "lessons": [
+    {
+      "id": "TA-W281-enge-controlled-question",
+      "sequence": 16070,
+      "title": "Your first Tamil question from meaning",
+      "headword": "(controlled location question)",
+      "romanization": "",
+      "gloss": "assemble one familiar Tamil location question from meaning, with no visible answer",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:e4c4fcf88a971276",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice — repair one difference"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice — repair one difference."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the earlier lessons. Recall tea and the place question where? without writing either one yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — assemble one familiar question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "From meaning alone, write Where is the tea? There is no word bank, romanization, or copyable sentence. Choose the two familiar pieces, put them in Tamil order, and add the question mark. This first composition is untimed: finish the attempt before checking the earlier lessons."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — repair one difference",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check the thing, place question, word boundary, and punctuation separately. Repair the first difference and write the whole question once more from meaning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What made this composition rather than copying? (You selected and ordered two known pieces from meaning, with no visible Tamil answer.)"
+            },
+            {
+              "kind": "speech",
+              "text": "One controlled line closes this writing rung. It does not prove A1 attainment, readiness, human validation, or completion of the later timed writing task."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

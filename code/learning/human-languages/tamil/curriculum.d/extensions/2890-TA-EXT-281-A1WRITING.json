@@ -1,0 +1,10 @@
+{
+  "id": "TA-EXT-281-A1WRITING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can assemble one familiar Tamil location question from meaning without a visible model.",
+  "prerequisites": [
+    "TA-EXT-280-VELAI280"
+  ]
+}
