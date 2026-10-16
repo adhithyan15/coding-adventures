@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-274-RENTAL274",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask and answer one attested question about a rented house.",
+  "prerequisites": [
+    "SA-EXT-273-REFLEXIVE273"
+  ]
+}

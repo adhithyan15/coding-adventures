@@ -181,8 +181,8 @@ it("offers one bounded contemporary Sanskrit condolence twice", () => {
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   expect(coverage).toMatchObject({
     enumerated: 164,
-    covered: 156,
-    unmapped: 8,
+    covered: 157,
+    unmapped: 7,
     partial: 0,
   });
   expect(coverage.points.find((point) => point.id === "SA-A1-F-19")).toMatchObject({
