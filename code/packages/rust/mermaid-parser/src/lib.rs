@@ -5653,6 +5653,7 @@ pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
 
 fn parse_ishikawa_config(source: &str) -> IshikawaConfig {
     let defaults = IshikawaConfig::default();
+    let root_front_matter = mermaid_front_matter_section(source, &["config"]);
     let front_matter = mermaid_front_matter_section(source, &["config", "ishikawa"]);
     let config = mermaid_directive_object(source, "ishikawa")
         .or(front_matter.as_deref())
@@ -5666,13 +5667,19 @@ fn parse_ishikawa_config(source: &str) -> IshikawaConfig {
     let use_max_width = value("useMaxWidth").and_then(|value| match value.to_ascii_lowercase().as_str() {
         "true" => Some(true), "false" => Some(false), _ => None,
     }).unwrap_or(defaults.use_max_width);
+    let root_value = |name: &str| quadrant_directive_value(source, name).or_else(|| root_front_matter.as_deref().and_then(|config| config.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    })));
+    let font_size = root_value("fontSize").and_then(parse_mermaid_font_size)
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(defaults.font_size);
     let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
     let theme = mermaid_directive_object(source, "themeVariables").or(theme_front.as_deref()).unwrap_or("");
     let theme_value = |name: &str| quadrant_directive_value(theme, name).or_else(|| theme.lines().find_map(|line| {
         let (key, value) = line.trim().split_once(':')?;
         (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
     }));
-    IshikawaConfig { diagram_padding, use_max_width,
+    IshikawaConfig { diagram_padding, use_max_width, font_size,
         font_family: sanitize_railroad_font_family(theme_value("fontFamily").as_deref(), &defaults.font_family),
         line_color: sanitize_railroad_color(theme_value("lineColor").as_deref(), &defaults.line_color),
         fill_color: sanitize_railroad_color(theme_value("mainBkg").as_deref(), &defaults.fill_color),

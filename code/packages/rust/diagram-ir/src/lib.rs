@@ -1890,10 +1890,10 @@ pub struct LayoutedVennDiagram {
 #[derive(Clone, Debug, PartialEq)]
 pub struct IshikawaCause { pub id: String, pub label: String, pub parent_id: Option<String>, pub depth: usize }
 #[derive(Clone, Debug, PartialEq)]
-pub struct IshikawaConfig { pub diagram_padding: f64, pub use_max_width: bool, pub font_family: String,
+pub struct IshikawaConfig { pub diagram_padding: f64, pub use_max_width: bool, pub font_size: f64, pub font_family: String,
     pub line_color: String, pub fill_color: String, pub text_color: String }
 impl Default for IshikawaConfig { fn default() -> Self { Self { diagram_padding: 20.0, use_max_width: false,
-    font_family: "sans-serif".into(), line_color: "#333333".into(), fill_color: "#ffffff".into(), text_color: "#333333".into() } } }
+    font_size: 16.0, font_family: "sans-serif".into(), line_color: "#333333".into(), fill_color: "#ffffff".into(), text_color: "#333333".into() } } }
 #[derive(Clone, Debug, PartialEq)]
 pub struct IshikawaDiagram { pub effect: String, pub causes: Vec<IshikawaCause>, pub config: IshikawaConfig }
 #[derive(Clone, Debug, PartialEq)]

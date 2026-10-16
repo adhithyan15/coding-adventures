@@ -122,6 +122,7 @@ fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64
 /// Lay out an Ishikawa causal tree as an alternating fishbone.
 pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> LayoutedIshikawaDiagram {
     let width = canvas_width.max(560.0);
+    let font_scale = diagram.config.font_size / 16.0;
     let max_depth = diagram.causes.iter().map(|cause| cause.depth).max().unwrap_or(1) as f64;
     let height = (width * 0.58).max(360.0).max(260.0 + max_depth * 70.0);
     let padding = diagram.config.diagram_padding.min(width / 4.0).min(height / 4.0);
@@ -138,7 +139,7 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         let tip = Point { x: attach.x - spacing * 0.48, y: spine_y + sign * vertical_reach };
         bones.push(LayoutedIshikawaBone { from: tip.clone(), to: attach, label: cause.label.clone(),
             label_position: Point { x: tip.x + spacing * 0.24, y: (tip.y + spine_y) / 2.0 + sign * 42.0 },
-            label_width: ishikawa_label_width(&cause.label), label_height: 28.0, depth: 1 });
+            label_width: ishikawa_label_width(&cause.label, font_scale), label_height: 28.0 * font_scale, depth: 1 });
         anchors.insert(&cause.id, tip);
     }
     for cause in diagram.causes.iter().filter(|cause| cause.parent_id.is_some()) {
@@ -148,15 +149,15 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         let tip = Point { x: parent.x - length, y: parent.y + sign * length * 0.55 };
         bones.push(LayoutedIshikawaBone { from: tip.clone(), to: parent,
             label: cause.label.clone(), label_position: Point { x: tip.x, y: tip.y - sign * 18.0 },
-            label_width: ishikawa_label_width(&cause.label), label_height: 28.0, depth: cause.depth });
+            label_width: ishikawa_label_width(&cause.label, font_scale), label_height: 28.0 * font_scale, depth: cause.depth });
         anchors.insert(&cause.id, tip);
     }
     LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), config: diagram.config.clone(), effect_x, effect_y: spine_y - effect_height / 2.0,
         effect_width, effect_height, spine_from, spine_to, bones }
 }
 
-fn ishikawa_label_width(label: &str) -> f64 {
-    (label.chars().count() as f64 * 7.0 + 20.0).clamp(72.0, 180.0)
+fn ishikawa_label_width(label: &str, font_scale: f64) -> f64 {
+    (label.chars().count() as f64 * 7.0 * font_scale + 20.0).clamp(72.0 * font_scale, 180.0 * font_scale)
 }
 
 /// Map Wardley visibility/evolution coordinates onto a deterministic Cartesian canvas.
@@ -542,6 +543,12 @@ mod tests {
         assert!(layout.bones[1].from.y > layout.spine_from.y);
         assert_eq!(layout.bones[0].label_height, 28.0);
         assert_eq!(layout.bones[0].label_width, 72.0);
+
+        let mut large_text = diagram.clone();
+        large_text.config.font_size = 24.0;
+        let large_text_layout = layout_ishikawa(&large_text, 640.0);
+        assert_eq!(large_text_layout.bones[0].label_height, 42.0);
+        assert_eq!(large_text_layout.bones[0].label_width, 108.0);
 
         let mut padded = diagram.clone();
         padded.config.diagram_padding = 64.0;
