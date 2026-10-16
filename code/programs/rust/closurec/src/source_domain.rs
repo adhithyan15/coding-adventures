@@ -106,9 +106,24 @@ impl Work {
         self.take(text.len())
     }
 }
-/// Returns no owned evidence or source-certified capability.
+/// The compiler retains the existing generic diagnostic stages without trying
+/// to recognize error-message text. Shape admission returns no evidence object.
+pub(super) enum AdmissionError {
+    Graph(String),
+    Shape(String),
+}
+pub(super) fn admit_publication(log: &CVLog, limits: ShapeLimits) -> Result<(), AdmissionError> {
+    admit_core(log, limits).map(|_| ())
+}
+#[cfg(test)]
 pub(super) fn validate_shape(log: &CVLog, limits: ShapeLimits) -> Result<(), String> {
     validate_shape_core(log, limits).map(|_| ())
+}
+#[cfg(test)]
+fn validate_shape_core(log: &CVLog, limits: ShapeLimits) -> Result<(usize, usize), String> {
+    admit_core(log, limits).map_err(|error| match error {
+        AdmissionError::Graph(message) | AdmissionError::Shape(message) => message,
+    })
 }
 fn index_storage(count: usize) -> Result<usize, String> {
     count
@@ -263,11 +278,16 @@ fn legacy_location(location: &str, path: &str, work: &mut Work) -> Result<(), St
     }
     Ok(())
 }
-fn validate_shape_core(log: &CVLog, limits: ShapeLimits) -> Result<(usize, usize), String> {
+fn admit_core(log: &CVLog, limits: ShapeLimits) -> Result<(usize, usize), AdmissionError> {
     if limits.work > 512_000_000 || limits.index_bytes > 256 * 1024 * 1024 {
-        return Err("source shape configuration ceiling".into());
+        return Err(AdmissionError::Shape(
+            "source shape configuration ceiling".into(),
+        ));
     }
-    log.validate_graph()?;
+    log.validate_graph().map_err(AdmissionError::Graph)?;
+    shape_body(log, limits).map_err(AdmissionError::Shape)
+}
+fn shape_body(log: &CVLog, limits: ShapeLimits) -> Result<(usize, usize), String> {
     let mut work = Work {
         used: 0,
         limit: limits.work,

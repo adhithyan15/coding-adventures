@@ -1985,8 +1985,19 @@ fn run_compiler_with_shape_limits(
     if config.special_modes.correlation_vector {
         // Admit the full physical inventory before any filter, format, summary
         // or prepared output is published. Shape is not source-content replay.
-        source_domain::validate_shape(&cv_log, shape_limits)
-            .map_err(provenance_error("source_domain"))?;
+        source_domain::admit_publication(&cv_log, shape_limits).map_err(|error| {
+            match error {
+                source_domain::AdmissionError::Shape(message) => provenance_error("source_domain")(message),
+                source_domain::AdmissionError::Graph(message) => {
+                    let stage = if config.special_modes.correlation_vector_format == crate::config::CorrelationVectorFormat::None {
+                        "validate"
+                    } else {
+                        "snapshot"
+                    };
+                    provenance_error(stage)(message)
+                }
+            }
+        })?;
         // CLOC11.69 — format selection. `None` short-circuits
         // the whole write step: the CV log is still computed
         // (the rest of the function ran) but nothing hits disk.
