@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source_corpus": "mindmap-11.16.1-corpus.json",
+  "fixtures": [
+    "simple-root",
+    "hierarchy",
+    "shapes",
+    "explicit-identifiers",
+    "decorations",
+    "quoted-labels",
+    "child-after-decoration",
+    "blank-lines-and-comments",
+    "markdown-labels",
+    "front-matter"
+  ]
+}

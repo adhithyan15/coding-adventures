@@ -40,6 +40,10 @@ const MINDMAP_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/mindmap-11.16.1-corpus.json"
 ));
+const MINDMAP_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/mindmap-11.16.1-visual-corpus.json"
+));
 const BLOCK_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/block-11.16.1-corpus.json"
@@ -902,16 +906,45 @@ fn block_full_status_is_backed_by_the_complete_pinned_corpus() {
 }
 
 #[test]
-fn pinned_mindmap_subset_corpus_parses_to_tree_edges() {
+fn pinned_mindmap_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(MINDMAP_CORPUS).expect("mindmap corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+    assert_eq!(corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
         let diagram = parse_mindmap(source)
             .unwrap_or_else(|error| panic!("mindmap fixture {id} failed: {error}"));
         assert_eq!(diagram.edges.len() + 1, diagram.nodes.len());
     }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(parse_mindmap(source).is_err(), "invalid mindmap fixture {id} parsed");
+    }
+}
+
+#[test]
+fn mindmap_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let mindmap = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "mindmap").expect("mindmap family");
+    assert_eq!(mindmap["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(MINDMAP_CORPUS).expect("mindmap corpus JSON");
+    let visual: Value = serde_json::from_str(MINDMAP_VISUAL_CORPUS)
+        .expect("mindmap visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
 }
 const REQUIREMENT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
