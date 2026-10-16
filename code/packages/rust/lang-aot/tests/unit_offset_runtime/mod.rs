@@ -669,3 +669,63 @@ fn cap23_real_return_observer_rejects_invalid_captures_and_cleans_up() {
         assert_eq!(observation.assert_float(24.0),24.0_f64.to_bits());
     }
 }
+
+/// Dedicated24 cases supplement, rather than replace, all prior29 exact programs.
+/// Runtime tuples require real completion, exact effect/output and backend-specific
+/// typed-return/status observations; unavailable backends are never counted.
+#[test]
+fn current_cap24_exact_sources_preserve_stdout_and_completed_exit_contract() {
+    const CASES:&[(usize,&str,&str,Option<i64>)]=&[
+        (1,"begin real procedure pick; begin output('P'); pick := -2.25 end; real saved; saved := entier(sign(pick()) + 24); output(saved) end","P23",None),
+        (2,"begin real procedure pick; begin output('P'); pick := -2.25 end; real saved; saved := entier(sign(pick()) - 24); output(saved) end","P-25",None),
+        (3,"begin real procedure pick; begin output('P'); pick := 0.0 end; real saved; saved := entier(sign(pick()) + 24); output(saved) end","P24",None),
+        (4,"begin real procedure pick; begin output('P'); pick := 0.0 end; real saved; saved := entier(sign(pick()) - 24); output(saved) end","P-24",None),
+        (5,"begin real procedure pick; begin output('P'); pick := 3.5 end; real saved; saved := entier(sign(pick()) + 24); output(saved) end","P25",None),
+        (6,"begin real procedure pick; begin output('P'); pick := 3.5 end; real saved; saved := entier(sign(pick()) - 24); output(saved) end","P-23",None),
+        (7,"begin boolean procedure choose; begin output('C'); choose := true end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 24) else ((entier(sign(rightvalue())) + 12) + 12))); output(saved) end","CL23",None),
+        (8,"begin boolean procedure choose; begin output('C'); choose := false end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 24) else ((entier(sign(rightvalue())) + 12) + 12))); output(saved) end","CR25",None),
+        (9,"begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 24)) else relay(entier(entier(sign(right)) + 24)); output(result) end","25",Some(25)),
+        (10,"begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 23 + 1)) else relay(entier(entier(sign(right)) + 1 + 23)); output(result) end","25",Some(25)),
+        (11,"begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 24); output(result) end","23",Some(23)),
+        (12,"begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 23 + 1); output(result) end","23",Some(23)),
+        (13,"begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 23) + 1); output(result) end","23",Some(23)),
+        (14,"begin real procedure pick; pick := -2.25; real result; result := entier(abs((sign(pick()) + 12) + 12)); output(result) end","23",Some(23)),
+        (15,"begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 24) else ((entier(sign(right)) + 12) + 12))); output(result) end","25",Some(25)),
+    ];
+    for &(case,source,expected,real_return) in CASES {
+        let program=Prog{lang:Language::Algol60,ext:"alg",src:source,expect:Expect::Stdout(expected),backends:&[NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit]};
+        let mut completed=0;
+        for backend in [NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit] {
+            let available=toolchain_available(backend);
+            let observation=real_return.filter(|_|matches!(backend,Vm|Jit))
+                .map(|_|return_observer::Observation::arm(source,backend,case));
+            let Some(result)=run(backend,&program) else {assert!(!available,"{backend:?} present but cap24 case={case} did not execute");continue;};
+            let (actual_code,typed_bits)=match &result {
+                RunResult::Completed{code,stdout}=>{
+                    let expected_code=match (real_return,backend) {
+                        (Some(_),Vm|Jit)=>None,
+                        (Some(value),Wasm|Clr)=>Some((value as i32)&0xff),
+                        _=>Some(0),
+                    };
+                    assert_eq!(*code,expected_code,"cap24 case={case} {backend:?}: {stdout:?}");
+                    assert_eq!(stdout.trim(),expected,"cap24 case={case} {backend:?}");
+                    let bits=observation.as_ref().map(|guard|guard.assert_float(real_return.expect("real guard") as f64));
+                    (*code,bits)
+                },
+                RunResult::Trapped=>panic!("cap24 case={case} {backend:?} trapped")
+            };
+            assert_cell(backend,&program,result);completed+=1;
+            eprintln!("cap24-runtime EXECUTED case={case} backend={backend:?} expected={expected} code={actual_code:?} typed_bits={typed_bits:?}");
+        }
+        assert!(completed>0,"cap24 case={case} needs actual backend execution");
+    }
+}
+
+// No backend tuple is invented for this unsupported25-unit output boundary.
+#[test]
+fn current_cap24_unsupported25_remains_a_compile_refusal() {
+    let source = "begin real procedure pick; begin output('P'); pick := -2.25 end; real saved; saved := entier(sign(pick()) + 25); output(saved) end";
+    let error = lang_aot::compile_source_to_iir(Language::Algol60, source, "native24_refusal").expect_err("unsupported25 is a compile refusal");
+    assert!(format!("{error:?}").contains("cannot print a real value"), "{source}: {error:?}");
+    eprintln!("cap24-runtime COMPILE_REFUSED units=25");
+}
