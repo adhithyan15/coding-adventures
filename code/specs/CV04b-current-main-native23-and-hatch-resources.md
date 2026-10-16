@@ -121,6 +121,23 @@ past exact counted capacity. Allocation failures map to the own error.
 
 ## Tests, delivery and acceptance
 
+The actual5031 full library run is917P/24F/0I/Cargo101, not acceptance. Independent
+inventory-v2 (SHA1cfffa01, report186c6af9) expands all347 case occurrences in those
+24 failed functions:126 pure budget22 cases and221 safety cases, including48
+shadowed-builtin expansions. Materialize complete static source tuples from that
+inventory rather than broadly replacing digits inside mixed templates. Retain
+every old test function and its original error-oracle strength. Each negative
+function may enumerate the same complete expanded cases: only the126 numeric
+sources become its independently specified cap24 counterparts, while all221
+safety sources stay byte-exact. Add each126 exact original full source as a
+typed-real positive in its original module, asserting one real formatter and
+zero integer formatters. Preserve duplicate occurrences and all true/false and
+left/right configurations; do not silently deduplicate or drop shadow cases.
+Whole-file inverses must prove every other function/resource assertion and the
+entire production prefix unchanged. Actual per-case markers after assertions
+must account for347 refusals and126 admissions. These are compiler/IR checks,
+not native numeric/effect execution or full-suite acceptance by themselves.
+
 Commit tests before implementation; capture real compiled semantic red/green.
 Run the actual incoming liveness case in an isolated bounded harness, not an
 endless test thread. Cover ordinary independent exact endpoints/complete Paint
