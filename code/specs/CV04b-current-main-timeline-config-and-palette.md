@@ -229,3 +229,14 @@ Earlier c601 contract remains in force for source authority, spine, linear work,
 independent palette-vector lengths, complete Scene/query tests and retained
 source bodies. Commit this extension before source integration/tests/repair.
 Miri DEFERRED/PENDING; native7a receipts never certify the incoming timeline.
+
+
+The first full parser run1cdb passed550 tests and failed only a new title-decoy
+fixture whose expected semantic title incorrectly retained #badbad. Current
+TITLE_STATEMENT excludes# even inside apparent JSON quotes; comments own that
+suffix. Preserve its complete original source and every configuration assertion;
+correct only the expected title to the independently declared prefix before#.
+Add a second hash-free color-name title decoy proving the entire semantic title
+remains data. No lexer/grammar/preprocessor change, source deletion or fallback
+weakening is permitted. The first green receipt remains unaccepted; strict did
+not run. This explicit fixture correction precedes its implementation.
