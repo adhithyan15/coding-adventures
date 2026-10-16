@@ -369,3 +369,40 @@ isolated same-font single-label positive and existing1/16/22/32/65536 positives.
 The original scalar model incorrectly assumed height360 and is withdrawn; retain
 it separately from corrected height400 evidence. No new outward-rounding target
 algorithm or narrower font/depth domain is part of this repair.
+
+
+## Complete ordinary HandDrawn transport fixture contract
+
+Keep every old Classic full-source/IR/layout/scene/query assertion. The incoming
+collision rule changes only six declared nested-three Y literals: B center107,
+rect93,glyph107.8; C center75,rect61,glyph75.8. The unchanged root bottom/upper
+neighbor tops prove the two4px gaps directly; paths, anchors, labels, widths,
+source parents/depth, arrowheads and all assertions remain byte-for-byte. Save
+full pre/post bodies and an exact inverse before migrating the literals.
+
+Add separate complete HandDrawn source fixtures for the declared ordinary single
+and nested-three coordinates, seeds0,17,-7, both source configuration forms and
+Georgia/CourierNew families. A bounded test-only legacy seeded-path/clip reference
+uses only declared coordinates and the incoming pre-repair formulas, never any
+returned layout/production hatch function. Keep its original one-pass offset
+arithmetic with a hard ordinary-fixture bound; it is a compatibility oracle, not
+a production admission implementation. Its entire expected layout includes all
+ordered points, arrowheads, final-position outlines and every hatch endpoint.
+The existing analytic rectangle-clipping oracle remains the independent numeric
+check on that reference. Compare entire PaintScene values: filled2.5px hatch
+strokes precede transparent closed outlines, complete arrows/spine/labels,
+metadata and ordered cached font queries; no token/presence-only substitute.
+Every complete fixture must print a unique marker only after all assertions.
+
+Actual30a2 geometry validation is81P0F0I/zero filters across15 executable
+harnesses plus an empty doc harness, strict0. It includes the original liveness
+route and both priority/actualPaintRect regressions. This is package-scoped
+execution; independent successor source/terminal review and complete painter/
+downstream/current-main acceptance are still pending. The earlier height400
+witness now has actual Rust confirmation at2f4: centered4 vs painted
+3.999999999999993; preserved Cargo101/2P1F is its expected-red receipt.
+
+Fresh150842Z mainac29 also contains new ALGOL24-unit bounds and timeline theme
+colors after94df. Those incoming changes are not integrated or accepted here;
+re-audit their complete source/fixtures and reconcile before publication. Local
+Miri remains DEFERRED/PENDING, never passed.
