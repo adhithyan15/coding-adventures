@@ -65,6 +65,18 @@ lineage for synthetic/composite nodes remain separate unfinished work.
 ## Exact evidence and legacy test migration
 
 Commit compiled CLI tests first and retain genuine semantic red execution on D1.
+Private unit tests must separately prove the ownership/refusal boundary: assert
+the Tokens vector pointer and every moved ID string-buffer pointer are retained,
+all non-cv Token fields match, and length/pre-stamped invariant failures leave
+the caller's borrowed Tokens unchanged. Exercise missing trusted capture and
+ordinary lexical-error capture as distinct refusals. They must never enter the
+legacy source-tokenizing route. Preserve a public Some(cv) facade call with
+arbitrary detached IDs as an explicit legacy-compatibility control; it still
+tokenizes its source and cannot claim consumed-root certification. CLI graph
+and output equality alone cannot detect ID cloning or cover private invalid
+states. Boundary tests may be committed after the compiled CLI red but before
+their production helper exists; compile-failure is not semantic red evidence.
+
 Start at each replacement's own constant-fold contribution, find its complete
 parent vector, traverse ancestry with missing-parent/cycle rejection, and compare
 the reachable physical IDs to exact D1 piece IDs selected by independently
