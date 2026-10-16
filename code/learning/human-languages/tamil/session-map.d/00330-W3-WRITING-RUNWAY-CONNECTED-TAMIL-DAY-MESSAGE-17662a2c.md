@@ -1,0 +1,1 @@
+| W3 | writing-runway | connected Tamil day message | eight-box plan → one untimed model-free 70–90-word message for Meena; taught links, contrast, question, and Tamil-script review; no A2-readiness claim |
