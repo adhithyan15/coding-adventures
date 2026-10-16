@@ -176,16 +176,20 @@ fn native18_complete_serialized_modules_preserve_lineage_except_authored_offset_
             }
         }
     }
+    // The former control is deliberately refused: literal assignments do not
+    // establish the retained runtime-real root proof, even at offset16.
+    let literal_root_control = "begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; real left, right, saved; left := -2.25; right := 3.5; saved := relay(entier(if choose() then (entier(sign(left)) + 16) else (entier(sign(right)) + 16))); output(saved) end";
+    assert!(matches!(compile_source(literal_root_control,"native18_lineage"),Err(CompileError::Type(m)) if m.contains("cannot print a real value")),"literal-root offset16 remains refused");
     for amount in [17_i64,18] {
-        for (template,leaves) in [
+        for (case,(template,leaves)) in [
             ("saved := entier(sign(pick()) + OFFSET); output(saved)",1),
             ("output(entier(sign(pick()) + OFFSET))",1),
             ("saved := relay(entier(sign(pick()) + OFFSET)); output(saved)",1),
             ("saved := entier(abs(entier(sign(pick()) + OFFSET))); output(saved)",1),
             ("saved := relay(entier(if choose() then (entier(sign(left)) + OFFSET) else (entier(sign(right)) + OFFSET))); output(saved)",2),
-        ] {
-            let source=|offset:&str| format!("begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; real left, right, saved; left := -2.25; right := 3.5; {} end",template.replace("OFFSET",offset));
-            let mut expected=compile_source(&source("16"),"native18_lineage").expect("accepted16 complete control");
+        ].into_iter().enumerate() {
+            let source=|offset:&str| format!("begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, saved; left := leftvalue(); right := rightvalue(); {} end",template.replace("OFFSET",offset));
+            let mut expected=compile_source(&source("16"),"native18_lineage").unwrap_or_else(|e|panic!("accepted16 complete control case={case} {template}: {e}"));
             let mut changed=0;
             for function in &mut expected.functions {for instruction in &mut function.instructions {for operand in &mut instruction.srcs {
                 match operand {
@@ -198,6 +202,7 @@ fn native18_complete_serialized_modules_preserve_lineage_except_authored_offset_
             let actual=compile_source(&source(&amount.to_string()),"native18_lineage").unwrap_or_else(|e|panic!("{amount} {template}: {e}"));
             assert_eq!(interpreter_ir::serialise::serialise(&actual),interpreter_ir::serialise::serialise(&expected),"whole wire module instructions/types {amount} {template}");
             complete_metadata(&actual,&expected);
+            eprintln!("NATIVE18-IIR-COMPLETE offset={amount} case={case} fullwire/metadata/source-map");
         }
     }
 }
