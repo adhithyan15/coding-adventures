@@ -1908,7 +1908,8 @@ pub struct LayoutedIshikawaDiagram { pub width: f64, pub height: f64, pub effect
 
 // STRATEGIC MAP FAMILY
 #[derive(Clone, Debug, PartialEq)]
-pub struct WardleyNode { pub id: String, pub label: String, pub visibility: f64, pub evolution: f64, pub anchor: bool }
+pub struct WardleyNode { pub id: String, pub label: String, pub visibility: f64, pub evolution: f64, pub anchor: bool,
+    pub pipeline_parent: bool }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyLink { pub source: String, pub target: String }
 #[derive(Clone, Debug, PartialEq)]
@@ -1924,6 +1925,8 @@ pub struct WardleyAnnotation { pub number: usize, pub text: String, pub coordina
 pub enum WardleyForceKind { Accelerator, Deaccelerator }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyForce { pub label: String, pub visibility: f64, pub evolution: f64, pub kind: WardleyForceKind }
+#[derive(Clone, Debug, PartialEq)]
+pub struct WardleyPipeline { pub parent_id: String, pub component_ids: Vec<String> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyTheme { pub background_color: String, pub axis_color: String, pub axis_text_color: String,
     pub grid_color: String, pub component_fill: String, pub component_stroke: String,
@@ -1942,9 +1945,11 @@ impl Default for WardleyConfig { fn default() -> Self { Self { width: 900.0, hei
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyDiagram { pub title: Option<String>, pub config: WardleyConfig, pub stages: Vec<String>,
     pub nodes: Vec<WardleyNode>, pub links: Vec<WardleyLink>, pub evolves: Vec<WardleyEvolution>, pub notes: Vec<WardleyNote>,
-    pub annotations_box: Option<(f64, f64)>, pub annotations: Vec<WardleyAnnotation>, pub forces: Vec<WardleyForce> }
+    pub annotations_box: Option<(f64, f64)>, pub annotations: Vec<WardleyAnnotation>, pub forces: Vec<WardleyForce>,
+    pub pipelines: Vec<WardleyPipeline> }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedWardleyNode { pub id: String, pub label: String, pub position: Point, pub anchor: bool }
+pub struct LayoutedWardleyNode { pub id: String, pub label: String, pub position: Point, pub anchor: bool,
+    pub pipeline_parent: bool }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyLink { pub from: Point, pub to: Point }
 #[derive(Clone, Debug, PartialEq)]
@@ -1956,10 +1961,14 @@ pub struct LayoutedWardleyAnnotation { pub number: usize, pub text: String, pub 
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyForce { pub label: String, pub position: Point, pub kind: WardleyForceKind }
 #[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedWardleyPipeline { pub x: f64, pub y: f64, pub width: f64, pub height: f64,
+    pub component_positions: Vec<Point> }
+#[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub config: WardleyConfig,
     pub stages: Vec<String>, pub nodes: Vec<LayoutedWardleyNode>, pub links: Vec<LayoutedWardleyLink>,
     pub evolves: Vec<LayoutedWardleyEvolution>, pub notes: Vec<LayoutedWardleyNote>,
-    pub annotations_box: Option<Point>, pub annotations: Vec<LayoutedWardleyAnnotation>, pub forces: Vec<LayoutedWardleyForce> }
+    pub annotations_box: Option<Point>, pub annotations: Vec<LayoutedWardleyAnnotation>, pub forces: Vec<LayoutedWardleyForce>,
+    pub pipelines: Vec<LayoutedWardleyPipeline> }
 
 // SENSE-MAKING FAMILY
 #[derive(Clone, Debug, Eq, PartialEq)]

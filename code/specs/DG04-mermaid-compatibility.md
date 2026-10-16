@@ -801,7 +801,10 @@ bold backend-neutral glyph runs. Numbered `annotation` coordinates group by
 number, lower as connected markers, and optionally populate a clamped annotations
 box. Accelerator and deaccelerator statements preserve authored map coordinates
 and lower as labeled right- and left-pointing backend-neutral arrow paths.
-Pipelines,
+Pipeline blocks inherit the parent component's visibility, preserve child evolution
+coordinates, reposition the parent, and lower the bounded pipeline plus dotted
+evolution links and parent square through backend-neutral Paint instructions.
+Advanced flow ports,
 advanced flow ports, decorators, per-node authored label offsets, custom stage boundaries, and
 remaining annotation theme fields and exact rendering remain unsupported at the partial level.
 

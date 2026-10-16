@@ -7,7 +7,7 @@
 //! bounding box of all elements) and passes elements through unchanged.
 
 use std::collections::{HashMap, HashSet};
-use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDebugCell, LayoutedVennDebugCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyForce, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
+use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDebugCell, LayoutedVennDebugCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyForce, LayoutedWardleyLink, LayoutedWardleyNode, LayoutedWardleyPipeline, Point, VennDiagram, WardleyDiagram};
 
 pub const VERSION: &str = "0.2.0";
 
@@ -311,8 +311,22 @@ fn layout_wardley_supported(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram 
     let point = |visibility: f64, evolution: f64| Point {
         x: left + evolution * (width - left - right), y: top + (1.0 - visibility) * (height - top - bottom),
     };
-    let nodes: Vec<_> = diagram.nodes.iter().map(|node| LayoutedWardleyNode { id: node.id.clone(), label: node.label.clone(),
-        position: point(node.visibility, node.evolution), anchor: node.anchor }).collect();
+    let mut nodes: Vec<_> = diagram.nodes.iter().map(|node| LayoutedWardleyNode { id: node.id.clone(), label: node.label.clone(),
+        position: point(node.visibility, node.evolution), anchor: node.anchor, pipeline_parent: node.pipeline_parent }).collect();
+    let node_indices: HashMap<_, _> = nodes.iter().enumerate().map(|(index, node)| (node.id.clone(), index)).collect();
+    let pipelines = diagram.pipelines.iter().filter_map(|pipeline| {
+        let mut component_positions: Vec<_> = pipeline.component_ids.iter().filter_map(|id| {
+            nodes.get(*node_indices.get(id.as_str())?).map(|node| node.position.clone())
+        }).collect();
+        component_positions.sort_by(|left, right| left.x.total_cmp(&right.x));
+        let first = component_positions.first()?; let last = component_positions.last()?;
+        let height = diagram.config.node_radius * 4.0; let y = first.y - height / 2.0;
+        if let Some(parent_index) = node_indices.get(pipeline.parent_id.as_str()) {
+            nodes[*parent_index].position = Point { x: (first.x + last.x) / 2.0,
+                y: y - diagram.config.node_radius * 1.6 / 6.0 };
+        }
+        Some(LayoutedWardleyPipeline { x: first.x - 15.0, y, width: last.x - first.x + 30.0, height, component_positions })
+    }).collect();
     let positions: HashMap<_, _> = diagram.nodes.iter().zip(nodes.iter()).map(|(source, layout)| (source.label.as_str(), layout.position.clone())).collect();
     let links = diagram.links.iter().filter_map(|link| Some(LayoutedWardleyLink {
         from: positions.get(link.source.as_str())?.clone(), to: positions.get(link.target.as_str())?.clone(),
@@ -332,7 +346,7 @@ fn layout_wardley_supported(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram 
         label: force.label.clone(), position: point(force.visibility, force.evolution), kind: force.kind,
     }).collect();
     LayoutedWardleyDiagram { width, height, title: diagram.title.clone(), config: diagram.config.clone(),
-        stages: diagram.stages.clone(), nodes, links, evolves, notes, annotations_box, annotations, forces }
+        stages: diagram.stages.clone(), nodes, links, evolves, notes, annotations_box, annotations, forces, pipelines }
 }
 
 /// Place the four Cynefin quadrants and central confusion domain deterministically.
@@ -675,20 +689,25 @@ mod tests {
     fn wardley_layout_maps_visibility_up_and_evolution_right() {
         let diagram = WardleyDiagram { title: None, config: diagram_ir::WardleyConfig { width: 600.0, height: 400.0,
             padding: 40.0, ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()],
-            nodes: vec![diagram_ir::WardleyNode { id: "a".into(), label: "A".into(), visibility: 0.8, evolution: 0.2, anchor: false },
-                diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false }],
+            nodes: vec![diagram_ir::WardleyNode { id: "a".into(), label: "A".into(), visibility: 0.8, evolution: 0.2, anchor: false, pipeline_parent: true },
+                diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false, pipeline_parent: false },
+                diagram_ir::WardleyNode { id: "c".into(), label: "A1".into(), visibility: 0.8, evolution: 0.1, anchor: false, pipeline_parent: false },
+                diagram_ir::WardleyNode { id: "d".into(), label: "A2".into(), visibility: 0.8, evolution: 0.4, anchor: false, pipeline_parent: false }],
             links: vec![], evolves: vec![], notes: vec![diagram_ir::WardleyNote { text: "Watch".into(), visibility: 0.5, evolution: 0.5 }],
             annotations_box: Some((0.2, 0.8)), annotations: vec![diagram_ir::WardleyAnnotation { number: 1,
                 text: "Risk".into(), coordinates: vec![(0.6, 0.7)] }], forces: vec![diagram_ir::WardleyForce {
-                    label: "Adoption".into(), visibility: 0.4, evolution: 0.25, kind: diagram_ir::WardleyForceKind::Accelerator }] };
+                    label: "Adoption".into(), visibility: 0.4, evolution: 0.25, kind: diagram_ir::WardleyForceKind::Accelerator }],
+            pipelines: vec![diagram_ir::WardleyPipeline { parent_id: "a".into(), component_ids: vec!["c".into(), "d".into()] }] };
         let layout = layout_wardley(&diagram);
         assert!(layout.nodes[0].position.y < layout.nodes[1].position.y);
         assert!(layout.nodes[0].position.x < layout.nodes[1].position.x);
-        assert_eq!(layout.nodes[0].position.x, 144.0);
+        assert_eq!(layout.nodes[0].position.x, 170.0);
         assert_eq!(layout.notes[0].position, Point { x: 300.0, y: 200.0 });
         assert_eq!(layout.annotations[0].positions[0], Point { x: 404.0, y: 168.0 });
         assert_eq!(layout.forces[0].position, Point { x: 170.0, y: 232.0 });
         assert_eq!(layout.forces[0].kind, diagram_ir::WardleyForceKind::Accelerator);
+        assert_eq!((layout.pipelines[0].x, layout.pipelines[0].width), (77.0, 186.0));
+        assert_eq!(layout.pipelines[0].component_positions.len(), 2);
     }
 
 

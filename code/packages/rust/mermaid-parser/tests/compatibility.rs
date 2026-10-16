@@ -430,6 +430,14 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
             assert_eq!((diagram.forces[1].visibility, diagram.forces[1].evolution), (0.15, 0.75));
             assert_eq!(diagram.forces[1].kind, diagram_ir::WardleyForceKind::Deaccelerator);
         }
+        if name == "pipeline" {
+            assert_eq!(diagram.pipelines.len(), 1);
+            assert_eq!(diagram.pipelines[0].component_ids.len(), 4);
+            assert_eq!(diagram.nodes.len(), 5);
+            assert!(diagram.nodes[0].pipeline_parent);
+            assert_eq!((diagram.nodes[1].label.as_str(), diagram.nodes[1].visibility, diagram.nodes[1].evolution),
+                ("File System", 0.40, 0.25));
+        }
     }
 }
 
