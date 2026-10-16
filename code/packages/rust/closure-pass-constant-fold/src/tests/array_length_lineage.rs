@@ -144,8 +144,14 @@ fn declined_lengths_record_no_fictitious_outer_rewrite() {
                 program: &prog, sidecar: &Sidecar::new(), cv: &mut cv,
             }).unwrap();
             assert!(matches!(extract_expr(&out.program), Expression::MemberExpression(_)));
-            assert!(!out.changed);
-            assert!(out.contributions.is_empty());
+            // Computed string access may independently normalize to dot
+            // access. That legitimate rewrite is not an array count fold.
+            assert!(out.contributions.iter().all(|c| !c.meta["before"]
+                .as_str().is_some_and(|s| s.starts_with("array-literal["))));
+            if !computed {
+                assert!(!out.changed);
+                assert!(out.contributions.is_empty());
+            }
             assert!(cv.get(&member).unwrap().contributions.is_empty());
         }
     }
