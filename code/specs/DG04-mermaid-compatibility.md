@@ -349,6 +349,10 @@ semantic configuration and select section, period, label, spine, and outline
 colors during backend-neutral PaintInstruction lowering.
 Non-negative `leftMargin` also survives typed configuration and shifts the
 section, spine, period, and event geometry before PaintScene lowering.
+Authored events now resolve to dedicated cards outside their period cards, with
+direction-aware deterministic placement and dashed, arrow-headed connector paths. Both event
+cards and connectors lower as backend-neutral PaintInstructions using the
+resolved Timeline palette.
 
 ### Mindmap Native Slice
 

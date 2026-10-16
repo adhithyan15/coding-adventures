@@ -2978,6 +2978,21 @@ pub enum LayoutedTemporalItem {
         events: Vec<String>,
         color_index: usize,
     },
+    TimelineEventLink {
+        x1: f64,
+        y1: f64,
+        x2: f64,
+        y2: f64,
+        color_index: usize,
+    },
+    TimelineEvent {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        label: String,
+        color_index: usize,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq)]
