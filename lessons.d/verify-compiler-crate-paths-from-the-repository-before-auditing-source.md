@@ -12,3 +12,15 @@ The D2 audit also guessed `tests/cv_fold_lineage.rs`; the actual existing graph
 tests are in `tests/cv_fold_trace.rs`. Run `rg --files` with a filename glob
 first, then open its exact returned path. A familiar test concept is not evidence
 of a filename, and a failed read does not count as auditing those assertions.
+
+
+
+An idle D2 follow-up search repeated this error with the positional path
+
+`code/specs/CLOC27*` on Windows. PowerShell did not expand it and rg returned
+
+os error123 alongside partial matches. Use `rg --files code/specs -g 'CLOC27*'`
+
+to discover exact files, or use `-g` while searching the existing directory.
+
+Treat the failed partial search as incomplete evidence, never a source audit.

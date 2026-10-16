@@ -2626,23 +2626,45 @@ Miri afterward; full objective and heartbeat remain ACTIVE.
 <!-- /CV04b D1 consumed source inventory -->
 
 <!-- CV04b D2 captured ingestion reuse -->
-D1 is actually published at a6047612 in sole PR17288: one normal push0 and
-matching saved REST/Git readback, independent carrier/publisher and saved
-postpublication security PASS. Its strict1,100P/0F/0I across180 targets remains
-attributed to tested source a8d79bab. Current PR is unmerged/conflicting with
-auto-mergeOFF; required CI/main reconciliation/actual merge remain gates.
+D2 actually connects the consumed D1 token IDs to existing typed ASI/bridge
 
-Selected bounded D2 specification:
-[captured ingestion leaf reuse](CV04b-D2-captured-ingestion-leaf-reuse.md).
-The actual typed compiler will move precharged ingestion IDs into its captured
-Tokens and use existing ASI/bridge, preserving shared APIs/limits and the legacy
-public source-based transform facade. No implementation or test execution is
-claimed at this specification checkpoint. Existing CLOC27/CLOC31 plumbing is
-real; exact result-to-inventory operand ancestry must replace disconnected
-rootless parser-token assertions. ASI synthetic semicolons retain cv=None and
-do not acquire invented physical inventory rows. Source-domain certification,
-composite/synthetic stable IDs, full transformation lineage, output-byte/source
+and checked fold lineage. Exact source60e58439 passed strict all-target lint and
+
+the complete compiler suite:1,112P/0F/0I across181 metadata-derived targets.
+
+Four private pointer/field/refusal tests, eight D2 CLI tests/ten exact lineage
+
+cells, unchanged-byte/determinism controls and four exact typed-refusal cells
+
+pass; counts are included in the full suite. Original semantic red and two
+
+withheld test-quality findings remain preserved; strengthened final tests were
+
+rerun. Independent source, test-quality and terminal reviews PASS. See the
+
+[full D2 contract and terminal appendix](CV04b-D2-captured-ingestion-leaf-reuse.md).
+
+
+
+Native2868/style872/SwiftUI191 input maps retain prior execution attribution;
+
+Closure3710/raw1499/static22/unchanged lock prove only six private Rust/test paths
+
+changed from D1. No new shared API/dependency/grammar/limit or downstream run.
+
+D1a604 is the actual published predecessor; D2 carrier publication remains to
+
+be verified. Sole PR17288 remains unmerged/conflicting/autoOFF. Main reconciliation,
+
+required exact-head CI and actual merge remain gates. Source-domain certification,
+
+composite/synthetic identities, full transform/pass-sweep lineage, output-byte
+
 joins and Closure parity remain OPEN. Miri **DEFERRED/PENDING**, NEVER passed;
-frozen run/checkout/inputs/target/receipts untouched and unpolled. Full objective
-and heartbeat ACTIVE; implementation/delivery precedes genuine final-source Miri.
+
+frozen checkout/run/inputs/target/receipts untouched and unpolled. Implementation/
+
+delivery first, genuine final-source Miri afterward; full goal/heartbeat ACTIVE.
+
+
 <!-- /CV04b D2 captured ingestion reuse -->

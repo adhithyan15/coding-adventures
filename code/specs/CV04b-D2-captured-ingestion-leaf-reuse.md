@@ -1,5 +1,8 @@
 # CV04b D2 — reuse consumed ingestion identities in the typed compiler
 
+The opening state is the pre-test contract. Its terminal appendix below records
+the actual implementation and supersedes earlier pending status.
+
 This specification precedes successor tests and implementation. D1 was actually
 published to sole PR17288 at a6047612; its tested source a8d79bab passed strict
 lint and1,100 unfiltered tests across180 targets. D1 records the actual consumed
@@ -128,3 +131,105 @@ join emitted bytes to source mappings or prove full Closure parity. Stable
 occurrences and complete pass/sweep events remain required. After implementation
 delivery complete genuine final-source Miri, rerunning invalidated receipts.
 Full objective and heartbeat remain ACTIVE until that evidence exists.
+
+## Exact-source terminal verification
+
+Actual traced SIMPLE/ADVANCED compilation now consumes the D1 captured Tokens
+
+and moves their already-precharged ingestion-ID strings into Token.cv before
+
+the existing ASI/bridge. Folds reach the exact physical input pieces and root;
+
+no second parser-token origin set is minted. All non-cv Token fields, ID-buffer
+
+and Tokens-vector identities are preserved. Private length/stamp/compact-ID
+
+refusals precede mutation; missing/lexical capture cannot select legacy relex.
+
+The public source-based transform facade retains detached-ID compatibility.
+
+Shared parser/ASI/bridge APIs, grammar, depth/retry/production limits, dependencies,
+
+passes and stage order are unchanged. Synthetic ASI semicolons keep cv=None;
+
+they acquire no invented physical source pieces.
+
+
+
+Exact source `60e58439764959178584906e4f26b148da96ae8c` passed strict all-target
+
+Clippy and the complete unfiltered standalone compiler suite:1,112P/0F/0I across
+
+181 metadata-derived targets. Four private ownership/refusal tests and eight D2
+
+CLI tests pass; ten lineage cells check exact raw byte/scalar/UTF16 spans, roots,
+
+ordered inventories and operand/merge/intermediate identities, ten baseline
+
+cells preserve trace-off JS/map/manifest bytes and repeated graph/journal bytes,
+
+and four failure cells require normal exit1 and the exact typed Parse cause while
+
+preserving all destinations. Both typed levels, EOF/right-brace/restricted-return
+
+ASI, repeated spelling, nested/string/unary folds, astral/CRLF coordinates and
+
+disjoint identical inputs are covered. Existing eight CLOC31 tests, CLOC27 smoke,
+
+ten D1 inventory tests and all remaining compiler targets pass; focused counts
+
+are included in1,112, not added. Private move tests cover14 language editions.
+
+Independent exact-source, static test-quality and terminal security reviews PASS.
+
+
+
+The original770cabaf compiled semantic red (1P/5F) is retained, with legacy
+
+success/byte/determinism guards and four refusal cells. The8783 test-quality
+
+review withheld inventory-census and error-domain claims; spec/lesson/test
+
+corrections added full legacy/reserved census, ordered ordinals/counts/EOF,
+
+synthetic oracle negatives and exact refusal classification at both levels.
+
+The earlier b802 focus remains historical; final60e was rerun. Helper shell-quote
+
+and old-Python startup failures remain separate; the same source-transfer helper
+
+completed under explicit py -3.13. No production/schema/limit weakening occurred.
+
+
+
+Complete native2868/style872/SwiftUI191 maps remain exact to published D1a604,
+
+retaining prior execution attribution. Closure36/3710 differs in exactly six
+
+Rust paths: two private production files, two new test files and two migrated
+
+legacy tests. Raw Rust/TOML1499,22 unique static native/Closure include paths and
+
+the standalone lock/15 previously accepted registry tuples are verified. No new
+
+native/style/SwiftUI execution or Java-oracle parity is inferred.
+
+
+
+Source-domain import certification, composite/synthetic stable identities, full
+
+fold/rename/inline/motion/merge/delete lineage, complete pass/sweep events,
+
+output-byte/source joins and full Closure parity remain OPEN. Base ESTree
+
+canonical serialized boundary, own types and no new crates.io dependencies
+
+remain owner decisions. Sole PR17288 remains unmerged; current-main conflict
+
+repair, required exact-head hosted checks and actual merge/reachability remain
+
+gates. Miri **DEFERRED/PENDING**, NEVER passed; frozen checkout/run/inputs/target/
+
+receipts untouched and unpolled. Implementation/delivery first, genuine
+
+final-source Miri afterward; full objective and heartbeat remain ACTIVE.

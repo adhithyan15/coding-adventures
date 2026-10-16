@@ -12,3 +12,17 @@ Require affirmative non-withheld review verdicts, exact source attribution,
 complete historical/native object maps and an actual validated emitted plan.
 Recheck the clean exact head and pin the integrated frame to its full SHA.
 No publication or source/test gate was executed through those defects.
+
+
+
+The D2 documentation preparer initially recognized the literal word PASS but
+
+rejected hash-bound reports beginning SECURITY REVIEW PASSED. It stopped before
+
+any source/document mutation. Preserve that startup refusal and helper version;
+
+recognize both exact affirmative forms while retaining full report hash, source
+
+identity, expected review-set and withheld-verdict guards. Do not reinterpret a
+
+rejected helper run as accepted documentation validation.
