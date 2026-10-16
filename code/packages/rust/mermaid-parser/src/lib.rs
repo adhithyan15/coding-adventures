@@ -600,7 +600,7 @@ use diagram_ir::{
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram,
-    WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, WardleyNote, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
+    WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, WardleyNote, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind, TreeViewTheme,
 };
 
@@ -5850,7 +5850,7 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
     let mut diagram = WardleyDiagram { title: None, config,
         stages: vec!["Genesis".into(), "Custom Built".into(), "Product".into(), "Commodity".into()],
-        nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new() };
+        nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new(), annotations_box: None, annotations: Vec::new() };
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
         // Notes own quoted text: comment markers inside the active quote are
@@ -5887,6 +5887,35 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             let target = target.parse::<f64>().map_err(|_| wardley_error(line_number, "invalid evolve target"))?;
             if !(0.0..=1.0).contains(&target) { return Err(wardley_error(line_number, "evolve target must be between 0 and 1")); }
             diagram.evolves.push(WardleyEvolution { component: wardley_name(name), target }); continue;
+        }
+        if let Some(value) = line.strip_prefix("annotations ") {
+            let (visibility, evolution) = parse_wardley_coordinates(value, line_number)?;
+            if !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
+                return Err(wardley_error(line_number, "Wardley annotations box coordinates must be between 0 and 1"));
+            }
+            diagram.annotations_box = Some((visibility, evolution)); continue;
+        }
+        if let Some(value) = line.strip_prefix("annotation ") {
+            let Some((number, remainder)) = value.split_once(',') else { return Err(wardley_error(line_number, "invalid Wardley annotation")); };
+            let number = number.trim().parse::<usize>().map_err(|_| wardley_error(line_number, "invalid Wardley annotation number"))?;
+            let Some(close) = remainder.find(']') else { return Err(wardley_error(line_number, "Wardley annotation requires coordinates")); };
+            let (visibility, evolution) = parse_wardley_coordinates(&remainder[..=close], line_number)?;
+            let authored_text = remainder[close + 1..].trim();
+            if authored_text.len() < 2 || !matches!((authored_text.chars().next(), authored_text.chars().last()),
+                (Some('"'), Some('"')) | (Some('\''), Some('\''))) {
+                return Err(wardley_error(line_number, "Wardley annotation text must be quoted"));
+            }
+            if !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
+                return Err(wardley_error(line_number, "Wardley annotation coordinates must be between 0 and 1"));
+            }
+            if let Some(annotation) = diagram.annotations.iter_mut().find(|annotation| annotation.number == number) {
+                annotation.coordinates.push((visibility, evolution));
+                if annotation.text.is_empty() { annotation.text = wardley_name(authored_text); }
+            } else {
+                diagram.annotations.push(WardleyAnnotation { number, text: wardley_name(authored_text),
+                    coordinates: vec![(visibility, evolution)] });
+            }
+            continue;
         }
         if let Some((source, target)) = line.split_once("->") {
             diagram.links.push(WardleyLink { source: wardley_name(source), target: wardley_name(target) }); continue;

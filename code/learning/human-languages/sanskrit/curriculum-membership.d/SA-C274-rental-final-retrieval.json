@@ -1,0 +1,11 @@
+{
+  "id": "SA-C274-rental-final-retrieval",
+  "pathSegment": "SA-PATH-274-RENTAL274",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-274-RENTAL274",
+      "order": 2
+    }
+  ]
+}

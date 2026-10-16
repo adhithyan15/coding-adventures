@@ -155,7 +155,10 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 1455 -> 1458: chapter 273 teaches one attested reflexive relation as a
     // whole sentence and retrieves it twice. It adds no idiom, sense, or
     // culture claim.
-    lessons: 1458,
+    // 1458 -> 1461: chapter 274 teaches one cross-checked rental exchange as
+    // a whole pair and retrieves it twice. It adds no idiom, sense, or
+    // culture claim.
+    lessons: 1461,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

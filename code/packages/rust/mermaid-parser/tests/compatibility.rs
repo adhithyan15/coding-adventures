@@ -410,6 +410,9 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
             assert_eq!(diagram.notes.len(), 1);
             assert_eq!(diagram.notes[0].text, "Standardising power accelerates evolution");
             assert_eq!((diagram.notes[0].visibility, diagram.notes[0].evolution), (0.30, 0.49));
+            assert_eq!(diagram.annotations_box, Some((0.10, 0.90)));
+            assert_eq!(diagram.annotations.len(), 1);
+            assert_eq!(diagram.annotations[0].coordinates, [(0.60, 0.65), (0.50, 0.50)]);
         }
         if name == "renderer-config" {
             assert_eq!((diagram.config.width, diagram.config.height, diagram.config.padding), (760.0, 480.0, 36.0));
@@ -1447,6 +1450,7 @@ fn wardley_dispatches_to_dedicated_strategic_map_ir() {
     }
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nAPI -> Missing").is_err());
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nnote unquoted [0.4, 0.5]").is_err());
+    assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nannotation one,[0.4, 0.5] \"Bad\"").is_err());
     let sized = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 700, \"height\": 420}}}%%\nwardley-beta\nsize [640, 360]\ncomponent API [0.6, 0.5]").unwrap();
     assert_eq!((sized.config.width, sized.config.height), (640.0, 360.0));
 }
