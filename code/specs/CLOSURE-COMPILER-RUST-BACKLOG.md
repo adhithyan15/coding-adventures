@@ -2950,3 +2950,13 @@ Miri remains required after implementation delivery; heartbeat ACTIVE.
 - Native25 scoped local checkpoint remains recorded above. Frozen Miri run,
   checkout, inputs, target and receipts untouched/unpolled. Final-source Miri
   DEFERRED/PENDING; full objective and heartbeat remain ACTIVE.
+
+### 2026-10-16: CLOC32 array construction hook selected (spec-first)
+
+CLOC31 local checkpoint remains at execution9d1a7b92/docs1dbe72de. Next bounded
+core slice is CLOC32's borrowed array-occurrence observer, preserving the legacy
+bridge API and all non-CV AST fields. This is infrastructure only: actual CLI
+composite IDs, trusted shared-span/node-domain certification and member suffix
+prefix identities remain OPEN. Main76955/PR#17288 conflict reconciliation and
+delivery remain unfinished; auto-merge stays off. Miri DEFERRED/PENDING; frozen
+inputs/receipts/run untouched and unpolled. No new crates.io dependencies.
