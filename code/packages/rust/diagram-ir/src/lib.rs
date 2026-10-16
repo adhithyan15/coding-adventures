@@ -1912,7 +1912,10 @@ pub struct WardleyNode { pub id: String, pub label: String, pub visibility: f64,
     pub pipeline_parent: bool, pub label_offset_x: Option<f64>, pub label_offset_y: Option<f64>,
     pub source_strategy: Option<WardleySourceStrategy>, pub inertia: bool }
 #[derive(Clone, Debug, PartialEq)]
-pub struct WardleyLink { pub source: String, pub target: String }
+pub struct WardleyLink { pub source: String, pub target: String, pub dashed: bool,
+    pub label: Option<String>, pub flow: Option<WardleyLinkFlow> }
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum WardleyLinkFlow { Forward, Backward, Bidirectional }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyEvolution { pub component: String, pub target: f64 }
 #[derive(Clone, Debug, PartialEq)]
@@ -1951,7 +1954,9 @@ pub struct LayoutedWardleyNode { pub id: String, pub label: String, pub position
     pub pipeline_parent: bool, pub label_offset_x: Option<f64>, pub label_offset_y: Option<f64>,
     pub source_strategy: Option<WardleySourceStrategy>, pub inertia: bool }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedWardleyLink { pub from: Point, pub to: Point }
+pub struct LayoutedWardleyLink { pub from: Point, pub to: Point, pub dashed: bool,
+    pub label: Option<String>, pub label_position: Point, pub label_angle: f64,
+    pub flow: Option<WardleyLinkFlow> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyEvolution { pub from: Point, pub to: Point }
 #[derive(Clone, Debug, PartialEq)]

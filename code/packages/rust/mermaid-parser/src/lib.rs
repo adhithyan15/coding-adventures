@@ -600,7 +600,7 @@ use diagram_ir::{
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram,
-    WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyForce, WardleyForceKind, WardleyLink, WardleyNode, WardleyNote, WardleyPipeline, WardleySourceStrategy, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
+    WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyForce, WardleyForceKind, WardleyLink, WardleyLinkFlow, WardleyNode, WardleyNote, WardleyPipeline, WardleySourceStrategy, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind, TreeViewTheme,
 };
 
@@ -5805,9 +5805,7 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             }
             continue;
         }
-        if let Some((source, target)) = line.split_once("->") {
-            diagram.links.push(WardleyLink { source: wardley_name(source), target: wardley_name(target) }); continue;
-        }
+        if let Some(link) = parse_wardley_link(line, line_number)? { diagram.links.push(link); continue; }
         return Err(wardley_error(line_number, format!("unsupported Wardley statement: {line}")));
     }
     let names: HashSet<_> = diagram.nodes.iter().map(|node| node.label.as_str()).collect();
@@ -5819,6 +5817,88 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
     }
     if active_pipeline.is_some() { return Err(wardley_error(prepared.lines().count(), "unterminated Wardley pipeline")); }
     Ok(diagram)
+}
+
+fn parse_wardley_link(value: &str, line: usize) -> Result<Option<WardleyLink>, ParseError> {
+    let Some(operator) = wardley_link_operator(value) else { return Ok(None); };
+    let source = wardley_name(&value[..operator.start]);
+    let (target, annotation) = split_wardley_link_annotation(&value[operator.end..]);
+    if annotation.is_some_and(|label| label.trim().is_empty()) {
+        return Err(wardley_error(line, "Wardley link annotations cannot be empty"));
+    }
+    let (target, target_flow) = wardley_link_target_port(target);
+    let target = wardley_name(target);
+    if source.is_empty() || target.is_empty() {
+        return Err(wardley_error(line, "Wardley links require source and target components"));
+    }
+    let annotation = annotation.map(str::trim).filter(|label| !label.is_empty()).map(str::to_string);
+    Ok(Some(WardleyLink { source, target, dashed: operator.dashed,
+        label: operator.label.or(annotation), flow: operator.flow.or(target_flow) }))
+}
+
+struct WardleyLinkOperator {
+    start: usize, end: usize, dashed: bool, flow: Option<WardleyLinkFlow>, label: Option<String>,
+}
+
+fn wardley_link_operator(value: &str) -> Option<WardleyLinkOperator> {
+    let bytes = value.as_bytes(); let mut index = 0; let mut quote = None;
+    while index < bytes.len() {
+        let byte = bytes[index];
+        if let Some(active) = quote {
+            if byte == active { quote = None; }
+            index += 1; continue;
+        }
+        if matches!(byte, b'\'' | b'"') { quote = Some(byte); index += 1; continue; }
+        if byte == b'+' && bytes.get(index + 1) == Some(&b'\'') {
+            let label_start = index + 2;
+            let label_end = value[label_start..].find('\'').map(|offset| label_start + offset)?;
+            let suffix_start = label_end + 1;
+            let (suffix_length, flow) = if value[suffix_start..].starts_with("<>") {
+                (2, WardleyLinkFlow::Bidirectional)
+            } else if value[suffix_start..].starts_with('<') {
+                (1, WardleyLinkFlow::Backward)
+            } else if value[suffix_start..].starts_with('>') {
+                (1, WardleyLinkFlow::Forward)
+            } else { return None; };
+            return Some(WardleyLinkOperator { start: index, end: suffix_start + suffix_length,
+                dashed: false, flow: Some(flow), label: Some(value[label_start..label_end].to_string()) });
+        }
+        for (operator, dashed, flow) in [
+            ("-.->", true, None), ("-->", false, None), ("->", false, None),
+            ("+<>", false, Some(WardleyLinkFlow::Bidirectional)),
+            ("+>", false, Some(WardleyLinkFlow::Forward)),
+            ("+<", false, Some(WardleyLinkFlow::Backward)),
+        ] {
+            if value[index..].starts_with(operator) {
+                return Some(WardleyLinkOperator { start: index, end: index + operator.len(), dashed, flow, label: None });
+            }
+        }
+        index += 1;
+    }
+    None
+}
+
+fn split_wardley_link_annotation(value: &str) -> (&str, Option<&str>) {
+    let mut quote = None;
+    for (index, byte) in value.bytes().enumerate() {
+        if let Some(active) = quote {
+            if byte == active { quote = None; }
+        } else if matches!(byte, b'\'' | b'"') {
+            quote = Some(byte);
+        } else if byte == b';' {
+            return (&value[..index], Some(&value[index + 1..]));
+        }
+    }
+    (value, None)
+}
+
+fn wardley_link_target_port(value: &str) -> (&str, Option<WardleyLinkFlow>) {
+    let value = value.trim_end();
+    for (port, flow) in [("+<>", WardleyLinkFlow::Bidirectional),
+        ("+>", WardleyLinkFlow::Forward), ("+<", WardleyLinkFlow::Backward)] {
+        if let Some(target) = value.strip_suffix(port) { return (target.trim_end(), Some(flow)); }
+    }
+    (value, None)
 }
 
 fn parse_wardley_config(source: &str) -> WardleyConfig {

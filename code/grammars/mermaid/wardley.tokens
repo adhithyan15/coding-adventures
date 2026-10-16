@@ -11,4 +11,5 @@ PIPELINE_END = /[ \t]*\}[ \t]*/
 EVOLUTION_LINE = /[ \t]*evolution[ \t]+[^\r\n]*/
 ACCELERATOR_LINE = /[ \t]*accelerator[ \t]+[^\r\n]*/
 DEACCELERATOR_LINE = /[ \t]*deaccelerator[ \t]+[^\r\n]*/
+LINK_LINE = /[ \t]*[^\r\n]+(?:-.->|-->|->|\+<>|\+>|\+<|\+'[^']*'(?:<>|<|>))[^\r\n]*/
 STATEMENT_LINE = /[ \t]*[^\r\n%][^\r\n]*/

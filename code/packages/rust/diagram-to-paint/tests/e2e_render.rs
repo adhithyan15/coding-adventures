@@ -4601,7 +4601,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_wardley_to_png() {
-        let diagram = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 760, \"height\": 480, \"padding\": 36, \"nodeRadius\": 9, \"nodeLabelOffset\": 12, \"axisFontSize\": 15, \"labelFontSize\": 13, \"showGrid\": true, \"useMaxWidth\": false}, \"themeVariables\": {\"wardley\": {\"backgroundColor\": \"#f8fafc\", \"axisColor\": \"#123456\", \"axisTextColor\": \"#234567\", \"gridColor\": \"#345678\", \"componentFill\": \"#abcdef\", \"componentStroke\": \"#456789\", \"componentLabelColor\": \"#56789a\", \"linkStroke\": \"#6789ab\", \"evolutionStroke\": \"#dc2626\"}}}}%%\nwardley-beta\ntitle Tea Shop\nevolution Genesis@0.2 / Concept -> Custom@0.4 / Emerging -> Product@0.75 / Converging -> Commodity@1.0 / Accepted\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61] (build)\ncomponent Kettle [0.43, 0.35] (buy) (inertia)\ncomponent Power [0.10, 0.70] label [-55, 12] (market)\npipeline Kettle {\n  component Gas [0.18]\n  component Electric [0.35] label [-25, 10]\n  component Induction [0.55]\n}\nBusiness -> Cup of Tea\nCup of Tea -> Kettle\nKettle -> Power\nevolve Kettle 0.62\nnote \"Standardising power accelerates evolution\" [0.30, 0.49]\nannotations [0.10, 0.90]\nannotation 1,[0.60, 0.65] \"Critical component\"\nannotation 1,[0.50, 0.50] \"Critical component\"\naccelerator \"AI Adoption\" [0.55, 0.25]\ndeaccelerator \"Legacy Constraints\" [0.15, 0.75]").expect("wardley parse failed");
+        let diagram = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 760, \"height\": 480, \"padding\": 36, \"nodeRadius\": 9, \"nodeLabelOffset\": 12, \"axisFontSize\": 15, \"labelFontSize\": 13, \"showGrid\": true, \"useMaxWidth\": false}, \"themeVariables\": {\"wardley\": {\"backgroundColor\": \"#f8fafc\", \"axisColor\": \"#123456\", \"axisTextColor\": \"#234567\", \"gridColor\": \"#345678\", \"componentFill\": \"#abcdef\", \"componentStroke\": \"#456789\", \"componentLabelColor\": \"#56789a\", \"linkStroke\": \"#6789ab\", \"evolutionStroke\": \"#dc2626\"}}}}%%\nwardley-beta\ntitle Tea Shop\nevolution Genesis@0.2 / Concept -> Custom@0.4 / Emerging -> Product@0.75 / Converging -> Commodity@1.0 / Accepted\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61] (build)\ncomponent Kettle [0.43, 0.35] (buy) (inertia)\ncomponent Power [0.10, 0.70] label [-55, 12] (market)\npipeline Kettle {\n  component Gas [0.18]\n  component Electric [0.35] label [-25, 10]\n  component Induction [0.55]\n}\nBusiness +'demand'> Cup of Tea\nCup of Tea -.-> Kettle\nKettle +<> Power\nevolve Kettle 0.62\nnote \"Standardising power accelerates evolution\" [0.30, 0.49]\nannotations [0.10, 0.90]\nannotation 1,[0.60, 0.65] \"Critical component\"\nannotation 1,[0.50, 0.50] \"Critical component\"\naccelerator \"AI Adoption\" [0.55, 0.25]\ndeaccelerator \"Legacy Constraints\" [0.15, 0.75]").expect("wardley parse failed");
         let layout = layout_wardley(&diagram);
         assert_eq!((layout.width, layout.height), (760.0, 480.0));
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
@@ -4626,8 +4626,13 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.customLabelCount")), Some(&"2".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.strategyCount")), Some(&"3".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.inertiaCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.flowLinkCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.dashedLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.labeledLinkCount")), Some(&"1".to_string()));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[6.0, 6.0]))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_wardley_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }

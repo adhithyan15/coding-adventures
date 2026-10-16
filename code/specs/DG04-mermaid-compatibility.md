@@ -803,8 +803,11 @@ Component and pipeline-child `label [x, y]` suffixes preserve signed offsets
 through semantic and layout IR into backend-neutral glyph placement.
 Component source strategies lower build, buy, outsource, and market overlays;
 inertia lowers as a heavy offset indicator while preserving both decorators in IR.
-Advanced flow ports and
-remaining annotation theme fields and exact rendering remain unsupported at the partial level.
+Dependency links preserve solid, alternate, and dashed line forms, semicolon annotations,
+forward, backward, and bidirectional flow ports, and inline flow labels. Layout clips
+links to component boundaries and positions rotated labels before backend-neutral paths,
+arrowheads, and glyph groups are emitted. Remaining annotation theme fields and exact
+rendering remain unsupported at the partial level.
 
 ### Cynefin Native Slice
 
