@@ -285,3 +285,20 @@ fn opposite_signed_zero_branches_preserve_the_choice() {
         }
     }
 }
+
+#[test]
+fn array_length_retains_child_rewrite_and_exact_available_origins() {
+    for level in ["SIMPLE", "ADVANCED"] {
+        for (source, expected) in [
+            ("report([1+2,4].length);\n", vec!["1:9", "1:11", "1:13"]),
+            ("report([1+2,4][\"length\"]);\n", vec!["1:9", "1:11", "1:13", "1:16"]),
+        ] {
+            let (j, emitted, path) = run(source, level);
+            assert_eq!(emitted, "report(2);\n", "{level}: {source}");
+            let outer = fold_id(&j, "2");
+            let inner = fold_id(&j, "3");
+            assert!(ancestry(&j, &outer).contains(&inner), "lost child fold history");
+            assert_operand_spans(&j, &outer, &path, &expected);
+        }
+    }
+}
