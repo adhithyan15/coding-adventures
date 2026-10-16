@@ -3864,6 +3864,9 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
         col: error.token.column,
     })?;
 
+    let config_source = timeline_config_selection_source(source, &tokens)?;
+    let config = parse_timeline_config(&config_source);
+
     let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
@@ -3928,79 +3931,108 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
     Ok((title, TimelineDiagram {
         accessibility_title,
         accessibility_description,
-        config: parse_timeline_config(source),
+        config,
         direction,
         sections,
     }))
 }
 
-fn parse_timeline_config(source: &str) -> TimelineConfig {
-    let defaults = TimelineConfig::default();
-    let front_matter = mermaid_front_matter_section(source, &["config", "timeline"]);
-    let config = mermaid_directive_object(source, "timeline")
-        .or(front_matter.as_deref())
-        .unwrap_or("");
-    let value = |name: &str| {
-        quadrant_directive_value(config, name).or_else(|| {
-            config.lines().find_map(|line| {
-                let (key, value) = line.trim().split_once(':')?;
-                (key.trim() == name)
-                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
-            })
-        })
-    };
-    let boolean = |name: &str, fallback: bool| {
-        value(name)
-            .and_then(|value| match value.to_ascii_lowercase().as_str() {
-                "true" => Some(true),
-                "false" => Some(false),
-                _ => None,
-            })
-            .unwrap_or(fallback)
-    };
-    let padding = value("padding")
-        .and_then(|value| value.parse::<f64>().ok())
-        .filter(|value| value.is_finite() && *value >= 0.0)
-        .unwrap_or(defaults.padding);
-    let left_margin = value("leftMargin")
-        .and_then(|value| value.parse::<f64>().ok())
-        .filter(|value| value.is_finite() && *value >= 0.0)
-        .unwrap_or(defaults.left_margin);
-    TimelineConfig {
-        padding,
-        left_margin,
-        use_max_width: boolean("useMaxWidth", defaults.use_max_width),
-        disable_multicolor: boolean("disableMulticolor", defaults.disable_multicolor),
-        section_colors: parse_timeline_theme_colors(source, "cScale", &defaults.section_colors),
-        section_label_colors: parse_timeline_theme_colors(
-            source,
-            "cScaleLabel",
-            &defaults.section_label_colors,
-        ),
-        section_inverse_colors: parse_timeline_theme_colors(
-            source,
-            "cScaleInv",
-            &defaults.section_inverse_colors,
-        ),
+// Configuration uses semantic ownership before raw envelope selection. The
+// global preprocessor preserves LF positions while blanking directives, so a
+// directive-looking physical line inside an accessibility token is data. Merge
+// ordered token intervals once, then mask whole raw lines in one byte traversal.
+fn timeline_config_selection_source<'a>(
+    source: &'a str, tokens: &[Token],
+) -> Result<std::borrow::Cow<'a, str>, ParseError> {
+    let mut intervals: Vec<(usize, usize)> = Vec::new();
+    for token in tokens.iter().filter(|token| token.type_name.as_deref() == Some("ACC_DESCR_BLOCK")) {
+        let start = token.line;
+        let end = start.checked_add(token.value.bytes().filter(|byte| *byte == b'\n').count())
+            .ok_or_else(|| token_error(token, "timeline accessibility line span overflow"))?;
+        if start == 0 || intervals.last().is_some_and(|(previous, _)| start < *previous) {
+            return Err(token_error(token, "invalid timeline accessibility line order"));
+        }
+        if let Some((_, previous_end)) = intervals.last_mut() {
+            if start <= *previous_end || start.checked_sub(1) == Some(*previous_end) {
+                *previous_end = (*previous_end).max(end);
+                continue;
+            }
+        }
+        intervals.push((start, end));
     }
+    if intervals.is_empty() { return Ok(std::borrow::Cow::Borrowed(source)); }
+    let mut masked = source.as_bytes().to_vec();
+    let (mut line, mut interval_index) = (1usize, 0usize);
+    for byte in &mut masked {
+        while interval_index < intervals.len() && line > intervals[interval_index].1 {
+            interval_index += 1;
+        }
+        if interval_index < intervals.len() && line >= intervals[interval_index].0
+            && !matches!(*byte, b'\r' | b'\n') {
+            *byte = b' ';
+        }
+        if *byte == b'\n' {
+            line = line.checked_add(1).ok_or_else(|| ParseError {
+                message: "timeline physical line overflow".into(), line, col: 1,
+            })?;
+        }
+    }
+    // Whole-line replacement cannot split a UTF-8 scalar. Keep the conversion
+    // fallible nevertheless: an invalid future ownership adapter returns an
+    // error rather than publishing configuration selected from corrupt text.
+    String::from_utf8(masked).map(std::borrow::Cow::Owned).map_err(|_| ParseError {
+        message: "invalid timeline configuration source".into(), line: 1, col: 1,
+    })
 }
 
-fn parse_timeline_theme_colors(source: &str, prefix: &str, defaults: &[String]) -> Vec<String> {
-    let front_matter = mermaid_front_matter_section(source, &["themeVariables"]);
-    let theme = mermaid_directive_object(source, "themeVariables")
-        .or(front_matter.as_deref())
-        .unwrap_or("");
-    defaults.iter().enumerate().map(|(index, fallback)| {
-        let key = format!("{prefix}{index}");
-        let value = quadrant_directive_value(theme, &key).or_else(|| {
-            theme.lines().find_map(|line| {
-                let (name, value) = line.trim().split_once(':')?;
-                (name.trim() == key)
-                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+// The FIRST closed init root owns selection. Absence permits YAML; PRESENT
+// invalid/nonobject/empty values replace that family and use its defaults.
+// Never search a later root or lift nested objects to fill an absent member.
+fn timeline_config_object<'a>(root: Option<&'a str>, name: &str) -> Option<&'a str> {
+    let value = venn_object_member(root?, name)?;
+    let Some(end) = venn_object_end(value) else { return Some(""); };
+    let tail = value[end + 1..].trim_start();
+    Some(if tail.is_empty() || tail.starts_with([',', '}']) { &value[..=end] } else { "" })
+}
+
+fn parse_timeline_config(source: &str) -> TimelineConfig {
+    let defaults = TimelineConfig::default();
+    let root = venn_init_root(source);
+    let config_object = timeline_config_object(root, "timeline");
+    let theme_object = timeline_config_object(root, "themeVariables");
+    let front_matter = venn_front_matter_fields(source, &["config", "timeline"]);
+    let theme_front = venn_front_matter_fields(source, &["themeVariables"]);
+    let field = |object: Option<&str>, front: &Option<String>, name: &str| {
+        if let Some(object) = object {
+            venn_object_member(object, name).map(|value| venn_theme_string(value, true))
+        } else {
+            front.as_deref().unwrap_or("").lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name).then(|| venn_theme_string(value, false))
             })
-        });
+        }
+    };
+    let value = |name: &str| field(config_object, &front_matter, name);
+    let boolean = |name: &str, fallback: bool| value(name)
+        .and_then(|value| match value.to_ascii_lowercase().as_str() {
+            "true" => Some(true), "false" => Some(false), _ => None,
+        }).unwrap_or(fallback);
+    let nonnegative = |name: &str, fallback: f64| value(name)
+        .and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+    let colors = |prefix: &str, defaults: &[String]| defaults.iter().enumerate().map(|(index, fallback)| {
+        let value = field(theme_object, &theme_front, &format!("{prefix}{index}"));
         sanitize_railroad_color(value.as_deref(), fallback)
-    }).collect()
+    }).collect();
+    TimelineConfig {
+        padding: nonnegative("padding", defaults.padding),
+        left_margin: nonnegative("leftMargin", defaults.left_margin),
+        use_max_width: boolean("useMaxWidth", defaults.use_max_width),
+        disable_multicolor: boolean("disableMulticolor", defaults.disable_multicolor),
+        section_colors: colors("cScale", &defaults.section_colors),
+        section_label_colors: colors("cScaleLabel", &defaults.section_label_colors),
+        section_inverse_colors: colors("cScaleInv", &defaults.section_inverse_colors),
+    }
 }
 
 fn parse_mermaid_font_size(value: String) -> Option<f64> {
