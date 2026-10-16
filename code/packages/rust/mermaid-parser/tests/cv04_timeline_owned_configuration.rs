@@ -286,7 +286,7 @@ complete_source_cell!(title_lookalike,
         section_colors: vec!["#dbeafe".into(),"#dcfce7".into(),"#fef3c7".into(),"#fae8ff".into(),"#ffe4e6".into(),"#cffafe".into()],
         section_label_colors: vec!["#0f172a".into(),"#0f172a".into(),"#0f172a".into(),"#0f172a".into(),"#0f172a".into(),"#0f172a".into()],
         section_inverse_colors: vec!["#2563eb".into(),"#16a34a".into(),"#d97706".into(),"#a21caf".into(),"#e11d48".into(),"#0891b2".into()],
-    }, Some("{\"timeline\":{\"padding\":409,\"leftMargin\":409},\"themeVariables\":{\"cScale0\":\"#badbad\"}}".into()), None, TopDown);
+    }, Some("{\"timeline\":{\"padding\":409,\"leftMargin\":409},\"themeVariables\":{\"cScale0\":\"".into()), None, TopDown);
 
 complete_source_cell!(yaml_unknown_parent,
     "---\nconfig:\n  other:\n    timeline:\n      padding: 409\n      leftMargin: 409\nother:\n  themeVariables:\n    cScale0: \"#badbad\"\n---\ntimeline TD\ntitle Roadmap\n2025 : event\n",
@@ -503,4 +503,16 @@ complete_source_cell!(malformed_theme_object_tail,
         section_label_colors: vec!["#0f172a".into(),"#0f172a".into(),"#0f172a".into(),"#0f172a".into(),"#0f172a".into(),"#0f172a".into()],
         section_inverse_colors: vec!["#2563eb".into(),"#16a34a".into(),"#d97706".into(),"#a21caf".into(),"#e11d48".into(),"#0891b2".into()],
     }, Some("Roadmap".into()), None, TopDown);
+
+complete_source_cell!(title_lookalike_without_hash,
+    "timeline TD\ntitle {\"timeline\":{\"padding\":409,\"leftMargin\":409},\"themeVariables\":{\"cScale0\":\"red\"}}\n2025 : event\n",
+    TimelineConfig {
+        padding: 50.0,
+        left_margin: 50.0,
+        use_max_width: false,
+        disable_multicolor: false,
+        section_colors: vec!["#dbeafe".into(),"#dcfce7".into(),"#fef3c7".into(),"#fae8ff".into(),"#ffe4e6".into(),"#cffafe".into()],
+        section_label_colors: vec!["#0f172a".into(),"#0f172a".into(),"#0f172a".into(),"#0f172a".into(),"#0f172a".into(),"#0f172a".into()],
+        section_inverse_colors: vec!["#2563eb".into(),"#16a34a".into(),"#d97706".into(),"#a21caf".into(),"#e11d48".into(),"#0891b2".into()],
+    }, Some("{\"timeline\":{\"padding\":409,\"leftMargin\":409},\"themeVariables\":{\"cScale0\":\"red\"}}".into()), None, TopDown);
 
