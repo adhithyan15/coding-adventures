@@ -2063,7 +2063,7 @@ fn run_compiler_with_limits_and_arrays(
         let source = source_catalog.as_ref().ok_or_else(|| provenance_error("source_replay")("missing source catalog".into()))?
             .admit(&shape, &per_file_cv_ids, &inputs).map_err(provenance_error("source_replay"))?;
         array_ledger.as_ref().ok_or_else(|| provenance_error("array_source")("missing final array ledger".into()))?
-            .validate(&source).map_err(provenance_error("array_source"))?;
+            .validate(&source).map_err(provenance_error("array_source_admission"))?;
         // CLOC11.69 — format selection. `None` short-circuits
         // the whole write step: the CV log is still computed
         // (the rest of the function ran) but nothing hits disk.
