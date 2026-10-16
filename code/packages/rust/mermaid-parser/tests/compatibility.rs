@@ -56,6 +56,10 @@ const KANBAN_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/kanban-11.16.1-corpus.json"
 ));
+const KANBAN_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/kanban-11.16.1-visual-corpus.json"
+));
 const ARCHITECTURE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/architecture-11.16.1-corpus.json"
@@ -769,10 +773,12 @@ fn pinned_architecture_subset_corpus_parses_to_structural_ir() {
 }
 
 #[test]
-fn pinned_kanban_subset_corpus_parses_to_board_ir() {
+fn pinned_kanban_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(KANBAN_CORPUS).expect("kanban corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+    assert_eq!(corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
         let board = parse_kanban(source)
@@ -788,12 +794,10 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.columns[0].cards[0].label.text, "Grammar parser");
             assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
         }
-        if id == "card-icon-decoration" {
-            assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
-        }
-        if id == "class-decorations" {
+        if id == "decorations" {
             assert_eq!(board.columns[0].classes, ["backlog"]);
             assert_eq!(board.columns[0].cards[0].classes, ["urgent", "blocked"]);
+            assert_eq!(board.columns[0].cards[0].icon.as_deref(), Some("heart"));
         }
         if id == "ticket-base-url" {
             assert_eq!(
@@ -805,7 +809,8 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.config.section_width, 300.0);
             assert_eq!(board.config.padding, 32.0);
         }
-        if id == "section-ticket-metadata" {
+        if id == "section-metadata" {
+            assert_eq!(board.columns[0].label.text, "Todo queue");
             assert_eq!(board.columns[0].ticket.as_deref(), Some("KB-7"));
         }
         if id == "shape-delimited-labels" {
@@ -820,9 +825,9 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.columns[0].cards[1].label.text, "Cloud card");
             assert_eq!(board.columns[0].cards[2].label.text, "Burst card");
         }
-        if id == "quoted-labels" {
-            assert_eq!(board.columns[0].label.text, "Todo queue");
-            assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+        if id == "quoted-delimiters" {
+            assert_eq!(board.columns[0].label.text, "String containing []");
+            assert_eq!(board.columns[0].cards[0].label.text, "String containing ()");
         }
         if id == "markdown-labels" {
             let column = &board.columns[0];
@@ -848,6 +853,33 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.columns[0].cards[1].priority.as_deref(), Some("Very Low"));
         }
     }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(parse_kanban(source).is_err(), "invalid kanban fixture {id} parsed");
+    }
+}
+
+#[test]
+fn kanban_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let kanban = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "kanban").expect("kanban family");
+    assert_eq!(kanban["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(KANBAN_CORPUS).expect("kanban corpus JSON");
+    let visual: Value = serde_json::from_str(KANBAN_VISUAL_CORPUS)
+        .expect("kanban visual corpus JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = syntax["valid"].as_array().expect("valid fixtures").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixtures").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert!(!syntax["invalid"].as_array().expect("invalid fixtures").is_empty());
 }
 
 #[test]

@@ -1443,12 +1443,9 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
         })?;
     let mut diagram = BoardDiagram { ticket_base_url, config, ..BoardDiagram::default() };
     let mut ids = HashSet::new();
-    let mut card_indent = None;
     let mut last_card: Option<(usize, usize)> = None;
     for token in lines {
         if token.type_name.as_deref() == Some("ICON_LINE") {
-            let (column_index, card_index) = last_card
-                .ok_or_else(|| token_error(token, "kanban icon must follow a card"))?;
             let value = token.value.trim();
             let icon = value
                 .strip_prefix("::icon(")
@@ -1456,7 +1453,12 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
                 .map(str::trim)
                 .filter(|value| !value.is_empty())
                 .ok_or_else(|| token_error(token, "kanban icon name cannot be empty"))?;
-            diagram.columns[column_index].cards[card_index].icon = Some(icon.to_string());
+            if let Some((column_index, card_index)) = last_card {
+                diagram.columns[column_index].cards[card_index].icon = Some(icon.to_string());
+            } else if diagram.columns.is_empty() {
+                return Err(token_error(token, "kanban icon must follow a column or card"));
+            }
+            // Mermaid accepts section icons but drops them when producing renderer data.
             continue;
         }
         if token.type_name.as_deref() == Some("CLASS_LINE") {
@@ -1491,9 +1493,6 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
             &mut ids,
         );
         if indent == column_indent {
-            if metadata.has_card_only_fields() {
-                return Err(token_error(token, "kanban card metadata requires a card"));
-            }
             diagram.columns.push(BoardColumn {
                 id,
                 label,
@@ -1503,13 +1502,6 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
             });
             last_card = None;
         } else if indent > column_indent {
-            match card_indent {
-                Some(expected) if indent != expected => {
-                    return Err(token_error(token, "nested kanban cards are outside the supported subset"));
-                }
-                None => card_indent = Some(indent),
-                Some(_) => {}
-            }
             let column_index = diagram.columns.len().checked_sub(1)
                 .ok_or_else(|| token_error(token, "kanban card must follow a column"))?;
             let column = diagram.columns.get_mut(column_index)
@@ -1538,12 +1530,6 @@ struct KanbanNodeMetadata {
     assigned: Option<String>,
     priority: Option<String>,
     icon: Option<String>,
-}
-
-impl KanbanNodeMetadata {
-    fn has_card_only_fields(&self) -> bool {
-        self.assigned.is_some() || self.priority.is_some() || self.icon.is_some()
-    }
 }
 
 fn parse_kanban_node_metadata<'a>(
@@ -14841,9 +14827,10 @@ mod tests_dg04 {
     }
 
     #[test]
-    fn kanban_rejects_nested_cards_outside_partial_subset() {
-        let error = parse_kanban("kanban\nTodo\n  task1[Task]\n    nested[Nested]").unwrap_err();
-        assert!(error.message.contains("nested kanban cards"));
+    fn kanban_flattens_deeper_card_indentation_like_mermaid() {
+        let board = parse_kanban("kanban\nTodo\n  task1[Task]\n    nested[Nested]").unwrap();
+        assert_eq!(board.columns[0].cards.len(), 2);
+        assert_eq!(board.columns[0].cards[1].label.text, "Nested");
     }
 
     #[test]

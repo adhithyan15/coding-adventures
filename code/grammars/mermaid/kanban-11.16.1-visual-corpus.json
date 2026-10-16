@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source_corpus": "kanban-11.16.1-corpus.json",
+  "fixtures": [
+    "simple-section",
+    "hierarchy",
+    "deeper-indentation-flattens",
+    "multiple-sections",
+    "explicit-ids",
+    "shape-delimited-labels",
+    "cloud-and-bang-labels",
+    "decorations",
+    "quoted-delimiters",
+    "child-after-decoration",
+    "blank-lines-and-comments",
+    "section-metadata",
+    "inline-card-metadata",
+    "multiline-card-metadata",
+    "ticket-base-url",
+    "layout-config",
+    "markdown-labels",
+    "inline-markdown-labels",
+    "multiline-labels",
+    "priority-markers"
+  ]
+}
