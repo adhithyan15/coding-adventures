@@ -13487,6 +13487,7 @@ emphasized --> direct
     include!("ishikawa_theme_contract.rs");
     include!("ishikawa_default_fallback_contract.rs");
     include!("ishikawa_box_labels_contract.rs");
+    include!("ishikawa_handdrawn_contract.rs");
     include!("wardley_config_scene_contract.rs");
     include!("wardley_theme_notes_scene_contract.rs");
     include!("wardley_annotations_scene_contract.rs");
