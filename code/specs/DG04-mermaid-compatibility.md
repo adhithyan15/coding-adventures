@@ -790,6 +790,8 @@ Every causal bone also carries a tangent-aligned arrowhead through layout IR and
 to a filled backend-neutral Paint path in both classic and hand-drawn modes.
 The effect uses Mermaid's closed fish-head silhouette, sampled from the upstream quadratic
 curve in layout and emitted as a portable filled path rather than a renderer-specific shape.
+Cause labels on each side of the spine resolve deterministic box collisions outward from
+the spine before outlines, hachures, and glyph runs are lowered.
 
 ### Wardley Native Slice
 
