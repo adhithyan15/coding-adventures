@@ -139,6 +139,67 @@ mod tests {
     use super::*;
 
     #[test]
+    fn composite_first_refusal_survives_caught_sentinel_and_blocks_both_methods() {
+        struct Refuse { arrays: usize, members: usize }
+        impl ArrayOccurrenceObserver for Refuse {
+            fn array_constructed(&mut self, _: &GrammarASTNode) -> Result<Option<String>, String> {
+                self.arrays += 1; Err("first-array".into())
+            }
+        }
+        impl CompositeOccurrenceObserver for Refuse {
+            fn member_constructed(&mut self, _: &GrammarASTNode, _: usize, _: bool, _: bool) -> Result<Option<String>, String> {
+                self.members += 1; Err("first-member".into())
+            }
+        }
+        let node = crate::parse_javascript_typed("a.b;", crate::DEFAULT_ES_VERSION).unwrap();
+        fn owner(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+            if node.rule_name == "member_expression" && node.children.len() == 3 { return Some(node); }
+            node.children.iter().find_map(|c| match c {
+                super::super::ASTNodeOrToken::Node(n) => owner(n), _ => None,
+            })
+        }
+        let member = owner(&node).unwrap();
+        for first_array in [false, true] {
+            let mut sink = Refuse { arrays: 0, members: 0 };
+            let mut context = Context::composite(&mut sink);
+            if first_array { assert!(context.array_constructed(&node).is_err()); }
+            else { assert!(context.member_constructed(member, 2, false, false).is_err()); }
+            assert!(context.member_constructed(member, 2, false, false).is_err());
+            assert!(context.array_constructed(&node).is_err());
+            let candidate = super::super::grammar_to_program(&node, crate::DEFAULT_ES_VERSION).unwrap();
+            assert!(matches!(context.finish(Ok(candidate)), Err(ObservedBridgeError::Observer(s))
+                if s == if first_array { "first-array" } else { "first-member" }));
+            assert_eq!((sink.arrays, sink.members), if first_array { (1, 0) } else { (0, 1) });
+        }
+    }
+
+    #[test]
+    fn invalid_composite_endpoint_latches_before_sink_and_suppresses_arrays() {
+        struct Sink(usize);
+        impl ArrayOccurrenceObserver for Sink {
+            fn array_constructed(&mut self, _: &GrammarASTNode) -> Result<Option<String>, String> {
+                self.0 += 1; Ok(None)
+            }
+        }
+        impl CompositeOccurrenceObserver for Sink {
+            fn member_constructed(&mut self, _: &GrammarASTNode, _: usize, _: bool, _: bool) -> Result<Option<String>, String> {
+                self.0 += 1; Ok(None)
+            }
+        }
+        let node = crate::parse_javascript_typed("[];", crate::DEFAULT_ES_VERSION).unwrap();
+        for (computed, expected) in [(true, "member occurrence endpoint is not a direct closing bracket"),
+            (false, "member occurrence endpoint is not a direct property token")] {
+            let mut sink = Sink(0);
+            let mut context = Context::composite(&mut sink);
+            assert!(context.member_constructed(&node, usize::MAX, computed, false).is_err());
+            assert!(context.array_constructed(&node).is_err());
+            let candidate = super::super::grammar_to_program(&node, crate::DEFAULT_ES_VERSION).unwrap();
+            assert!(matches!(context.finish(Ok(candidate)), Err(ObservedBridgeError::Observer(s)) if s == expected));
+            assert_eq!(sink.0, 0);
+        }
+    }
+
+    #[test]
     fn first_refusal_survives_a_caught_converter_sentinel_and_blocks_later_calls() {
         struct Refuse(usize);
         impl ArrayOccurrenceObserver for Refuse {
