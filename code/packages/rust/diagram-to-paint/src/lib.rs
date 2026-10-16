@@ -2218,9 +2218,17 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         }
     }
     for (index, stage) in diagram.stages.iter().enumerate() {
-        let x = left + (right - left) * index as f64 / (diagram.stages.len().saturating_sub(1).max(1)) as f64;
-        if index > 0 { instructions.push(PaintInstruction::Path(line_path(&[Point { x, y: top }, Point { x, y: bottom }], &theme.axis_color, 1.0))); }
-        text_children.push(text_node(stage, (x - 45.0).clamp(2.0, diagram.width - 92.0), bottom + 8.0, 90.0, 24.0,
+        let custom = diagram.stage_boundaries.len() == diagram.stages.len();
+        let start = if custom { if index == 0 { 0.0 } else { diagram.stage_boundaries[index - 1] } }
+            else { index as f64 / diagram.stages.len().max(1) as f64 };
+        let end = if custom { diagram.stage_boundaries[index] }
+            else { (index + 1) as f64 / diagram.stages.len().max(1) as f64 };
+        let start_x = left + (right - left) * start; let stage_width = (right - left) * (end - start);
+        if index > 0 {
+            let mut separator = line_path(&[Point { x: start_x, y: top }, Point { x: start_x, y: bottom }], "rgba(0,0,0,0.8)", 1.0);
+            separator.stroke_dash = Some(vec![5.0, 5.0]); instructions.push(PaintInstruction::Path(separator));
+        }
+        text_children.push(text_node_no_wrap(stage, start_x, bottom + 8.0, stage_width, 24.0,
             font_with_size(&options.label_font, Some(diagram.config.axis_font_size - 2.0)), axis_text_color));
     }
     for pipeline in &diagram.pipelines {
@@ -2333,6 +2341,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("wardley.annotationCount".into(), diagram.annotations.len().to_string());
     metadata.insert("wardley.forceCount".into(), diagram.forces.len().to_string());
     metadata.insert("wardley.pipelineCount".into(), diagram.pipelines.len().to_string());
+    metadata.insert("wardley.stageBoundaryCount".into(), diagram.stage_boundaries.len().to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: theme.background_color.clone(), instructions, id: None, metadata: Some(metadata) }
 }
@@ -11601,7 +11610,7 @@ mod tests {
                 background_color: "#f8fafc".into(), axis_color: "#123456".into(), axis_text_color: "#234567".into(),
                 grid_color: "#345678".into(), component_fill: "#abcdef".into(), component_stroke: "#456789".into(),
                 component_label_color: "#56789a".into(), link_stroke: "#6789ab".into(), evolution_stroke: "#dc2626".into() },
-                ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()],
+                ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.3, 1.0],
             nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true, pipeline_parent: true },
                 diagram_ir::LayoutedWardleyNode { id: "b".into(), label: "Child".into(), position: Point { x: 150.0, y: 120.0 }, anchor: false, pipeline_parent: false }],
             links: vec![], evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }],
@@ -11627,6 +11636,7 @@ mod tests {
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationCount")), Some(&"1".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.forceCount")), Some(&"2".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.pipelineCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.stageBoundaryCount")), Some(&"2".to_string()));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
@@ -11635,6 +11645,8 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Rect(rect) if rect.fill.is_none() && rect.corner_radius == Some(4.0)
                 && rect.stroke.as_deref() == Some("#123456"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 5.0]))));
     }
 
 

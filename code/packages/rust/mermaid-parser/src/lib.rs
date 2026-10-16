@@ -5696,6 +5696,7 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
     let mut diagram = WardleyDiagram { title: None, config,
         stages: vec!["Genesis".into(), "Custom Built".into(), "Product".into(), "Commodity".into()],
+        stage_boundaries: Vec::new(),
         nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new(), annotations_box: None, annotations: Vec::new(), forces: Vec::new(), pipelines: Vec::new() };
     let mut active_pipeline: Option<usize> = None;
     for (index, raw) in prepared.lines().enumerate() {
@@ -5726,9 +5727,13 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             diagram.config.width = width; diagram.config.height = height; continue;
         }
         if let Some(value) = line.strip_prefix("evolution ") {
-            let stages: Vec<_> = value.split("->").map(|stage| stage.trim().split('@').next().unwrap_or("").trim().trim_matches('"').to_string()).collect();
-            if stages.len() < 2 || stages.iter().any(String::is_empty) { return Err(wardley_error(line_number, "evolution requires at least two stages")); }
-            diagram.stages = stages; continue;
+            let parsed: Result<Vec<_>, _> = value.split("->").map(|stage| parse_wardley_stage(stage, line_number)).collect();
+            let parsed = parsed?;
+            if parsed.len() < 2 || parsed.iter().any(|(label, _)| label.is_empty()) {
+                return Err(wardley_error(line_number, "evolution requires at least two stages"));
+            }
+            diagram.stage_boundaries = parsed.iter().filter_map(|(_, boundary)| *boundary).collect();
+            diagram.stages = parsed.into_iter().map(|(label, _)| label).collect(); continue;
         }
         if let Some(value) = line.strip_prefix("anchor ") {
             diagram.nodes.push(parse_wardley_node(value, true, line_number, diagram.nodes.len())?); continue;
@@ -5870,6 +5875,25 @@ fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> R
         return Err(wardley_error(line, "Wardley node names must be non-empty and coordinates between 0 and 1"));
     }
     Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor, pipeline_parent: false })
+}
+
+fn parse_wardley_stage(value: &str, line: usize) -> Result<(String, Option<f64>), ParseError> {
+    let (name, boundary_and_second) = value.trim().split_once('@').map_or((value.trim(), None), |(name, rest)| (name.trim(), Some(rest.trim())));
+    let (boundary, second) = if let Some(rest) = boundary_and_second {
+        let (boundary, second) = rest.split_once('/').map_or((rest, None), |(boundary, second)| (boundary.trim(), Some(second.trim())));
+        let boundary = boundary.parse::<f64>().map_err(|_| wardley_error(line, "invalid Wardley stage boundary"))?;
+        if !(0.0..=1.0).contains(&boundary) { return Err(wardley_error(line, "Wardley stage boundaries must be between 0 and 1")); }
+        (Some(boundary), second)
+    } else {
+        let (first, second) = name.split_once('/').map_or((name, None), |(first, second)| (first.trim(), Some(second.trim())));
+        return Ok((wardley_stage_label(first, second), None));
+    };
+    Ok((wardley_stage_label(name, second), boundary))
+}
+
+fn wardley_stage_label(first: &str, second: Option<&str>) -> String {
+    let first = wardley_name(first);
+    second.map_or(first.clone(), |second| format!("{first} / {}", wardley_name(second)))
 }
 
 fn parse_wardley_pipeline_component(value: &str, visibility: f64, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
