@@ -1939,6 +1939,7 @@ impl Default for WardleyConfig { fn default() -> Self { Self { width: 900.0, hei
     show_grid: false, use_max_width: true, theme: WardleyTheme::default() } } }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyDiagram { pub title: Option<String>, pub config: WardleyConfig, pub stages: Vec<String>,
+    pub stage_boundaries: Vec<f64>,
     pub nodes: Vec<WardleyNode>, pub links: Vec<WardleyLink>, pub evolves: Vec<WardleyEvolution>, pub notes: Vec<WardleyNote>,
     pub annotations_box: Option<(f64, f64)>, pub annotations: Vec<WardleyAnnotation>, pub forces: Vec<WardleyForce>,
     pub pipelines: Vec<WardleyPipeline> }
@@ -1960,7 +1961,7 @@ pub struct LayoutedWardleyPipeline { pub x: f64, pub y: f64, pub width: f64, pub
     pub component_positions: Vec<Point> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub config: WardleyConfig,
-    pub stages: Vec<String>, pub nodes: Vec<LayoutedWardleyNode>, pub links: Vec<LayoutedWardleyLink>,
+    pub stages: Vec<String>, pub stage_boundaries: Vec<f64>, pub nodes: Vec<LayoutedWardleyNode>, pub links: Vec<LayoutedWardleyLink>,
     pub evolves: Vec<LayoutedWardleyEvolution>, pub notes: Vec<LayoutedWardleyNote>,
     pub annotations_box: Option<Point>, pub annotations: Vec<LayoutedWardleyAnnotation>, pub forces: Vec<LayoutedWardleyForce>,
     pub pipelines: Vec<LayoutedWardleyPipeline> }

@@ -797,8 +797,9 @@ and lower as labeled right- and left-pointing backend-neutral arrow paths.
 Pipeline blocks inherit the parent component's visibility, preserve child evolution
 coordinates, reposition the parent, and lower the bounded pipeline plus dotted
 evolution links and parent square through backend-neutral Paint instructions.
-Advanced flow ports,
-advanced flow ports, decorators, per-node authored label offsets, custom stage boundaries, and
+Evolution stages preserve dual labels and optional `@` boundaries; layout uses
+the authored widths for dashed separators and centered stage labels.
+Advanced flow ports, decorators, per-node authored label offsets, and
 remaining annotation theme fields and exact rendering remain unsupported at the partial level.
 
 ### Cynefin Native Slice
