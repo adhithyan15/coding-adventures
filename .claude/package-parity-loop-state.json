@@ -16,12 +16,12 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
+  "active_pr": 17677,
   "last_ci_action": {
-    "observed_at": "2026-10-16T21:50:28.588441+00:00",
-    "pr_number": 17473,
-    "status": "merged",
-    "notes": "Verified external merge of reviewed dea68afaab9db0cbff61c326eef93c4be58ffe69 as c4f9543aac39a3bbb97d70e700d10f2d5dabdf9e on fetched origin/main. All38 checks terminal acceptable (31 success/7 skipped), both required gates pass. No agent manual merge. Saved parallel audit additions preserved. Disk-full snapshot write failure left journal valid; space recovered before atomic state update."
+    "observed_at": "2026-10-16T22:09:49.541013+00:00",
+    "pr_number": 17677,
+    "status": "monitoring",
+    "notes": "Ready-for-review PR opened after final source/coordination security PASS and full local validation. Checks pending: monitor same branch, no second implementation PR or activity-only code changes. Enable auto-merge only when all checks terminal acceptable and conflict-free; never manually merge."
   },
   "last_inventory": {
     "revision": "f3a7eae08279a7bb9dfa5b7650b598016526770b",
@@ -20683,12 +20683,12 @@
     {
       "id": "starlark-compiler-go-opcode-provider-conformance-adoption",
       "title": "Qualify the pure Starlark opcode provider in go",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
       "branch": "codex/parity-go-provider-20261016",
-      "pr_number": null,
+      "pr_number": 17677,
       "delivery_class": "portable",
       "discovered_at": "2026-10-13T00:17:45.692565+00:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -20713,7 +20713,10 @@
         "metadata": "Neutral15tests/359rows;reporter10tests;lessons1209clean;complete materialized Git-visible report equals immutable pinned main including special Twig compiler bucket.0collisions/unknowns;diffcheck clean.",
         "security": "Independent two-tranche source/spec/coordination review;govulncheck no reachable vulnerabilities (informational imported/module advisories remain baseline). No production provider/API/dependency changes.",
         "limits": "Native execution on Windows; three-platform plans and both provider front scripts do not claim macOS/Linux native execution. Initial sparse-input failures resolved by materializing existing tracked metadata/readers/rules, without source fixes."
-      }
+      },
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17677",
+      "opened_at": "2026-10-16T22:09:49.541013+00:00",
+      "security_review": "go-stp01-security-final-source-review.md and go-stp01-security-final-prepush-review.md:PASS, clean2b3bf4cbff58, production source unchanged; final journal publication transition only."
     },
     {
       "id": "starlark-compiler-elixir-opcode-provider-conformance-adoption",
