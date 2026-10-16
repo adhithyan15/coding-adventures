@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 29646,
+    "totalLessons": 29647,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -42,12 +42,12 @@
     "chapterPayoffsNotRepresentative": 0,
     "chapterGateCleanTracks": 23,
     "tracksWithoutWritingStageEvidence": 0,
-    "missingWritingStagePairs": 112,
+    "missingWritingStagePairs": 107,
     "invalidWritingStageEvidence": 0,
     "drivableLessons": 27821,
     "drivablePercent": 94,
-    "chaptersWithoutDrivablePrefix": 194,
-    "chaptersWithoutDrivablePrefixByType": 186,
+    "chaptersWithoutDrivablePrefix": 195,
+    "chaptersWithoutDrivablePrefixByType": 187,
     "chaptersWithoutDrivablePrefixByContent": 8,
     "unexplainedModalityOverrides": 0
   },
@@ -4311,7 +4311,8 @@
           279,
           280,
           281,
-          282
+          282,
+          283
         ],
         "bookChapters": [
           1,
@@ -4595,7 +4596,8 @@
           279,
           280,
           281,
-          282
+          282,
+          283
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -12296,9 +12298,9 @@
       {
         "language": "tamil",
         "status": "version-2",
-        "lessonCount": 1438,
+        "lessonCount": 1439,
         "versions": {
-          "2": 1438
+          "2": 1439
         }
       },
       {
@@ -12596,8 +12598,8 @@
       },
       {
         "language": "tamil",
-        "bookChapters": 282,
-        "declaredChapters": 282,
+        "bookChapters": 283,
+        "declaredChapters": 283,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -12620,8 +12622,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 5870,
-      "declaredChapters": 5870,
+      "bookChapters": 5871,
+      "declaredChapters": 5871,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 0,
@@ -12633,11 +12635,11 @@
     }
   },
   "levels": {
-    "totalLessons": 29646,
+    "totalLessons": 29647,
     "byLevel": {
       "pre-A1": 9460,
       "A1": 18586,
-      "A2": 1516,
+      "A2": 1517,
       "B1": 39,
       "B2": 17,
       "C1": 10,
@@ -12948,11 +12950,11 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 1438,
+        "lessonCount": 1439,
         "byLevel": {
           "pre-A1": 451,
           "A1": 949,
-          "A2": 38,
+          "A2": 39,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -13598,8 +13600,8 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 1438,
-        "measurable": 1434,
+        "lessonCount": 1439,
+        "measurable": 1435,
         "unmeasurable": 4,
         "lessonViolations": 0,
         "chapterViolations": 1
@@ -13833,7 +13835,7 @@
           "language": "tamil",
           "script": "tamil",
           "latinScript": false,
-          "lessonCount": 1438,
+          "lessonCount": 1439,
           "totalGlyphs": 52,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -85459,7 +85461,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "TA-LEX-C04-NAALAI-01",
@@ -85483,7 +85485,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "TA-LEX-C05-PESU-01",
@@ -85495,7 +85497,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "TA-LEX-C05-VAAZH-01",
@@ -85519,7 +85521,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "TA-LEX-C100-FAMILY-01",
@@ -88471,7 +88473,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "TA-LEX-PATHINONDRU-IRUPATHU-01",
@@ -272208,7 +272210,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "TA-ETYMON-KUDUMBAM-01",
@@ -272230,7 +272232,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "TA-ETYMON-MANI-HOMOPHONE-TIME-01",
@@ -272516,7 +272518,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "TA-GRAMMAR-VENDAAM-NEGATION-02",
@@ -279636,6 +279638,17 @@
         "revisits": 3
       },
       {
+        "atom": "TA-LEX-C266-KARANAM266-02",
+        "language": "tamil",
+        "introducedBy": "TA-C266-ventumenre",
+        "introducedAt": 1358,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "TA-LEX-C268-GUNAM268-03",
         "language": "tamil",
         "introducedBy": "TA-C268-punnakai",
@@ -279735,6 +279748,17 @@
         "revisits": 3
       },
       {
+        "atom": "TA-LEX-C277-PORUL277-05",
+        "language": "tamil",
+        "introducedBy": "TA-C277-karuttu",
+        "introducedAt": 1418,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "TA-LEX-C40-DEIXIS-01",
         "language": "tamil",
         "introducedBy": "TA-C40-this",
@@ -279776,7 +279800,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "TA-LEX-C41-ADJ-02",
@@ -281272,7 +281296,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "TA-PRAGMATIC-VANAKKAM-03",
@@ -330195,7 +330219,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "TA-GRAMMAR-C77-SAY-02",
@@ -330256,16 +330280,6 @@
           "R4"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "TA-LEX-C266-KARANAM266-02",
-        "language": "tamil",
-        "introducedBy": "TA-C266-ventumenre",
-        "introducedAt": 1358,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
       },
       {
         "atom": "TA-LEX-C266-KARANAM266-03",
@@ -330748,16 +330762,6 @@
         "revisits": 3
       },
       {
-        "atom": "TA-LEX-C277-PORUL277-05",
-        "language": "tamil",
-        "introducedBy": "TA-C277-karuttu",
-        "introducedAt": 1418,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "TA-LEX-C278-PORUL278-01",
         "language": "tamil",
         "introducedBy": "TA-C278-karumpu",
@@ -330786,6 +330790,16 @@
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "TA-LEX-C280-VELAI280-05",
+        "language": "tamil",
+        "introducedBy": "TA-C280-virar",
+        "introducedAt": 1433,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "TA-LEX-C40-DEIXIS-03",
@@ -330965,7 +330979,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "TA-LEX-C63-MANNERS-01",
@@ -331415,7 +331429,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "TA-LEX-C76-JOIN-02",
@@ -331525,7 +331539,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "TA-LEX-TAYAVUSEYTU-01",
@@ -341617,7 +341631,7 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 1438,
+        "lessonCount": 1439,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
@@ -341656,9 +341670,9 @@
       "neverRevisitedPercent": 0,
       "missedByWindow": {
         "R1": 1554,
-        "R2": 19858,
-        "R3": 16011,
-        "R4": 24399
+        "R2": 19859,
+        "R3": 16012,
+        "R4": 24400
       },
       "forwardReferences": 788
     }
@@ -341850,8 +341864,8 @@
       {
         "language": "tamil",
         "script": "tamil",
-        "lessonCount": 1438,
-        "scriptLessons": 98,
+        "lessonCount": 1439,
+        "scriptLessons": 99,
         "taughtGlyphs": 52,
         "shownGlyphs": 52,
         "neverTaughtGlyphs": 0,
@@ -361129,6 +361143,15 @@
             "stage": "timed-assessment-production",
             "level": "A1",
             "sequence": 16080
+          },
+          {
+            "language": "tamil",
+            "lessonId": "TA-W283-a2-connected-composition",
+            "blockIndex": 1,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A2",
+            "sequence": 16090
           }
         ],
         "validEvidence": [
@@ -361365,6 +361388,15 @@
             "stage": "timed-assessment-production",
             "level": "A1",
             "sequence": 16080
+          },
+          {
+            "language": "tamil",
+            "lessonId": "TA-W283-a2-connected-composition",
+            "blockIndex": 1,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A2",
+            "sequence": 16090
           }
         ],
         "defects": [],
@@ -361424,12 +361456,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B1",
@@ -361448,12 +361479,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B2",
@@ -361472,12 +361502,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C1",
@@ -361496,12 +361525,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C2",
@@ -361520,12 +361548,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           }
         ]
       },
@@ -362711,9 +362738,9 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 930,
+      "evidenceBlocks": 931,
       "invalidEvidenceBlocks": 0,
-      "missingTrackLevelStages": 112
+      "missingTrackLevelStages": 107
     }
   },
   "gentleRamp": {
@@ -363974,8 +364001,8 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 1438,
-        "atomMeasurableLessons": 1434,
+        "lessonCount": 1439,
+        "atomMeasurableLessons": 1435,
         "atomMeasurementBlindLessons": 4,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -363992,15 +364019,15 @@
         "forwardReferences": 0,
         "atomsTaught": 1463,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 3178,
+        "reinforcementWindowMisses": 3181,
         "reinforcementMissesByWindow": {
           "R1": 115,
-          "R2": 885,
-          "R3": 896,
-          "R4": 1282
+          "R2": 886,
+          "R3": 897,
+          "R4": 1283
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 140,
+        "writingPracticeLessons": 141,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -364014,7 +364041,7 @@
           {
             "language": "tamil",
             "kind": "reinforcement",
-            "count": 3178,
+            "count": 3181,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -364408,7 +364435,7 @@
       {
         "language": "tamil",
         "kind": "reinforcement",
-        "count": 3178,
+        "count": 3181,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -365102,13 +365129,23 @@
       {
         "language": "tamil",
         "touches": "A2",
-        "attained": "A1",
-        "inProgressAt": "A2",
+        "attained": "A2",
+        "inProgressAt": "B1",
         "blockers": [
           {
-            "criterion": "writing-stage",
-            "detail": "1 cumulative writing stage(s) unproved at A2: connected-composition",
-            "shortfall": 1
+            "criterion": "spine-nodes",
+            "detail": "5 of 5 B1 spine node(s) unrealized: SPINE-NARRATE-EVENTS, SPINE-GIVE-REASONS, SPINE-HANDLE-TRAVEL, SPINE-DESCRIBE-EXPERIENCE…",
+            "shortfall": 5
+          },
+          {
+            "criterion": "vocabulary",
+            "detail": "teaches 1234 distinct headwords at or below B1, against 2500",
+            "shortfall": 1266
+          },
+          {
+            "criterion": "verb-vocabulary",
+            "detail": "teaches 220 distinct verb headwords at or below B1, against 250",
+            "shortfall": 30
           }
         ],
         "vocabulary": 1234
@@ -365153,12 +365190,12 @@
       }
     ],
     "summary": {
-      "tracksOverstating": 12,
+      "tracksOverstating": 11,
       "tracksWithAnyLevel": 22,
       "attainedByLevel": {
         "pre-A1": 5,
-        "A1": 5,
-        "A2": 12,
+        "A1": 4,
+        "A2": 13,
         "B1": 0,
         "B2": 0,
         "C1": 0,
@@ -365168,12 +365205,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 29646,
+    "totalLessons": 29647,
     "voice": 27251,
     "sight": 898,
-    "pen": 1497,
+    "pen": 1498,
     "coreVoice": 27821,
-    "lessonsWithWritingSegments": 962,
+    "lessonsWithWritingSegments": 963,
     "drivablePercent": 94,
     "tracks": [
       {
@@ -441423,10 +441460,10 @@
       },
       {
         "language": "tamil",
-        "lessonCount": 1438,
+        "lessonCount": 1439,
         "voice": 1284,
         "sight": 49,
-        "pen": 105,
+        "pen": 106,
         "coreVoice": 1320,
         "drivablePercent": 92,
         "drivablePrefixTotal": 1241,
@@ -445756,6 +445793,22 @@
             ],
             "drivablePrefix": 0,
             "firstNonVoiceLesson": "TA-W282-a1-timed-production",
+            "unstartable": "lesson-type"
+          },
+          {
+            "language": "tamil",
+            "chapter": 283,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "TA-W283-a2-connected-composition",
             "unstartable": "lesson-type"
           }
         ]
@@ -455028,13 +455081,13 @@
   },
   "rootLedger": {
     "roots": 21731,
-    "underspent": 20648,
+    "underspent": 20646,
     "neverSpent": 16443,
     "payoffDistribution": {
       "0": 16443,
       "1": 3058,
-      "2": 1147,
-      "3": 518,
+      "2": 1145,
+      "3": 520,
       "4": 253,
       "5": 123,
       "6": 63,
@@ -455065,7 +455118,7 @@
     "underspentPercent": 95
   },
   "infoDump": {
-    "lessons": 29646,
+    "lessons": 29647,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -455073,11 +455126,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 29646,
-    "measuredLessons": 25254,
-    "idiomMeasuredLessons": 25254,
-    "senseMeasuredLessons": 25255,
-    "cultureClaimMeasuredLessons": 25254,
+    "lessons": 29647,
+    "measuredLessons": 25255,
+    "idiomMeasuredLessons": 25255,
+    "senseMeasuredLessons": 25256,
+    "cultureClaimMeasuredLessons": 25255,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -455086,10 +455139,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 29254,
-    "usesBeforeIntroduction": 55699,
-    "technicalUsesBeforeIntroduction": 9660,
-    "technicalLessons": 6475,
+    "lessonsUsingTerms": 29255,
+    "usesBeforeIntroduction": 55703,
+    "technicalUsesBeforeIntroduction": 9661,
+    "technicalLessons": 6476,
     "worstTerms": [
       {
         "term": "verb",
@@ -455118,12 +455171,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 29646,
+    "lessonsScanned": 29647,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 5939,
+    "filesScanned": 5940,
     "mainCharacters": 154,
     "scriptCharacters": 829,
     "gaps": 0
