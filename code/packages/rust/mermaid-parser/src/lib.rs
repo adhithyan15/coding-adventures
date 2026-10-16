@@ -3962,8 +3962,13 @@ fn parse_timeline_config(source: &str) -> TimelineConfig {
         .and_then(|value| value.parse::<f64>().ok())
         .filter(|value| value.is_finite() && *value >= 0.0)
         .unwrap_or(defaults.padding);
+    let left_margin = value("leftMargin")
+        .and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .unwrap_or(defaults.left_margin);
     TimelineConfig {
         padding,
+        left_margin,
         use_max_width: boolean("useMaxWidth", defaults.use_max_width),
         disable_multicolor: boolean("disableMulticolor", defaults.disable_multicolor),
         section_colors: parse_timeline_theme_colors(source, "cScale", &defaults.section_colors),
@@ -15603,11 +15608,12 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn timeline_preserves_render_configuration_from_init_and_front_matter() {
         let (_, init) = parse_timeline(
-            "%%{init: {\"timeline\": {\"padding\": 72, \"useMaxWidth\": true, \"disableMulticolor\": true}, \"themeVariables\": {\"cScale0\": \"#112233\", \"cScaleLabel0\": \"#fefefe\", \"cScaleInv0\": \"#445566\"}}}%%\n\
+            "%%{init: {\"timeline\": {\"padding\": 72, \"leftMargin\": 80, \"useMaxWidth\": true, \"disableMulticolor\": true}, \"themeVariables\": {\"cScale0\": \"#112233\", \"cScaleLabel0\": \"#fefefe\", \"cScaleInv0\": \"#445566\"}}}%%\n\
              timeline\n2025 : Public beta\n2026 : General availability\n",
         )
         .unwrap();
         assert_eq!(init.config.padding, 72.0);
+        assert_eq!(init.config.left_margin, 80.0);
         assert!(init.config.use_max_width);
         assert!(init.config.disable_multicolor);
         assert_eq!(init.config.section_colors[0], "#112233");
@@ -15615,10 +15621,11 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(init.config.section_inverse_colors[0], "#445566");
 
         let (_, front_matter) = parse_timeline(
-            "---\nconfig:\n  timeline:\n    padding: 24\n    useMaxWidth: true\n    disableMulticolor: true\n---\ntimeline\n2025\n",
+            "---\nconfig:\n  timeline:\n    padding: 24\n    leftMargin: 36\n    useMaxWidth: true\n    disableMulticolor: true\n---\ntimeline\n2025\n",
         )
         .unwrap();
         assert_eq!(front_matter.config.padding, 24.0);
+        assert_eq!(front_matter.config.left_margin, 36.0);
         assert!(front_matter.config.use_max_width);
         assert!(front_matter.config.disable_multicolor);
     }

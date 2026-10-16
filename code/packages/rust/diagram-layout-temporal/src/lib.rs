@@ -61,6 +61,7 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
     let mut items = Vec::new();
     let width = cw.max(560.0);
     let padding = diagram.config.padding;
+    let origin_x = padding + diagram.config.left_margin;
     let mut y = padding;
     if let Some(label) = title {
         items.push(LayoutedTemporalItem::TemporalTitle {
@@ -71,14 +72,14 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
 
     match diagram.direction {
         TimelineDirection::TopDown => {
-            let spine_x = padding + 156.0;
+            let spine_x = origin_x + 106.0;
             let start_y = y;
             let mut color_index = 0usize;
             let without_sections = diagram.sections.iter().all(|section| section.label.is_none());
             for section in &diagram.sections {
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
-                        x: padding, y, width: 136.0, height: 30.0, label: label.clone(),
+                        x: origin_x, y, width: 136.0, height: 30.0, label: label.clone(),
                         color_index,
                     });
                     y += 38.0;
@@ -111,13 +112,13 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
             for section in &diagram.sections {
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
-                        x: padding, y, width: 136.0, height: 30.0, label: label.clone(),
+                        x: origin_x, y, width: 136.0, height: 30.0, label: label.clone(),
                         color_index,
                     });
                 }
                 let card_y = y + 44.0;
                 let spine_y = card_y + 12.0;
-                let start_x = padding + 156.0;
+                let start_x = origin_x + 106.0;
                 let mut row_height: f64 = 48.0;
                 let without_sections = diagram.sections.iter().all(|section| section.label.is_none());
                 for (index, period) in section.periods.iter().enumerate() {
@@ -2457,6 +2458,7 @@ mod tests {
                 accessibility_description: None,
                 config: diagram_ir::TimelineConfig {
                     padding: 72.0,
+                    left_margin: 50.0,
                     use_max_width: true,
                     disable_multicolor: true,
                     ..Default::default()
