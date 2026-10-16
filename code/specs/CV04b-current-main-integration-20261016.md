@@ -141,6 +141,23 @@ physical lines. Authored single-line values resembling internal placeholders
 remain literal text. Small supported Ishikawa fonts need positive floors on both
 inner text width and height, independently of the outline's scaled box.
 
+The complete core run at7c2e3af2 records1513P22F:21 lower-offset test functions
+still contain superseded quantitative19 refusals, plus one legacy bare-bracket
+node-label regression. The independent per-function inventory identifies92
+scalar occurrences and20 generated conditional cells; preserve every former
+full source string (including pick:=3.5 and unused declarations), add typed-real
+positive companions, and change only those exact numerical cases to22. Keep
+all mixed structural/fractional/effect/rounding/resource entries byte-exact.
+Preserve the existing useful -2.25/relay coverage, and separately add the eight
+original eighteenth-module pick:=3.5 contexts. Inverse-proof whole changed test
+files against the declared edits; no production proof widening is authorized.
+
+Finish quote-owned outside-comment handling before node/link/flow decoding;
+percent pairs inside quotes are authored data. Preserve legacy bare bracket
+labels while recognizing incoming coordinate/label-offset suffix ownership.
+Derived link-label validation must check the actual rotation translation and
+label-width/box arithmetic, including finite-but-overflowing forged pivots/fonts.
+
 The15-input read-only node-occurrence audit preserves real CLOC27/D1-D2 leaf
 reuse and folding; bridge prose saying every cv is None is stale. Composite/
 synthetic identities, full fold/rename/inline/motion/merge/delete and pass/sweep
