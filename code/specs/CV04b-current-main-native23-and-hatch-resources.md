@@ -344,3 +344,28 @@ source/terminal review92653b32 PASS binds7939 immutable inputs/locks and actual
 artifact/child evidence. The observed kill/reap path succeeded; harden rare
 query/kill-error unwinding with owned-child cleanup before delivery. Production
 still unchanged and repair not implemented.
+
+
+## Checked implementation precision and allocation corrections
+
+The initial checked implementation9ff passed49 library/2 liveness tests, but
+strict rejected constant chunks_exact(2); fixed-array pair iteration preserves
+clipping semantics. Public numeric-before-allocation regressiona985 is compiled
+red0P1F: zero-cause HandDrawn/E/canvas2e15 under allocation seam0 returns Allocation
+before the invalid final grid's DerivedGeometry. Use an allocation-free cloned
+outline iterator; all numeric/grid and aggregate line/work preflight precede
+new plan/scratch/output reservation, including the public zero-bone route.
+
+Collision certificates must enclose BOTH centered center+half and actual Paint
+rectangle (center-half)+size extents, whose rounding can differ. Use the larger
+represented right/bottom and retain original incoming target arithmetic. Return
+DerivedGeometry when that candidate cannot certify actual4px separation; do not
+silently change the scalar font, source depth or requested look. The corrected
+full-geometry source witness is canvas576, rootA and same-parent depth2 children
+B/C, font1.027027027027027: height400/spine200, centered child gap4 but actual
+rectangle gap3.999999999999993. This is still source-model evidence until compiled
+Rust confirmation. Test that exact case as explicit geometry refusal plus an
+isolated same-font single-label positive and existing1/16/22/32/65536 positives.
+The original scalar model incorrectly assumed height360 and is withdrawn; retain
+it separately from corrected height400 evidence. No new outward-rounding target
+algorithm or narrower font/depth domain is part of this repair.
