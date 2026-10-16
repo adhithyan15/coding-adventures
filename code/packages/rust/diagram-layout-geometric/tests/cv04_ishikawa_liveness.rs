@@ -4,6 +4,17 @@
 use std::process::{Command,Stdio};
 use std::time::{Duration,Instant};
 
+// Drop owns only this freshly spawned test child. Error/panic unwinding also
+// attempts kill+wait, so an OS query/kill error cannot silently abandon it.
+struct OwnedChild(Option<std::process::Child>);
+impl OwnedChild {
+    fn process(&mut self)->&mut std::process::Child {self.0.as_mut().expect("owned probe child")}
+    fn finish(mut self)->std::process::Output {self.0.take().expect("owned probe child").wait_with_output().expect("consume owned child")}
+}
+impl Drop for OwnedChild {
+    fn drop(&mut self) {if let Some(child)=self.0.as_mut() {let _=child.kill();let _=child.wait();}}
+}
+
 const CHILD_FLAG:&str="CV04_ISHIKAWA_HUGE_CANVAS_CHILD";
 
 #[test]
@@ -29,22 +40,22 @@ fn cv04_ishikawa_huge_finite_legacy_wrapper_refuses_within_bound() {
         use std::os::windows::process::CommandExt;
         command.creation_flags(0x08000000);
     }
-    let mut child=command.spawn().expect("spawn only owned liveness child");
-    let child_id=child.id();
+    let mut child=OwnedChild(Some(command.spawn().expect("spawn only owned liveness child")));
+    let child_id=child.process().id();
     let start=Instant::now();
     let bound=Duration::from_secs(3);
     loop {
-        if child.try_wait().expect("query owned child").is_some() {break;}
+        if child.process().try_wait().expect("query owned child").is_some() {break;}
         if start.elapsed()>=bound {
-            child.kill().expect("terminate only this owned liveness child");
-            let output=child.wait_with_output().expect("consume timed-out owned child");
+            child.process().kill().expect("terminate only this owned liveness child");
+            let output=child.finish();
             panic!("CV04_ISHIKAWA_TIMEOUT child={child_id} bound_ms={} actual_ms={} consumed_code={:?} stdout={:?} stderr={:?}",
                 bound.as_millis(),start.elapsed().as_millis(),output.status.code(),
                 String::from_utf8_lossy(&output.stdout),String::from_utf8_lossy(&output.stderr));
         }
         std::thread::sleep(Duration::from_millis(10));
     }
-    let output=child.wait_with_output().expect("consume completed owned child");
+    let output=child.finish();
     assert!(!output.status.success(),"unsupported huge geometry must refuse explicitly, not return a layout: {:?}",String::from_utf8_lossy(&output.stdout));
     let diagnostic=String::from_utf8_lossy(&output.stderr);
     assert!(diagnostic.contains("unsupported Ishikawa geometry"),"expected explicit compatibility-wrapper diagnostic, got {diagnostic:?}");
