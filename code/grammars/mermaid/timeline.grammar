@@ -3,5 +3,5 @@
 
 document = { terminator } header { terminator | statement } EOF ;
 header = HEADER | HEADER_LR | HEADER_TD ;
-terminator = NEWLINE | SEMICOLON ;
+terminator = NEWLINE ;
 statement = ACC_TITLE_STATEMENT | ACC_DESCR_STATEMENT | ACC_DESCR_BLOCK | TITLE_STATEMENT | SECTION_STATEMENT | EVENT_STATEMENT | PERIOD_STATEMENT ;

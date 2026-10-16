@@ -337,8 +337,7 @@ metadata, sections, periods, and ordered events attached to their preceding
 period. These statements lower into timeline-specific temporal semantic IR.
 Deterministic layout emits dedicated section, spine, and period-card geometry,
 which lowers to backend-neutral PaintScene rectangles, paths, and shaped text
-and is exercised by a Metal-to-PNG fixture. The family remains partial until
-the complete pinned syntax and tolerant visual corpus passes.
+and is exercised by Metal-to-PNG fixtures.
 Timeline `padding`, `useMaxWidth`, and `disableMulticolor` settings from Mermaid
 init directives or YAML front matter survive as typed semantic configuration.
 Padding controls deterministic outer and spine geometry, sectionless single-color
@@ -362,6 +361,10 @@ backend-neutral shaped text and PaintScene metadata.
 The direction semantic matches Mermaid 11.16.1: an unqualified `timeline`
 defaults to left-to-right layout, while explicit `LR` and `TD` headers select
 their corresponding deterministic layout paths.
+The pinned upstream parser corpus now covers direction headers, sections,
+periods, continued and inline events, Markdown links, and delimiter-rich labels.
+Every accepted fixture passes the backend-neutral visual corpus and Metal PNG
+rendering, so Timeline reaches the manifest's defined `full` level.
 
 ### Mindmap Native Slice
 
