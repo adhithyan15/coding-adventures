@@ -4,6 +4,32 @@
 use super::*;
 
 #[test]
+fn fifteen_unit_offsets_preserve_exact_stdout_normal_exit_and_selected_order() {
+    for (case,(source,expected)) in [
+        ("begin real procedure pick; pick := -2.25; real saved; saved := entier(sign(pick()) + 15); output(saved) end","14"),
+        ("begin real procedure pick; pick := -2.25; real saved; saved := entier(sign(pick()) - 15); output(saved) end","-16"),
+        ("begin real procedure pick; pick := 0.0; real saved; saved := entier(sign(pick()) + 15); output(saved) end","15"),
+        ("begin real procedure pick; pick := 0.0; real saved; saved := entier(sign(pick()) - 15); output(saved) end","-15"),
+        ("begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 15); output(saved) end","16"),
+        ("begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) - 15); output(saved) end","-14"),
+        ("begin real procedure pick; pick := -2.25; real saved; saved := entier(abs((sign(pick()) + 1) + 14)); output(saved) end","14"),
+        ("begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 14); output(saved) end","16"),
+        ("begin boolean procedure choose; begin output('C'); choose := true end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 15) else ((entier(sign(rightvalue())) + 1) + 14))); output(saved) end","CL14"),
+        ("begin boolean procedure choose; begin output('C'); choose := false end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 15) else ((entier(sign(rightvalue())) + 1) + 14))); output(saved) end","CR16"),
+    ].into_iter().enumerate() {
+        let program=Prog{lang:Language::Algol60,ext:"alg",src:source,expect:Expect::Stdout(expected),backends:&[NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit]};
+        let mut completed=0;
+        for backend in [NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit] {
+            let available=toolchain_available(backend);let Some(result)=run(backend,&program) else {assert!(!available,"{backend:?} present but fifteen-unit case{case} did not execute");continue;};
+            match &result {RunResult::Completed{code,stdout}=>{assert_eq!(*code,Some(0),"fifteen-unit{case} {backend:?}: {stdout:?}");assert_eq!(stdout.trim(),expected,"fifteen-unit{case} {backend:?}");},RunResult::Trapped=>panic!("fifteen-unit{case} {backend:?} trapped")}
+            assert_cell(backend,&program,result);completed+=1;
+            eprintln!("fifteen-unit EXECUTED case={case} backend={backend:?} expected={expected} Exit0");
+        }
+        assert!(completed>0,"fifteen-unit case{case} needs actual backend execution");
+    }
+}
+
+#[test]
 fn fourteen_unit_offsets_preserve_exact_stdout_normal_exit_and_selected_order() {
     for (case,(source,expected)) in [
         ("begin real procedure pick; pick := -2.25; real saved; saved := entier(sign(pick()) + 14); output(saved) end","13"),
