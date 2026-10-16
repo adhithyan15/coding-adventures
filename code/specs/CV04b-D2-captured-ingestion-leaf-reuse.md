@@ -107,6 +107,10 @@ nested/intermediate fold checks. The CLOC27 presence-only smoke test must likewi
 stop demanding rootless parser-token origins and require the exact physical
 inventory. It remains a smoke test, not a replacement for graph assertions.
 Retain and run old failure/limits, stage chronology and trace-neutrality tests.
+Refusal cells require exact normal exit1, empty stdout, typed Parse-stage
+classification and the expected lexical/parser cause, with no panic/abort.
+An arbitrary nonzero code and unchanged sentinels are insufficient. Exercise
+both SIMPLE and ADVANCED at the private missing/lexical capture boundary.
 
 After implementation run affected standalone compiler tests and strict all-target
 lint, exact-source independent security, docs and required hosted gates before
