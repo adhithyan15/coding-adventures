@@ -749,3 +749,6 @@ mod wardley_derived_contract;
 
 #[cfg(test)]
 mod wardley_note_derived_contract;
+
+#[cfg(test)]
+mod wardley_annotation_derived_contract;
