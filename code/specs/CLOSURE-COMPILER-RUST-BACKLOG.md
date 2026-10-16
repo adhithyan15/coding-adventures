@@ -2563,3 +2563,17 @@ review/conflict gates and actual fetched-main merge/payload proof before cleanup
 Full final-source Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/497
 inputs/receipts preserved without polling or termination. CV04b, full Closure
 parity, output-byte maps and complete transformation lineage remain open.
+
+<!-- CV04b D1 consumed source inventory -->
+Selected compiler-private consumed-source inventory after fresh four-file leaf
+audit153516b5/main81164: existing CLOC27 bridge and CLOC31 derive/merge are real;
+actual ingestion-ID reuse/root-domain import/all later lineage remain OPEN.
+Spec CV04b-D1-consumed-source-inventory.md precedes tests/implementation in its
+own worktree/target while R2 native18 producer3984 stays frozen. D1 records exact
+raw input/trivia/token/EOF inventory/root binding with precharged finite metadata;
+parser reuse, domain import and mutable/output-byte lineage are later slices.
+One remote PR17288; deliver native18 with its own evidence before publishing this
+successor. Incoming main/style/native19 frames remain separate pending work.
+No D1 tests or implementation yet. Miri DEFERRED/PENDING, never passed; frozen
+run/inputs/target/receipts untouched/unpolled. Full objective and heartbeat ACTIVE.
+<!-- /CV04b D1 consumed source inventory -->
