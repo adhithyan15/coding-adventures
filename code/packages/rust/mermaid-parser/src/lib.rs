@@ -5902,7 +5902,7 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
                 return Err(wardley_error(line_number, "Wardley pipeline bodies only accept components"));
             };
             let parent_id = diagram.pipelines[pipeline_index].parent_id.clone();
-            let parent_visibility = diagram.nodes.iter().find(|node| node.id == parent_id)
+            let parent_visibility = diagram.nodes.iter().find(|node| {#[cfg(test)] pipeline_visibility_visited();node.id == parent_id})
                 .map(|node| node.visibility).ok_or_else(|| wardley_error(line_number, "unknown Wardley pipeline parent"))?;
             let node = parse_wardley_pipeline_component(value, parent_visibility, line_number, diagram.nodes.len())?;
             diagram.pipelines[pipeline_index].component_ids.push(node.id.clone()); diagram.nodes.push(node); continue;
@@ -5932,7 +5932,7 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         if let Some(value) = line.strip_prefix("pipeline ") {
             let Some(parent) = value.strip_suffix('{') else { return Err(wardley_error(line_number, "Wardley pipeline requires an opening brace")); };
             let parent = wardley_name(parent);
-            let Some(parent_node) = diagram.nodes.iter_mut().find(|node| node.label == parent) else {
+            let Some(parent_node) = diagram.nodes.iter_mut().find(|node| {#[cfg(test)] pipeline_key_compared();node.label == parent}) else {
                 return Err(wardley_error(line_number, format!("Wardley pipeline {parent} must reference an existing component")));
             };
             parent_node.pipeline_parent = true;
@@ -19159,3 +19159,16 @@ mod wardley_annotation_work_contract;
 
 #[cfg(test)]
 mod wardley_pipeline_work_contract;
+
+// Test-only observations attach to actual lookup predicates. No production
+// counter or cap is introduced, and each Rust test thread owns its observations.
+#[cfg(test)]
+std::thread_local! {static WARDLEY_PIPELINE_WORK:std::cell::Cell<(usize,usize)>=const {std::cell::Cell::new((0,0))};}
+#[cfg(test)]
+fn pipeline_work_reset(){WARDLEY_PIPELINE_WORK.with(|v|v.set((0,0)));}
+#[cfg(test)]
+fn pipeline_work_read()->(usize,usize){WARDLEY_PIPELINE_WORK.with(|v|v.get())}
+#[cfg(test)]
+fn pipeline_key_compared(){WARDLEY_PIPELINE_WORK.with(|v|{let (c,p)=v.get();v.set((c+1,p));});}
+#[cfg(test)]
+fn pipeline_visibility_visited(){WARDLEY_PIPELINE_WORK.with(|v|{let (c,p)=v.get();v.set((c,p+1));});}
