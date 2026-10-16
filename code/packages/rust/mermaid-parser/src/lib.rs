@@ -5878,6 +5878,16 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             }
             continue;
         }
+        // Force labels own their active quote and outside comment boundary.
+        // Dispatch only the ASCII separators declared by wardley.tokens.
+        let force_line=raw.trim();
+        let force_statement=[("accelerator",WardleyForceKind::Accelerator),
+            ("deaccelerator",WardleyForceKind::Deaccelerator)].into_iter().find_map(|(keyword,kind)|
+                force_line.strip_prefix(keyword).filter(|rest|rest.starts_with([' ', '\t'])).map(|rest|(rest,kind)));
+        if let Some((value,kind))=force_statement {
+            diagram.forces.push(parse_wardley_force(value,kind,line_number)?);
+            continue;
+        }
         let line = raw.split("%%").next().unwrap_or("").trim();
         if line.is_empty() || line.eq_ignore_ascii_case("wardley-beta") { continue; }
         if let Some(value) = line.strip_prefix("title ") { diagram.title = Some(value.trim().to_string()); continue; }
@@ -5906,12 +5916,6 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             let target = target.parse::<f64>().map_err(|_| wardley_error(line_number, "invalid evolve target"))?;
             if !(0.0..=1.0).contains(&target) { return Err(wardley_error(line_number, "evolve target must be between 0 and 1")); }
             diagram.evolves.push(WardleyEvolution { component: wardley_name(name), target }); continue;
-        }
-        if let Some(value) = line.strip_prefix("accelerator ") {
-            diagram.forces.push(parse_wardley_force(value, WardleyForceKind::Accelerator, line_number)?); continue;
-        }
-        if let Some(value) = line.strip_prefix("deaccelerator ") {
-            diagram.forces.push(parse_wardley_force(value, WardleyForceKind::Deaccelerator, line_number)?); continue;
         }
         if let Some(value) = line.strip_prefix("annotations ") {
             let (visibility, evolution) = parse_wardley_coordinates(value, line_number)?;
@@ -6089,14 +6093,43 @@ fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> R
     Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor })
 }
 
-fn parse_wardley_force(value: &str, kind: WardleyForceKind, line: usize) -> Result<WardleyForce, ParseError> {
-    let Some(open) = value.rfind('[') else { return Err(wardley_error(line, "Wardley force requires coordinates")); };
-    let label = wardley_name(&value[..open]);
-    let (visibility, evolution) = parse_wardley_coordinates(&value[open..], line)?;
-    if label.is_empty() || !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
-        return Err(wardley_error(line, "Wardley force names must be non-empty and coordinates between 0 and 1"));
-    }
-    Ok(WardleyForce { label, visibility, evolution, kind })
+// A force owns one label followed by one complete coordinate pair. Quoted
+// labels scan once using char-derived UTF-8 boundaries; only the active quote
+// and backslash escapes decode. Bare names retain their established multiword
+// spelling. Neither path treats an interior quoted percent pair as a comment.
+fn parse_wardley_force(value:&str,kind:WardleyForceKind,line:usize)->Result<WardleyForce,ParseError> {
+    let value=value.trim_start();
+    let (label,coordinates)=if let Some(quote)=value.chars().next().filter(|c|*c=='\''||*c=='"') {
+        let invalid=||wardley_error(line,"Wardley force label must be a complete quoted string");
+        let mut chars=value[1..].char_indices();let mut label=String::new();let mut suffix=None;
+        while let Some((offset,c))=chars.next() {
+            if c==quote {suffix=Some(&value[offset+2..]);break;}
+            if c=='\\' {
+                match chars.next() {
+                    Some((_,escaped)) if escaped==quote||escaped=='\\'=>label.push(escaped),
+                    _=>return Err(invalid()),
+                }
+            }else{label.push(c);}
+        }
+        let suffix=suffix.ok_or_else(invalid)?.trim_start();
+        if label.is_empty() {return Err(wardley_error(line,"Wardley force label must be non-empty"));}
+        if suffix.is_empty()||suffix.starts_with("%%") {return Err(wardley_error(line,"Wardley force requires coordinates"));}
+        if !suffix.starts_with('[') {return Err(wardley_error(line,"invalid Wardley force label suffix"));}
+        (label,suffix)
+    }else{
+        let authored=value.split("%%").next().unwrap_or("");
+        let open=authored.find('[').ok_or_else(||wardley_error(line,"Wardley force requires coordinates"))?;
+        let label=authored[..open].trim().to_string();
+        if label.is_empty() {return Err(wardley_error(line,"Wardley force label must be non-empty"));}
+        (label,&authored[open..])
+    };
+    let close=coordinates.find(']').ok_or_else(||wardley_error(line,"invalid Wardley coordinates"))?;
+    let suffix=coordinates[close+1..].trim_start();
+    if !suffix.is_empty()&&!suffix.starts_with("%%") {return Err(wardley_error(line,"invalid Wardley force coordinates suffix"));}
+    let (visibility,evolution)=parse_wardley_coordinates(&coordinates[..=close],line)?;
+    let normalized=|v:f64|v.is_finite()&&(0.0..=1.0).contains(&v);
+    if !normalized(visibility)||!normalized(evolution) {return Err(wardley_error(line,"Wardley force coordinates must be between 0 and 1"));}
+    Ok(WardleyForce{label,visibility,evolution,kind})
 }
 
 fn parse_wardley_coordinates(value: &str, line: usize) -> Result<(f64, f64), ParseError> {

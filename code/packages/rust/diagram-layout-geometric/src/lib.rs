@@ -230,7 +230,7 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum WardleyLayoutError {
     Width, Height, Padding, NodeRadius, NodeLabelOffset, AxisFontSize, LabelFontSize,
-    NodeCoordinates, EvolutionTarget, NoteCoordinates, AnnotationBoxCoordinates, AnnotationCoordinates, UnknownLinkEndpoint, UnknownEvolutionComponent,
+    NodeCoordinates, EvolutionTarget, NoteCoordinates, AnnotationBoxCoordinates, AnnotationCoordinates, ForceCoordinates, UnknownLinkEndpoint, UnknownEvolutionComponent,
     DerivedGeometry,
 }
 
@@ -262,6 +262,11 @@ pub fn try_layout_wardley(diagram: &WardleyDiagram) -> Result<LayoutedWardleyDia
     if diagram.annotations.iter().any(|a|a.coordinates.iter().any(|(v,e)|!normalized(*v)||!normalized(*e))) {
         return Err(WardleyLayoutError::AnnotationCoordinates);
     }
+    // Force labels are independent glyphs; axes share normalized admission,
+    // after annotations and before any component-reference diagnostics.
+    if diagram.forces.iter().any(|f|!normalized(f.visibility)||!normalized(f.evolution)) {
+        return Err(WardleyLayoutError::ForceCoordinates);
+    }
     let names:HashSet<_>=diagram.nodes.iter().map(|n|n.label.as_str()).collect();
     if diagram.links.iter().any(|l|!names.contains(l.source.as_str())||!names.contains(l.target.as_str())) {
         return Err(WardleyLayoutError::UnknownLinkEndpoint);
@@ -290,6 +295,7 @@ fn validate_wardley_geometry(layout:&LayoutedWardleyDiagram)->Result<(),WardleyL
         ||layout.links.iter().any(|l|!point(&l.from)||!point(&l.to))
         ||layout.evolves.iter().any(|e|!point(&e.from)||!point(&e.to))
         ||layout.notes.iter().any(|n|!point(&n.position))
+        ||layout.forces.iter().any(|f|!point(&f.position))
         ||layout.annotations_box.as_ref().is_some_and(|p|!point(p))
         ||layout.annotations.iter().any(|a|a.positions.iter().any(|p|!point(p))) {
         return Err(WardleyLayoutError::DerivedGeometry);
