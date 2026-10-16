@@ -1,52 +1,54 @@
 # Closure Compiler on Rust — parity backlog
 
 <!-- CV04b current-main integration pending -->
-Local main3efe integration is unpublished (merge commits9832c396/eeeac01f/
-7c2e3af2). Full15-package compiler/diagram source58e52fad passes2009P/0F/0I
-across56 executable targets+15 doctest harnesses (2007 executable passes, two
-passing doctests/13 empty harnesses), strict all-target lint0; producer
-38726 is consumed. Receipt `CV04b-main-v5-fast-58e52fad.json` freezes7899 inputs
-across209 all-kind local roots, including Apple-only dev roots without claiming
-Apple execution. Independent exact-terminal and complete fixture reviews pending.
+Local406a9b5b/main3efe integration remains unpublished; sole PR17288 publishes
+D3b6132a518, conflicting, auto-merge OFF. Fresh audit20261016T132135Z observes
+maincf5da3f5 with native22/23 and Ishikawa hatch increments still unintegrated.
+Next bounded contract: `CV04b-current-main-native23-and-hatch-resources.md`,
+committed before successor tests/merge/production. Preserve unrelated edits.
 
-Core67 passed1555P/strict0 with independent review6056f7c7. Geometric22 passes
-66P/strict0 with source683d1b2b and terminal32a877d8 reviews. Native926 includes
-120 exact former authored-source companions; independentfaa1cce8 inverse-proves
-all edited files, mixed safety/resource controls and four dedicated cap18→21
-production edits. Shared native classification remains exact. New19/20/21 normal
-Exit0/evaluation-order runtime source cells remain pending actual execution.
+Native v9 source406a9b5b passes1882P/0F/1 existing outer trampoline I across74
+executables+5 empty doctest harnesses, strict0; producer85176 fully consumed0.
+Receipt `CV04b-main-v9-native-406a9b5b.json` binds7899 inputs/209 local roots and
+both unchanged locks. All24 exact19/20/21 source pairs execute normalExit0/exact
+output on NativeAot/Llvm/Wasm/Jvm/Vm/Jit:144 unique tuples; no CLR claim. Only the
+source-hashed archive outer3P/1I is allowed with its passing isolated-child parent;
+all other harnesses0I, all0F/measured/filtered. Static helper4b02e749/source9433a8d6
+reviews pass. Independent terminal audit reproduced all bodies/locks/census;
+final report pending. V8 Cargo101/E0597/zero-runtime failure remains preserved.
 
-Complete Wardley/Ishikawa IR/layout/scene/glyph/metadata/ordered-query assertions
-are retained with independent clipped-link, arrow/outline/fish-head, font16 and
-new dedicated annotation/node glyph semantics. Failed full7bec2001P/7F,
-7302002P/6F and4552003P/6F receipts remain. Independent authored inventory found
-12 custom-offset baselines/four root palette entries, repaired58 with whole-file
-inverses. Font1/32 actual parse→layout→paint tests bind all four positive inner
-frame fields, complete PaintRect and both complete glyph runs; full58 executes it.
-The retained ordinary-circle/private pipeline-square overflow test caught an
-unconditional decorator envelope, repaired with exact enabled paint parameters.
+Earlier exact execution heads: fast15 source58e52fad=2009P/0F/0I (2007 executable
+passes+2 doctests;56 executables/15 docs,13 empty), strict0, source2b01de36 and
+terminal04fb6f69 PASS. Standalone Closurefa4a78ee=1139P/0F/0I/182 executables,
+strict0, terminale3ccb63d PASS; its resolved36 local roots sit within237 union
+roots/7899 inputs. These are not relabeled as406 or latest main. Core67
+1555P/strict0/review6056f7c7 and geometric22 66P/strict0/reviews683d1b2b/32a877d8
+remain bounded historical receipts. Native120 former-source companions and mixed
+guards retain independent whole-file inverse reviewfaa1cce8.
 
-V5 workspace validator enforces fresh graph/input key/body/lock stability,
-metadata/artifact/Running identity joins and one exact summary per harness.
-Standalone v7 explicitly traverses its fresh resolved/local-path forward graph;
-static helper review85f0ecf7 passes. Actual standalone fa4a78ee executes1139P/
-0F/0I across182 exact targets, strict0; producer3704 consumed. Receipt
-`CV04b-main-v7-closure-fa4a78ee.json` binds36 actual resolved/local Closure roots
-inside237 union roots/7899 frozen inputs. Independent terminal review pending.
-Native validation preserves the sole existing isolated-child trampoline (3P/1I
-outer target; passing parent executes child); no new test ignores are authorized.
+Whole Wardley/Ishikawa IR/layout/scene/glyph/metadata/query tests and every old
+source/function remain. Failed fixture runs7bec2001P/7F,7302002P/6F,4552003P/6F
+and their inverses remain. Font1/32 actual text-frame/box/both-glyph proofs and
+ordinary-circle/private pipeline-square overflow controls stay intact.
 
-Fresh audit20261016T114956Z: origin/main d09a93b2 advances beyond integrated3efe,
-including native22 still unintegrated. Sole PR17288 publishes D3b6132a518,
-conflicting, auto-merge OFF. Next: affected native/downstream normal runtime,
-standalone Closure/strict, current-main conflict reconciliation, documentation
-and exact-head source/terminal review before publication/CI/actual merge.
-Composite/synthetic identities, full transformation/pass-sweep lineage,
-output-byte/source joins and evidence-backed Closure parity remain OPEN.
-Miri **DEFERRED/PENDING**, never passed; frozen run/checkout/inputs/receipts/target
-untouched and unpolled. Implementation/delivery first, genuine final-source Miri
-afterward. Base ESTree boundary, own types, no new crates.io dependencies.
-Full objective and heartbeat ACTIVE.
+Incoming hatchab41 security **WITHHELD**, report34e4156b: huge finite canvas can
+stall float stepping; numeric spans can amplify work/output. These are source/
+binary64 witnesses, not Rust runtime/UB receipts. Repair contract base+v2 has
+SECURITY CONTRACT PASSfe9afa7c, not implementation acceptance: fallible own layout
+API, finite signed grid, aggregate integer/two-pass/exact-output budgets, fallible
+storage and no partial output. Preserve ordinary hatching plus font/frame/depth
+guards; require compiled red/green, complete fixtures and independent review.
+Native22 draft review8ca4d80d conditionally supports dedicated-only proof and exact
+incoming normal-exit companions; newer native23 needs explicit reconciliation.
+
+Next: spec-first current-main/native23/hatch repair, exact old-source and whole-
+fixture retention, fresh input/graph/lock receipts, affected suites/strict and
+exact-head source/terminal security, then sole-PR publication/CI/actual merge.
+Composite/synthetic identities, all transformation/pass-sweep lineage, output-byte
+source joins and evidence-backed Closure parity remain OPEN. Miri
+**DEFERRED/PENDING**, never passed; frozen run/checkout/inputs/receipts/target
+untouched and unpolled. Delivery first, genuine final-source Miri afterward.
+Base ESTree boundary, own types, no new crates.io dependencies. Heartbeat ACTIVE.
 <!-- /CV04b current-main integration pending -->
 
 <!-- CV04a dedicated native18 selected -->
