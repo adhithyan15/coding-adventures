@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-V-01",
+  "category": "Dhātu and kriyāpada — the verb",
+  "label": "the present indicative, third person, as the citation form of a verb",
+  "probe": [
+    "SA-GRAMMAR-DHATU-GANA",
+    "SA-LEX-GACCHATI-GO",
+    "SA-LEX-ASTI-BHAVATI-BE"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-V-01",
+    "A1-V-03"
+  ],
+  "note": "The corpus teaches verbs in the third singular present throughout, and chapter 7 names the dhātu and its gaṇa — the root and the class it belongs to, which is what decides the present stem."
+}

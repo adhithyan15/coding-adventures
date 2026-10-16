@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-EV-04",
+  "category": "Evaluative notions",
+  "label": "ease and difficulty",
+  "probe": [
+    "SA-LEX-C43-COURTESY-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG6-10"
+  ],
+  "note": "saralaḥ means 'straightforward, honest' and covers the 'easy' sense obliquely. sukara and duṣkara are not taught. Thin, and recorded as such."
+}

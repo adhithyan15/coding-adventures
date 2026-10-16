@@ -1,0 +1,23 @@
+{
+  "id": "SA-A1-X-11",
+  "category": "Specific notions — the lexical fields",
+  "label": "flora",
+  "probe": [
+    "SA-LEX-C32-TREE-01",
+    "SA-LEX-C32-TREE-02",
+    "SA-LEX-C32-TREE-03",
+    "SA-LEX-C32-TREE-04",
+    "SA-LEX-C32-TREE-05",
+    "SA-LEX-C30-WELCOME-03",
+    "SA-LEX-C30-WELCOME-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE20-06"
+  ],
+  "note": "taruḥ, patram, tṛṇam, latā, dāru, puṣpam, mālā."
+}

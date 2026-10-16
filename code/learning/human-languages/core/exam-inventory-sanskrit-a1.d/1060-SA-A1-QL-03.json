@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-QL-03",
+  "category": "Qualitative notions",
+  "label": "age and old age",
+  "probe": [
+    "SA-LEX-C20-PERSON-04",
+    "SA-LEX-C15-ADJ-04",
+    "SA-LEX-C15-ADJ-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG5-04"
+  ],
+  "note": "vṛddhaḥ ('an elder'), nava ('new') and purātana ('old, of a thing'). The track carefully distinguishes old-of-a-thing from old-of-a-person. ASKING OR STATING AN AGE IN YEARS IS NOT POSSIBLE: there is no word for age and no 'how old are you'."
+}

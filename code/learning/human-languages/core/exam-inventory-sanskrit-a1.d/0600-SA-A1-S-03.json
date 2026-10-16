@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-S-03",
+  "category": "Vākya — the sentence",
+  "label": "questions with an asking word",
+  "probe": [
+    "SA-GRAMMAR-C18-K-QUESTIONS",
+    "SA-GRAMMAR-RESPECTFUL-QUESTION",
+    "SA-PATTERN-WHATS-YOUR-NAME"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-OS-03",
+    "A1-F1-02"
+  ],
+  "note": "tava nāma kim? is the model, and chapter 2 teaches the respectful version alongside it."
+}

@@ -1,0 +1,16 @@
+{
+  "id": "SA-A1-N-06",
+  "category": "Nāma — the noun",
+  "label": "the noun families: which ending a noun belongs to, and why that decides everything else",
+  "probe": [
+    "SA-GRAMMAR-C16-NOUN-FAMILIES"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [],
+  "sanskritSpecific": true,
+  "note": "Sanskrit-specific and there is no Spanish demand behind it. A Sanskrit noun cannot be used at all until you know its stem class, because the class chooses the case endings. Chapter 16 gathers the families the first fifteen chapters have been using."
+}

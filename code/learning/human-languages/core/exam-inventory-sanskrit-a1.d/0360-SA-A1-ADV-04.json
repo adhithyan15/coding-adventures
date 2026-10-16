@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-ADV-04",
+  "category": "Avyaya — the indeclinable and the adverb",
+  "label": "manner adverbs: well, rightly, slowly, thus",
+  "probe": [
+    "SA-LEX-C27-REPLY-02",
+    "SA-LEX-C36-REPLY-05",
+    "SA-LEX-C36-REPLY-04",
+    "SA-LEX-C27-REPLY-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ADV-04",
+    "A1-NG6-07"
+  ],
+  "note": "sādhu, samyak, mandam and evam. Spanish's mal has no taught counterpart — see SA-A1-EV-01."
+}

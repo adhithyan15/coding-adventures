@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-V-11",
+  "category": "Dhātu and kriyāpada — the verb",
+  "label": "verbs of taking, asking, helping and loving",
+  "probe": [
+    "SA-LEX-GRHNATI-TAKE",
+    "SA-LEX-PRCCHATI-ASK",
+    "SA-LEX-SAHAYYAM-KAROTI-HELP",
+    "SA-LEX-SNIHYATI-PRIYAM-LOVE"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F4-03"
+  ],
+  "note": "Chapter 9, and sāhāyyaṁ karoti is the noun-plus-karoti compound verb that Sanskrit builds most of its vocabulary from."
+}

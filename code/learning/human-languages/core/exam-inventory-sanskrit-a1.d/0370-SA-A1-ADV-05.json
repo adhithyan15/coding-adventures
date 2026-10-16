@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-ADV-05",
+  "category": "Avyaya — the indeclinable and the adverb",
+  "label": "polarity: yes and no",
+  "probe": [
+    "SA-LEX-AM-YES",
+    "SA-LEX-NA-NO",
+    "SA-CULTURE-SANSKRIT-ANSWERING"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ADV-05"
+  ],
+  "note": "ām and na, chapter 1, with the culture note on how a Sanskrit answer is actually given."
+}

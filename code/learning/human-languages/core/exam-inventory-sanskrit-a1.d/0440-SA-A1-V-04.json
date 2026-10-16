@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-V-04",
+  "category": "Dhātu and kriyāpada — the verb",
+  "label": "the verb classes: ten of them, and which one a root belongs to changes its stem",
+  "probe": [
+    "SA-GRAMMAR-DHATU-GANA",
+    "SA-GRAMMAR-GANA-TEN-AYA"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [],
+  "sanskritSpecific": true,
+  "note": "Sanskrit-specific. No Spanish A1 point asks it because Spanish has three conjugations that a learner can read off the infinitive; Sanskrit has ten gaṇas that must be learned per root. Chapters 7 and 8 teach the idea and the tenth class's -aya- infix."
+}

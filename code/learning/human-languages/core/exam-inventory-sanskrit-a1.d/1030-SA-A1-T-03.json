@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-T-03",
+  "category": "Temporal notions",
+  "label": "before and after; sequence",
+  "probe": [
+    "SA-LEX-C49-REPLY-01",
+    "SA-LEX-C28-LEAVE-01",
+    "SA-LEX-C17-TIME-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG4-03"
+  ],
+  "note": "tarhi, idānīm and sadā. pūrvam and paścāt — the actual before/after pair — are not taught, so sequencing is thin and the ordinal gap (SA-A1-Q-02) compounds it."
+}

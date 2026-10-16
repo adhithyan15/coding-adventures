@@ -1,0 +1,25 @@
+{
+  "id": "SA-A1-Q-01",
+  "category": "Saṅkhyā — number and quantity",
+  "label": "cardinal numerals one to ten",
+  "probe": [
+    "SA-LEX-NUMBERS-ONE-TO-FIVE",
+    "SA-LEX-C19-NUM-01",
+    "SA-LEX-C19-NUM-02",
+    "SA-LEX-C19-NUM-03",
+    "SA-LEX-C19-NUM-04",
+    "SA-LEX-C19-NUM-05",
+    "SA-GRAMMAR-C19-NUMBER-FAMILY"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-Q-01",
+    "A1-NG2-01",
+    "A1-NE16-01"
+  ],
+  "note": "eka to pañca in chapter 6, ṣaṭ to daśa in chapter 19, and chapter 19's family lesson ties them together. Eleven upward is not taught."
+}

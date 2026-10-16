@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-DEM-03",
+  "category": "Sarvanāma — deixis and demonstratives",
+  "label": "position, and that the demonstrative is not blocked by an article",
+  "probe": [
+    "SA-GRAMMAR-C14-DEIXIS-SYSTEM"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-DEM-03"
+  ],
+  "note": "The Spanish point exists because a demonstrative and an article compete for one slot. With no article there is no competition, and the system lesson is what a learner has instead."
+}

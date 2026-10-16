@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-EV-03",
+  "category": "Evaluative notions",
+  "label": "attractiveness and pleasingness",
+  "probe": [
+    "SA-LEX-C37-COURTESY-03",
+    "SA-LEX-C30-WELCOME-03",
+    "SA-LEX-C30-WELCOME-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG6-03"
+  ],
+  "note": "prasannaḥ ('pleased, gracious'), puṣpam and mālā. sundara ('beautiful') is not taught, so this is answered obliquely."
+}

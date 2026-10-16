@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-F-22",
+  "category": "Structuring the exchange",
+  "label": "ask for a person, and ask for quiet",
+  "probe": [
+    "SA-PATTERN-C271-ASK-FOR-PERSON-01",
+    "SA-PATTERN-C271-REQUEST-QUIET-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F6-03",
+    "A1-F6-05"
+  ],
+  "note": "Chapter 271 closes the two transferred spoken acts narrowly. It composes the doorway/telephone availability exchange adhyāpakaḥ atra asti? — ām, adhyāpakaḥ atra asti. from existing direct owners, then composes kṛpayā tūṣṇīṃ bhava from the sourced command tūṣṇīṃ bhava plus already-owned kṛpayā. Two later lessons retrieve both acts without a visible Sanskrit model. This probe does not claim a general service-counter or telephone script, polar-question system, imperative paradigm, or conversational competence."
+}

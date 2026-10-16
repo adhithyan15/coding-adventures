@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-M-05",
+  "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+  "label": "leisure, sport, shows and games",
+  "probe": [
+    "SA-LEX-PLAY"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE08-01",
+    "A1-NE08-02",
+    "A1-NE08-03",
+    "A1-NE08-04"
+  ],
+  "note": "krīḍati ('plays') is the ONLY atom in this whole field, and it is a verb with no game to play. Counted covered on that single exponent and named here as the thinnest 'covered' point in the file."
+}

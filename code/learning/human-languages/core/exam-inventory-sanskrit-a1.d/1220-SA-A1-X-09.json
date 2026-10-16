@@ -1,0 +1,26 @@
+{
+  "id": "SA-A1-X-09",
+  "category": "Specific notions — the lexical fields",
+  "label": "the sky, the weather and the universe",
+  "probe": [
+    "SA-LEX-C31-SKY-01",
+    "SA-LEX-C31-SKY-02",
+    "SA-LEX-C31-SKY-03",
+    "SA-LEX-C31-SKY-04",
+    "SA-LEX-C31-SKY-05",
+    "SA-LEX-C46-LIGHT-01",
+    "SA-LEX-C46-LIGHT-02",
+    "SA-LEX-C46-LIGHT-04",
+    "SA-LEX-C46-LIGHT-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE20-01",
+    "A1-NE20-04"
+  ],
+  "note": "ākāśaḥ, candraḥ, tārā, vāyuḥ, himam, raviḥ, raśmiḥ, chāyā, tāpaḥ. Weather as a TOPIC of conversation — 'it is raining' — is not sayable; there is no verb and no word for rain."
+}

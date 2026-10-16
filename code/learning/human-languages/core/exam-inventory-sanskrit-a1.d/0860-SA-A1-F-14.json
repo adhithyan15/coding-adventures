@@ -1,0 +1,23 @@
+{
+  "id": "SA-A1-F-14",
+  "category": "Relating socially",
+  "label": "greet, and respond to a greeting",
+  "probe": [
+    "SA-LEX-NAMASTE",
+    "SA-LEX-NAMASKARA",
+    "SA-CULTURE-ANJALI-BOW",
+    "SA-LEX-C29-COURTESY-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F5-01",
+    "A1-F5-02",
+    "A1-F6-02"
+  ],
+  "note": "namaste and namaskāraḥ, with the añjali bow that goes with them and praṇāmaḥ in chapter 29. The greeting IS the salutation in Sanskrit, and the culture atom says so."
+}

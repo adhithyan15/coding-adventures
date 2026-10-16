@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-POS-02",
+  "category": "Ṣaṣṭhī — possession",
+  "label": "possession, several possessors: our and your-plural",
+  "probe": [
+    "SA-LEX-C259-ASMAKAM-01",
+    "SA-LEX-C259-YUSMAKAM-02",
+    "SA-GRAMMAR-C259-PLURAL-POSSESSORS-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-POS-02"
+  ],
+  "note": "Chapter 259 teaches asmākam and yuṣmākam one at a time after retrieving chapter 2's singular mama/tava contrast, then requires model-free selection between one and several possessors in already-known house and family frames. The probe names both forms and the productive contrast atom; these are genitives answering 'whose?', not agreeing possessive adjectives."
+}

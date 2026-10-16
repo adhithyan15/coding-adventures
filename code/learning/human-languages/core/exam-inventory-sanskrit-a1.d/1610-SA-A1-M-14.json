@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-M-14",
+  "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+  "label": "government, politics, law and justice",
+  "probe": [
+    "SA-LEX-C26-ROLE-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE17-01",
+    "A1-NE17-02"
+  ],
+  "note": "rājā ('a king') is the entire political vocabulary of the track, which is the honest classical answer and answers almost none of what the proxy means."
+}

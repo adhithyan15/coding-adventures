@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-T-04",
+  "category": "Temporal notions",
+  "label": "locating an event in time: saying when something is",
+  "probe": [
+    "SA-LEX-C18-ASK-01",
+    "SA-LEX-C17-TIME-03",
+    "SA-LEX-SHVAH"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG1-04"
+  ],
+  "note": "kadā asks it and adya / śvaḥ answer it. Spanish uses ser for this; Sanskrit uses the locative of time, which the track does not teach as such."
+}
