@@ -1147,7 +1147,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.27.0");
+        assert_eq!(crate::VERSION, "0.28.0");
     }
 
     #[test]
