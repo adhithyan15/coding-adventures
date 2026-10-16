@@ -1973,6 +1973,10 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // the file in the summary line.
     let mut cv_sidecar_written: Option<PathBuf> = None;
     if config.special_modes.correlation_vector {
+        // Admit the full physical inventory before any filter, format, summary
+        // or prepared output is published. Shape is not source-content replay.
+        source_domain::validate_shape(&cv_log, source_domain::ShapeLimits::default())
+            .map_err(provenance_error("source_domain"))?;
         // CLOC11.69 — format selection. `None` short-circuits
         // the whole write step: the CV log is still computed
         // (the rest of the function ran) but nothing hits disk.
