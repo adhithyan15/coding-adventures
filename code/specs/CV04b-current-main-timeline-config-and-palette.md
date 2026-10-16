@@ -240,3 +240,23 @@ Add a second hash-free color-name title decoy proving the entire semantic title
 remains data. No lexer/grammar/preprocessor change, source deletion or fallback
 weakening is permitted. The first green receipt remains unaccepted; strict did
 not run. This explicit fixture correction precedes its implementation.
+
+## Stable typed palette checkpoint before event-card integration
+
+Main a2be13f7 introduces separate event cards after native25; complete incoming
+source audits precede its closed merge and changed geometry contract. While
+those immutable audits run, establish a bounded pre-integration baseline for
+the existing public TimelinePeriod embedded-event Paint transport. No acceptance
+of incoming event-card source, current-main geometry or source-to-Scene follows.
+
+Declare48 whole typed-layout/Scene/query cells before rendering: palette family
+lengths0/1/2/6/8 and independently mismatched1/2/8,8/0/2,0/8/1, each at ordinals
+0,1,5,6,7 and usizeMAX. Independent slot tables pin cycling without calling the
+production color helper. Every default role fallback, configured entry in full
+metadata, actual section/period/event glyphRGBA and geometry/order is asserted.
+Chronology spine uses inverse slot0 independently of each item's ordinal. Use
+Georgia labels/Courier New titles and assert the complete ordered cached resolver
+trace. Preserve all existing fixture bodies. These finite public typed payloads
+test palette transport, without claiming forged-layout numeric admission.
+The actual pre-integration execution head must stay separate from subsequent
+incoming merge/geometry/event-card validation. Miri DEFERRED/PENDING throughout.
