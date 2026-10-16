@@ -2326,15 +2326,15 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     let mut annotation_number_font = font_with_size(&options.label_font, Some(10.0)); annotation_number_font.weight = 700;
     for annotation in &diagram.annotations {
         for positions in annotation.positions.windows(2) {
-            let mut connector = line_path(positions, &theme.axis_color, 1.5);
+            let mut connector = line_path(positions, &theme.annotation_stroke, 1.5);
             connector.stroke_dash = Some(vec![4.0, 4.0]); instructions.push(PaintInstruction::Path(connector));
         }
         for position in &annotation.positions {
             instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: position.x, cy: position.y,
-                rx: 10.0, ry: 10.0, fill: Some(theme.background_color.clone()), stroke: Some(theme.axis_color.clone()),
+                rx: 10.0, ry: 10.0, fill: Some(theme.annotation_fill.clone()), stroke: Some(theme.annotation_stroke.clone()),
                 stroke_width: Some(1.5), stroke_dash: None, stroke_dash_offset: None }));
             text_children.push(text_node(&annotation.number.to_string(), position.x - 10.0, position.y - 10.0, 20.0, 20.0,
-                annotation_number_font.clone(), axis_text_color));
+                annotation_number_font.clone(), css_to_color(&theme.annotation_text_color)));
         }
     }
     if let Some(box_position) = &diagram.annotations_box {
@@ -2346,12 +2346,12 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             let box_x = box_position.x.clamp(diagram.config.padding, diagram.width - diagram.config.padding - box_width);
             let box_y = box_position.y.clamp(diagram.config.padding, diagram.height - diagram.config.padding - box_height);
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: box_x, y: box_y,
-                width: box_width, height: box_height, fill: Some(theme.background_color.clone()), stroke: Some(theme.axis_color.clone()),
+                width: box_width, height: box_height, fill: Some(theme.annotation_fill.clone()), stroke: Some(theme.annotation_stroke.clone()),
                 stroke_width: Some(1.5), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
             for (index, annotation) in entries.iter().enumerate() {
                 text_children.push(text_node_no_wrap(&format!("{}. {}", annotation.number, annotation.text), box_x + 10.0,
                     box_y + 10.0 + index as f64 * 16.0, box_width - 20.0, 16.0,
-                    font_with_size(&options.label_font, Some(11.0)), axis_text_color));
+                    font_with_size(&options.label_font, Some(11.0)), css_to_color(&theme.annotation_text_color)));
             }
         }
     }
@@ -2411,6 +2411,9 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("wardley.componentLabelColor".into(), theme.component_label_color.clone());
     metadata.insert("wardley.linkStroke".into(), theme.link_stroke.clone());
     metadata.insert("wardley.evolutionStroke".into(), theme.evolution_stroke.clone());
+    metadata.insert("wardley.annotationStroke".into(), theme.annotation_stroke.clone());
+    metadata.insert("wardley.annotationTextColor".into(), theme.annotation_text_color.clone());
+    metadata.insert("wardley.annotationFill".into(), theme.annotation_fill.clone());
     metadata.insert("wardley.noteCount".into(), diagram.notes.len().to_string());
     metadata.insert("wardley.annotationCount".into(), diagram.annotations.len().to_string());
     metadata.insert("wardley.forceCount".into(), diagram.forces.len().to_string());
@@ -11701,7 +11704,8 @@ mod tests {
             config: diagram_ir::WardleyConfig { show_grid: true, theme: diagram_ir::WardleyTheme {
                 background_color: "#f8fafc".into(), axis_color: "#123456".into(), axis_text_color: "#234567".into(),
                 grid_color: "#345678".into(), component_fill: "#abcdef".into(), component_stroke: "#456789".into(),
-                component_label_color: "#56789a".into(), link_stroke: "#6789ab".into(), evolution_stroke: "#dc2626".into() },
+                component_label_color: "#56789a".into(), link_stroke: "#6789ab".into(), evolution_stroke: "#dc2626".into(),
+                annotation_stroke: "#7c3aed".into(), annotation_text_color: "#f97316".into(), annotation_fill: "#fef3c7".into() },
                 ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.3, 1.0],
             nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true, pipeline_parent: true, label_offset_x: None, label_offset_y: None, source_strategy: Some(WardleySourceStrategy::Build), inertia: false },
                 diagram_ir::LayoutedWardleyNode { id: "b".into(), label: "Child".into(), position: Point { x: 150.0, y: 120.0 }, anchor: false, pipeline_parent: false, label_offset_x: Some(-30.0), label_offset_y: Some(12.0), source_strategy: Some(WardleySourceStrategy::Market), inertia: true },
@@ -11739,6 +11743,17 @@ mod tests {
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.flowLinkCount")), Some(&"1".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.dashedLinkCount")), Some(&"1".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.labeledLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationStroke")), Some(&"#7c3aed".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationTextColor")), Some(&"#f97316".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationFill")), Some(&"#fef3c7".to_string()));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#fef3c7")
+                && ellipse.stroke.as_deref() == Some("#7c3aed"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                && rect.stroke.as_deref() == Some("#7c3aed"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(249, 115, 22)"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[6.0, 6.0]))));
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,

@@ -4602,6 +4602,10 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_wardley_to_png() {
         let diagram = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 760, \"height\": 480, \"padding\": 36, \"nodeRadius\": 9, \"nodeLabelOffset\": 12, \"axisFontSize\": 15, \"labelFontSize\": 13, \"showGrid\": true, \"useMaxWidth\": false}, \"themeVariables\": {\"wardley\": {\"backgroundColor\": \"#f8fafc\", \"axisColor\": \"#123456\", \"axisTextColor\": \"#234567\", \"gridColor\": \"#345678\", \"componentFill\": \"#abcdef\", \"componentStroke\": \"#456789\", \"componentLabelColor\": \"#56789a\", \"linkStroke\": \"#6789ab\", \"evolutionStroke\": \"#dc2626\"}}}}%%\nwardley-beta\ntitle Tea Shop\nevolution Genesis@0.2 / Concept -> Custom@0.4 / Emerging -> Product@0.75 / Converging -> Commodity@1.0 / Accepted\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61] (build)\ncomponent Kettle [0.43, 0.35] (buy) (inertia)\ncomponent Power [0.10, 0.70] label [-55, 12] (market)\npipeline Kettle {\n  component Gas [0.18]\n  component Electric [0.35] label [-25, 10]\n  component Induction [0.55]\n}\nBusiness +'demand'> Cup of Tea\nCup of Tea -.-> Kettle\nKettle +<> Power\nevolve Kettle 0.62\nnote \"Standardising power accelerates evolution\" [0.30, 0.49]\nannotations [0.10, 0.90]\nannotation 1,[0.60, 0.65] \"Critical component\"\nannotation 1,[0.50, 0.50] \"Critical component\"\naccelerator \"AI Adoption\" [0.55, 0.25]\ndeaccelerator \"Legacy Constraints\" [0.15, 0.75]").expect("wardley parse failed");
+        let mut diagram = diagram;
+        diagram.config.theme.annotation_stroke = "#7c3aed".into();
+        diagram.config.theme.annotation_text_color = "#f97316".into();
+        diagram.config.theme.annotation_fill = "#fef3c7".into();
         let layout = layout_wardley(&diagram);
         assert_eq!((layout.width, layout.height), (760.0, 480.0));
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
@@ -4629,6 +4633,12 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.flowLinkCount")), Some(&"2".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.dashedLinkCount")), Some(&"1".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.labeledLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationStroke")), Some(&"#7c3aed".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationTextColor")), Some(&"#f97316".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationFill")), Some(&"#fef3c7".to_string()));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#fef3c7")
+                && ellipse.stroke.as_deref() == Some("#7c3aed"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,

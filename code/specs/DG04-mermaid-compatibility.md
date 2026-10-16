@@ -806,8 +806,9 @@ inertia lowers as a heavy offset indicator while preserving both decorators in I
 Dependency links preserve solid, alternate, and dashed line forms, semicolon annotations,
 forward, backward, and bidirectional flow ports, and inline flow labels. Layout clips
 links to component boundaries and positions rotated labels before backend-neutral paths,
-arrowheads, and glyph groups are emitted. Remaining annotation theme fields and exact
-rendering remain unsupported at the partial level.
+arrowheads, and glyph groups are emitted. Annotation stroke, text, and fill theme fields
+also survive typed configuration and control marker, connector, and annotations-box Paint.
+Exact browser rendering remains unsupported at the partial level.
 
 ### Cynefin Native Slice
 

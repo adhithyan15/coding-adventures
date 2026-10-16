@@ -563,7 +563,9 @@ mod tests {
     #[test]
     fn wardley_layout_maps_visibility_up_and_evolution_right() {
         let diagram = WardleyDiagram { title: None, config: diagram_ir::WardleyConfig { width: 600.0, height: 400.0,
-            padding: 40.0, ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.35, 1.0],
+            padding: 40.0, theme: diagram_ir::WardleyTheme { annotation_stroke: "#7c3aed".into(),
+                annotation_text_color: "#f97316".into(), annotation_fill: "#fef3c7".into(), ..Default::default() },
+            ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.35, 1.0],
             nodes: vec![diagram_ir::WardleyNode { id: "a".into(), label: "A".into(), visibility: 0.8, evolution: 0.2, anchor: false, pipeline_parent: true, label_offset_x: Some(-20.0), label_offset_y: Some(8.0), source_strategy: Some(diagram_ir::WardleySourceStrategy::Build), inertia: true },
                 diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None, source_strategy: None, inertia: false },
                 diagram_ir::WardleyNode { id: "c".into(), label: "A1".into(), visibility: 0.8, evolution: 0.1, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None, source_strategy: None, inertia: false },
@@ -589,6 +591,8 @@ mod tests {
         assert_eq!((layout.nodes[0].label_offset_x, layout.nodes[0].label_offset_y), (Some(-20.0), Some(8.0)));
         assert_eq!(layout.nodes[0].source_strategy, Some(diagram_ir::WardleySourceStrategy::Build));
         assert!(layout.nodes[0].inertia);
+        assert_eq!((&layout.config.theme.annotation_stroke, &layout.config.theme.annotation_text_color,
+            &layout.config.theme.annotation_fill), (&"#7c3aed".to_string(), &"#f97316".to_string(), &"#fef3c7".to_string()));
         assert!(layout.links[0].dashed);
         assert_eq!(layout.links[0].label.as_deref(), Some("flow"));
         assert_eq!(layout.links[0].flow, Some(diagram_ir::WardleyLinkFlow::Bidirectional));
