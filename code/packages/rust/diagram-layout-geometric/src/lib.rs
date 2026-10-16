@@ -7,7 +7,7 @@
 //! bounding box of all elements) and passes elements through unchanged.
 
 use std::collections::{HashMap, HashSet};
-use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDebugCell, LayoutedVennDebugCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyForce, LayoutedWardleyLink, LayoutedWardleyNode, LayoutedWardleyPipeline, Point, VennDiagram, WardleyDiagram};
+use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, IshikawaLook, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDebugCell, LayoutedVennDebugCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyForce, LayoutedWardleyLink, LayoutedWardleyNode, LayoutedWardleyPipeline, Point, VennDiagram, WardleyDiagram};
 
 pub const VERSION: &str = "0.2.0";
 
@@ -129,6 +129,8 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
     let spine_y = height / 2.0; let spine_from = Point { x: padding + 16.0, y: spine_y };
     let effect_width = 150.0; let effect_height = 58.0; let effect_x = width - effect_width - padding;
     let spine_to = Point { x: effect_x, y: spine_y };
+    let hand_drawn = diagram.config.look == IshikawaLook::HandDrawn;
+    let spine_path = ishikawa_line_path(&spine_from, &spine_to, hand_drawn, diagram.config.hand_drawn_seed, 0);
     let roots: Vec<_> = diagram.causes.iter().filter(|cause| cause.parent_id.is_none()).collect();
     let spacing = (spine_to.x - spine_from.x) / (roots.len() + 1).max(2) as f64;
     let mut bones = Vec::new(); let mut anchors = HashMap::<&str, Point>::new();
@@ -137,9 +139,11 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         let sign = if index.is_multiple_of(2) { -1.0 } else { 1.0 };
         let vertical_reach = ((height / 2.0 - padding) * 0.72).max(40.0);
         let tip = Point { x: attach.x - spacing * 0.48, y: spine_y + sign * vertical_reach };
+        let path = ishikawa_line_path(&tip, &attach, hand_drawn, diagram.config.hand_drawn_seed, index + 1);
         bones.push(LayoutedIshikawaBone { from: tip.clone(), to: attach, label: cause.label.clone(),
             label_position: Point { x: tip.x + spacing * 0.24, y: (tip.y + spine_y) / 2.0 + sign * 42.0 },
-            label_width: ishikawa_label_width(&cause.label, font_scale), label_height: 28.0 * font_scale, depth: 1 });
+            label_width: ishikawa_label_width(&cause.label, font_scale), label_height: 28.0 * font_scale, depth: 1,
+            path });
         anchors.insert(&cause.id, tip);
     }
     for cause in diagram.causes.iter().filter(|cause| cause.parent_id.is_some()) {
@@ -147,13 +151,30 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         let sign = if parent.y < spine_y { -1.0 } else { 1.0 };
         let length = (90.0 / cause.depth as f64).max(38.0);
         let tip = Point { x: parent.x - length, y: parent.y + sign * length * 0.55 };
+        let path = ishikawa_line_path(&tip, &parent, hand_drawn, diagram.config.hand_drawn_seed, bones.len() + 1);
         bones.push(LayoutedIshikawaBone { from: tip.clone(), to: parent,
             label: cause.label.clone(), label_position: Point { x: tip.x, y: tip.y - sign * 18.0 },
-            label_width: ishikawa_label_width(&cause.label, font_scale), label_height: 28.0 * font_scale, depth: cause.depth });
+            label_width: ishikawa_label_width(&cause.label, font_scale), label_height: 28.0 * font_scale, depth: cause.depth,
+            path });
         anchors.insert(&cause.id, tip);
     }
     LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), config: diagram.config.clone(), effect_x, effect_y: spine_y - effect_height / 2.0,
-        effect_width, effect_height, spine_from, spine_to, bones }
+        effect_width, effect_height, spine_from, spine_to, spine_path, bones }
+}
+
+fn ishikawa_line_path(from: &Point, to: &Point, hand_drawn: bool, seed: i64, index: usize) -> Vec<Point> {
+    if !hand_drawn { return vec![from.clone(), to.clone()]; }
+    let dx = to.x - from.x; let dy = to.y - from.y; let length = dx.hypot(dy).max(1.0);
+    let perpendicular = (-dy / length, dx / length);
+    let mut state = (seed as u64).wrapping_add((index as u64 + 1).wrapping_mul(0x9e3779b97f4a7c15));
+    let mut offset = || { state ^= state << 13; state ^= state >> 7; state ^= state << 17; (state as f64 / u64::MAX as f64 - 0.5) * 6.0 };
+    let mut points = vec![from.clone()];
+    for ratio in [0.25, 0.5, 0.75] {
+        let jitter = offset();
+        points.push(Point { x: from.x + dx * ratio + perpendicular.0 * jitter,
+            y: from.y + dy * ratio + perpendicular.1 * jitter });
+    }
+    points.push(to.clone()); points
 }
 
 fn ishikawa_label_width(label: &str, font_scale: f64) -> f64 {
@@ -543,6 +564,16 @@ mod tests {
         assert!(layout.bones[1].from.y > layout.spine_from.y);
         assert_eq!(layout.bones[0].label_height, 28.0);
         assert_eq!(layout.bones[0].label_width, 72.0);
+        assert_eq!(layout.spine_path.len(), 2);
+        assert_eq!(layout.bones[0].path.len(), 2);
+
+        let mut hand_drawn = diagram.clone();
+        hand_drawn.config.look = IshikawaLook::HandDrawn;
+        hand_drawn.config.hand_drawn_seed = 17;
+        let hand_drawn_layout = layout_ishikawa(&hand_drawn, 640.0);
+        assert_eq!(hand_drawn_layout.spine_path.len(), 5);
+        assert_eq!(hand_drawn_layout.bones[0].path.len(), 5);
+        assert_eq!(hand_drawn_layout, layout_ishikawa(&hand_drawn, 640.0));
 
         let mut large_text = diagram.clone();
         large_text.config.font_size = 24.0;

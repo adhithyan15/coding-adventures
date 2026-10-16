@@ -775,6 +775,9 @@ Paint lowering. Exact upstream sizing and collision behavior, remaining
 configuration parity, and interactive behavior remain unsupported at the partial level.
 The global Mermaid `fontSize` setting survives typed causal IR, scales cause-label
 geometry during layout, and selects the matching glyph size before Paint lowering.
+Global `look: handDrawn` and `handDrawnSeed` settings also survive causal IR;
+layout deterministically perturbs spine and bone paths before backend-neutral Paint
+lowering. Hand-drawn effect and cause-box outlines remain part of the visual parity gap.
 
 ### Wardley Native Slice
 

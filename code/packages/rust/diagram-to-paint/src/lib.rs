@@ -2152,14 +2152,11 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     label_font.size = diagram.config.font_size;
     let mut title_font = options.title_font.clone();
     title_font.family.clone_from(&diagram.config.font_family);
-    let mut instructions = vec![PaintInstruction::Path(line_path(
-        &[diagram.spine_from.clone(), diagram.spine_to.clone()], &stroke, 3.0,
-    ))];
+    let mut instructions = vec![PaintInstruction::Path(line_path(&diagram.spine_path, &stroke, 3.0))];
     let mut text_children = Vec::new();
     for bone in &diagram.bones {
-        instructions.push(PaintInstruction::Path(line_path(
-            &[bone.from.clone(), bone.to.clone()], &stroke, if bone.depth == 1 { 2.5 } else { 1.5 },
-        )));
+        instructions.push(PaintInstruction::Path(line_path(&bone.path, &stroke,
+            if bone.depth == 1 { 2.5 } else { 1.5 })));
         let label_x = bone.label_position.x - bone.label_width / 2.0;
         let label_y = bone.label_position.y - bone.label_height / 2.0;
         instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: label_x, y: label_y,
@@ -2186,6 +2183,10 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("ishikawa.diagramPadding".into(), diagram.config.diagram_padding.to_string());
     metadata.insert("ishikawa.useMaxWidth".into(), diagram.config.use_max_width.to_string());
     metadata.insert("ishikawa.fontSize".into(), diagram.config.font_size.to_string());
+    metadata.insert("ishikawa.look".into(), match diagram.config.look {
+        diagram_ir::IshikawaLook::Classic => "classic", diagram_ir::IshikawaLook::HandDrawn => "handDrawn",
+    }.into());
+    metadata.insert("ishikawa.handDrawnSeed".into(), diagram.config.hand_drawn_seed.to_string());
     metadata.insert("ishikawa.fontFamily".into(), diagram.config.font_family.clone());
     metadata.insert("ishikawa.lineColor".into(), diagram.config.line_color.clone());
     metadata.insert("ishikawa.fillColor".into(), diagram.config.fill_color.clone());
@@ -11685,9 +11686,11 @@ mod tests {
                 fill_color: "#abcdef".into(), text_color: "#654321".into(), ..Default::default() },
             effect_x: 430.0, effect_y: 150.0, effect_width: 150.0, effect_height: 60.0,
             spine_from: Point { x: 30.0, y: 180.0 }, spine_to: Point { x: 430.0, y: 180.0 },
+            spine_path: vec![Point { x: 30.0, y: 180.0 }, Point { x: 430.0, y: 180.0 }],
             bones: vec![diagram_ir::LayoutedIshikawaBone { from: Point { x: 100.0, y: 80.0 },
                 to: Point { x: 180.0, y: 180.0 }, label: "People".into(),
-                label_position: Point { x: 100.0, y: 68.0 }, label_width: 80.0, label_height: 28.0, depth: 1 }], };
+                label_position: Point { x: 100.0, y: 68.0 }, label_width: 80.0, label_height: 28.0, depth: 1,
+                path: vec![Point { x: 100.0, y: 80.0 }, Point { x: 180.0, y: 180.0 }] }], };
         let scene = diagram_to_paint_ishikawa(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,

@@ -498,6 +498,10 @@ fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
             assert_eq!(diagram.causes.iter().map(|cause| cause.depth).max(), Some(3));
             assert!(diagram.causes.iter().any(|cause| cause.label == "Legal approval queues delay publication"));
         }
+        if name == "hand-drawn-config" {
+            assert_eq!(diagram.config.look, diagram_ir::IshikawaLook::HandDrawn);
+            assert_eq!(diagram.config.hand_drawn_seed, 17);
+        }
     }
 }
 
@@ -1477,12 +1481,14 @@ fn ishikawa_dispatches_to_dedicated_causal_tree_ir() {
     assert_eq!(indented_effect.causes[1].parent_id.as_deref(), Some("cause-1"));
 
     let configured = parse_ishikawa(
-        "---\nconfig:\n  fontSize: 20px\n  ishikawa:\n    diagramPadding: 52\n    useMaxWidth: true\nthemeVariables:\n  fontFamily: Georgia\n  lineColor: '#123456'\n  mainBkg: '#abcdef'\n  textColor: '#654321'\n---\nishikawa\nFailure\n  People",
+        "---\nconfig:\n  fontSize: 20px\n  look: handDrawn\n  handDrawnSeed: -9\n  ishikawa:\n    diagramPadding: 52\n    useMaxWidth: true\nthemeVariables:\n  fontFamily: Georgia\n  lineColor: '#123456'\n  mainBkg: '#abcdef'\n  textColor: '#654321'\n---\nishikawa\nFailure\n  People",
     )
     .unwrap();
     assert_eq!(configured.config.diagram_padding, 52.0);
     assert!(configured.config.use_max_width);
     assert_eq!(configured.config.font_size, 20.0);
+    assert_eq!(configured.config.look, diagram_ir::IshikawaLook::HandDrawn);
+    assert_eq!(configured.config.hand_drawn_seed, -9);
     assert_eq!((&configured.config.font_family, &configured.config.line_color, &configured.config.fill_color,
         &configured.config.text_color), (&"Georgia".to_string(), &"#123456".to_string(),
         &"#abcdef".to_string(), &"#654321".to_string()));
