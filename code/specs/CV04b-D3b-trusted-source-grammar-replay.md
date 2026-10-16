@@ -155,6 +155,35 @@ metadata/ID/source is cloned to perform comparisons. Test independently derived
 small-input storage/work expectations alongside exact/one-less/zero controls;
 reading the implementation's own counter alone is insufficient evidence.
 
+Freeze this conservative comparison schedule before implementation. New catalog
+reservation costs one work unit per slot. Each retain costs one input visit,
+then one compact-decode visit plus two20-byte scans (41); each fingerprint costs
+one Token visit + twice the complete framed encoding byte length +128 prepaid
+digest-finalization units. The fixed128 covers bounded final padding/scratch;
+the encoding-dependent term covers every full field/hash scan, including long
+and non-ASCII values. Refuse stamped Tokens before commitment.
+
+Final replay censuses each graph entry at one visit + its Origin.source byte
+length, if present. Per trusted input prepay512 units for the already D3a-bounded
+root/inventory scalar fields/lookups, the41-unit compact decode, nine times the
+actual path's encoded byte length before lossy conversion/comparison, each
+visited contribution at1+source.len+tag.len, the source digest at source.len +
+ceil(source.len/64) +128, and one capture invocation. Every actual piece prepays
+1024 units for its D3a-bounded fields/IDs/coordinates and three times its legacy
+location byte length before splitting/comparison; each replay Token additionally
+pays the full framed fingerprint cost. Fixed root/piece charges conservatively
+cover bounded numeric/text/field scans, not arbitrary ordinary metadata.
+
+Independent examples: one unavailable NUL input, root1 and path input-0.js has
+43 retain work +11 census +512 root +41 compact +90 path +26 inventory-event
++130 source-hash +1 capture =854 total. One available source "1", same path,
+Number+EOF, has3110 total plus twice the independently framed original Token
+fingerprint costs. These schedules exclude separate generic/shape/lexical work.
+Test them literally and require exact/one-less behavior. In compiler sentinel
+tests, a work threshold equal to independently derived complete retention cost
+must permit retention yet refuse at FINAL replay, so deleting the final gate
+cannot make the tests pass. Retain early-capacity refusal cells separately.
+
 The ledger covers catalog ownership and replay comparison/hash work. Generic
 graph, D3a shape, lexical capture and existing regex costs keep their own bounds.
 Existing lexer/hasher/path formatter allocations are not claimed to offer
