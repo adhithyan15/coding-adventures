@@ -60,6 +60,15 @@ literal is not a substitute. Retain the owned true17/fold16 witness and add the 
 control. Shared exp/ln finite-range leakage witnesses remain refused by the
 unchanged shared proof domain, without weakening conversion/trap handling.
 
+For representative saved/direct/relay/wrapped/conditional forms, compare the
+complete serialized module with the accepted16-literal control compiled under
+the same module name. All compared numeric spellings have two digits, retaining
+source-span widths. Independently replace exactly one or two authored16 operand
+leaves in the control with17/18, as declared per case, then require byte equality
+of the entire serialized module. This binds instruction order, operands, labels,
+types, source positions and all serialized metadata; opcode counts alone do not
+prove this contract. Retain the existing route/effect assertions beside it.
+
 Commit tests before changing production. Genuine semantic reds must be actual
 executed assertion failures; compiler/ABI/helper failures are separate outcomes.
 After repairing only the four declared locations, independently reverse the
