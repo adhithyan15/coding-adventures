@@ -26,8 +26,9 @@ Incoming removes seven full refusal contexts. All seven already occur in owned
 sources at2/2/1/1/1/1/1; that is only a locator. Six pure25 contexts need exact
 positive companions without blind duplicate restoration. Conditional-under-
 addition24+1 remains a structural negative even though its arithmetic sum is25.
-Canonical literals/wrappers cannot reset or refund absolute units; cancellation,
-unrepresentable literals and intermediate2^53 rounding remain explicit refusals.
+Canonical literals/wrappers cannot reset or refund absolute units; over-budget
+cancellation, unrepresentable literals and intermediate2^53 rounding remain
+explicit refusals. Within-budget cancellation such as +1-1 remains permitted.
 Do not globally replace25 digits or relax shared exp/ln consumers.
 
 Preserve the complete44 old runtime sources/264 six-backend tuples/40 Float
