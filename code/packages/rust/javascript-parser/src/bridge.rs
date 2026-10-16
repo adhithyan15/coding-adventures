@@ -82,6 +82,7 @@ use coding_adventures_javascript_tokens::EsVersion;
 mod occurrence;
 pub use occurrence::{
     grammar_to_program_with_array_observer, ArrayOccurrenceObserver, ObservedBridgeError,
+    grammar_to_program_with_composite_observer, CompositeOccurrenceObserver,
 };
 
 // =========================================================================

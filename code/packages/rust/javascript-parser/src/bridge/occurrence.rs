@@ -18,6 +18,29 @@ pub trait ArrayOccurrenceObserver: Send {
     fn array_constructed(&mut self, node: &GrammarASTNode) -> Result<Option<String>, String>;
 }
 
+/// A single caller-owned sink for arrays and each actual typed member prefix.
+/// The end index is inclusive in the borrowed owner's raw children, and is
+/// evidence of construction rather than a certified physical source range.
+pub trait CompositeOccurrenceObserver: ArrayOccurrenceObserver {
+    fn member_constructed(
+        &mut self,
+        owner: &GrammarASTNode,
+        end_child: usize,
+        computed: bool,
+        optional: bool,
+    ) -> Result<Option<String>, String>;
+}
+
+/// CLOC34 delegating scaffold: exposes the API for an honest compiled red.
+/// Member construction observation is deliberately not implemented yet.
+pub fn grammar_to_program_with_composite_observer(
+    node: &GrammarASTNode,
+    version: EsVersion,
+    observer: &mut dyn CompositeOccurrenceObserver,
+) -> Result<Program, ObservedBridgeError> {
+    grammar_to_program_with_array_observer(node, version, observer)
+}
+
 /// Keep observed failures distinct without changing the legacy error enum.
 #[derive(Debug)]
 pub enum ObservedBridgeError {
