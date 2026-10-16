@@ -184,7 +184,13 @@ fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64
 /// Lay out an Ishikawa causal tree as an alternating fishbone.
 pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> LayoutedIshikawaDiagram {
     let width = canvas_width.max(560.0);
-    let font_scale = diagram.config.font_size / 16.0;
+    // Typed callers share the authored font domain. Keep the normalized config
+    // with the geometry so painting cannot recover an unsupported raw value.
+    let mut config = diagram.config.clone();
+    if !config.font_size.is_finite() || !(1.0..=diagram_ir::MAX_ISHIKAWA_FONT_SIZE).contains(&config.font_size) {
+        config.font_size = 16.0;
+    }
+    let font_scale = config.font_size / 16.0;
     let max_depth = diagram.causes.iter().map(|cause| cause.depth).max().unwrap_or(1) as f64;
     let height = (width * 0.58).max(360.0).max(260.0 + max_depth * 70.0);
     let padding = diagram.config.diagram_padding.min(width / 4.0).min(height / 4.0);
@@ -232,7 +238,7 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
             path, arrowhead, label_outline });
         anchors.insert(&cause.id, tip);
     }
-    LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), config: diagram.config.clone(), effect_x, effect_y,
+    LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), config, effect_x, effect_y,
         effect_width, effect_height, spine_from, spine_to, spine_path, effect_outline, bones }
 }
 
@@ -285,7 +291,7 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
 pub enum WardleyLayoutError {
     Width, Height, Padding, NodeRadius, NodeLabelOffset, AxisFontSize, LabelFontSize,
     NodeCoordinates, EvolutionTarget, NoteCoordinates, AnnotationBoxCoordinates, AnnotationCoordinates, ForceCoordinates, UnknownLinkEndpoint, UnknownEvolutionComponent,
-    PipelineReference, PipelineMembership, StageBoundaries, DerivedGeometry,
+    PipelineReference, PipelineMembership, StageBoundaries, NodeLabelOffsets, DerivedGeometry,
 }
 
 /// Check every scalar before empty-map shortcuts and every reference before the
@@ -355,6 +361,11 @@ pub fn try_layout_wardley(diagram: &WardleyDiagram) -> Result<LayoutedWardleyDia
     if !wardley_stage_boundaries_supported(diagram.stages.len(), &diagram.stage_boundaries) {
         return Err(WardleyLayoutError::StageBoundaries);
     }
+    // This new input cannot displace any existing scalar/reference diagnostic.
+    if diagram.nodes.iter().any(|node| [node.label_offset_x,node.label_offset_y].into_iter().flatten()
+        .any(|v| !v.is_finite() || v.fract()!=0.0 || v.abs()>diagram_ir::MAX_WARDLEY_SCALAR)) {
+        return Err(WardleyLayoutError::NodeLabelOffsets);
+    }
     let result=layout_wardley_supported(diagram);
     validate_wardley_geometry(&result)?;
     Ok(result)
@@ -398,8 +409,10 @@ fn validate_wardley_geometry(layout:&LayoutedWardleyDiagram)->Result<(),WardleyL
         ||!positive(c.axis_font_size)||!positive(c.axis_font_size*1.05)
         ||!positive((c.axis_font_size-2.0).max(1.0))||!positive(c.label_font_size)
         ||!wardley_stage_geometry_finite(layout)
-        ||layout.nodes.iter().any(|n|!point(&n.position))
-        ||layout.links.iter().any(|l|!point(&l.from)||!point(&l.to))
+        ||layout.nodes.iter().any(|n|!point(&n.position) || !wardley_node_paint_geometry_finite(n,c))
+        ||layout.links.iter().any(|l|!point(&l.from)||!point(&l.to)||!point(&l.label_position)
+            ||!l.label_angle.is_finite()||!(l.to.x-l.from.x).is_finite()
+            ||!(l.to.y-l.from.y).is_finite()||!(l.to.x-l.from.x).hypot(l.to.y-l.from.y).is_finite())
         ||layout.evolves.iter().any(|e|!point(&e.from)||!point(&e.to))
         ||layout.notes.iter().any(|n|!point(&n.position))
         ||layout.forces.iter().any(|f|!point(&f.position))
@@ -416,6 +429,23 @@ fn validate_wardley_geometry(layout:&LayoutedWardleyDiagram)->Result<(),WardleyL
         return Err(WardleyLayoutError::DerivedGeometry);
     }
     Ok(())
+}
+
+// These are the actual label origins and decorator extents used by paint.
+// Checking just the copied center leaves overflow and invalid offsets hidden.
+fn wardley_node_paint_geometry_finite(node:&LayoutedWardleyNode,c:&diagram_ir::WardleyConfig)->bool {
+    if [node.label_offset_x,node.label_offset_y].into_iter().flatten()
+        .any(|v|!v.is_finite()||v.fract()!=0.0||v.abs()>diagram_ir::MAX_WARDLEY_SCALAR) {return false;}
+    let strategy_spacing=if node.source_strategy.is_some() {10.0} else {0.0};
+    let (x,y)=if node.anchor {
+        (node.position.x-75.0+node.label_offset_x.unwrap_or(0.0),node.position.y-8.0+node.label_offset_y.unwrap_or(-3.0))
+    } else {
+        (node.position.x+node.label_offset_x.unwrap_or(c.node_label_offset+strategy_spacing),
+         node.position.y+node.label_offset_y.unwrap_or(-c.node_label_offset-strategy_spacing)-8.0)
+    };
+    let extent=c.node_radius*4.0+25.0;
+    x.is_finite()&&y.is_finite()&&extent.is_finite()
+        &&[node.position.x-extent,node.position.x+extent,node.position.y-extent,node.position.y+extent].into_iter().all(f64::is_finite)
 }
 
 /// Map already-admitted coordinates with the preserved ordinary arithmetic.

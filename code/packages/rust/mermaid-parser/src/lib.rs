@@ -5551,9 +5551,23 @@ fn venn_init_root(source: &str) -> Option<&str> {
 }
 
 fn venn_init_object<'a>(source: &'a str, key: &str) -> Option<&'a str> {
-    let value = venn_object_member(venn_init_root(source)?, key)?;
-    let end = venn_object_end(value)?;
-    Some(&value[1..end])
+    // Match the semantic preparation envelope. Init-looking literal content in
+    // the leading YAML document is data, even if its line has directive syntax.
+    let mut lines = source.lines().peekable();
+    while lines.peek().is_some_and(|line| line.trim().is_empty()) { lines.next(); }
+    if lines.peek().is_some_and(|line| line.trim() == "---") {
+        lines.next();
+        for line in lines.by_ref() { if line.trim() == "---" { break; } }
+    }
+    lines.find_map(|line| {
+        let directive = line.trim().strip_prefix("%%{")?.strip_suffix("}%%")?.trim();
+        let payload = directive.strip_prefix("init")?.trim_start().strip_prefix(':')?.trim();
+        let end = venn_object_end(payload)?;
+        if !payload[end + 1..].trim().is_empty() { return None; }
+        let value = venn_object_member(payload, key)?;
+        let end = venn_object_end(value)?;
+        Some(&value[1..end])
+    })
 }
 
 // Preserve parent indentation for this flat Venn config subset. The older
@@ -5834,7 +5848,7 @@ fn parse_ishikawa_config(source: &str) -> IshikawaConfig {
         } else { field(&None, &root_front, name) }
     };
     let font_size = root_value("fontSize").and_then(parse_mermaid_font_size)
-        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(defaults.font_size);
+        .filter(|value| value.is_finite() && (1.0..=diagram_ir::MAX_ISHIKAWA_FONT_SIZE).contains(value)).unwrap_or(defaults.font_size);
     let look = match root_value("look").as_deref() {
         Some(value) if value.eq_ignore_ascii_case("handdrawn") => IshikawaLook::HandDrawn,
         _ => IshikawaLook::Classic,
@@ -5861,6 +5875,7 @@ fn indentation_width(line: &str) -> usize {
 pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
     let config = parse_wardley_config(source);
     let (prepared, multiline_descriptions) = prepare_wardley_source(source)?;
+    let mut multiline_descriptions = multiline_descriptions.into_iter().peekable();
     let tokens = try_tokenize_mermaid_wardley(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(WARDLEY_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse wardley.grammar: {error}"));
@@ -5978,11 +5993,10 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             diagram.accessibility_title = Some(value.trim().to_string()); continue;
         }
         if let Some((_, value)) = line.split_once(':').filter(|(keyword, _)| keyword.trim() == "accDescr") {
-            let value = value.trim();
-            diagram.accessibility_description = value.strip_prefix("__WARDLEY_MULTILINE_")
-                .and_then(|index| index.parse::<usize>().ok())
-                .and_then(|index| multiline_descriptions.get(index).cloned())
-                .or_else(|| Some(value.to_string()));
+            let value=value.trim();
+            diagram.accessibility_description=Some(if multiline_descriptions.peek().is_some_and(|(owner,_)|*owner==index) {
+                multiline_descriptions.next().expect("owned description line").1
+            } else {value.to_string()});
             continue;
         }
         if let Some(value) = line.strip_prefix("size ") {
@@ -6122,7 +6136,7 @@ fn wardley_description_bounds(lines: &[&str]) -> (usize, usize, usize) {
     (start, end, visits)
 }
 
-fn prepare_wardley_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
+fn prepare_wardley_source(source: &str) -> Result<(String, Vec<(usize,String)>), ParseError> {
     let prepared = prepare_line_grammar_source(source)?;
     let lines: Vec<_> = prepared.lines().collect(); let mut output = Vec::with_capacity(lines.len());
     let mut multiline_descriptions = Vec::new(); let mut index = 0usize;
@@ -6147,27 +6161,60 @@ fn prepare_wardley_source(source: &str) -> Result<(String, Vec<String>), ParseEr
             remainder = lines[index];
         }
         let (start, end, _) = wardley_description_bounds(&description);
-        let description_index = multiline_descriptions.len(); multiline_descriptions.push(description[start..end].join("\n"));
-        output.push(format!("accDescr: __WARDLEY_MULTILINE_{description_index}")); index += 1;
+        multiline_descriptions.push((output.len(),description[start..end].join("\n")));
+        output.push("accDescr: __WARDLEY_DESCRIPTION".to_string());
+        // Retain physical locations after a multiline block for every later
+        // semantic error and token span. Only its owned first line is replaced.
+        output.extend((start_line..=index).map(|_|String::new()));
+        index += 1;
     }
     Ok((output.join("\n"), multiline_descriptions))
 }
 
 fn parse_wardley_link(value: &str, line: usize) -> Result<Option<WardleyLink>, ParseError> {
     let Some(operator) = wardley_link_operator(value) else { return Ok(None); };
-    let source = wardley_name(&value[..operator.start]);
+    let source = wardley_link_endpoint(&value[..operator.start],line)?;
     let (target, annotation) = split_wardley_link_annotation(&value[operator.end..]);
     if annotation.is_some_and(|label| label.trim().is_empty()) {
         return Err(wardley_error(line, "Wardley link annotations cannot be empty"));
     }
     let (target, target_flow) = wardley_link_target_port(target);
-    let target = wardley_name(target);
+    let target = wardley_link_endpoint(target,line)?;
     if source.is_empty() || target.is_empty() {
         return Err(wardley_error(line, "Wardley links require source and target components"));
     }
     let annotation = annotation.map(str::trim).filter(|label| !label.is_empty()).map(str::to_string);
     Ok(Some(WardleyLink { source, target, dashed: operator.dashed,
         label: operator.label.or(annotation), flow: operator.flow.or(target_flow) }))
+}
+
+// Quoted endpoint text has the same active-escape ownership as node labels.
+fn wardley_link_endpoint(value:&str,line:usize)->Result<String,ParseError> {
+    let value=value.trim();
+    if value.starts_with(['\'', '"']) {
+        let (label,suffix)=wardley_active_quoted_label(value,line,"link endpoint")?;
+        if !suffix.trim().is_empty() {return Err(wardley_error(line,"invalid Wardley link endpoint suffix"));}
+        Ok(label)
+    } else {Ok(value.to_string())}
+}
+
+// Only ASCII quote/backslash escapes decode. The returned suffix borrows an
+// actual char boundary in this allocation, never an arbitrary byte offset.
+fn wardley_active_quoted_label<'a>(value:&'a str,line:usize,role:&str)->Result<(String,&'a str),ParseError> {
+    let quote=value.chars().next().filter(|c|*c=='\''||*c=='"')
+        .ok_or_else(||wardley_error(line,format!("Wardley {role} must be quoted")))?;
+    let invalid=||wardley_error(line,format!("Wardley {role} must be a complete quoted string"));
+    let mut chars=value[1..].char_indices();let mut label=String::new();
+    while let Some((offset,c))=chars.next() {
+        if c==quote {return Ok((label,&value[offset+2..]));}
+        if c=='\\' {
+            match chars.next() {
+                Some((_,escaped)) if escaped==quote||escaped=='\\'=>label.push(escaped),
+                _=>return Err(invalid()),
+            }
+        } else {label.push(c);}
+    }
+    Err(invalid())
 }
 
 struct WardleyLinkOperator {
@@ -6179,23 +6226,18 @@ fn wardley_link_operator(value: &str) -> Option<WardleyLinkOperator> {
     while index < bytes.len() {
         let byte = bytes[index];
         if let Some(active) = quote {
+            if byte == b'\\' { index = (index + 2).min(bytes.len()); continue; }
             if byte == active { quote = None; }
             index += 1; continue;
         }
         if matches!(byte, b'\'' | b'"') { quote = Some(byte); index += 1; continue; }
         if byte == b'+' && bytes.get(index + 1) == Some(&b'\'') {
-            let label_start = index + 2;
-            let label_end = value[label_start..].find('\'').map(|offset| label_start + offset)?;
-            let suffix_start = label_end + 1;
-            let (suffix_length, flow) = if value[suffix_start..].starts_with("<>") {
-                (2, WardleyLinkFlow::Bidirectional)
-            } else if value[suffix_start..].starts_with('<') {
-                (1, WardleyLinkFlow::Backward)
-            } else if value[suffix_start..].starts_with('>') {
-                (1, WardleyLinkFlow::Forward)
-            } else { return None; };
-            return Some(WardleyLinkOperator { start: index, end: suffix_start + suffix_length,
-                dashed: false, flow: Some(flow), label: Some(value[label_start..label_end].to_string()) });
+            let (label,remainder)=wardley_active_quoted_label(&value[index+1..],0,"link flow").ok()?;
+            let suffix_start=value.len()-remainder.len();
+            let (suffix_length,flow)=if remainder.starts_with("<>") {(2,WardleyLinkFlow::Bidirectional)}
+                else if remainder.starts_with('<') {(1,WardleyLinkFlow::Backward)}
+                else if remainder.starts_with('>') {(1,WardleyLinkFlow::Forward)} else {return None;};
+            return Some(WardleyLinkOperator{start:index,end:suffix_start+suffix_length,dashed:false,flow:Some(flow),label:Some(label)});
         }
         for (operator, dashed, flow) in [
             ("-.->", true, None), ("-->", false, None), ("->", false, None),
@@ -6213,17 +6255,17 @@ fn wardley_link_operator(value: &str) -> Option<WardleyLinkOperator> {
 }
 
 fn split_wardley_link_annotation(value: &str) -> (&str, Option<&str>) {
-    let mut quote = None;
-    for (index, byte) in value.bytes().enumerate() {
-        if let Some(active) = quote {
-            if byte == active { quote = None; }
-        } else if matches!(byte, b'\'' | b'"') {
-            quote = Some(byte);
-        } else if byte == b';' {
-            return (&value[..index], Some(&value[index + 1..]));
-        }
+    let bytes=value.as_bytes();let mut quote=None;let mut index=0;
+    while index<bytes.len() {
+        let byte=bytes[index];
+        if let Some(active)=quote {
+            if byte==b'\\' {index=(index+2).min(bytes.len());continue;}
+            if byte==active {quote=None;}
+        } else if matches!(byte,b'\''|b'"') {quote=Some(byte);}
+        else if byte==b';' {return (&value[..index],Some(&value[index+1..]));}
+        index+=1;
     }
-    (value, None)
+    (value,None)
 }
 
 fn wardley_link_target_port(value: &str) -> (&str, Option<WardleyLinkFlow>) {
@@ -6511,7 +6553,9 @@ fn parse_wardley_component_suffix(value: &str, anchor: bool, line: usize) -> Res
     if let Some(after_label) = remainder.strip_prefix("label ") {
         let Some(close) = after_label.find(']') else { return Err(wardley_error(line, "invalid Wardley label offsets")); };
         let (x, y) = parse_wardley_coordinates(&after_label[..=close], line)?;
-        if x.fract() != 0.0 || y.fract() != 0.0 { return Err(wardley_error(line, "Wardley label offsets must be integers")); }
+        if [x,y].into_iter().any(|v|!v.is_finite()||v.fract()!=0.0||v.abs()>diagram_ir::MAX_WARDLEY_SCALAR) {
+            return Err(wardley_error(line, "Wardley label offsets must be bounded signed integers"));
+        }
         offsets = (Some(x), Some(y)); remainder = after_label[close + 1..].trim();
     }
     while !remainder.is_empty() {
@@ -6713,7 +6757,7 @@ fn mermaid_string_hash(value: &str) -> i32 {
     value.encode_utf16().fold(0i32, |hash, unit| hash.wrapping_shl(5).wrapping_sub(hash).wrapping_add(i32::from(unit)))
 }
 
-fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
+fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<(usize,String)>), ParseError> {
     let prepared = prepare_line_grammar_source(source)?;
     let lines: Vec<_> = prepared.lines().collect();
     let mut output = Vec::with_capacity(lines.len());
@@ -6926,7 +6970,7 @@ fn resolve_treeview_icon(
     }
 }
 
-fn prepare_treeview_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
+fn prepare_treeview_source(source: &str) -> Result<(String, Vec<(usize,String)>), ParseError> {
     let prepared = prepare_line_grammar_source(source)?;
     let lines: Vec<_> = prepared.lines().collect();
     let mut output = Vec::with_capacity(lines.len());

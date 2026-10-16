@@ -1893,6 +1893,8 @@ pub struct LayoutedVennDiagram {
 pub struct IshikawaCause { pub id: String, pub label: String, pub parent_id: Option<String>, pub depth: usize }
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub enum IshikawaLook { #[default] Classic, HandDrawn }
+/// Finite font admission keeps scaled label boxes and outlines representable.
+pub const MAX_ISHIKAWA_FONT_SIZE: f64 = 65_536.0;
 #[derive(Clone, Debug, PartialEq)]
 pub struct IshikawaConfig { pub diagram_padding: f64, pub use_max_width: bool, pub font_size: f64, pub font_family: String,
     pub line_color: String, pub fill_color: String, pub text_color: String, pub look: IshikawaLook, pub hand_drawn_seed: i64 }

@@ -2430,7 +2430,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
                 stroke_dash: None, stroke_dash_offset: None }));
         }
         text_children.push(text_node(&bone.label, label_x + 6.0, label_y + 2.0,
-            bone.label_width - 12.0, bone.label_height - 4.0, label_font.clone(), text_color));
+            (bone.label_width - 12.0).max(1.0), (bone.label_height - 4.0).max(1.0), label_font.clone(), text_color));
     }
     if hand_drawn {
         instructions.push(ishikawa_outline_instruction(&diagram.effect_outline, &diagram.config.fill_color, &stroke, 2.0));
