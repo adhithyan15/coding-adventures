@@ -1102,9 +1102,6 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
             )?);
         }
     }
-    if diagram.nodes.is_empty() {
-        return Err(ParseError { message: "architecture diagram requires a service".into(), line: 1, col: 1 });
-    }
     Ok(diagram)
 }
 
@@ -1150,6 +1147,7 @@ fn parse_architecture_config(source: &str) -> ArchitectureConfig {
             .unwrap_or(defaults.ideal_edge_length_multiplier),
         edge_elasticity: bounded_number("edgeElasticity", 0.0, 1.0)
             .unwrap_or(defaults.edge_elasticity),
+        num_iter: integer("numIter").filter(|value| *value > 0).unwrap_or(defaults.num_iter),
         randomize: boolean("randomize").unwrap_or(defaults.randomize),
         seed: integer("seed").unwrap_or(defaults.seed),
     }
@@ -1193,6 +1191,9 @@ fn parse_architecture_junction(
     if id.is_empty() || id.contains(char::is_whitespace) {
         return Err(token_error(token, "invalid architecture junction identifier"));
     }
+    if matches!(id, "align" | "row" | "column") {
+        return Err(token_error(token, "reserved architecture identifier"));
+    }
     if parent.is_some_and(|parent| parent.is_empty() || parent.contains(char::is_whitespace)) {
         return Err(token_error(token, "invalid architecture parent group"));
     }
@@ -1217,6 +1218,9 @@ fn parse_architecture_declaration(
     if id.is_empty() {
         return Err(token_error(token, "architecture declaration requires an identifier"));
     }
+    if matches!(id.as_str(), "align" | "row" | "column") {
+        return Err(token_error(token, "reserved architecture identifier"));
+    }
     let mut rest = source[id_end..].trim_start();
     let mut icon_text = None;
     let icon = if rest.starts_with('(') {
@@ -1234,7 +1238,11 @@ fn parse_architecture_declaration(
     };
     let label = if rest.starts_with('[') {
         let end = rest.find(']').ok_or_else(|| token_error(token, "unterminated architecture title"))?;
-        let label = rest[1..end].trim().trim_matches(['"', '\'']).to_string();
+        let label = rest[1..end]
+            .trim()
+            .trim_matches(['"', '\''])
+            .replace("\\\"", "\"")
+            .replace("\\'", "'");
         rest = rest[end + 1..].trim_start();
         label
     } else {
@@ -14948,7 +14956,7 @@ mod tests_dg04 {
     #[test]
     fn architecture_preserves_size_and_separation_configuration() {
         let diagram = parse_architecture(
-            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25, \"edgeElasticity\": 0.8, \"randomize\": true, \"seed\": 17}}}%%\narchitecture-beta\nservice api(server)[API]",
+            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25, \"edgeElasticity\": 0.8, \"numIter\": 5000, \"randomize\": true, \"seed\": 17}}}%%\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         assert_eq!(
@@ -14960,13 +14968,14 @@ mod tests_dg04 {
                 padding: 48.0,
                 ideal_edge_length_multiplier: 1.25,
                 edge_elasticity: 0.8,
+                num_iter: 5000,
                 randomize: true,
                 seed: 17,
             })
         );
 
         let diagram = parse_architecture(
-            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n    edgeElasticity: 0.2\n    randomize: false\n    seed: -9\n---\narchitecture-beta\nservice api(server)[API]",
+            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n    edgeElasticity: 0.2\n    numIter: 3200\n    randomize: false\n    seed: -9\n---\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         let config = diagram.architecture_config.unwrap();
@@ -14976,6 +14985,7 @@ mod tests_dg04 {
         assert_eq!(config.padding, 52.0);
         assert_eq!(config.ideal_edge_length_multiplier, 1.75);
         assert_eq!(config.edge_elasticity, 0.2);
+        assert_eq!(config.num_iter, 3200);
         assert!(!config.randomize);
         assert_eq!(config.seed, -9);
 

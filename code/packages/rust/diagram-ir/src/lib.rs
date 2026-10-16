@@ -2285,6 +2285,7 @@ pub struct ArchitectureConfig {
     pub padding: f64,
     pub ideal_edge_length_multiplier: f64,
     pub edge_elasticity: f64,
+    pub num_iter: i64,
     pub randomize: bool,
     pub seed: i64,
 }
@@ -2298,6 +2299,7 @@ impl Default for ArchitectureConfig {
             padding: 40.0,
             ideal_edge_length_multiplier: 1.5,
             edge_elasticity: 0.45,
+            num_iter: 2500,
             randomize: false,
             seed: 1,
         }
@@ -2466,6 +2468,7 @@ pub struct LayoutedStructuralDiagram {
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub architecture_config: Option<ArchitectureConfig>,
     pub groups: Vec<LayoutedStructuralGroup>,
     pub nodes: Vec<LayoutedStructuralNode>,
     pub relationships: Vec<LayoutedStructuralRelationship>,

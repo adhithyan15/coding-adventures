@@ -7061,6 +7061,9 @@ where
     if let Some(description) = &diagram.accessibility_description {
         scene_metadata.insert("accessibility.description".into(), description.clone());
     }
+    if let Some(config) = &diagram.architecture_config {
+        scene_metadata.insert("architecture.numIter".into(), config.num_iter.to_string());
+    }
     let lf = options.label_font.clone();
     let ls = lf.size;
 
@@ -9968,6 +9971,7 @@ mod tests {
             title: None,
             accessibility_title: None,
             accessibility_description: None,
+            architecture_config: None,
             groups: vec![],
             nodes: vec![diagram_ir::LayoutedStructuralNode {
                 id: "api".into(),
@@ -10013,6 +10017,32 @@ mod tests {
     }
 
     #[test]
+    fn architecture_iteration_limit_lowers_to_scene_metadata() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedStructuralDiagram {
+            width: 200.0,
+            height: 100.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            architecture_config: Some(diagram_ir::ArchitectureConfig {
+                num_iter: 5000,
+                ..diagram_ir::ArchitectureConfig::default()
+            }),
+            groups: vec![],
+            nodes: vec![],
+            relationships: vec![],
+        };
+
+        let scene = diagram_to_paint_structural(&layout, &opts);
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+            metadata.get("architecture.numIter")), Some(&"5000".to_string()));
+    }
+
+    #[test]
     fn structural_bidirectional_relationship_lowers_both_arrowheads() {
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
@@ -10024,6 +10054,7 @@ mod tests {
             title: None,
             accessibility_title: None,
             accessibility_description: None,
+            architecture_config: None,
             groups: vec![],
             nodes: vec![],
             relationships: vec![diagram_ir::LayoutedStructuralRelationship {
