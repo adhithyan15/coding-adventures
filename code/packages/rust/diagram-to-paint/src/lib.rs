@@ -38,7 +38,7 @@ use diagram_ir::{
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram,
     LayoutedSwimlaneEdge, LayoutedRailroadDiagram,
-    LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram, WardleyForceKind,
+    LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram, WardleyForceKind, WardleyLinkFlow, WardleySourceStrategy,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardCard, LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
@@ -2401,16 +2401,23 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     let text_color = css_to_color(&diagram.config.text_color);
     let mut label_font = options.label_font.clone();
     label_font.family.clone_from(&diagram.config.font_family);
+    label_font.size = diagram.config.font_size;
     let mut title_font = options.title_font.clone();
     title_font.family.clone_from(&diagram.config.font_family);
-    let mut instructions = vec![PaintInstruction::Path(line_path(
-        &[diagram.spine_from.clone(), diagram.spine_to.clone()], &stroke, 3.0,
-    ))];
+    let mut instructions = vec![PaintInstruction::Path(line_path(&diagram.spine_path, &stroke, 3.0))];
     let mut text_children = Vec::new();
     for bone in &diagram.bones {
-        instructions.push(PaintInstruction::Path(line_path(
-            &[bone.from.clone(), bone.to.clone()], &stroke, if bone.depth == 1 { 2.5 } else { 1.5 },
-        )));
+        instructions.push(PaintInstruction::Path(line_path(&bone.path, &stroke,
+            if bone.depth == 1 { 2.5 } else { 1.5 })));
+        let mut arrow_commands = Vec::with_capacity(bone.arrowhead.len() + 1);
+        for (index, point) in bone.arrowhead.iter().enumerate() {
+            arrow_commands.push(if index == 0 { PathCommand::MoveTo { x: point.x, y: point.y } }
+                else { PathCommand::LineTo { x: point.x, y: point.y } });
+        }
+        arrow_commands.push(PathCommand::Close);
+        instructions.push(PaintInstruction::Path(PaintPath { base: PaintBase::default(), commands: arrow_commands,
+            fill: Some(stroke.clone()), fill_rule: None, stroke: Some(stroke.clone()), stroke_width: Some(1.0),
+            stroke_cap: Some(StrokeCap::Round), stroke_join: Some(StrokeJoin::Round), stroke_dash: None, stroke_dash_offset: None }));
         let label_x = bone.label_position.x - bone.label_width / 2.0;
         let label_y = bone.label_position.y - bone.label_height / 2.0;
         instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: label_x, y: label_y,
@@ -2436,6 +2443,11 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     let mut metadata = HashMap::new();
     metadata.insert("ishikawa.diagramPadding".into(), diagram.config.diagram_padding.to_string());
     metadata.insert("ishikawa.useMaxWidth".into(), diagram.config.use_max_width.to_string());
+    metadata.insert("ishikawa.fontSize".into(), diagram.config.font_size.to_string());
+    metadata.insert("ishikawa.look".into(), match diagram.config.look {
+        diagram_ir::IshikawaLook::Classic => "classic", diagram_ir::IshikawaLook::HandDrawn => "handDrawn",
+    }.into());
+    metadata.insert("ishikawa.handDrawnSeed".into(), diagram.config.hand_drawn_seed.to_string());
     metadata.insert("ishikawa.fontFamily".into(), diagram.config.font_family.clone());
     metadata.insert("ishikawa.lineColor".into(), diagram.config.line_color.clone());
     metadata.insert("ishikawa.fillColor".into(), diagram.config.fill_color.clone());
@@ -2455,6 +2467,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     let component_label_color = css_to_color(&theme.component_label_color);
     let mut instructions = vec![PaintInstruction::Path(line_path(&[Point { x: left, y: top }, Point { x: left, y: bottom }, Point { x: right, y: bottom }], &theme.axis_color, 1.0))];
     let mut text_children = Vec::new();
+    let mut rotated_link_labels = Vec::new();
     if let Some(title) = &diagram.title {
         text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0,
             font_with_size(&options.title_font, Some(diagram.config.axis_font_size * 1.05)), axis_text_color));
@@ -2492,38 +2505,100 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             width: pipeline.width, height: pipeline.height, fill: None, stroke: Some(theme.axis_color.clone()),
             stroke_width: Some(1.5), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
     }
-    for link in &diagram.links { instructions.push(PaintInstruction::Path(line_path(&[link.from.clone(), link.to.clone()], &theme.link_stroke, 1.0))); }
+    for link in &diagram.links {
+        let mut path = line_path(&[link.from.clone(), link.to.clone()], &theme.link_stroke, 1.0);
+        if link.dashed { path.stroke_dash = Some(vec![6.0, 6.0]); }
+        instructions.push(PaintInstruction::Path(path));
+        if matches!(link.flow, Some(WardleyLinkFlow::Forward | WardleyLinkFlow::Bidirectional)) {
+            instructions.push(PaintInstruction::Path(wardley_flow_arrowhead(&link.from, &link.to, &theme.link_stroke)));
+        }
+        if matches!(link.flow, Some(WardleyLinkFlow::Backward | WardleyLinkFlow::Bidirectional)) {
+            instructions.push(PaintInstruction::Path(wardley_flow_arrowhead(&link.to, &link.from, &theme.link_stroke)));
+        }
+        if let Some(label) = &link.label {
+            let width = (label.chars().count() as f64 * diagram.config.label_font_size * 0.65).max(30.0);
+            rotated_link_labels.push((text_node_no_wrap(label, link.label_position.x - width / 2.0,
+                link.label_position.y - 10.0, width, 20.0,
+                font_with_size(&options.label_font, Some(diagram.config.label_font_size)), axis_text_color),
+                link.label_angle, link.label_position.x, link.label_position.y));
+        }
+    }
     for evolution in &diagram.evolves { instructions.push(PaintInstruction::Path(line_path(&[evolution.from.clone(), evolution.to.clone()], &theme.evolution_stroke, 1.0))); }
     for node in &diagram.nodes {
+        if let Some(strategy) = node.source_strategy {
+            let (fill, stroke) = match strategy {
+                WardleySourceStrategy::Build => ("#eeeeee", "#000000"),
+                WardleySourceStrategy::Buy => ("#cccccc", theme.component_stroke.as_str()),
+                WardleySourceStrategy::Outsource => ("#666666", theme.component_stroke.as_str()),
+                WardleySourceStrategy::Market => ("#ffffff", theme.component_stroke.as_str()),
+            };
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: node.position.x, cy: node.position.y,
+                rx: diagram.config.node_radius * 2.0, ry: diagram.config.node_radius * 2.0, fill: Some(fill.into()), stroke: Some(stroke.into()),
+                stroke_width: Some(1.0), stroke_dash: None, stroke_dash_offset: None }));
+            if strategy == WardleySourceStrategy::Market {
+                let triangle_radius = diagram.config.node_radius * 1.2; let dot_radius = diagram.config.node_radius * 0.7;
+                let top_dot = Point { x: node.position.x, y: node.position.y - triangle_radius };
+                let left_dot = Point { x: node.position.x - triangle_radius * (std::f64::consts::PI / 6.0).cos(),
+                    y: node.position.y + triangle_radius * (std::f64::consts::PI / 6.0).sin() };
+                let right_dot = Point { x: node.position.x + triangle_radius * (std::f64::consts::PI / 6.0).cos(), y: left_dot.y };
+                instructions.push(PaintInstruction::Path(line_path(&[top_dot.clone(), left_dot.clone(), right_dot.clone(), top_dot.clone()],
+                    &theme.component_stroke, 1.0)));
+                for dot in [top_dot, left_dot, right_dot] {
+                    instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: dot.x, cy: dot.y,
+                        rx: dot_radius, ry: dot_radius, fill: Some("#ffffff".into()), stroke: Some(theme.component_stroke.clone()),
+                        stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None }));
+                }
+            }
+        }
         if node.pipeline_parent {
             let size = diagram.config.node_radius * 1.6;
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.position.x - size / 2.0,
                 y: node.position.y - size / 2.0, width: size, height: size, fill: Some(theme.component_fill.clone()),
                 stroke: Some(theme.component_stroke.clone()), stroke_width: Some(1.0), corner_radius: None,
                 stroke_dash: None, stroke_dash_offset: None }));
-        } else {
+        } else if node.source_strategy != Some(WardleySourceStrategy::Market) {
             let radius = if node.anchor { diagram.config.node_radius * 1.35 } else { diagram.config.node_radius };
             instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: node.position.x, cy: node.position.y,
                 rx: radius, ry: radius, fill: Some(theme.component_fill.clone()), stroke: Some(theme.component_stroke.clone()),
                 stroke_width: Some(1.0), stroke_dash: None, stroke_dash_offset: None }));
         }
-        text_children.push(text_node(&node.label, node.position.x + diagram.config.node_label_offset, node.position.y - 16.0, 150.0, 24.0,
-            font_with_size(&options.label_font, Some(diagram.config.label_font_size)), component_label_color));
+        if node.inertia {
+            let square_size = diagram.config.node_radius * 1.6;
+            let mut offset = if node.pipeline_parent { square_size / 2.0 + 15.0 } else { diagram.config.node_radius + 15.0 };
+            if node.source_strategy.is_some() { offset += diagram.config.node_radius + 10.0; }
+            let line_height = if node.pipeline_parent { square_size } else { diagram.config.node_radius * 2.0 };
+            instructions.push(PaintInstruction::Path(line_path(&[
+                Point { x: node.position.x + offset, y: node.position.y - line_height / 2.0 },
+                Point { x: node.position.x + offset, y: node.position.y + line_height / 2.0 },
+            ], &theme.component_stroke, 6.0)));
+        }
+        let mut font = font_with_size(&options.label_font, Some(diagram.config.label_font_size));
+        if node.anchor { font.weight = 700; }
+        if node.anchor {
+            text_children.push(text_node_no_wrap(&node.label, node.position.x - 75.0 + node.label_offset_x.unwrap_or(0.0),
+                node.position.y - 8.0 + node.label_offset_y.unwrap_or(-3.0), 150.0, 22.0, font, css_to_color("#000000")));
+        } else {
+            let strategy_spacing = if node.source_strategy.is_some() { 10.0 } else { 0.0 };
+            let x = node.position.x + node.label_offset_x.unwrap_or(diagram.config.node_label_offset + strategy_spacing);
+            let y = node.position.y + node.label_offset_y.unwrap_or(-diagram.config.node_label_offset - strategy_spacing) - 8.0;
+            text_children.push(align_text_node(text_node_no_wrap(&node.label, x, y, 150.0, 24.0,
+                font, component_label_color), TextAlign::Start));
+        }
     }
     text_children.push(text_node("Visibility", 2.0, top, 56.0, 24.0,
         font_with_size(&options.label_font, Some(diagram.config.axis_font_size)), axis_text_color));
     let mut annotation_number_font = font_with_size(&options.label_font, Some(10.0)); annotation_number_font.weight = 700;
     for annotation in &diagram.annotations {
         for positions in annotation.positions.windows(2) {
-            let mut connector = line_path(positions, &theme.axis_color, 1.5);
+            let mut connector = line_path(positions, &theme.annotation_stroke, 1.5);
             connector.stroke_dash = Some(vec![4.0, 4.0]); instructions.push(PaintInstruction::Path(connector));
         }
         for position in &annotation.positions {
             instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: position.x, cy: position.y,
-                rx: 10.0, ry: 10.0, fill: Some(theme.background_color.clone()), stroke: Some(theme.axis_color.clone()),
+                rx: 10.0, ry: 10.0, fill: Some(theme.annotation_fill.clone()), stroke: Some(theme.annotation_stroke.clone()),
                 stroke_width: Some(1.5), stroke_dash: None, stroke_dash_offset: None }));
             text_children.push(text_node(&annotation.number.to_string(), position.x - 10.0, position.y - 10.0, 20.0, 20.0,
-                annotation_number_font.clone(), axis_text_color));
+                annotation_number_font.clone(), css_to_color(&theme.annotation_text_color)));
         }
     }
     if let Some(box_position) = &diagram.annotations_box {
@@ -2539,12 +2614,12 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             let box_x = box_position.x.clamp(left, (right - box_width).max(left));
             let box_y = box_position.y.clamp(top, (bottom - box_height).max(top));
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: box_x, y: box_y,
-                width: box_width, height: box_height, fill: Some(theme.background_color.clone()), stroke: Some(theme.axis_color.clone()),
+                width: box_width, height: box_height, fill: Some(theme.annotation_fill.clone()), stroke: Some(theme.annotation_stroke.clone()),
                 stroke_width: Some(1.5), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
             for (index, annotation) in entries.iter().enumerate() {
                 text_children.push(text_node_no_wrap(&format!("{}. {}", annotation.number, annotation.text), box_x + 10.0,
                     box_y + 10.0 + index as f64 * 16.0, box_width - 20.0, 16.0,
-                    font_with_size(&options.label_font, Some(11.0)), axis_text_color));
+                    font_with_size(&options.label_font, Some(11.0)), css_to_color(&theme.annotation_text_color)));
             }
         }
     }
@@ -2576,6 +2651,17 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
     });
     instructions.extend(text_scene.instructions);
+    for (node, rotation_degrees, pivot_x, pivot_y) in rotated_link_labels {
+        let scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+            id: None, content: None, children: vec![node], ext: HashMap::new() }, &LayoutToPaintOptions {
+            width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
+            shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
+        });
+        let radians = rotation_degrees.to_radians(); let cosine = radians.cos(); let sine = radians.sin();
+        instructions.push(PaintInstruction::Group(PaintGroup { base: PaintBase::default(), children: scene.instructions,
+            transform: Some([cosine, sine, -sine, cosine, pivot_x - cosine * pivot_x + sine * pivot_y,
+                pivot_y - sine * pivot_x - cosine * pivot_y]), opacity: None }));
+    }
     let mut metadata = HashMap::new();
     metadata.insert("wardley.padding".into(), diagram.config.padding.to_string());
     metadata.insert("wardley.nodeRadius".into(), diagram.config.node_radius.to_string());
@@ -2593,13 +2679,38 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("wardley.componentLabelColor".into(), theme.component_label_color.clone());
     metadata.insert("wardley.linkStroke".into(), theme.link_stroke.clone());
     metadata.insert("wardley.evolutionStroke".into(), theme.evolution_stroke.clone());
+    metadata.insert("wardley.annotationStroke".into(), theme.annotation_stroke.clone());
+    metadata.insert("wardley.annotationTextColor".into(), theme.annotation_text_color.clone());
+    metadata.insert("wardley.annotationFill".into(), theme.annotation_fill.clone());
     metadata.insert("wardley.noteCount".into(), diagram.notes.len().to_string());
     metadata.insert("wardley.annotationCount".into(), diagram.annotations.len().to_string());
     metadata.insert("wardley.forceCount".into(), diagram.forces.len().to_string());
     metadata.insert("wardley.pipelineCount".into(), diagram.pipelines.len().to_string());
     metadata.insert("wardley.stageBoundaryCount".into(), diagram.stage_boundaries.len().to_string());
+    metadata.insert("wardley.customLabelCount".into(), diagram.nodes.iter().filter(|node| node.label_offset_x.is_some()).count().to_string());
+    metadata.insert("wardley.strategyCount".into(), diagram.nodes.iter().filter(|node| node.source_strategy.is_some()).count().to_string());
+    metadata.insert("wardley.inertiaCount".into(), diagram.nodes.iter().filter(|node| node.inertia).count().to_string());
+    metadata.insert("wardley.flowLinkCount".into(), diagram.links.iter().filter(|link| link.flow.is_some()).count().to_string());
+    metadata.insert("wardley.dashedLinkCount".into(), diagram.links.iter().filter(|link| link.dashed).count().to_string());
+    metadata.insert("wardley.labeledLinkCount".into(), diagram.links.iter().filter(|link| link.label.is_some()).count().to_string());
+    if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
+    if let Some(description) = &diagram.accessibility_description {
+        metadata.insert("accessibility.description".into(), description.clone());
+    }
     PaintScene { width: diagram.width, height: diagram.height,
         background: theme.background_color.clone(), instructions, id: None, metadata: Some(metadata) }
+}
+
+fn wardley_flow_arrowhead(previous: &Point, tip: &Point, stroke: &str) -> PaintPath {
+    let dx = tip.x - previous.x; let dy = tip.y - previous.y; let length = dx.hypot(dy).max(1e-9);
+    let ux = dx / length; let uy = dy / length; let size = 5.0; let half_width = 2.5;
+    let base_x = tip.x - ux * size; let base_y = tip.y - uy * size;
+    PaintPath { base: PaintBase::default(), commands: vec![
+        PathCommand::MoveTo { x: tip.x, y: tip.y },
+        PathCommand::LineTo { x: base_x - uy * half_width, y: base_y + ux * half_width },
+        PathCommand::LineTo { x: base_x + uy * half_width, y: base_y - ux * half_width }, PathCommand::Close,
+    ], fill: Some(stroke.into()), fill_rule: None, stroke: None, stroke_width: None,
+        stroke_cap: None, stroke_join: None, stroke_dash: None, stroke_dash_offset: None }
 }
 
 /// Lower Cynefin domains and transitions into backend-neutral geometry and glyphs.
@@ -13501,17 +13612,23 @@ emphasized --> direct
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedIshikawaDiagram { width: 600.0, height: 360.0, effect: "Delay".into(),
-            config: diagram_ir::IshikawaConfig { font_family: "Georgia".into(), line_color: "#123456".into(),
+            config: diagram_ir::IshikawaConfig { font_size: 22.0, font_family: "Georgia".into(), line_color: "#123456".into(),
                 fill_color: "#abcdef".into(), text_color: "#654321".into(), ..Default::default() },
             effect_x: 430.0, effect_y: 150.0, effect_width: 150.0, effect_height: 60.0,
             spine_from: Point { x: 30.0, y: 180.0 }, spine_to: Point { x: 430.0, y: 180.0 },
+            spine_path: vec![Point { x: 30.0, y: 180.0 }, Point { x: 430.0, y: 180.0 }],
             bones: vec![diagram_ir::LayoutedIshikawaBone { from: Point { x: 100.0, y: 80.0 },
                 to: Point { x: 180.0, y: 180.0 }, label: "People".into(),
-                label_position: Point { x: 100.0, y: 68.0 }, label_width: 80.0, label_height: 28.0, depth: 1 }], };
+                label_position: Point { x: 100.0, y: 68.0 }, label_width: 80.0, label_height: 28.0, depth: 1,
+                path: vec![Point { x: 100.0, y: 80.0 }, Point { x: 180.0, y: 180.0 }],
+                arrowhead: vec![Point { x: 180.0, y: 180.0 }, Point { x: 168.0, y: 180.0 }, Point { x: 180.0, y: 168.0 }] }], };
         let scene = diagram_to_paint_ishikawa(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#123456"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#123456")
+                && path.commands.last() == Some(&PathCommand::Close))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef")
                 && rect.stroke.as_deref() == Some("#123456"))));
@@ -13519,7 +13636,10 @@ emphasized --> direct
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef"))).count(), 2);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(101, 67, 33)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if (run.font_size - 22.0).abs() < 0.001)));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontFamily")), Some(&"Georgia".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontSize")), Some(&"22".to_string()));
     }
 
 
@@ -13527,14 +13647,20 @@ emphasized --> direct
     fn wardley_lowers_to_backend_neutral_paths_ellipses_and_glyphs() {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver; let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedWardleyDiagram { width: 500.0, height: 320.0, title: Some("Map".into()),
+            accessibility_title: Some("Strategy map".into()), accessibility_description: Some("Components and dependencies".into()),
             config: diagram_ir::WardleyConfig { show_grid: true, theme: diagram_ir::WardleyTheme {
                 background_color: "#f8fafc".into(), axis_color: "#123456".into(), axis_text_color: "#234567".into(),
                 grid_color: "#345678".into(), component_fill: "#abcdef".into(), component_stroke: "#456789".into(),
-                component_label_color: "#56789a".into(), link_stroke: "#6789ab".into(), evolution_stroke: "#dc2626".into() },
+                component_label_color: "#56789a".into(), link_stroke: "#6789ab".into(), evolution_stroke: "#dc2626".into(),
+                annotation_stroke: "#7c3aed".into(), annotation_text_color: "#f97316".into(), annotation_fill: "#fef3c7".into() },
                 ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.3, 1.0],
-            nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true, pipeline_parent: true },
-                diagram_ir::LayoutedWardleyNode { id: "b".into(), label: "Child".into(), position: Point { x: 150.0, y: 120.0 }, anchor: false, pipeline_parent: false }],
-            links: vec![], evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }],
+            nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true, pipeline_parent: true, label_offset_x: None, label_offset_y: None, source_strategy: Some(WardleySourceStrategy::Build), inertia: false },
+                diagram_ir::LayoutedWardleyNode { id: "b".into(), label: "Child".into(), position: Point { x: 150.0, y: 120.0 }, anchor: false, pipeline_parent: false, label_offset_x: Some(-30.0), label_offset_y: Some(12.0), source_strategy: Some(WardleySourceStrategy::Market), inertia: true },
+                diagram_ir::LayoutedWardleyNode { id: "c".into(), label: "Normal".into(), position: Point { x: 260.0, y: 120.0 }, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None, source_strategy: None, inertia: false }],
+            links: vec![diagram_ir::LayoutedWardleyLink { from: Point { x: 205.0, y: 102.0 }, to: Point { x: 155.0, y: 118.0 },
+                dashed: true, label: Some("constraint".into()), label_position: Point { x: 178.0, y: 102.0 },
+                label_angle: -17.7, flow: Some(WardleyLinkFlow::Bidirectional) }],
+            evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }],
             annotations_box: Some(Point { x: 60.0, y: 220.0 }), annotations: vec![diagram_ir::LayoutedWardleyAnnotation {
                 number: 1, text: "Risk".into(), positions: vec![Point { x: 280.0, y: 180.0 }, Point { x: 320.0, y: 160.0 }] }],
             forces: vec![diagram_ir::LayoutedWardleyForce { label: "Adoption".into(), position: Point { x: 100.0, y: 170.0 },
@@ -13558,6 +13684,31 @@ emphasized --> direct
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.forceCount")), Some(&"2".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.pipelineCount")), Some(&"1".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.stageBoundaryCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.customLabelCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.strategyCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.inertiaCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.flowLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.dashedLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.labeledLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationStroke")), Some(&"#7c3aed".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationTextColor")), Some(&"#f97316".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationFill")), Some(&"#fef3c7".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")), Some(&"Strategy map".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.description")), Some(&"Components and dependencies".to_string()));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#fef3c7")
+                && ellipse.stroke.as_deref() == Some("#7c3aed"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                && rect.stroke.as_deref() == Some("#7c3aed"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(249, 115, 22)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[6.0, 6.0]))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#6789ab") && path.stroke.is_none())).count(), 2);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Group(group) if group.transform.is_some())));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
@@ -13568,6 +13719,11 @@ emphasized --> direct
                 && rect.stroke.as_deref() == Some("#123456"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 5.0]))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#eeeeee"))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#ffffff")
+                && ellipse.stroke_width == Some(2.0))).count(), 3);
     }
 
 

@@ -1,0 +1,18 @@
+{
+  "id": "SA-A1-L-09",
+  "category": "Lipi — the script and its orthography",
+  "label": "abbreviations, initialisms and symbols",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "SA-SCRIPT-DATA",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-O4-01",
+    "A1-O4-02",
+    "A1-O4-03"
+  ],
+  "note": "UNCOVERED, and probably permanently. Classical Sanskrit has no abbreviation convention of the kind the proxy means; the nearest thing is the scribal use of the avagraha and of numerals in verse citation, neither taught nor arguably A1. Recorded rather than dropped, so the count stays honest."
+}

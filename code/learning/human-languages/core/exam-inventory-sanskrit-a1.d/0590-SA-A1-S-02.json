@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-S-02",
+  "category": "Vākya — the sentence",
+  "label": "yes-or-no questions",
+  "probe": [
+    "SA-LEX-AM-YES",
+    "SA-LEX-NA-NO",
+    "SA-CULTURE-SANSKRIT-ANSWERING"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-OS-02",
+    "A1-F1-05"
+  ],
+  "note": "The track teaches the ANSWERS and the culture of answering. The interrogative particle kim at the head of a sentence — Sanskrit's actual yes-or-no marker — is taught as the word 'what' and never in that job, so a learner can answer such a question and not ask one."
+}

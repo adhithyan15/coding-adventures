@@ -4573,7 +4573,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_ishikawa_to_png() {
-        let diagram = parse_ishikawa("%%{init: {\"ishikawa\": {\"diagramPadding\": 64, \"useMaxWidth\": true}, \"themeVariables\": {\"fontFamily\": \"Georgia\", \"lineColor\": \"#123456\", \"mainBkg\": \"#abcdef\", \"textColor\": \"#654321\"}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews\n  Tools\n    Slow builds").expect("ishikawa parse failed");
+        let diagram = parse_ishikawa("%%{init: {\"fontSize\": 22, \"look\": \"handDrawn\", \"handDrawnSeed\": 17, \"ishikawa\": {\"diagramPadding\": 64, \"useMaxWidth\": true}, \"themeVariables\": {\"fontFamily\": \"Georgia\", \"lineColor\": \"#123456\", \"mainBkg\": \"#abcdef\", \"textColor\": \"#654321\"}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews\n  Tools\n    Slow builds").expect("ishikawa parse failed");
         let layout = layout_ishikawa(&diagram, 720.0);
         assert_eq!(diagram.config.diagram_padding, 64.0);
         assert!(diagram.config.use_max_width);
@@ -4587,6 +4587,9 @@ line "Target" [35, 50, 68, 82]"##,
         });
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#123456"))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#123456")
+                && path.commands.last() == Some(&paint_instructions::PathCommand::Close))).count(), diagram.causes.len());
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef")
                 && rect.stroke.as_deref() == Some("#123456"))));
@@ -4594,6 +4597,11 @@ line "Target" [35, 50, 68, 82]"##,
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef"))).count(), diagram.causes.len() + 1);
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.useMaxWidth")), Some(&"true".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontFamily")), Some(&"Georgia".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontSize")), Some(&"22".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.look")), Some(&"handDrawn".to_string()));
+        assert_eq!(layout.spine_path.len(), 5);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if (run.font_size - 22.0).abs() < 0.001)));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_ishikawa_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
@@ -4601,7 +4609,13 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_wardley_to_png() {
-        let diagram = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 760, \"height\": 480, \"padding\": 36, \"nodeRadius\": 9, \"nodeLabelOffset\": 12, \"axisFontSize\": 15, \"labelFontSize\": 13, \"showGrid\": true, \"useMaxWidth\": false}, \"themeVariables\": {\"wardley\": {\"backgroundColor\": \"#f8fafc\", \"axisColor\": \"#123456\", \"axisTextColor\": \"#234567\", \"gridColor\": \"#345678\", \"componentFill\": \"#abcdef\", \"componentStroke\": \"#456789\", \"componentLabelColor\": \"#56789a\", \"linkStroke\": \"#6789ab\", \"evolutionStroke\": \"#dc2626\"}}}}%%\nwardley-beta\ntitle Tea Shop\nevolution Genesis@0.2 / Concept -> Custom@0.4 / Emerging -> Product@0.75 / Converging -> Commodity@1.0 / Accepted\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61]\ncomponent Kettle [0.43, 0.35]\ncomponent Power [0.10, 0.70]\npipeline Kettle {\n  component Gas [0.18]\n  component Electric [0.35]\n  component Induction [0.55]\n}\nBusiness -> Cup of Tea\nCup of Tea -> Kettle\nKettle -> Power\nevolve Kettle 0.62\nnote \"Standardising power accelerates evolution\" [0.30, 0.49]\nannotations [0.10, 0.90]\nannotation 1,[0.60, 0.65] \"Critical component\"\nannotation 1,[0.50, 0.50] \"Critical component\"\naccelerator \"AI Adoption\" [0.55, 0.25]\ndeaccelerator \"Legacy Constraints\" [0.15, 0.75]").expect("wardley parse failed");
+        let diagram = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 760, \"height\": 480, \"padding\": 36, \"nodeRadius\": 9, \"nodeLabelOffset\": 12, \"axisFontSize\": 15, \"labelFontSize\": 13, \"showGrid\": true, \"useMaxWidth\": false}, \"themeVariables\": {\"wardley\": {\"backgroundColor\": \"#f8fafc\", \"axisColor\": \"#123456\", \"axisTextColor\": \"#234567\", \"gridColor\": \"#345678\", \"componentFill\": \"#abcdef\", \"componentStroke\": \"#456789\", \"componentLabelColor\": \"#56789a\", \"linkStroke\": \"#6789ab\", \"evolutionStroke\": \"#dc2626\"}}}}%%\nwardley-beta\ntitle Tea Shop\nevolution Genesis@0.2 / Concept -> Custom@0.4 / Emerging -> Product@0.75 / Converging -> Commodity@1.0 / Accepted\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61] (build)\ncomponent Kettle [0.43, 0.35] (buy) (inertia)\ncomponent Power [0.10, 0.70] label [-55, 12] (market)\npipeline Kettle {\n  component Gas [0.18]\n  component Electric [0.35] label [-25, 10]\n  component Induction [0.55]\n}\nBusiness +'demand'> Cup of Tea\nCup of Tea -.-> Kettle\nKettle +<> Power\nevolve Kettle 0.62\nnote \"Standardising power accelerates evolution\" [0.30, 0.49]\nannotations [0.10, 0.90]\nannotation 1,[0.60, 0.65] \"Critical component\"\nannotation 1,[0.50, 0.50] \"Critical component\"\naccelerator \"AI Adoption\" [0.55, 0.25]\ndeaccelerator \"Legacy Constraints\" [0.15, 0.75]").expect("wardley parse failed");
+        let mut diagram = diagram;
+        diagram.config.theme.annotation_stroke = "#7c3aed".into();
+        diagram.config.theme.annotation_text_color = "#f97316".into();
+        diagram.config.theme.annotation_fill = "#fef3c7".into();
+        diagram.accessibility_title = Some("Tea shop strategy map".into());
+        diagram.accessibility_description = Some("Components and dependencies across the value chain".into());
         let layout = layout_wardley(&diagram);
         assert_eq!((layout.width, layout.height), (760.0, 480.0));
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
@@ -4623,8 +4637,25 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.forceCount")), Some(&"2".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.pipelineCount")), Some(&"1".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.stageBoundaryCount")), Some(&"4".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.customLabelCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.strategyCount")), Some(&"3".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.inertiaCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.flowLinkCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.dashedLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.labeledLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationStroke")), Some(&"#7c3aed".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationTextColor")), Some(&"#f97316".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationFill")), Some(&"#fef3c7".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")), Some(&"Tea shop strategy map".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.description")),
+            Some(&"Components and dependencies across the value chain".to_string()));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#fef3c7")
+                && ellipse.stroke.as_deref() == Some("#7c3aed"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[6.0, 6.0]))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_wardley_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }

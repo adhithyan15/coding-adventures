@@ -7,7 +7,7 @@
 //! bounding box of all elements) and passes elements through unchanged.
 
 use std::collections::{HashMap, HashSet};
-use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDebugCell, LayoutedVennDebugCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyForce, LayoutedWardleyLink, LayoutedWardleyNode, LayoutedWardleyPipeline, Point, VennDiagram, WardleyDiagram};
+use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, IshikawaLook, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDebugCell, LayoutedVennDebugCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyForce, LayoutedWardleyLink, LayoutedWardleyNode, LayoutedWardleyPipeline, Point, VennDiagram, WardleyDiagram};
 
 pub const VERSION: &str = "0.2.0";
 
@@ -184,12 +184,15 @@ fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64
 /// Lay out an Ishikawa causal tree as an alternating fishbone.
 pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> LayoutedIshikawaDiagram {
     let width = canvas_width.max(560.0);
+    let font_scale = diagram.config.font_size / 16.0;
     let max_depth = diagram.causes.iter().map(|cause| cause.depth).max().unwrap_or(1) as f64;
     let height = (width * 0.58).max(360.0).max(260.0 + max_depth * 70.0);
     let padding = diagram.config.diagram_padding.min(width / 4.0).min(height / 4.0);
     let spine_y = height / 2.0; let spine_from = Point { x: padding + 16.0, y: spine_y };
     let effect_width = 150.0; let effect_height = 58.0; let effect_x = width - effect_width - padding;
     let spine_to = Point { x: effect_x, y: spine_y };
+    let hand_drawn = diagram.config.look == IshikawaLook::HandDrawn;
+    let spine_path = ishikawa_line_path(&spine_from, &spine_to, hand_drawn, diagram.config.hand_drawn_seed, 0);
     let roots: Vec<_> = diagram.causes.iter().filter(|cause| cause.parent_id.is_none()).collect();
     let spacing = (spine_to.x - spine_from.x) / (roots.len() + 1).max(2) as f64;
     let mut bones = Vec::new(); let mut anchors = HashMap::<&str, Point>::new();
@@ -198,9 +201,12 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         let sign = if index.is_multiple_of(2) { -1.0 } else { 1.0 };
         let vertical_reach = ((height / 2.0 - padding) * 0.72).max(40.0);
         let tip = Point { x: attach.x - spacing * 0.48, y: spine_y + sign * vertical_reach };
+        let path = ishikawa_line_path(&tip, &attach, hand_drawn, diagram.config.hand_drawn_seed, index + 1);
+        let arrowhead = ishikawa_arrowhead(&path);
         bones.push(LayoutedIshikawaBone { from: tip.clone(), to: attach, label: cause.label.clone(),
             label_position: Point { x: tip.x + spacing * 0.24, y: (tip.y + spine_y) / 2.0 + sign * 42.0 },
-            label_width: ishikawa_label_width(&cause.label), label_height: 28.0, depth: 1 });
+            label_width: ishikawa_label_width(&cause.label, font_scale), label_height: 28.0 * font_scale, depth: 1,
+            path, arrowhead });
         anchors.insert(&cause.id, tip);
     }
     for cause in diagram.causes.iter().filter(|cause| cause.parent_id.is_some()) {
@@ -208,17 +214,44 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         let sign = if parent.y < spine_y { -1.0 } else { 1.0 };
         let length = (90.0 / cause.depth as f64).max(38.0);
         let tip = Point { x: parent.x - length, y: parent.y + sign * length * 0.55 };
+        let path = ishikawa_line_path(&tip, &parent, hand_drawn, diagram.config.hand_drawn_seed, bones.len() + 1);
+        let arrowhead = ishikawa_arrowhead(&path);
         bones.push(LayoutedIshikawaBone { from: tip.clone(), to: parent,
             label: cause.label.clone(), label_position: Point { x: tip.x, y: tip.y - sign * 18.0 },
-            label_width: ishikawa_label_width(&cause.label), label_height: 28.0, depth: cause.depth });
+            label_width: ishikawa_label_width(&cause.label, font_scale), label_height: 28.0 * font_scale, depth: cause.depth,
+            path, arrowhead });
         anchors.insert(&cause.id, tip);
     }
     LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), config: diagram.config.clone(), effect_x, effect_y: spine_y - effect_height / 2.0,
-        effect_width, effect_height, spine_from, spine_to, bones }
+        effect_width, effect_height, spine_from, spine_to, spine_path, bones }
 }
 
-fn ishikawa_label_width(label: &str) -> f64 {
-    (label.chars().count() as f64 * 7.0 + 20.0).clamp(72.0, 180.0)
+fn ishikawa_line_path(from: &Point, to: &Point, hand_drawn: bool, seed: i64, index: usize) -> Vec<Point> {
+    if !hand_drawn { return vec![from.clone(), to.clone()]; }
+    let dx = to.x - from.x; let dy = to.y - from.y; let length = dx.hypot(dy).max(1.0);
+    let perpendicular = (-dy / length, dx / length);
+    let mut state = (seed as u64).wrapping_add((index as u64 + 1).wrapping_mul(0x9e3779b97f4a7c15));
+    let mut offset = || { state ^= state << 13; state ^= state >> 7; state ^= state << 17; (state as f64 / u64::MAX as f64 - 0.5) * 6.0 };
+    let mut points = vec![from.clone()];
+    for ratio in [0.25, 0.5, 0.75] {
+        let jitter = offset();
+        points.push(Point { x: from.x + dx * ratio + perpendicular.0 * jitter,
+            y: from.y + dy * ratio + perpendicular.1 * jitter });
+    }
+    points.push(to.clone()); points
+}
+
+fn ishikawa_arrowhead(path: &[Point]) -> Vec<Point> {
+    let [.., before, tip] = path else { return Vec::new(); };
+    let dx = tip.x - before.x; let dy = tip.y - before.y; let length = dx.hypot(dy).max(1.0);
+    let unit = (dx / length, dy / length); let perpendicular = (-unit.1, unit.0);
+    let base = Point { x: tip.x - unit.0 * 12.0, y: tip.y - unit.1 * 12.0 };
+    vec![tip.clone(), Point { x: base.x + perpendicular.0 * 5.0, y: base.y + perpendicular.1 * 5.0 },
+        Point { x: base.x - perpendicular.0 * 5.0, y: base.y - perpendicular.1 * 5.0 }]
+}
+
+fn ishikawa_label_width(label: &str, font_scale: f64) -> f64 {
+    (label.chars().count() as f64 * 7.0 * font_scale + 20.0).clamp(72.0 * font_scale, 180.0 * font_scale)
 }
 
 /// Compatibility entry: caller-owned Wardley IR must satisfy checked admission.
@@ -373,7 +406,9 @@ fn layout_wardley_supported(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram 
         x: left + evolution * (width - left - right), y: top + (1.0 - visibility) * (height - top - bottom),
     };
     let mut nodes: Vec<_> = diagram.nodes.iter().map(|node| LayoutedWardleyNode { id: node.id.clone(), label: node.label.clone(),
-        position: point(node.visibility, node.evolution), anchor: node.anchor, pipeline_parent: node.pipeline_parent }).collect();
+        position: point(node.visibility, node.evolution), anchor: node.anchor, pipeline_parent: node.pipeline_parent,
+        label_offset_x: node.label_offset_x, label_offset_y: node.label_offset_y,
+        source_strategy: node.source_strategy, inertia: node.inertia }).collect();
     let node_indices: HashMap<_, _> = nodes.iter().enumerate().map(|(index, node)| (node.id.clone(), index)).collect();
     let pipelines = diagram.pipelines.iter().filter_map(|pipeline| {
         let mut component_positions: Vec<_> = pipeline.component_ids.iter().filter_map(|id| {
@@ -389,9 +424,25 @@ fn layout_wardley_supported(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram 
         Some(LayoutedWardleyPipeline { x: first.x - 15.0, y, width: last.x - first.x + 30.0, height, component_positions })
     }).collect();
     let positions: HashMap<_, _> = diagram.nodes.iter().zip(nodes.iter()).map(|(source, layout)| (source.label.as_str(), layout.position.clone())).collect();
-    let links = diagram.links.iter().filter_map(|link| Some(LayoutedWardleyLink {
-        from: positions.get(link.source.as_str())?.clone(), to: positions.get(link.target.as_str())?.clone(),
-    })).collect();
+    let layout_nodes: HashMap<_, _> = diagram.nodes.iter().zip(nodes.iter()).map(|(source, layout)| (source.label.as_str(), layout)).collect();
+    let links = diagram.links.iter().filter_map(|link| {
+        let source = layout_nodes.get(link.source.as_str())?; let target = layout_nodes.get(link.target.as_str())?;
+        let dx = target.position.x - source.position.x; let dy = target.position.y - source.position.y;
+        let distance = dx.hypot(dy); let (ux, uy) = if distance > f64::EPSILON { (dx / distance, dy / distance) } else { (0.0, 0.0) };
+        let source_radius = if source.pipeline_parent { diagram.config.node_radius * 1.6 / 2.0_f64.sqrt() } else { diagram.config.node_radius };
+        let target_radius = if target.pipeline_parent { diagram.config.node_radius * 1.6 / 2.0_f64.sqrt() } else { diagram.config.node_radius };
+        let midpoint = Point { x: (source.position.x + target.position.x) / 2.0,
+            y: (source.position.y + target.position.y) / 2.0 };
+        let mut label_angle = dy.atan2(dx).to_degrees();
+        if !(-90.0..=90.0).contains(&label_angle) { label_angle += 180.0; }
+        Some(LayoutedWardleyLink {
+            from: Point { x: source.position.x + ux * source_radius, y: source.position.y + uy * source_radius },
+            to: Point { x: target.position.x - ux * target_radius, y: target.position.y - uy * target_radius },
+            dashed: link.dashed, label: link.label.clone(),
+            label_position: Point { x: midpoint.x + uy * 8.0, y: midpoint.y - ux * 8.0 }, label_angle,
+            flow: link.flow,
+        })
+    }).collect();
     let evolves = diagram.evolves.iter().filter_map(|evolve| {
         let node = diagram.nodes.iter().find(|node| node.label == evolve.component)?;
         Some(LayoutedWardleyEvolution { from: positions.get(node.label.as_str())?.clone(), to: point(node.visibility, evolve.target) })
@@ -406,7 +457,9 @@ fn layout_wardley_supported(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram 
     let forces = diagram.forces.iter().map(|force| LayoutedWardleyForce {
         label: force.label.clone(), position: point(force.visibility, force.evolution), kind: force.kind,
     }).collect();
-    LayoutedWardleyDiagram { width, height, title: diagram.title.clone(), config: diagram.config.clone(),
+    LayoutedWardleyDiagram { width, height, title: diagram.title.clone(),
+        accessibility_title: diagram.accessibility_title.clone(), accessibility_description: diagram.accessibility_description.clone(),
+        config: diagram.config.clone(),
         stages: diagram.stages.clone(), stage_boundaries: diagram.stage_boundaries.clone(), nodes, links, evolves, notes,
         annotations_box, annotations, forces, pipelines }
 }
@@ -727,6 +780,25 @@ mod tests {
         assert!(layout.bones[1].from.y > layout.spine_from.y);
         assert_eq!(layout.bones[0].label_height, 28.0);
         assert_eq!(layout.bones[0].label_width, 72.0);
+        assert_eq!(layout.spine_path.len(), 2);
+        assert_eq!(layout.bones[0].path.len(), 2);
+        assert_eq!(layout.bones[0].arrowhead.len(), 3);
+        assert_eq!(layout.bones[0].arrowhead[0], layout.bones[0].to);
+
+        let mut hand_drawn = diagram.clone();
+        hand_drawn.config.look = IshikawaLook::HandDrawn;
+        hand_drawn.config.hand_drawn_seed = 17;
+        let hand_drawn_layout = layout_ishikawa(&hand_drawn, 640.0);
+        assert_eq!(hand_drawn_layout.spine_path.len(), 5);
+        assert_eq!(hand_drawn_layout.bones[0].path.len(), 5);
+        assert_eq!(hand_drawn_layout.bones[0].arrowhead[0], hand_drawn_layout.bones[0].to);
+        assert_eq!(hand_drawn_layout, layout_ishikawa(&hand_drawn, 640.0));
+
+        let mut large_text = diagram.clone();
+        large_text.config.font_size = 24.0;
+        let large_text_layout = layout_ishikawa(&large_text, 640.0);
+        assert_eq!(large_text_layout.bones[0].label_height, 42.0);
+        assert_eq!(large_text_layout.bones[0].label_width, 108.0);
 
         let mut padded = diagram.clone();
         padded.config.diagram_padding = 64.0;
@@ -749,13 +821,18 @@ mod tests {
 
     #[test]
     fn wardley_layout_maps_visibility_up_and_evolution_right() {
-        let diagram = WardleyDiagram { title: None, config: diagram_ir::WardleyConfig { width: 600.0, height: 400.0,
-            padding: 40.0, ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.35, 1.0],
-            nodes: vec![diagram_ir::WardleyNode { id: "a".into(), label: "A".into(), visibility: 0.8, evolution: 0.2, anchor: false, pipeline_parent: true },
-                diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false, pipeline_parent: false },
-                diagram_ir::WardleyNode { id: "c".into(), label: "A1".into(), visibility: 0.8, evolution: 0.1, anchor: false, pipeline_parent: false },
-                diagram_ir::WardleyNode { id: "d".into(), label: "A2".into(), visibility: 0.8, evolution: 0.4, anchor: false, pipeline_parent: false }],
-            links: vec![], evolves: vec![], notes: vec![diagram_ir::WardleyNote { text: "Watch".into(), visibility: 0.5, evolution: 0.5 }],
+        let diagram = WardleyDiagram { title: None, accessibility_title: Some("Strategy map".into()),
+            accessibility_description: Some("Components and dependencies".into()), config: diagram_ir::WardleyConfig { width: 600.0, height: 400.0,
+            padding: 40.0, theme: diagram_ir::WardleyTheme { annotation_stroke: "#7c3aed".into(),
+                annotation_text_color: "#f97316".into(), annotation_fill: "#fef3c7".into(), ..Default::default() },
+            ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.35, 1.0],
+            nodes: vec![diagram_ir::WardleyNode { id: "a".into(), label: "A".into(), visibility: 0.8, evolution: 0.2, anchor: false, pipeline_parent: true, label_offset_x: Some(-20.0), label_offset_y: Some(8.0), source_strategy: Some(diagram_ir::WardleySourceStrategy::Build), inertia: true },
+                diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None, source_strategy: None, inertia: false },
+                diagram_ir::WardleyNode { id: "c".into(), label: "A1".into(), visibility: 0.8, evolution: 0.1, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None, source_strategy: None, inertia: false },
+                diagram_ir::WardleyNode { id: "d".into(), label: "A2".into(), visibility: 0.8, evolution: 0.4, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None, source_strategy: None, inertia: false }],
+            links: vec![diagram_ir::WardleyLink { source: "A".into(), target: "B".into(), dashed: true,
+                label: Some("flow".into()), flow: Some(diagram_ir::WardleyLinkFlow::Bidirectional) }],
+            evolves: vec![], notes: vec![diagram_ir::WardleyNote { text: "Watch".into(), visibility: 0.5, evolution: 0.5 }],
             annotations_box: Some((0.2, 0.8)), annotations: vec![diagram_ir::WardleyAnnotation { number: 1,
                 text: "Risk".into(), coordinates: vec![(0.6, 0.7)] }], forces: vec![diagram_ir::WardleyForce {
                     label: "Adoption".into(), visibility: 0.4, evolution: 0.25, kind: diagram_ir::WardleyForceKind::Accelerator }],
@@ -771,6 +848,18 @@ mod tests {
         assert_eq!((layout.pipelines[0].x, layout.pipelines[0].width), (77.0, 186.0));
         assert_eq!(layout.pipelines[0].component_positions.len(), 2);
         assert_eq!(layout.stage_boundaries, [0.35, 1.0]);
+        assert_eq!((layout.nodes[0].label_offset_x, layout.nodes[0].label_offset_y), (Some(-20.0), Some(8.0)));
+        assert_eq!(layout.nodes[0].source_strategy, Some(diagram_ir::WardleySourceStrategy::Build));
+        assert!(layout.nodes[0].inertia);
+        assert_eq!(layout.accessibility_title.as_deref(), Some("Strategy map"));
+        assert_eq!(layout.accessibility_description.as_deref(), Some("Components and dependencies"));
+        assert_eq!((&layout.config.theme.annotation_stroke, &layout.config.theme.annotation_text_color,
+            &layout.config.theme.annotation_fill), (&"#7c3aed".to_string(), &"#f97316".to_string(), &"#fef3c7".to_string()));
+        assert!(layout.links[0].dashed);
+        assert_eq!(layout.links[0].label.as_deref(), Some("flow"));
+        assert_eq!(layout.links[0].flow, Some(diagram_ir::WardleyLinkFlow::Bidirectional));
+        assert!(layout.links[0].from.x > layout.nodes[0].position.x);
+        assert!(layout.links[0].to.x < layout.nodes[1].position.x);
     }
 
 

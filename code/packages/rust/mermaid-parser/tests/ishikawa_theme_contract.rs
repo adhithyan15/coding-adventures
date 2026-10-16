@@ -3,9 +3,9 @@ use diagram_ir::{IshikawaCause,IshikawaConfig,IshikawaDiagram};
 // Each setting case retains the whole causal IR, including identity and order.
 // Expected defaults are literal so a production-default change cannot rescue a
 // failed source-origin or malformed-present-value control.
-fn defaults() -> IshikawaConfig { IshikawaConfig {diagram_padding:20.0,use_max_width:false,
+fn defaults() -> IshikawaConfig { IshikawaConfig {font_size:16.0,look:diagram_ir::IshikawaLook::Classic,hand_drawn_seed:0,diagram_padding:20.0,use_max_width:false,
     font_family:"sans-serif".into(),line_color:"#333333".into(),fill_color:"#ffffff".into(),text_color:"#333333".into()} }
-fn custom() -> IshikawaConfig { IshikawaConfig {diagram_padding:80.0,use_max_width:true,
+fn custom() -> IshikawaConfig { IshikawaConfig {font_size:16.0,look:diagram_ir::IshikawaLook::Classic,hand_drawn_seed:0,diagram_padding:80.0,use_max_width:true,
     font_family:"Georgia".into(),line_color:"#123456".into(),fill_color:"#abcdef".into(),text_color:"#654321".into()} }
 fn complete(prefix:&str,config:IshikawaConfig) {
     let source=[prefix,"ishikawa-beta\nE\n  A\n"].concat();

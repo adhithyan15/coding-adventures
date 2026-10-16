@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-F-02",
+  "category": "Giving and asking for information",
+  "label": "ask who somebody is, what a thing is, and where it is",
+  "probe": [
+    "SA-LEX-C14-DEIXIS-05",
+    "SA-LEX-KIM",
+    "SA-LEX-C14-DEIXIS-06",
+    "SA-PATTERN-WHATS-YOUR-NAME"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F1-02"
+  ],
+  "note": "kaḥ, kim, kutra and the name question that models them."
+}

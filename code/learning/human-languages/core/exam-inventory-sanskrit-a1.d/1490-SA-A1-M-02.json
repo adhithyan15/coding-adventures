@@ -1,0 +1,29 @@
+{
+  "id": "SA-A1-M-02",
+  "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+  "label": "meals, the restaurant and ordering",
+  "probe": [
+    "SA-LEX-C97-LOC97-02",
+    "SA-LEX-C160-THG160-01",
+    "SA-LEX-KHADATI-EAT",
+    "SA-LEX-C29-COURTESY-01",
+    "SA-PRON-DATIVE-ME-01",
+    "SA-LEX-C72-HOUSEWORK-05",
+    "SA-LEX-ANNAM-FOOD",
+    "SA-LEX-PANIYAM-WATER",
+    "SA-LEX-KSHIRAM-MILK",
+    "SA-GRAMMAR-C265-DADATU-01",
+    "SA-PATTERN-C265-POLITE-ORDER-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE05-01",
+    "A1-NE05-05"
+  ],
+  "note": "COVERED. Chapters 97 and 160 already owned bhojanālayaḥ (restaurant) and bhojanam (meal); chapter 265 corrects that stale audit note, retrieves familiar food and drink, bridges known dadāti to the complete request form dadātu, and twice requires a model-free kṛpayā mahyaṃ X dadātu request. This closes one narrow project-defined meal-ordering point, not a complete imperative paradigm or restaurant vocabulary."
+}

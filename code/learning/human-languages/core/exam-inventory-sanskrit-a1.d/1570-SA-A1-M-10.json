@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-M-10",
+  "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+  "label": "health, illness, medicine and hygiene",
+  "probe": [
+    "SA-LEX-C26-ROLE-05",
+    "SA-LEX-KUSHALAM"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE13-01",
+    "A1-NE13-02",
+    "A1-NE13-03",
+    "A1-NE13-04"
+  ],
+  "note": "vaidyaḥ ('a physician') and kuśalam ('well-being') are the only two atoms in this field, and kuśalam is taught as a greeting rather than as health. No word for illness, pain, medicine or a hospital. Counted covered, very thinly, and the four proxy points behind it are effectively open."
+}

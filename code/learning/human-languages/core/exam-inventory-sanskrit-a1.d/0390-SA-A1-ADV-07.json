@@ -1,0 +1,24 @@
+{
+  "id": "SA-A1-ADV-07",
+  "category": "Avyaya — the indeclinable and the adverb",
+  "label": "interrogative adverbs: where, when, why, how, from where",
+  "probe": [
+    "SA-LEX-C14-DEIXIS-06",
+    "SA-LEX-C18-ASK-01",
+    "SA-LEX-C18-ASK-02",
+    "SA-LEX-KATHAM",
+    "SA-LEX-C18-ASK-04",
+    "SA-GRAMMAR-C18-K-QUESTIONS"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ADV-07",
+    "A1-ADV-08",
+    "A1-F1-02"
+  ],
+  "note": "kutra, kadā, kimartham, katham and kutaḥ. This is the best-covered corner of the whole inventory: five question adverbs and a lesson naming the family they belong to."
+}

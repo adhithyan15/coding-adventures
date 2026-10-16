@@ -1,0 +1,26 @@
+{
+  "id": "SA-A1-X-06",
+  "category": "Specific notions — the lexical fields",
+  "label": "the house and its parts",
+  "probe": [
+    "SA-LEX-C16-PLACE-01",
+    "SA-LEX-C30-WELCOME-01",
+    "SA-LEX-C47-DWELL-01",
+    "SA-LEX-C47-DWELL-02",
+    "SA-LEX-C47-DWELL-03",
+    "SA-LEX-C47-DWELL-04",
+    "SA-LEX-C47-DWELL-05",
+    "SA-LEX-C35-HOUSE-05",
+    "SA-LEX-C30-WELCOME-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE10-02",
+    "A1-NE10-04"
+  ],
+  "note": "gṛham, dvāram, bhittiḥ, vātāyanam, sopānam, stambhaḥ, talam, śayyā, āsanam. Buying, renting and domestic activity are absent."
+}

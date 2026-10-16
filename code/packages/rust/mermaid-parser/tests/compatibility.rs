@@ -423,9 +423,38 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
                 &diagram.config.theme.component_fill, &diagram.config.theme.link_stroke),
                 (&"#f8fafc".to_string(), &"#123456".to_string(), &"#abcdef".to_string(), &"#6789ab".to_string()));
         }
+        if name == "annotation-theme" {
+            assert_eq!((&diagram.config.theme.annotation_stroke, &diagram.config.theme.annotation_text_color,
+                &diagram.config.theme.annotation_fill), (&"#7c3aed".to_string(), &"#f97316".to_string(),
+                &"#fef3c7".to_string()));
+        }
         if name == "stage-boundaries" {
             assert_eq!(diagram.stages, ["Genesis / Concept", "Custom / Emerging", "Product / Converging", "Commodity / Accepted"]);
             assert_eq!(diagram.stage_boundaries, [0.2, 0.4, 0.75, 1.0]);
+        }
+        if name == "label-offsets" {
+            assert_eq!((diagram.nodes[0].label_offset_x, diagram.nodes[0].label_offset_y), (Some(-50.0), Some(10.0)));
+        }
+        if name == "decorators" {
+            assert_eq!(diagram.nodes.iter().map(|node| node.source_strategy).collect::<Vec<_>>(), [
+                Some(diagram_ir::WardleySourceStrategy::Build), Some(diagram_ir::WardleySourceStrategy::Buy),
+                Some(diagram_ir::WardleySourceStrategy::Outsource), Some(diagram_ir::WardleySourceStrategy::Market)]);
+            assert!(diagram.nodes[3].inertia);
+        }
+        if name == "flow-links" {
+            assert_eq!(diagram.links.len(), 6);
+            assert_eq!(diagram.links[0].label.as_deref(), Some("request"));
+            assert!(diagram.links[1].dashed);
+            assert_eq!(diagram.links[2].flow, Some(diagram_ir::WardleyLinkFlow::Forward));
+            assert_eq!(diagram.links[3].flow, Some(diagram_ir::WardleyLinkFlow::Backward));
+            assert_eq!(diagram.links[4].flow, Some(diagram_ir::WardleyLinkFlow::Bidirectional));
+            assert_eq!(diagram.links[4].label.as_deref(), Some("sync"));
+            assert_eq!(diagram.links[5].flow, Some(diagram_ir::WardleyLinkFlow::Forward));
+        }
+        if name == "accessibility" {
+            assert_eq!(diagram.accessibility_title.as_deref(), Some("Accessible strategy map"));
+            assert_eq!(diagram.accessibility_description.as_deref(),
+                Some("Components and dependencies\nacross the value chain"));
         }
         if name == "forces" {
             assert_eq!(diagram.forces.len(), 2);
@@ -441,6 +470,7 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
             assert!(diagram.nodes[0].pipeline_parent);
             assert_eq!((diagram.nodes[1].label.as_str(), diagram.nodes[1].visibility, diagram.nodes[1].evolution),
                 ("File System", 0.40, 0.25));
+            assert_eq!((diagram.nodes[1].label_offset_x, diagram.nodes[1].label_offset_y), (Some(-12.0), Some(8.0)));
         }
     }
 }
@@ -458,6 +488,7 @@ fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
         if name == "diagram-padding-config" {
             assert_eq!(diagram.config.diagram_padding, 64.0);
             assert!(diagram.config.use_max_width);
+            assert_eq!(diagram.config.font_size, 22.0);
             assert_eq!(diagram.config.font_family, "Georgia");
             assert_eq!(diagram.config.line_color, "#123456");
             assert_eq!(diagram.config.fill_color, "#abcdef");
@@ -466,6 +497,10 @@ fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
         if name == "deep-long-labels" {
             assert_eq!(diagram.causes.iter().map(|cause| cause.depth).max(), Some(3));
             assert!(diagram.causes.iter().any(|cause| cause.label == "Legal approval queues delay publication"));
+        }
+        if name == "hand-drawn-config" {
+            assert_eq!(diagram.config.look, diagram_ir::IshikawaLook::HandDrawn);
+            assert_eq!(diagram.config.hand_drawn_seed, 17);
         }
     }
 }
@@ -1446,11 +1481,14 @@ fn ishikawa_dispatches_to_dedicated_causal_tree_ir() {
     assert_eq!(indented_effect.causes[1].parent_id.as_deref(), Some("cause-1"));
 
     let configured = parse_ishikawa(
-        "---\nconfig:\n  ishikawa:\n    diagramPadding: 52\n    useMaxWidth: true\nthemeVariables:\n  fontFamily: Georgia\n  lineColor: '#123456'\n  mainBkg: '#abcdef'\n  textColor: '#654321'\n---\nishikawa\nFailure\n  People",
+        "---\nconfig:\n  fontSize: 20px\n  look: handDrawn\n  handDrawnSeed: -9\n  ishikawa:\n    diagramPadding: 52\n    useMaxWidth: true\nthemeVariables:\n  fontFamily: Georgia\n  lineColor: '#123456'\n  mainBkg: '#abcdef'\n  textColor: '#654321'\n---\nishikawa\nFailure\n  People",
     )
     .unwrap();
     assert_eq!(configured.config.diagram_padding, 52.0);
     assert!(configured.config.use_max_width);
+    assert_eq!(configured.config.font_size, 20.0);
+    assert_eq!(configured.config.look, diagram_ir::IshikawaLook::HandDrawn);
+    assert_eq!(configured.config.hand_drawn_seed, -9);
     assert_eq!((&configured.config.font_family, &configured.config.line_color, &configured.config.fill_color,
         &configured.config.text_color), (&"Georgia".to_string(), &"#123456".to_string(),
         &"#abcdef".to_string(), &"#654321".to_string()));
@@ -1470,6 +1508,8 @@ fn wardley_dispatches_to_dedicated_strategic_map_ir() {
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nAPI -> Missing").is_err());
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nnote unquoted [0.4, 0.5]").is_err());
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nannotation one,[0.4, 0.5] \"Bad\"").is_err());
+    assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\ncomponent DB [0.4, 0.7]\nAPI -> DB;").is_err());
+    assert!(parse_wardley("wardley-beta\naccDescr {\nmissing close\ncomponent API [0.6, 0.5]").is_err());
     let sized = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 700, \"height\": 420}}}%%\nwardley-beta\nsize [640, 360]\ncomponent API [0.6, 0.5]").unwrap();
     assert_eq!((sized.config.width, sized.config.height), (640.0, 360.0));
 }

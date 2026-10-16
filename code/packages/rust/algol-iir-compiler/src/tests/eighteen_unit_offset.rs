@@ -5,6 +5,15 @@ use super::*;
 fn canonical_eighteen_unit_forms_have_typed_output_routes_and_independent_arms() {
     // These include every formerly refused eighteen-unit boundary shape.
     for expression in [
+        // Former absolute-budget nineteen refusals become exact positives.
+        "entier(sign(pick()) + 19)",
+        "entier((sign(pick()) + 9) + 10)",
+        "entier(1 + (18 + sign(pick())))",
+        "entier(entier(sign(pick()) + 1) + 18)",
+        "entier(abs(sign(pick()) + 2) + 17)",
+        "entier(sign(pick()) + 18 - 1)",
+        "entier(abs(entier(sign(pick()) + 18) + 1))",
+        "entier(entier(abs(sign(pick()) + 18) + 1))",
         "entier(sign(pick()) + 17)",
         "entier(sign(pick()) - 17)",
         "entier((sign(pick()) + 8) + 9)",
@@ -76,13 +85,13 @@ fn canonical_eighteen_unit_forms_have_typed_output_routes_and_independent_arms()
 }
 
 #[test]
-fn eighteen_unit_proofs_refuse_nineteen_units_rounding_traps_and_exp_widening() {
+fn eighteen_unit_proofs_refuse_twenty_two_units_rounding_traps_and_exp_widening() {
     for expression in [
-        "entier(sign(pick()) + 19)",
-        "entier((sign(pick()) + 9) + 10)",
-        "entier(1 + (18 + sign(pick())))",
-        "entier(entier(sign(pick()) + 1) + 18)",
-        "entier(abs(sign(pick()) + 2) + 17)",
+        "entier(sign(pick()) + 22)",
+        "entier((sign(pick()) + 11) + 11)",
+        "entier(1 + (21 + sign(pick())))",
+        "entier(entier(sign(pick()) + 1) + 21)",
+        "entier(abs(sign(pick()) + 2) + 20)",
         "entier(sign(pick()) + 15.5)",
         "entier(sign(pick()) + 16.5)",
         "entier(sign(pick()) + 17.5)",
@@ -107,9 +116,9 @@ fn eighteen_unit_proofs_refuse_nineteen_units_rounding_traps_and_exp_widening() 
         "entier((sign(pick()) + 18) * 1)",
         "entier(exp(sign(pick())) + 18)",
         "entier(exp(sign(pick()) + 18))",
-        "entier(sign(pick()) + 18 - 1)",
-        "entier(abs(entier(sign(pick()) + 18) + 1))",
-        "entier(entier(abs(sign(pick()) + 18) + 1))",
+        "entier(sign(pick()) + 21 - 1)",
+        "entier(abs(entier(sign(pick()) + 21) + 1))",
+        "entier(entier(abs(sign(pick()) + 21) + 1))",
     ] {
         let source = format!("begin real procedure pick; pick := 3.5; real saved; saved := {expression}; output(saved) end");
         assert!(matches!(compile_source(&source, "eighteen_unit_refusal"), Err(CompileError::Type(m)) if m.contains("cannot print a real value")), "{source}");

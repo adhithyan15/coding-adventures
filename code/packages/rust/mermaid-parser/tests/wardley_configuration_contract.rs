@@ -4,8 +4,8 @@ use mermaid_parser::parse_wardley;
 
 fn literal_config()->WardleyConfig { WardleyConfig {width:900.0,height:600.0,
 padding:48.0,node_radius:6.0,node_label_offset:8.0,axis_font_size:12.0,
-label_font_size:10.0,show_grid:false,use_max_width:true,theme:diagram_ir::WardleyTheme {background_color:"#ffffff".into(),axis_color:"#000000".into(),axis_text_color:"#222222".into(),grid_color:"rgba(100, 100, 100, 0.2)".into(),component_fill:"#ffffff".into(),component_stroke:"#000000".into(),component_label_color:"#222222".into(),link_stroke:"#000000".into(),evolution_stroke:"#dc3545".into()}} }
-fn expected(config:WardleyConfig)->WardleyDiagram { WardleyDiagram {title:None,
+label_font_size:10.0,show_grid:false,use_max_width:true,theme:diagram_ir::WardleyTheme {annotation_stroke:"#000000".into(),annotation_text_color:"#222222".into(),annotation_fill:"#ffffff".into(),background_color:"#ffffff".into(),axis_color:"#000000".into(),axis_text_color:"#222222".into(),grid_color:"rgba(100, 100, 100, 0.2)".into(),component_fill:"#ffffff".into(),component_stroke:"#000000".into(),component_label_color:"#222222".into(),link_stroke:"#000000".into(),evolution_stroke:"#dc3545".into()}} }
+fn expected(config:WardleyConfig)->WardleyDiagram { WardleyDiagram {accessibility_title:None,accessibility_description:None,title:None,
 config,stages:vec!["Genesis".into(),"Custom Built".into(),"Product".into(),"Commodity".into()],
 nodes:vec![],links:vec![],evolves:vec![],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]} }
 

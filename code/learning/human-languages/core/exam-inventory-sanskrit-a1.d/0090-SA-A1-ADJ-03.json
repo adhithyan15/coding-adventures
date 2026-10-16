@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-ADJ-03",
+  "category": "Viśeṣaṇa — the adjective",
+  "label": "adjective gender: the adjective takes the gender of its noun",
+  "probe": [
+    "SA-GRAMMAR-C15-ADJ-SYSTEM"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-03"
+  ],
+  "note": "Chapter 15's system lesson is where agreement is stated. Sanskrit agrees in gender, number AND case, which is more than the proxy asks and is the same lesson."
+}

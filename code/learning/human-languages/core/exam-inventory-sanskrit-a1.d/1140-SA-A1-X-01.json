@@ -1,0 +1,31 @@
+{
+  "id": "SA-A1-X-01",
+  "category": "Specific notions — the lexical fields",
+  "label": "the body",
+  "probe": [
+    "SA-LEX-AKSHI-EYE",
+    "SA-LEX-KARNAH-EAR",
+    "SA-LEX-MUKHAM-MOUTH",
+    "SA-LEX-NASIKA-NOSE",
+    "SA-LEX-HRIDAYAM-HEART",
+    "SA-LEX-C25-BODY-01",
+    "SA-LEX-C25-BODY-02",
+    "SA-LEX-C25-BODY-03",
+    "SA-LEX-C25-BODY-04",
+    "SA-LEX-C25-BODY-05",
+    "SA-LEX-C34-LIMB-01",
+    "SA-LEX-C34-LIMB-02",
+    "SA-LEX-C34-LIMB-03",
+    "SA-LEX-C34-LIMB-04",
+    "SA-LEX-C34-LIMB-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE01-01"
+  ],
+  "note": "Fifteen body atoms across chapters 12, 13, 25 and 34 — the best-covered lexical field in the track, and far past what A1 asks."
+}

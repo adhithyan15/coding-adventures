@@ -599,8 +599,8 @@ use diagram_ir::{
     TemporalKind, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
-    CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram,
-    WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyForce, WardleyForceKind, WardleyLink, WardleyNode, WardleyNote, WardleyPipeline, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
+    CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram, IshikawaLook,
+    WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyForce, WardleyForceKind, WardleyLink, WardleyLinkFlow, WardleyNode, WardleyNote, WardleyPipeline, WardleySourceStrategy, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind, TreeViewTheme,
 };
 
@@ -5532,7 +5532,7 @@ fn venn_object_member<'a>(source: &'a str, key: &str) -> Option<&'a str> {
     None
 }
 
-fn venn_init_object<'a>(source: &'a str, key: &str) -> Option<&'a str> {
+fn venn_init_root(source: &str) -> Option<&str> {
     // Match the semantic preparation envelope. Init-looking literal content in
     // the leading YAML document is data, even if its line has directive syntax.
     let mut lines = source.lines().peekable();
@@ -5546,10 +5546,14 @@ fn venn_init_object<'a>(source: &'a str, key: &str) -> Option<&'a str> {
         let payload = directive.strip_prefix("init")?.trim_start().strip_prefix(':')?.trim();
         let end = venn_object_end(payload)?;
         if !payload[end + 1..].trim().is_empty() { return None; }
-        let value = venn_object_member(payload, key)?;
-        let end = venn_object_end(value)?;
-        Some(&value[1..end])
+        Some(payload)
     })
+}
+
+fn venn_init_object<'a>(source: &'a str, key: &str) -> Option<&'a str> {
+    let value = venn_object_member(venn_init_root(source)?, key)?;
+    let end = venn_object_end(value)?;
+    Some(&value[1..end])
 }
 
 // Preserve parent indentation for this flat Venn config subset. The older
@@ -5823,10 +5827,24 @@ fn parse_ishikawa_config(source: &str) -> IshikawaConfig {
     let use_max_width = value("useMaxWidth").and_then(|value| match value.to_ascii_lowercase().as_str() {
         "true" => Some(true), "false" => Some(false), _ => None,
     }).unwrap_or(defaults.use_max_width);
+    let root_front = venn_front_matter_fields(source, &["config"]);
+    let root_value = |name: &str| {
+        if let Some(root) = venn_init_root(source) {
+            venn_object_member(root, name).map(|value| venn_theme_string(value, true))
+        } else { field(&None, &root_front, name) }
+    };
+    let font_size = root_value("fontSize").and_then(parse_mermaid_font_size)
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(defaults.font_size);
+    let look = match root_value("look").as_deref() {
+        Some(value) if value.eq_ignore_ascii_case("handdrawn") => IshikawaLook::HandDrawn,
+        _ => IshikawaLook::Classic,
+    };
+    let hand_drawn_seed = root_value("handDrawnSeed").and_then(|value| value.parse::<i64>().ok())
+        .unwrap_or(defaults.hand_drawn_seed);
     let theme_front = venn_front_matter_fields(source, &["themeVariables"]);
     let theme_object = venn_init_object(source, "themeVariables").map(|value| format!("{{{value}}}"));
     let theme_value = |name: &str| field(&theme_object, &theme_front, name);
-    IshikawaConfig { diagram_padding, use_max_width,
+    IshikawaConfig { diagram_padding, use_max_width, font_size, look, hand_drawn_seed,
         font_family: sanitize_railroad_font_family(theme_value("fontFamily").as_deref(), &defaults.font_family),
         line_color: sanitize_railroad_color(theme_value("lineColor").as_deref(), &defaults.line_color),
         fill_color: sanitize_railroad_color(theme_value("mainBkg").as_deref(), &defaults.fill_color),
@@ -5842,13 +5860,13 @@ fn indentation_width(line: &str) -> usize {
 /// Parse the coordinate-based core of Mermaid 11.16.1 Wardley maps.
 pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
     let config = parse_wardley_config(source);
-    let prepared = prepare_line_grammar_source(source)?;
+    let (prepared, multiline_descriptions) = prepare_wardley_source(source)?;
     let tokens = try_tokenize_mermaid_wardley(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(WARDLEY_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse wardley.grammar: {error}"));
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
-    let mut diagram = WardleyDiagram { title: None, config,
+    let mut diagram = WardleyDiagram { title: None, accessibility_title: None, accessibility_description: None, config,
         stages: vec!["Genesis".into(), "Custom Built".into(), "Product".into(), "Commodity".into()],
         stage_boundaries: Vec::new(),
         nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new(), annotations_box: None, annotations: Vec::new(), forces: Vec::new(), pipelines: Vec::new() };
@@ -5956,6 +5974,17 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         let line = raw.split("%%").next().unwrap_or("").trim();
         if line.is_empty() || line.eq_ignore_ascii_case("wardley-beta") { continue; }
         if let Some(value) = line.strip_prefix("title ") { diagram.title = Some(value.trim().to_string()); continue; }
+        if let Some((_, value)) = line.split_once(':').filter(|(keyword, _)| keyword.trim() == "accTitle") {
+            diagram.accessibility_title = Some(value.trim().to_string()); continue;
+        }
+        if let Some((_, value)) = line.split_once(':').filter(|(keyword, _)| keyword.trim() == "accDescr") {
+            let value = value.trim();
+            diagram.accessibility_description = value.strip_prefix("__WARDLEY_MULTILINE_")
+                .and_then(|index| index.parse::<usize>().ok())
+                .and_then(|index| multiline_descriptions.get(index).cloned())
+                .or_else(|| Some(value.to_string()));
+            continue;
+        }
         if let Some(value) = line.strip_prefix("size ") {
             let (width, height) = parse_wardley_coordinates(value, line_number)?;
             if width <= 0.0 || height <= 0.0 { return Err(wardley_error(line_number, "size must be positive")); }
@@ -5988,9 +6017,7 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             }
             diagram.annotations_box = Some((visibility, evolution)); continue;
         }
-        if let Some((source, target)) = line.split_once("->") {
-            diagram.links.push(WardleyLink { source: wardley_name(source), target: wardley_name(target) }); continue;
-        }
+        if let Some(link) = parse_wardley_link(line, line_number)? { diagram.links.push(link); continue; }
         return Err(wardley_error(line_number, format!("unsupported Wardley statement: {line}")));
     }
     let names: HashSet<_> = diagram.nodes.iter().map(|node| node.label.as_str()).collect();
@@ -6078,6 +6105,136 @@ fn parse_wardley_note(value: &str, line: usize) -> Result<WardleyNote, ParseErro
     Err(invalid())
 }
 
+// Borrow a contiguous body; never shift or clone the discarded prefix.
+// The third value counts actual emptiness examinations for private unit controls.
+fn wardley_description_bounds(lines: &[&str]) -> (usize, usize, usize) {
+    let (mut start, mut end, mut visits) = (0, lines.len(), 0);
+    while start < end {
+        visits += 1;
+        if !lines[start].is_empty() { break; }
+        start += 1;
+    }
+    while end > start {
+        visits += 1;
+        if !lines[end - 1].is_empty() { break; }
+        end -= 1;
+    }
+    (start, end, visits)
+}
+
+fn prepare_wardley_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let lines: Vec<_> = prepared.lines().collect(); let mut output = Vec::with_capacity(lines.len());
+    let mut multiline_descriptions = Vec::new(); let mut index = 0usize;
+    while index < lines.len() {
+        let trimmed = lines[index].trim();
+        let Some(after_keyword) = trimmed.strip_prefix("accDescr") else {
+            output.push(lines[index].to_string()); index += 1; continue;
+        };
+        let Some(mut remainder) = after_keyword.trim_start().strip_prefix('{') else {
+            output.push(lines[index].to_string()); index += 1; continue;
+        };
+        let start_line = index + 1; let mut description = Vec::new();
+        loop {
+            if let Some((content, trailing)) = remainder.split_once('}') {
+                if !trailing.trim().is_empty() {
+                    return Err(wardley_error(index + 1, "unexpected content after Wardley accessibility description"));
+                }
+                description.push(content.trim()); break;
+            }
+            description.push(remainder.trim()); index += 1;
+            if index == lines.len() { return Err(wardley_error(start_line, "unterminated Wardley accessibility description")); }
+            remainder = lines[index];
+        }
+        let (start, end, _) = wardley_description_bounds(&description);
+        let description_index = multiline_descriptions.len(); multiline_descriptions.push(description[start..end].join("\n"));
+        output.push(format!("accDescr: __WARDLEY_MULTILINE_{description_index}")); index += 1;
+    }
+    Ok((output.join("\n"), multiline_descriptions))
+}
+
+fn parse_wardley_link(value: &str, line: usize) -> Result<Option<WardleyLink>, ParseError> {
+    let Some(operator) = wardley_link_operator(value) else { return Ok(None); };
+    let source = wardley_name(&value[..operator.start]);
+    let (target, annotation) = split_wardley_link_annotation(&value[operator.end..]);
+    if annotation.is_some_and(|label| label.trim().is_empty()) {
+        return Err(wardley_error(line, "Wardley link annotations cannot be empty"));
+    }
+    let (target, target_flow) = wardley_link_target_port(target);
+    let target = wardley_name(target);
+    if source.is_empty() || target.is_empty() {
+        return Err(wardley_error(line, "Wardley links require source and target components"));
+    }
+    let annotation = annotation.map(str::trim).filter(|label| !label.is_empty()).map(str::to_string);
+    Ok(Some(WardleyLink { source, target, dashed: operator.dashed,
+        label: operator.label.or(annotation), flow: operator.flow.or(target_flow) }))
+}
+
+struct WardleyLinkOperator {
+    start: usize, end: usize, dashed: bool, flow: Option<WardleyLinkFlow>, label: Option<String>,
+}
+
+fn wardley_link_operator(value: &str) -> Option<WardleyLinkOperator> {
+    let bytes = value.as_bytes(); let mut index = 0; let mut quote = None;
+    while index < bytes.len() {
+        let byte = bytes[index];
+        if let Some(active) = quote {
+            if byte == active { quote = None; }
+            index += 1; continue;
+        }
+        if matches!(byte, b'\'' | b'"') { quote = Some(byte); index += 1; continue; }
+        if byte == b'+' && bytes.get(index + 1) == Some(&b'\'') {
+            let label_start = index + 2;
+            let label_end = value[label_start..].find('\'').map(|offset| label_start + offset)?;
+            let suffix_start = label_end + 1;
+            let (suffix_length, flow) = if value[suffix_start..].starts_with("<>") {
+                (2, WardleyLinkFlow::Bidirectional)
+            } else if value[suffix_start..].starts_with('<') {
+                (1, WardleyLinkFlow::Backward)
+            } else if value[suffix_start..].starts_with('>') {
+                (1, WardleyLinkFlow::Forward)
+            } else { return None; };
+            return Some(WardleyLinkOperator { start: index, end: suffix_start + suffix_length,
+                dashed: false, flow: Some(flow), label: Some(value[label_start..label_end].to_string()) });
+        }
+        for (operator, dashed, flow) in [
+            ("-.->", true, None), ("-->", false, None), ("->", false, None),
+            ("+<>", false, Some(WardleyLinkFlow::Bidirectional)),
+            ("+>", false, Some(WardleyLinkFlow::Forward)),
+            ("+<", false, Some(WardleyLinkFlow::Backward)),
+        ] {
+            if bytes[index..].starts_with(operator.as_bytes()) {
+                return Some(WardleyLinkOperator { start: index, end: index + operator.len(), dashed, flow, label: None });
+            }
+        }
+        index += 1;
+    }
+    None
+}
+
+fn split_wardley_link_annotation(value: &str) -> (&str, Option<&str>) {
+    let mut quote = None;
+    for (index, byte) in value.bytes().enumerate() {
+        if let Some(active) = quote {
+            if byte == active { quote = None; }
+        } else if matches!(byte, b'\'' | b'"') {
+            quote = Some(byte);
+        } else if byte == b';' {
+            return (&value[..index], Some(&value[index + 1..]));
+        }
+    }
+    (value, None)
+}
+
+fn wardley_link_target_port(value: &str) -> (&str, Option<WardleyLinkFlow>) {
+    let value = value.trim_end();
+    for (port, flow) in [("+<>", WardleyLinkFlow::Bidirectional),
+        ("+>", WardleyLinkFlow::Forward), ("+<", WardleyLinkFlow::Backward)] {
+        if let Some(target) = value.strip_suffix(port) { return (target.trim_end(), Some(flow)); }
+    }
+    (value, None)
+}
+
 fn parse_wardley_config(source: &str) -> WardleyConfig {
     let defaults = WardleyConfig::default();
     // Select one closed source object. Reuse the established owned lexical
@@ -6143,19 +6300,29 @@ fn parse_wardley_theme(source: &str) -> WardleyTheme {
     let primary_text = sanitize_railroad_color(value(false, "primaryTextColor").as_deref(), &defaults.axis_text_color);
     WardleyTheme { background_color: color("backgroundColor", &background), axis_color: color("axisColor", &defaults.axis_color),
         axis_text_color: color("axisTextColor", &primary_text), grid_color: color("gridColor", &defaults.grid_color),
-        component_fill: color("componentFill", &defaults.component_fill), component_stroke: color("componentStroke", &defaults.component_stroke),
-        component_label_color: color("componentLabelColor", &primary_text), link_stroke: color("linkStroke", &defaults.link_stroke),
-        evolution_stroke: color("evolutionStroke", &defaults.evolution_stroke) }
+        component_fill: color("componentFill", &defaults.component_fill),
+        component_stroke: color("componentStroke", &defaults.component_stroke),
+        component_label_color: color("componentLabelColor", &primary_text),
+        link_stroke: color("linkStroke", &defaults.link_stroke),
+        evolution_stroke: color("evolutionStroke", &defaults.evolution_stroke),
+        annotation_stroke: color("annotationStroke", &defaults.annotation_stroke),
+        annotation_text_color: color("annotationTextColor", &primary_text),
+        annotation_fill: color("annotationFill", &background) }
 }
 
 fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
-    let Some(open) = value.rfind('[') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
+    let Some(open) = value.find('[') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
+    let Some(relative_close) = value[open..].find(']') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
+    let close = open + relative_close;
     let label = wardley_name(&value[..open]);
-    let (visibility, evolution) = parse_wardley_coordinates(&value[open..], line)?;
+    let (visibility, evolution) = parse_wardley_coordinates(&value[open..=close], line)?;
     if label.is_empty() || !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
         return Err(wardley_error(line, "Wardley node names must be non-empty and coordinates between 0 and 1"));
     }
-    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor, pipeline_parent: false })
+    let suffix = parse_wardley_component_suffix(value[close + 1..].trim(), anchor, line)?;
+    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor, pipeline_parent: false,
+        label_offset_x: suffix.label_offset_x, label_offset_y: suffix.label_offset_y,
+        source_strategy: suffix.source_strategy, inertia: suffix.inertia })
 }
 
 // Actual ordered-map key comparisons are observable only in unit tests. The
@@ -6324,7 +6491,44 @@ fn parse_wardley_pipeline_component(value: &str, visibility: f64, line: usize, i
     if !evolution.is_finite() || !(0.0..=1.0).contains(&evolution) {
         return Err(wardley_error(line, "Wardley pipeline evolution must be between 0 and 1"));
     }
-    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor: false, pipeline_parent: false })
+    let suffix = parse_wardley_component_suffix(value[close + 1..].trim(), false, line)?;
+    if suffix.source_strategy.is_some() || suffix.inertia { return Err(wardley_error(line, "Wardley pipeline children only accept label offsets")); }
+    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor: false, pipeline_parent: false,
+        label_offset_x: suffix.label_offset_x, label_offset_y: suffix.label_offset_y, source_strategy: None, inertia: false })
+}
+
+struct WardleyComponentSuffix { label_offset_x: Option<f64>, label_offset_y: Option<f64>,
+    source_strategy: Option<WardleySourceStrategy>, inertia: bool }
+
+fn parse_wardley_component_suffix(value: &str, anchor: bool, line: usize) -> Result<WardleyComponentSuffix, ParseError> {
+    if value.is_empty() { return Ok(WardleyComponentSuffix { label_offset_x: None, label_offset_y: None,
+        source_strategy: None, inertia: false }); }
+    if anchor { return Err(wardley_error(line, "Wardley anchors do not accept component suffixes")); }
+    let mut remainder = value; let mut offsets = (None, None); let mut strategy = None; let mut inertia = false;
+    if let Some(after_label) = remainder.strip_prefix("label ") {
+        let Some(close) = after_label.find(']') else { return Err(wardley_error(line, "invalid Wardley label offsets")); };
+        let (x, y) = parse_wardley_coordinates(&after_label[..=close], line)?;
+        if x.fract() != 0.0 || y.fract() != 0.0 { return Err(wardley_error(line, "Wardley label offsets must be integers")); }
+        offsets = (Some(x), Some(y)); remainder = after_label[close + 1..].trim();
+    }
+    while !remainder.is_empty() {
+        let (decorator, rest) = if let Some(parenthesized) = remainder.strip_prefix('(') {
+            let Some(close) = parenthesized.find(')') else { return Err(wardley_error(line, "invalid Wardley decorator")); };
+            (&parenthesized[..close], parenthesized[close + 1..].trim())
+        } else if let Some(rest) = remainder.strip_prefix("inertia") { ("inertia", rest.trim()) }
+        else { return Err(wardley_error(line, "unsupported Wardley component suffix")); };
+        match decorator {
+            "inertia" if !inertia => inertia = true,
+            "build" if strategy.is_none() => strategy = Some(WardleySourceStrategy::Build),
+            "buy" if strategy.is_none() => strategy = Some(WardleySourceStrategy::Buy),
+            "outsource" if strategy.is_none() => strategy = Some(WardleySourceStrategy::Outsource),
+            "market" if strategy.is_none() => strategy = Some(WardleySourceStrategy::Market),
+            _ => return Err(wardley_error(line, format!("invalid or duplicate Wardley decorator {decorator}"))),
+        }
+        remainder = rest;
+    }
+    Ok(WardleyComponentSuffix { label_offset_x: offsets.0, label_offset_y: offsets.1,
+        source_strategy: strategy, inertia })
 }
 
 // A force owns one label followed by one complete coordinate pair. Quoted

@@ -780,6 +780,13 @@ backend-neutral Paint instructions and metadata. Cause labels lower as bounded,
 width-aware theme boxes, and deeply nested trees expand the canvas vertically before
 Paint lowering. Exact upstream sizing and collision behavior, remaining
 configuration parity, and interactive behavior remain unsupported at the partial level.
+The global Mermaid `fontSize` setting survives typed causal IR, scales cause-label
+geometry during layout, and selects the matching glyph size before Paint lowering.
+Global `look: handDrawn` and `handDrawnSeed` settings also survive causal IR;
+layout deterministically perturbs spine and bone paths before backend-neutral Paint
+lowering. Hand-drawn effect and cause-box outlines remain part of the visual parity gap.
+Every causal bone also carries a tangent-aligned arrowhead through layout IR and lowers
+to a filled backend-neutral Paint path in both classic and hand-drawn modes.
 
 ### Wardley Native Slice
 
@@ -806,8 +813,18 @@ coordinates, reposition the parent, and lower the bounded pipeline plus dotted
 evolution links and parent square through backend-neutral Paint instructions.
 Evolution stages preserve dual labels and optional `@` boundaries; layout uses
 the authored widths for dashed separators and centered stage labels.
-Advanced flow ports, decorators, per-node authored label offsets, and
-remaining annotation theme fields and exact rendering remain unsupported at the partial level.
+Component and pipeline-child `label [x, y]` suffixes preserve signed offsets
+through semantic and layout IR into backend-neutral glyph placement.
+Single-line accessibility titles and single-line or braced multiline accessibility
+descriptions survive semantic and layout IR into PaintScene metadata.
+Component source strategies lower build, buy, outsource, and market overlays;
+inertia lowers as a heavy offset indicator while preserving both decorators in IR.
+Dependency links preserve solid, alternate, and dashed line forms, semicolon annotations,
+forward, backward, and bidirectional flow ports, and inline flow labels. Layout clips
+links to component boundaries and positions rotated labels before backend-neutral paths,
+arrowheads, and glyph groups are emitted. Annotation stroke, text, and fill theme fields
+also survive typed configuration and control marker, connector, and annotations-box Paint.
+Exact browser rendering remains unsupported at the partial level.
 
 ### Cynefin Native Slice
 

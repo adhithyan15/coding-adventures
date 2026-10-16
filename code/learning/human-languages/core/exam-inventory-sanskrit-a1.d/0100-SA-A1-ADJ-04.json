@@ -1,0 +1,18 @@
+{
+  "id": "SA-A1-ADJ-04",
+  "category": "Viśeṣaṇa — the adjective",
+  "label": "adjective number and agreement in the plural",
+  "probe": [
+    "SA-GRAMMAR-C15-ADJ-SYSTEM",
+    "SA-GRAMMAR-SINGULAR-DUAL-PLURAL"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-04"
+  ],
+  "note": "Agreement runs through three numbers here, the dual included."
+}

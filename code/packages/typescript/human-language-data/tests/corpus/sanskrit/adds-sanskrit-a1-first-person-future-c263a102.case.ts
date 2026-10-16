@@ -1,11 +1,10 @@
 import { expect, it } from "vitest";
-import { measureExamCoverage } from "../../../src/exam-inventory.js";
 import {
-  loadEverything,
   loadExamInventory,
   loadTrackChapters,
   loadTrackLessons,
 } from "../../../src/loader.js";
+import { sanskritA1PointCoverage } from "../sanskrit-a1-point-coverage.js";
 
 it("adds a gentle Sanskrit A1 first-person future ramp", () => {
   const lessons = loadTrackLessons("sanskrit");
@@ -118,23 +117,7 @@ it("adds a gentle Sanskrit A1 first-person future ramp", () => {
 
   const inventory = loadExamInventory("sanskrit", "A1");
   expect(inventory.points.find((point) => point.id === "SA-A1-F-10")?.probe).toEqual(atoms);
-  const coverage = measureExamCoverage(inventory, loadEverything().lessons);
-  expect(coverage).toMatchObject({
-    enumerated: 164,
-    // 146 -> 157 belongs to the later meal-ordering, market, school-plan,
-    // service-location, media-word, modern-technology, and spoken-request
-    // tranches, followed by the bounded-condolence, bounded-reflexive, and
-    // bounded-rental tranches; this test still pins the exact
-    // first-person-future probe above.
-    covered: 157,
-    unmapped: 7,
-    partial: 0,
-  });
-  expect(coverage.byCategory["Likes, wishes and feelings"]).toEqual({
-    enumerated: 2,
-    covered: 2,
-  });
-  expect(coverage.points.find((point) => point.id === "SA-A1-F-10")).toMatchObject({
+  expect(sanskritA1PointCoverage("SA-A1-F-10")).toMatchObject({
     covered: true,
     missingAtoms: [],
     unmapped: false,

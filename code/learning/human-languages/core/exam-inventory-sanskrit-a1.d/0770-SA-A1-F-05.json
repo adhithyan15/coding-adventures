@@ -1,0 +1,24 @@
+{
+  "id": "SA-A1-F-05",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "agree, approve and accept",
+  "probe": [
+    "SA-LEX-C27-REPLY-01",
+    "SA-LEX-C27-REPLY-02",
+    "SA-LEX-C36-REPLY-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F2-05",
+    "A1-F2-06",
+    "A1-NG6-05",
+    "A1-NG6-06",
+    "A1-F4-08"
+  ],
+  "note": "astu ('so be it'), sādhu ('well done') and samyak ('exactly so') — a genuinely idiomatic Sanskrit agreement set, and chapter 27 exists to teach it."
+}

@@ -88,6 +88,7 @@ import os
 import re
 import unicodedata
 
+from authoring_frontmatter import decode_scalar
 from sharded_ledger import (
     load_book_generation,
     load_chapters,
@@ -188,11 +189,12 @@ def fm_of(text):
         top = re.match(r"^([A-Za-z0-9_]+):\s*(.*)$", line)
         if top:
             parent = top.group(1)
-            out[parent] = top.group(2).strip()
+            out[parent] = decode_scalar(top.group(2), parent)
             continue
         child = re.match(r"^\s+([A-Za-z0-9_]+):\s*(.*)$", line)
         if child and parent:
-            out[f"{parent}.{child.group(1)}"] = child.group(2).strip()
+            key = f"{parent}.{child.group(1)}"
+            out[key] = decode_scalar(child.group(2), key)
     return out
 
 
@@ -206,7 +208,7 @@ def load_lessons(track):
         seq = int(h.get("sequence", "0") or 0)
         rows.append(dict(id=h.get("id", f[:-3]), seq=seq,
                          chapter=int(h.get("chapter", "0") or 0),
-                         headword=h.get("headword", "").strip().strip('"')))
+                         headword=h.get("headword", "")))
     rows.sort(key=lambda r: r["seq"])
     return rows
 

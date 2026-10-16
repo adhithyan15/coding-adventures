@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-F-06",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "disagree, decline, express doubt",
+  "probe": [
+    "SA-LEX-NA-NO",
+    "SA-LEX-C42-REPLY-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F2-07",
+    "A1-F2-08",
+    "A1-F2-12",
+    "A1-F4-09"
+  ],
+  "note": "na, and prāyaḥ ('mostly') as the nearest thing to hedging. There is no 'I don't know' (na jānāmi is not taught as a phrase) and no politeness formula for declining, so this is the thinnest of the reply functions."
+}

@@ -1,0 +1,24 @@
+{
+  "id": "SA-A1-F-21",
+  "category": "Structuring the exchange",
+  "label": "show you are following, and hand the turn back",
+  "probe": [
+    "SA-LEX-C27-REPLY-05",
+    "SA-LEX-C36-REPLY-03",
+    "SA-LEX-KATHAM",
+    "SA-PATTERN-HOW-ARE-YOU"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F2-01",
+    "A1-F2-03",
+    "A1-F6-01",
+    "A1-F6-04"
+  ],
+  "note": "evam, tathā, and bhavān katham asti? as the model of handing the turn back. Spanish's 'ask somebody to be quiet' (A1-F6-05) and 'ask for a person' (A1-F6-03) have no taught exponent and are recorded in proxy.notTransferred."
+}

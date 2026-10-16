@@ -514,3 +514,37 @@ fn single_unit_offsets_preserve_exact_stdout_and_normal_exit() {
         assert!(completed>0,"unit-offset source {case} needs at least one actual backend execution");
     }
 }
+
+/// The integration boundary needs the same Exit0 and evaluation-order contract
+/// as the owned lower offsets. A backend returning output and then trapping is
+/// a failed cell; an unavailable toolchain is never counted as execution.
+#[test]
+fn current_main_nineteen_through_twenty_one_normal_exit() {
+    for offset in 19..=21 {
+        let mut cases = Vec::new();
+        for (value, sign) in [("-2.25", -1), ("0.0", 0), ("3.5", 1)] {
+            for (operator, expected) in [("+", sign + offset), ("-", sign - offset)] {
+                cases.push((format!("begin real procedure pick; begin output('P'); pick := {value} end; real saved; saved := entier(sign(pick()) {operator} {offset}); output(saved) end"), format!("P{expected}")));
+            }
+        }
+        for (condition, expected) in [("true", format!("CL{}", offset - 1)), ("false", format!("CR{}", offset + 1))] {
+            let prior = offset - 1;
+            cases.push((format!("begin boolean procedure choose; begin output('C'); choose := {condition} end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + {offset}) else ((entier(sign(rightvalue())) + 1) + {prior}))); output(saved) end"), expected));
+        }
+        for (case, (source, expected)) in cases.iter().enumerate() {
+            let program=Prog{lang:Language::Algol60,ext:"alg",src:source,expect:Expect::Stdout(expected),backends:&[NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit]};
+            let mut completed=0;
+            for backend in [NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit] {
+                let available=toolchain_available(backend);
+                let Some(result)=run(backend,&program) else {assert!(!available,"{backend:?} present but offset={offset} case={case} did not execute");continue;};
+                match &result {
+                    RunResult::Completed{code,stdout}=>{assert_eq!(*code,Some(0),"offset={offset} case={case} {backend:?}: {stdout:?}");assert_eq!(stdout.trim(),expected,"offset={offset} case={case} {backend:?}");},
+                    RunResult::Trapped=>panic!("offset={offset} case={case} {backend:?} trapped")
+                }
+                assert_cell(backend,&program,result);completed+=1;
+                eprintln!("current-main EXECUTED offset={offset} case={case} backend={backend:?} expected={expected} Exit0");
+            }
+            assert!(completed>0,"offset={offset} case={case} needs actual backend execution");
+        }
+    }
+}
