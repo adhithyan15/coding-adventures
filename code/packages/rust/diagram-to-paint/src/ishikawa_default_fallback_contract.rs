@@ -16,7 +16,7 @@ fn ishikawa_default_and_rejected_settings_keep_complete_scene_queries() {
         let parsed=mermaid_parser::parse_ishikawa(&source).unwrap();assert_eq!(parsed,expected_ir,"whole default IR source={source}");
         let expected_layout=LayoutedIshikawaDiagram {width:576.0,height:360.0,effect:"E".into(),config,
             effect_x:412.0,effect_y:146.0,effect_width:144.0,effect_height:68.0,spine_from:Point{x:36.0,y:180.0},spine_to:Point{x:412.0,y:180.0},
-            spine_path:vec![Point{x:36.0,y:180.0},Point{x:412.0,y:180.0}],effect_outline:ishikawa_fixture_effect(412.0,146.0),
+            spine_path:vec![Point{x:36.0,y:180.0},Point{x:412.0,y:180.0}],effect_outline:ishikawa_fixture_effect(412.0,146.0),effect_hatches:vec![],
             bones:vec![ishikawa_fixture_bone((Point{x:133.76,y:64.80000000000001},Point{x:224.0,y:180.0}),"A",Point{x:178.88,y:80.4},72.0,1)]};
         let layout=diagram_layout_geometric::layout_ishikawa(&parsed,576.0);assert_eq!(layout,expected_layout,"whole default layout source={source}");
         let path=|from:Point,to:Point,width|PaintInstruction::Path(PaintPath {base:PaintBase::default(),commands:vec![PathCommand::MoveTo{x:from.x,y:from.y},PathCommand::LineTo{x:to.x,y:to.y}],fill:Some("none".into()),fill_rule:None,stroke:Some("#333333".into()),stroke_width:Some(width),stroke_cap:Some(StrokeCap::Round),stroke_join:Some(StrokeJoin::Round),stroke_dash:None,stroke_dash_offset:None});

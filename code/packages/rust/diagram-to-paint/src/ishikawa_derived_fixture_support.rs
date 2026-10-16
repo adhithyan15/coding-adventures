@@ -16,7 +16,7 @@ fn ishikawa_fixture_bone(ends:(Point,Point),label:&str,center:Point,width:f64,de
     let (x,y)=(center.x-width/2.0,center.y-14.0);
     let label_outline=vec![Point{x,y},Point{x:x+width,y},Point{x:x+width,y:y+28.0},Point{x,y:y+28.0},Point{x,y}];
     diagram_ir::LayoutedIshikawaBone{path:vec![from.clone(),to.clone()],from,to,label:label.into(),
-        label_position:center,label_width:width,label_height:28.0,depth,arrowhead,label_outline}
+        label_position:center,label_width:width,label_height:28.0,depth,arrowhead,label_outline,hatches:vec![]}
 }
 fn ishikawa_fixture_closed(points:&[Point],fill:&str,stroke:&str,width:f64)->PaintInstruction {
     let mut commands:Vec<_>=points.iter().enumerate().map(|(i,p)|if i==0 {PathCommand::MoveTo{x:p.x,y:p.y}}

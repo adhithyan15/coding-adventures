@@ -95,7 +95,7 @@ mod ishikawa_box_labels_contract {
             let expected_layout=LayoutedIshikawaDiagram {width:case.width,height:case.height,effect:"E".into(),config,
                 effect_x:case.effect.0,effect_y:case.effect.1,effect_width:144.0,effect_height:68.0,
                 spine_from:point(case.spine.0),spine_to:point(case.spine.1),
-                spine_path:vec![point(case.spine.0),point(case.spine.1)],effect_outline:ishikawa_fixture_effect(case.effect.0,case.effect.1),
+                spine_path:vec![point(case.spine.0),point(case.spine.1)],effect_outline:ishikawa_fixture_effect(case.effect.0,case.effect.1),effect_hatches:vec![],
                 bones:case.bones.iter().map(|bone|ishikawa_fixture_bone((point(bone.from),point(bone.to)),bone.label,point(bone.center),bone.width,bone.depth)).collect()};
             let layout=diagram_layout_geometric::layout_ishikawa(&ir,case.width);assert_eq!(layout,expected_layout,"whole layout {} {family}",case.name);
             let mut instructions=vec![line(case.spine.0,case.spine.1,3.0)];
