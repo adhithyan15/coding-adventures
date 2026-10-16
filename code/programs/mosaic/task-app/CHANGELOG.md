@@ -7,6 +7,14 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.6` accumulate here until the next version is
 cut.
 
+### Fixed — SwiftUI milestone markers retain their diamond rotation (#17502)
+
+TaskApp's timeline and calendar milestone squares now rotate by their authored
+45 degrees in SwiftUI. Single finite degree rotations preserve centered visual
+rotation and the original layout footprint; unsupported units, transform chains,
+and invalid angles remain explicit debt. The measured SwiftUI inventory falls
+from 59 to 57 style drops.
+
 ## [0.5.6] - 2026-10-14
 
 ### Fixed — SwiftUI drag-body gaps leave the degradation report (#17481)

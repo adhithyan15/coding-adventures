@@ -66,7 +66,6 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "position": 6,
         "text-overflow": 1,
         "top": 6,
-        "transform": 2,
         "white-space": 1,
     },
     "compose": {
