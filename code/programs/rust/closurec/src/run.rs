@@ -725,7 +725,7 @@ fn transform_source_core(
             let program = match arrays {
                 Some(ledger) => {
                     let (log, root, _, _) = cv_pair.as_mut().ok_or_else(|| provenance_error("array_source")("missing actual traced input".into()))?;
-                    let mut observer = ledger.observer(&mut **log, root).map_err(provenance_error("array_source"))?;
+                    let mut observer = ledger.observer(log, root).map_err(provenance_error("array_source"))?;
                     bridge::grammar_to_program_with_array_observer(&node, es_version, &mut observer)
                         .map_err(|error| match error {
                             bridge::ObservedBridgeError::Bridge(error) => ordinary_bridge_error(error),
