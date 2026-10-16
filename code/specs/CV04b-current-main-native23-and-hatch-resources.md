@@ -156,3 +156,34 @@ independent exact-head source/resource and terminal security review. Publish onl
 to the discovered sole PR; enable squash auto-merge only with current conflict-free
 review-clean exact-head terminal acceptable required checks, then verify real
 merge reachability. Full objective/Miri completion is not granted by this slice.
+
+
+## Exact runtime companion reconciliation after the cap23 unit census
+
+Source09fb actual serialized ALGOL unit validation passes965/0/0 with every347
+negative and126 exact-old-source positive ID observed, plus package strict0;
+producer81099 consumed0. This is unit/IR evidence, not backend execution. Preserve
+the original interleaved census failure and the separate old22 integration red:
+Cargo101/build true,2P1F, the exact old22 refusal unwrap_err receives Ok. Its wrapper
+also failed a progress-line formatting assertion; no runtime acceptance follows.
+
+Keep every old integration test function and rounding/source17..21 assertion.
+Only its former quantitative22 refusal source becomes24; add the exact original22
+full declaration/consumer as a real-formatter1/integer-formatter0 positive, plus23
+admission. Retain structural context7 and all rounding/shared-classifier refusals.
+
+Append29 static full-source runtime pairs to the existing shared unit-offset
+module, preserving its entire old contents and all24 old19..21 pairs:16 new
+22/23 effect-marked cases from the eight-case formula above,10 exact original
+positive retained-boundary contexts1..6/8..11,2 exact incoming matrix22/23
+source/stdout pairs23/24, and1 exact old22 integration declaration/consumer
+(expected21). Each pair gets a stable explicit case ID and executes against every
+available standard backend with Completed, codeSome(0), exact trimmed stdout and
+existing assert_cell checks. Present toolchain without execution fails; each
+pair needs at least one actual backend. Preserve original incoming matrix tests
+and Expect::Stdout behavior, strengthening through these exact-source companions.
+Do not turn structural context7 into a runtime positive. Record exact unique
+source-ID/backend tuples; preserve duplicate authored occurrences separately.
+No production/shared lifetime/new dependency/ignore changes are authorized by
+this fixture slice. Run focused integration and all29 runtime cases/strict, then
+full affected final-source suites with fresh graph/input/lock evidence.

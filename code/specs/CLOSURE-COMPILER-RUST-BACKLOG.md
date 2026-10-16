@@ -52,10 +52,21 @@ inverses;49ad compiled semantic red3P/10F, consumed. The nested conditional stay
 negative.5031 focused retained13P/incoming2P GREEN includes intermediate-rounding,
 shared-exp and24-budget guards, but full ALGOL library FAILS917P/24F/0I (Cargo101,
 build-finished true), strict not run. Producer37273 consumed; receipt
-`CV04b-cap23-focused-full-5031e756.json`. Independent security inventories every
-case/loop in those24 functions before further oracle migration: preserve all
-exact older source/consumer contexts and mixed safety/resource/structural guards.
-No new full-suite/native-runtime acceptance is inferred from focused greens.
+`CV04b-cap23-focused-full-5031e756.json`. Independent inventory-v2 binds347 negatives:126 quantitative22 plus221 safety,
+including48 shadowed cases. Specac5 preceded exact test migration09fb:347 negative
+cases (only126 specified24 replacements) and126 byte-exact original-source real
+formatter companions, every other function/production byte and18 inverses intact.
+Independent source review7578563b PASS. Actual serialized09fb unit965P/0F/0I,
+exact347/126 marker census/executable join and strict0; producer81099 consumed0,
+receipt `CV04b-cap23-complete-units-v2-09fb5986.json`. Earlier interleaved census
+withheld receipt is preserved; independent terminal review pending. Separate
+existing22 integration oracle compiled red2P1F/Cargo101; its wrapper progress-line
+assertion failed and remains preserved. Next spec adds exact29 runtime companions
+and quantitative24 integration migration without altering production.
+New observed main6e54ad6b collision integration is unintegrated and security
+WITHHELD33c6686f: quadratic pair scans, eager hatches, cap-font cross-side overlap.
+Concrete external repair contract is under independent review. No current native
+runtime/downstream/final-source acceptance is inferred from unit greens.
 
 Next: spec-first current-main/native23/hatch repair, exact old-source and whole-
 fixture retention, fresh input/graph/lock receipts, affected suites/strict and
