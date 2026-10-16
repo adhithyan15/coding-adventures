@@ -6757,7 +6757,7 @@ fn mermaid_string_hash(value: &str) -> i32 {
     value.encode_utf16().fold(0i32, |hash, unit| hash.wrapping_shl(5).wrapping_sub(hash).wrapping_add(i32::from(unit)))
 }
 
-fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<(usize,String)>), ParseError> {
+fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
     let prepared = prepare_line_grammar_source(source)?;
     let lines: Vec<_> = prepared.lines().collect();
     let mut output = Vec::with_capacity(lines.len());
@@ -6970,7 +6970,7 @@ fn resolve_treeview_icon(
     }
 }
 
-fn prepare_treeview_source(source: &str) -> Result<(String, Vec<(usize,String)>), ParseError> {
+fn prepare_treeview_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
     let prepared = prepare_line_grammar_source(source)?;
     let lines: Vec<_> = prepared.lines().collect();
     let mut output = Vec::with_capacity(lines.len());
