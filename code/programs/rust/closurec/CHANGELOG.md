@@ -4,6 +4,42 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Added — consumed-source grammar replay (CV04b D3b)
+
+Traced compilation retains each actual consumed String allocation by move and
+commits full original-Token fingerprints before defines, stamping or ASI. After
+generic/D3a admission, a private read-only gate replays the standard grammar with
+the configured edition against those retained bytes. It compares the complete
+input-root census/order/path, source digest/length, availability, every physical
+piece kind and six coordinates, processed legacy Token data, and ordered full
+Token fingerprints. Changed files cannot replace the consumed buffer authority.
+
+Capacity/index/fingerprint storage and comparison/hash work are checked and
+prepaid under finite private budgets. Retention errors preserve the committed
+prefix. Capture resource failures cannot become unavailable success. The gate
+precedes filters, JSON/NDJSON/NONE, summaries and all prepared publication;
+refusals report source_replay. No public API, new dependency, grammar/pass order
+or existing production safety limit changes.
+
+Exact source `b1f67a8f5946dee8b1540bff42956e8663e1760d` passed strict all-target Clippy and the complete
+unfiltered compiler suite:1,139P/0F/0I across182 metadata-derived targets.
+Fifteen new private tests cover all14 editions,10 generic-and-D3a-valid replay
+forgeries,8 original-Token fingerprint mutants, independent storage/work/SHA
+framing boundaries, and60 actual compiler sentinel refusals across five levels,
+three formats and filters. Half refuse early retention; half prove retention
+passes and require the final replay gate. All four artifact sentinels survive.
+Focused counts are included in the full suite. Fresh exact D3a and D3b offline
+builds each ran35 identical-path CLI cells; all210 JS/map/manifest/trace/stdout/
+stderr pairs match exactly, including full graph/journal bytes. PLAIN/NONE trace
+destinations preserve sentinels. Independent source/test-quality/terminal reviews PASS.
+
+This binds source ingestion evidence; later transformed Token/AST/output-byte
+lineage, composite/synthetic identities, full fold/rename/inline/motion/merge/
+delete and pass/sweep history, and evidence-backed Closure parity remain OPEN.
+Current-main conflicts, required hosted checks and actual merge remain gates.
+Miri **DEFERRED/PENDING**, never passed; frozen run/inputs/receipts untouched and
+unpolled. Full objective/heartbeat ACTIVE.
+
 ### Added — source inventory shape admission (CV04b D3a)
 
 Traced compilation now checks the full physical source inventory before any

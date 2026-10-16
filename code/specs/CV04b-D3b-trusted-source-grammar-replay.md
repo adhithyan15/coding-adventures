@@ -227,3 +227,52 @@ stable composite/synthetic occurrences, output-byte joins, evidence-backed
 Closure parity, current-main conflicts/required CI/merge and genuine final-source
 Miri remain OPEN after this bounded source-replay slice. Do not disable the
 heartbeat or claim full completion until deferred Miri genuinely passes.
+
+## Executed bounded slice
+
+Traced compilation retains each actual consumed String allocation by move and
+commits full original-Token fingerprints before defines, stamping or ASI. After
+generic/D3a admission, a private read-only gate replays the standard grammar with
+the configured edition against those retained bytes. It compares the complete
+input-root census/order/path, source digest/length, availability, every physical
+piece kind and six coordinates, processed legacy Token data, and ordered full
+Token fingerprints. Changed files cannot replace the consumed buffer authority.
+
+Capacity/index/fingerprint storage and comparison/hash work are checked and
+prepaid under finite private budgets. Retention errors preserve the committed
+prefix. Capture resource failures cannot become unavailable success. The gate
+precedes filters, JSON/NDJSON/NONE, summaries and all prepared publication;
+refusals report source_replay. No public API, new dependency, grammar/pass order
+or existing production safety limit changes.
+
+Exact source `b1f67a8f5946dee8b1540bff42956e8663e1760d` passed strict all-target Clippy and the complete
+unfiltered compiler suite:1,139P/0F/0I across182 metadata-derived targets.
+Fifteen new private tests cover all14 editions,10 generic-and-D3a-valid replay
+forgeries,8 original-Token fingerprint mutants, independent storage/work/SHA
+framing boundaries, and60 actual compiler sentinel refusals across five levels,
+three formats and filters. Half refuse early retention; half prove retention
+passes and require the final replay gate. All four artifact sentinels survive.
+Focused counts are included in the full suite. Fresh exact D3a and D3b offline
+builds each ran35 identical-path CLI cells; all210 JS/map/manifest/trace/stdout/
+stderr pairs match exactly, including full graph/journal bytes. PLAIN/NONE trace
+destinations preserve sentinels. Independent source/test-quality/terminal reviews PASS.
+
+This binds source ingestion evidence; later transformed Token/AST/output-byte
+lineage, composite/synthetic identities, full fold/rename/inline/motion/merge/
+delete and pass/sweep history, and evidence-backed Closure parity remain OPEN.
+Current-main conflicts, required hosted checks and actual merge remain gates.
+Miri **DEFERRED/PENDING**, never passed; frozen run/inputs/receipts untouched and
+unpolled. Full objective/heartbeat ACTIVE.
+
+Retained evidence: contract42b9 PASS; test-first a138 WITHHELD and successor
+a522 arithmetic WITHHELD; corrected1e2 test contract PASS before real code.
+Narrow genuine redbd7 is1P/3F with14 actual-edition and3 first-forgery markers;
+it makes no resource/red coverage claim. First implementedbc2 focus15P but strict
+lint refused11 warnings; b1 corrected lint and passed full execution. Full receipt
+`CV04b-D3b-full-b1f67a8f.json` SHA256 `fc8a8045572f11d20605e5df3db2fa551559d12d1dad37fb5fb0208e91100fe5`; prior-byte receipt SHA256
+`1331ca595ee37a584c1c43e21b557c7d03adc803e5d54ccce317c8983b7c8623`. Closure36 roots/3715 objects/exactfive-Rust-file delta;
+native2868/style872/SwiftUI191 prior executions unchanged,1504raw/static22 and
+51-package lock/15registry inputs proven unchanged. No new downstream/Java
+parity execution inferred. Sole PR17288 remains unmerged; normal progress push
+pending at this carrier checkpoint. Main a7a3e197 re-audited with12 open PR file
+sets, both backlogs and epic15830; OPEN/CONFLICTING/autoOFF/0 attached checks.
