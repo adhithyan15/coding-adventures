@@ -344,14 +344,14 @@ sum of exact `1` through `17` terms and is preserved through parentheses,
 supported standard-function wrappers, and runtime conditional branches; each
 conditional path receives its own eighteen-unit budget.
 
-Incoming23 surface (integration validation pending):
+Incoming24 surface (integration validation pending):
 
-Variable-free exact additive zero terms and up to twenty-three exact offset units
+Variable-free exact additive zero terms and up to twenty-four exact offset units
 may surround that bounded result before `entier`; larger and dynamic additive
-terms remain conservative. The twenty-three-unit cap accepts one exact `23` term
-or a checked sum of exact `1` through `22` terms and is preserved through parentheses,
+terms remain conservative. The twenty-four-unit cap accepts one exact `24` term
+or a checked sum of exact `1` through `23` terms and is preserved through parentheses,
 supported standard-function wrappers, and runtime conditional branches; each
-conditional path receives its own twenty-three-unit budget.
+conditional path receives its own twenty-four-unit budget.
 Variable-free exact multiplicative unit factors may likewise surround it;
 non-unit or variable factors remain conservative.
 Exact unit division is also permitted when the bounded result is the numerator;

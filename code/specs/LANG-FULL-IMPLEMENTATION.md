@@ -1458,11 +1458,11 @@ Retained earlier validation (historical):
   offset units, either as one exact `18` term or a checked sum of exact `1`
   through `17` terms. The cap is
 
-Incoming23 surface (integration validation pending):
+Incoming24 surface (integration validation pending):
 
-  The bounded sign-rooted transform may include up to twenty-three exact additive
-  offset units, either as one exact `23` term or a checked sum of exact `1`
-  through `22` terms. The cap is
+  The bounded sign-rooted transform may include up to twenty-four exact additive
+  offset units, either as one exact `24` term or a checked sum of exact `1`
+  through `23` terms. The cap is
   preserved through parentheses and supported standard-function wrappers and
   applied independently to each runtime conditional path. Larger and dynamic
   offsets remain conservative.

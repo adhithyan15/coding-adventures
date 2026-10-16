@@ -60,23 +60,26 @@ pub fn layout_temporal_diagram(d: &TemporalDiagram, cw: f64) -> LayoutedTemporal
 fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -> LayoutedTemporalDiagram {
     let mut items = Vec::new();
     let width = cw.max(560.0);
-    let mut y = 20.0;
+    let padding = diagram.config.padding;
+    let mut y = padding;
     if let Some(label) = title {
         items.push(LayoutedTemporalItem::TemporalTitle {
-            x: 16.0, y, width: width - 32.0, height: 40.0, label: label.clone(),
+            x: padding, y, width: width - padding * 2.0, height: 40.0, label: label.clone(),
         });
         y += 52.0;
     }
 
     match diagram.direction {
         TimelineDirection::TopDown => {
-            let spine_x = 176.0;
+            let spine_x = padding + 156.0;
             let start_y = y;
             let mut color_index = 0usize;
+            let without_sections = diagram.sections.iter().all(|section| section.label.is_none());
             for section in &diagram.sections {
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
-                        x: 16.0, y, width: 136.0, height: 30.0, label: label.clone(),
+                        x: padding, y, width: 136.0, height: 30.0, label: label.clone(),
+                        color_index,
                     });
                     y += 38.0;
                 }
@@ -88,7 +91,9 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                         events: period.events.clone(), color_index,
                     });
                     y += card_height + 18.0;
-                    color_index += 1;
+                    if !without_sections || !diagram.config.disable_multicolor {
+                        color_index += 1;
+                    }
                 }
                 y += 10.0;
             }
@@ -106,13 +111,15 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
             for section in &diagram.sections {
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
-                        x: 16.0, y, width: 136.0, height: 30.0, label: label.clone(),
+                        x: padding, y, width: 136.0, height: 30.0, label: label.clone(),
+                        color_index,
                     });
                 }
                 let card_y = y + 44.0;
                 let spine_y = card_y + 12.0;
-                let start_x = 176.0;
+                let start_x = padding + 156.0;
                 let mut row_height: f64 = 48.0;
+                let without_sections = diagram.sections.iter().all(|section| section.label.is_none());
                 for (index, period) in section.periods.iter().enumerate() {
                     let x = start_x + index as f64 * (card_width + gap);
                     let card_height = 48.0 + period.events.len() as f64 * 18.0;
@@ -121,7 +128,9 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                         x, y: card_y + 24.0, width: card_width, height: card_height,
                         label: period.label.clone(), events: period.events.clone(), color_index,
                     });
-                    color_index += 1;
+                    if !without_sections || !diagram.config.disable_multicolor {
+                        color_index += 1;
+                    }
                 }
                 if !section.periods.is_empty() {
                     let end_x = start_x
@@ -130,23 +139,25 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                     items.push(LayoutedTemporalItem::TimelineSpine {
                         x1: start_x + card_width / 2.0, y1: spine_y, x2: end_x, y2: spine_y,
                     });
-                    max_width = max_width.max(end_x + card_width / 2.0 + 24.0);
+                    max_width = max_width.max(end_x + card_width / 2.0 + padding);
                 }
                 y = card_y + row_height + 42.0;
             }
             return LayoutedTemporalDiagram {
-                width: max_width, height: y + 16.0,
+                width: max_width, height: y + padding,
                 accessibility_title: diagram.accessibility_title.clone(),
                 accessibility_description: diagram.accessibility_description.clone(),
+                timeline_config: Some(diagram.config.clone()),
                 interactions: Vec::new(), items,
             };
         }
     }
 
     LayoutedTemporalDiagram {
-        width, height: y + 16.0,
+        width, height: y + padding,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
+        timeline_config: Some(diagram.config.clone()),
         interactions: Vec::new(), items,
     }
 }
@@ -282,6 +293,7 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
         height: (max_score_y + 20.0).max(actor_y + margin_y + 16.0),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
+        timeline_config: None,
         interactions: Vec::new(),
         items,
     }
@@ -1025,6 +1037,7 @@ fn layout_gantt(
         width: cw, height: y + 16.0,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
+        timeline_config: None,
         interactions,
         items,
     }
@@ -1208,6 +1221,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
         width, height,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
+        timeline_config: None,
         interactions: Vec::new(),
         items,
     }
@@ -2407,6 +2421,7 @@ mod tests {
             body: TemporalBody::Timeline(TimelineDiagram {
                 accessibility_title: Some("Release history".into()),
                 accessibility_description: Some("Milestones by year".into()),
+                config: Default::default(),
                 direction: TimelineDirection::TopDown,
                 sections: vec![TimelineSection {
                     label: Some("Foundation".into()),
@@ -2430,6 +2445,41 @@ mod tests {
             item,
             LayoutedTemporalItem::TimelineSpine { .. }
         )));
+    }
+
+    #[test]
+    fn timeline_layout_applies_padding_and_single_color_mode() {
+        let diagram = TemporalDiagram {
+            kind: TemporalKind::Timeline,
+            title: None,
+            body: TemporalBody::Timeline(TimelineDiagram {
+                accessibility_title: None,
+                accessibility_description: None,
+                config: diagram_ir::TimelineConfig {
+                    padding: 72.0,
+                    use_max_width: true,
+                    disable_multicolor: true,
+                    ..Default::default()
+                },
+                direction: TimelineDirection::TopDown,
+                sections: vec![TimelineSection {
+                    label: None,
+                    periods: vec![
+                        TimelinePeriod { label: "2025".into(), events: Vec::new() },
+                        TimelinePeriod { label: "2026".into(), events: Vec::new() },
+                    ],
+                }],
+            }),
+        };
+        let layout = layout_temporal_diagram(&diagram, 640.0);
+        let periods = layout.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TimelinePeriod { x, color_index, .. } => {
+                Some((*x, *color_index))
+            }
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(periods, vec![(256.0, 0), (256.0, 0)]);
+        assert_eq!(layout.timeline_config.as_ref().unwrap().padding, 72.0);
     }
 
     #[test]

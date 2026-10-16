@@ -13459,6 +13459,7 @@ fn operator_from_token(token: &Token) -> Option<&'static str> {
 #[cfg(test)]
 mod tests {
     mod cv04_incoming_native22_23;
+    mod cv04_incoming_native24;
     mod cv04_retained_boundary_contexts;
     mod unit_offset;
     mod two_unit_offset;
