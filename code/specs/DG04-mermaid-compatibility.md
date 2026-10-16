@@ -347,6 +347,8 @@ backend-neutral PaintScene metadata.
 Timeline `cScale`, `cScaleLabel`, and `cScaleInv` theme slots also survive
 semantic configuration and select section, period, label, spine, and outline
 colors during backend-neutral PaintInstruction lowering.
+Non-negative `leftMargin` also survives typed configuration and shifts the
+section, spine, period, and event geometry before PaintScene lowering.
 
 ### Mindmap Native Slice
 

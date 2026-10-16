@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:ab45f47342469902",
+  "lessonIds": [
+    "TA-W282-a1-timed-production"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "tamil/narration/ch282.txt",
+  "json": "tamil/narration/ch282.json",
+  "textHash": "fnv1a64:8750ebd026c6c87e",
+  "jsonHash": "fnv1a64:f793255daf4caa43",
+  "findings": []
+}

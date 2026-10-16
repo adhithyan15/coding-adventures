@@ -2504,6 +2504,7 @@ pub enum TimelineDirection {
 #[derive(Clone, Debug, PartialEq)]
 pub struct TimelineConfig {
     pub padding: f64,
+    pub left_margin: f64,
     pub use_max_width: bool,
     pub disable_multicolor: bool,
     pub section_colors: Vec<String>,
@@ -2515,6 +2516,7 @@ impl Default for TimelineConfig {
     fn default() -> Self {
         Self {
             padding: 50.0,
+            left_margin: 50.0,
             use_max_width: false,
             disable_multicolor: false,
             section_colors: ["#dbeafe", "#dcfce7", "#fef3c7", "#fae8ff", "#ffe4e6", "#cffafe"]

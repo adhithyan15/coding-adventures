@@ -42,5 +42,5 @@ it("builds Tamil's first A1 controlled question without a visible model", () => 
   expect(tamil.defects).toEqual([]);
   expect(
     tamil.levels.find((level) => level.level === "A1")?.missingStages,
-  ).toEqual(["timed-assessment-production"]);
+  ).toEqual([]);
 });
