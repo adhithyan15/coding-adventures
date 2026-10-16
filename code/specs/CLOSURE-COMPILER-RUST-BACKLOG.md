@@ -43,8 +43,20 @@ painter167P + geometric81P, zero failures/ignores/filters,17 actual executables
 and2 empty doc harnesses; all24 unique post-assertion fixture markers join the
 complete expected census. Both all-target strict commands exit0. Receipt binds
 7947 physical inputs/both locks/helper, actual Cargo artifact/executable joins
-and binary hashes. Independent fixture/source and terminal reviews are pending;
-no acceptance transfers to broader downstream/current-main/hosted validation.
+and binary hashes. Independent fixture/source442444ff and terminale9955e93
+reviews PASS atc275, verifying all source inverses, complete target/artifact/
+Running joins, binary hashes and exact counts. Documentation carriers retain
+that execution attribution; broader current-main/hosted validation stays OPEN.
+
+Incoming native24 source reviewb8b5dc89 WITHHELD materializes9paths/18slots:
+restore owned narrow shared exp/ln classifier and extend only the dedicated
+canonical23→24 proof. Seven exact source contexts disappeared: retain six pure
+24-unit real-result sources as positive companions, and conditional-under-addition
+23+1 as an exact structural refusal. Timeline colors reviewbf258a86 WITHHELD
+materializes10paths/20blobs: raw comment/nested/quote-prefix config ownership adds
+to inherited94df geometry/spine/typed-work issues. Palette default changes are
+intentional; preserve old sources and add complete18-slot IR/layout/Scene/query
+oracles. These are source findings; no new incoming runtime/UB claim is made.
 
 Earlier cap23 unit09fb remains965P/strict0 with347 negatives+126 exact original
 formatter positives, source7578563b/terminal21c2e65c PASS. Runtime3137 remains
