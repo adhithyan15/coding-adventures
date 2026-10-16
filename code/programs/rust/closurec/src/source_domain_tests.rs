@@ -508,3 +508,80 @@ fn d3a_small_graph_storage_and_work_have_an_independent_schedule() {
         }
     }
 }
+
+#[test]
+fn d3a_prepublication_refusal_preserves_every_destination_in_every_presentation() {
+    use crate::config::{CompilationLevel, CompilerConfig, CorrelationVectorFormat};
+    use crate::run::{run_compiler_with_shape_limits, CompilerError};
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static SEQUENCE: AtomicU64 = AtomicU64::new(0);
+    let dir = std::env::temp_dir().join(format!(
+        "closurec-d3a-{}-{}",
+        std::process::id(),
+        SEQUENCE.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&dir).unwrap();
+    let input = dir.join("input.js");
+    std::fs::write(&input, "report(1+1);").unwrap();
+    let paths = ["out.js", "out.map", "manifest.txt", "trace.json"].map(|p| dir.join(p));
+    for level in [
+        CompilationLevel::Bundle,
+        CompilationLevel::WhitespaceOnly,
+        CompilationLevel::Simple,
+        CompilationLevel::ChecksOnly,
+        CompilationLevel::Advanced,
+    ] {
+        for format in [
+            CorrelationVectorFormat::Json,
+            CorrelationVectorFormat::Ndjson,
+            CorrelationVectorFormat::None,
+        ] {
+            for filtered in [false, true] {
+                for path in &paths {
+                    std::fs::write(path, b"sentinel\0prior bytes").unwrap();
+                }
+                let mut config = CompilerConfig::default();
+                config.compilation.level = level;
+                config.io.js_patterns = vec![input.to_string_lossy().into_owned()];
+                config.io.js_output_file = Some(paths[0].clone());
+                config.source_map.path_template = paths[1].to_string_lossy().into_owned();
+                config.chunks.output_manifest_file = Some(paths[2].clone());
+                config.special_modes.correlation_vector = true;
+                config.special_modes.correlation_vector_format = format;
+                config.special_modes.correlation_vector_output = Some(paths[3].clone());
+                config.special_modes.correlation_vector_summary = true;
+                if filtered {
+                    config.special_modes.correlation_vector_filter =
+                        vec!["hide-all-source-rows".into()];
+                }
+                let error = run_compiler_with_shape_limits(
+                    &config,
+                    ShapeLimits {
+                        work: 0,
+                        index_bytes: 64 * 1024 * 1024,
+                    },
+                )
+                .unwrap_err();
+                assert!(
+                    matches!(error, CompilerError::Provenance { ref stage, ref message } if stage=="source_domain" && message=="source shape work limit"),
+                    "{error:?}"
+                );
+                for path in &paths {
+                    assert_eq!(std::fs::read(path).unwrap(), b"sentinel\0prior bytes");
+                }
+                assert_eq!(
+                    std::fs::read_dir(&dir).unwrap().count(),
+                    5,
+                    "no stage/backup files on refusal"
+                );
+                println!("D3A_PUBLICATION_REFUSAL {level:?} {format:?} filtered={filtered}");
+            }
+        }
+    }
+    // Only explicitly owned files are removed; no recursive or computed parent
+    // deletion is needed for this failure-before-publication fixture.
+    for path in paths.iter().chain(std::iter::once(&input)) {
+        std::fs::remove_file(path).unwrap();
+    }
+    std::fs::remove_dir(dir).unwrap();
+}
