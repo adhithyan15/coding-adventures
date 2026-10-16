@@ -206,8 +206,10 @@ fn d1_escaped_astral_string_binds_raw_ranges_instead_of_processed_length() {
         Piece{type_:"Semicolon",token:Some(1),start:[8,5,6,0,5,6],end:[9,6,7,0,6,7]},
         Piece{type_:"EOF",token:Some(2),start:[9,6,7,0,6,7],end:[9,6,7,0,6,7]},
     ];
+    let legacy=coding_adventures_javascript_lexer::tokenize_javascript_typed(source,coding_adventures_javascript_tokens::EsVersion::Es2025).unwrap();
+    assert_eq!(legacy[0].value,"😀\\n","ES2025 preserves raw escapes inside stripped quotes");assert_eq!(legacy[0].value.len(),6);
     let f=Fixture::new(source);success(f.run("WHITESPACE_ONLY",true,&[]));let wire=reload(&f.sidecar());let ids=assert_inventory(&wire,&f.input,source,"81a656f58118529b94001ce1c21014de058dc6c9582f8efba1fc8043c25acbc1",&rows);
-    assert_eq!(wire["entries"][&ids[0]]["origin"]["meta"]["lexeme_byte_len"],5);assert_eq!(rows[0].end[0]-rows[0].start[0],8);
+    assert_eq!(wire["entries"][&ids[0]]["origin"]["meta"]["lexeme_byte_len"],6);assert_eq!(rows[0].end[0]-rows[0].start[0],8);
     eprintln!("CV04b-D1-CLI-COMPLETE case=astralEscape level=WHITESPACE_ONLY exactInventory");
 }
 #[test]

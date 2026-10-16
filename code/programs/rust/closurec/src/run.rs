@@ -24,7 +24,6 @@ use crate::defines;
 use crate::globs;
 use crate::whitespace_only;
 use crate::wrapper;
-use coding_adventures_javascript_lexer::tokenize_javascript_typed;
 use coding_adventures_javascript_parser::{bridge, bridge::BridgeError, parse_javascript_typed};
 use coding_adventures_javascript_tokens::EsVersion;
 use lexer::token::TokenType;
