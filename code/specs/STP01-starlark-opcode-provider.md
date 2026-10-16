@@ -147,9 +147,10 @@ OCaml emerging until its promotion gates pass; this profile does not change the
 ## 6. Go native adoption
 
 The Go provider's committed test reader consumes the fixed shared cases.json
-through standard-library JSON token parsing. It enforces section 4 before any
+through standard-library JSON token parsing. It enforces section 4 transport, shape and domain checks before any
 provider call or byte conversion, including decoded duplicate keys, scalar-only
-Unicode, integer syntax, explicit null versus omission, and bounded input/depth.
+Unicode, integer syntax, explicit null versus omission, and bounded input/depth. Semantic table values are checked against actual
+provider APIs and independently by the neutral oracle.
 All 359 rows must be compared with actual AllOps, OpFromByte, category/name/byte,
 four map constructors and direct lookup helpers. Corruption cases must fail;
 coordinated fixture changes must not regenerate expected provider behavior.
