@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-Q-05",
+  "category": "Saṅkhyā — number and quantity",
+  "label": "the numeral agrees in gender, and two behaves like nothing else",
+  "probe": [
+    "SA-GRAMMAR-NUMERAL-GENDER",
+    "SA-GRAMMAR-NUMERAL-DUAL"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [],
+  "sanskritSpecific": true,
+  "note": "Sanskrit-specific. eka, dvi and tri inflect for gender, and dvi is grammatically dual. No Spanish A1 point asks this because Spanish numerals above one do not agree."
+}

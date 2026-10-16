@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-QT-01",
+  "category": "Quantitative notions",
+  "label": "measures of size and quantity",
+  "probe": [
+    "SA-LEX-C15-ADJ-01",
+    "SA-LEX-C15-ADJ-02",
+    "SA-LEX-C42-REPLY-05",
+    "SA-LEX-C42-REPLY-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG2-02",
+    "A1-NG2-03",
+    "A1-NG2-04"
+  ],
+  "note": "mahat, alpa, bahu, kiñcit. Distance and weight have no units taught; size is the only measure a learner can express."
+}

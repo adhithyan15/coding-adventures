@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-PRON-01",
+  "category": "Sarvanāma — the pronoun",
+  "label": "subject pronouns: I, you familiar, you respectful",
+  "probe": [
+    "SA-LEX-AHAM",
+    "SA-LEX-TVAM",
+    "SA-LEX-BHAVAN",
+    "SA-GRAMMAR-POLITENESS-BY-PERSON"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-PRON-01"
+  ],
+  "note": "aham, tvam and bhavān. The paradigm is NOT full — no third person pronoun, no plural — but the three an A1 conversation needs are taught, and the register split between tvam and bhavān is taught with them."
+}

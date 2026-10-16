@@ -1,0 +1,23 @@
+{
+  "id": "SA-A1-N-02",
+  "category": "Nāma — the noun",
+  "label": "common nouns naming periods of time: day, night, morning, noon, evening, month, year",
+  "probe": [
+    "SA-LEX-C17-TIME-01",
+    "SA-LEX-C17-TIME-02",
+    "SA-LEX-C45-DAYTIME-01",
+    "SA-LEX-C45-DAYTIME-02",
+    "SA-LEX-C45-DAYTIME-03",
+    "SA-LEX-C45-DAYTIME-04",
+    "SA-LEX-C45-DAYTIME-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-N-02"
+  ],
+  "note": "dinam, rātriḥ, prātaḥ, madhyāhnaḥ, sāyam, māsaḥ and saṁvatsaraḥ are all taught, and `ṛtuḥ` ('a season') is added in chapter 61. WEEKDAY AND MONTH NAMES AND THE SIX SEASON NAMES ARE STILL ABSENT, which is why SA-A1-T-02 records the calendar as incomplete: naming a period is not the same demand as locating one, and the generic word for a season is not the six names."
+}

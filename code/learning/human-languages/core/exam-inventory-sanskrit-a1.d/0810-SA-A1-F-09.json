@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-F-09",
+  "category": "Likes, wishes and feelings",
+  "label": "say what you like, want or prefer",
+  "probe": [
+    "SA-LEX-ICCHATI-WANT-01",
+    "SA-FRAME-ROCATE-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F3-01",
+    "A1-F3-02",
+    "A1-F3-03",
+    "A1-F3-04"
+  ],
+  "note": "Closed by SA-C57-icchati for wanting and SA-C58-rocate for liking. The two are deliberately taught in different chapters because they take different frames: `icchati` takes an infinitive from the person, `rocate` makes the thing liked the subject."
+}

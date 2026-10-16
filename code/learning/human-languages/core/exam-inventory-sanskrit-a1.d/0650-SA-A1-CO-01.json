@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-CO-01",
+  "category": "Samuccaya — coordination",
+  "label": "joining two things with 'and'",
+  "probe": [
+    "SA-JOIN-CA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-CO-01"
+  ],
+  "note": "Closed by SA-C52-ca. `ca` is introduced as an atom, with the fact that decides whether a learner can use it: it stands AFTER the second item, not between the two."
+}

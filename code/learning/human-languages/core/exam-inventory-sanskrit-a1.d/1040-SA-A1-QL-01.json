@@ -1,0 +1,23 @@
+{
+  "id": "SA-A1-QL-01",
+  "category": "Qualitative notions",
+  "label": "sight and hearing",
+  "probe": [
+    "SA-LEX-PASHYATI-SEE",
+    "SA-LEX-HEAR",
+    "SA-LEX-AKSHI-EYE",
+    "SA-LEX-KARNAH-EAR",
+    "SA-LEX-C46-LIGHT-03",
+    "SA-LEX-C50-SOUND-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG5-01",
+    "A1-NG5-02"
+  ],
+  "note": "paśyati, śṛṇoti, akṣi, karṇaḥ, prakāśaḥ and śabdaḥ — both senses with their organ and their object."
+}

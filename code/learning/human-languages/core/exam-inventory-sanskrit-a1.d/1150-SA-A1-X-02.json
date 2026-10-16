@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-X-02",
+  "category": "Specific notions — the lexical fields",
+  "label": "physical characteristics and personality",
+  "probe": [
+    "SA-LEX-C43-COURTESY-02",
+    "SA-LEX-C43-COURTESY-03",
+    "SA-LEX-C43-COURTESY-05",
+    "SA-LEX-C37-COURTESY-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE01-02",
+    "A1-NE02-01"
+  ],
+  "note": "vinayaḥ, namratā, saralaḥ, prasannaḥ. All of chapter 43 is character vocabulary — Sanskrit's own moral register — and none of it is physical description, which is untaught."
+}

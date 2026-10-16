@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-Q-03",
+  "category": "Saṅkhyā — number and quantity",
+  "label": "vague quantity: a little and a lot",
+  "probe": [
+    "SA-LEX-C42-REPLY-04",
+    "SA-LEX-C42-REPLY-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-Q-03",
+    "A1-NG2-02"
+  ],
+  "note": "kiñcit and bahu, both chapter 42."
+}

@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-SP-02",
+  "category": "Spatial notions",
+  "label": "relative position: left, right, above, below, in front, behind",
+  "probe": [
+    "SA-LEX-C93-TIME93-03",
+    "SA-LEX-C93-TIME93-04",
+    "SA-LEX-C94-LOC94-02",
+    "SA-LEX-C94-LOC94-03",
+    "SA-LEX-C94-LOC94-04",
+    "SA-LEX-C94-LOC94-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG3-02"
+  ],
+  "note": "CLOSED by chapters 93-94 and jointly retrieved in SA-R99-first-pass-time-and-places: vāmaḥ (left), dakṣiṇaḥ (right; south), upari (above), adhaḥ (below), agre (in front) and pṛṣṭhataḥ (behind). The earlier null probe was stale: it said none of these meanings was taught even though all six introducing atoms already existed. It also named paścāt for 'behind', but the book teaches paścāt in chapter 92 only as temporal 'after, later'; chapter 94's pṛṣṭhataḥ is the actual spatial exponent and the atom this point probes."
+}

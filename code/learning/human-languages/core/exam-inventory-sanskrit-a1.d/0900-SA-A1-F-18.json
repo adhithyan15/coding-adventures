@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-F-18",
+  "category": "Relating socially",
+  "label": "congratulate, bless, wish well",
+  "probe": [
+    "SA-LEX-C37-COURTESY-04",
+    "SA-LEX-C37-COURTESY-05",
+    "SA-LEX-C28-LEAVE-05",
+    "SA-LEX-C28-LEAVE-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F5-09",
+    "A1-F5-10"
+  ],
+  "note": "abhinandanam, āśīrvādaḥ, svasti and śubham. Spanish's toast has no exact counterpart; svasti is the nearest and is recorded as such rather than as a match."
+}

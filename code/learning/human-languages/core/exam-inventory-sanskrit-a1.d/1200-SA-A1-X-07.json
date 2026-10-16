@@ -1,0 +1,27 @@
+{
+  "id": "SA-A1-X-07",
+  "category": "Specific notions — the lexical fields",
+  "label": "the settlement and the built world",
+  "probe": [
+    "SA-LEX-C16-PLACE-02",
+    "SA-LEX-C16-PLACE-05",
+    "SA-LEX-C33-LAND-04",
+    "SA-LEX-C16-PLACE-03",
+    "SA-LEX-C33-LAND-02",
+    "SA-LEX-C41-CRAFT-01",
+    "SA-LEX-C41-CRAFT-02",
+    "SA-LEX-C41-CRAFT-03",
+    "SA-LEX-C41-CRAFT-04",
+    "SA-LEX-C41-CRAFT-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE20-03",
+    "A1-NE14-03"
+  ],
+  "note": "grāmaḥ, nagaram, puram, mārgaḥ, setuḥ, and chapter 41's made things — cakram, kalaśaḥ, plavaḥ, darpaṇaḥ, chatram. A boat and a wheel are the transport system Sanskrit has."
+}

@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-CO-03",
+  "category": "Samuccaya — coordination",
+  "label": "disjunctive coordination: or",
+  "probe": [
+    "SA-JOIN-VA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-CO-03"
+  ],
+  "note": "Closed by SA-C52-va. `va` shares the enclitic slot with `ca`, which is why the two are taught one lesson apart and contrasted in the same position."
+}

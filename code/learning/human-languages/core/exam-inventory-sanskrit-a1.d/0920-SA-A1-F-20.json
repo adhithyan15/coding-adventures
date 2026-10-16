@@ -1,0 +1,23 @@
+{
+  "id": "SA-A1-F-20",
+  "category": "Relating socially",
+  "label": "take leave",
+  "probe": [
+    "SA-PATTERN-PUNAR-DARSHANAYA",
+    "SA-LEX-GACCHAMI",
+    "SA-LEX-PUNAH",
+    "SA-LEX-SHVAH",
+    "SA-LEX-C28-LEAVE-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F5-11",
+    "A1-F6-06"
+  ],
+  "note": "punar darśanāya, gacchāmi, punaḥ, śvaḥ and svasti. Chapter 4 is entirely this function and chapter 28 extends it."
+}

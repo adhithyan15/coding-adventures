@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-L-10",
+  "category": "Lipi — the script and its orthography",
+  "label": "the akṣara: the syllable is the unit Devanagari is built from",
+  "probe": [
+    "SA-SCRIPT-RECOG-05",
+    "SA-GRAMMAR-SANDHI-JOINS-WORDS"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "SA-SCRIPT-DATA",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-O1-07"
+  ],
+  "note": "Spanish asks for syllable division. Devanagari's unit is the akṣara — a consonant with its vowel — and the virāma is what strips the inherent vowel so two consonants can bind. The track teaches the virāma in chapter 1. CONJUNCT CONSONANTS as a written form are not taught systematically, which is the real gap behind this point."
+}

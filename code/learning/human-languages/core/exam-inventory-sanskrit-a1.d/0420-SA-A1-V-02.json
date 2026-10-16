@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-V-02",
+  "category": "Dhātu and kriyāpada — the verb",
+  "label": "the first person: I go, I speak, I live, I do",
+  "probe": [
+    "SA-LEX-GACCHAMI",
+    "SA-LEX-VADAMI",
+    "SA-LEX-VASAMI",
+    "SA-LEX-KAROMI",
+    "SA-GRAMMAR-ASMI-FIRST-PERSON"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-V-01"
+  ],
+  "note": "gacchāmi, vadāmi, vasāmi, karomi and asmi. The first person is what an A1 candidate needs most and the track teaches it early, in chapters 3 to 5."
+}

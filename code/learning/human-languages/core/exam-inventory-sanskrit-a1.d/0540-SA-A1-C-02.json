@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-C-02",
+  "category": "Vibhakti — the case system",
+  "label": "the locative: saying where you live",
+  "probe": [
+    "SA-GRAMMAR-LOCATIVE-CASE",
+    "SA-LEX-VASAMI"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG3-01",
+    "A1-SV-06"
+  ],
+  "note": "vasāmi with the locative is chapter 5's sentence, and it is how Sanskrit answers 'I live in …' with no preposition at all."
+}

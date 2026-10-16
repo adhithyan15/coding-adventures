@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-EX-01",
+  "category": "Existential notions",
+  "label": "existence, and its absence",
+  "probe": [
+    "SA-LEX-ASTI-BHAVATI-BE",
+    "SA-LEX-NA-NO"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG1-01",
+    "A1-NG1-02",
+    "A1-NG1-03"
+  ],
+  "note": "asti and bhavati, which Sanskrit keeps apart as being and becoming — a distinction Spanish makes with ser/estar for a different reason. na negates."
+}

@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-RG-03",
+  "category": "Register — which Sanskrit is being taught",
+  "label": "the etymological layer: what this track teaches that no exam asks for",
+  "probe": [
+    "SA-HISTORY-JONES-1786",
+    "SA-COMPARISON-NUMERAL-FAMILY",
+    "SA-SOUND-PIE-KW-OUTCOMES",
+    "SA-SOUND-GRIMMS-LAW-P-TO-F",
+    "SA-HISTORY-TATSAMA-TADBHAVA"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-EXAM-LEVELS",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [],
+  "sanskritSpecific": true,
+  "note": "Sanskrit-specific. Eleven HISTORY atoms, forty-eight ETYMON atoms, a COMPARISON atom and two SOUND atoms carry an Indo-European comparative layer — Jones's 1786 lecture, Grimm's law, the kʷ outcomes, the tatsama/tadbhava split — that is the reason this track exists and that no A1 syllabus anywhere would ask for. Counted as a point so the inventory does not silently imply the track is only 'A1 minus gaps'."
+}
