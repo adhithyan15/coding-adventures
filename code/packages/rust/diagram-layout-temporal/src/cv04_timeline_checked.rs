@@ -179,3 +179,43 @@ fn actual_predicate_and_section_visits_are_linear() {
     }
     println!("timeline-checked COMPLETE cell=actual_predicate_and_section_visits_are_linear");
 }
+
+#[test]
+fn nonempty_events_keep_complete_layouts() {
+    let rows = [
+        (TimelineDirection::TopDown, 1, 194.0, 66.0, 108.0, 234.0, 50.0, 382.0, 66.0),
+        (TimelineDirection::TopDown, 2, 212.0, 66.0, 126.0, 234.0, 50.0, 382.0, 84.0),
+        (TimelineDirection::LeftRight, 1, 252.0, 106.0, 106.0, 206.0, 118.0, 190.0, 66.0),
+        (TimelineDirection::LeftRight, 2, 270.0, 106.0, 106.0, 206.0, 118.0, 190.0, 84.0),
+    ];
+    for (direction, count, height, sy1, sy2, x, y, width, card_height) in rows {
+        let events = ["A", "B"][..count].iter().map(|s| s.to_string()).collect::<Vec<_>>();
+        let period = LayoutedTemporalItem::TimelinePeriod {
+            x, y, width, height: card_height, label: "P0".into(), events: events.clone(), color_index: 0,
+        };
+        let (sx1, sx2) = if direction == TimelineDirection::TopDown { (206.0, 206.0) } else { (301.0, 301.0) };
+        let spine = LayoutedTemporalItem::TimelineSpine { x1: sx1, y1: sy1, x2: sx2, y2: sy2 };
+        let items = if direction == TimelineDirection::TopDown { vec![spine, period] } else { vec![period, spine] };
+        let oracle = expected(640.0, height, config(50.0, 50.0, false), items);
+        let mut d = input(50.0, 50.0, direction, false, false, false, 1);
+        let TemporalBody::Timeline(t) = &mut d.body else { unreachable!() };
+        t.sections[0].periods[0].events = events;
+        assert_eq!(try_layout_temporal_diagram(&d, 640.0), Ok(oracle));
+    }
+    println!("timeline-checked COMPLETE cell=nonempty_events_keep_complete_layouts");
+}
+
+#[test]
+fn event_frame_extent_can_fail_after_outer_and_title_extents_pass() {
+    // At this exact f64 boundary the outer card and its title still advance,
+    // while the event frame's positive28 height is swallowed at2^58.
+    let y = 2f64.powi(58) - 32.0;
+    assert!(y + 66.0 > y);
+    assert!((y + 8.0) + 22.0 > y + 8.0);
+    assert_eq!((y + 32.0) + 28.0, y + 32.0);
+    let mut d = input(y, 0.0, TimelineDirection::TopDown, false, false, false, 1);
+    let TemporalBody::Timeline(t) = &mut d.body else { unreachable!() };
+    t.sections[0].periods[0].events = vec!["A".into()];
+    assert_eq!(try_layout_temporal_diagram(&d, 2f64.powi(60)), Err(TemporalLayoutError::TimelineGeometry));
+    println!("timeline-checked COMPLETE cell=event_frame_extent_can_fail_after_outer_and_title_extents_pass");
+}
