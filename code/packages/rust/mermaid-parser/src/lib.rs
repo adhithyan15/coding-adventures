@@ -5851,12 +5851,31 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
     let mut diagram = WardleyDiagram { title: None, config,
         stages: vec!["Genesis".into(), "Custom Built".into(), "Product".into(), "Commodity".into()],
         nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new(), annotations_box: None, annotations: Vec::new() };
+    let mut annotation_indices=std::collections::BTreeMap::<WardleyAnnotationKey,usize>::new();
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
         // Notes own quoted text: comment markers inside the active quote are
         // data. Other Wardley statements retain their established splitting.
         if let Some(value) = raw.trim().strip_prefix("note ") {
             diagram.notes.push(parse_wardley_note(value, line_number)?);
+            continue;
+        }
+        // Annotations own their complete quote and only then outside comments.
+        if let Some(value)=raw.trim().strip_prefix("annotation ") {
+            let (number,visibility,evolution,text)=parse_wardley_annotation(value,line_number)?;
+            match annotation_indices.entry(WardleyAnnotationKey(number)) {
+                std::collections::btree_map::Entry::Occupied(entry)=>{
+                    // Every index was allocated from this vector, which never
+                    // removes/reorders groups; only coordinates and text grow.
+                    let annotation=&mut diagram.annotations[*entry.get()];
+                    annotation.coordinates.push((visibility,evolution));
+                    if annotation.text.is_empty() {annotation.text=text;}
+                }
+                std::collections::btree_map::Entry::Vacant(entry)=>{
+                    entry.insert(diagram.annotations.len());
+                    diagram.annotations.push(WardleyAnnotation{number,text,coordinates:vec![(visibility,evolution)]});
+                }
+            }
             continue;
         }
         let line = raw.split("%%").next().unwrap_or("").trim();
@@ -5895,31 +5914,6 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             }
             diagram.annotations_box = Some((visibility, evolution)); continue;
         }
-        if let Some(value) = line.strip_prefix("annotation ") {
-            let Some((number, remainder)) = value.split_once(',') else { return Err(wardley_error(line_number, "invalid Wardley annotation")); };
-            let number = number.trim().parse::<usize>().map_err(|_| wardley_error(line_number, "invalid Wardley annotation number"))?;
-            let Some(close) = remainder.find(']') else { return Err(wardley_error(line_number, "Wardley annotation requires coordinates")); };
-            let (visibility, evolution) = parse_wardley_coordinates(&remainder[..=close], line_number)?;
-            let authored_text = remainder[close + 1..].trim();
-            if authored_text.len() < 2 || !matches!((authored_text.chars().next(), authored_text.chars().last()),
-                (Some('"'), Some('"')) | (Some('\''), Some('\''))) {
-                return Err(wardley_error(line_number, "Wardley annotation text must be quoted"));
-            }
-            if !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
-                return Err(wardley_error(line_number, "Wardley annotation coordinates must be between 0 and 1"));
-            }
-            if let Some(annotation) = diagram.annotations.iter_mut().find(|annotation| {
-                #[cfg(test)] wardley_annotation_compared();
-                annotation.number == number
-            }) {
-                annotation.coordinates.push((visibility, evolution));
-                if annotation.text.is_empty() { annotation.text = wardley_name(authored_text); }
-            } else {
-                diagram.annotations.push(WardleyAnnotation { number, text: wardley_name(authored_text),
-                    coordinates: vec![(visibility, evolution)] });
-            }
-            continue;
-        }
         if let Some((source, target)) = line.split_once("->") {
             diagram.links.push(WardleyLink { source: wardley_name(source), target: wardley_name(target) }); continue;
         }
@@ -5933,6 +5927,49 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         return Err(wardley_error(1, format!("unknown evolved component {}", evolve.component)));
     }
     Ok(diagram)
+}
+
+// The vector owns authored order; this private ordered key only finds its index.
+// Test comparison observations do not add a production counter or resource cap.
+#[derive(Clone,Copy,Debug,PartialEq,Eq)]
+struct WardleyAnnotationKey(usize);
+impl Ord for WardleyAnnotationKey {
+    fn cmp(&self,other:&Self)->std::cmp::Ordering {
+        #[cfg(test)] wardley_annotation_compared();
+        self.0.cmp(&other.0)
+    }
+}
+impl PartialOrd for WardleyAnnotationKey {
+    fn partial_cmp(&self,other:&Self)->Option<std::cmp::Ordering> {Some(self.cmp(other))}
+}
+
+// Coordinates precede one active-quoted token. Byte offsets are obtained only
+// from char_indices; the opening/closing quote itself is one ASCII byte.
+fn parse_wardley_annotation(value:&str,line:usize)->Result<(usize,f64,f64,String),ParseError> {
+    let Some((number,remainder))=value.split_once(',') else {return Err(wardley_error(line,"invalid Wardley annotation"));};
+    let number=number.trim().parse::<usize>().map_err(|_|wardley_error(line,"invalid Wardley annotation number"))?;
+    let Some(close)=remainder.find(']') else {return Err(wardley_error(line,"Wardley annotation requires coordinates"));};
+    let (visibility,evolution)=parse_wardley_coordinates(&remainder[..=close],line)?;
+    let normalized=|v:f64|v.is_finite()&&(0.0..=1.0).contains(&v);
+    if !normalized(visibility)||!normalized(evolution) {return Err(wardley_error(line,"Wardley annotation coordinates must be between 0 and 1"));}
+    let authored=remainder[close+1..].trim_start();
+    let Some(quote)=authored.chars().next().filter(|c|*c=='\''||*c=='"') else {return Err(wardley_error(line,"Wardley annotation text must be quoted"));};
+    let invalid=||wardley_error(line,"Wardley annotation text must be a complete quoted string");
+    let mut chars=authored[1..].char_indices();let mut text=String::new();
+    while let Some((offset,c))=chars.next() {
+        if c==quote {
+            let suffix=authored[offset+2..].trim_start();
+            if !suffix.is_empty()&&!suffix.starts_with("%%") {return Err(wardley_error(line,"invalid Wardley annotation text suffix"));}
+            return Ok((number,visibility,evolution,text));
+        }
+        if c=='\\' {
+            match chars.next() {
+                Some((_,escaped)) if escaped==quote||escaped=='\\'=>text.push(escaped),
+                _=>return Err(invalid()),
+            }
+        } else {text.push(c);}
+    }
+    Err(invalid())
 }
 
 // Match one complete active-quoted token before interpreting its suffix.

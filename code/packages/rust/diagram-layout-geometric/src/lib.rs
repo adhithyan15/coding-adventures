@@ -230,7 +230,7 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum WardleyLayoutError {
     Width, Height, Padding, NodeRadius, NodeLabelOffset, AxisFontSize, LabelFontSize,
-    NodeCoordinates, EvolutionTarget, NoteCoordinates, UnknownLinkEndpoint, UnknownEvolutionComponent,
+    NodeCoordinates, EvolutionTarget, NoteCoordinates, AnnotationBoxCoordinates, AnnotationCoordinates, UnknownLinkEndpoint, UnknownEvolutionComponent,
     DerivedGeometry,
 }
 
@@ -255,6 +255,12 @@ pub fn try_layout_wardley(diagram: &WardleyDiagram) -> Result<LayoutedWardleyDia
     if diagram.evolves.iter().any(|e|!normalized(e.target)) {return Err(WardleyLayoutError::EvolutionTarget);}
     if diagram.notes.iter().any(|n|!normalized(n.visibility)||!normalized(n.evolution)) {
         return Err(WardleyLayoutError::NoteCoordinates);
+    }
+    if diagram.annotations_box.is_some_and(|(v,e)|!normalized(v)||!normalized(e)) {
+        return Err(WardleyLayoutError::AnnotationBoxCoordinates);
+    }
+    if diagram.annotations.iter().any(|a|a.coordinates.iter().any(|(v,e)|!normalized(*v)||!normalized(*e))) {
+        return Err(WardleyLayoutError::AnnotationCoordinates);
     }
     let names:HashSet<_>=diagram.nodes.iter().map(|n|n.label.as_str()).collect();
     if diagram.links.iter().any(|l|!names.contains(l.source.as_str())||!names.contains(l.target.as_str())) {
@@ -283,7 +289,9 @@ fn validate_wardley_geometry(layout:&LayoutedWardleyDiagram)->Result<(),WardleyL
         ||layout.nodes.iter().any(|n|!point(&n.position))
         ||layout.links.iter().any(|l|!point(&l.from)||!point(&l.to))
         ||layout.evolves.iter().any(|e|!point(&e.from)||!point(&e.to))
-        ||layout.notes.iter().any(|n|!point(&n.position)) {
+        ||layout.notes.iter().any(|n|!point(&n.position))
+        ||layout.annotations_box.as_ref().is_some_and(|p|!point(p))
+        ||layout.annotations.iter().any(|a|a.positions.iter().any(|p|!point(p))) {
         return Err(WardleyLayoutError::DerivedGeometry);
     }
     Ok(())
