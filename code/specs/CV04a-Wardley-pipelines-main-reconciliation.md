@@ -58,6 +58,16 @@ complete IR/defaults and exact physical error messages/line/column BEFORE repair
 including incomplete/escaped/suffix quotes, empty labels/body, missing/extra
 coordinates, nonfinite/range failures, wrong separators and relationships.
 
+The line grammar must preserve that semantic ownership. The raw child's grouped
+pipeline rule rejects empty/invalid bodies before the declared physical-source
+errors can run, and its header token stops at a brace inside a quoted name. Use
+one complete physical-line PIPELINE_LINE token after the keyword and one complete
+PIPELINE_END line token; the document admits those alongside existing line tokens.
+The semantic state machine alone validates opening/closing delimiters, nonempty
+bodies and flat relationships. This does not accept nested or malformed source:
+it makes the closed reader responsible for exact errors and quote-owned braces.
+Keep newline/EOF handling, existing grammar depth bounds and other token rules.
+
 Preserve first-authored matching-label parent lookup with an index; capture its
 visibility once per header. Child append must not rescan all prior nodes. Specify
 and observe actual header/parent-visibility comparisons for parent-last prefixes
