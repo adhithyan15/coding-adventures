@@ -42,6 +42,9 @@ fn generic_checked_graph_acceptance_does_not_admit_the_source_namespace() {
             }
             _ => unreachable!(),
         }
+        if case == "missing-inventory" {
+            wire["pass_order"] = json!([]);
+        }
         CVLog::from_checked_json(
             &serde_json::to_string(&wire).unwrap(),
             GraphLimits::default(),
