@@ -520,31 +520,48 @@ fn single_unit_offsets_preserve_exact_stdout_and_normal_exit() {
 /// a failed cell; an unavailable toolchain is never counted as execution.
 #[test]
 fn current_main_nineteen_through_twenty_one_normal_exit() {
-    for offset in 19..=21 {
-        let mut cases = Vec::new();
-        for (value, sign) in [("-2.25", -1), ("0.0", 0), ("3.5", 1)] {
-            for (operator, expected) in [("+", sign + offset), ("-", sign - offset)] {
-                cases.push((format!("begin real procedure pick; begin output('P'); pick := {value} end; real saved; saved := entier(sign(pick()) {operator} {offset}); output(saved) end"), format!("P{expected}")));
+    // Prog and its expected stdout deliberately borrow immutable fixture text.
+    // Materialize these24 bounded source pairs instead of leaking dynamic text
+    // or weakening the shared harness's static lifetime and execution contract.
+    const CASES:&[(usize,usize,&str,&str)]=&[
+        (19,0,"begin real procedure pick; begin output('P'); pick := -2.25 end; real saved; saved := entier(sign(pick()) + 19); output(saved) end","P18"),
+        (19,1,"begin real procedure pick; begin output('P'); pick := -2.25 end; real saved; saved := entier(sign(pick()) - 19); output(saved) end","P-20"),
+        (19,2,"begin real procedure pick; begin output('P'); pick := 0.0 end; real saved; saved := entier(sign(pick()) + 19); output(saved) end","P19"),
+        (19,3,"begin real procedure pick; begin output('P'); pick := 0.0 end; real saved; saved := entier(sign(pick()) - 19); output(saved) end","P-19"),
+        (19,4,"begin real procedure pick; begin output('P'); pick := 3.5 end; real saved; saved := entier(sign(pick()) + 19); output(saved) end","P20"),
+        (19,5,"begin real procedure pick; begin output('P'); pick := 3.5 end; real saved; saved := entier(sign(pick()) - 19); output(saved) end","P-18"),
+        (19,6,"begin boolean procedure choose; begin output('C'); choose := true end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 19) else ((entier(sign(rightvalue())) + 1) + 18))); output(saved) end","CL18"),
+        (19,7,"begin boolean procedure choose; begin output('C'); choose := false end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 19) else ((entier(sign(rightvalue())) + 1) + 18))); output(saved) end","CR20"),
+        (20,0,"begin real procedure pick; begin output('P'); pick := -2.25 end; real saved; saved := entier(sign(pick()) + 20); output(saved) end","P19"),
+        (20,1,"begin real procedure pick; begin output('P'); pick := -2.25 end; real saved; saved := entier(sign(pick()) - 20); output(saved) end","P-21"),
+        (20,2,"begin real procedure pick; begin output('P'); pick := 0.0 end; real saved; saved := entier(sign(pick()) + 20); output(saved) end","P20"),
+        (20,3,"begin real procedure pick; begin output('P'); pick := 0.0 end; real saved; saved := entier(sign(pick()) - 20); output(saved) end","P-20"),
+        (20,4,"begin real procedure pick; begin output('P'); pick := 3.5 end; real saved; saved := entier(sign(pick()) + 20); output(saved) end","P21"),
+        (20,5,"begin real procedure pick; begin output('P'); pick := 3.5 end; real saved; saved := entier(sign(pick()) - 20); output(saved) end","P-19"),
+        (20,6,"begin boolean procedure choose; begin output('C'); choose := true end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 20) else ((entier(sign(rightvalue())) + 1) + 19))); output(saved) end","CL19"),
+        (20,7,"begin boolean procedure choose; begin output('C'); choose := false end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 20) else ((entier(sign(rightvalue())) + 1) + 19))); output(saved) end","CR21"),
+        (21,0,"begin real procedure pick; begin output('P'); pick := -2.25 end; real saved; saved := entier(sign(pick()) + 21); output(saved) end","P20"),
+        (21,1,"begin real procedure pick; begin output('P'); pick := -2.25 end; real saved; saved := entier(sign(pick()) - 21); output(saved) end","P-22"),
+        (21,2,"begin real procedure pick; begin output('P'); pick := 0.0 end; real saved; saved := entier(sign(pick()) + 21); output(saved) end","P21"),
+        (21,3,"begin real procedure pick; begin output('P'); pick := 0.0 end; real saved; saved := entier(sign(pick()) - 21); output(saved) end","P-21"),
+        (21,4,"begin real procedure pick; begin output('P'); pick := 3.5 end; real saved; saved := entier(sign(pick()) + 21); output(saved) end","P22"),
+        (21,5,"begin real procedure pick; begin output('P'); pick := 3.5 end; real saved; saved := entier(sign(pick()) - 21); output(saved) end","P-20"),
+        (21,6,"begin boolean procedure choose; begin output('C'); choose := true end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 21) else ((entier(sign(rightvalue())) + 1) + 20))); output(saved) end","CL20"),
+        (21,7,"begin boolean procedure choose; begin output('C'); choose := false end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + 21) else ((entier(sign(rightvalue())) + 1) + 20))); output(saved) end","CR22"),
+    ];
+    for &(offset,case,source,expected) in CASES {
+        let program=Prog{lang:Language::Algol60,ext:"alg",src:source,expect:Expect::Stdout(expected),backends:&[NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit]};
+        let mut completed=0;
+        for backend in [NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit] {
+            let available=toolchain_available(backend);
+            let Some(result)=run(backend,&program) else {assert!(!available,"{backend:?} present but offset={offset} case={case} did not execute");continue;};
+            match &result {
+                RunResult::Completed{code,stdout}=>{assert_eq!(*code,Some(0),"offset={offset} case={case} {backend:?}: {stdout:?}");assert_eq!(stdout.trim(),expected,"offset={offset} case={case} {backend:?}");},
+                RunResult::Trapped=>panic!("offset={offset} case={case} {backend:?} trapped")
             }
+            assert_cell(backend,&program,result);completed+=1;
+            eprintln!("current-main EXECUTED offset={offset} case={case} backend={backend:?} expected={expected} Exit0");
         }
-        for (condition, expected) in [("true", format!("CL{}", offset - 1)), ("false", format!("CR{}", offset + 1))] {
-            let prior = offset - 1;
-            cases.push((format!("begin boolean procedure choose; begin output('C'); choose := {condition} end; real procedure leftvalue; begin output('L'); leftvalue := -2.25 end; real procedure rightvalue; begin output('R'); rightvalue := 3.5 end; real procedure relay(x); real x; relay := x; real saved; saved := relay(entier(if choose() then (entier(sign(leftvalue())) + {offset}) else ((entier(sign(rightvalue())) + 1) + {prior}))); output(saved) end"), expected));
-        }
-        for (case, (source, expected)) in cases.iter().enumerate() {
-            let program=Prog{lang:Language::Algol60,ext:"alg",src:source,expect:Expect::Stdout(expected),backends:&[NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit]};
-            let mut completed=0;
-            for backend in [NativeAot,Llvm,Wasm,Jvm,Clr,Vm,Jit] {
-                let available=toolchain_available(backend);
-                let Some(result)=run(backend,&program) else {assert!(!available,"{backend:?} present but offset={offset} case={case} did not execute");continue;};
-                match &result {
-                    RunResult::Completed{code,stdout}=>{assert_eq!(*code,Some(0),"offset={offset} case={case} {backend:?}: {stdout:?}");assert_eq!(stdout.trim(),expected,"offset={offset} case={case} {backend:?}");},
-                    RunResult::Trapped=>panic!("offset={offset} case={case} {backend:?} trapped")
-                }
-                assert_cell(backend,&program,result);completed+=1;
-                eprintln!("current-main EXECUTED offset={offset} case={case} backend={backend:?} expected={expected} Exit0");
-            }
-            assert!(completed>0,"offset={offset} case={case} needs actual backend execution");
-        }
+        assert!(completed>0,"offset={offset} case={case} needs actual backend execution");
     }
 }
