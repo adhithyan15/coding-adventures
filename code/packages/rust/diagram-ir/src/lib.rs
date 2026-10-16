@@ -2488,6 +2488,19 @@ pub enum TimelineDirection {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct TimelineConfig {
+    pub padding: f64,
+    pub use_max_width: bool,
+    pub disable_multicolor: bool,
+}
+
+impl Default for TimelineConfig {
+    fn default() -> Self {
+        Self { padding: 50.0, use_max_width: false, disable_multicolor: false }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct TimelinePeriod {
     pub label: String,
     pub events: Vec<String>,
@@ -2503,6 +2516,7 @@ pub struct TimelineSection {
 pub struct TimelineDiagram {
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub config: TimelineConfig,
     pub direction: TimelineDirection,
     pub sections: Vec<TimelineSection>,
 }
@@ -2957,6 +2971,7 @@ pub struct LayoutedTemporalDiagram {
     pub height: f64,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub timeline_config: Option<TimelineConfig>,
     pub interactions: Vec<LayoutedTemporalInteraction>,
     pub items: Vec<LayoutedTemporalItem>,
 }

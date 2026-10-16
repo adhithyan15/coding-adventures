@@ -9200,6 +9200,14 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".to_string(), description.clone());
     }
+    if let Some(config) = &diagram.timeline_config {
+        metadata.insert("timeline.padding".into(), config.padding.to_string());
+        metadata.insert("timeline.useMaxWidth".into(), config.use_max_width.to_string());
+        metadata.insert(
+            "timeline.disableMulticolor".into(),
+            config.disable_multicolor.to_string(),
+        );
+    }
     for interaction in &diagram.interactions {
         let prefix = format!("gantt.task.{}", interaction.task_id);
         if let Some(link) = &interaction.link {
@@ -10193,6 +10201,7 @@ mod tests {
             height: 96.0,
             accessibility_title: None,
             accessibility_description: None,
+            timeline_config: None,
             interactions: Vec::new(),
             items: vec![
                 LayoutedTemporalItem::JourneyTitle {
@@ -10274,6 +10283,32 @@ mod tests {
     }
 
     #[test]
+    fn timeline_config_lowers_to_scene_metadata() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedTemporalDiagram {
+            width: 320.0,
+            height: 180.0,
+            accessibility_title: None,
+            accessibility_description: None,
+            timeline_config: Some(diagram_ir::TimelineConfig {
+                padding: 72.0,
+                use_max_width: true,
+                disable_multicolor: true,
+            }),
+            interactions: Vec::new(),
+            items: Vec::new(),
+        };
+        let scene = diagram_to_paint_temporal(&layout, &opts);
+        let metadata = scene.metadata.unwrap();
+        assert_eq!(metadata.get("timeline.padding").map(String::as_str), Some("72"));
+        assert_eq!(metadata.get("timeline.useMaxWidth").map(String::as_str), Some("true"));
+        assert_eq!(metadata.get("timeline.disableMulticolor").map(String::as_str), Some("true"));
+    }
+
+    #[test]
     fn today_marker_style_lowers_to_backend_neutral_path() {
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
@@ -10284,6 +10319,7 @@ mod tests {
             height: 180.0,
             accessibility_title: None,
             accessibility_description: None,
+            timeline_config: None,
             interactions: Vec::new(),
             items: vec![diagram_ir::LayoutedTemporalItem::TodayMarker {
                 x: 160.0,

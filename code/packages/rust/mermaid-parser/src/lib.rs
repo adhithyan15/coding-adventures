@@ -596,7 +596,7 @@ use diagram_ir::{
     StructuralGroupMetadata, StructuralKind, StructuralNode,
     GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralPort,
     StructuralRelationship, StructuralRouting, TaskEnd, TaskStart, TemporalBody, TemporalDiagram,
-    TemporalKind, TimelineDiagram, TimelineDirection,
+    TemporalKind, TimelineConfig, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram, IshikawaLook,
@@ -3928,9 +3928,45 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
     Ok((title, TimelineDiagram {
         accessibility_title,
         accessibility_description,
+        config: parse_timeline_config(source),
         direction,
         sections,
     }))
+}
+
+fn parse_timeline_config(source: &str) -> TimelineConfig {
+    let defaults = TimelineConfig::default();
+    let front_matter = mermaid_front_matter_section(source, &["config", "timeline"]);
+    let config = mermaid_directive_object(source, "timeline")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config, name).or_else(|| {
+            config.lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name)
+                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
+    let boolean = |name: &str, fallback: bool| {
+        value(name)
+            .and_then(|value| match value.to_ascii_lowercase().as_str() {
+                "true" => Some(true),
+                "false" => Some(false),
+                _ => None,
+            })
+            .unwrap_or(fallback)
+    };
+    let padding = value("padding")
+        .and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .unwrap_or(defaults.padding);
+    TimelineConfig {
+        padding,
+        use_max_width: boolean("useMaxWidth", defaults.use_max_width),
+        disable_multicolor: boolean("disableMulticolor", defaults.disable_multicolor),
+    }
 }
 
 fn parse_mermaid_font_size(value: String) -> Option<f64> {
@@ -15533,6 +15569,35 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         let d = parse_gantt(GANTT_SRC).unwrap();
         assert_eq!(d.sections.len(), 1);
         assert_eq!(d.sections[0].label.as_deref(), Some("Phase 1"));
+    }
+
+    #[test]
+    fn timeline_preserves_render_configuration_from_init_and_front_matter() {
+        let (_, init) = parse_timeline(
+            "%%{init: {\"timeline\": {\"padding\": 72, \"useMaxWidth\": true, \"disableMulticolor\": true}}}%%\n\
+             timeline\n2025 : Public beta\n2026 : General availability\n",
+        )
+        .unwrap();
+        assert_eq!(init.config.padding, 72.0);
+        assert!(init.config.use_max_width);
+        assert!(init.config.disable_multicolor);
+
+        let (_, front_matter) = parse_timeline(
+            "---\nconfig:\n  timeline:\n    padding: 24\n    useMaxWidth: true\n    disableMulticolor: true\n---\ntimeline\n2025\n",
+        )
+        .unwrap();
+        assert_eq!(front_matter.config.padding, 24.0);
+        assert!(front_matter.config.use_max_width);
+        assert!(front_matter.config.disable_multicolor);
+    }
+
+    #[test]
+    fn timeline_rejects_invalid_padding_by_falling_back_to_upstream_default() {
+        let (_, negative) = parse_timeline(
+            "%%{init: {\"timeline\": {\"padding\": -1}}}%%\ntimeline\n2025\n",
+        )
+        .unwrap();
+        assert_eq!(negative.config.padding, 50.0);
     }
 
     #[test]
