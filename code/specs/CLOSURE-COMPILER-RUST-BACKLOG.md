@@ -3,6 +3,20 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 
+<!-- CV04a Wardley forces selected -->
+R2 spec-first branch starts from fixedc82 native16; nativefocused58/1/1+60cells,
+sourcef885v2 PASS and SwiftUI strict/263Rusttests/6targets/terminal26e7 PASS.
+R1full6 exec84776 RUNNING afterstrict0/preflight1477raw/native2859/style847;
+full1848/78/996 PENDING, do not mutate R1source/index/lock3ce/railroadtarget.
+Incoming314forces rawWITHHELD88588c/manifest98e8 binds14paths/28wholeblobs:
+typed/derived axes, closed quoted-name/comment and TAB-dispatch gaps. New force
+spec precedes tests/import/repair;32oldWardley whole scene cells require only
+forcesemptyABI/zero19thmetadata migration, new wholeoracles before rendering.
+Complete3Wardley resource delta, indexed annotation/totalbox/stage unchanged.
+Published solePR17288 remainse183/unmerged/conflicting/autoOFF. Frozen Miri
+DEFERRED/PENDING untouched/unpolled; fullClosuregoal/CV04b OPEN heartbeatACTIVE.
+<!-- /CV04a Wardley forces selected -->
+
 <!-- CV04a native16 selected -->
 Native15+annotations progress is published on solePR17288 at e18313b1, actual
 API/Git FF verified; UNMERGED/CONFLICTING/autoOFF. Native93 actual1842/78/936,
