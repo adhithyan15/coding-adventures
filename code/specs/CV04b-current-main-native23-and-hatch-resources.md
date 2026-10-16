@@ -11,8 +11,8 @@ edits, base ESTree canonical boundary, own types and zero new crates.io deps.
 Native406 validation is fully consumed:1882P/0F/1 existing archive trampoline I,
 74 executable targets+5 empty doctest harnesses, strict0. All24 physical source
 contexts19/20/21 run on six actual backends,144 unique normalExit0/output tuples.
-Independent terminal reviewer has reproduced7899 source bodies/209 roots/both
-locks; final report is pending. Keep that exact execution head and earlier fast58
+Independent terminal reviewd1762a9f passes7899 source bodies/209 roots/both
+locks and complete native/runtime/strict evidence. Keep that exact execution head and earlier fast58
 2009P/strict0, Closurefa4 1139P/strict0 receipts; never relabel them as the new
 source or current main. V8 compilation failure/zero execution stays preserved.
 
@@ -47,8 +47,11 @@ negative, including relay(entier((if choose() then ...+21 else ...+21)+1));
 the dedicated route still permits only a conditional front and flat arms.
 
 Keep prior near2^53 refusals. Add a current true24/binary64-fold23 offset witness
-((9007199254740993-9007199254740992)+23) under a complete source context, plus the
-previous true23/fold22 witness. Keep shared exp/log refusal controls, including
+((9007199254740992+1)-9007199254740992+23) under a complete source context, plus the
+previous true23/fold22 witness. Keep the direct9007199254740993-literal refusal
+separately: the existing large-leaf guard already excludes it, so it does not
+exercise intermediate rounding of individually admitted literal leaves.
+Keep shared exp/log refusal controls, including
 entier(ln(exp(exp(sign(pick())+23)))) with pick returning3.5; these require actual
 compiler confirmation, not a claim of executed miscompilation or UB.
 

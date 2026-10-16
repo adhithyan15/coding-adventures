@@ -1,9 +1,10 @@
 # Closure Compiler on Rust — parity backlog
 
 <!-- CV04b current-main integration pending -->
-Local406a9b5b/main3efe integration remains unpublished; sole PR17288 publishes
+Local maincf5da3f5 merge6ab6f339 remains unpublished; sole PR17288 publishes
 D3b6132a518, conflicting, auto-merge OFF. Fresh audit20261016T132135Z observes
-maincf5da3f5 with native22/23 and Ishikawa hatch increments still unintegrated.
+maincf5da3f5. Native22/23 tests and hatch fields are merged; dedicated production
+still byte-exact cap21, and hatch resource repair/fixture migration are pending.
 Next bounded contract: `CV04b-current-main-native23-and-hatch-resources.md`,
 committed before successor tests/merge/production. Preserve unrelated edits.
 
@@ -14,8 +15,8 @@ both unchanged locks. All24 exact19/20/21 source pairs execute normalExit0/exact
 output on NativeAot/Llvm/Wasm/Jvm/Vm/Jit:144 unique tuples; no CLR claim. Only the
 source-hashed archive outer3P/1I is allowed with its passing isolated-child parent;
 all other harnesses0I, all0F/measured/filtered. Static helper4b02e749/source9433a8d6
-reviews pass. Independent terminal audit reproduced all bodies/locks/census;
-final report pending. V8 Cargo101/E0597/zero-runtime failure remains preserved.
+reviews pass. Independent terminald1762a9f PASS reproduces all bodies/locks/census.
+V8 Cargo101/E0597/zero-runtime failure remains preserved.
 
 Earlier exact execution heads: fast15 source58e52fad=2009P/0F/0I (2007 executable
 passes+2 doctests;56 executables/15 docs,13 empty), strict0, source2b01de36 and
@@ -40,6 +41,12 @@ storage and no partial output. Preserve ordinary hatching plus font/frame/depth
 guards; require compiled red/green, complete fixtures and independent review.
 Native22 draft review8ca4d80d conditionally supports dedicated-only proof and exact
 incoming normal-exit companions; newer native23 needs explicit reconciliation.
+Merge source review found11 exact missing older boundary contexts outside conflict
+markers: four owned22 and seven intermediate native22-producer cap23 sources.
+Restore them test-first at cap21, capture refusal baseline, then migrate only ten
+quantitative contexts to exact-source positives; the nested conditional stays a
+structural negative. Incoming copied admission groups use different contexts and
+cannot substitute. No integration/runtime acceptance is inferred from auto-merge.
 
 Next: spec-first current-main/native23/hatch repair, exact old-source and whole-
 fixture retention, fresh input/graph/lock receipts, affected suites/strict and
