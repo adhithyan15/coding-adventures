@@ -65,12 +65,12 @@ pub fn layout_temporal_diagram(d: &TemporalDiagram, cw: f64) -> LayoutedTemporal
 pub fn try_layout_temporal_diagram(
     d: &TemporalDiagram, cw: f64,
 ) -> Result<LayoutedTemporalDiagram, TemporalLayoutError> {
-    Ok(match &d.body {
-        TemporalBody::Gantt(g) => layout_gantt(&d.title, g, cw),
-        TemporalBody::Git(g) => layout_git(g, cw),
-        TemporalBody::Journey(j) => layout_journey(&d.title, j, cw),
+    match &d.body {
+        TemporalBody::Gantt(g) => Ok(layout_gantt(&d.title, g, cw)),
+        TemporalBody::Git(g) => Ok(layout_git(g, cw)),
+        TemporalBody::Journey(j) => Ok(layout_journey(&d.title, j, cw)),
         TemporalBody::Timeline(t) => layout_timeline(&d.title, t, cw),
-    })
+    }
 }
 
 // These observers count actual predicate comparisons and section visits only in
@@ -80,29 +80,43 @@ std::thread_local! {
     static TIMELINE_WORK: std::cell::Cell<(usize, usize)> = const { std::cell::Cell::new((0, 0)) };
 }
 
-fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -> LayoutedTemporalDiagram {
+fn layout_timeline(
+    title: &Option<String>, diagram: &TimelineDiagram, cw: f64,
+) -> Result<LayoutedTemporalDiagram, TemporalLayoutError> {
+    // Validate raw inputs in a deterministic order before max can conceal NaN.
+    if !cw.is_finite() { return Err(TemporalLayoutError::TimelineCanvas); }
+    if !diagram.config.padding.is_finite() || diagram.config.padding < 0.0 {
+        return Err(TemporalLayoutError::TimelinePadding);
+    }
+    if !diagram.config.left_margin.is_finite() || diagram.config.left_margin < 0.0 {
+        return Err(TemporalLayoutError::TimelineLeftMargin);
+    }
     let mut items = Vec::new();
     let width = cw.max(560.0);
     let padding = diagram.config.padding;
-    let origin_x = padding + diagram.config.left_margin;
+    let origin_x = timeline_finite(padding + diagram.config.left_margin)?;
+    // This predicate concerns the whole diagram; compute it once, including LR
+    // with many empty unnamed rows. Palette ordinals never decide spine presence.
+    let without_sections = diagram.sections.iter().all(|section| {
+        #[cfg(test)]
+        TIMELINE_WORK.with(|count| { let (p, s) = count.get(); count.set((p + 1, s)); });
+        section.label.is_none()
+    });
     let mut y = padding;
     if let Some(label) = title {
         items.push(LayoutedTemporalItem::TemporalTitle {
             x: padding, y, width: width - padding * 2.0, height: 40.0, label: label.clone(),
         });
-        y += 52.0;
+        y = timeline_finite(y + 52.0)?;
     }
 
     match diagram.direction {
         TimelineDirection::TopDown => {
-            let spine_x = origin_x + 106.0;
+            let spine_x = timeline_finite(origin_x + 106.0)?;
+            let mut has_period = false;
             let start_y = y;
             let mut color_index = 0usize;
-            let without_sections = diagram.sections.iter().all(|section| {
-                #[cfg(test)]
-                TIMELINE_WORK.with(|count| { let (p, s) = count.get(); count.set((p + 1, s)); });
-                section.label.is_none()
-            });
+
             for section in &diagram.sections {
                 #[cfg(test)]
                 TIMELINE_WORK.with(|count| { let (p, s) = count.get(); count.set((p, s + 1)); });
@@ -111,23 +125,25 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                         x: origin_x, y, width: 136.0, height: 30.0, label: label.clone(),
                         color_index,
                     });
-                    y += 38.0;
+                    y = timeline_finite(y + 38.0)?;
                 }
                 for period in &section.periods {
+                    has_period = true;
                     let card_height = 48.0 + period.events.len() as f64 * 18.0;
                     items.push(LayoutedTemporalItem::TimelinePeriod {
                         x: spine_x + 28.0, y, width: width - spine_x - 52.0,
                         height: card_height, label: period.label.clone(),
                         events: period.events.clone(), color_index,
                     });
-                    y += card_height + 18.0;
+                    y = timeline_finite(y + timeline_finite(card_height + 18.0)?)?;
                     if !without_sections || !diagram.config.disable_multicolor {
-                        color_index += 1;
+                        color_index = color_index.checked_add(1)
+                            .ok_or(TemporalLayoutError::TimelineGeometry)?;
                     }
                 }
-                y += 10.0;
+                y = timeline_finite(y + 10.0)?;
             }
-            if color_index > 0 {
+            if has_period {
                 items.insert(usize::from(title.is_some()), LayoutedTemporalItem::TimelineSpine {
                     x1: spine_x, y1: start_y + 16.0, x2: spine_x, y2: y - 36.0,
                 });
@@ -147,15 +163,11 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                         color_index,
                     });
                 }
-                let card_y = y + 44.0;
-                let spine_y = card_y + 12.0;
-                let start_x = origin_x + 106.0;
+                let card_y = timeline_finite(y + 44.0)?;
+                let spine_y = timeline_finite(card_y + 12.0)?;
+                let start_x = timeline_finite(origin_x + 106.0)?;
                 let mut row_height: f64 = 48.0;
-                let without_sections = diagram.sections.iter().all(|section| {
-                #[cfg(test)]
-                TIMELINE_WORK.with(|count| { let (p, s) = count.get(); count.set((p + 1, s)); });
-                section.label.is_none()
-            });
+
                 for (index, period) in section.periods.iter().enumerate() {
                     let x = start_x + index as f64 * (card_width + gap);
                     let card_height = 48.0 + period.events.len() as f64 * 18.0;
@@ -165,7 +177,8 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                         label: period.label.clone(), events: period.events.clone(), color_index,
                     });
                     if !without_sections || !diagram.config.disable_multicolor {
-                        color_index += 1;
+                        color_index = color_index.checked_add(1)
+                            .ok_or(TemporalLayoutError::TimelineGeometry)?;
                     }
                 }
                 if !section.periods.is_empty() {
@@ -177,25 +190,68 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                     });
                     max_width = max_width.max(end_x + card_width / 2.0 + padding);
                 }
-                y = card_y + row_height + 42.0;
+                y = timeline_finite(timeline_finite(card_y + row_height)? + 42.0)?;
             }
-            return LayoutedTemporalDiagram {
+            return validate_timeline_layout(LayoutedTemporalDiagram {
                 width: max_width, height: y + padding,
                 accessibility_title: diagram.accessibility_title.clone(),
                 accessibility_description: diagram.accessibility_description.clone(),
                 timeline_config: Some(diagram.config.clone()),
                 interactions: Vec::new(), items,
-            };
+            });
         }
     }
 
-    LayoutedTemporalDiagram {
+    validate_timeline_layout(LayoutedTemporalDiagram {
         width, height: y + padding,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         timeline_config: Some(diagram.config.clone()),
         interactions: Vec::new(), items,
-    }
+    })
+}
+
+fn timeline_finite(value: f64) -> Result<f64, TemporalLayoutError> {
+    if value.is_finite() { Ok(value) } else { Err(TemporalLayoutError::TimelineGeometry) }
+}
+
+// Positive dimensions alone are insufficient: a large coordinate can swallow
+// an otherwise positive width in f64. Check the actual represented endpoints.
+fn timeline_rect(x: f64, y: f64, width: f64, height: f64) -> bool {
+    [x, y, width, height, x + width, y + height].iter().all(|v| v.is_finite())
+        && width > 0.0 && height > 0.0 && x + width > x && y + height > y
+}
+
+fn validate_timeline_layout(
+    layout: LayoutedTemporalDiagram,
+) -> Result<LayoutedTemporalDiagram, TemporalLayoutError> {
+    // Mirror the painter's actual frames, rather than a centered proxy. This
+    // validates owned layouts only; forged public layout/paint payloads and
+    // raster-resource admission retain their separate contracts.
+    let valid = layout.width.is_finite() && layout.width > 0.0
+        && layout.height.is_finite() && layout.height >= 0.0
+        && (layout.height > 0.0 || layout.items.is_empty())
+        && layout.items.iter().all(|item| match item {
+            LayoutedTemporalItem::TemporalTitle { x, y, width, height, .. } => {
+                timeline_rect(*x, *y, *width, *height)
+                    && timeline_rect(x + 8.0, y + 6.0, width - 16.0, height - 12.0)
+            }
+            LayoutedTemporalItem::TimelineSection { x, y, width, height, .. } => {
+                timeline_rect(*x, *y, *width, *height)
+                    && timeline_rect(x + 10.0, y + 6.0, width - 20.0, height - 12.0)
+            }
+            LayoutedTemporalItem::TimelinePeriod { x, y, width, height, events, .. } => {
+                timeline_rect(*x, *y, *width, *height)
+                    && timeline_rect(x + 12.0, y + 8.0, width - 24.0, 22.0)
+                    && (events.is_empty()
+                        || timeline_rect(x + 12.0, y + 32.0, width - 24.0, (height - 38.0).max(12.0)))
+            }
+            LayoutedTemporalItem::TimelineSpine { x1, y1, x2, y2 } => {
+                [x1, y1, x2, y2].iter().all(|v| v.is_finite())
+            }
+            _ => false,
+        });
+    if valid { Ok(layout) } else { Err(TemporalLayoutError::TimelineGeometry) }
 }
 
 fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> LayoutedTemporalDiagram {
