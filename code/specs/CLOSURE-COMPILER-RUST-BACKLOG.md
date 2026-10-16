@@ -5,8 +5,11 @@ Sole PR17288 still publishes6132a518b3990619eb904397ee0b21a69ce8ac20,
 CONFLICTING/auto-merge OFF/zero hosted checks in audit20261016T163121Z,
 14 open PRs completely audited. Main is now41a1c6aea80ff0bc2f1d034e345a7a7b9d351176:
 new timeline-left-margin d75e1d2e and unrelated Tamil41a follow integratedac29.
-These two successors are UNINTEGRATED/UNACCEPTED; read-only margin security is
-running before revising the next timeline contract or implementation.
+These successors are UNINTEGRATED/UNACCEPTED. Complete margin source security
+db4b277d is WITHHELD: source margin409 gives negative actual text width at640,
+408zero/407one; inherited ownership/spine/quadratic/palette findings persist.
+Spec-first extension adds explicit LeftMargin error priority and coupled origin,
+keeps LRmargin1000 positive and preserves all edited parent source companions.
 Origin/main ac29edea was genuinely merged5c2b: reviewed complete226167-leaf tree
 matches prospective SHA d1d2dac7; recipe securityd437af4b PASS. Whole owned
 compiler/test bodies preserved inverse, raw50-source positive group isolated,

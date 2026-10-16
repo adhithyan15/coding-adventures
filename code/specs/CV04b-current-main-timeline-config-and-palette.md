@@ -180,3 +180,52 @@ acceptable required hosted checks still gate delivery/auto-merge. Keep one exist
 PR, verify actual main merge reachability before cleanup. Miri DEFERRED/PENDING,
 never passed; frozen checkout/run/inputs/receipts/target untouched and unpolled.
 Full Closure output-byte/source and transformation-lineage completion stays OPEN.
+
+
+## Incoming left-margin extension, before tests and integration
+
+Incoming d75e1d2ec927ececa6630dbf1acef3038e586d7d (parent ac29) is WITHHELD
+by full10-path/20-blob source auditdb4b277d. Integrate only by closed deltas over
+the owned source. Preserve both complete parent parser programs and the parent
+configured e2e source alongside the edited margin programs. Add explicit
+left_margin50 in complete public TimelineConfig constructors/patterns/oracles;
+retain every other authored value. Four incoming manifest changes are version
+only; registry records/dependencies remain exact.
+
+The independent source family now has padding50 AND leftMargin50 defaults.
+A missing/invalid source leftMargin selects50; complete finite nonnegative zero
+is valid. Apply exactly the same direct-family/first-root/YAML-parent/active-quote
+and accessibility-data exclusion rules to margin. A malformed PRESENT init
+family suppresses YAML for padding, margin and booleans together; themeVariables
+still has independent selection. Full18-slot palette controls retain all fields.
+
+Extend TemporalLayoutError with TimelineLeftMargin. Deterministic admission
+priority is raw canvas finiteness, then typed padding finite/nonnegative, then
+typed left_margin finite/nonnegative, then coupled represented geometry. Source
+finite1e308 is admitted to IR, then checked derived geometry may refuse. Empty
+zero-padding timelines may still have zero height. Do not clamp either numeric
+field or add a blanket margin/canvas bound.
+
+Retain incoming arithmetic order: origin_x=padding+left_margin, TD spine and LR
+start=origin_x+106. Check the origin sum even on empty diagrams; title remains at
+padding, section headers move to origin_x, periods/spines use the shifted origin.
+Default section x intentionally changes50 to100; default spine206 and period234
+remain unchanged. Preserve these intentional differences in independent tables.
+Validate actual outer/inner represented rectangles, all consumed intermediates
+and final extents, not an algebraically collapsed bound. Typed finite values
+whose additions swallow a positive frame dimension are refused as Geometry.
+
+At canvas640/defaultpadding50, TDmargin407 yields cardwidth25 and innerwidth1;
+408 yields innerwidth0 and409 yields-1. Add the exact full-source boundary
+companions, typed NaN/Inf/negative margin, huge finite margin and combined finite
+padding1e308+margin1e308 overflow. Source invalids fall back50. LRpadding50/
+margin1000/no title/one period remains positive, width1396 with innerwidth166;
+a title is checked on its own retained padding-based frame. Keep direction,
+title, empty/named/unnamed sections and both boolean companions, with all new
+margin metadata and actual ordered font/text frames. No font-fit, containment,
+renderer-memory or unexecuted UB claim is introduced.
+
+Earlier c601 contract remains in force for source authority, spine, linear work,
+independent palette-vector lengths, complete Scene/query tests and retained
+source bodies. Commit this extension before source integration/tests/repair.
+Miri DEFERRED/PENDING; native7a receipts never certify the incoming timeline.
