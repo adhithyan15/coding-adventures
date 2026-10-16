@@ -118,14 +118,18 @@ fn assert_array(
         root_entry["origin"]["meta"][SOURCE]["byte_length"],
         source.len().to_string()
     );
+    // The wire schema uses canonical decimal strings, not JSON numbers.
+    // Hoist these bounded expected values and borrow them in the lookup.
+    let start_wire = start.to_string();
+    let end_wire = end.to_string();
     let candidates: Vec<_> = entries
         .iter()
         .filter(|(_, e)| {
             let m = &e["origin"]["meta"][NODE];
             e["origin"]["source"] == "typed_array"
                 && m["input_id"] == root.as_str()
-                && m["start"]["byte_offset"] == start.to_string()
-                && m["end"]["byte_offset"] == end.to_string()
+                && m["start"]["byte_offset"].as_str() == Some(start_wire.as_str())
+                && m["end"]["byte_offset"].as_str() == Some(end_wire.as_str())
         })
         .collect();
     assert_eq!(
