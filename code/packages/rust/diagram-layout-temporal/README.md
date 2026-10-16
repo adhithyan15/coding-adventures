@@ -1,5 +1,16 @@
 # diagram-layout-temporal
 
+Use `try_layout_temporal_diagram` to handle unsupported timeline geometry.
+Its own `TemporalLayoutError` reports raw canvas, padding, left margin and
+derived geometry in that priority. It validates actual outer and painter text
+frames, including represented endpoints, without imposing a blanket finite
+canvas/margin limit. The compatibility function explicitly panics on refusal.
+Single-color unnamed timelines retain their chronology spine. Section detection
+runs once per layout. Gantt/Git/Journey/event-model algorithms retain their
+previous behavior. At22638c8b all76 package tests and strict lint passed; full
+source/Scene/palette transport remains pending. Miri DEFERRED/PENDING.
+
+
 Layout engine for temporal diagrams (DG04): Gantt charts and git-graphs.
 
 ## Position in pipeline

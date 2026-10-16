@@ -1,86 +1,61 @@
 # Closure Compiler on Rust — parity backlog
 
 <!-- CV04b current-main integration pending -->
-Sole PR17288 still publishes6132a518b3990619eb904397ee0b21a69ce8ac20,
-CONFLICTING/auto-merge OFF/zero hosted checks in audit20261016T163121Z,
-14 open PRs completely audited. Main is now41a1c6aea80ff0bc2f1d034e345a7a7b9d351176:
-new timeline-left-margin d75e1d2e and unrelated Tamil41a follow integratedac29.
-These successors are UNINTEGRATED/UNACCEPTED. Complete margin source security
-db4b277d is WITHHELD: source margin409 gives negative actual text width at640,
-408zero/407one; inherited ownership/spine/quadratic/palette findings persist.
-Spec-first extension adds explicit LeftMargin error priority and coupled origin,
-keeps LRmargin1000 positive and preserves all edited parent source companions.
-Origin/main ac29edea was genuinely merged5c2b: reviewed complete226167-leaf tree
-matches prospective SHA d1d2dac7; recipe securityd437af4b PASS. Whole owned
-compiler/test bodies preserved inverse, raw50-source positive group isolated,
-all21 raw refusal full sources retained. Six local path-package lock versions
-reconciled; complete registry records exact, Closure lock unchanged. No new
-push/actual PR merge/cleanup/full-goal acceptance. Own types/base ESTree boundary,
-no new crates.io dependencies remain owner decisions.
+Sole PR17288 publishes6132a518b3990619eb904397ee0b21a69ce8ac20,
+CONFLICTING/auto OFF/zero hosted checks in fresh20261016T165752Z audit:
+all15 open PRs inspected, no second Closure/shared PR. Main41a1c6aea80ff0bc2f1d034e345a7a7b9d351176
+is genuinely integrated396f by ten complete owned-hunk inverses plus17 pure
+incoming paths; whole226185-leaf prospective/index tree exact. Margin d75 raw
+source auditdb4b remains WITHHELD, not retroactively accepted by repairs.
 
-Native24 contract5ca4113d and decoded inventory2395d112 PASS precede source edits.
-Inventoryf346ec2a:365 negatives in31 functions,137 quantitative24 occurrences in
-29 full-source identities plus228 safety; old126 cap22 positives exact. Two old
-historical29/30 duplicate occurrences are quantitative at24, correcting the stale
-blanket221 safety grouping. All seven raw contexts map to decoded occurrences.
-Tests7816 retain all137 exact complete24 sources, individually migrate25 refusals
-with27-function/20-file inverses and preserve structural23+1 plus raw24+1.
-Genuine compiled cap23 red7816: Cargo101/2P1F,137 unique refusals/four precision
-and shared-exp guards; producer94410 consumed0. Dedicated cap24 repairbb838
-changes four production lines only, entire owned production inverse exact;
-source securityba4dc7e9 PASS verifies repair/red. Shared exp/ln/f64/conditional
-routes stay exact. First bb8381002P run had strict101 redundant &source after
-String-generator materialization; separate one-borrow fix16dac/spec/lesson
-preserves its diagnostic oracle. That first combined receipt remains unaccepted.
+Timeline configuration ownership is repaired at1cdb; fixture successor8b has
+641P/0fail/ignore/filter over25 executables plus empty docs, strict0 and all41
+complete source/IR post-assertion joins. Trusted successful accessibility token
+line ownership masks only a local configuration copy; one selected genuine init
+root/direct independent families, PRESENT-invalid suppression of YAML, parent
+scope and active quotes preserve shared readers/grammar/preprocessing. Three
+whole renamed parent functions/four complete old programs retained7794. Genuine
+compiled reds16P22F and16P24F remain immutable. First full1cdb550P1F title-oracle
+failure/no strict remains unaccepted; spec-first8b corrects only its expected
+pre-# semantic title and adds a full hash-free-title companion. V3 supporting
+prefix flag is stale: separate immutable correction records exactly this one
+expected-title exception; all40 old sources/config/other IR remain exact.
+Source1cdb35251594, fixture8b0dd3eb4b and terminal8b6ec3dc21 reviews PASS only in
+their separately bound scopes, with no source execution relabeling.
 
-Current tested source7a0171312fe83726bd080bdae97061302daaa22b is locally passing:
-compiler1002P/0fail/ignore/filter across five actual executables plus empty doc
-harness; all137 complete VM formatter-byte/typed-return occurrence markers,
-347 refusal IDs and126 old22-positive IDs exactly joined. Compiler strict0.
-Runtime adds15 immutable cases as an exact suffix to the old29-source/runner
-body: eight effect24, six raw real-result contexts, incoming false/right3.5
-24/12+12. Old29/new15 execute174/90 unique six-backend tuples and26/14 exact
-VM/JIT Float observations. Observer controls, compile-only25 refusal and both
-compiler/LANG strict pass. CLR absent/uncounted; Native/LLVM typed-main ABI open.
-Receipts native24-units-green-7a017131 and runtime15-v1-7a017131 bind frozen
-inputs/locks/helpers/logs/compiled harnesses. Producers29333/17987 consumed0;
-all root validation producers consumed, no active Cargo. Migration security
-a96805d0, successor source/runtime48b40da4, compiler terminal3f7b5d14 and runtime
-terminal7250ae82 all PASS at their separately bound7816/7a heads. Runtime stdout
-uses the retained trim contract;137 unit VM occurrences compare raw bytes. Docs
-f07 five-MD carrier independently7c729b85 PASS, full doc-checker0/lessons1385zero/
-diff0, preserving Rust attribution7a. This subsequent backlog-only checkpoint
-records those reports without relabeling execution. No broader native/compiler
-reverse-graph/downstream/Closure/hosted acceptance transfers to current source.
+Checked temporal tests0abec922 compile genuinely red4P25F/47legacy filtered.
+Repair22638c8b passes the full76-test package/empty docs, strict0; producer61904
+consumed0. Own Result API returns Canvas/Padding/LeftMargin/Geometry in that
+priority, checks coupled origin even empty and actual represented outer/text
+rectangles, preserves finite large-LR expansion, computes the section predicate
+once and emits TD spines independently of palette ordinals. All47 old tests and
+Gantt/Git/Journey/event-model bodies retained. New29 tests include22 exact
+refusals, explicit compatibility panic,16 whole-layout matrix cells, four whole
+positive controls and actual128-section predicate/visit counts in both directions.
+Independent source/terminal geometry review pending; source-derived geometry,
+complete ordered Scenes/glyphRGBA/font-query/metadata/accessibility and arbitrary
+typed palette0/1/2/6/8 transport remain OPEN. Next finish that bounded transport
+slice, then fresh full affected native/downstream/Closure suites and strict.
 
-Earlier checked Ishikawa sourcec275 remains separately attributed: painter167+
-geometric81P/0fail/ignore/filter,24 complete source/IR/layout/Scene/font-query
-fixtures,17 binary joins and both strict0. Sourceb2f1b88c/fixture442444ff/
-terminale9955e93 PASS; docs8cff full unchanged checker0/lessons1383zero/diff0,
-independent3bf3eecf PASS. Public liveness, allocation-before-grid and actual
-painted-clearance reds remain preserved; shared work/grid/output limits remain.
-No execution receipt is relabeled to a documentation or integration successor.
+Native24 remains historically validated at7a017131: compiler1002P/strict0,
+137 exact VM formatter-byte/typed returns; old29/new15 runtime cases yield264
+unique six-backend tuples/40Float observations, all source/terminal reviews PASS.
+Runtime stdout retains trim; raw unit VM bytes are exact. No native/LLVM typed-
+main ABI or current-source reverse-graph acceptance is claimed. Ishikawac275
+248P/24 complete fixtures/17 executable joins/both strict0 retains separate
+source/fixture/terminal/documentation reviews. Old negative/resource tests stay.
 
-Timeline94df/colorsac29 are integrated but remain WITHHELD95041495/bf258a86 and
-UNREPAIRED. Contract v1 was WITHHELD for raw directive-looking accessibility data;
-v2c601e735 PASS requires trusted ACC_DESCR_BLOCK-owned raw-line masking in a local
-config copy. Shared helpers stay exact. Implement genuine compiled source/
-geometry/spine/work reds, owned independent object-family parsing, checked
-Result/actual text frames, real-period spine, one-time LR predicate and complete
-18-slot palette/source/IR/layout/Scene/glyph/query fixtures. Retain old complete
-named-section sources and every earlier Venn/Wardley/Ishikawa assertion. Then
-fresh affected native/downstream/Closure suites/strict and independent source/
-terminal review before only existing PR delivery; required current exact-head
-terminal acceptable checks, conflict-free clean review and actual main merge
-reachability gate auto-merge/cleanup.
+Base ESTree canonical serialized boundary, own types, no new crates.io
+dependencies. CLOC27 leaf-token provenance is real; epic all-None bridge audit
+stale. Composite/synthetic stable IDs, full folding/renaming/inlining/motion/
+merging/deletion and pass/sweep lineage, output-byte/source joins and evidence-
+backed Closure parity remain OPEN. Miri DEFERRED/PENDING, never passed: frozen
+checkout/run/inputs/receipts/target untouched and unpolled. Deliver remaining
+implementation first, then genuine final-source Miri. Required current clean
+exact-head terminal hosted checks/reviews/conflict-free state gate auto-merge;
+verify actual merge reachability before cleanup. Full objective OPEN; heartbeat
+ACTIVE. No push/actual PR merge/auto-enable/cleanup in this checkpoint.
 
-CLOC27 leaf-token provenance is real; epic all-None bridge audit is stale.
-Composite/synthetic stable IDs, full fold/rename/inline/motion/merge/delete and
-pass/sweep lineage, output-byte/source joins and evidence-backed Closure parity
-remain OPEN. Miri DEFERRED/PENDING, never passed: frozen checkout/run/inputs/
-receipts/target untouched and unpolled. Deliver remaining implementation first,
-then obtain genuine final-source Miri acceptance. Full objective OPEN; heartbeat
-ACTIVE, no final completion claim.
 <!-- /CV04b current-main integration pending -->
 
 <!-- CV04a dedicated native18 selected -->

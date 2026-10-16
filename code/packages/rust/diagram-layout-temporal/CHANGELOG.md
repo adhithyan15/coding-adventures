@@ -1,5 +1,13 @@
 # Changelog
 
+
+## Unreleased — checked timeline geometry
+
+- Add explicit checked numeric errors, represented outer/text frame validation,
+  real-period TD spines and one-time section detection; preserve other dialects.
+- Genuine compiled red4P25F precedes22638c8b full76P/strict0; source-derived
+  Scene/palette/downstream validation remains pending. Miri DEFERRED/PENDING.
+
 ## 0.36.0
 
 - Resolve bounded three-digit Gantt years into backend-neutral temporal geometry.
@@ -135,11 +143,11 @@
 
 - Lay out Mermaid user-journey sections and scored task rows.
 
-## 0.1.0 — 2026-04-24
+## 0.1.0 â€” 2026-04-24
 
 ### Added
 - Initial release as part of DG04 extended diagram families
-- `layout_temporal_diagram(diagram, cw)` — lay out Gantt or git-graph
+- `layout_temporal_diagram(diagram, cw)` â€” lay out Gantt or git-graph
 - Gantt: two-pass date resolution (absolute dates + `after <id>` deps)
 - Gantt: weekly axis ticks, section headers, task bars, milestone markers
 - Git-graph: branch lane assignment, commit nodes, merge arcs

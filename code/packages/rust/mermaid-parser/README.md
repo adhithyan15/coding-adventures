@@ -1,5 +1,16 @@
 # mermaid-parser
 
+Timeline configuration reads the first genuinely closed init root and direct
+timeline/themeVariables families independently, with owned YAML fallback.
+Successfully parsed multiline accessibility data cannot supply configuration;
+the original semantic token stream remains unchanged. PRESENT invalid/empty
+families select defaults instead of exposing YAML fields. Source padding and
+leftMargin accept complete finite nonnegative values, otherwise50. At8b40726a,
+all641 parser tests and strict lint passed, including41 whole-source/IR cells.
+Geometry/render transport and final Closure validation remain separate gates;
+Miri DEFERRED/PENDING.
+
+
 Wardley evolution statements accept uniform stages or an explicit finite,
 normalized, nondecreasing end for every stage. Empty and single-stage typed
 vectors, zero/equal bands and a final end below1 are supported. Closed quoted
