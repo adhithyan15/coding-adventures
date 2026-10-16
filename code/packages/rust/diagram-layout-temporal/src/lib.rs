@@ -47,14 +47,37 @@ fn multiline_height(label: &str, base_height: f64, line_height: f64) -> f64 {
     base_height + label.lines().count().saturating_sub(1) as f64 * line_height
 }
 
-/// Lay out a `TemporalDiagram` on a canvas of `cw` pixels wide.
+/// A timeline refuses unsupported numeric input before returning any layout.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TemporalLayoutError {
+    TimelineCanvas,
+    TimelinePadding,
+    TimelineLeftMargin,
+    TimelineGeometry,
+}
+
+/// Compatibility entry point. Call the checked API to handle unsupported geometry.
 pub fn layout_temporal_diagram(d: &TemporalDiagram, cw: f64) -> LayoutedTemporalDiagram {
-    match &d.body {
+    try_layout_temporal_diagram(d, cw).expect("unsupported temporal geometry")
+}
+
+/// Lay out a temporal diagram, with timeline numeric admission reported explicitly.
+pub fn try_layout_temporal_diagram(
+    d: &TemporalDiagram, cw: f64,
+) -> Result<LayoutedTemporalDiagram, TemporalLayoutError> {
+    Ok(match &d.body {
         TemporalBody::Gantt(g) => layout_gantt(&d.title, g, cw),
-        TemporalBody::Git(g)   => layout_git(g, cw),
+        TemporalBody::Git(g) => layout_git(g, cw),
         TemporalBody::Journey(j) => layout_journey(&d.title, j, cw),
         TemporalBody::Timeline(t) => layout_timeline(&d.title, t, cw),
-    }
+    })
+}
+
+// These observers count actual predicate comparisons and section visits only in
+// the test build. They impose no production counter, cap or allocation policy.
+#[cfg(test)]
+std::thread_local! {
+    static TIMELINE_WORK: std::cell::Cell<(usize, usize)> = const { std::cell::Cell::new((0, 0)) };
 }
 
 fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -> LayoutedTemporalDiagram {
@@ -75,8 +98,14 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
             let spine_x = origin_x + 106.0;
             let start_y = y;
             let mut color_index = 0usize;
-            let without_sections = diagram.sections.iter().all(|section| section.label.is_none());
+            let without_sections = diagram.sections.iter().all(|section| {
+                #[cfg(test)]
+                TIMELINE_WORK.with(|count| { let (p, s) = count.get(); count.set((p + 1, s)); });
+                section.label.is_none()
+            });
             for section in &diagram.sections {
+                #[cfg(test)]
+                TIMELINE_WORK.with(|count| { let (p, s) = count.get(); count.set((p, s + 1)); });
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
                         x: origin_x, y, width: 136.0, height: 30.0, label: label.clone(),
@@ -110,6 +139,8 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
             let mut max_width = width;
             let mut color_index = 0usize;
             for section in &diagram.sections {
+                #[cfg(test)]
+                TIMELINE_WORK.with(|count| { let (p, s) = count.get(); count.set((p, s + 1)); });
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
                         x: origin_x, y, width: 136.0, height: 30.0, label: label.clone(),
@@ -120,7 +151,11 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                 let spine_y = card_y + 12.0;
                 let start_x = origin_x + 106.0;
                 let mut row_height: f64 = 48.0;
-                let without_sections = diagram.sections.iter().all(|section| section.label.is_none());
+                let without_sections = diagram.sections.iter().all(|section| {
+                #[cfg(test)]
+                TIMELINE_WORK.with(|count| { let (p, s) = count.get(); count.set((p + 1, s)); });
+                section.label.is_none()
+            });
                 for (index, period) in section.periods.iter().enumerate() {
                     let x = start_x + index as f64 * (card_width + gap);
                     let card_height = 48.0 + period.events.len() as f64 * 18.0;
@@ -2579,3 +2614,6 @@ mod tests {
         }));
     }
 }
+
+#[cfg(test)]
+mod cv04_timeline_checked;
