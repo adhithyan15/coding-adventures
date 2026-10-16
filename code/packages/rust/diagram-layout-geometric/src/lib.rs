@@ -775,3 +775,6 @@ mod wardley_annotation_derived_contract;
 
 #[cfg(test)]
 mod wardley_force_derived_contract;
+
+#[cfg(test)]
+mod wardley_pipeline_derived_contract;
