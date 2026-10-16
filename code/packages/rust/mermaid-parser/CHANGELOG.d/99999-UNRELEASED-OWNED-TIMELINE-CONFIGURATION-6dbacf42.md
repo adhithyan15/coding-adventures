@@ -1,4 +1,4 @@
-## Unreleased — owned timeline configuration
+## Unreleased â€” owned timeline configuration
 
 - Select one genuine init root and direct timeline/themeVariables families with
   independent YAML fallback; exclude trusted accessibility-owned lines only in
