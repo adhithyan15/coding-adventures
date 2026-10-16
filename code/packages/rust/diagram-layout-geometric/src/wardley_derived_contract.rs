@@ -42,3 +42,32 @@ fn wardley_link_label_postcondition_owns_rotation_translation_and_text_box() {
         assert_eq!(validate_wardley_geometry(&forged),Err(WardleyLayoutError::DerivedGeometry),"rotation/text route={route}");
     }
 }
+
+
+#[test]
+fn node_decorator_postcondition_checks_only_enabled_paint_parameters() {
+    let mut plain=empty();
+    plain.config.node_radius=1.2e308;
+    plain.nodes.push(LayoutedWardleyNode{label_offset_x:None,label_offset_y:None,source_strategy:None,inertia:false,
+        id:"a".into(),label:"A".into(),position:Point{x:0.0,y:0.0},anchor:false,pipeline_parent:false});
+    assert_eq!(validate_wardley_geometry(&plain),Ok(()),"ordinary finite radius has no decorator envelope");
+    for route in 0..3 {
+        let mut decorated=plain.clone();
+        match route {
+            0=>decorated.nodes[0].source_strategy=Some(diagram_ir::WardleySourceStrategy::Buy),
+            1=>decorated.nodes[0].inertia=true,
+            _=>decorated.nodes[0].pipeline_parent=true,
+        }
+        assert_eq!(validate_wardley_geometry(&decorated),Err(WardleyLayoutError::DerivedGeometry),"extreme route={route}");
+    }
+    for strategy in [diagram_ir::WardleySourceStrategy::Buy,diagram_ir::WardleySourceStrategy::Market] {
+        let mut decorated=plain.clone();decorated.config.node_radius=6.0;
+        decorated.nodes[0].source_strategy=Some(strategy);decorated.nodes[0].inertia=true;
+        assert_eq!(validate_wardley_geometry(&decorated),Ok(()));
+        decorated.config.node_radius=1e307;decorated.nodes[0].position.y= -f64::MAX;
+        assert_eq!(validate_wardley_geometry(&decorated),Err(WardleyLayoutError::DerivedGeometry),"inertia lower endpoint");
+    }
+    let mut market=plain;market.config.node_radius=1e307;
+    market.nodes[0].position.y= -f64::MAX;market.nodes[0].source_strategy=Some(diagram_ir::WardleySourceStrategy::Market);
+    assert_eq!(validate_wardley_geometry(&market),Err(WardleyLayoutError::DerivedGeometry),"Market top dot");
+}
