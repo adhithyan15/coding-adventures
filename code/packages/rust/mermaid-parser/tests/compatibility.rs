@@ -451,6 +451,11 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
             assert_eq!(diagram.links[4].label.as_deref(), Some("sync"));
             assert_eq!(diagram.links[5].flow, Some(diagram_ir::WardleyLinkFlow::Forward));
         }
+        if name == "accessibility" {
+            assert_eq!(diagram.accessibility_title.as_deref(), Some("Accessible strategy map"));
+            assert_eq!(diagram.accessibility_description.as_deref(),
+                Some("Components and dependencies\nacross the value chain"));
+        }
         if name == "forces" {
             assert_eq!(diagram.forces.len(), 2);
             assert_eq!(diagram.forces[0].label, "AI Adoption");
@@ -1496,6 +1501,7 @@ fn wardley_dispatches_to_dedicated_strategic_map_ir() {
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nnote unquoted [0.4, 0.5]").is_err());
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nannotation one,[0.4, 0.5] \"Bad\"").is_err());
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\ncomponent DB [0.4, 0.7]\nAPI -> DB;").is_err());
+    assert!(parse_wardley("wardley-beta\naccDescr {\nmissing close\ncomponent API [0.6, 0.5]").is_err());
     let sized = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 700, \"height\": 420}}}%%\nwardley-beta\nsize [640, 360]\ncomponent API [0.6, 0.5]").unwrap();
     assert_eq!((sized.config.width, sized.config.height), (640.0, 360.0));
 }

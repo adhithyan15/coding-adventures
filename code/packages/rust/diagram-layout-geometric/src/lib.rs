@@ -219,7 +219,9 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
     let forces = diagram.forces.iter().map(|force| LayoutedWardleyForce {
         label: force.label.clone(), position: point(force.visibility, force.evolution), kind: force.kind,
     }).collect();
-    LayoutedWardleyDiagram { width, height, title: diagram.title.clone(), config: diagram.config.clone(),
+    LayoutedWardleyDiagram { width, height, title: diagram.title.clone(),
+        accessibility_title: diagram.accessibility_title.clone(), accessibility_description: diagram.accessibility_description.clone(),
+        config: diagram.config.clone(),
         stages: diagram.stages.clone(), stage_boundaries: diagram.stage_boundaries.clone(), nodes, links, evolves, notes,
         annotations_box, annotations, forces, pipelines }
 }
@@ -562,7 +564,8 @@ mod tests {
 
     #[test]
     fn wardley_layout_maps_visibility_up_and_evolution_right() {
-        let diagram = WardleyDiagram { title: None, config: diagram_ir::WardleyConfig { width: 600.0, height: 400.0,
+        let diagram = WardleyDiagram { title: None, accessibility_title: Some("Strategy map".into()),
+            accessibility_description: Some("Components and dependencies".into()), config: diagram_ir::WardleyConfig { width: 600.0, height: 400.0,
             padding: 40.0, theme: diagram_ir::WardleyTheme { annotation_stroke: "#7c3aed".into(),
                 annotation_text_color: "#f97316".into(), annotation_fill: "#fef3c7".into(), ..Default::default() },
             ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.35, 1.0],
@@ -591,6 +594,8 @@ mod tests {
         assert_eq!((layout.nodes[0].label_offset_x, layout.nodes[0].label_offset_y), (Some(-20.0), Some(8.0)));
         assert_eq!(layout.nodes[0].source_strategy, Some(diagram_ir::WardleySourceStrategy::Build));
         assert!(layout.nodes[0].inertia);
+        assert_eq!(layout.accessibility_title.as_deref(), Some("Strategy map"));
+        assert_eq!(layout.accessibility_description.as_deref(), Some("Components and dependencies"));
         assert_eq!((&layout.config.theme.annotation_stroke, &layout.config.theme.annotation_text_color,
             &layout.config.theme.annotation_fill), (&"#7c3aed".to_string(), &"#f97316".to_string(), &"#fef3c7".to_string()));
         assert!(layout.links[0].dashed);
