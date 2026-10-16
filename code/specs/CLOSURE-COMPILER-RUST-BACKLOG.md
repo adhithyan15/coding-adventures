@@ -4,116 +4,107 @@
 
 
 <!-- CV04a Wardley annotations selected -->
-R2 starts from fixed93 native15 source in a separate target/worktree from active
-R1full16959. Spec precedes annotation tests/import/repair. Native15 source8e43
-and focus54/1/1 PASS; strict6actual0/full78 PENDING, not accepted or delivered.
-Style33 independently accepted989/50/strict14 remains attributed; unpublished
-cf5f Markdown carrier preserved, oldhelper publication REFUSED beforepush on
-main advance. SolePR17288 actualpublished261 remains UNMERGED/AUTOOFF.
-Latest inspected5b adds cfb annotations12 +Sanskrit35 after4f. Annotation raw
-WITHHELDa9d61642/manifest e177130d: default30-entry clamp panic, quadraticgroup
-lookup, activequote/comment mismatch and new typed/derived coordinate gaps.
-Pure35 review16fd5822/manifest70520c73 classifies complete70slots, no TS/runtime
-claim. Next testfirst/complete47path closedmerge retains native93 wholebytes;
-bounded indexed grouping/quoted text/checkedcoordinates/totalbox placement,
-reversible old16 scene ABI+zeroCount migration and independent newwholeoracles.
-Retain Venn13files/232cells,Ishikawa37/IR67. 8192 is cfg(test)-only classifier
-observer/assertion, not a production counter/cap. Correct inherited wording
-in finalMDcarrier. FrozenMiri DEFERRED/PENDING untouched/unpolled; fullClosure
-parity/outputbyte/full lineage/stableIDs/spans/passsweep/CV04b OPEN heartbeatACTIVE.
+Annotation source1e13: focused62 tests/32 whole scene cells, full14 actual
+1000P0F0I/53targets and strict0; independent source/terminal PASS. Native93:
+1842P0F/1unchangedignore/78targets, strict6,156sources/936actual runtime cells.
+SolePR17288 remains unmerged/autoOFF. Composed source integrates5b; incoming
+native16 main459274e4 requires bounded reconciliation. Fresh complete carrier,
+docs/lessons/current-main plan and final independent publication review precede
+normal samePR progress update. Miri DEFERRED/PENDING, frozen inputs untouched;
+full Closure parity/provenance/CV04b OPEN, heartbeat ACTIVE.
+
 <!-- /CV04a Wardley annotations selected -->
 
 <!-- CV04a native15 current checkpoint -->
-Native15 main4f (parent61) has9 paths/18 slots/16 real blobs/2 absent shards;
-raw incoming review5cf99164 WITHHELD, manifest e9ee35e5. This specification
-precedes tests/import/repair in isolated R1 from locally accepted-source carrier
-cf5f (final carrier/helper review/publication pending separately in fixed R2).
-Native14 e3 actual1836/78/strict6 and146sources/876cells remain attributed;
-style33 actual989/50/strict14 remains fixed. Native15 NOT implemented/executed.
-Next: new15 testfirst, all-old canonical15 refusal inventory, exact closed9path
-merge retaining whole owned production, then only4 dedicated14→15 edits.
-Keep all shared exp/log/legacy/identity/effect/8192 limits and structural controls,
-reverse6/forward166/native2853/resources21+3/registry376; no rawmain4/160 shrink.
-SolePR17288 UNMERGED/AUTOOFF. Frozen Miri DEFERRED/PENDING, never passed;
-untouched/unpolled/no duplicate/termination. Full Closure parity/outputbyte/full
-transformation lineage/stableIDs/spans/passsweep/CV04b OPEN; heartbeat ACTIVE.
+## Reviewed fifteen-unit canonical offsets
+
+The dedicated canonical outer-entier proof admits cumulative exact offsets
+through fifteen and range[-16,16]. Only four dedicated domain/comment/list/cap
+edits implement this boundary. Shared folded-f64/exp/log and legacy helpers,
+identity/read-once/alias/effect/rounding/trap and production admission/depth
+guards retain their owned behavior. The8192 classifier visit observer/assertion
+exists only under cfg(test); production has no classifier work counter or cap.
+Structural13/14/15 refusals and the new16 boundary remain required. The integer
+intermediate16/f64-fold15 witness ((9007199254740992+1-9007199254740992)+15)
+refuses; opposite signs cannot cancel the absolute-unit budget.
+
+Exact source93bfe3d2 passes strict6 and unfiltered1842P0F/1unchangedignore across
+78 target identities, compiler899/fullLANG508. All146 old saved runtime sources
+and876 actual cells remain; ten new sources/60 real normalExit0 cells give
+156sources/936cells on NativeAot/LLVM/WASM/JVM/VM/JIT, including CL14/CR16 order.
+Unavailable CLR is uncounted. Tests910aba55/strictafc09bd0, independent source
+8e43b98e/terminal6fc141af,2856nativeobjects and21+3 static resources bind the
+acceptance. Spec/tests precede repair; only obsolete supported15 refusals move
+to16 with whole reversible migration and exact old positive companions.
+
+This is unmerged progress in solePR17288. The composed source integrates main
+5b42502d; later native16 main459274e4 is pending bounded reconciliation, without
+current-main validation acceptance. Required exact-head hostedCI, conflicts,
+reviews, actual merge reachability and macOS phase-refusal rootcause remain OPEN.
+Historical Closure36/3705+3 retains source316e attribution, without fresh execution.
+Base ESTree canonical serialized boundary/own types/no new crates.io dependencies
+remain owner decisions. Full Closure parity/output-byte-source/full folding,
+renaming,inlining,motion,merging,deletion lineage/stableIDs/spans/pass-sweep/CV04b
+remain OPEN. Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/inputs/
+target/receipts untouched and unpolled, no duplicate or termination. Delivery
+first, genuine final-source Miri afterward; heartbeat remains ACTIVE.
+
 <!-- /CV04a native15 current checkpoint -->
 
 <!-- CV04a Wardley theme-notes selected -->
-Current implementation source33ac7884: full14 actual989P0F0I/50targets0 and
-strict14 actual0, sessions fully consumed. Independent source/terminal review
-PASS; exact reports and full input/log attribution retained. Named Markdown
-carrier/docs/current-main plan/final review/publication follow; solePR17288
-still published261/conflicting/unmerged/autoOFF at the00:38UTC audit.
-Integrated main61; later4f native15 pending bounded spec-first reconciliation,
-raw shared-helper widening WITHHELD5cf99164. Frozen Miri DEFERRED/PENDING,
-untouched/unpolled/no duplicate/termination. Full Closure parity/outputbyte/full
-transformation lineage/stableIDs/spans/passsweep/CV04b OPEN; heartbeat ACTIVE.
+Source33 theme/note acceptance is retained historically; source1e13 annotation
+acceptance supersedes the earlier selected phase. See the current checkpoint.
 
 <!-- /CV04a Wardley theme-notes selected -->
 
 <!-- CV04a Wardley current checkpoint -->
-## Closed Wardley themes and checked notes
+## Stable Wardley annotations and total box placement
 
-The Wardley parser selects one closed init or direct frontmatter theme root.
-Direct wardley fields override sanitized background/primary-text root defaults;
-an empty selected init root replaces frontmatter wholesale. Complete active-quote
-decoding precedes the existing color whitelist. Nested mappings, sequence items,
-block literals, inactive-quote prefixes and trailing junk cannot supply a value.
-The nine theme fields drive background, axes/text/grid, components, links and
-evolutions. This is lexical source admission; typed theme strings do not gain a
-renderer-wide CSS guarantee.
+Annotation groups retain first authored number order, every repeated coordinate,
+and the first nonempty decoded text. An ordered index replaces repeated vector
+scans. Active quotes preserve interior spaces, Unicode and percent-percent;
+only the active delimiter and backslash may be escaped. Malformed tokens retain
+exact physical source errors. Typed box and marker coordinates are finite in
+[0,1], with named refusals after note coordinates and before reference checks;
+every derived box and marker point is finite.
 
-Notes preserve quoted interior text, including spaces, empty strings, Unicode,
-inactive quotes, brackets and percent-percent. Only the active delimiter and
-backslash may be escaped. Coordinates and outside comments are read after the
-closed token; malformed input has exact physical source errors. Typed finite
-normalized note coordinates have a named NoteCoordinates refusal after
-EvolutionTarget and before reference checks. Every derived note point is finite.
-Paint notes use the retained caller family/italic/stretch with weight700/size11;
-ordinary caller weights and the independent numeric/font/query tables remain.
-All17 metadata fields and complete ordered cached font queries are checked.
+Boxes use the existing effective plot edges. Width is the smaller of desired
+width and max(plot width,40); height retains all nonempty entries. Clamp upper
+bounds are never below their lower bounds. Insufficient space pins the origin
+to the inner left/top and permits overflow. No entry is dropped or font reduced.
+This defines placement, without a general fontfit or containment guarantee.
+Marker700/10, entry caller-weight/11 and note700/11 retain caller family, italic
+and stretch. The checked minimum420x300 map and stage expression are unchanged.
 
-Specd629/d70b precedes parser tests08b, closed main61 merge10e and bounded source
-repairs. Genuine semantic reds4a1/53d9/2d858 remain failed receipts. Generated-tag
-and removed-node-reader compile failures had zero executed tests; neither is a
-semantic-red receipt. The unchanged node reader was restored whole. The ABI-only
-five-file migration and old eight-scene migration reverse byte-exactly to their
-original modules; no numeric/font/query oracle was inferred from output. The
-new eight complete scene/query cells were committed e81 before first execution
-and passed on their first render. The filtered empty-binary wrapper failure and
-the v1 wrong-baseline-path preflight failure remain preserved separately.
+Actual exact source1e13fc69 passes parser10, work3, geometry45 and Paint4 focused
+tests:20 new complete IR/34 exact errors;48legacy+48named/6priority/24derived
+annotation refusals;32 whole source/IR/layout/scene/glyph/all18metadata/ordered
+cached-query cells, comprising16 old and16 new. New literal scene oracles were
+committed before rendering. The real default30-entry clamp48..44 panic was
+reproduced; its failed wrapper word check remains separate from actual Cargo101.
+All new cells passed on first repaired render without oracle corrections. Old
+scene migrations add only required empty annotation ABI and zero count metadata;
+all numeric/font/query/color/stroke assertions reverse byte-exactly.
 
-Actual tested source33ac7884: focused8 parser/40 geometry/3 Paint tests PASS,
-including old94 IR/2 body errors, new83 theme+12 note complete IR/21 exact errors,
-24 legacy+24 named note refusals/4 priorities/6 forged derived-point refusals,
-and16 whole source/IR/layout/scene/all-glyph/metadata/query cells (old8+new8).
-Full affected14 packages989P0F0I/50 targets and strict all-target warnings and
-unknown-lints denial both exit0. Tests269276ba/strict0925ef46 and independent
-source/terminal reports bind that exact source. All1469 raw Rust/TOML files,
-reverse14/forward50/style835 objects, registry376, four local style-version
-changes, complete native2853 attribution and21+3 static resources are bound.
-Retained13 Venn fixture files contain232 complete cells;37 Ishikawa cells and67
-causal parser IR controls remain exact. Human snapshot changes are integrated
-as pure incoming paths; no TS/book execution is claimed.
+Full affected14 packages pass1000P0F0I across53 target identities; strict all-
+target warnings/unknown-lints denial exits0. Tests4b007728/strict86be17a7 bind
+style14reverse/50forward/844objects, raw1476 Rust/TOML, native2856 exact93bfe3d2,
+registry376 and21+3 static resources. Independent source and terminal reviews
+PASS. Retained13 Venn fixture files contain232 complete cells;37 Ishikawa cells
+and67 prior parser IR controls remain exact. Indexed comparison bounds are
+cfg(test) observers, without a production work counter/cap.
 
-Native execution remains attributed to e3e1106c:1836P0F/1 unchanged ignore over
-78 targets, compiler895/LANG506/strict6,146 programs/876 actual six-backend cells.
-Historical Closure36/3705+3 retains316e attribution, not fresh execution. This
-carrier integrates main61eebb03. Later main4f383fea native15 is NOT integrated
-or validated; its raw shared-helper widenings remain WITHHELD under independent
-incoming review5cf99164. Dedicated bounded reconciliation is the next slice.
-
-This is unmerged progress in solePR17288. Current-head hosted CI/conflicts/
-reviews/actual merge and the macOS phase-refusal root cause remain OPEN.
-General fontfit, containment, area/node-count limits and forged resolved Paint
-layouts remain outside this bounded contract. Base ESTree canonical serialized
-boundary/own types/no new crates.io dependencies remain owner decisions. Full
-Closure parity/output-byte-source/full fold/rename/inline/motion/merge/delete
-lineage/stable IDs/spans/pass-sweep/CV04b remain OPEN. Final-source Miri is
-**DEFERRED/PENDING**, never passed; frozen checkout/run/inputs/target/receipts
-untouched/unpolled, no duplicate/termination. Delivery first, genuine Miri later;
-the heartbeat remains ACTIVE until the full completion contract is met.
+This is unmerged progress in solePR17288. The composed source integrates main
+5b42502d; later native16 main459274e4 is pending bounded reconciliation, without
+current-main validation acceptance. Required exact-head hostedCI, conflicts,
+reviews, actual merge reachability and macOS phase-refusal rootcause remain OPEN.
+Historical Closure36/3705+3 retains source316e attribution, without fresh execution.
+Base ESTree canonical serialized boundary/own types/no new crates.io dependencies
+remain owner decisions. Full Closure parity/output-byte-source/full folding,
+renaming,inlining,motion,merging,deletion lineage/stableIDs/spans/pass-sweep/CV04b
+remain OPEN. Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/inputs/
+target/receipts untouched and unpolled, no duplicate or termination. Delivery
+first, genuine final-source Miri afterward; heartbeat remains ACTIVE.
 
 <!-- /CV04a Wardley current checkpoint -->
 
@@ -123,7 +114,7 @@ the heartbeat remains ACTIVE until the full completion contract is met.
 The dedicated canonical outer-entier proof admits cumulative exact offsets
 through fourteen and the range[-15,15]. Four dedicated domain/comment/list/cap
 edits implement the boundary. Shared folded-f64/exp/log and legacy helpers,
-identity/read-once/alias/effect/rounding/trap checks and8192 production-work
+identity/read-once/alias/effect/rounding/trap checks and8192 cfg(test) visit
 controls retain their owned behavior. Structural13/14 and incoming15 refusals
 remain required; the true15/f64-fold14 rounding witness also refuses. Opposite
 signs cannot cancel the absolute-unit budget. No new dependency or general
@@ -161,8 +152,7 @@ Native13 actual acceptance
 The dedicated canonical outer-entier proof admits cumulative exact offsets
 through thirteen and range[-14,14]. Four dedicated budget/comment/list/cap edits
 implement the boundary. Shared folded-f64/exp/log, legacy, root identity,
-read-once, alias/effect/value, rounding, post-lowering, traps and8192 production-
-work controls retain their owned semantics. The old structural13 conditional
+read-once, alias/effect/value, rounding, post-lowering, traps and8192 cfg(test) visit controls retain their owned semantics. The old structural13 conditional
 refusal stays required; the new14 limit and true14/f64-fold13 rounding witness
 also refuse. No new dependency or general proof/resource cap is introduced.
 

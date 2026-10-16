@@ -1280,37 +1280,35 @@ and unavailable-toolchain assertions remain unchanged. Full final-source
 unfiltered suites/strict and hosted acceptance remain required; the4a diagnostic
 baseline cancellation is preserved as incomplete. Miri **DEFERRED/PENDING**.
 
-## Reviewed fourteen-unit canonical offsets
+## Reviewed fifteen-unit canonical offsets
 
 The dedicated canonical outer-entier proof admits cumulative exact offsets
-through fourteen and the range[-15,15]. Four dedicated domain/comment/list/cap
-edits implement the boundary. Shared folded-f64/exp/log and legacy helpers,
-identity/read-once/alias/effect/rounding/trap checks and8192 production-work
-controls retain their owned behavior. Structural13/14 and incoming15 refusals
-remain required; the true15/f64-fold14 rounding witness also refuses. Opposite
-signs cannot cancel the absolute-unit budget. No new dependency or general
-proof/resource cap is introduced.
+through fifteen and range[-16,16]. Only four dedicated domain/comment/list/cap
+edits implement this boundary. Shared folded-f64/exp/log and legacy helpers,
+identity/read-once/alias/effect/rounding/trap and production admission/depth
+guards retain their owned behavior. The8192 classifier visit observer/assertion
+exists only under cfg(test); production has no classifier work counter or cap.
+Structural13/14/15 refusals and the new16 boundary remain required. The integer
+intermediate16/f64-fold15 witness ((9007199254740992+1-9007199254740992)+15)
+refuses; opposite signs cannot cancel the absolute-unit budget.
 
-Actual tested sourcee3e1106c: strict six-package all-target warnings/unknown-lints
-denial0; full unfiltered1836P/0F/1unchanged archive ignore across78 targets0,
-compiler895/fullLANG506. Old136 runtime sources/816 actual six-backend cells
-remain byte-exact to18f;10 new sources/60 actual normalExit0 cells give146/876.
-NativeAot/LLVM/WASM/JVM/VM/JIT execute the exact stdout and ordering controls,
-including CL13/CR15; absent CLR is uncounted. Source/focused review2cc7257b and
-independent terminal review bind the complete input and78-target inventories.
-Tests3097e0fe/strictd76f2fdf retain source-specific log attribution.
+Exact source93bfe3d2 passes strict6 and unfiltered1842P0F/1unchangedignore across
+78 target identities, compiler899/fullLANG508. All146 old saved runtime sources
+and876 actual cells remain; ten new sources/60 real normalExit0 cells give
+156sources/936cells on NativeAot/LLVM/WASM/JVM/VM/JIT, including CL14/CR16 order.
+Unavailable CLR is uncounted. Tests910aba55/strictafc09bd0, independent source
+8e43b98e/terminal6fc141af,2856nativeobjects and21+3 static resources bind the
+acceptance. Spec/tests precede repair; only obsolete supported15 refusals move
+to16 with whole reversible migration and exact old positive companions.
 
-Spec21ff precedes testfirsta5 and closed main47ee merge02baaf9f. Focused5b27
-actually failed49P1F101 because three old signed/wrapped expressions now consume
-the admitted14 budget. Correctede3 migrates only those refusals to15 and adds
-their exact old forms as positive formatter/read-once controls, with production
-unchanged. The failed receipt is retained; corrected focus50/1incoming/1owned
-and the full suites pass. Whole native2853 inputs and21 external resources are
-carried separately from named documentation changes. Source acceptance does
-not establish current-head hosted CI, conflict/review or merge acceptance.
-
+This is unmerged progress in solePR17288. The composed source integrates main
+5b42502d; later native16 main459274e4 is pending bounded reconciliation, without
+current-main validation acceptance. Required exact-head hostedCI, conflicts,
+reviews, actual merge reachability and macOS phase-refusal rootcause remain OPEN.
+Historical Closure36/3705+3 retains source316e attribution, without fresh execution.
 Base ESTree canonical serialized boundary/own types/no new crates.io dependencies
-remain owner decisions. Full Closure parity/output-byte-source/full transformation
-lineage/stable IDs/spans/pass-sweep/CV04b remain OPEN. Final-source Miri
-**DEFERRED/PENDING**, never passed; frozen run/checkout/inputs/target/receipts
-untouched/unpolled, no duplicate/termination. Delivery first, genuine Miri later.
+remain owner decisions. Full Closure parity/output-byte-source/full folding,
+renaming,inlining,motion,merging,deletion lineage/stableIDs/spans/pass-sweep/CV04b
+remain OPEN. Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/inputs/
+target/receipts untouched and unpolled, no duplicate or termination. Delivery
+first, genuine final-source Miri afterward; heartbeat remains ACTIVE.

@@ -84,7 +84,7 @@ final-source Miri before full completion or disabling the heartbeat.
 The dedicated canonical outer-entier proof admits cumulative exact offsets
 through fourteen and the range[-15,15]. Four dedicated domain/comment/list/cap
 edits implement the boundary. Shared folded-f64/exp/log and legacy helpers,
-identity/read-once/alias/effect/rounding/trap checks and8192 production-work
+identity/read-once/alias/effect/rounding/trap checks and8192 cfg(test) visit
 controls retain their owned behavior. Structural13/14 and incoming15 refusals
 remain required; the true15/f64-fold14 rounding witness also refuses. Opposite
 signs cannot cancel the absolute-unit budget. No new dependency or general

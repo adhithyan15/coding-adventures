@@ -186,3 +186,7 @@ the min/max precondition instead. Preserve the original incomplete receipt and
 wrapper failure. Independently bind the full log, exact f64.rs panic, ordered
 five prior cells and committed next30-entry table in a separate read-only red
 reconciliation; do not relabel the failed wrapper or rerun merely to hide it.
+
+A later documentation search passed a wildcard as a literal Windows path and
+rg returned an invalid filename error. Re-run against the actual directory with
+-g CV04a-*.md; inspect every command exit before interpreting a partial result.

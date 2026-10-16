@@ -20,7 +20,7 @@ standard backend. Do not loosen aliases, finite/root/production-limit proofs.
 Retain five-layer controls; add six/seven public compile_ast semantic controls
 with exact relay/root/call counts and original parsed AST. Distinguish source
 parser135 refusals from semantic depth; do not claim cloned positions as mappings.
-Preserve classifier work and unchanged8192 production bound.
+Preserve classifier work and unchanged8192 cfg(test) visit bound.
 
 Preserve incoming subgraph style/class, theme variables/typography and shape
 contracts across parser/IR/layout/paint, plus native e2e controls. Retain the

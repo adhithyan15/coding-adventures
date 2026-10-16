@@ -77,7 +77,7 @@ Only the dedicated canonical outer-entier proof admits cumulative exact unit
 offsets through twelve and the range[-13,13]. Four production edits implement
 that boundary; shared folded-f64/exp/log helpers retain their earlier semantics.
 Existing one-root/read-once, alias/effect, shadowing, rounding, post-lowering and
-8192 production-work controls stay required. Genuine prior twelve-unit refusal
+8192 cfg(test) visit controls stay required. Genuine prior twelve-unit refusal
 boundaries move to thirteen; true13 folded12 at the f64 precision boundary still
 refuses. No new dependency or production cap is introduced.
 

@@ -101,8 +101,7 @@ renaming/inlining/motion/merging/deletion lineage remain OPEN. Heartbeat ACTIVE.
 The dedicated canonical outer-entier proof admits cumulative exact offsets
 through thirteen and range[-14,14]. Four dedicated budget/comment/list/cap edits
 implement the boundary. Shared folded-f64/exp/log, legacy, root identity,
-read-once, alias/effect/value, rounding, post-lowering, traps and8192 production-
-work controls retain their owned semantics. The old structural13 conditional
+read-once, alias/effect/value, rounding, post-lowering, traps and8192 cfg(test) visit controls retain their owned semantics. The old structural13 conditional
 refusal stays required; the new14 limit and true14/f64-fold13 rounding witness
 also refuse. No new dependency or general proof/resource cap is introduced.
 
