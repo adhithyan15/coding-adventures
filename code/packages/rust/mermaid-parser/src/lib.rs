@@ -19365,3 +19365,7 @@ fn pipeline_work_read()->(usize,usize){WARDLEY_PIPELINE_WORK.with(|v|v.get())}
 fn pipeline_key_compared(){WARDLEY_PIPELINE_WORK.with(|v|{let (c,p)=v.get();v.set((c+1,p));});}
 #[cfg(test)]
 fn pipeline_visibility_visited(){WARDLEY_PIPELINE_WORK.with(|v|{let (c,p)=v.get();v.set((c,p+1));});}
+
+#[cfg(test)]
+#[path = "cv04_description_tests.rs"]
+mod cv04_description_tests;

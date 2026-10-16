@@ -17,8 +17,22 @@ fn current_main_finite_twenty_one_units_preserves_seventeen_and_eighteen() {
 }
 
 #[test]
-fn current_main_twenty_two_units_still_refuses_before_lowering() {
+fn current_main_twenty_two_units_still_refuses_at_typed_output_boundary() {
     let error = compile_source(&source(22), "integration").unwrap_err();
-    assert!(matches!(error, CompileError::Unsupported(_)), "{error:?}");
+    assert!(
+        matches!(&error, CompileError::Type(message) if message == "standard output procedure \"output\" cannot print a real value"),
+        "{error:?}"
+    );
     println!("CV04_MAIN_NATIVE_REFUSE 22");
+}
+
+#[test]
+fn rounded_f64_intermediate_never_grants_an_exact_integer_bound() {
+    let source = source(21).replace("+ 21", "+ ((9007199254740992 + 1) - 9007199254740992 + 21)");
+    let error = compile_source(&source, "integration").unwrap_err();
+    assert!(
+        matches!(&error, CompileError::Type(message) if message == "standard output procedure \"output\" cannot print a real value"),
+        "{error:?}"
+    );
+    println!("CV04_MAIN_NATIVE_REFUSE rounded-intermediate");
 }
