@@ -2981,3 +2981,14 @@ inputs/receipts/run untouched and unpolled. No new crates.io dependencies.
   conflicting / zero checks / auto-merge OFF; unpublished, no delivery/merge.
   Miri DEFERRED/PENDING; frozen run/inputs/target/receipts untouched/unpolled.
   Genuine final-source Miri follows delivery; full goal and heartbeat ACTIVE.
+
+### 2026-10-16: CLOC33 trusted array source adapter selected (spec-first)
+
+CLOC32 local execution7e/docs46eb is accepted. Next bounded slice CLOC33 wires
+actual captured-input array construction to fresh checked node identities,
+shared lexical ranges and complete original physical-piece parents. Provisional
+D1 metadata requires D3b source replay plus a private construction-ledger node
+admission before publication; no new source/span index or generic AST fields.
+Contract committed before tests/code; implementation and evidence pending.
+One PR #17288, no new publication/merge. Miri DEFERRED/PENDING; frozen run and
+receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
