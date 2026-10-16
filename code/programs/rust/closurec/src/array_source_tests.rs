@@ -133,3 +133,68 @@ fn c33_actual_compiler_refusals_keep_every_preexisting_destination() {
     }
     for p in paths.iter().chain(std::iter::once(&input)) {std::fs::remove_file(p).unwrap();}std::fs::remove_dir(dir).unwrap();
 }
+
+
+#[test]
+fn c33_final_validation_obeys_transient_buffer_budget() {
+    let mut f=fixture();
+    f.ledger.limits.buffer_bytes=0;
+    assert!(validate(&f,&f.log).is_err(),"final identity preparation cannot allocate outside the buffer limit");
+    f.ledger.limits.buffer_bytes=ArrayLimits::default().buffer_bytes;
+    f.ledger.limits.work=f.ledger.used_work+1;
+    assert!(validate(&f,&f.log).is_err(),"one row visit does not buy identity encoding/scans");
+}
+#[test]
+fn c33_missing_foreign_duplicate_reversed_and_wrong_kind_boundaries_never_mutate_graph() {
+    fn find(node:&mut GrammarASTNode)->&mut GrammarASTNode {
+        if node.rule_name=="array_literal" {return node;}
+        for child in &mut node.children {if let ASTNodeOrToken::Node(n)=child {if contains(n) {return find(n);}}}
+        panic!("array node");
+    }
+    fn contains(node:&GrammarASTNode)->bool {node.rule_name=="array_literal" || node.children.iter().any(|c|matches!(c,ASTNodeOrToken::Node(n) if contains(n)))}
+    for case in ["missing","foreign","duplicate","reversed","wrong-kind","noncompact"] {
+        let mut log=CVLog::new_checked_chronology(GraphLimits::default()).unwrap();
+        let mut budget=SourceInventoryBudget::new(SourceInventoryLimits::default()).unwrap();
+        let recorded=record_file(&mut log,Path::new("first.js"),"[];",DEFAULT_ES_VERSION,&mut budget).unwrap();
+        let foreign=record_file(&mut log,Path::new("other.js"),"[];",DEFAULT_ES_VERSION,&mut budget).unwrap();
+        let mut tokens=recorded.tokens.unwrap();stamp_ingestion_ids(&mut tokens,recorded.token_ids).unwrap();
+        let mut node=parse_with_asi(tokens,DEFAULT_ES_VERSION).unwrap();let array=find(&mut node);
+        let len=array.children.len();let original_first=match &array.children[0] {ASTNodeOrToken::Token(t)=>t.cv.clone().unwrap(),_=>panic!("open")};
+        let original_last=match &array.children[len-1] {ASTNodeOrToken::Token(t)=>t.cv.clone().unwrap(),_=>panic!("close")};
+        match case {
+            "missing"=>if let ASTNodeOrToken::Token(t)=&mut array.children[0] {t.cv=None;},
+            "foreign"=>if let ASTNodeOrToken::Token(t)=&mut array.children[0] {t.cv=Some(foreign.token_ids[0].clone());},
+            "duplicate"=>if let ASTNodeOrToken::Token(t)=&mut array.children[len-1] {t.cv=Some(original_first.clone());},
+            "reversed"=>{if let ASTNodeOrToken::Token(t)=&mut array.children[0] {t.cv=Some(original_last);}if let ASTNodeOrToken::Token(t)=&mut array.children[len-1] {t.cv=Some(original_first);}},
+            "wrong-kind"=>if let ASTNodeOrToken::Token(t)=&mut array.children[0] {t.type_=TokenType::Name;},
+            "noncompact"=>if let ASTNodeOrToken::Token(t)=&mut array.children[0] {t.cv=Some("not-an-id".into());},
+            _=>unreachable!(),
+        }
+        let before=log.to_json_string().unwrap();let mut ledger=ArrayLedger::new(ArrayLimits::default()).unwrap();
+        {let mut observer=ledger.observer(&mut log,&recorded.id).unwrap();assert!(observer.array_constructed(array).is_err(),"accepted {case}");}
+        assert_eq!(log.to_json_string().unwrap(),before,"{case} mutated graph");assert!(ledger.receipts.is_empty());
+    }
+}
+#[test]
+fn c33_exact_and_one_less_construction_limits_and_nonpower_receipt_growth() {
+    for source in ["[];","[];[];[];","[];[];[];[];[];"] {
+        let f=fixture_with(source,ArrayLimits::default(),GraphLimits::default()).unwrap();
+        let ledger_bytes=f.ledger.receipts.capacity()*size_of::<Receipt>();
+        let parent_bytes=2*(size_of::<String>()+64+size_of::<&str>());
+        let peak=ledger_bytes+parent_bytes+4096;
+        let exact=ArrayLimits{work:f.ledger.used_work,buffer_bytes:peak,ledger_bytes,metadata_bytes:f.ledger.receipts.len()*4096};
+        fixture_with(source,exact,GraphLimits::default()).unwrap();
+        for case in ["work","buffer","ledger","metadata"] {
+            let mut less=exact;
+            match case {"work"=>less.work-=1,"buffer"=>less.buffer_bytes-=1,"ledger"=>less.ledger_bytes-=1,"metadata"=>less.metadata_bytes-=1,_=>unreachable!()}
+            assert!(fixture_with(source,less,GraphLimits::default()).is_err(),"accepted one-less {case} for {source}");
+        }
+        // Final admission includes all late graph rows and the non-power-of-two
+        // owned-node census; buy its complete measured work, then one less.
+        let shape=crate::run::source_domain::admit_publication(&f.log,crate::run::source_domain::ShapeLimits::default()).unwrap_or_else(|_|panic!("shape"));
+        let admitted=f.catalog.admit(&shape,&f.roots,&f.paths).unwrap();
+        let total=f.ledger.validate_core(&admitted).unwrap();
+        let mut f=f;f.ledger.limits.work=total;validate(&f,&f.log).unwrap();
+        f.ledger.limits.work-=1;assert!(validate(&f,&f.log).is_err());
+    }
+}

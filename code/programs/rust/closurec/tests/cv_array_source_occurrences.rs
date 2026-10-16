@@ -89,7 +89,7 @@ fn assert_array(j:&Value,source:&str,path:&str,start:usize,end:usize,fold:Option
     let merge:Vec<_>=events.iter().filter(|e|e["event"]["kind"]=="merge" && e["event"]["entity"]==id.as_str()).collect();
     assert_eq!(merge.len(),1);assert!(merge[0]["context"].is_null());
     if let Some(after)=fold {
-        let folds:Vec<_>=entries.iter().filter(|(_,e)|e["parent_ids"].as_array().unwrap().iter().any(|p|p==id.as_str()) && e["contributions"].as_array().unwrap().iter().any(|c|c["source"]=="constant-fold" && c["tag"]=="folded" && c["meta"]["after"]==after)).collect();
+        let folds:Vec<_>=entries.iter().filter(|(result_id,e)|ancestry(j,result_id).contains(id) && e["contributions"].as_array().unwrap().iter().any(|c|c["source"]=="constant-fold" && c["tag"]=="folded" && c["meta"]["after"]==after)).collect();
         assert_eq!(folds.len(),1,"result-owned array length lineage");let (result_id,result)=folds[0];
         assert!(result["contributions"].as_array().unwrap().iter().any(|c|c["meta"]["new_cv"]==result_id.as_str()));
         let reachable=ancestry(j,result_id);assert!(reachable.contains(id));
@@ -103,7 +103,7 @@ fn assert_array(j:&Value,source:&str,path:&str,start:usize,end:usize,fold:Option
             let exact_computed_key=source[end..].starts_with("[\"length\"]") && begin==end+1 && finish==end+9 && &source[begin..finish]=="\"length\"";
             if !exact_computed_key {assert!(!reachable.contains(p.as_str().unwrap()),"unrelated physical sibling reached");}
         }
-        let recorded=events.iter().find(|e|e["event"]["kind"]=="merge" && e["event"]["entity"]==result_id.as_str()).unwrap();
+        let recorded=events.iter().find(|e|matches!(e["event"]["kind"].as_str(),Some("merge"|"derive")) && e["event"]["entity"]==result_id.as_str()).unwrap();
         assert!(merge[0]["sequence"].as_str().unwrap()<recorded["sequence"].as_str().unwrap(),"array construction precedes its fold");
     }
     id.clone()
