@@ -107,7 +107,8 @@ from raw spans: bare CR, CRLF, astral text and escaped/quoted strings differ.
 
 Each reconstructed Token must additionally match its retained original-Token
 fingerprint in order. The fingerprint is SHA256 over a fixed domain separator
-closurec.lexical-token.v1 followed by unambiguous length/option framing: frozen
+the exact bytes b"closurec.lexical-token.v1\0" followed by unambiguous
+length/option framing: frozen
 TokenType wire name, full value UTF8 bytes, checked u64 little-endian line and
 column, type_name None/Some plus length-prefixed bytes, flags None/Some plus
 u32 little endian, and an explicit cv=None tag. Encode string byte lengths as
@@ -115,6 +116,10 @@ checked u64 little endian. Distinguish None from Some(0)/Some(""). No Debug,
 serde ordering, concatenated scratch string, or ambiguous delimiter encoding.
 This commits full original Token fields; checking only value length is weaker.
 It does not certify later transformed Token/AST/output-byte lineage.
+Exhaustively destructure Token without a rest pattern, and reuse the producer's
+exhaustive TokenType spelling match, so future fields/variants cannot silently
+escape the full-Token commitment. These clarify the reviewed42b9 contract before
+tests and implementation; its contract-only PASS is retained separately.
 
 Use existing Sha256Hasher in chunks of at most64 bytes: its update currently
 buffers/drains input, so handing it an entire source/value would copy data and

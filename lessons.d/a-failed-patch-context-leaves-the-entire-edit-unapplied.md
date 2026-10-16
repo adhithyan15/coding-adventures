@@ -14,3 +14,7 @@ During the D3a diagnostic amendment, a backlog sentence was mistakenly used as
 spec context, followed by an assumed wrapping of the intended spec sentence.
 Both patches were refused atomically. Read the actual spec window and use its
 exact physical line before reapplying either the spec or the accompanying lesson.
+
+The D3b framing clarification also used a lowercase paraphrase where the spec
+had a capitalized physical sentence. The patch refused before mutation. Read
+that exact window and anchor its current spelling; no earlier hunk was applied.
