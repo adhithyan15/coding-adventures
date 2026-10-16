@@ -29,6 +29,13 @@ physical piece interval, including interior trivia, in source order. The new
 checked graph identity belongs to the array; never reuse a boundary/leaf ID.
 Empty/hole/repeated/nested arrays each create a distinct actual occurrence.
 
+The current compiler captures then transforms each input in one loop. Callback
+checks and receipt creation are provisional and precede only their owning
+pipeline. Full D3a/D3b replay and node certification run after ALL input
+pipelines and their graph mutations, immediately before any publication. The
+borrowed replay-admitted premise lives only in that final block and expires
+before subsequent graph mutation. Multi-input capture is not reordered.
+
 D1 metadata is a provisional resolver input, not yet certified source authority.
 Only existing D3b replay against the retained consumed String and original token
 fingerprints can certify it. It runs before node-domain admission/publication.
@@ -56,7 +63,9 @@ after successful D3b validation. Preserve the existing validate facade for old
 callers/tests. Node admission requires this stronger premise; graph shape alone
 is insufficient. Check every receipt's exact closed origin/range/boundaries and
 ordered full piece parents against the replay-admitted source inventory; check
-its recorded Merge event/entity/context before pipeline execution. Census every
+its exact recorded Merge event/entity with contextNone and construction order.
+These are final checks of events captured before the owning pipeline, not a
+request to run full-catalog replay before each per-input pipeline. Census every
 entry/contribution/deletion to reject missing, extra or misplaced owned facts,
 including unreceipted typed_array origins even without the namespace. Retain
 ordinary later transformation contributions/deletions outside the namespace;
@@ -76,6 +85,8 @@ Precharge a conservative fixed4KiB per closed node metadata before creating its
 bounded Values. Check actual allocator capacities; use fallible reserve for
 owned parent IDs/reference vectors/receipts. Geometric receipt growth charges
 all retained capacity and possible existing-row relocation before reserve.
+Account concurrent owned IDs/reference vectors and old+new receipt buffers in
+the transient peak; capacity growth is not permission for uncharged overlap.
 Existing generic graph node/edge/metadata/event limits remain independent.
 
 All checks fail closed before publishing any output, map, summary or sidecar,
@@ -100,6 +111,8 @@ extra/forged/missing node namespace, altered parents/ranges/root/recorded Merge
 order or entity, and domain metadata in contributions/deletions. Exercise every
 new work/buffer/ledger/metadata bound and existing graph exhaustion. Include
 actual compiler publication refusal controls preserving preexisting files.
+Multiple/repeated-input cases and forged facts introduced after construction
+must specifically bind final certification after all owning pipelines.
 Run complete closurec/parser/fold/native consumer suites, affected all-target
 strict checks and six-backend downstream companions. Obtain independent exact-
 source and consumed-terminal security review; record actual receipt heads.
@@ -108,3 +121,12 @@ Miri DEFERRED/PENDING under October11 sequencing: frozen run/checkout/inputs/
 target/receipts untouched and unpolled. Genuine final-source Miri follows
 implementation delivery. Current-main reconciliation, hosted CI, actual merge,
 full lineage/parity and the full objective remain OPEN.
+
+## Contract review amendment before tests/code
+
+Independent review withheld original6cf674c1 for a scheduling contradiction:
+full-catalog D3b cannot precede a pipeline while later inputs are not captured.
+The committed amendment above distinguishes provisional callback work from
+final replay-backed certification, preserving the current per-input loop.
+Peak overlapping allocation accounting is explicit. No implementation preceded
+this correction; original withheld report remains immutable.
