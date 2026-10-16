@@ -34,6 +34,13 @@ fn link_endpoints_decode_the_same_active_quotes_as_components() {
 }
 
 #[test]
+fn percent_pairs_belong_to_quoted_nodes_endpoints_and_flow_labels() {
+    let diagram=parse_wardley("wardley-beta\ncomponent 'A%%B' [0.5,0.2]\ncomponent C [0.5,0.8]\n'A%%B' +'demand %% signal'> C %% outside\n").unwrap();
+    assert_eq!(diagram.nodes[0].label,"A%%B");
+    assert_eq!((diagram.links[0].source.as_str(),diagram.links[0].target.as_str(),diagram.links[0].label.as_deref()),("A%%B","C",Some("demand %% signal")));
+}
+
+#[test]
 fn distinct_init_directives_preserve_per_key_selection() {
     let diagram=parse_ishikawa("%%{init: {\"fontSize\":22}}%%\n%%{init: {\"themeVariables\":{\"fontFamily\":\"Georgia\"}}}%%\nishikawa-beta\nE\n  A\n").unwrap();
     assert_eq!(diagram.config.font_size,22.0);
