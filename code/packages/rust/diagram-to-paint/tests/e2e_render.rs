@@ -4591,8 +4591,11 @@ line "Target" [35, 50, 68, 82]"##,
             PaintInstruction::Path(path) if path.fill.as_deref() == Some("#123456")
                 && path.commands.last() == Some(&paint_instructions::PathCommand::Close))).count(), diagram.causes.len());
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
-            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#abcdef")
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("none")
                 && path.commands.last() == Some(&paint_instructions::PathCommand::Close))).count(), diagram.causes.len() + 1);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#abcdef")
+                && path.stroke_width == Some(2.5))));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.useMaxWidth")), Some(&"true".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontFamily")), Some(&"Georgia".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontSize")), Some(&"22".to_string()));

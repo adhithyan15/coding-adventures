@@ -7,7 +7,7 @@
 //! bounding box of all elements) and passes elements through unchanged.
 
 use std::collections::{HashMap, HashSet};
-use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, IshikawaLook, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDebugCell, LayoutedVennDebugCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyForce, LayoutedWardleyLink, LayoutedWardleyNode, LayoutedWardleyPipeline, Point, VennDiagram, WardleyDiagram};
+use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, IshikawaLook, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedIshikawaHatch, LayoutedVennCircle, LayoutedVennDebugCell, LayoutedVennDebugCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyForce, LayoutedWardleyLink, LayoutedWardleyNode, LayoutedWardleyPipeline, Point, VennDiagram, WardleyDiagram};
 
 pub const VERSION: &str = "0.2.0";
 
@@ -135,6 +135,7 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
     let effect_y = spine_y - effect_height / 2.0;
     let effect_outline = ishikawa_effect_outline(effect_x, effect_y, effect_width, effect_height,
         hand_drawn, diagram.config.hand_drawn_seed, 1_000);
+    let effect_hatches = if hand_drawn { ishikawa_hatches(&effect_outline) } else { Vec::new() };
     let roots: Vec<_> = diagram.causes.iter().filter(|cause| cause.parent_id.is_none()).collect();
     let spacing = (spine_to.x - spine_from.x) / (roots.len() + 1).max(2) as f64;
     let mut bones = Vec::new(); let mut anchors = HashMap::<&str, Point>::new();
@@ -150,8 +151,9 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         let label_outline = ishikawa_box_outline(label_position.x - label_width / 2.0,
             label_position.y - label_height / 2.0, label_width, label_height, hand_drawn,
             diagram.config.hand_drawn_seed, 2_000 + index);
+        let hatches = if hand_drawn { ishikawa_hatches(&label_outline) } else { Vec::new() };
         bones.push(LayoutedIshikawaBone { from: tip.clone(), to: attach, label: cause.label.clone(),
-            label_position, label_width, label_height, depth: 1, path, arrowhead, label_outline });
+            label_position, label_width, label_height, depth: 1, path, arrowhead, label_outline, hatches });
         anchors.insert(&cause.id, tip);
     }
     for cause in diagram.causes.iter().filter(|cause| cause.parent_id.is_some()) {
@@ -166,13 +168,14 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         let label_outline = ishikawa_box_outline(label_position.x - label_width / 2.0,
             label_position.y - label_height / 2.0, label_width, label_height, hand_drawn,
             diagram.config.hand_drawn_seed, 2_000 + bones.len());
+        let hatches = if hand_drawn { ishikawa_hatches(&label_outline) } else { Vec::new() };
         bones.push(LayoutedIshikawaBone { from: tip.clone(), to: parent,
             label: cause.label.clone(), label_position, label_width, label_height, depth: cause.depth,
-            path, arrowhead, label_outline });
+            path, arrowhead, label_outline, hatches });
         anchors.insert(&cause.id, tip);
     }
     LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), config: diagram.config.clone(), effect_x, effect_y,
-        effect_width, effect_height, spine_from, spine_to, spine_path, effect_outline, bones }
+        effect_width, effect_height, spine_from, spine_to, spine_path, effect_outline, effect_hatches, bones }
 }
 
 fn ishikawa_line_path(from: &Point, to: &Point, hand_drawn: bool, seed: i64, index: usize) -> Vec<Point> {
@@ -224,6 +227,34 @@ fn ishikawa_effect_outline(x: f64, y: f64, width: f64, height: f64, hand_drawn: 
         outline.extend(points.into_iter().skip(1));
     }
     outline
+}
+
+fn ishikawa_hatches(outline: &[Point]) -> Vec<LayoutedIshikawaHatch> {
+    let angle = -41.0_f64.to_radians(); let direction = (angle.cos(), angle.sin());
+    let normal = (-direction.1, direction.0); let project = |point: &Point| point.x * normal.0 + point.y * normal.1;
+    let minimum = outline.iter().map(&project).fold(f64::INFINITY, f64::min);
+    let maximum = outline.iter().map(&project).fold(f64::NEG_INFINITY, f64::max);
+    let mut hatches = Vec::new(); let mut offset = (minimum / 5.0).floor() * 5.0;
+    while offset <= maximum {
+        let mut intersections = Vec::new();
+        for edge in outline.windows(2) {
+            let from = project(&edge[0]) - offset; let to = project(&edge[1]) - offset;
+            if from * to <= 0.0 && (from - to).abs() > 1e-9 {
+                let ratio = from / (from - to);
+                let point = Point { x: edge[0].x + (edge[1].x - edge[0].x) * ratio,
+                    y: edge[0].y + (edge[1].y - edge[0].y) * ratio };
+                intersections.push((point.x * direction.0 + point.y * direction.1, point));
+            }
+        }
+        intersections.sort_by(|left, right| left.0.total_cmp(&right.0));
+        intersections.dedup_by(|left, right| (left.0 - right.0).abs() < 1e-7);
+        let pair_size = 2;
+        for pair in intersections.chunks_exact(pair_size) {
+            hatches.push(LayoutedIshikawaHatch { from: pair[0].1.clone(), to: pair[1].1.clone() });
+        }
+        offset += 5.0;
+    }
+    hatches
 }
 
 fn ishikawa_label_width(label: &str, font_scale: f64) -> f64 {
@@ -619,6 +650,8 @@ mod tests {
         assert_eq!(layout.bones[0].arrowhead[0], layout.bones[0].to);
         assert_eq!(layout.effect_outline.len(), 14);
         assert_eq!(layout.bones[0].label_outline.len(), 5);
+        assert!(layout.effect_hatches.is_empty());
+        assert!(layout.bones[0].hatches.is_empty());
 
         let mut hand_drawn = diagram.clone();
         hand_drawn.config.look = IshikawaLook::HandDrawn;
@@ -629,6 +662,8 @@ mod tests {
         assert_eq!(hand_drawn_layout.bones[0].arrowhead[0], hand_drawn_layout.bones[0].to);
         assert_eq!(hand_drawn_layout.effect_outline.len(), 53);
         assert_eq!(hand_drawn_layout.bones[0].label_outline.len(), 17);
+        assert!(!hand_drawn_layout.effect_hatches.is_empty());
+        assert!(!hand_drawn_layout.bones[0].hatches.is_empty());
         assert_eq!(hand_drawn_layout, layout_ishikawa(&hand_drawn, 640.0));
 
         let mut large_text = diagram.clone();

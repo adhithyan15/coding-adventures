@@ -2170,7 +2170,11 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         let label_x = bone.label_position.x - bone.label_width / 2.0;
         let label_y = bone.label_position.y - bone.label_height / 2.0;
         if hand_drawn {
-            instructions.push(ishikawa_outline_instruction(&bone.label_outline, &diagram.config.fill_color, &stroke, 1.0));
+            for hatch in &bone.hatches {
+                instructions.push(PaintInstruction::Path(line_path(&[hatch.from.clone(), hatch.to.clone()],
+                    &diagram.config.fill_color, 2.5)));
+            }
+            instructions.push(ishikawa_outline_instruction(&bone.label_outline, "none", &stroke, 1.0));
         } else {
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: label_x, y: label_y,
                 width: bone.label_width, height: bone.label_height, fill: Some(diagram.config.fill_color.clone()),
@@ -2180,8 +2184,12 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         text_children.push(text_node(&bone.label, label_x + 6.0, label_y + 2.0,
             bone.label_width - 12.0, bone.label_height - 4.0, label_font.clone(), text_color));
     }
+    for hatch in &diagram.effect_hatches {
+        instructions.push(PaintInstruction::Path(line_path(&[hatch.from.clone(), hatch.to.clone()],
+            &diagram.config.fill_color, 2.5)));
+    }
     instructions.push(ishikawa_outline_instruction(&diagram.effect_outline,
-        &diagram.config.fill_color, &stroke, 2.0));
+        if hand_drawn { "none" } else { &diagram.config.fill_color }, &stroke, 2.0));
     let effect_label_width = diagram.effect_width / 2.4;
     text_children.push(text_node(&diagram.effect, diagram.effect_x + 3.0, diagram.effect_y + 8.0,
         effect_label_width - 6.0, diagram.effect_height - 16.0, title_font, text_color));
@@ -11713,13 +11721,14 @@ mod tests {
             spine_path: vec![Point { x: 30.0, y: 180.0 }, Point { x: 430.0, y: 180.0 }],
             effect_outline: vec![Point { x: 430.0, y: 150.0 }, Point { x: 430.0, y: 210.0 },
                 Point { x: 580.0, y: 180.0 }],
+            effect_hatches: vec![],
             bones: vec![diagram_ir::LayoutedIshikawaBone { from: Point { x: 100.0, y: 80.0 },
                 to: Point { x: 180.0, y: 180.0 }, label: "People".into(),
                 label_position: Point { x: 100.0, y: 68.0 }, label_width: 80.0, label_height: 28.0, depth: 1,
                 path: vec![Point { x: 100.0, y: 80.0 }, Point { x: 180.0, y: 180.0 }],
                 arrowhead: vec![Point { x: 180.0, y: 180.0 }, Point { x: 168.0, y: 180.0 }, Point { x: 180.0, y: 168.0 }],
                 label_outline: vec![Point { x: 60.0, y: 54.0 }, Point { x: 140.0, y: 54.0 },
-                    Point { x: 140.0, y: 82.0 }, Point { x: 60.0, y: 82.0 }] }], };
+                    Point { x: 140.0, y: 82.0 }, Point { x: 60.0, y: 82.0 }], hatches: vec![] }], };
         let scene = diagram_to_paint_ishikawa(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,

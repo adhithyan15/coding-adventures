@@ -1900,13 +1900,16 @@ impl Default for IshikawaConfig { fn default() -> Self { Self { diagram_padding:
 #[derive(Clone, Debug, PartialEq)]
 pub struct IshikawaDiagram { pub effect: String, pub causes: Vec<IshikawaCause>, pub config: IshikawaConfig }
 #[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedIshikawaHatch { pub from: Point, pub to: Point }
+#[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedIshikawaBone { pub from: Point, pub to: Point, pub label: String, pub label_position: Point,
     pub label_width: f64, pub label_height: f64, pub depth: usize, pub path: Vec<Point>, pub arrowhead: Vec<Point>,
-    pub label_outline: Vec<Point> }
+    pub label_outline: Vec<Point>, pub hatches: Vec<LayoutedIshikawaHatch> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedIshikawaDiagram { pub width: f64, pub height: f64, pub effect: String, pub config: IshikawaConfig,
     pub effect_x: f64, pub effect_y: f64, pub effect_width: f64, pub effect_height: f64,
     pub spine_from: Point, pub spine_to: Point, pub spine_path: Vec<Point>, pub effect_outline: Vec<Point>,
+    pub effect_hatches: Vec<LayoutedIshikawaHatch>,
     pub bones: Vec<LayoutedIshikawaBone> }
 
 // STRATEGIC MAP FAMILY
