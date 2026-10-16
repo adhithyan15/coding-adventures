@@ -47,6 +47,14 @@ fn multiline_height(label: &str, base_height: f64, line_height: f64) -> f64 {
     base_height + label.lines().count().saturating_sub(1) as f64 * line_height
 }
 
+fn timeline_text_box_height(label: &str, width: f64, font_size: f64, minimum: f64) -> f64 {
+    let characters_per_line = ((width - 20.0) / (font_size * 0.44)).floor().max(1.0) as usize;
+    let lines = label.lines().map(|line| {
+        line.chars().count().max(1).div_ceil(characters_per_line)
+    }).sum::<usize>().max(1);
+    minimum.max(lines as f64 * font_size * 1.2 + 12.0)
+}
+
 /// Lay out a `TemporalDiagram` on a canvas of `cw` pixels wide.
 pub fn layout_temporal_diagram(d: &TemporalDiagram, cw: f64) -> LayoutedTemporalDiagram {
     match &d.body {
@@ -62,12 +70,16 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
     let width = cw.max(560.0);
     let padding = diagram.config.padding;
     let origin_x = padding + diagram.config.left_margin;
+    let title_height = (diagram.config.font_size * 2.5).max(40.0);
+    let section_height = (diagram.config.font_size * 1.875).max(30.0);
+    let minimum_card_height = (diagram.config.font_size * 3.0).max(48.0);
+    let minimum_event_height = (diagram.config.font_size * 1.875).max(30.0);
     let mut y = padding;
     if let Some(label) = title {
         items.push(LayoutedTemporalItem::TemporalTitle {
-            x: padding, y, width: width - padding * 2.0, height: 40.0, label: label.clone(),
+            x: padding, y, width: width - padding * 2.0, height: title_height, label: label.clone(),
         });
-        y += 52.0;
+        y += title_height + 12.0;
     }
 
     match diagram.direction {
@@ -80,40 +92,49 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
             for section in &diagram.sections {
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
-                        x: origin_x, y, width: 136.0, height: 30.0, label: label.clone(),
+                        x: origin_x, y, width: 136.0, height: section_height, label: label.clone(),
                         color_index,
                     });
-                    y += 38.0;
+                    y += section_height + 8.0;
                 }
                 for period in &section.periods {
                     let card_x = spine_x + 28.0;
                     let card_width = 180.0;
-                    let card_height = 48.0;
+                    let card_height = timeline_text_box_height(
+                        &period.label, card_width, diagram.config.font_size,
+                        minimum_card_height,
+                    );
                     items.push(LayoutedTemporalItem::TimelinePeriod {
                         x: card_x, y, width: card_width, height: card_height,
                         label: period.label.clone(), events: Vec::new(), color_index,
                     });
                     let event_x = card_x + card_width + 36.0;
-                    let event_width = (width - event_x - padding).max(160.0);
-                    for (event_index, event) in period.events.iter().enumerate() {
-                        let event_y = y + event_index as f64 * 38.0;
+                    let event_width = (width - event_x - padding).max(180.0);
+                    let mut event_y = y;
+                    for event in &period.events {
+                        let event_height = timeline_text_box_height(
+                            event, event_width, diagram.config.font_size,
+                            minimum_event_height,
+                        );
                         items.push(LayoutedTemporalItem::TimelineEventLink {
                             x1: card_x + card_width,
                             y1: y + card_height / 2.0,
                             x2: event_x,
-                            y2: event_y + 15.0,
+                            y2: event_y + event_height / 2.0,
                             color_index,
                         });
                         items.push(LayoutedTemporalItem::TimelineEvent {
                             x: event_x,
                             y: event_y,
                             width: event_width,
-                            height: 30.0,
+                            height: event_height,
                             label: event.clone(),
                             color_index,
                         });
+                        event_y += event_height + 8.0;
                     }
-                    let row_height = card_height.max(period.events.len() as f64 * 38.0 - 8.0);
+                    let event_stack_height = (event_y - y - 8.0).max(0.0);
+                    let row_height = card_height.max(event_stack_height);
                     y += row_height + 18.0;
                     if without_sections && !diagram.config.disable_multicolor {
                         color_index += 1;
@@ -139,24 +160,32 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
             for section in &diagram.sections {
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
-                        x: origin_x, y, width: 136.0, height: 30.0, label: label.clone(),
+                        x: origin_x, y, width: 136.0, height: section_height, label: label.clone(),
                         color_index,
                     });
                 }
                 let card_y = y + 44.0;
                 let spine_y = card_y + 12.0;
                 let start_x = origin_x + 106.0;
-                let mut row_height: f64 = 48.0;
+                let mut row_height = minimum_card_height;
                 for (index, period) in section.periods.iter().enumerate() {
                     let x = start_x + index as f64 * (card_width + gap);
-                    let card_height = 48.0;
+                    let card_height = timeline_text_box_height(
+                        &period.label, card_width, diagram.config.font_size,
+                        minimum_card_height,
+                    );
                     row_height = row_height.max(card_height);
                     items.push(LayoutedTemporalItem::TimelinePeriod {
                         x, y: card_y + 24.0, width: card_width, height: card_height,
                         label: period.label.clone(), events: Vec::new(), color_index,
                     });
-                    for (event_index, event) in period.events.iter().enumerate() {
-                        let event_y = card_y + 90.0 + event_index as f64 * 38.0;
+                    let mut event_y = card_y + card_height + 42.0;
+                    let event_start_y = event_y;
+                    for event in &period.events {
+                        let event_height = timeline_text_box_height(
+                            event, card_width, diagram.config.font_size,
+                            minimum_event_height,
+                        );
                         items.push(LayoutedTemporalItem::TimelineEventLink {
                             x1: x + card_width / 2.0,
                             y1: card_y + 24.0 + card_height,
@@ -168,13 +197,16 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                             x,
                             y: event_y,
                             width: card_width,
-                            height: 30.0,
+                            height: event_height,
                             label: event.clone(),
                             color_index,
                         });
+                        event_y += event_height + 8.0;
                     }
                     if !period.events.is_empty() {
-                        row_height = row_height.max(72.0 + period.events.len() as f64 * 38.0);
+                        row_height = row_height.max(
+                            card_height + 24.0 + event_y - event_start_y,
+                        );
                     }
                     if without_sections && !diagram.config.disable_multicolor {
                         color_index += 1;
@@ -2578,6 +2610,43 @@ mod tests {
         }).collect::<Vec<_>>();
         assert_eq!(period_colors, vec![0, 0, 1]);
         assert_eq!(event_colors, vec![0, 1]);
+    }
+
+    #[test]
+    fn timeline_layout_scales_cards_for_configured_typography() {
+        let diagram = TemporalDiagram {
+            kind: TemporalKind::Timeline,
+            title: Some("Release history".into()),
+            body: TemporalBody::Timeline(TimelineDiagram {
+                accessibility_title: None,
+                accessibility_description: None,
+                config: diagram_ir::TimelineConfig {
+                    font_size: 24.0,
+                    ..Default::default()
+                },
+                direction: TimelineDirection::TopDown,
+                sections: vec![TimelineSection {
+                    label: Some("Foundation".into()),
+                    periods: vec![TimelinePeriod {
+                        label: "2025".into(),
+                        events: vec!["Public beta".into()],
+                    }],
+                }],
+            }),
+        };
+        let layout = layout_temporal_diagram(&diagram, 720.0);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::TemporalTitle { height, .. } if *height == 60.0
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::TimelinePeriod { height, .. } if *height == 72.0
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::TimelineEvent { height, .. } if *height == 45.0
+        )));
     }
 
     #[test]

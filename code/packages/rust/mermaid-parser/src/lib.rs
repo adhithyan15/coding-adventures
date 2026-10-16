@@ -3936,6 +3936,7 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
 
 fn parse_timeline_config(source: &str) -> TimelineConfig {
     let defaults = TimelineConfig::default();
+    let root_front_matter = mermaid_front_matter_section(source, &["config"]);
     let front_matter = mermaid_front_matter_section(source, &["config", "timeline"]);
     let config = mermaid_directive_object(source, "timeline")
         .or(front_matter.as_deref())
@@ -3966,9 +3967,37 @@ fn parse_timeline_config(source: &str) -> TimelineConfig {
         .and_then(|value| value.parse::<f64>().ok())
         .filter(|value| value.is_finite() && *value >= 0.0)
         .unwrap_or(defaults.left_margin);
+    let root_value = |name: &str| quadrant_directive_value(source, name).or_else(|| {
+        root_front_matter.as_deref().and_then(|config| config.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name)
+                .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        }))
+    });
+    let font_size = root_value("fontSize")
+        .and_then(parse_mermaid_font_size)
+        .filter(|value| value.is_finite() && *value > 0.0)
+        .unwrap_or(defaults.font_size);
+    let theme_front_matter = mermaid_front_matter_section(source, &["config", "themeVariables"])
+        .or_else(|| mermaid_front_matter_section(source, &["themeVariables"]));
+    let theme = mermaid_directive_object(source, "themeVariables")
+        .or(theme_front_matter.as_deref())
+        .unwrap_or("");
+    let theme_value = |name: &str| quadrant_directive_value(theme, name).or_else(|| {
+        theme.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name)
+                .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        })
+    });
     TimelineConfig {
         padding,
         left_margin,
+        font_size,
+        font_family: sanitize_railroad_font_family(
+            theme_value("fontFamily").as_deref(),
+            &defaults.font_family,
+        ),
         use_max_width: boolean("useMaxWidth", defaults.use_max_width),
         disable_multicolor: boolean("disableMulticolor", defaults.disable_multicolor),
         section_colors: parse_timeline_theme_colors(source, "cScale", &defaults.section_colors),
@@ -3986,7 +4015,8 @@ fn parse_timeline_config(source: &str) -> TimelineConfig {
 }
 
 fn parse_timeline_theme_colors(source: &str, prefix: &str, defaults: &[String]) -> Vec<String> {
-    let front_matter = mermaid_front_matter_section(source, &["themeVariables"]);
+    let front_matter = mermaid_front_matter_section(source, &["config", "themeVariables"])
+        .or_else(|| mermaid_front_matter_section(source, &["themeVariables"]));
     let theme = mermaid_directive_object(source, "themeVariables")
         .or(front_matter.as_deref())
         .unwrap_or("");
@@ -15608,12 +15638,14 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn timeline_preserves_render_configuration_from_init_and_front_matter() {
         let (_, init) = parse_timeline(
-            "%%{init: {\"timeline\": {\"padding\": 72, \"leftMargin\": 80, \"useMaxWidth\": true, \"disableMulticolor\": true}, \"themeVariables\": {\"cScale0\": \"#112233\", \"cScaleLabel0\": \"#fefefe\", \"cScaleInv0\": \"#445566\"}}}%%\n\
+            "%%{init: {\"fontSize\": \"20px\", \"timeline\": {\"padding\": 72, \"leftMargin\": 80, \"useMaxWidth\": true, \"disableMulticolor\": true}, \"themeVariables\": {\"fontFamily\": \"Avenir Next\", \"cScale0\": \"#112233\", \"cScaleLabel0\": \"#fefefe\", \"cScaleInv0\": \"#445566\"}}}%%\n\
              timeline\n2025 : Public beta\n2026 : General availability\n",
         )
         .unwrap();
         assert_eq!(init.config.padding, 72.0);
         assert_eq!(init.config.left_margin, 80.0);
+        assert_eq!(init.config.font_size, 20.0);
+        assert_eq!(init.config.font_family, "Avenir Next");
         assert!(init.config.use_max_width);
         assert!(init.config.disable_multicolor);
         assert_eq!(init.config.section_colors[0], "#112233");
@@ -15621,11 +15653,13 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(init.config.section_inverse_colors[0], "#445566");
 
         let (_, front_matter) = parse_timeline(
-            "---\nconfig:\n  timeline:\n    padding: 24\n    leftMargin: 36\n    useMaxWidth: true\n    disableMulticolor: true\n---\ntimeline\n2025\n",
+            "---\nconfig:\n  fontSize: 22\n  themeVariables:\n    fontFamily: Georgia\n  timeline:\n    padding: 24\n    leftMargin: 36\n    useMaxWidth: true\n    disableMulticolor: true\n---\ntimeline\n2025\n",
         )
         .unwrap();
         assert_eq!(front_matter.config.padding, 24.0);
         assert_eq!(front_matter.config.left_margin, 36.0);
+        assert_eq!(front_matter.config.font_size, 22.0);
+        assert_eq!(front_matter.config.font_family, "Georgia");
         assert!(front_matter.config.use_max_width);
         assert!(front_matter.config.disable_multicolor);
     }
