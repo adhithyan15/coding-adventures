@@ -6,6 +6,7 @@
     {"name":"size-and-evolution","source":"wardley-beta\nsize [800, 500]\nevolution Genesis -> Custom -> Product -> Commodity\ncomponent API [0.6, 0.7]\ncomponent Database [0.4, 0.5]\nAPI -> Database"},
     {"name":"quoted-and-evolve","source":"wardley-beta\ncomponent \"Mobile App\" [0.8, 0.85]\ncomponent API [0.6, 0.65]\n\"Mobile App\" -> API\nevolve API 0.82"},
     {"name":"renderer-config","source":"%%{init: {\"wardley-beta\": {\"width\": 760, \"height\": 480, \"padding\": 36, \"nodeRadius\": 9, \"nodeLabelOffset\": 12, \"axisFontSize\": 15, \"labelFontSize\": 13, \"showGrid\": true, \"useMaxWidth\": false}, \"themeVariables\": {\"wardley\": {\"backgroundColor\": \"#f8fafc\", \"axisColor\": \"#123456\", \"axisTextColor\": \"#234567\", \"gridColor\": \"#345678\", \"componentFill\": \"#abcdef\", \"componentStroke\": \"#456789\", \"componentLabelColor\": \"#56789a\", \"linkStroke\": \"#6789ab\", \"evolutionStroke\": \"#dc2626\"}}}}%%\nwardley-beta\ntitle Configured Map\nanchor User [0.9, 0.2]\ncomponent API [0.6, 0.7]\nUser -> API"},
-    {"name":"forces","source":"wardley-beta\ncomponent Platform [0.55, 0.50]\naccelerator \"AI Adoption\" [0.55, 0.25]\ndeaccelerator Legacy Constraints [0.15, 0.75]"}
+    {"name":"forces","source":"wardley-beta\ncomponent Platform [0.55, 0.50]\naccelerator \"AI Adoption\" [0.55, 0.25]\ndeaccelerator Legacy Constraints [0.15, 0.75]"},
+    {"name":"pipeline","source":"wardley-beta\ncomponent Database [0.40, 0.60]\npipeline Database {\n  component \"File System\" [0.25]\n  component \"SQL DB\" [0.50]\n  component NoSQL [0.70]\n  component \"Cloud DB\" [0.85]\n}"}
   ]
 }

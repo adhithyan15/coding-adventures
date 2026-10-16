@@ -2223,13 +2223,30 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         text_children.push(text_node(stage, (x - 45.0).clamp(2.0, diagram.width - 92.0), bottom + 8.0, 90.0, 24.0,
             font_with_size(&options.label_font, Some(diagram.config.axis_font_size - 2.0)), axis_text_color));
     }
+    for pipeline in &diagram.pipelines {
+        for positions in pipeline.component_positions.windows(2) {
+            let mut connector = line_path(positions, &theme.link_stroke, 1.0);
+            connector.stroke_dash = Some(vec![4.0, 4.0]); instructions.push(PaintInstruction::Path(connector));
+        }
+        instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: pipeline.x, y: pipeline.y,
+            width: pipeline.width, height: pipeline.height, fill: None, stroke: Some(theme.axis_color.clone()),
+            stroke_width: Some(1.5), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
+    }
     for link in &diagram.links { instructions.push(PaintInstruction::Path(line_path(&[link.from.clone(), link.to.clone()], &theme.link_stroke, 1.0))); }
     for evolution in &diagram.evolves { instructions.push(PaintInstruction::Path(line_path(&[evolution.from.clone(), evolution.to.clone()], &theme.evolution_stroke, 1.0))); }
     for node in &diagram.nodes {
-        let radius = if node.anchor { diagram.config.node_radius * 1.35 } else { diagram.config.node_radius };
-        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: node.position.x, cy: node.position.y,
-            rx: radius, ry: radius, fill: Some(theme.component_fill.clone()), stroke: Some(theme.component_stroke.clone()),
-            stroke_width: Some(1.0), stroke_dash: None, stroke_dash_offset: None }));
+        if node.pipeline_parent {
+            let size = diagram.config.node_radius * 1.6;
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.position.x - size / 2.0,
+                y: node.position.y - size / 2.0, width: size, height: size, fill: Some(theme.component_fill.clone()),
+                stroke: Some(theme.component_stroke.clone()), stroke_width: Some(1.0), corner_radius: None,
+                stroke_dash: None, stroke_dash_offset: None }));
+        } else {
+            let radius = if node.anchor { diagram.config.node_radius * 1.35 } else { diagram.config.node_radius };
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: node.position.x, cy: node.position.y,
+                rx: radius, ry: radius, fill: Some(theme.component_fill.clone()), stroke: Some(theme.component_stroke.clone()),
+                stroke_width: Some(1.0), stroke_dash: None, stroke_dash_offset: None }));
+        }
         text_children.push(text_node(&node.label, node.position.x + diagram.config.node_label_offset, node.position.y - 16.0, 150.0, 24.0,
             font_with_size(&options.label_font, Some(diagram.config.label_font_size)), component_label_color));
     }
@@ -2284,7 +2301,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
                 (x + head, y + height / 2.0), (x + width, y + height / 2.0)],
         };
         instructions.push(PaintInstruction::Path(PaintPath { base: PaintBase::default(), commands: polygon_path_commands(&points),
-            fill: Some("white".into()), fill_rule: None, stroke: Some(theme.component_stroke.clone()),
+            fill: Some("#ffffff".into()), fill_rule: None, stroke: Some(theme.component_stroke.clone()),
             stroke_width: Some(1.0), stroke_cap: None, stroke_join: Some(StrokeJoin::Round), stroke_dash: None, stroke_dash_offset: None }));
         text_children.push(text_node(&force.label, x, y + height / 2.0 + 5.0, width, 20.0,
             force_font.clone(), axis_text_color));
@@ -2315,6 +2332,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("wardley.noteCount".into(), diagram.notes.len().to_string());
     metadata.insert("wardley.annotationCount".into(), diagram.annotations.len().to_string());
     metadata.insert("wardley.forceCount".into(), diagram.forces.len().to_string());
+    metadata.insert("wardley.pipelineCount".into(), diagram.pipelines.len().to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: theme.background_color.clone(), instructions, id: None, metadata: Some(metadata) }
 }
@@ -11584,13 +11602,16 @@ mod tests {
                 grid_color: "#345678".into(), component_fill: "#abcdef".into(), component_stroke: "#456789".into(),
                 component_label_color: "#56789a".into(), link_stroke: "#6789ab".into(), evolution_stroke: "#dc2626".into() },
                 ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()],
-            nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true }],
+            nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true, pipeline_parent: true },
+                diagram_ir::LayoutedWardleyNode { id: "b".into(), label: "Child".into(), position: Point { x: 150.0, y: 120.0 }, anchor: false, pipeline_parent: false }],
             links: vec![], evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }],
             annotations_box: Some(Point { x: 60.0, y: 220.0 }), annotations: vec![diagram_ir::LayoutedWardleyAnnotation {
                 number: 1, text: "Risk".into(), positions: vec![Point { x: 280.0, y: 180.0 }, Point { x: 320.0, y: 160.0 }] }],
             forces: vec![diagram_ir::LayoutedWardleyForce { label: "Adoption".into(), position: Point { x: 100.0, y: 170.0 },
                 kind: WardleyForceKind::Accelerator }, diagram_ir::LayoutedWardleyForce { label: "Legacy".into(),
-                position: Point { x: 360.0, y: 90.0 }, kind: WardleyForceKind::Deaccelerator }] };
+                position: Point { x: 360.0, y: 90.0 }, kind: WardleyForceKind::Deaccelerator }],
+            pipelines: vec![diagram_ir::LayoutedWardleyPipeline { x: 120.0, y: 110.0, width: 120.0, height: 24.0,
+                component_positions: vec![Point { x: 135.0, y: 122.0 }, Point { x: 225.0, y: 122.0 }] }] };
         let scene = diagram_to_paint_wardley(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
@@ -11605,11 +11626,15 @@ mod tests {
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.noteCount")), Some(&"1".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationCount")), Some(&"1".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.forceCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.pipelineCount")), Some(&"1".to_string()));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
-            PaintInstruction::Path(path) if path.fill.as_deref() == Some("white")
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#ffffff")
                 && path.stroke.as_deref() == Some("#456789"))).count(), 2);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.is_none() && rect.corner_radius == Some(4.0)
+                && rect.stroke.as_deref() == Some("#123456"))));
     }
 
 
