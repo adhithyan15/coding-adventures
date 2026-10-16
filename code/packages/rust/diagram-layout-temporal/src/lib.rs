@@ -76,6 +76,7 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
             let start_y = y;
             let mut color_index = 0usize;
             let without_sections = diagram.sections.iter().all(|section| section.label.is_none());
+            let has_periods = diagram.sections.iter().any(|section| !section.periods.is_empty());
             for section in &diagram.sections {
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
@@ -114,13 +115,16 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                     }
                     let row_height = card_height.max(period.events.len() as f64 * 38.0 - 8.0);
                     y += row_height + 18.0;
-                    if !without_sections || !diagram.config.disable_multicolor {
+                    if without_sections && !diagram.config.disable_multicolor {
                         color_index += 1;
                     }
                 }
+                if !without_sections && !section.periods.is_empty() {
+                    color_index += 1;
+                }
                 y += 10.0;
             }
-            if color_index > 0 {
+            if has_periods {
                 items.insert(usize::from(title.is_some()), LayoutedTemporalItem::TimelineSpine {
                     x1: spine_x, y1: start_y + 16.0, x2: spine_x, y2: y - 36.0,
                 });
@@ -131,6 +135,7 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
             let gap = 24.0;
             let mut max_width = width;
             let mut color_index = 0usize;
+            let without_sections = diagram.sections.iter().all(|section| section.label.is_none());
             for section in &diagram.sections {
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
@@ -142,7 +147,6 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                 let spine_y = card_y + 12.0;
                 let start_x = origin_x + 106.0;
                 let mut row_height: f64 = 48.0;
-                let without_sections = diagram.sections.iter().all(|section| section.label.is_none());
                 for (index, period) in section.periods.iter().enumerate() {
                     let x = start_x + index as f64 * (card_width + gap);
                     let card_height = 48.0;
@@ -172,9 +176,12 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                     if !period.events.is_empty() {
                         row_height = row_height.max(72.0 + period.events.len() as f64 * 38.0);
                     }
-                    if !without_sections || !diagram.config.disable_multicolor {
+                    if without_sections && !diagram.config.disable_multicolor {
                         color_index += 1;
                     }
+                }
+                if !without_sections && !section.periods.is_empty() {
+                    color_index += 1;
                 }
                 if !section.periods.is_empty() {
                     let end_x = start_x
@@ -2531,6 +2538,46 @@ mod tests {
         }).collect::<Vec<_>>();
         assert_eq!(periods, vec![(256.0, 0), (256.0, 0)]);
         assert_eq!(layout.timeline_config.as_ref().unwrap().padding, 72.0);
+    }
+
+    #[test]
+    fn timeline_layout_shares_palette_slots_within_sections() {
+        let diagram = TemporalDiagram {
+            kind: TemporalKind::Timeline,
+            title: None,
+            body: TemporalBody::Timeline(TimelineDiagram {
+                accessibility_title: None,
+                accessibility_description: None,
+                config: Default::default(),
+                direction: TimelineDirection::TopDown,
+                sections: vec![
+                    TimelineSection {
+                        label: Some("Foundation".into()),
+                        periods: vec![
+                            TimelinePeriod { label: "2024".into(), events: vec!["Prototype".into()] },
+                            TimelinePeriod { label: "2025".into(), events: Vec::new() },
+                        ],
+                    },
+                    TimelineSection {
+                        label: Some("Growth".into()),
+                        periods: vec![TimelinePeriod {
+                            label: "2026".into(), events: vec!["Launch".into()],
+                        }],
+                    },
+                ],
+            }),
+        };
+        let layout = layout_temporal_diagram(&diagram, 720.0);
+        let period_colors = layout.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TimelinePeriod { color_index, .. } => Some(*color_index),
+            _ => None,
+        }).collect::<Vec<_>>();
+        let event_colors = layout.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TimelineEvent { color_index, .. } => Some(*color_index),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(period_colors, vec![0, 0, 1]);
+        assert_eq!(event_colors, vec![0, 1]);
     }
 
     #[test]
