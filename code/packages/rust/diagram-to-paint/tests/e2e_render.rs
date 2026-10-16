@@ -4606,6 +4606,8 @@ line "Target" [35, 50, 68, 82]"##,
         diagram.config.theme.annotation_stroke = "#7c3aed".into();
         diagram.config.theme.annotation_text_color = "#f97316".into();
         diagram.config.theme.annotation_fill = "#fef3c7".into();
+        diagram.accessibility_title = Some("Tea shop strategy map".into());
+        diagram.accessibility_description = Some("Components and dependencies across the value chain".into());
         let layout = layout_wardley(&diagram);
         assert_eq!((layout.width, layout.height), (760.0, 480.0));
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
@@ -4636,6 +4638,9 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationStroke")), Some(&"#7c3aed".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationTextColor")), Some(&"#f97316".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationFill")), Some(&"#fef3c7".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")), Some(&"Tea shop strategy map".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.description")),
+            Some(&"Components and dependencies across the value chain".to_string()));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#fef3c7")
                 && ellipse.stroke.as_deref() == Some("#7c3aed"))));

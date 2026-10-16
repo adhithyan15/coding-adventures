@@ -5688,13 +5688,13 @@ fn indentation_width(line: &str) -> usize {
 /// Parse the coordinate-based core of Mermaid 11.16.1 Wardley maps.
 pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
     let config = parse_wardley_config(source);
-    let prepared = prepare_line_grammar_source(source)?;
+    let (prepared, multiline_descriptions) = prepare_wardley_source(source)?;
     let tokens = try_tokenize_mermaid_wardley(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(WARDLEY_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse wardley.grammar: {error}"));
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
-    let mut diagram = WardleyDiagram { title: None, config,
+    let mut diagram = WardleyDiagram { title: None, accessibility_title: None, accessibility_description: None, config,
         stages: vec!["Genesis".into(), "Custom Built".into(), "Product".into(), "Commodity".into()],
         stage_boundaries: Vec::new(),
         nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new(), annotations_box: None, annotations: Vec::new(), forces: Vec::new(), pipelines: Vec::new() };
@@ -5721,6 +5721,17 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         }
         if line == "}" { return Err(wardley_error(line_number, "unexpected Wardley pipeline terminator")); }
         if let Some(value) = line.strip_prefix("title ") { diagram.title = Some(value.trim().to_string()); continue; }
+        if let Some((_, value)) = line.split_once(':').filter(|(keyword, _)| keyword.trim() == "accTitle") {
+            diagram.accessibility_title = Some(value.trim().to_string()); continue;
+        }
+        if let Some((_, value)) = line.split_once(':').filter(|(keyword, _)| keyword.trim() == "accDescr") {
+            let value = value.trim();
+            diagram.accessibility_description = value.strip_prefix("__WARDLEY_MULTILINE_")
+                .and_then(|index| index.parse::<usize>().ok())
+                .and_then(|index| multiline_descriptions.get(index).cloned())
+                .or_else(|| Some(value.to_string()));
+            continue;
+        }
         if let Some(value) = line.strip_prefix("size ") {
             let (width, height) = parse_wardley_coordinates(value, line_number)?;
             if width <= 0.0 || height <= 0.0 { return Err(wardley_error(line_number, "size must be positive")); }
@@ -5817,6 +5828,38 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
     }
     if active_pipeline.is_some() { return Err(wardley_error(prepared.lines().count(), "unterminated Wardley pipeline")); }
     Ok(diagram)
+}
+
+fn prepare_wardley_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let lines: Vec<_> = prepared.lines().collect(); let mut output = Vec::with_capacity(lines.len());
+    let mut multiline_descriptions = Vec::new(); let mut index = 0usize;
+    while index < lines.len() {
+        let trimmed = lines[index].trim();
+        let Some(after_keyword) = trimmed.strip_prefix("accDescr") else {
+            output.push(lines[index].to_string()); index += 1; continue;
+        };
+        let Some(mut remainder) = after_keyword.trim_start().strip_prefix('{') else {
+            output.push(lines[index].to_string()); index += 1; continue;
+        };
+        let start_line = index + 1; let mut description = Vec::new();
+        loop {
+            if let Some((content, trailing)) = remainder.split_once('}') {
+                if !trailing.trim().is_empty() {
+                    return Err(wardley_error(index + 1, "unexpected content after Wardley accessibility description"));
+                }
+                description.push(content.trim()); break;
+            }
+            description.push(remainder.trim()); index += 1;
+            if index == lines.len() { return Err(wardley_error(start_line, "unterminated Wardley accessibility description")); }
+            remainder = lines[index];
+        }
+        while description.first().is_some_and(|line| line.is_empty()) { description.remove(0); }
+        while description.last().is_some_and(|line| line.is_empty()) { description.pop(); }
+        let description_index = multiline_descriptions.len(); multiline_descriptions.push(description.join("\n"));
+        output.push(format!("accDescr: __WARDLEY_MULTILINE_{description_index}")); index += 1;
+    }
+    Ok((output.join("\n"), multiline_descriptions))
 }
 
 fn parse_wardley_link(value: &str, line: usize) -> Result<Option<WardleyLink>, ParseError> {

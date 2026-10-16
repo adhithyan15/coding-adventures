@@ -2425,6 +2425,10 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("wardley.flowLinkCount".into(), diagram.links.iter().filter(|link| link.flow.is_some()).count().to_string());
     metadata.insert("wardley.dashedLinkCount".into(), diagram.links.iter().filter(|link| link.dashed).count().to_string());
     metadata.insert("wardley.labeledLinkCount".into(), diagram.links.iter().filter(|link| link.label.is_some()).count().to_string());
+    if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
+    if let Some(description) = &diagram.accessibility_description {
+        metadata.insert("accessibility.description".into(), description.clone());
+    }
     PaintScene { width: diagram.width, height: diagram.height,
         background: theme.background_color.clone(), instructions, id: None, metadata: Some(metadata) }
 }
@@ -11701,6 +11705,7 @@ mod tests {
     fn wardley_lowers_to_backend_neutral_paths_ellipses_and_glyphs() {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver; let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedWardleyDiagram { width: 500.0, height: 320.0, title: Some("Map".into()),
+            accessibility_title: Some("Strategy map".into()), accessibility_description: Some("Components and dependencies".into()),
             config: diagram_ir::WardleyConfig { show_grid: true, theme: diagram_ir::WardleyTheme {
                 background_color: "#f8fafc".into(), axis_color: "#123456".into(), axis_text_color: "#234567".into(),
                 grid_color: "#345678".into(), component_fill: "#abcdef".into(), component_stroke: "#456789".into(),
@@ -11746,6 +11751,8 @@ mod tests {
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationStroke")), Some(&"#7c3aed".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationTextColor")), Some(&"#f97316".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationFill")), Some(&"#fef3c7".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")), Some(&"Strategy map".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.description")), Some(&"Components and dependencies".to_string()));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#fef3c7")
                 && ellipse.stroke.as_deref() == Some("#7c3aed"))));

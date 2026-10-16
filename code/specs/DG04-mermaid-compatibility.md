@@ -801,6 +801,8 @@ Evolution stages preserve dual labels and optional `@` boundaries; layout uses
 the authored widths for dashed separators and centered stage labels.
 Component and pipeline-child `label [x, y]` suffixes preserve signed offsets
 through semantic and layout IR into backend-neutral glyph placement.
+Single-line accessibility titles and single-line or braced multiline accessibility
+descriptions survive semantic and layout IR into PaintScene metadata.
 Component source strategies lower build, buy, outsource, and market overlays;
 inertia lowers as a heavy offset indicator while preserving both decorators in IR.
 Dependency links preserve solid, alternate, and dashed line forms, semicolon annotations,

@@ -1946,7 +1946,8 @@ impl Default for WardleyConfig { fn default() -> Self { Self { width: 900.0, hei
     node_radius: 6.0, node_label_offset: 8.0, axis_font_size: 12.0, label_font_size: 10.0,
     show_grid: false, use_max_width: true, theme: WardleyTheme::default() } } }
 #[derive(Clone, Debug, PartialEq)]
-pub struct WardleyDiagram { pub title: Option<String>, pub config: WardleyConfig, pub stages: Vec<String>,
+pub struct WardleyDiagram { pub title: Option<String>, pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>, pub config: WardleyConfig, pub stages: Vec<String>,
     pub stage_boundaries: Vec<f64>,
     pub nodes: Vec<WardleyNode>, pub links: Vec<WardleyLink>, pub evolves: Vec<WardleyEvolution>, pub notes: Vec<WardleyNote>,
     pub annotations_box: Option<(f64, f64)>, pub annotations: Vec<WardleyAnnotation>, pub forces: Vec<WardleyForce>,
@@ -1971,7 +1972,8 @@ pub struct LayoutedWardleyForce { pub label: String, pub position: Point, pub ki
 pub struct LayoutedWardleyPipeline { pub x: f64, pub y: f64, pub width: f64, pub height: f64,
     pub component_positions: Vec<Point> }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub config: WardleyConfig,
+pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: Option<String>,
+    pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub config: WardleyConfig,
     pub stages: Vec<String>, pub stage_boundaries: Vec<f64>, pub nodes: Vec<LayoutedWardleyNode>, pub links: Vec<LayoutedWardleyLink>,
     pub evolves: Vec<LayoutedWardleyEvolution>, pub notes: Vec<LayoutedWardleyNote>,
     pub annotations_box: Option<Point>, pub annotations: Vec<LayoutedWardleyAnnotation>, pub forces: Vec<LayoutedWardleyForce>,
