@@ -124,6 +124,33 @@ mod ishikawa_box_labels_contract {
     }
 
     #[test]
+    fn supported_small_and_large_fonts_reach_exact_positive_paint_frames_and_glyphs() {
+        for (font,frame,glyph,box_size) in [
+            (1.0,[179.255,81.525,1.0,1.0],(179.505,82.325),(11.25,1.75)),
+            (32.0,[112.88,54.400000000000006,132.0,52.0],(170.88,80.0),(144.0,56.0)),
+        ] {
+            let source=format!("%%{{init: {{\"fontSize\":{font}}}}}%%\nishikawa-beta\nE\n  A\n");
+            let parsed=mermaid_parser::parse_ishikawa(&source).unwrap();
+            assert_eq!(parsed.config.font_size,font);
+            let layout=diagram_layout_geometric::layout_ishikawa(&parsed,576.0);
+            assert_eq!(ishikawa_label_text_frame(&layout.bones[0]),frame);
+            let scene=diagram_to_paint_ishikawa(&layout,&make_opts(&FakeShaper,&FakeMetrics,&FakeResolver));
+            assert_eq!(scene.instructions.len(),7);
+            assert_eq!(scene.instructions[3],PaintInstruction::Rect(PaintRect{base:PaintBase::default(),
+                x:178.88-box_size.0/2.0,y:80.4-box_size.1/2.0,width:box_size.0,height:box_size.1,
+                fill:Some("#ffffff".into()),stroke:Some("#333333".into()),stroke_width:Some(1.0),corner_radius:Some(4.0),
+                stroke_dash:None,stroke_dash_offset:None}));
+            let emitted:Vec<_>=scene.instructions.iter().filter_map(|instruction|match instruction {
+                PaintInstruction::GlyphRun(run)=>Some(run.clone()),_=>None}).collect();
+            let expected:Vec<_>=[('A',glyph.0,glyph.1,font),('E',437.5,168.4,18.0)].into_iter().map(|(c,x,y,size)|
+                PaintGlyphRun{base:PaintBase::default(),glyphs:vec![GlyphPosition{glyph_id:c as u32,x,y}],
+                    font_ref:"fake:test".into(),font_size:size,fill:Some("rgb(51, 51, 51)".into())}).collect();
+            assert_eq!(emitted,expected,"complete actual glyph vector font{font}");
+            assert_eq!(scene.metadata.as_ref().unwrap().get("ishikawa.fontSize"),Some(&font.to_string()));
+        }
+    }
+
+    #[test]
     fn cause_depth_controls_height_without_a_new_source_admission_limit() {
         for (depth,height) in [(0,360.0),(1,360.0),(2,400.0),(3,470.0),(7,750.0)] {
             let diagram=diagram_ir::IshikawaDiagram {effect:"E".into(),config:diagram_ir::IshikawaConfig::default(),
