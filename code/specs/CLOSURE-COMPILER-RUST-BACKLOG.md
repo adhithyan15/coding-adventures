@@ -2,6 +2,20 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+<!-- CV04a Wardley pipelines selected -->
+Published3a84 normalFF verified on solePR17288; wrapper post-assertion1 retained
+separately from push0 and read-only REST/Git reconciliation0. UNMERGED/conflicting/
+autoOFF/no hosted acceptance. Nativec82 strict/full1848/78/996 and force85 strict/
+full1009/56/48wholeScenes independently PASS. New pipeline spec from3a84 precedes
+tests/import/repair (NOT STARTED), selects14pathc138/28blobs rawWITHHELD49edf.
+Bounded flat/nonempty relations, closed readers, first-parent indexing, typed/
+derived guards and20field wholeScene controls required; preserve old48cells and
+literal white force fill. Later stage69adc/native17553 rawWITHHELD9dd1/0d08 remain
+separate, no current-main acceptance. Full Closure/CV04b OPEN; Miri DEFERRED/PENDING,
+frozen run/inputs untouched/unpolled. Keep one active PR and heartbeat active.
+<!-- /CV04a Wardley pipelines selected -->
+
+
 
 <!-- CV04a Wardley forces selected -->
 At native source `c82b1d18`, strict checks for six affected packages and the full
