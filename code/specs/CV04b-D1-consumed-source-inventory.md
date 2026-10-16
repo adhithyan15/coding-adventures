@@ -1,5 +1,8 @@
 # CV04b D1 — serialize the actual consumed source inventory
 
+The opening state records the original pre-test checkpoint. The terminal
+appendix below supersedes its then-active native18/pending D1 status.
+
 ## State and bounded delivery
 
 This specification precedes tests and implementation. It builds on native18
@@ -261,3 +264,38 @@ four exact contribution source/tag pairs and their actual journal indexes:
 inventory then lex, pipeline begin/converged end, compilation_level then defines.
 Do not filter out inventory events, alter production chronology, drop the test
 or claim pass_order alone proves pass/sweep scheduling or transformation lineage.
+
+## Exact-source terminal verification
+
+Exact source `a8d79babf8f0c8b0bd1062c8a3f3e7d04ee02467` passed all-target
+strict Clippy and the complete unfiltered Rust compiler suite:1,100 passed,
+zero failed/ignored across180 metadata-derived targets. Focused5 private budget
+tests and10 native CLI tests pass, with22 exact completion cells:15 available,
+two unavailable and five output-sentinel refusals. Focused counts are included
+in the full suite, not added to it. Private recording cases cover14 editions;
+the exact schema, full ordered IDs/parent vectors, raw coordinates, hashes,
+legacy Tokens, define ownership, checked reload, repeated chronology and trace
+on/off JS/map/manifest equality are asserted. Exact-source/focused and terminal
+independent security reviews passed. The original CLI processed-length failure,
+full stale-prefix failure and helper failures remain separately preserved.
+
+Complete native166/2868, style50/872 and SwiftUI191 maps remain exact to the
+published native18 carrier26e0bfe4, retaining their prior execution attribution.
+Closure36/3708 has only four Rust paths changed: the ingestion adapter, private
+producer, private tests and CLI inventory tests. Raw Rust/TOML1497 and static
+native21 plus three Closure include bindings were verified (22 unique paths
+because two bindings overlap). No new native/style/SwiftUI execution follows.
+Standalone15 registry tuples are an exact subset of accepted native376; no
+manifest, dependency, shared API, grammar or existing shared production-limit
+change is made.
+
+This proves the bounded producer inventory, not complete Closure parity or new
+Java-oracle execution. Existing CLOC27/CLOC31 leaf/checked fold plumbing is real;
+typed-parser ingestion-ID reuse, source-domain import admission, composite node
+identities, all later fold/rename/inline/motion/merge/delete lineage and emitted
+byte/source joins remain OPEN. Base ESTree canonical boundary, own types and no
+new crates.io dependencies remain owner decisions. Sole PR17288 stays unmerged;
+later-main reconciliation, required hosted checks and actual merge remain gates.
+Miri **DEFERRED/PENDING**, NEVER passed. Frozen checkout/run/inputs/receipts/target
+remain untouched and unpolled. Implementation/delivery first, genuine final-source
+Miri afterward; full objective and heartbeat remain ACTIVE.

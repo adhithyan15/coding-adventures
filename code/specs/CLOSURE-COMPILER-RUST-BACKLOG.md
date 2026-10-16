@@ -2572,15 +2572,55 @@ inputs/receipts preserved without polling or termination. CV04b, full Closure
 parity, output-byte maps and complete transformation lineage remain open.
 
 <!-- CV04b D1 consumed source inventory -->
-Selected compiler-private consumed-source inventory after fresh four-file leaf
-audit153516b5/main81164: existing CLOC27 bridge and CLOC31 derive/merge are real;
-actual ingestion-ID reuse/root-domain import/all later lineage remain OPEN.
-Spec CV04b-D1-consumed-source-inventory.md precedes tests/implementation in its
-own worktree/target while R2 native18 producer3984 stays frozen. D1 records exact
-raw input/trivia/token/EOF inventory/root binding with precharged finite metadata;
-parser reuse, domain import and mutable/output-byte lineage are later slices.
-One remote PR17288; deliver native18 with its own evidence before publishing this
-successor. Incoming main/style/native19 frames remain separate pending work.
-No D1 tests or implementation yet. Miri DEFERRED/PENDING, never passed; frozen
-run/inputs/target/receipts untouched/unpolled. Full objective and heartbeat ACTIVE.
+With `--correlation_vector`, each actual `read_to_string` UTF8 input now
+records the closed `closurec_source_v1` namespace: source hash/length/edition,
+every consumed trivia/token/EOF range with independent byte/scalar/UTF16
+coordinates, direct input-root parent identities and one finalized ordered
+inventory. Token IDs select exactly the token/EOF projection, preserving define
+and whitespace contribution ownership. Legacy processed token lengths remain
+distinct from raw consumed widths; ES2025 preserves raw string escapes.
+
+The private per-run budget precharges the complete prospective metadata before
+ownership: values1,000,000, encoded bytes64MiB, references16MiB, work64,000,000,
+with checked ceilings/arithmetic, fallible exact reference reservations and
+compact-ID capacity checks. Only an ordinary lexical error may record an
+unavailable inventory. Capture/admission or graph recording failure preserves
+the preexisting output set; an unpublished internal graph need not roll back.
+Tracing off and shared APIs/limits/dependencies remain unchanged. The inventory
+contribution precedes the legacy lex summary; existing stage and scheduler order
+is preserved and the exact journal ordering is tested.
+
+Exact source `a8d79babf8f0c8b0bd1062c8a3f3e7d04ee02467` passed all-target
+strict Clippy and the complete unfiltered Rust compiler suite:1,100 passed,
+zero failed/ignored across180 metadata-derived targets. Focused5 private budget
+tests and10 native CLI tests pass, with22 exact completion cells:15 available,
+two unavailable and five output-sentinel refusals. Focused counts are included
+in the full suite, not added to it. Private recording cases cover14 editions;
+the exact schema, full ordered IDs/parent vectors, raw coordinates, hashes,
+legacy Tokens, define ownership, checked reload, repeated chronology and trace
+on/off JS/map/manifest equality are asserted. Exact-source/focused and terminal
+independent security reviews passed. The original CLI processed-length failure,
+full stale-prefix failure and helper failures remain separately preserved.
+
+Complete native166/2868, style50/872 and SwiftUI191 maps remain exact to the
+published native18 carrier26e0bfe4, retaining their prior execution attribution.
+Closure36/3708 has only four Rust paths changed: the ingestion adapter, private
+producer, private tests and CLI inventory tests. Raw Rust/TOML1497 and static
+native21 plus three Closure include bindings were verified (22 unique paths
+because two bindings overlap). No new native/style/SwiftUI execution follows.
+Standalone15 registry tuples are an exact subset of accepted native376; no
+manifest, dependency, shared API, grammar or existing shared production-limit
+change is made.
+
+This proves the bounded producer inventory, not complete Closure parity or new
+Java-oracle execution. Existing CLOC27/CLOC31 leaf/checked fold plumbing is real;
+typed-parser ingestion-ID reuse, source-domain import admission, composite node
+identities, all later fold/rename/inline/motion/merge/delete lineage and emitted
+byte/source joins remain OPEN. Base ESTree canonical boundary, own types and no
+new crates.io dependencies remain owner decisions. Sole PR17288 stays unmerged;
+later-main reconciliation, required hosted checks and actual merge remain gates.
+Miri **DEFERRED/PENDING**, NEVER passed. Frozen checkout/run/inputs/receipts/target
+remain untouched and unpolled. Implementation/delivery first, genuine final-source
+Miri afterward; full objective and heartbeat remain ACTIVE.
+
 <!-- /CV04b D1 consumed source inventory -->
