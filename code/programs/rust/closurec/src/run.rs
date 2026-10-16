@@ -33,6 +33,8 @@ use std::path::{Path, PathBuf};
 
 #[path="source_inventory.rs"]
 mod source_inventory;
+#[path="source_domain.rs"]
+mod source_domain;
 
 // ---------------------------------------------------------------------------
 // Output type
