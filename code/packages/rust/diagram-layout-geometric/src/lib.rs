@@ -7,7 +7,7 @@
 //! bounding box of all elements) and passes elements through unchanged.
 
 use std::collections::{HashMap, HashSet};
-use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDebugCell, LayoutedVennDebugCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
+use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDebugCell, LayoutedVennDebugCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyForce, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
 
 pub const VERSION: &str = "0.2.0";
 
@@ -322,8 +322,11 @@ fn layout_wardley_supported(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram 
         number: annotation.number, text: annotation.text.clone(),
         positions: annotation.coordinates.iter().map(|(visibility, evolution)| point(*visibility, *evolution)).collect(),
     }).collect();
+    let forces = diagram.forces.iter().map(|force| LayoutedWardleyForce {
+        label: force.label.clone(), position: point(force.visibility, force.evolution), kind: force.kind,
+    }).collect();
     LayoutedWardleyDiagram { width, height, title: diagram.title.clone(), config: diagram.config.clone(),
-        stages: diagram.stages.clone(), nodes, links, evolves, notes, annotations_box, annotations }
+        stages: diagram.stages.clone(), nodes, links, evolves, notes, annotations_box, annotations, forces }
 }
 
 /// Place the four Cynefin quadrants and central confusion domain deterministically.
@@ -670,13 +673,16 @@ mod tests {
                 diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false }],
             links: vec![], evolves: vec![], notes: vec![diagram_ir::WardleyNote { text: "Watch".into(), visibility: 0.5, evolution: 0.5 }],
             annotations_box: Some((0.2, 0.8)), annotations: vec![diagram_ir::WardleyAnnotation { number: 1,
-                text: "Risk".into(), coordinates: vec![(0.6, 0.7)] }] };
+                text: "Risk".into(), coordinates: vec![(0.6, 0.7)] }], forces: vec![diagram_ir::WardleyForce {
+                    label: "Adoption".into(), visibility: 0.4, evolution: 0.25, kind: diagram_ir::WardleyForceKind::Accelerator }] };
         let layout = layout_wardley(&diagram);
         assert!(layout.nodes[0].position.y < layout.nodes[1].position.y);
         assert!(layout.nodes[0].position.x < layout.nodes[1].position.x);
         assert_eq!(layout.nodes[0].position.x, 144.0);
         assert_eq!(layout.notes[0].position, Point { x: 300.0, y: 200.0 });
         assert_eq!(layout.annotations[0].positions[0], Point { x: 404.0, y: 168.0 });
+        assert_eq!(layout.forces[0].position, Point { x: 170.0, y: 232.0 });
+        assert_eq!(layout.forces[0].kind, diagram_ir::WardleyForceKind::Accelerator);
     }
 
 

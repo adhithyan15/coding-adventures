@@ -799,7 +799,9 @@ backend-neutral Paint instructions. Quoted `note` statements preserve their
 visibility/evolution coordinates in strategic-map IR and lower as positioned,
 bold backend-neutral glyph runs. Numbered `annotation` coordinates group by
 number, lower as connected markers, and optionally populate a clamped annotations
-box. Pipelines, accelerators/deaccelerators,
+box. Accelerator and deaccelerator statements preserve authored map coordinates
+and lower as labeled right- and left-pointing backend-neutral arrow paths.
+Pipelines,
 advanced flow ports, decorators, per-node authored label offsets, custom stage boundaries, and
 remaining annotation theme fields and exact rendering remain unsupported at the partial level.
 

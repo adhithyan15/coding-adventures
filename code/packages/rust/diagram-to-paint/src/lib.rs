@@ -38,7 +38,7 @@ use diagram_ir::{
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram,
     LayoutedSwimlaneEdge, LayoutedRailroadDiagram,
-    LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
+    LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram, WardleyForceKind,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardCard, LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
@@ -2528,6 +2528,23 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         text_children.push(text_node_no_wrap(&note.text, note.position.x, note.position.y - 12.0,
             (diagram.width - note.position.x - 8.0).max(40.0), 24.0, note_font.clone(), axis_text_color));
     }
+    let mut force_font = font_with_size(&options.label_font, Some(10.0)); force_font.weight = 700;
+    for force in &diagram.forces {
+        let x = force.position.x; let y = force.position.y; let width = 60.0; let height = 30.0; let head = 20.0;
+        let points = match force.kind {
+            WardleyForceKind::Accelerator => vec![(x, y - height / 2.0), (x + width - head, y - height / 2.0),
+                (x + width - head, y - height / 2.0 - 8.0), (x + width, y),
+                (x + width - head, y + height / 2.0 + 8.0), (x + width - head, y + height / 2.0), (x, y + height / 2.0)],
+            WardleyForceKind::Deaccelerator => vec![(x + width, y - height / 2.0), (x + head, y - height / 2.0),
+                (x + head, y - height / 2.0 - 8.0), (x, y), (x + head, y + height / 2.0 + 8.0),
+                (x + head, y + height / 2.0), (x + width, y + height / 2.0)],
+        };
+        instructions.push(PaintInstruction::Path(PaintPath { base: PaintBase::default(), commands: polygon_path_commands(&points),
+            fill: Some("white".into()), fill_rule: None, stroke: Some(theme.component_stroke.clone()),
+            stroke_width: Some(1.0), stroke_cap: None, stroke_join: Some(StrokeJoin::Round), stroke_dash: None, stroke_dash_offset: None }));
+        text_children.push(text_node(&force.label, x, y + height / 2.0 + 5.0, width, 20.0,
+            force_font.clone(), axis_text_color));
+    }
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
         id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
         width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
@@ -2553,6 +2570,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("wardley.evolutionStroke".into(), theme.evolution_stroke.clone());
     metadata.insert("wardley.noteCount".into(), diagram.notes.len().to_string());
     metadata.insert("wardley.annotationCount".into(), diagram.annotations.len().to_string());
+    metadata.insert("wardley.forceCount".into(), diagram.forces.len().to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: theme.background_color.clone(), instructions, id: None, metadata: Some(metadata) }
 }
@@ -13487,7 +13505,10 @@ emphasized --> direct
             nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true }],
             links: vec![], evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }],
             annotations_box: Some(Point { x: 60.0, y: 220.0 }), annotations: vec![diagram_ir::LayoutedWardleyAnnotation {
-                number: 1, text: "Risk".into(), positions: vec![Point { x: 280.0, y: 180.0 }, Point { x: 320.0, y: 160.0 }] }] };
+                number: 1, text: "Risk".into(), positions: vec![Point { x: 280.0, y: 180.0 }, Point { x: 320.0, y: 160.0 }] }],
+            forces: vec![diagram_ir::LayoutedWardleyForce { label: "Adoption".into(), position: Point { x: 100.0, y: 170.0 },
+                kind: WardleyForceKind::Accelerator }, diagram_ir::LayoutedWardleyForce { label: "Legacy".into(),
+                position: Point { x: 360.0, y: 90.0 }, kind: WardleyForceKind::Deaccelerator }] };
         let scene = diagram_to_paint_wardley(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
@@ -13501,8 +13522,12 @@ emphasized --> direct
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.showGrid")), Some(&"true".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.noteCount")), Some(&"1".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.forceCount")), Some(&"2".to_string()));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("white")
+                && path.stroke.as_deref() == Some("#456789"))).count(), 2);
     }
 
 
