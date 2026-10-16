@@ -585,3 +585,21 @@ fn d3a_prepublication_refusal_preserves_every_destination_in_every_presentation(
     }
     std::fs::remove_dir(dir).unwrap();
 }
+
+#[test]
+fn d3a_private_error_classification_preserves_configuration_then_graph_then_shape() {
+    let disabled = CVLog::new_compact(false);
+    assert!(
+        matches!(admit_publication(&disabled, ShapeLimits { work: 512_000_001, index_bytes: 0 }), Err(AdmissionError::Shape(message)) if message=="source shape configuration ceiling")
+    );
+    assert!(matches!(
+        admit_publication(&disabled, ShapeLimits::default()),
+        Err(AdmissionError::Graph(_))
+    ));
+    let (log, roots) = fixture(&[""], EsVersion::Es2025);
+    let mut value = wire(&log);
+    value["entries"][&roots[0]]["origin"]["meta"][NS]["schema"] = json!("2");
+    assert!(
+        matches!(admit_publication(&checked(&value), ShapeLimits::default()), Err(AdmissionError::Shape(message)) if message=="source shape literal mismatch")
+    );
+}
