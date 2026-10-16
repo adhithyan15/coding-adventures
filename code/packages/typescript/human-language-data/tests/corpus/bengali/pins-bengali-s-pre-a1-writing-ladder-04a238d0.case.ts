@@ -22,6 +22,7 @@ it("pins Bengali's writing ladder through its first A1 controlled composition", 
     ["BN-W01-na-dictation", "dictation-transcription"],
     ["BN-W26-kothay-controlled-question", "controlled-composition"],
     ["BN-W40-a1-timed-production", "timed-assessment-production"],
+    ["BN-W263-a2-connected-composition", "connected-composition"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({
