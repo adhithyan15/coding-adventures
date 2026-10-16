@@ -1,51 +1,45 @@
 # Closure Compiler on Rust — parity backlog
 
 <!-- CV04b current-main integration pending -->
-Current local integration incorporates main8093cdda and175666b3 through real
-merge commits9832c396 andeeeac01f; all14 manual conflicts are resolved. It is
-**unpublished and unaccepted**. PR17288 still carries reviewed D3b6132a518;
-auto-merge stays off. Earlier native18 and style executions below are historical.
+Local main3efe integration is unpublished; merge commits9832c396/eeeac01f/
+7c2e3af2 retain resolved parents. Source67effb89 passes the unfiltered two-package
+ALGOL/Mermaid core:1555P/0F/0I,29 executable targets plus two zero-test doctests;
+strict all-target lint0. Receipt `CV04b-main-v3-core-67effb89.json` is consumed.
+Independent terminal identity/input audit is pending; this is core-only evidence.
 
-The shared native classifier remains byte-exact; only the dedicated checked
-outer-entier cap advances18→21. Eight exact former19 expressions and four exact
-former19 conditional sources remain as typed positives, with22-unit negative
-companions. Structural, effect, rounding and resource refusals remain. New
-19/20/21 normal-Exit0 runtime sources are committed but execution is pending.
+Native926 tests pass, including120 exact former authored-source companions;
+92 scalar occurrences and20 generated conditional cells migrate only obsolete
+19-unit quantitative refusals to22 under the dedicated cap21. Shared native
+classification and mixed structural/effect/rounding/resource refusals remain.
+New19/20/21 normal-Exit0 runtime sources are committed but execution is pending.
 
-Independent exact-eee reviews withheld incoming geometry/font/source ownership
-gaps and a stale numerical oracle. Spec-first fixes cover signed offset bounds,
-typed/derived geometry, finite Ishikawa font admission, positive small-font text
-boxes, active quoted link endpoints, per-key init selection and line-owned
-multiline descriptions. Seven new controls compile and fail atc599745f (parser
-0P5F; geometric0P2F), then compile and pass at5e2eea6f (5P+2P). These are narrow
-source/typed controls; derived mutation and actual small-font paint controls,
-full suites, lint and final independent security review remain gates.
+New source/typed/private-geometry guards pass12 focused tests at67effb89.
+Actual red/green receipts retain quoted-percent, bare-bracket label and derived
+paint-transform/width failures and repairs. Independent bounded follow-up source
+review is pending; earlier withheld reports remain historical. Full15-package
+7be4bc28 attempt fails compilation on14 derived paint fixture constructors,
+with no test/lint acceptance. Whole IR/scene equality and independently declared
+new path/arrowhead/outline/clipped-link oracles must be retained while migrating.
+Actual tiny-font paint lowering remains pending.
 
-The full15-package attempt at7be4bc28 fails compilation on14 incomplete derived
-IR constructors in the retained paint fixtures: new Ishikawa path/arrowhead/
-outline fields and Wardley link style/label-position/angle fields. No tests or
-lint passed in that attempt. Preserve complete equality and literal oracles while
-reconciling intentional incoming geometry; do not delete assertions or populate
-expected values by calling production layout. Seven root annotation-fallback
-fixtures now explicitly retain the new text/background cascade. Other old-field
-fixture migrations and exact current-main feature coverage remain under review.
+The frozen7812 inputs cover194 local forward roots, including all45 needed by
+the Windows core. This deliberately excludes15 roots reachable only through
+three Apple-only diagram-to-paint dev edges; it is not a universal all-host cone.
+Source/locks are idle after consumed producer26088. Validation helper v3 recorded
+expected targets without enforcing equality; independent audit and stronger
+fail-closed target/input/count gates precede broader acceptance.
 
-External receipts: `CV04b-incoming-security-{red-c599745f,green-5e2eea6f}.json`,
-`CV04b-main-v2-fast-7be4bc28.json` and both exact-eee independent reports. The
-successor validator freezes7812 inputs across194 actual local forward roots.
-Its failed test producer is consumed. The earlier18030-input validator was
-stopped/consumed with metadata0 only; a pre-consumption empty-results statement
-was corrected against the final receipt. Neither is test acceptance.
-
-Next: complete derived IR/scene fixtures and targeted derived/paint regressions,
-then affected native/downstream runtime, standalone compiler and strict lint;
-obtain exact-head independent review, re-audit main/sole PR/epic/checks and publish
-only validated progress. Composite/synthetic identities, complete transformation
-and pass/sweep lineage, output-byte/source joins and Closure parity remain OPEN.
-Miri **DEFERRED/PENDING**, never passed; frozen run/checkout/inputs/receipts/target
-remain untouched and unpolled. Implementation/delivery first, genuine final-source
-Miri afterward. Base ESTree boundary, own types, no new crates.io dependencies.
-Full objective and heartbeat ACTIVE.
+Fresh audit20261016T114956Z: origin/main d09a93b2 advances beyond integrated3efe,
+including native22 changes still unintegrated. Sole PR17288 publishes D3b6132a518,
+conflicting, auto-merge OFF; current integration is not published or delivered.
+Next: finish derived fixtures/paint guards, affected native/downstream runtime,
+standalone Closure and strict lint, exact-head source/terminal security review,
+then fresh main/PR/check reconciliation before publication. Full composite/
+synthetic identities, transformation/pass-sweep lineage, output-byte/source joins
+and evidence-backed Closure parity remain OPEN. Miri **DEFERRED/PENDING**, never
+passed; frozen run/checkout/inputs/receipts/target untouched and unpolled.
+Implementation/delivery first, genuine final-source Miri afterward. Base ESTree
+boundary, own types, no new crates.io dependencies. Full goal/heartbeat ACTIVE.
 <!-- /CV04b current-main integration pending -->
 
 <!-- CV04a dedicated native18 selected -->

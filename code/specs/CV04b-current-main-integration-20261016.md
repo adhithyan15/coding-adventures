@@ -165,3 +165,31 @@ lineage, output-byte/source joins and evidence-backed Closure parity remain
 OPEN. Base ESTree serialized boundary, own types and no new crates.io dependencies
 are owner decisions. Full objective/heartbeat ACTIVE, including genuine
 final-source Miri acceptance after implementation delivery.
+
+
+## Complete derived fixture reconciliation
+
+Retain every complete semantic IR, layout, PaintScene, glyph, metadata and
+ordered resolver equality. Wardley old center-to-center links intentionally
+become clipped links. Expected links are independently calculated only from
+fixture-declared source/target coordinates and radii: unit delta, source plus
+radius, target minus radius; pipeline parents have radius nodeRadius*1.6/sqrt(2).
+The expected label pivot is the center midpoint plus (unit_y*8,-unit_x*8), with
+the upright atan2 angle. Plain retained links explicitly have dashed=false,
+label=None, flow=None. A test-only adapter may share this arithmetic between
+fixtures; it must never query production layout or observed output. Both scene
+path points and whole layout objects use this independent declaration. Keep
+zero-length links total. Accessibility fields remain explicit None for these
+sources. Preserve all existing test functions and all mixed negative controls.
+
+For Ishikawa use the incoming fish-head outline, all bone paths/arrowheads/box
+outlines, declared font-driven boxes and exact paint glyph/metadata behavior.
+Do not use rectangles or caller font4 as substitute for current semantic font16.
+An actual fontSize1 paint regression must exercise both positive inner-box floors.
+
+Validation producers must fail closed on missing frozen input paths; explicitly
+name host exclusions. Cargo compiler-artifact JSON must join package_id, target
+name/kind/source and executable with every declared metadata test target. Require
+terminal exit0, successful build-finished, matching runtime target identities,
+nonempty aggregate assertions and zero failed/ignored/measured/filtered summaries
+before accepting tests. A core-only receipt covers only its selected packages.
