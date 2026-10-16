@@ -248,7 +248,8 @@ fn ishikawa_hatches(outline: &[Point]) -> Vec<LayoutedIshikawaHatch> {
         }
         intersections.sort_by(|left, right| left.0.total_cmp(&right.0));
         intersections.dedup_by(|left, right| (left.0 - right.0).abs() < 1e-7);
-        for pair in intersections.chunks_exact(2) {
+        let pair_size = 2;
+        for pair in intersections.chunks_exact(pair_size) {
             hatches.push(LayoutedIshikawaHatch { from: pair[0].1.clone(), to: pair[1].1.clone() });
         }
         offset += 5.0;
