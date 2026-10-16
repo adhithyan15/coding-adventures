@@ -32,10 +32,23 @@ once and emits TD spines independently of palette ordinals. All47 old tests and
 Gantt/Git/Journey/event-model bodies retained. New29 tests include22 exact
 refusals, explicit compatibility panic,16 whole-layout matrix cells, four whole
 positive controls and actual128-section predicate/visit counts in both directions.
-Independent source/terminal geometry review pending; source-derived geometry,
-complete ordered Scenes/glyphRGBA/font-query/metadata/accessibility and arbitrary
-typed palette0/1/2/6/8 transport remain OPEN. Next finish that bounded transport
-slice, then fresh full affected native/downstream/Closure suites and strict.
+Independent geometry source/terminal22638a25098e9 PASS. Test-only successor
+e869 retains the complete old29-test module as an exact prefix and adds two
+functions: four literal complete TD/LR layouts with1/2 events, plus an exact
+event-frame precision refusal where outer/title represented extents remain
+valid. Full78P/strict0 and all29 cell+16 matrix joins pass; producer99905 consumed0,
+separate fixture/terminald0fb9c92 PASS. Source-derived geometry, complete ordered
+Scenes/glyphRGBA/font-query/metadata/accessibility and arbitrary typed palettes
+0/1/2/6/8 remain OPEN. Next CV04b-next-timeline-scene-slice.md defines the bounded
+transport work before fresh full affected native/downstream/Closure suites.
+
+Docs carrierf125 passed structural checkers but independent6e24bb9c WITHHELD
+invalid CP1252 shard punctuation and two corrupted historical dashes. Explicit
+UTF8 successor ee49 restores the entire original temporal changelog suffix;
+all6MD strictly decode. Unchanged full checker0/lessons1388zero/diff0, producer
+89836 consumed0; independent docs6c831ede PASS. Original f125 receipt/review and
+first partial repair helper are preserved, never relabeled. V3 prefix metadata
+correction remains separate from immutable source/test execution receipts.
 
 Native24 remains historically validated at7a017131: compiler1002P/strict0,
 137 exact VM formatter-byte/typed returns; old29/new15 runtime cases yield264
