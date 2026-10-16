@@ -152,6 +152,30 @@ fn eighteen_unit_unselected_nineteen_unit_arms_are_semantic_refusals() {
 /// spellings retain locations; only declared authored leaf operands may change.
 #[test]
 fn native18_complete_serialized_modules_preserve_lineage_except_authored_offset_leaves() {
+    // Exhaustive patterns deliberately have no rest: a future IR field needs
+    // an explicit assertion. The wire serializer omits these source/side tables.
+    fn complete_metadata(actual:&IIRModule,expected:&IIRModule) {
+        let IIRModule{name:an,functions:af,entry_point:ae,language:al,exports:ax,imports:ai}=actual;
+        let IIRModule{name:en,functions:ef,entry_point:ee,language:el,exports:ex,imports:ei}=expected;
+        assert_eq!((an,ae,al,ax,ai),(en,ee,el,ex,ei),"complete module metadata");
+        assert_eq!(af.len(),ef.len(),"ordered function count");
+        let main=actual.get_function("main").expect("source main");
+        assert_eq!(main.source_map.len(),main.instructions.len(),"AST main source-map lockstep");
+        assert!(main.source_map.iter().any(|loc|loc.line>0&&loc.column>0),"real main source positions must be observable");
+        for (a,e) in af.iter().zip(ef) {
+            let IIRFunction{name:an,params:ap,return_type:ar,instructions:ai,register_count:ac,type_status:at,call_count:acc,feedback_slots:afs,source_map:asm,param_refinements:apr,return_refinement:arr}=a;
+            let IIRFunction{name:en,params:ep,return_type:er,instructions:ei,register_count:ec,type_status:et,call_count:ecc,feedback_slots:efs,source_map:esm,param_refinements:epr,return_refinement:err}=e;
+            assert_eq!((an,ap,ar,ac,at,acc,afs,asm,apr,arr),(en,ep,er,ec,et,ecc,efs,esm,epr,err),"complete function metadata");
+            assert!(asm.is_empty()||asm.len()==ai.len(),"nonempty retained source maps stay in lockstep");
+            assert_eq!(ai.len(),ei.len(),"ordered instruction count");
+            for (a,e) in ai.iter().zip(ei) {
+                let IIRInstr{op:ao,dest:ad,srcs:asrc,type_hint:at,may_alloc:am,observed_slot:aos,observed_type:aot,observation_count:aoc,deopt_anchor:ada,ic_slot:aic}=a;
+                let IIRInstr{op:eo,dest:ed,srcs:esrc,type_hint:et,may_alloc:em,observed_slot:eos,observed_type:eot,observation_count:eoc,deopt_anchor:eda,ic_slot:eic}=e;
+                assert_eq!((ao,ad,asrc,at,am,aot,aoc,ada,aic),(eo,ed,esrc,et,em,eot,eoc,eda,eic),"complete instruction metadata and operands");
+                assert!(aos.is_none()&&eos.is_none(),"freshly compiled instructions have no observed profiling slots");
+            }
+        }
+    }
     for amount in [17_i64,18] {
         for (template,leaves) in [
             ("saved := entier(sign(pick()) + OFFSET); output(saved)",1),
@@ -172,7 +196,8 @@ fn native18_complete_serialized_modules_preserve_lineage_except_authored_offset_
             }}}
             assert_eq!(changed,leaves,"independent authored leaf inventory: {template}");
             let actual=compile_source(&source(&amount.to_string()),"native18_lineage").unwrap_or_else(|e|panic!("{amount} {template}: {e}"));
-            assert_eq!(interpreter_ir::serialise::serialise(&actual),interpreter_ir::serialise::serialise(&expected),"whole module instructions/types/locations/metadata {amount} {template}");
+            assert_eq!(interpreter_ir::serialise::serialise(&actual),interpreter_ir::serialise::serialise(&expected),"whole wire module instructions/types {amount} {template}");
+            complete_metadata(&actual,&expected);
         }
     }
 }
