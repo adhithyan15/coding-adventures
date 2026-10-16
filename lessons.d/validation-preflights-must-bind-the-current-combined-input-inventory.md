@@ -165,3 +165,15 @@ had written the receipt and correctly failed with FileNotFoundError. Consume
 the producing session before dependent reads. A later fixture-module search
 also assumed a nonexistent old filename; enumerate with rg --files first.
 Both diagnostic failures changed no source or target and supply no acceptance.
+
+
+A stage-clamp applicability note assumed raw source width reached Paint unchanged.
+The owned checked mapper actually floors dimensions to420x300, as the retained
+minimum-frame test already specifies. Withdraw the proposed unrelated stage fix
+before any test/production edit and keep its source-derived claim historical.
+Trace the complete public parse/layout route before calling a raw renderer
+precondition source-reachable. The new annotation box's raw-padding mismatch and
+default30-entry48..44 interval remain independently applicable.
+The first annotation closed-merge helper also rejected separator comments as
+conflict markers because it used substring matching. Preserve that before-merge
+failure; match complete conflict lines and retain all whole-tree/blob guards.

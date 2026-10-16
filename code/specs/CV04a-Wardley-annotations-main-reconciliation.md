@@ -119,14 +119,17 @@ target/receipts untouched/unpolled/no duplicate/termination. Delivery first,
 genuine final-source Miri afterward; heartbeat remains ACTIVE.
 
 
-## Tiny public-map stage precondition, before its tests or repair
+## Checked minimum-map applicability correction
 
-Inspection for the declared tiny public Paint companion found an independent
-older stage-label x clamp: clamp(2,width-92) inverts below width94. This occurs
-before annotation rendering even with no annotations. The same bounded slice
-must make its upper bound max(2,width-92); every width>=94 result stays exact.
-Include separate tiny no-annotation and tiny populated-annotation whole scenes
-to distinguish this older refusal from the new default30-entry annotation box.
-Keep the90x24 stage text frame, every stage/font/glyph/query control and the
-existing overflow/containment exclusions. This is a source-derived finding,
-not yet an executed reproduction or general renderer-wide guarantee.
+The earlier planned stage-clamp repair is withdrawn before any stage test or
+production edit. layout_wardley_supported floors dimensions to420x300, so raw
+source/typed config width<94 does not reach that stage clamp. Only caller-forged
+resolved layouts can do so; that boundary stays outside this slice. Preserve
+the entire stage expression and every existing minimum-frame assertion.
+Tiny admitted config12x12/padding65536 produces a420x300 checked layout with
+effective L/R140/280 and T/B100/200. Test its annotation box with those literal
+dimensions/points. The incoming box still incorrectly uses raw padding65536;
+the effective-edge/ordered-interval repair remains necessary. Default30-entry
+48..44 is independently reachable and remains a separate actual regression.
+No source-stage panic or executed reproduction is claimed by the withdrawn
+inspection. Preserve the original spec commit as history, not accepted evidence.
