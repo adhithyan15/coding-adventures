@@ -41,6 +41,35 @@ fn percent_pairs_belong_to_quoted_nodes_endpoints_and_flow_labels() {
 }
 
 #[test]
+fn no_space_link_operators_preserve_quoted_target_comments() {
+    for quote in ['\'', '"'] {
+        for operator in ["->","-->","-.->","+>","+<","+<>"] {
+            let source=format!("wardley-beta\ncomponent A [0.5,0.2]\ncomponent {quote}B%%C{quote} [0.5,0.8]\nA{operator}{quote}B%%C{quote} %% outside\n");
+            let diagram=parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}"));
+            assert_eq!(diagram.nodes[1].label,"B%%C");
+            assert_eq!((diagram.links[0].source.as_str(),diagram.links[0].target.as_str()),("A","B%%C"));
+            assert_eq!(diagram.links[0].dashed,operator=="-.->");
+        }
+    }
+    // An interior apostrophe in a bare word does not capture the outside comment.
+    let diagram=parse_wardley("wardley-beta\ncomponent O'Reilly [0.5,0.2] %% outside\npipeline 'O\\'Reilly' {\ncomponent C [0.25]\n}\n").unwrap();
+    assert_eq!(diagram.nodes[0].label,"O'Reilly");
+    assert_eq!(diagram.pipelines[0].component_ids,[diagram.nodes[1].id.clone()]);
+}
+
+#[test]
+fn legacy_bare_brackets_before_label_word_are_not_coordinate_suffixes() {
+    for label in ["A[X] label","A[0,0] label"] {
+        let diagram=parse_wardley(&format!("wardley-beta\ncomponent {label} [0.5,0.2]\npipeline '{label}' {{\ncomponent C [0.25]\n}}\n")).unwrap();
+        assert_eq!(diagram.nodes[0].label,label);
+        assert_eq!((diagram.nodes[0].visibility,diagram.nodes[0].evolution),(0.5,0.2));
+        assert!(diagram.nodes[0].pipeline_parent);
+        assert_eq!(diagram.pipelines[0].parent_id,diagram.nodes[0].id);
+        assert_eq!(diagram.pipelines[0].component_ids,[diagram.nodes[1].id.clone()]);
+    }
+}
+
+#[test]
 fn distinct_init_directives_preserve_per_key_selection() {
     let diagram=parse_ishikawa("%%{init: {\"fontSize\":22}}%%\n%%{init: {\"themeVariables\":{\"fontFamily\":\"Georgia\"}}}%%\nishikawa-beta\nE\n  A\n").unwrap();
     assert_eq!(diagram.config.font_size,22.0);
