@@ -207,3 +207,25 @@ would miss duplicated legacy ingestion tokens. An unavailable inventory must
 have no such children. A synthetic census regression retains the valid row and
 adds namespace-free legacy token/trivia children and misattributed reserved
 pieces; each addition must be detected without depending on the new producer.
+
+## Private reference reservation contract
+
+Before allocation, reserve the full prospective piece-ID Value vector and
+token-ID String vector. For n pieces and t tokens, charge
+n*(size_of(Value)+40)+t*(size_of(String)+20)+64 reference bytes when n>0.
+The40 counts one20-byte copied inventory ID and one20-byte input_id per piece;
+token copies are20 bytes each. The64 bounds one transient compact allocator
+return while copying it into those admitted buffers. No piece means zero
+additional reference storage. This conservative per-file charge is cumulative
+across a run, including temporary allowances already released by previous files.
+Reject an allocator return with capacity>64 or a noncompact ID. Fallible exact
+reservations for new vectors/20-byte reference strings must have no extra
+capacity beyond their admitted request. Generic CVLog's own entry/parent/ID
+ownership is still its independent budget. Additional reference work counts
+2*n+t copied occurrences; existing generic ID allocation work is not redefined.
+
+Private unit tests precede implementation: compare arithmetic values/compact
+bytes against actual serialized namespace objects, exercise exact and one-less
+limits on each axis and cumulative files, all25 token spellings and14 editions,
+zero/over-ceiling/overflow/allocator-capacity refusals, and every capture-error
+class. Producer refusal must precede any root/child/metadata mutation.
