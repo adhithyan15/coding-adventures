@@ -78,11 +78,13 @@ fn d2_trusted_missing_and_lex_error_captures_never_enter_legacy_parser() {
         let mut log = CVLog::new_compact(true);
         let root = log.try_create(None).unwrap();
         let before = log.to_json_string().unwrap();
+        let mut array_ledger = super::array_source::ArrayLedger::new(super::array_source::ArrayLimits::default()).unwrap();
         let missing = transform_source_with_ingestion(
             "report(1+1);",
             &config,
             Some((&mut log, &root, &[], "a.js")),
             None,
+            &mut array_ledger,
         );
         assert!(
             matches!(missing,Err(CompilerError::Provenance{stage,..}) if stage=="typed_ingestion")
@@ -93,6 +95,7 @@ fn d2_trusted_missing_and_lex_error_captures_never_enter_legacy_parser() {
             &config,
             Some((&mut log, &root, &[], "a.js")),
             Some(Err("actual lexical error marker".into())),
+            &mut array_ledger,
         );
         assert!(
             matches!(lexical,Err(CompilerError::TypedPipeline{stage:TypedPipelineStage::Parse,message,..}) if message=="actual lexical error marker")
