@@ -5129,6 +5129,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("26"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 - the additive offset budget accepts twenty-six units on each
+    // runtime-selected path as one exact 26 or a nested exact 13+13 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 26) else ((entier(sign(right)) + 13) + 13))); output(result) end",
+        expect: Expect::Stdout("27"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -22415,6 +22424,32 @@ fn algol_pathwise_twenty_five_unit_offset_bounded_local_name_actual_runtime_real
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the pathwise twenty-five-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_six_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 26) else ((entier(sign(right)) + 13) + 13)))",
+                )
+        })
+        .expect("the pathwise twenty-six-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-six-unit-offset local name actual did not run"
             );
             continue;
         };
