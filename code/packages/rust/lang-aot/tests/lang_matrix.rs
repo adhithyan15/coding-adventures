@@ -10775,6 +10775,7 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
     };
 
     // The exit code: an expression language's `main` returns an `Int`.
+    unit_offset_runtime::observe_engine_return(Vm,p.src,result.as_ref());
     let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
     // stdout: prefer the byte stream (Brainfuck `putchar`) when present, else the integer
     // stream (BASIC `print_i64`) joined by newlines; empty for the expression languages.
@@ -10945,6 +10946,7 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
 
     // Exit code / stdout extraction is identical to `run_vm` — the JIT is observably
     // equivalent to the interpreter, which is the whole point of a JIT.
+    unit_offset_runtime::observe_engine_return(Jit,p.src,result.as_ref());
     let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
     let byte_buf = printed_bytes.lock().expect("lang-matrix JIT putchar buffer poisoned");
     let stdout = if byte_buf.is_empty() {
