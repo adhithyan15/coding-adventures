@@ -105,6 +105,8 @@ use coding_adventures_javascript_ast::{
 };
 use serde_json::json;
 
+mod array_length_frontier;
+
 /// Constant-folding pass — see crate-level docs.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct ConstantFoldPass;
@@ -305,7 +307,18 @@ impl FoldState<'_> {
                 unique.push(*parent);
             }
         }
-        let parent = match unique.as_slice() {
+        self.fork_unique_operand_cvs(&unique, before, after)
+    }
+
+    /// The wide array frontier has already deduplicated under its own budget.
+    /// Reuse checked CV mutation without repeating a quadratic membership scan.
+    fn fork_unique_operand_cvs(
+        &mut self,
+        unique: &[&str],
+        before: &str,
+        after: &str,
+    ) -> Option<String> {
+        let parent = match unique {
             [] => None,
             [one] => Some((*one).to_string()),
             many => match self.cv.try_merge(many, None) {
@@ -4610,10 +4623,11 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
                     .all(|el| el.as_ref().is_none_or(is_side_effect_free));
                 if !has_spread && all_free {
                     let len = a.elements.len() as f64;
-                    let parent = m.cv.clone();
                     let before = format!("array-literal[{}].length", a.elements.len());
                     let after = format_js_number(len);
-                    let new_cv = st.fork_cv(&parent, &before, &after);
+                    let new_cv = fork_array_length_cvs(
+                        a, m.cv.as_deref(), primitive_cv(&property), &before, &after, st,
+                    );
                     return stamp_literal_cv(FoldedLiteral::Number(len), new_cv);
                 }
             }
@@ -4892,7 +4906,9 @@ fn fold_array_string_key_access(
         let len = a.elements.len() as f64;
         let before = format!("array-literal[{}][\"length\"]", a.elements.len());
         let after = format_js_number(len);
-        let new_cv = st.fork_cv(parent_cv, &before, &after);
+        let new_cv = fork_array_length_cvs(
+            a, parent_cv.as_deref(), s.cv.as_deref(), &before, &after, st,
+        );
         return Some(stamp_literal_cv(FoldedLiteral::Number(len), new_cv));
     }
 
@@ -4911,6 +4927,32 @@ fn fold_array_string_key_access(
 // ---------------------------------------------------------------------
 // Binary
 // ---------------------------------------------------------------------
+
+/// Retain only the available immediate frontier. This does not invent array
+/// occurrence identities or walk descendants of opaque composite elements.
+/// Collection stays outside the hot recursive member frame and must succeed
+/// before any outer-fold graph mutation; the worker rejects a latched failure.
+#[inline(never)]
+fn fork_array_length_cvs(
+    array: &ArrayExpression,
+    member: Option<&str>,
+    property: Option<&str>,
+    before: &str,
+    after: &str,
+    st: &mut FoldState,
+) -> Option<String> {
+    if st.cv_error.is_some() { return None; }
+    let frontier = [member, array.cv.as_deref(), property].into_iter().chain(
+        array.elements.iter().map(|cell| cell.as_ref().and_then(primitive_cv)),
+    );
+    match array_length_frontier::collect(frontier) {
+        Ok(parents) => st.fork_unique_operand_cvs(&parents, before, after),
+        Err(error) => {
+            st.cv_error = Some(error);
+            None
+        }
+    }
+}
 
 /// The `f64` value of an expression that is a numeric literal, else `None`.
 /// (Unary-minus on a literal has already been folded to a `NumericLiteral` by

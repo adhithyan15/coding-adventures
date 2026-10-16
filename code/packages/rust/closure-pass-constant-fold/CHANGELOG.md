@@ -4,6 +4,17 @@ All notable changes to the `coding-adventures-closure-pass-constant-fold` crate 
 
 ## [Unreleased]
 
+### Fixed — array-length operand lineage (CLOC31)
+
+- Both array-literal length spellings retain the available member, array,
+  property and folded immediate primitive identities in first-seen order.
+  Result-owned fold records retain child rewrites; spread/effect guards and
+  JavaScript count/hole semantics stay unchanged.
+- Meter temporary frontier storage, ID hashing and collided comparisons before
+  checked graph mutation. Allocation/work failures reject the candidate.
+  Composite occurrence identities and full output/source mappings remain open;
+  final-source Miri is DEFERRED/PENDING under the authorized delivery sequence.
+
 ### Fixed — CV02 boundary review
 
 - Reject and dispose of a failed deep candidate inside the large-stack worker

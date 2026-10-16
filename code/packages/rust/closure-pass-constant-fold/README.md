@@ -88,3 +88,10 @@ an accepted replacement with missing evidence.
 On a provenance error the worker disposes of the candidate AST on its own
 large stack before returning, so rejection does not transfer a deep tree to
 a small caller stack for destruction.
+
+Array-literal `.length` and `["length"]` retain available member/array/property
+identities and already folded immediate primitive elements in first-seen order.
+A borrowed collector meters per-fold work and requested temporary storage
+before graph mutation, including collision/equality work. These operand links
+do not supply missing composite occurrences, opaque child lineage or complete
+source/output mappings. Final-source Miri remains DEFERRED/PENDING.

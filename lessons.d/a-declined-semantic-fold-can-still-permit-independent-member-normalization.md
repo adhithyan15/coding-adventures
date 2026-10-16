@@ -11,5 +11,3 @@ assertion rejected existing correct behavior. Require the member expression to
 survive and forbid only the outer array-count contribution. Keep separate
 unchanged assertions for the dot spelling. Inspect the actual failure before
 labeling every failed new assertion as proof of the targeted defect.
-
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
