@@ -325,3 +325,19 @@ runtime receipt/review is not relabeled as3137. The965-unit/census347+126 comple
 unit receipt remains exact09fb. Full affected/final-source/hosted and nativeLLVM
 typed ABI/absentCLR/Miri limitations above remain unchanged. Mandatory audit
 143000Z observes new main94df timeline config; no newmain acceptance is granted.
+
+
+## Actual public hatch liveness redcc911
+
+The new nonignored integration probe compiles and executes the huge-finite
+zero-cause HandDrawn/default-font/E/canvas1e20 call only inside its exact owned
+current-exe child. At cc911199 actual Cargo101/buildtrue/1P1F: the parent observes
+noncompletion by3000ms, kills/reaps that Child handle at3006ms with codeSome(1).
+Receipt `CV04b-ishikawa-liveness-red-cc911199.json`, log SHA3ed1c355. Producer51247
+is fully consumed0 (the wrapper verified expected red); repair acceptance stays
+false. This is bounded runtime evidence, separate from the fixed-operation ULP
+stall proof; it is not infinite-duration or Rust UB evidence. No external/Miri
+process was inspected or changed. The legacy explicit-expect wrapper must refuse
+unsupported geometry before expensive work; keep its isolated panic-policy test
+alongside successor exact Result/error/resource/no-partial tests. Source/terminal
+red review is pending; production still unchanged and the repair is not implemented.

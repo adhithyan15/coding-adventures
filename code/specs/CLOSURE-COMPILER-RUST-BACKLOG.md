@@ -60,7 +60,12 @@ work/eager hatches/cap-font cross-side overlap. Contract-v1 precision gap was
 WITHHELD94d9732e; combined v2 PASS3fcfeadf adds represented extents, side/pair
 clearance certificates and correct shared work admission/error ordering. Both
 contracts are tracked; implementation/tests/complete hatch fixture migration
-remain pending. New timeline94df security audit is running; no acceptance inferred.
+remain pending. Actual cc911 public huge-finite empty HandDrawn hatch call now has a compiled
+bounded red: Cargo101/buildtrue/1P1F; owned child noncompletion by3s, parent
+kills/reaps only that Child handle at3006ms. Producer51247 consumed0 verifying
+expected red, receipt `CV04b-ishikawa-liveness-red-cc911199.json`; no repair
+acceptance/infinite-duration/UB/Miri claim. Red security review is pending.
+New timeline94df security audit is running; no acceptance inferred.
 
 Next: audit latest main, implement/test reviewed bounded geometry integration
 with whole-source/fixture retention; derive fresh complete input/dependency/lock
