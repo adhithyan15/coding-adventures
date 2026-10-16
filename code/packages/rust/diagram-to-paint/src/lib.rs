@@ -2235,6 +2235,38 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     }
     text_children.push(text_node("Visibility", 2.0, top, 56.0, 24.0,
         font_with_size(&options.label_font, Some(diagram.config.axis_font_size)), axis_text_color));
+    let mut annotation_number_font = font_with_size(&options.label_font, Some(10.0)); annotation_number_font.weight = 700;
+    for annotation in &diagram.annotations {
+        for positions in annotation.positions.windows(2) {
+            let mut connector = line_path(positions, &theme.axis_color, 1.5);
+            connector.stroke_dash = Some(vec![4.0, 4.0]); instructions.push(PaintInstruction::Path(connector));
+        }
+        for position in &annotation.positions {
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: position.x, cy: position.y,
+                rx: 10.0, ry: 10.0, fill: Some(theme.background_color.clone()), stroke: Some(theme.axis_color.clone()),
+                stroke_width: Some(1.5), stroke_dash: None, stroke_dash_offset: None }));
+            text_children.push(text_node(&annotation.number.to_string(), position.x - 10.0, position.y - 10.0, 20.0, 20.0,
+                annotation_number_font.clone(), axis_text_color));
+        }
+    }
+    if let Some(box_position) = &diagram.annotations_box {
+        let entries: Vec<_> = diagram.annotations.iter().filter(|annotation| !annotation.text.is_empty()).collect();
+        if !entries.is_empty() {
+            let box_width = entries.iter().map(|annotation| annotation.text.chars().count() as f64 * 6.5 + 145.0)
+                .fold(180.0, f64::max).min(diagram.width - diagram.config.padding * 2.0);
+            let box_height = entries.len() as f64 * 16.0 + 28.0;
+            let box_x = box_position.x.clamp(diagram.config.padding, diagram.width - diagram.config.padding - box_width);
+            let box_y = box_position.y.clamp(diagram.config.padding, diagram.height - diagram.config.padding - box_height);
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: box_x, y: box_y,
+                width: box_width, height: box_height, fill: Some(theme.background_color.clone()), stroke: Some(theme.axis_color.clone()),
+                stroke_width: Some(1.5), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
+            for (index, annotation) in entries.iter().enumerate() {
+                text_children.push(text_node_no_wrap(&format!("{}. {}", annotation.number, annotation.text), box_x + 10.0,
+                    box_y + 10.0 + index as f64 * 16.0, box_width - 20.0, 16.0,
+                    font_with_size(&options.label_font, Some(11.0)), axis_text_color));
+            }
+        }
+    }
     let mut note_font = font_with_size(&options.label_font, Some(11.0)); note_font.weight = 700;
     for note in &diagram.notes {
         text_children.push(text_node_no_wrap(&note.text, note.position.x, note.position.y - 12.0,
@@ -2264,6 +2296,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("wardley.linkStroke".into(), theme.link_stroke.clone());
     metadata.insert("wardley.evolutionStroke".into(), theme.evolution_stroke.clone());
     metadata.insert("wardley.noteCount".into(), diagram.notes.len().to_string());
+    metadata.insert("wardley.annotationCount".into(), diagram.annotations.len().to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: theme.background_color.clone(), instructions, id: None, metadata: Some(metadata) }
 }
@@ -11534,7 +11567,9 @@ mod tests {
                 component_label_color: "#56789a".into(), link_stroke: "#6789ab".into(), evolution_stroke: "#dc2626".into() },
                 ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()],
             nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true }],
-            links: vec![], evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }] };
+            links: vec![], evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }],
+            annotations_box: Some(Point { x: 60.0, y: 220.0 }), annotations: vec![diagram_ir::LayoutedWardleyAnnotation {
+                number: 1, text: "Risk".into(), positions: vec![Point { x: 280.0, y: 180.0 }, Point { x: 320.0, y: 160.0 }] }] };
         let scene = diagram_to_paint_wardley(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
@@ -11547,6 +11582,9 @@ mod tests {
         assert_eq!(scene.background, "#f8fafc");
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.showGrid")), Some(&"true".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.noteCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationCount")), Some(&"1".to_string()));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
     }
 
 

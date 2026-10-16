@@ -790,7 +790,9 @@ preserved in Paint metadata. Nested Wardley background, axis, grid, component,
 link, and evolution theme colors also survive semantic config and layout IR into
 backend-neutral Paint instructions. Quoted `note` statements preserve their
 visibility/evolution coordinates in strategic-map IR and lower as positioned,
-bold backend-neutral glyph runs. Pipelines, annotations, accelerators/deaccelerators,
+bold backend-neutral glyph runs. Numbered `annotation` coordinates group by
+number, lower as connected markers, and optionally populate a clamped annotations
+box. Pipelines, accelerators/deaccelerators,
 advanced flow ports, decorators, per-node authored label offsets, custom stage boundaries, and
 remaining annotation theme fields and exact rendering remain unsupported at the partial level.
 
