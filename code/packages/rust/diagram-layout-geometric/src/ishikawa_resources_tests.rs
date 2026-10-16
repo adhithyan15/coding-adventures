@@ -142,3 +142,23 @@ fn public_projection_domain_error_precedes_outline_descriptor_allocation() {
     let _failure=AllocationFailure::after(0);
     assert_eq!(layout(&diagram(0,IshikawaLook::HandDrawn),2e15,Limits::default()),Err(IshikawaLayoutError::DerivedGeometry));
 }
+
+
+#[test]
+fn public_collision_certificate_encloses_actual_paint_rectangles() {
+    let mut d=diagram(1,IshikawaLook::Classic);d.causes[0].label="A".into();
+    d.config.font_size=1.027027027027027;
+    assert!(layout(&d,576.0,Limits::default()).is_ok(),"same supported font without collisions stays positive");
+    for id in ["b","c"] {d.causes.push(IshikawaCause{id:id.into(),label:id.into(),parent_id:Some("n0".into()),depth:2});}
+    match layout(&d,576.0,Limits::default()) {
+        Ok(result)=>{
+            assert_eq!(result.height,400.0);
+            let b=&result.bones[1];let c=&result.bones[2];
+            let paint_top=b.label_position.y-b.label_height/2.0;
+            let paint_bottom=(c.label_position.y-c.label_height/2.0)+c.label_height;
+            panic!("unchecked actual rectangle clearance: centered_gap={} actual_gap={} height={}",
+                (b.label_position.y-b.label_height/2.0)-(c.label_position.y+c.label_height/2.0),paint_top-paint_bottom,result.height);
+        },
+        Err(error)=>assert_eq!(error,IshikawaLayoutError::DerivedGeometry),
+    }
+}
