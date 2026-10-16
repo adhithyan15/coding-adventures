@@ -724,8 +724,8 @@ fn current_cap24_exact_sources_preserve_stdout_and_completed_exit_contract() {
 // No backend tuple is invented for this unsupported25-unit output boundary.
 #[test]
 fn current_cap24_unsupported25_remains_a_compile_refusal() {
-    let source = "begin real procedure pick; begin output('P'); pick := -2.25 end; real saved; saved := entier(sign(pick()) + 25); output(saved) end";
-    let error = lang_aot::compile_source_to_iir(Language::Algol60, source, "native24_refusal").expect_err("unsupported25 is a compile refusal");
+    let source = "begin real procedure pick; begin output('P'); pick := -2.25 end; real saved; saved := entier(sign(pick()) + 26); output(saved) end";
+    let error = lang_aot::compile_source_to_iir(Language::Algol60, source, "native24_refusal").expect_err("unsupported26 is a compile refusal");
     assert!(format!("{error:?}").contains("cannot print a real value"), "{source}: {error:?}");
-    eprintln!("cap24-runtime COMPILE_REFUSED units=25");
+    eprintln!("cap24-runtime COMPILE_REFUSED units=26");
 }
