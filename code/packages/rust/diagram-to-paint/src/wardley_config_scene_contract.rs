@@ -94,6 +94,7 @@ Case{name:"minimum-positive-fonts",source:"%%{init: {\"wardley-beta\":{\"width\"
     let mut queries=vec![];
     if c.populated {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(800)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Expanded));}
     queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(600)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Condensed));
+    if c.populated {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(700)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Condensed));}
     assert_eq!(*resolver.0.borrow(),queries,"wholeOrderedCachedQueries {} {family}",c.name);
     eprintln!("WARDLEY-COMPLETE case={} family={family} wholeIR/layout/scene/query",c.name);
  }}

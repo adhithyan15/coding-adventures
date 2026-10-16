@@ -78,18 +78,18 @@ Case{name:"small-config-large-padding-no-annotations",source:"%%{init: {\"wardle
         }
     // Declared annotation paths, marker rings and the complete positive box.
     for a in &c.annotations {
-        for pair in a.markers.windows(2) {let mut connector=path(vec![p(pair[0].x,pair[0].y),p(pair[1].x,pair[1].y)],&c.config.theme.axis_color,1.5,false);
+        for pair in a.markers.windows(2) {let mut connector=path(vec![p(pair[0].x,pair[0].y),p(pair[1].x,pair[1].y)],&c.config.theme.annotation_stroke,1.5,false);
             let PaintInstruction::Path(ref mut value)=connector else{unreachable!()};value.stroke_dash=Some(vec![4.0,4.0]);instructions.push(connector);}
-        for m in &a.markers {instructions.push(PaintInstruction::Ellipse(PaintEllipse{base:PaintBase::default(),cx:m.x,cy:m.y,rx:10.0,ry:10.0,fill:Some(c.config.theme.background_color.clone()),stroke:Some(c.config.theme.axis_color.clone()),stroke_width:Some(1.5),stroke_dash:None,stroke_dash_offset:None}));}
+        for m in &a.markers {instructions.push(PaintInstruction::Ellipse(PaintEllipse{base:PaintBase::default(),cx:m.x,cy:m.y,rx:10.0,ry:10.0,fill:Some(c.config.theme.annotation_fill.clone()),stroke:Some(c.config.theme.annotation_stroke.clone()),stroke_width:Some(1.5),stroke_dash:None,stroke_dash_offset:None}));}
     }
-    if let Some(rect)=c.box_case.as_ref().and_then(|b|b.rect.as_ref()) {instructions.push(PaintInstruction::Rect(PaintRect{base:PaintBase::default(),x:rect.x,y:rect.y,width:rect.w,height:rect.h,fill:Some(c.config.theme.background_color.clone()),stroke:Some(c.config.theme.axis_color.clone()),stroke_width:Some(1.5),corner_radius:Some(4.0),stroke_dash:None,stroke_dash_offset:None}));}
+    if let Some(rect)=c.box_case.as_ref().and_then(|b|b.rect.as_ref()) {instructions.push(PaintInstruction::Rect(PaintRect{base:PaintBase::default(),x:rect.x,y:rect.y,width:rect.w,height:rect.h,fill:Some(c.config.theme.annotation_fill.clone()),stroke:Some(c.config.theme.annotation_stroke.clone()),stroke_width:Some(1.5),corner_radius:Some(4.0),stroke_dash:None,stroke_dash_offset:None}));}
     if c.populated {instructions.push(glyphs("T",c.title_x,c.title_y,c.title_font,c.axis_css));}
     for (i,name) in stage_names.iter().enumerate() {instructions.push(glyphs(name,c.stage_glyph_x[i],c.stage_y,c.stage_font,c.axis_css));}
     if c.populated {instructions.push(glyphs("A",c.node_x[0],c.node_y[0],c.label_font,"rgb(0, 0, 0)"));
         instructions.push(glyphs("B",c.node_x[1],c.node_y[1],c.label_font,c.label_css));}
     instructions.push(glyphs("Visibility",c.axis_x,c.axis_y,c.axis_font,c.axis_css));
-    for a in &c.annotations {for m in &a.markers {instructions.push(glyphs(&a.number.to_string(),m.gx,m.gy,10.0,c.axis_css));}}
-    if let Some(rect)=c.box_case.as_ref().and_then(|b|b.rect.as_ref()) {for row in &rect.rows {instructions.push(glyphs(&row.text,row.gx,row.gy,11.0,c.axis_css));}}
+    for a in &c.annotations {for m in &a.markers {instructions.push(glyphs(&a.number.to_string(),m.gx,m.gy,10.0,"rgb(34, 34, 34)"));}}
+    if let Some(rect)=c.box_case.as_ref().and_then(|b|b.rect.as_ref()) {for row in &rect.rows {instructions.push(glyphs(&row.text,row.gx,row.gy,11.0,"rgb(34, 34, 34)"));}}
     for n in &c.notes {instructions.push(glyphs(n.text,n.gx,n.gy,11.0,c.axis_css));}
     let expected=PaintScene{width:c.w,height:c.h,background:c.config.theme.background_color.clone(),id:None,metadata:Some(HashMap::from([
         ("wardley.padding".into(),c.config.padding.to_string()),("wardley.nodeRadius".into(),c.config.node_radius.to_string()),
@@ -115,7 +115,7 @@ Case{name:"small-config-large-padding-no-annotations",source:"%%{init: {\"wardle
     let mut queries=vec![];
     if c.populated {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(800)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Expanded));}
     queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(600)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Condensed));
-    if !c.notes.is_empty()||c.annotations.iter().any(|a|!a.markers.is_empty()) {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(700)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Condensed));}
+    if c.populated||!c.notes.is_empty()||c.annotations.iter().any(|a|!a.markers.is_empty()) {queries.push(FontQuery::named(family).with_weight(text_interfaces::FontWeight(700)).with_style(text_interfaces::FontStyle::Italic).with_stretch(text_interfaces::FontStretch::Condensed));}
     assert_eq!(*resolver.0.borrow(),queries,"wholeOrderedCachedQueries {} {family}",c.name);
     eprintln!("WARDLEY-ANNOTATION-COMPLETE case={} family={family} wholeIR/layout/scene/query",c.name);
  }}
