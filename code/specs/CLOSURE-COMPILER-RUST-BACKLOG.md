@@ -12,8 +12,12 @@ remains native16. First producer65088 failed Rust compilation101 (disk free0,
 zero tests), wrapper1; not a semantic red. Official Cargo cleanup of verified
 idle generated targets reclaimed19GiB; sources/receipts/Miri untouched.
 Independent review withheld wire-only lineage test: explicit SourceLoc/static
-side-table companions are now specified before repair. Genuine red, import and
-implementation remain PENDING. Label54f66 separately pending.
+side-table companions are now specified before repair. SourceLoc/static companionsa738 now keep exact wire bytes plus exhaustive
+in-memory fields and real main positions. Recovered-space producer66684 consumed
+actual genuine semantic reds: compiler1012P3F/runtime1010P2F (no build failure).
+Raw union helper schema1 stopped before writes; both complete prior manifests
+remain unchanged, and corrected per-schema validation precedes reconstruction.
+Import/production repair and accepted green remain PENDING. Label54f66 separately pending.
 FullClosure/CV04b/hostedchecks/merge OPEN; oneactivePR/heartbeatACTIVE.
 Miri DEFERRED/PENDING NEVER passed; frozen run/inputs untouched/unpolled.
 <!-- /CV04a dedicated native18 selected -->
