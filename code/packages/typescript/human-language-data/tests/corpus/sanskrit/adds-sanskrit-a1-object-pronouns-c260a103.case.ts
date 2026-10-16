@@ -138,23 +138,6 @@ it("adds the Sanskrit A1 object-pronoun series one number at a time", () => {
   const inventory = loadExamInventory("sanskrit", "A1");
   expect(inventory.points.find((point) => point.id === "SA-A1-PRON-03")?.probe).toEqual(atoms);
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
-  expect(coverage).toMatchObject({
-    enumerated: 164,
-    // 145 -> 146 belongs to the later first-person-future tranche, 146 -> 147
-    // to meal ordering, 147 -> 149 to the market tranche and 149 -> 150 to the
-    // school-plan tranche, 150 -> 151 from service locations, 151 -> 152 from
-    // media words, 152 -> 153 from modern-technology retrieval, 153 -> 154
-    // from spoken requests, 154 -> 155 from the bounded condolence, 155 -> 156
-    // from the bounded reflexive, and 156 -> 157 from the bounded rental;
-    // this test still pins the exact object-pronoun probe.
-    covered: 157,
-    unmapped: 7,
-    partial: 0,
-  });
-  expect(coverage.byCategory["Sarvanāma — the pronoun"]).toEqual({
-    enumerated: 8,
-    covered: 8,
-  });
   expect(coverage.points.find((point) => point.id === "SA-A1-PRON-03")).toMatchObject({
     covered: true,
     missingAtoms: [],

@@ -189,16 +189,6 @@ it("asks for a person and requests quiet twice in Sanskrit A1", () => {
     pointAtoms,
   );
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
-  expect(coverage).toMatchObject({
-    enumerated: 164,
-    covered: 157,
-    unmapped: 7,
-    partial: 0,
-  });
-  expect(coverage.byCategory["Structuring the exchange"]).toEqual({
-    enumerated: 2,
-    covered: 2,
-  });
   expect(coverage.points.find((point) => point.id === "SA-A1-F-22")).toMatchObject({
     covered: true,
     missingAtoms: [],

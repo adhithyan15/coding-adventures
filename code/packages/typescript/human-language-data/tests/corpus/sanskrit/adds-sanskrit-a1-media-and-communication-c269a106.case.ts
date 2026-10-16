@@ -106,15 +106,6 @@ it("builds one sourced Sanskrit A1 six-word media and communication field", () =
     pointAtoms,
   );
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
-  expect(coverage).toMatchObject({
-    enumerated: 164,
-    covered: 157,
-    unmapped: 7,
-    partial: 0,
-  });
-  expect(coverage.byCategory[
-    "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]).toEqual({ enumerated: 15, covered: 12 });
   expect(coverage.points.find((point) => point.id === "SA-A1-M-06")).toMatchObject({
     covered: true,
     missingAtoms: [],

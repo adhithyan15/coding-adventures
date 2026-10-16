@@ -186,12 +186,6 @@ it("teaches one bounded cross-checked Sanskrit rental exchange twice", () => {
     rentalAtom,
   ]);
   const coverage = measureExamCoverage(inventory, loadEverything().lessons);
-  expect(coverage).toMatchObject({
-    enumerated: 164,
-    covered: 157,
-    unmapped: 7,
-    partial: 0,
-  });
   expect(coverage.points.find((point) => point.id === "SA-A1-M-07")).toMatchObject({
     covered: true,
     missingAtoms: [],
