@@ -11,5 +11,3 @@ its receipt and all four genuine semantic reds were consumed; checkpointing then
 succeeded. A future runner should write an explicit initial state before collecting
 the freeze, and readers must distinguish receipt initialization from Cargo execution.
 Do not describe a missing receipt as test success or silently restart a live producer.
-
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.

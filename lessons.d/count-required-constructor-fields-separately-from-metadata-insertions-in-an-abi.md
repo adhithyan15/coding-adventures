@@ -9,5 +9,3 @@ zero pipelineCount metadata additions across 21 files. A delivery helper confuse
 their 66 total with the field-only counter and refused before starting Cargo.
 The failed preflight receipt is preserved. Read the saved schema and assert each
 counter independently; retain the whole-file inverse proof when fixing a census.
-
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.

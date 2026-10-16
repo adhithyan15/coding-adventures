@@ -9,5 +9,3 @@ fixture helper that bound a constructor and immediately returned it. Return the
 same literal directly, with no lint suppression and no assertion, scalar, source
 reader or Scene-oracle changes. Preserve the actual failed log and rerun strict
 checks plus the affected suite on the final source.
-
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.

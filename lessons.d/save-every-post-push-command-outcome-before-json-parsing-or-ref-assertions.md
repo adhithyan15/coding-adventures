@@ -4,7 +4,6 @@ category: Repo policy / workflow reminders
 
 # Save every post-push command outcome before JSON parsing or ref assertions
 
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
 
 The first pipeline publisher was withheld by independent preflight review before
 execution because check_output would drop failed post-push command stdout/stderr

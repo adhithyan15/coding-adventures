@@ -19,6 +19,10 @@ final-parent link/evolution points and the existing literal-white force arrows.
 
 At pipeline source `80e8f09d`, strict checks for all14 affected packages and the
 complete unfiltered 1,022-test/59-target suite passed with zero failures/ignores.
+The first documentation carrier6bc was withheld: real lessons validation1
+found five generator TODO placeholders. Its doc-shard0/plan0 are preserved;
+the successor removes only lesson placeholders and adds this failure's lesson.
+Fresh final-head docs/lessons/diff/plan and carrier review are required.
 Thirteen test functions were added, none removed. Whole source IR, typed IR,
 checked/compatibility layout and16 new complete Scenes bind every glyph, all20
 metadata fields and ordered cached Georgia/CourierNew queries. New literal
