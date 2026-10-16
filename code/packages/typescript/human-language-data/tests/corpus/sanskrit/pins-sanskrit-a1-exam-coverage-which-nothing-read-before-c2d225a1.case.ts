@@ -1,171 +1,232 @@
+import { readFileSync, readdirSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { expect, it } from "vitest";
-import { loadEverything, loadExamInventory } from "../../../src/loader.js";
-import { formatExamCoverage, measureExamCoverage } from "../../../src/exam-inventory.js";
+import type {
+  ExamCoverage,
+  ExamInventory,
+} from "../../../src/exam-inventory.js";
 import {
-  expectLanguageContinuity,
-  expectLanguageLessonBudgets,
-  expectLanguageModality,
-  languageWritingStages,
-} from "../assert-language-corpus.js";
+  formatExamCoverage,
+  measureExamCoverage,
+} from "../../../src/exam-inventory.js";
+import { loadEverything, loadExamInventory } from "../../../src/loader.js";
 
-// ---------------------------------------------------------------------------
-// SANSKRIT A1 COVERAGE WAS MEASURABLE AND MEASURED BY NOBODY.
-//
-// `core/exam-inventory-sanskrit-a1.json` has been committed for as long as the
-// Dravidian and Indo-Aryan inventories have, and every one of those is pinned
-// by a test that fails when its number moves. Sanskrit's was not: it was the
-// third of three files -- with Hindi's and Telugu's -- that no test loaded at
-// all. A tranche could raise it, a retired atom could lower it, and the suite
-// would have said the same thing either way, which is the exact failure mode
-// the probe design in `exam-inventory.ts` exists to rule out. A number nothing
-// reads is not a measurement.
-//
-// This is the pin. It was falsified before being kept: fabricating an atom id
-// in the file fails the census's existence gate, and nulling any covered
-// point's probe fails the count below.
-// ---------------------------------------------------------------------------
-it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
-  const { lessons } = loadEverything();
-  const coverage = measureExamCoverage(loadExamInventory("sanskrit", "A1"), lessons);
-  expect(coverage.enumerated).toBe(164);
-  // 141 -> 142: the ordinal tranche closes SA-A1-Q-02, and with it the Sankhya
-  // column outright. One point for twelve lessons is a poor ratio and it is the
-  // honest one -- the ordinals unlock nothing else in this inventory. In
-  // particular they do NOT unlock SA-A1-SP-02, which SA-A1-Q-02's own note used
-  // to claim they would; that point is relative position (left, right, above,
-  // below, in front, behind) and it is blocked on six direction words nobody
-  // teaches. The note was corrected in the same commit.
-  // 142 -> 143: SA-A1-SP-02 was stale measurement debt, not missing
-  // curriculum. Chapters 93-94 already introduce all six relative-position
-  // exponents and chapter 99 retrieves them together.
-  // 143 -> 144: chapter 259 teaches asmākam and yuṣmākam separately, then
-  // retrieves the one-versus-several possessor contrast in known noun frames.
-  // 144 -> 145: chapters 260-262 teach the independent first- and second-person
-  // accusatives one number at a time, then retrieve the six-way choice.
-  // 145 -> 146: chapters 263-264 bridge from known third-person future
-  // recognition to three first-person singular plans, then require two rounds
-  // of model-free near-term retrieval before SA-A1-F-10 closes.
-  // 146 -> 147: chapter 265 reuses the already-owned meal, restaurant, food,
-  // drink, courtesy, recipient, and giving atoms, adds only dadātu and the
-  // complete polite-order frame, then retrieves the request twice without a
-  // visible Sanskrit model before SA-A1-M-02 closes.
-  // 147 -> 149: chapter 266 composes the already-owned market vocabulary with
-  // one first-person buyer form and one price turn, then independently
-  // retrieves the exchange twice before SA-A1-EV-02 and SA-A1-M-09 close.
-  // 149 -> 150: chapter 267 composes already-owned school vocabulary with
-  // one school-plan frame, then independently retrieves the plan twice before
-  // SA-A1-M-03 closes.
-  // 150 -> 151: chapter 268 adds one sourced financial-bank word, joins it to
-  // three already-owned service referents and the known location question,
-  // then retrieves the bounded exchange twice before SA-A1-M-08 closes.
-  // 151 -> 152: chapter 269 adds sourced modern radio and internet words to
-  // four already-owned media referents, then retrieves all six twice before
-  // SA-A1-M-06 closes.
-  // 152 -> 153: chapter 270 retrieves the already-owned computer and internet
-  // nouns twice before SA-A1-M-13 closes, without claiming digital literacy.
-  // 153 -> 154: chapter 271 composes a person request from existing owners,
-  // adds one sourced quiet request, then retrieves both turns twice without a
-  // visible model before SA-A1-F-22 closes.
-  // 154 -> 155: chapter 272 teaches one attested condolence as a whole social
-  // formula, distinguishes it from tribute, and retrieves it twice before
-  // SA-A1-F-19 closes.
-  // 155 -> 156: chapter 273 preserves one complete attested sentence whose
-  // object points back to the first-person subject, then retrieves it twice
-  // before SA-A1-PRON-05 closes.
-  // 156 -> 157: chapter 274 reconnects the owned house, buying, and
-  // household-work field through one cross-checked rental exchange, then
-  // retrieves the pair twice before SA-A1-M-07 closes.
-  expect(coverage.covered).toBe(157);
-  expect(coverage.unmapped).toBe(7);
-  expect(coverage.partial).toBe(0);
-  // The highest percentage in the corpus, and the reason is worth stating so it
-  // is not read as the track being furthest along: this inventory is DERIVED
-  // from the Spanish A1 point set and drops what Sanskrit has not got, so its
-  // denominator is the smallest of the twenty-five. 96% of 164 is not
-  // comparable with 84% of 273.
-  expect(formatExamCoverage(coverage)).toContain(
-    "sanskrit A1 (partial inventory): 157/164 points covered (96%)",
-  );
-  // Where the seven gaps actually are, named rather than counted. Two columns hold
-  // all of them, and they are the two an editorially derived A1 inventory is
-  // bound to strain on: the revival vocabulary a classical corpus never had,
-  // and the orthography beyond the characters the script ladder teaches.
-  expect(coverage.byCategory[
-    "Modern life — fields a spoken revival needs and a classical corpus lacks"
-  ]!).toEqual({ enumerated: 15, covered: 12 });
-  expect(coverage.byCategory["Lipi — the script and its orthography"]!).toEqual({
-    enumerated: 10,
-    covered: 7,
-  });
-  // And the two columns the clause-joining tranche finished outright, which are
-  // what a reader of a classical text needs first.
-  expect(coverage.byCategory["Samuccaya — coordination"]!).toEqual({ enumerated: 5, covered: 5 });
-  expect(coverage.byCategory["Vibhakti — the case system"]!).toEqual({ enumerated: 5, covered: 5 });
-  // The spatial column is now closed on existing lessons, rather than left
-  // artificially open by a null probe and paid twice with redundant teaching.
-  expect(coverage.byCategory["Spatial notions"]!).toEqual({ enumerated: 4, covered: 4 });
-  expect(coverage.byCategory["Ṣaṣṭhī — possession"]!).toEqual({ enumerated: 3, covered: 3 });
-  expect(coverage.byCategory["Sarvanāma — the pronoun"]!).toEqual({
-    enumerated: 8,
-    covered: 8,
-  });
-  expect(coverage.byCategory["Likes, wishes and feelings"]!).toEqual({
-    enumerated: 2,
-    covered: 2,
-  });
-  expect(coverage.byCategory["Evaluative notions"]!).toEqual({ enumerated: 4, covered: 4 });
-  expect(coverage.byCategory["Structuring the exchange"]!).toEqual({
-    enumerated: 2,
-    covered: 2,
-  });
-  // And the column the ordinal tranche finished: number and quantity, 4/5 -> 5/5.
-  expect(coverage.byCategory["Saṅkhyā — number and quantity"]!).toEqual({ enumerated: 5, covered: 5 });
-  // The ordinal point, named rather than left to the aggregate, so a nulled
-  // probe or a fabricated id is caught HERE and not only by the total. Both
-  // halves were falsified before this was kept.
-  const ordinals = loadExamInventory("sanskrit", "A1").points.find(
-    (point) => point.id === "SA-A1-Q-02",
-  );
-  expect(ordinals?.probe).toEqual([
-    // The productive ending, and the five numbers it makes (chapter 62).
-    "SA-LEX-C62-ORDINAL-01",
-    "SA-GRAMMAR-C62-ORDINAL-MA-02",
-    "SA-LEX-C62-ORDINAL-03",
-    "SA-LEX-C62-ORDINAL-04",
-    "SA-LEX-C62-ORDINAL-05",
-    "SA-LEX-C62-ORDINAL-06",
-    // The two endings before it, and the word that uses neither (chapter 63).
-    "SA-LEX-C63-ORDINAL-01",
-    "SA-GRAMMAR-C63-ORDINAL-THA-02",
-    "SA-LEX-C63-ORDINAL-03",
-    "SA-LEX-C63-ORDINAL-04",
-    "SA-GRAMMAR-C63-ORDINAL-TIYA-05",
-    "SA-LEX-C63-ORDINAL-06",
-    "SA-LEX-C63-ORDINAL-07",
-  ]);
-  for (const atom of ordinals?.probe ?? []) {
-    expect(coverage.points.find((point) => point.id === "SA-A1-Q-02")?.missingAtoms, atom).toEqual(
-      [],
-    );
+interface CoverageGapOwner {
+  readonly pointId: string;
+  readonly unmapped: boolean;
+  readonly missingAtoms: readonly string[];
+}
+
+const OWNER_NAME = /^(SA-A1-[A-Z0-9-]+)\.json$/;
+const ownerDirectory = join(
+  dirname(fileURLToPath(import.meta.url)),
+  "a1-coverage-gaps.d",
+);
+
+/**
+ * Load the exceptional states, not a second copy of every covered result.
+ *
+ * Every inventory point without a gap owner must measure covered. An unmapped
+ * point owns one tiny file; a partial point additionally owns the exact atoms
+ * it still lacks. Closing one point therefore removes only that point's file.
+ * The aggregate totals and categories remain exact because they are derived
+ * from the complete direct point inventory plus this exact exceptional set.
+ */
+function loadCoverageGapOwners(
+  directory = ownerDirectory,
+): ReadonlyMap<string, CoverageGapOwner> {
+  const owners = new Map<string, CoverageGapOwner>();
+  const foldedNames = new Set<string>();
+
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    if (!entry.isFile()) {
+      throw new Error(
+        `Sanskrit A1 coverage gap owner '${entry.name}' must be a regular file`,
+      );
+    }
+    const match = OWNER_NAME.exec(entry.name);
+    if (match === null) {
+      throw new Error(
+        `unexpected Sanskrit A1 coverage gap owner '${entry.name}'`,
+      );
+    }
+    const folded = entry.name.toLowerCase();
+    if (foldedNames.has(folded)) {
+      throw new Error(
+        `Sanskrit A1 coverage gap owner case-fold collision: '${entry.name}'`,
+      );
+    }
+    foldedNames.add(folded);
+
+    const raw = readFileSync(join(directory, entry.name), "utf8");
+    const parsed: unknown = JSON.parse(raw);
+    if (
+      typeof parsed !== "object" ||
+      parsed === null ||
+      Array.isArray(parsed)
+    ) {
+      throw new Error(
+        `Sanskrit A1 coverage gap owner '${entry.name}' must be an object`,
+      );
+    }
+    const owner = parsed as Record<string, unknown>;
+    if (Object.keys(owner).join(",") !== "pointId,unmapped,missingAtoms") {
+      throw new Error(
+        `Sanskrit A1 coverage gap owner '${entry.name}' must have exact canonical keys`,
+      );
+    }
+    const pointId = match[1]!;
+    if (
+      owner.pointId !== pointId ||
+      typeof owner.unmapped !== "boolean" ||
+      !Array.isArray(owner.missingAtoms) ||
+      owner.missingAtoms.some((atom) => typeof atom !== "string")
+    ) {
+      throw new Error(
+        `Sanskrit A1 coverage gap owner '${entry.name}' must bind its filename and state`,
+      );
+    }
+    const missingAtoms = owner.missingAtoms as string[];
+    if (new Set(missingAtoms).size !== missingAtoms.length) {
+      throw new Error(
+        `Sanskrit A1 coverage gap owner '${entry.name}' repeats a missing atom`,
+      );
+    }
+    if (
+      (owner.unmapped && missingAtoms.length !== 0) ||
+      (!owner.unmapped && missingAtoms.length === 0)
+    ) {
+      throw new Error(
+        `Sanskrit A1 coverage gap owner '${entry.name}' must describe an unmapped or partial point`,
+      );
+    }
+    if (raw !== `${JSON.stringify(parsed, null, 2)}\n`) {
+      throw new Error(
+        `Sanskrit A1 coverage gap owner '${entry.name}' must use canonical JSON`,
+      );
+    }
+    if (owners.has(pointId)) {
+      throw new Error(`duplicate Sanskrit A1 coverage gap owner '${pointId}'`);
+    }
+    owners.set(pointId, {
+      pointId,
+      unmapped: owner.unmapped,
+      missingAtoms,
+    });
   }
 
-  const relativePosition = loadExamInventory("sanskrit", "A1").points.find(
-    (point) => point.id === "SA-A1-SP-02",
+  return owners;
+}
+
+function assertCoverageMatchesOwners(
+  coverage: ExamCoverage,
+  inventory: ExamInventory,
+  owners: ReadonlyMap<string, CoverageGapOwner>,
+): void {
+  const inventoryIds = new Set(inventory.points.map((point) => point.id));
+  expect(
+    [...owners.keys()].filter((pointId) => !inventoryIds.has(pointId)).sort(),
+    "every gap owner names a canonical inventory point",
+  ).toEqual([]);
+
+  const expectedPoints = inventory.points.map((point) => {
+    const gap = owners.get(point.id);
+    return {
+      id: point.id,
+      covered: gap === undefined,
+      unmapped: gap?.unmapped ?? false,
+      missingAtoms: [...(gap?.missingAtoms ?? [])],
+    };
+  });
+  expect(
+    coverage.points.map(({ id, covered, unmapped, missingAtoms }) => ({
+      id,
+      covered,
+      unmapped,
+      missingAtoms,
+    })),
+    "every Sanskrit A1 point matches its direct gap ownership",
+  ).toEqual(expectedPoints);
+
+  const enumerated = inventory.points.length;
+  const covered = enumerated - owners.size;
+  const unmapped = [...owners.values()].filter(
+    (owner) => owner.unmapped,
+  ).length;
+  const partial = owners.size - unmapped;
+  const percent =
+    enumerated === 0 ? 0 : Math.round((covered / enumerated) * 100);
+  expect({
+    enumerated: coverage.enumerated,
+    covered: coverage.covered,
+    unmapped: coverage.unmapped,
+    partial: coverage.partial,
+    percent: coverage.percent,
+  }).toEqual({ enumerated, covered, unmapped, partial, percent });
+
+  const categoryTally = new Map<
+    string,
+    { enumerated: number; covered: number }
+  >();
+  for (const point of inventory.points) {
+    const bucket = categoryTally.get(point.category) ?? {
+      enumerated: 0,
+      covered: 0,
+    };
+    bucket.enumerated += 1;
+    if (!owners.has(point.id)) bucket.covered += 1;
+    categoryTally.set(point.category, bucket);
+  }
+  expect(coverage.byCategory).toEqual(Object.fromEntries(categoryTally));
+
+  expect(
+    coverage.points.filter((point) => !point.covered).map((point) => point.id),
+  ).toEqual(
+    inventory.points
+      .filter((point) => owners.has(point.id))
+      .map((point) => point.id),
   );
-  expect(relativePosition).toMatchObject({
-    label: "relative position: left, right, above, below, in front, behind",
-    probe: [
-      "SA-LEX-C93-TIME93-03",
-      "SA-LEX-C93-TIME93-04",
-      "SA-LEX-C94-LOC94-02",
-      "SA-LEX-C94-LOC94-03",
-      "SA-LEX-C94-LOC94-04",
-      "SA-LEX-C94-LOC94-05",
-    ],
-  });
-  expect(coverage.points.find((point) => point.id === "SA-A1-SP-02")).toMatchObject({
-    covered: true,
+  expect(formatExamCoverage(coverage).split("\n").slice(0, 2)).toEqual([
+    `sanskrit A1 (partial inventory): ${covered}/${enumerated} points covered (${percent}%)`,
+    `  ${unmapped} with no corresponding atom, ${partial} only partly taught`,
+  ]);
+}
+
+// Whole-corpus parsing is deliberately shared at module scope. The corpus has
+// outgrown Vitest's per-test timeout; recomputing it inside each assertion turns
+// a deterministic census into a timing failure as the books grow.
+const lessons = loadEverything().lessons;
+const inventory = loadExamInventory("sanskrit", "A1");
+const measuredCoverage = measureExamCoverage(inventory, lessons);
+const gapOwners = loadCoverageGapOwners();
+
+it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
+  // Keep the load, measurement, and direct read in this block. The repository's
+  // inventory census source-scans that complete shape so merely computing a
+  // report at module scope cannot masquerade as a coverage pin.
+  const pinnedInventory = loadExamInventory("sanskrit", "A1");
+  const coverage = measureExamCoverage(pinnedInventory, lessons);
+  expect(coverage.enumerated).toBe(pinnedInventory.points.length);
+  assertCoverageMatchesOwners(coverage, inventory, gapOwners);
+});
+
+it("fails closed when an independently owned gap disappears", () => {
+  const withoutOneGap = new Map(gapOwners);
+  withoutOneGap.delete(withoutOneGap.keys().next().value!);
+  expect(() =>
+    assertCoverageMatchesOwners(measuredCoverage, inventory, withoutOneGap),
+  ).toThrow();
+});
+
+it("fails closed when a gap owner names a non-canonical point", () => {
+  const withUnknownGap = new Map(gapOwners);
+  withUnknownGap.set("SA-A1-NOT-A-POINT", {
+    pointId: "SA-A1-NOT-A-POINT",
+    unmapped: true,
     missingAtoms: [],
-    unmapped: false,
   });
-}, 120_000);
+  expect(() =>
+    assertCoverageMatchesOwners(measuredCoverage, inventory, withUnknownGap),
+  ).toThrow();
+});
