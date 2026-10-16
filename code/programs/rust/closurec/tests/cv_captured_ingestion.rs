@@ -477,7 +477,25 @@ fn d2_typed_lex_and_parse_failures_preserve_every_destination() {
                 std::fs::write(path, b"sentinel").unwrap();
             }
             let out = f.run(level, true);
-            assert_ne!(out.status.code(), Some(0));
+            assert_eq!(
+                out.status.code(),
+                Some(1),
+                "normal typed refusal, not panic/setup error"
+            );
+            assert!(out.stdout.is_empty());
+            let error = String::from_utf8(out.stderr).unwrap();
+            let cause = if source == "\0" {
+                "JavaScript tokenization failed:"
+            } else {
+                "JavaScript parse failed:"
+            };
+            assert!(
+                error.starts_with(&format!(
+                    "{level} compilation failed at parse stage: {cause}"
+                )),
+                "{error}"
+            );
+            assert!(!error.contains("panicked") && !error.contains("abort"));
             for path in &f.paths {
                 assert_eq!(std::fs::read(path).unwrap(), b"sentinel");
             }

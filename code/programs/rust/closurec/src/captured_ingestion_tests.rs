@@ -72,33 +72,37 @@ fn d2_invalid_private_stamp_invariants_leave_borrowed_tokens_unchanged() {
 }
 #[test]
 fn d2_trusted_missing_and_lex_error_captures_never_enter_legacy_parser() {
-    let mut config = CompilerConfig::default();
-    config.compilation.level = CompilationLevel::Simple;
-    let mut log = CVLog::new_compact(true);
-    let root = log.try_create(None).unwrap();
-    let before = log.to_json_string().unwrap();
-    let missing = transform_source_with_ingestion(
-        "report(1+1);",
-        &config,
-        Some((&mut log, &root, &[], "a.js")),
-        None,
-    );
-    assert!(matches!(missing,Err(CompilerError::Provenance{stage,..}) if stage=="typed_ingestion"));
-    assert_eq!(log.to_json_string().unwrap(), before);
-    let lexical = transform_source_with_ingestion(
-        "report(1+1);",
-        &config,
-        Some((&mut log, &root, &[], "a.js")),
-        Some(Err("actual lexical error marker".into())),
-    );
-    assert!(
-        matches!(lexical,Err(CompilerError::TypedPipeline{stage:TypedPipelineStage::Parse,message,..}) if message=="actual lexical error marker")
-    );
-    assert_eq!(
-        log.to_json_string().unwrap(),
-        before,
-        "no legacy relex or partial downstream graph"
-    );
+    for level in [CompilationLevel::Simple, CompilationLevel::Advanced] {
+        let mut config = CompilerConfig::default();
+        config.compilation.level = level;
+        let mut log = CVLog::new_compact(true);
+        let root = log.try_create(None).unwrap();
+        let before = log.to_json_string().unwrap();
+        let missing = transform_source_with_ingestion(
+            "report(1+1);",
+            &config,
+            Some((&mut log, &root, &[], "a.js")),
+            None,
+        );
+        assert!(
+            matches!(missing,Err(CompilerError::Provenance{stage,..}) if stage=="typed_ingestion")
+        );
+        assert_eq!(log.to_json_string().unwrap(), before);
+        let lexical = transform_source_with_ingestion(
+            "report(1+1);",
+            &config,
+            Some((&mut log, &root, &[], "a.js")),
+            Some(Err("actual lexical error marker".into())),
+        );
+        assert!(
+            matches!(lexical,Err(CompilerError::TypedPipeline{stage:TypedPipelineStage::Parse,message,..}) if message=="actual lexical error marker")
+        );
+        assert_eq!(
+            log.to_json_string().unwrap(),
+            before,
+            "no legacy relex or partial downstream graph"
+        );
+    }
 }
 #[test]
 fn d2_public_detached_id_facade_retains_legacy_source_based_behavior() {
