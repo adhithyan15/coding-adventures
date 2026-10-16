@@ -58,11 +58,11 @@ fn canonical_twelve_unit_forms_have_typed_output_routes_and_independent_arms() {
 fn twelve_unit_proofs_refuse_twenty_two_units_rounding_traps_and_exp_widening() {
     // All authored loop configurations are explicit; mixed guards stay exact.
     for (case_id, source) in [
-        (307, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 24); output(saved) end"),
-        (308, "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) + 16); output(saved) end"),
-        (309, "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (23 + sign(pick()))); output(saved) end"),
-        (310, "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 23); output(saved) end"),
-        (311, "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 22); output(saved) end"),
+        (307, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 25); output(saved) end"),
+        (308, "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) + 17); output(saved) end"),
+        (309, "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (24 + sign(pick()))); output(saved) end"),
+        (310, "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 24); output(saved) end"),
+        (311, "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 23); output(saved) end"),
         (312, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 12.5); output(saved) end"),
         (313, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + sign(pick()) + 6 + 6); output(saved) end"),
         (314, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + ((9007199254740993 - 9007199254740992) + 12)); output(saved) end"),

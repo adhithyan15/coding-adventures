@@ -149,9 +149,13 @@ fn current_cap_precision_and_shared_exp_guards_remain_refused() {
 
 #[test]
 fn canonical_twenty_four_units_stay_outside_the_dedicated_budget() {
-    for expression in ["entier(sign(pick()) + 24)", "entier((sign(pick()) + 12) + 12)",
-        "entier(entier(sign(pick()) + 1) + 23)", "entier(abs(sign(pick()) + 12) + 12)"] {
-        let source = format!("begin real procedure pick; pick := -2.25; real saved; saved := {expression}; output(saved) end");
+    // Exact complete generated sources; quantitative boundary is now25.
+    for source in [
+        "begin real procedure pick; pick := -2.25; real saved; saved := entier(sign(pick()) + 25); output(saved) end",
+        "begin real procedure pick; pick := -2.25; real saved; saved := entier((sign(pick()) + 12) + 13); output(saved) end",
+        "begin real procedure pick; pick := -2.25; real saved; saved := entier(entier(sign(pick()) + 1) + 24); output(saved) end",
+        "begin real procedure pick; pick := -2.25; real saved; saved := entier(abs(sign(pick()) + 12) + 13); output(saved) end",
+    ] {
         assert!(matches!(compile_source(&source, "current_cap_refusal"), Err(CompileError::Type(message)) if message.contains("cannot print a real value")), "{source}");
     }
 }

@@ -13460,6 +13460,7 @@ fn operator_from_token(token: &Token) -> Option<&'static str> {
 mod tests {
     mod cv04_incoming_native22_23;
     mod cv04_incoming_native24;
+    mod cv04_native24_exact_sources;
     mod cv04_retained_boundary_contexts;
     mod unit_offset;
     mod two_unit_offset;
@@ -14824,11 +14825,11 @@ mod tests {
             (23, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 16) else (entier(sign(right)) + 16)) + 1)); output(result) end"),
             (24, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 17) else (entier(sign(right)) + 17)) + 1)); output(result) end"),
             (25, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 18) else (entier(sign(right)) + 18)) + 1)); output(result) end"),
-            (26, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 24)) else relay(entier(entier(sign(right)) + 24)); output(result) end"),
-            (27, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 23 + 1)) else relay(entier(entier(sign(right)) + 1 + 23)); output(result) end"),
+            (26, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 25)) else relay(entier(entier(sign(right)) + 25)); output(result) end"),
+            (27, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 24 + 1)) else relay(entier(entier(sign(right)) + 1 + 24)); output(result) end"),
             (28, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 21) else (entier(sign(right)) + 21)) + 1)); output(result) end"),
-            (29, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 24)) else relay(entier(entier(sign(right)) + 24)); output(result) end"),
-            (30, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 23 + 1)) else relay(entier(entier(sign(right)) + 1 + 23)); output(result) end"),
+            (29, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 25)) else relay(entier(entier(sign(right)) + 25)); output(result) end"),
+            (30, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) + 24 + 1)) else relay(entier(entier(sign(right)) + 1 + 24)); output(result) end"),
             (31, "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := relay(entier((if choose() then (entier(sign(left)) + 23) else (entier(sign(right)) + 23)) + 1)); output(result) end"),
         ] {
             let error = compile_source(source, "cap24_refusal").expect_err("exact retained refusal");
@@ -15217,10 +15218,10 @@ mod tests {
     #[test]
     fn al4_additive_entier_sign_widening_rejects_unproven_terms() {
         for source in [
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 24); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 23 + 1); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 23) + 1); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(abs((sign(pick()) + 12) + 12)); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 25); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 24 + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 24) + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(abs((sign(pick()) + 12) + 13)); output(result) end",
             "begin real procedure pick; pick := -2.25; integer zero; real result; zero := 0; result := entier(sign(pick()) + zero); output(result) end",
         ] {
             let err = compile_source(source, "test")
