@@ -28,3 +28,9 @@ log both use Georgia/CourierNew. Retain the original receipt and a separate
 metadata correction; do not rewrite the immutable expected scenes or call the
 wrong names an executed observation. The actual first force render passed all16
 whole cells with its precommitted oracle source unchanged.
+
+The mechanical Copy repair left kind:kind struct fields, so the second strict
+run correctly refused redundant_field_names before full tests. Preserve both
+actual101 receipts; finish the equivalent shorthand field repair and rerun all
+checks. Check the final lint shape rather than assuming a suggested local edit
+also satisfies adjacent lint rules. Production and whole scene oracles stay exact.

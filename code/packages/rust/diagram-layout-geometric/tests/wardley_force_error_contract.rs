@@ -3,7 +3,7 @@ use diagram_layout_geometric::{try_layout_wardley,WardleyLayoutError};
 fn config()->WardleyConfig {WardleyConfig {width:900.0,height:600.0,padding:48.0,node_radius:6.0,node_label_offset:8.0,axis_font_size:12.0,label_font_size:10.0,show_grid:false,use_max_width:true,theme:WardleyTheme {background_color:"#ffffff".into(),axis_color:"#000000".into(),axis_text_color:"#222222".into(),grid_color:"rgba(100, 100, 100, 0.2)".into(),component_fill:"#ffffff".into(),component_stroke:"#000000".into(),component_label_color:"#222222".into(),link_stroke:"#000000".into(),evolution_stroke:"#dc3545".into()}}}
 fn diagram()->WardleyDiagram {WardleyDiagram{title:None,config:config(),stages:vec![],nodes:vec![],links:vec![],evolves:vec![],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![]}}
 fn invalidate(d:&mut WardleyDiagram,kind:WardleyForceKind,axis:usize,value:f64,populated:bool) {
- if populated {d.nodes.push(WardleyNode{id:"a".into(),label:"A".into(),visibility:0.5,evolution:0.5,anchor:false});d.forces.push(WardleyForce{label:"Good".into(),visibility:0.0,evolution:1.0,kind:kind});}
+ if populated {d.nodes.push(WardleyNode{id:"a".into(),label:"A".into(),visibility:0.5,evolution:0.5,anchor:false});d.forces.push(WardleyForce{label:"Good".into(),visibility:0.0,evolution:1.0,kind});}
  d.forces.push(WardleyForce{label:"Unknown".into(),visibility:if axis==0 {value}else{0.5},evolution:if axis==1 {value}else{0.5},kind});
 }
 #[test]

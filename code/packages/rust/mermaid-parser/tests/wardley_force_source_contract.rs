@@ -8,41 +8,41 @@ fn expected()->WardleyDiagram {WardleyDiagram {title:None,config:WardleyConfig {
 #[test]
 fn force_labels_have_complete_literal_ir_for_both_directions() {
  for (keyword,kind) in [("accelerator",WardleyForceKind::Accelerator),("deaccelerator",WardleyForceKind::Deaccelerator)] {
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","A [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/bare");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"Alpha Beta".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"Alpha Beta".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","  Alpha Beta  [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/bare-many");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","\"A\" [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/double");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","'A' [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/single");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"  A  ".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"  A  ".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","\"  A  \" [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/spaces");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:" ".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:" ".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","' ' [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/one-space");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A'B".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A'B".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","\"A'B\" [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/inactive-single");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A\"B".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A\"B".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","'A\"B' [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/inactive-double");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A\"B".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A\"B".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","\"A\\\"B\" [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/escaped-double");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A'B".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A'B".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","'A\\'B' [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/escaped-single");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A\\B".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A\\B".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","\"A\\\\B\" [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/escaped-slash");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"α निर्णय".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"α निर्णय".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","\"α निर्णय\" [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/unicode");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"[A], ] B".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"[A], ] B".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","\"[A], ] B\" [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/brackets");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A%%B".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A%%B".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","\"A%%B\" [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/percent");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A%%B".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A%%B".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","'A%%B' [0.25,0.75]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/single-percent");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","A [0.25,0.75] %% \"junk");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/outside-comment");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A%%B".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A%%B".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","\"A%%B\" [0.25,0.75] %% \"junk");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/inside-and-outside");}
- {let mut want=expected();want.forces=vec![WardleyForce{label:"A".into(),visibility:0.25,evolution:0.75,kind:kind}];
+ {let mut want=expected();want.forces=vec![WardleyForce{label:"A".into(),visibility:0.25,evolution:0.75,kind}];
  let source=format!("wardley-beta\n{keyword} {}\n","A [ 0.25 , 0.75 ]");assert_eq!(parse_wardley(&source).unwrap_or_else(|e|panic!("{source}: {e:?}")),want);eprintln!("WARDLEY-FORCE-IR {keyword}/coordinate-space");}
  }}
 #[test]
