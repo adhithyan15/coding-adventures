@@ -4,7 +4,7 @@ Specification committed before tests/import/implementation, from published
 carrier261c82f8 on an isolated successor branch; tested source branches/receipts
 remain preserved. Incoming static reviews8c49270a(theme)/5dd0b992(notes) WITHHOLD
 raw integration; full manifests0fb7b465/cff571ec verify22+24 slots. Re-audit actual current
-main/open shared PRs/backlog/epic; this draft's classified incoming chain is
+main/open shared PRs/backlog/epic; the classified incoming chain is
 6c4e ->987ab434 theme ->e0724e0 human snapshots ->61eebb03 notes. It gives no
 acceptance for later main revisions. Stay in the same sole implementation PR.
 
@@ -102,3 +102,25 @@ canonical boundary/own types/no new crates.io dependencies remain owner choices.
 Full Closure parity/outputbyte/source/full fold/rename/inline/motion/merge/delete
 lineage/stable IDs/spans/pass-sweep remains OPEN. Delivery first, genuine final-
 source Miri acceptance afterward; do not disable the ACTIVE heartbeat early.
+
+## Exact source-note text and error contract
+
+Quoted note text preserves every interior Unicode scalar and space, including an
+empty string, the inactive quote, brackets and percent-percent. As in the owned
+active-quote reader, backslash may escape only the active delimiter or another
+backslash; unknown escapes are refused. Coordinates are read only after the
+first complete active-quoted token. An outside percent-percent starts a comment
+only after the token; an inside percent-percent is data. Other Wardley statements
+retain their existing comment/name behavior.
+
+Each semantic note error uses its physical prepared-source line and column1.
+An unquoted text uses `Wardley note text must be quoted`. An unclosed quote or
+unsupported escape uses `Wardley note text must be a complete quoted string`.
+No coordinate suffix uses `Wardley note requires coordinates`. A suffix without
+complete outer brackets, including quote/trailing junk, uses
+`invalid Wardley coordinates`; a missing comma uses `coordinates require two
+values`; an unparseable scalar uses `invalid coordinate`. Parsed note scalars
+outside finite[0,1] use `Wardley note coordinates must be between 0 and 1`.
+Keep the existing source-coordinate parser and unrelated statement behavior.
+Typed NoteCoordinates admission follows the existing EvolutionTarget check and
+precedes reference checks; DerivedGeometry also covers every resolved note point.
