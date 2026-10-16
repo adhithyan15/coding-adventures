@@ -273,3 +273,17 @@ no duplicate source/backend tuples, and the independently calculated P/CL/CR
 outputs. Missing toolchains do not count as execution; production tests already
 refuse present-but-unexecuted backends. Full affected suites and strict lint,
 actual target census/frozen inputs and final independent reviews remain gates.
+
+
+## Bounded static runtime fixture repair
+
+Native v8 at880 fails compilation (actual Cargo101/E0597) before any executable
+harness starts. Its generated Vec<String> cannot satisfy Prog.src and
+Expect::Stdout's existing static lifetime. The receipt's target identity mismatch
+is secondary to partial compilation, not evidence of a discovered test omission.
+Keep that failed receipt and zero runtime acceptance. Materialize the exact24
+19/20/21 source/output pairs in a fixed literal table; independently preserve the
+generator's byte strings, tuple order and output markers. Keep shared Prog/Expect
+lifetimes, all available-backend and normal-Exit0/stdout assertions unchanged.
+No allocation leaks, harness-wide lifetime change or new dependencies. Re-run
+six-package native full/runtime/strict with its exact whitelist/census gates.
