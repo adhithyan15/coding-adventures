@@ -2,11 +2,36 @@
 
 <!-- CV04b current-main integration pending -->
 Sole PR17288 publishes6132a518b3990619eb904397ee0b21a69ce8ac20,
-CONFLICTING/auto OFF/zero hosted checks in fresh20261016T165752Z audit:
-all15 open PRs inspected, no second Closure/shared PR. Main41a1c6aea80ff0bc2f1d034e345a7a7b9d351176
-is genuinely integrated396f by ten complete owned-hunk inverses plus17 pure
-incoming paths; whole226185-leaf prospective/index tree exact. Margin d75 raw
-source auditdb4b remains WITHHELD, not retroactively accepted by repairs.
+CONFLICTING/auto OFF/zero hosted checks in fresh20261016T171941Z audit:
+all13 open PRs inspected, no second Closure/shared PR. Main now advances to
+a2be13f7dcb244d600b1796573fd7854ffd20fe8: native25 793b and separate timeline
+event cards a2. These16 incoming paths are UNINTEGRATED/UNACCEPTED. Independent
+full raw source audits native e70fe57e/event274d7165 WITHHELD: shared arithmetic
+widening must stay excluded, and new event/link geometry requires actual frame/
+arrow admission. Earlier main41a is genuinely integrated396f with exact complete
+tree/owned-hunk inverses; old rawmargin auditdb4b remains historically WITHHELD.
+
+Stable typed palette baseline41fad2ab passes fullpainter169P/0fail/ignore/filter,
+empty e2e/docs and strict0; root60856 consumed0. All48 whole Scene/glyphRGBA/
+ordered cached query/full metadata cells pass across independent palette lengths
+0/1/2/6/8, mixed1/2/8,8/0/2,0/8/1 and ordinals0/1/5/6/7/MAX. Eight-entry vectors
+retain all metadata; each role has its exact empty fallback and chronology spine
+uses inverse slot0. Complete existing lib/test bodies remain exact after removing
+one test include. Static ca8125cd and separately consumed terminal report PASS
+at41fad only; no incoming-main/source-to-Scene/event-card acceptance transfers.
+
+Spec-first native25/event-card contracts35b21 and native wording-onlyfc3d are
+independently PASS166840eb/f5cdcd34/86fb3d8e. Native requires the complete decoded
+current occurrence/oracle inventory, quantitative25→26 migration plus exact25
+positive companions, four dedicated proof edits only and all44 prior runtime
+sources retained. Structural24+1 stays refused; within-budget +1-1 remains valid.
+Event cards require new outer/text frames, finite actual arrow intermediates and
+nonzero represented triangle determinant; independent p2^55/56/57 models are
+not Rust execution. Preserve all old whole source/layouts while explicitly
+migrating changed fixed-card oracles. Read-only merge-tree35b21 finds five
+conflicting paths; no source/index/HEAD merge occurred. Next prepare closed
+whole-tree merge/inventories and genuine tests/repair, then full source-to-Scene
+and affected native/compiler/downstream/Closure validation before delivery.
 
 Timeline configuration ownership is repaired at1cdb; fixture successor8b has
 641P/0fail/ignore/filter over25 executables plus empty docs, strict0 and all41

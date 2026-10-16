@@ -1,5 +1,13 @@
 # diagram-to-paint
 
+
+At the pre-integration timeline palette checkpoint41fad2ab, all169 package tests
+and strict lint pass. New48 complete typed Scene/query cells pin independently
+sized0/1/2/6/8 palettes, mismatched families, MAX ordinals, role-specific empty
+fallbacks, every metadata entry and glyph colors. This retains public embedded-
+event period rendering; separate event-card/current-main/source-to-Scene delivery
+validation remains pending. Local Miri DEFERRED/PENDING.
+
 ## Checked Ishikawa collision and hatch resources
 
 `try_layout_ishikawa(&diagram, canvas_width)` returns an owned layout or
