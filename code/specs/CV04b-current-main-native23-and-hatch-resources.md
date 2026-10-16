@@ -275,3 +275,39 @@ and typed-return observability require an independently reviewed successor
 contract; native/LLVM typed-main ABI coverage must stay explicitly bounded.
 All saved cases retain their strict normalExit0 contract. No source/production
 change is authorized merely to make the mistaken status assertion green.
+
+
+## Bounded backend-aware exact-source completion contract
+
+Independent ownership/security trace confirms the universal-zero contract is
+wrong for real result sources. Preserve all29 sources/output tuples and every
+existing saved-only Exit0 test. For the13 unchanged real-result sources, require:
+NativeAot/Llvm/Jvm actual host process codeSome(0) with exact stdout; Wasm numeric
+returned valueSome(P); Vm/Jit Completed/codeNone only together with a fresh
+observed Value::Float(P) exactly; CLR numeric sentinelSome(P) plus the existing
+successful dotnet-process guard if that toolchain is available. No arbitrary
+status/None/trap allowance; available-but-no-execution remains failure. P is
+independently21 for retained1..4 and old integration22,24 for retained5/6,
+22 for retained8..11,23/24 for incoming matrix22/23. All16 saved fixtures stay
+Some(0) on every backend and have no typed-real expectation.
+
+A thread-local guard in the existing test-only unit-offset module may arm one
+source/backend/case before Vm/Jit run, capture the actual execute-Ok return BEFORE
+as_i64 consumption, require exactly one matching source/backend Float(P) bit
+pattern, and clear on scope/panic/drop. Missing/stale/multiple/wrong source,
+backend/type/value captures must fail. Preserve each generic run and assert_cell
+behavior, adding only the two optional return-observation calls; no production
+API, shared Prog/Expect lifetime or new dependency changes. Tests first include
+adversarial missing/stale/multiple/wrong-typed/wrong-valued capture and panic
+cleanup, with valid controls. Check both exact backend status and full output
+before the per-source/backend post-assertion marker; bind fixture-source hashes,
+explicit return expectations and actual typed observation bits in receipts.
+
+This is explicitly bounded stdout/effect plus normal host-process completion
+evidence. Native/LLVM f64-main ABI/value parity remains OPEN; their0 does not
+prove the typed return. CLR has a static float64-entry-to-int32 conversion gap:
+if present it must satisfy the numeric result contract or fail as a backend gap,
+never be skipped/relaxed. No CLR execution claim when absent. Full Closure parity
+and final-source security/requiredCI/Miri remain separate. This corrects the
+previous mistaken zero assertion from observed/source evidence; it does not
+rename sources, remove real execution, or accept arbitrary process failure.
