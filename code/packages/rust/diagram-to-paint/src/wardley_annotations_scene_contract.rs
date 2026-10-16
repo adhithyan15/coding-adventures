@@ -57,14 +57,14 @@ Case{name:"small-config-large-padding-no-annotations",source:"%%{init: {\"wardle
         diagram_ir::WardleyNode{id:"wardley-1".into(),label:"A".into(),visibility:1.0,evolution:0.0,anchor:true},
         diagram_ir::WardleyNode{id:"wardley-2".into(),label:"B".into(),visibility:0.0,evolution:1.0,anchor:false}]}else{vec![]},
       links:if c.populated {vec![diagram_ir::WardleyLink{source:"A".into(),target:"B".into()}]}else{vec![]},
-      evolves:if c.populated {vec![diagram_ir::WardleyEvolution{component:"A".into(),target:0.5}]}else{vec![]},notes:c.notes.iter().map(|n|diagram_ir::WardleyNote{text:n.text.into(),visibility:n.v,evolution:n.e}).collect(),annotations_box:c.box_case.as_ref().map(|b|(b.v,b.e)),annotations:c.annotations.iter().map(|a|diagram_ir::WardleyAnnotation{number:a.number,text:a.text.into(),coordinates:a.markers.iter().map(|m|(m.v,m.e)).collect()}).collect()};
+      evolves:if c.populated {vec![diagram_ir::WardleyEvolution{component:"A".into(),target:0.5}]}else{vec![]},notes:c.notes.iter().map(|n|diagram_ir::WardleyNote{text:n.text.into(),visibility:n.v,evolution:n.e}).collect(),annotations_box:c.box_case.as_ref().map(|b|(b.v,b.e)),annotations:c.annotations.iter().map(|a|diagram_ir::WardleyAnnotation{number:a.number,text:a.text.into(),coordinates:a.markers.iter().map(|m|(m.v,m.e)).collect()}).collect(),forces:vec![]};
     let parsed=mermaid_parser::parse_wardley(c.source).unwrap();assert_eq!(parsed,expected_ir,"wholeIR {} {family}",c.name);
     let expected_layout=LayoutedWardleyDiagram{width:c.w,height:c.h,title:c.populated.then(||"T".into()),config:c.config.clone(),
       stages:stage_names.map(String::from).to_vec(),nodes:if c.populated {vec![
         diagram_ir::LayoutedWardleyNode{id:"wardley-1".into(),label:"A".into(),position:p(c.lo,c.top),anchor:true},
         diagram_ir::LayoutedWardleyNode{id:"wardley-2".into(),label:"B".into(),position:p(c.hi_x,c.hi_y),anchor:false}]}else{vec![]},
       links:if c.populated {vec![diagram_ir::LayoutedWardleyLink{from:p(c.lo,c.top),to:p(c.hi_x,c.hi_y)}]}else{vec![]},
-      evolves:if c.populated {vec![diagram_ir::LayoutedWardleyEvolution{from:p(c.lo,c.top),to:p(c.mid,c.lo)}]}else{vec![]},notes:c.notes.iter().map(|n|diagram_ir::LayoutedWardleyNote{text:n.text.into(),position:p(n.x,n.y)}).collect(),annotations_box:c.box_case.as_ref().map(|b|p(b.x,b.y)),annotations:c.annotations.iter().map(|a|diagram_ir::LayoutedWardleyAnnotation{number:a.number,text:a.text.into(),positions:a.markers.iter().map(|m|p(m.x,m.y)).collect()}).collect()};
+      evolves:if c.populated {vec![diagram_ir::LayoutedWardleyEvolution{from:p(c.lo,c.top),to:p(c.mid,c.lo)}]}else{vec![]},notes:c.notes.iter().map(|n|diagram_ir::LayoutedWardleyNote{text:n.text.into(),position:p(n.x,n.y)}).collect(),annotations_box:c.box_case.as_ref().map(|b|p(b.x,b.y)),annotations:c.annotations.iter().map(|a|diagram_ir::LayoutedWardleyAnnotation{number:a.number,text:a.text.into(),positions:a.markers.iter().map(|m|p(m.x,m.y)).collect()}).collect(),forces:vec![]};
     let layout=diagram_layout_geometric::try_layout_wardley(&parsed).unwrap();assert_eq!(layout,expected_layout,"wholeLayout {} {family}",c.name);
     let mut instructions=vec![path(vec![p(c.lo,c.top),p(c.lo,c.hi_y),p(c.hi_x,c.hi_y)],&c.config.theme.axis_color,1.0,false)];
     for (x,y) in &c.grid {instructions.push(path(vec![p(*x,c.top),p(*x,c.hi_y)],&c.config.theme.grid_color,1.0,true));
@@ -103,7 +103,7 @@ Case{name:"small-config-large-padding-no-annotations",source:"%%{init: {\"wardle
         ("wardley.componentLabelColor".into(),c.config.theme.component_label_color.clone()),
         ("wardley.linkStroke".into(),c.config.theme.link_stroke.clone()),
         ("wardley.evolutionStroke".into(),c.config.theme.evolution_stroke.clone()),
-        ("wardley.noteCount".into(),c.notes.len().to_string()),("wardley.annotationCount".into(),c.annotations.len().to_string())])),instructions};
+        ("wardley.noteCount".into(),c.notes.len().to_string()),("wardley.annotationCount".into(),c.annotations.len().to_string()),("wardley.forceCount".into(),"0".into())])),instructions};
     let resolver=VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
     let options=DiagramToPaintOptions {background:Color{r:3,g:5,b:7,a:255},device_pixel_ratio:1.0,
       label_font:FontSpec{family:family.into(),size:4.0,weight:600,italic:true,stretch:FontStretch::Condensed,..defaults.label_font},
