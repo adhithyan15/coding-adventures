@@ -27,6 +27,12 @@ start_x+(width-measured_advance)/2. Preserve the first failure and re-derive all
 nine profiles, then correct only two numeric literals with an inverse proof;
 production/equality/old64 stay exact. New18 serial acceptance, full14 and
 source/terminal security/delivery remain PENDING.
+Float correction488e reverse-proves only two new glyph literals, old64/production
+unchanged. Its serial rerun actually failed101 (6passed/1failed;8new Georgia
+cells complete): cap fixture inherited hardcoded forceCount6 despite its declared
+empty force vector. Expected metadata now uses that independent IR cardinality;
+preserve both actual failures, exact equality and every other literal. Final18
+Scene acceptance and full/security/delivery remain PENDING.
 One active PR; heartbeat ACTIVE.
 <!-- /CV04a Wardley stage bands selected -->
 
