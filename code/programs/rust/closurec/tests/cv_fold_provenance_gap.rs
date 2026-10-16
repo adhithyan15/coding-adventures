@@ -87,8 +87,7 @@ fn typed_pipeline_records_per_token_origins_and_pass_summary() {
     // (1) The constant-fold pass ran — recorded in the coarse simple_v2 summary.
     let mut saw_constant_fold_pass = false;
     let mut origin_sources: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
-    // (2) Per-token source-span origins — minted by the parser's CV tokenizer
-    // (CLOC27 P2/P3), `Origin.source == <input path>`, `location == line:col`.
+    // (2) D2 consumes D1's physical lexer origins; no second parser-token set.
     // This asserts source-token inventory only. It cannot establish a path
     // from a transformed result; the graph tests in cv_fold_trace do that.
     let mut per_token_span_origins = 0usize;
@@ -96,7 +95,28 @@ fn typed_pipeline_records_per_token_origins_and_pass_summary() {
         if let Some(src) = e["origin"]["source"].as_str() {
             origin_sources.insert(src.to_string());
             let loc = e["origin"]["location"].as_str().unwrap_or("");
-            if src == input_path && is_line_col(loc) {
+            assert_ne!(
+                src, input_path,
+                "actual compiler must not mint rootless parser tokens"
+            );
+            let prefix = format!("{input_path}:");
+            if src == "lexer_token" && loc.strip_prefix(&prefix).is_some_and(is_line_col) {
+                let descriptor = &e["origin"]["meta"]["closurec_source_v1"];
+                let root = descriptor["input_id"].as_str().unwrap();
+                assert_eq!(e["parent_ids"], serde_json::json!([root]));
+                assert_eq!(j["entries"][root]["origin"]["location"], input_path);
+                let inventories: Vec<_> = j["entries"][root]["contributions"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .filter(|c| c["source"] == "source.inventory" && c["tag"] == "finalized")
+                    .collect();
+                assert_eq!(inventories.len(), 1);
+                assert!(inventories[0]["meta"]["closurec_source_v1"]["piece_ids"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .any(|id| id.as_str() == Some(_id.as_str())));
                 per_token_span_origins += 1;
             }
         }
@@ -120,8 +140,8 @@ fn typed_pipeline_records_per_token_origins_and_pass_summary() {
     // Their presence does not imply that any replacement reaches them.
     assert!(
         per_token_span_origins > 0,
-        "expected at least one per-token source-span origin (source == {input_path:?}, \
-         location == line:col) proving leaf-token origins reach the sidecar; \
+        "expected physical ingestion token origins (path == {input_path:?}) \
+         with exact input-root/inventory ownership; \
          origins seen: {origin_sources:?}",
     );
 

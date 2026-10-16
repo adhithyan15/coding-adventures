@@ -127,8 +127,41 @@ fn assert_operand_spans(j: &serde_json::Value, id: &str, path: &str, expected: &
         .iter()
         .filter_map(|id| {
             let origin = &j["entries"][id]["origin"];
-            (origin["source"].as_str() == Some(path))
-                .then(|| origin["location"].as_str().unwrap().to_string())
+            if origin["source"] != "lexer_token" {
+                return None;
+            }
+            let descriptor = &origin["meta"]["closurec_source_v1"];
+            assert_eq!(descriptor["role"], "piece");
+            assert_eq!(descriptor["kind"], "token");
+            let root = descriptor["input_id"].as_str().unwrap();
+            assert_eq!(j["entries"][id]["parent_ids"], serde_json::json!([root]));
+            assert_eq!(j["entries"][root]["origin"]["source"], "input_file");
+            assert_eq!(j["entries"][root]["origin"]["location"], path);
+            assert_eq!(
+                j["entries"][root]["origin"]["meta"]["closurec_source_v1"]["role"],
+                "input"
+            );
+            let inventories: Vec<_> = j["entries"][root]["contributions"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|c| c["source"] == "source.inventory" && c["tag"] == "finalized")
+                .collect();
+            assert_eq!(inventories.len(), 1);
+            assert!(inventories[0]["meta"]["closurec_source_v1"]["piece_ids"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|p| p.as_str() == Some(id.as_str())));
+            let prefix = format!("{path}:");
+            Some(
+                origin["location"]
+                    .as_str()
+                    .unwrap()
+                    .strip_prefix(&prefix)
+                    .expect("exact legacy path prefix")
+                    .to_owned(),
+            )
         })
         .collect();
     assert_eq!(
