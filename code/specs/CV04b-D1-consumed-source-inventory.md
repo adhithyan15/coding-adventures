@@ -246,3 +246,18 @@ escape to five bytes; their captured-vs-legacy whole-Token checks remain exact.
 Correct only the ES2025 literal to6 after an explicit legacy value guard. Keep
 the raw8 and every coordinate/hash/origin assertion; do not change lexer policy.
 Preserve actual CLI101/9P1F and unit0/5P logs without relabeling them green.
+
+## Chronology migration for the new inventory contribution
+
+The first broad e718 run passed all-target strict lint but failed one existing
+binary unit assertion: its old string prefix required lex to be the very first
+pass_order source. The new finalized source.inventory contribution precedes
+lex.tokens_emitted by design. Preserve that actual full101 receipt and all old
+test functions. The complete expected stage-source vector for its existing
+SIMPLE fixture is now source.inventory, lex, compilation_level, defines, charset,
+write_output_file; the old stages retain their exact order. Replace the tolerant
+substring prefix with this exact parsed array. Also require the input root's
+four exact contribution source/tag pairs and their actual journal indexes:
+inventory then lex, pipeline begin/converged end, compilation_level then defines.
+Do not filter out inventory events, alter production chronology, drop the test
+or claim pass_order alone proves pass/sweep scheduling or transformation lineage.
