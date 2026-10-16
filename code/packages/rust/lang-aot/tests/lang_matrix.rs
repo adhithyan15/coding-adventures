@@ -5096,6 +5096,24 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("22"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 - the additive offset budget accepts twenty-two units on each
+    // runtime-selected path as one exact 22 or a nested exact 11+11 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 22) else ((entier(sign(right)) + 11) + 11))); output(result) end",
+        expect: Expect::Stdout("23"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts twenty-three units on each
+    // runtime-selected path as one exact 23 or a nested exact 11+12 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 23) else ((entier(sign(right)) + 11) + 12))); output(result) end",
+        expect: Expect::Stdout("24"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -22366,6 +22384,58 @@ fn algol_pathwise_twenty_one_unit_offset_bounded_local_name_actual_runtime_real_
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the pathwise twenty-one-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_two_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 22) else ((entier(sign(right)) + 11) + 11)))",
+                )
+        })
+        .expect("the pathwise twenty-two-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-two-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_three_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 23) else ((entier(sign(right)) + 11) + 12)))",
+                )
+        })
+        .expect("the pathwise twenty-three-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-three-unit-offset local name actual did not run"
             );
             continue;
         };

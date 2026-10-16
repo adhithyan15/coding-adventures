@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "BN-W263-a2-connected-composition",
+    "language": "bengali",
+    "chapter": 263,
+    "sequence": 16490,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e6c651d1bf5b4e0a",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
