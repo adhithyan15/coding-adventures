@@ -62,3 +62,20 @@ fn cv04_ishikawa_huge_finite_legacy_wrapper_refuses_within_bound() {
     assert!(!String::from_utf8_lossy(&output.stdout).contains("CV04_UNCHECKED_LAYOUT_RETURNED"));
     println!("CV04_ISHIKAWA_BOUNDED_REFUSAL child={child_id} elapsed_ms={} code={:?}",start.elapsed().as_millis(),output.status.code());
 }
+
+
+#[test]
+fn cv04_public_checked_ishikawa_returns_errors_before_output() {
+    use diagram_layout_geometric::{try_layout_ishikawa,IshikawaLayoutError};
+    let mut d=diagram_ir::IshikawaDiagram {effect:"E".into(),causes:Vec::new(),config:Default::default()};
+    let ordinary=try_layout_ishikawa(&d,640.0).expect("ordinary classic geometry");
+    assert!(ordinary.effect_hatches.is_empty());
+    assert_eq!(try_layout_ishikawa(&d,f64::NAN),Err(IshikawaLayoutError::DerivedGeometry));
+    assert_eq!(try_layout_ishikawa(&d,f64::INFINITY),Err(IshikawaLayoutError::DerivedGeometry));
+    assert!(try_layout_ishikawa(&d,1e12).is_ok(),"classic does not acquire hatch-only bounds");
+    d.config.look=diagram_ir::IshikawaLook::HandDrawn;
+    assert_eq!(try_layout_ishikawa(&d,1e20),Err(IshikawaLayoutError::DerivedGeometry));
+    let ordinary=try_layout_ishikawa(&d,640.0).expect("ordinary hand-drawn hatching");
+    assert!(!ordinary.effect_hatches.is_empty());
+    assert_eq!(ordinary.config.look,diagram_ir::IshikawaLook::HandDrawn);
+}
