@@ -127,3 +127,12 @@ textual replacement, rather than assuming a farther function is adjacent.
 Print structured command outputs through their output field before diagnosing
 escaping: an earlier proposed external-helper patch matched nothing and changed
 no source; the displayed JSON escapes were not extra file characters.
+
+A Cargo test-name filter applies inside every selected integration binary. The
+first combined note-geometry wrapper used "wardley", but three new function names
+omit that word: two binaries ran0 tests despite command0. The exact target/event
+guard correctly failed wrapper1. Preserve those logs, remove the filter and run
+the complete31-unit/4/2/2/1 target vector; all24 legacy,24 named and6 derived note
+events must execute. Do not count an empty successful binary as tested behavior.
+An external JavaScript raw-template patch also failed before edits because its
+prose contained unescaped backticks; such setup failures provide no acceptance.

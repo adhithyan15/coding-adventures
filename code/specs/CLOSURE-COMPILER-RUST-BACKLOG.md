@@ -4,23 +4,30 @@
 
 
 <!-- CV04a Wardley theme-notes selected -->
-Published solePR17288 exact261c82f8 native14/Wardley-config progress by normal
-FF frome16c; API/Git-ref verified, UNMERGED/CONFLICTING/AUTOOFF. Actual nativee3
-1836/78/compiler895/LANG506/strict6 and Wardley1b981/47/strict14 independently
-accepted; carrier7c61d102/helper302fddfb, doc/lessons/diff0/raw1464/namedMD/
-resources/current61 plan selection-only all recorded. Miri DEFERRED/PENDING.
-Latest audited main61 includes987theme11 +e072human9 +61notes12 modifications,
-closed21-path union3beac8b9. Raw theme/notes source reviews8c49270a/5dd0b992
-WITHHOLD integration: config authority/active quotes/empty-init resurrection,
-unchecked typed note coordinates and note quote/comment preservation gaps.
-Next bounded theme+notes specification committed before tests/import/repair in
-isolated successor branch; sourcecode unchanged. Preserve native146/876 actual
-cells,94IR/2bodyerrors/271geometry/8Wardley scene-query controls,13Venn files/
-232complete cells,37Ishi/67IR, all guard/limit/dependency/resource boundaries.
-See CV04a-wardley-theme-notes-main-reconciliation.md. Tests/import/code NOT
-started; current-main/requiredCI/conflict/review/actualmerge/CV04b/fullparity/
-outputbyte/full transformation lineage remain OPEN. Frozen Miri untouched/
-unpolled/no duplicate/termination; heartbeat ACTIVE.
+Published solePR17288 exact261c82f8 remains UNMERGED/AUTOOFF. New specd629/d70b
+precedes parser testfirst08b and closed main61 merge10e:14pure/7whole recipes,
+two retained scalar/stage conflicts, complete225685 tree exact/63 commit blobs.
+Current unpublished theme+notes repairs retain native2853/resources21+3 and
+Venn/Ishi exact; no TS/book execution claim. Raw integration findings remain
+separately recorded in8c49270a/5dd0b992, not waived.
+Parser meaningfulred4a1 0P3F101; exactquote/origin adaptere152 plus whole node
+reader restore8e actual8parser tests pass at708:83theme+12note wholeIR cells,
+21exact note errors and old94IR/2bodyerrors. Original compile101/wrapper1 on
+generated tag10e and accidentally removed reader e152 remain failed.
+Typed tests53d9 meaningfulred1P1F101; ABI2d858 whole5files reverse-exact (8theme/
+7empty-notes fields only), derivedred0P1F101. Guard708 exactly3 production edits;
+actual unfiltered geometry31/4/2/2/1 PASS,24legacy/24named/4priority/6derived notes
+plus old controls. Original filtered empty-binary wrapper1 retained.
+New8 whole source/IR/layout/scene/glyph/all17metadata/ordered cached-font-query
+cells were specified and committed e81 before renderer execution; first execution
+passes all8 with2families, grid/anchor/link/evolution/zero-one-multiple notes,
+Unicode/percent text, explicit700/11 notes and preserved caller styles. Old8
+scene oracles now migrate only declared theme colors/stroke widths/background/
+metadata and required ABI; independent numeric/font/query tables stay fixed.
+Combined affected14 full/strict, source/terminal/carrier review, docs/current-main
+plan/publication and currenthead requiredCI/conflict/review/actualmerge PENDING.
+Miri DEFERRED/PENDING untouched/unpolled; fullClosure parity/outputbyte/full
+transformation lineage/stableIDs/spans/passsweep/CV04b OPEN, heartbeat ACTIVE.
 <!-- /CV04a Wardley theme-notes selected -->
 
 <!-- CV04a Wardley current checkpoint -->

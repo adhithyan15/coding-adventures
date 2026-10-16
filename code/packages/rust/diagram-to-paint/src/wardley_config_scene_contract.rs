@@ -29,9 +29,9 @@ fn glyphs(text:&str,x:f64,y:f64,size:f64,color:&str)->PaintInstruction {
  PaintInstruction::GlyphRun(PaintGlyphRun{base:PaintBase::default(),glyphs:text.chars().enumerate().map(|(i,c)|
  GlyphPosition{glyph_id:c as u32,x:x+i as f64*advance,y}).collect(),font_ref:"fake:test".into(),font_size:size as f32 as f64,fill:Some(color.into())})
 }
-fn ellipse(x:f64,y:f64,radius:f64,anchor:bool)->PaintInstruction {PaintInstruction::Ellipse(PaintEllipse{
-base:PaintBase::default(),cx:x,cy:y,rx:radius,ry:radius,fill:Some(if anchor {"#0f172a"}else{"#ffffff"}.into()),
-stroke:Some("#0f172a".into()),stroke_width:Some(2.0),stroke_dash:None,stroke_dash_offset:None})}
+fn ellipse(x:f64,y:f64,radius:f64,_anchor:bool)->PaintInstruction {PaintInstruction::Ellipse(PaintEllipse{
+base:PaintBase::default(),cx:x,cy:y,rx:radius,ry:radius,fill:Some("#ffffff".into()),
+stroke:Some("#000000".into()),stroke_width:Some(1.0),stroke_dash:None,stroke_dash_offset:None})}
 #[test]
 fn wardley_whole_source_ir_layout_scene_and_cached_queries() {
  let cases=vec![
@@ -56,23 +56,33 @@ Case{name:"minimum-positive-fonts",source:"%%{init: {\"wardley-beta\":{\"width\"
       links:if c.populated {vec![diagram_ir::LayoutedWardleyLink{from:p(c.lo,c.lo),to:p(c.hi_x,c.hi_y)}]}else{vec![]},
       evolves:if c.populated {vec![diagram_ir::LayoutedWardleyEvolution{from:p(c.lo,c.lo),to:p(c.mid,c.lo)}]}else{vec![]},notes:vec![]};
     let layout=diagram_layout_geometric::try_layout_wardley(&parsed).unwrap();assert_eq!(layout,expected_layout,"wholeLayout {} {family}",c.name);
-    let mut instructions=vec![path(vec![p(c.lo,c.lo),p(c.lo,c.hi_y),p(c.hi_x,c.hi_y)],"#475569",2.0,false)];
+    let mut instructions=vec![path(vec![p(c.lo,c.lo),p(c.lo,c.hi_y),p(c.hi_x,c.hi_y)],"#000000",1.0,false)];
     for (x,y) in &c.grid {instructions.push(path(vec![p(*x,c.lo),p(*x,c.hi_y)],"rgba(100, 100, 100, 0.2)",1.0,true));
         instructions.push(path(vec![p(c.lo,*y),p(c.hi_x,*y)],"rgba(100, 100, 100, 0.2)",1.0,true));}
-    for x in &c.stages[1..] {instructions.push(path(vec![p(*x,c.lo),p(*x,c.hi_y)],"#cbd5e1",1.0,false));}
-    if c.populated {instructions.push(path(vec![p(c.lo,c.lo),p(c.hi_x,c.hi_y)],"#64748b",1.5,false));
-        instructions.push(path(vec![p(c.lo,c.lo),p(c.mid,c.lo)],"#dc2626",2.0,false));
+    for x in &c.stages[1..] {instructions.push(path(vec![p(*x,c.lo),p(*x,c.hi_y)],"#000000",1.0,false));}
+    if c.populated {instructions.push(path(vec![p(c.lo,c.lo),p(c.hi_x,c.hi_y)],"#000000",1.0,false));
+        instructions.push(path(vec![p(c.lo,c.lo),p(c.mid,c.lo)],"#dc3545",1.0,false));
         instructions.push(ellipse(c.lo,c.lo,c.anchor_radius,true));instructions.push(ellipse(c.hi_x,c.hi_y,c.config.node_radius,false));
-        instructions.push(glyphs("T",c.title_x,c.title_y,c.title_font,"rgb(15, 23, 42)"));}
-    for (i,name) in stage_names.iter().enumerate() {instructions.push(glyphs(name,c.stage_glyph_x[i],c.stage_y,c.stage_font,"rgb(71, 85, 105)"));}
-    if c.populated {instructions.push(glyphs("A",c.node_x[0],c.node_y[0],c.label_font,"rgb(15, 23, 42)"));
-        instructions.push(glyphs("B",c.node_x[1],c.node_y[1],c.label_font,"rgb(15, 23, 42)"));}
-    instructions.push(glyphs("Visibility",c.axis_x,c.axis_y,c.axis_font,"rgb(71, 85, 105)"));
-    let expected=PaintScene{width:c.w,height:c.h,background:"rgb(3,5,7)".into(),id:None,metadata:Some(HashMap::from([
+        instructions.push(glyphs("T",c.title_x,c.title_y,c.title_font,"rgb(34, 34, 34)"));}
+    for (i,name) in stage_names.iter().enumerate() {instructions.push(glyphs(name,c.stage_glyph_x[i],c.stage_y,c.stage_font,"rgb(34, 34, 34)"));}
+    if c.populated {instructions.push(glyphs("A",c.node_x[0],c.node_y[0],c.label_font,"rgb(34, 34, 34)"));
+        instructions.push(glyphs("B",c.node_x[1],c.node_y[1],c.label_font,"rgb(34, 34, 34)"));}
+    instructions.push(glyphs("Visibility",c.axis_x,c.axis_y,c.axis_font,"rgb(34, 34, 34)"));
+    let expected=PaintScene{width:c.w,height:c.h,background:"#ffffff".into(),id:None,metadata:Some(HashMap::from([
         ("wardley.padding".into(),c.config.padding.to_string()),("wardley.nodeRadius".into(),c.config.node_radius.to_string()),
         ("wardley.nodeLabelOffset".into(),c.config.node_label_offset.to_string()),("wardley.axisFontSize".into(),c.config.axis_font_size.to_string()),
         ("wardley.labelFontSize".into(),c.config.label_font_size.to_string()),("wardley.showGrid".into(),c.config.show_grid.to_string()),
-        ("wardley.useMaxWidth".into(),c.config.use_max_width.to_string())])),instructions};
+        ("wardley.useMaxWidth".into(),c.config.use_max_width.to_string()),
+        ("wardley.backgroundColor".into(),c.config.theme.background_color.clone()),
+        ("wardley.axisColor".into(),c.config.theme.axis_color.clone()),
+        ("wardley.axisTextColor".into(),c.config.theme.axis_text_color.clone()),
+        ("wardley.gridColor".into(),c.config.theme.grid_color.clone()),
+        ("wardley.componentFill".into(),c.config.theme.component_fill.clone()),
+        ("wardley.componentStroke".into(),c.config.theme.component_stroke.clone()),
+        ("wardley.componentLabelColor".into(),c.config.theme.component_label_color.clone()),
+        ("wardley.linkStroke".into(),c.config.theme.link_stroke.clone()),
+        ("wardley.evolutionStroke".into(),c.config.theme.evolution_stroke.clone()),
+        ("wardley.noteCount".into(),"0".into())])),instructions};
     let resolver=VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
     let options=DiagramToPaintOptions {background:Color{r:3,g:5,b:7,a:255},device_pixel_ratio:1.0,
       label_font:FontSpec{family:family.into(),size:4.0,weight:600,italic:true,stretch:FontStretch::Condensed,..defaults.label_font},
