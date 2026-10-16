@@ -116,7 +116,7 @@ fn quote_owned_braces_blank_pipeline_lines_and_multiline_accessibility_survive()
 
 #[test]
 fn annotation_theme_and_ishikawa_root_settings_bind_actual_incoming_fields() {
-    let wardley = parse_wardley("%%{init: {\"themeVariables\": {\"annotationStroke\":\"#123456\",\"annotationTextColor\":\"#654321\",\"annotationFill\":\"#abcdef\"}}}%%\nwardley-beta\n").unwrap();
+    let wardley = parse_wardley("%%{init: {\"themeVariables\": {\"wardley\": {\"annotationStroke\":\"#123456\",\"annotationTextColor\":\"#654321\",\"annotationFill\":\"#abcdef\"}}}}%%\nwardley-beta\n").unwrap();
     assert_eq!(
         (
             wardley.config.theme.annotation_stroke.as_str(),
