@@ -2157,6 +2157,15 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     for bone in &diagram.bones {
         instructions.push(PaintInstruction::Path(line_path(&bone.path, &stroke,
             if bone.depth == 1 { 2.5 } else { 1.5 })));
+        let mut arrow_commands = Vec::with_capacity(bone.arrowhead.len() + 1);
+        for (index, point) in bone.arrowhead.iter().enumerate() {
+            arrow_commands.push(if index == 0 { PathCommand::MoveTo { x: point.x, y: point.y } }
+                else { PathCommand::LineTo { x: point.x, y: point.y } });
+        }
+        arrow_commands.push(PathCommand::Close);
+        instructions.push(PaintInstruction::Path(PaintPath { base: PaintBase::default(), commands: arrow_commands,
+            fill: Some(stroke.clone()), fill_rule: None, stroke: Some(stroke.clone()), stroke_width: Some(1.0),
+            stroke_cap: Some(StrokeCap::Round), stroke_join: Some(StrokeJoin::Round), stroke_dash: None, stroke_dash_offset: None }));
         let label_x = bone.label_position.x - bone.label_width / 2.0;
         let label_y = bone.label_position.y - bone.label_height / 2.0;
         instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: label_x, y: label_y,
@@ -11690,11 +11699,15 @@ mod tests {
             bones: vec![diagram_ir::LayoutedIshikawaBone { from: Point { x: 100.0, y: 80.0 },
                 to: Point { x: 180.0, y: 180.0 }, label: "People".into(),
                 label_position: Point { x: 100.0, y: 68.0 }, label_width: 80.0, label_height: 28.0, depth: 1,
-                path: vec![Point { x: 100.0, y: 80.0 }, Point { x: 180.0, y: 180.0 }] }], };
+                path: vec![Point { x: 100.0, y: 80.0 }, Point { x: 180.0, y: 180.0 }],
+                arrowhead: vec![Point { x: 180.0, y: 180.0 }, Point { x: 168.0, y: 180.0 }, Point { x: 180.0, y: 168.0 }] }], };
         let scene = diagram_to_paint_ishikawa(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#123456"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#123456")
+                && path.commands.last() == Some(&PathCommand::Close))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef")
                 && rect.stroke.as_deref() == Some("#123456"))));
