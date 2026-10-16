@@ -285,12 +285,18 @@ behavior are unchanged; this is reporting reconciliation.
 manifest match the source commit, all twelve checksum entries match GitHub
 asset digests, and the existing artifact coverage and limitations are retained.
 
-**Next release checkpoint — P1 [#17491](https://github.com/adhithyan15/coding-adventures/issues/17491):
-publish `task-app-v0.5.6`.** Roll forward the compatible SwiftUI drag-body
-gap reporting correction (#17483). This corrects diagnostics and tightens the
-style regression gate; emitted drag behavior is unchanged. Validate the existing
-release matrix, publish from main, and audit the immutable assets. Static HTML,
-Web Components, and Paint remain CI-only; signing and installers remain #13977.
+**Published checkpoint — [#17491](https://github.com/adhithyan15/coding-adventures/issues/17491):
+`task-app-v0.5.6`.** Published from #17492 and audited: immutable tag and
+manifest match the source commit, and all twelve checksums match asset digests.
+
+**Next release checkpoint — P1 [#17610](https://github.com/adhithyan15/coding-adventures/issues/17610):
+publish `task-app-v0.5.7`.** Roll forward the compatible SwiftUI milestone
+rotation fix (#17503): timeline and calendar markers retain their 45-degree
+diamond shape, reducing the measured SwiftUI style inventory from 59 to 57.
+Validate every existing release payload lane on the exact source commit, publish
+from main after preparation merges, and audit the immutable tag, manifest,
+inventory, and checksums. Static HTML, Web Components, and Paint remain CI-only;
+signing, notarization, and installers remain #13977. Preparation is not publication.
 
 ### Tier C — reach, stated honestly
 
