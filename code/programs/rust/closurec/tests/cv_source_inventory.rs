@@ -110,6 +110,17 @@ fn input_entry<'a>(wire:&'a Value,path:&std::path::Path)->(&'a str,&'a Value) {
     assert_eq!(rows.len(),1,"one exact file root");(rows[0].0.as_str(),rows[0].1)
 }
 fn assert_inventory(wire:&Value,path:&std::path::Path,source:&str,sha:&str,rows:&[Piece])->Vec<String> {
+    // Validate the independently authored fixture before asking the new producer
+    // to match it. This exercises the existing captured/legacy API at every
+    // edition and cannot turn a bad expected partition into a producer defect.
+    let point=|p:Pos|lexer::lexical::SourcePosition{byte_offset:p[0],scalar_offset:p[1],utf16_offset:p[2],line:p[3],scalar_column:p[4],utf16_column:p[5]};
+    let declared:Vec<_>=rows.iter().map(|r|lexer::lexical::LexicalPiece{kind:match r.token{None=>lexer::lexical::LexicalPieceKind::Trivia,Some(i) if r.type_=="EOF"=>lexer::lexical::LexicalPieceKind::Eof(i),Some(i)=>lexer::lexical::LexicalPieceKind::Token(i)},range:lexer::lexical::SourceRange{start:point(r.start),end:point(r.end)}}).collect();
+    for &edition in coding_adventures_javascript_tokens::EsVersion::ALL {
+        let limits=lexer::lexical::LexicalLimits::default();let captured=coding_adventures_javascript_lexer::tokenize_javascript_typed_with_ranges(source,edition,limits).unwrap();let legacy=coding_adventures_javascript_lexer::tokenize_javascript_typed(source,edition).unwrap();
+        assert_eq!(captured.tokens(),legacy.as_slice(),"unchanged complete Tokens/ASI/CVs {edition}");
+        assert_eq!(captured.pieces(),declared.as_slice(),"independent raw piece fixture {edition}");
+        lexer::lexical::validate_lexical_partition(source,legacy.len(),&declared,limits).unwrap();
+    }
     let (root_id,root)=input_entry(wire,path);
     assert_eq!(root["parent_ids"],json!([]));
     assert_eq!(root["origin"]["timestamp"],Value::Null);
@@ -181,6 +192,7 @@ fn d1_crlf_bare_cr_and_matched_unicode_separators_keep_independent_coordinates()
 }
 #[test]
 fn d1_ordinary_lexical_failure_has_exact_unavailable_inventory_in_copy_modes() {
+    assert!(coding_adventures_javascript_lexer::tokenize_javascript_typed("@",coding_adventures_javascript_tokens::EsVersion::Es2025).is_err(),"the unavailable control is an actual ordinary lexical error");
     for level in ["BUNDLE","TRANSPILE_ONLY"] {
         let f=Fixture::new("@");success(f.run(level,false,&[]));let plain=f.outputs();success(f.run(level,true,&[]));assert_eq!(f.outputs(),plain);let wire=reload(&f.sidecar());let (id,root)=input_entry(&wire,&f.input);
         assert_eq!(root["origin"]["meta"][NS],json!({"schema":"1","role":"input","buffer_domain":"read_to_string_utf8","encoding":"utf8","grammar":"javascript_standard","edition":"es2025","sha256":"c3641f8544d7c02f3580b07c0f9887f0c6a27ff5ab1d4a3e29caf197cfc299ae","byte_length":"1"}));
