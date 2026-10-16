@@ -5,7 +5,7 @@ fn theme()->WardleyTheme { WardleyTheme {background_color:"#ffffff".into(),axis_
 fn expected(theme:WardleyTheme,notes:Vec<WardleyNote>)->WardleyDiagram {WardleyDiagram {
  title:None,config:WardleyConfig{width:900.0,height:600.0,padding:48.0,node_radius:6.0,
  node_label_offset:8.0,axis_font_size:12.0,label_font_size:10.0,show_grid:false,use_max_width:true,theme},
- stages:vec!["Genesis".into(),"Custom Built".into(),"Product".into(),"Commodity".into()],nodes:vec![],links:vec![],evolves:vec![],notes}}
+ stages:vec!["Genesis".into(),"Custom Built".into(),"Product".into(),"Commodity".into()],nodes:vec![],links:vec![],evolves:vec![],notes,annotations_box:None,annotations:vec![]}}
 fn complete(label:&str,source:&str,want:WardleyDiagram) {
  assert_eq!(parse_wardley(source).unwrap_or_else(|e|panic!("{label}: {e:?}")),want,"{label}");
  eprintln!("WARDLEY-THEME-NOTE-IR {label}");
