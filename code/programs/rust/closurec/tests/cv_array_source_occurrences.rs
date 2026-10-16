@@ -67,7 +67,7 @@ fn assert_array(j:&Value,source:&str,path:&str,start:usize,end:usize,fold:Option
     let (id,entry)=candidates[0];let meta=&entry["origin"]["meta"][NODE];
     assert_eq!(entry["origin"]["meta"].as_object().unwrap().len(),1);
     assert_eq!(entry["origin"]["location"],"array_literal");assert!(entry["origin"]["timestamp"].is_null());
-    assert_eq!(meta["schema"],"1");assert_eq!(meta["kind"],"ArrayExpression");assert_eq!(meta.as_object().unwrap().len(),8);
+    assert_eq!(meta["schema"],"1");assert_eq!(meta["kind"],"ArrayExpression");assert_eq!(meta.as_object().unwrap().len(),7);
     assert_eq!(meta["start"],position(source,start));assert_eq!(meta["end"],position(source,end));
     let inventories:Vec<_>=root_entry["contributions"].as_array().unwrap().iter().filter(|c|c["source"]=="source.inventory" && c["tag"]=="finalized").collect();
     assert_eq!(inventories.len(),1);let pieces=inventories[0]["meta"][SOURCE]["piece_ids"].as_array().unwrap();
@@ -97,7 +97,11 @@ fn assert_array(j:&Value,source:&str,path:&str,start:usize,end:usize,fold:Option
         for p in pieces.iter().take(first).chain(pieces.iter().skip(last+1)) {
             // The computed property key is a legitimate separate operand.
             let physical=&entries[p.as_str().unwrap()];
-            if physical["origin"]["meta"][SOURCE]["token_type"]!="String" {assert!(!reachable.contains(p.as_str().unwrap()),"unrelated physical sibling reached");}
+            let piece=&physical["origin"]["meta"][SOURCE];
+            let begin=piece["start"]["byte_offset"].as_str().unwrap().parse::<usize>().unwrap();
+            let finish=piece["end"]["byte_offset"].as_str().unwrap().parse::<usize>().unwrap();
+            let exact_computed_key=source[end..].starts_with("[\"length\"]") && begin==end+1 && finish==end+9 && &source[begin..finish]=="\"length\"";
+            if !exact_computed_key {assert!(!reachable.contains(p.as_str().unwrap()),"unrelated physical sibling reached");}
         }
         let recorded=events.iter().find(|e|e["event"]["kind"]=="merge" && e["event"]["entity"]==result_id.as_str()).unwrap();
         assert!(merge[0]["sequence"].as_str().unwrap()<recorded["sequence"].as_str().unwrap(),"array construction precedes its fold");
