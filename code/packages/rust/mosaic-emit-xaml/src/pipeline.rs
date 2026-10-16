@@ -1078,6 +1078,7 @@ struct NativeTableEmission {
     role: NativeTableRole,
     header_helper: String,
     cell_name_helper: String,
+    row_label: Option<LayoutPropValue>,
     for_depth: usize,
     navigation_handlers: Vec<String>,
 }
@@ -8021,6 +8022,26 @@ fn emit_for(
                 .and_then(|binding| binding.index_name.as_deref())
                 .map(kebab_to_pascal_case)
                 .unwrap_or_else(|| "Index".to_string());
+            // Semantic labels belong to the authored data window. Keep Row
+            // local for layout and GridItem navigation, but lower the label
+            // in this nested template so captured indices remain reactive.
+            let row_label = ctx.native_table.as_ref().and_then(|table| table.row_label.clone());
+            let row_name = match row_label {
+                Some(LayoutPropValue::String(value)) => format!("\"{}\"", escape_csharp_string(&value)),
+                Some(LayoutPropValue::SlotRef(slot)) => {
+                    register_template_state_dependencies(&format!("slot: {slot}"), ctx);
+                    ctx.slot_xbind_path(&slot)
+                },
+                Some(LayoutPropValue::Expr(src)) => {
+                    register_template_state_dependencies(&src, ctx);
+                    match lower_expr_for_xbind(&src, ctx) {
+                    ExprLowering::Bindable(path) | ExprLowering::Helper(path) => path,
+                    ExprLowering::Unsupported(reason) => return Err(PipelineEmitError::UnsupportedExpression(reason)),
+                    }
+                },
+                None => format!("{row_index_property} + 1"),
+                _ => return Err(PipelineEmitError::UnsupportedExpression("native table row label must be text, a slot or an expression".into())),
+            };
             if let Some(vm) = ctx.row_vms.iter_mut().find(|vm| vm.class_name == vm_class) {
                 vm.helper_bindings.push(RowVmHelperBinding {
                     property_name: "MosaicTableHeader".to_string(),
@@ -8031,7 +8052,7 @@ fn emit_for(
                     property_name: "MosaicTableName".to_string(),
                     return_type: "string".to_string(),
                     owner_call: format!(
-                        "Owner.{cell_name_helper}(MosaicTableHeader, {element_property}, {row_index_property})"
+                        "Owner.{cell_name_helper}(MosaicTableHeader, {element_property}, {row_name})"
                     ),
                 });
             }
@@ -14575,10 +14596,10 @@ fn emit_native_host_table(
         parameters: vec![
             ("header".to_string(), "string".to_string()),
             ("value".to_string(), "object?".to_string()),
-            ("row".to_string(), "int".to_string()),
+            ("row".to_string(), "object?".to_string()),
         ],
         return_type: "string".to_string(),
-        body: "$\"{header}, row {row + 1}: {Convert.ToString(value) ?? string.Empty}\"".to_string(),
+        body: "$\"{header}, row {Convert.ToString(row) ?? string.Empty}: {Convert.ToString(value) ?? string.Empty}\"".to_string(),
     });
     ctx.needs_native_table_support = true;
 
@@ -14600,6 +14621,7 @@ fn emit_native_host_table(
         role: NativeTableRole::Header,
         header_helper: header_helper.clone(),
         cell_name_helper: cell_name_helper.clone(),
+        row_label: None,
         for_depth: 0,
         navigation_handlers: Vec::new(),
     });
@@ -14614,6 +14636,11 @@ fn emit_native_host_table(
         role: NativeTableRole::Body,
         header_helper,
         cell_name_helper,
+        row_label: shape.body.children[0].children[0].children.iter()
+            .find(|child| find_prop_keyword(child, "table-cell-role") == Some("row-header"))
+            .and_then(|header| header.children.first())
+            .and_then(|text| find_prop_value(text, "content"))
+            .cloned(),
         for_depth: 0,
         navigation_handlers: Vec::new(),
     });
@@ -27921,6 +27948,32 @@ mod tests {
             r.xaml
         );
         assert!(!r.xaml.contains("Header=\"{}{"), "got:\n{}", r.xaml);
+        assert!(r.for_view_models.iter().any(|vm| vm.source.contains("MosaicTableCellName1(MosaicTableHeader, Cell, Owner.Corner)")));
+        assert!(r.code_behind.contains("OnMosaicCornerRowProjectionInputChanged"));
+    }
+
+    #[test]
+    fn native_table_cell_names_use_authored_labels_and_local_coordinates() {
+        for (table, expected) in [
+            (numbered_native_table(LayoutPropValue::String("Quarter \\\"A\\\"".into())),
+             "MosaicTableCellName1(MosaicTableHeader, Cell, \"Quarter \\\\\\\"A\\\\\\\"\")"),
+            (canonical_native_table_node(), "MosaicTableCellName1(MosaicTableHeader, Cell, RowIndex + 1)"),
+        ] {
+            let r = compile(&native_table_sheet(), &layout_with_root("Sheet", table), &empty_style("Sheet"));
+            assert!(r.for_view_models.iter().any(|vm| vm.source.contains(expected)), "{:?}", r.for_view_models);
+            assert!(r.xaml.contains("MosaicTableCell Row=\"{x:Bind RowIndex, Mode=OneWay}\""));
+        }
+        let table = numbered_native_table(LayoutPropValue::Expr("labels[row-index]".into()));
+        let mut sheet = native_table_sheet();
+        sheet.slots.push(slot("labels", SlotType::List(Box::new(ListInnerType::Text)), true));
+        let r = compile(&sheet, &layout_with_root("Sheet", table), &empty_style("Sheet"));
+        assert!(r.code_behind.contains("OnMosaicLabelsRowProjectionInputChanged"));
+        let callback = r.code_behind.split("private static void OnMosaicLabelsRowProjectionInputChanged").nth(1).unwrap().split('}').next().unwrap();
+        assert!(callback.contains("NotifyRowProjectionChanged"));
+        let cell = r.for_view_models.iter().find(|vm| vm.source.contains("MosaicTableName")).unwrap();
+        assert!(!cell.source.contains("MosaicTableHeader, Cell, RowIndex + 1)"));
+        assert!(cell.source.contains("mosaicObservedMosaicTableName"));
+        assert!(cell.source.contains("RowIndex"));
     }
 
     #[test]
@@ -28480,7 +28533,10 @@ mod projection_identity_tests {
             class_name: "CellVm".into(), element_property: "Text".into(), element_type: "string".into(),
             has_index: true, has_width: true, has_is_selected: true,
             captures: vec![RowVmCapture { property_name: "RowIndex".into(), property_type: "int".into() }],
-            helper_bindings: vec![], nested_projections: vec![],
+            helper_bindings: vec![RowVmHelperBinding {
+                property_name: "MosaicTableName".into(), return_type: "string".into(),
+                owner_call: "$\"A, row {Owner.RowLabels[RowIndex]}: {Text}\"".into(),
+            }], nested_projections: vec![],
         };
         let dir = std::env::temp_dir().join(format!("mosaic-identity-{}-{}", std::process::id(),
             std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
@@ -28497,11 +28553,19 @@ class Owner {
     public IReadOnlyList<double> Widths = new[] { 80.0, 90.0 };
     public int Selected = 0;
     public string Label = "before";
+    public IReadOnlyList<string> RowLabels = new[] { "1", "2", "3" };
 PROJECTION
     static void Check(bool ok, string why) { if (!ok) throw new Exception(why); }
     static void Main() {
         var owner = new Owner(); var rows = owner.Rows; var first = rows[0]; var second = rows[1];
         var cells = first.Cells; var cell = cells[0]; Check(first.Label == "before", "initial helper");
+        Check(cell.MosaicTableName == "A, row 1: a", "initial accessible name");
+        var nameChanges = 0;
+        cell.PropertyChanged += (_, e) => { if (e.PropertyName == "MosaicTableName") nameChanges++; };
+        owner.RowLabels = new[] { "16", "17", "18" }; _ = owner.Rows;
+        Check(ReferenceEquals(cell, owner.Rows[0].Cells[0]) && cell.RowIndex == 0, "semantic label changed navigation identity");
+        Check(cell.MosaicTableName == "A, row 16: a" && nameChanges == 1, "viewport accessible name notification");
+        _ = owner.Rows; Check(nameChanges == 1, "unchanged name notified again");
         int collectionChanges = 0, helpers = 0;
         ((INotifyCollectionChanged)rows).CollectionChanged += (_, _) => collectionChanges++;
         first.PropertyChanged += (_, e) => { if(e.PropertyName == "Label") helpers++; if(e.PropertyName == "Cells") _ = first.Cells; };
