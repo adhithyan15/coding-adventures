@@ -1,5 +1,22 @@
 # Closure Compiler on Rust — parity backlog
 
+<!-- CV04a Wardley stage bands selected -->
+From verified pipeline carrier2d17, bounded stage-band spec is committed BEFORE
+tests/import/repair. Resume audit043930 main54f66, sole openPR17288 still
+conflicting/unmerged/autoOFF/no hosted acceptance. Raw stage69adc/c138 complete
+14paths/28blobs WITHHELD9dd1/manifestfbfaa3ce; select only that increment.
+All-or-none finite normalized nondecreasing stage ends, zero/equal/end-below1
+bands, closed quote-aware labels/aliases, typed/derived guards and retained font
+clamp are specified. Default centered/no-wrap bands intentionally change output;
+declare and reverse-prove the old64 Scene revision BEFORE first rendering.
+Native17553/newlabel54f66 remain separate; no raw whole-main replacement.
+Pipeline source80e8 strict14/full1022/59 and independent reviews PASS; actual
+published2d17 verified separately from push0/wrapper1/RESTold-Gitnew snapshots.
+Source and resource attributions remain exact, full goal/CV04b/merge OPEN.
+Miri DEFERRED/PENDING never passed; frozen run/inputs untouched/unpolled.
+One active PR; heartbeat ACTIVE. Next stage tests, closed import, genuine reds.
+<!-- /CV04a Wardley stage bands selected -->
+
 **Status:** active — resumed with provenance as a completion requirement
 
 <!-- CV04a Wardley pipelines selected -->
