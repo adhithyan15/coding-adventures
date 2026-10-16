@@ -1,5 +1,8 @@
 # CV04a: bounded flat Wardley pipelines
 
+The opening checkpoint below records pre-implementation state; terminal
+verification at the end supersedes that historical pending status.
+
 Specification committed before pipeline tests/import/repair from actual published
 carrier3a84. Sole PR17288 remains unmerged/conflicting/autoOFF; main553 adds later
 stage and native17 increments, without current-main acceptance. Nativec82 full
@@ -118,3 +121,36 @@ merge/delete lineage/stableIDs/spans/pass-sweep/CV04b OPEN. Base ESTree canonica
 boundary/own types/no dependencies remain owner decisions. Miri DEFERRED/PENDING,
 never passed; frozen run/checkout/inputs/target/receipts untouched and unpolled.
 Deliver first, genuine final-source Miri afterward. Heartbeat remains active.
+
+
+## Exact-source terminal verification
+
+At pipeline source `80e8f09d`, strict checks for all14 affected packages and the
+complete unfiltered 1,022-test/59-target suite passed with zero failures/ignores.
+Thirteen test functions were added, none removed. Whole source IR, typed IR,
+checked/compatibility layout and16 new complete Scenes bind every glyph, all20
+metadata fields and ordered cached Georgia/CourierNew queries. New literal
+oracle tables preceded the first rendering and passed unchanged; old48 complete
+Scenes retain every assertion with only required ABI fields/zero pipelineCount.
+Source57 whole-IR cells/44 exact physical errors,12 legacy/12 named refusals,
+11 priority cells,20 derived refusals plus parent-square overflow and increasing
+8/32/128 actual-key comparison profiles pass. The first strict101 test-helper
+let-and-return failure and the ABI helper census preflight failure are retained;
+the direct-return repair changes no production or Scene oracle. Independent
+exact-source/focused and terminal security reviews passed.
+
+These results are source-specific local acceptance. Native16 c82's1848/78/996
+and SwiftUI263/6 retain their original execution attribution; current native166/
+2861 carrier objects and SwiftUI191 stay exact. Closure36/3705+3 and resources21
+retain their earlier attribution without new execution. Registry376 is unchanged;
+only four incoming local style versions advance. All Venn232/Ishikawa37/prior67
+IR controls remain. Raw Rust/TOML1488 and the complete14/50 style cone are frozen.
+
+Sole PR17288 is still unmerged; current-main reconciliation, required hosted
+checks and merge are separate gates. The bounded pipeline slice integrates c138
+while later stage69adc/native17553 remain independently audited, WITHHELD and
+unexecuted here. Full Closure parity/output-byte/source/full transformation
+lineage/CV04b remain OPEN. Base ESTree canonical boundary, own types and no new
+crates.io dependencies remain decisions. Miri **DEFERRED/PENDING**, never passed;
+frozen run/checkout/inputs/target/receipts untouched and unpolled. Implementation
+delivery comes first, then genuine final-source Miri. Heartbeat remains ACTIVE.
