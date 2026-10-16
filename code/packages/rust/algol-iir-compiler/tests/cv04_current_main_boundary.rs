@@ -18,12 +18,12 @@ fn current_main_finite_twenty_one_units_preserves_seventeen_and_eighteen() {
 
 #[test]
 fn current_main_twenty_two_units_still_refuses_at_typed_output_boundary() {
-    let error = compile_source(&source(22), "integration").unwrap_err();
+    let error = compile_source(&source(24), "integration").unwrap_err();
     assert!(
         matches!(&error, CompileError::Type(message) if message == "standard output procedure \"output\" cannot print a real value"),
         "{error:?}"
     );
-    println!("CV04_MAIN_NATIVE_REFUSE 22");
+    println!("CV04_MAIN_NATIVE_REFUSE 24");
 }
 
 #[test]
@@ -35,4 +35,20 @@ fn rounded_f64_intermediate_never_grants_an_exact_integer_bound() {
         "{error:?}"
     );
     println!("CV04_MAIN_NATIVE_REFUSE rounded-intermediate");
+}
+
+
+// Keep the old22 declaration/consumer verbatim through source(22); its legacy
+// negative test name remains above while its quantitative boundary becomes24.
+#[test]
+fn current_cap23_preserves_original_twenty_two_and_new_twenty_three_integration_sources() {
+    use algol_iir_compiler::Operand;
+    for units in [22,23] {
+        let text=source(units);
+        let module=compile_source(&text,"integration").unwrap_or_else(|error|panic!("{text}: {error:?}"));
+        let instructions=&module.get_function("main").expect("main").instructions;
+        assert_eq!(instructions.iter().filter(|i|i.op=="call" && i.srcs.first().and_then(Operand::as_var)==Some("__basic_print_real")).count(),1,"{text}");
+        assert_eq!(instructions.iter().filter(|i|i.op=="call_builtin" && i.srcs.first().and_then(Operand::as_var)==Some("print_i64")).count(),0,"{text}");
+        println!("CV04_MAIN_NATIVE_EXACT_ADMITTED {units}");
+    }
 }
