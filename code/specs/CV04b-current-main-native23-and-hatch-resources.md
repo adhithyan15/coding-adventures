@@ -187,3 +187,91 @@ source-ID/backend tuples; preserve duplicate authored occurrences separately.
 No production/shared lifetime/new dependency/ignore changes are authorized by
 this fixture slice. Run focused integration and all29 runtime cases/strict, then
 full affected final-source suites with fresh graph/input/lock evidence.
+
+
+## Collision reconciliation before integrating main6e54
+
+Incoming security audit33c6686f and contract-v1 review94d9732e are WITHHELD.
+The following combined draft+v2 contract has independent security-contract
+PASS3fcfeadf; this grants test readiness only, not implementation acceptance.
+
+Preserve incoming same-side order: partition by ORIGINAL label center y < spine; sort increasing absolute distance from spine with original bone index as explicit tie breaker, using allocation-free unstable sort. Preserve all x, dimensions, bone paths and arrowheads. Before same-side resolution, clamp each above center to at most spine - half_height - 2 and each below center to at least spine + half_height + 2. This guarantees at least4px vertical cross-side clearance, including supported font65536 A/B atwidth576. Ordinary boxes already clear of spine retain exact positions. A cap-font single-A remains supported and its expected moved y/outline must be authored from this rule, never copied from production output. This is an explicit extension of incoming same-side-only resolution, required for its all-pairs no-overlap claim. Final labels may extend beyond canvas as incoming outward collision policy already permits; do not silently shrink/clip typography.
+
+After each side clamp, preserve incoming arithmetic order for x overlap and outward y relocation against ALL earlier same-side labels; count every scheduled pair even when horizontal rejection is immediate. Use original-side membership throughout. No free whole-diagram all-pairs postcondition pass is necessary: opposite-side vertical separation follows directly from the clamp; same-side separation follows the placement invariant. Tests independently verify all pairs on bounded fixtures.
+
+One shared CollisionWork budget of8388608 scheduled pair visits applies to both Classic and HandDrawn. Preflight count_above*(count_above-1)/2 + count_below*(count_below-1)/2 using checked integer arithmetic with parity division before multiplication. Count0/1 contributes0 without subtraction underflow. Overflow or above-limit returns own IshikawaLayoutError::CollisionWork. Do not reset by side, charge only overlapping pairs, truncate causes, or silently skip collision resolution. A private limit seam may test exact/one-over; production limit constant unchanged. This budget indirectly bounds index count: n_above+n_below <= 2*(1+ceil(sqrt(2*limit))) whenever sides are large, and0/1 cases remain trivially bounded.
+
+Validate initial/final centers, dimensions, extents, spine distances, comparison intermediates and each candidate target finite; nonfinite yields own DerivedGeometry. Keep existing font1..65536/default16 normalization BEFORE geometry, including1e12/1e307 fallback. Validate derived coordinates before budget/sort so NaN cannot select arbitrary side/order. Preserve deliberate ordinary scalar normalization; do not add unrelated lower depth limits. Preflight collision work after numeric initial validation, then fallibly reserve exact total side index storage with Allocation error, then sort/place/validate final geometry. Use prior sorted prefix as placed indices (no separately growing placed Vec); no per-pair or stable-sort scratch allocation. No successful partial layout or output on errors.
+
+Generate effect and ALL root/nested label outlines only after final collision positions, preserving seed/index order. No eager ishikawa_hatches call can remain at effect/root/nested construction or in resolver. HandDrawn then uses ONE all-outline shared preflight/count/reserve/generate hatch pipeline from the prior reviewed contract. Classic bypasses hatch-grid/work limits yet still pays collision work. Rebuild each outline once and clip each outline twice only as required by exact two-pass hatch counting, with one scratch buffer; no extra final hatch regeneration. Numeric collision errors precede CollisionWork/Allocation, followed by complete final-outline numeric, hatch line/work, exact segments and final storage admission. Preserve prior final-stage/no-partial policy.
+
+Tests precede implementation: red/green checked pair arithmetic0/1/overflow, both-side aggregate exact/one-over counters, horizontal-disjoint pair charges, Classic+HandDrawn and100000 shallow roots refusal using bounded preflight instrumentation (no quadratic attack execution). All moved/unmoved/root/nested/tied positions,4px and exact-contact/fractional arithmetic need independently derived expected whole outlines and Paint/glyph data. Keep every incoming no-overlap assertion and add cap-font cross-side A/B plus cap-font single-A positive, fallback-font full objects, and counter evidence of zero early clipping and one final shared pipeline. Keep old huge-finite hatch liveness/projection/budget controls and explicit Result propagation at source-facing artifact routes. New integration does not grant full downstream/final-source/security/publication acceptance.
+
+This addendum corrects v1's finite-only invariant; v1 remains WITHHELD94d9732e.
+Keep its budget, allocation, original-order and final-only hatch design.
+
+Initial and each final box must have finite represented left/right/top/bottom,
+strict left<right and top<bottom for positive declared dimensions. Validate all
+intermediates and distance/order keys. For each above target after clamp require
+finite spine_y - (target + half_height) >= 2; below require finite
+(target - half_height) - spine_y >= 2. Nonfinite or unrepresentable required
+clearance returns DerivedGeometry. Do not introduce a blanket Classic coordinate
+or hatch-domain cap: numerically valid, representably separated Classic geometry
+remains supported independently of HandDrawn hatch-grid admission.
+
+Each already scheduled same-side pair owns its arithmetic certification. A
+horizontal rejection requires an actual finite gap other_left - current_right
+>= 4 or current_left - other_right >= 4. If neither holds, apply incoming outward
+y update as needed, then certify achieved actual finite vertical gap >= 4 against
+that earlier bone. Failure is DerivedGeometry; never claim a rounded-away shift
+establishes separation. Before each new target and after the side, recheck its
+extent validity and side gap. Later updates move only farther outward, and every
+such finite/extent-valid target preserves previously certified separation. No
+extra all-pairs scan or uncharged extra pair iteration. Group each pair's finite
+checks/comparisons/gap proof in its charged visit; test work counts separately
+from arithmetic assertions. Exact-contact/fractional/huge-finite controls bind
+the concrete operation order; ordinary incoming geometry stays byte-exact where
+its arithmetic actually proves the required gaps.
+
+Add public Classic witness canvas1e20/font16, rootA and sibling childrenB/C depth2:
+finite raw centers collapse near(2.6e19,8.12e18), width72/height28; require explicit
+DerivedGeometry with bounded visits rather than successful overlapping boxes.
+Keep corresponding ordinary-width success and both looks. Include rounded-away
+2px spine clamp,4px pair clearance, nonfinite extents/targets and no partial
+Result/output checks. Cap-font A/B must succeed with represented cross-side gap
+>=4; cap-font single-A HandDrawn stays positive under prior shared hatch limits.
+
+Production pair budget8388608 cannot equal the sum of two triangular counts;
+do not invent an exact real diagram with that count. Bind production arithmetic
+nearest fixtures8388606 for sides531/4062 (admitted) and8388610 for1705/3725
+(refused), with pure-count overflow tests. A private shared limit1 allows root3
+balanced sides2/1 work1 exact and root4 sides2/2 work2 one-over. These must inspect
+preflight rather than run millions of pair visits. Horizontal-disjoint diagrams
+still charge the same planned pair count. Tests cover both looks, allocation
+failure seam and combined geometry/collision/hatch error priority.
+
+No implementation/full-suite/publication/fullgoal acceptance. Miri DEFERRED/PENDING.
+
+
+Error phase clarification from independent contract review: INITIAL numeric
+validation precedes CollisionWork and scratch Allocation. Resolution-derived
+numeric failures can occur only after collision work admission, before final
+outline/hatch stages. Never execute unbudgeted resolution to search for a later
+numeric failure. No eager hatch call may survive before final geometry.
+
+## Runtime exit-contract correction identified by actual execution
+
+At e5df focused integration4P/0F passes, but the29-source runtime test actually
+fails0P1F/Cargo101 after98 successful source/backend observations:16 effect-marked
+saved cases execute all6 backends with codeSome(0) and exact output; unchanged
+result-context17 additionally executes NativeAot/Llvm code0, then Wasm completes
+normally with codeSome(21), stdout21. Preserve this compiled semantic failure and
+all original source bytes. The earlier universalSome(0) contract was mistaken
+for the13 sources that deliberately declare real result. The compiler returns
+that f64 as main's result; existing backends interpret it differently. Do not
+change result to saved, allow arbitrary statuses, normalize a trap into success,
+or claim all29 execute based on16 complete cases. Exact expected backend statuses
+and typed-return observability require an independently reviewed successor
+contract; native/LLVM typed-main ABI coverage must stay explicitly bounded.
+All saved cases retain their strict normalExit0 contract. No source/production
+change is authorized merely to make the mistaken status assertion green.

@@ -65,8 +65,15 @@ assertion failed and remains preserved. Next spec adds exact29 runtime companion
 and quantitative24 integration migration without altering production.
 New observed main6e54ad6b collision integration is unintegrated and security
 WITHHELD33c6686f: quadratic pair scans, eager hatches, cap-font cross-side overlap.
-Concrete external repair contract is under independent review. No current native
-runtime/downstream/final-source acceptance is inferred from unit greens.
+Collision draft+v2 now has independent security-contract PASS3fcfeadf and is
+tracked before integration; implementation/tests remain pending. Exact29 runtime
+fixtures68c first failed to compileE0603 (zero runtime), fixed test import ate5df.
+Focused integration4P/0F actual0. Runtime compiled red0P1F/Cargo101:16 saved
+22/23 cases execute all6 backends (96 strict Exit0 tuples); result-context17
+additionally NativeAot/Llvm0, then Wasm normal code21/stdout21 disproves the
+mistaken universal-zero spec. All exact source bytes remain; successor typed
+exit/ABI contract is independently under review. No full native/runtime29 or
+downstream/final-source acceptance follows from partial observations.
 
 Next: spec-first current-main/native23/hatch repair, exact old-source and whole-
 fixture retention, fresh input/graph/lock receipts, affected suites/strict and
