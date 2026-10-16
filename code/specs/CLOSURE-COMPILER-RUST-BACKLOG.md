@@ -64,7 +64,9 @@ remain pending. Actual cc911 public huge-finite empty HandDrawn hatch call now h
 bounded red: Cargo101/buildtrue/1P1F; owned child noncompletion by3s, parent
 kills/reaps only that Child handle at3006ms. Producer51247 consumed0 verifying
 expected red, receipt `CV04b-ishikawa-liveness-red-cc911199.json`; no repair
-acceptance/infinite-duration/UB/Miri claim. Red security review is pending.
+acceptance/infinite-duration/UB/Miri claim. Independent expected-red review92653b32 PASS binds7939 immutable inputs/locks
+and actual artifact/child/timeout evidence; repair acceptance remains false.
+Harden owned-child cleanup for rare query/kill error unwinding before delivery.
 Incoming timeline94df security WITHHELD95041495: admitted padding can produce
 infinite/negative actual geometry; skipped-comment text can become configuration;
 sectionless single-color TD loses its spine; typed LR has a repeated quadratic

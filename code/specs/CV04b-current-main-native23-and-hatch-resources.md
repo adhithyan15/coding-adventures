@@ -339,5 +339,8 @@ false. This is bounded runtime evidence, separate from the fixed-operation ULP
 stall proof; it is not infinite-duration or Rust UB evidence. No external/Miri
 process was inspected or changed. The legacy explicit-expect wrapper must refuse
 unsupported geometry before expensive work; keep its isolated panic-policy test
-alongside successor exact Result/error/resource/no-partial tests. Source/terminal
-red review is pending; production still unchanged and the repair is not implemented.
+alongside successor exact Result/error/resource/no-partial tests. Independent expected-red
+source/terminal review92653b32 PASS binds7939 immutable inputs/locks and actual
+artifact/child evidence. The observed kill/reap path succeeded; harden rare
+query/kill-error unwinding with owned-child cleanup before delivery. Production
+still unchanged and repair not implemented.
