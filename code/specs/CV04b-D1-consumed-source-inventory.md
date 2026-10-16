@@ -228,7 +228,11 @@ Private unit tests precede implementation: compare arithmetic values/compact
 bytes against actual serialized namespace objects, exercise exact and one-less
 limits on each axis and cumulative files, all25 token spellings and14 editions,
 zero/over-ceiling/overflow/allocator-capacity refusals, and every capture-error
-class. Producer refusal must precede any root/child/metadata mutation.
+class. Source-inventory precharge and non-Lex capture admission refusals precede
+any root/child/metadata mutation. Later generic graph or allocator failures may
+leave unpublished internal state, as the failure-ownership section specifies;
+they must preserve the complete preexisting output set. No file-wide graph
+rollback is required or claimed.
 
 ## First producer fixture correction
 
