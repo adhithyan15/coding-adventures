@@ -20,8 +20,8 @@ fn canonical_two_unit_forms_keep_one_real_formatter_and_legacy_arm_forms() {
 
 #[test]
 fn two_unit_refusals_keep_exp_ranges_and_cumulative_wrapper_budget() {
-    for expression in ["entier((sign(pick()) + 8) + 11)","entier(1 + (18 + sign(pick())))",
-        "entier(entier(sign(pick()) + 1) + 18)","entier(abs(sign(pick()) + 2) + 17)",
+    for expression in ["entier((sign(pick()) + 8) + 14)","entier(1 + (21 + sign(pick())))",
+        "entier(entier(sign(pick()) + 1) + 21)","entier(abs(sign(pick()) + 2) + 20)",
         "entier(sign(pick()) + 2.5)","entier(sign(pick()) + sign(pick()) + 1)",
         "entier(sign(pick()) + ((9007199254740992 + 1) - 9007199254740992) + 2)",
         "entier(ln(exp(exp(exp(sign(pick()) + 2)))))",
@@ -48,4 +48,22 @@ fn two_unit_conditional_fronts_keep_alias_effects_and_discovery_limit() {
         let (visits,limit)=SELECTOR_CLASSIFIER_BUDGET.with(Cell::get).unwrap();assert!(visits>0&&visits<=limit);
         eprintln!("two-unit condition={condition} root={root} value={value} visits={visits} limit={limit}");
     }}}
+}
+
+// Every formerly refused full authored source stays observable, including its
+// producer value/declarations. Numerical cap migration cannot erase a source.
+#[test]
+fn current_main_preserves_all_former_nineteen_unit_authored_sources() {
+    for source in [
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) + 11); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (18 + sign(pick()))); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 18); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 17); output(saved) end",
+
+    ] {
+        let module=compile_source(source,"former_nineteen_source").unwrap_or_else(|e|panic!("{source}: {e}"));
+        let instructions=&module.get_function("main").unwrap().instructions;
+        assert_eq!(instructions.iter().filter(|i|i.op=="call"&&i.srcs.first().and_then(Operand::as_var)==Some("__basic_print_real")).count(),1,"{source}");
+        assert_eq!(instructions.iter().filter(|i|i.op=="call_builtin"&&i.srcs.first().and_then(Operand::as_var)==Some("print_i64")).count(),0,"{source}");
+    }
 }

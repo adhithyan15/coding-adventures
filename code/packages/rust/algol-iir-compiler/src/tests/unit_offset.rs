@@ -103,13 +103,13 @@ fn identity_declaration_guard_checks_exact_tree_signature_and_resolved_identity(
 fn nested_offsets_and_shifted_narrow_range_proofs_have_exact_typed_refusals() {
     let mut failures = Vec::new();
     for (name, expression) in [
-        ("nested-right", "entier((sign(pick()) + 8) + 11)"),
-        ("nested-left", "entier(1 + (18 + sign(pick())))"),
-        ("entier-wrapped", "entier(entier(sign(pick()) + 1) + 18)"),
-        ("abs-wrapped", "entier(abs(sign(pick()) + 2) + 17)"),
+        ("nested-right", "entier((sign(pick()) + 8) + 14)"),
+        ("nested-left", "entier(1 + (21 + sign(pick())))"),
+        ("entier-wrapped", "entier(entier(sign(pick()) + 1) + 21)"),
+        ("abs-wrapped", "entier(abs(sign(pick()) + 2) + 20)"),
         ("shifted-triple-exp", "entier(ln(exp(exp(exp(sign(pick()) + 1)))))"),
-        ("flat-nineteen", "entier(sign(pick()) + 8 + 11)"),
-        ("non-unit", "entier(sign(pick()) + 19)"),
+        ("flat-nineteen", "entier(sign(pick()) + 8 + 14)"),
+        ("non-unit", "entier(sign(pick()) + 22)"),
     ] {
         let source = format!("begin real procedure pick; pick := 3.5; real saved; saved := {expression}; output(saved) end");
         match compile_source(&source, "unit_offset_refusal") {
@@ -173,8 +173,8 @@ fn conditional_front_second_and_nonunit_offsets_keep_typed_refusals() {
     for condition in ["true","false"] {
         for expression in [
             "entier((if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1)) + 1)",
-            "entier(if choose() then (entier(sign(left)) + 19) else (entier(sign(right)) + 1))",
-            "entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 19))",
+            "entier(if choose() then (entier(sign(left)) + 22) else (entier(sign(right)) + 1))",
+            "entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 22))",
         ] {
             let source=format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := {expression}; output(saved) end");
             assert!(matches!(compile_source(&source,"conditional_unit_refusal"),Err(CompileError::Type(message)) if message.contains("cannot print a real value")),"condition={condition}: {source}");
@@ -198,5 +198,29 @@ fn conditional_front_condition_name_writes_refuse_and_value_writes_preserve_proo
                 }
             }
         }
+    }
+}
+
+// Every formerly refused full authored source stays observable, including its
+// producer value/declarations. Numerical cap migration cannot erase a source.
+#[test]
+fn current_main_preserves_all_former_nineteen_unit_authored_sources() {
+    for source in [
+        "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier(if choose() then (entier(sign(left)) + 19) else (entier(sign(right)) + 1)); output(saved) end",
+        "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 19)); output(saved) end",
+        "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier(if choose() then (entier(sign(left)) + 19) else (entier(sign(right)) + 1)); output(saved) end",
+        "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 19)); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) + 11); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (18 + sign(pick()))); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 18); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 17); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 8 + 11); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 19); output(saved) end",
+
+    ] {
+        let module=compile_source(source,"former_nineteen_source").unwrap_or_else(|e|panic!("{source}: {e}"));
+        let instructions=&module.get_function("main").unwrap().instructions;
+        assert_eq!(instructions.iter().filter(|i|i.op=="call"&&i.srcs.first().and_then(Operand::as_var)==Some("__basic_print_real")).count(),1,"{source}");
+        assert_eq!(instructions.iter().filter(|i|i.op=="call_builtin"&&i.srcs.first().and_then(Operand::as_var)==Some("print_i64")).count(),0,"{source}");
     }
 }

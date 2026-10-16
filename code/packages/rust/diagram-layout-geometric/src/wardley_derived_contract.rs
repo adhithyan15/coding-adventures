@@ -12,7 +12,7 @@ fn wardley_postcondition_rejects_each_nonfinite_geometry_or_style_route() {
             0=>d.width=f64::NAN,
             1=>d.height=f64::INFINITY,
             2=>d.nodes.push(LayoutedWardleyNode{label_offset_x:None,label_offset_y:None,source_strategy:None,inertia:false,id:"a".into(),label:"A".into(),position:Point{x:f64::NAN,y:0.0},anchor:true,pipeline_parent:false}),
-            3=>d.links.push(LayoutedWardleyLink{from:Point{x:0.0,y:0.0},to:Point{x:f64::INFINITY,y:0.0}}),
+            3=>d.links.push(LayoutedWardleyLink{from:Point{x:0.0,y:0.0},to:Point{x:f64::INFINITY,y:0.0},dashed:false,label:None,label_position:Point{x:0.0,y:0.0},label_angle:0.0,flow:None}),
             4=>d.evolves.push(LayoutedWardleyEvolution{from:Point{x:0.0,y:f64::NAN},to:Point{x:0.0,y:0.0}}),
             5=>d.config.node_radius=1.5e308,
             6=>d.config.axis_font_size=1.75e308,
@@ -22,4 +22,23 @@ fn wardley_postcondition_rejects_each_nonfinite_geometry_or_style_route() {
         eprintln!("WARDLEY-DERIVED route{which}");
     }
     assert_eq!(validate_wardley_geometry(&empty()),Ok(()));
+}
+
+#[test]
+fn wardley_link_label_postcondition_owns_rotation_translation_and_text_box() {
+    let mut supported=empty();
+    supported.links.push(LayoutedWardleyLink{from:Point{x:100.0,y:100.0},to:Point{x:200.0,y:200.0},dashed:false,
+        label:Some("demand".into()),label_position:Point{x:150.0,y:150.0},label_angle:45.0,flow:None});
+    assert_eq!(validate_wardley_geometry(&supported),Ok(()));
+    for route in 0..5 {
+        let mut forged=supported.clone();
+        match route {
+            0=>forged.links[0].label_angle=f64::NAN,
+            1=>forged.links[0].label_position.y=f64::INFINITY,
+            2=>{forged.links[0].label_position.x=f64::MAX;forged.links[0].label_position.y=0.0;forged.links[0].label_angle=180.0;},
+            3=>{forged.links[0].from.x=f64::MAX;forged.links[0].to.x= -f64::MAX;},
+            _=>forged.config.label_font_size=1e308,
+        }
+        assert_eq!(validate_wardley_geometry(&forged),Err(WardleyLayoutError::DerivedGeometry),"rotation/text route={route}");
+    }
 }
