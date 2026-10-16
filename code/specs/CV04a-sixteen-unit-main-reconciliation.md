@@ -7,7 +7,7 @@ conflicting/autoOFF). Native93 actual1842/78/936 and style1e13 actual1000/53/
 R2 remains fixed at reviewed/published e183; R1 uses the separate idle railroad
 target. The old native15 branch and source93 receipts remain unchanged.
 Latest main314 adds14 Wardley forces paths beyond the audited cce frame. This
-bounded native16 slice imports only nine native paths plus35 pure Mosaic/SwiftUI
+bounded native16 slice imports only nine native paths plus35 Mosaic/SwiftUI
 paths through cce; forces remain a separate pending style slice. Classify the
 entire current pending union, without importing unreviewed forces or inferring
 current-main acceptance from the partial native reconciliation.
@@ -79,3 +79,24 @@ IDs/spans/pass-sweep/CV04b remain OPEN. Miri DEFERRED/PENDING, never passed;
 frozen checkout/process/inputs/target/receipts untouched and unpolled, no duplicate
 or termination. Delivery first, genuine final-source Miri afterward. Heartbeat
 remains ACTIVE until the full completion contract, including Miri, is achieved.
+
+## Owned-frame overlap correction before import or production edits
+
+The complete44-path preflight derives37 pure imports and seven overlaps, rather
+than treating all35 Mosaic paths as pure relative to the owned tree. SwiftUI's
+README and pipeline retain the owned elevation single-scan observer and three
+exact report/resource controls. The incoming rotation feature is a separate
+addition. Preserve both whole README paragraphs at the sole documentation
+conflict; take the complete independent zero-conflict pipeline three-way and
+verify all owned observer/test bytes remain. Do not resolve either file by
+replacing it wholesale with incoming main. Native lib has two production and
+one test conflict; restore the entire owned production prefix and retain every
+structural13/14/15/16 refusal while importing the new17 boundary cases.
+
+After the closed import/repair, also execute strict all-target SwiftUI validation
+and its complete unfiltered Rust library/integration tests, including old exact
+elevation work/report and incoming rotation controls. This is Rust source/code-
+generation evidence, without Swift compilation, Apple-host or C#/XAML runtime
+acceptance. Other imported Mosaic files remain exact incoming whole bytes;
+native6/style14/Closure36 acceptance and their static resource limits remain
+separately attributed. Preserve the original spec assumption as history.
