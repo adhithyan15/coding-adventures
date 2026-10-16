@@ -79,6 +79,18 @@ that receipt as a toolchain/resource failure, never a semantic red. Official Car
 cleanup reclaimed only verified idle generated caches, with sources/receipts and
 frozen Miri untouched. Add companion assertions before the next genuine red.
 
+The first post-repair focus at46a9 actually failed4P1F before runtime execution:
+the complete-IIR reference incorrectly called a literal-initialized conditional
+an accepted16 control. Retained selector provenance requires runtime_real_slots
+roots, as the existing16 fixtures establish through real producer procedures.
+Correct only the common test fixture to declare/call leftvalue()/rightvalue()
+for both control and actual. Keep the old literal-root conditional as an explicit
+semantic-refusal companion. Preserve exact wire/full-field/source-map assertions
+and the four production edits; do not relax root admission. Emit a completion
+marker only after each full-IIR case passes, requiring exactly10 distinct cases.
+The old log has no per-case markers, so inferred first-four template ordering
+is not a recorded completion count. Preserve the original failed receipt/log.
+
 Commit tests before changing production. Genuine semantic reds must be actual
 executed assertion failures; compiler/ABI/helper failures are separate outcomes.
 After repairing only the four declared locations, independently reverse the

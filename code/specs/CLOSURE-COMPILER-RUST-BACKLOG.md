@@ -25,7 +25,13 @@ Repairc272 changes only4dedicated canonical locations to18; whole other compiler
 production/sharedexp/ln/f64fold byte-exact. Lock only ALGOL.477→.479/LANG.551→.553,
 registry376/allotherfields exact. Focused green, full native and final security/
 delivery remain PENDING. Disk/resource failure and two preflight helper failures
-remain separate from genuine semantic reds. No native18 publication yet. Label54f66 separately pending.
+remain separate from genuine semantic reds. Firstpostrepairfocus53328 consumed: compiler1014P1F, no runtimes executed.
+The IIR reference's literal-initialized conditional violates existing strict
+runtime-root provenance. Independent review confirms a TESTONLY producer-root
+fixture correction; retain old invalid source as negative, all wire/side-table/
+SourceLoc assertions and4production edits. Originalfailure unchanged; new10case
+completion markers required, no inferred ordering relabeled as acceptance.
+No native18 publication yet. Label54f66 separately pending.
 FullClosure/CV04b/hostedchecks/merge OPEN; oneactivePR/heartbeatACTIVE.
 Miri DEFERRED/PENDING NEVER passed; frozen run/inputs untouched/unpolled.
 <!-- /CV04a dedicated native18 selected -->
