@@ -2228,7 +2228,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_timeline_to_png() {
         let (title, timeline) = parse_timeline(
-            "%%{init: {\"timeline\": {\"padding\": 64, \"useMaxWidth\": true, \"disableMulticolor\": true}}}%%\ntimeline TD\naccTitle: Product history\naccDescr: Native release milestones\ntitle Native timeline\n2024 : Prototype\n     : First customer\n2025 : General availability",
+            "%%{init: {\"timeline\": {\"padding\": 64, \"useMaxWidth\": true, \"disableMulticolor\": true}, \"themeVariables\": {\"cScale0\": \"#d8f3dc\", \"cScaleLabel0\": \"#173b24\", \"cScaleInv0\": \"#40916c\"}}}%%\ntimeline TD\naccTitle: Product history\naccDescr: Native release milestones\ntitle Native timeline\n2024 : Prototype\n     : First customer\n2025 : General availability",
         ).expect("timeline parse failed");
         let layout = layout_temporal_diagram(&TemporalDiagram {
             kind: TemporalKind::Timeline,

@@ -344,6 +344,9 @@ init directives or YAML front matter survive as typed semantic configuration.
 Padding controls deterministic outer and spine geometry, sectionless single-color
 mode selects stable period Paint styles, and all three settings lower to
 backend-neutral PaintScene metadata.
+Timeline `cScale`, `cScaleLabel`, and `cScaleInv` theme slots also survive
+semantic configuration and select section, period, label, spine, and outline
+colors during backend-neutral PaintInstruction lowering.
 
 ### Mindmap Native Slice
 
