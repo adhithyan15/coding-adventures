@@ -17428,3 +17428,55 @@ clear the seven product paths; #17185 has the previously known journal overlap.
 The 3,493-file PR was checked with immutable Git tree comparisons beyond the
 3,000-file API cap. The final journal retains 297 merged, 1,038 pending and one
 in-progress owner, including the distinct coverage-qualification successor.
+
+
+## Post-#17379 inventory and opcode-provider foundation
+
+#17379 merged externally as `d9bb1f83d9e937880c7e06a3a522d725148f8f80`
+from exact reviewed head `2a02fb26abbb61e6aa0601ee19a450d94d8be9b8`.
+The merge is an ancestor of fetched main `5526f94f956ac390fc667af525dabef602ec7fce`;
+all 32 checks were acceptable (13 successful, 19 skipped), both gates passed,
+and selected source at merge matches the reviewed head. No manual merge occurred.
+
+The immutable collision-checked report now contains 1507 established identities,
+4789 occupied slots and 1549 reported identities across 15 established languages.
+There are zero collisions or unknown buckets; five OCaml roots remain emerging.
+The sole new package is the concrete macOS Seatbelt sandbox. Its new pending,
+selection-blocked native-authority review depends on shared spawn isolation;
+it is excluded from autonomous portable delivery and is a launcher prerequisite.
+Current Mermaid, ALGOL, Chief, Mosaic and validation changes remain with existing
+classification owners, with explicit orthogonal line-hop and validator-universe
+scope review notes. No newly unowned eligible portable gap was established.
+
+All 43 pending audit additions from the prior PR plus that excluded review are
+preserved. The reconciled graph has 1380 owners and 2466 edges. Select exactly
+`starlark-compiler-opcode-provider-neutral-conformance` in a fresh clean worktree.
+Its 14 bounded provider follow-ups give more practical leverage than the six
+compiler-IR lane leaves or six-reader duplicate-fixture routing repair. The Ruby
+applicability record remains blocked and AST neutral still has other prerequisites.
+Live product overlap was cleared across 14 open PRs, including immutable checks
+beyond listing caps; CI and journal shared-file overlap requires narrow reconciliation.
+
+The selected slice freezes [STP01](STP01-starlark-opcode-provider.md), its closed
+359-record corpus and an independent strict validator, tests and existing metadata
+CI integration. Per-lane production changes and durable native readers remain
+pending adoption owners. Existing package tests or external API witnesses provide
+validation evidence without crediting a committed shared-corpus adopter. PY03's
+future runtime architecture and Python/Ruby gaps remain explicit. Specs precede
+tests, source, documentation, final-head security review and PR publication.
+
+
+STP01 local validation passes 15 neutral tests with 131/131 measured Python
+coverage statements and 68/68 branches, plus 19 CI-registry checks. Go reference
+native tests and the actual BUILD recipe pass at 98.0% statement coverage;
+Rust provider BUILD passes eight tests and its AST downstream passes 96.
+An external Go witness compares all 359 corpus records through public APIs;
+it is validation evidence, not a committed native-adoption reader. All native
+adoption children remain pending. Ruff, formatting, Bandit and Python compile
+checks pass. Actual detector execution validates 5327 discovered package BUILD
+metadata and orphan gates (38 existing exemptions), evaluates 45 Starlark fronts,
+and emits an empty package-diff selection. This does not compile 5327 packages.
+Parity inventory remains collision-free/identical to pinned main; ten reporter
+and 31 lessons tests pass, with 1163 lesson shards and zero problems. Independent
+correctness and CI-scope reviews found no actionable issue. Exact-head security
+review and hosted CI remain gates before publication and auto-merge.
