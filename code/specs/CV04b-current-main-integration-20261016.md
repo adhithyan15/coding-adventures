@@ -212,3 +212,21 @@ ordinary/strategy/inertia/pipeline controls at finite extreme radii; test-first
 red must compile and expose the too-broad guard. Validate finite-but-overflowing
 actual Market/inertia points and supported decorated companions. Full geometric
 suite/strict then proves retention, before completing paint fixture migration.
+
+
+## Retained glyph and metadata migration
+
+Full15-package7bec7277 compiles and executes2001P/7F, not acceptance; strict is
+not run. All56 executable/15 doctest identities are present. Six retained Wardley
+scene functions still expect former centered component-label frames and omit
+annotation metadata in four families. Preserve full scenes/queries and declare
+incoming anchor text centered at node.x-75 in a150px box, y=node.y-11, color black;
+ordinary component text starts at node.x+nodeLabelOffset, y=node.y-offset-8,
+with current theme color. Pipeline parents follow their anchor flag. All glyph
+advances/baselines and metadata remain explicit in the fixture table.
+
+One Ishikawa root-parity literal used decimal rounding rather than actual
+intermediate binary arithmetic. Independently calculate the declared spacing127,
+attachment173, tip=173-127*0.48 and label=tip+127*0.24 before spelling exact f64
+literals. Keep whole layout/scene equality, every old source case and all glyphs;
+do not replace these assertions with a tolerance or observed-output snapshot.
