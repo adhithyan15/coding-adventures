@@ -3867,12 +3867,13 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
     let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
-    let mut direction = TimelineDirection::TopDown;
+    let mut direction = TimelineDirection::LeftRight;
     let mut sections = Vec::<TimelineSection>::new();
     for token in tokens {
         match token.type_name.as_deref() {
             Some("HEADER_LR") => direction = TimelineDirection::LeftRight,
-            Some("HEADER_TD" | "HEADER") => direction = TimelineDirection::TopDown,
+            Some("HEADER_TD") => direction = TimelineDirection::TopDown,
+            Some("HEADER") => direction = TimelineDirection::LeftRight,
             Some("TITLE_STATEMENT") => {
                 title = Some(normalize_mermaid_line_breaks(token.value["title".len()..].trim()));
             }
@@ -15662,6 +15663,17 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(front_matter.config.font_family, "Georgia");
         assert!(front_matter.config.use_max_width);
         assert!(front_matter.config.disable_multicolor);
+    }
+
+    #[test]
+    fn timeline_defaults_to_left_right_and_accepts_explicit_directions() {
+        let (_, default_direction) = parse_timeline("timeline\n2025\n").unwrap();
+        let (_, left_right) = parse_timeline("timeline LR\n2025\n").unwrap();
+        let (_, top_down) = parse_timeline("timeline TD\n2025\n").unwrap();
+
+        assert_eq!(default_direction.direction, TimelineDirection::LeftRight);
+        assert_eq!(left_right.direction, TimelineDirection::LeftRight);
+        assert_eq!(top_down.direction, TimelineDirection::TopDown);
     }
 
     #[test]
