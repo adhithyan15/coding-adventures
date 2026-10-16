@@ -13262,6 +13262,7 @@ emphasized --> direct
     include!("ishikawa_default_fallback_contract.rs");
     include!("ishikawa_box_labels_contract.rs");
     include!("wardley_config_scene_contract.rs");
+    include!("wardley_theme_notes_scene_contract.rs");
 
     #[test]
     fn venn_theme_source_to_complete_scene_and_ordered_font_queries() {
