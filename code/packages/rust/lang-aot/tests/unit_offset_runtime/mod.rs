@@ -618,3 +618,37 @@ fn current_cap23_exact_sources_preserve_stdout_and_completed_exit_contract() {
         assert!(completed>0,"cap23 case={case} needs actual backend execution");
     }
 }
+
+
+#[test]
+fn cap23_real_return_observer_rejects_invalid_captures_and_cleans_up() {
+    use vm_core::value::Value;
+    use std::panic::{catch_unwind,AssertUnwindSafe};
+    // A missing, absent, wrong-typed, wrong-valued or duplicate return cannot
+    // satisfy typed observation merely because stdout/code have the right shape.
+    for (value,visits) in [(None,0),(None,1),(Some(Value::Int(21)),1),
+        (Some(Value::Float(22.0)),1),(Some(Value::Float(21.0)),2)] {
+        let observation=return_observer::Observation::arm("probe",Vm,17);
+        for _ in 0..visits {return_observer::observe(Vm,"probe",value.as_ref());}
+        assert!(catch_unwind(AssertUnwindSafe(||observation.assert_float(21.0))).is_err());
+        drop(observation);
+    }
+    for (backend,source) in [(Jit,"probe"),(Vm,"stale-source")] {
+        let observation=return_observer::Observation::arm("probe",Vm,17);
+        assert!(catch_unwind(AssertUnwindSafe(||return_observer::observe(backend,source,Some(&Value::Float(21.0))))).is_err());
+        drop(observation);
+    }
+    // Unarmed generic runs are inert; every valid guard starts fresh, and panic
+    // unwinding drops its state instead of making it available to another case.
+    return_observer::observe(Vm,"unarmed",Some(&Value::Float(99.0)));
+    assert!(catch_unwind(|| {
+        let _observation=return_observer::Observation::arm("probe",Vm,17);
+        return_observer::observe(Vm,"probe",Some(&Value::Float(21.0)));
+        panic!("simulated failed cell");
+    }).is_err());
+    for backend in [Vm,Jit] {
+        let observation=return_observer::Observation::arm("fresh",backend,18);
+        return_observer::observe(backend,"fresh",Some(&Value::Float(24.0)));
+        assert_eq!(observation.assert_float(24.0),24.0_f64.to_bits());
+    }
+}
