@@ -65,7 +65,14 @@ bounded red: Cargo101/buildtrue/1P1F; owned child noncompletion by3s, parent
 kills/reaps only that Child handle at3006ms. Producer51247 consumed0 verifying
 expected red, receipt `CV04b-ishikawa-liveness-red-cc911199.json`; no repair
 acceptance/infinite-duration/UB/Miri claim. Red security review is pending.
-New timeline94df security audit is running; no acceptance inferred.
+Incoming timeline94df security WITHHELD95041495: admitted padding can produce
+infinite/negative actual geometry; skipped-comment text can become configuration;
+sectionless single-color TD loses its spine; typed LR has a repeated quadratic
+scan (not source-quadratic); old named-section e2e source was replaced. Preserve
+that old source and add new whole fixtures. Require owned config boundaries,
+coupled actual-frame admission/Result propagation, period-presence spine and a
+single LR predicate before integration/final validation. No runtime/repair
+acceptance follows from this source audit.
 
 Next: audit latest main, implement/test reviewed bounded geometry integration
 with whole-source/fixture retention; derive fresh complete input/dependency/lock
