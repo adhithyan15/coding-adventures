@@ -5908,7 +5908,10 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             if !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
                 return Err(wardley_error(line_number, "Wardley annotation coordinates must be between 0 and 1"));
             }
-            if let Some(annotation) = diagram.annotations.iter_mut().find(|annotation| annotation.number == number) {
+            if let Some(annotation) = diagram.annotations.iter_mut().find(|annotation| {
+                #[cfg(test)] wardley_annotation_compared();
+                annotation.number == number
+            }) {
                 annotation.coordinates.push((visibility, evolution));
                 if annotation.text.is_empty() { annotation.text = wardley_name(authored_text); }
             } else {
@@ -19017,3 +19020,12 @@ mod styled_label_work_tests {
         assert!(labeled_swimlane_operator("a -. .-> b", "-.", '.', 1, "->", SwimlaneEdgeKind::Dotted).is_none());
     }
 }
+
+// Count real ID comparisons only in the dedicated per-thread test observer.
+// This supplies regression evidence, not a production resource counter/cap.
+#[cfg(test)]
+std::thread_local! {static WARDLEY_ANNOTATION_COMPARE_COUNT:std::cell::Cell<usize>=const {std::cell::Cell::new(0)};}
+#[cfg(test)]
+fn wardley_annotation_compared() {WARDLEY_ANNOTATION_COMPARE_COUNT.with(|c|c.set(c.get().checked_add(1).expect("annotation comparison counter")));}
+#[cfg(test)]
+mod wardley_annotation_work_contract;
