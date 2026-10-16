@@ -599,7 +599,7 @@ use diagram_ir::{
     TemporalKind, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
-    CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram,
+    CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram, IshikawaLook,
     WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyForce, WardleyForceKind, WardleyLink, WardleyLinkFlow, WardleyNode, WardleyNote, WardleyPipeline, WardleySourceStrategy, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind, TreeViewTheme,
 };
@@ -5673,13 +5673,19 @@ fn parse_ishikawa_config(source: &str) -> IshikawaConfig {
     })));
     let font_size = root_value("fontSize").and_then(parse_mermaid_font_size)
         .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(defaults.font_size);
+    let look = match root_value("look").as_deref() {
+        Some(value) if value.eq_ignore_ascii_case("handdrawn") => IshikawaLook::HandDrawn,
+        _ => IshikawaLook::Classic,
+    };
+    let hand_drawn_seed = root_value("handDrawnSeed").and_then(|value| value.parse::<i64>().ok())
+        .unwrap_or(defaults.hand_drawn_seed);
     let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
     let theme = mermaid_directive_object(source, "themeVariables").or(theme_front.as_deref()).unwrap_or("");
     let theme_value = |name: &str| quadrant_directive_value(theme, name).or_else(|| theme.lines().find_map(|line| {
         let (key, value) = line.trim().split_once(':')?;
         (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
     }));
-    IshikawaConfig { diagram_padding, use_max_width, font_size,
+    IshikawaConfig { diagram_padding, use_max_width, font_size, look, hand_drawn_seed,
         font_family: sanitize_railroad_font_family(theme_value("fontFamily").as_deref(), &defaults.font_family),
         line_color: sanitize_railroad_color(theme_value("lineColor").as_deref(), &defaults.line_color),
         fill_color: sanitize_railroad_color(theme_value("mainBkg").as_deref(), &defaults.fill_color),
