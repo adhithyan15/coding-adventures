@@ -127,12 +127,13 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
     let height = (width * 0.58).max(360.0).max(260.0 + max_depth * 70.0);
     let padding = diagram.config.diagram_padding.min(width / 4.0).min(height / 4.0);
     let spine_y = height / 2.0; let spine_from = Point { x: padding + 16.0, y: spine_y };
-    let effect_width = 150.0; let effect_height = 58.0; let effect_x = width - effect_width - padding;
+    let effect_base_width = (diagram.effect.chars().count() as f64 * 7.0 + 6.0).max(60.0);
+    let effect_width = effect_base_width * 2.4; let effect_height = 68.0; let effect_x = width - effect_width - padding;
     let spine_to = Point { x: effect_x, y: spine_y };
     let hand_drawn = diagram.config.look == IshikawaLook::HandDrawn;
     let spine_path = ishikawa_line_path(&spine_from, &spine_to, hand_drawn, diagram.config.hand_drawn_seed, 0);
     let effect_y = spine_y - effect_height / 2.0;
-    let effect_outline = ishikawa_box_outline(effect_x, effect_y, effect_width, effect_height,
+    let effect_outline = ishikawa_effect_outline(effect_x, effect_y, effect_width, effect_height,
         hand_drawn, diagram.config.hand_drawn_seed, 1_000);
     let roots: Vec<_> = diagram.causes.iter().filter(|cause| cause.parent_id.is_none()).collect();
     let spacing = (spine_to.x - spine_from.x) / (roots.len() + 1).max(2) as f64;
@@ -204,6 +205,22 @@ fn ishikawa_box_outline(x: f64, y: f64, width: f64, height: f64, hand_drawn: boo
     let mut outline = vec![corners[0].clone()];
     for side in 0..4 {
         let points = ishikawa_line_path(&corners[side], &corners[side + 1], hand_drawn, seed, index * 4 + side);
+        outline.extend(points.into_iter().skip(1));
+    }
+    outline
+}
+
+fn ishikawa_effect_outline(x: f64, y: f64, width: f64, height: f64, hand_drawn: bool, seed: i64, index: usize) -> Vec<Point> {
+    let mut shape = vec![Point { x, y }, Point { x, y: y + height }];
+    for step in 1..=12 {
+        let t = step as f64 / 12.0; let one_minus_t = 1.0 - t;
+        shape.push(Point { x: one_minus_t * one_minus_t * x + 2.0 * one_minus_t * t * (x + width) + t * t * x,
+            y: one_minus_t * one_minus_t * (y + height) + 2.0 * one_minus_t * t * (y + height / 2.0) + t * t * y });
+    }
+    if !hand_drawn { return shape; }
+    let mut outline = vec![shape[0].clone()];
+    for side in 0..shape.len() - 1 {
+        let points = ishikawa_line_path(&shape[side], &shape[side + 1], true, seed, index * 16 + side);
         outline.extend(points.into_iter().skip(1));
     }
     outline
@@ -600,7 +617,7 @@ mod tests {
         assert_eq!(layout.bones[0].path.len(), 2);
         assert_eq!(layout.bones[0].arrowhead.len(), 3);
         assert_eq!(layout.bones[0].arrowhead[0], layout.bones[0].to);
-        assert_eq!(layout.effect_outline.len(), 5);
+        assert_eq!(layout.effect_outline.len(), 14);
         assert_eq!(layout.bones[0].label_outline.len(), 5);
 
         let mut hand_drawn = diagram.clone();
@@ -610,7 +627,7 @@ mod tests {
         assert_eq!(hand_drawn_layout.spine_path.len(), 5);
         assert_eq!(hand_drawn_layout.bones[0].path.len(), 5);
         assert_eq!(hand_drawn_layout.bones[0].arrowhead[0], hand_drawn_layout.bones[0].to);
-        assert_eq!(hand_drawn_layout.effect_outline.len(), 17);
+        assert_eq!(hand_drawn_layout.effect_outline.len(), 53);
         assert_eq!(hand_drawn_layout.bones[0].label_outline.len(), 17);
         assert_eq!(hand_drawn_layout, layout_ishikawa(&hand_drawn, 640.0));
 
