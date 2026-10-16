@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-W281-enge-controlled-question",
+    "language": "tamil",
+    "chapter": 281,
+    "sequence": 16070,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e4c4fcf88a971276",
+    "detachableSegments": [
+      "Writing — assemble one familiar question"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

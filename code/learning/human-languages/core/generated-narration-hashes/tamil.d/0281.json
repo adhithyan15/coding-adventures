@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:d5e3990bb3bbe6ca",
+  "lessonIds": [
+    "TA-W281-enge-controlled-question"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "tamil/narration/ch281.txt",
+  "json": "tamil/narration/ch281.json",
+  "textHash": "fnv1a64:aae9bd87e2e24775",
+  "jsonHash": "fnv1a64:e7a9b2a6ec71ed4b",
+  "findings": []
+}
