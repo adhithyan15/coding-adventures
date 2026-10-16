@@ -173,6 +173,26 @@ fn ordinary_bridge_errors_keep_their_original_kind_and_diagnostic() {
     assert!(matches!(error, ObservedBridgeError::Bridge(_)));
     assert_eq!(error.to_string(), legacy);
     assert_eq!(observer.0, 0);
+    let unsupported = parse_javascript_typed("async function f(){}", DEFAULT_ES_VERSION).unwrap();
+    let legacy = grammar_to_program(&unsupported, DEFAULT_ES_VERSION).unwrap_err();
+    assert!(matches!(legacy, coding_adventures_javascript_parser::bridge::BridgeError::UnsupportedSyntax { .. }));
+    let error = grammar_to_program_with_array_observer(&unsupported, DEFAULT_ES_VERSION, &mut observer).unwrap_err();
+    assert!(matches!(error, ObservedBridgeError::Bridge(_)));
+    assert_eq!(error.to_string(), legacy.to_string());
+    assert_eq!(observer.0, 0);
+}
+
+#[test]
+fn observer_panic_is_a_worker_error_and_never_an_unobserved_success() {
+    struct Panics;
+    impl ArrayOccurrenceObserver for Panics {
+        fn array_constructed(&mut self, _: &GrammarASTNode) -> Result<Option<String>, String> {
+            panic!("injected observer panic");
+        }
+    }
+    let node = parse_javascript_typed("[];", DEFAULT_ES_VERSION).unwrap();
+    assert!(matches!(grammar_to_program_with_array_observer(&node, DEFAULT_ES_VERSION, &mut Panics),
+        Err(ObservedBridgeError::Worker(s)) if s == "worker panicked"));
 }
 
 #[test]

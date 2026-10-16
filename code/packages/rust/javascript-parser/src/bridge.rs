@@ -41,9 +41,10 @@
 //!
 //! # CV tracking
 //!
-//! v1: all produced nodes carry `cv: None`.  Per-node CV threading
-//! (source-byte → IR → engine-clause provenance) is a follow-up
-//! (CLOC12.137) that wires the lexer-level CVs into each AST node.
+//! CLOC27 reuses physical token CVs on primary typed leaves. Other composite
+//! identities remain absent by default. CLOC32's optional run-scoped array
+//! observer can assign an array identity at construction; the caller owns its
+//! validity and work. This hook alone certifies no source span or CLI mapping.
 
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -135,8 +136,9 @@ impl std::error::Error for BridgeError {}
 ///
 /// # CV tracking
 ///
-/// v1: all nodes carry `cv: None`.  Source-map-quality per-node CVs
-/// land in CLOC12.137.
+/// Primary leaves inherit their existing token CVs; composite CVs remain absent
+/// on this compatibility facade. The separate observed entry can assign array
+/// identities without changing non-CV fields or certifying source spans.
 pub fn grammar_to_program(
     node: &GrammarASTNode,
     version: EsVersion,
@@ -147,7 +149,8 @@ pub fn grammar_to_program(
             rule: node.rule_name.clone(),
         });
     }
-    convert_program(node, version)
+    let mut context = occurrence::Context::unobserved();
+    convert_program(&mut context, node, version)
 }
 
 // =========================================================================
@@ -236,12 +239,12 @@ fn internal(node: &GrammarASTNode, msg: impl Into<String>) -> BridgeError {
 // Program
 // =========================================================================
 
-fn convert_program(node: &GrammarASTNode, version: EsVersion) -> Result<Program, BridgeError> {
+fn convert_program(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode, version: EsVersion) -> Result<Program, BridgeError> {
     // program = [ HASHBANG ] { source_element }
     // Children: optional Token(#!) plus Node("source_element") per statement/decl.
     let mut body = Vec::new();
     for child in node_children(node) {
-        let item = convert_source_element(child)?;
+        let item = convert_source_element(bridge_context, child)?;
         body.push(item);
     }
     Ok(Program {
@@ -252,7 +255,7 @@ fn convert_program(node: &GrammarASTNode, version: EsVersion) -> Result<Program,
     })
 }
 
-fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeError> {
+fn convert_source_element(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<ProgramItem, BridgeError> {
     // source_element = import_declaration | export_declaration
     //                | function_declaration | generator_declaration
     //                | async_function_declaration | async_generator_declaration
@@ -265,7 +268,7 @@ fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeEr
         // converter — the `*` distinguishes them and sets the `generator` flag
         // (CLOC12.163 PR2).
         "function_declaration" | "generator_declaration" => {
-            let decl = convert_function_declaration(child)?;
+            let decl = convert_function_declaration(bridge_context, child)?;
             Ok(ProgramItem::Declaration(Declaration::FunctionDeclaration(decl)))
         }
         // A class *declaration* (`class C { … }`) — CLOC12.174 PR2. The grammar
@@ -276,13 +279,13 @@ fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeEr
         // (safe WHITESPACE_ONLY fallback).
         "decorated_class_declaration" => match node_children(child).as_slice() {
             [cd] if cd.rule_name == "class_declaration" => {
-                let decl = convert_class_declaration(cd)?;
+                let decl = convert_class_declaration(bridge_context, cd)?;
                 Ok(ProgramItem::Declaration(Declaration::ClassDeclaration(decl)))
             }
             _ => Err(unsupported(child)),
         },
         "class_declaration" => {
-            let decl = convert_class_declaration(child)?;
+            let decl = convert_class_declaration(bridge_context, child)?;
             Ok(ProgramItem::Declaration(Declaration::ClassDeclaration(decl)))
         }
         // An ES-module `import` declaration (CLOC12.188 PR2). Recognised shapes:
@@ -299,9 +302,9 @@ fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeEr
         // export-all (`export * from "y"`), default (`export default …`), and
         // declaration exports (`export const/var/function/class …`). Anything
         // unrecognised — e.g. `export * as ns from "y"` (grammar gap) — DECLINES.
-        "export_declaration" => Ok(ProgramItem::Declaration(convert_export_declaration(child)?)),
+        "export_declaration" => Ok(ProgramItem::Declaration(convert_export_declaration(bridge_context, child)?)),
         "statement" => {
-            let stmt = convert_statement(child)?;
+            let stmt = convert_statement(bridge_context, child)?;
             Ok(ProgramItem::Statement(stmt))
         }
         // variable_statement / lexical_declaration land inside statement
@@ -438,7 +441,7 @@ fn import_source(node: &GrammarASTNode) -> Option<StringLiteral> {
 /// `export`. `export * as ns from "y"` is a grammar gap (rejected at parse) and
 /// any unrecognised shape DECLINES via `unsupported` (safe WHITESPACE_ONLY
 /// fallback), never a mis-bridge.
-fn convert_export_declaration(node: &GrammarASTNode) -> Result<Declaration, BridgeError> {
+fn convert_export_declaration(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Declaration, BridgeError> {
     let kids = node_children(node);
 
     // `export default <expr | function | class>`.
@@ -448,21 +451,21 @@ fn convert_export_declaration(node: &GrammarASTNode) -> Result<Declaration, Brid
             .ok_or_else(|| internal(node, "export default: missing operand"))?;
         let kind = match child.rule_name.as_str() {
             "function_declaration" | "generator_declaration" => {
-                ExportDefaultKind::FunctionDeclaration(convert_function_declaration(child)?)
+                ExportDefaultKind::FunctionDeclaration(convert_function_declaration(bridge_context, child)?)
             }
             "decorated_class_declaration" => match node_children(child).as_slice() {
                 [cd] if cd.rule_name == "class_declaration" => {
-                    ExportDefaultKind::ClassDeclaration(convert_class_declaration(cd)?)
+                    ExportDefaultKind::ClassDeclaration(convert_class_declaration(bridge_context, cd)?)
                 }
                 _ => return Err(unsupported(child)),
             },
             "class_declaration" => {
-                ExportDefaultKind::ClassDeclaration(convert_class_declaration(child)?)
+                ExportDefaultKind::ClassDeclaration(convert_class_declaration(bridge_context, child)?)
             }
             // Anything else is an expression operand (`export default 1`,
             // `export default foo()`); `convert_expression` dispatches on the
             // expression rule (`assignment_expression`, …).
-            _ => ExportDefaultKind::Expression(Box::new(convert_expression(child)?)),
+            _ => ExportDefaultKind::Expression(Box::new(convert_expression(bridge_context, child)?)),
         };
         return Ok(Declaration::ExportDefaultDeclaration(ExportDefaultDeclaration {
             cv: None,
@@ -525,21 +528,21 @@ fn convert_export_declaration(node: &GrammarASTNode) -> Result<Declaration, Brid
         .ok_or_else(|| internal(node, "export declaration: missing inner declaration"))?;
     let decl = match inner.rule_name.as_str() {
         "lexical_declaration" => {
-            Declaration::VariableDeclaration(convert_lexical_declaration(inner)?)
+            Declaration::VariableDeclaration(convert_lexical_declaration(bridge_context, inner)?)
         }
         "variable_statement" => {
-            Declaration::VariableDeclaration(convert_variable_statement(inner)?)
+            Declaration::VariableDeclaration(convert_variable_statement(bridge_context, inner)?)
         }
         "function_declaration" | "generator_declaration" => {
-            Declaration::FunctionDeclaration(convert_function_declaration(inner)?)
+            Declaration::FunctionDeclaration(convert_function_declaration(bridge_context, inner)?)
         }
         "decorated_class_declaration" => match node_children(inner).as_slice() {
             [cd] if cd.rule_name == "class_declaration" => {
-                Declaration::ClassDeclaration(convert_class_declaration(cd)?)
+                Declaration::ClassDeclaration(convert_class_declaration(bridge_context, cd)?)
             }
             _ => return Err(unsupported(inner)),
         },
-        "class_declaration" => Declaration::ClassDeclaration(convert_class_declaration(inner)?),
+        "class_declaration" => Declaration::ClassDeclaration(convert_class_declaration(bridge_context, inner)?),
         _ => return Err(unsupported(inner)),
     };
     Ok(Declaration::ExportNamedDeclaration(ExportNamedDeclaration {
@@ -554,7 +557,7 @@ fn convert_export_declaration(node: &GrammarASTNode) -> Result<Declaration, Brid
 // Statements
 // =========================================================================
 
-fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
+fn convert_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Statement, BridgeError> {
     // statement = block | variable_statement | lexical_declaration
     //           | empty_statement | expression_statement | if_statement
     //           | while_statement | do_while_statement | for_statement
@@ -565,28 +568,28 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
     //           | using_declaration | await_using_declaration ;
     let child = sole_node(node).ok_or_else(|| internal(node, "expected 1 child in statement"))?;
     match child.rule_name.as_str() {
-        "block" => convert_block_statement(child).map(Statement::block_statement),
-        "variable_statement" => convert_variable_statement(child)
+        "block" => convert_block_statement(bridge_context, child).map(Statement::block_statement),
+        "variable_statement" => convert_variable_statement(bridge_context, child)
             .map(|v| Statement::Declaration(Declaration::VariableDeclaration(v))),
-        "lexical_declaration" => convert_lexical_declaration(child)
+        "lexical_declaration" => convert_lexical_declaration(bridge_context, child)
             .map(|v| Statement::Declaration(Declaration::VariableDeclaration(v))),
         "empty_statement" => Ok(Statement::empty_statement(EmptyStatement { cv: None })),
-        "expression_statement" => convert_expression_statement(child),
-        "if_statement" => convert_if_statement(child).map(Statement::if_statement),
-        "while_statement" => convert_while_statement(child).map(Statement::while_statement),
+        "expression_statement" => convert_expression_statement(bridge_context, child),
+        "if_statement" => convert_if_statement(bridge_context, child).map(Statement::if_statement),
+        "while_statement" => convert_while_statement(bridge_context, child).map(Statement::while_statement),
         "do_while_statement" => {
-            convert_do_while_statement(child).map(Statement::do_while_statement)
+            convert_do_while_statement(bridge_context, child).map(Statement::do_while_statement)
         }
-        "for_statement" => convert_for_statement(child).map(Statement::for_statement),
-        "for_in_statement" => convert_for_in_statement(child).map(Statement::for_in_statement),
-        "for_of_statement" => convert_for_of_statement(child).map(Statement::for_of_statement),
+        "for_statement" => convert_for_statement(bridge_context, child).map(Statement::for_statement),
+        "for_in_statement" => convert_for_in_statement(bridge_context, child).map(Statement::for_in_statement),
+        "for_of_statement" => convert_for_of_statement(bridge_context, child).map(Statement::for_of_statement),
         "continue_statement" => convert_continue_statement(child).map(Statement::continue_statement),
         "break_statement" => convert_break_statement(child).map(Statement::break_statement),
-        "return_statement" => convert_return_statement(child).map(Statement::return_statement),
-        "switch_statement" => convert_switch_statement(child).map(Statement::switch_statement),
-        "labelled_statement" => convert_labeled_statement(child).map(Statement::labeled_statement),
-        "throw_statement" => convert_throw_statement(child).map(Statement::throw_statement),
-        "try_statement" => convert_try_statement(child).map(Statement::try_statement),
+        "return_statement" => convert_return_statement(bridge_context, child).map(Statement::return_statement),
+        "switch_statement" => convert_switch_statement(bridge_context, child).map(Statement::switch_statement),
+        "labelled_statement" => convert_labeled_statement(bridge_context, child).map(Statement::labeled_statement),
+        "throw_statement" => convert_throw_statement(bridge_context, child).map(Statement::throw_statement),
+        "try_statement" => convert_try_statement(bridge_context, child).map(Statement::try_statement),
         // debugger_statement = "debugger" SEMICOLON — no node children, so the
         // typed node is a bare marker. (CLOC21.)
         "debugger_statement" => Ok(Statement::debugger_statement(DebuggerStatement { cv: None })),
@@ -594,7 +597,7 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
         // The atomic node + emitter + pass traversal landed in PR1, and the
         // renaming-soundness gate (rename passes decline when a `with` is
         // present) landed in PR2a — so bridging it here is sound.
-        "with_statement" => convert_with_statement(child).map(Statement::with_statement),
+        "with_statement" => convert_with_statement(bridge_context, child).map(Statement::with_statement),
         // Phase 2+ — not yet in the typed AST
         "for_await_of_statement" | "using_declaration" | "await_using_declaration" => {
             Err(unsupported(child))
@@ -610,12 +613,12 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
 // block
 // -------------------------------------------------------------------------
 
-fn convert_block_statement(node: &GrammarASTNode) -> Result<BlockStatement, BridgeError> {
+fn convert_block_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<BlockStatement, BridgeError> {
     // block = LBRACE { statement } RBRACE ;
     // All Node children are statement nodes.
     let stmts: Result<Vec<Statement>, _> = node_children(node)
         .into_iter()
-        .map(convert_statement)
+        .map(|node| convert_statement(bridge_context, node))
         .collect();
     Ok(BlockStatement { cv: None, body: stmts? })
 }
@@ -624,17 +627,17 @@ fn convert_block_statement(node: &GrammarASTNode) -> Result<BlockStatement, Brid
 // if_statement
 // -------------------------------------------------------------------------
 
-fn convert_if_statement(node: &GrammarASTNode) -> Result<IfStatement, BridgeError> {
+fn convert_if_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<IfStatement, BridgeError> {
     // if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ]
     // Node children: [expression, statement] or [expression, statement, statement]
     let nodes = node_children(node);
     if nodes.len() < 2 {
         return Err(internal(node, "if_statement needs ≥2 node children"));
     }
-    let test = convert_expression(nodes[0])?;
-    let consequent = convert_statement(nodes[1])?;
+    let test = convert_expression(bridge_context, nodes[0])?;
+    let consequent = convert_statement(bridge_context, nodes[1])?;
     let alternate = if nodes.len() >= 3 {
-        Some(Box::new(convert_statement(nodes[2])?))
+        Some(Box::new(convert_statement(bridge_context, nodes[2])?))
     } else {
         None
     };
@@ -650,7 +653,7 @@ fn convert_if_statement(node: &GrammarASTNode) -> Result<IfStatement, BridgeErro
 // while_statement
 // -------------------------------------------------------------------------
 
-fn convert_while_statement(node: &GrammarASTNode) -> Result<WhileStatement, BridgeError> {
+fn convert_while_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<WhileStatement, BridgeError> {
     // while_statement = "while" LPAREN expression RPAREN statement
     // Node children: [expression, statement]
     let nodes = node_children(node);
@@ -659,12 +662,12 @@ fn convert_while_statement(node: &GrammarASTNode) -> Result<WhileStatement, Brid
     }
     Ok(WhileStatement {
         cv: None,
-        test: convert_expression(nodes[0])?,
-        body: Box::new(convert_statement(nodes[1])?),
+        test: convert_expression(bridge_context, nodes[0])?,
+        body: Box::new(convert_statement(bridge_context, nodes[1])?),
     })
 }
 
-fn convert_do_while_statement(node: &GrammarASTNode) -> Result<DoWhileStatement, BridgeError> {
+fn convert_do_while_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<DoWhileStatement, BridgeError> {
     // do_while_statement = "do" statement "while" LPAREN expression RPAREN [";"]
     // Node children (tokens filtered out): [statement, expression] — the body
     // comes first in source order, the test second. This is the mirror of
@@ -675,12 +678,12 @@ fn convert_do_while_statement(node: &GrammarASTNode) -> Result<DoWhileStatement,
     }
     Ok(DoWhileStatement {
         cv: None,
-        body: Box::new(convert_statement(nodes[0])?),
-        test: convert_expression(nodes[1])?,
+        body: Box::new(convert_statement(bridge_context, nodes[0])?),
+        test: convert_expression(bridge_context, nodes[1])?,
     })
 }
 
-fn convert_with_statement(node: &GrammarASTNode) -> Result<WithStatement, BridgeError> {
+fn convert_with_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<WithStatement, BridgeError> {
     // with_statement = "with" LPAREN expression RPAREN statement (CLOC12.187).
     // Node children: [expression, statement] — the injected object first, the
     // body second. Structurally identical to `while_statement`; the difference
@@ -693,8 +696,8 @@ fn convert_with_statement(node: &GrammarASTNode) -> Result<WithStatement, Bridge
     }
     Ok(WithStatement {
         cv: None,
-        object: convert_expression(nodes[0])?,
-        body: Box::new(convert_statement(nodes[1])?),
+        object: convert_expression(bridge_context, nodes[0])?,
+        body: Box::new(convert_statement(bridge_context, nodes[1])?),
     })
 }
 
@@ -702,7 +705,7 @@ fn convert_with_statement(node: &GrammarASTNode) -> Result<WithStatement, Bridge
 // for_statement
 // -------------------------------------------------------------------------
 
-fn convert_for_statement(node: &GrammarASTNode) -> Result<ForStatement, BridgeError> {
+fn convert_for_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<ForStatement, BridgeError> {
     // for_statement = "for" LPAREN
     //   [ ( "var" variable_declaration_list | expression ) ]
     //   SEMICOLON
@@ -745,7 +748,7 @@ fn convert_for_statement(node: &GrammarASTNode) -> Result<ForStatement, BridgeEr
     if let Some(&n) = phase_nodes[0].first() {
         match n.rule_name.as_str() {
             "variable_declaration_list" => {
-                let decl = convert_var_decl_list(n, VarKind::Var)?;
+                let decl = convert_var_decl_list(bridge_context, n, VarKind::Var)?;
                 init = Some(ForInit::VariableDeclaration(decl));
             }
             // `for (let/const i = 0; …)` (CLOC12.186). The grammar inlines the
@@ -762,7 +765,7 @@ fn convert_for_statement(node: &GrammarASTNode) -> Result<ForStatement, BridgeEr
                     VarKind::Let
                 };
                 let declarations: Result<Vec<VariableDeclarator>, _> =
-                    node_children(n).into_iter().map(convert_variable_declarator).collect();
+                    node_children(n).into_iter().map(|node| convert_variable_declarator(bridge_context, node)).collect();
                 init = Some(ForInit::VariableDeclaration(VariableDeclaration {
                     cv: None,
                     kind,
@@ -770,19 +773,19 @@ fn convert_for_statement(node: &GrammarASTNode) -> Result<ForStatement, BridgeEr
                 }));
             }
             _ => {
-                init = Some(ForInit::Expression(convert_expression(n)?));
+                init = Some(ForInit::Expression(convert_expression(bridge_context, n)?));
             }
         }
     }
 
     // Phase 1: test
     if let Some(&n) = phase_nodes[1].first() {
-        test = Some(convert_expression(n)?);
+        test = Some(convert_expression(bridge_context, n)?);
     }
 
     // Phase 2: update
     if let Some(&n) = phase_nodes[2].first() {
-        update = Some(convert_expression(n)?);
+        update = Some(convert_expression(bridge_context, n)?);
     }
 
     // Phase 3: body
@@ -802,11 +805,11 @@ fn convert_for_statement(node: &GrammarASTNode) -> Result<ForStatement, BridgeEr
         init,
         test,
         update,
-        body: Box::new(convert_statement(body)?),
+        body: Box::new(convert_statement(bridge_context, body)?),
     })
 }
 
-fn convert_for_in_statement(node: &GrammarASTNode) -> Result<ForInStatement, BridgeError> {
+fn convert_for_in_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<ForInStatement, BridgeError> {
     // for_in_statement = "for" LPAREN
     //   ( "var" variable_declaration | "let" binding_element
     //   | "const" binding_element | left_hand_side_expression )
@@ -847,7 +850,7 @@ fn convert_for_in_statement(node: &GrammarASTNode) -> Result<ForInStatement, Bri
             // failure to a graceful decline (whitespace-only fallback) rather
             // than a hard error, so an unrepresentable binding shape never
             // aborts compilation.
-            let declarator = convert_variable_declarator(left_node)
+            let declarator = convert_variable_declarator(bridge_context, left_node)
                 .map_err(|_| unsupported(left_node))?;
             ForInit::VariableDeclaration(VariableDeclaration {
                 cv: None,
@@ -855,20 +858,20 @@ fn convert_for_in_statement(node: &GrammarASTNode) -> Result<ForInStatement, Bri
                 declarations: vec![declarator],
             })
         }
-        None => ForInit::Expression(convert_expression(left_node)?),
+        None => ForInit::Expression(convert_expression(bridge_context, left_node)?),
     };
 
     // Right: the enumerated expression.
     let right_node = *phase_nodes[1]
         .first()
         .ok_or_else(|| internal(node, "for_in_statement: missing right expression"))?;
-    let right = convert_expression(right_node)?;
+    let right = convert_expression(bridge_context, right_node)?;
 
     // Body.
     let body_node = *phase_nodes[2]
         .first()
         .ok_or_else(|| internal(node, "for_in_statement: missing body"))?;
-    let body = Box::new(convert_statement(body_node)?);
+    let body = Box::new(convert_statement(bridge_context, body_node)?);
 
     Ok(ForInStatement {
         cv: None,
@@ -878,7 +881,7 @@ fn convert_for_in_statement(node: &GrammarASTNode) -> Result<ForInStatement, Bri
     })
 }
 
-fn convert_for_of_statement(node: &GrammarASTNode) -> Result<ForOfStatement, BridgeError> {
+fn convert_for_of_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<ForOfStatement, BridgeError> {
     // for_of_statement = "for" LPAREN
     //   ( "var" variable_declaration | "let" binding_element
     //   | "const" binding_element | "using" binding_element
@@ -924,27 +927,27 @@ fn convert_for_of_statement(node: &GrammarASTNode) -> Result<ForOfStatement, Bri
             // declines destructuring; any other unrepresentable shape is mapped
             // to a graceful decline rather than a hard error.
             let declarator =
-                convert_variable_declarator(left_node).map_err(|_| unsupported(left_node))?;
+                convert_variable_declarator(bridge_context, left_node).map_err(|_| unsupported(left_node))?;
             ForInit::VariableDeclaration(VariableDeclaration {
                 cv: None,
                 kind,
                 declarations: vec![declarator],
             })
         }
-        None => ForInit::Expression(convert_expression(left_node)?),
+        None => ForInit::Expression(convert_expression(bridge_context, left_node)?),
     };
 
     // Right: the iterable expression (an assignment_expression).
     let right_node = *phase_nodes[1]
         .first()
         .ok_or_else(|| internal(node, "for_of_statement: missing right expression"))?;
-    let right = convert_expression(right_node)?;
+    let right = convert_expression(bridge_context, right_node)?;
 
     // Body.
     let body_node = *phase_nodes[2]
         .first()
         .ok_or_else(|| internal(node, "for_of_statement: missing body"))?;
-    let body = Box::new(convert_statement(body_node)?);
+    let body = Box::new(convert_statement(bridge_context, body_node)?);
 
     Ok(ForOfStatement {
         cv: None,
@@ -986,64 +989,64 @@ fn convert_break_statement(node: &GrammarASTNode) -> Result<BreakStatement, Brid
     Ok(BreakStatement { cv: None, label })
 }
 
-fn convert_return_statement(node: &GrammarASTNode) -> Result<ReturnStatement, BridgeError> {
+fn convert_return_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<ReturnStatement, BridgeError> {
     // return_statement = "return" [ expression ] SEMICOLON ;
     let expr = match node_children(node).first() {
-        Some(&n) => Some(convert_expression(n)?),
+        Some(&n) => Some(convert_expression(bridge_context, n)?),
         None => None,
     };
     Ok(ReturnStatement { cv: None, argument: expr })
 }
 
-fn convert_throw_statement(node: &GrammarASTNode) -> Result<ThrowStatement, BridgeError> {
+fn convert_throw_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<ThrowStatement, BridgeError> {
     // throw_statement = "throw" expression SEMICOLON ;
     let n = node_children(node)
         .into_iter()
         .next()
         .ok_or_else(|| internal(node, "throw_statement: missing expression"))?;
-    Ok(ThrowStatement { cv: None, argument: convert_expression(n)? })
+    Ok(ThrowStatement { cv: None, argument: convert_expression(bridge_context, n)? })
 }
 
-fn convert_switch_statement(node: &GrammarASTNode) -> Result<SwitchStatement, BridgeError> {
+fn convert_switch_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<SwitchStatement, BridgeError> {
     // switch_statement = "switch" LPAREN expression RPAREN
     //   LBRACE { case_clause | default_clause } RBRACE ;
     let nodes = node_children(node);
     let discriminant = nodes
         .first()
         .ok_or_else(|| internal(node, "switch_statement: missing discriminant"))?;
-    let discriminant = convert_expression(discriminant)?;
+    let discriminant = convert_expression(bridge_context, discriminant)?;
 
     let mut cases = Vec::new();
     for n in nodes.iter().skip(1) {
         match n.rule_name.as_str() {
-            "case_clause" => cases.push(convert_case_clause(n)?),
-            "default_clause" => cases.push(convert_default_clause(n)?),
+            "case_clause" => cases.push(convert_case_clause(bridge_context, n)?),
+            "default_clause" => cases.push(convert_default_clause(bridge_context, n)?),
             _ => {}
         }
     }
     Ok(SwitchStatement { cv: None, discriminant, cases })
 }
 
-fn convert_case_clause(node: &GrammarASTNode) -> Result<SwitchCase, BridgeError> {
+fn convert_case_clause(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<SwitchCase, BridgeError> {
     // case_clause = "case" expression COLON { statement }
     let nodes = node_children(node);
     let test_n = nodes
         .first()
         .ok_or_else(|| internal(node, "case_clause: missing test expression"))?;
-    let test = Some(convert_expression(test_n)?);
+    let test = Some(convert_expression(bridge_context, test_n)?);
     let consequent: Result<Vec<Statement>, _> =
-        nodes.iter().skip(1).map(|n| convert_statement(n)).collect();
+        nodes.iter().skip(1).map(|n| convert_statement(bridge_context, n)).collect();
     Ok(SwitchCase { cv: None, test, consequent: consequent? })
 }
 
-fn convert_default_clause(node: &GrammarASTNode) -> Result<SwitchCase, BridgeError> {
+fn convert_default_clause(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<SwitchCase, BridgeError> {
     // default_clause = "default" COLON { statement }
     let consequent: Result<Vec<Statement>, _> =
-        node_children(node).into_iter().map(convert_statement).collect();
+        node_children(node).into_iter().map(|node| convert_statement(bridge_context, node)).collect();
     Ok(SwitchCase { cv: None, test: None, consequent: consequent? })
 }
 
-fn convert_labeled_statement(node: &GrammarASTNode) -> Result<LabeledStatement, BridgeError> {
+fn convert_labeled_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<LabeledStatement, BridgeError> {
     // labelled_statement = NAME COLON statement ;
     // Token children include the name; one Node child is the statement.
     let label_val = node.children.iter().find_map(|c| match c {
@@ -1059,7 +1062,7 @@ fn convert_labeled_statement(node: &GrammarASTNode) -> Result<LabeledStatement, 
     Ok(LabeledStatement {
         cv: None,
         label: Identifier { cv: None, name: label_name },
-        body: Box::new(convert_statement(body_n)?),
+        body: Box::new(convert_statement(bridge_context, body_n)?),
     })
 }
 
@@ -1067,7 +1070,7 @@ fn convert_labeled_statement(node: &GrammarASTNode) -> Result<LabeledStatement, 
 // try_statement / catch_clause (CLOC19)
 // -------------------------------------------------------------------------
 
-fn convert_try_statement(node: &GrammarASTNode) -> Result<TryStatement, BridgeError> {
+fn convert_try_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<TryStatement, BridgeError> {
     // try_statement = "try" block ( catch_clause [ finally_clause ]
     //                             | finally_clause ) ;
     // Groups flatten, so the Node children are, in order: the try `block`,
@@ -1077,20 +1080,20 @@ fn convert_try_statement(node: &GrammarASTNode) -> Result<TryStatement, BridgeEr
         .first()
         .filter(|n| n.rule_name == "block")
         .ok_or_else(|| internal(node, "try_statement: missing try block"))?;
-    let block = convert_block_statement(block_n)?;
+    let block = convert_block_statement(bridge_context, block_n)?;
 
     let mut handler = None;
     let mut finalizer = None;
     for n in children.iter().skip(1) {
         match n.rule_name.as_str() {
-            "catch_clause" => handler = Some(convert_catch_clause(n)?),
+            "catch_clause" => handler = Some(convert_catch_clause(bridge_context, n)?),
             "finally_clause" => {
                 // finally_clause = "finally" block
                 let fb = node_children(n)
                     .into_iter()
                     .find(|c| c.rule_name == "block")
                     .ok_or_else(|| internal(n, "finally_clause: missing block"))?;
-                finalizer = Some(convert_block_statement(fb)?);
+                finalizer = Some(convert_block_statement(bridge_context, fb)?);
             }
             _ => {}
         }
@@ -1104,7 +1107,7 @@ fn convert_try_statement(node: &GrammarASTNode) -> Result<TryStatement, BridgeEr
     })
 }
 
-fn convert_catch_clause(node: &GrammarASTNode) -> Result<CatchClause, BridgeError> {
+fn convert_catch_clause(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<CatchClause, BridgeError> {
     // catch_clause = "catch" [ LPAREN NAME RPAREN ] block ;
     // The grammar restricts the binding to a simple NAME (no destructuring),
     // so the optional param is the single token that is neither the `catch`
@@ -1125,7 +1128,7 @@ fn convert_catch_clause(node: &GrammarASTNode) -> Result<CatchClause, BridgeErro
         .into_iter()
         .find(|c| c.rule_name == "block")
         .ok_or_else(|| internal(node, "catch_clause: missing body block"))?;
-    let body = convert_block_statement(body_n)?;
+    let body = convert_block_statement(bridge_context, body_n)?;
     Ok(CatchClause {
         cv: None,
         param,
@@ -1137,13 +1140,13 @@ fn convert_catch_clause(node: &GrammarASTNode) -> Result<CatchClause, BridgeErro
 // expression_statement
 // -------------------------------------------------------------------------
 
-fn convert_expression_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
+fn convert_expression_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Statement, BridgeError> {
     // expression_statement = expression SEMICOLON ;
     let n = node_children(node)
         .into_iter()
         .next()
         .ok_or_else(|| internal(node, "expression_statement: missing expression"))?;
-    let expr = convert_expression(n)?;
+    let expr = convert_expression(bridge_context, n)?;
     Ok(Statement::expression_statement(ExpressionStatement { cv: None, expression: expr }))
 }
 
@@ -1151,17 +1154,17 @@ fn convert_expression_statement(node: &GrammarASTNode) -> Result<Statement, Brid
 // Variable declarations
 // =========================================================================
 
-fn convert_variable_statement(node: &GrammarASTNode) -> Result<VariableDeclaration, BridgeError> {
+fn convert_variable_statement(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<VariableDeclaration, BridgeError> {
     // variable_statement = "var" variable_declaration_list SEMICOLON ;
     // One Node child: variable_declaration_list
     let list_n = node_children(node)
         .into_iter()
         .next()
         .ok_or_else(|| internal(node, "variable_statement: missing declaration list"))?;
-    convert_var_decl_list(list_n, VarKind::Var)
+    convert_var_decl_list(bridge_context, list_n, VarKind::Var)
 }
 
-fn convert_var_decl_list(
+fn convert_var_decl_list(bridge_context: &mut occurrence::Context<'_>,
     node: &GrammarASTNode,
     kind: VarKind,
 ) -> Result<VariableDeclaration, BridgeError> {
@@ -1169,12 +1172,12 @@ fn convert_var_decl_list(
     // All Node children are variable_declaration.
     let declarators: Result<Vec<VariableDeclarator>, _> = node_children(node)
         .into_iter()
-        .map(convert_variable_declarator)
+        .map(|node| convert_variable_declarator(bridge_context, node))
         .collect();
     Ok(VariableDeclaration { cv: None, kind, declarations: declarators? })
 }
 
-fn convert_variable_declarator(node: &GrammarASTNode) -> Result<VariableDeclarator, BridgeError> {
+fn convert_variable_declarator(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<VariableDeclarator, BridgeError> {
     // variable_declaration = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
     // OR: lexical_binding = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
     //
@@ -1213,7 +1216,7 @@ fn convert_variable_declarator(node: &GrammarASTNode) -> Result<VariableDeclarat
     let init = node_children(node).into_iter().next();
     let init_expr = match init {
         Some(n) if n.rule_name == "assignment_expression" || n.rule_name.contains("expression") => {
-            Some(convert_expression(n)?)
+            Some(convert_expression(bridge_context, n)?)
         }
         _ => None,
     };
@@ -1225,7 +1228,7 @@ fn convert_variable_declarator(node: &GrammarASTNode) -> Result<VariableDeclarat
     })
 }
 
-fn convert_lexical_declaration(node: &GrammarASTNode) -> Result<VariableDeclaration, BridgeError> {
+fn convert_lexical_declaration(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<VariableDeclaration, BridgeError> {
     // lexical_declaration = ( "let" | "const" ) binding_list SEMICOLON ;
     // binding_list = lexical_binding { COMMA lexical_binding }
     let tok_vals = token_vals(node);
@@ -1243,7 +1246,7 @@ fn convert_lexical_declaration(node: &GrammarASTNode) -> Result<VariableDeclarat
     // binding_list node children are lexical_binding nodes.
     let declarators: Result<Vec<VariableDeclarator>, _> = node_children(list_n)
         .into_iter()
-        .map(convert_variable_declarator)
+        .map(|node| convert_variable_declarator(bridge_context, node))
         .collect();
     Ok(VariableDeclaration { cv: None, kind, declarations: declarators? })
 }
@@ -1252,7 +1255,7 @@ fn convert_lexical_declaration(node: &GrammarASTNode) -> Result<VariableDeclarat
 // Function declaration
 // =========================================================================
 
-fn convert_function_declaration(node: &GrammarASTNode) -> Result<FunctionDeclaration, BridgeError> {
+fn convert_function_declaration(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<FunctionDeclaration, BridgeError> {
     // function_declaration  = "function"     NAME LPAREN [ formal_parameters ] RPAREN
     //                         LBRACE function_body RBRACE ;
     // generator_declaration = "function" "*" NAME LPAREN [ formal_parameters ] RPAREN
@@ -1288,7 +1291,7 @@ fn convert_function_declaration(node: &GrammarASTNode) -> Result<FunctionDeclara
     for n in &nodes {
         match n.rule_name.as_str() {
             "formal_parameters" => {
-                params = convert_formal_parameters(n)?;
+                params = convert_formal_parameters(bridge_context, n)?;
             }
             "function_body" => {
                 body_node = Some(n);
@@ -1298,7 +1301,7 @@ fn convert_function_declaration(node: &GrammarASTNode) -> Result<FunctionDeclara
     }
 
     let body = match body_node {
-        Some(n) => convert_function_body(n)?,
+        Some(n) => convert_function_body(bridge_context, n)?,
         None => BlockStatement { cv: None, body: vec![] },
     };
 
@@ -1312,7 +1315,7 @@ fn convert_function_declaration(node: &GrammarASTNode) -> Result<FunctionDeclara
     })
 }
 
-fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpression, BridgeError> {
+fn convert_function_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<FunctionExpression, BridgeError> {
     // function_expression  = "function"     [ NAME ] LPAREN [ formal_parameters ] RPAREN
     //                        LBRACE function_body RBRACE ;
     // generator_expression = "function" "*" [ NAME ] LPAREN [ formal_parameters ] RPAREN
@@ -1345,7 +1348,7 @@ fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpressi
     for n in &nodes {
         match n.rule_name.as_str() {
             "formal_parameters" => {
-                params = convert_formal_parameters(n)?;
+                params = convert_formal_parameters(bridge_context, n)?;
             }
             "function_body" => {
                 body_node = Some(n);
@@ -1355,7 +1358,7 @@ fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpressi
     }
 
     let body = match body_node {
-        Some(n) => convert_function_body(n)?,
+        Some(n) => convert_function_body(bridge_context, n)?,
         None => BlockStatement { cv: None, body: vec![] },
     };
 
@@ -1400,7 +1403,7 @@ fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpressi
 ///   WHITESPACE_ONLY, never a miscompile.
 /// - **Body.** `class_body`'s `class_element` children each become one
 ///   [`ClassMember`] via [`convert_class_element`].
-fn convert_class_expression(node: &GrammarASTNode) -> Result<ClassExpression, BridgeError> {
+fn convert_class_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<ClassExpression, BridgeError> {
     // Name: the only direct-child token that is not the `class` keyword.
     let id = node
         .children
@@ -1421,7 +1424,7 @@ fn convert_class_expression(node: &GrammarASTNode) -> Result<ClassExpression, Br
             _ => None,
         })
     {
-        super_class = Some(Box::new(convert_class_heritage(heritage)?));
+        super_class = Some(Box::new(convert_class_heritage(bridge_context, heritage)?));
     }
 
     // Body: iterate `class_element` children of the `class_body` node.
@@ -1437,7 +1440,7 @@ fn convert_class_expression(node: &GrammarASTNode) -> Result<ClassExpression, Br
     let mut body = Vec::new();
     for el in node_children(body_node) {
         if el.rule_name == "class_element" {
-            body.push(convert_class_element(el)?);
+            body.push(convert_class_element(bridge_context, el)?);
         }
     }
 
@@ -1464,7 +1467,7 @@ fn convert_class_expression(node: &GrammarASTNode) -> Result<ClassExpression, Br
 /// [`convert_class_heritage`] and [`convert_class_element`] unchanged — only the
 /// name handling differs: a missing name is not a valid declaration, so it
 /// DECLINES (safe WHITESPACE_ONLY fallback) rather than fabricating an empty id.
-fn convert_class_declaration(node: &GrammarASTNode) -> Result<ClassDeclaration, BridgeError> {
+fn convert_class_declaration(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<ClassDeclaration, BridgeError> {
     // Name: the required class name — the single direct-child token that is not
     // the `class` keyword. Unlike `class_expression` (optional id), a *missing*
     // name here DECLINES: a class declaration with no name is not valid syntax
@@ -1486,7 +1489,7 @@ fn convert_class_declaration(node: &GrammarASTNode) -> Result<ClassDeclaration, 
         ASTNodeOrToken::Node(n) if n.rule_name == "class_heritage" => Some(n),
         _ => None,
     }) {
-        super_class = Some(Box::new(convert_class_heritage(heritage)?));
+        super_class = Some(Box::new(convert_class_heritage(bridge_context, heritage)?));
     }
 
     // Body: iterate `class_element` children of the `class_body` node — same
@@ -1503,7 +1506,7 @@ fn convert_class_declaration(node: &GrammarASTNode) -> Result<ClassDeclaration, 
     let mut body = Vec::new();
     for el in node_children(body_node) {
         if el.rule_name == "class_element" {
-            body.push(convert_class_element(el)?);
+            body.push(convert_class_element(bridge_context, el)?);
         }
     }
 
@@ -1512,10 +1515,10 @@ fn convert_class_declaration(node: &GrammarASTNode) -> Result<ClassDeclaration, 
 
 /// Convert a `class_heritage` (`extends <operand>`) node into the super-class
 /// [`Expression`]. See the shape note on [`convert_class_expression`].
-fn convert_class_heritage(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_class_heritage(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // Prefer a child *node* operand (`extends ns.B` → left_hand_side_expression).
     if let Some(operand) = node_children(node).into_iter().next() {
-        return convert_expression(operand);
+        return convert_expression(bridge_context, operand);
     }
     // Otherwise a lone NAME token (`extends B`). Exactly one non-`extends`
     // token is a clean identifier; anything else (the grammar's flattened
@@ -1562,7 +1565,7 @@ fn convert_class_heritage(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 /// `class_field_declaration` (CLOC12.175) member nodes are modelled; an
 /// `async_method` node is a form this slice does not model — it DECLINES (safe
 /// WHITESPACE_ONLY fallback) rather than surface a mis-emit.
-fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeError> {
+fn convert_class_element(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<ClassMember, BridgeError> {
     // A `class_element` carries at most one *word* modifier — `static` (which
     // we model) or `async` (which we do not). It may also carry a benign
     // separator `;` (a stray semicolon between members). Inspect only the
@@ -1600,11 +1603,11 @@ fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeErr
         .next()
         .ok_or_else(|| internal(node, "class_element: empty"))?;
     match member.rule_name.as_str() {
-        "method_definition" => Ok(ClassMember::Method(convert_method_definition(member, is_static)?)),
-        "class_field_declaration" => Ok(ClassMember::Field(convert_class_field(member)?)),
-        "static_block" => Ok(ClassMember::StaticBlock(convert_static_block(member)?)),
+        "method_definition" => Ok(ClassMember::Method(convert_method_definition(bridge_context, member, is_static)?)),
+        "class_field_declaration" => Ok(ClassMember::Field(convert_class_field(bridge_context, member)?)),
+        "static_block" => Ok(ClassMember::StaticBlock(convert_static_block(bridge_context, member)?)),
         "private_method_definition" => {
-            Ok(ClassMember::Method(convert_private_method_definition(member)?))
+            Ok(ClassMember::Method(convert_private_method_definition(bridge_context, member)?))
         }
         _ => Err(unsupported(member)),
     }
@@ -1628,9 +1631,9 @@ fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeErr
 /// empty block (`static {}`) yields an empty `body`. Because every statement is
 /// routed through the shared converter, any unmodelled body statement makes the
 /// converter DECLINE (safe WHITESPACE_ONLY fallback) rather than mis-emit.
-fn convert_static_block(node: &GrammarASTNode) -> Result<BlockStatement, BridgeError> {
+fn convert_static_block(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<BlockStatement, BridgeError> {
     let stmts: Result<Vec<Statement>, _> =
-        node_children(node).into_iter().map(convert_statement).collect();
+        node_children(node).into_iter().map(|node| convert_statement(bridge_context, node)).collect();
     Ok(BlockStatement { cv: None, body: stmts? })
 }
 
@@ -1680,7 +1683,7 @@ fn private_name_key(node: &GrammarASTNode) -> Option<PropertyKey> {
     None
 }
 
-fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, BridgeError> {
+fn convert_class_field(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<PropertyDefinition, BridgeError> {
     // `static` — a bare NAME token before the `property_name` node.
     let mut is_static = false;
     for c in &node.children {
@@ -1702,7 +1705,7 @@ fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, Brid
             .into_iter()
             .find(|n| n.rule_name == "property_name")
             .ok_or_else(|| unsupported(node))?;
-        convert_property_key(key_node)?
+        convert_property_key(bridge_context, key_node)?
     };
 
     // initializer — the optional `assignment_expression` after `=`. A bare field
@@ -1711,7 +1714,7 @@ fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, Brid
         .into_iter()
         .find(|n| n.rule_name == "assignment_expression")
     {
-        Some(v) => Some(convert_expression(v)?),
+        Some(v) => Some(convert_expression(bridge_context, v)?),
         None => None,
     };
 
@@ -1757,7 +1760,7 @@ fn convert_class_field(node: &GrammarASTNode) -> Result<PropertyDefinition, Brid
 /// two or more parse under a `formal_parameters` wrapper (mirroring the two
 /// grammar shapes). Both are collected. Rest/default/destructured params are
 /// declined by the shared [`convert_formal_parameter`] (Phase-1 simple names).
-fn convert_method_definition(
+fn convert_method_definition(bridge_context: &mut occurrence::Context<'_>,
     node: &GrammarASTNode,
     is_static: bool,
 ) -> Result<MethodDefinition, BridgeError> {
@@ -1790,7 +1793,7 @@ fn convert_method_definition(
         .ok_or_else(|| internal(node, "method_definition: missing property_name"))?;
     // `convert_property_key` lowers a computed `[expr]` key to
     // `PropertyKey::Expression` (CLOC12.180); the `computed` flag is set below.
-    let key = convert_property_key(key_node)?;
+    let key = convert_property_key(bridge_context, key_node)?;
 
     let kind = if saw_get {
         MethodKind::Get
@@ -1812,15 +1815,15 @@ fn convert_method_definition(
     let mut params = Vec::new();
     for n in node_children(node) {
         match n.rule_name.as_str() {
-            "formal_parameters" => params.extend(convert_formal_parameters(n)?),
-            "formal_parameter" => params.push(convert_formal_parameter(n)?),
+            "formal_parameters" => params.extend(convert_formal_parameters(bridge_context, n)?),
+            "formal_parameter" => params.push(convert_formal_parameter(bridge_context, n)?),
             _ => {}
         }
     }
 
     // Body: the `function_body` node, or an empty block for `m(){}`.
     let body = match node_children(node).into_iter().find(|n| n.rule_name == "function_body") {
-        Some(b) => convert_function_body(b)?,
+        Some(b) => convert_function_body(bridge_context, b)?,
         None => BlockStatement { cv: None, body: vec![] },
     };
 
@@ -1878,7 +1881,7 @@ fn convert_method_definition(
 /// [`MethodKind::Get`] / [`MethodKind::Set`] accessor. Params and body reuse the
 /// shared [`convert_formal_parameters`] / [`convert_formal_parameter`] /
 /// [`convert_function_body`], mirroring [`convert_method_definition`].
-fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefinition, BridgeError> {
+fn convert_private_method_definition(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<MethodDefinition, BridgeError> {
     // Read `static`, the `get` / `set` accessor keyword, and the `*` generator
     // marker (inside this node); decline only the `async` form this slice does
     // not model. All of `static` / `get` / `set` / `*` / `async` precede the
@@ -1913,15 +1916,15 @@ fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefi
     let mut params = Vec::new();
     for n in node_children(node) {
         match n.rule_name.as_str() {
-            "formal_parameters" => params.extend(convert_formal_parameters(n)?),
-            "formal_parameter" => params.push(convert_formal_parameter(n)?),
+            "formal_parameters" => params.extend(convert_formal_parameters(bridge_context, n)?),
+            "formal_parameter" => params.push(convert_formal_parameter(bridge_context, n)?),
             _ => {}
         }
     }
 
     // Body: the `function_body` node, or an empty block for `#m(){}`.
     let body = match node_children(node).into_iter().find(|n| n.rule_name == "function_body") {
-        Some(b) => convert_function_body(b)?,
+        Some(b) => convert_function_body(bridge_context, b)?,
         None => BlockStatement { cv: None, body: vec![] },
     };
 
@@ -1979,7 +1982,7 @@ fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefi
 /// operand-less form. If a future grammar change yields an operand-less node,
 /// the `node_children().next()` below returns `None` and we surface an internal
 /// error rather than silently mis-converting.
-fn convert_yield_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_yield_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     let delegate = has_token(node, "*");
     let operand = node_children(node)
         .into_iter()
@@ -1988,7 +1991,7 @@ fn convert_yield_expression(node: &GrammarASTNode) -> Result<Expression, BridgeE
     Ok(Expression::YieldExpression(YieldExpression {
         cv: None,
         delegate,
-        argument: Some(Box::new(convert_expression(operand)?)),
+        argument: Some(Box::new(convert_expression(bridge_context, operand)?)),
     }))
 }
 
@@ -2028,7 +2031,7 @@ fn convert_yield_expression(node: &GrammarASTNode) -> Result<Expression, BridgeE
 /// Async arrows (`async x => x`) parse under the separate
 /// `async_arrow_function` rule and remain declined for now — a follow-up
 /// once the async evaluation model lands.
-fn convert_arrow_function(
+fn convert_arrow_function(bridge_context: &mut occurrence::Context<'_>,
     node: &GrammarASTNode,
     is_async: bool,
 ) -> Result<ArrowFunctionExpression, BridgeError> {
@@ -2039,8 +2042,8 @@ fn convert_arrow_function(
 
     for n in &children {
         match n.rule_name.as_str() {
-            "arrow_parameters" => params = convert_arrow_parameters(n)?,
-            "concise_body" => body = Some(convert_concise_body(n)?),
+            "arrow_parameters" => params = convert_arrow_parameters(bridge_context, n)?,
+            "concise_body" => body = Some(convert_concise_body(bridge_context, n)?),
             _ => {}
         }
     }
@@ -2093,11 +2096,11 @@ fn convert_arrow_function(
 ///
 /// A parenthesised list wraps a `formal_parameters` node; a single bare
 /// identifier is just a `NAME` token (no wrapper); `()` has neither.
-fn convert_arrow_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>, BridgeError> {
+fn convert_arrow_parameters(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Vec<FunctionParam>, BridgeError> {
     for c in &node.children {
         if let ASTNodeOrToken::Node(n) = c {
             if n.rule_name == "formal_parameters" {
-                return convert_formal_parameters(n);
+                return convert_formal_parameters(bridge_context, n);
             }
         }
     }
@@ -2122,12 +2125,12 @@ fn convert_arrow_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>,
 /// gap-156 note on [`convert_arrow_function`]); the `function_body` arm is
 /// kept so the bridge is already correct once the grammar parses block
 /// bodies.
-fn convert_concise_body(node: &GrammarASTNode) -> Result<ArrowBody, BridgeError> {
+fn convert_concise_body(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<ArrowBody, BridgeError> {
     if let Some(n) = node_children(node).into_iter().next() {
         if n.rule_name == "function_body" {
-            return Ok(ArrowBody::Block(convert_function_body(n)?));
+            return Ok(ArrowBody::Block(convert_function_body(bridge_context, n)?));
         }
-        return Ok(ArrowBody::Expression(Box::new(convert_expression(n)?)));
+        return Ok(ArrowBody::Expression(Box::new(convert_expression(bridge_context, n)?)));
     }
     // Only brace tokens, no inner node → an empty block body `() => {}`.
     Ok(ArrowBody::Block(BlockStatement { cv: None, body: vec![] }))
@@ -2200,18 +2203,18 @@ fn convert_template_literal(node: &GrammarASTNode) -> Result<TemplateLiteral, Br
     })
 }
 
-fn convert_formal_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>, BridgeError> {
+fn convert_formal_parameters(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Vec<FunctionParam>, BridgeError> {
     // formal_parameters = formal_parameter { COMMA formal_parameter } [ COMMA ]
     // formal_parameter = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
     //                  | ELLIPSIS ( NAME | binding_pattern )
     let params: Result<Vec<FunctionParam>, _> = node_children(node)
         .into_iter()
-        .map(convert_formal_parameter)
+        .map(|node| convert_formal_parameter(bridge_context, node))
         .collect();
     params
 }
 
-fn convert_formal_parameter(node: &GrammarASTNode) -> Result<FunctionParam, BridgeError> {
+fn convert_formal_parameter(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<FunctionParam, BridgeError> {
     // formal_parameter = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
     //                  | ELLIPSIS ( NAME | binding_pattern )
     // Simple NAME identifiers and (CLOC12.190) trailing rest parameters
@@ -2272,7 +2275,7 @@ fn convert_formal_parameter(node: &GrammarASTNode) -> Result<FunctionParam, Brid
                 _ => None,
             })
             .ok_or_else(|| internal(node, "default parameter: missing default expression"))?;
-        let right = convert_expression(right_node)?;
+        let right = convert_expression(bridge_context, right_node)?;
         return Ok(FunctionParam::AssignmentPattern(AssignmentPattern {
             cv: None,
             left: Identifier { cv: None, name },
@@ -2287,13 +2290,13 @@ fn convert_formal_parameter(node: &GrammarASTNode) -> Result<FunctionParam, Brid
     Ok(FunctionParam::Identifier(Identifier { cv: None, name }))
 }
 
-fn convert_function_body(node: &GrammarASTNode) -> Result<BlockStatement, BridgeError> {
+fn convert_function_body(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<BlockStatement, BridgeError> {
     // function_body = { source_element }
     let stmts: Result<Vec<Statement>, _> = node_children(node)
         .into_iter()
         .map(|n| {
             // source_element children are statements or declarations.
-            let item = convert_source_element(n)?;
+            let item = convert_source_element(bridge_context, n)?;
             Ok(match item {
                 ProgramItem::Statement(s) => s,
                 ProgramItem::Declaration(d) => Statement::Declaration(d),
@@ -2307,52 +2310,52 @@ fn convert_function_body(node: &GrammarASTNode) -> Result<BlockStatement, Bridge
 // Expressions — dispatch
 // =========================================================================
 
-fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     match node.rule_name.as_str() {
         // Top-level expression rule: comma-separated sequence.
-        "expression" => convert_expression_rule(node),
+        "expression" => convert_expression_rule(bridge_context, node),
 
         // Assignment
-        "assignment_expression" => convert_assignment_expression(node),
+        "assignment_expression" => convert_assignment_expression(bridge_context, node),
 
         // Conditional and below
-        "conditional_expression" => convert_conditional_expression(node),
+        "conditional_expression" => convert_conditional_expression(bridge_context, node),
 
         // Short-circuit logical
-        "nullish_coalescing_expression" => convert_left_fold_logical(node, "??"),
-        "logical_or_expression" => convert_left_fold_logical(node, "||"),
-        "logical_and_expression" => convert_left_fold_logical(node, "&&"),
+        "nullish_coalescing_expression" => convert_left_fold_logical(bridge_context, node, "??"),
+        "logical_or_expression" => convert_left_fold_logical(bridge_context, node, "||"),
+        "logical_and_expression" => convert_left_fold_logical(bridge_context, node, "&&"),
 
         // Bitwise
-        "bitwise_or_expression" => convert_left_fold_binary(node, &["|"]),
-        "bitwise_xor_expression" => convert_left_fold_binary(node, &["^"]),
-        "bitwise_and_expression" => convert_left_fold_binary(node, &["&"]),
+        "bitwise_or_expression" => convert_left_fold_binary(bridge_context, node, &["|"]),
+        "bitwise_xor_expression" => convert_left_fold_binary(bridge_context, node, &["^"]),
+        "bitwise_and_expression" => convert_left_fold_binary(bridge_context, node, &["&"]),
 
         // Equality / relational / shift / additive / multiplicative / exponentiation
-        "equality_expression" => convert_left_fold_binary(node, &["==", "!=", "===", "!=="]),
+        "equality_expression" => convert_left_fold_binary(bridge_context, node, &["==", "!=", "===", "!=="]),
         "relational_expression" => {
-            convert_left_fold_binary(node, &["<", ">", "<=", ">=", "in", "instanceof"])
+            convert_left_fold_binary(bridge_context, node, &["<", ">", "<=", ">=", "in", "instanceof"])
         }
-        "shift_expression" => convert_left_fold_binary(node, &["<<", ">>", ">>>"]),
-        "additive_expression" => convert_left_fold_binary(node, &["+", "-"]),
-        "multiplicative_expression" => convert_left_fold_binary(node, &["*", "/", "%"]),
-        "exponentiation_expression" => convert_right_fold_binary(node, "**"),
+        "shift_expression" => convert_left_fold_binary(bridge_context, node, &["<<", ">>", ">>>"]),
+        "additive_expression" => convert_left_fold_binary(bridge_context, node, &["+", "-"]),
+        "multiplicative_expression" => convert_left_fold_binary(bridge_context, node, &["*", "/", "%"]),
+        "exponentiation_expression" => convert_right_fold_binary(bridge_context, node, "**"),
 
         // Unary / postfix
-        "unary_expression" => convert_unary_expression(node),
-        "postfix_expression" => convert_postfix_expression(node),
+        "unary_expression" => convert_unary_expression(bridge_context, node),
+        "postfix_expression" => convert_postfix_expression(bridge_context, node),
 
         // LHS / call / member / primary
-        "left_hand_side_expression" => convert_lhs_expression(node),
-        "call_expression" => convert_call_expression(node),
+        "left_hand_side_expression" => convert_lhs_expression(bridge_context, node),
+        "call_expression" => convert_call_expression(bridge_context, node),
         // optional_chain_expression is the main suffix-chain rule in the grammar —
         // it handles simple member_expression pass-through, dot access, bracket
         // access, AND function calls in addition to true optional-chain (?.); only
         // the ?. variants are Phase 2.
-        "optional_chain_expression" => convert_optional_chain_expression(node),
-        "new_expression" => convert_new_expression(node),
-        "member_expression" => convert_member_expression(node),
-        "primary_expression" => convert_primary_expression(node),
+        "optional_chain_expression" => convert_optional_chain_expression(bridge_context, node),
+        "new_expression" => convert_new_expression(bridge_context, node),
+        "member_expression" => convert_member_expression(bridge_context, node),
+        "primary_expression" => convert_primary_expression(bridge_context, node),
 
         // `import.meta` — the module meta-property (CLOC12.168 PR2, gap-169).
         // The grammar emits a dedicated `import_meta` leaf whose children are the
@@ -2373,11 +2376,11 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         // specifier (e.g. `import("a" + "b")` → `import("ab")`) propagates.
         // Previously fell through to the `other =>` internal-error arm, dropping
         // the file to WHITESPACE_ONLY.
-        "dynamic_import" => convert_dynamic_import(node),
+        "dynamic_import" => convert_dynamic_import(bridge_context, node),
 
         // Literals
-        "array_literal" => convert_array_literal(node),
-        "object_literal" => convert_object_literal(node),
+        "array_literal" => convert_array_literal(bridge_context, node),
+        "object_literal" => convert_object_literal(bridge_context, node),
 
         // A plain (non-generator, non-async) function in value position —
         // an IIFE `(function(){})()`, an assigned function
@@ -2387,7 +2390,7 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         // instead of declining, so closurec optimises through it rather than
         // falling back to WHITESPACE_ONLY. (gap-153.)
         "function_expression" => {
-            convert_function_expression(node).map(Expression::FunctionExpression)
+            convert_function_expression(bridge_context, node).map(Expression::FunctionExpression)
         }
 
         // A generator function in value position (`x = function*(){…}`,
@@ -2395,7 +2398,7 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         // `*` sets the `generator` flag so the emitter re-prints `function*`
         // (CLOC12.163 PR2, gap-164).
         "generator_expression" => {
-            convert_function_expression(node).map(Expression::FunctionExpression)
+            convert_function_expression(bridge_context, node).map(Expression::FunctionExpression)
         }
 
         // A `yield` / `yield* x` expression inside a generator body
@@ -2403,13 +2406,13 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         // `Expression::YieldExpression` (CLOC12.163 PR1) and the bridge
         // converts the enclosing generator function, convert the yield instead
         // of declining.
-        "yield_expression" => convert_yield_expression(node),
+        "yield_expression" => convert_yield_expression(bridge_context, node),
 
         // Concise-body arrow function (CLOC12.152). `convert_arrow_function`
         // itself declines the ambiguous `() => {}` / object-body case and
         // (until the grammar parses them) never sees a block body.
         "arrow_function" => {
-            convert_arrow_function(node, false).map(Expression::ArrowFunctionExpression)
+            convert_arrow_function(bridge_context, node, false).map(Expression::ArrowFunctionExpression)
         }
 
         // Async arrow function (CLOC12.192). The grammar rule
@@ -2420,7 +2423,7 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         // already model async arrows; a body that requires `await` still
         // declines separately (that grammar is not parseable yet).
         "async_arrow_function" => {
-            convert_arrow_function(node, true).map(Expression::ArrowFunctionExpression)
+            convert_arrow_function(bridge_context, node, true).map(Expression::ArrowFunctionExpression)
         }
 
         // No-substitution template literal (CLOC12.155). `convert_template_literal`
@@ -2447,7 +2450,7 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         // `UnsupportedSyntax`, so an unrepresentable member still drops the
         // whole file to WHITESPACE_ONLY rather than mis-emitting.
         "class_expression" => {
-            convert_class_expression(node).map(Expression::ClassExpression)
+            convert_class_expression(bridge_context, node).map(Expression::ClassExpression)
         }
 
         "await_expression"
@@ -2467,11 +2470,11 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
 // expression rule (comma-sequence)
 // -------------------------------------------------------------------------
 
-fn convert_expression_rule(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_expression_rule(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // expression = assignment_expression { COMMA assignment_expression }
     let nodes = node_children(node);
     if nodes.len() == 1 {
-        convert_expression(nodes[0])
+        convert_expression(bridge_context, nodes[0])
     } else if nodes.is_empty() {
         Err(internal(node, "expression: no children"))
     } else {
@@ -2482,7 +2485,7 @@ fn convert_expression_rule(node: &GrammarASTNode) -> Result<Expression, BridgeEr
         // propagates its error, dropping the whole file to WHITESPACE_ONLY.)
         let expressions = nodes
             .iter()
-            .map(|n| convert_expression(n))
+            .map(|n| convert_expression(bridge_context, n))
             .collect::<Result<Vec<_>, _>>()?;
         Ok(Expression::SequenceExpression(SequenceExpression {
             cv: None,
@@ -2495,22 +2498,22 @@ fn convert_expression_rule(node: &GrammarASTNode) -> Result<Expression, BridgeEr
 // assignment_expression
 // -------------------------------------------------------------------------
 
-fn convert_assignment_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_assignment_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // assignment_expression = conditional_expression
     //                       | left_hand_side_expression assignment_operator assignment_expression
     let nodes = node_children(node);
     if nodes.len() == 1 {
         // Pass-through to conditional_expression.
-        return convert_expression(nodes[0]);
+        return convert_expression(bridge_context, nodes[0]);
     }
     if nodes.len() == 3 {
         // nodes[0] = lhs, nodes[1] = assignment_operator, nodes[2] = rhs
-        let lhs = convert_expression(nodes[0])?;
+        let lhs = convert_expression(bridge_context, nodes[0])?;
         let op_str = token_vals(nodes[1]).into_iter().next().unwrap_or("=");
         let op = parse_assignment_op(op_str).ok_or_else(|| {
             internal(node, format!("unknown assignment operator '{op_str}'"))
         })?;
-        let rhs = convert_expression(nodes[2])?;
+        let rhs = convert_expression(bridge_context, nodes[2])?;
         let target = expr_to_assignment_target(lhs, node)?;
         return Ok(Expression::AssignmentExpression(AssignmentExpression {
             cv: None,
@@ -2567,18 +2570,18 @@ fn parse_assignment_op(s: &str) -> Option<AssignmentOperator> {
 // conditional_expression
 // -------------------------------------------------------------------------
 
-fn convert_conditional_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_conditional_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // conditional_expression = nullish_coalescing_expression
     //                        | nullish_coalescing_expression "?" assignment_expression ":" assignment_expression
     let nodes = node_children(node);
     if nodes.len() == 1 {
-        return convert_expression(nodes[0]);
+        return convert_expression(bridge_context, nodes[0]);
     }
     if nodes.len() == 3 {
         // test ? consequent : alternate
-        let test = convert_expression(nodes[0])?;
-        let consequent = convert_expression(nodes[1])?;
-        let alternate = convert_expression(nodes[2])?;
+        let test = convert_expression(bridge_context, nodes[0])?;
+        let consequent = convert_expression(bridge_context, nodes[1])?;
+        let alternate = convert_expression(bridge_context, nodes[2])?;
         return Ok(Expression::ConditionalExpression(ConditionalExpression {
             cv: None,
             test: Box::new(test),
@@ -2594,18 +2597,18 @@ fn convert_conditional_expression(node: &GrammarASTNode) -> Result<Expression, B
 // -------------------------------------------------------------------------
 
 /// Left-fold for logical operators (&&, ||, ??)
-fn convert_left_fold_logical(node: &GrammarASTNode, op_tok: &str) -> Result<Expression, BridgeError> {
+fn convert_left_fold_logical(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode, op_tok: &str) -> Result<Expression, BridgeError> {
     let nodes = node_children(node);
     if nodes.len() == 1 {
-        return convert_expression(nodes[0]);
+        return convert_expression(bridge_context, nodes[0]);
     }
     // Multiple children: fold left. Children interleave Node, Token(op), Node...
-    let mut left = convert_expression(nodes[0])?;
+    let mut left = convert_expression(bridge_context, nodes[0])?;
     let op = parse_logical_op(op_tok).ok_or_else(|| {
         internal(node, format!("unknown logical op '{op_tok}'"))
     })?;
     for right_n in nodes.iter().skip(1) {
-        let right = convert_expression(right_n)?;
+        let right = convert_expression(bridge_context, right_n)?;
         left = Expression::LogicalExpression(LogicalExpression {
             cv: None,
             operator: op,
@@ -2627,17 +2630,17 @@ fn parse_logical_op(s: &str) -> Option<LogicalOperator> {
 
 /// Left-fold for binary operators (A { op A } form).
 /// `allowed_ops` lists the expected operator tokens for this rule.
-fn convert_left_fold_binary(
+fn convert_left_fold_binary(bridge_context: &mut occurrence::Context<'_>,
     node: &GrammarASTNode,
     allowed_ops: &[&str],
 ) -> Result<Expression, BridgeError> {
     let nodes = node_children(node);
     if nodes.len() == 1 {
-        return convert_expression(nodes[0]);
+        return convert_expression(bridge_context, nodes[0]);
     }
     // Walk the flat children list: Node, Token(op), Node, Token(op), Node...
     // We reconstruct the operator-node pairs from the interleaved children.
-    let mut left_expr = convert_expression(nodes[0])?;
+    let mut left_expr = convert_expression(bridge_context, nodes[0])?;
     let mut op_iter = node.children.iter().filter_map(|c| match c {
         ASTNodeOrToken::Token(t) if allowed_ops.contains(&t.value.as_str()) => {
             Some(t.value.as_str())
@@ -2651,7 +2654,7 @@ fn convert_left_fold_binary(
         let op = parse_binary_op(op_str).ok_or_else(|| {
             internal(node, format!("unknown binary op '{op_str}'"))
         })?;
-        let right = convert_expression(right_n)?;
+        let right = convert_expression(bridge_context, right_n)?;
         left_expr = Expression::BinaryExpression(BinaryExpression {
             cv: None,
             operator: op,
@@ -2663,17 +2666,17 @@ fn convert_left_fold_binary(
 }
 
 /// Right-fold for exponentiation: A ** A is right-associative.
-fn convert_right_fold_binary(node: &GrammarASTNode, op_str: &str) -> Result<Expression, BridgeError> {
+fn convert_right_fold_binary(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode, op_str: &str) -> Result<Expression, BridgeError> {
     let nodes = node_children(node);
     if nodes.len() == 1 {
-        return convert_expression(nodes[0]);
+        return convert_expression(bridge_context, nodes[0]);
     }
     if nodes.len() == 2 {
         let op = parse_binary_op(op_str).ok_or_else(|| {
             internal(node, format!("unknown binary op '{op_str}'"))
         })?;
-        let left = convert_expression(nodes[0])?;
-        let right = convert_expression(nodes[1])?;
+        let left = convert_expression(bridge_context, nodes[0])?;
+        let right = convert_expression(bridge_context, nodes[1])?;
         return Ok(Expression::BinaryExpression(BinaryExpression {
             cv: None,
             operator: op,
@@ -2716,7 +2719,7 @@ fn parse_binary_op(s: &str) -> Option<BinaryOperator> {
 // unary_expression
 // -------------------------------------------------------------------------
 
-fn convert_unary_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_unary_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // unary_expression = postfix_expression
     //                  | "delete" | "void" | "typeof" | PLUS | MINUS | TILDE | BANG
     //                    unary_expression
@@ -2764,15 +2767,15 @@ fn convert_unary_expression(node: &GrammarASTNode) -> Result<Expression, BridgeE
                 cv: None,
                 operator,
                 prefix: true,
-                argument: Box::new(convert_expression(arg_n)?),
+                argument: Box::new(convert_expression(bridge_context, arg_n)?),
             })),
-            None => convert_expression(arg_n),
+            None => convert_expression(bridge_context, arg_n),
         },
         Some(operator) => Ok(Expression::UnaryExpression(UnaryExpression {
             cv: None,
             operator,
             prefix: true,
-            argument: Box::new(convert_expression(arg_n)?),
+            argument: Box::new(convert_expression(bridge_context, arg_n)?),
         })),
     }
 }
@@ -2798,7 +2801,7 @@ fn unary_operator_from_str(s: &str) -> Option<UnaryOperator> {
 // postfix_expression
 // -------------------------------------------------------------------------
 
-fn convert_postfix_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_postfix_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ]
     //
     // The optional `++`/`--` is a *token* child (dropped by `node_children`),
@@ -2816,9 +2819,9 @@ fn convert_postfix_expression(node: &GrammarASTNode) -> Result<Expression, Bridg
             cv: None,
             operator,
             prefix: false,
-            argument: Box::new(convert_expression(operand)?),
+            argument: Box::new(convert_expression(bridge_context, operand)?),
         })),
-        None => convert_expression(operand),
+        None => convert_expression(bridge_context, operand),
     }
 }
 
@@ -2840,10 +2843,10 @@ fn update_operator_from_node(node: &GrammarASTNode) -> Option<UpdateOperator> {
 // left_hand_side_expression
 // -------------------------------------------------------------------------
 
-fn convert_lhs_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_lhs_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // left_hand_side_expression = call_expression | optional_chain_expression | member_expression
     let child = sole_node(node).ok_or_else(|| internal(node, "lhs_expression: expected 1 child"))?;
-    convert_expression(child)
+    convert_expression(bridge_context, child)
 }
 
 // -------------------------------------------------------------------------
@@ -2863,14 +2866,14 @@ fn convert_lhs_expression(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 /// `a?.[k]` / `a?.()` — each optional link becomes an `OptionalMemberExpression`
 /// / `OptionalCallExpression`, and a chain containing any optional link is
 /// wrapped once in a `ChainExpression` (CLOC12.171 PR2, closes gap-OptionalChain).
-fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_optional_chain_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     let nodes = node_children(node);
     if nodes.is_empty() {
         return Err(internal(node, "optional_chain_expression: no children"));
     }
 
     // Base: the first node child is always the member_expression.
-    let mut base = convert_expression(nodes[0])?;
+    let mut base = convert_expression(bridge_context, nodes[0])?;
 
     // Whether any `?.` link appeared in this chain. If so, the whole spine is
     // wrapped once in a `ChainExpression` (the boundary at which the `undefined`
@@ -2917,7 +2920,7 @@ fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression
                         i += 1;
                         while i < children.len() {
                             if let ASTNodeOrToken::Node(key_n) = &children[i] {
-                                let key = convert_expression(key_n)?;
+                                let key = convert_expression(bridge_context, key_n)?;
                                 base = Expression::OptionalMemberExpression(
                                     OptionalMemberExpression {
                                         cv: None,
@@ -2940,7 +2943,7 @@ fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression
                     }
                     // `?.(` args `)` — optional call.
                     Some(ASTNodeOrToken::Node(arg_n)) if arg_n.rule_name == "arguments" => {
-                        let args = convert_arguments(arg_n)?;
+                        let args = convert_arguments(bridge_context, arg_n)?;
                         base = Expression::OptionalCallExpression(OptionalCallExpression {
                             cv: None,
                             callee: Box::new(base),
@@ -2992,7 +2995,7 @@ fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression
                 // Find the Node child (the key expression).
                 while i < children.len() {
                     if let ASTNodeOrToken::Node(key_n) = &children[i] {
-                        let key = convert_expression(key_n)?;
+                        let key = convert_expression(bridge_context, key_n)?;
                         base = Expression::MemberExpression(MemberExpression {
                             cv: None,
                             object: Box::new(base),
@@ -3013,7 +3016,7 @@ fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression
             }
             ASTNodeOrToken::Node(arg_n) if arg_n.rule_name == "arguments" => {
                 // Function call via arguments node.
-                let args = convert_arguments(arg_n)?;
+                let args = convert_arguments(bridge_context, arg_n)?;
                 base = Expression::CallExpression(CallExpression {
                     cv: None,
                     callee: Box::new(base),
@@ -3052,13 +3055,13 @@ fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression
 // new_expression
 // -------------------------------------------------------------------------
 
-fn convert_new_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_new_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // new_expression = member_expression | "new" new_expression
     // Simple member_expression pass-through (no "new" keyword).
     if !has_token(node, "new") {
         let child = sole_node(node)
             .ok_or_else(|| internal(node, "new_expression: expected 1 child"))?;
-        return convert_expression(child);
+        return convert_expression(bridge_context, child);
     }
     // `"new" new_expression` — the BARE `new X` form (no argument parens). It is
     // semantically identical to `new X()`, so we build a `NewExpression` with an
@@ -3067,7 +3070,7 @@ fn convert_new_expression(node: &GrammarASTNode) -> Result<Expression, BridgeErr
     // `new_expression`, and is converted in `convert_member_expression`.)
     let callee_node =
         sole_node(node).ok_or_else(|| internal(node, "new_expression: expected callee after `new`"))?;
-    let callee = convert_expression(callee_node)?;
+    let callee = convert_expression(bridge_context, callee_node)?;
     Ok(Expression::NewExpression(NewExpression {
         cv: None,
         callee: Box::new(callee),
@@ -3079,7 +3082,7 @@ fn convert_new_expression(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 // call_expression
 // -------------------------------------------------------------------------
 
-fn convert_call_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_call_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // call_expression = member_expression arguments
     //                 | call_expression arguments
     //                 | call_expression LBRACKET expression RBRACKET
@@ -3128,7 +3131,7 @@ fn convert_call_expression(node: &GrammarASTNode) -> Result<Expression, BridgeEr
     // wrong program).
     let children = &node.children;
     let mut base = match children.first() {
-        Some(ASTNodeOrToken::Node(n)) => convert_expression(n)?,
+        Some(ASTNodeOrToken::Node(n)) => convert_expression(bridge_context, n)?,
         _ => return Err(internal(node, "call_expression: expected a base expression")),
     };
 
@@ -3137,7 +3140,7 @@ fn convert_call_expression(node: &GrammarASTNode) -> Result<Expression, BridgeEr
         match &children[i] {
             // `(args)` — a call applied to the current base.
             ASTNodeOrToken::Node(n) if n.rule_name == "arguments" => {
-                let args = convert_arguments(n)?;
+                let args = convert_arguments(bridge_context, n)?;
                 base = Expression::CallExpression(CallExpression {
                     cv: None,
                     callee: Box::new(base),
@@ -3170,7 +3173,7 @@ fn convert_call_expression(node: &GrammarASTNode) -> Result<Expression, BridgeEr
                     _ => None,
                 });
                 let key = match key_node {
-                    Some(n) => convert_expression(n)?,
+                    Some(n) => convert_expression(bridge_context, n)?,
                     None => return Err(internal(node, "call_expression.computed: missing key")),
                 };
                 base = Expression::MemberExpression(MemberExpression {
@@ -3199,7 +3202,7 @@ fn convert_call_expression(node: &GrammarASTNode) -> Result<Expression, BridgeEr
     Ok(base)
 }
 
-fn convert_arguments(node: &GrammarASTNode) -> Result<Vec<Expression>, BridgeError> {
+fn convert_arguments(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Vec<Expression>, BridgeError> {
     // arguments = LPAREN [ argument_list [ COMMA ] ] RPAREN
     // argument_list = argument { COMMA argument }
     // argument = [ ELLIPSIS ] assignment_expression
@@ -3209,11 +3212,11 @@ fn convert_arguments(node: &GrammarASTNode) -> Result<Vec<Expression>, BridgeErr
         match n.rule_name.as_str() {
             "argument_list" => {
                 for arg_n in node_children(n) {
-                    args.push(convert_argument(arg_n)?);
+                    args.push(convert_argument(bridge_context, arg_n)?);
                 }
             }
             r if r.contains("expression") || r == "assignment_expression" => {
-                args.push(convert_expression(n)?);
+                args.push(convert_expression(bridge_context, n)?);
             }
             _ => {}
         }
@@ -3221,7 +3224,7 @@ fn convert_arguments(node: &GrammarASTNode) -> Result<Vec<Expression>, BridgeErr
     Ok(args)
 }
 
-fn convert_argument(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_argument(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // argument = [ ELLIPSIS ] assignment_expression
     //
     // A spread argument `f(...a)` parses to a `spread_element` node whose
@@ -3238,7 +3241,7 @@ fn convert_argument(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
             .ok_or_else(|| internal(node, "spread argument: missing expression"))?;
         return Ok(Expression::SpreadElement(SpreadElement {
             cv: None,
-            argument: Box::new(convert_expression(inner)?),
+            argument: Box::new(convert_expression(bridge_context, inner)?),
         }));
     }
     // The parser collapses the single-alternative `argument` production, so the
@@ -3262,7 +3265,7 @@ fn convert_argument(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     } else {
         node
     };
-    convert_expression(target)
+    convert_expression(bridge_context, target)
 }
 
 // -------------------------------------------------------------------------
@@ -3306,7 +3309,7 @@ fn convert_import_meta(node: &GrammarASTNode) -> Result<Expression, BridgeError>
 /// `node_children` skips the three bare tokens, so the specifier is
 /// `node_children(node).first()`. If it is somehow absent (a malformed tree),
 /// we surface an internal error rather than silently dropping the operand.
-fn convert_dynamic_import(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_dynamic_import(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     let cv = match node.children.first() {
         Some(ASTNodeOrToken::Token(t)) => t.cv.clone(),
         _ => None,
@@ -3315,7 +3318,7 @@ fn convert_dynamic_import(node: &GrammarASTNode) -> Result<Expression, BridgeErr
         .into_iter()
         .next()
         .ok_or_else(|| internal(node, "dynamic_import: no source expression"))?;
-    let source = convert_expression(source_node)?;
+    let source = convert_expression(bridge_context, source_node)?;
     Ok(Expression::ImportExpression(ImportExpression {
         cv,
         source: Box::new(source),
@@ -3326,7 +3329,7 @@ fn convert_dynamic_import(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 // member_expression
 // -------------------------------------------------------------------------
 
-fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_member_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // member_expression = primary_expression
     //                   | member_expression LBRACKET expression RBRACKET  (computed)
     //                   | member_expression DOT NAME                       (property)
@@ -3408,7 +3411,7 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
                 return Ok(Expression::Super(Super { cv: t.cv.clone() }));
             }
         }
-        return convert_expression(nodes[0]); // primary_expression pass-through
+        return convert_expression(bridge_context, nodes[0]); // primary_expression pass-through
     }
 
     // Suffix chain: `primary { DOT NAME | LBRACKET expr RBRACKET }`.
@@ -3447,12 +3450,12 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
         );
         match (callee_node, args_idx) {
             (Some(callee_node), Some(args_idx)) => {
-                let callee = convert_expression(callee_node)?;
+                let callee = convert_expression(bridge_context, callee_node)?;
                 let args_node = match &children[args_idx] {
                     ASTNodeOrToken::Node(n) => n,
                     _ => unreachable!("args_idx points at a Node by construction"),
                 };
-                let arguments = convert_arguments(args_node)?;
+                let arguments = convert_arguments(bridge_context, args_node)?;
                 let new_expr = Expression::NewExpression(NewExpression {
                     cv: None,
                     callee: Box::new(callee),
@@ -3477,7 +3480,7 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
     } else {
         // A plain primary base — always the first child Node.
         let base = match children.first() {
-            Some(ASTNodeOrToken::Node(n)) => convert_expression(n)?,
+            Some(ASTNodeOrToken::Node(n)) => convert_expression(bridge_context, n)?,
             _ => return Err(internal(node, "member_expression: expected primary base")),
         };
         (base, 1)
@@ -3514,7 +3517,7 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
                     _ => None,
                 });
                 let key = match key_node {
-                    Some(n) => convert_expression(n)?,
+                    Some(n) => convert_expression(bridge_context, n)?,
                     None => {
                         return Err(internal(
                             node,
@@ -3569,7 +3572,7 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
 // primary_expression
 // -------------------------------------------------------------------------
 
-fn convert_primary_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_primary_expression(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // primary_expression = "this" | NAME | NUMBER | BIGINT | STRING | REGEX
     //                    | "true" | "false" | "null" | array_literal
     //                    | object_literal | LPAREN expression RPAREN
@@ -3587,12 +3590,12 @@ fn convert_primary_expression(node: &GrammarASTNode) -> Result<Expression, Bridg
     // Tokens; non-paren rule refs have only a single Node.
     let nodes = node_children(node);
     if nodes.len() == 1 && !has_token(node, "(") {
-        return convert_expression(nodes[0]);
+        return convert_expression(bridge_context, nodes[0]);
     }
     // Parenthesized expression: (expr)
     if has_token(node, "(") {
         if let Some(inner_n) = nodes.first() {
-            return convert_expression(inner_n);
+            return convert_expression(bridge_context, inner_n);
         }
     }
 
@@ -3801,7 +3804,7 @@ fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, 
 // Literals
 // =========================================================================
 
-fn convert_array_literal(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_array_literal(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // array_literal = LBRACKET [ element_list ] RBRACKET ;
     // element_list  = [ ELLIPSIS ] assignment_expression
     //                 { COMMA [ ELLIPSIS ] assignment_expression } [ COMMA ] ;
@@ -3860,7 +3863,7 @@ fn convert_array_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErro
                                     })?;
                                 elements.push(Some(Expression::SpreadElement(SpreadElement {
                                     cv: None,
-                                    argument: Box::new(convert_expression(inner)?),
+                                    argument: Box::new(convert_expression(bridge_context, inner)?),
                                 })));
                                 expect_element = false;
                                 continue;
@@ -3874,7 +3877,7 @@ fn convert_array_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErro
                             // dispatches `assignment_expression` correctly for
                             // both the plain (`[x]`) and assignment (`[x=1]`)
                             // cases.
-                            elements.push(Some(convert_expression(elem)?));
+                            elements.push(Some(convert_expression(bridge_context, elem)?));
                             expect_element = false;
                         }
                     }
@@ -3883,15 +3886,15 @@ fn convert_array_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErro
             // Single-element array with no `element_list` wrapper — no commas, so
             // no holes are possible.
             r if r.contains("expression") => {
-                elements.push(Some(convert_expression(n)?));
+                elements.push(Some(convert_expression(bridge_context, n)?));
             }
             _ => {}
         }
     }
-    Ok(Expression::ArrayExpression(ArrayExpression { cv: None, elements }))
+    Ok(Expression::ArrayExpression(ArrayExpression { cv: bridge_context.array_constructed(node)?, elements }))
 }
 
-fn convert_object_literal(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+fn convert_object_literal(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // object_literal = LBRACE [ property_definition { COMMA property_definition } ] RBRACE
     let nodes = node_children(node);
     let mut properties = Vec::new();
@@ -3917,20 +3920,20 @@ fn convert_object_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErr
                 let arg_n = node_children(spread_node).into_iter().next().ok_or_else(
                     || internal(spread_node, "object spread: no argument expression"),
                 )?;
-                let argument = convert_expression(arg_n)?;
+                let argument = convert_expression(bridge_context, arg_n)?;
                 properties.push(ObjectMember::Spread(SpreadElement {
                     cv: None,
                     argument: Box::new(argument),
                 }));
             } else {
-                properties.push(ObjectMember::Property(convert_property_definition(n)?));
+                properties.push(ObjectMember::Property(convert_property_definition(bridge_context, n)?));
             }
         }
     }
     Ok(Expression::ObjectExpression(ObjectExpression { cv: None, properties }))
 }
 
-fn convert_property_definition(node: &GrammarASTNode) -> Result<Property, BridgeError> {
+fn convert_property_definition(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<Property, BridgeError> {
     // property_definition = property_name COLON assignment_expression
     //                     | NAME  (shorthand)
     //                     | method_definition  (unsupported Phase 2)
@@ -3943,8 +3946,8 @@ fn convert_property_definition(node: &GrammarASTNode) -> Result<Property, Bridge
         // property_name : value
         let key_n = nodes[0];
         let val_n = nodes[1];
-        let key = convert_property_key(key_n)?;
-        let value = convert_expression(val_n)?;
+        let key = convert_property_key(bridge_context, key_n)?;
+        let value = convert_expression(bridge_context, val_n)?;
         // A computed key `[expr]` bridges to `PropertyKey::Expression`
         // (CLOC12.180); the `computed` flag tracks exactly that variant.
         let computed = matches!(&key, PropertyKey::Expression(_));
@@ -3979,7 +3982,7 @@ fn convert_property_definition(node: &GrammarASTNode) -> Result<Property, Bridge
     Err(unsupported(node))
 }
 
-fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeError> {
+fn convert_property_key(bridge_context: &mut occurrence::Context<'_>, node: &GrammarASTNode) -> Result<PropertyKey, BridgeError> {
     // property_name = NAME | STRING | NUMBER | LBRACKET assignment_expression RBRACKET
     //
     // CRITICAL — the terminal token *kind* (NAME / NUMBER / STRING) lives in the
@@ -4015,7 +4018,7 @@ fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeErro
             .into_iter()
             .next()
             .ok_or_else(|| internal(node, "computed key: missing key expression"))?;
-        return Ok(PropertyKey::Expression(Box::new(convert_expression(inner)?)));
+        return Ok(PropertyKey::Expression(Box::new(convert_expression(bridge_context, inner)?)));
     }
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {

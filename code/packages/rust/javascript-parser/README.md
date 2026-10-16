@@ -64,3 +64,19 @@ The JavaScript grammar covers:
 ## Checked provenance errors (CV02)
 
 CV02: propagate program-root allocation and construction-event failures before accepting a parsed result; test node/event exhaustion. The caller must propagate the error and reject the compilation result.
+
+## Optional array occurrence observation (CLOC32)
+
+`bridge::grammar_to_program_with_array_observer` borrows a caller-owned
+`ArrayOccurrenceObserver: Send` and the original grammar CST. Its callback
+receives each actual array occurrence once after its children; its optional
+returned identity is assigned only to `ArrayExpression.cv`. Ordinary
+`grammar_to_program` retains existing leaf IDs and leaves composites untraced.
+
+The observed entry distinguishes bridge, sink and worker failures. Its scoped
+128 MiB worker rejects partial candidates before returning an error to a small
+caller; the first sink refusal remains authoritative. Arbitrary Rust callback
+work, returned IDs and successful AST ownership remain caller responsibilities.
+This hook introduces no source/span namespace and does not certify arbitrary
+sink metadata or wire the CLI. A trusted source-range adapter is follow-up work.
+Final-source Miri remains DEFERRED/PENDING; existing frozen validation is untouched.
