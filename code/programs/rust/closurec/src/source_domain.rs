@@ -3,6 +3,7 @@
 use coding_adventures_correlation_vector::CVLog;
 use coding_adventures_javascript_tokens::EsVersion;
 use serde_json::Value;
+const NS: &str = "closurec_source_v1";
 #[derive(Clone, Copy)]
 pub(super) struct ShapeLimits { work: usize, index_bytes: usize }
 impl Default for ShapeLimits {
