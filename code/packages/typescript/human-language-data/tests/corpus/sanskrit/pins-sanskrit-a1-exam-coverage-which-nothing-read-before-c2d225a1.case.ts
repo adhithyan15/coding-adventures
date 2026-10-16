@@ -113,6 +113,11 @@ it("pins Sanskrit A1 exam coverage, which nothing read before", () => {
     enumerated: 2,
     covered: 2,
   });
+  expect(coverage.byCategory["Evaluative notions"]!).toEqual({ enumerated: 4, covered: 4 });
+  expect(coverage.byCategory["Structuring the exchange"]!).toEqual({
+    enumerated: 2,
+    covered: 2,
+  });
   // And the column the ordinal tranche finished: number and quantity, 4/5 -> 5/5.
   expect(coverage.byCategory["Saṅkhyā — number and quantity"]!).toEqual({ enumerated: 5, covered: 5 });
   // The ordinal point, named rather than left to the aggregate, so a nulled

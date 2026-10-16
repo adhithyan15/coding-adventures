@@ -2,13 +2,12 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { expect, it } from "vitest";
-import { measureExamCoverage } from "../../../src/exam-inventory.js";
 import {
-  loadEverything,
   loadExamInventory,
   loadTrackChapters,
   loadTrackLessons,
 } from "../../../src/loader.js";
+import { sanskritA1PointCoverage } from "../sanskrit-a1-point-coverage.js";
 
 it("asks for a person and requests quiet twice in Sanskrit A1", () => {
   const lessons = loadTrackLessons("sanskrit");
@@ -188,18 +187,7 @@ it("asks for a person and requests quiet twice in Sanskrit A1", () => {
   expect(inventory.points.find((point) => point.id === "SA-A1-F-22")?.probe).toEqual(
     pointAtoms,
   );
-  const coverage = measureExamCoverage(inventory, loadEverything().lessons);
-  expect(coverage).toMatchObject({
-    enumerated: 164,
-    covered: 157,
-    unmapped: 7,
-    partial: 0,
-  });
-  expect(coverage.byCategory["Structuring the exchange"]).toEqual({
-    enumerated: 2,
-    covered: 2,
-  });
-  expect(coverage.points.find((point) => point.id === "SA-A1-F-22")).toMatchObject({
+  expect(sanskritA1PointCoverage("SA-A1-F-22")).toMatchObject({
     covered: true,
     missingAtoms: [],
     unmapped: false,

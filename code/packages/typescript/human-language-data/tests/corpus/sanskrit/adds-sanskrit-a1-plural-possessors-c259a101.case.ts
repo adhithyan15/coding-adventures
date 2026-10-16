@@ -1,11 +1,10 @@
 import { expect, it } from "vitest";
-import { measureExamCoverage } from "../../../src/exam-inventory.js";
 import {
-  loadEverything,
   loadExamInventory,
   loadTrackChapters,
   loadTrackLessons,
 } from "../../../src/loader.js";
+import { sanskritA1PointCoverage } from "../sanskrit-a1-point-coverage.js";
 
 it("adds Sanskrit A1 plural possessors on a gentle contrastive ramp", () => {
   const lessons = loadTrackLessons("sanskrit");
@@ -89,13 +88,7 @@ it("adds Sanskrit A1 plural possessors on a gentle contrastive ramp", () => {
     "SA-LEX-C259-YUSMAKAM-02",
     "SA-GRAMMAR-C259-PLURAL-POSSESSORS-03",
   ]);
-  const coverage = measureExamCoverage(inventory, loadEverything().lessons);
-  expect(coverage.enumerated).toBe(164);
-  expect(coverage.byCategory["Ṣaṣṭhī — possession"]).toEqual({
-    enumerated: 3,
-    covered: 3,
-  });
-  expect(coverage.points.find((point) => point.id === "SA-A1-POS-02")).toMatchObject({
+  expect(sanskritA1PointCoverage("SA-A1-POS-02")).toMatchObject({
     covered: true,
     missingAtoms: [],
     unmapped: false,
