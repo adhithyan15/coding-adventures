@@ -24,3 +24,10 @@ blobs for every file. Preserve that exit1/log; do not normalize the worktree.
 Keep raw Rust/TOML exact, restore path-aware Git hash-object content checks in
 one batch, freeze every physical body, and permit only per-path Markdown CRLF
 whose LF-normalized full bytes reproduce the exact committed Git blob.
+
+The first isolated D1 helper contained an inert conditional instead of checking
+the expected full source SHA. Its actual receipt/header and complete source
+freeze still identify the tested source, but that guard did not admit a pinned
+candidate. Preserve it, consume its producer, and use an explicit full expected
+SHA argument in a corrected helper before reuse. No source acceptance follows
+from a forty-character shape check.

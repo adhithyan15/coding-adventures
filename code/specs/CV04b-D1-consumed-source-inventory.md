@@ -229,3 +229,16 @@ bytes against actual serialized namespace objects, exercise exact and one-less
 limits on each axis and cumulative files, all25 token spellings and14 editions,
 zero/over-ceiling/overflow/allocator-capacity refusals, and every capture-error
 class. Producer refusal must precede any root/child/metadata mutation.
+
+## First producer fixture correction
+
+At first productionc5e2efb5, private unit tests passed5/5; CLI passed9/10 and
+failed only its extra processed-string length literal. The complete Origin
+comparison already agreed with the actual unchanged legacy Token. ES2025's
+generated grammar explicitly uses escapes=none, so the quoted astral emoji and
+backslash+n have raw string width8 bytes but processed Token.value width6 (four
+emoji bytes plus two retained escape bytes). Earlier editions may decode that
+escape to five bytes; their captured-vs-legacy whole-Token checks remain exact.
+Correct only the ES2025 literal to6 after an explicit legacy value guard. Keep
+the raw8 and every coordinate/hash/origin assertion; do not change lexer policy.
+Preserve actual CLI101/9P1F and unit0/5P logs without relabeling them green.
