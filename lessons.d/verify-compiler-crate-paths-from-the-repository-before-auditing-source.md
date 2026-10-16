@@ -24,3 +24,6 @@ os error123 alongside partial matches. Use `rg --files code/specs -g 'CLOC27*'`
 to discover exact files, or use `-g` while searching the existing directory.
 
 Treat the failed partial search as incomplete evidence, never a source audit.
+
+D3a again guessed src/cli.rs for flag mapping; the actual mapping is wire.rs.
+Enumerate the existing src directory, then search it with a Rust filename glob.

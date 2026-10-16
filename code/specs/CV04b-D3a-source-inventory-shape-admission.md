@@ -40,6 +40,12 @@ allocation gaps, allocator-only reloads, cycles, dangling parents and invalid
 chronology never become stronger evidence through a shape check. Generic graph
 validation permits an absent journal; D3a validates present chronology and does
 not manufacture missing chronological evidence or assert full pass/sweep history.
+Preserve existing generic-error diagnostics: NONE reports validate stage and
+serialized formats report snapshot stage. A private typed error distinguishes
+generic graph refusal from new shape/configuration refusal (source_domain stage)
+without validating twice or classifying error-message text. This amendment
+follows the retained full-suite6e88097d diagnostic regression before its repair;
+the existing work-limit/sentinel test remains unchanged.
 Raw untrusted
 snapshot tests must call from_checked_json on original text before shape checks;
 never normalize via serde_json::Value or the compatibility loader first.
