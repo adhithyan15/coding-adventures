@@ -1,5 +1,8 @@
 # CV04a: checked Wardley forces and closed force names
 
+The opening checkpoint records the state when this specification was committed.
+The exact-source terminal verification at the end supersedes its pending status.
+
 Specification committed before force tests/import/repairs in isolated R2 from
 fixed native16 sourcec82. R1 source/index/lock3ce and railroad target remain
 FROZEN during full6 exec84776. Native16 focused58/1/1 and60 new real normalExit0
@@ -115,3 +118,35 @@ fold/rename/inline/motion/merge/delete lineage/stableIDs/spans/pass-sweep/CV04b
 remain OPEN. Miri DEFERRED/PENDING, never passed; frozen checkout/process/inputs/
 target/receipts untouched/unpolled, no duplicate/termination. Delivery first,
 genuine final-source Miri afterward. Heartbeat ACTIVE until the full contract.
+
+
+## Exact-source terminal verification
+
+At native source `c82b1d18`, strict checks for six affected packages and the full
+unfiltered 1,848-test/78-target suite passed, with one unchanged ignore. Compiler
+903 and LANG510 passed; 166 saved sources produced 996 actual normal-exit cells
+on six available backends, retaining all old156/936. CLR was unavailable and
+uncounted. SwiftUI overlap separately passed strict and263 Rust tests/6targets;
+no Swift/Apple/C#/XAML execution follows. Independent exact-source and terminal
+security reviews passed.
+
+At force source `85d6df6e`, strict checks for14 affected packages and the full
+unfiltered 1,009-test/56-target suite passed with zero failures/ignores. Nine
+test functions were added, none removed. Old32 and new16 complete Wardley cells
+bind whole IR/layout/scene, every glyph, all19 metadata fields and ordered cached
+font queries. New oracle tables preceded the first force rendering and passed
+unchanged, including two wrapped labels per cell with Georgia/CourierNew. Source
+48IR/64errors,48legacy/48named/9priority/24derived force controls passed. All Venn,
+Ishikawa and previous parser/resource controls remain. Independent exact-source/
+focused and terminal security reviews passed. Two earlier test-only strict101
+frames are retained; Copy/shorthand repairs changed no production or scene oracle.
+
+These are source-specific local results. Sole PR17288 remains published e183,
+unmerged/conflicting/autoOFF; hosted checks, current-main reconciliation and actual
+merge are separate gates. Mainc138 pipeline integration is withheld under its
+independent audit, including parent-scan, quoted-reader and stale-layout findings.
+Full Closure parity/output-byte/source/full transformation lineage/CV04b remain
+open. Base ESTree canonical boundary, own types/no crates.io dependencies remain
+decisions. Miri **DEFERRED/PENDING**, never passed; frozen run/checkout/inputs/
+target/receipts untouched and unpolled. Deliver first, genuine final-source Miri
+afterward. Heartbeat remains active until the full completion contract.

@@ -34,3 +34,9 @@ run correctly refused redundant_field_names before full tests. Preserve both
 actual101 receipts; finish the equivalent shorthand field repair and rerun all
 checks. Check the final lint shape rather than assuming a suggested local edit
 also satisfies adjacent lint rules. Production and whole scene oracles stay exact.
+
+The pipeline audit stored real endpoints at paths named in its manifest, so a
+guessed after/repository/path read failed despite complete materialization. Read
+the exact saved filename from the manifest. Native changelogs are tracked shards
+under CHANGELOG.d; a guessed root CHANGELOG.md read likewise failed. Discover
+both paths before the reader rather than retrying an inferred layout.

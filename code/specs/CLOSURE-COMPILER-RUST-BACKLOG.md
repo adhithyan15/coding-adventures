@@ -4,27 +4,67 @@
 
 
 <!-- CV04a Wardley forces selected -->
-R2 spec-first branch starts from fixedc82 native16; nativefocused58/1/1+60cells,
-sourcef885v2 PASS and SwiftUI strict/263Rusttests/6targets/terminal26e7 PASS.
-R1full6 exec84776 RUNNING afterstrict0/preflight1477raw/native2859/style847;
-full1848/78/996 PENDING, do not mutate R1source/index/lock3ce/railroadtarget.
-Incoming314forces rawWITHHELD88588c/manifest98e8 binds14paths/28wholeblobs:
-typed/derived axes, closed quoted-name/comment and TAB-dispatch gaps. Force spec precedes new literal source/typed/derived testfirst modules; raw
-import/repair and test execution remain NOT STARTED.32oldWardley whole scene cells require only
-forcesemptyABI/zero19thmetadata migration, new wholeoracles before rendering.
-Complete3Wardley resource delta, indexed annotation/totalbox/stage unchanged.
-Published solePR17288 remainse183/unmerged/conflicting/autoOFF. Frozen Miri
-DEFERRED/PENDING untouched/unpolled; fullClosuregoal/CV04b OPEN heartbeatACTIVE.
+At native source `c82b1d18`, strict checks for six affected packages and the full
+unfiltered 1,848-test/78-target suite passed, with one unchanged ignore. Compiler
+903 and LANG510 passed; 166 saved sources produced 996 actual normal-exit cells
+on six available backends, retaining all old156/936. CLR was unavailable and
+uncounted. SwiftUI overlap separately passed strict and263 Rust tests/6targets;
+no Swift/Apple/C#/XAML execution follows. Independent exact-source and terminal
+security reviews passed.
+
+At force source `85d6df6e`, strict checks for14 affected packages and the full
+unfiltered 1,009-test/56-target suite passed with zero failures/ignores. Nine
+test functions were added, none removed. Old32 and new16 complete Wardley cells
+bind whole IR/layout/scene, every glyph, all19 metadata fields and ordered cached
+font queries. New oracle tables preceded the first force rendering and passed
+unchanged, including two wrapped labels per cell with Georgia/CourierNew. Source
+48IR/64errors,48legacy/48named/9priority/24derived force controls passed. All Venn,
+Ishikawa and previous parser/resource controls remain. Independent exact-source/
+focused and terminal security reviews passed. Two earlier test-only strict101
+frames are retained; Copy/shorthand repairs changed no production or scene oracle.
+
+These are source-specific local results. Sole PR17288 remains published e183,
+unmerged/conflicting/autoOFF; hosted checks, current-main reconciliation and actual
+merge are separate gates. Mainc138 pipeline integration is withheld under its
+independent audit, including parent-scan, quoted-reader and stale-layout findings.
+Full Closure parity/output-byte/source/full transformation lineage/CV04b remain
+open. Base ESTree canonical boundary, own types/no crates.io dependencies remain
+decisions. Miri **DEFERRED/PENDING**, never passed; frozen run/checkout/inputs/
+target/receipts untouched and unpolled. Deliver first, genuine final-source Miri
+afterward. Heartbeat remains active until the full completion contract.
+
 <!-- /CV04a Wardley forces selected -->
 
 <!-- CV04a native16 selected -->
-Native16 exactc82 source/focused58+1+1/60actualCells PASS f885v2; SwiftUI
-strict/Rust263/6 PASS26e7. Complete44path import/105migrationrecords/only4
-dedicated production edits retained. Strict6 actual0; full1848/78/996 RUNNING
-exec84776 and R1 HEAD/source/index/lock3ce/railroad target FROZEN. Native15
-1842/78/936 and annotations1000/53/32scenes retain exact-source acceptance.
-Published solePR17288 e183 remains unmerged/conflicting/autoOFF. Miri remains
-DEFERRED/PENDING untouched/unpolled; full Closure goal/CV04b OPEN.
+At native source `c82b1d18`, strict checks for six affected packages and the full
+unfiltered 1,848-test/78-target suite passed, with one unchanged ignore. Compiler
+903 and LANG510 passed; 166 saved sources produced 996 actual normal-exit cells
+on six available backends, retaining all old156/936. CLR was unavailable and
+uncounted. SwiftUI overlap separately passed strict and263 Rust tests/6targets;
+no Swift/Apple/C#/XAML execution follows. Independent exact-source and terminal
+security reviews passed.
+
+At force source `85d6df6e`, strict checks for14 affected packages and the full
+unfiltered 1,009-test/56-target suite passed with zero failures/ignores. Nine
+test functions were added, none removed. Old32 and new16 complete Wardley cells
+bind whole IR/layout/scene, every glyph, all19 metadata fields and ordered cached
+font queries. New oracle tables preceded the first force rendering and passed
+unchanged, including two wrapped labels per cell with Georgia/CourierNew. Source
+48IR/64errors,48legacy/48named/9priority/24derived force controls passed. All Venn,
+Ishikawa and previous parser/resource controls remain. Independent exact-source/
+focused and terminal security reviews passed. Two earlier test-only strict101
+frames are retained; Copy/shorthand repairs changed no production or scene oracle.
+
+These are source-specific local results. Sole PR17288 remains published e183,
+unmerged/conflicting/autoOFF; hosted checks, current-main reconciliation and actual
+merge are separate gates. Mainc138 pipeline integration is withheld under its
+independent audit, including parent-scan, quoted-reader and stale-layout findings.
+Full Closure parity/output-byte/source/full transformation lineage/CV04b remain
+open. Base ESTree canonical boundary, own types/no crates.io dependencies remain
+decisions. Miri **DEFERRED/PENDING**, never passed; frozen run/checkout/inputs/
+target/receipts untouched and unpolled. Deliver first, genuine final-source Miri
+afterward. Heartbeat remains active until the full completion contract.
+
 <!-- /CV04a native16 selected -->
 
 <!-- CV04a Wardley annotations selected -->
