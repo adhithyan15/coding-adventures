@@ -101,24 +101,38 @@ fn identity_declaration_guard_checks_exact_tree_signature_and_resolved_identity(
 
 #[test]
 fn nested_offsets_and_shifted_narrow_range_proofs_have_exact_typed_refusals() {
-    let mut failures = Vec::new();
-    for (name, expression) in [
-        ("nested-right", "entier((sign(pick()) + 8) + 14)"),
-        ("nested-left", "entier(1 + (21 + sign(pick())))"),
-        ("entier-wrapped", "entier(entier(sign(pick()) + 1) + 21)"),
-        ("abs-wrapped", "entier(abs(sign(pick()) + 2) + 20)"),
-        ("shifted-triple-exp", "entier(ln(exp(exp(exp(sign(pick()) + 1)))))"),
-        ("flat-nineteen", "entier(sign(pick()) + 8 + 14)"),
-        ("non-unit", "entier(sign(pick()) + 22)"),
+    // All authored loop configurations are explicit; mixed guards stay exact.
+    for (case_id, source) in [
+        (341, "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) + 16); output(saved) end"),
+        (342, "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (23 + sign(pick()))); output(saved) end"),
+        (343, "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 23); output(saved) end"),
+        (344, "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 22); output(saved) end"),
+        (345, "begin real procedure pick; pick := 3.5; real saved; saved := entier(ln(exp(exp(exp(sign(pick()) + 1))))); output(saved) end"),
+        (346, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 8 + 16); output(saved) end"),
+        (347, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 24); output(saved) end"),
     ] {
-        let source = format!("begin real procedure pick; pick := 3.5; real saved; saved := {expression}; output(saved) end");
-        match compile_source(&source, "unit_offset_refusal") {
-            Err(CompileError::Type(message)) if message.contains("cannot print a real value") => {}
-            Ok(_) => failures.push((name, "unexpectedly accepted".to_owned())),
-            Err(error) => failures.push((name, format!("wrong refusal: {error:?}"))),
-        }
+        assert!(matches!(compile_source(source, "cap24_refusal"), Err(CompileError::Type(message)) if message.contains("cannot print a real value")), "original case {case_id}: {source}");
+        eprintln!("cap23-corpus REFUSED original-case={case_id}");
     }
-    assert!(failures.is_empty(), "exact Type/formatter refusal failures: {failures:?}");
+}
+
+#[test]
+fn current_cap23_preserves_exact_sources_for_nested_offsets_and_shifted_narrow_range_proofs_have_exact_typed_refusals() {
+    // Exact former sources retain their original producer/declarations/consumer.
+    for (case_id, source) in [
+        (341, "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) + 14); output(saved) end"),
+        (342, "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (21 + sign(pick()))); output(saved) end"),
+        (343, "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 21); output(saved) end"),
+        (344, "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 20); output(saved) end"),
+        (346, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 8 + 14); output(saved) end"),
+        (347, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 22); output(saved) end"),
+    ] {
+        let module = compile_source(source, "retained_original").unwrap_or_else(|error| panic!("original case {case_id}: {source}: {error:?}"));
+        let instructions = &module.get_function("main").expect("main").instructions;
+        assert_eq!(instructions.iter().filter(|i| i.op == "call" && i.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "original case {case_id}: {source}");
+        assert_eq!(instructions.iter().filter(|i| i.op == "call_builtin" && i.srcs.first().and_then(Operand::as_var) == Some("print_i64")).count(), 0, "original case {case_id}: {source}");
+        eprintln!("cap23-corpus ADMITTED original-case={case_id}");
+    }
 }
 
 #[test]
@@ -170,15 +184,34 @@ fn conditional_unit_fronts_preserve_both_branches_with_bounded_discovery() {
 
 #[test]
 fn conditional_front_second_and_nonunit_offsets_keep_typed_refusals() {
-    for condition in ["true","false"] {
-        for expression in [
-            "entier((if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1)) + 1)",
-            "entier(if choose() then (entier(sign(left)) + 22) else (entier(sign(right)) + 1))",
-            "entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 22))",
-        ] {
-            let source=format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := {expression}; output(saved) end");
-            assert!(matches!(compile_source(&source,"conditional_unit_refusal"),Err(CompileError::Type(message)) if message.contains("cannot print a real value")),"condition={condition}: {source}");
-        }
+    // All authored loop configurations are explicit; mixed guards stay exact.
+    for (case_id, source) in [
+        (335, "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier((if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1)) + 1); output(saved) end"),
+        (336, "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier(if choose() then (entier(sign(left)) + 24) else (entier(sign(right)) + 1)); output(saved) end"),
+        (337, "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 24)); output(saved) end"),
+        (338, "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier((if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1)) + 1); output(saved) end"),
+        (339, "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier(if choose() then (entier(sign(left)) + 24) else (entier(sign(right)) + 1)); output(saved) end"),
+        (340, "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 24)); output(saved) end"),
+    ] {
+        assert!(matches!(compile_source(source, "cap24_refusal"), Err(CompileError::Type(message)) if message.contains("cannot print a real value")), "original case {case_id}: {source}");
+        eprintln!("cap23-corpus REFUSED original-case={case_id}");
+    }
+}
+
+#[test]
+fn current_cap23_preserves_exact_sources_for_conditional_front_second_and_nonunit_offsets_keep_typed_refusals() {
+    // Exact former sources retain their original producer/declarations/consumer.
+    for (case_id, source) in [
+        (336, "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier(if choose() then (entier(sign(left)) + 22) else (entier(sign(right)) + 1)); output(saved) end"),
+        (337, "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 22)); output(saved) end"),
+        (339, "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier(if choose() then (entier(sign(left)) + 22) else (entier(sign(right)) + 1)); output(saved) end"),
+        (340, "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, unit, saved; left := leftvalue(); right := rightvalue(); unit := 1.0; saved := entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 22)); output(saved) end"),
+    ] {
+        let module = compile_source(source, "retained_original").unwrap_or_else(|error| panic!("original case {case_id}: {source}: {error:?}"));
+        let instructions = &module.get_function("main").expect("main").instructions;
+        assert_eq!(instructions.iter().filter(|i| i.op == "call" && i.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "original case {case_id}: {source}");
+        assert_eq!(instructions.iter().filter(|i| i.op == "call_builtin" && i.srcs.first().and_then(Operand::as_var) == Some("print_i64")).count(), 0, "original case {case_id}: {source}");
+        eprintln!("cap23-corpus ADMITTED original-case={case_id}");
     }
 }
 

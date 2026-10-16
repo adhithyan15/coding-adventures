@@ -56,26 +56,44 @@ fn canonical_eight_unit_forms_have_typed_output_routes_and_independent_arms() {
 
 #[test]
 fn eight_unit_proofs_refuse_twenty_two_units_rounding_traps_and_exp_widening() {
-    for expression in [
-        "entier(sign(pick()) + 22)",
-        "entier((sign(pick()) + 8) + 14)",
-        "entier(1 + (21 + sign(pick())))",
-        "entier(entier(sign(pick()) + 1) + 21)",
-        "entier(abs(sign(pick()) + 2) + 20)",
-        "entier(sign(pick()) + 8.5)",
-        "entier(sign(pick()) + sign(pick()) + 3 + 5)",
-        "entier(sign(pick()) + ((9007199254740992 + 1) - 9007199254740992) + 8)",
-        "entier(ln(exp(exp(exp(sign(pick()) + 8)))))",
-        "entier(ln(exp(exp(exp((sign(pick()) + 3) + 5)))))",
-        "entier((sign(pick()) + 8) * 1)",
-        "entier(exp(sign(pick())) + 8)",
+    // All authored loop configurations are explicit; mixed guards stay exact.
+    for (case_id, source) in [
+        (32, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 24); output(saved) end"),
+        (33, "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) + 16); output(saved) end"),
+        (34, "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (23 + sign(pick()))); output(saved) end"),
+        (35, "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 23); output(saved) end"),
+        (36, "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 22); output(saved) end"),
+        (37, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 8.5); output(saved) end"),
+        (38, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + sign(pick()) + 3 + 5); output(saved) end"),
+        (39, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + ((9007199254740992 + 1) - 9007199254740992) + 8); output(saved) end"),
+        (40, "begin real procedure pick; pick := 3.5; real saved; saved := entier(ln(exp(exp(exp(sign(pick()) + 8))))); output(saved) end"),
+        (41, "begin real procedure pick; pick := 3.5; real saved; saved := entier(ln(exp(exp(exp((sign(pick()) + 3) + 5))))); output(saved) end"),
+        (42, "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) * 1); output(saved) end"),
+        (43, "begin real procedure pick; pick := 3.5; real saved; saved := entier(exp(sign(pick())) + 8); output(saved) end"),
+        (44, "begin integer procedure sign(x); value x; real x; sign := 1; real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 1) + 7); output(saved) end"),
+        (45, "begin integer procedure abs(x); value x; real x; abs := 1; real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 1) + 7); output(saved) end"),
+        (46, "begin integer procedure entier(x); value x; real x; entier := 1; real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 1) + 7); output(saved) end"),
     ] {
-        let source = format!("begin real procedure pick; pick := 3.5; real saved; saved := {expression}; output(saved) end");
-        assert!(matches!(compile_source(&source, "eight_unit_refusal"), Err(CompileError::Type(m)) if m.contains("cannot print a real value")), "{source}");
+        assert!(matches!(compile_source(source, "cap24_refusal"), Err(CompileError::Type(message)) if message.contains("cannot print a real value")), "original case {case_id}: {source}");
+        eprintln!("cap23-corpus REFUSED original-case={case_id}");
     }
-    for name in ["sign", "abs", "entier"] {
-        let source = format!("begin integer procedure {name}(x); value x; real x; {name} := 1; real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 1) + 7); output(saved) end");
-        assert!(matches!(compile_source(&source, "eight_unit_shadow"), Err(CompileError::Type(m)) if m.contains("cannot print a real value")), "{source}");
+}
+
+#[test]
+fn current_cap23_preserves_exact_sources_for_eight_unit_proofs_refuse_twenty_two_units_rounding_traps_and_exp_widening() {
+    // Exact former sources retain their original producer/declarations/consumer.
+    for (case_id, source) in [
+        (32, "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 22); output(saved) end"),
+        (33, "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 8) + 14); output(saved) end"),
+        (34, "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (21 + sign(pick()))); output(saved) end"),
+        (35, "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 21); output(saved) end"),
+        (36, "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 20); output(saved) end"),
+    ] {
+        let module = compile_source(source, "retained_original").unwrap_or_else(|error| panic!("original case {case_id}: {source}: {error:?}"));
+        let instructions = &module.get_function("main").expect("main").instructions;
+        assert_eq!(instructions.iter().filter(|i| i.op == "call" && i.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")).count(), 1, "original case {case_id}: {source}");
+        assert_eq!(instructions.iter().filter(|i| i.op == "call_builtin" && i.srcs.first().and_then(Operand::as_var) == Some("print_i64")).count(), 0, "original case {case_id}: {source}");
+        eprintln!("cap23-corpus ADMITTED original-case={case_id}");
     }
 }
 
