@@ -1,5 +1,5 @@
 // Literal source/geometry tables, specified before importing label-box code.
-// Fake font4 has advance2/ascent3.2, keeping the long-label case on one line.
+// Semantic font16 has advance8/ascent12.8; oversized Latin words retain all glyphs.
 // These are complete drawing/transport oracles, not a general font-fit promise.
 mod ishikawa_box_labels_contract {
     use super::*;
@@ -41,47 +41,47 @@ mod ishikawa_box_labels_contract {
     fn glyphs(label:&str, position:(f64,f64), size:f64) -> PaintInstruction {
         PaintInstruction::GlyphRun(PaintGlyphRun {base:PaintBase::default(),
             glyphs:label.chars().enumerate().map(|(index,c)|GlyphPosition {glyph_id:c as u32,
-                x:position.0+index as f64*2.0,y:position.1}).collect(),
+                x:position.0+index as f64*(size/2.0),y:position.1}).collect(),
             font_ref:"fake:test".into(),font_size:size,fill:Some("rgb(17, 34, 51)".into())})
     }
     fn single(name:&'static str,label:&'static str,width:f64,glyph_x:f64) -> Case {
         Case {name,source:format!("ishikawa-beta\nE\n  {label}\n"),causes:vec![(label,None,1)],
-            width:576.0,height:360.0,padding:80.0,spine:((96.0,180.0),(346.0,180.0)),
-            effect:(346.0,151.0),effect_glyph:(419.5,163.8),bones:vec![Bone {
-                label,from:(161.0,108.0),to:(221.0,180.0),center:(191.0,102.0),width,
-                rect:(191.0-width/2.0,88.0),glyph:(glyph_x,93.2),depth:1}]}
+            width:576.0,height:360.0,padding:80.0,spine:((96.0,180.0),(352.0,180.0)),
+            effect:(352.0,146.0),effect_glyph:(380.5,158.8),bones:vec![Bone {
+                label,from:(162.56,108.0),to:(224.0,180.0),center:(193.28,102.0),width,
+                rect:(193.28-width/2.0,88.0),glyph:(glyph_x,102.8),depth:1}]}
     }
     #[test]
     fn complete_source_boxes_keep_scalar_widths_parity_depth_style_and_query_order() {
         let cases=vec![
             Case {name:"empty",source:"ishikawa-beta\nE\n".into(),causes:vec![],width:576.0,height:360.0,
-                padding:80.0,spine:((96.0,180.0),(346.0,180.0)),effect:(346.0,151.0),effect_glyph:(419.5,163.8),bones:vec![]},
-            single("short","A",72.0,190.0),
-            single("interior","ABCDEFGH",76.0,183.0),
-            single("clamped","CCCCCCCCCCCCCCCCCCCCCCC",180.0,168.0),
-            single("unicode-scalars","界界界界界界界界",76.0,183.0),
+                padding:80.0,spine:((96.0,180.0),(352.0,180.0)),effect:(352.0,146.0),effect_glyph:(380.5,158.8),bones:vec![]},
+            single("short","A",72.0,189.28),
+            single("interior","ABCDEFGH",76.0,161.28),
+            single("clamped","CCCCCCCCCCCCCCCCCCCCCCC",180.0,101.28),
+            single("unicode-scalars","界界界界界界界界",76.0,161.28),
             Case {name:"root-parities",source:"ishikawa-beta\nE\n  A\n  界界界界界界界界\n".into(),
                 causes:vec![("A",None,1),("界界界界界界界界",None,1)],width:601.0,height:360.0,padding:30.0,
-                spine:((46.0,180.0),(421.0,180.0)),effect:(421.0,151.0),effect_glyph:(494.5,163.8),
-                bones:vec![Bone {label:"A",from:(111.0,72.0),to:(171.0,180.0),center:(141.0,84.0),width:72.0,
-                    rect:(105.0,70.0),glyph:(140.0,75.2),depth:1},
-                    Bone {label:"界界界界界界界界",from:(236.0,288.0),to:(296.0,180.0),center:(266.0,276.0),width:76.0,
-                    rect:(228.0,262.0),glyph:(258.0,267.2),depth:1}]},
+                spine:((46.0,180.0),(427.0,180.0)),effect:(427.0,146.0),effect_glyph:(455.5,158.8),
+                bones:vec![Bone {label:"A",from:(112.04,72.0),to:(173.0,180.0),center:(142.52,84.0),width:72.0,
+                    rect:(106.52000000000001,70.0),glyph:(138.52,84.8),depth:1},
+                    Bone {label:"界界界界界界界界",from:(239.04,288.0),to:(300.0,180.0),center:(269.52,276.0),width:76.0,
+                    rect:(231.51999999999998,262.0),glyph:(237.51999999999998,276.8),depth:1}]},
             Case {name:"nested-three",source:"ishikawa-beta\nE\n  A\n    BBBBBBBB\n      CCCCCCCCCCCCCCCCCCCCCCC\n".into(),
                 causes:vec![("A",None,1),("BBBBBBBB",Some(1),2),("CCCCCCCCCCCCCCCCCCCCCCC",Some(2),3)],
-                width:586.0,height:470.0,padding:85.0,spine:((101.0,235.0),(351.0,235.0)),
-                effect:(351.0,206.0),effect_glyph:(424.5,218.8),bones:vec![
-                    Bone {label:"A",from:(166.0,127.0),to:(226.0,235.0),center:(196.0,139.0),width:72.0,
-                        rect:(160.0,125.0),glyph:(195.0,130.2),depth:1},
-                    Bone {label:"BBBBBBBB",from:(121.0,102.25),to:(166.0,127.0),center:(121.0,120.25),width:76.0,
-                        rect:(83.0,106.25),glyph:(113.0,111.45),depth:2},
-                    Bone {label:"CCCCCCCCCCCCCCCCCCCCCCC",from:(83.0,81.35),to:(121.0,102.25),center:(83.0,99.35),width:180.0,
-                        rect:(-7.0,85.35),glyph:(60.0,90.55),depth:3}]},
+                width:586.0,height:470.0,padding:85.0,spine:((101.0,235.0),(357.0,235.0)),
+                effect:(357.0,201.0),effect_glyph:(385.5,213.8),bones:vec![
+                    Bone {label:"A",from:(167.56,127.0),to:(229.0,235.0),center:(198.28,139.0),width:72.0,
+                        rect:(162.28,125.0),glyph:(194.28,139.8),depth:1},
+                    Bone {label:"BBBBBBBB",from:(122.56,102.25),to:(167.56,127.0),center:(122.56,120.25),width:76.0,
+                        rect:(84.56,106.25),glyph:(90.56,121.05),depth:2},
+                    Bone {label:"CCCCCCCCCCCCCCCCCCCCCCC",from:(84.56,81.35),to:(122.56,102.25),center:(84.56,99.35),width:180.0,
+                        rect:(-5.439999999999998,85.35),glyph:(-7.439999999999998,100.14999999999999),depth:3}]},
             Case {name:"finite-padding-clamp",source:"ishikawa-beta\nE\n  A\n".into(),causes:vec![("A",None,1)],
-                width:576.0,height:360.0,padding:1_000_000_000.0,spine:((106.0,180.0),(336.0,180.0)),
-                effect:(336.0,151.0),effect_glyph:(409.5,163.8),bones:vec![
-                    Bone {label:"A",from:(165.8,115.2),to:(221.0,180.0),center:(193.4,105.6),width:72.0,
-                        rect:(157.4,91.6),glyph:(192.4,96.8),depth:1}]},
+                width:576.0,height:360.0,padding:1_000_000_000.0,spine:((106.0,180.0),(342.0,180.0)),
+                effect:(342.0,146.0),effect_glyph:(370.5,158.8),bones:vec![
+                    Bone {label:"A",from:(167.36,115.2),to:(224.0,180.0),center:(195.68,105.6),width:72.0,
+                        rect:(159.68,91.6),glyph:(191.68,106.39999999999999),depth:1}]},
         ];
         for family in ["Georgia","CourierNew"] { for case in &cases {
             let prefix=format!("---\nconfig:\n  ishikawa:\n    diagramPadding: {}\n    useMaxWidth: true\nthemeVariables:\n  fontFamily: {family}\n  lineColor: '#123456'\n  mainBkg: '#abcdef'\n  textColor: '#112233'\n---\n",case.padding);
@@ -93,20 +93,21 @@ mod ishikawa_box_labels_contract {
                     id:format!("cause-{}",index+1),label:(*label).into(),parent_id:parent.map(|id|format!("cause-{id}")),depth:*depth}).collect()};
             let ir=mermaid_parser::parse_ishikawa(&source).unwrap();assert_eq!(ir,expected_ir,"whole source IR {} {family}",case.name);
             let expected_layout=LayoutedIshikawaDiagram {width:case.width,height:case.height,effect:"E".into(),config,
-                effect_x:case.effect.0,effect_y:case.effect.1,effect_width:150.0,effect_height:58.0,
+                effect_x:case.effect.0,effect_y:case.effect.1,effect_width:144.0,effect_height:68.0,
                 spine_from:point(case.spine.0),spine_to:point(case.spine.1),
-                bones:case.bones.iter().map(|bone|diagram_ir::LayoutedIshikawaBone {from:point(bone.from),to:point(bone.to),
-                    label:bone.label.into(),label_position:point(bone.center),label_width:bone.width,label_height:28.0,depth:bone.depth}).collect()};
+                spine_path:vec![point(case.spine.0),point(case.spine.1)],effect_outline:ishikawa_fixture_effect(case.effect.0,case.effect.1),
+                bones:case.bones.iter().map(|bone|ishikawa_fixture_bone((point(bone.from),point(bone.to)),bone.label,point(bone.center),bone.width,bone.depth)).collect()};
             let layout=diagram_layout_geometric::layout_ishikawa(&ir,case.width);assert_eq!(layout,expected_layout,"whole layout {} {family}",case.name);
             let mut instructions=vec![line(case.spine.0,case.spine.1,3.0)];
-            for bone in &case.bones {instructions.push(line(bone.from,bone.to,if bone.depth==1 {2.5}else{1.5}));
+            for (index,bone) in case.bones.iter().enumerate() {instructions.push(line(bone.from,bone.to,if bone.depth==1 {2.5}else{1.5}));
+                instructions.push(ishikawa_fixture_closed(&expected_layout.bones[index].arrowhead,"#123456","#123456",1.0));
                 instructions.push(rectangle(bone.rect.0,bone.rect.1,bone.width,28.0,1.0,4.0));}
-            instructions.push(rectangle(case.effect.0,case.effect.1,150.0,58.0,2.0,8.0));
-            for bone in &case.bones {instructions.push(glyphs(bone.label,bone.glyph,4.0));}
+            instructions.push(ishikawa_fixture_closed(&expected_layout.effect_outline,"#abcdef","#123456",2.0));
+            for bone in &case.bones {instructions.push(glyphs(bone.label,bone.glyph,16.0));}
             instructions.push(glyphs("E",case.effect_glyph,6.0));
             let expected=PaintScene {width:case.width,height:case.height,background:"rgb(255,255,255)".into(),id:None,
                 metadata:Some(HashMap::from([("ishikawa.diagramPadding".into(),case.padding.to_string()),("ishikawa.useMaxWidth".into(),"true".into()),
-                    ("ishikawa.fontFamily".into(),family.into()),("ishikawa.lineColor".into(),"#123456".into()),
+                    ("ishikawa.fontSize".into(),"16".into()),("ishikawa.look".into(),"classic".into()),("ishikawa.handDrawnSeed".into(),"0".into()),("ishikawa.fontFamily".into(),family.into()),("ishikawa.lineColor".into(),"#123456".into()),
                     ("ishikawa.fillColor".into(),"#abcdef".into()),("ishikawa.textColor".into(),"#112233".into())])),instructions};
             let resolver=VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
             let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,

@@ -157,7 +157,7 @@ Case{name:"scalar-cap-canvas",source:"%%{init: {\"wardley-beta\":{\"width\":6553
         ("wardley.componentLabelColor".into(),c.config.theme.component_label_color.clone()),
         ("wardley.linkStroke".into(),c.config.theme.link_stroke.clone()),
         ("wardley.evolutionStroke".into(),c.config.theme.evolution_stroke.clone()),
-        ("wardley.noteCount".into(),c.notes.len().to_string()),("wardley.annotationCount".into(),c.annotations.len().to_string()),("wardley.forceCount".into(),c.forces.len().to_string()),("wardley.pipelineCount".into(),c.pipeline_cases.len().to_string()),("wardley.stageBoundaryCount".into(),c.stage_boundaries.len().to_string())])),instructions};
+        ("wardley.customLabelCount".into(),"0".into()),("wardley.strategyCount".into(),"0".into()),("wardley.inertiaCount".into(),"0".into()),("wardley.flowLinkCount".into(),"0".into()),("wardley.dashedLinkCount".into(),"0".into()),("wardley.labeledLinkCount".into(),"0".into()),("wardley.noteCount".into(),c.notes.len().to_string()),("wardley.annotationCount".into(),c.annotations.len().to_string()),("wardley.forceCount".into(),c.forces.len().to_string()),("wardley.pipelineCount".into(),c.pipeline_cases.len().to_string()),("wardley.stageBoundaryCount".into(),c.stage_boundaries.len().to_string())])),instructions};
     let resolver=VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
     let options=DiagramToPaintOptions {background:Color{r:3,g:5,b:7,a:255},device_pixel_ratio:1.0,
       label_font:FontSpec{family:family.into(),size:4.0,weight:600,italic:true,stretch:FontStretch::Condensed,..defaults.label_font},

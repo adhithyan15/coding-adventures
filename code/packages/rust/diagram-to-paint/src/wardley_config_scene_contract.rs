@@ -84,7 +84,7 @@ Case{name:"minimum-positive-fonts",source:"%%{init: {\"wardley-beta\":{\"width\"
         ("wardley.componentLabelColor".into(),c.config.theme.component_label_color.clone()),
         ("wardley.linkStroke".into(),c.config.theme.link_stroke.clone()),
         ("wardley.evolutionStroke".into(),c.config.theme.evolution_stroke.clone()),
-        ("wardley.noteCount".into(),"0".into()),("wardley.annotationCount".into(),"0".into()),("wardley.forceCount".into(),"0".into()),("wardley.pipelineCount".into(),"0".into()),("wardley.stageBoundaryCount".into(),"0".into())])),instructions};
+        ("wardley.customLabelCount".into(),"0".into()),("wardley.strategyCount".into(),"0".into()),("wardley.inertiaCount".into(),"0".into()),("wardley.flowLinkCount".into(),"0".into()),("wardley.dashedLinkCount".into(),"0".into()),("wardley.labeledLinkCount".into(),"0".into()),("wardley.annotationStroke".into(),"#000000".into()),("wardley.annotationTextColor".into(),"#222222".into()),("wardley.annotationFill".into(),"#ffffff".into()),("wardley.noteCount".into(),"0".into()),("wardley.annotationCount".into(),"0".into()),("wardley.forceCount".into(),"0".into()),("wardley.pipelineCount".into(),"0".into()),("wardley.stageBoundaryCount".into(),"0".into())])),instructions};
     let resolver=VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
     let options=DiagramToPaintOptions {background:Color{r:3,g:5,b:7,a:255},device_pixel_ratio:1.0,
       label_font:FontSpec{family:family.into(),size:4.0,weight:600,italic:true,stretch:FontStretch::Condensed,..defaults.label_font},

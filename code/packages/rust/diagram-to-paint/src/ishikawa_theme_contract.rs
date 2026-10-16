@@ -15,17 +15,19 @@ fn ishikawa_sources_retain_complete_ir_layout_scene_and_ordered_queries() {
         let expected_ir=diagram_ir::IshikawaDiagram {effect:"E".into(),causes:vec![diagram_ir::IshikawaCause {id:"cause-1".into(),label:"A".into(),parent_id:None,depth:1}],config:config.clone()};
         let parsed=mermaid_parser::parse_ishikawa(&source).unwrap();assert_eq!(parsed,expected_ir,"whole IR source={source}");
         let expected_layout=LayoutedIshikawaDiagram {width:576.0,height:360.0,effect:"E".into(),config,
-            effect_x:346.0,effect_y:151.0,effect_width:150.0,effect_height:58.0,spine_from:Point{x:96.0,y:180.0},spine_to:Point{x:346.0,y:180.0},
-            bones:vec![diagram_ir::LayoutedIshikawaBone {from:Point{x:161.0,y:108.0},to:Point{x:221.0,y:180.0},label:"A".into(),label_position:Point{x:191.0,y:102.0},label_width:72.0,label_height:28.0,depth:1}]};
+            effect_x:352.0,effect_y:146.0,effect_width:144.0,effect_height:68.0,spine_from:Point{x:96.0,y:180.0},spine_to:Point{x:352.0,y:180.0},
+            spine_path:vec![Point{x:96.0,y:180.0},Point{x:352.0,y:180.0}],effect_outline:ishikawa_fixture_effect(352.0,146.0),
+            bones:vec![ishikawa_fixture_bone((Point{x:162.56,y:108.0},Point{x:224.0,y:180.0}),"A",Point{x:193.28,y:102.0},72.0,1)]};
         let layout=diagram_layout_geometric::layout_ishikawa(&parsed,576.0);assert_eq!(layout,expected_layout,"whole layout source={source}");
         let path=|from:Point,to:Point,width|PaintInstruction::Path(PaintPath {base:PaintBase::default(),commands:vec![PathCommand::MoveTo{x:from.x,y:from.y},PathCommand::LineTo{x:to.x,y:to.y}],fill:Some("none".into()),fill_rule:None,stroke:Some(line.into()),stroke_width:Some(width),stroke_cap:Some(StrokeCap::Round),stroke_join:Some(StrokeJoin::Round),stroke_dash:None,stroke_dash_offset:None});
         let glyph=|c:char,x,y,size|PaintInstruction::GlyphRun(PaintGlyphRun {base:PaintBase::default(),glyphs:vec![GlyphPosition{glyph_id:c as u32,x,y}],font_ref:"fake:test".into(),font_size:size,fill:Some(format!("rgb({rgb})"))});
         let expected=PaintScene {width:576.0,height:360.0,background:"rgb(255,255,255)".into(),id:None,
-            metadata:Some(HashMap::from([("ishikawa.diagramPadding".into(),"80".into()),("ishikawa.useMaxWidth".into(),use_max_width.to_string()),("ishikawa.fontFamily".into(),family.into()),("ishikawa.lineColor".into(),line.into()),("ishikawa.fillColor".into(),fill.into()),("ishikawa.textColor".into(),text.into())])),
-            instructions:vec![path(Point{x:96.0,y:180.0},Point{x:346.0,y:180.0},3.0),path(Point{x:161.0,y:108.0},Point{x:221.0,y:180.0},2.5),
-                PaintInstruction::Rect(PaintRect {base:PaintBase::default(),x:155.0,y:88.0,width:72.0,height:28.0,fill:Some(fill.into()),stroke:Some(line.into()),stroke_width:Some(1.0),corner_radius:Some(4.0),stroke_dash:None,stroke_dash_offset:None}),
-                PaintInstruction::Rect(PaintRect {base:PaintBase::default(),x:346.0,y:151.0,width:150.0,height:58.0,fill:Some(fill.into()),stroke:Some(line.into()),stroke_width:Some(2.0),corner_radius:Some(8.0),stroke_dash:None,stroke_dash_offset:None}),
-                glyph('A',187.0,102.8,16.0),glyph('E',416.0,175.0,20.0)]};
+            metadata:Some(HashMap::from([("ishikawa.diagramPadding".into(),"80".into()),("ishikawa.useMaxWidth".into(),use_max_width.to_string()),("ishikawa.fontSize".into(),"16".into()),("ishikawa.look".into(),"classic".into()),("ishikawa.handDrawnSeed".into(),"0".into()),("ishikawa.fontFamily".into(),family.into()),("ishikawa.lineColor".into(),line.into()),("ishikawa.fillColor".into(),fill.into()),("ishikawa.textColor".into(),text.into())])),
+            instructions:vec![path(Point{x:96.0,y:180.0},Point{x:352.0,y:180.0},3.0),path(Point{x:162.56,y:108.0},Point{x:224.0,y:180.0},2.5),
+                ishikawa_fixture_closed(&expected_layout.bones[0].arrowhead,line,line,1.0),
+                PaintInstruction::Rect(PaintRect {base:PaintBase::default(),x:157.28,y:88.0,width:72.0,height:28.0,fill:Some(fill.into()),stroke:Some(line.into()),stroke_width:Some(1.0),corner_radius:Some(4.0),stroke_dash:None,stroke_dash_offset:None}),
+                ishikawa_fixture_closed(&expected_layout.effect_outline,fill,line,2.0),
+                glyph('A',189.28,102.8,16.0),glyph('E',377.0,170.0,20.0)]};
         let resolver=VennDebugRecordingResolver(std::cell::RefCell::new(vec![]));let defaults=make_opts(&FakeShaper,&FakeMetrics,&FakeResolver);
         let options=DiagramToPaintOptions {background:defaults.background,device_pixel_ratio:defaults.device_pixel_ratio,
             label_font:FontSpec {family:"Ignored Caller".into(),size:16.0,weight:600,italic:true,stretch:FontStretch::Condensed,..defaults.label_font},

@@ -9807,6 +9807,7 @@ fn simple_arrowhead(prev: &Point, tip: &Point, stroke: &str) -> PaintPath {
 #[cfg(test)]
 mod tests {
     include!("../../diagram-layout-geometric/tests/support/wardley_fixture_link.rs");
+    include!("ishikawa_derived_fixture_support.rs");
     mod common_origin;
     mod subgraph_margin;
     mod railroad_spacing;
