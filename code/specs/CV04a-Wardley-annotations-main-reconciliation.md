@@ -117,3 +117,16 @@ fold/rename/inline/motion/merge/delete lineage/stable IDs/spans/pass-sweep/CV04b
 remain OPEN. Miri DEFERRED/PENDING, never passed; frozen run/checkout/inputs/
 target/receipts untouched/unpolled/no duplicate/termination. Delivery first,
 genuine final-source Miri afterward; heartbeat remains ACTIVE.
+
+
+## Tiny public-map stage precondition, before its tests or repair
+
+Inspection for the declared tiny public Paint companion found an independent
+older stage-label x clamp: clamp(2,width-92) inverts below width94. This occurs
+before annotation rendering even with no annotations. The same bounded slice
+must make its upper bound max(2,width-92); every width>=94 result stays exact.
+Include separate tiny no-annotation and tiny populated-annotation whole scenes
+to distinguish this older refusal from the new default30-entry annotation box.
+Keep the90x24 stage text frame, every stage/font/glyph/query control and the
+existing overflow/containment exclusions. This is a source-derived finding,
+not yet an executed reproduction or general renderer-wide guarantee.

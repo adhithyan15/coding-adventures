@@ -158,3 +158,10 @@ do not drop unmatched targets or relax raw1470/native2856/style838 checks.
 Correctedv3 preflight/strict passed; full tests remain pending at this checkpoint.
 The classifier's8192 observer is cfg(test)-only; documentation must distinguish
 test work controls from actual production admission/depth guarantees.
+
+
+An annotation merge-frame inspection ran before its still-running preflight
+had written the receipt and correctly failed with FileNotFoundError. Consume
+the producing session before dependent reads. A later fixture-module search
+also assumed a nonexistent old filename; enumerate with rg --files first.
+Both diagnostic failures changed no source or target and supply no acceptance.
