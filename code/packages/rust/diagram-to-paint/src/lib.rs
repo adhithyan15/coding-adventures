@@ -2505,10 +2505,14 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         let entries: Vec<_> = diagram.annotations.iter().filter(|annotation| !annotation.text.is_empty()).collect();
         if !entries.is_empty() {
             let box_width = entries.iter().map(|annotation| annotation.text.chars().count() as f64 * 6.5 + 145.0)
-                .fold(180.0, f64::max).min(diagram.width - diagram.config.padding * 2.0);
+                .fold(180.0, f64::max).min((right - left).max(40.0));
             let box_height = entries.len() as f64 * 16.0 + 28.0;
-            let box_x = box_position.x.clamp(diagram.config.padding, diagram.width - diagram.config.padding - box_width);
-            let box_y = box_position.y.clamp(diagram.config.padding, diagram.height - diagram.config.padding - box_height);
+            // Use the same effective plot edges as the checked mapper. Keep
+            // positive entry frames; if the complete box cannot fit, pin its
+            // origin to the inner left/top and retain every authored entry.
+            // Overflow is allowed; this is not a general containment claim.
+            let box_x = box_position.x.clamp(left, (right - box_width).max(left));
+            let box_y = box_position.y.clamp(top, (bottom - box_height).max(top));
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: box_x, y: box_y,
                 width: box_width, height: box_height, fill: Some(theme.background_color.clone()), stroke: Some(theme.axis_color.clone()),
                 stroke_width: Some(1.5), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));

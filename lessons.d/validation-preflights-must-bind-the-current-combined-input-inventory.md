@@ -177,3 +177,12 @@ default30-entry48..44 interval remain independently applicable.
 The first annotation closed-merge helper also rejected separator comments as
 conflict markers because it used substring matching. Preserve that before-merge
 failure; match complete conflict lines and retain all whole-tree/blob guards.
+
+
+The annotation Paint command genuinely failed0P1F/101 after five complete new
+whole-scene cells, with the default30-entry f64 panic48..44. Its wrapper then
+exited1 because it additionally expected the literal word clamp; Rust prints
+the min/max precondition instead. Preserve the original incomplete receipt and
+wrapper failure. Independently bind the full log, exact f64.rs panic, ordered
+five prior cells and committed next30-entry table in a separate read-only red
+reconciliation; do not relabel the failed wrapper or rerun merely to hide it.
