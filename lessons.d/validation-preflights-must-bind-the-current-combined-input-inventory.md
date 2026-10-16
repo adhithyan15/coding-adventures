@@ -110,3 +110,10 @@ The pending-main static audit also correctly refused an assumed learning-backlog
 changelog prefix: the actual ninth human path is a named HLD changelog shard.
 Retain that failure and the subsequent failed inline shell-quoting attempt; use
 a saved Python helper and the exact nine-path manifest, not a relaxed guard.
+
+An unbounded template replacement of THEME also rewrote the diagnostic event tag
+WARDLEY-THEME-NOTE-IR, inserting a Rust struct literal into a string. The first
+theme/note red command stopped at compile101 with zero executed tests; wrapper1
+and the original source/log remain failed, not semantic-red evidence. Repair
+only that diagnostic line, retain every literal oracle/assertion, and use a
+unique whole placeholder when generating source before rerunning actual tests.
