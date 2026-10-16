@@ -278,6 +278,13 @@ the style regression gate from 63 to 59 allowances. Emitted drag behavior and
 downloadable artifact coverage remain unchanged. Publication and the immutable
 asset audit are tracked in #17491; the same CI-only and signing limitations apply.
 
+The prepared `task-app-v0.5.7` patch preserves timeline and calendar milestone
+diamond rotations in SwiftUI and tightens its style regression gate from 59 to
+57 allowances. Publication and the immutable asset audit remain pending in
+#17610 until release validation and publication complete. Downloadable coverage
+is unchanged: Static HTML, Web Components, and Paint remain CI-only; signing,
+notarization, and installers remain #13977.
+
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI
 command for the first release is:
