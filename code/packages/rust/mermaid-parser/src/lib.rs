@@ -6181,7 +6181,7 @@ fn wardley_outside_comment(value:&str)->&str {
         if let Some(active)=quote {
             if byte==b'\\' {index=(index+2).min(bytes.len());continue;}
             if byte==active {quote=None;}
-        } else if matches!(byte,b'\''|b'"') && (index==0 || bytes[index-1].is_ascii_whitespace() || bytes[index-1]==b'+') {
+        } else if matches!(byte,b'\''|b'"') && (index==0 || bytes[index-1].is_ascii_whitespace() || matches!(bytes[index-1],b'+'|b'>'|b'<')) {
             quote=Some(byte);
         } else if byte==b'%' && bytes.get(index+1)==Some(&b'%') {return &value[..index];}
         index+=1;
@@ -6382,7 +6382,15 @@ fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> R
         if let Some(before_label)=prefix.strip_suffix("label").filter(|v|v.ends_with([' ','\t'])) {
             let before_label=before_label.trim_end();
             if before_label.ends_with(']') {
-                open=before_label.rfind('[').ok_or_else(||wardley_error(line,"Wardley node requires coordinates"))?;
+                if let Some(candidate)=before_label.rfind('[') {
+                    // A bracket attached to a bare name is label data, and a
+                    // nonnumeric bracket cannot introduce a coordinate suffix.
+                    let separated=candidate>0 && before_label.as_bytes()[candidate-1].is_ascii_whitespace();
+                    if separated && parse_wardley_coordinates(&before_label[candidate..],line)
+                        .is_ok_and(|(v,e)|(0.0..=1.0).contains(&v)&&(0.0..=1.0).contains(&e)) {
+                        open=candidate;
+                    }
+                }
             }
         }
         (wardley_name(&value[..open]),&value[open..])
