@@ -378,7 +378,8 @@ fn layout_wardley_supported(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram 
         label: force.label.clone(), position: point(force.visibility, force.evolution), kind: force.kind,
     }).collect();
     LayoutedWardleyDiagram { width, height, title: diagram.title.clone(), config: diagram.config.clone(),
-        stages: diagram.stages.clone(), nodes, links, evolves, notes, annotations_box, annotations, forces, pipelines }
+        stages: diagram.stages.clone(), stage_boundaries: diagram.stage_boundaries.clone(), nodes, links, evolves, notes,
+        annotations_box, annotations, forces, pipelines }
 }
 
 /// Place the four Cynefin quadrants and central confusion domain deterministically.
@@ -720,7 +721,7 @@ mod tests {
     #[test]
     fn wardley_layout_maps_visibility_up_and_evolution_right() {
         let diagram = WardleyDiagram { title: None, config: diagram_ir::WardleyConfig { width: 600.0, height: 400.0,
-            padding: 40.0, ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()],
+            padding: 40.0, ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.35, 1.0],
             nodes: vec![diagram_ir::WardleyNode { id: "a".into(), label: "A".into(), visibility: 0.8, evolution: 0.2, anchor: false, pipeline_parent: true },
                 diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false, pipeline_parent: false },
                 diagram_ir::WardleyNode { id: "c".into(), label: "A1".into(), visibility: 0.8, evolution: 0.1, anchor: false, pipeline_parent: false },
@@ -740,6 +741,7 @@ mod tests {
         assert_eq!(layout.forces[0].kind, diagram_ir::WardleyForceKind::Accelerator);
         assert_eq!((layout.pipelines[0].x, layout.pipelines[0].width), (77.0, 186.0));
         assert_eq!(layout.pipelines[0].component_positions.len(), 2);
+        assert_eq!(layout.stage_boundaries, [0.35, 1.0]);
     }
 
 
