@@ -170,3 +170,32 @@ already-unique checked merge/derive tail for reuse. Tests must force collisions
 via private injected hashing, exact/one-less work and buffer bounds, long IDs,
 all-duplicate/missing/hole inputs, arithmetic overflow and injected allocation
 refusal. Test seams cannot change production settings.
+
+### Array-length local validation checkpoint (2026-10-16)
+
+Implemented at `9d1a7b92550aabb11ecd9f54d4b47c6fbec6dbce` after the
+resource-amended spec `b6fddb81` and committed regressions `430343a9`. The
+unchanged compiler produced a genuine compiled red: four targeted unit failures
+plus one CLI ownership failure; the independent normalization control passed.
+The earlier overbroad changed=false control was corrected before implementation.
+
+Full constant-fold validation passed 451 tests across three executables, plus
+an empty doctest target; two historical upstream ignores remain excluded.
+Full closurec validation passed 1,140 tests across all 182 executables, including
+the differential ladder, oracle manifest and both length spellings at SIMPLE
+and ADVANCED with traced/untraced byte equality and exact result ancestry.
+Both affected all-target strict Clippy commands passed. Source review
+`555972f9bfde320461f81e8357594d9e812a6dba232068f9072b0909ee6b777b` and
+independent terminal review
+`3469fe0343d1f81d386812db5861d5b768c3dbc3db1c6dc82dfe289dad7d1d75` passed.
+The terminal review checked 8,014 frozen inputs and all 185 executable joins/
+hashes. Receipt SHA256:
+`32c260a93914c2abdba247cfdcdd61b1508e7739f59b30fc85806d6f9d06ae7b`.
+
+This is scoped local acceptance, still unpublished. Inherited per-case oracle
+declines/platform branches do not establish complete compiler/platform parity.
+Composite array/member occurrence identities and exact spans are the selected
+next core design audit; remaining transformation/output mapping work stays
+OPEN. Current-main conflict reconciliation, hosted checks and actual merge
+are unfinished. Final-source Miri remains DEFERRED/PENDING; frozen inputs and
+receipts were untouched and unpolled.

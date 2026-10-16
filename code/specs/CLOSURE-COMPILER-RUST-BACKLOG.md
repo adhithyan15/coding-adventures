@@ -2923,3 +2923,30 @@ Miri remains required after implementation delivery; heartbeat ACTIVE.
   folds' immediate primitive frontier; see CLOC31's bounded follow-up contract.
   Empty/opaque composite identities and full output/source lineage remain OPEN.
 - Frozen Miri run/inputs/receipts untouched; final-source Miri DEFERRED/PENDING.
+
+### 2026-10-16: array-length immediate lineage locally accepted
+
+- CLOC31 bounded dot/computed array-length repair is implemented at `9d1a7b92`
+  after committed spec/resource amendment and genuine compiled red `430343a9`.
+  Full constant-fold 451 passed / two historical ignored; full closurec
+  1,140 passed across 182 executables; both all-target strict checks passed.
+  Exact result ownership, child-fold ancestry, closed physical source origins,
+  deterministic parent order and metered collision/allocation refusal are tested.
+- Independent exact-source review SHA256 `555972f9bfde320461f81e8357594d9e812a6dba232068f9072b0909ee6b777b`
+  and terminal review SHA256 `3469fe0343d1f81d386812db5861d5b768c3dbc3db1c6dc82dfe289dad7d1d75`
+  passed; 8,014 frozen inputs / 185 exact executable joins were verified.
+  This is partial available-operand lineage, not composite/source/output parity.
+- Next core item: spec-first design for stable array/member composite occurrence
+  IDs and exact shared spans, including empty/hole/opaque arrays, repeated source
+  occurrences, raw escapes/CRLF/astral prefixes and synthetic ASI. Existing
+  physical token CVs must be reused; no new crates.io dependencies or parallel
+  incompatible source representations. Full fold/rename/inline/motion/merge/
+  deletion, pass/sweep order and output-byte joins remain OPEN.
+- Fresh remote audit: main `76955b074120626dafc0d26b51ad666d51ba7cb3`; only
+  a2be13f7 is integrated. Native27/timeline static audits bind a51e1610; later
+  native28 is pending. Raw shared-proof widening/global font key searches are
+  withheld. One active PR #17288 still publishes `6132a518`, conflicts, has
+  no checks and auto-merge off; no push/hosted/delivery/merge claimed.
+- Native25 scoped local checkpoint remains recorded above. Frozen Miri run,
+  checkout, inputs, target and receipts untouched/unpolled. Final-source Miri
+  DEFERRED/PENDING; full objective and heartbeat remain ACTIVE.
