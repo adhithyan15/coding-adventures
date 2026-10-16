@@ -129,9 +129,18 @@ fn d3a_inventory_placement_status_counts_and_census() {
             }
             _ => unreachable!(),
         }
-        // Pass-order is generic chronology metadata, independent of these shape
-        // mutations. Omit it consistently instead of fabricating a stage list.
-        value["pass_order"] = json!([]);
+        // Retain the exact generic event-source census. Removing one root's
+        // inventory does not remove the other root's stage declaration.
+        let mut stages = std::collections::BTreeSet::new();
+        for entry in value["entries"].as_object().unwrap().values() {
+            for event in entry["contributions"].as_array().unwrap() {
+                stages.insert(event["source"].as_str().unwrap().to_owned());
+            }
+            if let Some(source) = entry["deleted"]["source"].as_str() {
+                stages.insert(source.to_owned());
+            }
+        }
+        value["pass_order"] = json!(stages);
         refused(&value, case, "source shape");
     }
     let (log, roots) = fixture(&["\0"], EsVersion::Es2025);
@@ -151,6 +160,7 @@ fn d3a_piece_ordinals_parents_eof_coordinates_and_legacy_fields() {
         let trivia = pieces.iter().find(|id| value["entries"][*id]["origin"]["source"] == "lexer_trivia").unwrap().clone();
         let first = &pieces[0];
         let last = pieces.last().unwrap();
+        let later_piece = ids(&value, &roots[1])[0].clone();
         let entries = value["entries"].as_object_mut().unwrap();
         let origin = &mut entries[first]["origin"];
         let piece = &mut origin["meta"][NS];
@@ -169,12 +179,12 @@ fn d3a_piece_ordinals_parents_eof_coordinates_and_legacy_fields() {
             "legacy-length" => origin["meta"]["lexeme_byte_len"] = json!("1"),
             "legacy-location" => origin["location"] = json!("input-0.js:0:1"),
             "wrong-piece-source" => origin["source"] = json!("other"),
-            "parents" => entries[first]["parent_ids"] = json!([roots[1]]),
+            "parents" => entries[&later_piece]["parent_ids"] = json!([roots[0]]),
             "position-key" => piece["start"]["extra"] = json!("0"),
             "position-number" => piece["start"]["scalar_offset"] = json!("00"),
             "nonzero-start" => piece["start"]["byte_offset"] = json!("1"),
             "gap" => entries[&pieces[1]]["origin"]["meta"][NS]["start"]["byte_offset"] = json!("2"),
-            "backward" => piece["end"]["utf16_offset"] = json!("0"),
+            "backward" => entries[&pieces[1]]["origin"]["meta"][NS]["end"]["utf16_offset"] = json!("0"),
             "zero-token" => piece["end"] = piece["start"].clone(),
             "early-eof" => piece["kind"] = json!("eof"),
             "wide-eof" => entries[last]["origin"]["meta"][NS]["end"]["byte_offset"] = json!("99"),
