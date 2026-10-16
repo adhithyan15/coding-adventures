@@ -356,6 +356,9 @@ resolved Timeline palette.
 Periods and events within an authored section now share one palette slot, while
 sectionless timelines advance per period unless `disableMulticolor` is enabled.
 The timeline spine remains present for single-color sectionless documents.
+Global `fontSize` and theme `fontFamily` settings survive in typed timeline
+configuration, scale title and card geometry during layout, and select fonts for
+backend-neutral shaped text and PaintScene metadata.
 
 ### Mindmap Native Slice
 

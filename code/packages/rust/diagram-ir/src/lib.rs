@@ -2491,6 +2491,8 @@ pub enum TimelineDirection {
 pub struct TimelineConfig {
     pub padding: f64,
     pub left_margin: f64,
+    pub font_size: f64,
+    pub font_family: String,
     pub use_max_width: bool,
     pub disable_multicolor: bool,
     pub section_colors: Vec<String>,
@@ -2503,6 +2505,8 @@ impl Default for TimelineConfig {
         Self {
             padding: 50.0,
             left_margin: 50.0,
+            font_size: 16.0,
+            font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
             use_max_width: false,
             disable_multicolor: false,
             section_colors: ["#dbeafe", "#dcfce7", "#fef3c7", "#fae8ff", "#ffe4e6", "#cffafe"]

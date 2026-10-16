@@ -8551,9 +8551,14 @@ where
 {
     let mut instructions: Vec<PaintInstruction> = Vec::new();
     let mut text_children: Vec<PositionedNode> = Vec::new();
-    let lf = options.label_font.clone();
-    let ls = lf.size;
     let timeline_config = diagram.timeline_config.clone().unwrap_or_default();
+    let mut lf = options.label_font.clone();
+    lf.size = timeline_config.font_size;
+    lf.family.clone_from(&timeline_config.font_family);
+    let ls = lf.size;
+    let mut title_font = options.title_font.clone();
+    title_font.size = timeline_config.font_size * 2.0;
+    title_font.family.clone_from(&timeline_config.font_family);
 
     for item in &diagram.items {
         match item {
@@ -8570,7 +8575,7 @@ where
                     *y + 6.0,
                     *width - 16.0,
                     *height - 12.0,
-                    options.title_font.clone(),
+                    title_font.clone(),
                     Color {
                         r: 17,
                         g: 24,
@@ -8619,7 +8624,7 @@ where
                 }));
                 text_children.push(text_node(
                     label, *x + 12.0, *y + 8.0, *width - 24.0, 22.0,
-                    options.title_font.clone(), css_to_color(timeline_color(
+                    lf.clone(), css_to_color(timeline_color(
                         &timeline_config.section_label_colors, *color_index, "#0f172a",
                     )),
                 ));
@@ -9276,6 +9281,8 @@ where
     if let Some(config) = &diagram.timeline_config {
         metadata.insert("timeline.padding".into(), config.padding.to_string());
         metadata.insert("timeline.leftMargin".into(), config.left_margin.to_string());
+        metadata.insert("timeline.fontSize".into(), config.font_size.to_string());
+        metadata.insert("timeline.fontFamily".into(), config.font_family.clone());
         metadata.insert("timeline.useMaxWidth".into(), config.use_max_width.to_string());
         metadata.insert(
             "timeline.disableMulticolor".into(),
@@ -10379,6 +10386,8 @@ mod tests {
             timeline_config: Some(diagram_ir::TimelineConfig {
                 padding: 72.0,
                 left_margin: 80.0,
+                font_size: 20.0,
+                font_family: "Avenir Next".into(),
                 use_max_width: true,
                 disable_multicolor: true,
                 section_colors: vec!["#112233".into()],
@@ -10404,6 +10413,8 @@ mod tests {
         let metadata = scene.metadata.unwrap();
         assert_eq!(metadata.get("timeline.padding").map(String::as_str), Some("72"));
         assert_eq!(metadata.get("timeline.leftMargin").map(String::as_str), Some("80"));
+        assert_eq!(metadata.get("timeline.fontSize").map(String::as_str), Some("20"));
+        assert_eq!(metadata.get("timeline.fontFamily").map(String::as_str), Some("Avenir Next"));
         assert_eq!(metadata.get("timeline.useMaxWidth").map(String::as_str), Some("true"));
         assert_eq!(metadata.get("timeline.disableMulticolor").map(String::as_str), Some("true"));
         assert_eq!(metadata.get("timeline.theme.cScale0").map(String::as_str), Some("#112233"));
@@ -10417,6 +10428,10 @@ mod tests {
             instruction,
             PaintInstruction::Path(path)
                 if path.stroke_dash.as_deref() == Some(&[5.0, 5.0][..])
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 20.0
         )));
     }
 
