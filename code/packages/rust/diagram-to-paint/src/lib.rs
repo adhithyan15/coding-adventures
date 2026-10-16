@@ -2152,6 +2152,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     label_font.size = diagram.config.font_size;
     let mut title_font = options.title_font.clone();
     title_font.family.clone_from(&diagram.config.font_family);
+    let hand_drawn = diagram.config.look == diagram_ir::IshikawaLook::HandDrawn;
     let mut instructions = vec![PaintInstruction::Path(line_path(&diagram.spine_path, &stroke, 3.0))];
     let mut text_children = Vec::new();
     for bone in &diagram.bones {
@@ -2168,18 +2169,26 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             stroke_cap: Some(StrokeCap::Round), stroke_join: Some(StrokeJoin::Round), stroke_dash: None, stroke_dash_offset: None }));
         let label_x = bone.label_position.x - bone.label_width / 2.0;
         let label_y = bone.label_position.y - bone.label_height / 2.0;
-        instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: label_x, y: label_y,
-            width: bone.label_width, height: bone.label_height, fill: Some(diagram.config.fill_color.clone()),
-            stroke: Some(stroke.clone()), stroke_width: Some(1.0), corner_radius: Some(4.0),
-            stroke_dash: None, stroke_dash_offset: None }));
+        if hand_drawn {
+            instructions.push(ishikawa_outline_instruction(&bone.label_outline, &diagram.config.fill_color, &stroke, 1.0));
+        } else {
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: label_x, y: label_y,
+                width: bone.label_width, height: bone.label_height, fill: Some(diagram.config.fill_color.clone()),
+                stroke: Some(stroke.clone()), stroke_width: Some(1.0), corner_radius: Some(4.0),
+                stroke_dash: None, stroke_dash_offset: None }));
+        }
         text_children.push(text_node(&bone.label, label_x + 6.0, label_y + 2.0,
             bone.label_width - 12.0, bone.label_height - 4.0, label_font.clone(), text_color));
     }
-    instructions.push(PaintInstruction::Rect(PaintRect {
-        base: PaintBase::default(), x: diagram.effect_x, y: diagram.effect_y, width: diagram.effect_width,
-        height: diagram.effect_height, fill: Some(diagram.config.fill_color.clone()), stroke: Some(stroke.clone()),
-        stroke_width: Some(2.0), corner_radius: Some(8.0), stroke_dash: None, stroke_dash_offset: None,
-    }));
+    if hand_drawn {
+        instructions.push(ishikawa_outline_instruction(&diagram.effect_outline, &diagram.config.fill_color, &stroke, 2.0));
+    } else {
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(), x: diagram.effect_x, y: diagram.effect_y, width: diagram.effect_width,
+            height: diagram.effect_height, fill: Some(diagram.config.fill_color.clone()), stroke: Some(stroke.clone()),
+            stroke_width: Some(2.0), corner_radius: Some(8.0), stroke_dash: None, stroke_dash_offset: None,
+        }));
+    }
     text_children.push(text_node(&diagram.effect, diagram.effect_x + 8.0, diagram.effect_y + 8.0,
         diagram.effect_width - 16.0, diagram.effect_height - 16.0, title_font, text_color));
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
@@ -2203,6 +2212,18 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
         instructions, id: None, metadata: Some(metadata) }
+}
+
+fn ishikawa_outline_instruction(points: &[Point], fill: &str, stroke: &str, stroke_width: f64) -> PaintInstruction {
+    let mut commands = Vec::with_capacity(points.len() + 1);
+    for (index, point) in points.iter().enumerate() {
+        commands.push(if index == 0 { PathCommand::MoveTo { x: point.x, y: point.y } }
+            else { PathCommand::LineTo { x: point.x, y: point.y } });
+    }
+    commands.push(PathCommand::Close);
+    PaintInstruction::Path(PaintPath { base: PaintBase::default(), commands, fill: Some(fill.into()), fill_rule: None,
+        stroke: Some(stroke.into()), stroke_width: Some(stroke_width), stroke_cap: Some(StrokeCap::Round),
+        stroke_join: Some(StrokeJoin::Round), stroke_dash: None, stroke_dash_offset: None })
 }
 
 /// Lower a Wardley strategic map into backend-neutral paths, ellipses, and glyph runs.
@@ -11696,11 +11717,15 @@ mod tests {
             effect_x: 430.0, effect_y: 150.0, effect_width: 150.0, effect_height: 60.0,
             spine_from: Point { x: 30.0, y: 180.0 }, spine_to: Point { x: 430.0, y: 180.0 },
             spine_path: vec![Point { x: 30.0, y: 180.0 }, Point { x: 430.0, y: 180.0 }],
+            effect_outline: vec![Point { x: 430.0, y: 150.0 }, Point { x: 580.0, y: 150.0 },
+                Point { x: 580.0, y: 210.0 }, Point { x: 430.0, y: 210.0 }],
             bones: vec![diagram_ir::LayoutedIshikawaBone { from: Point { x: 100.0, y: 80.0 },
                 to: Point { x: 180.0, y: 180.0 }, label: "People".into(),
                 label_position: Point { x: 100.0, y: 68.0 }, label_width: 80.0, label_height: 28.0, depth: 1,
                 path: vec![Point { x: 100.0, y: 80.0 }, Point { x: 180.0, y: 180.0 }],
-                arrowhead: vec![Point { x: 180.0, y: 180.0 }, Point { x: 168.0, y: 180.0 }, Point { x: 180.0, y: 168.0 }] }], };
+                arrowhead: vec![Point { x: 180.0, y: 180.0 }, Point { x: 168.0, y: 180.0 }, Point { x: 180.0, y: 168.0 }],
+                label_outline: vec![Point { x: 60.0, y: 54.0 }, Point { x: 140.0, y: 54.0 },
+                    Point { x: 140.0, y: 82.0 }, Point { x: 60.0, y: 82.0 }] }], };
         let scene = diagram_to_paint_ishikawa(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
