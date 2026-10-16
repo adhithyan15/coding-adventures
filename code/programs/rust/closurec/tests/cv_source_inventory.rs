@@ -109,6 +109,35 @@ fn input_entry<'a>(wire:&'a Value,path:&std::path::Path)->(&'a str,&'a Value) {
     let rows:Vec<_>=wire["entries"].as_object().unwrap().iter().filter(|(_,e)|e["origin"]["source"]=="input_file"&&e["origin"]["location"]==path.to_string_lossy().as_ref()).collect();
     assert_eq!(rows.len(),1,"one exact file root");(rows[0].0.as_str(),rows[0].1)
 }
+// Census legacy children independently of the descriptor under test. A duplicate
+// old lexer child without any namespace must not disappear from the comparison.
+fn source_children<'a>(wire: &'a Value, root_id: &str) -> BTreeSet<&'a str> {
+    wire["entries"].as_object().unwrap().iter().filter(|(_, entry)| {
+        let direct = entry["parent_ids"].as_array().unwrap().iter()
+            .any(|parent| parent.as_str() == Some(root_id));
+        let legacy = entry["origin"]["source"] == "lexer_token"
+            || entry["origin"]["source"] == "lexer_trivia";
+        let reserved = &entry["origin"]["meta"][NS];
+        (legacy && direct) || (reserved["role"] == "piece"
+            && (reserved["input_id"] == root_id || direct))
+    }).map(|(id, _)| id.as_str()).collect()
+}
+#[test]
+fn d1_census_detects_unmarked_legacy_and_misattributed_piece_children() {
+    let original = json!({"entries": {"valid": {"parent_ids": ["root"],
+        "origin": {"source": "lexer_token", "meta": {NS: {"role": "piece", "input_id": "root"}}}}}});
+    assert_eq!(source_children(&original, "root"), BTreeSet::from(["valid"]));
+    for extra in [
+        json!({"parent_ids": ["root"], "origin": {"source": "lexer_token", "meta": {}}}),
+        json!({"parent_ids": ["root"], "origin": {"source": "lexer_trivia", "meta": {}}}),
+        json!({"parent_ids": ["other"], "origin": {"source": "other", "meta": {NS: {"role": "piece", "input_id": "root"}}}}),
+        json!({"parent_ids": ["root"], "origin": {"source": "other", "meta": {NS: {"role": "piece", "input_id": "other"}}}}),
+    ] {
+        let mut wire = original.clone();
+        wire["entries"]["extra"] = extra;
+        assert_eq!(source_children(&wire, "root"), BTreeSet::from(["extra", "valid"]));
+    }
+}
 fn assert_inventory(wire:&Value,path:&std::path::Path,source:&str,sha:&str,rows:&[Piece])->Vec<String> {
     assert_inventory_editions(wire,path,source,sha,rows,coding_adventures_javascript_tokens::EsVersion::ALL)
 }
@@ -147,7 +176,7 @@ fn assert_inventory_editions(wire:&Value,path:&std::path::Path,source:&str,sha:&
         assert_eq!(piece["origin"],expected_origin,"complete piece origin #{index}");
     }
     let declared:BTreeSet<_>=ids.iter().map(String::as_str).collect();
-    let actual:BTreeSet<_>=wire["entries"].as_object().unwrap().iter().filter(|(_,e)|e["origin"]["meta"][NS]["role"]=="piece"&&e["origin"]["meta"][NS]["input_id"]==root_id).map(|(id,_)|id.as_str()).collect();assert_eq!(actual,declared,"no omitted or extra namespace child");
+    assert_eq!(source_children(wire,root_id),declared,"no omitted or extra legacy/reserved source child");
     ids
 }
 #[test]
@@ -200,7 +229,7 @@ fn d1_ordinary_lexical_failure_has_exact_unavailable_inventory_in_copy_modes() {
         let f=Fixture::new("var x=\0");success(f.run(level,false,&[]));let plain=f.outputs();success(f.run(level,true,&[]));assert_eq!(f.outputs(),plain);let wire=reload(&f.sidecar());let (id,root)=input_entry(&wire,&f.input);
         assert_eq!(root["origin"]["meta"][NS],json!({"schema":"1","role":"input","buffer_domain":"read_to_string_utf8","encoding":"utf8","grammar":"javascript_standard","edition":"es2025","sha256":"db347a502947b0c40419db751366a87b1d026bec2fc259de66193382c73e900f","byte_length":"7"}));
         let rows:Vec<_>=root["contributions"].as_array().unwrap().iter().filter(|c|c["source"]=="source.inventory").collect();assert_eq!(rows.len(),1);assert_eq!(rows[0]["tag"],"finalized");assert_eq!(rows[0]["meta"],json!({NS:{"schema":"1","role":"inventory","status":"unavailable","piece_count":"0","token_count":"0","piece_ids":[],"reason":"lexical_error"}}));
-        assert!(!wire["entries"].as_object().unwrap().values().any(|e|e["origin"]["meta"][NS]["role"]=="piece"&&e["origin"]["meta"][NS]["input_id"]==id));
+        assert!(source_children(&wire,id).is_empty(),"unavailable inventory has no legacy/reserved source children");
         assert!(root["contributions"].as_array().unwrap().iter().any(|c|c["source"]=="lex"&&c["tag"]=="failed"));
         eprintln!("CV04b-D1-CLI-COMPLETE case=lexicalError level={level} exactInventory");
     }
