@@ -2714,3 +2714,19 @@ downstream or Java parity execution is inferred. Same sole PR17288; ordinary
 progress publication still pending at this documentation checkpoint.
 
 <!-- /CV04b D3a source shape admission -->
+
+<!-- CV04b D3b trusted source replay -->
+D3a is published in sole PR17288 at6dcda953 with1,124P/0F/0I/182 targets,
+strict lint, independent reviews and35x6 prior-D2 byte comparisons. Source replay
+is the next bounded slice: [D3b contract](CV04b-D3b-trusted-source-grammar-replay.md).
+Retain actual consumed String allocations under explicit finite capacity/index
+budgets, fingerprint original captured Tokens before mutation, and replay the
+standard configured grammar before any traced publication. Do not reread paths
+as consumed-byte proof or substitute structural spans/value lengths for replay.
+This specification checkpoint claims no D3b implementation or execution yet.
+Main4014a701/open PR file sets/backlogs/epic15830 re-audited; PR17288 remains
+OPEN/CONFLICTING/autoOFF/0 attached checks. Source replay/full transformation and
+pass-sweep lineage/output-byte joins/parity/CI/merge remain OPEN. Base ESTree/own
+types/no new crates.io dependencies retained. Miri **DEFERRED/PENDING**, never
+passed; frozen inputs/run/target/receipts untouched/unpolled. Full goal ACTIVE.
+<!-- /CV04b D3b trusted source replay -->
