@@ -381,10 +381,13 @@ metadata. Integrator-supplied class styles resolve in authored class order
 before layout, so typography participates in node measurement and the resolved
 fill, stroke, and text styling lower through backend-neutral PaintInstructions.
 Integrator-supplied icon glyphs resolve from semantic icon identifiers, reserve
-layout space, and lower through the same backend-neutral shaped-text path. A
-native Metal-to-PNG fixture validates this documented subset; automatic loading
-of external icon packs remains explicitly outside the partial compatibility
-level.
+layout space, and lower through the same backend-neutral shaped-text path.
+Automatic loading of external icon packs remains an integrator responsibility,
+outside the parser-to-Paint compatibility boundary. The pinned upstream syntax
+corpus includes hierarchy, every node shape, explicit IDs, decorations,
+delimiter-rich and Markdown labels, comments, front matter, and invalid root
+structures. Every accepted fixture passes the native visual corpus, so Mindmap
+reaches the manifest's defined `full` level.
 
 ### Block Native Slice
 
