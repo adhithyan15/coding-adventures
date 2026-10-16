@@ -470,12 +470,17 @@ Ticket metadata on sections follows the same typed IR, layout, and backend-neutr
 link-metadata path as card tickets.
 Positive `sectionWidth` and `padding` settings from the same configuration paths
 resolve column width and outer canvas geometry before backend-neutral Paint lowering.
-`diagram-layout-board` resolves
-deterministic column/card geometry and dedicated PaintScene lowering emits
-backend-neutral rectangles and shaped text. A native Metal-to-PNG fixture gates
-this slice; external icon-pack artwork, class-driven styles, non-ticket links, description
-fields, non-ticket section metadata, and configurable field arrangements remain
-unsupported at the partial level.
+`diagram-layout-board` resolves deterministic column/card geometry and dedicated
+PaintScene lowering emits backend-neutral rectangles and shaped text. Mermaid's
+parser accepts deeper card indentation but flattens it into the current section;
+the native parser now preserves that behavior. Section-only assignee, priority,
+and icon metadata is accepted and discarded at the same renderer-data boundary
+as pinned Mermaid 11.16.1. Automatic external icon-pack artwork remains an
+integrator responsibility outside the parser-to-Paint compatibility boundary.
+The pinned syntax corpus covers all upstream parser behaviors plus the native
+Markdown, configuration, and priority-marker extensions, and every accepted
+fixture passes the Metal visual corpus. Kanban therefore reaches the manifest's
+defined `full` level.
 
 ### Architecture Native Slice
 
