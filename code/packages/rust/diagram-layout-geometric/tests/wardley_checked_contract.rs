@@ -4,19 +4,19 @@ use diagram_layout_geometric::layout_wardley;
 
 fn config()->WardleyConfig { WardleyConfig {width:900.0,height:600.0,padding:48.0,
 node_radius:6.0,node_label_offset:8.0,axis_font_size:12.0,label_font_size:10.0,
-show_grid:false,use_max_width:true} }
+show_grid:false,use_max_width:true,theme:diagram_ir::WardleyTheme {background_color:"#ffffff".into(),axis_color:"#000000".into(),axis_text_color:"#222222".into(),grid_color:"rgba(100, 100, 100, 0.2)".into(),component_fill:"#ffffff".into(),component_stroke:"#000000".into(),component_label_color:"#222222".into(),link_stroke:"#000000".into(),evolution_stroke:"#dc3545".into()}} }
 fn stages()->Vec<String> { ["Genesis","Custom Built","Product","Commodity"].map(String::from).to_vec() }
 fn source(config:WardleyConfig)->WardleyDiagram { WardleyDiagram {title:Some("T".into()),config,
 stages:stages(),nodes:vec![WardleyNode{id:"a".into(),label:"A".into(),visibility:1.0,evolution:0.0,anchor:true},
 WardleyNode{id:"b".into(),label:"B".into(),visibility:0.0,evolution:1.0,anchor:false}],
 links:vec![WardleyLink{source:"A".into(),target:"B".into()}],
-evolves:vec![WardleyEvolution{component:"A".into(),target:0.5}]} }
+evolves:vec![WardleyEvolution{component:"A".into(),target:0.5}],notes:vec![]} }
 fn frame(config:WardleyConfig,width:f64,height:f64,lo:f64,hi_x:f64,hi_y:f64,mid_x:f64)->LayoutedWardleyDiagram {
 LayoutedWardleyDiagram {width,height,title:Some("T".into()),config,stages:stages(),
 nodes:vec![LayoutedWardleyNode{id:"a".into(),label:"A".into(),position:Point{x:lo,y:lo},anchor:true},
 LayoutedWardleyNode{id:"b".into(),label:"B".into(),position:Point{x:hi_x,y:hi_y},anchor:false}],
 links:vec![LayoutedWardleyLink{from:Point{x:lo,y:lo},to:Point{x:hi_x,y:hi_y}}],
-evolves:vec![LayoutedWardleyEvolution{from:Point{x:lo,y:lo},to:Point{x:mid_x,y:lo}}]} }
+evolves:vec![LayoutedWardleyEvolution{from:Point{x:lo,y:lo},to:Point{x:mid_x,y:lo}}],notes:vec![]} }
 
 #[test]
 fn wardley_complete_default_minimum_and_cap_frames_are_literal() {
