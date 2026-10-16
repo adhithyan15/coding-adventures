@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-16 (Centered milestone rotations)
+
+- Lower single finite `rotate(Ndeg)` transforms on painted rectangles to centered
+  Qt Item rotation, with ordered state overrides and unchanged layout dimensions.
+  Unsupported units, chains, and non-finite angles remain reported (#17675).
+
 ## 2026-10-13 (Path geometry binds to slots and For items)
 
 - `Path` coordinates (`cx`, `cy`, `r`, `x1` … `y2`) may now be bound to a

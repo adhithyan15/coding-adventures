@@ -293,10 +293,11 @@ manifest match the source commit, and all twelve checksums match asset digests.
 publish `task-app-v0.5.7`.** Roll forward the compatible SwiftUI milestone
 rotation fix (#17503): timeline and calendar markers retain their 45-degree
 diamond shape, reducing the measured SwiftUI style inventory from 59 to 57.
-Validate every existing release payload lane on the exact source commit, publish
-from main after preparation merges, and audit the immutable tag, manifest,
-inventory, and checksums. Static HTML, Web Components, and Paint remain CI-only;
-signing, notarization, and installers remain #13977. Preparation is not publication.
+Published from `93206f2a5b2cb3c02f30bb7dd23c7573898d2334` after every payload lane
+passed in run 38971558648. The immutable tag and manifest match that source;
+all 13 assets and twelve checksum entries were audited against GitHub digests.
+Static HTML, Web Components, and Paint remain CI-only; signing, notarization,
+and installers remain #13977.
 
 ### Next bounded fidelity item — #17675: Qt milestone rotations
 

@@ -234,6 +234,10 @@ cd host/web && npm install && npm run dev       # http://localhost:5173
 
 ## Incremental releases
 
+The next unreleased Qt fidelity patch preserves the timeline milestone and
+legend-swatch diamond rotations (#17675), reducing measured Qt style drops from
+83 to 81. Downloadable coverage is unchanged.
+
 TaskApp uses product-scoped [Semantic Versioning](https://semver.org/):
 `task-app-vMAJOR.MINOR.PATCH`. Compatible fixes and packaging improvements bump
 the patch version, new usable capabilities bump the minor version, and breaking

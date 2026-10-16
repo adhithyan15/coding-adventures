@@ -2039,6 +2039,7 @@ fn qt_drop_reason(name: &str) -> &'static str {
             "only the supported Mosaic elevation tokens `raised` and `overlay` \
              lower to QtQuick.Effects.MultiEffect"
         }
+        "transform" => "only a single finite rotate(Ndeg) lowers to centered Qt Item rotation",
         "flex-grow" | "flex-shrink" | "flex" => {
             "Qt distributes space with Layout.fillWidth / Layout.preferredWidth \
              inside a RowLayout or ColumnLayout, chosen where the child is \
@@ -2365,7 +2366,7 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
         .unwrap_or(&[]);
     let state_layers = collect_state_layers(node, part, ctx.part_styles);
 
-    let mut rect_lines: Vec<String> = Vec::new();
+    let mut rect_lines: Vec<String> = qml_rotation_lines(base, &state_layers);
 
     // --- Geometry -----------------------------------------------------
     // height → implicitHeight (+ Layout.preferredHeight for layout
@@ -2731,8 +2732,33 @@ fn qml_elevation_wrap(
     )
 }
 
+/// Item rotation is visual only: Qt Quick layouts continue using the original
+/// width and height. Canonicalize a finite number instead of interpolating
+/// authored syntax into executable QML; chains and other units remain debt.
+fn qml_rotation_degrees(value: &str) -> Option<String> {
+    let angle = value.trim().trim_matches('"').trim()
+        .strip_prefix("rotate(")?.strip_suffix("deg)")?.trim()
+        .parse::<f64>().ok()?;
+    angle.is_finite().then(|| angle.to_string())
+}
+
+/// Last active state wins, matching the other conditional paint properties.
+/// Record only accepted conversions so a rejected override stays observable.
+fn qml_rotation_lines(base: &[StyleProp], layers: &[StateLayer<'_>]) -> Vec<String> {
+    let mut rotation = lowered_style_prop(base, "transform", qml_rotation_degrees);
+    for layer in layers {
+        if let Some(angle) = lowered_style_prop(layer.props, "transform", qml_rotation_degrees) {
+            rotation = Some(format!("( {} ) ? {angle} : {}", layer.cond_expr,
+                rotation.as_deref().unwrap_or("0")));
+        }
+    }
+    rotation.map(|angle| vec!["transformOrigin: Item.Center".into(), format!("rotation: {angle}")])
+        .unwrap_or_default()
+}
+
 fn qml_rectangle_paint_lines(props: &[StyleProp]) -> Vec<String> {
     let mut lines = Vec::new();
+    lines.extend(qml_rotation_lines(props, &[]));
     if let Some(background) = style_prop(props, "background")
         .or_else(|| style_prop(props, "background-color"))
         .and_then(qml_hex_color_or_none)
@@ -2762,6 +2788,7 @@ fn qml_rectangle_paint_lines_with_states(
     layers: &[StateLayer<'_>],
 ) -> Vec<String> {
     let mut lines = Vec::new();
+    lines.extend(qml_rotation_lines(base, layers));
     let base_background =
         style_prop_any(base, &["background", "background-color"]).and_then(qml_hex_color_or_none);
     if let Some(background) = conditional_color_expr(
@@ -16715,6 +16742,52 @@ mod tests {
         StyleProp {
             name: name.to_string(),
             value: value.to_string(),
+        }
+    }
+
+    #[test]
+    fn degree_rotation_is_centered_and_preserves_ordered_states() {
+        let base = vec![sp("transform", "\"rotate(45deg)\"")];
+        let first = vec![sp("transform", "rotate(-90deg)")];
+        let last = vec![sp("transform", "rotate(180deg)")];
+        let layers = vec![
+            StateLayer { cond_expr: "first".into(), props: &first },
+            StateLayer { cond_expr: "last".into(), props: &last },
+        ];
+        assert_eq!(qml_rotation_lines(&base, &layers), vec![
+            "transformOrigin: Item.Center", "rotation: ( last ) ? 180 : ( first ) ? -90 : 45",
+        ]);
+        assert_eq!(qml_rotation_lines(&[], &layers)[1],
+            "rotation: ( last ) ? 180 : ( first ) ? -90 : 0");
+        assert!(qml_rectangle_paint_lines(&base).contains(&"rotation: 45".into()));
+        assert!(qml_rectangle_paint_lines_with_states(&base, &layers)
+            .contains(&"rotation: ( last ) ? 180 : ( first ) ? -90 : 45".into()));
+    }
+
+    #[test]
+    fn unsupported_degree_rotations_are_not_lowered() {
+        for value in ["rotate(1rad)", "rotate(NaNdeg)", "rotate(infdeg)",
+            "rotate(1e999deg)", "rotate(45deg) scale(2)", "translate(2px)",
+            "rotate(45deg);evil()", "rotate()"] {
+            assert_eq!(qml_rotation_degrees(value), None, "{value}");
+            assert!(qml_rotation_lines(&[sp("transform", value)], &[]).is_empty());
+        }
+    }
+
+    #[test]
+    fn degree_rotation_report_matches_emitted_box() {
+        let layout = box_layout_with_part("card");
+        let model = component("X", vec![], vec![]);
+        for (value, supported) in [("rotate(45deg)", true), ("rotate(1rad)", false)] {
+            let style = style_with_part("X", "card", vec![
+                ("background", "#ffffff"), ("width", "8px"),
+                ("height", "8px"), ("transform", value),
+            ]);
+            let output = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert_eq!(output.contains("rotation: 45"), supported, "{output}");
+            let drops = dropped_style_properties(&model, &layout, &style);
+            assert_eq!(drops.iter().any(|drop| drop.name == "transform"), !supported);
+            assert!(output.contains("implicitWidth: 8") && output.contains("implicitHeight: 8"));
         }
     }
 
