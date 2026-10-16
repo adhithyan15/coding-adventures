@@ -353,6 +353,9 @@ Authored events now resolve to dedicated cards outside their period cards, with
 direction-aware deterministic placement and dashed, arrow-headed connector paths. Both event
 cards and connectors lower as backend-neutral PaintInstructions using the
 resolved Timeline palette.
+Periods and events within an authored section now share one palette slot, while
+sectionless timelines advance per period unless `disableMulticolor` is enabled.
+The timeline spine remains present for single-color sectionless documents.
 
 ### Mindmap Native Slice
 
