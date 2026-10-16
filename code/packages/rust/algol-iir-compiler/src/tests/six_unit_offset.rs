@@ -44,13 +44,13 @@ fn canonical_six_unit_forms_have_one_real_formatter_and_independent_arms() {
 }
 
 #[test]
-fn six_unit_proofs_refuse_fifteen_units_rounding_traps_and_exp_widening() {
+fn six_unit_proofs_refuse_sixteen_units_rounding_traps_and_exp_widening() {
     for expression in [
-        "entier(sign(pick()) + 15)",
-        "entier((sign(pick()) + 7) + 8)",
-        "entier(1 + (14 + sign(pick())))",
-        "entier(entier(sign(pick()) + 1) + 14)",
-        "entier(abs(sign(pick()) + 2) + 13)",
+        "entier(sign(pick()) + 16)",
+        "entier((sign(pick()) + 8) + 8)",
+        "entier(1 + (15 + sign(pick())))",
+        "entier(entier(sign(pick()) + 1) + 15)",
+        "entier(abs(sign(pick()) + 2) + 14)",
         "entier(sign(pick()) + 6.5)",
         "entier(sign(pick()) + sign(pick()) + 1 + 5)",
         "entier(sign(pick()) + ((9007199254740992 + 1) - 9007199254740992) + 6)",
