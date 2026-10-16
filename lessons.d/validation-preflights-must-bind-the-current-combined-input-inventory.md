@@ -136,3 +136,10 @@ the complete31-unit/4/2/2/1 target vector; all24 legacy,24 named and6 derived no
 events must execute. Do not count an empty successful binary as tested behavior.
 An external JavaScript raw-template patch also failed before edits because its
 prose contained unescaped backticks; such setup failures provide no acceptance.
+
+A global validator namespace replacement also renamed an immutable baseline
+receipt pointer to a nonexistent file. The v1 preflight exited1 before Cargo;
+preserve its source, receipt and failure. Correct only the baseline pointer,
+retain all source/resource/lock/registry and target-count guards, and bind the
+subsequent actual v2 strict0/full989/50 result to source33ac7884. Namespace edits
+must distinguish new output names from immutable prior evidence inputs.

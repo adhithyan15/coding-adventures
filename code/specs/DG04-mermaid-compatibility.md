@@ -1438,3 +1438,12 @@ scene-query cells. Preserve13 Venn files/232complete cells,37 Ishi and67 IR.
 Later main987 Wardley themes are NOT integrated or validated by this receipt.
 General visual/fontfit/containment and hosted current-head acceptance remain
 OPEN. Final-source Miri DEFERRED/PENDING.
+
+The later tested33ac7884 integrates Wardley themes/notes through main61eebb03,
+superseding the preceding receipt's unintegrated-theme status. Full affected14
+packages989P0F0I/50 targets and strict14 actual0;95 new complete theme/note IR
+cells/21 exact source errors and54 typed/derived refusals plus4 priority cases,
+16 complete scene/query cells (old8+new8). The retained Venn count above is13
+fixture files containing232 complete cells. Native15 main4f remains unintegrated;
+general visual/fontfit/containment/hosted acceptance and full Closure provenance
+remain OPEN. Final-source Miri DEFERRED/PENDING, never passed.

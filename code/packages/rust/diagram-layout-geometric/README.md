@@ -161,55 +161,64 @@ configured rectangle before effect box/text with6/2 insets. All37 complete
 source/IR/layout/scene/query cells retain their accepted boxed-label semantics.
 General fontfit, arbitrary nesting and canvas containment remain OPEN.
 
-## Bounded Wardley configuration and checked geometry
+## Closed Wardley themes and checked notes
 
-Wardley source configuration uses direct owned mapping ancestry or a closed init
-object; an init object replaces the mapping wholesale, including empty objects.
-Nested/sequence/block-scalar/quoted-tail decoys cannot supply a direct field.
-Width/height/radius are finite positive values at most65536; padding/label offset
-are finite nonnegative values through65536; configured fonts are1..65536.
-Invalid source settings use field defaults. Body size uses the same finite cap,
-with a named source error for positive over-cap values.
+The Wardley parser selects one closed init or direct frontmatter theme root.
+Direct wardley fields override sanitized background/primary-text root defaults;
+an empty selected init root replaces frontmatter wholesale. Complete active-quote
+decoding precedes the existing color whitelist. Nested mappings, sequence items,
+block literals, inactive-quote prefixes and trailing junk cannot supply a value.
+The nine theme fields drive background, axes/text/grid, components, links and
+evolutions. This is lexical source admission; typed theme strings do not gain a
+renderer-wide CSS guarantee.
 
-The checked typed route `try_layout_wardley` rejects invalid configuration,
-non-normalized node/evolution coordinates and unknown references before mapping,
-and rejects nonfinite derived geometry. Compatibility `layout_wardley` refuses
-unsupported typed values. Ordinary default/minimum/cap layouts remain literal
-whole-layout controls. Stage fonts use max(axisFontSize-2,1); title fonts use
-axisFontSize*1.05. Grid paths, node/anchor radii, source precedence, all glyphs,
-seven metadata fields and ordered cached font queries have exact whole-scene
-oracles. General font fitting, containment, area/node-count resource guarantees
-and caller-forged resolved Paint layouts remain outside this bounded contract.
+Notes preserve quoted interior text, including spaces, empty strings, Unicode,
+inactive quotes, brackets and percent-percent. Only the active delimiter and
+backslash may be escaped. Coordinates and outside comments are read after the
+closed token; malformed input has exact physical source errors. Typed finite
+normalized note coordinates have a named NoteCoordinates refusal after
+EvolutionTarget and before reference checks. Every derived note point is finite.
+Paint notes use the retained caller family/italic/stretch with weight700/size11;
+ordinary caller weights and the independent numeric/font/query tables remain.
+All17 metadata fields and complete ordered cached font queries are checked.
 
-Spec3b6e precedes closed incoming6c merge8f43 and test-first source/typed/Paint
-controls. Semantic reds parser2P3F101/geometry1P3F101/paint0P1F101 are retained.
-Actual3600 full strict101/wrapper1 stopped before full tests on negative-fixture
-assignment formatting;1b216e6b changes only Rust whitespace plus documentation,
-preserving every assertion and independently specified numeric table.
+Specd629/d70b precedes parser tests08b, closed main61 merge10e and bounded source
+repairs. Genuine semantic reds4a1/53d9/2d858 remain failed receipts. Generated-tag
+and removed-node-reader compile failures had zero executed tests; neither is a
+semantic-red receipt. The unchanged node reader was restored whole. The ABI-only
+five-file migration and old eight-scene migration reverse byte-exactly to their
+original modules; no numeric/font/query oracle was inferred from output. The
+new eight complete scene/query cells were committed e81 before first execution
+and passed on their first render. The filtered empty-binary wrapper failure and
+the v1 wrong-baseline-path preflight failure remain preserved separately.
 
-Actual tested1b216e6b: focused5parser/8geometry/2paint PASS;94 complete IR cells,
-2 exact size errors,271 geometry events and8 complete source/IR/layout/PaintScene/
-glyph/metadata/ordered-query cells. Full affected14 packages981P0F0I/47targets
-and strict all-target warnings/unknown-lints denial both exit0. Tests02de82c1/
-strict54460559 and independent source/terminal reviews bind that exact source.
-All1464 raw Rust/TOML inputs, reverse14/forward50/style827 objects, native2853,
-registry376, only4 local style-version changes and resources21+3 are verified.
-The13 retained Venn fixture files contain232 complete scene/query cells;
-37 complete Ishikawa cells and67 causal parser IR controls remain exact.
+Actual tested source33ac7884: focused8 parser/40 geometry/3 Paint tests PASS,
+including old94 IR/2 body errors, new83 theme+12 note complete IR/21 exact errors,
+24 legacy+24 named note refusals/4 priorities/6 forged derived-point refusals,
+and16 whole source/IR/layout/scene/all-glyph/metadata/query cells (old8+new8).
+Full affected14 packages989P0F0I/50 targets and strict all-target warnings and
+unknown-lints denial both exit0. Tests269276ba/strict0925ef46 and independent
+source/terminal reports bind that exact source. All1469 raw Rust/TOML files,
+reverse14/forward50/style835 objects, registry376, four local style-version
+changes, complete native2853 attribution and21+3 static resources are bound.
+Retained13 Venn fixture files contain232 complete cells;37 Ishikawa cells and67
+causal parser IR controls remain exact. Human snapshot changes are integrated
+as pure incoming paths; no TS/book execution is claimed.
 
-Native execution is independently attributed to actuale3e1106c1836/78,
-compiler895/fullLANG506/strict6 and146sources/876 six-backend cells. Historical
-Closure36/3705+3 conservative static inputs retain316e attribution; no fresh
-Closure execution or dynamic/toolchain/OS resource closure is inferred.
-Integrated main6c4e is an ancestor. Later inspected main987ab434 Wardley theme
-and e0724e0 human-language snapshot changes are NOT integrated/validated here.
-This is local bounded acceptance and unmerged progress, with current-main/
-hosted exact-head CI/conflict/review/actual merge gates and the actual macOS
-phase-refusal root cause OPEN. No TS/book runtime or general visual-parity claim.
+Native execution remains attributed to e3e1106c:1836P0F/1 unchanged ignore over
+78 targets, compiler895/LANG506/strict6,146 programs/876 actual six-backend cells.
+Historical Closure36/3705+3 retains316e attribution, not fresh execution. This
+carrier integrates main61eebb03. Later main4f383fea native15 is NOT integrated
+or validated; its raw shared-helper widenings remain WITHHELD under independent
+incoming review5cf99164. Dedicated bounded reconciliation is the next slice.
 
-Base ESTree canonical/own types/no new crates.io dependencies remain owner
-decisions. Full Closure parity/output-byte-source/full transformation lineage/
-stable IDs/spans/pass-sweep/CV04b remain OPEN. Miri **DEFERRED/PENDING**, never
-passed; frozen run/checkout/inputs/target/receipts untouched/unpolled, no duplicate
-or termination. Delivery first, genuine final-source Miri before full completion
-or disabling the ACTIVE heartbeat.
+This is unmerged progress in solePR17288. Current-head hosted CI/conflicts/
+reviews/actual merge and the macOS phase-refusal root cause remain OPEN.
+General fontfit, containment, area/node-count limits and forged resolved Paint
+layouts remain outside this bounded contract. Base ESTree canonical serialized
+boundary/own types/no new crates.io dependencies remain owner decisions. Full
+Closure parity/output-byte-source/full fold/rename/inline/motion/merge/delete
+lineage/stable IDs/spans/pass-sweep/CV04b remain OPEN. Final-source Miri is
+**DEFERRED/PENDING**, never passed; frozen checkout/run/inputs/target/receipts
+untouched/unpolled, no duplicate/termination. Delivery first, genuine Miri later;
+the heartbeat remains ACTIVE until the full completion contract is met.
