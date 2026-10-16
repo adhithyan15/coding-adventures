@@ -2668,3 +2668,21 @@ delivery first, genuine final-source Miri afterward; full goal/heartbeat ACTIVE.
 
 
 <!-- /CV04b D2 captured ingestion reuse -->
+
+<!-- CV04b D3a source shape admission -->
+D2 is actually published in sole PR17288 at7e1a28f5 with normal push0 and
+verified REST/Git agreement; independent saved postpublication security PASS.
+Its1112P/0F/0I/181-target strict-lint result remains attributed to source60e58439.
+
+Selected bounded [D3a source-inventory shape admission](CV04b-D3a-source-inventory-shape-admission.md).
+Audit confirms generic checked raw decoding ALREADY rejects nested decoded
+duplicate metadata keys; preserve and reuse it. Add a private closed namespace/
+inventory/census gate before traced publication without cloning source/metadata
+or rescanning each root per piece. This specification checkpoint claims no new
+tests or implementation. D3a is structural admission, not source-domain replay
+or source certification; D3b must bind actual bytes and grammar capture.
+Composite identities/full transformation/pass-sweep lineage/output joins/parity,
+current-main conflicts/required hosted checks/actual merge remain OPEN. Base
+ESTree/own types/no new crates.io deps retained. Miri **DEFERRED/PENDING**, never
+passed; frozen inputs/run/target/receipts untouched/unpolled. Full goal/heartbeat ACTIVE.
+<!-- /CV04b D3a source shape admission -->
