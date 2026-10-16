@@ -231,7 +231,7 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
 pub enum WardleyLayoutError {
     Width, Height, Padding, NodeRadius, NodeLabelOffset, AxisFontSize, LabelFontSize,
     NodeCoordinates, EvolutionTarget, NoteCoordinates, AnnotationBoxCoordinates, AnnotationCoordinates, ForceCoordinates, UnknownLinkEndpoint, UnknownEvolutionComponent,
-    DerivedGeometry,
+    PipelineReference, PipelineMembership, DerivedGeometry,
 }
 
 /// Check every scalar before empty-map shortcuts and every reference before the
@@ -274,6 +274,30 @@ pub fn try_layout_wardley(diagram: &WardleyDiagram) -> Result<LayoutedWardleyDia
     if diagram.evolves.iter().any(|e|!names.contains(e.component.as_str())) {
         return Err(WardleyLayoutError::UnknownEvolutionComponent);
     }
+    // Preserve old diagnostics before this new graph boundary. Duplicate IDs
+    // remain compatible on maps without pipeline relationships or parent roles.
+    if !diagram.pipelines.is_empty() || diagram.nodes.iter().any(|n| n.pipeline_parent) {
+        let ids: HashMap<_, _> = diagram.nodes.iter().map(|n| (n.id.as_str(), n)).collect();
+        let parents: HashSet<_> = diagram.pipelines.iter().map(|p| p.parent_id.as_str()).collect();
+        if ids.len() != diagram.nodes.len()
+            || diagram.pipelines.iter().any(|p| !ids.contains_key(p.parent_id.as_str())
+                || p.component_ids.iter().any(|id| !ids.contains_key(id.as_str())))
+            || diagram.nodes.iter().any(|n| n.pipeline_parent != parents.contains(n.id.as_str())) {
+            return Err(WardleyLayoutError::PipelineReference);
+        }
+        let mut membership = HashMap::new();
+        if parents.len() != diagram.pipelines.len()
+            || diagram.pipelines.iter().enumerate().any(|(index, p)| p.component_ids.is_empty()
+                || p.component_ids.iter().any(|id| {
+                    // Same-block occurrences stay in authored order; a shared
+                    // member or any parent-as-member would make moved geometry
+                    // disagree with an earlier rectangle/connector snapshot.
+                    parents.contains(id.as_str())
+                        || *membership.entry(id.as_str()).or_insert(index) != index
+                })) {
+            return Err(WardleyLayoutError::PipelineMembership);
+        }
+    }
     let result=layout_wardley_supported(diagram);
     validate_wardley_geometry(&result)?;
     Ok(result)
@@ -296,6 +320,14 @@ fn validate_wardley_geometry(layout:&LayoutedWardleyDiagram)->Result<(),WardleyL
         ||layout.evolves.iter().any(|e|!point(&e.from)||!point(&e.to))
         ||layout.notes.iter().any(|n|!point(&n.position))
         ||layout.forces.iter().any(|f|!point(&f.position))
+        ||layout.pipelines.iter().any(|p| !p.x.is_finite() || !p.y.is_finite()
+            || !nonnegative(p.width) || !nonnegative(p.height)
+            || p.component_positions.iter().any(|p| !point(p)))
+        ||layout.nodes.iter().filter(|n| n.pipeline_parent).any(|n| {
+            let size = c.node_radius * 1.6;
+            !positive(size) || !(n.position.x - size / 2.0).is_finite()
+                || !(n.position.y - size / 2.0).is_finite()
+        })
         ||layout.annotations_box.as_ref().is_some_and(|p|!point(p))
         ||layout.annotations.iter().any(|a|a.positions.iter().any(|p|!point(p))) {
         return Err(WardleyLayoutError::DerivedGeometry);

@@ -6,10 +6,17 @@
 Published3a84 normalFF verified on solePR17288; wrapper post-assertion1 retained
 separately from push0 and read-only REST/Git reconciliation0. UNMERGED/conflicting/
 autoOFF/no hosted acceptance. Nativec82 strict/full1848/78/996 and force85 strict/
-full1009/56/48wholeScenes independently PASS. New pipeline spec from3a84 precedes
-tests/import/repair (NOT STARTED), selects14pathc138/28blobs rawWITHHELD49edf.
-Bounded flat/nonempty relations, closed readers, first-parent indexing, typed/
-derived guards and20field wholeScene controls required; preserve old48cells and
+full1009/56/48wholeScenes independently PASS. Pipeline spec94/158/c742 preceded
+source886/worke8/typed16bf tests, closed14path import9a6 and reverse-proved old
+constructor ABI d200 (21files/66insertions). At observer36c41fde, four real
+semantic-red commands returned101 with 2passed/8failed, no compiler failures:
+source1/3, work0/2, typed1/1, derived0/2. Parent-last8 actually visited64 nodes;
+interleaved8 visited100. Immutable CV04a-pipeline-semantic-red-36c41fde.json/logs
+retain every failure and frozen source/lock. Separate target and four version-only
+lock changes preserve registry376. Closed readers, first-label ordered index,
+one cached visibility/header, flat typed graph and derived guards are now
+implemented; focused green/full/security/new wholeScene acceptance still PENDING.
+Bounded flat/nonempty relations and20field wholeScene controls required; preserve old48cells and
 literal white force fill. Later stage69adc/native17553 rawWITHHELD9dd1/0d08 remain
 separate, no current-main acceptance. Full Closure/CV04b OPEN; Miri DEFERRED/PENDING,
 frozen run/inputs untouched/unpolled. Keep one active PR and heartbeat active.
