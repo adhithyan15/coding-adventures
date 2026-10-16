@@ -5,4 +5,6 @@ skip:
   COMMENT = /[ \t]*%%[^\r\n]*/
 NEWLINE = /\r?\n/
 HEADER = /wardley-beta/
+ACCELERATOR_LINE = /[ \t]*accelerator[ \t]+[^\r\n]*/
+DEACCELERATOR_LINE = /[ \t]*deaccelerator[ \t]+[^\r\n]*/
 STATEMENT_LINE = /[ \t]*[^\r\n%][^\r\n]*/
