@@ -2624,3 +2624,25 @@ remain untouched and unpolled. Implementation/delivery first, genuine final-sour
 Miri afterward; full objective and heartbeat remain ACTIVE.
 
 <!-- /CV04b D1 consumed source inventory -->
+
+<!-- CV04b D2 captured ingestion reuse -->
+D1 is actually published at a6047612 in sole PR17288: one normal push0 and
+matching saved REST/Git readback, independent carrier/publisher and saved
+postpublication security PASS. Its strict1,100P/0F/0I across180 targets remains
+attributed to tested source a8d79bab. Current PR is unmerged/conflicting with
+auto-mergeOFF; required CI/main reconciliation/actual merge remain gates.
+
+Selected bounded D2 specification:
+[captured ingestion leaf reuse](CV04b-D2-captured-ingestion-leaf-reuse.md).
+The actual typed compiler will move precharged ingestion IDs into its captured
+Tokens and use existing ASI/bridge, preserving shared APIs/limits and the legacy
+public source-based transform facade. No implementation or test execution is
+claimed at this specification checkpoint. Existing CLOC27/CLOC31 plumbing is
+real; exact result-to-inventory operand ancestry must replace disconnected
+rootless parser-token assertions. ASI synthetic semicolons retain cv=None and
+do not acquire invented physical inventory rows. Source-domain certification,
+composite/synthetic stable IDs, full transformation lineage, output-byte/source
+joins and Closure parity remain OPEN. Miri **DEFERRED/PENDING**, NEVER passed;
+frozen run/checkout/inputs/target/receipts untouched and unpolled. Full objective
+and heartbeat ACTIVE; implementation/delivery precedes genuine final-source Miri.
+<!-- /CV04b D2 captured ingestion reuse -->
