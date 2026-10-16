@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-176-POINTING-PLACE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can point to this or that and state that a familiar thing is here, there, or in a familiar place.",
+  "prerequisites": [
+    "PA-EXT-175-FORM-REPAIR-RETURN"
+  ]
+}

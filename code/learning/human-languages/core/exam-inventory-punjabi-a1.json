@@ -339,7 +339,10 @@
       "id": "PA-A1-DEM-01",
       "category": "Sanketak (demonstratives and deixis)",
       "label": "eh and oh: this and that",
-      "probe": null,
+      "probe": [
+        "PA-DEM-EH-01",
+        "PA-PRON-OH-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -351,13 +354,16 @@
         "A1-DEM-03"
       ],
       "punjabiSpecific": false,
-      "note": "NOT TAUGHT. Neither demonstrative appears as a standalone word anywhere in 226 lessons. Three Spanish points on one gap, and it also removes the only way to point at any of the track's nineteen nouns."
+      "note": "Closed by chapter 176 without pretending both halves were new. PA-C42-oh already introduced oh and explicitly taught its distant-demonstrative sense; PA-C176-eh adds the missing proximal partner and practises the near/far contrast on the already-taught kitab."
     },
     {
       "id": "PA-A1-DEM-02",
       "category": "Sanketak (demonstratives and deixis)",
       "label": "ithe and uthe: here and there",
-      "probe": null,
+      "probe": [
+        "PA-LEX-C89-PLACE89-03",
+        "PA-LEX-C89-PLACE89-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -368,7 +374,7 @@
         "A1-NG3-01"
       ],
       "punjabiSpecific": false,
-      "note": "Not taught. With the missing 'where' at PA-A1-Q-04, location cannot be asked about or answered."
+      "note": "Closed by honest wiring, not new vocabulary. PA-C89-itthe and PA-C89-utthe already introduce exact atoms for here and there, while PA-C43-kitthe already teaches where; chapter 176 retrieves all three in one location exchange."
     },
     {
       "id": "PA-A1-PRON-01",
@@ -842,7 +848,9 @@
       "id": "PA-A1-CASE-04",
       "category": "Sambandhak (postpositions and case)",
       "label": "vich: in, at",
-      "probe": null,
+      "probe": [
+        "PA-POSTPOSITION-VICH-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -852,7 +860,7 @@
         "A1-NG3-01"
       ],
       "punjabiSpecific": false,
-      "note": "The principle is taught and the word is not. vich never appears in Gurmukhi anywhere in the corpus."
+      "note": "Closed by PA-C176-vich. The lesson introduces vich after familiar place nouns, contrasts Punjabi's postposition order with English preposition order, and does not award the point before that exact atom exists."
     },
     {
       "id": "PA-A1-CASE-05",
@@ -1615,7 +1623,10 @@
       "id": "PA-A1-ADV-05",
       "category": "Kiria-visheshan (adverbs)",
       "label": "place deictics: here, there",
-      "probe": null,
+      "probe": [
+        "PA-LEX-C89-PLACE89-03",
+        "PA-LEX-C89-PLACE89-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1625,7 +1636,7 @@
         "A1-ADV-01"
       ],
       "punjabiSpecific": false,
-      "note": "See PA-A1-DEM-02."
+      "note": "Closed by the same exact chapter-89 here/there atoms as PA-A1-DEM-02. Chapter 176 retrieves them adverbially in dukaan itthe hai / dukaan utthe hai; no new atom is fabricated for a use the existing lessons already taught."
     },
     {
       "id": "PA-A1-ADV-06",
@@ -1778,7 +1789,9 @@
       "id": "PA-A1-S-06",
       "category": "Vaak (the sentence)",
       "label": "the existential sentence: there is, there are",
-      "probe": null,
+      "probe": [
+        "PA-GRAMMAR-EXISTENTIAL-LOCATION-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "PA-CORPUS",
@@ -1790,7 +1803,7 @@
         "A1-NG1-02"
       ],
       "punjabiSpecific": false,
-      "note": "Not taught. Punjabi uses hai with a location and the track never builds one, so presence and absence cannot be stated."
+      "note": "Closed by PA-C176-location-frame after vich is introduced. The lesson explicitly builds thing + location + hai and contrasts it with a familiar here/there answer; the point probes the frame atom rather than inferring existence from unrelated copular sentences."
     },
     {
       "id": "PA-A1-S-07",
