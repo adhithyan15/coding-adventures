@@ -3,6 +3,19 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 
+<!-- CV04a native16 selected -->
+Native15+annotations progress is published on solePR17288 at e18313b1, actual
+API/Git FF verified; UNMERGED/CONFLICTING/autoOFF. Native93 actual1842/78/936,
+style1e13 actual1000/53/32wholeScenes and strict6/14 independently PASS.
+Incoming native16459 raw shared exp/ln/f64 widening WITHHELD0be/manifest1cdf;
+pendingMosaic35 childcce scopePASS800e/manifest2b, complete44 pending paths.
+This committed spec precedes tests/import/repair in isolatedR1 frome183.
+Next: literal16 controls and exact17/f64fold16 witness before only4dedicated
+15to16 edits; preserve all156oldPrograms/936actualCells and structural13/14/
+15/16. Sixteen-unit implementation/test execution NOT STARTED. Miri remains
+DEFERRED/PENDING, frozen inputs untouched/unpolled; fullClosuregoal OPEN.
+<!-- /CV04a native16 selected -->
+
 <!-- CV04a Wardley annotations selected -->
 Annotation source1e13: focused62 tests/32 whole scene cells, full14 actual
 1000P0F0I/53targets and strict0; independent source/terminal PASS. Native93:
