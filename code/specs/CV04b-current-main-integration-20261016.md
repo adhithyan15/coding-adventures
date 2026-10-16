@@ -252,3 +252,24 @@ complete label PaintRect and both complete emitted glyph runs. Font1 must expose
 width1/height1 floors despite a11.25x1.75 outer box. Font32 retains144x56 outer
 box and132x52 inner frame. Keep font-driven glyph size/positions and effect title
 font18 separate; preserve every existing complete causal scene test.
+
+
+## Native isolated child harness accounting
+
+The existing lang-aot cargo_archive_path target intentionally marks only
+archive_lookup_child ignored in its outer harness. Its nonignored parent launches
+that exact child with --ignored/--exact and isolated Cargo/probe directories,
+asserts normal child success and GC_ARCHIVE_PROBE_PASSED. Preserve the test source
+and isolation. A native validator may account for this existing outer-harness
+3P/1I only when the exact frozen file hash is
+9c7aa3188746c79bf413511c1c38da92e78db8752e441b66d1dd681ccdd3ba94,
+its metadata package/target/source/executable identity matches, the precise ignored
+name/reason is present and the parent passes. All other harnesses require0I;
+all harnesses require0F/0measured/0filtered. Record the one ignored trampoline
+honestly, without treating it as an unexecuted platform waiver or Miri receipt.
+
+Require all24 new19/20/21 source-case pairs to produce actual normal-Exit0 cells,
+no duplicate source/backend tuples, and the independently calculated P/CL/CR
+outputs. Missing toolchains do not count as execution; production tests already
+refuse present-but-unexecuted backends. Full affected suites and strict lint,
+actual target census/frozen inputs and final independent reviews remain gates.

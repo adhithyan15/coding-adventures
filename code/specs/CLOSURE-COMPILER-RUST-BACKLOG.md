@@ -1,45 +1,48 @@
 # Closure Compiler on Rust — parity backlog
 
 <!-- CV04b current-main integration pending -->
-Local main3efe integration is unpublished; merge commits9832c396/eeeac01f/
-7c2e3af2 retain resolved parents. Source67effb89 passes the unfiltered two-package
-ALGOL/Mermaid core:1555P/0F/0I,29 executable targets plus two zero-test doctests;
-strict all-target lint0. Receipt `CV04b-main-v3-core-67effb89.json` is consumed.
-Independent terminal identity/input audit is pending; this is core-only evidence.
+Local main3efe integration is unpublished (merge commits9832c396/eeeac01f/
+7c2e3af2). Full15-package compiler/diagram source58e52fad passes2009P/0F/0I
+across56 executable targets+15 empty doctests, strict all-target lint0; producer
+38726 is consumed. Receipt `CV04b-main-v5-fast-58e52fad.json` freezes7899 inputs
+across209 all-kind local roots, including Apple-only dev roots without claiming
+Apple execution. Independent exact-terminal and complete fixture reviews pending.
 
-Native926 tests pass, including120 exact former authored-source companions;
-92 scalar occurrences and20 generated conditional cells migrate only obsolete
-19-unit quantitative refusals to22 under the dedicated cap21. Shared native
-classification and mixed structural/effect/rounding/resource refusals remain.
-New19/20/21 normal-Exit0 runtime sources are committed but execution is pending.
+Core67 passed1555P/strict0 with independent review6056f7c7. Geometric22 passes
+66P/strict0 with source683d1b2b and terminal32a877d8 reviews. Native926 includes
+120 exact former authored-source companions; independentfaa1cce8 inverse-proves
+all edited files, mixed safety/resource controls and four dedicated cap18→21
+production edits. Shared native classification remains exact. New19/20/21 normal
+Exit0/evaluation-order runtime source cells remain pending actual execution.
 
-New source/typed/private-geometry guards pass12 focused tests at67effb89.
-Actual red/green receipts retain quoted-percent, bare-bracket label and derived
-paint-transform/width failures and repairs. Independent bounded follow-up source
-review is pending; earlier withheld reports remain historical. Full15-package
-7be4bc28 attempt fails compilation on14 derived paint fixture constructors,
-with no test/lint acceptance. Whole IR/scene equality and independently declared
-new path/arrowhead/outline/clipped-link oracles must be retained while migrating.
-Actual tiny-font paint lowering remains pending.
+Complete Wardley/Ishikawa IR/layout/scene/glyph/metadata/ordered-query assertions
+are retained with independent clipped-link, arrow/outline/fish-head, font16 and
+new dedicated annotation/node glyph semantics. Failed full7bec2001P/7F,
+7302002P/6F and4552003P/6F receipts remain. Independent authored inventory found
+12 custom-offset baselines/four root palette entries, repaired58 with whole-file
+inverses. Font1/32 actual parse→layout→paint tests bind all four positive inner
+frame fields, complete PaintRect and both complete glyph runs; full58 executes it.
+The retained ordinary-circle/private pipeline-square overflow test caught an
+unconditional decorator envelope, repaired with exact enabled paint parameters.
 
-The frozen7812 inputs cover194 local forward roots, including all45 needed by
-the Windows core. This deliberately excludes15 roots reachable only through
-three Apple-only diagram-to-paint dev edges; it is not a universal all-host cone.
-Source/locks are idle after consumed producer26088. Validation helper v3 recorded
-expected targets without enforcing equality; independent audit and stronger
-fail-closed target/input/count gates precede broader acceptance.
+V5 workspace validator enforces fresh graph/input key/body/lock stability,
+metadata/artifact/Running identity joins and one exact summary per harness.
+Standalone v7 explicitly traverses its fresh resolved/local-path forward graph;
+static helper review85f0ecf7 passes, actual Closure execution is still pending.
+Native validation preserves the sole existing isolated-child trampoline (3P/1I
+outer target; passing parent executes child); no new test ignores are authorized.
 
 Fresh audit20261016T114956Z: origin/main d09a93b2 advances beyond integrated3efe,
-including native22 changes still unintegrated. Sole PR17288 publishes D3b6132a518,
-conflicting, auto-merge OFF; current integration is not published or delivered.
-Next: finish derived fixtures/paint guards, affected native/downstream runtime,
-standalone Closure and strict lint, exact-head source/terminal security review,
-then fresh main/PR/check reconciliation before publication. Full composite/
-synthetic identities, transformation/pass-sweep lineage, output-byte/source joins
-and evidence-backed Closure parity remain OPEN. Miri **DEFERRED/PENDING**, never
-passed; frozen run/checkout/inputs/receipts/target untouched and unpolled.
-Implementation/delivery first, genuine final-source Miri afterward. Base ESTree
-boundary, own types, no new crates.io dependencies. Full goal/heartbeat ACTIVE.
+including native22 still unintegrated. Sole PR17288 publishes D3b6132a518,
+conflicting, auto-merge OFF. Next: affected native/downstream normal runtime,
+standalone Closure/strict, current-main conflict reconciliation, documentation
+and exact-head source/terminal review before publication/CI/actual merge.
+Composite/synthetic identities, full transformation/pass-sweep lineage,
+output-byte/source joins and evidence-backed Closure parity remain OPEN.
+Miri **DEFERRED/PENDING**, never passed; frozen run/checkout/inputs/receipts/target
+untouched and unpolled. Implementation/delivery first, genuine final-source Miri
+afterward. Base ESTree boundary, own types, no new crates.io dependencies.
+Full objective and heartbeat ACTIVE.
 <!-- /CV04b current-main integration pending -->
 
 <!-- CV04a dedicated native18 selected -->
