@@ -783,8 +783,8 @@ configuration parity, and interactive behavior remain unsupported at the partial
 The global Mermaid `fontSize` setting survives typed causal IR, scales cause-label
 geometry during layout, and selects the matching glyph size before Paint lowering.
 Global `look: handDrawn` and `handDrawnSeed` settings also survive causal IR;
-layout deterministically perturbs spine and bone paths before backend-neutral Paint
-lowering. Hand-drawn effect and cause-box outlines remain part of the visual parity gap.
+layout deterministically perturbs spine, bone, effect-box, and cause-box paths before
+backend-neutral Paint lowering. RoughJS hachure fill remains part of the visual parity gap.
 Every causal bone also carries a tangent-aligned arrowhead through layout IR and lowers
 to a filled backend-neutral Paint path in both classic and hand-drawn modes.
 
