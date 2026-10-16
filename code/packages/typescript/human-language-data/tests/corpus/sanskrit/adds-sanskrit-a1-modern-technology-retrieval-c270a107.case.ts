@@ -2,13 +2,12 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { expect, it } from "vitest";
-import { measureExamCoverage } from "../../../src/exam-inventory.js";
 import {
-  loadEverything,
   loadExamInventory,
   loadTrackChapters,
   loadTrackLessons,
 } from "../../../src/loader.js";
+import { sanskritA1PointCoverage } from "../sanskrit-a1-point-coverage.js";
 
 it("retrieves the two existing Sanskrit A1 modern-technology nouns twice", () => {
   const lessons = loadTrackLessons("sanskrit");
@@ -141,8 +140,7 @@ it("retrieves the two existing Sanskrit A1 modern-technology nouns twice", () =>
   expect(inventory.points.find((point) => point.id === "SA-A1-M-13")?.probe).toEqual(
     pointAtoms,
   );
-  const coverage = measureExamCoverage(inventory, loadEverything().lessons);
-  expect(coverage.points.find((point) => point.id === "SA-A1-M-13")).toMatchObject({
+  expect(sanskritA1PointCoverage("SA-A1-M-13")).toMatchObject({
     covered: true,
     missingAtoms: [],
     unmapped: false,

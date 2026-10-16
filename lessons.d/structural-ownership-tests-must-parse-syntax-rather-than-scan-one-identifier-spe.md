@@ -11,10 +11,10 @@ destructuring binding, bracket notation, or another matcher and remain green.
 Comments and string literals could also create false owners.
 
 When the contract is about program structure, parse the language syntax and
-test the semantic shapes that violate the contract. Follow direct calls,
-import aliases, variable aliases, and later assignments, and allow only the
-specific narrow access pattern the non-owner needs. Include adversarial
-fixtures for inline calls, aggregate computations through an otherwise safe
-property, and obvious alternate spellings before relying on the guard. Text
-search is appropriate for exact generated tokens; it is not an ownership
-boundary when ordinary refactoring changes how the same behavior is spelled.
+test the semantic shapes that violate the contract. Prefer a capability
+boundary over an open-ended taint analysis: expose a point-only helper to
+feature tests, then use the AST to forbid imports of the aggregate measurement
+capability outside its census owner. Include adversarial fixtures for renamed
+and namespace imports before relying on the guard. Text search is appropriate
+for exact generated tokens; it is not an ownership boundary when ordinary
+refactoring changes how the same behavior is spelled.

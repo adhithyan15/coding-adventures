@@ -1,11 +1,10 @@
 import { expect, it } from "vitest";
-import { measureExamCoverage } from "../../../src/exam-inventory.js";
 import {
-  loadEverything,
   loadExamInventory,
   loadTrackChapters,
   loadTrackLessons,
 } from "../../../src/loader.js";
+import { sanskritA1PointCoverage } from "../sanskrit-a1-point-coverage.js";
 
 it("turns owned Sanskrit market words into a gentle A1 price exchange", () => {
   const lessons = loadTrackLessons("sanskrit");
@@ -135,9 +134,8 @@ it("turns owned Sanskrit market words into a gentle A1 price exchange", () => {
   expect(inventory.points.find((point) => point.id === "SA-A1-M-09")?.probe).toEqual(
     shoppingAtoms,
   );
-  const coverage = measureExamCoverage(inventory, loadEverything().lessons);
   for (const id of ["SA-A1-EV-02", "SA-A1-M-09"]) {
-    expect(coverage.points.find((point) => point.id === id)).toMatchObject({
+    expect(sanskritA1PointCoverage(id)).toMatchObject({
       covered: true,
       missingAtoms: [],
       unmapped: false,
