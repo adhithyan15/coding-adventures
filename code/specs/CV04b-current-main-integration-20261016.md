@@ -230,3 +230,13 @@ intermediate binary arithmetic. Independently calculate the declared spacing127,
 attachment173, tip=173-127*0.48 and label=tip+127*0.24 before spelling exact f64
 literals. Keep whole layout/scene equality, every old source case and all glyphs;
 do not replace these assertions with a tolerance or observed-output snapshot.
+
+
+The730 successor executes2002P/6F, strict not run. All Ishikawa whole cases now
+pass. Retain the exact ordered resolver trace: anchors add the700-weight query,
+shared with notes/annotations/forces by the existing size-independent font key.
+Annotation connectors/markers/boxes use their dedicated stroke/fill/text fields,
+not axis/background fields. The retained root-fallback note case explicitly
+inherits annotation text#202122 and fill#101112 from its authored root theme;
+nested-only cases retain dedicated default annotation colors. Preserve all six
+whole-scene functions and every glyph/metadata/resolver assertion.
