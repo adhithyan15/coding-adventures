@@ -97,6 +97,41 @@ verify real merge reachability before cleanup.
 
 ## Remaining objective
 
+## Incoming-field security closure before publication
+
+The first real integration preserves two recorded merge parents8093cdda and
+175666b3. Eight focus controls pass at a0858b75; this is not full-suite acceptance.
+Independent immutable-eeeac01f review identifies additional incoming-field
+boundaries. Existing numerical19-unit conditional-arm refusals become22-unit
+refusals with all four former source expressions retained as positives. The
+shifted-conditional structural refusals stay unchanged. Whole-IR fixtures gain
+every new semantic and layout field, including link midpoint/angle; root theme
+fallback fixtures explicitly assert the new annotation background/text cascade.
+
+Wardley label offsets must be finite signed integers with magnitude at most
+65536. Source rejects invalid authored offsets; typed layout returns the new
+NodeLabelOffsets error only after every existing input diagnostic, preserving
+old priority. Derived layout checks offsets and the actual final text positions,
+link label position/angle and all newly painted decorator parameters. Independent
+forged layout controls must reject nonfinite/overflowing new fields. Link endpoint
+labels use the same active-quote/escape decoding as component labels; interior
+quoted operators cannot become the structural link operator. Keep malformed
+suffix rejection and all current incoming flow/dashed/label capabilities.
+
+Ishikawa root fontSize accepts1..=65536, default16 for unsupported source or typed
+values. Share its explicit cap in diagram-ir; layout normalizes only this newly
+introduced field and reports the normalized config. Preserve existing ordinary
+and hand-drawn geometry. Paint clamps the scaled label's inner text height to
+at least1 so a supported fontSize1 cannot create a negative text box. New tests
+cover extreme finite/nonfinite typed values, authored extremes, exact supported
+cap/default normalization and actual positive finite label/outline geometry.
+
+The first all-workspace validator froze18030 objects and was deliberately stopped
+before any Cargo command after checking its exact PID/command and zero children.
+Its incomplete receipt has no results and is withheld, not failed test evidence.
+Use the complete metadata-derived affected/forward source set for the next
+validator; preserve its frozen bytes and all existing Miri targets untouched.
+
 The15-input read-only node-occurrence audit preserves real CLOC27/D1-D2 leaf
 reuse and folding; bridge prose saying every cv is None is stale. Composite/
 synthetic identities, full fold/rename/inline/motion/merge/delete and pass/sweep
