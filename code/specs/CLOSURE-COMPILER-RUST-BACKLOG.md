@@ -3,6 +3,26 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 
+<!-- CV04a Wardley annotations selected -->
+R2 starts from fixed93 native15 source in a separate target/worktree from active
+R1full16959. Spec precedes annotation tests/import/repair. Native15 source8e43
+and focus54/1/1 PASS; strict6actual0/full78 PENDING, not accepted or delivered.
+Style33 independently accepted989/50/strict14 remains attributed; unpublished
+cf5f Markdown carrier preserved, oldhelper publication REFUSED beforepush on
+main advance. SolePR17288 actualpublished261 remains UNMERGED/AUTOOFF.
+Latest inspected5b adds cfb annotations12 +Sanskrit35 after4f. Annotation raw
+WITHHELDa9d61642/manifest e177130d: default30-entry clamp panic, quadraticgroup
+lookup, activequote/comment mismatch and new typed/derived coordinate gaps.
+Pure35 review16fd5822/manifest70520c73 classifies complete70slots, no TS/runtime
+claim. Next testfirst/complete47path closedmerge retains native93 wholebytes;
+bounded indexed grouping/quoted text/checkedcoordinates/totalbox placement,
+reversible old16 scene ABI+zeroCount migration and independent newwholeoracles.
+Retain Venn13files/232cells,Ishikawa37/IR67. 8192 is cfg(test)-only classifier
+observer/assertion, not a production counter/cap. Correct inherited wording
+in finalMDcarrier. FrozenMiri DEFERRED/PENDING untouched/unpolled; fullClosure
+parity/outputbyte/full lineage/stableIDs/spans/passsweep/CV04b OPEN heartbeatACTIVE.
+<!-- /CV04a Wardley annotations selected -->
+
 <!-- CV04a native15 current checkpoint -->
 Native15 main4f (parent61) has9 paths/18 slots/16 real blobs/2 absent shards;
 raw incoming review5cf99164 WITHHELD, manifest e9ee35e5. This specification

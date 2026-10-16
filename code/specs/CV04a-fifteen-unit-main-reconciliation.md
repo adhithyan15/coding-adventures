@@ -31,7 +31,7 @@ One resolved unshadowed direct sign root, supported additive/unary/parenthesized
 abs/entier wrappers and one conditional front retain their owned shape boundary.
 Preserve shared narrow exp/log/legacy helpers, all read-once/root/identity/arity/
 body/type/alias/effect/selector/context/condition guards, conversion and trap
-behavior,8192 production/work caps and the no-proof-bit-restoration policy.
+behavior,existing8192 cfg(test) visit controls and the no-proof-bit-restoration policy.
 No new crates.io dependency or unsafe/production-limit change.
 
 ## Exact test-first boundary and runtime evidence
@@ -87,3 +87,7 @@ dependencies remain owner choices. Full Closure parity/output-byte-to-source/
 folding,renaming,inlining,motion,merging,deletion lineage/stable IDs/spans/pass-
 sweep ordering/CV04b remain OPEN. Genuine final-source Miri follows implementation
 delivery; full completion and heartbeat deletion require that genuine acceptance.
+
+Clarification before annotation integration: production has no classifier work
+counter or cap. Its admission/depth limits are separate from the existing8192
+cfg(test) observer/assertion; preserve both without implying a production cap.

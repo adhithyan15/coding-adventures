@@ -143,3 +143,18 @@ preserve its source, receipt and failure. Correct only the baseline pointer,
 retain all source/resource/lock/registry and target-count guards, and bind the
 subsequent actual v2 strict0/full989/50 result to source33ac7884. Namespace edits
 must distinguish new output names from immutable prior evidence inputs.
+
+
+Successful default-captured Cargo logs do not contain a passing test's stderr
+diagnostics. The native15 v1 preflight incorrectly searched the old full14 log
+for876 event lines and refused before metadata/Cargo. Preserve it; the actual
+immutable13 focused log has816 events and14 focused has60. Bind both hashes and
+source attribution, then request nocapture in the new full run so every old/new
+event can be checked. That new run is pending until genuinely consumed.
+The v2 target parser then refused before strict/tests because Windows uses
+tests-backslash paths. Preserve it too. Use the real Running binary/Doc-tests
+records, strip only artifact hashes and retain all78 ordered identities/counts;
+do not drop unmatched targets or relax raw1470/native2856/style838 checks.
+Correctedv3 preflight/strict passed; full tests remain pending at this checkpoint.
+The classifier's8192 observer is cfg(test)-only; documentation must distinguish
+test work controls from actual production admission/depth guarantees.
