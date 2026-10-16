@@ -2262,6 +2262,74 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_mermaid_timeline_to_png_retained_before_timeline_configuration() {
+        let (title, timeline) = parse_timeline(
+            "timeline TD\naccTitle: Product history\naccDescr: Native release milestones\ntitle Native timeline\nsection Foundation\n2024 : Prototype\n     : First customer\nsection Growth\n2025 : General availability",
+        ).expect("timeline parse failed");
+        let layout = layout_temporal_diagram(&TemporalDiagram {
+            kind: TemporalKind::Timeline,
+            title,
+            body: TemporalBody::Timeline(timeline),
+        }, 720.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_temporal(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert_eq!(
+            scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")),
+            Some(&"Product history".to_string())
+        );
+        assert!(!scene.instructions.is_empty());
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_timeline_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_timeline_to_png_retained_before_left_margin() {
+        let (title, timeline) = parse_timeline(
+            "%%{init: {\"timeline\": {\"padding\": 64, \"useMaxWidth\": true, \"disableMulticolor\": true}, \"themeVariables\": {\"cScale0\": \"#d8f3dc\", \"cScaleLabel0\": \"#173b24\", \"cScaleInv0\": \"#40916c\"}}}%%\ntimeline TD\naccTitle: Product history\naccDescr: Native release milestones\ntitle Native timeline\n2024 : Prototype\n     : First customer\n2025 : General availability",
+        ).expect("timeline parse failed");
+        let layout = layout_temporal_diagram(&TemporalDiagram {
+            kind: TemporalKind::Timeline,
+            title,
+            body: TemporalBody::Timeline(timeline),
+        }, 720.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_temporal(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0),
+            title_font: font_spec("Helvetica", 17.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert_eq!(
+            scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")),
+            Some(&"Product history".to_string())
+        );
+        assert_eq!(
+            scene.metadata.as_ref().and_then(|metadata| metadata.get("timeline.disableMulticolor")),
+            Some(&"true".to_string())
+        );
+        assert!(!scene.instructions.is_empty());
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_timeline_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
     fn render_mermaid_event_modeling_to_png() {
         let diagram = parse_event_modeling(
             "%%{init: {\"eventmodeling\": {\"padding\": 24, \"rowHeight\": 40, \"useMaxWidth\": false}, \"themeVariables\": {\"emCommandFill\": \"#cdeffd\", \"emCommandStroke\": \"#405060\"}}}%%\neventmodeling\ntitle Checkout flow\naccTitle: Checkout event model\nentity Sales.CheckoutUI\nentity Sales.SubmitOrder\nentity Sales.OrderSubmitted\nrf 01 ui Sales.CheckoutUI\ntf 02 cmd Sales.SubmitOrder ->> 01 [[OrderData]]\ntf 03 evt Sales.OrderSubmitted ->> 02 `text`\"order accepted\"\ndata OrderData `json`{ \"total\": 42 }\nnote 02 `md` {\n  Order reviewed\n}\ngwt 02 given evt CartCreated when ui CheckoutUI then evt OrderSubmitted",

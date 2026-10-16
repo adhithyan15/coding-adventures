@@ -16302,6 +16302,29 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn timeline_preserves_render_configuration_from_init_and_front_matter_retained_before_left_margin() {
+        let (_, init) = parse_timeline(
+            "%%{init: {\"timeline\": {\"padding\": 72, \"useMaxWidth\": true, \"disableMulticolor\": true}, \"themeVariables\": {\"cScale0\": \"#112233\", \"cScaleLabel0\": \"#fefefe\", \"cScaleInv0\": \"#445566\"}}}%%\n\
+             timeline\n2025 : Public beta\n2026 : General availability\n",
+        )
+        .unwrap();
+        assert_eq!(init.config.padding, 72.0);
+        assert!(init.config.use_max_width);
+        assert!(init.config.disable_multicolor);
+        assert_eq!(init.config.section_colors[0], "#112233");
+        assert_eq!(init.config.section_label_colors[0], "#fefefe");
+        assert_eq!(init.config.section_inverse_colors[0], "#445566");
+
+        let (_, front_matter) = parse_timeline(
+            "---\nconfig:\n  timeline:\n    padding: 24\n    useMaxWidth: true\n    disableMulticolor: true\n---\ntimeline\n2025\n",
+        )
+        .unwrap();
+        assert_eq!(front_matter.config.padding, 24.0);
+        assert!(front_matter.config.use_max_width);
+        assert!(front_matter.config.disable_multicolor);
+    }
+
+    #[test]
     fn timeline_rejects_invalid_padding_by_falling_back_to_upstream_default() {
         let (_, negative) = parse_timeline(
             "%%{init: {\"timeline\": {\"padding\": -1}}}%%\ntimeline\n2025\n",
