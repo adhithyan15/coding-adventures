@@ -271,7 +271,7 @@ fn piece_token<'a>(
     }
 }
 // Exhaustive enum matching freezes wire spelling independently of Debug/Display.
-fn token_name(kind: TokenType) -> &'static str {
+pub(super) fn token_name(kind: TokenType) -> &'static str {
     match kind {
         TokenType::Name => "Name",
         TokenType::Number => "Number",

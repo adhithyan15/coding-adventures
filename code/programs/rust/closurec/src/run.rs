@@ -1086,10 +1086,9 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     run_compiler_with_shape_limits(config, source_domain::ShapeLimits::default())
 }
 
-// D3b red scaffold only: the new retention refusal is not wired yet.
 #[cfg(test)]
-fn run_compiler_with_replay_limits(config: &CompilerConfig, _limits: source_replay::ReplayLimits) -> Result<CompilerOutput, CompilerError> {
-    run_compiler(config)
+fn run_compiler_with_replay_limits(config: &CompilerConfig, limits: source_replay::ReplayLimits) -> Result<CompilerOutput, CompilerError> {
+    run_compiler_with_limits(config, source_domain::ShapeLimits::default(), limits)
 }
 
 // The production entry always supplies fixed private defaults. This seam lets
@@ -1098,6 +1097,14 @@ fn run_compiler_with_replay_limits(config: &CompilerConfig, _limits: source_repl
 fn run_compiler_with_shape_limits(
     config: &CompilerConfig,
     shape_limits: source_domain::ShapeLimits,
+) -> Result<CompilerOutput, CompilerError> {
+    run_compiler_with_limits(config, shape_limits, source_replay::ReplayLimits::default())
+}
+
+fn run_compiler_with_limits(
+    config: &CompilerConfig,
+    shape_limits: source_domain::ShapeLimits,
+    replay_limits: source_replay::ReplayLimits,
 ) -> Result<CompilerOutput, CompilerError> {
     config.special_modes.correlation_vector_limits.validate()
         .map_err(provenance_error("configuration"))?;
@@ -1254,6 +1261,10 @@ fn run_compiler_with_shape_limits(
     let mut source_inventory_budget = source_inventory::SourceInventoryBudget::new(
         source_inventory::SourceInventoryLimits::default(),
     ).map_err(provenance_error("source_inventory"))?;
+    let mut source_catalog = if config.special_modes.correlation_vector {
+        Some(source_replay::SourceCatalog::new(inputs.len(), map_language_in_to_es_version(config), replay_limits)
+            .map_err(provenance_error("source_replay"))?)
+    } else { None };
     for path in &inputs {
         let contents = fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {
             path: path.clone(),
@@ -1272,6 +1283,14 @@ fn run_compiler_with_shape_limits(
                 &mut source_inventory_budget,
             ).map_err(provenance_error("source_inventory"))?)
         } else { None };
+        // Move the actual consumed allocation before defines/stamping/ASI can
+        // alter the captured Tokens. Borrow it for the existing transform flow.
+        let contents: &str = match (&mut source_catalog, &recorded) {
+            (Some(catalog), Some(recorded)) => catalog.retain(contents, &recorded.id,
+                recorded.tokens.as_ref().ok().map(Vec::as_slice)).map_err(provenance_error("source_replay"))?,
+            (None, None) => &contents,
+            _ => return Err(provenance_error("source_replay")("source catalog ingestion invariant".into())),
+        };
         let (cv_id, mut captured, mut token_cv_ids) = match recorded {
             Some(recorded) => (Some(recorded.id), Some(recorded.tokens), recorded.token_ids),
             None => (None, None, Vec::new()),
@@ -1992,8 +2011,8 @@ fn run_compiler_with_shape_limits(
     let mut cv_sidecar_written: Option<PathBuf> = None;
     if config.special_modes.correlation_vector {
         // Admit the full physical inventory before any filter, format, summary
-        // or prepared output is published. Shape is not source-content replay.
-        source_domain::admit_publication(&cv_log, shape_limits).map_err(|error| {
+        // or prepared output is published, then bind shape to consumed buffers.
+        let shape = source_domain::admit_publication(&cv_log, shape_limits).map_err(|error| {
             match error {
                 source_domain::AdmissionError::Shape(message) => provenance_error("source_domain")(message),
                 source_domain::AdmissionError::Graph(message) => {
@@ -2006,6 +2025,8 @@ fn run_compiler_with_shape_limits(
                 }
             }
         })?;
+        source_catalog.as_ref().ok_or_else(|| provenance_error("source_replay")("missing source catalog".into()))?
+            .validate(&shape, &per_file_cv_ids, &inputs).map_err(provenance_error("source_replay"))?;
         // CLOC11.69 — format selection. `None` short-circuits
         // the whole write step: the CV log is still computed
         // (the rest of the function ran) but nothing hits disk.
