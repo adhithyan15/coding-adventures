@@ -38,7 +38,8 @@ or leave earlier connectors/rectangles referring to old node positions. Unsuppor
 nested/repeated structures remain a declared parity gap, not full Mermaid parity.
 
 Typed PipelineReference covers unknown parent/member IDs and inconsistent parent
-role flags; PipelineMembership covers empty/unsupported/repeated/cross-block
+role flags, and ambiguous duplicate node IDs when pipelines or parent roles are
+present. Old no-pipeline/no-parent ID behavior stays unchanged. PipelineMembership covers empty/unsupported/repeated/cross-block
 relationships. Preserve every existing scalar/node/evolve/note/annotation/force
 gate and old UnknownLinkEndpoint/UnknownEvolutionComponent priority. New reference
 then membership checks follow those old reference errors and precede arithmetic.
