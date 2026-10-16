@@ -78,6 +78,11 @@ use coding_adventures_javascript_ast::{
 };
 use coding_adventures_javascript_tokens::EsVersion;
 
+mod occurrence;
+pub use occurrence::{
+    grammar_to_program_with_array_observer, ArrayOccurrenceObserver, ObservedBridgeError,
+};
+
 // =========================================================================
 // Public error type
 // =========================================================================
