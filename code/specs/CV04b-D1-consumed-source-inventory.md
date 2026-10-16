@@ -184,3 +184,14 @@ Miri DEFERRED/PENDING, never passed. Implementation/delivery first, genuine
 final-source Miri afterward. This spec, D1 implementation, and even passing D1
 producer tests do not complete the full Closure parity/lineage contract or justify
 disabling the heartbeat.
+
+## First test-fixture classification correction
+
+The first D1 test-only run4afe02af actually returned1P7F: six exact input
+descriptor failures and one invalid lexical-error control. The legacy/capture
+baseline guard correctly refused classifying @ as an ordinary ES2025 lexer
+error, because that edition adds an AT decorator terminal. Preserve its full
+log/receipt and wrapper1; do not claim seven producer-semantic failures. Change
+only the error fixture to the existing CV04-tested var x= followed by NUL,
+retain @ as an available ES2025 companion, and test its earlier-edition refusal.
+Keep all exact inventory/schema/parent/coordinate assertions and source APIs.
