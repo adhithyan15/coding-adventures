@@ -1,0 +1,1 @@
+| W1 | writing-runway | connected A2 message | content-only plan → model-free 70–90-word Bengali-script draft → four-pass review; only taught Bengali atoms are allowed, and the untimed attempt proves no A2 readiness |
