@@ -3572,19 +3572,50 @@ mod tests {
         // Both source-names present.
         assert!(body.contains("\"source\":\"compilation_level\""));
         assert!(body.contains("\"source\":\"defines\""));
-        // pass_order in the CVLog dump should show lex FIRST
-        // (CLOC11.64 added per-token CV emission ahead of
-        // transform_source_with_cv), then compilation_level,
-        // then defines. Other passes follow (CLOC11.62 adds
-        // charset; later slices add more). Pin the prefix to
-        // keep the per-file ordering invariant while staying
-        // tolerant of new passes.
-        assert!(
-            body.contains(
-                "\"pass_order\":[\"lex\",\"compilation_level\",\"defines\""
-            ),
-            "expected pass_order to start with [lex, compilation_level, defines, ...], got: {body}"
-        );
+        // D1 finalizes the consumed-source inventory before the legacy lex
+        // summary. Bind the complete stage list and actual journal positions;
+        // neither field presence nor a tolerant prefix proves their order.
+        let wire: serde_json::Value = serde_json::from_str(&body).unwrap();
+        coding_adventures_correlation_vector::CVLog::from_checked_json(
+            &body, coding_adventures_correlation_vector::GraphLimits::default(),
+        ).unwrap();
+        assert_eq!(wire["pass_order"], serde_json::json!([
+            "source.inventory", "lex", "compilation_level", "defines",
+            "charset", "write_output_file",
+        ]));
+        let roots: Vec<_> = wire["entries"].as_object().unwrap().iter()
+            .filter(|(_, entry)| entry["origin"]["source"] == "input_file")
+            .collect();
+        assert_eq!(roots.len(), 1);
+        let (root_id, root) = roots[0];
+        let pairs: Vec<_> = root["contributions"].as_array().unwrap().iter()
+            .map(|event| (event["source"].as_str().unwrap(), event["tag"].as_str().unwrap()))
+            .collect();
+        assert_eq!(pairs, vec![("source.inventory", "finalized"),
+            ("lex", "tokens_emitted"), ("compilation_level", "simple_v2"),
+            ("defines", "applied")]);
+        let events = wire["journal"]["events"].as_array().unwrap();
+        let contributions: Vec<_> = events.iter().enumerate().filter(|(_, event)|
+            event["event"]["kind"] == "contribution" && event["event"]["entity"] == root_id.as_str()
+        ).collect();
+        assert_eq!(contributions.len(), 4);
+        for (index, (_, event)) in contributions.iter().enumerate() {
+            assert_eq!(event["event"]["index"], format!("{index:016x}"));
+            assert!(event["context"].is_null());
+        }
+        let pipelines: Vec<_> = events.iter().enumerate().filter(|(_, event)|
+            event["event"]["kind"] == "context_begin" && event["event"]["scope"]["kind"] == "pipeline"
+        ).collect();
+        assert_eq!(pipelines.len(), 1);
+        let (begin, pipeline) = pipelines[0];
+        let ends: Vec<_> = events.iter().enumerate().filter(|(_, event)|
+            event["event"]["kind"] == "context_end" && event["event"]["begin"] == pipeline["sequence"]
+        ).collect();
+        assert_eq!(ends.len(), 1);
+        let (end, terminal) = ends[0];
+        assert_eq!(terminal["event"]["outcome"]["kind"], "converged");
+        assert!(contributions[0].0 < contributions[1].0 && contributions[1].0 < begin
+            && begin < end && end < contributions[2].0 && contributions[2].0 < contributions[3].0);
         let _ = fs::remove_dir_all(&dir);
     }
 
