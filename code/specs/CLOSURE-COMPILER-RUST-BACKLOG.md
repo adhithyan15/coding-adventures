@@ -2860,3 +2860,28 @@ pending at this carrier checkpoint. Main a7a3e197 re-audited with12 open PR file
 sets, both backlogs and epic15830; OPEN/CONFLICTING/autoOFF/0 attached checks.
 
 <!-- /CV04b D3b trusted source replay -->
+
+
+### CV04b native25 recovery checkpoint (2026-10-16)
+
+Maina2 integrated by137c8e21 with a reviewed closed tree; dedicated native25
+four-place repair0b9e8bd0 retains the bounded shared proofs. Migration4b8c
+retains233 safety occurrences,126+137 old positives and44 runtime sources.
+Genuine cap24 red63666 consumed0:2P/1F,138 exact25 refusals,4 guards and7 raw26
+controls. Independent migration/red550b63b9 and production177d0cde reviews PASS
+only for their immutable source scopes.
+
+Green24222 consumed1/OSError28, empty JSON/incomplete log preserved. Space
+recovered externally; separately named atomic-receipt retry38017 consumed1:
+actual compiled972P/1F, sole failure missing print_str capture for the correct
+P24 oracle. No full green, strict or runtime acceptance. Spec-first observer
+correction precedes the test-only fix; all raw programs/oracles remain exact.
+Staged native25 runtime15 plan preserves old44; not applied/executed here.
+
+Latest audited mainf3a7eae0 remains pending beyonda2: section groupinged453613,
+typography1785d889, bare-header LR default4a54c89d, native26fcd4e661/native27b5e7fb1d,
+timeline compatibility07132543, plus later downstream compatibility/CI frames.
+Re-audit live source before importing; raw shared-proof widening remains excluded.
+Sole PR17288 published6132 remains unmerged/conflicting/autoOFF with0 checks.
+Full Closure lineage/parity and final-source validation remain OPEN. Miri
+DEFERRED/PENDING, never passed; frozen run/inputs/receipts/target untouched.

@@ -48,3 +48,25 @@ current conflict-free review-clean exact-head terminal checks gate auto-merge.
 Verify actual main reachability before cleanup. Miri DEFERRED/PENDING, frozen
 run/checkout/inputs/receipts/target untouched and unpolled. Full Closure parity,
 output-byte/source joins and transformation-lineage completion remain OPEN.
+
+## Complete-output observer correction after genuine full-suite failure
+
+The recorded v2 full compiler run at0b9e8bd0 genuinely compiled but finished
+972P/1F, so strict and later harnesses did not run. Its runtime-compile25 row
+executed the literal P through VM print_str, outside the putchar/print_i64
+capture, and compared captured24 with the correct expectedP24. Keep the failed
+receipt and log as failed; neither source behavior nor the P24 oracle changes.
+
+Before the next full run, register print_str in this new exact-source test only.
+Require exactly one string argument and append its exact UTF8 bytes to the same
+ordered bounded buffer used by putchar/print_i64. Keep every complete source,
+expected stdout, typed-return assertion, occurrence identity and existing guard
+unchanged. The existing complete effectful source must pass P24, so losing,
+duplicating or reordering P cannot pass. No production/shared proof/VM builtin
+implementation changes. Preserve native25 red and source reviews with their
+original heads; obtain fresh exact-head test/terminal review for the correction.
+
+The first green attempt24222 failed writing its receipt with OSError28 and left
+an empty JSON/incomplete log; it never passed. Use a separately named retry,
+check free space, and replace its working receipt atomically. Keep the frozen
+Miri inputs/checkout/target/receipts untouched: Miri DEFERRED/PENDING.
