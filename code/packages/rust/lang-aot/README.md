@@ -1443,3 +1443,40 @@ main-return ABI. Both compiler/LANG strict commands passed. These are local
 scoped receipts; broader final-source checks and PR/CI delivery remain pending.
 Miri DEFERRED/PENDING, never passed; genuine final-source acceptance follows
 implementation delivery.
+
+
+## Reviewed twenty-five-unit canonical offsets (CV04b)
+
+The dedicated outer-entier proof admits canonical literal units0..25 with
+checked cumulative absolute units; wrappers and cancellation cannot refund
+the budget. All other production arithmetic, including shared exp/ln proofs,
+stays unchanged. The raw incoming shared-helper widening is excluded.
+
+At immutable9a6818c7 the complete compiler package passes1006 tests across five
+executables plus an empty doctest harness, with zero failures/ignores/filters,
+and strict all-target lint passes. All138 original25-unit source occurrences
+have exact formatter bytes and typed-return checks;137 prior24-unit and126
+prior22-unit positive occurrences remain. Quantitative26 refusals,233 retained
+safety occurrences, four explicit new guards and seven raw26 controls remain.
+Independent compiler terminal review6e874bdb binds this exact source and run.
+
+At immutable8d0f05e0 the complete old44-source runtime module is an exact prefix
+of the15-source append. All59 declared sources execute354 unique source/backend
+tuples on NativeAot, LLVM, WASM, JVM, VM and JIT;54 VM/JIT Float observations
+match exact bits. Effect markers, both branch outcomes and raw incoming sources
+are checked. Runtime stdout retains its existing trim policy; direct unit VM
+formatter bytes are exact. CLR is unavailable and uncounted; normal native/LLVM
+process completion leaves typed-main ABI OPEN. Focused integration/observer/
+compile26-refusal controls and both compiler/LANG strict commands pass.
+
+Failed evidence stays failed: producer24222 exhausted disk writing a receipt;
+retry38017 compiled972P/1F because the direct unit observer omitted print_str.
+Spec186d preceded test-only capture9a, retaining the correct complete P24 source
+and oracle. Numeric output and literal effects now share one bounded ordered
+buffer. The isolated retry uses atomic working receipts and no incremental or
+debug artifacts. No frozen Miri files or run were changed to recover disk.
+
+These local source-bound checkpoints do not establish current-main/downstream/
+Closure parity or PR delivery. New main frames remain pending reconciliation.
+Full output-byte/source joins and transformation lineage remain OPEN. Miri is
+DEFERRED/PENDING, never passed; genuine final-source validation follows delivery.

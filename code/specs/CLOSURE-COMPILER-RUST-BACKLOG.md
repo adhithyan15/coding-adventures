@@ -2885,3 +2885,29 @@ Re-audit live source before importing; raw shared-proof widening remains exclude
 Sole PR17288 published6132 remains unmerged/conflicting/autoOFF with0 checks.
 Full Closure lineage/parity and final-source validation remain OPEN. Miri
 DEFERRED/PENDING, never passed; frozen run/inputs/receipts/target untouched.
+
+
+### CV04b native25 completed local checks (supersedes the recovery failure checkpoint)
+
+Disk recovered externally; no cleanup performed here. Spec-first186d and
+observer-only9a preserve the failed24222/38017 evidence and every P24/source/
+typed oracle. Corrected9a passes full1006 compiler tests/emptydoc/strict0;
+independent terminal6e874bdb PASS. Runtime append8d preserves all44 old sources
+and adds15. Producer60993 consumed0 after seven commands:59 exact sources,
+354 six-backend tuples,54 VM/JIT Float-bit observations; integration4P,
+affine-observer1P, compile26-refusal1P and compiler/LANG strict0. Each focused
+LANG run reports526 intentionally filtered tests; this is no full LANG-suite
+claim. Runtime stdout retains trim; direct unit formatter bytes remain exact.
+CLR absent/uncounted; native/LLVM typed-main ABI OPEN. Runtime source review
+df37433a PASS; its independent terminal report is separately bound to8d.
+
+Artifacts: CV04b-native25-units-v2-green-9a6818c7.json (a1cbb4ae...),
+CV04b-native25-runtime15-v1-8d0f05e0.json (40177c29...). Docs carrier is not an
+execution head. Native25 bounded proof is locally checked; later main26/27,
+timeline section/colors/typography/LR/default/compatibility, checked event-card
+admission and full source-to-Scene transport remain pending. Keep only PR17288;
+no new publication/CI/merge acceptance. CLOC27 leaf provenance is real; full
+Closure parity, composite/synthetic identities, transformation/pass-sweep
+lineage and output-byte/source joins remain OPEN. Miri DEFERRED/PENDING,
+frozen checkout/run/inputs/target/receipts untouched and unpolled. Final-source
+Miri remains required after implementation delivery; heartbeat ACTIVE.

@@ -70,3 +70,16 @@ The first green attempt24222 failed writing its receipt with OSError28 and left
 an empty JSON/incomplete log; it never passed. Use a separately named retry,
 check free space, and replace its working receipt atomically. Keep the frozen
 Miri inputs/checkout/target/receipts untouched: Miri DEFERRED/PENDING.
+
+
+## Local execution endpoints
+
+Corrected direct observer9a6818c7 passes1006 full compiler tests plus emptydocs
+and strict lint; independent terminal6e874bdb binds the exact marker, source and
+executable censuses. Append-only runtime8d0f05e0 passes seven focused commands:
+old44 plus15 complete sources produce354 six-backend tuples and54 VM/JIT
+Float-bit observations; strict compiler/LANG checks pass. Runtime stdout keeps
+its retained trim convention, with native/LLVM typed-main ABI OPEN and absent
+CLR uncounted. These execution heads remain separate from later documentation
+carriers, pending main reconciliation and broader final-source delivery.
+Miri DEFERRED/PENDING; no full Closure completion is implied.
