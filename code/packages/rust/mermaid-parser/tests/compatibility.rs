@@ -430,6 +430,12 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
         if name == "label-offsets" {
             assert_eq!((diagram.nodes[0].label_offset_x, diagram.nodes[0].label_offset_y), (Some(-50.0), Some(10.0)));
         }
+        if name == "decorators" {
+            assert_eq!(diagram.nodes.iter().map(|node| node.source_strategy).collect::<Vec<_>>(), [
+                Some(diagram_ir::WardleySourceStrategy::Build), Some(diagram_ir::WardleySourceStrategy::Buy),
+                Some(diagram_ir::WardleySourceStrategy::Outsource), Some(diagram_ir::WardleySourceStrategy::Market)]);
+            assert!(diagram.nodes[3].inertia);
+        }
         if name == "forces" {
             assert_eq!(diagram.forces.len(), 2);
             assert_eq!(diagram.forces[0].label, "AI Adoption");

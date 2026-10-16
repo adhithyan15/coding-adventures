@@ -36,7 +36,7 @@ use diagram_ir::{
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram,
     LayoutedSwimlaneEdge, LayoutedRailroadDiagram,
-    LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram, WardleyForceKind,
+    LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram, WardleyForceKind, WardleySourceStrategy,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardCard, LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
@@ -2243,17 +2243,52 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     for link in &diagram.links { instructions.push(PaintInstruction::Path(line_path(&[link.from.clone(), link.to.clone()], &theme.link_stroke, 1.0))); }
     for evolution in &diagram.evolves { instructions.push(PaintInstruction::Path(line_path(&[evolution.from.clone(), evolution.to.clone()], &theme.evolution_stroke, 1.0))); }
     for node in &diagram.nodes {
+        if let Some(strategy) = node.source_strategy {
+            let (fill, stroke) = match strategy {
+                WardleySourceStrategy::Build => ("#eeeeee", "#000000"),
+                WardleySourceStrategy::Buy => ("#cccccc", theme.component_stroke.as_str()),
+                WardleySourceStrategy::Outsource => ("#666666", theme.component_stroke.as_str()),
+                WardleySourceStrategy::Market => ("#ffffff", theme.component_stroke.as_str()),
+            };
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: node.position.x, cy: node.position.y,
+                rx: diagram.config.node_radius * 2.0, ry: diagram.config.node_radius * 2.0, fill: Some(fill.into()), stroke: Some(stroke.into()),
+                stroke_width: Some(1.0), stroke_dash: None, stroke_dash_offset: None }));
+            if strategy == WardleySourceStrategy::Market {
+                let triangle_radius = diagram.config.node_radius * 1.2; let dot_radius = diagram.config.node_radius * 0.7;
+                let top_dot = Point { x: node.position.x, y: node.position.y - triangle_radius };
+                let left_dot = Point { x: node.position.x - triangle_radius * (std::f64::consts::PI / 6.0).cos(),
+                    y: node.position.y + triangle_radius * (std::f64::consts::PI / 6.0).sin() };
+                let right_dot = Point { x: node.position.x + triangle_radius * (std::f64::consts::PI / 6.0).cos(), y: left_dot.y };
+                instructions.push(PaintInstruction::Path(line_path(&[top_dot.clone(), left_dot.clone(), right_dot.clone(), top_dot.clone()],
+                    &theme.component_stroke, 1.0)));
+                for dot in [top_dot, left_dot, right_dot] {
+                    instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: dot.x, cy: dot.y,
+                        rx: dot_radius, ry: dot_radius, fill: Some("#ffffff".into()), stroke: Some(theme.component_stroke.clone()),
+                        stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None }));
+                }
+            }
+        }
         if node.pipeline_parent {
             let size = diagram.config.node_radius * 1.6;
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.position.x - size / 2.0,
                 y: node.position.y - size / 2.0, width: size, height: size, fill: Some(theme.component_fill.clone()),
                 stroke: Some(theme.component_stroke.clone()), stroke_width: Some(1.0), corner_radius: None,
                 stroke_dash: None, stroke_dash_offset: None }));
-        } else {
+        } else if node.source_strategy != Some(WardleySourceStrategy::Market) {
             let radius = if node.anchor { diagram.config.node_radius * 1.35 } else { diagram.config.node_radius };
             instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: node.position.x, cy: node.position.y,
                 rx: radius, ry: radius, fill: Some(theme.component_fill.clone()), stroke: Some(theme.component_stroke.clone()),
                 stroke_width: Some(1.0), stroke_dash: None, stroke_dash_offset: None }));
+        }
+        if node.inertia {
+            let square_size = diagram.config.node_radius * 1.6;
+            let mut offset = if node.pipeline_parent { square_size / 2.0 + 15.0 } else { diagram.config.node_radius + 15.0 };
+            if node.source_strategy.is_some() { offset += diagram.config.node_radius + 10.0; }
+            let line_height = if node.pipeline_parent { square_size } else { diagram.config.node_radius * 2.0 };
+            instructions.push(PaintInstruction::Path(line_path(&[
+                Point { x: node.position.x + offset, y: node.position.y - line_height / 2.0 },
+                Point { x: node.position.x + offset, y: node.position.y + line_height / 2.0 },
+            ], &theme.component_stroke, 6.0)));
         }
         let mut font = font_with_size(&options.label_font, Some(diagram.config.label_font_size));
         if node.anchor { font.weight = 700; }
@@ -2261,8 +2296,9 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             text_children.push(text_node_no_wrap(&node.label, node.position.x - 75.0 + node.label_offset_x.unwrap_or(0.0),
                 node.position.y - 8.0 + node.label_offset_y.unwrap_or(-3.0), 150.0, 22.0, font, css_to_color("#000000")));
         } else {
-            let x = node.position.x + node.label_offset_x.unwrap_or(diagram.config.node_label_offset);
-            let y = node.position.y + node.label_offset_y.unwrap_or(-diagram.config.node_label_offset) - 8.0;
+            let strategy_spacing = if node.source_strategy.is_some() { 10.0 } else { 0.0 };
+            let x = node.position.x + node.label_offset_x.unwrap_or(diagram.config.node_label_offset + strategy_spacing);
+            let y = node.position.y + node.label_offset_y.unwrap_or(-diagram.config.node_label_offset - strategy_spacing) - 8.0;
             text_children.push(align_text_node(text_node_no_wrap(&node.label, x, y, 150.0, 24.0,
                 font, component_label_color), TextAlign::Start));
         }
@@ -2352,6 +2388,8 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("wardley.pipelineCount".into(), diagram.pipelines.len().to_string());
     metadata.insert("wardley.stageBoundaryCount".into(), diagram.stage_boundaries.len().to_string());
     metadata.insert("wardley.customLabelCount".into(), diagram.nodes.iter().filter(|node| node.label_offset_x.is_some()).count().to_string());
+    metadata.insert("wardley.strategyCount".into(), diagram.nodes.iter().filter(|node| node.source_strategy.is_some()).count().to_string());
+    metadata.insert("wardley.inertiaCount".into(), diagram.nodes.iter().filter(|node| node.inertia).count().to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: theme.background_color.clone(), instructions, id: None, metadata: Some(metadata) }
 }
@@ -11621,8 +11659,9 @@ mod tests {
                 grid_color: "#345678".into(), component_fill: "#abcdef".into(), component_stroke: "#456789".into(),
                 component_label_color: "#56789a".into(), link_stroke: "#6789ab".into(), evolution_stroke: "#dc2626".into() },
                 ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.3, 1.0],
-            nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true, pipeline_parent: true, label_offset_x: None, label_offset_y: None },
-                diagram_ir::LayoutedWardleyNode { id: "b".into(), label: "Child".into(), position: Point { x: 150.0, y: 120.0 }, anchor: false, pipeline_parent: false, label_offset_x: Some(-30.0), label_offset_y: Some(12.0) }],
+            nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true, pipeline_parent: true, label_offset_x: None, label_offset_y: None, source_strategy: Some(WardleySourceStrategy::Build), inertia: false },
+                diagram_ir::LayoutedWardleyNode { id: "b".into(), label: "Child".into(), position: Point { x: 150.0, y: 120.0 }, anchor: false, pipeline_parent: false, label_offset_x: Some(-30.0), label_offset_y: Some(12.0), source_strategy: Some(WardleySourceStrategy::Market), inertia: true },
+                diagram_ir::LayoutedWardleyNode { id: "c".into(), label: "Normal".into(), position: Point { x: 260.0, y: 120.0 }, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None, source_strategy: None, inertia: false }],
             links: vec![], evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }],
             annotations_box: Some(Point { x: 60.0, y: 220.0 }), annotations: vec![diagram_ir::LayoutedWardleyAnnotation {
                 number: 1, text: "Risk".into(), positions: vec![Point { x: 280.0, y: 180.0 }, Point { x: 320.0, y: 160.0 }] }],
@@ -11648,6 +11687,8 @@ mod tests {
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.pipelineCount")), Some(&"1".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.stageBoundaryCount")), Some(&"2".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.customLabelCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.strategyCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.inertiaCount")), Some(&"1".to_string()));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
@@ -11658,6 +11699,11 @@ mod tests {
                 && rect.stroke.as_deref() == Some("#123456"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 5.0]))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#eeeeee"))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#ffffff")
+                && ellipse.stroke_width == Some(2.0))).count(), 3);
     }
 
 

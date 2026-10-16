@@ -801,7 +801,9 @@ Evolution stages preserve dual labels and optional `@` boundaries; layout uses
 the authored widths for dashed separators and centered stage labels.
 Component and pipeline-child `label [x, y]` suffixes preserve signed offsets
 through semantic and layout IR into backend-neutral glyph placement.
-Advanced flow ports, decorators, and
+Component source strategies lower build, buy, outsource, and market overlays;
+inertia lowers as a heavy offset indicator while preserving both decorators in IR.
+Advanced flow ports and
 remaining annotation theme fields and exact rendering remain unsupported at the partial level.
 
 ### Cynefin Native Slice
