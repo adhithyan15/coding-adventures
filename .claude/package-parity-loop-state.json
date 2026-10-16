@@ -18,10 +18,10 @@
   },
   "active_pr": 17677,
   "last_ci_action": {
-    "observed_at": "2026-10-16T22:09:49.541013+00:00",
+    "observed_at": "2026-10-16T22:18:41.932236+00:00",
     "pr_number": 17677,
-    "status": "monitoring",
-    "notes": "Ready-for-review PR opened after final source/coordination security PASS and full local validation. Checks pending: monitor same branch, no second implementation PR or activity-only code changes. Enable auto-merge only when all checks terminal acceptable and conflict-free; never manually merge."
+    "status": "fixing-codeql-range-proof",
+    "notes": "Actual check117222868684 on99cb49 reports high integer conversion at reader223. Existing int(max) guard was not proven by CodeQL. Small in-scope fix parses signed16-bit and checks literal0..255 plus field maximum before int conversion; same accepted domain. Same PR, no new delivery; rerun native fronts/vet/build and independent review before push."
   },
   "last_inventory": {
     "revision": "f3a7eae08279a7bb9dfa5b7650b598016526770b",
@@ -20712,7 +20712,8 @@
         "build_tool": "Full15-package go test ./... passes;83.7% aggregate statements;vet/build, actual generic BUILD Windows fallback pass. Exact fixture selection/three-platform unforced plan/atomic missing-reader tests pass; real repository detector emits plan,only Go needed,force=false.",
         "metadata": "Neutral15tests/359rows;reporter10tests;lessons1209clean;complete materialized Git-visible report equals immutable pinned main including special Twig compiler bucket.0collisions/unknowns;diffcheck clean.",
         "security": "Independent two-tranche source/spec/coordination review;govulncheck no reachable vulnerabilities (informational imported/module advisories remain baseline). No production provider/API/dependency changes.",
-        "limits": "Native execution on Windows; three-platform plans and both provider front scripts do not claim macOS/Linux native execution. Initial sparse-input failures resolved by materializing existing tracked metadata/readers/rules, without source fixes."
+        "limits": "Native execution on Windows; three-platform plans and both provider front scripts do not claim macOS/Linux native execution. Initial sparse-input failures resolved by materializing existing tracked metadata/readers/rules, without source fixes.",
+        "codeql_followup": "Actual CodeQL117222868684 on99cb49 flagged test-reader int64->int proof. Signed16 parsing plus literal0..255 guard retains field-domain behavior. Native tests99%, vet/build and bothfronts pass after fix; two extra range negatives, lessons1210. Await exact-new-head CodeQL before gate success."
       },
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17677",
       "opened_at": "2026-10-16T22:09:49.541013+00:00",

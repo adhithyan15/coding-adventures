@@ -215,8 +215,11 @@ func (r *stpShape) integer(v any, max int) int {
 		r.fail("integer lexical form required")
 		return 0
 	}
-	i, err := strconv.ParseInt(s, 10, 64)
-	if err != nil || i < 0 || i > int64(max) {
+	// Every integer in this profile is a version or byte. Keep a literal
+	// byte bound before converting to int so the width proof is independent
+	// of callers and remains visible to static analysis on every platform.
+	i, err := strconv.ParseInt(s, 10, 16)
+	if err != nil || i < 0 || i > 255 || i > int64(max) {
 		r.fail("integer out of range")
 		return 0
 	}

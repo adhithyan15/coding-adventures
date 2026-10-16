@@ -76,7 +76,7 @@ func TestSTP01TransportRejectsMalformed(t *testing.T) {
 			}
 		})
 	}
-	for _, number := range []string{"true", "1.0", "1e0", "-1", "256", "99999999999999999999999999999999", "NaN"} {
+	for _, number := range []string{"true", "1.0", "1e0", "-1", "256", "32768", "65535", "99999999999999999999999999999999", "NaN"} {
 		t.Run("byte-"+number, func(t *testing.T) {
 			bad := bytes.Replace(b, []byte(`"byte": 1`), []byte(`"byte": `+number), 1)
 			if _, err := stpDecode(bad); err == nil {
