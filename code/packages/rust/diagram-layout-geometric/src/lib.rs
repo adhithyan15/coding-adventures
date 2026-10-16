@@ -428,7 +428,7 @@ fn validate_wardley_geometry(layout:&LayoutedWardleyDiagram)->Result<(),WardleyL
         ||!wardley_stage_geometry_finite(layout)
         ||layout.nodes.iter().any(|n|!point(&n.position) || !wardley_node_paint_geometry_finite(n,c))
         ||layout.links.iter().any(|l|!point(&l.from)||!point(&l.to)||!point(&l.label_position)
-            ||!l.label_angle.is_finite()||!(l.to.x-l.from.x).is_finite()
+            ||!l.label_angle.is_finite()||!wardley_link_label_paint_geometry_finite(l,c)||!(l.to.x-l.from.x).is_finite()
             ||!(l.to.y-l.from.y).is_finite()||!(l.to.x-l.from.x).hypot(l.to.y-l.from.y).is_finite())
         ||layout.evolves.iter().any(|e|!point(&e.from)||!point(&e.to))
         ||layout.notes.iter().any(|n|!point(&n.position))
@@ -446,6 +446,17 @@ fn validate_wardley_geometry(layout:&LayoutedWardleyDiagram)->Result<(),WardleyL
         return Err(WardleyLayoutError::DerivedGeometry);
     }
     Ok(())
+}
+
+// A finite pivot and angle can still overflow the actual paint transform.
+// Keep the same evaluation order for the label box and rotation translation.
+fn wardley_link_label_paint_geometry_finite(link:&LayoutedWardleyLink,c:&diagram_ir::WardleyConfig)->bool {
+    let Some(label)=&link.label else {return true;};
+    let width=(label.chars().count() as f64*c.label_font_size*0.65).max(30.0);
+    let radians=link.label_angle.to_radians();let cosine=radians.cos();let sine=radians.sin();
+    let (x,y)=(link.label_position.x,link.label_position.y);
+    [width,x-width/2.0,y-10.0,radians,cosine,sine,
+        x-cosine*x+sine*y,y-sine*x-cosine*y].into_iter().all(f64::is_finite) && width>0.0
 }
 
 // These are the actual label origins and decorator extents used by paint.

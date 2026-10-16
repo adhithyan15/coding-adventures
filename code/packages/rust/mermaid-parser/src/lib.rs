@@ -5986,7 +5986,7 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             diagram.forces.push(parse_wardley_force(value,kind,line_number)?);
             continue;
         }
-        let line = raw.split("%%").next().unwrap_or("").trim();
+        let line = wardley_outside_comment(raw).trim();
         if line.is_empty() || line.eq_ignore_ascii_case("wardley-beta") { continue; }
         if let Some(value) = line.strip_prefix("title ") { diagram.title = Some(value.trim().to_string()); continue; }
         if let Some((_, value)) = line.split_once(':').filter(|(keyword, _)| keyword.trim() == "accTitle") {
@@ -6171,6 +6171,24 @@ fn prepare_wardley_source(source: &str) -> Result<(String, Vec<(usize,String)>),
     Ok((output.join("\n"), multiline_descriptions))
 }
 
+// A quote owns its percent pairs and escaped active quote. Only an ASCII
+// percent outside a quoted token starts a comment, so the returned str boundary
+// is valid even while the scanner advances over UTF-8 bytes.
+fn wardley_outside_comment(value:&str)->&str {
+    let bytes=value.as_bytes();let mut quote=None;let mut index=0;
+    while index<bytes.len() {
+        let byte=bytes[index];
+        if let Some(active)=quote {
+            if byte==b'\\' {index=(index+2).min(bytes.len());continue;}
+            if byte==active {quote=None;}
+        } else if matches!(byte,b'\''|b'"') && (index==0 || bytes[index-1].is_ascii_whitespace() || bytes[index-1]==b'+') {
+            quote=Some(byte);
+        } else if byte==b'%' && bytes.get(index+1)==Some(&b'%') {return &value[..index];}
+        index+=1;
+    }
+    value
+}
+
 fn parse_wardley_link(value: &str, line: usize) -> Result<Option<WardleyLink>, ParseError> {
     let Some(operator) = wardley_link_operator(value) else { return Ok(None); };
     let source = wardley_link_endpoint(&value[..operator.start],line)?;
@@ -6353,12 +6371,25 @@ fn parse_wardley_theme(source: &str) -> WardleyTheme {
 }
 
 fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
-    // A quoted label may contain brackets or braces. Coordinates start only
-    // after that complete label; all following offsets refer to this remainder.
-    let (label, coordinates) = wardley_pipeline_label(value, '[', "node", line)?;
-    if !coordinates.starts_with('[') { return Err(wardley_error(line, "Wardley node requires coordinates")); }
-    let Some(close) = coordinates.find(']') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
-    let (visibility, evolution) = parse_wardley_coordinates(&coordinates[..=close], line)?;
+    let value=value.trim_start();
+    let (label,coordinates)=if value.starts_with(['\'', '"']) {
+        wardley_pipeline_label(value,'[',"node",line)?
+    } else {
+        // Bare labels historically own interior brackets. The last pair is
+        // coordinates, except the incoming explicit `label [x,y]` suffix.
+        let mut open=value.rfind('[').ok_or_else(||wardley_error(line,"Wardley node requires coordinates"))?;
+        let prefix=value[..open].trim_end();
+        if let Some(before_label)=prefix.strip_suffix("label").filter(|v|v.ends_with([' ','\t'])) {
+            let before_label=before_label.trim_end();
+            if before_label.ends_with(']') {
+                open=before_label.rfind('[').ok_or_else(||wardley_error(line,"Wardley node requires coordinates"))?;
+            }
+        }
+        (wardley_name(&value[..open]),&value[open..])
+    };
+    if !coordinates.starts_with('[') {return Err(wardley_error(line,"Wardley node requires coordinates"));}
+    let close=coordinates.find(']').ok_or_else(||wardley_error(line,"Wardley node requires coordinates"))?;
+    let (visibility,evolution)=parse_wardley_coordinates(&coordinates[..=close],line)?;
     if label.is_empty() || !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
         return Err(wardley_error(line, "Wardley node names must be non-empty and coordinates between 0 and 1"));
     }
