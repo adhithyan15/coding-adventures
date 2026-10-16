@@ -1,5 +1,37 @@
 # closurec
 
+## Source inventory shape admission (CV04b D3a)
+
+Traced compilation now checks the full physical source inventory before any
+filter, JSON/NDJSON/NONE selection, summary or artifact publication. The private
+read-only gate requires complete generic graph evidence, dense compact IDs,
+closed source metadata, exact ordered root/piece ownership, six-coordinate
+continuity, legacy-field agreement and finite prepaid work/index storage. It
+borrows metadata and allocates one fallibly reserved pointer index. Existing
+generic work-limit diagnostics retain their validate/snapshot stages; new shape
+refusals use source_domain. Public APIs, grammar, passes, dependencies and
+production limits stay unchanged.
+
+Exact source `c4278413686141c1b97640ae6a46a7ab85a5b759` passed strict all-target Clippy and the complete
+unfiltered compiler suite:1,124P/0F/0I across182 metadata-derived targets.
+Ten private tests include68 independently generic-valid schema refusals and30
+actual compiler transaction refusals across five levels, three formats and
+filtered/unfiltered views, preserving all four destination sentinels. Two raw
+baseline tests retain the existing nested decoded-duplicate rejection. A separate
+offline build of the accepted D2 source snapshot and the successor each ran35
+CLI cells; all210 JS/map/manifest/trace/stdout/stderr artifacts match byte for
+byte, including complete JSON graph/journal bytes. Focused counts are included
+in the full suite. PLAIN/NONE trace destinations retain the prior sentinel;
+they do not emit traces. Exact source, test-quality and terminal security reviews PASS.
+
+This is structural shape admission. Trusted consumed-byte/hash/edition binding
+and grammar replay remain D3b; no source-certified capability or serialized
+certification marker is produced. Remaining composite/synthetic identities,
+full transformation/pass-sweep lineage, output-byte joins and Closure parity
+remain OPEN. Miri **DEFERRED/PENDING**, never passed; its frozen run, inputs and
+receipts remain untouched. Current-main conflicts, required hosted checks and
+actual merge/reachability remain delivery gates. Full objective/heartbeat ACTIVE.
+
 ## Captured ingestion leaf reuse (CV04b D2)
 
 Actual traced SIMPLE/ADVANCED compilation now consumes the D1 captured Tokens

@@ -136,3 +136,48 @@ exact-head checks, then actual merge reachability before cleanup. Main conflict
 repair and full Closure parity/source-domain replay/full lineage/output-byte
 mapping remain gates. After implementation delivery, obtain genuine final-source
 Miri acceptance; full objective and heartbeat stay ACTIVE until then.
+
+## Executed bounded slice
+
+Traced compilation now checks the full physical source inventory before any
+filter, JSON/NDJSON/NONE selection, summary or artifact publication. The private
+read-only gate requires complete generic graph evidence, dense compact IDs,
+closed source metadata, exact ordered root/piece ownership, six-coordinate
+continuity, legacy-field agreement and finite prepaid work/index storage. It
+borrows metadata and allocates one fallibly reserved pointer index. Existing
+generic work-limit diagnostics retain their validate/snapshot stages; new shape
+refusals use source_domain. Public APIs, grammar, passes, dependencies and
+production limits stay unchanged.
+
+Exact source `c4278413686141c1b97640ae6a46a7ab85a5b759` passed strict all-target Clippy and the complete
+unfiltered compiler suite:1,124P/0F/0I across182 metadata-derived targets.
+Ten private tests include68 independently generic-valid schema refusals and30
+actual compiler transaction refusals across five levels, three formats and
+filtered/unfiltered views, preserving all four destination sentinels. Two raw
+baseline tests retain the existing nested decoded-duplicate rejection. A separate
+offline build of the accepted D2 source snapshot and the successor each ran35
+CLI cells; all210 JS/map/manifest/trace/stdout/stderr artifacts match byte for
+byte, including complete JSON graph/journal bytes. Focused counts are included
+in the full suite. PLAIN/NONE trace destinations retain the prior sentinel;
+they do not emit traces. Exact source, test-quality and terminal security reviews PASS.
+
+This is structural shape admission. Trusted consumed-byte/hash/edition binding
+and grammar replay remain D3b; no source-certified capability or serialized
+certification marker is produced. Remaining composite/synthetic identities,
+full transformation/pass-sweep lineage, output-byte joins and Closure parity
+remain OPEN. Miri **DEFERRED/PENDING**, never passed; its frozen run, inputs and
+receipts remain untouched. Current-main conflicts, required hosted checks and
+actual merge/reachability remain delivery gates. Full objective/heartbeat ACTIVE.
+
+Retained evidence: original69/547c/28 withheld reviews, revised39 contract PASS,
+compiled generic-only red245f924 (1P/5F, three shape-mutant groups only), and
+compile-failed4ab remain distinct. First full6e failed the unchanged NONE
+generic diagnostic test; spec11d/testc56/private typed-error repairc427 fixed
+it, and the final full suite passed. Shape/resource/extra-child controls were
+strengthened after review without lowering production limits. Local source
+receipt `CV04b-D3a-full-c4278413.json` SHA256 `64f2b6a1da28af91fbac05d8dd29d01fe6c13129a6c1f5bbe29856fc237b9629`;
+prior-byte receipt SHA256 `87b40d4cc9f3916bae6c00078fe2c93b5b6819ca8cdea6d1217e0ddf67c1beb4`. Native2868/style872/SwiftUI191
+maps preserve prior execution; Closure3713/four-Rust-file delta, raw1502/static22
+and unchanged51-package lock/15registry dependencies are proven. No fresh
+downstream or Java parity execution is inferred. Same sole PR17288; ordinary
+progress publication still pending at this documentation checkpoint.
