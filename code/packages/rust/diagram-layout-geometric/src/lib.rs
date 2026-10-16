@@ -140,10 +140,11 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         let vertical_reach = ((height / 2.0 - padding) * 0.72).max(40.0);
         let tip = Point { x: attach.x - spacing * 0.48, y: spine_y + sign * vertical_reach };
         let path = ishikawa_line_path(&tip, &attach, hand_drawn, diagram.config.hand_drawn_seed, index + 1);
+        let arrowhead = ishikawa_arrowhead(&path);
         bones.push(LayoutedIshikawaBone { from: tip.clone(), to: attach, label: cause.label.clone(),
             label_position: Point { x: tip.x + spacing * 0.24, y: (tip.y + spine_y) / 2.0 + sign * 42.0 },
             label_width: ishikawa_label_width(&cause.label, font_scale), label_height: 28.0 * font_scale, depth: 1,
-            path });
+            path, arrowhead });
         anchors.insert(&cause.id, tip);
     }
     for cause in diagram.causes.iter().filter(|cause| cause.parent_id.is_some()) {
@@ -152,10 +153,11 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
         let length = (90.0 / cause.depth as f64).max(38.0);
         let tip = Point { x: parent.x - length, y: parent.y + sign * length * 0.55 };
         let path = ishikawa_line_path(&tip, &parent, hand_drawn, diagram.config.hand_drawn_seed, bones.len() + 1);
+        let arrowhead = ishikawa_arrowhead(&path);
         bones.push(LayoutedIshikawaBone { from: tip.clone(), to: parent,
             label: cause.label.clone(), label_position: Point { x: tip.x, y: tip.y - sign * 18.0 },
             label_width: ishikawa_label_width(&cause.label, font_scale), label_height: 28.0 * font_scale, depth: cause.depth,
-            path });
+            path, arrowhead });
         anchors.insert(&cause.id, tip);
     }
     LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), config: diagram.config.clone(), effect_x, effect_y: spine_y - effect_height / 2.0,
@@ -175,6 +177,15 @@ fn ishikawa_line_path(from: &Point, to: &Point, hand_drawn: bool, seed: i64, ind
             y: from.y + dy * ratio + perpendicular.1 * jitter });
     }
     points.push(to.clone()); points
+}
+
+fn ishikawa_arrowhead(path: &[Point]) -> Vec<Point> {
+    let [.., before, tip] = path else { return Vec::new(); };
+    let dx = tip.x - before.x; let dy = tip.y - before.y; let length = dx.hypot(dy).max(1.0);
+    let unit = (dx / length, dy / length); let perpendicular = (-unit.1, unit.0);
+    let base = Point { x: tip.x - unit.0 * 12.0, y: tip.y - unit.1 * 12.0 };
+    vec![tip.clone(), Point { x: base.x + perpendicular.0 * 5.0, y: base.y + perpendicular.1 * 5.0 },
+        Point { x: base.x - perpendicular.0 * 5.0, y: base.y - perpendicular.1 * 5.0 }]
 }
 
 fn ishikawa_label_width(label: &str, font_scale: f64) -> f64 {
@@ -566,6 +577,8 @@ mod tests {
         assert_eq!(layout.bones[0].label_width, 72.0);
         assert_eq!(layout.spine_path.len(), 2);
         assert_eq!(layout.bones[0].path.len(), 2);
+        assert_eq!(layout.bones[0].arrowhead.len(), 3);
+        assert_eq!(layout.bones[0].arrowhead[0], layout.bones[0].to);
 
         let mut hand_drawn = diagram.clone();
         hand_drawn.config.look = IshikawaLook::HandDrawn;
@@ -573,6 +586,7 @@ mod tests {
         let hand_drawn_layout = layout_ishikawa(&hand_drawn, 640.0);
         assert_eq!(hand_drawn_layout.spine_path.len(), 5);
         assert_eq!(hand_drawn_layout.bones[0].path.len(), 5);
+        assert_eq!(hand_drawn_layout.bones[0].arrowhead[0], hand_drawn_layout.bones[0].to);
         assert_eq!(hand_drawn_layout, layout_ishikawa(&hand_drawn, 640.0));
 
         let mut large_text = diagram.clone();
