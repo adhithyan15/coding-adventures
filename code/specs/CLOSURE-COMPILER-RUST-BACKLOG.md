@@ -18,8 +18,15 @@ Specae32 preceded testsa049, complete14path importb2f55 (5pure/9overlaps) and
 required-field-only ABI0e9 (27files, whole inverse). At0e9, actual source/typed/
 derived semantic reds101 were consumed:3passed/4failed, no compiler failure.
 Closed source/all-or-none/nondecreasing ends and typed/derived guards are now
-implemented; focused green, old64 stage oracle revision, new Scenes and full
-security/delivery remain PENDING. No stage Paint execution yet.
+implemented; focused source/typed/derived9functions passed at a5832aad.
+Old64 intentional oracle revision32b has a whole-file inverse; all64 passed
+the first stage render. New18 Scene tablese2b preceded that render, which
+actually failed101 (6passed/1failed;6newcells). Independent review found two
+new glyph literals regrouped f64 centering incorrectly; source/spec order is
+start_x+(width-measured_advance)/2. Preserve the first failure and re-derive all
+nine profiles, then correct only two numeric literals with an inverse proof;
+production/equality/old64 stay exact. New18 serial acceptance, full14 and
+source/terminal security/delivery remain PENDING.
 One active PR; heartbeat ACTIVE.
 <!-- /CV04a Wardley stage bands selected -->
 

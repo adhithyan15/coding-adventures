@@ -103,6 +103,23 @@ ordered cached queries, including mixed pipelines/final parent links/forces/
 notes/annotation boxes. Actual source/typed/derived reds must fail semantically;
 missing fields/variants or compiler/ABI failures are not red evidence.
 
+## Exact floating-point oracle evaluation order
+
+The first stage render at e2b98500 actually failed101 (6passed/1failed),
+with all old64 revised Scenes passing and only6 new stage cells complete.
+Preserve that receipt/log unchanged. Independent source review found two new
+literal-table errors: real-number regrouping had changed f64 rounding. The
+existing layout-to-paint center expression is start_x + (band_width -
+measured_advance)/2; the declared shaper uses f32 character advances. Re-derive
+every new profile, including the cap profile, in that operation order and
+correct only the two differing literals. The narrow alias is
+140+(1.4000000000000001-142.5)/2=69.45; the third uniform stage is
+233.33333333333331+(46.66666666666667-2.5)/2=255.41666666666666.
+Keep exact whole-Scene equality, production arithmetic and all old64 oracles
+unchanged. Save a reversible numeric-only proof before the next serial render;
+require all18 distinct case/family pairs, all21 metadata fields and every glyph
+and ordered query. The failed parallel marker census is not font acceptance.
+
 ## Delivery and completion boundaries
 
 Run focused and full unfiltered affected14/forward50 suites and strict all-target
