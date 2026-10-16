@@ -45,6 +45,8 @@
 //! identities remain absent by default. CLOC32's optional run-scoped array
 //! observer can assign an array identity at construction; the caller owns its
 //! validity and work. This hook alone certifies no source span or CLI mapping.
+//! CLOC34's composite observer additionally receives actual member suffix-prefix
+//! endpoints, sharing the same borrowed sink with arrays; old routes stay intact.
 
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -2854,6 +2856,20 @@ fn convert_lhs_expression(bridge_context: &mut occurrence::Context<'_>, node: &G
 // optional_chain_expression
 // -------------------------------------------------------------------------
 
+/// Attach only the just-constructed member CV after the existing suffix cursor
+/// consumed its endpoint. No traversal or registry is added by this hook.
+fn observe_member_prefix(context: &mut occurrence::Context<'_>, node: &GrammarASTNode,
+    end_child: usize, computed: bool, optional: bool, expression: &mut Expression,
+) -> Result<(), BridgeError> {
+    let cv = context.member_constructed(node, end_child, computed, optional)?;
+    match expression {
+        Expression::MemberExpression(member) => member.cv = cv,
+        Expression::OptionalMemberExpression(member) => member.cv = cv,
+        _ => return Err(internal(node, "member occurrence hook requires its constructed member")),
+    }
+    Ok(())
+}
+
 /// Convert `optional_chain_expression` — the grammar rule that wraps ALL
 /// suffix operations on a `member_expression` base:
 ///
@@ -2918,6 +2934,7 @@ fn convert_optional_chain_expression(bridge_context: &mut occurrence::Context<'_
                 match children.get(i) {
                     // `?.[` expr `]` — optional computed access.
                     Some(ASTNodeOrToken::Token(t)) if t.value == "[" => {
+                        let mut constructed = false;
                         i += 1;
                         while i < children.len() {
                             if let ASTNodeOrToken::Node(key_n) = &children[i] {
@@ -2930,6 +2947,7 @@ fn convert_optional_chain_expression(bridge_context: &mut occurrence::Context<'_
                                         computed: true,
                                     },
                                 );
+                                constructed = true;
                                 i += 1;
                                 break;
                             }
@@ -2940,6 +2958,9 @@ fn convert_optional_chain_expression(bridge_context: &mut occurrence::Context<'_
                             if t.value == "]" {
                                 i += 1;
                             }
+                        }
+                        if constructed {
+                            observe_member_prefix(bridge_context, node, i - 1, true, true, &mut base)?;
                         }
                     }
                     // `?.(` args `)` — optional call.
@@ -2958,7 +2979,7 @@ fn convert_optional_chain_expression(bridge_context: &mut occurrence::Context<'_
                         let prop_name = name_t.value.clone();
                         i += 1;
                         base = Expression::OptionalMemberExpression(OptionalMemberExpression {
-                            cv: None,
+                            cv: bridge_context.member_constructed(node, i - 1, false, true)?,
                             object: Box::new(base),
                             property: Box::new(Expression::Identifier(Identifier {
                                 cv: None,
@@ -2984,7 +3005,7 @@ fn convert_optional_chain_expression(bridge_context: &mut occurrence::Context<'_
                 };
                 i += 1;
                 base = Expression::MemberExpression(MemberExpression {
-                    cv: None,
+                    cv: bridge_context.member_constructed(node, i - 1, false, false)?,
                     object: Box::new(base),
                     property: Box::new(Expression::Identifier(Identifier { cv: None, name: prop_name })),
                     computed: false,
@@ -2992,6 +3013,7 @@ fn convert_optional_chain_expression(bridge_context: &mut occurrence::Context<'_
             }
             ASTNodeOrToken::Token(t) if t.value == "[" => {
                 // LBRACKET expression RBRACKET — computed access.
+                let mut constructed = false;
                 i += 1;
                 // Find the Node child (the key expression).
                 while i < children.len() {
@@ -3003,6 +3025,7 @@ fn convert_optional_chain_expression(bridge_context: &mut occurrence::Context<'_
                             property: Box::new(key),
                             computed: true,
                         });
+                        constructed = true;
                         i += 1;
                         break;
                     }
@@ -3013,6 +3036,9 @@ fn convert_optional_chain_expression(bridge_context: &mut occurrence::Context<'_
                     if let ASTNodeOrToken::Token(t) = &children[i] {
                         if t.value == "]" { i += 1; }
                     }
+                }
+                if constructed {
+                    observe_member_prefix(bridge_context, node, i - 1, true, false, &mut base)?;
                 }
             }
             ASTNodeOrToken::Node(arg_n) if arg_n.rule_name == "arguments" => {
@@ -3165,6 +3191,7 @@ fn convert_call_expression(bridge_context: &mut occurrence::Context<'_>, node: &
                     computed: false,
                 });
                 i += 2; // consume DOT + NAME
+                observe_member_prefix(bridge_context, node, i - 1, false, false, &mut base)?;
             }
             // `[expr]` — computed member access.
             ASTNodeOrToken::Token(t) if t.value == "[" => {
@@ -3193,6 +3220,7 @@ fn convert_call_expression(bridge_context: &mut occurrence::Context<'_>, node: &
                         break;
                     }
                 }
+                observe_member_prefix(bridge_context, node, i - 1, true, false, &mut base)?;
             }
             // Anything else (tagged template, `new`/`super`, a stray token) is
             // not yet representable — fail closed rather than drop it.
@@ -3509,6 +3537,7 @@ fn convert_member_expression(bridge_context: &mut occurrence::Context<'_>, node:
                     computed: false,
                 });
                 i += 2; // consume DOT + NAME
+                observe_member_prefix(bridge_context, node, i - 1, false, false, &mut base)?;
             }
             // `[expr]` — computed property access.
             ASTNodeOrToken::Token(t) if t.value == "[" => {
@@ -3544,6 +3573,7 @@ fn convert_member_expression(bridge_context: &mut occurrence::Context<'_>, node:
                         break;
                     }
                 }
+                observe_member_prefix(bridge_context, node, i - 1, true, false, &mut base)?;
             }
             // `` <base>`...` `` — a tagged template: the accumulated `base`
             // becomes the tag, and the `template_literal` becomes the quasi.

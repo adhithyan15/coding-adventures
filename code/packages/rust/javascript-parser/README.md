@@ -80,3 +80,12 @@ work, returned IDs and successful AST ownership remain caller responsibilities.
 This hook introduces no source/span namespace and does not certify arbitrary
 sink metadata or wire the CLI. A trusted source-range adapter is follow-up work.
 Final-source Miri remains DEFERRED/PENDING; existing frozen validation is untouched.
+# CLOC34 member occurrence observer
+
+`bridge::grammar_to_program_with_composite_observer` accepts one borrowed
+`CompositeOccurrenceObserver` for arrays and actual member-prefix constructions.
+Each member callback receives its borrowed CST owner, inclusive suffix endpoint,
+and computed/optional flags; only the returned member CV may change. Legacy and
+array-only entries remain available. This library hook does not certify source
+ranges or wire CLI member identities. Validation is pending in CLOC34; Miri is
+DEFERRED/PENDING until implementation delivery and genuine final-source testing.

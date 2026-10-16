@@ -31,14 +31,34 @@ pub trait CompositeOccurrenceObserver: ArrayOccurrenceObserver {
     ) -> Result<Option<String>, String>;
 }
 
-/// CLOC34 delegating scaffold: exposes the API for an honest compiled red.
-/// Member construction observation is deliberately not implemented yet.
+/// Observe arrays and member prefixes with one run-scoped caller-owned sink.
+/// Rejected candidates stay on the same large worker stack as CLOC32. This
+/// provides borrowed construction evidence, not trusted CLI/source admission.
 pub fn grammar_to_program_with_composite_observer(
     node: &GrammarASTNode,
     version: EsVersion,
     observer: &mut dyn CompositeOccurrenceObserver,
 ) -> Result<Program, ObservedBridgeError> {
-    grammar_to_program_with_array_observer(node, version, observer)
+    if node.rule_name != "program" {
+        return Err(ObservedBridgeError::Bridge(super::internal(
+            node,
+            format!("expected root rule 'program', got '{}'", node.rule_name),
+        )));
+    }
+    std::thread::scope(|scope| {
+        let worker = std::thread::Builder::new()
+            .name("javascript-composite-bridge".into())
+            .stack_size(128 * 1024 * 1024)
+            .spawn_scoped(scope, move || {
+                let mut context = Context::composite(observer);
+                let result = super::convert_program(&mut context, node, version);
+                context.finish(result)
+            })
+            .map_err(|error| ObservedBridgeError::Worker(error.to_string()))?;
+        worker
+            .join()
+            .map_err(|_| ObservedBridgeError::Worker("worker panicked".into()))?
+    })
 }
 
 /// Keep observed failures distinct without changing the legacy error enum.
@@ -64,29 +84,108 @@ impl std::error::Error for ObservedBridgeError {}
 /// One invocation owns its first refusal. The outer boundary checks this latch
 /// even if a future converter catches the internal propagation sentinel.
 pub(super) struct Context<'a> {
-    observer: Option<&'a mut dyn ArrayOccurrenceObserver>,
+    observer: Option<Observer<'a>>,
     first_error: Option<String>,
+}
+
+// A composite sink owns one mutable borrow; it is never split into separate
+// array/member sinks that would compete for the same CV log or receipt ledger.
+enum Observer<'a> {
+    Array(&'a mut dyn ArrayOccurrenceObserver),
+    Composite(&'a mut dyn CompositeOccurrenceObserver),
 }
 
 impl<'a> Context<'a> {
     pub(super) fn unobserved() -> Self {
-        Self { observer: None, first_error: None }
+        Self {
+            observer: None,
+            first_error: None,
+        }
     }
 
     fn observed(observer: &'a mut dyn ArrayOccurrenceObserver) -> Self {
-        Self { observer: Some(observer), first_error: None }
+        Self {
+            observer: Some(Observer::Array(observer)),
+            first_error: None,
+        }
     }
 
-    pub(super) fn array_constructed(&mut self, node: &GrammarASTNode) -> Result<Option<String>, BridgeError> {
-        if self.first_error.is_some() {
-            return Err(super::internal(node, "array occurrence observer already refused construction"));
+    fn composite(observer: &'a mut dyn CompositeOccurrenceObserver) -> Self {
+        Self {
+            observer: Some(Observer::Composite(observer)),
+            first_error: None,
         }
-        let Some(observer) = self.observer.as_deref_mut() else { return Ok(None); };
-        match observer.array_constructed(node) {
+    }
+
+    pub(super) fn array_constructed(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Option<String>, BridgeError> {
+        if self.first_error.is_some() {
+            return Err(super::internal(
+                node,
+                "array occurrence observer already refused construction",
+            ));
+        }
+        let result = match self.observer.as_mut() {
+            None => return Ok(None),
+            Some(Observer::Array(observer)) => observer.array_constructed(node),
+            Some(Observer::Composite(observer)) => observer.array_constructed(node),
+        };
+        match result {
             Ok(id) => Ok(id),
             Err(message) => {
                 self.first_error = Some(message);
-                Err(super::internal(node, "array occurrence observer refused construction"))
+                Err(super::internal(
+                    node,
+                    "array occurrence observer refused construction",
+                ))
+            }
+        }
+    }
+
+    pub(super) fn member_constructed(
+        &mut self,
+        node: &GrammarASTNode,
+        end_child: usize,
+        computed: bool,
+        optional: bool,
+    ) -> Result<Option<String>, BridgeError> {
+        if self.first_error.is_some() {
+            return Err(super::internal(
+                node,
+                "occurrence observer already refused construction",
+            ));
+        }
+        // Gate before indexing: the legacy and CLOC32 array-only routes retain
+        // their historical malformed-CST behavior and perform no prefix walk.
+        let Some(Observer::Composite(observer)) = self.observer.as_mut() else {
+            return Ok(None);
+        };
+        let valid = matches!(node.children.get(end_child), Some(super::ASTNodeOrToken::Token(t))
+            if !computed || t.value == "]");
+        if !valid {
+            self.first_error = Some(
+                if computed {
+                    "member occurrence endpoint is not a direct closing bracket"
+                } else {
+                    "member occurrence endpoint is not a direct property token"
+                }
+                .into(),
+            );
+            return Err(super::internal(
+                node,
+                "member occurrence endpoint refused construction",
+            ));
+        }
+        match observer.member_constructed(node, end_child, computed, optional) {
+            Ok(id) => Ok(id),
+            Err(message) => {
+                self.first_error = Some(message);
+                Err(super::internal(
+                    node,
+                    "member occurrence observer refused construction",
+                ))
             }
         }
     }
@@ -117,8 +216,10 @@ pub fn grammar_to_program_with_array_observer(
     observer: &mut dyn ArrayOccurrenceObserver,
 ) -> Result<Program, ObservedBridgeError> {
     if node.rule_name != "program" {
-        return Err(ObservedBridgeError::Bridge(super::internal(node,
-            format!("expected root rule 'program', got '{}'", node.rule_name))));
+        return Err(ObservedBridgeError::Bridge(super::internal(
+            node,
+            format!("expected root rule 'program', got '{}'", node.rule_name),
+        )));
     }
     std::thread::scope(|scope| {
         let worker = std::thread::Builder::new()
@@ -130,7 +231,9 @@ pub fn grammar_to_program_with_array_observer(
                 context.finish(result)
             })
             .map_err(|error| ObservedBridgeError::Worker(error.to_string()))?;
-        worker.join().map_err(|_| ObservedBridgeError::Worker("worker panicked".into()))?
+        worker
+            .join()
+            .map_err(|_| ObservedBridgeError::Worker("worker panicked".into()))?
     })
 }
 
@@ -140,36 +243,62 @@ mod tests {
 
     #[test]
     fn composite_first_refusal_survives_caught_sentinel_and_blocks_both_methods() {
-        struct Refuse { arrays: usize, members: usize }
+        struct Refuse {
+            arrays: usize,
+            members: usize,
+        }
         impl ArrayOccurrenceObserver for Refuse {
             fn array_constructed(&mut self, _: &GrammarASTNode) -> Result<Option<String>, String> {
-                self.arrays += 1; Err("first-array".into())
+                self.arrays += 1;
+                Err("first-array".into())
             }
         }
         impl CompositeOccurrenceObserver for Refuse {
-            fn member_constructed(&mut self, _: &GrammarASTNode, _: usize, _: bool, _: bool) -> Result<Option<String>, String> {
-                self.members += 1; Err("first-member".into())
+            fn member_constructed(
+                &mut self,
+                _: &GrammarASTNode,
+                _: usize,
+                _: bool,
+                _: bool,
+            ) -> Result<Option<String>, String> {
+                self.members += 1;
+                Err("first-member".into())
             }
         }
         let node = crate::parse_javascript_typed("a.b;", crate::DEFAULT_ES_VERSION).unwrap();
         fn owner(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
-            if node.rule_name == "member_expression" && node.children.len() == 3 { return Some(node); }
+            if node.rule_name == "member_expression" && node.children.len() == 3 {
+                return Some(node);
+            }
             node.children.iter().find_map(|c| match c {
-                super::super::ASTNodeOrToken::Node(n) => owner(n), _ => None,
+                super::super::ASTNodeOrToken::Node(n) => owner(n),
+                _ => None,
             })
         }
         let member = owner(&node).unwrap();
         for first_array in [false, true] {
-            let mut sink = Refuse { arrays: 0, members: 0 };
+            let mut sink = Refuse {
+                arrays: 0,
+                members: 0,
+            };
             let mut context = Context::composite(&mut sink);
-            if first_array { assert!(context.array_constructed(&node).is_err()); }
-            else { assert!(context.member_constructed(member, 2, false, false).is_err()); }
+            if first_array {
+                assert!(context.array_constructed(&node).is_err());
+            } else {
+                assert!(context.member_constructed(member, 2, false, false).is_err());
+            }
             assert!(context.member_constructed(member, 2, false, false).is_err());
             assert!(context.array_constructed(&node).is_err());
-            let candidate = super::super::grammar_to_program(&node, crate::DEFAULT_ES_VERSION).unwrap();
-            assert!(matches!(context.finish(Ok(candidate)), Err(ObservedBridgeError::Observer(s))
-                if s == if first_array { "first-array" } else { "first-member" }));
-            assert_eq!((sink.arrays, sink.members), if first_array { (1, 0) } else { (0, 1) });
+            let candidate =
+                super::super::grammar_to_program(&node, crate::DEFAULT_ES_VERSION).unwrap();
+            assert!(
+                matches!(context.finish(Ok(candidate)), Err(ObservedBridgeError::Observer(s))
+                if s == if first_array { "first-array" } else { "first-member" })
+            );
+            assert_eq!(
+                (sink.arrays, sink.members),
+                if first_array { (1, 0) } else { (0, 1) }
+            );
         }
     }
 
@@ -178,23 +307,44 @@ mod tests {
         struct Sink(usize);
         impl ArrayOccurrenceObserver for Sink {
             fn array_constructed(&mut self, _: &GrammarASTNode) -> Result<Option<String>, String> {
-                self.0 += 1; Ok(None)
+                self.0 += 1;
+                Ok(None)
             }
         }
         impl CompositeOccurrenceObserver for Sink {
-            fn member_constructed(&mut self, _: &GrammarASTNode, _: usize, _: bool, _: bool) -> Result<Option<String>, String> {
-                self.0 += 1; Ok(None)
+            fn member_constructed(
+                &mut self,
+                _: &GrammarASTNode,
+                _: usize,
+                _: bool,
+                _: bool,
+            ) -> Result<Option<String>, String> {
+                self.0 += 1;
+                Ok(None)
             }
         }
         let node = crate::parse_javascript_typed("[];", crate::DEFAULT_ES_VERSION).unwrap();
-        for (computed, expected) in [(true, "member occurrence endpoint is not a direct closing bracket"),
-            (false, "member occurrence endpoint is not a direct property token")] {
+        for (computed, expected) in [
+            (
+                true,
+                "member occurrence endpoint is not a direct closing bracket",
+            ),
+            (
+                false,
+                "member occurrence endpoint is not a direct property token",
+            ),
+        ] {
             let mut sink = Sink(0);
             let mut context = Context::composite(&mut sink);
-            assert!(context.member_constructed(&node, usize::MAX, computed, false).is_err());
+            assert!(context
+                .member_constructed(&node, usize::MAX, computed, false)
+                .is_err());
             assert!(context.array_constructed(&node).is_err());
-            let candidate = super::super::grammar_to_program(&node, crate::DEFAULT_ES_VERSION).unwrap();
-            assert!(matches!(context.finish(Ok(candidate)), Err(ObservedBridgeError::Observer(s)) if s == expected));
+            let candidate =
+                super::super::grammar_to_program(&node, crate::DEFAULT_ES_VERSION).unwrap();
+            assert!(
+                matches!(context.finish(Ok(candidate)), Err(ObservedBridgeError::Observer(s)) if s == expected)
+            );
             assert_eq!(sink.0, 0);
         }
     }
