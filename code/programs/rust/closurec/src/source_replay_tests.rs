@@ -297,9 +297,12 @@ fn d3b_original_token_fingerprint_covers_fields_beyond_wire_lengths() {
     }
 }
 
-fn independently_encoded_name(token: &Token) -> Vec<u8> {
+fn independently_encoded_token(token: &Token) -> Vec<u8> {
     let mut bytes = b"closurec.lexical-token.v1\0".to_vec();
-    for text in ["Name", token.value.as_str()] {
+    // Display is a separate implementation from the producer's frozen wire
+    // spelling match. Encode complete bytes independently of production helpers.
+    let kind = token.type_.to_string();
+    for text in [kind.as_str(), token.value.as_str()] {
         bytes.extend_from_slice(&(text.len() as u64).to_le_bytes());
         bytes.extend_from_slice(text.as_bytes());
     }
@@ -346,7 +349,7 @@ fn d3b_fingerprint_framing_and_work_are_independent_and_complete() {
         let mut token = base.clone();
         token.type_name = name.map(str::to_owned);
         token.flags = flags;
-        let encoded = independently_encoded_name(&token);
+        let encoded = independently_encoded_token(&token);
         let expected_work = 1 + 2 * encoded.len() + 128;
         let mut work = Work {
             used: 0,
@@ -361,6 +364,38 @@ fn d3b_fingerprint_framing_and_work_are_independent_and_complete() {
             &mut Work {
                 used: 0,
                 limit: expected_work - 1
+            }
+        )
+        .is_err());
+    }
+    for total in [64, 119, 120, 127, 128, 183, 184, 191, 192] {
+        let mut token = base.clone();
+        token.value = "😀\0".into();
+        let prefix = independently_encoded_token(&token).len();
+        // Complete framing already exceeds SHA's first 55/56-byte padding
+        // boundary; exercise later equivalent residues with UTF8 and NUL.
+        if total < prefix {
+            continue;
+        }
+        token.value.push_str(&"x".repeat(total - prefix));
+        let encoded = independently_encoded_token(&token);
+        assert_eq!(encoded.len(), total);
+        assert_ne!(token.value.len(), token.value.chars().count());
+        let expected = 1 + 2 * total + 128;
+        let mut work = Work {
+            used: 0,
+            limit: expected,
+        };
+        assert_eq!(
+            fingerprint(&token, &mut work).unwrap(),
+            coding_adventures_sha256::sha256(&encoded)
+        );
+        assert_eq!(work.used, expected);
+        assert!(fingerprint(
+            &token,
+            &mut Work {
+                used: 0,
+                limit: expected - 1
             }
         )
         .is_err());
@@ -463,6 +498,13 @@ fn d3b_catalog_cardinality_root_order_and_complete_input_census() {
         assert!(f.catalog.validate(&shape, &roots, &f.paths).is_err());
     }
     assert!(f.catalog.validate(&shape, &f.roots, &f.paths[..1]).is_err());
+    let mut wrong_paths = f.paths.clone();
+    wrong_paths[0] = PathBuf::from("wrong.js");
+    assert!(f
+        .catalog
+        .validate(&shape, &f.roots, &wrong_paths)
+        .unwrap_err()
+        .contains("path"));
     let one = fixture(&["1;"], EsVersion::Es2025);
     let error = one
         .catalog
@@ -473,6 +515,108 @@ fn d3b_catalog_cardinality_root_order_and_complete_input_census() {
     assert!(owner
         .retain("1;".into(), "cv1.0000000000000000", None)
         .is_err());
+}
+
+#[test]
+fn d3b_original_capture_status_is_independent_of_declared_and_replayed_availability() {
+    for (source, original_available) in [("1", false), ("\0", true)] {
+        let f = fixture(&[source], EsVersion::Es2025);
+        let mut owner = SourceCatalog::new(1, EsVersion::Es2025, ReplayLimits::default()).unwrap();
+        owner
+            .retain(
+                source.into(),
+                &f.roots[0],
+                if original_available { Some(&[]) } else { None },
+            )
+            .unwrap();
+        assert!(owner
+            .validate(&shaped(&f.log), &f.roots, &f.paths)
+            .unwrap_err()
+            .contains("availability"));
+    }
+}
+
+#[test]
+fn d3b_retention_order_slots_and_fingerprint_failure_preserve_the_committed_prefix() {
+    let token = Token {
+        type_: TokenType::Name,
+        value: "a".into(),
+        line: 1,
+        column: 1,
+        type_name: None,
+        flags: None,
+        cv: None,
+    };
+    for (slots, root, stamped, reason) in [
+        (2, "cv1.0000000000000002", false, "root"),
+        (2, "cv1.0000000000000001", false, "root"),
+        (1, "cv1.0000000000000003", false, "slot"),
+        (2, "cv1.0000000000000003", true, "stamped"),
+    ] {
+        let mut owner =
+            SourceCatalog::new(slots, EsVersion::Es2025, ReplayLimits::default()).unwrap();
+        owner
+            .retain(
+                "a".into(),
+                "cv1.0000000000000002",
+                Some(std::slice::from_ref(&token)),
+            )
+            .unwrap();
+        let ledger = owner.used;
+        let pointer = owner.inputs[0].source.as_ptr();
+        let fingerprints = owner.inputs[0].fingerprints.clone();
+        let mut next_token = token.clone();
+        if stamped {
+            next_token.cv = Some("cv1.0000000000000003".into());
+        }
+        assert!(owner
+            .retain("a".into(), root, Some(&[next_token]))
+            .unwrap_err()
+            .contains(reason));
+        assert_eq!(owner.used, ledger);
+        assert_eq!(owner.inputs.len(), 1);
+        assert_eq!(owner.inputs[0].source.as_ptr(), pointer);
+        assert_eq!(owner.inputs[0].source, "a");
+        assert_eq!(owner.inputs[0].root, 2);
+        assert_eq!(owner.inputs[0].fingerprints, fingerprints);
+    }
+}
+
+#[test]
+fn d3b_independent_complete_replay_work_schedule_exact_and_one_less() {
+    for source in ["\0", "1"] {
+        let mut f = fixture(&[source], EsVersion::Es2025);
+        let expected = if source == "\0" {
+            854
+        } else {
+            let capture =
+                coding_adventures_javascript_lexer::tokenize_javascript_typed_with_ranges(
+                    source,
+                    EsVersion::Es2025,
+                    lexer::lexical::LexicalLimits::default(),
+                )
+                .unwrap();
+            let fingerprints: usize = capture
+                .tokens()
+                .iter()
+                .map(|token| 1 + 2 * independently_encoded_token(token).len() + 128)
+                .sum();
+            3110 + 2 * fingerprints
+        };
+        f.catalog.limits.work = expected;
+        assert_eq!(
+            f.catalog
+                .validate_core(&shaped(&f.log), &f.roots, &f.paths)
+                .unwrap(),
+            expected
+        );
+        f.catalog.limits.work = expected - 1;
+        assert!(f
+            .catalog
+            .validate(&shaped(&f.log), &f.roots, &f.paths)
+            .unwrap_err()
+            .contains("work"));
+    }
 }
 
 #[test]
@@ -630,7 +774,7 @@ fn d3b_actual_production_capture_limit_is_never_unavailable_success() {
 }
 
 #[test]
-fn d3b_actual_compiler_retention_refusal_preserves_all_destination_bytes() {
+fn d3b_actual_compiler_early_retention_and_final_replay_refusals_preserve_all_destination_bytes() {
     use crate::config::{CompilationLevel, CompilerConfig, CorrelationVectorFormat};
     use crate::run::{run_compiler_with_replay_limits, CompilerError};
     use std::sync::atomic::{AtomicU64, Ordering};
@@ -657,38 +801,66 @@ fn d3b_actual_compiler_retention_refusal_preserves_all_destination_bytes() {
             CorrelationVectorFormat::None,
         ] {
             for filtered in [false, true] {
-                for path in &paths {
-                    std::fs::write(path, b"prior\0source replay sentinel").unwrap();
-                }
-                let mut config = CompilerConfig::default();
-                config.compilation.level = level;
-                config.io.js_patterns = vec![input.to_string_lossy().into_owned()];
-                config.io.js_output_file = Some(paths[0].clone());
-                config.source_map.path_template = paths[1].to_string_lossy().into_owned();
-                config.chunks.output_manifest_file = Some(paths[2].clone());
-                config.special_modes.correlation_vector = true;
-                config.special_modes.correlation_vector_format = format;
-                config.special_modes.correlation_vector_output = Some(paths[3].clone());
-                config.special_modes.correlation_vector_summary = true;
-                if filtered {
-                    config.special_modes.correlation_vector_filter =
-                        vec!["hide-all-input-rows".into()];
-                }
-                let mut limits = ReplayLimits::default();
-                limits.source_capacity = 0;
-                let error = run_compiler_with_replay_limits(&config, limits).unwrap_err();
-                assert!(
-                    matches!(error,CompilerError::Provenance{ref stage,ref message} if stage=="source_replay" && message.contains("source capacity")),
-                    "{error:?}"
-                );
-                for path in &paths {
-                    assert_eq!(
-                        std::fs::read(path).unwrap(),
-                        b"prior\0source replay sentinel"
+                for early in [true, false] {
+                    for path in &paths {
+                        std::fs::write(path, b"prior\0source replay sentinel").unwrap();
+                    }
+                    let mut config = CompilerConfig::default();
+                    config.compilation.level = level;
+                    config.io.js_patterns = vec![input.to_string_lossy().into_owned()];
+                    config.io.js_output_file = Some(paths[0].clone());
+                    config.source_map.path_template = paths[1].to_string_lossy().into_owned();
+                    config.chunks.output_manifest_file = Some(paths[2].clone());
+                    config.special_modes.correlation_vector = true;
+                    config.special_modes.correlation_vector_format = format;
+                    config.special_modes.correlation_vector_output = Some(paths[3].clone());
+                    config.special_modes.correlation_vector_summary = true;
+                    if filtered {
+                        config.special_modes.correlation_vector_filter =
+                            vec!["hide-all-input-rows".into()];
+                    }
+                    let mut limits = ReplayLimits::default();
+                    let reason = if early {
+                        limits.source_capacity = 0;
+                        "source capacity"
+                    } else {
+                        // Independently pay exactly the entire retain phase. The
+                        // first final-replay census visit must exhaust this budget;
+                        // bypassing final replay would instead publish sentinels.
+                        let edition = crate::run::map_language_in_to_es_version(&config);
+                        let capture = coding_adventures_javascript_lexer::tokenize_javascript_typed_with_ranges("report(1+1);", edition, lexer::lexical::LexicalLimits::default()).unwrap();
+                        let retention = 43
+                            + capture
+                                .tokens()
+                                .iter()
+                                .map(|token| 1 + 2 * independently_encoded_token(token).len() + 128)
+                                .sum::<usize>();
+                        limits.work = retention;
+                        let mut control = SourceCatalog::new(1, edition, limits).unwrap();
+                        control
+                            .retain(
+                                "report(1+1);".into(),
+                                "cv1.0000000000000001",
+                                Some(capture.tokens()),
+                            )
+                            .unwrap();
+                        assert_eq!(control.used.work, retention);
+                        "source replay work limit"
+                    };
+                    let error = run_compiler_with_replay_limits(&config, limits).unwrap_err();
+                    assert!(
+                        matches!(error,CompilerError::Provenance{ref stage,ref message} if stage=="source_replay" && message.contains(reason)),
+                        "{error:?}"
                     );
+                    for path in &paths {
+                        assert_eq!(
+                            std::fs::read(path).unwrap(),
+                            b"prior\0source replay sentinel"
+                        );
+                    }
+                    assert_eq!(std::fs::read_dir(&dir).unwrap().count(), 5);
+                    println!("D3B_PUBLICATION_REFUSAL {level:?} {format:?} filtered={filtered} early={early}");
                 }
-                assert_eq!(std::fs::read_dir(&dir).unwrap().count(), 5);
-                println!("D3B_PUBLICATION_REFUSAL {level:?} {format:?} filtered={filtered}");
             }
         }
     }
