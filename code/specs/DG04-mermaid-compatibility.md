@@ -773,6 +773,8 @@ backend-neutral Paint instructions and metadata. Cause labels lower as bounded,
 width-aware theme boxes, and deeply nested trees expand the canvas vertically before
 Paint lowering. Exact upstream sizing and collision behavior, remaining
 configuration parity, and interactive behavior remain unsupported at the partial level.
+The global Mermaid `fontSize` setting survives typed causal IR, scales cause-label
+geometry during layout, and selects the matching glyph size before Paint lowering.
 
 ### Wardley Native Slice
 

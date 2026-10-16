@@ -2149,6 +2149,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     let text_color = css_to_color(&diagram.config.text_color);
     let mut label_font = options.label_font.clone();
     label_font.family.clone_from(&diagram.config.font_family);
+    label_font.size = diagram.config.font_size;
     let mut title_font = options.title_font.clone();
     title_font.family.clone_from(&diagram.config.font_family);
     let mut instructions = vec![PaintInstruction::Path(line_path(
@@ -2184,6 +2185,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     let mut metadata = HashMap::new();
     metadata.insert("ishikawa.diagramPadding".into(), diagram.config.diagram_padding.to_string());
     metadata.insert("ishikawa.useMaxWidth".into(), diagram.config.use_max_width.to_string());
+    metadata.insert("ishikawa.fontSize".into(), diagram.config.font_size.to_string());
     metadata.insert("ishikawa.fontFamily".into(), diagram.config.font_family.clone());
     metadata.insert("ishikawa.lineColor".into(), diagram.config.line_color.clone());
     metadata.insert("ishikawa.fillColor".into(), diagram.config.fill_color.clone());
@@ -11679,7 +11681,7 @@ mod tests {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedIshikawaDiagram { width: 600.0, height: 360.0, effect: "Delay".into(),
-            config: diagram_ir::IshikawaConfig { font_family: "Georgia".into(), line_color: "#123456".into(),
+            config: diagram_ir::IshikawaConfig { font_size: 22.0, font_family: "Georgia".into(), line_color: "#123456".into(),
                 fill_color: "#abcdef".into(), text_color: "#654321".into(), ..Default::default() },
             effect_x: 430.0, effect_y: 150.0, effect_width: 150.0, effect_height: 60.0,
             spine_from: Point { x: 30.0, y: 180.0 }, spine_to: Point { x: 430.0, y: 180.0 },
@@ -11697,7 +11699,10 @@ mod tests {
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef"))).count(), 2);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(101, 67, 33)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if (run.font_size - 22.0).abs() < 0.001)));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontFamily")), Some(&"Georgia".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontSize")), Some(&"22".to_string()));
     }
 
 

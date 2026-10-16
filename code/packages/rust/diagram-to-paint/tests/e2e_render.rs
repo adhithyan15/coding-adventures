@@ -4573,7 +4573,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_ishikawa_to_png() {
-        let diagram = parse_ishikawa("%%{init: {\"ishikawa\": {\"diagramPadding\": 64, \"useMaxWidth\": true}, \"themeVariables\": {\"fontFamily\": \"Georgia\", \"lineColor\": \"#123456\", \"mainBkg\": \"#abcdef\", \"textColor\": \"#654321\"}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews\n  Tools\n    Slow builds").expect("ishikawa parse failed");
+        let diagram = parse_ishikawa("%%{init: {\"fontSize\": 22, \"ishikawa\": {\"diagramPadding\": 64, \"useMaxWidth\": true}, \"themeVariables\": {\"fontFamily\": \"Georgia\", \"lineColor\": \"#123456\", \"mainBkg\": \"#abcdef\", \"textColor\": \"#654321\"}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews\n  Tools\n    Slow builds").expect("ishikawa parse failed");
         let layout = layout_ishikawa(&diagram, 720.0);
         assert_eq!(diagram.config.diagram_padding, 64.0);
         assert!(diagram.config.use_max_width);
@@ -4594,6 +4594,9 @@ line "Target" [35, 50, 68, 82]"##,
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef"))).count(), diagram.causes.len() + 1);
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.useMaxWidth")), Some(&"true".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontFamily")), Some(&"Georgia".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontSize")), Some(&"22".to_string()));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if (run.font_size - 22.0).abs() < 0.001)));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_ishikawa_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
