@@ -130,3 +130,50 @@ The committed amendment above distinguishes provisional callback work from
 final replay-backed certification, preserving the current per-input loop.
 Peak overlapping allocation accounting is explicit. No implementation preceded
 this correction; original withheld report remains immutable.
+
+## 2026-10-16: local implementation and scoped validation accepted
+
+Actual captured SIMPLE/ADVANCED compilation now owns fresh array occurrence IDs
+with complete ordered original physical-piece parents, including interior trivia,
+and shared exact half-open SourceRange coordinates. Final source replay precedes
+closed node/receipt/chronology admission after every input pipeline. Empty, hole,
+nested, repeated-text/input, escaped/CRLF/astral/comment/ASI cases connect result-
+owned fold ancestry to exact array occurrences; public legacy paths stay unchanged.
+
+Contract6cf was withheld for premature full-catalog certification; amendment2d
+passed before tests/code. Initial compiled CLI red9acf: zero passed/three failed,
+all missing occurrence nodes. Source9f was withheld for final identity allocation
+before debit, undercharged search and missing controls. Test-first buffer redb173:
+eight passed/one failed (756 filtered). Fixed stack ID keys, prepaid peak storage,
+per-comparison debit, exact/one-less limits with1/3/5 receipt growth, direct bad
+boundary controls and late publication refusal now close those findings. Original
+failed receipts/reviews remain unchanged; no semantic guard or safety test weakened.
+
+Full executions at0d: parser272P, folder451P/two historical ignored, closurec1152P,
+nativecompiler1006P =2881P across193 executables plus three empty doctests;
+package strict passed. That overall receipt remains UNACCEPTED because CLI strict
+found two owned-comparison lints in the new test. Test-only18 hoists canonical
+expected Strings and borrows as_str, preserving the strict STRING predicate.
+All8025 other old input bodies are identical. Actual changed-target3P and CLI
+all-target strict passed at18; the independent closed input/test transfer accepts
+this composed evidence, never relabeling old full execution as a full18 run.
+Transfer receipt `e3bb5c3a825ad2b79aadf3231b9ee6c7a23f021c163f32513b6ac4fafdf8f7cc`.
+Source review `30dfa056d2ef06b420bb77d992950cb7a2204c99ece9bccc9090a831c749ab0e`;
+terminal review `20b1f374c3b6f7027c7085a83d1bbea8d4311146bc9f4d6e030c7fd343ca82ff`. Current8027 physical inputs/both locks and all
+cited executable joins/hashes were independently checked in separate snapshots.
+The existing local parser path dependency is now direct; deleting only its one
+lock dependency member reconstructs the exact prior lock. No registry additions.
+
+Separate actual downstream run at18 passed59 exact sources/354 six-backend tuples,
+54 VM/JIT Float-bit observations, integration4P, observer/refusal controls and
+strict checks. Receipt `f8d303dfde1694e26fa4a5b4b641582b30465902b7bc57cda59df011876deb3d`.
+Focused LANG selectors each filter526 unrelated tests. CLR absent/uncounted;
+native/LLVM typed-main ABI remains OPEN. This is not a full LANG runtime suite.
+
+Next bounded core item is per-suffix member occurrence construction and shared
+spans. Other composite/synthetic identities, full child rewrite/pass/sweep history,
+rename/inline/motion/merge/deletion and emitted-byte joins/parity remain OPEN.
+Main76955 reconciliation beyonda2/PR#17288 conflicting/zero hosted checks/autoOFF
+still prevents delivery. No new push/merge or full objective acceptance is claimed.
+Miri DEFERRED/PENDING; frozen run/checkout/inputs/target/receipts untouched and
+unpolled. Genuine final-source Miri follows implementation delivery.

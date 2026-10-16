@@ -8180,7 +8180,7 @@ No new architectural pieces are needed per flag.
 - Source of truth: when upstream Closure Compiler adds a flag, `cli.spec.json` is updated and the binary picks it up via `include_str!`; no Rust code changes are required.
 
 
-### CLOC33 trusted array source occurrences (local validation pending)
+### CLOC33 trusted array source occurrences (local validation recorded)
 
 Wire CLOC32's actual array observer only into traced captured typed ingestion.
 Retain a bounded private construction ledger and certify its closed source-node

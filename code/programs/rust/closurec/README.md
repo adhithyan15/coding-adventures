@@ -662,5 +662,5 @@ CLOC33's traced SIMPLE/ADVANCED captured-input route now assigns fresh array
 construction identities with original physical-piece parents and the existing
 shared lexical ranges. A private construction ledger is checked only after full
 consumed-source replay and all input pipelines, before publication. Legacy
-source facades and tracing-off bytes remain unchanged. Validation is pending;
+source facades and tracing-off bytes remain unchanged. Local affected validation is recorded in CLOC33;
 full transformation/output lineage and Miri DEFERRED/PENDING remain open.

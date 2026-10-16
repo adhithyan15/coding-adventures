@@ -2992,3 +2992,24 @@ admission before publication; no new source/span index or generic AST fields.
 Contract committed before tests/code; implementation and evidence pending.
 One PR #17288, no new publication/merge. Miri DEFERRED/PENDING; frozen run and
 receipts untouched/unpolled. Full transformation/output/parity objective OPEN.
+
+### 2026-10-16: CLOC33 trusted array source occurrences locally accepted
+
+- Actual captured SIMPLE/ADVANCED array construction now owns fresh identities,
+  exact shared ranges and complete original physical-piece parents; final D3b
+  source replay and closed construction-ledger/journal admission precede publish.
+  Exact empty/hole/nested/repeated/raw-coordinate/fold ancestry controls pass.
+- 2,881 full tests/two historical ignores/193 executable joins passed at0d, plus
+  package strict. Original overall receipt stays failed for CLI test lint only.
+  Test-only18 preserves canonical STRING predicates; actual changed3CLI tests
+  and CLI strict pass. Closed independent input transfer retains correct heads;
+  no full18 execution claim. Source and composed terminal reviews PASS; bindings
+  and red/withheld/repair evidence are in CLOC33. Separate18runtime59/354/54 and
+  integration/observer/refusal/strict controls pass. CLR absent; nativeLLVM ABI OPEN.
+- Next: per-suffix member construction identities/shared spans, then remaining
+  composite/synthetic/pass/transformation/output joins. Base ESTree, own types,
+  no new crates.io dependencies preserved. Existing local parser now direct.
+- Sole PR17288 remains unpublished beyond6132/conflicting/zero checks/autoOFF;
+  main76955 reconciliation beyonda2 and delivery remain OPEN. Miri DEFERRED/PENDING;
+  frozen run/inputs/target/receipts untouched/unpolled. Final-source Miri follows
+  implementation delivery; full goal and heartbeat ACTIVE.
