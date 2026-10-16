@@ -2,96 +2,73 @@
 
 <!-- CV04b current-main integration pending -->
 Sole PR17288 still publishes6132a518b3990619eb904397ee0b21a69ce8ac20,
-CONFLICTING/auto-merge OFF. Fresh audit20261016T154507Z observes mainac29edea:
-14 open PRs fully audited, sole Closure/shared PR17288. Incoming timeline94df,
-native24-unit6e3b and timeline colorsac29 remain UNINTEGRATED/UNACCEPTED. Main6e54
-collision is integrated atc845; no new push/merge/cleanup or final objective claim.
-Base ESTree canonical boundary, own types and no new crates.io dependencies stay.
+CONFLICTING/auto-merge OFF/zero hosted checks in audit20261016T154507Z.
+Origin/main ac29edea was genuinely merged5c2b: reviewed complete226167-leaf tree
+matches prospective SHA d1d2dac7; recipe securityd437af4b PASS. Whole owned
+compiler/test bodies preserved inverse, raw50-source positive group isolated,
+all21 raw refusal full sources retained. Six local path-package lock versions
+reconciled; complete registry records exact, Closure lock unchanged. No new
+push/actual PR merge/cleanup/full-goal acceptance. Own types/base ESTree boundary,
+no new crates.io dependencies remain owner decisions.
 
-Before source integration, native24 contractab517 independently passes5ca4113d.
-Timeline v1 spec was WITHHELD because global preprocessing lets init-looking
-accessibility data masquerade as settings; revised1bdb contractc601e735 PASS
-requires trusted token-owned line masking in a local config copy. Shared helper
-bodies remain unchanged. Decoded native occurrence inventoryf346ec2a finds365
-negatives:137 quantitative24 (29 source identities),228 safety; old126 cap22
-positive companions remain exact. Historical29/30 are two quantitative duplicate
-occurrences, correcting the stale blanket221 safety classification. Inventory
-security is pending completion; no source merge or new execution acceptance.
-Read-only merge preflight/imports verify52 slots/35 missing immutable blobs;
-producer11439 consumed0 without source/index/lock/target/Miri edits. All incoming
-implementation remains unaccepted until genuine reds, repairs and final checks.
-Miri DEFERRED/PENDING; full Closure lineage/parity and actual delivery stay OPEN.
+Native24 contract5ca4113d and decoded inventory2395d112 PASS precede source edits.
+Inventoryf346ec2a:365 negatives in31 functions,137 quantitative24 occurrences in
+29 full-source identities plus228 safety; old126 cap22 positives exact. Two old
+historical29/30 duplicate occurrences are quantitative at24, correcting the stale
+blanket221 safety grouping. All seven raw contexts map to decoded occurrences.
+Tests7816 retain all137 exact complete24 sources, individually migrate25 refusals
+with27-function/20-file inverses and preserve structural23+1 plus raw24+1.
+Genuine compiled cap23 red7816: Cargo101/2P1F,137 unique refusals/four precision
+and shared-exp guards; producer94410 consumed0. Dedicated cap24 repairbb838
+changes four production lines only, entire owned production inverse exact;
+source securityba4dc7e9 PASS verifies repair/red. Shared exp/ln/f64/conditional
+routes stay exact. First bb8381002P run had strict101 redundant &source after
+String-generator materialization; separate one-borrow fix16dac/spec/lesson
+preserves its diagnostic oracle. That first combined receipt remains unaccepted.
 
-Checked hatch/collision implementation9ff adds the public Result API and explicit
-legacy wrapper refusal: represented initial geometry, shared8,388,608 pair-work
-budget, deterministic original-side placement, once-final seeded outlines and
-shared hatch limits262,144 lines/8,388,608 two-pass edge visits/262,144 actual
-segments. Fallible counted output reservation follows allocation-free numeric/
-grid preflight. Classic has no hatch-grid restriction; supported font/depth/look
-and all prior whole-source/fixture assertions remain. No universal physical
-allocation/font-fit/containment claim is added.
+Current tested source7a0171312fe83726bd080bdae97061302daaa22b is locally passing:
+compiler1002P/0fail/ignore/filter across five actual executables plus empty doc
+harness; all137 complete VM formatter-byte/typed-return occurrence markers,
+347 refusal IDs and126 old22-positive IDs exactly joined. Compiler strict0.
+Runtime adds15 immutable cases as an exact suffix to the old29-source/runner
+body: eight effect24, six raw real-result contexts, incoming false/right3.5
+24/12+12. Old29/new15 execute174/90 unique six-backend tuples and26/14 exact
+VM/JIT Float observations. Observer controls, compile-only25 refusal and both
+compiler/LANG strict pass. CLR absent/uncounted; Native/LLVM typed-main ABI open.
+Receipts native24-units-green-7a017131 and runtime15-v1-7a017131 bind frozen
+inputs/locks/helpers/logs/compiled harnesses. Producers29333/17987 consumed0;
+all producers consumed, no active Cargo. Exact-head migration/runtime source and
+terminal independent reviews are pending completion. No broader native/compiler
+reverse-graph/downstream/Closure/hosted acceptance transfers to current source.
 
-Preserve actual public huge-finitecc911 Cargo101/1P1F/owned-child noncompletion
-by3s then kill/reap3006ms; independent expected-red review92653b32 PASS. Cleanup
-RAII hardened79abc. Initial9ff source reviewa70bb17b WITHHELD found two issues:
-public outline-descriptor allocation hid grid failure (a985 actual0P1F), and a
-centered4px gap overstated actual PaintRect clearance at height400 (2f4 actual
-2P1F; painted3.999999999999993). Withdrawn height360 model remains separate.
-Fix46b791 removes descriptor allocation;30a2 encloses centered AND painted bounds
-while preserving original candidate arithmetic. Scoped source securityb2f1b88c
-PASS closes both findings; geometric30a2 actual81P/strict0.
+Earlier checked Ishikawa sourcec275 remains separately attributed: painter167+
+geometric81P/0fail/ignore/filter,24 complete source/IR/layout/Scene/font-query
+fixtures,17 binary joins and both strict0. Sourceb2f1b88c/fixture442444ff/
+terminale9955e93 PASS; docs8cff full unchanged checker0/lessons1383zero/diff0,
+independent3bf3eecf PASS. Public liveness, allocation-before-grid and actual
+painted-clearance reds remain preserved; shared work/grid/output limits remain.
+No execution receipt is relabeled to a documentation or integration successor.
 
-Four missing empty-hatch fixture fields migrated7161 with exact whole-file
-inverses. Painter then actually164P1F: only the nested-three whole-layout oracle
-was stale. Spec c252 precedes8a2 exact six-Y migration: B center107/rect93/glyph
-107.8 and C center75/rect61/glyph75.8, both declared4px gaps. All old sources,
-anchors, paths, depths, widths, glyph/style/meta/query and full assertions remain.
-Newa237 adds24 complete HandDrawn source/IR/layout/scene/ordered-query cells:
-single/nested-three, seeds0/17/-7, Georgia/CourierNew, frontmatter/directive.
-Bounded legacy math uses only declared coords, with analytic clipping controls.
-First full167P raw run had a tuple/list wrapper refusal; preserve v4 receipt/log,
-no strict ran. Lesson c275 fixes future receipt ordering, not the old evidence.
+Timeline94df/colorsac29 are integrated but remain WITHHELD95041495/bf258a86 and
+UNREPAIRED. Contract v1 was WITHHELD for raw directive-looking accessibility data;
+v2c601e735 PASS requires trusted ACC_DESCR_BLOCK-owned raw-line masking in a local
+config copy. Shared helpers stay exact. Implement genuine compiled source/
+geometry/spine/work reds, owned independent object-family parsing, checked
+Result/actual text frames, real-period spine, one-time LR predicate and complete
+18-slot palette/source/IR/layout/Scene/glyph/query fixtures. Retain old complete
+named-section sources and every earlier Venn/Wardley/Ishikawa assertion. Then
+fresh affected native/downstream/Closure suites/strict and independent source/
+terminal review before only existing PR delivery; required current exact-head
+terminal acceptable checks, conflict-free clean review and actual main merge
+reachability gate auto-merge/cleanup.
 
-Fresh exactc275 execution `CV04b-ishikawa-checked-v5-c27554a9.json` is consumed0:
-painter167P + geometric81P, zero failures/ignores/filters,17 actual executables
-and2 empty doc harnesses; all24 unique post-assertion fixture markers join the
-complete expected census. Both all-target strict commands exit0. Receipt binds
-7947 physical inputs/both locks/helper, actual Cargo artifact/executable joins
-and binary hashes. Independent fixture/source442444ff and terminale9955e93
-reviews PASS atc275, verifying all source inverses, complete target/artifact/
-Running joins, binary hashes and exact counts. Documentation carriers retain
-that execution attribution; broader current-main/hosted validation stays OPEN.
-
-Incoming native24 source reviewb8b5dc89 WITHHELD materializes9paths/18slots:
-restore owned narrow shared exp/ln classifier and extend only the dedicated
-canonical23→24 proof. Seven exact source contexts disappeared: retain six pure
-24-unit real-result sources as positive companions, and conditional-under-addition
-23+1 as an exact structural refusal. Timeline colors reviewbf258a86 WITHHELD
-materializes10paths/20blobs: raw comment/nested/quote-prefix config ownership adds
-to inherited94df geometry/spine/typed-work issues. Palette default changes are
-intentional; preserve old sources and add complete18-slot IR/layout/Scene/query
-oracles. These are source findings; no new incoming runtime/UB claim is made.
-
-Earlier cap23 unit09fb remains965P/strict0 with347 negatives+126 exact original
-formatter positives, source7578563b/terminal21c2e65c PASS. Runtime3137 remains
-29x6=174 unique tuples/26 exact typed Float observations, integration4P/observer
-1P/runtime1P and strict0; source de459e24/terminal1c6ffe99 PASS. Native/LLVM typed
-main ABI/value parity and CLR float-entry conversion stay OPEN; absent CLR
-uncounted. Historical native406=1882P/1 controlled archive ignore/strict0,
-fast58=2009P/strict0 and Closurefa4=1139P/strict0 retain their execution heads.
-
-Next: consume exact fixture/terminal reviews, audit latest incoming24-unit and
-timeline changes, commit bounded repair contracts before further integration;
-retain old complete source contexts. Derive fresh complete graphs/inputs/locks,
-run affected final compiler/native/downstream/Closure suites and strict, exact
-head independent security and all required hosted checks before sole-PR delivery.
-Verify actual merge reachability before cleanup. Existing CLOC27 leaf-token
-provenance is real; the epic's all-None bridge audit is stale. Composite/synthetic
-stable IDs, full fold/rename/inline/motion/merge/delete and pass/sweep lineage,
-output-byte/source joins and evidence-backed Closure parity remain OPEN.
-Miri **DEFERRED/PENDING**, never passed; frozen checkout/run/inputs/receipts/target
-untouched and unpolled. Delivery first, genuine final-source validation afterward;
-full objective OPEN and heartbeat ACTIVE.
+CLOC27 leaf-token provenance is real; epic all-None bridge audit is stale.
+Composite/synthetic stable IDs, full fold/rename/inline/motion/merge/delete and
+pass/sweep lineage, output-byte/source joins and evidence-backed Closure parity
+remain OPEN. Miri DEFERRED/PENDING, never passed: frozen checkout/run/inputs/
+receipts/target untouched and unpolled. Deliver remaining implementation first,
+then obtain genuine final-source Miri acceptance. Full objective OPEN; heartbeat
+ACTIVE, no final completion claim.
 <!-- /CV04b current-main integration pending -->
 
 <!-- CV04a dedicated native18 selected -->

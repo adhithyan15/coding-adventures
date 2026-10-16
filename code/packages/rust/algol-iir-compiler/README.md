@@ -344,7 +344,7 @@ sum of exact `1` through `17` terms and is preserved through parentheses,
 supported standard-function wrappers, and runtime conditional branches; each
 conditional path receives its own eighteen-unit budget.
 
-Incoming24 surface (integration validation pending):
+Dedicated24-unit integration (local validation; PR delivery pending):
 
 Variable-free exact additive zero terms and up to twenty-four exact offset units
 may surround that bounded result before `entier`; larger and dynamic additive
@@ -802,3 +802,26 @@ quantitative24 refusal and unchanged rounding controls. These checks do not clai
 full native/downstream/Closure parity. Miri remains **DEFERRED/PENDING**; its frozen
 run stays untouched and genuine final-source acceptance follows implementation
 and delivery. Full transformation lineage/output-byte-source joins remain OPEN.
+
+
+The dedicated canonical sign-unit proof admits exact literal units0..24 with
+checked cumulative absolute units; cancellation and wrappers cannot refund that
+budget. The shared exp/ln and generic floating-point proof remain unchanged.
+Current conditional-under-addition, dynamic/aliased roots, shadowed builtins and
+intermediate2^53 rounding guards remain conservative. This is a bounded proof,
+not general floating-point algebra certification.
+
+At source7a017131 the full compiler package passed1002 tests with zero failures,
+ignores or filters; all137 formerly refused24-unit source occurrences have exact
+formatter-byte and typed VM-return checks. Old126 cap22 positive companions and
+all228 safety occurrences remain intact, with quantitative25 refusals separately
+retained. The earlier strict borrow failure is preserved; its one-borrow fix now
+passes strict all-target lint. Runtime validation preserves the old29 sources
+(174 executed tuples) and adds15 sources (90 executed tuples), including effects,
+both conditional outcomes and exact real-result programs. VM/JIT produced40 exact
+Float observations across the two groups; six available backends ran. CLR was
+absent and uncounted. Native/LLVM process completion does not settle their typed
+main-return ABI. Both compiler/LANG strict commands passed. These are local
+scoped receipts; broader final-source checks and PR/CI delivery remain pending.
+Miri DEFERRED/PENDING, never passed; genuine final-source acceptance follows
+implementation delivery.
