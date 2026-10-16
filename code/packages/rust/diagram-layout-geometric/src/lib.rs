@@ -734,3 +734,6 @@ mod venn_typography_contract;
 
 #[cfg(test)]
 mod wardley_derived_contract;
+
+#[cfg(test)]
+mod wardley_note_derived_contract;
