@@ -65,9 +65,19 @@ complete serialized module with the accepted16-literal control compiled under
 the same module name. All compared numeric spellings have two digits, retaining
 source-span widths. Independently replace exactly one or two authored16 operand
 leaves in the control with17/18, as declared per case, then require byte equality
-of the entire serialized module. This binds instruction order, operands, labels,
-types, source positions and all serialized metadata; opcode counts alone do not
-prove this contract. Retain the existing route/effect assertions beside it.
+of the entire serialized module. Serialization binds the wire fields, including
+instruction order, operands, labels and types; it omits source maps and several
+static side tables. Independently compare every module/function/instruction
+field through exhaustive destructuring without ignored future fields, including
+source_map, feedback slots, refinements, may_alloc and IC/profiling fields. Keep
+source-map lockstep and at least one real source position observable. No shared
+wire-format change is intended. Opcode counts or wire bytes alone do not prove
+the complete in-memory lineage contract. Retain all route/effect assertions.
+Independent test-first review withheld5b for this missing companion; the first
+Rust build failed101 before any test ran because C had zero free space. Preserve
+that receipt as a toolchain/resource failure, never a semantic red. Official Cargo
+cleanup reclaimed only verified idle generated caches, with sources/receipts and
+frozen Miri untouched. Add companion assertions before the next genuine red.
 
 Commit tests before changing production. Genuine semantic reds must be actual
 executed assertion failures; compiler/ABI/helper failures are separate outcomes.

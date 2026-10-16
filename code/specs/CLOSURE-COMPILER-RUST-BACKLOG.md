@@ -7,7 +7,13 @@ generic f64-fold hazards. New spec precedes tests/import/repair; preserve the
 complete native16 shared prefix and only advance four dedicated canonical
 outer-entier locations to18. Add trueinteger19/f64fold18 and retain old rounding,
 structural13..18/effect/root/range refusals and166saved sources/996actual cells.
-Native18 implementation/execution NOT STARTED. Label54f66 separately pending.
+Native18 testfirst5b adds5compiler+2runtime functions/20saved sources; production
+remains native16. First producer65088 failed Rust compilation101 (disk free0,
+zero tests), wrapper1; not a semantic red. Official Cargo cleanup of verified
+idle generated targets reclaimed19GiB; sources/receipts/Miri untouched.
+Independent review withheld wire-only lineage test: explicit SourceLoc/static
+side-table companions are now specified before repair. Genuine red, import and
+implementation remain PENDING. Label54f66 separately pending.
 FullClosure/CV04b/hostedchecks/merge OPEN; oneactivePR/heartbeatACTIVE.
 Miri DEFERRED/PENDING NEVER passed; frozen run/inputs untouched/unpolled.
 <!-- /CV04a dedicated native18 selected -->
