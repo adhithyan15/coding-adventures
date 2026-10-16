@@ -3,6 +3,22 @@
 **Status:** active — resumed with provenance as a completion requirement
 
 
+<!-- CV04a native15 current checkpoint -->
+Native15 main4f (parent61) has9 paths/18 slots/16 real blobs/2 absent shards;
+raw incoming review5cf99164 WITHHELD, manifest e9ee35e5. This specification
+precedes tests/import/repair in isolated R1 from locally accepted-source carrier
+cf5f (final carrier/helper review/publication pending separately in fixed R2).
+Native14 e3 actual1836/78/strict6 and146sources/876cells remain attributed;
+style33 actual989/50/strict14 remains fixed. Native15 NOT implemented/executed.
+Next: new15 testfirst, all-old canonical15 refusal inventory, exact closed9path
+merge retaining whole owned production, then only4 dedicated14→15 edits.
+Keep all shared exp/log/legacy/identity/effect/8192 limits and structural controls,
+reverse6/forward166/native2853/resources21+3/registry376; no rawmain4/160 shrink.
+SolePR17288 UNMERGED/AUTOOFF. Frozen Miri DEFERRED/PENDING, never passed;
+untouched/unpolled/no duplicate/termination. Full Closure parity/outputbyte/full
+transformation lineage/stableIDs/spans/passsweep/CV04b OPEN; heartbeat ACTIVE.
+<!-- /CV04a native15 current checkpoint -->
+
 <!-- CV04a Wardley theme-notes selected -->
 Current implementation source33ac7884: full14 actual989P0F0I/50targets0 and
 strict14 actual0, sessions fully consumed. Independent source/terminal review
