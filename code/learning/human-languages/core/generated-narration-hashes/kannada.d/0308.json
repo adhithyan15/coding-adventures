@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:be694f2f05cf64c9",
+  "lessonIds": [
+    "KA-W308-a2-connected-composition"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch308.txt",
+  "json": "kannada/narration/ch308.json",
+  "textHash": "fnv1a64:59b46ed1563a98ee",
+  "jsonHash": "fnv1a64:ecde5a0163895016",
+  "findings": []
+}
