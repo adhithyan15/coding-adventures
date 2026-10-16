@@ -339,6 +339,11 @@ Deterministic layout emits dedicated section, spine, and period-card geometry,
 which lowers to backend-neutral PaintScene rectangles, paths, and shaped text
 and is exercised by a Metal-to-PNG fixture. The family remains partial until
 the complete pinned syntax and tolerant visual corpus passes.
+Timeline `padding`, `useMaxWidth`, and `disableMulticolor` settings from Mermaid
+init directives or YAML front matter survive as typed semantic configuration.
+Padding controls deterministic outer and spine geometry, sectionless single-color
+mode selects stable period Paint styles, and all three settings lower to
+backend-neutral PaintScene metadata.
 
 ### Mindmap Native Slice
 
