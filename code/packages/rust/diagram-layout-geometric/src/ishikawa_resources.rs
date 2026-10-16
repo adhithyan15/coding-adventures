@@ -194,7 +194,7 @@ fn finish_hatches(outlines:&[&[Point]],limits:Limits)->Result<Vec<Vec<LayoutedIs
         for step in 0..plan.lines {
             let index=plan.first.checked_add(i64::try_from(step).map_err(|_|Error::DerivedGeometry)?).ok_or(Error::DerivedGeometry)?;
             intersections(outline,index as f64*5.0,&mut scratch)?;
-            for pair in scratch.chunks_exact(2) {
+            for pair in scratch.as_chunks::<2>().0 {
                 if values.len()>=*count {return Err(Error::DerivedGeometry);}
                 values.push(LayoutedIshikawaHatch{from:pair[0].point.clone(),to:pair[1].point.clone()});
             }
