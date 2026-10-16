@@ -13,7 +13,8 @@ frozen Miri DEFERRED/PENDING untouched/unpolled, no duplicate or termination.
 Re-audit actual origin/main/open shared PRs/backlog/epic before mutation. Select
 only pipelinec138 relative314, complete14paths/28real blobs under independently
 WITHHELD49edf/manifest3d1e. Later stages69adc and native17553 stay separately
-pending under audits9dd1/d1f878 and0d08; no raw full-main replacement. Reconstruct
+pending under reports9dd1/0d08 and manifestsfbfaa3ce/d1f878a5, respectively;
+no raw full-main replacement. Reconstruct
 every complete overlap and the entire expected tree before import. Preserve all
 native16/SwiftUI/Closure/Go/CI and21+3resource inputs, old config/note/annotation/
 force readers, checked gates, total annotation box and stage expression.

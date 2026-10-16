@@ -40,3 +40,8 @@ guessed after/repository/path read failed despite complete materialization. Read
 the exact saved filename from the manifest. Native changelogs are tracked shards
 under CHANGELOG.d; a guessed root CHANGELOG.md read likewise failed. Discover
 both paths before the reader rather than retrying an inferred layout.
+
+Pair each incoming report and manifest with its own commit when recording short
+hashes. The first pipeline-spec checkpoint mixed the stage report with the native17
+manifest in one phrase. Correct the pair explicitly: stage9dd1/fbfaa3ce and
+native170d08/d1f878a5. Complete filenames and full hashes remain in their receipts.
