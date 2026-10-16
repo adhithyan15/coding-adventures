@@ -4601,6 +4601,11 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontSize")), Some(&"22".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.look")), Some(&"handDrawn".to_string()));
         assert_eq!(layout.spine_path.len(), 5);
+        for (index, left) in layout.bones.iter().enumerate() {
+            assert!(layout.bones.iter().skip(index + 1).all(|right|
+                (left.label_position.x - right.label_position.x).abs() >= (left.label_width + right.label_width) / 2.0
+                || (left.label_position.y - right.label_position.y).abs() >= (left.label_height + right.label_height) / 2.0));
+        }
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::GlyphRun(run) if (run.font_size - 22.0).abs() < 0.001)));
         let pixels = render(&scene);
