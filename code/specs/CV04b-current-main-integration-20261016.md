@@ -132,6 +132,13 @@ Its incomplete receipt has no results and is withheld, not failed test evidence.
 Use the complete metadata-derived affected/forward source set for the next
 validator; preserve its frozen bytes and all existing Miri targets untouched.
 
+Preserve per-key selection across multiple init directives for existing callers;
+the new root-font reader must not change that shared contract. Multiline
+accessibility descriptions carry an out-of-band line owner and preserve consumed
+physical lines. Authored single-line values resembling internal placeholders
+remain literal text. Small supported Ishikawa fonts need positive floors on both
+inner text width and height, independently of the outline's scaled box.
+
 The15-input read-only node-occurrence audit preserves real CLOC27/D1-D2 leaf
 reuse and folding; bridge prose saying every cv is None is stale. Composite/
 synthetic identities, full fold/rename/inline/motion/merge/delete and pass/sweep
