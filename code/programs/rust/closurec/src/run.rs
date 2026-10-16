@@ -2155,6 +2155,10 @@ pub fn run_and_print(config: &CompilerConfig) -> Result<(), CompilerError> {
 // ---------------------------------------------------------------------------
 
 #[cfg(test)]
+#[path = "captured_ingestion_tests.rs"]
+mod captured_ingestion_tests;
+
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::config::IoConfig;

@@ -384,3 +384,28 @@ fn d2_typed_lex_and_parse_failures_preserve_every_destination() {
         }
     }
 }
+
+#[test]
+fn d2_right_brace_and_restricted_return_asi_keep_physical_ownership() {
+    for (source, spans) in [
+        (
+            "function f(){return 1+1}report(f());",
+            [ascii(20, 21), ascii(22, 23)],
+        ),
+        (
+            "function f(){return\n1+1}\nreport(2+2)",
+            [
+                [[20, 20, 20, 1, 0, 0], [21, 21, 21, 1, 1, 1]],
+                [[22, 22, 22, 1, 2, 2], [23, 23, 23, 1, 3, 3]],
+            ],
+        ),
+    ] {
+        let f = Fixture::new(&[source]);
+        let w = f.compile("SIMPLE");
+        let root = root(&w, &f.inputs[0], source);
+        let result = single_fold(&w, "2");
+        let ids = operands(&w, &result, root, &spans);
+        merge_parents(&w, &result, &ids);
+        println!("D2_LINEAGE_OK brace-or-return");
+    }
+}
