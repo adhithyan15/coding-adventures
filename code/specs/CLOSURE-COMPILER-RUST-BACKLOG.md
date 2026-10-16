@@ -2,6 +2,27 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 
+
+<!-- CV04a Wardley theme-notes selected -->
+Published solePR17288 exact261c82f8 native14/Wardley-config progress by normal
+FF frome16c; API/Git-ref verified, UNMERGED/CONFLICTING/AUTOOFF. Actual nativee3
+1836/78/compiler895/LANG506/strict6 and Wardley1b981/47/strict14 independently
+accepted; carrier7c61d102/helper302fddfb, doc/lessons/diff0/raw1464/namedMD/
+resources/current61 plan selection-only all recorded. Miri DEFERRED/PENDING.
+Latest audited main61 includes987theme11 +e072human9 +61notes12 modifications,
+closed21-path union3beac8b9. Raw theme/notes source reviews8c49270a/5dd0b992
+WITHHOLD integration: config authority/active quotes/empty-init resurrection,
+unchecked typed note coordinates and note quote/comment preservation gaps.
+Next bounded theme+notes specification committed before tests/import/repair in
+isolated successor branch; sourcecode unchanged. Preserve native146/876 actual
+cells,94IR/2bodyerrors/271geometry/8Wardley scene-query controls,13Venn files/
+232complete cells,37Ishi/67IR, all guard/limit/dependency/resource boundaries.
+See CV04a-wardley-theme-notes-main-reconciliation.md. Tests/import/code NOT
+started; current-main/requiredCI/conflict/review/actualmerge/CV04b/fullparity/
+outputbyte/full transformation lineage remain OPEN. Frozen Miri untouched/
+unpolled/no duplicate/termination; heartbeat ACTIVE.
+<!-- /CV04a Wardley theme-notes selected -->
+
 <!-- CV04a Wardley current checkpoint -->
 ## Bounded Wardley configuration and checked geometry
 
