@@ -286,3 +286,7 @@ existing star-track lowering; other flex shorthand forms remain unsupported.
 See `code/specs/mosaic-xaml-table-viewport-20261012.md` for executed native evidence
 and outstanding performance/accessibility acceptance. This is not native release
 acceptance.
+
+Native table cell automation names use the authored row-header label, including
+reactive list/index labels for virtual windows. GridItem row indices remain local
+to the realized table. Tables without row headers use one-based local names.

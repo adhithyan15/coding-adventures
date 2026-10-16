@@ -17,3 +17,10 @@ expressions and unnumbered fallback; package tests and generated WinUI build.
 Native scroll/name inspection and keyboard acceptance remain separately pending
 until computer control is available. This change does not establish release
 readiness or resolve all of #14278.
+
+Validation receipt (2026-10-16): 407 package tests passed (393 unit, 14
+integration), one documentation test ignored. Includes compiled C# retained-cell
+label change/notification probe. Generated VisiCalc Release WinUI build passed
+with zero errors and two existing unused PropertyChanged event warnings.
+Native UI inspection is pending because the computer-control Node kernel cannot
+initialize (kernel asset path error). No native acceptance or release claim.
