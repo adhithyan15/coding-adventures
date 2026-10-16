@@ -108,9 +108,11 @@ pub(super) fn finish(layout:&mut LayoutedIshikawaDiagram,limits:Limits)->Result<
         points_finite(&b.label_outline)?;
     }
     if hand {
-        let mut outlines=Vec::new();reserve(&mut outlines,layout.bones.len()+1)?;
-        outlines.push(layout.effect_outline.as_slice());for b in &layout.bones {outlines.push(b.label_outline.as_slice());}
-        let result=finish_hatches(&outlines,limits)?;drop(outlines);
+        // Borrow final outlines through a cloned, allocation-free iterator.
+        // Even descriptor storage must not hide a later numeric/grid failure.
+        let outlines=std::iter::once(layout.effect_outline.as_slice())
+            .chain(layout.bones.iter().map(|b|b.label_outline.as_slice()));
+        let result=finish_hatches_iter(outlines,limits)?;
         let mut result=result.into_iter();layout.effect_hatches=result.next().expect("effect outline admitted");
         for b in &mut layout.bones {b.hatches=result.next().expect("label outline admitted");}
     }
@@ -162,21 +164,27 @@ fn intersections(outline:&[Point],offset:f64,scratch:&mut Vec<Intersection>)->Re
     scratch.sort_unstable_by(|a,b|a.key.total_cmp(&b.key).then(a.edge.cmp(&b.edge)));
     scratch.dedup_by(|a,b|(a.key-b.key).abs()<1e-7);Ok(())
 }
+#[cfg(test)]
 fn finish_hatches(outlines:&[&[Point]],limits:Limits)->Result<Vec<Vec<LayoutedIshikawaHatch>>,Error> {
+    finish_hatches_iter(outlines.iter().copied(),limits)
+}
+fn finish_hatches_iter<'a>(outlines:impl Iterator<Item=&'a [Point]>+Clone,limits:Limits)->Result<Vec<Vec<LayoutedIshikawaHatch>>,Error> {
     // Numeric validity of *all* outlines wins over a budget error on an earlier
     // outline. This first pass allocates neither plans nor hatch storage.
-    let mut lines=Some(0_usize);let mut work=Some(0_usize);let mut max_edges=0;
-    for outline in outlines {
+    let mut lines=Some(0_usize);let mut work=Some(0_usize);let mut max_edges=0;let mut number=Some(0_usize);
+    for outline in outlines.clone() {
         let plan=outline_grid(outline)?;let edges=outline.len().saturating_sub(1);max_edges=max_edges.max(edges);
+        number=number.and_then(|n|n.checked_add(1));
         lines=lines.and_then(|sum|sum.checked_add(plan.lines));
         work=work.and_then(|sum|plan.lines.checked_mul(edges).and_then(|n|n.checked_mul(2)).and_then(|n|sum.checked_add(n)));
     }
     if lines.is_none_or(|n|n>limits.lines) {return Err(Error::HatchLines);}
     if work.is_none_or(|n|n>limits.edge_visits) {return Err(Error::HatchWork);}
-    let mut plans=Vec::new();reserve(&mut plans,outlines.len())?;
+    let number=number.ok_or(Error::Allocation)?;
+    let mut plans=Vec::new();reserve(&mut plans,number)?;
     let mut scratch=Vec::new();reserve(&mut scratch,max_edges)?;
     let mut total=0_usize;
-    for outline in outlines {
+    for outline in outlines.clone() {
         let plan=outline_grid(outline)?;let mut count=0_usize;
         #[cfg(test)] observe(|s|s.hatch_passes+=1);
         for step in 0..plan.lines {
@@ -187,9 +195,9 @@ fn finish_hatches(outlines:&[&[Point]],limits:Limits)->Result<Vec<Vec<LayoutedIs
         total=total.checked_add(count).ok_or(Error::HatchSegments)?;plans.push((plan,count));
     }
     if total>limits.segments {return Err(Error::HatchSegments);}
-    let mut result=Vec::new();reserve(&mut result,outlines.len())?;
+    let mut result=Vec::new();reserve(&mut result,number)?;
     for (_,count) in &plans {let mut values=Vec::new();reserve(&mut values,*count)?;result.push(values);}
-    for ((outline,(plan,count)),values) in outlines.iter().zip(&plans).zip(&mut result) {
+    for ((outline,(plan,count)),values) in outlines.zip(&plans).zip(&mut result) {
         #[cfg(test)] observe(|s|s.hatch_passes+=1);
         for step in 0..plan.lines {
             let index=plan.first.checked_add(i64::try_from(step).map_err(|_|Error::DerivedGeometry)?).ok_or(Error::DerivedGeometry)?;
