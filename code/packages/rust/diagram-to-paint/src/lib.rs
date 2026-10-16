@@ -36,7 +36,7 @@ use diagram_ir::{
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram,
     LayoutedSwimlaneEdge, LayoutedRailroadDiagram,
-    LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram, WardleyForceKind, WardleySourceStrategy,
+    LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram, WardleyForceKind, WardleyLinkFlow, WardleySourceStrategy,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardCard, LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
@@ -2203,6 +2203,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     let component_label_color = css_to_color(&theme.component_label_color);
     let mut instructions = vec![PaintInstruction::Path(line_path(&[Point { x: left, y: top }, Point { x: left, y: bottom }, Point { x: right, y: bottom }], &theme.axis_color, 1.0))];
     let mut text_children = Vec::new();
+    let mut rotated_link_labels = Vec::new();
     if let Some(title) = &diagram.title {
         text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0,
             font_with_size(&options.title_font, Some(diagram.config.axis_font_size * 1.05)), axis_text_color));
@@ -2240,7 +2241,24 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             width: pipeline.width, height: pipeline.height, fill: None, stroke: Some(theme.axis_color.clone()),
             stroke_width: Some(1.5), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
     }
-    for link in &diagram.links { instructions.push(PaintInstruction::Path(line_path(&[link.from.clone(), link.to.clone()], &theme.link_stroke, 1.0))); }
+    for link in &diagram.links {
+        let mut path = line_path(&[link.from.clone(), link.to.clone()], &theme.link_stroke, 1.0);
+        if link.dashed { path.stroke_dash = Some(vec![6.0, 6.0]); }
+        instructions.push(PaintInstruction::Path(path));
+        if matches!(link.flow, Some(WardleyLinkFlow::Forward | WardleyLinkFlow::Bidirectional)) {
+            instructions.push(PaintInstruction::Path(wardley_flow_arrowhead(&link.from, &link.to, &theme.link_stroke)));
+        }
+        if matches!(link.flow, Some(WardleyLinkFlow::Backward | WardleyLinkFlow::Bidirectional)) {
+            instructions.push(PaintInstruction::Path(wardley_flow_arrowhead(&link.to, &link.from, &theme.link_stroke)));
+        }
+        if let Some(label) = &link.label {
+            let width = (label.chars().count() as f64 * diagram.config.label_font_size * 0.65).max(30.0);
+            rotated_link_labels.push((text_node_no_wrap(label, link.label_position.x - width / 2.0,
+                link.label_position.y - 10.0, width, 20.0,
+                font_with_size(&options.label_font, Some(diagram.config.label_font_size)), axis_text_color),
+                link.label_angle, link.label_position.x, link.label_position.y));
+        }
+    }
     for evolution in &diagram.evolves { instructions.push(PaintInstruction::Path(line_path(&[evolution.from.clone(), evolution.to.clone()], &theme.evolution_stroke, 1.0))); }
     for node in &diagram.nodes {
         if let Some(strategy) = node.source_strategy {
@@ -2365,6 +2383,17 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
     });
     instructions.extend(text_scene.instructions);
+    for (node, rotation_degrees, pivot_x, pivot_y) in rotated_link_labels {
+        let scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+            id: None, content: None, children: vec![node], ext: HashMap::new() }, &LayoutToPaintOptions {
+            width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
+            shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
+        });
+        let radians = rotation_degrees.to_radians(); let cosine = radians.cos(); let sine = radians.sin();
+        instructions.push(PaintInstruction::Group(PaintGroup { base: PaintBase::default(), children: scene.instructions,
+            transform: Some([cosine, sine, -sine, cosine, pivot_x - cosine * pivot_x + sine * pivot_y,
+                pivot_y - sine * pivot_x - cosine * pivot_y]), opacity: None }));
+    }
     let mut metadata = HashMap::new();
     metadata.insert("wardley.padding".into(), diagram.config.padding.to_string());
     metadata.insert("wardley.nodeRadius".into(), diagram.config.node_radius.to_string());
@@ -2390,8 +2419,23 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("wardley.customLabelCount".into(), diagram.nodes.iter().filter(|node| node.label_offset_x.is_some()).count().to_string());
     metadata.insert("wardley.strategyCount".into(), diagram.nodes.iter().filter(|node| node.source_strategy.is_some()).count().to_string());
     metadata.insert("wardley.inertiaCount".into(), diagram.nodes.iter().filter(|node| node.inertia).count().to_string());
+    metadata.insert("wardley.flowLinkCount".into(), diagram.links.iter().filter(|link| link.flow.is_some()).count().to_string());
+    metadata.insert("wardley.dashedLinkCount".into(), diagram.links.iter().filter(|link| link.dashed).count().to_string());
+    metadata.insert("wardley.labeledLinkCount".into(), diagram.links.iter().filter(|link| link.label.is_some()).count().to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: theme.background_color.clone(), instructions, id: None, metadata: Some(metadata) }
+}
+
+fn wardley_flow_arrowhead(previous: &Point, tip: &Point, stroke: &str) -> PaintPath {
+    let dx = tip.x - previous.x; let dy = tip.y - previous.y; let length = dx.hypot(dy).max(1e-9);
+    let ux = dx / length; let uy = dy / length; let size = 5.0; let half_width = 2.5;
+    let base_x = tip.x - ux * size; let base_y = tip.y - uy * size;
+    PaintPath { base: PaintBase::default(), commands: vec![
+        PathCommand::MoveTo { x: tip.x, y: tip.y },
+        PathCommand::LineTo { x: base_x - uy * half_width, y: base_y + ux * half_width },
+        PathCommand::LineTo { x: base_x + uy * half_width, y: base_y - ux * half_width }, PathCommand::Close,
+    ], fill: Some(stroke.into()), fill_rule: None, stroke: None, stroke_width: None,
+        stroke_cap: None, stroke_join: None, stroke_dash: None, stroke_dash_offset: None }
 }
 
 /// Lower Cynefin domains and transitions into backend-neutral geometry and glyphs.
@@ -11662,7 +11706,10 @@ mod tests {
             nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true, pipeline_parent: true, label_offset_x: None, label_offset_y: None, source_strategy: Some(WardleySourceStrategy::Build), inertia: false },
                 diagram_ir::LayoutedWardleyNode { id: "b".into(), label: "Child".into(), position: Point { x: 150.0, y: 120.0 }, anchor: false, pipeline_parent: false, label_offset_x: Some(-30.0), label_offset_y: Some(12.0), source_strategy: Some(WardleySourceStrategy::Market), inertia: true },
                 diagram_ir::LayoutedWardleyNode { id: "c".into(), label: "Normal".into(), position: Point { x: 260.0, y: 120.0 }, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None, source_strategy: None, inertia: false }],
-            links: vec![], evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }],
+            links: vec![diagram_ir::LayoutedWardleyLink { from: Point { x: 205.0, y: 102.0 }, to: Point { x: 155.0, y: 118.0 },
+                dashed: true, label: Some("constraint".into()), label_position: Point { x: 178.0, y: 102.0 },
+                label_angle: -17.7, flow: Some(WardleyLinkFlow::Bidirectional) }],
+            evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }],
             annotations_box: Some(Point { x: 60.0, y: 220.0 }), annotations: vec![diagram_ir::LayoutedWardleyAnnotation {
                 number: 1, text: "Risk".into(), positions: vec![Point { x: 280.0, y: 180.0 }, Point { x: 320.0, y: 160.0 }] }],
             forces: vec![diagram_ir::LayoutedWardleyForce { label: "Adoption".into(), position: Point { x: 100.0, y: 170.0 },
@@ -11689,6 +11736,15 @@ mod tests {
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.customLabelCount")), Some(&"1".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.strategyCount")), Some(&"2".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.inertiaCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.flowLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.dashedLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.labeledLinkCount")), Some(&"1".to_string()));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[6.0, 6.0]))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#6789ab") && path.stroke.is_none())).count(), 2);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Group(group) if group.transform.is_some())));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,

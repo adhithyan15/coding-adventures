@@ -436,6 +436,16 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
                 Some(diagram_ir::WardleySourceStrategy::Outsource), Some(diagram_ir::WardleySourceStrategy::Market)]);
             assert!(diagram.nodes[3].inertia);
         }
+        if name == "flow-links" {
+            assert_eq!(diagram.links.len(), 6);
+            assert_eq!(diagram.links[0].label.as_deref(), Some("request"));
+            assert!(diagram.links[1].dashed);
+            assert_eq!(diagram.links[2].flow, Some(diagram_ir::WardleyLinkFlow::Forward));
+            assert_eq!(diagram.links[3].flow, Some(diagram_ir::WardleyLinkFlow::Backward));
+            assert_eq!(diagram.links[4].flow, Some(diagram_ir::WardleyLinkFlow::Bidirectional));
+            assert_eq!(diagram.links[4].label.as_deref(), Some("sync"));
+            assert_eq!(diagram.links[5].flow, Some(diagram_ir::WardleyLinkFlow::Forward));
+        }
         if name == "forces" {
             assert_eq!(diagram.forces.len(), 2);
             assert_eq!(diagram.forces[0].label, "AI Adoption");
@@ -1480,6 +1490,7 @@ fn wardley_dispatches_to_dedicated_strategic_map_ir() {
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nAPI -> Missing").is_err());
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nnote unquoted [0.4, 0.5]").is_err());
     assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\nannotation one,[0.4, 0.5] \"Bad\"").is_err());
+    assert!(parse_wardley("wardley-beta\ncomponent API [0.6, 0.5]\ncomponent DB [0.4, 0.7]\nAPI -> DB;").is_err());
     let sized = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 700, \"height\": 420}}}%%\nwardley-beta\nsize [640, 360]\ncomponent API [0.6, 0.5]").unwrap();
     assert_eq!((sized.config.width, sized.config.height), (640.0, 360.0));
 }

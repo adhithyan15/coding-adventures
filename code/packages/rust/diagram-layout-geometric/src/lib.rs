@@ -186,9 +186,25 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
         Some(LayoutedWardleyPipeline { x: first.x - 15.0, y, width: last.x - first.x + 30.0, height, component_positions })
     }).collect();
     let positions: HashMap<_, _> = diagram.nodes.iter().zip(nodes.iter()).map(|(source, layout)| (source.label.as_str(), layout.position.clone())).collect();
-    let links = diagram.links.iter().filter_map(|link| Some(LayoutedWardleyLink {
-        from: positions.get(link.source.as_str())?.clone(), to: positions.get(link.target.as_str())?.clone(),
-    })).collect();
+    let layout_nodes: HashMap<_, _> = diagram.nodes.iter().zip(nodes.iter()).map(|(source, layout)| (source.label.as_str(), layout)).collect();
+    let links = diagram.links.iter().filter_map(|link| {
+        let source = layout_nodes.get(link.source.as_str())?; let target = layout_nodes.get(link.target.as_str())?;
+        let dx = target.position.x - source.position.x; let dy = target.position.y - source.position.y;
+        let distance = dx.hypot(dy); let (ux, uy) = if distance > f64::EPSILON { (dx / distance, dy / distance) } else { (0.0, 0.0) };
+        let source_radius = if source.pipeline_parent { diagram.config.node_radius * 1.6 / 2.0_f64.sqrt() } else { diagram.config.node_radius };
+        let target_radius = if target.pipeline_parent { diagram.config.node_radius * 1.6 / 2.0_f64.sqrt() } else { diagram.config.node_radius };
+        let midpoint = Point { x: (source.position.x + target.position.x) / 2.0,
+            y: (source.position.y + target.position.y) / 2.0 };
+        let mut label_angle = dy.atan2(dx).to_degrees();
+        if !(-90.0..=90.0).contains(&label_angle) { label_angle += 180.0; }
+        Some(LayoutedWardleyLink {
+            from: Point { x: source.position.x + ux * source_radius, y: source.position.y + uy * source_radius },
+            to: Point { x: target.position.x - ux * target_radius, y: target.position.y - uy * target_radius },
+            dashed: link.dashed, label: link.label.clone(),
+            label_position: Point { x: midpoint.x + uy * 8.0, y: midpoint.y - ux * 8.0 }, label_angle,
+            flow: link.flow,
+        })
+    }).collect();
     let evolves = diagram.evolves.iter().filter_map(|evolve| {
         let node = diagram.nodes.iter().find(|node| node.label == evolve.component)?;
         Some(LayoutedWardleyEvolution { from: positions.get(node.label.as_str())?.clone(), to: point(node.visibility, evolve.target) })
@@ -552,7 +568,9 @@ mod tests {
                 diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None, source_strategy: None, inertia: false },
                 diagram_ir::WardleyNode { id: "c".into(), label: "A1".into(), visibility: 0.8, evolution: 0.1, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None, source_strategy: None, inertia: false },
                 diagram_ir::WardleyNode { id: "d".into(), label: "A2".into(), visibility: 0.8, evolution: 0.4, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None, source_strategy: None, inertia: false }],
-            links: vec![], evolves: vec![], notes: vec![diagram_ir::WardleyNote { text: "Watch".into(), visibility: 0.5, evolution: 0.5 }],
+            links: vec![diagram_ir::WardleyLink { source: "A".into(), target: "B".into(), dashed: true,
+                label: Some("flow".into()), flow: Some(diagram_ir::WardleyLinkFlow::Bidirectional) }],
+            evolves: vec![], notes: vec![diagram_ir::WardleyNote { text: "Watch".into(), visibility: 0.5, evolution: 0.5 }],
             annotations_box: Some((0.2, 0.8)), annotations: vec![diagram_ir::WardleyAnnotation { number: 1,
                 text: "Risk".into(), coordinates: vec![(0.6, 0.7)] }], forces: vec![diagram_ir::WardleyForce {
                     label: "Adoption".into(), visibility: 0.4, evolution: 0.25, kind: diagram_ir::WardleyForceKind::Accelerator }],
@@ -571,6 +589,11 @@ mod tests {
         assert_eq!((layout.nodes[0].label_offset_x, layout.nodes[0].label_offset_y), (Some(-20.0), Some(8.0)));
         assert_eq!(layout.nodes[0].source_strategy, Some(diagram_ir::WardleySourceStrategy::Build));
         assert!(layout.nodes[0].inertia);
+        assert!(layout.links[0].dashed);
+        assert_eq!(layout.links[0].label.as_deref(), Some("flow"));
+        assert_eq!(layout.links[0].flow, Some(diagram_ir::WardleyLinkFlow::Bidirectional));
+        assert!(layout.links[0].from.x > layout.nodes[0].position.x);
+        assert!(layout.links[0].to.x < layout.nodes[1].position.x);
     }
 
 
