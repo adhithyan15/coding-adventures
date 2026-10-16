@@ -600,7 +600,7 @@ use diagram_ir::{
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram,
-    WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewConfig, TreeViewDiagram, TreeViewNode,
+    WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, WardleyNote, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind, TreeViewTheme,
 };
 
@@ -5850,7 +5850,7 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
     let mut diagram = WardleyDiagram { title: None, config,
         stages: vec!["Genesis".into(), "Custom Built".into(), "Product".into(), "Commodity".into()],
-        nodes: Vec::new(), links: Vec::new(), evolves: Vec::new() };
+        nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new() };
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
         let line = raw.split("%%").next().unwrap_or("").trim();
@@ -5881,6 +5881,19 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             let target = target.parse::<f64>().map_err(|_| wardley_error(line_number, "invalid evolve target"))?;
             if !(0.0..=1.0).contains(&target) { return Err(wardley_error(line_number, "evolve target must be between 0 and 1")); }
             diagram.evolves.push(WardleyEvolution { component: wardley_name(name), target }); continue;
+        }
+        if let Some(value) = line.strip_prefix("note ") {
+            let Some(open) = value.rfind('[') else { return Err(wardley_error(line_number, "Wardley note requires coordinates")); };
+            let authored_text = value[..open].trim();
+            if authored_text.len() < 2 || !matches!((authored_text.chars().next(), authored_text.chars().last()),
+                (Some('"'), Some('"')) | (Some('\''), Some('\''))) {
+                return Err(wardley_error(line_number, "Wardley note text must be quoted"));
+            }
+            let (visibility, evolution) = parse_wardley_coordinates(&value[open..], line_number)?;
+            if !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
+                return Err(wardley_error(line_number, "Wardley note coordinates must be between 0 and 1"));
+            }
+            diagram.notes.push(WardleyNote { text: wardley_name(authored_text), visibility, evolution }); continue;
         }
         if let Some((source, target)) = line.split_once("->") {
             diagram.links.push(WardleyLink { source: wardley_name(source), target: wardley_name(target) }); continue;
@@ -5928,7 +5941,30 @@ fn parse_wardley_config(source: &str) -> WardleyConfig {
         node_label_offset: nonnegative("nodeLabelOffset", defaults.node_label_offset),
         axis_font_size: font("axisFontSize", defaults.axis_font_size),
         label_font_size: font("labelFontSize", defaults.label_font_size),
-        show_grid: boolean("showGrid", defaults.show_grid), use_max_width: boolean("useMaxWidth", defaults.use_max_width) }
+        show_grid: boolean("showGrid", defaults.show_grid), use_max_width: boolean("useMaxWidth", defaults.use_max_width),
+        theme: parse_wardley_theme(source) }
+}
+
+fn parse_wardley_theme(source: &str) -> WardleyTheme {
+    let defaults = WardleyTheme::default();
+    let root_front = mermaid_front_matter_section(source, &["config", "themeVariables"]);
+    let root = mermaid_directive_object(source, "themeVariables").or(root_front.as_deref()).unwrap_or("");
+    let nested_front = mermaid_front_matter_section(source, &["config", "themeVariables", "wardley"]);
+    let nested = mermaid_directive_object(root, "wardley").or(nested_front.as_deref()).unwrap_or("");
+    let value = |section: &str, name: &str| quadrant_directive_value(section, name).or_else(|| section.lines().find_map(|line| {
+        let (key, value) = line.trim().split_once(':')?;
+        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+    }));
+    let color = |name: &str, fallback: &str| sanitize_railroad_color(value(nested, name).as_deref(), fallback);
+    let background = sanitize_railroad_color(value(root, "background").as_deref(), &defaults.background_color);
+    let primary_text = sanitize_railroad_color(value(root, "primaryTextColor").as_deref(), &defaults.axis_text_color);
+    WardleyTheme { background_color: color("backgroundColor", &background), axis_color: color("axisColor", &defaults.axis_color),
+        axis_text_color: color("axisTextColor", &primary_text), grid_color: color("gridColor", &defaults.grid_color),
+        component_fill: color("componentFill", &defaults.component_fill),
+        component_stroke: color("componentStroke", &defaults.component_stroke),
+        component_label_color: color("componentLabelColor", &primary_text),
+        link_stroke: color("linkStroke", &defaults.link_stroke),
+        evolution_stroke: color("evolutionStroke", &defaults.evolution_stroke) }
 }
 
 

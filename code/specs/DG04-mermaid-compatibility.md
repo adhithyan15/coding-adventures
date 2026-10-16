@@ -793,9 +793,13 @@ validation. Mermaid's `wardley-beta` width, height, padding, node radius,
 node-label offset, axis and label font sizes, grid visibility, and max-width
 configuration survive grammar parsing through typed semantic and layout IR.
 The grid lowers to dashed backend-neutral paths and renderer configuration is
-preserved in Paint metadata. Pipelines, notes, annotations, accelerators/deaccelerators,
+preserved in Paint metadata. Nested Wardley background, axis, grid, component,
+link, and evolution theme colors also survive semantic config and layout IR into
+backend-neutral Paint instructions. Quoted `note` statements preserve their
+visibility/evolution coordinates in strategic-map IR and lower as positioned,
+bold backend-neutral glyph runs. Pipelines, annotations, accelerators/deaccelerators,
 advanced flow ports, decorators, per-node authored label offsets, custom stage boundaries, and
-theme-exact rendering remain unsupported at the partial level.
+remaining annotation theme fields and exact rendering remain unsupported at the partial level.
 
 ### Cynefin Native Slice
 

@@ -4601,7 +4601,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_wardley_to_png() {
-        let diagram = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 760, \"height\": 480, \"padding\": 36, \"nodeRadius\": 9, \"nodeLabelOffset\": 12, \"axisFontSize\": 15, \"labelFontSize\": 13, \"showGrid\": true, \"useMaxWidth\": false}}}%%\nwardley-beta\ntitle Tea Shop\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61]\ncomponent Kettle [0.43, 0.35]\ncomponent Power [0.10, 0.70]\nBusiness -> Cup of Tea\nCup of Tea -> Kettle\nKettle -> Power\nevolve Kettle 0.62").expect("wardley parse failed");
+        let diagram = parse_wardley("%%{init: {\"wardley-beta\": {\"width\": 760, \"height\": 480, \"padding\": 36, \"nodeRadius\": 9, \"nodeLabelOffset\": 12, \"axisFontSize\": 15, \"labelFontSize\": 13, \"showGrid\": true, \"useMaxWidth\": false}, \"themeVariables\": {\"wardley\": {\"backgroundColor\": \"#f8fafc\", \"axisColor\": \"#123456\", \"axisTextColor\": \"#234567\", \"gridColor\": \"#345678\", \"componentFill\": \"#abcdef\", \"componentStroke\": \"#456789\", \"componentLabelColor\": \"#56789a\", \"linkStroke\": \"#6789ab\", \"evolutionStroke\": \"#dc2626\"}}}}%%\nwardley-beta\ntitle Tea Shop\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61]\ncomponent Kettle [0.43, 0.35]\ncomponent Power [0.10, 0.70]\nBusiness -> Cup of Tea\nCup of Tea -> Kettle\nKettle -> Power\nevolve Kettle 0.62\nnote \"Standardising power accelerates evolution\" [0.30, 0.49]").expect("wardley parse failed");
         let layout = layout_wardley(&diagram);
         assert_eq!((layout.width, layout.height), (760.0, 480.0));
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
@@ -4614,6 +4614,11 @@ line "Target" [35, 50, 68, 82]"##,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[2.0, 6.0]))));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.nodeRadius")), Some(&"9".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.useMaxWidth")), Some(&"false".to_string()));
+        assert_eq!(scene.background, "#f8fafc");
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#abcdef")
+                && ellipse.stroke.as_deref() == Some("#456789"))));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.noteCount")), Some(&"1".to_string()));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_wardley_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }

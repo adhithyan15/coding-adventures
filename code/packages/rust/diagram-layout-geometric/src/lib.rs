@@ -303,8 +303,10 @@ fn layout_wardley_supported(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram 
         let node = diagram.nodes.iter().find(|node| node.label == evolve.component)?;
         Some(LayoutedWardleyEvolution { from: positions.get(node.label.as_str())?.clone(), to: point(node.visibility, evolve.target) })
     }).collect();
+    let notes = diagram.notes.iter().map(|note| diagram_ir::LayoutedWardleyNote {
+        text: note.text.clone(), position: point(note.visibility, note.evolution) }).collect();
     LayoutedWardleyDiagram { width, height, title: diagram.title.clone(), config: diagram.config.clone(),
-        stages: diagram.stages.clone(), nodes, links, evolves }
+        stages: diagram.stages.clone(), nodes, links, evolves, notes }
 }
 
 /// Place the four Cynefin quadrants and central confusion domain deterministically.
@@ -649,11 +651,12 @@ mod tests {
             padding: 40.0, ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()],
             nodes: vec![diagram_ir::WardleyNode { id: "a".into(), label: "A".into(), visibility: 0.8, evolution: 0.2, anchor: false },
                 diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false }],
-            links: vec![], evolves: vec![] };
+            links: vec![], evolves: vec![], notes: vec![diagram_ir::WardleyNote { text: "Watch".into(), visibility: 0.5, evolution: 0.5 }] };
         let layout = layout_wardley(&diagram);
         assert!(layout.nodes[0].position.y < layout.nodes[1].position.y);
         assert!(layout.nodes[0].position.x < layout.nodes[1].position.x);
         assert_eq!(layout.nodes[0].position.x, 144.0);
+        assert_eq!(layout.notes[0].position, Point { x: 300.0, y: 200.0 });
     }
 
 
