@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 282,
+  "title": "A short timed Tamil writing checkpoint",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:ab45f47342469902",
+  "lessons": [
+    {
+      "id": "TA-W282-a1-timed-production",
+      "sequence": 16080,
+      "title": "A short Tamil A1 writing checkpoint",
+      "headword": "(short timed A1 writing checkpoint)",
+      "romanization": "",
+      "gloss": "a three-minute independent Tamil form attempt after controlled composition",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:4f9db7efa353dc21",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is a short independent attempt, not a model. You will write the answers, and this page will not show you any copyable Tamil answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Put away the earlier lessons, word bank, romanization, dictionaries, translators, and spell-checkers. Keep a blank page ready and set a three-minute timer. Write in Tamil script. Short, legible answers are enough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — timed assessment production",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One practical form — three minutes."
+            },
+            {
+              "kind": "speech",
+              "text": "Complete all six fields in Tamil script for a neighbourhood language exchange. Write one short answer in every field. Start the timer when you begin the first field; leave any unfinished field as evidence when it rings."
+            },
+            {
+              "kind": "speech",
+              "text": "Your greeting."
+            },
+            {
+              "kind": "speech",
+              "text": "Your name."
+            },
+            {
+              "kind": "speech",
+              "text": "The language you speak."
+            },
+            {
+              "kind": "speech",
+              "text": "One drink."
+            },
+            {
+              "kind": "speech",
+              "text": "A short question asking where that drink is."
+            },
+            {
+              "kind": "speech",
+              "text": "A closing that promises another meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "When the three-minute timer rings, stop. Record the number of completed fields. An honest short attempt is more useful than a perfect untimed one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spend at most one minute looking at this first attempt. Note one field you completed clearly and one field to practise next; do not rewrite the timed answer. Keep the page as evidence."
+            },
+            {
+              "kind": "speech",
+              "text": "This checkpoint is not the complete A1 writing paper. Tamil's later full paper still needs its task inventory, mocks, rubric, answer key, calibration, and human review. This short curriculum attempt does not establish A1 attainment, readiness, completeness, or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
