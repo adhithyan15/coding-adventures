@@ -37,6 +37,8 @@ mod source_inventory;
 mod source_domain;
 #[path="source_replay.rs"]
 mod source_replay;
+#[path="array_source.rs"]
+mod array_source;
 
 // ---------------------------------------------------------------------------
 // Output type
@@ -559,7 +561,7 @@ pub fn transform_source_with_cv(
     // Public callers still own only a source string and detached optional IDs.
     // They retain the legacy source-tokenizing facade. Only run_compiler can
     // supply its consumed private capture through the mandatory route below.
-    transform_source_core(source, config, cv, None)
+    transform_source_core(source, config, cv, None, None)
 }
 
 type TransformCv<'a> = Option<(
@@ -574,6 +576,7 @@ fn transform_source_with_ingestion(
     config: &CompilerConfig,
     cv: TransformCv<'_>,
     captured: Option<Result<Vec<lexer::token::Token>, String>>,
+    arrays: &mut array_source::ArrayLedger,
 ) -> Result<String, CompilerError> {
     if cv.is_none()
         || !matches!(config.compilation.level, CompilationLevel::Simple | CompilationLevel::Advanced)
@@ -587,7 +590,7 @@ fn transform_source_with_ingestion(
         stage: "typed_ingestion".into(),
         message: "missing captured typed ingestion stream".into(),
     })?;
-    transform_source_core(source, config, cv, Some(captured))
+    transform_source_core(source, config, cv, Some(captured), Some(arrays))
 }
 
 fn transform_source_core(
@@ -595,6 +598,7 @@ fn transform_source_core(
     config: &CompilerConfig,
     cv: TransformCv<'_>,
     mut captured: Option<Result<Vec<lexer::token::Token>, String>>,
+    arrays: Option<&mut array_source::ArrayLedger>,
 ) -> Result<String, CompilerError> {
     let es_version = map_language_in_to_es_version(config);
 
@@ -705,8 +709,8 @@ fn transform_source_core(
             let node = parse_result.map_err(|message| {
                 TypedPipelineFailure::Parse(message).into_compiler_error(level)
             })?;
-            let program = bridge::grammar_to_program(&node, es_version)
-                .map_err(|error| match error {
+            let ordinary_bridge_error = |error| {
+                let failure = match error {
                     BridgeError::UnsupportedSyntax { rule, location } => {
                         TypedPipelineFailure::Bridge(format!(
                             "unsupported syntax {rule} at {location}"
@@ -715,8 +719,21 @@ fn transform_source_core(
                     BridgeError::InternalError { msg, rule } => {
                         TypedPipelineFailure::Bridge(format!("internal error in {rule}: {msg}"))
                     }
-                })
-                .map_err(|failure| failure.into_compiler_error(level))?;
+                };
+                failure.into_compiler_error(level)
+            };
+            let program = match arrays {
+                Some(ledger) => {
+                    let (log, root, _, _) = cv_pair.as_mut().ok_or_else(|| provenance_error("array_source")("missing actual traced input".into()))?;
+                    let mut observer = ledger.observer(&mut **log, root).map_err(provenance_error("array_source"))?;
+                    bridge::grammar_to_program_with_array_observer(&node, es_version, &mut observer)
+                        .map_err(|error| match error {
+                            bridge::ObservedBridgeError::Bridge(error) => ordinary_bridge_error(error),
+                            bridge::ObservedBridgeError::Observer(message) | bridge::ObservedBridgeError::Worker(message) => provenance_error("array_source")(message),
+                        })?
+                }
+                None => bridge::grammar_to_program(&node, es_version).map_err(ordinary_bridge_error)?,
+            };
 
             // ADVANCED adds aggressive renaming on top of the SIMPLE pipeline.
             // `rename-globals` runs always (gated by the externs value
@@ -1106,6 +1123,20 @@ fn run_compiler_with_limits(
     shape_limits: source_domain::ShapeLimits,
     replay_limits: source_replay::ReplayLimits,
 ) -> Result<CompilerOutput, CompilerError> {
+    run_compiler_with_limits_and_arrays(config, shape_limits, replay_limits, array_source::ArrayLimits::default())
+}
+
+#[cfg(test)]
+fn run_compiler_with_array_limits(config: &CompilerConfig, limits: array_source::ArrayLimits) -> Result<CompilerOutput, CompilerError> {
+    run_compiler_with_limits_and_arrays(config, source_domain::ShapeLimits::default(), source_replay::ReplayLimits::default(), limits)
+}
+
+fn run_compiler_with_limits_and_arrays(
+    config: &CompilerConfig,
+    shape_limits: source_domain::ShapeLimits,
+    replay_limits: source_replay::ReplayLimits,
+    array_limits: array_source::ArrayLimits,
+) -> Result<CompilerOutput, CompilerError> {
     config.special_modes.correlation_vector_limits.validate()
         .map_err(provenance_error("configuration"))?;
     // Step 0: identity-banner fallback. Empty argv → friendly
@@ -1261,6 +1292,9 @@ fn run_compiler_with_limits(
     let mut source_inventory_budget = source_inventory::SourceInventoryBudget::new(
         source_inventory::SourceInventoryLimits::default(),
     ).map_err(provenance_error("source_inventory"))?;
+    let mut array_ledger = if config.special_modes.correlation_vector {
+        Some(array_source::ArrayLedger::new(array_limits).map_err(provenance_error("array_source"))?)
+    } else { None };
     let mut source_catalog = if config.special_modes.correlation_vector {
         Some(source_replay::SourceCatalog::new(inputs.len(), map_language_in_to_es_version(config), replay_limits)
             .map_err(provenance_error("source_replay"))?)
@@ -1506,6 +1540,7 @@ fn run_compiler_with_limits(
                 config,
                 Some((&mut cv_log, id.as_str(), &token_cv_ids, path_display.as_ref())),
                 captured,
+                array_ledger.as_mut().ok_or_else(|| provenance_error("array_source")("missing run-local array ledger".into()))?,
             )?,
             Some(id) => transform_source_with_cv(
                 contents,
@@ -2025,8 +2060,10 @@ fn run_compiler_with_limits(
                 }
             }
         })?;
-        source_catalog.as_ref().ok_or_else(|| provenance_error("source_replay")("missing source catalog".into()))?
-            .validate(&shape, &per_file_cv_ids, &inputs).map_err(provenance_error("source_replay"))?;
+        let source = source_catalog.as_ref().ok_or_else(|| provenance_error("source_replay")("missing source catalog".into()))?
+            .admit(&shape, &per_file_cv_ids, &inputs).map_err(provenance_error("source_replay"))?;
+        array_ledger.as_ref().ok_or_else(|| provenance_error("array_source")("missing final array ledger".into()))?
+            .validate(&source).map_err(provenance_error("array_source"))?;
         // CLOC11.69 — format selection. `None` short-circuits
         // the whole write step: the CV log is still computed
         // (the rest of the function ran) but nothing hits disk.

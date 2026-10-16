@@ -50,6 +50,12 @@ pub(super) struct SourceCatalog {
     limits: ReplayLimits,
     used: Cost,
 }
+/// Only successful full consumed-source replay constructs this final borrowed
+/// premise. It expires before subsequent graph mutation; node-domain admission
+/// cannot substitute graph shape or caller-supplied metadata for this authority.
+pub(super) struct SourceReplayAdmitted<'a> { log: &'a coding_adventures_correlation_vector::CVLog }
+impl SourceReplayAdmitted<'_> { pub(super) fn log(&self) -> &coding_adventures_correlation_vector::CVLog { self.log } }
+
 struct Work {
     used: usize,
     limit: usize,
@@ -266,13 +272,23 @@ impl SourceCatalog {
             .ok_or("source replay missing committed input")?
             .source)
     }
+    #[cfg(test)]
     pub(super) fn validate(
         &self,
         shape: &ShapeAdmitted<'_>,
         roots: &[String],
         paths: &[PathBuf],
     ) -> Result<(), String> {
-        self.validate_core(shape, roots, paths).map(|_| ())
+        self.admit(shape, roots, paths).map(|_| ())
+    }
+    pub(super) fn admit<'a>(
+        &self,
+        shape: &'a ShapeAdmitted<'_>,
+        roots: &[String],
+        paths: &[PathBuf],
+    ) -> Result<SourceReplayAdmitted<'a>, String> {
+        self.validate_core(shape, roots, paths)?;
+        Ok(SourceReplayAdmitted { log: shape.log() })
     }
     fn validate_core(
         &self,

@@ -8178,3 +8178,14 @@ No new architectural pieces are needed per flag.
 - Dependencies: `cli-builder`; every crate scaffolded in Stages 1–4; `serde`/`serde_json`.
 - Required capabilities: `fs.read` + `fs.write`. v1 doesn't actually touch the filesystem yet (identity body skips it) but the manifest declares the future surface.
 - Source of truth: when upstream Closure Compiler adds a flag, `cli.spec.json` is updated and the binary picks it up via `include_str!`; no Rust code changes are required.
+
+
+### CLOC33 trusted array source occurrences (local validation pending)
+
+Wire CLOC32's actual array observer only into traced captured typed ingestion.
+Retain a bounded private construction ledger and certify its closed source-node
+facts against the final consumed-source replay and exact Merge chronology.
+Reuse existing physical IDs and shared lexical ranges; add only an existing
+local parser path dependency, no crates.io dependency. Original array ancestry
+fixtures now include all punctuation while retaining nested rewrite assertions.
+Full parity/delivery/Miri remain open; Miri DEFERRED/PENDING.

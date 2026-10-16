@@ -2,7 +2,7 @@
 use super::*;
 use crate::run::source_inventory::{record_file, stamp_ingestion_ids, SourceInventoryBudget, SourceInventoryLimits};
 use crate::run::source_replay::{ReplayLimits, SourceCatalog};
-use coding_adventures_correlation_vector::{GraphLimits, Origin};
+use coding_adventures_correlation_vector::{GraphLimits};
 use coding_adventures_javascript_parser::{asi::parse_with_asi, bridge::grammar_to_program_with_array_observer, DEFAULT_ES_VERSION};
 use serde_json::json;
 use std::path::{Path, PathBuf};

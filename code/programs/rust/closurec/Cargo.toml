@@ -18,6 +18,7 @@ coding-adventures-javascript-lexer = { path = "../../../packages/rust/javascript
 coding-adventures-javascript-ast = { path = "../../../packages/rust/javascript-ast" }
 coding-adventures-javascript-parser = { path = "../../../packages/rust/javascript-parser" }
 lexer = { path = "../../../packages/rust/lexer" }
+parser = { path = "../../../packages/rust/parser" }
 
 # Type checker
 coding-adventures-closure-typechecker = { path = "../../../packages/rust/closure-typechecker" }

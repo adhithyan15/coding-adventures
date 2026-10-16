@@ -336,7 +336,7 @@ fn reference_vector<T>(n: usize) -> Result<Vec<T>, String> {
     check_capacity(owned.capacity(), n)?;
     Ok(owned)
 }
-fn position(p: SourcePosition) -> Value {
+pub(super) fn position(p: SourcePosition) -> Value {
     json!({"byte_offset":decimal(p.byte_offset),"scalar_offset":decimal(p.scalar_offset),"utf16_offset":decimal(p.utf16_offset),"line":decimal(p.line),"scalar_column":decimal(p.scalar_column),"utf16_column":decimal(p.utf16_column)})
 }
 fn input_meta(source: &str, edition: EsVersion) -> HashMap<String, Value> {
