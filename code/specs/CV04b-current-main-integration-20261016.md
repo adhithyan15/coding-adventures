@@ -127,8 +127,10 @@ cover extreme finite/nonfinite typed values, authored extremes, exact supported
 cap/default normalization and actual positive finite label/outline geometry.
 
 The first all-workspace validator froze18030 objects and was deliberately stopped
-before any Cargo command after checking its exact PID/command and zero children.
-Its incomplete receipt has no results and is withheld, not failed test evidence.
+after checking its exact PID/command and zero live children. Its consumed receipt
+records one completed Cargo metadata command0, no tests or lint, and is withheld.
+The earlier pre-consumption observation of no results was incomplete: a zero-live-
+child snapshot cannot prove no prior child executed. This is not test evidence.
 Use the complete metadata-derived affected/forward source set for the next
 validator; preserve its frozen bytes and all existing Miri targets untouched.
 
