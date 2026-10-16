@@ -1,5 +1,6 @@
 //! Independent exact Wardley frames and rejection at the legacy typed entry.
 use diagram_ir::*;
+include!("support/wardley_fixture_link.rs");
 use diagram_layout_geometric::layout_wardley;
 
 fn config()->WardleyConfig { WardleyConfig {width:900.0,height:600.0,padding:48.0,
@@ -12,10 +13,11 @@ WardleyNode{label_offset_x:None,label_offset_y:None,source_strategy:None,inertia
 links:vec![WardleyLink{dashed:false,label:None,flow:None,source:"A".into(),target:"B".into()}],
 evolves:vec![WardleyEvolution{component:"A".into(),target:0.5}],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]} }
 fn frame(config:WardleyConfig,width:f64,height:f64,lo:f64,hi_x:f64,hi_y:f64,mid_x:f64)->LayoutedWardleyDiagram {
-LayoutedWardleyDiagram {width,height,title:Some("T".into()),config,stages:stages(),
+let link=wardley_fixture_link(Point{x:lo,y:lo},Point{x:hi_x,y:hi_y},config.node_radius,config.node_radius);
+LayoutedWardleyDiagram {accessibility_title:None,accessibility_description:None,width,height,title:Some("T".into()),config,stages:stages(),
 nodes:vec![LayoutedWardleyNode{label_offset_x:None,label_offset_y:None,source_strategy:None,inertia:false,id:"a".into(),label:"A".into(),position:Point{x:lo,y:lo},anchor:true,pipeline_parent:false},
 LayoutedWardleyNode{label_offset_x:None,label_offset_y:None,source_strategy:None,inertia:false,id:"b".into(),label:"B".into(),position:Point{x:hi_x,y:hi_y},anchor:false,pipeline_parent:false}],
-links:vec![LayoutedWardleyLink{from:Point{x:lo,y:lo},to:Point{x:hi_x,y:hi_y}}],
+links:vec![link],
 evolves:vec![LayoutedWardleyEvolution{from:Point{x:lo,y:lo},to:Point{x:mid_x,y:lo}}],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]} }
 
 #[test]

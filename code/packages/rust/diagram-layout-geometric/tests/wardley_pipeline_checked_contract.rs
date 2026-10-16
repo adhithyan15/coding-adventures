@@ -1,4 +1,5 @@
 use diagram_ir::*;
+include!("support/wardley_fixture_link.rs");
 use diagram_layout_geometric::{layout_wardley,try_layout_wardley};
 fn config()->WardleyConfig {WardleyConfig {width:900.0,height:600.0,padding:48.0,node_radius:6.0,node_label_offset:8.0,axis_font_size:12.0,label_font_size:10.0,show_grid:false,use_max_width:true,theme:WardleyTheme {annotation_stroke:"#000000".into(),annotation_text_color:"#222222".into(),annotation_fill:"#ffffff".into(),background_color:"#ffffff".into(),axis_color:"#000000".into(),axis_text_color:"#222222".into(),grid_color:"rgba(100, 100, 100, 0.2)".into(),component_fill:"#ffffff".into(),component_stroke:"#000000".into(),component_label_color:"#222222".into(),link_stroke:"#000000".into(),evolution_stroke:"#dc3545".into()}}}
 fn diagram()->WardleyDiagram {WardleyDiagram{accessibility_title:None,accessibility_description:None,title:None,config:config(),stages:vec![],nodes:vec![],links:vec![],evolves:vec![],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]}}
@@ -26,7 +27,7 @@ fn flat_pipeline_sorted_occurrences_and_final_parent_references_have_whole_layou
  3=>{d.pipelines[0].component_ids.push("C".into());(vec![ln("P",249.0,286.4,true),ln("C",249.0,300.0,false)],vec![lp(234.0,288.0,30.0,&[(249.0,300.0),(249.0,300.0)])])},
  4=>{d=seeded();(vec![ln("P",249.0,286.4,true),ln("C",249.0,300.0,false),ln("Q",651.0,538.4,true),ln("D",651.0,552.0,false)],vec![lp(234.0,288.0,30.0,&[(249.0,300.0)]),lp(636.0,540.0,30.0,&[(651.0,552.0)])])},_=>unreachable!()};
  let parent=nodes[0].position.clone();d.links=vec![WardleyLink{dashed:false,label:None,flow:None,source:"P".into(),target:"C".into()}];d.evolves=vec![WardleyEvolution{component:"P".into(),target:1.0}];
- let want=LayoutedWardleyDiagram{accessibility_title:None,accessibility_description:None,width:900.0,height:600.0,title:None,config:config(),stages:vec![],links:vec![LayoutedWardleyLink{from:parent.clone(),to:nodes[1].position.clone()}],evolves:vec![LayoutedWardleyEvolution{from:parent,to:p(852.0,300.0)}],nodes,notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines,stage_boundaries:vec![]};
+ let want=LayoutedWardleyDiagram{accessibility_title:None,accessibility_description:None,width:900.0,height:600.0,title:None,config:config(),stages:vec![],links:vec![wardley_fixture_link(parent.clone(),nodes[1].position.clone(),6.0*1.6/2.0_f64.sqrt(),6.0)],evolves:vec![LayoutedWardleyEvolution{from:parent,to:p(852.0,300.0)}],nodes,notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines,stage_boundaries:vec![]};
  assert_eq!(try_layout_wardley(&d),Ok(want.clone()),"case{case}");assert_eq!(layout_wardley(&d),want);eprintln!("WARDLEY-PIPELINE-WHOLE-LAYOUT {case}");
  }
 }

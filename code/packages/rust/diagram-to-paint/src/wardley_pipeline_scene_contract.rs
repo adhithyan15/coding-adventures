@@ -87,12 +87,12 @@ Case{name:"small-config-large-padding-no-annotations",source:"%%{init: {\"wardle
       stages:stage_names.map(String::from).to_vec(),nodes:if c.populated {vec![
         diagram_ir::LayoutedWardleyNode{label_offset_x:None,label_offset_y:None,source_strategy:None,inertia:false,id:"wardley-1".into(),label:"A".into(),position:p(c.lo,c.top),anchor:true,pipeline_parent:false},
         diagram_ir::LayoutedWardleyNode{label_offset_x:None,label_offset_y:None,source_strategy:None,inertia:false,id:"wardley-2".into(),label:"B".into(),position:p(c.hi_x,c.hi_y),anchor:false,pipeline_parent:false}]}else{vec![]},
-      links:if c.populated {vec![diagram_ir::LayoutedWardleyLink{from:p(c.lo,c.top),to:p(c.hi_x,c.hi_y)}]}else{vec![]},
+      links:if c.populated {vec![wardley_fixture_link(p(c.lo,c.top),p(c.hi_x,c.hi_y),c.config.node_radius,c.config.node_radius)]}else{vec![]},
       evolves:if c.populated {vec![diagram_ir::LayoutedWardleyEvolution{from:p(c.lo,c.top),to:p(c.mid,c.lo)}]}else{vec![]},notes:c.notes.iter().map(|n|diagram_ir::LayoutedWardleyNote{text:n.text.into(),position:p(n.x,n.y)}).collect(),annotations_box:c.box_case.as_ref().map(|b|p(b.x,b.y)),annotations:c.annotations.iter().map(|a|diagram_ir::LayoutedWardleyAnnotation{number:a.number,text:a.text.into(),positions:a.markers.iter().map(|m|p(m.x,m.y)).collect()}).collect(),forces:c.forces.iter().map(|f|diagram_ir::LayoutedWardleyForce{label:f.label.into(),position:p(f.x,f.y),kind:f.kind}).collect(),pipelines:vec![],stage_boundaries:vec![]};
     expected_layout.nodes.extend(c.pipeline_nodes.iter().map(|n|diagram_ir::LayoutedWardleyNode{label_offset_x:None,label_offset_y:None,source_strategy:None,inertia:false,id:n.id.into(),label:n.label.into(),position:p(n.x,n.y),anchor:n.anchor,pipeline_parent:n.parent}));
     expected_layout.pipelines=c.pipeline_cases.iter().map(|a|diagram_ir::LayoutedWardleyPipeline{x:a.x,y:a.y,width:a.w,height:a.h,component_positions:a.positions.iter().map(|(x,y)|p(*x,*y)).collect()}).collect();
     if c.name=="custom-groups-note" {
-        expected_layout.links.push(diagram_ir::LayoutedWardleyLink{from:p(450.0,286.4),to:p(651.0,300.0)});
+        expected_layout.links.push(wardley_fixture_link(p(450.0,286.4),p(651.0,300.0),6.0*1.6/2.0_f64.sqrt(),6.0));
         expected_layout.evolves.push(diagram_ir::LayoutedWardleyEvolution{from:p(450.0,286.4),to:p(852.0,300.0)});
     }
     let layout=diagram_layout_geometric::try_layout_wardley(&typed).unwrap();assert_eq!(layout,expected_layout,"wholeTypedLayout {} {family}",c.name);
@@ -107,8 +107,8 @@ Case{name:"small-config-large-padding-no-annotations",source:"%%{init: {\"wardle
             let PaintInstruction::Path(ref mut value)=connector else{unreachable!()};value.stroke_dash=Some(vec![4.0,4.0]);instructions.push(connector);}
         instructions.push(PaintInstruction::Rect(PaintRect{base:PaintBase::default(),x:a.x,y:a.y,width:a.w,height:a.h,fill:None,stroke:Some(c.config.theme.axis_color.clone()),stroke_width:Some(1.5),corner_radius:Some(4.0),stroke_dash:None,stroke_dash_offset:None}));
     }
-    if c.populated {instructions.push(path(vec![p(c.lo,c.top),p(c.hi_x,c.hi_y)],&c.config.theme.link_stroke,1.0,false));}
-    if c.name=="custom-groups-note" {instructions.push(path(vec![p(450.0,286.4),p(651.0,300.0)],&c.config.theme.link_stroke,1.0,false));}
+    if c.populated {instructions.push(path(vec![expected_layout.links[0].from.clone(),expected_layout.links[0].to.clone()],&c.config.theme.link_stroke,1.0,false));}
+    if c.name=="custom-groups-note" {instructions.push(path(vec![expected_layout.links[1].from.clone(),expected_layout.links[1].to.clone()],&c.config.theme.link_stroke,1.0,false));}
     if c.populated {instructions.push(path(vec![p(c.lo,c.top),p(c.mid,c.lo)],&c.config.theme.evolution_stroke,1.0,false));}
     if c.name=="custom-groups-note" {instructions.push(path(vec![p(450.0,286.4),p(852.0,300.0)],&c.config.theme.evolution_stroke,1.0,false));}
     if c.populated {instructions.push(ellipse(c.lo,c.lo,c.anchor_radius,&c.config.theme));instructions.push(ellipse(c.hi_x,c.hi_y,c.config.node_radius,&c.config.theme));}

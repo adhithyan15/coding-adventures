@@ -56,14 +56,14 @@ Case{name:"default-min-fonts-quoted-origin-decoy",source:"---\nnote: |\n  {\"the
       stages:stage_names.map(String::from).to_vec(),nodes:if c.populated {vec![
         diagram_ir::LayoutedWardleyNode{label_offset_x:None,label_offset_y:None,source_strategy:None,inertia:false,id:"wardley-1".into(),label:"A".into(),position:p(c.lo,c.lo),anchor:true,pipeline_parent:false},
         diagram_ir::LayoutedWardleyNode{label_offset_x:None,label_offset_y:None,source_strategy:None,inertia:false,id:"wardley-2".into(),label:"B".into(),position:p(c.hi_x,c.hi_y),anchor:false,pipeline_parent:false}]}else{vec![]},
-      links:if c.populated {vec![diagram_ir::LayoutedWardleyLink{from:p(c.lo,c.lo),to:p(c.hi_x,c.hi_y)}]}else{vec![]},
+      links:if c.populated {vec![wardley_fixture_link(p(c.lo,c.lo),p(c.hi_x,c.hi_y),c.config.node_radius,c.config.node_radius)]}else{vec![]},
       evolves:if c.populated {vec![diagram_ir::LayoutedWardleyEvolution{from:p(c.lo,c.lo),to:p(c.mid,c.lo)}]}else{vec![]},notes:c.notes.iter().map(|n|diagram_ir::LayoutedWardleyNote{text:n.text.into(),position:p(n.x,n.y)}).collect(),annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]};
     let layout=diagram_layout_geometric::try_layout_wardley(&parsed).unwrap();assert_eq!(layout,expected_layout,"wholeLayout {} {family}",c.name);
     let mut instructions=vec![path(vec![p(c.lo,c.lo),p(c.lo,c.hi_y),p(c.hi_x,c.hi_y)],&c.config.theme.axis_color,1.0,false)];
     for (x,y) in &c.grid {instructions.push(path(vec![p(*x,c.lo),p(*x,c.hi_y)],&c.config.theme.grid_color,1.0,true));
         instructions.push(path(vec![p(c.lo,*y),p(c.hi_x,*y)],&c.config.theme.grid_color,1.0,true));}
     for x in &c.stages[1..] {let mut separator=path(vec![p(*x,c.lo),p(*x,c.hi_y)],"rgba(0,0,0,0.8)",1.0,false);let PaintInstruction::Path(ref mut value)=separator else{unreachable!()};value.stroke_dash=Some(vec![5.0,5.0]);instructions.push(separator);}
-    if c.populated {instructions.push(path(vec![p(c.lo,c.lo),p(c.hi_x,c.hi_y)],&c.config.theme.link_stroke,1.0,false));
+    if c.populated {instructions.push(path(vec![expected_layout.links[0].from.clone(),expected_layout.links[0].to.clone()],&c.config.theme.link_stroke,1.0,false));
         instructions.push(path(vec![p(c.lo,c.lo),p(c.mid,c.lo)],&c.config.theme.evolution_stroke,1.0,false));
         instructions.push(ellipse(c.lo,c.lo,c.anchor_radius,&c.config.theme));instructions.push(ellipse(c.hi_x,c.hi_y,c.config.node_radius,&c.config.theme));
         instructions.push(glyphs("T",c.title_x,c.title_y,c.title_font,c.axis_css));}
