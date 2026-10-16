@@ -195,3 +195,15 @@ log/receipt and wrapper1; do not claim seven producer-semantic failures. Change
 only the error fixture to the existing CV04-tested var x= followed by NUL,
 retain @ as an available ES2025 companion, and test its earlier-edition refusal.
 Keep all exact inventory/schema/parent/coordinate assertions and source APIs.
+
+## Independent source-child census
+
+The no-extra-child test must independently count every direct input-root child
+whose legacy origin source is lexer_token or lexer_trivia, even when reserved
+metadata is absent or malformed. Also count reserved piece rows attributed to
+the input ID or directly parented by that root. This union must equal the full
+ordered inventory's set. Testing only rows already claiming the new namespace
+would miss duplicated legacy ingestion tokens. An unavailable inventory must
+have no such children. A synthetic census regression retains the valid row and
+adds namespace-free legacy token/trivia children and misattributed reserved
+pieces; each addition must be detected without depending on the new producer.
