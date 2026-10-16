@@ -5853,6 +5853,12 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new() };
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
+        // Notes own quoted text: comment markers inside the active quote are
+        // data. Other Wardley statements retain their established splitting.
+        if let Some(value) = raw.trim().strip_prefix("note ") {
+            diagram.notes.push(parse_wardley_note(value, line_number)?);
+            continue;
+        }
         let line = raw.split("%%").next().unwrap_or("").trim();
         if line.is_empty() || line.eq_ignore_ascii_case("wardley-beta") { continue; }
         if let Some(value) = line.strip_prefix("title ") { diagram.title = Some(value.trim().to_string()); continue; }
@@ -5882,19 +5888,6 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             if !(0.0..=1.0).contains(&target) { return Err(wardley_error(line_number, "evolve target must be between 0 and 1")); }
             diagram.evolves.push(WardleyEvolution { component: wardley_name(name), target }); continue;
         }
-        if let Some(value) = line.strip_prefix("note ") {
-            let Some(open) = value.rfind('[') else { return Err(wardley_error(line_number, "Wardley note requires coordinates")); };
-            let authored_text = value[..open].trim();
-            if authored_text.len() < 2 || !matches!((authored_text.chars().next(), authored_text.chars().last()),
-                (Some('"'), Some('"')) | (Some('\''), Some('\''))) {
-                return Err(wardley_error(line_number, "Wardley note text must be quoted"));
-            }
-            let (visibility, evolution) = parse_wardley_coordinates(&value[open..], line_number)?;
-            if !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
-                return Err(wardley_error(line_number, "Wardley note coordinates must be between 0 and 1"));
-            }
-            diagram.notes.push(WardleyNote { text: wardley_name(authored_text), visibility, evolution }); continue;
-        }
         if let Some((source, target)) = line.split_once("->") {
             diagram.links.push(WardleyLink { source: wardley_name(source), target: wardley_name(target) }); continue;
         }
@@ -5908,6 +5901,37 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         return Err(wardley_error(1, format!("unknown evolved component {}", evolve.component)));
     }
     Ok(diagram)
+}
+
+// Match one complete active-quoted token before interpreting its suffix.
+// Byte offsets come from char_indices; both accepted quote delimiters are ASCII.
+fn parse_wardley_note(value: &str, line: usize) -> Result<WardleyNote, ParseError> {
+    let value = value.trim_start();
+    let Some(quote) = value.chars().next().filter(|c| *c == '\'' || *c == '"') else {
+        return Err(wardley_error(line, "Wardley note text must be quoted"));
+    };
+    let invalid = || wardley_error(line, "Wardley note text must be a complete quoted string");
+    let mut chars = value[1..].char_indices();
+    let mut text = String::new();
+    while let Some((offset, c)) = chars.next() {
+        if c == quote {
+            let suffix = value[offset + 2..].split("%%").next().unwrap_or("").trim();
+            if suffix.is_empty() { return Err(wardley_error(line, "Wardley note requires coordinates")); }
+            let (visibility, evolution) = parse_wardley_coordinates(suffix, line)?;
+            let normalized = |v: f64| v.is_finite() && (0.0..=1.0).contains(&v);
+            if !normalized(visibility) || !normalized(evolution) {
+                return Err(wardley_error(line, "Wardley note coordinates must be between 0 and 1"));
+            }
+            return Ok(WardleyNote { text, visibility, evolution });
+        }
+        if c == '\\' {
+            match chars.next() {
+                Some((_, escaped)) if escaped == quote || escaped == '\\' => text.push(escaped),
+                _ => return Err(invalid()),
+            }
+        } else { text.push(c); }
+    }
+    Err(invalid())
 }
 
 fn parse_wardley_config(source: &str) -> WardleyConfig {
@@ -5947,35 +5971,37 @@ fn parse_wardley_config(source: &str) -> WardleyConfig {
 
 fn parse_wardley_theme(source: &str) -> WardleyTheme {
     let defaults = WardleyTheme::default();
-    let root_front = mermaid_front_matter_section(source, &["config", "themeVariables"]);
-    let root = mermaid_directive_object(source, "themeVariables").or(root_front.as_deref()).unwrap_or("");
-    let nested_front = mermaid_front_matter_section(source, &["config", "themeVariables", "wardley"]);
-    let nested = mermaid_directive_object(root, "wardley").or(nested_front.as_deref()).unwrap_or("");
-    let value = |section: &str, name: &str| quadrant_directive_value(section, name).or_else(|| section.lines().find_map(|line| {
-        let (key, value) = line.trim().split_once(':')?;
-        (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
-    }));
-    let color = |name: &str, fallback: &str| sanitize_railroad_color(value(nested, name).as_deref(), fallback);
-    let background = sanitize_railroad_color(value(root, "background").as_deref(), &defaults.background_color);
-    let primary_text = sanitize_railroad_color(value(root, "primaryTextColor").as_deref(), &defaults.axis_text_color);
+    let root_front = venn_front_matter_fields(source, &["config", "themeVariables"]);
+    let nested_front = venn_front_matter_fields(source, &["config", "themeVariables", "wardley"]);
+    // Choose the complete root once. Missing nested init fields cannot expose
+    // an older header object after an explicitly selected, even empty, init.
+    let root_object = venn_init_object(source, "themeVariables").map(|v| format!("{{{v}}}"));
+    let nested_object = root_object.as_ref().and_then(|root| {
+        let value = venn_object_member(root, "wardley")?;
+        let end = venn_object_end(value)?;
+        let tail = value[end + 1..].trim_start();
+        (tail.is_empty() || tail.starts_with([',', '}'])).then_some(&value[..=end])
+    });
+    let value = |nested: bool, name: &str| {
+        if let Some(root) = root_object.as_deref() {
+            let object = if nested { nested_object? } else { root };
+            venn_object_member(object, name).map(|v| venn_theme_string(v, true))
+        } else {
+            let fields = if nested { &nested_front } else { &root_front };
+            fields.as_deref().unwrap_or("").lines().find_map(|line| {
+                let (key, value) = line.trim().split_once(':')?;
+                (key.trim() == name).then(|| venn_theme_string(value, false))
+            })
+        }
+    };
+    let color = |name: &str, fallback: &str| sanitize_railroad_color(value(true, name).as_deref(), fallback);
+    let background = sanitize_railroad_color(value(false, "background").as_deref(), &defaults.background_color);
+    let primary_text = sanitize_railroad_color(value(false, "primaryTextColor").as_deref(), &defaults.axis_text_color);
     WardleyTheme { background_color: color("backgroundColor", &background), axis_color: color("axisColor", &defaults.axis_color),
         axis_text_color: color("axisTextColor", &primary_text), grid_color: color("gridColor", &defaults.grid_color),
-        component_fill: color("componentFill", &defaults.component_fill),
-        component_stroke: color("componentStroke", &defaults.component_stroke),
-        component_label_color: color("componentLabelColor", &primary_text),
-        link_stroke: color("linkStroke", &defaults.link_stroke),
+        component_fill: color("componentFill", &defaults.component_fill), component_stroke: color("componentStroke", &defaults.component_stroke),
+        component_label_color: color("componentLabelColor", &primary_text), link_stroke: color("linkStroke", &defaults.link_stroke),
         evolution_stroke: color("evolutionStroke", &defaults.evolution_stroke) }
-}
-
-
-fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
-    let Some(open) = value.rfind('[') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
-    let label = wardley_name(&value[..open]);
-    let (visibility, evolution) = parse_wardley_coordinates(&value[open..], line)?;
-    if label.is_empty() || !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
-        return Err(wardley_error(line, "Wardley node names must be non-empty and coordinates between 0 and 1"));
-    }
-    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor })
 }
 
 fn parse_wardley_coordinates(value: &str, line: usize) -> Result<(f64, f64), ParseError> {
