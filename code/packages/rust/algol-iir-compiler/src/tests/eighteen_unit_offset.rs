@@ -227,3 +227,25 @@ fn native18_complete_serialized_modules_preserve_lineage_except_authored_offset_
         }
     }
 }
+
+// The former negative contexts use pick:=3.5 and no relay declaration. Keep
+// them in addition to the existing negative-input, direct and relay routes.
+#[test]
+fn current_main_preserves_exact_eight_eighteenth_boundary_source_contexts() {
+    for source in [
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 19); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier((sign(pick()) + 9) + 10); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(1 + (18 + sign(pick()))); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(sign(pick()) + 1) + 18); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(sign(pick()) + 2) + 17); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(sign(pick()) + 18 - 1); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(abs(entier(sign(pick()) + 18) + 1)); output(saved) end",
+        "begin real procedure pick; pick := 3.5; real saved; saved := entier(entier(abs(sign(pick()) + 18) + 1)); output(saved) end",
+
+    ] {
+        let module=compile_source(source,"former_eighteenth_context").unwrap_or_else(|e|panic!("{source}: {e}"));
+        let instructions=&module.get_function("main").unwrap().instructions;
+        assert_eq!(instructions.iter().filter(|i|i.op=="call"&&i.srcs.first().and_then(Operand::as_var)==Some("__basic_print_real")).count(),1,"{source}");
+        assert_eq!(instructions.iter().filter(|i|i.op=="call_builtin"&&i.srcs.first().and_then(Operand::as_var)==Some("print_i64")).count(),0,"{source}");
+    }
+}
