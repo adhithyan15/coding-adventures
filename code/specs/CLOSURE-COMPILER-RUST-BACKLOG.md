@@ -2,11 +2,25 @@
 
 <!-- CV04b current-main integration pending -->
 Sole PR17288 still publishes6132a518b3990619eb904397ee0b21a69ce8ac20,
-CONFLICTING/auto-merge OFF. Fresh audit20261016T150842Z observes mainac29edea:
-12 open PRs fully audited, sole Closure/shared PR17288. Incoming timeline94df,
+CONFLICTING/auto-merge OFF. Fresh audit20261016T154507Z observes mainac29edea:
+14 open PRs fully audited, sole Closure/shared PR17288. Incoming timeline94df,
 native24-unit6e3b and timeline colorsac29 remain UNINTEGRATED/UNACCEPTED. Main6e54
 collision is integrated atc845; no new push/merge/cleanup or final objective claim.
 Base ESTree canonical boundary, own types and no new crates.io dependencies stay.
+
+Before source integration, native24 contractab517 independently passes5ca4113d.
+Timeline v1 spec was WITHHELD because global preprocessing lets init-looking
+accessibility data masquerade as settings; revised1bdb contractc601e735 PASS
+requires trusted token-owned line masking in a local config copy. Shared helper
+bodies remain unchanged. Decoded native occurrence inventoryf346ec2a finds365
+negatives:137 quantitative24 (29 source identities),228 safety; old126 cap22
+positive companions remain exact. Historical29/30 are two quantitative duplicate
+occurrences, correcting the stale blanket221 safety classification. Inventory
+security is pending completion; no source merge or new execution acceptance.
+Read-only merge preflight/imports verify52 slots/35 missing immutable blobs;
+producer11439 consumed0 without source/index/lock/target/Miri edits. All incoming
+implementation remains unaccepted until genuine reds, repairs and final checks.
+Miri DEFERRED/PENDING; full Closure lineage/parity and actual delivery stay OPEN.
 
 Checked hatch/collision implementation9ff adds the public Result API and explicit
 legacy wrapper refusal: represented initial geometry, shared8,388,608 pair-work

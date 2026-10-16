@@ -41,6 +41,21 @@ not substring counts or conflict markers. The read-only current presence receipt
 for seven raw lost contexts (2/2/1/1/1/1/1 fullsubstring hits) is only a locator;
 it is not an AST/oracle/admission census and must not create duplicate tests.
 
+The independently decoded current inventory contains365 negative occurrences in
+31 functions:137 pure quantitative24 occurrences (29 complete source identities)
+and228 unchanged safety occurrences. The137 are126 formerly migrated rows,
+TWO historical rows29/30 previously grouped among221 kept cases, four original
+main additive contexts, four canonical generator contexts and source(24) in the
+integration test. The two historical duplicates have distinct occurrence IDs;
+they are quantitative at the new boundary, not permanently structural guards.
+The old126 cap22 positive occurrences remain byte-exact. Materialize the four
+canonical generator programs only with a full-function inverse; integration
+source(24) becomes source(25) with its exact diagnostic oracle retained. Every
+new24 companion records its original occurrence ID and declared mathematical
+result independently; a source-level result is not a claimed executed backend
+observation. The raw seven contexts all map to existing decoded occurrences;
+restoring raw positives may not replace any owned function or erase an oracle.
+
 Retain every current negative occurrence and all126 original cap22 formatter
 positive companions, plus all later complete contexts. Pure quantitative24
 negatives move to individually inventoried25-unit refusals, while their EXACT
