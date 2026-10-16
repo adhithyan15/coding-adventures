@@ -1,5 +1,17 @@
 # Closure Compiler on Rust — parity backlog
 
+<!-- CV04a dedicated native18 selected -->
+From actually published stage carrierb165, native17/18 audited frames are the
+next bounded slice. Raw integrations remain WITHHELD for shared exp/ln and
+generic f64-fold hazards. New spec precedes tests/import/repair; preserve the
+complete native16 shared prefix and only advance four dedicated canonical
+outer-entier locations to18. Add trueinteger19/f64fold18 and retain old rounding,
+structural13..18/effect/root/range refusals and166saved sources/996actual cells.
+Native18 implementation/execution NOT STARTED. Label54f66 separately pending.
+FullClosure/CV04b/hostedchecks/merge OPEN; oneactivePR/heartbeatACTIVE.
+Miri DEFERRED/PENDING NEVER passed; frozen run/inputs untouched/unpolled.
+<!-- /CV04a dedicated native18 selected -->
+
 <!-- CV04a Wardley stage bands selected -->
 Wardley evolution statements accept uniform stages or an explicit finite,
 normalized, nondecreasing end for every stage. Empty and single-stage typed
