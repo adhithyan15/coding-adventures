@@ -15,4 +15,3 @@ result against that frozen baseline, then check direct lookups. Do not assume
 append reallocates. Local mutation experiments replaced each of AllOps and the
 four map constructors with a shared-storage implementation; all five variants
 failed the corrected test. The production source was restored byte-for-byte.
-
