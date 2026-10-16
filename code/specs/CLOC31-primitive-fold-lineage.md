@@ -114,8 +114,7 @@ their side-effect/spread guards, JavaScript bytes, count or hole semantics.
 For each successful length fold, collect available identities in this order:
 member, array, property, then the already folded immediate primitive elements
 in element order. Omit holes and unavailable identities. Deduplicate by first
-occurrence; use bounded ordered membership work (O(n log n) comparisons), not
-a quadratic scan when the frontier is wide. Reuse the checked merge/derive/
+occurrence using the explicitly metered collector below. Reuse the checked merge/derive/
 contribution path and its first-error latch. Keep collection out of the hot
 recursive frame. One parent derives directly; multiple parents merge then
 derive; zero parents retain the existing untraced behavior. Do not mint fake
@@ -140,3 +139,34 @@ lint, differential ladder and oracle manifest checks; obtain independent
 exact-head security review before publication. No new crates.io dependencies.
 Miri remains DEFERRED/PENDING under the October 11 sequencing authorization;
 genuine final-source Miri acceptance follows implementation delivery.
+
+### Collector resource amendment after independent review
+
+The original follow-up contract was withheld because graph `try_merge` cannot
+bound allocations/work done by its caller before graph mutation. Use an
+out-of-line, two-pass borrowed collector with a first-seen output vector and
+a separate open-addressed membership table. Production table hashing uses
+`std::collections::hash_map::RandomState`; placement never affects output order.
+Use the existing default GraphLimits max_work (64,000,000) and max_input_bytes
+(128 MiB) as explicit **per collector** work/requested-buffer caps; these are
+not a whole-pass or whole-program work guarantee. No shared CV API change.
+
+Charge every frontier visit before inspecting its identity, including missing,
+opaque, duplicate and hole cells; charge each available ID byte on that scan.
+Before allocation, check 2*n, next power of two, and the sum of simultaneously
+live vector/table requested storage using checked size_of arithmetic. Charge
+table initialization before fallible reserve/resize. Zero IDs allocate/hash
+nothing. Keep table load at most one half. On the second scan, charge hash
+setup/terminator/finish constants plus ID bytes before hashing, each probe
+before access, and both ID lengths before equality. Bound probe count by
+capacity and use explicit safe circular indexing. Adversarial collisions must
+refuse through work exhaustion rather than unbounded comparison work.
+
+Allocation, arithmetic or work refusal latches the first CV error and rejects
+the candidate; no collector merge/derive/contribution occurs before collection
+succeeds. Earlier child-fold history is not rolled back or claimed accepted.
+Keep the existing small-arity operand helper unchanged except extracting its
+already-unique checked merge/derive tail for reuse. Tests must force collisions
+via private injected hashing, exact/one-less work and buffer bounds, long IDs,
+all-duplicate/missing/hole inputs, arithmetic overflow and injected allocation
+refusal. Test seams cannot change production settings.
