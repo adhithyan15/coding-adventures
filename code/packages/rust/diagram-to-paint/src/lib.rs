@@ -8535,6 +8535,10 @@ fn git_commit_symbol_instructions(
     }
 }
 
+fn timeline_color<'a>(colors: &'a [String], index: usize, fallback: &'a str) -> &'a str {
+    colors.get(index % colors.len().max(1)).map(String::as_str).unwrap_or(fallback)
+}
+
 /// Lower a [`LayoutedTemporalDiagram`] into a [`PaintScene`].
 pub fn diagram_to_paint_temporal<S, M, R>(
     diagram: &LayoutedTemporalDiagram,
@@ -8549,6 +8553,7 @@ where
     let mut text_children: Vec<PositionedNode> = Vec::new();
     let lf = options.label_font.clone();
     let ls = lf.size;
+    let timeline_config = diagram.timeline_config.clone().unwrap_or_default();
 
     for item in &diagram.items {
         match item {
@@ -8577,39 +8582,46 @@ where
             LayoutedTemporalItem::TimelineSpine { x1, y1, x2, y2 } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
-                    "#475569", 3.0,
+                    timeline_color(&timeline_config.section_inverse_colors, 0, "#475569"), 3.0,
                 )));
             }
-            LayoutedTemporalItem::TimelineSection { x, y, width, height, label } => {
+            LayoutedTemporalItem::TimelineSection {
+                x, y, width, height, label, color_index,
+            } => {
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(), x: *x, y: *y, width: *width, height: *height,
-                    fill: Some("#0f172a".into()), stroke: None, stroke_width: None,
+                    fill: Some(timeline_color(
+                        &timeline_config.section_colors, *color_index, "#0f172a",
+                    ).into()),
+                    stroke: None, stroke_width: None,
                     corner_radius: Some(15.0), stroke_dash: None, stroke_dash_offset: None,
                 }));
                 text_children.push(text_node(
                     label, *x + 10.0, *y + 6.0, *width - 20.0, *height - 12.0, lf.clone(),
-                    Color { r: 255, g: 255, b: 255, a: 255 },
+                    css_to_color(timeline_color(
+                        &timeline_config.section_label_colors, *color_index, "#ffffff",
+                    )),
                 ));
             }
             LayoutedTemporalItem::TimelinePeriod {
                 x, y, width, height, label, events, color_index,
             } => {
-                const FILLS: [&str; 6] = [
-                    "#dbeafe", "#dcfce7", "#fef3c7", "#fae8ff", "#ffe4e6", "#cffafe",
-                ];
-                const STROKES: [&str; 6] = [
-                    "#2563eb", "#16a34a", "#d97706", "#a21caf", "#e11d48", "#0891b2",
-                ];
-                let palette_index = *color_index % FILLS.len();
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(), x: *x, y: *y, width: *width, height: *height,
-                    fill: Some(FILLS[palette_index].into()),
-                    stroke: Some(STROKES[palette_index].into()), stroke_width: Some(2.0),
+                    fill: Some(timeline_color(
+                        &timeline_config.section_colors, *color_index, "#dbeafe",
+                    ).into()),
+                    stroke: Some(timeline_color(
+                        &timeline_config.section_inverse_colors, *color_index, "#2563eb",
+                    ).into()),
+                    stroke_width: Some(2.0),
                     corner_radius: Some(8.0), stroke_dash: None, stroke_dash_offset: None,
                 }));
                 text_children.push(text_node(
                     label, *x + 12.0, *y + 8.0, *width - 24.0, 22.0,
-                    options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 },
+                    options.title_font.clone(), css_to_color(timeline_color(
+                        &timeline_config.section_label_colors, *color_index, "#0f172a",
+                    )),
                 ));
                 if !events.is_empty() {
                     let event_text = events.iter().map(|event| format!("- {event}"))
@@ -8617,7 +8629,9 @@ where
                     text_children.push(text_node(
                         &event_text, *x + 12.0, *y + 32.0, *width - 24.0,
                         (*height - 38.0).max(12.0), lf.clone(),
-                        Color { r: 51, g: 65, b: 85, a: 255 },
+                        css_to_color(timeline_color(
+                            &timeline_config.section_label_colors, *color_index, "#334155",
+                        )),
                     ));
                 }
             }
@@ -9207,6 +9221,15 @@ where
             "timeline.disableMulticolor".into(),
             config.disable_multicolor.to_string(),
         );
+        for (index, color) in config.section_colors.iter().enumerate() {
+            metadata.insert(format!("timeline.theme.cScale{index}"), color.clone());
+        }
+        for (index, color) in config.section_label_colors.iter().enumerate() {
+            metadata.insert(format!("timeline.theme.cScaleLabel{index}"), color.clone());
+        }
+        for (index, color) in config.section_inverse_colors.iter().enumerate() {
+            metadata.insert(format!("timeline.theme.cScaleInv{index}"), color.clone());
+        }
     }
     for interaction in &diagram.interactions {
         let prefix = format!("gantt.task.{}", interaction.task_id);
@@ -10297,15 +10320,33 @@ mod tests {
                 padding: 72.0,
                 use_max_width: true,
                 disable_multicolor: true,
+                section_colors: vec!["#112233".into()],
+                section_label_colors: vec!["#fefefe".into()],
+                section_inverse_colors: vec!["#445566".into()],
             }),
             interactions: Vec::new(),
-            items: Vec::new(),
+            items: vec![LayoutedTemporalItem::TimelinePeriod {
+                x: 20.0,
+                y: 20.0,
+                width: 200.0,
+                height: 60.0,
+                label: "2025".into(),
+                events: Vec::new(),
+                color_index: 0,
+            }],
         };
         let scene = diagram_to_paint_temporal(&layout, &opts);
         let metadata = scene.metadata.unwrap();
         assert_eq!(metadata.get("timeline.padding").map(String::as_str), Some("72"));
         assert_eq!(metadata.get("timeline.useMaxWidth").map(String::as_str), Some("true"));
         assert_eq!(metadata.get("timeline.disableMulticolor").map(String::as_str), Some("true"));
+        assert_eq!(metadata.get("timeline.theme.cScale0").map(String::as_str), Some("#112233"));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#112233")
+                    && rect.stroke.as_deref() == Some("#445566")
+        )));
     }
 
     #[test]

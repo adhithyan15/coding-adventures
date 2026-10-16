@@ -79,6 +79,7 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
                         x: padding, y, width: 136.0, height: 30.0, label: label.clone(),
+                        color_index,
                     });
                     y += 38.0;
                 }
@@ -111,6 +112,7 @@ fn layout_timeline(title: &Option<String>, diagram: &TimelineDiagram, cw: f64) -
                 if let Some(label) = &section.label {
                     items.push(LayoutedTemporalItem::TimelineSection {
                         x: padding, y, width: 136.0, height: 30.0, label: label.clone(),
+                        color_index,
                     });
                 }
                 let card_y = y + 44.0;
@@ -2457,6 +2459,7 @@ mod tests {
                     padding: 72.0,
                     use_max_width: true,
                     disable_multicolor: true,
+                    ..Default::default()
                 },
                 direction: TimelineDirection::TopDown,
                 sections: vec![TimelineSection {

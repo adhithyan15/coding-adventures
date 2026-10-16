@@ -2492,11 +2492,23 @@ pub struct TimelineConfig {
     pub padding: f64,
     pub use_max_width: bool,
     pub disable_multicolor: bool,
+    pub section_colors: Vec<String>,
+    pub section_label_colors: Vec<String>,
+    pub section_inverse_colors: Vec<String>,
 }
 
 impl Default for TimelineConfig {
     fn default() -> Self {
-        Self { padding: 50.0, use_max_width: false, disable_multicolor: false }
+        Self {
+            padding: 50.0,
+            use_max_width: false,
+            disable_multicolor: false,
+            section_colors: ["#dbeafe", "#dcfce7", "#fef3c7", "#fae8ff", "#ffe4e6", "#cffafe"]
+                .map(str::to_string).to_vec(),
+            section_label_colors: vec!["#0f172a".into(); 6],
+            section_inverse_colors: ["#2563eb", "#16a34a", "#d97706", "#a21caf", "#e11d48", "#0891b2"]
+                .map(str::to_string).to_vec(),
+        }
     }
 }
 
@@ -2953,6 +2965,7 @@ pub enum LayoutedTemporalItem {
         width: f64,
         height: f64,
         label: String,
+        color_index: usize,
     },
     TimelinePeriod {
         x: f64,
