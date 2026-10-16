@@ -174,6 +174,17 @@ fn native25_exact_original_occurrence_sources_and_typed_results() {
             buffer.extend_from_slice(text.as_bytes());
             Ok(Value::Null)
         });
+        // Literal effects and numeric formatter calls share one ordered byte stream.
+        // In particular, the exact runtime-compile25 source must retain its leading P.
+        let captured = Arc::clone(&output);
+        vm.builtins_mut().register("print_str", move |args: &[Value]| {
+            assert_eq!(args.len(), 1);
+            let text = args[0].as_str().expect("literal effect is a string");
+            let mut buffer = captured.lock().expect("formatter buffer");
+            assert!(buffer.len().checked_add(text.len()).is_some_and(|len| len <= 32), "bounded declared formatter output");
+            buffer.extend_from_slice(text.as_bytes());
+            Ok(Value::Null)
+        });
         let actual = vm.execute(&mut module, "main", &[]).unwrap_or_else(|e| panic!("{id}: {source}: {e:?}"));
         match (actual, expected_return) {
             (Some(Value::Float(actual)), Value::Float(expected)) => assert_eq!(actual.to_bits(), expected.to_bits(), "{id}: exact f64 main"),
