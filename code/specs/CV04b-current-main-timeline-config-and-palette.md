@@ -20,6 +20,33 @@ closed payload/trailing directive delimiter. Ordinary %% comments, nested object
 quoted semantic text and literal directive-looking YAML block content cannot
 supply settings. Later init roots do not overlay the selected first root.
 
+Before that root selection, exclude physical lines OWNED by successfully parsed
+ACC_DESCR_BLOCK tokens. Existing global preprocessing blanks directives before
+multiline accessibility tokenization, so raw lines inside description data can
+otherwise masquerade as init roots. The timeline-local adapter derives inclusive
+physical line intervals from each trusted token's1-based start line and checked
+newline count. Header/directive preprocessing preserves physical newlines, so
+these intervals refer to original raw-source lines. Handle LF/CRLF, inclusive
+closing lines and adjacent/overlapping intervals in one ordered source/interval
+traversal, O(source bytes + tokens), not a whole-source rescan per block. Blank
+all non-CR/LF bytes of excluded lines to ASCII spaces only in a local config-
+selection copy; preserve lengths/newlines/UTF-8 validity. Read both object
+families from that copy. Original tokens, source preprocessing, accessibility
+content/metadata and all shared readers stay unchanged. Failed source/token
+parsing remains an error; do not guess intervals from malformed text.
+
+Current timeline tokens have no other multiline semantic token: title, single-
+line accessibility, periods and events exclude CR/LF. Re-audit that fact if the
+grammar changes; a physical line cannot be simultaneously an independently
+selectable whole-line init root and partly owned by a multiline description.
+Add complete-source/IR controls for BOTH timeline/themeVariables init impostors
+inside descriptions, Unicode and CRLF boundaries, plus a later genuine init
+root proving excluded data does not consume first-root selection. Preserve the
+actual current accessibility result after existing preprocessing; no new claim
+that directive-looking raw description text was previously retained verbatim.
+The v1 contract/source-composition finding e1f29b91 remains WITHHELD and preserved;
+this adapter clarification precedes all tests/implementation.
+
 For each object family, select ONLY a direct root member: timeline or
  themeVariables. A missing member permits its YAML object fallback. A PRESENT
 closed object, including {}, replaces that entire YAML object. PRESENT nonobject
