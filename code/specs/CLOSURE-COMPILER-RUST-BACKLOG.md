@@ -14,7 +14,13 @@ Pipeline source80e8 strict14/full1022/59 and independent reviews PASS; actual
 published2d17 verified separately from push0/wrapper1/RESTold-Gitnew snapshots.
 Source and resource attributions remain exact, full goal/CV04b/merge OPEN.
 Miri DEFERRED/PENDING never passed; frozen run/inputs untouched/unpolled.
-One active PR; heartbeat ACTIVE. Next stage tests, closed import, genuine reds.
+Specae32 preceded testsa049, complete14path importb2f55 (5pure/9overlaps) and
+required-field-only ABI0e9 (27files, whole inverse). At0e9, actual source/typed/
+derived semantic reds101 were consumed:3passed/4failed, no compiler failure.
+Closed source/all-or-none/nondecreasing ends and typed/derived guards are now
+implemented; focused green, old64 stage oracle revision, new Scenes and full
+security/delivery remain PENDING. No stage Paint execution yet.
+One active PR; heartbeat ACTIVE.
 <!-- /CV04a Wardley stage bands selected -->
 
 **Status:** active — resumed with provenance as a completion requirement

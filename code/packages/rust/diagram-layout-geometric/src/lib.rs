@@ -231,7 +231,7 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
 pub enum WardleyLayoutError {
     Width, Height, Padding, NodeRadius, NodeLabelOffset, AxisFontSize, LabelFontSize,
     NodeCoordinates, EvolutionTarget, NoteCoordinates, AnnotationBoxCoordinates, AnnotationCoordinates, ForceCoordinates, UnknownLinkEndpoint, UnknownEvolutionComponent,
-    PipelineReference, PipelineMembership, DerivedGeometry,
+    PipelineReference, PipelineMembership, StageBoundaries, DerivedGeometry,
 }
 
 /// Check every scalar before empty-map shortcuts and every reference before the
@@ -298,9 +298,37 @@ pub fn try_layout_wardley(diagram: &WardleyDiagram) -> Result<LayoutedWardleyDia
             return Err(WardleyLayoutError::PipelineMembership);
         }
     }
+    if !wardley_stage_boundaries_supported(diagram.stages.len(), &diagram.stage_boundaries) {
+        return Err(WardleyLayoutError::StageBoundaries);
+    }
     let result=layout_wardley_supported(diagram);
     validate_wardley_geometry(&result)?;
     Ok(result)
+}
+
+// Empty means uniform bands; otherwise every stage owns its authored end.
+// Equal/zero bands and a last end below one are deliberately supported.
+fn wardley_stage_boundaries_supported(count: usize, ends: &[f64]) -> bool {
+    ends.is_empty() || (ends.len() == count
+        && ends.iter().all(|end| end.is_finite() && (0.0..=1.0).contains(end))
+        && ends.windows(2).all(|pair| pair[0] <= pair[1]))
+}
+
+fn wardley_stage_geometry_finite(layout: &LayoutedWardleyDiagram) -> bool {
+    let count = layout.stages.len();
+    let ends = &layout.stage_boundaries;
+    if !wardley_stage_boundaries_supported(count, ends) { return false; }
+    let left = layout.config.padding.min(layout.width / 3.0);
+    let right = layout.width - left;
+    (0..count).all(|index| {
+        let custom = !ends.is_empty();
+        let start = if custom { if index == 0 { 0.0 } else { ends[index - 1] } }
+            else { index as f64 / count as f64 };
+        let end = if custom { ends[index] } else { (index + 1) as f64 / count as f64 };
+        let start_x = left + (right - left) * start;
+        let width = (right - left) * (end - start);
+        start.is_finite() && end.is_finite() && start_x.is_finite() && width.is_finite() && width >= 0.0
+    })
 }
 
 fn validate_wardley_geometry(layout:&LayoutedWardleyDiagram)->Result<(),WardleyLayoutError> {
@@ -315,6 +343,7 @@ fn validate_wardley_geometry(layout:&LayoutedWardleyDiagram)->Result<(),WardleyL
         ||!positive(c.node_radius)||!positive(c.node_radius*1.35)
         ||!positive(c.axis_font_size)||!positive(c.axis_font_size*1.05)
         ||!positive((c.axis_font_size-2.0).max(1.0))||!positive(c.label_font_size)
+        ||!wardley_stage_geometry_finite(layout)
         ||layout.nodes.iter().any(|n|!point(&n.position))
         ||layout.links.iter().any(|l|!point(&l.from)||!point(&l.to))
         ||layout.evolves.iter().any(|e|!point(&e.from)||!point(&e.to))

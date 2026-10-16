@@ -5910,6 +5910,15 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
             diagram.pipelines.push(WardleyPipeline { parent_id: parent_node.id.clone(), component_ids: Vec::new() });
             active_pipeline = Some((diagram.pipelines.len() - 1, visibility)); continue;
         }
+        // Stage labels own their quotes and outside comment boundary. Pipeline
+        // body ownership above still rejects an evolution statement in a body.
+        if let Some(value) = physical.strip_prefix("evolution")
+            .filter(|rest| rest.starts_with([' ', '\t'])) {
+            let (stages, boundaries) = parse_wardley_stages(value, line_number)?;
+            diagram.stages = stages;
+            diagram.stage_boundaries = boundaries;
+            continue;
+        }
         // Notes own quoted text: comment markers inside the active quote are
         // data. Other Wardley statements retain their established splitting.
         if let Some(value) = raw.trim().strip_prefix("note ") {
@@ -5955,15 +5964,6 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
                 return Err(wardley_error(line_number, "size must be finite and at most 65536"));
             }
             diagram.config.width = width; diagram.config.height = height; continue;
-        }
-        if let Some(value) = line.strip_prefix("evolution ") {
-            let parsed: Result<Vec<_>, _> = value.split("->").map(|stage| parse_wardley_stage(stage, line_number)).collect();
-            let parsed = parsed?;
-            if parsed.len() < 2 || parsed.iter().any(|(label, _)| label.is_empty()) {
-                return Err(wardley_error(line_number, "evolution requires at least two stages"));
-            }
-            diagram.stage_boundaries = parsed.iter().filter_map(|(_, boundary)| *boundary).collect();
-            diagram.stages = parsed.into_iter().map(|(label, _)| label).collect(); continue;
         }
         if let Some(value) = line.strip_prefix("anchor ") {
             let node = parse_wardley_node(value, true, line_number, diagram.nodes.len())?;
@@ -6225,23 +6225,90 @@ fn parse_wardley_pipeline_parent(value: &str, line: usize) -> Result<String, Par
     Ok(label)
 }
 
-fn parse_wardley_stage(value: &str, line: usize) -> Result<(String, Option<f64>), ParseError> {
-    let (name, boundary_and_second) = value.trim().split_once('@').map_or((value.trim(), None), |(name, rest)| (name.trim(), Some(rest.trim())));
-    let (boundary, second) = if let Some(rest) = boundary_and_second {
-        let (boundary, second) = rest.split_once('/').map_or((rest, None), |(boundary, second)| (boundary.trim(), Some(second.trim())));
-        let boundary = boundary.parse::<f64>().map_err(|_| wardley_error(line, "invalid Wardley stage boundary"))?;
-        if !(0.0..=1.0).contains(&boundary) { return Err(wardley_error(line, "Wardley stage boundaries must be between 0 and 1")); }
-        (Some(boundary), second)
+// A stage label owns one complete active-quoted token or one outside-trimmed
+// bare name. Syntax-like bytes inside a quote are data. Every UTF-8 slice is
+// obtained from char_indices; only the ASCII opening/closing quote adds one.
+fn wardley_stage_label(value: &str, secondary: bool, line: usize) -> Result<(String, &str), ParseError> {
+    let role = if secondary { "secondary stage" } else { "stage" };
+    let value = value.trim_start();
+    let (label, rest, quoted) = if let Some(quote) = value.chars().next().filter(|c| *c == '\'' || *c == '"') {
+        let invalid = || wardley_error(line, format!("Wardley {role} label must be a complete quoted string"));
+        let mut chars = value[1..].char_indices();
+        let mut label = String::new();
+        let mut rest = None;
+        while let Some((offset, c)) = chars.next() {
+            if c == quote { rest = Some(&value[offset + 2..]); break; }
+            if c == '\\' {
+                match chars.next() {
+                    Some((_, escaped)) if escaped == quote || escaped == '\\' => label.push(escaped),
+                    _ => return Err(invalid()),
+                }
+            } else { label.push(c); }
+        }
+        (label, rest.ok_or_else(invalid)?.trim_start(), true)
     } else {
-        let (first, second) = name.split_once('/').map_or((name, None), |(first, second)| (first.trim(), Some(second.trim())));
-        return Ok((wardley_stage_label(first, second), None));
+        let end = wardley_stage_delimiter(value, true);
+        (value[..end].trim().to_string(), value[end..].trim_start(), false)
     };
-    Ok((wardley_stage_label(name, second), boundary))
+    if label.is_empty() {
+        return Err(wardley_error(line, format!("Wardley {role} label must be non-empty")));
+    }
+    let terminal = rest.is_empty() || rest.starts_with("%%") || rest.starts_with("->");
+    if !terminal && (secondary || !rest.starts_with(['@', '/'])) {
+        if secondary && rest.starts_with(['@', '/']) {
+            return Err(wardley_error(line, "invalid Wardley stage suffix"));
+        }
+        if quoted { return Err(wardley_error(line, format!("invalid Wardley {role} label suffix"))); }
+        return Err(wardley_error(line, "invalid Wardley stage suffix"));
+    }
+    Ok((label, rest))
 }
 
-fn wardley_stage_label(first: &str, second: Option<&str>) -> String {
-    let first = wardley_name(first);
-    second.map_or(first.clone(), |second| format!("{first} / {}", wardley_name(second)))
+// Delimiters are searched only outside an already-decoded label. The boundary
+// scanner leaves a second @ in the numeric token, which makes it fail parsing.
+fn wardley_stage_delimiter(value: &str, label: bool) -> usize {
+    value.char_indices().find_map(|(offset, c)| {
+        let rest = &value[offset..];
+        (c == '/' || (label && c == '@') || rest.starts_with("->") || rest.starts_with("%%"))
+            .then_some(offset)
+    }).unwrap_or(value.len())
+}
+
+fn parse_wardley_stages(mut value: &str, line: usize) -> Result<(Vec<String>, Vec<f64>), ParseError> {
+    let mut parsed = Vec::new();
+    loop {
+        let (mut label, mut rest) = wardley_stage_label(value, false, line)?;
+        let boundary = if let Some(tail) = rest.strip_prefix('@') {
+            let end = wardley_stage_delimiter(tail, false);
+            let number = tail[..end].trim().parse::<f64>()
+                .map_err(|_| wardley_error(line, "invalid Wardley stage boundary"))?;
+            if !number.is_finite() || !(0.0..=1.0).contains(&number) {
+                return Err(wardley_error(line, "Wardley stage boundaries must be between 0 and 1"));
+            }
+            rest = tail[end..].trim_start();
+            Some(number)
+        } else { None };
+        if let Some(tail) = rest.strip_prefix('/') {
+            let (second, suffix) = wardley_stage_label(tail, true, line)?;
+            label.push_str(" / "); label.push_str(&second); rest = suffix;
+        }
+        parsed.push((label, boundary));
+        if rest.is_empty() || rest.starts_with("%%") { break; }
+        value = rest.strip_prefix("->")
+            .ok_or_else(|| wardley_error(line, "invalid Wardley stage suffix"))?;
+    }
+    if parsed.len() < 2 { return Err(wardley_error(line, "evolution requires at least two stages")); }
+    let count = parsed.iter().filter(|(_, end)| end.is_some()).count();
+    if count != 0 && count != parsed.len() {
+        return Err(wardley_error(line, "Wardley stage boundaries must specify every stage"));
+    }
+    // Compression is safe only after proving every authored association is
+    // present (or every one is absent); a mixed vector never reaches this map.
+    let boundaries: Vec<_> = parsed.iter().filter_map(|(_, end)| *end).collect();
+    if boundaries.windows(2).any(|pair| pair[0] > pair[1]) {
+        return Err(wardley_error(line, "Wardley stage boundaries must be nondecreasing"));
+    }
+    Ok((parsed.into_iter().map(|(label, _)| label).collect(), boundaries))
 }
 
 fn parse_wardley_pipeline_component(value: &str, visibility: f64, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
