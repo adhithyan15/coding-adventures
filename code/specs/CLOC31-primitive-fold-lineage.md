@@ -101,3 +101,42 @@ failure ordering. Concurrent reservations must never exceed the existing
 overflow must fail closed. Keep the oracle command, trust pins, captured bytes
 and classification rules unchanged. Verify exact-cap and overflow rejection,
 concurrent saturation, the example's own tests and all-target strict lint.
+
+## Bounded follow-up: array-literal length operand frontier (2026-10-16)
+
+The current-source audit confirms CLOC27 physical leaf identities and CLOC31
+primitive folds already work. Array-literal `.length` and `["length"]` still
+derive only from the often absent member identity. Consequently
+`report([1+2,4].length)` retains the child fold to 3 but loses the final count's
+own identity and history. Repair these two existing folds without changing
+their side-effect/spread guards, JavaScript bytes, count or hole semantics.
+
+For each successful length fold, collect available identities in this order:
+member, array, property, then the already folded immediate primitive elements
+in element order. Omit holes and unavailable identities. Deduplicate by first
+occurrence; use bounded ordered membership work (O(n log n) comparisons), not
+a quadratic scan when the frontier is wide. Reuse the checked merge/derive/
+contribution path and its first-error latch. Keep collection out of the hot
+recursive frame. One parent derives directly; multiple parents merge then
+derive; zero parents retain the existing untraced behavior. Do not mint fake
+source origins or recursively harvest descendants of opaque composite cells.
+
+This is explicitly partial operand lineage. Empty/hole-only arrays, untraced
+composites and nonprimitive cells still need shared composite occurrence
+identities/source spans. Dot-property tokens are not currently bridged into
+identifiers. This repair does not establish complete array/source coverage,
+output-byte mappings, deletion history or full CCR-065 acceptance.
+
+Commit regressions before implementation and record an actual compiled red.
+Run SIMPLE and ADVANCED traced/untraced CLI compilations for both spellings
+of `[1+2,4]` length. Assert the exact emitted bytes, a result-owned count fold,
+reachability of the earlier 1+2 fold, and the exact closed set of physical
+operand origins (including the computed string key). Typed tests must pin
+first-seen parent order/dedup, holes, missing identities, a wide frontier,
+declined effect/spread cases and checked node/edge/event exhaustion with no
+accepted candidate. Preserve existing deep-stack and production limit tests.
+Run complete constant-fold and closurec suites, affected strict all-target
+lint, differential ladder and oracle manifest checks; obtain independent
+exact-head security review before publication. No new crates.io dependencies.
+Miri remains DEFERRED/PENDING under the October 11 sequencing authorization;
+genuine final-source Miri acceptance follows implementation delivery.

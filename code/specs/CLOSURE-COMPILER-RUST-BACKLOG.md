@@ -2911,3 +2911,15 @@ Closure parity, composite/synthetic identities, transformation/pass-sweep
 lineage and output-byte/source joins remain OPEN. Miri DEFERRED/PENDING,
 frozen checkout/run/inputs/target/receipts untouched and unpolled. Final-source
 Miri remains required after implementation delivery; heartbeat ACTIVE.
+
+### 2026-10-16: bounded array-length lineage selected (spec-first)
+
+- Native25 local compiler/runtime checkpoint remains validated at 9a6818c7 /
+  8d0f05e0, documented at 394d30f2; unpublished. Main a51e1610 is audited,
+  pending closed reconciliation beyond a2be13f7; sole PR #17288 remains open,
+  conflicting, auto-merge off. No hosted acceptance or merge claimed.
+- Independent current-source audit confirms existing CLOC27 leaf-ID reuse and
+  CLOC31 primitive history. Next core slice is the two array-literal length
+  folds' immediate primitive frontier; see CLOC31's bounded follow-up contract.
+  Empty/opaque composite identities and full output/source lineage remain OPEN.
+- Frozen Miri run/inputs/receipts untouched; final-source Miri DEFERRED/PENDING.
