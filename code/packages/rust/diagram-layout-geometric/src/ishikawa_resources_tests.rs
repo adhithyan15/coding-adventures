@@ -132,3 +132,13 @@ fn invalid_font_fallback_preserves_the_complete_normalized_layout() {
         }
     }
 }
+
+
+#[test]
+fn public_projection_domain_error_precedes_outline_descriptor_allocation() {
+    // Initial scalars/extents remain finite and represented; the final fish-head
+    // projection is beyond the hatch offset domain. No descriptor allocation
+    // may conceal that numeric error, even on the zero-bone public route.
+    let _failure=AllocationFailure::after(0);
+    assert_eq!(layout(&diagram(0,IshikawaLook::HandDrawn),2e15,Limits::default()),Err(IshikawaLayoutError::DerivedGeometry));
+}
