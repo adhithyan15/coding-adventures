@@ -5868,13 +5868,17 @@ fn parse_wardley_theme(source: &str) -> WardleyTheme {
 }
 
 fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
-    let Some(open) = value.rfind('[') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
+    let Some(open) = value.find('[') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
+    let Some(relative_close) = value[open..].find(']') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
+    let close = open + relative_close;
     let label = wardley_name(&value[..open]);
-    let (visibility, evolution) = parse_wardley_coordinates(&value[open..], line)?;
+    let (visibility, evolution) = parse_wardley_coordinates(&value[open..=close], line)?;
     if label.is_empty() || !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
         return Err(wardley_error(line, "Wardley node names must be non-empty and coordinates between 0 and 1"));
     }
-    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor, pipeline_parent: false })
+    let (label_offset_x, label_offset_y) = parse_wardley_label_offsets(value[close + 1..].trim(), anchor, line)?;
+    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor, pipeline_parent: false,
+        label_offset_x, label_offset_y })
 }
 
 fn parse_wardley_stage(value: &str, line: usize) -> Result<(String, Option<f64>), ParseError> {
@@ -5897,15 +5901,28 @@ fn wardley_stage_label(first: &str, second: Option<&str>) -> String {
 }
 
 fn parse_wardley_pipeline_component(value: &str, visibility: f64, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
-    let Some(open) = value.rfind('[') else { return Err(wardley_error(line, "Wardley pipeline component requires evolution")); };
+    let Some(open) = value.find('[') else { return Err(wardley_error(line, "Wardley pipeline component requires evolution")); };
+    let Some(relative_close) = value[open..].find(']') else { return Err(wardley_error(line, "Wardley pipeline component requires evolution")); };
+    let close = open + relative_close;
     let label = wardley_name(&value[..open]);
-    let evolution = value[open..].trim().strip_prefix('[').and_then(|value| value.strip_suffix(']'))
+    let evolution = value[open..=close].trim().strip_prefix('[').and_then(|value| value.strip_suffix(']'))
         .ok_or_else(|| wardley_error(line, "invalid Wardley pipeline evolution"))?.trim().parse::<f64>()
         .map_err(|_| wardley_error(line, "invalid Wardley pipeline evolution"))?;
     if label.is_empty() || !(0.0..=1.0).contains(&evolution) {
         return Err(wardley_error(line, "Wardley pipeline component names must be non-empty and evolution between 0 and 1"));
     }
-    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor: false, pipeline_parent: false })
+    let (label_offset_x, label_offset_y) = parse_wardley_label_offsets(value[close + 1..].trim(), false, line)?;
+    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor: false, pipeline_parent: false,
+        label_offset_x, label_offset_y })
+}
+
+fn parse_wardley_label_offsets(value: &str, anchor: bool, line: usize) -> Result<(Option<f64>, Option<f64>), ParseError> {
+    if value.is_empty() { return Ok((None, None)); }
+    if anchor { return Err(wardley_error(line, "Wardley anchors do not accept label offsets")); }
+    let Some(coordinates) = value.strip_prefix("label ") else { return Err(wardley_error(line, "unsupported Wardley component suffix")); };
+    let (x, y) = parse_wardley_coordinates(coordinates, line)?;
+    if x.fract() != 0.0 || y.fract() != 0.0 { return Err(wardley_error(line, "Wardley label offsets must be integers")); }
+    Ok((Some(x), Some(y)))
 }
 
 fn parse_wardley_force(value: &str, kind: WardleyForceKind, line: usize) -> Result<WardleyForce, ParseError> {

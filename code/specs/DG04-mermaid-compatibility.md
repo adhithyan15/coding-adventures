@@ -799,7 +799,9 @@ coordinates, reposition the parent, and lower the bounded pipeline plus dotted
 evolution links and parent square through backend-neutral Paint instructions.
 Evolution stages preserve dual labels and optional `@` boundaries; layout uses
 the authored widths for dashed separators and centered stage labels.
-Advanced flow ports, decorators, per-node authored label offsets, and
+Component and pipeline-child `label [x, y]` suffixes preserve signed offsets
+through semantic and layout IR into backend-neutral glyph placement.
+Advanced flow ports, decorators, and
 remaining annotation theme fields and exact rendering remain unsupported at the partial level.
 
 ### Cynefin Native Slice

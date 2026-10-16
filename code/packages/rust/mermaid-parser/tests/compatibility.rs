@@ -427,6 +427,9 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
             assert_eq!(diagram.stages, ["Genesis / Concept", "Custom / Emerging", "Product / Converging", "Commodity / Accepted"]);
             assert_eq!(diagram.stage_boundaries, [0.2, 0.4, 0.75, 1.0]);
         }
+        if name == "label-offsets" {
+            assert_eq!((diagram.nodes[0].label_offset_x, diagram.nodes[0].label_offset_y), (Some(-50.0), Some(10.0)));
+        }
         if name == "forces" {
             assert_eq!(diagram.forces.len(), 2);
             assert_eq!(diagram.forces[0].label, "AI Adoption");
@@ -441,6 +444,7 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
             assert!(diagram.nodes[0].pipeline_parent);
             assert_eq!((diagram.nodes[1].label.as_str(), diagram.nodes[1].visibility, diagram.nodes[1].evolution),
                 ("File System", 0.40, 0.25));
+            assert_eq!((diagram.nodes[1].label_offset_x, diagram.nodes[1].label_offset_y), (Some(-12.0), Some(8.0)));
         }
     }
 }

@@ -2255,8 +2255,17 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
                 rx: radius, ry: radius, fill: Some(theme.component_fill.clone()), stroke: Some(theme.component_stroke.clone()),
                 stroke_width: Some(1.0), stroke_dash: None, stroke_dash_offset: None }));
         }
-        text_children.push(text_node(&node.label, node.position.x + diagram.config.node_label_offset, node.position.y - 16.0, 150.0, 24.0,
-            font_with_size(&options.label_font, Some(diagram.config.label_font_size)), component_label_color));
+        let mut font = font_with_size(&options.label_font, Some(diagram.config.label_font_size));
+        if node.anchor { font.weight = 700; }
+        if node.anchor {
+            text_children.push(text_node_no_wrap(&node.label, node.position.x - 75.0 + node.label_offset_x.unwrap_or(0.0),
+                node.position.y - 8.0 + node.label_offset_y.unwrap_or(-3.0), 150.0, 22.0, font, css_to_color("#000000")));
+        } else {
+            let x = node.position.x + node.label_offset_x.unwrap_or(diagram.config.node_label_offset);
+            let y = node.position.y + node.label_offset_y.unwrap_or(-diagram.config.node_label_offset) - 8.0;
+            text_children.push(align_text_node(text_node_no_wrap(&node.label, x, y, 150.0, 24.0,
+                font, component_label_color), TextAlign::Start));
+        }
     }
     text_children.push(text_node("Visibility", 2.0, top, 56.0, 24.0,
         font_with_size(&options.label_font, Some(diagram.config.axis_font_size)), axis_text_color));
@@ -2342,6 +2351,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("wardley.forceCount".into(), diagram.forces.len().to_string());
     metadata.insert("wardley.pipelineCount".into(), diagram.pipelines.len().to_string());
     metadata.insert("wardley.stageBoundaryCount".into(), diagram.stage_boundaries.len().to_string());
+    metadata.insert("wardley.customLabelCount".into(), diagram.nodes.iter().filter(|node| node.label_offset_x.is_some()).count().to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: theme.background_color.clone(), instructions, id: None, metadata: Some(metadata) }
 }
@@ -11611,8 +11621,8 @@ mod tests {
                 grid_color: "#345678".into(), component_fill: "#abcdef".into(), component_stroke: "#456789".into(),
                 component_label_color: "#56789a".into(), link_stroke: "#6789ab".into(), evolution_stroke: "#dc2626".into() },
                 ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.3, 1.0],
-            nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true, pipeline_parent: true },
-                diagram_ir::LayoutedWardleyNode { id: "b".into(), label: "Child".into(), position: Point { x: 150.0, y: 120.0 }, anchor: false, pipeline_parent: false }],
+            nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true, pipeline_parent: true, label_offset_x: None, label_offset_y: None },
+                diagram_ir::LayoutedWardleyNode { id: "b".into(), label: "Child".into(), position: Point { x: 150.0, y: 120.0 }, anchor: false, pipeline_parent: false, label_offset_x: Some(-30.0), label_offset_y: Some(12.0) }],
             links: vec![], evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }],
             annotations_box: Some(Point { x: 60.0, y: 220.0 }), annotations: vec![diagram_ir::LayoutedWardleyAnnotation {
                 number: 1, text: "Risk".into(), positions: vec![Point { x: 280.0, y: 180.0 }, Point { x: 320.0, y: 160.0 }] }],
@@ -11637,6 +11647,7 @@ mod tests {
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.forceCount")), Some(&"2".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.pipelineCount")), Some(&"1".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.stageBoundaryCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.customLabelCount")), Some(&"1".to_string()));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,

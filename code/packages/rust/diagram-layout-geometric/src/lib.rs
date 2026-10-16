@@ -168,7 +168,8 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
         x: left + evolution * (width - left - right), y: top + (1.0 - visibility) * (height - top - bottom),
     };
     let mut nodes: Vec<_> = diagram.nodes.iter().map(|node| LayoutedWardleyNode { id: node.id.clone(), label: node.label.clone(),
-        position: point(node.visibility, node.evolution), anchor: node.anchor, pipeline_parent: node.pipeline_parent }).collect();
+        position: point(node.visibility, node.evolution), anchor: node.anchor, pipeline_parent: node.pipeline_parent,
+        label_offset_x: node.label_offset_x, label_offset_y: node.label_offset_y }).collect();
     let node_indices: HashMap<_, _> = nodes.iter().enumerate().map(|(index, node)| (node.id.clone(), index)).collect();
     let pipelines = diagram.pipelines.iter().filter_map(|pipeline| {
         let mut component_positions: Vec<_> = pipeline.component_ids.iter().filter_map(|id| {
@@ -546,10 +547,10 @@ mod tests {
     fn wardley_layout_maps_visibility_up_and_evolution_right() {
         let diagram = WardleyDiagram { title: None, config: diagram_ir::WardleyConfig { width: 600.0, height: 400.0,
             padding: 40.0, ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.35, 1.0],
-            nodes: vec![diagram_ir::WardleyNode { id: "a".into(), label: "A".into(), visibility: 0.8, evolution: 0.2, anchor: false, pipeline_parent: true },
-                diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false, pipeline_parent: false },
-                diagram_ir::WardleyNode { id: "c".into(), label: "A1".into(), visibility: 0.8, evolution: 0.1, anchor: false, pipeline_parent: false },
-                diagram_ir::WardleyNode { id: "d".into(), label: "A2".into(), visibility: 0.8, evolution: 0.4, anchor: false, pipeline_parent: false }],
+            nodes: vec![diagram_ir::WardleyNode { id: "a".into(), label: "A".into(), visibility: 0.8, evolution: 0.2, anchor: false, pipeline_parent: true, label_offset_x: Some(-20.0), label_offset_y: Some(8.0) },
+                diagram_ir::WardleyNode { id: "b".into(), label: "B".into(), visibility: 0.2, evolution: 0.8, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None },
+                diagram_ir::WardleyNode { id: "c".into(), label: "A1".into(), visibility: 0.8, evolution: 0.1, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None },
+                diagram_ir::WardleyNode { id: "d".into(), label: "A2".into(), visibility: 0.8, evolution: 0.4, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None }],
             links: vec![], evolves: vec![], notes: vec![diagram_ir::WardleyNote { text: "Watch".into(), visibility: 0.5, evolution: 0.5 }],
             annotations_box: Some((0.2, 0.8)), annotations: vec![diagram_ir::WardleyAnnotation { number: 1,
                 text: "Risk".into(), coordinates: vec![(0.6, 0.7)] }], forces: vec![diagram_ir::WardleyForce {
@@ -566,6 +567,7 @@ mod tests {
         assert_eq!((layout.pipelines[0].x, layout.pipelines[0].width), (77.0, 186.0));
         assert_eq!(layout.pipelines[0].component_positions.len(), 2);
         assert_eq!(layout.stage_boundaries, [0.35, 1.0]);
+        assert_eq!((layout.nodes[0].label_offset_x, layout.nodes[0].label_offset_y), (Some(-20.0), Some(8.0)));
     }
 
 
