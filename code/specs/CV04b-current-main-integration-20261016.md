@@ -240,3 +240,15 @@ not axis/background fields. The retained root-fallback note case explicitly
 inherits annotation text#202122 and fill#101112 from its authored root theme;
 nested-only cases retain dedicated default annotation colors. Preserve all six
 whole-scene functions and every glyph/metadata/resolver assertion.
+
+
+## Actual small-font paint frame proof
+
+Extract the already-clamped Ishikawa inner text frame into one private pure
+function consumed by the real paint route. This is a behavior-preserving
+extraction, with no admission or geometry widening. Add authored fontSize1 and32
+controls through parse→layout→paint; compare the exact four-coordinate frame,
+complete label PaintRect and both complete emitted glyph runs. Font1 must expose
+width1/height1 floors despite a11.25x1.75 outer box. Font32 retains144x56 outer
+box and132x52 inner frame. Keep font-driven glyph size/positions and effect title
+font18 separate; preserve every existing complete causal scene test.
