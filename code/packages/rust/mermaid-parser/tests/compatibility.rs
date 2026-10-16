@@ -423,6 +423,11 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
                 &diagram.config.theme.component_fill, &diagram.config.theme.link_stroke),
                 (&"#f8fafc".to_string(), &"#123456".to_string(), &"#abcdef".to_string(), &"#6789ab".to_string()));
         }
+        if name == "annotation-theme" {
+            assert_eq!((&diagram.config.theme.annotation_stroke, &diagram.config.theme.annotation_text_color,
+                &diagram.config.theme.annotation_fill), (&"#7c3aed".to_string(), &"#f97316".to_string(),
+                &"#fef3c7".to_string()));
+        }
         if name == "stage-boundaries" {
             assert_eq!(diagram.stages, ["Genesis / Concept", "Custom / Emerging", "Product / Converging", "Commodity / Accepted"]);
             assert_eq!(diagram.stage_boundaries, [0.2, 0.4, 0.75, 1.0]);

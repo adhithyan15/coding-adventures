@@ -5944,7 +5944,10 @@ fn parse_wardley_theme(source: &str) -> WardleyTheme {
         component_stroke: color("componentStroke", &defaults.component_stroke),
         component_label_color: color("componentLabelColor", &primary_text),
         link_stroke: color("linkStroke", &defaults.link_stroke),
-        evolution_stroke: color("evolutionStroke", &defaults.evolution_stroke) }
+        evolution_stroke: color("evolutionStroke", &defaults.evolution_stroke),
+        annotation_stroke: color("annotationStroke", &defaults.annotation_stroke),
+        annotation_text_color: color("annotationTextColor", &primary_text),
+        annotation_fill: color("annotationFill", &background) }
 }
 
 fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> Result<WardleyNode, ParseError> {

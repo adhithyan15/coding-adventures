@@ -1931,11 +1931,13 @@ pub struct WardleyPipeline { pub parent_id: String, pub component_ids: Vec<Strin
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyTheme { pub background_color: String, pub axis_color: String, pub axis_text_color: String,
     pub grid_color: String, pub component_fill: String, pub component_stroke: String,
-    pub component_label_color: String, pub link_stroke: String, pub evolution_stroke: String }
+    pub component_label_color: String, pub link_stroke: String, pub evolution_stroke: String,
+    pub annotation_stroke: String, pub annotation_text_color: String, pub annotation_fill: String }
 impl Default for WardleyTheme { fn default() -> Self { Self { background_color: "#ffffff".into(), axis_color: "#000000".into(),
     axis_text_color: "#222222".into(), grid_color: "rgba(100, 100, 100, 0.2)".into(), component_fill: "#ffffff".into(),
     component_stroke: "#000000".into(), component_label_color: "#222222".into(), link_stroke: "#000000".into(),
-    evolution_stroke: "#dc3545".into() } } }
+    evolution_stroke: "#dc3545".into(), annotation_stroke: "#000000".into(),
+    annotation_text_color: "#222222".into(), annotation_fill: "#ffffff".into() } } }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyConfig { pub width: f64, pub height: f64, pub padding: f64, pub node_radius: f64,
     pub node_label_offset: f64, pub axis_font_size: f64, pub label_font_size: f64,
