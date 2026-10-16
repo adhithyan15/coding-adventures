@@ -174,8 +174,41 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
             path, arrowhead, label_outline, hatches });
         anchors.insert(&cause.id, tip);
     }
+    resolve_ishikawa_label_collisions(&mut bones, spine_y, hand_drawn, diagram.config.hand_drawn_seed);
     LayoutedIshikawaDiagram { width, height, effect: diagram.effect.clone(), config: diagram.config.clone(), effect_x, effect_y,
         effect_width, effect_height, spine_from, spine_to, spine_path, effect_outline, effect_hatches, bones }
+}
+
+fn resolve_ishikawa_label_collisions(bones: &mut [LayoutedIshikawaBone], spine_y: f64, hand_drawn: bool, seed: i64) {
+    for above in [true, false] {
+        let mut indices: Vec<_> = bones.iter().enumerate()
+            .filter_map(|(index, bone)| ((bone.label_position.y < spine_y) == above).then_some(index)).collect();
+        indices.sort_by(|left, right| (bones[*left].label_position.y - spine_y).abs()
+            .total_cmp(&(bones[*right].label_position.y - spine_y).abs()));
+        let mut placed = Vec::<usize>::new();
+        for index in indices {
+            let half_width = bones[index].label_width / 2.0; let half_height = bones[index].label_height / 2.0;
+            let mut target = bones[index].label_position.y;
+            for other_index in &placed {
+                let other = &bones[*other_index];
+                let horizontal_overlap = bones[index].label_position.x + half_width + 4.0 > other.label_position.x - other.label_width / 2.0
+                    && bones[index].label_position.x - half_width - 4.0 < other.label_position.x + other.label_width / 2.0;
+                if !horizontal_overlap { continue; }
+                if above && target + half_height + 4.0 > other.label_position.y - other.label_height / 2.0 {
+                    target = target.min(other.label_position.y - other.label_height / 2.0 - half_height - 4.0);
+                } else if !above && target - half_height - 4.0 < other.label_position.y + other.label_height / 2.0 {
+                    target = target.max(other.label_position.y + other.label_height / 2.0 + half_height + 4.0);
+                }
+            }
+            bones[index].label_position.y = target; placed.push(index);
+        }
+    }
+    for (index, bone) in bones.iter_mut().enumerate() {
+        bone.label_outline = ishikawa_box_outline(bone.label_position.x - bone.label_width / 2.0,
+            bone.label_position.y - bone.label_height / 2.0, bone.label_width, bone.label_height,
+            hand_drawn, seed, 2_000 + index);
+        bone.hatches = if hand_drawn { ishikawa_hatches(&bone.label_outline) } else { Vec::new() };
+    }
 }
 
 fn ishikawa_line_path(from: &Point, to: &Point, hand_drawn: bool, seed: i64, index: usize) -> Vec<Point> {
@@ -688,6 +721,15 @@ mod tests {
         let deep_layout = layout_ishikawa(&deep, 560.0);
         assert_eq!(deep_layout.height, 470.0);
         assert_eq!(deep_layout.bones[2].label_width, 180.0);
+        for (index, left) in deep_layout.bones.iter().enumerate() {
+            for right in deep_layout.bones.iter().skip(index + 1) {
+                let horizontal_overlap = (left.label_position.x - right.label_position.x).abs()
+                    < (left.label_width + right.label_width) / 2.0;
+                let vertical_overlap = (left.label_position.y - right.label_position.y).abs()
+                    < (left.label_height + right.label_height) / 2.0;
+                assert!(!(horizontal_overlap && vertical_overlap));
+            }
+        }
     }
 
 
