@@ -35,6 +35,8 @@ use std::path::{Path, PathBuf};
 mod source_inventory;
 #[path="source_domain.rs"]
 mod source_domain;
+#[path="source_replay.rs"]
+mod source_replay;
 
 // ---------------------------------------------------------------------------
 // Output type
@@ -1082,6 +1084,12 @@ fn collect_externs_property_names(
 /// module docstring for the future expansion plan.
 pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerError> {
     run_compiler_with_shape_limits(config, source_domain::ShapeLimits::default())
+}
+
+// D3b red scaffold only: the new retention refusal is not wired yet.
+#[cfg(test)]
+fn run_compiler_with_replay_limits(config: &CompilerConfig, _limits: source_replay::ReplayLimits) -> Result<CompilerOutput, CompilerError> {
+    run_compiler(config)
 }
 
 // The production entry always supplies fixed private defaults. This seam lets

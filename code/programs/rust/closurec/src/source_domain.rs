@@ -112,8 +112,22 @@ pub(super) enum AdmissionError {
     Graph(String),
     Shape(String),
 }
-pub(super) fn admit_publication(log: &CVLog, limits: ShapeLimits) -> Result<(), AdmissionError> {
-    admit_core(log, limits).map(|_| ())
+/// A borrowed shape premise, with no source-content or replay certification.
+/// Only this module can construct it; its borrow prevents graph mutation while
+/// a stronger compiler-private consumer checks trusted source evidence.
+pub(super) struct ShapeAdmitted<'a> {
+    log: &'a CVLog,
+}
+impl ShapeAdmitted<'_> {
+    pub(super) fn log(&self) -> &CVLog {
+        self.log
+    }
+}
+pub(super) fn admit_publication(
+    log: &CVLog,
+    limits: ShapeLimits,
+) -> Result<ShapeAdmitted<'_>, AdmissionError> {
+    admit_core(log, limits).map(|_| ShapeAdmitted { log })
 }
 #[cfg(test)]
 pub(super) fn validate_shape(log: &CVLog, limits: ShapeLimits) -> Result<(), String> {
