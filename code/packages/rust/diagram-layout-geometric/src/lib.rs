@@ -230,7 +230,7 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum WardleyLayoutError {
     Width, Height, Padding, NodeRadius, NodeLabelOffset, AxisFontSize, LabelFontSize,
-    NodeCoordinates, EvolutionTarget, UnknownLinkEndpoint, UnknownEvolutionComponent,
+    NodeCoordinates, EvolutionTarget, NoteCoordinates, UnknownLinkEndpoint, UnknownEvolutionComponent,
     DerivedGeometry,
 }
 
@@ -253,6 +253,9 @@ pub fn try_layout_wardley(diagram: &WardleyDiagram) -> Result<LayoutedWardleyDia
         return Err(WardleyLayoutError::NodeCoordinates);
     }
     if diagram.evolves.iter().any(|e|!normalized(e.target)) {return Err(WardleyLayoutError::EvolutionTarget);}
+    if diagram.notes.iter().any(|n|!normalized(n.visibility)||!normalized(n.evolution)) {
+        return Err(WardleyLayoutError::NoteCoordinates);
+    }
     let names:HashSet<_>=diagram.nodes.iter().map(|n|n.label.as_str()).collect();
     if diagram.links.iter().any(|l|!names.contains(l.source.as_str())||!names.contains(l.target.as_str())) {
         return Err(WardleyLayoutError::UnknownLinkEndpoint);
@@ -279,7 +282,8 @@ fn validate_wardley_geometry(layout:&LayoutedWardleyDiagram)->Result<(),WardleyL
         ||!positive((c.axis_font_size-2.0).max(1.0))||!positive(c.label_font_size)
         ||layout.nodes.iter().any(|n|!point(&n.position))
         ||layout.links.iter().any(|l|!point(&l.from)||!point(&l.to))
-        ||layout.evolves.iter().any(|e|!point(&e.from)||!point(&e.to)) {
+        ||layout.evolves.iter().any(|e|!point(&e.from)||!point(&e.to))
+        ||layout.notes.iter().any(|n|!point(&n.position)) {
         return Err(WardleyLayoutError::DerivedGeometry);
     }
     Ok(())
