@@ -370,6 +370,27 @@ pub(super) struct RecordedInput {
     pub(super) tokens: Result<Vec<Token>, String>,
     pub(super) token_ids: Vec<String>,
 }
+
+/// D2 transfers the already-precharged ID buffers into the actual captured
+/// Tokens. Check the complete borrowed stream before changing its first slot:
+/// a private invariant refusal must not leave a half-stamped parser input.
+/// This is a linear trusted ingestion adapter, not serialized-domain admission.
+pub(super) fn stamp_ingestion_ids(tokens: &mut [Token], ids: Vec<String>) -> Result<(), String> {
+    if tokens.len() != ids.len() {
+        return Err("captured ingestion token/identity length mismatch".into());
+    }
+    if tokens.iter().any(|token| token.cv.is_some()) {
+        return Err("captured ingestion token already has an identity".into());
+    }
+    for id in &ids {
+        compact_id(id)?;
+    }
+    for (token, id) in tokens.iter_mut().zip(ids) {
+        token.cv = Some(id);
+    }
+    Ok(())
+}
+
 pub(super) fn record_file(
     log: &mut CVLog,
     path: &Path,

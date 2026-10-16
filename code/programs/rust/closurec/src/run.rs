@@ -552,6 +552,46 @@ pub fn transform_source_with_cv(
         &str,
     )>,
 ) -> Result<String, CompilerError> {
+    // Public callers still own only a source string and detached optional IDs.
+    // They retain the legacy source-tokenizing facade. Only run_compiler can
+    // supply its consumed private capture through the mandatory route below.
+    transform_source_core(source, config, cv, None)
+}
+
+type TransformCv<'a> = Option<(
+    &'a mut coding_adventures_correlation_vector::CVLog,
+    &'a str,
+    &'a [String],
+    &'a str,
+)>;
+
+fn transform_source_with_ingestion(
+    source: &str,
+    config: &CompilerConfig,
+    cv: TransformCv<'_>,
+    captured: Option<Result<Vec<lexer::token::Token>, String>>,
+) -> Result<String, CompilerError> {
+    if cv.is_none()
+        || !matches!(config.compilation.level, CompilationLevel::Simple | CompilationLevel::Advanced)
+    {
+        return Err(CompilerError::Provenance {
+            stage: "typed_ingestion".into(),
+            message: "captured typed ingestion requires tracing and a typed level".into(),
+        });
+    }
+    let captured = captured.ok_or_else(|| CompilerError::Provenance {
+        stage: "typed_ingestion".into(),
+        message: "missing captured typed ingestion stream".into(),
+    })?;
+    transform_source_core(source, config, cv, Some(captured))
+}
+
+fn transform_source_core(
+    source: &str,
+    config: &CompilerConfig,
+    cv: TransformCv<'_>,
+    mut captured: Option<Result<Vec<lexer::token::Token>, String>>,
+) -> Result<String, CompilerError> {
     let es_version = map_language_in_to_es_version(config);
 
     // Hoist `cv` into a local so we can borrow it twice inside
@@ -637,20 +677,25 @@ pub fn transform_source_with_cv(
         // property/global renaming, cross-module tree-shaking — layer on
         // here as they are implemented.
         CompilationLevel::Simple | CompilationLevel::Advanced => {
-            // CLOC27 P4 (D5): when --correlation_vector is on (the `cv` tuple
-            // is present), parse via `parse_javascript_typed_with_cv` so every
-            // token carries its source CvId into the bridge, where the leaf
-            // factory stamps it onto each literal (CLOC27 P2/P3). The 4th tuple
-            // element is the input file's display name, used as the per-token
-            // `Origin.source`. The non-CV path keeps the zero-overhead
-            // `parse_javascript_typed` and is byte-identical to before.
-            let parse_result = match cv_pair.as_mut() {
-                Some((log, _id, _ids, file)) => {
-                    coding_adventures_javascript_parser::parse_javascript_typed_with_cv(
-                        source, file, es_version, log,
-                    )
-                }
-                None => parse_javascript_typed(source, es_version),
+            // Actual traced compilation uses D2 captured IDs. Public legacy
+            // callers without a capture retain CLOC27's source-based parser.
+            // Tracing off keeps parse_javascript_typed with no new CV work.
+            let parse_result = match captured.take() {
+                // Same ASI grammar/depth/retry protection, using the actual
+                // moved ingestion stream. Synthetic semicolons keep cv=None.
+                // Ordinary lexical failure is returned, never re-tokenized.
+                Some(tokens) => tokens.and_then(|tokens| {
+                    coding_adventures_javascript_parser::asi::parse_with_asi(tokens, es_version)
+                        .map_err(|error| format!("JavaScript parse failed: {error}"))
+                }),
+                None => match cv_pair.as_mut() {
+                    Some((log, _id, _ids, file)) => {
+                        coding_adventures_javascript_parser::parse_javascript_typed_with_cv(
+                            source, file, es_version, log,
+                        )
+                    }
+                    None => parse_javascript_typed(source, es_version),
+                },
             };
             let level = config.compilation.level;
             let node = parse_result.map_err(|message| {
@@ -1199,19 +1244,20 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         // D1 captures the exact raw buffer before assigning its root, precharges
         // the complete closed inventory, then consumes that very token stream.
         // Trivia/EOF share the root; token_cv_ids is the token-only projection.
-        // Typed-parser leaf reuse and output-byte joins remain later slices.
+        // D2 moves its IDs into this same stream before typed ASI/bridge.
+        // Composite identities and output-byte joins remain later slices.
         let recorded = if config.special_modes.correlation_vector {
             Some(source_inventory::record_file(
                 &mut cv_log, path, &contents, map_language_in_to_es_version(config),
                 &mut source_inventory_budget,
             ).map_err(provenance_error("source_inventory"))?)
         } else { None };
-        let (cv_id, captured, token_cv_ids) = match recorded {
+        let (cv_id, mut captured, mut token_cv_ids) = match recorded {
             Some(recorded) => (Some(recorded.id), Some(recorded.tokens), recorded.token_ids),
             None => (None, None, Vec::new()),
         };
         if let Some(id) = &cv_id {
-            match captured.ok_or_else(|| CompilerError::Provenance {
+            match captured.as_mut().ok_or_else(|| CompilerError::Provenance {
                 stage: "source_inventory".into(), message: "missing captured ingestion stream".into(),
             })? {
                 Ok(tokens) => {
@@ -1379,12 +1425,19 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                             ).map_err(provenance_error("compilation_level"))?;
                         }
                     }
+                    if matches!(config.compilation.level, CompilationLevel::Simple | CompilationLevel::Advanced) {
+                        // Define observations above borrow the parallel IDs.
+                        // The typed path now consumes those very string buffers
+                        // instead of allocating a second lexer-origin set.
+                        source_inventory::stamp_ingestion_ids(tokens, std::mem::take(&mut token_cv_ids))
+                            .map_err(provenance_error("typed_ingestion"))?;
+                    }
                 }
                 Err(err) => {
                     let mut emeta = std::collections::HashMap::new();
                     emeta.insert(
                         "message".to_string(),
-                        serde_json::Value::String(err),
+                        serde_json::Value::String(err.clone()),
                     );
                     cv_log.contribute(
                         id, "lex", "failed", emeta,
@@ -1403,12 +1456,18 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         // can tombstone gap-rule-dropped tokens (hoisted above the lex
         // block; empty if lex failed, which is safe — whitespace_only
         // skips out-of-bounds indices).
-        // CLOC27 P4 (D5): the input file's display name becomes the per-token
-        // `Origin.source` when the SIMPLE/ADVANCED typed path parses with CV on,
-        // so a folded literal traces back to the file (and line:col) it derived
-        // from. Bound here so it outlives the borrow inside the call.
+        // D2: the traced typed compiler consumes its captured physical IDs.
+        // The public source-based facade remains available to legacy callers;
+        // only non-typed levels use it here. The input path remains borrowed
+        // for that facade, not a reason to remint parser-token identities.
         let path_display = path.to_string_lossy();
         let transformed = match &cv_id {
+            Some(id) if matches!(config.compilation.level, CompilationLevel::Simple | CompilationLevel::Advanced) => transform_source_with_ingestion(
+                &contents,
+                config,
+                Some((&mut cv_log, id.as_str(), &token_cv_ids, path_display.as_ref())),
+                captured,
+            )?,
             Some(id) => transform_source_with_cv(
                 &contents,
                 config,
