@@ -600,7 +600,7 @@ use diagram_ir::{
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram,
-    WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyForce, WardleyForceKind, WardleyLink, WardleyNode, WardleyNote, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
+    WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyForce, WardleyForceKind, WardleyLink, WardleyNode, WardleyNote, WardleyPipeline, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind, TreeViewTheme,
 };
 
@@ -5696,11 +5696,29 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
     let mut diagram = WardleyDiagram { title: None, config,
         stages: vec!["Genesis".into(), "Custom Built".into(), "Product".into(), "Commodity".into()],
-        nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new(), annotations_box: None, annotations: Vec::new(), forces: Vec::new() };
+        nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new(), annotations_box: None, annotations: Vec::new(), forces: Vec::new(), pipelines: Vec::new() };
+    let mut active_pipeline: Option<usize> = None;
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
         let line = raw.split("%%").next().unwrap_or("").trim();
         if line.is_empty() || line.eq_ignore_ascii_case("wardley-beta") { continue; }
+        if let Some(pipeline_index) = active_pipeline {
+            if line == "}" {
+                if diagram.pipelines[pipeline_index].component_ids.is_empty() {
+                    return Err(wardley_error(line_number, "Wardley pipeline requires at least one component"));
+                }
+                active_pipeline = None; continue;
+            }
+            let Some(value) = line.strip_prefix("component ") else {
+                return Err(wardley_error(line_number, "Wardley pipeline bodies only accept components"));
+            };
+            let parent_id = diagram.pipelines[pipeline_index].parent_id.clone();
+            let parent_visibility = diagram.nodes.iter().find(|node| node.id == parent_id)
+                .map(|node| node.visibility).ok_or_else(|| wardley_error(line_number, "unknown Wardley pipeline parent"))?;
+            let node = parse_wardley_pipeline_component(value, parent_visibility, line_number, diagram.nodes.len())?;
+            diagram.pipelines[pipeline_index].component_ids.push(node.id.clone()); diagram.nodes.push(node); continue;
+        }
+        if line == "}" { return Err(wardley_error(line_number, "unexpected Wardley pipeline terminator")); }
         if let Some(value) = line.strip_prefix("title ") { diagram.title = Some(value.trim().to_string()); continue; }
         if let Some(value) = line.strip_prefix("size ") {
             let (width, height) = parse_wardley_coordinates(value, line_number)?;
@@ -5717,6 +5735,16 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         }
         if let Some(value) = line.strip_prefix("component ") {
             diagram.nodes.push(parse_wardley_node(value, false, line_number, diagram.nodes.len())?); continue;
+        }
+        if let Some(value) = line.strip_prefix("pipeline ") {
+            let Some(parent) = value.strip_suffix('{') else { return Err(wardley_error(line_number, "Wardley pipeline requires an opening brace")); };
+            let parent = wardley_name(parent);
+            let Some(parent_node) = diagram.nodes.iter_mut().find(|node| node.label == parent) else {
+                return Err(wardley_error(line_number, format!("Wardley pipeline {parent} must reference an existing component")));
+            };
+            parent_node.pipeline_parent = true;
+            diagram.pipelines.push(WardleyPipeline { parent_id: parent_node.id.clone(), component_ids: Vec::new() });
+            active_pipeline = Some(diagram.pipelines.len() - 1); continue;
         }
         if let Some(value) = line.strip_prefix("evolve ") {
             let Some((name, target)) = value.rsplit_once(char::is_whitespace) else { return Err(wardley_error(line_number, "invalid evolve statement")); };
@@ -5784,6 +5812,7 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
     if let Some(evolve) = diagram.evolves.iter().find(|evolve| !names.contains(evolve.component.as_str())) {
         return Err(wardley_error(1, format!("unknown evolved component {}", evolve.component)));
     }
+    if active_pipeline.is_some() { return Err(wardley_error(prepared.lines().count(), "unterminated Wardley pipeline")); }
     Ok(diagram)
 }
 
@@ -5840,7 +5869,19 @@ fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> R
     if label.is_empty() || !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
         return Err(wardley_error(line, "Wardley node names must be non-empty and coordinates between 0 and 1"));
     }
-    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor })
+    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor, pipeline_parent: false })
+}
+
+fn parse_wardley_pipeline_component(value: &str, visibility: f64, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
+    let Some(open) = value.rfind('[') else { return Err(wardley_error(line, "Wardley pipeline component requires evolution")); };
+    let label = wardley_name(&value[..open]);
+    let evolution = value[open..].trim().strip_prefix('[').and_then(|value| value.strip_suffix(']'))
+        .ok_or_else(|| wardley_error(line, "invalid Wardley pipeline evolution"))?.trim().parse::<f64>()
+        .map_err(|_| wardley_error(line, "invalid Wardley pipeline evolution"))?;
+    if label.is_empty() || !(0.0..=1.0).contains(&evolution) {
+        return Err(wardley_error(line, "Wardley pipeline component names must be non-empty and evolution between 0 and 1"));
+    }
+    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor: false, pipeline_parent: false })
 }
 
 fn parse_wardley_force(value: &str, kind: WardleyForceKind, line: usize) -> Result<WardleyForce, ParseError> {
