@@ -79,3 +79,47 @@ adapter and then per-suffix member prefix identities are the next core slices.
 Miri remains DEFERRED/PENDING under the October 11 delivery sequencing override.
 Frozen checkout/run/inputs/receipts/target stay untouched and unpolled; genuine
 final-source acceptance follows implementation delivery. Full objective OPEN.
+
+### 2026-10-16: array construction observer locally validated
+
+CLOC32 library infrastructure is implemented at `7e6059d8` after committed
+contract `b05f23b3`, tests `e298cff7` and compiled scaffold red `7f99642c`
+(one outer harness: 1 passed / 6 failed; captured child failure is not additive).
+The borrowed run context assigns only array CVs at actual construction, in
+child-before-parent order. Legacy API/diagnostics and non-CV AST fields remain
+unchanged; first observer error and worker failure refuse a Program. Empty,
+hole, repeated, nested and 16 parent-path cases assert exact occurrence and
+ordered token-parent identities. This is not CLI array/source certification.
+
+Full affected suites at exact execution head: parser 272 passed, constant-fold
+451 passed / two historical ignored, closurec 1,140 passed, native compiler
+1,006 passed: 2,869 passed / zero failed across 192 executables and three empty
+doctests. Both all-target strict checks passed. Core receipt SHA256
+`69c2db098af3a41215fa2a98d1fcf25a5e840c6c53b801350376c795a6cceb16`. Independent source review
+`403659d3289328606223a21c5f798763bb08b24205fc197a89c1942e208b0c60`
+and terminal review `74c99ad019d53867dcc297803f624b5b4bad54e841d5af063f4cb7cb6fca31b3` passed.
+All 8,017 frozen input bodies and exact executable joins/hashes were checked.
+
+Separate downstream runtime at the same head passed all 59 exact sources /
+354 six-backend tuples and 54 VM/JIT Float-bit observations, plus integration
+4 passed, observer/refusal controls and strict checks. Receipt SHA256
+`4c68781f02502b520cc346fc5da68da4503b625d8d2d70e2dedeb0600d6c1425`. CLR unavailable/uncounted;
+native/LLVM typed-main return ABI stays OPEN. Focused LANG selectors each
+filter 526 unrelated tests; no full LANG runtime-suite claim. Existing safety
+and production-limit tests and all upstream expectations are preserved.
+
+Next core slice is a spec-first trusted captured-input CLI array adapter using
+existing lexical SourceRange and physical token IDs, bounded node-domain
+admission and distinct actual occurrences. Member suffix prefix identities,
+other transformations/pass-sweep history, output-byte/source joins and full
+Closure parity remain OPEN. No new crates.io dependencies; base ESTree
+serialized boundary and own types remain the owner decisions.
+
+Current audited main `76955b074120626dafc0d26b51ad666d51ba7cb3` is pending
+closed reconciliation beyond a2be13f7. Sole PR #17288 still publishes
+`6132a518b3990619eb904397ee0b21a69ce8ac20`, conflicts, has zero checks and
+auto-merge OFF. No push, hosted acceptance, delivery or merge is claimed.
+Miri DEFERRED/PENDING: frozen run/checkout/inputs/target/receipts remain
+untouched and unpolled; genuine final-source Miri follows implementation
+delivery. This documentation carrier is not a separate Rust execution head.
+Full objective and heartbeat ACTIVE.

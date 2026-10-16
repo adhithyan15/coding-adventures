@@ -2960,3 +2960,24 @@ composite IDs, trusted shared-span/node-domain certification and member suffix
 prefix identities remain OPEN. Main76955/PR#17288 conflict reconciliation and
 delivery remain unfinished; auto-merge stays off. Miri DEFERRED/PENDING; frozen
 inputs/receipts/run untouched and unpolled. No new crates.io dependencies.
+
+### 2026-10-16: CLOC32 array construction observer locally validated
+
+- Execution `7e6059d8` follows committed contract/tests/compiled red. Borrowed
+  construction hooks preserve the legacy bridge and assign only array CVs;
+  exact occurrence/postorder/parent identities and first-error refusal tested.
+  Library infrastructure only; trusted CLI array spans remain the next slice.
+- Full parser/fold/closurec/native suites: 2,869 passed / two historical ignored,
+  192 executable joins, three empty doctests; both strict checks passed.
+  Separate downstream: 59 exact sources / 354 six-backend tuples / 54 VM/JIT
+  Float-bit observations, integration/observer/refusal controls and strict pass.
+  CLR unavailable/uncounted; native/LLVM typed-main ABI OPEN. Source and terminal
+  security PASS; exact receipt/report bindings are in the CLOC32 spec.
+- Next: spec-first captured-input array identities using shared SourceRange,
+  existing physical IDs and bounded node-domain admission; then member suffix
+  prefix identities. Full transformation/pass-sweep/output joins/parity OPEN.
+  Base ESTree boundary, own types and no new crates.io dependencies preserved.
+- Audited main76955 remains pending beyond a2. Sole PR #17288 publishes6132,
+  conflicting / zero checks / auto-merge OFF; unpublished, no delivery/merge.
+  Miri DEFERRED/PENDING; frozen run/inputs/target/receipts untouched/unpolled.
+  Genuine final-source Miri follows delivery; full goal and heartbeat ACTIVE.
