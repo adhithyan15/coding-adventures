@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source_corpus": "timeline-11.16.1-corpus.json",
+  "fixtures": [
+    "default-direction",
+    "top-down-direction",
+    "left-right-direction",
+    "section-and-periods",
+    "multiple-sections",
+    "inline-events",
+    "markdown-link-event",
+    "continued-events",
+    "semicolon-labels",
+    "hash-labels",
+    "metadata-and-events"
+  ]
+}

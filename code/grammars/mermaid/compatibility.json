@@ -107,7 +107,7 @@
     {
       "id": "timeline",
       "headers": ["timeline"],
-      "status": "partial",
+      "status": "full",
       "ir": "temporal",
       "smoke_source": "timeline\n2026 : Started"
     },

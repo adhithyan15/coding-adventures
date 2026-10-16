@@ -3918,9 +3918,8 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
                 let period = sections.last_mut()
                     .and_then(|section| section.periods.last_mut())
                     .ok_or_else(|| token_error(&token, "timeline event requires a preceding period"))?;
-                period.events.push(normalize_mermaid_line_breaks(
-                    token.value.trim_start_matches(':').trim(),
-                ));
+                period.events.extend(split_timeline_events(&token.value).into_iter()
+                    .map(|event| normalize_mermaid_line_breaks(&event)));
             }
             _ => {}
         }
@@ -3933,6 +3932,22 @@ pub fn parse_timeline(source: &str) -> Result<(Option<String>, TimelineDiagram),
         direction,
         sections,
     }))
+}
+
+fn split_timeline_events(raw: &str) -> Vec<String> {
+    let content = raw.trim_start().strip_prefix(':').unwrap_or(raw).trim_start();
+    let mut events = Vec::new();
+    let mut start = 0usize;
+    for (index, character) in content.char_indices() {
+        if character == ':' && content[index + 1..].chars().next().is_some_and(char::is_whitespace) {
+            let event = content[start..index].trim();
+            if !event.is_empty() { events.push(event.to_string()); }
+            start = index + 1;
+        }
+    }
+    let event = content[start..].trim();
+    if !event.is_empty() { events.push(event.to_string()); }
+    events
 }
 
 fn parse_timeline_config(source: &str) -> TimelineConfig {
@@ -15674,6 +15689,25 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(default_direction.direction, TimelineDirection::LeftRight);
         assert_eq!(left_right.direction, TimelineDirection::LeftRight);
         assert_eq!(top_down.direction, TimelineDirection::TopDown);
+    }
+
+    #[test]
+    fn timeline_preserves_upstream_delimiter_rich_labels_and_inline_events() {
+        let (title, diagram) = parse_timeline(
+            "timeline\n\
+             title ;my;#title#;\n\
+             section ;a;#bc-123#;\n\
+             ;ta;sk1; : ;ev;ent1; : #ev#ent2# : [event3](http://example.com)\n",
+        )
+        .unwrap();
+
+        assert_eq!(title.as_deref(), Some(";my;#title#;"));
+        assert_eq!(diagram.sections[0].label.as_deref(), Some(";a;#bc-123#;"));
+        assert_eq!(diagram.sections[0].periods[0].label, ";ta;sk1;");
+        assert_eq!(
+            diagram.sections[0].periods[0].events,
+            [";ev;ent1;", "#ev#ent2#", "[event3](http://example.com)"]
+        );
     }
 
     #[test]

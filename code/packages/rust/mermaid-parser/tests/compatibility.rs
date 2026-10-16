@@ -32,6 +32,10 @@ const TIMELINE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/timeline-11.16.1-corpus.json"
 ));
+const TIMELINE_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/timeline-11.16.1-visual-corpus.json"
+));
 const MINDMAP_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/mindmap-11.16.1-corpus.json"
@@ -963,6 +967,39 @@ fn pinned_timeline_core_corpus_matches_upstream_acceptance() {
         assert!(parse_timeline(source).is_err(),
             "invalid upstream fixture {id} unexpectedly parsed");
     }
+}
+
+#[test]
+fn pinned_timeline_visual_corpus_covers_every_valid_fixture() {
+    let syntax: Value = serde_json::from_str(TIMELINE_CORPUS).expect("timeline corpus must be JSON");
+    let visual: Value = serde_json::from_str(TIMELINE_VISUAL_CORPUS)
+        .expect("timeline visual corpus must be JSON");
+    assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+    let expected = syntax["valid"].as_array().expect("valid corpus array").iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"].as_array().expect("visual fixture array").iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert_eq!(actual.len(), syntax["valid"].as_array().unwrap().len());
+}
+
+#[test]
+fn timeline_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let timeline = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "timeline").expect("timeline family");
+    assert_eq!(timeline["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(TIMELINE_CORPUS).expect("timeline corpus must be JSON");
+    let visual: Value = serde_json::from_str(TIMELINE_VISUAL_CORPUS)
+        .expect("timeline visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert!(!syntax["valid"].as_array().expect("valid corpus").is_empty());
+    assert!(!syntax["invalid"].as_array().expect("invalid corpus").is_empty());
 }
 
 #[test]
