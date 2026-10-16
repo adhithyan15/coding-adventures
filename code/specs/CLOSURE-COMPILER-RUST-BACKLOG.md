@@ -2,7 +2,11 @@
 
 <!-- CV04b current-main integration pending -->
 Sole PR17288 still publishes6132a518b3990619eb904397ee0b21a69ce8ac20,
-CONFLICTING/auto-merge OFF/zero hosted checks in audit20261016T154507Z.
+CONFLICTING/auto-merge OFF/zero hosted checks in audit20261016T163121Z,
+14 open PRs completely audited. Main is now41a1c6aea80ff0bc2f1d034e345a7a7b9d351176:
+new timeline-left-margin d75e1d2e and unrelated Tamil41a follow integratedac29.
+These two successors are UNINTEGRATED/UNACCEPTED; read-only margin security is
+running before revising the next timeline contract or implementation.
 Origin/main ac29edea was genuinely merged5c2b: reviewed complete226167-leaf tree
 matches prospective SHA d1d2dac7; recipe securityd437af4b PASS. Whole owned
 compiler/test bodies preserved inverse, raw50-source positive group isolated,
@@ -37,8 +41,13 @@ VM/JIT Float observations. Observer controls, compile-only25 refusal and both
 compiler/LANG strict pass. CLR absent/uncounted; Native/LLVM typed-main ABI open.
 Receipts native24-units-green-7a017131 and runtime15-v1-7a017131 bind frozen
 inputs/locks/helpers/logs/compiled harnesses. Producers29333/17987 consumed0;
-all producers consumed, no active Cargo. Exact-head migration/runtime source and
-terminal independent reviews are pending completion. No broader native/compiler
+all root validation producers consumed, no active Cargo. Migration security
+a96805d0, successor source/runtime48b40da4, compiler terminal3f7b5d14 and runtime
+terminal7250ae82 all PASS at their separately bound7816/7a heads. Runtime stdout
+uses the retained trim contract;137 unit VM occurrences compare raw bytes. Docs
+f07 five-MD carrier independently7c729b85 PASS, full doc-checker0/lessons1385zero/
+diff0, preserving Rust attribution7a. This subsequent backlog-only checkpoint
+records those reports without relabeling execution. No broader native/compiler
 reverse-graph/downstream/Closure/hosted acceptance transfers to current source.
 
 Earlier checked Ishikawa sourcec275 remains separately attributed: painter167+
