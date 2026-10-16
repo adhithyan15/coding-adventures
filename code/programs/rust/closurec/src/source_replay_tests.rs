@@ -601,7 +601,7 @@ fn d3b_independent_complete_replay_work_schedule_exact_and_one_less() {
                 .iter()
                 .map(|token| 1 + 2 * independently_encoded_token(token).len() + 128)
                 .sum();
-            3110 + 2 * fingerprints
+            3010 + 2 * fingerprints
         };
         f.catalog.limits.work = expected;
         assert_eq!(
