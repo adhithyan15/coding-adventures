@@ -32,6 +32,9 @@ use std::fs;
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 
+#[path="source_inventory.rs"]
+mod source_inventory;
+
 // ---------------------------------------------------------------------------
 // Output type
 // ---------------------------------------------------------------------------
@@ -1184,6 +1187,9 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // That combined entry retains post-combine stage facts. It does not yet
     // establish source ownership for each emitted byte or a source-map join.
     let mut per_file_cv_ids: Vec<String> = Vec::new();
+    let mut source_inventory_budget = source_inventory::SourceInventoryBudget::new(
+        source_inventory::SourceInventoryLimits::default(),
+    ).map_err(provenance_error("source_inventory"))?;
     for path in &inputs {
         let contents = fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {
             path: path.clone(),
@@ -1191,126 +1197,26 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             message: e.to_string(),
         })?;
 
-        // CLOC11.60 — assign a CV ID at ingestion (the per-file
-        // root), so every downstream contribution can attach to
-        // it. The `Origin` is the file path; granularity is
-        // per-file for now. CLOC11.61+ deepen this to per-token
-        // / per-byte as the transform stages get CV-aware.
-        let cv_id = if config.special_modes.correlation_vector {
-            let mut meta = std::collections::HashMap::new();
-            meta.insert(
-                "byte_len".to_string(),
-                serde_json::Value::Number((contents.len() as u64).into()),
-            );
-            meta.insert(
-                "content_sha256".into(),
-                serde_json::Value::String(coding_adventures_sha256::sha256_hex(contents.as_bytes())),
-            );
-            Some(cv_log.try_create(Some(
-                coding_adventures_correlation_vector::Origin {
-                    source: "input_file".to_string(),
-                    location: path.to_string_lossy().into_owned(),
-                    timestamp: None,
-                    meta,
-                },
-            )).map_err(provenance_error("input"))?)
-        } else {
-            None
+        // D1 captures the exact raw buffer before assigning its root, precharges
+        // the complete closed inventory, then consumes that very token stream.
+        // Trivia/EOF share the root; token_cv_ids is the token-only projection.
+        // Typed-parser leaf reuse and output-byte joins remain later slices.
+        let recorded = if config.special_modes.correlation_vector {
+            Some(source_inventory::record_file(
+                &mut cv_log, path, &contents, map_language_in_to_es_version(config),
+                &mut source_inventory_budget,
+            ).map_err(provenance_error("source_inventory"))?)
+        } else { None };
+        let (cv_id, captured, token_cv_ids) = match recorded {
+            Some(recorded) => (Some(recorded.id), Some(recorded.tokens), recorded.token_ids),
+            None => (None, None, Vec::new()),
         };
-
-        // CLOC11.64: per-token CV entries. With CV enabled we
-        // tokenize the file and create a CV entry per token that
-        // is a *child* (via `derive`) of the per-file CV entry.
-        // This lays the substrate later slices need to migrate
-        // token-level contributions (defines.applied,
-        // whitespace_only drops, rename mappings…) off the
-        // per-file CV and onto the precise token CV they touched.
-        //
-        // The per-file CV is left in place: it remains the
-        // attach-point for stage-level summaries
-        // (compilation_level, defines) and the merge-parent for
-        // the combined post-concat CV. Tokens add detail; they
-        // don't replace the file root.
-        //
-        // Granularity (intentional this slice):
-        //   - one child entry per token from
-        //     `tokenize_javascript_typed` — comments and pure
-        //     whitespace are not emitted as tokens by the
-        //     lexer, so we get exactly the bytes that survive
-        //     into the token stream.
-        //   - Origin.source = "lexer_token", location =
-        //     "<path>:<line>:<col>" (1-based, matching the
-        //     lexer's own line/column).
-        //   - meta = {kind, lexeme_byte_len, token_index} —
-        //     kind is the TokenType as a stable lowercase
-        //     string; lexeme_byte_len is value.len() (post
-        //     escape resolution for strings — matches what the
-        //     emitter would write); token_index is the 0-based
-        //     position in the stream so later passes can refer
-        //     back without keeping the token vec around.
-        //
-        // Errors: a lex failure (malformed JS) does not abort
-        // the build. The string-only transform pipeline can
-        // still handle WHITESPACE_ONLY style copies; we just
-        // record a `lex.failed` contribution on the per-file
-        // CV and skip token-CV creation. Later slices that need
-        // tokens may treat absence as "lex didn't reach this
-        // file" — a recoverable state.
-        //
-        // CLOC12.132: declare token_cv_ids outside the lex block so
-        // it can be passed to transform_source_with_cv (which threads
-        // it into whitespace_only_minify for gap-drop tombstones).
-        // Stays empty on lex failure or when CV is off — both callers
-        // guard on cv_id / token_cv_ids being populated before using
-        // the indices.
-        let mut token_cv_ids: Vec<String> = Vec::new();
         if let Some(id) = &cv_id {
-            let es = map_language_in_to_es_version(config);
-            match tokenize_javascript_typed(&contents, es) {
+            match captured.ok_or_else(|| CompilerError::Provenance {
+                stage: "source_inventory".into(), message: "missing captured ingestion stream".into(),
+            })? {
                 Ok(tokens) => {
                     let token_count = tokens.len();
-                    // CLOC11.65: capture each derived token CV ID
-                    // so that *after* the lex loop we can attach
-                    // token-level contributions (defines.applied
-                    // on the specific Name token a --define
-                    // substituted) onto the precise child CV
-                    // rather than smearing them on the per-file
-                    // root.
-                    token_cv_ids = Vec::with_capacity(token_count);
-                    for (idx, tok) in tokens.iter().enumerate() {
-                        let mut tmeta = std::collections::HashMap::new();
-                        tmeta.insert(
-                            "kind".to_string(),
-                            serde_json::Value::String(
-                                format!("{:?}", tok.type_).to_lowercase(),
-                            ),
-                        );
-                        tmeta.insert(
-                            "lexeme_byte_len".to_string(),
-                            serde_json::Value::Number(
-                                (tok.value.len() as u64).into(),
-                            ),
-                        );
-                        tmeta.insert(
-                            "token_index".to_string(),
-                            serde_json::Value::Number((idx as u64).into()),
-                        );
-                        let tok_cv = cv_log.try_derive(
-                            id,
-                            Some(coding_adventures_correlation_vector::Origin {
-                                source: "lexer_token".to_string(),
-                                location: format!(
-                                    "{}:{}:{}",
-                                    path.to_string_lossy(),
-                                    tok.line,
-                                    tok.column,
-                                ),
-                                timestamp: None,
-                                meta: tmeta,
-                            }),
-                        ).map_err(provenance_error("lex"))?;
-                        token_cv_ids.push(tok_cv);
-                    }
                     let mut cmeta = std::collections::HashMap::new();
                     cmeta.insert(
                         "token_count".to_string(),
