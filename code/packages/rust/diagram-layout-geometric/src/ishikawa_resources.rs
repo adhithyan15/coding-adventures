@@ -25,14 +25,18 @@ fn extents(x:f64,y:f64,width:f64,height:f64)->Result<(f64,f64,f64,f64),Error> {
     if width<=0.0 || height<=0.0 || x>=right || y>=bottom {return Err(Error::DerivedGeometry);}
     Ok((x,right,y,bottom))
 }
-fn bone_extents(b:&LayoutedIshikawaBone)->Result<(f64,f64,f64,f64),Error> {
-    extents(finite(b.label_position.x-b.label_width/2.0)?,finite(b.label_position.y-b.label_height/2.0)?,b.label_width,b.label_height)?;
-    // Preserve the actual centered operations consumed by the renderer and the
-    // incoming collision algorithm; (x-half)+width can round differently.
+fn centered_extents(b:&LayoutedIshikawaBone)->Result<(f64,f64,f64,f64),Error> {
     let left=finite(b.label_position.x-b.label_width/2.0)?;let right=finite(b.label_position.x+b.label_width/2.0)?;
     let top=finite(b.label_position.y-b.label_height/2.0)?;let bottom=finite(b.label_position.y+b.label_height/2.0)?;
     if left>=right || top>=bottom {return Err(Error::DerivedGeometry);}
     Ok((left,right,top,bottom))
+}
+fn bone_extents(b:&LayoutedIshikawaBone)->Result<(f64,f64,f64,f64),Error> {
+    let (left,right,top,bottom)=centered_extents(b)?;
+    let (_,paint_right,_,paint_bottom)=extents(left,top,b.label_width,b.label_height)?;
+    // Both operations are consumed: centered collision targets and the painter
+    // rectangle's (center-half)+size. Neither may overstate the other's gap.
+    Ok((left,right.max(paint_right),top,bottom.max(paint_bottom)))
 }
 fn side_clear(b:&LayoutedIshikawaBone,spine:f64,above:bool)->Result<(),Error> {
     let (_,_,top,bottom)=bone_extents(b)?;
@@ -82,13 +86,15 @@ pub(super) fn finish(layout:&mut LayoutedIshikawaDiagram,limits:Limits)->Result<
             let (left,right,_,_)=bone_extents(&layout.bones[index])?;
             let (other_left,other_right,other_top,other_bottom)=bone_extents(&layout.bones[other_index])?;
             let horizontal_clear=finite(other_left-right)? >=4.0 || finite(left-other_right)? >=4.0;
-            let horizontal_overlap=finite(right+4.0)?>other_left && finite(left-4.0)?<other_right;
+            let (_,original_right,_,_)=centered_extents(&layout.bones[index])?;
+            let (_,original_other_right,_,original_other_bottom)=centered_extents(&layout.bones[other_index])?;
+            let horizontal_overlap=finite(original_right+4.0)?>other_left && finite(left-4.0)?<original_other_right;
             if !horizontal_overlap {if !horizontal_clear {return Err(Error::DerivedGeometry);}continue;}
             let target=layout.bones[index].label_position.y;
             let shifted=if above && finite(finite(target+half)?+4.0)?>other_top {
                 target.min(finite(finite(other_top-half)?-4.0)?)
-            }else if !above && finite(finite(target-half)?-4.0)?<other_bottom {
-                target.max(finite(finite(other_bottom+half)?+4.0)?)
+            }else if !above && finite(finite(target-half)?-4.0)?<original_other_bottom {
+                target.max(finite(finite(original_other_bottom+half)?+4.0)?)
             }else{target};
             layout.bones[index].label_position.y=shifted;
             side_clear(&layout.bones[index],spine,above)?;
