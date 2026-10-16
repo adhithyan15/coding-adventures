@@ -423,6 +423,13 @@ fn pinned_wardley_subset_corpus_parses_to_strategic_map_ir() {
                 &diagram.config.theme.component_fill, &diagram.config.theme.link_stroke),
                 (&"#f8fafc".to_string(), &"#123456".to_string(), &"#abcdef".to_string(), &"#6789ab".to_string()));
         }
+        if name == "forces" {
+            assert_eq!(diagram.forces.len(), 2);
+            assert_eq!(diagram.forces[0].label, "AI Adoption");
+            assert_eq!(diagram.forces[0].kind, diagram_ir::WardleyForceKind::Accelerator);
+            assert_eq!((diagram.forces[1].visibility, diagram.forces[1].evolution), (0.15, 0.75));
+            assert_eq!(diagram.forces[1].kind, diagram_ir::WardleyForceKind::Deaccelerator);
+        }
     }
 }
 

@@ -600,7 +600,7 @@ use diagram_ir::{
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram,
-    WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, WardleyNote, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
+    WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyForce, WardleyForceKind, WardleyLink, WardleyNode, WardleyNote, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind, TreeViewTheme,
 };
 
@@ -5696,7 +5696,7 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
     let mut diagram = WardleyDiagram { title: None, config,
         stages: vec!["Genesis".into(), "Custom Built".into(), "Product".into(), "Commodity".into()],
-        nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new(), annotations_box: None, annotations: Vec::new() };
+        nodes: Vec::new(), links: Vec::new(), evolves: Vec::new(), notes: Vec::new(), annotations_box: None, annotations: Vec::new(), forces: Vec::new() };
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
         let line = raw.split("%%").next().unwrap_or("").trim();
@@ -5736,6 +5736,12 @@ pub fn parse_wardley(source: &str) -> Result<WardleyDiagram, ParseError> {
                 return Err(wardley_error(line_number, "Wardley note coordinates must be between 0 and 1"));
             }
             diagram.notes.push(WardleyNote { text: wardley_name(authored_text), visibility, evolution }); continue;
+        }
+        if let Some(value) = line.strip_prefix("accelerator ") {
+            diagram.forces.push(parse_wardley_force(value, WardleyForceKind::Accelerator, line_number)?); continue;
+        }
+        if let Some(value) = line.strip_prefix("deaccelerator ") {
+            diagram.forces.push(parse_wardley_force(value, WardleyForceKind::Deaccelerator, line_number)?); continue;
         }
         if let Some(value) = line.strip_prefix("annotations ") {
             let (visibility, evolution) = parse_wardley_coordinates(value, line_number)?;
@@ -5835,6 +5841,16 @@ fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> R
         return Err(wardley_error(line, "Wardley node names must be non-empty and coordinates between 0 and 1"));
     }
     Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor })
+}
+
+fn parse_wardley_force(value: &str, kind: WardleyForceKind, line: usize) -> Result<WardleyForce, ParseError> {
+    let Some(open) = value.rfind('[') else { return Err(wardley_error(line, "Wardley force requires coordinates")); };
+    let label = wardley_name(&value[..open]);
+    let (visibility, evolution) = parse_wardley_coordinates(&value[open..], line)?;
+    if label.is_empty() || !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
+        return Err(wardley_error(line, "Wardley force names must be non-empty and coordinates between 0 and 1"));
+    }
+    Ok(WardleyForce { label, visibility, evolution, kind })
 }
 
 fn parse_wardley_coordinates(value: &str, line: usize) -> Result<(f64, f64), ParseError> {
