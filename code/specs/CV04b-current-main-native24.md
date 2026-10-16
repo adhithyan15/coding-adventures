@@ -110,3 +110,11 @@ Current conflict-free review-clean exact-head terminal acceptable required CI an
 actual merge reachability still gate auto-merge/cleanup. Miri DEFERRED/PENDING,
 never passed; frozen checkout/run/inputs/receipts/target untouched. Full Closure
 parity and output-byte/source/full transformation lineage remain OPEN.
+
+The first compiled cap24 run atbb838 passed all1002 compiler package tests,
+including137 complete original-source VM/output/type observations, but strict
+Clippy rejected the canonical generator's now-redundant &source borrow. Remove
+only that borrow after materializing String generators to &str arrays; the full
+assertion/diagnostic oracle and all four complete sources remain identical.
+Record this mechanical inverse separately; the first combined receipt stays
+unaccepted until a genuine corrected-source test/strict run.

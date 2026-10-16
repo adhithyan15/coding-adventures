@@ -156,6 +156,6 @@ fn canonical_twenty_four_units_stay_outside_the_dedicated_budget() {
         "begin real procedure pick; pick := -2.25; real saved; saved := entier(entier(sign(pick()) + 1) + 24); output(saved) end",
         "begin real procedure pick; pick := -2.25; real saved; saved := entier(abs(sign(pick()) + 12) + 13); output(saved) end",
     ] {
-        assert!(matches!(compile_source(&source, "current_cap_refusal"), Err(CompileError::Type(message)) if message.contains("cannot print a real value")), "{source}");
+        assert!(matches!(compile_source(source, "current_cap_refusal"), Err(CompileError::Type(message)) if message.contains("cannot print a real value")), "{source}");
     }
 }
