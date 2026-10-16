@@ -37,7 +37,10 @@ stay OPEN. No public parser/transform signature or CLI flag is added.
 The private validator first validates its own finite limits, then requires
 complete generic graph evidence through validate_graph. Thus disabled recording,
 allocation gaps, allocator-only reloads, cycles, dangling parents and invalid
-chronology never become stronger evidence through a shape check. Raw untrusted
+chronology never become stronger evidence through a shape check. Generic graph
+validation permits an absent journal; D3a validates present chronology and does
+not manufacture missing chronological evidence or assert full pass/sweep history.
+Raw untrusted
 snapshot tests must call from_checked_json on original text before shape checks;
 never normalize via serde_json::Value or the compatibility loader first.
 
@@ -79,8 +82,13 @@ inventory; include namespace-free legacy rows in this independent census.
 
 Never scan a root's entire contribution list once per piece. Use two bounded
 passes: locate each root's inventory once, then validate its listed pieces.
-Compact IDs are canonical and densely covered after generic graph validation;
-a borrowed inventory-pointer vector indexed by compact sequence allows O(1)
+Generic graph validation ALSO supports valid hierarchical logs: it is not a
+compact/dense precondition. Before reserving/indexing, explicitly require EVERY
+nonempty record key to be canonical compact-v1 lowercase16-hex format, equal
+its entry ID, with sequence in1..=record_count. Unique canonical keys and that
+range establish dense coverage. Reject a valid hierarchical generic log rather
+than indexing it. Include hierarchical and out-of-range negative controls.
+A borrowed inventory-pointer vector indexed by compact sequence then allows O(1)
 root access. Charge its complete prospective bytes before fallible exact reserve,
 check actual capacity, and retain no cloned metadata, IDs, sources or descriptors.
 Use ordinal/parent checks plus complete physical/listed counts to detect duplicate
