@@ -20703,7 +20703,17 @@
       },
       "started_at": "2026-10-16T21:55:55.808613+00:00",
       "base_revision": "f3a7eae08279a7bb9dfa5b7650b598016526770b",
-      "selection_notes": "post-stp01-priority-audit.md/post-stp01-go-adoption-plan.md:11 open PR file lists no overlap. Go APIs fit, installed toolchain, no actual downstream imports. BF03 has14direct/19transitive but broader profile. Go selected for bounded qualification. #15858 closed/unmerged."
+      "selection_notes": "post-stp01-priority-audit.md/post-stp01-go-adoption-plan.md:11 open PR file lists no overlap. Go APIs fit, installed toolchain, no actual downstream imports. BF03 has14direct/19transitive but broader profile. Go selected for bounded qualification. #15858 closed/unmerged.",
+      "worktree": "C:/Users/adhit/.codex/worktrees/parity-go-provider-20261016/coding-adventures",
+      "validation": {
+        "observed_at": "2026-10-16T22:07:18.295423+00:00",
+        "go_version": "go1.26.4 windows/amd64",
+        "native": "All359 records/195holes,11 top-level tests plus corruption subtests pass;99.0% production statements;vet/build and actual BUILD+BUILD_windows pass. Five shared-storage mutation experiments rejected; production source restored byte-for-byte. No actual downstream importer exists.",
+        "build_tool": "Full15-package go test ./... passes;83.7% aggregate statements;vet/build, actual generic BUILD Windows fallback pass. Exact fixture selection/three-platform unforced plan/atomic missing-reader tests pass; real repository detector emits plan,only Go needed,force=false.",
+        "metadata": "Neutral15tests/359rows;reporter10tests;lessons1209clean;complete materialized Git-visible report equals immutable pinned main including special Twig compiler bucket.0collisions/unknowns;diffcheck clean.",
+        "security": "Independent two-tranche source/spec/coordination review;govulncheck no reachable vulnerabilities (informational imported/module advisories remain baseline). No production provider/API/dependency changes.",
+        "limits": "Native execution on Windows; three-platform plans and both provider front scripts do not claim macOS/Linux native execution. Initial sparse-input failures resolved by materializing existing tracked metadata/readers/rules, without source fixes."
+      }
     },
     {
       "id": "starlark-compiler-elixir-opcode-provider-conformance-adoption",

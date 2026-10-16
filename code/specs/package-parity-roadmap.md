@@ -17503,3 +17503,18 @@ reader and ownership checks; live open-PR file overlap checks were clear. The
 broader BF03 contract retains 14 direct/19 transitive dependents. Go adoption
 wins this tranche on bounded implementation readiness, not dependency count.
 No actual Go downstream importer was found; AST compiler tests are separate.
+
+
+Go adoption local qualification now consumes every STP01 row through native
+APIs and rejects malformed transport/coordinated semantic corruption. Actual
+provider BUILD/BUILD_windows, vet/build and tests pass with 99.0% production
+statement coverage. Five temporary shared-storage regressions are rejected by
+independently copied baselines; production source is restored byte-for-byte.
+The complete build-tool suite passes with 83.7% aggregate coverage, vet/build
+and its actual generic BUILD on Windows. Exact fixture routing, all three
+platform plans and missing-reader output atomicity are tested. The real
+repository detector emits an unforced plan requiring only Go; dependencies are
+retained. Neutral 15-test/359-row and reporter ten-test checks pass, as do 1,209
+lesson shards. Full materialized Git-visible inventory matches the immutable
+report, including special buckets. Native execution was Windows only; platform
+plan inspection and script execution do not claim native Linux/macOS runs.
