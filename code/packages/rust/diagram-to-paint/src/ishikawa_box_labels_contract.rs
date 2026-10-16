@@ -73,10 +73,10 @@ mod ishikawa_box_labels_contract {
                 effect:(357.0,201.0),effect_glyph:(385.5,213.8),bones:vec![
                     Bone {label:"A",from:(167.56,127.0),to:(229.0,235.0),center:(198.28,139.0),width:72.0,
                         rect:(162.28,125.0),glyph:(194.28,139.8),depth:1},
-                    Bone {label:"BBBBBBBB",from:(122.56,102.25),to:(167.56,127.0),center:(122.56,120.25),width:76.0,
-                        rect:(84.56,106.25),glyph:(90.56,121.05),depth:2},
-                    Bone {label:"CCCCCCCCCCCCCCCCCCCCCCC",from:(84.56,81.35),to:(122.56,102.25),center:(84.56,99.35),width:180.0,
-                        rect:(-5.439999999999998,85.35),glyph:(-7.439999999999998,100.14999999999999),depth:3}]},
+                    Bone {label:"BBBBBBBB",from:(122.56,102.25),to:(167.56,127.0),center:(122.56,107.0),width:76.0,
+                        rect:(84.56,93.0),glyph:(90.56,107.8),depth:2},
+                    Bone {label:"CCCCCCCCCCCCCCCCCCCCCCC",from:(84.56,81.35),to:(122.56,102.25),center:(84.56,75.0),width:180.0,
+                        rect:(-5.439999999999998,61.0),glyph:(-7.439999999999998,75.8),depth:3}]},
             Case {name:"finite-padding-clamp",source:"ishikawa-beta\nE\n  A\n".into(),causes:vec![("A",None,1)],
                 width:576.0,height:360.0,padding:1_000_000_000.0,spine:((106.0,180.0),(342.0,180.0)),
                 effect:(342.0,146.0),effect_glyph:(370.5,158.8),bones:vec![
