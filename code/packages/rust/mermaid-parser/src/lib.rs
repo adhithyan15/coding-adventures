@@ -6004,6 +6004,16 @@ fn parse_wardley_theme(source: &str) -> WardleyTheme {
         evolution_stroke: color("evolutionStroke", &defaults.evolution_stroke) }
 }
 
+fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> Result<WardleyNode, ParseError> {
+    let Some(open) = value.rfind('[') else { return Err(wardley_error(line, "Wardley node requires coordinates")); };
+    let label = wardley_name(&value[..open]);
+    let (visibility, evolution) = parse_wardley_coordinates(&value[open..], line)?;
+    if label.is_empty() || !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
+        return Err(wardley_error(line, "Wardley node names must be non-empty and coordinates between 0 and 1"));
+    }
+    Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor })
+}
+
 fn parse_wardley_coordinates(value: &str, line: usize) -> Result<(f64, f64), ParseError> {
     let value = value.trim();
     let Some(inner) = value.strip_prefix('[').and_then(|value| value.strip_suffix(']')) else {

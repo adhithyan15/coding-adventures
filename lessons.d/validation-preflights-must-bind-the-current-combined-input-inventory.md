@@ -117,3 +117,13 @@ theme/note red command stopped at compile101 with zero executed tests; wrapper1
 and the original source/log remain failed, not semantic-red evidence. Repair
 only that diagnostic line, retain every literal oracle/assertion, and use a
 unique whole placeholder when generating source before rerunning actual tests.
+
+Replacing a Wardley helper up to the coordinates function also removed the
+intervening node reader. The first attempted source-green command stopped at
+compile101 with zero executed tests; preserve its log/wrapper1. Restore that
+entire unchanged reader from the immutable pre-repair source and assert its
+whole byte identity. Resolve the immediate next function boundary before a
+textual replacement, rather than assuming a farther function is adjacent.
+Print structured command outputs through their output field before diagnosing
+escaping: an earlier proposed external-helper patch matched nothing and changed
+no source; the displayed JSON escapes were not extra file characters.
