@@ -19115,3 +19115,6 @@ std::thread_local! {static WARDLEY_ANNOTATION_COMPARE_COUNT:std::cell::Cell<usiz
 fn wardley_annotation_compared() {WARDLEY_ANNOTATION_COMPARE_COUNT.with(|c|c.set(c.get().checked_add(1).expect("annotation comparison counter")));}
 #[cfg(test)]
 mod wardley_annotation_work_contract;
+
+#[cfg(test)]
+mod wardley_pipeline_work_contract;
