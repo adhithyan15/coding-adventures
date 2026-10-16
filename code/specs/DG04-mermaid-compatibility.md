@@ -359,6 +359,9 @@ The timeline spine remains present for single-color sectionless documents.
 Global `fontSize` and theme `fontFamily` settings survive in typed timeline
 configuration, scale title and card geometry during layout, and select fonts for
 backend-neutral shaped text and PaintScene metadata.
+The direction semantic matches Mermaid 11.16.1: an unqualified `timeline`
+defaults to left-to-right layout, while explicit `LR` and `TD` headers select
+their corresponding deterministic layout paths.
 
 ### Mindmap Native Slice
 
