@@ -109,6 +109,45 @@ describe("lesson content budgets", () => {
       candidates,
     );
   });
+
+  it("does not let derived totals hide a schema-v1 downgrade", () => {
+    const legacy = parseLesson(
+      "---\nid: SA-LEGACY\nsequence: 10\nintroduces_idioms: []\nintroduces_senses: []\n" +
+        "introduces_culture_claims: []\n---\n\n# Legacy\n\nSay it.\n",
+      "sanskrit",
+      "Devanagari",
+    );
+
+    expect(() =>
+      expectLanguageLessonBudgets("sanskrit", { unitPrefix: "SA" }, [legacy]),
+    ).toThrow();
+  });
+
+  it("fails when a declared unit disappears from an independent identity census", () => {
+    const withIdiom = lesson(
+      "SA-BUDGET",
+      { idioms: ["SA-IDIOM-A"], senses: [], cultureClaims: [] },
+      "sanskrit",
+    );
+    const withoutIdiom = lesson(
+      "SA-BUDGET",
+      { idioms: [], senses: [], cultureClaims: [] },
+      "sanskrit",
+    );
+    const expected = {
+      unitPrefix: "SA",
+      units: {
+        idiom: ["SA-IDIOM-A"],
+        sense: [],
+        "culture-claim": [],
+      },
+    } as const;
+
+    expectLanguageLessonBudgets("sanskrit", expected, [withIdiom]);
+    expect(() =>
+      expectLanguageLessonBudgets("sanskrit", expected, [withoutIdiom]),
+    ).toThrow();
+  });
 });
 
 describe("the committed corpus", () => {
