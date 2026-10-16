@@ -787,6 +787,8 @@ layout deterministically perturbs spine, bone, effect-box, and cause-box paths b
 backend-neutral Paint lowering. RoughJS hachure fill remains part of the visual parity gap.
 Every causal bone also carries a tangent-aligned arrowhead through layout IR and lowers
 to a filled backend-neutral Paint path in both classic and hand-drawn modes.
+The effect uses Mermaid's closed fish-head silhouette, sampled from the upstream quadratic
+curve in layout and emitted as a portable filled path rather than a renderer-specific shape.
 
 ### Wardley Native Slice
 

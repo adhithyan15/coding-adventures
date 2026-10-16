@@ -2432,17 +2432,11 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         text_children.push(text_node(&bone.label, label_x + 6.0, label_y + 2.0,
             (bone.label_width - 12.0).max(1.0), (bone.label_height - 4.0).max(1.0), label_font.clone(), text_color));
     }
-    if hand_drawn {
-        instructions.push(ishikawa_outline_instruction(&diagram.effect_outline, &diagram.config.fill_color, &stroke, 2.0));
-    } else {
-        instructions.push(PaintInstruction::Rect(PaintRect {
-            base: PaintBase::default(), x: diagram.effect_x, y: diagram.effect_y, width: diagram.effect_width,
-            height: diagram.effect_height, fill: Some(diagram.config.fill_color.clone()), stroke: Some(stroke.clone()),
-            stroke_width: Some(2.0), corner_radius: Some(8.0), stroke_dash: None, stroke_dash_offset: None,
-        }));
-    }
-    text_children.push(text_node(&diagram.effect, diagram.effect_x + 8.0, diagram.effect_y + 8.0,
-        diagram.effect_width - 16.0, diagram.effect_height - 16.0, title_font, text_color));
+    instructions.push(ishikawa_outline_instruction(&diagram.effect_outline,
+        &diagram.config.fill_color, &stroke, 2.0));
+    let effect_label_width = diagram.effect_width / 2.4;
+    text_children.push(text_node(&diagram.effect, diagram.effect_x + 3.0, diagram.effect_y + 8.0,
+        effect_label_width - 6.0, diagram.effect_height - 16.0, title_font, text_color));
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
         id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
         width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
@@ -13638,8 +13632,8 @@ emphasized --> direct
             effect_x: 430.0, effect_y: 150.0, effect_width: 150.0, effect_height: 60.0,
             spine_from: Point { x: 30.0, y: 180.0 }, spine_to: Point { x: 430.0, y: 180.0 },
             spine_path: vec![Point { x: 30.0, y: 180.0 }, Point { x: 430.0, y: 180.0 }],
-            effect_outline: vec![Point { x: 430.0, y: 150.0 }, Point { x: 580.0, y: 150.0 },
-                Point { x: 580.0, y: 210.0 }, Point { x: 430.0, y: 210.0 }],
+            effect_outline: vec![Point { x: 430.0, y: 150.0 }, Point { x: 430.0, y: 210.0 },
+                Point { x: 580.0, y: 180.0 }],
             bones: vec![diagram_ir::LayoutedIshikawaBone { from: Point { x: 100.0, y: 80.0 },
                 to: Point { x: 180.0, y: 180.0 }, label: "People".into(),
                 label_position: Point { x: 100.0, y: 68.0 }, label_width: 80.0, label_height: 28.0, depth: 1,
@@ -13658,7 +13652,10 @@ emphasized --> direct
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef")
                 && rect.stroke.as_deref() == Some("#123456"))));
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
-            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef"))).count(), 2);
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef"))).count(), 1);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#abcdef")
+                && path.stroke_width == Some(2.0))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(101, 67, 33)"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
