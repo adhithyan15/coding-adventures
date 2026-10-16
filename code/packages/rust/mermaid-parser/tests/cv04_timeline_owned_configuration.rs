@@ -480,3 +480,27 @@ complete_source_cell!(adjacent_accessibility_closing_boundary,
         section_inverse_colors: vec!["#2563eb".into(),"#16a34a".into(),"#d97706".into(),"#a21caf".into(),"#e11d48".into(),"#0891b2".into()],
     }, Some("Roadmap".into()), Some("résumé".into()), TopDown);
 
+complete_source_cell!(malformed_timeline_object_tail,
+    "---\nconfig:\n  timeline:\n    padding: 72\n    leftMargin: 80\n    useMaxWidth: true\n    disableMulticolor: true\nthemeVariables:\n  cScale0: \"#112230\"\n  cScale1: \"#112231\"\n  cScale2: \"#112232\"\n  cScale3: \"#112233\"\n  cScale4: \"#112234\"\n  cScale5: \"#112235\"\n  cScaleLabel0: \"#223340\"\n  cScaleLabel1: \"#223341\"\n  cScaleLabel2: \"#223342\"\n  cScaleLabel3: \"#223343\"\n  cScaleLabel4: \"#223344\"\n  cScaleLabel5: \"#223345\"\n  cScaleInv0: \"#334450\"\n  cScaleInv1: \"#334451\"\n  cScaleInv2: \"#334452\"\n  cScaleInv3: \"#334453\"\n  cScaleInv4: \"#334454\"\n  cScaleInv5: \"#334455\"\n---\n%%{init: {\"timeline\":{\"padding\":64,\"leftMargin\":0}junk}}%%\ntimeline TD\ntitle Roadmap\n2025 : event\n",
+    TimelineConfig {
+        padding: 50.0,
+        left_margin: 50.0,
+        use_max_width: false,
+        disable_multicolor: false,
+        section_colors: vec!["#112230".into(),"#112231".into(),"#112232".into(),"#112233".into(),"#112234".into(),"#112235".into()],
+        section_label_colors: vec!["#223340".into(),"#223341".into(),"#223342".into(),"#223343".into(),"#223344".into(),"#223345".into()],
+        section_inverse_colors: vec!["#334450".into(),"#334451".into(),"#334452".into(),"#334453".into(),"#334454".into(),"#334455".into()],
+    }, Some("Roadmap".into()), None, TopDown);
+
+complete_source_cell!(malformed_theme_object_tail,
+    "---\nconfig:\n  timeline:\n    padding: 72\n    leftMargin: 80\n    useMaxWidth: true\n    disableMulticolor: true\nthemeVariables:\n  cScale0: \"#112230\"\n  cScale1: \"#112231\"\n  cScale2: \"#112232\"\n  cScale3: \"#112233\"\n  cScale4: \"#112234\"\n  cScale5: \"#112235\"\n  cScaleLabel0: \"#223340\"\n  cScaleLabel1: \"#223341\"\n  cScaleLabel2: \"#223342\"\n  cScaleLabel3: \"#223343\"\n  cScaleLabel4: \"#223344\"\n  cScaleLabel5: \"#223345\"\n  cScaleInv0: \"#334450\"\n  cScaleInv1: \"#334451\"\n  cScaleInv2: \"#334452\"\n  cScaleInv3: \"#334453\"\n  cScaleInv4: \"#334454\"\n  cScaleInv5: \"#334455\"\n---\n%%{init: {\"themeVariables\":{\"cScale0\":\"#badbad\"}junk}}%%\ntimeline TD\ntitle Roadmap\n2025 : event\n",
+    TimelineConfig {
+        padding: 72.0,
+        left_margin: 80.0,
+        use_max_width: true,
+        disable_multicolor: true,
+        section_colors: vec!["#dbeafe".into(),"#dcfce7".into(),"#fef3c7".into(),"#fae8ff".into(),"#ffe4e6".into(),"#cffafe".into()],
+        section_label_colors: vec!["#0f172a".into(),"#0f172a".into(),"#0f172a".into(),"#0f172a".into(),"#0f172a".into(),"#0f172a".into()],
+        section_inverse_colors: vec!["#2563eb".into(),"#16a34a".into(),"#d97706".into(),"#a21caf".into(),"#e11d48".into(),"#0891b2".into()],
+    }, Some("Roadmap".into()), None, TopDown);
+
