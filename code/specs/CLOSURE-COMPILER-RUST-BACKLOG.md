@@ -1,10 +1,13 @@
 # Closure Compiler on Rust — parity backlog
 
 <!-- CV04b current-main integration pending -->
-Local maincf5da3f5 merge6ab6f339 remains unpublished; sole PR17288 publishes
+Local native implementation5031e756/maincf5da3f5 merge6ab6f339 is unpublished;
+sole PR17288 publishes
 D3b6132a518, conflicting, auto-merge OFF. Fresh audit20261016T132135Z observes
-maincf5da3f5. Native22/23 tests and hatch fields are merged; dedicated production
-still byte-exact cap21, and hatch resource repair/fixture migration are pending.
+maincf5da3f5. Native22/23 tests and hatch fields are merged. Dedicated production
+now changes exactly four places cap21→23, inverse-proven against the full owned
+prefix; shared classification stays exact406. Hatch repair/fixture migration
+and full new-source validation remain pending.
 Next bounded contract: `CV04b-current-main-native23-and-hatch-resources.md`,
 committed before successor tests/merge/production. Preserve unrelated edits.
 
@@ -40,13 +43,19 @@ API, finite signed grid, aggregate integer/two-pass/exact-output budgets, fallib
 storage and no partial output. Preserve ordinary hatching plus font/frame/depth
 guards; require compiled red/green, complete fixtures and independent review.
 Native22 draft review8ca4d80d conditionally supports dedicated-only proof and exact
-incoming normal-exit companions; newer native23 needs explicit reconciliation.
+incoming normal-exit companions; native23 implementation needs full acceptance.
 Merge source review found11 exact missing older boundary contexts outside conflict
 markers: four owned22 and seven intermediate native22-producer cap23 sources.
-Restore them test-first at cap21, capture refusal baseline, then migrate only ten
-quantitative contexts to exact-source positives; the nested conditional stays a
-structural negative. Incoming copied admission groups use different contexts and
-cannot substitute. No integration/runtime acceptance is inferred from auto-merge.
+All11 were restored verbatim inb1ca: actual cap21 baseline11P and incoming
+admission0P/2F, consumed. Ten quantitative oracle changes have exact whole-file
+inverses;49ad compiled semantic red3P/10F, consumed. The nested conditional stays
+negative.5031 focused retained13P/incoming2P GREEN includes intermediate-rounding,
+shared-exp and24-budget guards, but full ALGOL library FAILS917P/24F/0I (Cargo101,
+build-finished true), strict not run. Producer37273 consumed; receipt
+`CV04b-cap23-focused-full-5031e756.json`. Independent security inventories every
+case/loop in those24 functions before further oracle migration: preserve all
+exact older source/consumer contexts and mixed safety/resource/structural guards.
+No new full-suite/native-runtime acceptance is inferred from focused greens.
 
 Next: spec-first current-main/native23/hatch repair, exact old-source and whole-
 fixture retention, fresh input/graph/lock receipts, affected suites/strict and

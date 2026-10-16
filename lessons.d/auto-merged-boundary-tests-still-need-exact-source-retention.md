@@ -17,4 +17,9 @@ pure quantitative cases under the new dedicated proof. Nested conditionals remai
 structural negatives even when their arithmetic fits the higher cap. Keep whole
 inverse/retention evidence and distinguish a copied case's admission from runtime
 normal-exit/effect fidelity. The gap was caught before focused successor tests or
-publication; repair and successor acceptance are still pending in this checkpoint.
+publication. After restoring all11, the actual refusal baseline11P, compiled
+quantitative semantic red3P/10F and focused successor13P/2P passed their distinct
+gates. Full successor5031 still fails917P/24F in older boundary groups: enumerate
+every source/loop before migrating another oracle. Neither a failure's title nor
+focused greens establish that all its safety cases are quantitative. Full
+successor/runtime acceptance remains pending.
