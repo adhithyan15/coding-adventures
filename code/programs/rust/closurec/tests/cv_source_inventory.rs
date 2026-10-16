@@ -110,12 +110,15 @@ fn input_entry<'a>(wire:&'a Value,path:&std::path::Path)->(&'a str,&'a Value) {
     assert_eq!(rows.len(),1,"one exact file root");(rows[0].0.as_str(),rows[0].1)
 }
 fn assert_inventory(wire:&Value,path:&std::path::Path,source:&str,sha:&str,rows:&[Piece])->Vec<String> {
+    assert_inventory_editions(wire,path,source,sha,rows,coding_adventures_javascript_tokens::EsVersion::ALL)
+}
+fn assert_inventory_editions(wire:&Value,path:&std::path::Path,source:&str,sha:&str,rows:&[Piece],editions:&[coding_adventures_javascript_tokens::EsVersion])->Vec<String> {
     // Validate the independently authored fixture before asking the new producer
     // to match it. This exercises the existing captured/legacy API at every
     // edition and cannot turn a bad expected partition into a producer defect.
     let point=|p:Pos|lexer::lexical::SourcePosition{byte_offset:p[0],scalar_offset:p[1],utf16_offset:p[2],line:p[3],scalar_column:p[4],utf16_column:p[5]};
     let declared:Vec<_>=rows.iter().map(|r|lexer::lexical::LexicalPiece{kind:match r.token{None=>lexer::lexical::LexicalPieceKind::Trivia,Some(i) if r.type_=="EOF"=>lexer::lexical::LexicalPieceKind::Eof(i),Some(i)=>lexer::lexical::LexicalPieceKind::Token(i)},range:lexer::lexical::SourceRange{start:point(r.start),end:point(r.end)}}).collect();
-    for &edition in coding_adventures_javascript_tokens::EsVersion::ALL {
+    for &edition in editions {
         let limits=lexer::lexical::LexicalLimits::default();let captured=coding_adventures_javascript_lexer::tokenize_javascript_typed_with_ranges(source,edition,limits).unwrap();let legacy=coding_adventures_javascript_lexer::tokenize_javascript_typed(source,edition).unwrap();
         assert_eq!(captured.tokens(),legacy.as_slice(),"unchanged complete Tokens/ASI/CVs {edition}");
         assert_eq!(captured.pieces(),declared.as_slice(),"independent raw piece fixture {edition}");
@@ -192,10 +195,10 @@ fn d1_crlf_bare_cr_and_matched_unicode_separators_keep_independent_coordinates()
 }
 #[test]
 fn d1_ordinary_lexical_failure_has_exact_unavailable_inventory_in_copy_modes() {
-    assert!(coding_adventures_javascript_lexer::tokenize_javascript_typed("@",coding_adventures_javascript_tokens::EsVersion::Es2025).is_err(),"the unavailable control is an actual ordinary lexical error");
+    assert!(coding_adventures_javascript_lexer::tokenize_javascript_typed("var x=\0",coding_adventures_javascript_tokens::EsVersion::Es2025).is_err(),"the unavailable control is an actual ordinary lexical error");
     for level in ["BUNDLE","TRANSPILE_ONLY"] {
-        let f=Fixture::new("@");success(f.run(level,false,&[]));let plain=f.outputs();success(f.run(level,true,&[]));assert_eq!(f.outputs(),plain);let wire=reload(&f.sidecar());let (id,root)=input_entry(&wire,&f.input);
-        assert_eq!(root["origin"]["meta"][NS],json!({"schema":"1","role":"input","buffer_domain":"read_to_string_utf8","encoding":"utf8","grammar":"javascript_standard","edition":"es2025","sha256":"c3641f8544d7c02f3580b07c0f9887f0c6a27ff5ab1d4a3e29caf197cfc299ae","byte_length":"1"}));
+        let f=Fixture::new("var x=\0");success(f.run(level,false,&[]));let plain=f.outputs();success(f.run(level,true,&[]));assert_eq!(f.outputs(),plain);let wire=reload(&f.sidecar());let (id,root)=input_entry(&wire,&f.input);
+        assert_eq!(root["origin"]["meta"][NS],json!({"schema":"1","role":"input","buffer_domain":"read_to_string_utf8","encoding":"utf8","grammar":"javascript_standard","edition":"es2025","sha256":"db347a502947b0c40419db751366a87b1d026bec2fc259de66193382c73e900f","byte_length":"7"}));
         let rows:Vec<_>=root["contributions"].as_array().unwrap().iter().filter(|c|c["source"]=="source.inventory").collect();assert_eq!(rows.len(),1);assert_eq!(rows[0]["tag"],"finalized");assert_eq!(rows[0]["meta"],json!({NS:{"schema":"1","role":"inventory","status":"unavailable","piece_count":"0","token_count":"0","piece_ids":[],"reason":"lexical_error"}}));
         assert!(!wire["entries"].as_object().unwrap().values().any(|e|e["origin"]["meta"][NS]["role"]=="piece"&&e["origin"]["meta"][NS]["input_id"]==id));
         assert!(root["contributions"].as_array().unwrap().iter().any(|c|c["source"]=="lex"&&c["tag"]=="failed"));
@@ -220,4 +223,13 @@ fn d1_recording_refusal_preserves_every_preexisting_output_at_all_levels() {
         let f=Fixture::new("1+1;");for (i,p) in f.paths.iter().enumerate(){std::fs::write(p,format!("sentinel {i}")).unwrap();}let before:Vec<_>=f.paths.iter().map(|p|std::fs::read(p).unwrap()).collect();let output=f.run(level,true,&["--correlation_vector_limits","max_nodes=1"]);assert_ne!(output.status.code(),Some(0));assert!(output.stdout.is_empty());assert!(String::from_utf8_lossy(&output.stderr).contains("provenance"));assert_eq!(f.paths.iter().map(|p|std::fs::read(p).unwrap()).collect::<Vec<_>>(),before);assert_eq!(std::fs::read_dir(&f.dir).unwrap().count(),5);
         eprintln!("CV04b-D1-CLI-COMPLETE case=graphRefusal level={level} sentinelPreserved");
     }
+}
+
+#[test]
+fn d1_es2025_decorator_terminal_is_available_and_older_edition_refuses_it() {
+    use coding_adventures_javascript_tokens::EsVersion;
+    assert!(coding_adventures_javascript_lexer::tokenize_javascript_typed("@",EsVersion::Es5).is_err());
+    let source="@";let f=Fixture::new(source);success(f.run("BUNDLE",false,&[]));let plain=f.outputs();success(f.run("BUNDLE",true,&[]));assert_eq!(f.outputs(),plain);
+    assert_inventory_editions(&reload(&f.sidecar()),&f.input,source,"c3641f8544d7c02f3580b07c0f9887f0c6a27ff5ab1d4a3e29caf197cfc299ae",&[token("Name",0,0,1),token("EOF",1,1,1)],&[EsVersion::Es2025]);
+    eprintln!("CV04b-D1-CLI-COMPLETE case=decoratorLex level=BUNDLE exactInventory");
 }
