@@ -9216,6 +9216,7 @@ where
     }
     if let Some(config) = &diagram.timeline_config {
         metadata.insert("timeline.padding".into(), config.padding.to_string());
+        metadata.insert("timeline.leftMargin".into(), config.left_margin.to_string());
         metadata.insert("timeline.useMaxWidth".into(), config.use_max_width.to_string());
         metadata.insert(
             "timeline.disableMulticolor".into(),
@@ -10318,6 +10319,7 @@ mod tests {
             accessibility_description: None,
             timeline_config: Some(diagram_ir::TimelineConfig {
                 padding: 72.0,
+                left_margin: 80.0,
                 use_max_width: true,
                 disable_multicolor: true,
                 section_colors: vec!["#112233".into()],
@@ -10338,6 +10340,7 @@ mod tests {
         let scene = diagram_to_paint_temporal(&layout, &opts);
         let metadata = scene.metadata.unwrap();
         assert_eq!(metadata.get("timeline.padding").map(String::as_str), Some("72"));
+        assert_eq!(metadata.get("timeline.leftMargin").map(String::as_str), Some("80"));
         assert_eq!(metadata.get("timeline.useMaxWidth").map(String::as_str), Some("true"));
         assert_eq!(metadata.get("timeline.disableMulticolor").map(String::as_str), Some("true"));
         assert_eq!(metadata.get("timeline.theme.cScale0").map(String::as_str), Some("#112233"));
