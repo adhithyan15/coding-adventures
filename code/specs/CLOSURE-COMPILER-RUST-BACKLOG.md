@@ -17,7 +17,15 @@ in-memory fields and real main positions. Recovered-space producer66684 consumed
 actual genuine semantic reds: compiler1012P3F/runtime1010P2F (no build failure).
 Raw union helper schema1 stopped before writes; both complete prior manifests
 remain unchanged, and corrected per-schema validation precedes reconstruction.
-Import/production repair and accepted green remain PENDING. Label54f66 separately pending.
+Closed11path native17/18 unionca8a independently reconstructs the complete
+owned tree (6pure/5overlaps/3compiler conflicts). Entire c82 production prefix
+retained. Boundary migration2509 reverses17whole files and preserves structural
+12..18 plus complete former17 refusal programs as positive companions.
+Repairc272 changes only4dedicated canonical locations to18; whole other compiler
+production/sharedexp/ln/f64fold byte-exact. Lock only ALGOL.477→.479/LANG.551→.553,
+registry376/allotherfields exact. Focused green, full native and final security/
+delivery remain PENDING. Disk/resource failure and two preflight helper failures
+remain separate from genuine semantic reds. No native18 publication yet. Label54f66 separately pending.
 FullClosure/CV04b/hostedchecks/merge OPEN; oneactivePR/heartbeatACTIVE.
 Miri DEFERRED/PENDING NEVER passed; frozen run/inputs untouched/unpolled.
 <!-- /CV04a dedicated native18 selected -->
