@@ -19,16 +19,17 @@ function importsAggregateCoverageCapability(filename: string, source: string): b
   );
   let found = false;
   const visit = (node: ts.Node): void => {
-    if (
-      ts.isImportDeclaration(node) &&
-      ts.isStringLiteral(node.moduleSpecifier) &&
-      node.moduleSpecifier.text.endsWith("src/exam-inventory.js") &&
-      node.importClause
-    ) {
+    if (ts.isImportDeclaration(node) && node.importClause) {
+      const moduleName = ts.isStringLiteral(node.moduleSpecifier)
+        ? node.moduleSpecifier.text
+        : "";
       const bindings = node.importClause.namedBindings;
+      const aggregateModule =
+        moduleName.endsWith("src/exam-inventory.js") ||
+        moduleName.endsWith("src/index.js");
       if (
-        node.importClause.name ||
-        (bindings && ts.isNamespaceImport(bindings)) ||
+        (aggregateModule && node.importClause.name) ||
+        (aggregateModule && bindings && ts.isNamespaceImport(bindings)) ||
         (bindings &&
           ts.isNamedImports(bindings) &&
           bindings.elements.some(
@@ -58,6 +59,9 @@ it("recognizes renamed and namespace imports of aggregate coverage", () => {
     'import { measureExamCoverage } from "../../../src/exam-inventory.js";',
     'import { measureExamCoverage as measure } from "../../../src/exam-inventory.js";',
     'import * as inventoryCoverage from "../../../src/exam-inventory.js";',
+    'import { measureExamCoverage } from "../../../src/index.js";',
+    'import { measureExamCoverage as measure } from "../../../src/index.js";',
+    'import * as humanLanguageData from "../../../src/index.js";',
     "measureExamCoverage(inventory, lessons);",
   ];
   for (const [index, source] of violatingSources.entries()) {

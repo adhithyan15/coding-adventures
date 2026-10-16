@@ -15,6 +15,7 @@ test the semantic shapes that violate the contract. Prefer a capability
 boundary over an open-ended taint analysis: expose a point-only helper to
 feature tests, then use the AST to forbid imports of the aggregate measurement
 capability outside its census owner. Include adversarial fixtures for renamed
-and namespace imports before relying on the guard. Text search is appropriate
-for exact generated tokens; it is not an ownership boundary when ordinary
-refactoring changes how the same behavior is spelled.
+and namespace imports from both a defining module and its public barrel before
+relying on the guard. Text search is appropriate for exact generated tokens;
+it is not an ownership boundary when ordinary refactoring changes how the same
+behavior is spelled.
