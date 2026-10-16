@@ -4847,18 +4847,18 @@ impl Compiler {
                 break;
             }
             // Only canonical small literals enter this dedicated budget of
-            // twenty-four; a sign root therefore stays within [-25, 25]. A
+            // twenty-five; a sign root therefore stays within [-26, 26]. A
             // generic f64 fold is not an exact proof for integer arithmetic
             // near2^53, and must not hide another unit in a nested subtree.
             let tokens=direct_tokens(current);
             if tokens.len()==1&&direct_nodes(current).is_empty() {
                 let amount=match tokens[0].effective_type_name() {
-                    "INTEGER_LIT"=>tokens[0].value.parse::<u64>().ok().filter(|v|*v<=24),
+                    "INTEGER_LIT"=>tokens[0].value.parse::<u64>().ok().filter(|v|*v<=25),
                     "REAL_LIT"=>tokens[0].value.parse::<f64>().ok().and_then(|v|
-                        [0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0,21.0,22.0,23.0,24.0].iter().position(|allowed|*allowed==v).map(|v|v as u64)),
+                        [0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0,16.0,17.0,18.0,19.0,20.0,21.0,22.0,23.0,24.0,25.0].iter().position(|allowed|*allowed==v).map(|v|v as u64)),
                     _=>None,
                 }?;
-                units=units.checked_add(amount)?;if units>24 {return None;}continue;
+                units=units.checked_add(amount)?;if units>25 {return None;}continue;
             }
             if matches!(current.rule_name.as_str(),"expr_add"|"simple_arith") {
                 let sequence=pieces(current);
