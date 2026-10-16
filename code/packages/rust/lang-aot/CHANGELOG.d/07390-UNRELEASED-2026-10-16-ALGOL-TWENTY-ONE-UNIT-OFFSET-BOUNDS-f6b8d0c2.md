@@ -1,3 +1,3 @@
-### Changed
+## [0.556.0] - UNRELEASED
 
-- Prove twenty-one-unit pathwise ALGOL `entier(sign(...))` offsets across NativeAOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+- Add a seven-backend ALGOL matrix proof for twenty-one-unit bounded additive offsets through runtime-selected real name actuals.
