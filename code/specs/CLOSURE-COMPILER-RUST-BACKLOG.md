@@ -3,7 +3,8 @@
 <!-- CV04b current-main integration pending -->
 Local main3efe integration is unpublished (merge commits9832c396/eeeac01f/
 7c2e3af2). Full15-package compiler/diagram source58e52fad passes2009P/0F/0I
-across56 executable targets+15 empty doctests, strict all-target lint0; producer
+across56 executable targets+15 doctest harnesses (2007 executable passes, two
+passing doctests/13 empty harnesses), strict all-target lint0; producer
 38726 is consumed. Receipt `CV04b-main-v5-fast-58e52fad.json` freezes7899 inputs
 across209 all-kind local roots, including Apple-only dev roots without claiming
 Apple execution. Independent exact-terminal and complete fixture reviews pending.
@@ -28,7 +29,10 @@ unconditional decorator envelope, repaired with exact enabled paint parameters.
 V5 workspace validator enforces fresh graph/input key/body/lock stability,
 metadata/artifact/Running identity joins and one exact summary per harness.
 Standalone v7 explicitly traverses its fresh resolved/local-path forward graph;
-static helper review85f0ecf7 passes, actual Closure execution is still pending.
+static helper review85f0ecf7 passes. Actual standalone fa4a78ee executes1139P/
+0F/0I across182 exact targets, strict0; producer3704 consumed. Receipt
+`CV04b-main-v7-closure-fa4a78ee.json` binds36 actual resolved/local Closure roots
+inside237 union roots/7899 frozen inputs. Independent terminal review pending.
 Native validation preserves the sole existing isolated-child trampoline (3P/1I
 outer target; passing parent executes child); no new test ignores are authorized.
 
