@@ -1905,9 +1905,12 @@ pub struct LayoutedIshikawaDiagram { pub width: f64, pub height: f64, pub effect
     pub spine_from: Point, pub spine_to: Point, pub bones: Vec<LayoutedIshikawaBone> }
 
 // STRATEGIC MAP FAMILY
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum WardleySourceStrategy { Build, Buy, Outsource, Market }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyNode { pub id: String, pub label: String, pub visibility: f64, pub evolution: f64, pub anchor: bool,
-    pub pipeline_parent: bool, pub label_offset_x: Option<f64>, pub label_offset_y: Option<f64> }
+    pub pipeline_parent: bool, pub label_offset_x: Option<f64>, pub label_offset_y: Option<f64>,
+    pub source_strategy: Option<WardleySourceStrategy>, pub inertia: bool }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyLink { pub source: String, pub target: String }
 #[derive(Clone, Debug, PartialEq)]
@@ -1945,7 +1948,8 @@ pub struct WardleyDiagram { pub title: Option<String>, pub config: WardleyConfig
     pub pipelines: Vec<WardleyPipeline> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyNode { pub id: String, pub label: String, pub position: Point, pub anchor: bool,
-    pub pipeline_parent: bool, pub label_offset_x: Option<f64>, pub label_offset_y: Option<f64> }
+    pub pipeline_parent: bool, pub label_offset_x: Option<f64>, pub label_offset_y: Option<f64>,
+    pub source_strategy: Option<WardleySourceStrategy>, pub inertia: bool }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyLink { pub from: Point, pub to: Point }
 #[derive(Clone, Debug, PartialEq)]

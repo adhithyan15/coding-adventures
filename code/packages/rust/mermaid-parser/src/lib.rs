@@ -600,7 +600,7 @@ use diagram_ir::{
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaConfig, IshikawaDiagram,
-    WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyForce, WardleyForceKind, WardleyLink, WardleyNode, WardleyNote, WardleyPipeline, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
+    WardleyAnnotation, WardleyConfig, WardleyDiagram, WardleyEvolution, WardleyForce, WardleyForceKind, WardleyLink, WardleyNode, WardleyNote, WardleyPipeline, WardleySourceStrategy, WardleyTheme, TreeViewConfig, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind, TreeViewTheme,
 };
 
@@ -5876,9 +5876,10 @@ fn parse_wardley_node(value: &str, anchor: bool, line: usize, index: usize) -> R
     if label.is_empty() || !(0.0..=1.0).contains(&visibility) || !(0.0..=1.0).contains(&evolution) {
         return Err(wardley_error(line, "Wardley node names must be non-empty and coordinates between 0 and 1"));
     }
-    let (label_offset_x, label_offset_y) = parse_wardley_label_offsets(value[close + 1..].trim(), anchor, line)?;
+    let suffix = parse_wardley_component_suffix(value[close + 1..].trim(), anchor, line)?;
     Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor, pipeline_parent: false,
-        label_offset_x, label_offset_y })
+        label_offset_x: suffix.label_offset_x, label_offset_y: suffix.label_offset_y,
+        source_strategy: suffix.source_strategy, inertia: suffix.inertia })
 }
 
 fn parse_wardley_stage(value: &str, line: usize) -> Result<(String, Option<f64>), ParseError> {
@@ -5911,18 +5912,44 @@ fn parse_wardley_pipeline_component(value: &str, visibility: f64, line: usize, i
     if label.is_empty() || !(0.0..=1.0).contains(&evolution) {
         return Err(wardley_error(line, "Wardley pipeline component names must be non-empty and evolution between 0 and 1"));
     }
-    let (label_offset_x, label_offset_y) = parse_wardley_label_offsets(value[close + 1..].trim(), false, line)?;
+    let suffix = parse_wardley_component_suffix(value[close + 1..].trim(), false, line)?;
+    if suffix.source_strategy.is_some() || suffix.inertia { return Err(wardley_error(line, "Wardley pipeline children only accept label offsets")); }
     Ok(WardleyNode { id: format!("wardley-{}", index + 1), label, visibility, evolution, anchor: false, pipeline_parent: false,
-        label_offset_x, label_offset_y })
+        label_offset_x: suffix.label_offset_x, label_offset_y: suffix.label_offset_y, source_strategy: None, inertia: false })
 }
 
-fn parse_wardley_label_offsets(value: &str, anchor: bool, line: usize) -> Result<(Option<f64>, Option<f64>), ParseError> {
-    if value.is_empty() { return Ok((None, None)); }
-    if anchor { return Err(wardley_error(line, "Wardley anchors do not accept label offsets")); }
-    let Some(coordinates) = value.strip_prefix("label ") else { return Err(wardley_error(line, "unsupported Wardley component suffix")); };
-    let (x, y) = parse_wardley_coordinates(coordinates, line)?;
-    if x.fract() != 0.0 || y.fract() != 0.0 { return Err(wardley_error(line, "Wardley label offsets must be integers")); }
-    Ok((Some(x), Some(y)))
+struct WardleyComponentSuffix { label_offset_x: Option<f64>, label_offset_y: Option<f64>,
+    source_strategy: Option<WardleySourceStrategy>, inertia: bool }
+
+fn parse_wardley_component_suffix(value: &str, anchor: bool, line: usize) -> Result<WardleyComponentSuffix, ParseError> {
+    if value.is_empty() { return Ok(WardleyComponentSuffix { label_offset_x: None, label_offset_y: None,
+        source_strategy: None, inertia: false }); }
+    if anchor { return Err(wardley_error(line, "Wardley anchors do not accept component suffixes")); }
+    let mut remainder = value; let mut offsets = (None, None); let mut strategy = None; let mut inertia = false;
+    if let Some(after_label) = remainder.strip_prefix("label ") {
+        let Some(close) = after_label.find(']') else { return Err(wardley_error(line, "invalid Wardley label offsets")); };
+        let (x, y) = parse_wardley_coordinates(&after_label[..=close], line)?;
+        if x.fract() != 0.0 || y.fract() != 0.0 { return Err(wardley_error(line, "Wardley label offsets must be integers")); }
+        offsets = (Some(x), Some(y)); remainder = after_label[close + 1..].trim();
+    }
+    while !remainder.is_empty() {
+        let (decorator, rest) = if let Some(parenthesized) = remainder.strip_prefix('(') {
+            let Some(close) = parenthesized.find(')') else { return Err(wardley_error(line, "invalid Wardley decorator")); };
+            (&parenthesized[..close], parenthesized[close + 1..].trim())
+        } else if let Some(rest) = remainder.strip_prefix("inertia") { ("inertia", rest.trim()) }
+        else { return Err(wardley_error(line, "unsupported Wardley component suffix")); };
+        match decorator {
+            "inertia" if !inertia => inertia = true,
+            "build" if strategy.is_none() => strategy = Some(WardleySourceStrategy::Build),
+            "buy" if strategy.is_none() => strategy = Some(WardleySourceStrategy::Buy),
+            "outsource" if strategy.is_none() => strategy = Some(WardleySourceStrategy::Outsource),
+            "market" if strategy.is_none() => strategy = Some(WardleySourceStrategy::Market),
+            _ => return Err(wardley_error(line, format!("invalid or duplicate Wardley decorator {decorator}"))),
+        }
+        remainder = rest;
+    }
+    Ok(WardleyComponentSuffix { label_offset_x: offsets.0, label_offset_y: offsets.1,
+        source_strategy: strategy, inertia })
 }
 
 fn parse_wardley_force(value: &str, kind: WardleyForceKind, line: usize) -> Result<WardleyForce, ParseError> {
