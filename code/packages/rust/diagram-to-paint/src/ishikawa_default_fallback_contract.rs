@@ -11,7 +11,7 @@ fn ishikawa_default_and_rejected_settings_keep_complete_scene_queries() {
         "---\nconfig:\n  ishikawa:\n    diagramPadding: 80\n    useMaxWidth: true\nthemeVariables:\n  fontFamily: Georgia\n  lineColor: red\n  mainBkg: blue\n  textColor: green\n---\n%%{init: {\"ishikawa\":{},\"themeVariables\":{}}}%%\n",
     ] {
         let source=[prefix,"ishikawa-beta\nE\n  A\n"].concat();
-        let config=diagram_ir::IshikawaConfig {diagram_padding:20.0,use_max_width:false,font_family:"sans-serif".into(),line_color:"#333333".into(),fill_color:"#ffffff".into(),text_color:"#333333".into()};
+        let config=diagram_ir::IshikawaConfig {font_size:16.0,look:diagram_ir::IshikawaLook::Classic,hand_drawn_seed:0,diagram_padding:20.0,use_max_width:false,font_family:"sans-serif".into(),line_color:"#333333".into(),fill_color:"#ffffff".into(),text_color:"#333333".into()};
         let expected_ir=diagram_ir::IshikawaDiagram {effect:"E".into(),causes:vec![diagram_ir::IshikawaCause {id:"cause-1".into(),label:"A".into(),parent_id:None,depth:1}],config:config.clone()};
         let parsed=mermaid_parser::parse_ishikawa(&source).unwrap();assert_eq!(parsed,expected_ir,"whole default IR source={source}");
         let expected_layout=LayoutedIshikawaDiagram {width:576.0,height:360.0,effect:"E".into(),config,

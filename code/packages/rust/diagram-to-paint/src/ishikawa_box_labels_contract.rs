@@ -86,7 +86,7 @@ mod ishikawa_box_labels_contract {
         for family in ["Georgia","CourierNew"] { for case in &cases {
             let prefix=format!("---\nconfig:\n  ishikawa:\n    diagramPadding: {}\n    useMaxWidth: true\nthemeVariables:\n  fontFamily: {family}\n  lineColor: '#123456'\n  mainBkg: '#abcdef'\n  textColor: '#112233'\n---\n",case.padding);
             let source=prefix+&case.source;
-            let config=diagram_ir::IshikawaConfig {diagram_padding:case.padding,use_max_width:true,
+            let config=diagram_ir::IshikawaConfig {font_size:16.0,look:diagram_ir::IshikawaLook::Classic,hand_drawn_seed:0,diagram_padding:case.padding,use_max_width:true,
                 font_family:family.into(),line_color:"#123456".into(),fill_color:"#abcdef".into(),text_color:"#112233".into()};
             let expected_ir=diagram_ir::IshikawaDiagram {effect:"E".into(),config:config.clone(),
                 causes:case.causes.iter().enumerate().map(|(index,(label,parent,depth))|diagram_ir::IshikawaCause {

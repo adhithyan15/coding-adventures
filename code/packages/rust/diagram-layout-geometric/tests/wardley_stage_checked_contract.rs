@@ -13,7 +13,7 @@ fn unsupported_typed_stage_vectors_and_compatibility_refuse_before_mapping() {
 fn admitted_uniform_zero_equal_partial_final_and_small_stage_vectors_have_whole_layout() {
  for (names,ends) in [(vec![],vec![]),(vec!["A"],vec![]),(vec!["A"],vec![0.0]),(vec!["A"],vec![0.7]),(vec!["A","B"],vec![]),(vec!["A","B"],vec![0.0,1.0]),(vec!["A","B"],vec![0.3,0.3]),(vec!["A","B","C"],vec![0.0,0.5,0.8])] {
  let mut d=diagram();d.stages=names.iter().map(|v|v.to_string()).collect();d.stage_boundaries=ends.clone();
- let want=LayoutedWardleyDiagram{width:900.0,height:600.0,title:None,config:config(),stages:names.iter().map(|v|v.to_string()).collect(),stage_boundaries:ends,nodes:vec![],links:vec![],evolves:vec![],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![]};
+ let want=LayoutedWardleyDiagram{accessibility_title:None,accessibility_description:None,width:900.0,height:600.0,title:None,config:config(),stages:names.iter().map(|v|v.to_string()).collect(),stage_boundaries:ends,nodes:vec![],links:vec![],evolves:vec![],notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![]};
  assert_eq!(try_layout_wardley(&d),Ok(want.clone()));assert_eq!(layout_wardley(&d),want);eprintln!("WARDLEY-STAGE-WHOLE-LAYOUT {}",names.len());
  }
 }

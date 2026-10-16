@@ -13,7 +13,7 @@ fn valid_annotation_edges_keep_literal_complete_layout_and_group_order() {
  let mut d=diagram();d.annotations_box=Some((0.25,0.75));d.annotations=vec![
  WardleyAnnotation{number:3,text:"Three".into(),coordinates:vec![(0.0,0.0),(0.5,0.5),(1.0,1.0)]},
  WardleyAnnotation{number:1,text:"".into(),coordinates:vec![(0.75,0.25)]}];
- let expected=LayoutedWardleyDiagram{width:900.0,height:600.0,title:None,config:config(),stages:vec![],nodes:vec![],links:vec![],evolves:vec![],notes:vec![],annotations_box:Some(Point{x:651.0,y:426.0}),annotations:vec![
+ let expected=LayoutedWardleyDiagram{accessibility_title:None,accessibility_description:None,width:900.0,height:600.0,title:None,config:config(),stages:vec![],nodes:vec![],links:vec![],evolves:vec![],notes:vec![],annotations_box:Some(Point{x:651.0,y:426.0}),annotations:vec![
  LayoutedWardleyAnnotation{number:3,text:"Three".into(),positions:vec![Point{x:48.0,y:552.0},Point{x:450.0,y:300.0},Point{x:852.0,y:48.0}]},
  LayoutedWardleyAnnotation{number:1,text:"".into(),positions:vec![Point{x:249.0,y:174.0}]}],forces:vec![],pipelines:vec![],stage_boundaries:vec![]};
  assert_eq!(try_layout_wardley(&d),Ok(expected.clone()));assert_eq!(layout_wardley(&d),expected);

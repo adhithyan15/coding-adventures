@@ -7,7 +7,7 @@ fn diagram()->WardleyDiagram {WardleyDiagram{accessibility_title:None,accessibil
 #[test]
 fn valid_note_edges_have_literal_complete_layout_and_order() {
  let mut d=diagram();d.notes=vec![WardleyNote{text:"L".into(),visibility:0.0,evolution:0.0},WardleyNote{text:"R".into(),visibility:1.0,evolution:1.0},WardleyNote{text:"M".into(),visibility:0.5,evolution:0.5}];
- let expected=LayoutedWardleyDiagram {width:900.0,height:600.0,title:None,config:config(),stages:vec![],nodes:vec![],links:vec![],evolves:vec![],notes:vec![
+ let expected=LayoutedWardleyDiagram {accessibility_title:None,accessibility_description:None,width:900.0,height:600.0,title:None,config:config(),stages:vec![],nodes:vec![],links:vec![],evolves:vec![],notes:vec![
  LayoutedWardleyNote{text:"L".into(),position:Point{x:48.0,y:552.0}},
  LayoutedWardleyNote{text:"R".into(),position:Point{x:852.0,y:48.0}},
  LayoutedWardleyNote{text:"M".into(),position:Point{x:450.0,y:300.0}}],annotations_box:None,annotations:vec![],forces:vec![],pipelines:vec![],stage_boundaries:vec![]};

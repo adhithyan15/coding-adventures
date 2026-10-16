@@ -148,11 +148,23 @@ fn eighteen_unit_conditional_alias_effects_obey_the_discovery_limit() {
 
 // Both arms must prove their own budget, including an unselected oversized arm.
 #[test]
-fn eighteen_unit_unselected_nineteen_unit_arms_are_semantic_refusals() {
+fn twenty_one_unit_unselected_twenty_two_unit_arms_are_semantic_refusals() {
+    for condition in ["true", "false"] {
+        for (left, right) in [("22", "1"), ("1", "22")] {
+            let source = format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := entier(if choose() then (entier(sign(left)) + {left}) else (entier(sign(right)) + {right})); output(saved) end");
+            assert!(matches!(compile_source(&source, "eighteen_unit_oversized_arm"), Err(CompileError::Type(m)) if m.contains("cannot print a real value")), "{source}");
+        }
+    }
+}
+
+// Preserve every exact former nineteen-unit refusal as a typed-real positive.
+#[test]
+fn former_nineteen_unit_conditional_arm_refusals_are_exact_positives() {
     for condition in ["true", "false"] {
         for (left, right) in [("19", "1"), ("1", "19")] {
             let source = format!("begin boolean procedure choose; choose := {condition}; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, saved; left := leftvalue(); right := rightvalue(); saved := entier(if choose() then (entier(sign(left)) + {left}) else (entier(sign(right)) + {right})); output(saved) end");
-            assert!(matches!(compile_source(&source, "eighteen_unit_oversized_arm"), Err(CompileError::Type(m)) if m.contains("cannot print a real value")), "{source}");
+            let module=compile_source(&source,"former_nineteen_unit_arm").unwrap_or_else(|e|panic!("{source}: {e}"));
+            assert_eq!(module.get_function("main").unwrap().instructions.iter().filter(|i|i.op=="call"&&i.srcs.first().and_then(Operand::as_var)==Some("__basic_print_real")).count(),1,"{source}");
         }
     }
 }

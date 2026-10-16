@@ -13,7 +13,7 @@ fn invalid_pipeline_graphs_refuse_before_legacy_mapping() {
  for case in 0..12 {let d=invalid(case);assert!(try_layout_wardley(&d).is_err(),"case{case}");assert!(std::panic::catch_unwind(||layout_wardley(&d)).is_err());eprintln!("WARDLEY-PIPELINE-LEGACY {case}");}
 }
 fn p(x:f64,y:f64)->Point {Point{x,y}}
-fn ln(id:&str,x:f64,y:f64,parent:bool)->LayoutedWardleyNode {LayoutedWardleyNode{id:id.into(),label:id.into(),position:p(x,y),anchor:false,pipeline_parent:parent}}
+fn ln(id:&str,x:f64,y:f64,parent:bool)->LayoutedWardleyNode {LayoutedWardleyNode{label_offset_x:None,label_offset_y:None,source_strategy:None,inertia:false,id:id.into(),label:id.into(),position:p(x,y),anchor:false,pipeline_parent:parent}}
 fn lp(x:f64,y:f64,w:f64,positions:&[(f64,f64)])->LayoutedWardleyPipeline {LayoutedWardleyPipeline{x,y,width:w,height:24.0,component_positions:positions.iter().map(|(x,y)|p(*x,*y)).collect()}}
 #[test]
 fn flat_pipeline_sorted_occurrences_and_final_parent_references_have_whole_layout() {
@@ -26,7 +26,7 @@ fn flat_pipeline_sorted_occurrences_and_final_parent_references_have_whole_layou
  3=>{d.pipelines[0].component_ids.push("C".into());(vec![ln("P",249.0,286.4,true),ln("C",249.0,300.0,false)],vec![lp(234.0,288.0,30.0,&[(249.0,300.0),(249.0,300.0)])])},
  4=>{d=seeded();(vec![ln("P",249.0,286.4,true),ln("C",249.0,300.0,false),ln("Q",651.0,538.4,true),ln("D",651.0,552.0,false)],vec![lp(234.0,288.0,30.0,&[(249.0,300.0)]),lp(636.0,540.0,30.0,&[(651.0,552.0)])])},_=>unreachable!()};
  let parent=nodes[0].position.clone();d.links=vec![WardleyLink{dashed:false,label:None,flow:None,source:"P".into(),target:"C".into()}];d.evolves=vec![WardleyEvolution{component:"P".into(),target:1.0}];
- let want=LayoutedWardleyDiagram{width:900.0,height:600.0,title:None,config:config(),stages:vec![],links:vec![LayoutedWardleyLink{from:parent.clone(),to:nodes[1].position.clone()}],evolves:vec![LayoutedWardleyEvolution{from:parent,to:p(852.0,300.0)}],nodes,notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines,stage_boundaries:vec![]};
+ let want=LayoutedWardleyDiagram{accessibility_title:None,accessibility_description:None,width:900.0,height:600.0,title:None,config:config(),stages:vec![],links:vec![LayoutedWardleyLink{from:parent.clone(),to:nodes[1].position.clone()}],evolves:vec![LayoutedWardleyEvolution{from:parent,to:p(852.0,300.0)}],nodes,notes:vec![],annotations_box:None,annotations:vec![],forces:vec![],pipelines,stage_boundaries:vec![]};
  assert_eq!(try_layout_wardley(&d),Ok(want.clone()),"case{case}");assert_eq!(layout_wardley(&d),want);eprintln!("WARDLEY-PIPELINE-WHOLE-LAYOUT {case}");
  }
 }
