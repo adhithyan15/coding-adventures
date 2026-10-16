@@ -12,3 +12,9 @@ Recompute the exact surviving event-source census and reparent a later piece to
 an earlier wrong input. Every shape cell must explicitly pass checked generic
 import before asserting a shape refusal. A backward-coordinate control must
 actually decrease from a positive start rather than leave a zero start unchanged.
+
+The later private compiler transaction fixture confused checks_only (a separate
+boolean) with the five-level enum. Its ChecksOnly variant caused E0599 before
+tests ran. The actual fifth level is TranspileOnly. Preserve that compile-failed
+receipt separately and require a compiling successor across all five real levels;
+neither the failure nor a substituted mode is runtime coverage.

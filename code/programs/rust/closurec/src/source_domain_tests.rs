@@ -528,7 +528,7 @@ fn d3a_prepublication_refusal_preserves_every_destination_in_every_presentation(
         CompilationLevel::Bundle,
         CompilationLevel::WhitespaceOnly,
         CompilationLevel::Simple,
-        CompilationLevel::ChecksOnly,
+        CompilationLevel::TranspileOnly,
         CompilationLevel::Advanced,
     ] {
         for format in [
