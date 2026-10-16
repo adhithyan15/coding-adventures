@@ -1,0 +1,20 @@
+{
+  "chapter": 315,
+  "title": "A connected A2 Telugu message",
+  "label": "ch:te-a-connected-a2-telugu-message",
+  "canDo": "I can plan and write a connected 70–90 word Telugu message in Telugu script for a named reader and practical purpose.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "TE-W315-a2-connected-composition",
+    "kind": "production",
+    "summary": "Complete chapter 315 by writing a model-free 70–90 word connected Telugu message for a named reader and practical purpose.",
+    "assesses": [
+      "TE-LEX-C64-JOIN-04",
+      "TE-LEX-C74-LINK-02",
+      "TE-LEX-C74-LINK-05",
+      "TE-LEX-C75-WHEN-03"
+    ]
+  }
+}

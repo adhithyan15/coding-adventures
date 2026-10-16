@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:d4a056710d44370b",
+  "lessonIds": [
+    "TE-W315-a2-connected-composition"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "telugu/narration/ch315.txt",
+  "json": "telugu/narration/ch315.json",
+  "textHash": "fnv1a64:83d84e47c912a28d",
+  "jsonHash": "fnv1a64:ad6e48442ec8a87f",
+  "findings": []
+}

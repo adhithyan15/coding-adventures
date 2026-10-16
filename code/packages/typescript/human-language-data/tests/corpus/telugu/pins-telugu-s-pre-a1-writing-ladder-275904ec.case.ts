@@ -52,8 +52,12 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // stage exercised on a harder pair. `TE-S171`, `TE-S172`, and `TE-S173`
   // then return to observe-and-trace for newly introduced rare letters. The
   // `TE-R152` recall closes that last filmstrip with whole-word composition and
-  // a timed production check. A rung may repeat; the ORDER assertion below
-  // still forbids one arriving before its prerequisite stages.
+  // a timed production check. `TE-W315` then adds the cumulative policy's final
+  // A2 stage through a separately owned, model-free connected message. There is
+  // no later writing-stage id for another lesson to add, so this one-time final
+  // row does not turn the language-owned pin into a recurring aggregate edit.
+  // A rung may repeat; the ORDER assertion below still forbids one arriving
+  // before its prerequisite stages.
   expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
     ["TE-S150-letter-ma", "observe-trace"],
     ["TE-S151-letter-dha", "observe-trace"],
@@ -89,6 +93,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S173-letter-jha", "observe-trace"],
     ["TE-R152-jhari-recall", "controlled-composition"],
     ["TE-R152-jhari-recall", "timed-assessment-production"],
+    ["TE-W315-a2-connected-composition", "connected-composition"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({
