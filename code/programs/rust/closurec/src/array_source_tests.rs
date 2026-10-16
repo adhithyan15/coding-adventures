@@ -15,7 +15,9 @@ fn fixture_with(source:&str,limits:ArrayLimits,graph:GraphLimits)->Result<Fixtur
     let path=Path::new("array-input.js");let owned=source.to_owned();
     let recorded=record_file(&mut log,path,&owned,DEFAULT_ES_VERSION,&mut budget)?;
     catalog.retain(owned,&recorded.id,recorded.tokens.as_ref().ok().map(Vec::as_slice))?;
-    let mut tokens=recorded.tokens?;stamp_ingestion_ids(&mut tokens,recorded.token_ids)?;
+    let mut tokens=recorded.tokens?;
+    log.contribute(&recorded.id,"lex","tokens_emitted",std::collections::HashMap::from([("token_count".into(),json!(tokens.len()))]))?;
+    stamp_ingestion_ids(&mut tokens,recorded.token_ids)?;
     let node=parse_with_asi(tokens,DEFAULT_ES_VERSION).map_err(|e|e.to_string())?;
     let mut ledger=ArrayLedger::new(limits)?;
     let program={let mut observer=ledger.observer(&mut log,&recorded.id)?;
@@ -114,7 +116,7 @@ fn c33_actual_compiler_refusals_keep_every_preexisting_destination() {
     for level in [CompilationLevel::Simple,CompilationLevel::Advanced] {
         for format in [CorrelationVectorFormat::Json,CorrelationVectorFormat::Ndjson,CorrelationVectorFormat::None] {
             for filtered in [false,true] {
-                for case in ["work","buffer","ledger","metadata"] {
+                for case in ["work","buffer","ledger","metadata","final-work"] {
                     for p in &paths {std::fs::write(p,b"prior\0array source sentinel").unwrap();}
                     let mut config=CompilerConfig::default();config.compilation.level=level;
                     config.io.js_patterns=vec![input.to_string_lossy().into_owned()];config.io.js_output_file=Some(paths[0].clone());
@@ -122,9 +124,9 @@ fn c33_actual_compiler_refusals_keep_every_preexisting_destination() {
                     config.special_modes.correlation_vector=true;config.special_modes.correlation_vector_format=format;
                     config.special_modes.correlation_vector_output=Some(paths[3].clone());config.special_modes.correlation_vector_summary=true;
                     if filtered {config.special_modes.correlation_vector_filter=vec!["hide-array-rows".into()];}
-                    let mut limits=ArrayLimits::default();match case {"work"=>limits.work=0,"buffer"=>limits.buffer_bytes=0,"ledger"=>limits.ledger_bytes=0,"metadata"=>limits.metadata_bytes=0,_=>unreachable!()}
+                    let mut limits=ArrayLimits::default();match case {"work"=>limits.work=0,"buffer"=>limits.buffer_bytes=0,"ledger"=>limits.ledger_bytes=0,"metadata"=>limits.metadata_bytes=0,"final-work"=>limits.work=fixture().ledger.used_work,_=>unreachable!()}
                     let error=run_compiler_with_array_limits(&config,limits).unwrap_err();
-                    assert!(matches!(error,CompilerError::Provenance{ref stage,..} if stage=="array_source"),"{error:?}");
+                    assert!(matches!(error,CompilerError::Provenance{ref stage,..} if stage==if case=="final-work" {"array_source_admission"} else {"array_source"}),"{error:?}");
                     for p in &paths {assert_eq!(std::fs::read(p).unwrap(),b"prior\0array source sentinel");}
                     assert_eq!(std::fs::read_dir(&dir).unwrap().count(),5);
                 }
