@@ -14,7 +14,9 @@ struct Armed {
 }
 thread_local! { static ACTIVE: RefCell<Option<Armed>> = const { RefCell::new(None) }; }
 
-pub(super) struct Observation;
+// A guard belongs to the thread whose slot it armed. Encoding that ownership
+// prevents future callers from moving its Drop onto a different thread.
+pub(super) struct Observation { _thread: std::marker::PhantomData<std::rc::Rc<()>> }
 impl Observation {
     pub(super) fn arm(source: &'static str, backend: Backend, case: usize) -> Self {
         assert!(matches!(backend,Vm|Jit),"typed engine observation is only for VM/JIT");
@@ -23,7 +25,7 @@ impl Observation {
             assert!(state.is_none(),"a prior typed engine observation is still armed");
             *state=Some(Armed{source,backend,case,visits:0,bits:None});
         });
-        Self
+        Self { _thread: std::marker::PhantomData }
     }
 
     pub(super) fn assert_float(&self,expected: f64) -> u64 {
