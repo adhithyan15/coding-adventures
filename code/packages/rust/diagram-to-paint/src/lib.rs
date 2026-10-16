@@ -2394,6 +2394,14 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         instructions, id: None, metadata: Some(metadata) }
 }
 
+// Keep the actual text-child frame explicit: semantic font1 can make the
+// outer box smaller than its fixed insets, while the inner frame stays positive.
+fn ishikawa_label_text_frame(bone:&diagram_ir::LayoutedIshikawaBone)->[f64;4] {
+    [bone.label_position.x-bone.label_width/2.0+6.0,
+        bone.label_position.y-bone.label_height/2.0+2.0,
+        (bone.label_width-12.0).max(1.0),(bone.label_height-4.0).max(1.0)]
+}
+
 /// Lower Ishikawa fishbone geometry into backend-neutral paths, a rect, and glyph runs.
 pub fn diagram_to_paint_ishikawa<S, M, R>(diagram: &LayoutedIshikawaDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
@@ -2429,8 +2437,8 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
                 stroke: Some(stroke.clone()), stroke_width: Some(1.0), corner_radius: Some(4.0),
                 stroke_dash: None, stroke_dash_offset: None }));
         }
-        text_children.push(text_node(&bone.label, label_x + 6.0, label_y + 2.0,
-            (bone.label_width - 12.0).max(1.0), (bone.label_height - 4.0).max(1.0), label_font.clone(), text_color));
+        let [text_x,text_y,text_width,text_height]=ishikawa_label_text_frame(bone);
+        text_children.push(text_node(&bone.label,text_x,text_y,text_width,text_height,label_font.clone(),text_color));
     }
     instructions.push(ishikawa_outline_instruction(&diagram.effect_outline,
         &diagram.config.fill_color, &stroke, 2.0));
